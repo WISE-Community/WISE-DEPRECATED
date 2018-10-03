@@ -75,9 +75,6 @@ var DrawController = function (_ComponentController) {
       _this.isResetButtonVisible = true;
 
       _this.drawingToolId = 'drawingtool_' + _this.nodeId + '_' + _this.componentId;
-
-      // get the latest annotations
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision' || _this.mode === 'onlyShowWork') {
       // get the component state from the scope
       var _componentState = _this.$scope.componentState;
@@ -88,11 +85,6 @@ var DrawController = function (_ComponentController) {
         if (_this.mode === 'gradingRevision') {
           _this.drawingToolId = 'drawingtool_gradingRevision_' + _componentState.id;
         }
-      }
-
-      if (_this.mode === 'grading') {
-        // get the latest annotations
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
       }
     } else if (_this.mode === 'showPreviousWork') {
       // get the component state from the scope
@@ -350,9 +342,6 @@ var DrawController = function (_ComponentController) {
       // get the component state from the scope
       componentState = this.$scope.componentState;
 
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
       if (this.mode == 'student') {
         if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
           // we will show work from another component
@@ -414,11 +403,6 @@ var DrawController = function (_ComponentController) {
       }
 
       this.disableComponentIfNecessary();
-
-      // register this component with the parent node
-      if (this.$scope.$parent && this.$scope.$parent.nodeController != null) {
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
 
       /*
        * Wait before we start listening for the drawing:changed event. We need to wait
@@ -629,135 +613,17 @@ var DrawController = function (_ComponentController) {
     value: function setStudentWork(componentState) {
 
       if (componentState != null) {
-
-        // set the draw data
         this.setDrawData(componentState);
-
-        /*
-         * check if the latest component state is a submit and perform
-         * any necessary processing
-         */
-        this.processLatestSubmit();
+        this.processLatestStudentWork();
       }
     }
   }, {
-    key: 'processLatestSubmit',
+    key: 'resetButtonClicked',
 
-
-    /**
-     * Check if latest component state is a submission and set isSubmitDirty accordingly
-     */
-    value: function processLatestSubmit() {
-      var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-      if (latestState) {
-        var serverSaveTime = latestState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestState.isSubmit) {
-          // latest state is a submission, so set isSubmitDirty to false and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSubmittedMessage(clientSaveTime);
-        } else {
-          // latest state is not a submission, so set isSubmitDirty to true and notify node
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSavedMessage(clientSaveTime);
-        }
-      }
-    }
-  }, {
-    key: 'submit',
-
-
-    /**
-     * A submit was triggered by the component submit button or node submit button
-     * @param submitTriggeredBy what triggered the submit
-     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-     */
-    value: function submit(submitTriggeredBy) {
-
-      if (this.isSubmitDirty) {
-        // the student has unsubmitted work
-
-        var performSubmit = true;
-
-        if (this.componentContent.maxSubmitCount != null) {
-          // there is a max submit count
-
-          // calculate the number of submits this student has left
-          var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-          var message = '';
-
-          if (numberOfSubmitsLeft <= 0) {
-            // the student does not have any more chances to submit
-            performSubmit = false;
-          } else if (numberOfSubmitsLeft == 1) {
-            /*
-             * the student has one more chance to submit left so maybe
-             * we should ask the student if they are sure they want to submit
-             */
-          } else if (numberOfSubmitsLeft > 1) {
-            /*
-             * the student has more than one chance to submit left so maybe
-             * we should ask the student if they are sure they want to submit
-             */
-          }
-        }
-
-        if (performSubmit) {
-
-          /*
-           * set isSubmit to true so that when the component state is
-           * created, it will know that is a submit component state
-           * instead of just a save component state
-           */
-          this.isSubmit = true;
-          this.incrementSubmitCounter();
-
-          // check if the student has used up all of their submits
-          if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-            /*
-             * the student has used up all of their submits so we will
-             * disable the submit button
-             */
-            this.isSubmitButtonDisabled = true;
-          }
-
-          if (this.mode === 'authoring') {
-            /*
-             * we are in authoring mode so we will set values appropriately
-             * here because the 'componentSubmitTriggered' event won't
-             * work in authoring mode
-             */
-            this.isDirty = false;
-            this.isSubmitDirty = false;
-            this.createComponentState('submit');
-          }
-
-          if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-          } else if (submitTriggeredBy === 'nodeSubmitButton') {
-            // nothing extra needs to be performed
-          }
-        } else {
-          /*
-           * the student has cancelled the submit so if a component state
-           * is created, it will just be a regular save and not submit
-           */
-          this.isSubmit = false;
-        }
-      }
-    }
 
     /**
      * The reset button was clicked
      */
-
-  }, {
-    key: 'resetButtonClicked',
     value: function resetButtonClicked() {
 
       // ask the student if they are sure they want to clear the drawing

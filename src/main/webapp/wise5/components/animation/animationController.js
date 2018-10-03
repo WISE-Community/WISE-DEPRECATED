@@ -33,7 +33,6 @@ var AnimationController = function (_ComponentController) {
     _this.AnimationService = AnimationService;
     _this.NotificationService = NotificationService;
 
-    _this.latestAnnotations = null;
     _this.width = 800;
     _this.height = 600;
     _this.pixelsPerXUnit = 1;
@@ -53,7 +52,6 @@ var AnimationController = function (_ComponentController) {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.isGradingMode()) {
       if (componentState != null) {
         _this.svgId = 'svg_' + _this.nodeId + '_' + _this.componentId + '_' + componentState.id;
@@ -86,10 +84,6 @@ var AnimationController = function (_ComponentController) {
     }
 
     _this.disableComponentIfNecessary();
-
-    if (_this.$scope.$parent.nodeController != null) {
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
 
     _this.setupSVGAfterTimeout();
 
@@ -1134,106 +1128,7 @@ var AnimationController = function (_ComponentController) {
         if (submitCounter != null) {
           this.submitCounter = submitCounter;
         }
-        this.processLatestSubmit();
-      }
-    }
-
-    /**
-     * Check if latest component state is a submission and set isSubmitDirty accordingly.
-     */
-
-  }, {
-    key: 'processLatestSubmit',
-    value: function processLatestSubmit() {
-      var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-      if (latestComponentState) {
-        var serverSaveTime = latestComponentState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestComponentState.isSubmit) {
-          this.setIsSubmitDirtyFalse();
-          this.emitComponentSubmitDirty(false);
-          this.setSubmittedMessage(clientSaveTime);
-        } else {
-          this.setIsSubmitDirtyTrue();
-          this.emitComponentSubmitDirty(true);
-          this.setSavedMessage(clientSaveTime);
-        }
-      }
-    }
-  }, {
-    key: 'setIsSubmitDirtyTrue',
-    value: function setIsSubmitDirtyTrue() {
-      this.setIsSubmitDirty(true);
-    }
-  }, {
-    key: 'setIsSubmitDirtyFalse',
-    value: function setIsSubmitDirtyFalse() {
-      this.setIsSubmitDirty(false);
-    }
-  }, {
-    key: 'setIsSubmitDirty',
-    value: function setIsSubmitDirty(isDirty) {
-      this.isSubmitDirty = isDirty;
-    }
-  }, {
-    key: 'getIsSubmitDirty',
-    value: function getIsSubmitDirty() {
-      return this.isSubmitDirty;
-    }
-  }, {
-    key: 'emitComponentDirty',
-    value: function emitComponentDirty(isDirty) {
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: isDirty });
-    }
-  }, {
-    key: 'emitComponentSubmitDirty',
-    value: function emitComponentSubmitDirty(isDirty) {
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
-    }
-
-    /**
-     * A submit was triggered by the component submit button or node submit button.
-     * @param {string} submitTriggeredBy What triggered the submit.
-     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-     */
-
-  }, {
-    key: 'submit',
-    value: function submit(submitTriggeredBy) {
-      if (this.getIsSubmitDirty()) {
-        var performSubmit = true;
-
-        if (this.hasMaxSubmitCount()) {
-          var numberOfSubmitsLeft = this.getNumberOfSubmitsLeft();
-          performSubmit = this.confirmSubmit(numberOfSubmitsLeft);
-        }
-
-        if (performSubmit) {
-          this.setIsSubmitTrue();
-          this.incrementSubmitCounter();
-
-          if (this.hasSubmitsLeft()) {
-            this.isSubmitButtonDisabled = true;
-          }
-
-          if (this.isAuthoringMode()) {
-            /*
-             * We are in authoring mode so we will set values appropriately
-             * here because the 'componentSubmitTriggered' event won't
-             * work in authoring mode.
-             */
-            this.isDirty = false;
-            this.setIsSubmitDirty(false);
-            this.createComponentState('submit');
-          } else {
-            if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-              this.emitComponentSubmitTriggered();
-            }
-          }
-        } else {
-          this.setIsSubmitFalse();
-        }
+        this.processLatestStudentWork();
       }
     }
   }, {
@@ -1252,16 +1147,11 @@ var AnimationController = function (_ComponentController) {
       return isPerformSubmit;
     }
   }, {
-    key: 'emitComponentSubmitTriggered',
-    value: function emitComponentSubmitTriggered() {
-      this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-    }
-  }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
       var _this5 = this;
 
-      this.setIsDirty(true);
+      this.setIsDirtyTrue(true);
       this.emitComponentDirty(true);
 
       this.setIsSubmitDirty(true);
@@ -1296,7 +1186,7 @@ var AnimationController = function (_ComponentController) {
        * Reset the isSubmit value so that the next component state
        * doesn't maintain the same value.
        */
-      this.setIsSubmitFalse();
+      this.setIsSubmit(false);
 
       /*
        * Perform any additional processing that is required before returning

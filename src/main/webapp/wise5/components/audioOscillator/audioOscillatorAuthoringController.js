@@ -24,9 +24,12 @@ var AudioOscillatorAuthoringController = function (_AudioOscillatorContr) {
   function AudioOscillatorAuthoringController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, AudioOscillatorService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, AudioOscillatorAuthoringController);
 
-    // the component types we are allowed to connect to
     var _this = _possibleConstructorReturn(this, (AudioOscillatorAuthoringController.__proto__ || Object.getPrototypeOf(AudioOscillatorAuthoringController)).call(this, $filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, AudioOscillatorService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
 
+    _this.showOscillatorTypeChooser = false;
+    _this.oscillatorTypeToAdd = 'sine';
+
+    // the component types we are allowed to connect to
     _this.allowedConnectedComponentTypes = [{
       type: 'AudioOscillator'
     }];

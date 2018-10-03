@@ -34,11 +34,6 @@ var HTMLController = function (_ComponentController) {
       if (_this.componentContent != null) {
         _this.html = _this.componentContent.html;
       }
-
-      if ($scope.$parent.registerComponentController != null) {
-        // register this component with the parent node
-        $scope.$parent.registerComponentController($scope, _this.componentContent);
-      }
     }
 
     /*

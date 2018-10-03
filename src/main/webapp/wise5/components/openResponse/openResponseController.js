@@ -34,17 +34,11 @@ var OpenResponseController = function (_ComponentController) {
     // holds the text that the student has typed
     _this.studentResponse = '';
 
-    // holds student attachments like assets
-    _this.attachments = [];
-
     // whether rich text editing is enabled
     _this.isRichTextEnabled = false;
 
     // whether we're only showing the student work
     _this.onlyShowWork = false;
-
-    // the latest annotations
-    _this.latestAnnotations = null;
 
     // used to hold a message dialog if we need to use one
     _this.messageDialog = null;
@@ -91,9 +85,6 @@ var OpenResponseController = function (_ComponentController) {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-
-      // get the latest annotations
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'grading') {
       _this.isPromptVisible = false;
       _this.isSaveButtonVisible = false;
@@ -116,9 +107,6 @@ var OpenResponseController = function (_ComponentController) {
 
     // set whether rich text is enabled
     _this.isRichTextEnabled = _this.componentContent.isRichTextEnabled;
-
-    // set whether studentAttachment is enabled
-    _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
 
     if (_this.componentContent.completionCriteria != null) {
       _this.useCustomCompletionCriteria = true;
@@ -173,13 +161,6 @@ var OpenResponseController = function (_ComponentController) {
     }
 
     _this.disableComponentIfNecessary();
-
-    if (_this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
-
-    //$('.openResponse').off('dragover').off('drop');
 
     /**
      * Returns true iff there is student work that hasn't been saved yet
@@ -296,124 +277,32 @@ var OpenResponseController = function (_ComponentController) {
             this.attachments = attachments;
           }
 
-          this.processLatestSubmit();
+          this.processLatestStudentWork();
         }
       }
     }
   }, {
-    key: 'processLatestSubmit',
-
-
-    /**
-     * Check if latest component state is a submission and set isSubmitDirty accordingly
-     */
-    value: function processLatestSubmit() {
-      var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-      if (latestState) {
-        var serverSaveTime = latestState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestState.isSubmit) {
-          // latest state is a submission, so set isSubmitDirty to false and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSubmittedMessage(clientSaveTime);
-        } else {
-          // latest state is not a submission, so set isSubmitDirty to true and notify node
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSavedMessage(clientSaveTime);
-        }
-      }
+    key: 'hasSubmitMessage',
+    value: function hasSubmitMessage() {
+      return true;
     }
   }, {
-    key: 'submit',
+    key: 'confirmSubmit',
+    value: function confirmSubmit(numberOfSubmitsLeft) {
+      var message = '';
+      var isPerformSubmit = false;
 
-
-    /**
-     * A submit was triggered by the component submit button or node submit button
-     * @param submitTriggeredBy what triggered the submit
-     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-     */
-    value: function submit(submitTriggeredBy) {
-
-      if (this.isSubmitDirty) {
-        // the student has unsubmitted work
-
-        var performSubmit = true;
-
-        if (this.componentContent.maxSubmitCount != null) {
-          // there is a max submit count
-
-          // calculate the number of submits this student has left
-          var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-          var message = '';
-
-          if (numberOfSubmitsLeft <= 0) {
-
-            // the student does not have any more chances to submit
-            alert(this.$translate('openResponse.youHaveNoMoreChances'));
-            performSubmit = false;
-          } else if (numberOfSubmitsLeft == 1) {
-
-            // ask the student if they are sure they want to submit
-            message = this.$translate('openResponse.youHaveOneChance', { numberOfSubmitsLeft: numberOfSubmitsLeft });
-            //message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
-            performSubmit = confirm(message);
-          } else if (numberOfSubmitsLeft > 1) {
-
-            // ask the student if they are sure they want to submit
-            message = this.$translate('openResponse.youHaveMultipleChances', { numberOfSubmitsLeft: numberOfSubmitsLeft });
-            //message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
-            performSubmit = confirm(message);
-          }
-        }
-
-        if (performSubmit) {
-
-          /*
-           * set isSubmit to true so that when the component state is
-           * created, it will know that is a submit component state
-           * instead of just a save component state
-           */
-          this.isSubmit = true;
-          this.incrementSubmitCounter();
-
-          // check if the student has used up all of their submits
-          if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-            /*
-             * the student has used up all of their submits so we will
-             * disable the submit button
-             */
-            this.isSubmitButtonDisabled = true;
-          }
-
-          if (this.mode === 'authoring') {
-            /*
-             * we are in authoring mode so we will set values appropriately
-             * here because the 'componentSubmitTriggered' event won't
-             * work in authoring mode
-             */
-            this.isDirty = false;
-            this.isSubmitDirty = false;
-            this.createComponentState('submit');
-          }
-
-          if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-          } else if (submitTriggeredBy === 'nodeSubmitButton') {
-            // nothing extra needs to be performed
-          }
-        } else {
-          /*
-           * the student has cancelled the submit so if a component state
-           * is created, it will just be a regular save and not submit
-           */
-          this.isSubmit = false;
-        }
+      if (numberOfSubmitsLeft <= 0) {
+        alert(this.$translate('openResponse.youHaveNoMoreChances'));
+      } else if (numberOfSubmitsLeft == 1) {
+        message = this.$translate('openResponse.youHaveOneChance', { numberOfSubmitsLeft: numberOfSubmitsLeft });
+        isPerformSubmit = confirm(message);
+      } else if (numberOfSubmitsLeft > 1) {
+        message = this.$translate('openResponse.youHaveMultipleChances', { numberOfSubmitsLeft: numberOfSubmitsLeft });
+        isPerformSubmit = confirm(message);
       }
+
+      return isPerformSubmit;
     }
 
     /**
@@ -786,46 +675,13 @@ var OpenResponseController = function (_ComponentController) {
 
       return annotation;
     }
-  }, {
-    key: 'removeAttachment',
-    value: function removeAttachment(attachment) {
-      if (this.attachments.indexOf(attachment) != -1) {
-        this.attachments.splice(this.attachments.indexOf(attachment), 1);
-        this.studentDataChanged();
-      }
-    }
-
-    /**
-     * Attach student asset to this Component's attachments
-     * @param studentAsset
-     */
-
-  }, {
-    key: 'attachStudentAsset',
-    value: function attachStudentAsset(studentAsset) {
-      var _this3 = this;
-
-      if (studentAsset != null) {
-        this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-          if (copiedAsset != null) {
-            var attachment = {
-              studentAssetId: copiedAsset.id,
-              iconURL: copiedAsset.iconURL
-            };
-
-            _this3.attachments.push(attachment);
-            _this3.studentDataChanged();
-          }
-        });
-      }
-    }
-  }, {
-    key: 'getNumRows',
-
 
     /**
      * Get the number of rows for the textarea
      */
+
+  }, {
+    key: 'getNumRows',
     value: function getNumRows() {
       var numRows = null;
 
@@ -870,17 +726,17 @@ var OpenResponseController = function (_ComponentController) {
   }, {
     key: 'snipButtonClicked',
     value: function snipButtonClicked($event) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (this.isDirty) {
         var deregisterListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
           var componentState = args.studentWork;
-          if (componentState && _this4.nodeId === componentState.nodeId && _this4.componentId === componentState.componentId) {
+          if (componentState && _this3.nodeId === componentState.nodeId && _this3.componentId === componentState.componentId) {
             var imageObject = null;
             var noteText = componentState.studentData.response;
             var isEditTextEnabled = false;
             var isFileUploadEnabled = false;
-            _this4.NotebookService.addNote($event, imageObject, noteText, [componentState.id], isEditTextEnabled, isFileUploadEnabled);
+            _this3.NotebookService.addNote($event, imageObject, noteText, [componentState.id], isEditTextEnabled, isFileUploadEnabled);
             deregisterListener();
           }
         });
