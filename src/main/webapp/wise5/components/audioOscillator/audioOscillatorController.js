@@ -91,6 +91,8 @@ var AudioOscillatorController = function (_ComponentController) {
      * @return A component state containing the student data.
      */
     _this.$scope.getComponentState = function (isSubmit) {
+      var _this2 = this;
+
       var deferred = this.$q.defer();
       var getState = false;
       var action = 'change';
@@ -109,6 +111,7 @@ var AudioOscillatorController = function (_ComponentController) {
 
       if (getState) {
         this.$scope.audioOscillatorController.createComponentState(action).then(function (componentState) {
+          _this2.$scope.audioOscillatorController.isSubmit = false;
           deferred.resolve(componentState);
         });
       } else {
@@ -193,19 +196,18 @@ var AudioOscillatorController = function (_ComponentController) {
     value: function createComponentState(action) {
       var deferred = this.$q.defer();
       var componentState = this.NodeService.createNewComponentState();
-      var studentData = {};
-      studentData.frequenciesPlayed = this.frequenciesPlayed;
-      studentData.frequenciesPlayedSorted = this.frequenciesPlayedSorted;
-      studentData.numberOfFrequenciesPlayed = this.numberOfFrequenciesPlayed;
-      studentData.minFrequencyPlayed = this.minFrequencyPlayed;
-      studentData.maxFrequencyPlayed = this.maxFrequencyPlayed;
-      studentData.submitCounter = this.submitCounter;
       componentState.isSubmit = this.isSubmit;
-      componentState.studentData = studentData;
       componentState.componentType = 'AudioOscillator';
       componentState.nodeId = this.nodeId;
       componentState.componentId = this.componentId;
-      this.isSubmit = false;
+      componentState.studentData = {
+        frequenciesPlayed: this.frequenciesPlayed,
+        frequenciesPlayedSorted: this.frequenciesPlayedSorted,
+        numberOfFrequenciesPlayed: this.numberOfFrequenciesPlayed,
+        minFrequencyPlayed: this.minFrequencyPlayed,
+        maxFrequencyPlayed: this.maxFrequencyPlayed,
+        submitCounter: this.submitCounter
+      };
       this.createComponentStateAdditionalProcessing(deferred, componentState, action);
       return deferred.promise;
     }
@@ -279,7 +281,7 @@ var AudioOscillatorController = function (_ComponentController) {
   }, {
     key: 'drawOscilloscope',
     value: function drawOscilloscope() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!this.isPlaying) {
         return;
@@ -301,7 +303,7 @@ var AudioOscillatorController = function (_ComponentController) {
 
       if (this.isDrawAgain()) {
         requestAnimationFrame(function () {
-          _this2.drawOscilloscope();
+          _this3.drawOscilloscope();
         });
       }
     }

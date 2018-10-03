@@ -52,7 +52,7 @@ var ComponentController = function () {
       time: ''
     };
 
-    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;;
+    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
     this.isPromptVisible = true;
     this.isSaveButtonVisible = false;

@@ -36,26 +36,10 @@ describe('AudioOscillatorController', () => {
 
     $scope = $rootScope.$new();
     $scope.componentContent = JSON.parse(JSON.stringify(component));
-    window.AudioContext = function() {};audioOscillatorController = $controller('AudioOscillatorController', { $scope: $scope });
+    window.AudioContext = function() {};
+    audioOscillatorController = $controller('AudioOscillatorController', { $scope: $scope });
     audioOscillatorController.nodeId = 'node1';
   }));
-
-  it('should add a frequency played to the student data', () => {
-    audioOscillatorController.addFrequencyPlayed(440);
-    expect(audioOscillatorController.frequenciesPlayed.length).toEqual(1);
-    expect(audioOscillatorController.frequenciesPlayed[0]).toEqual(440);
-  });
-
-  it('should add a frequency played to the student data', () => {
-    audioOscillatorController.addFrequencyPlayed(440);
-    expect(audioOscillatorController.frequenciesPlayed[0]).toEqual(440);
-  });
-
-  it('should call play when the toggle play is called', () => {
-    const playSpy = spyOn(audioOscillatorController, 'play');
-    audioOscillatorController.togglePlay();
-    expect(playSpy).toHaveBeenCalled();
-  });
 
   it('should set the parameters from the component content', () => {
     expect(audioOscillatorController.frequency).toEqual(component.startingFrequency);
@@ -63,6 +47,18 @@ describe('AudioOscillatorController', () => {
     expect(audioOscillatorController.oscilloscopeHeight).toEqual(component.oscilloscopeHeight);
     expect(audioOscillatorController.gridCellSize).toEqual(component.gridCellSize);
     expect(audioOscillatorController.oscillatorTypes.length).toEqual(3);
+  });
+
+  it('should add a frequency played to the student data', () => {
+    audioOscillatorController.addFrequencyPlayed(440);
+    expect(audioOscillatorController.frequenciesPlayed.length).toEqual(1);
+    expect(audioOscillatorController.frequenciesPlayed[0]).toEqual(440);
+  });
+
+  it('should call play when the toggle play is called', () => {
+    const playSpy = spyOn(audioOscillatorController, 'play');
+    audioOscillatorController.togglePlay();
+    expect(playSpy).toHaveBeenCalled();
   });
 
   it('should repopulate student work', () => {
@@ -85,6 +81,4 @@ describe('AudioOscillatorController', () => {
   //     console.log('hello3');
   //   });
   // });
-
-
 });

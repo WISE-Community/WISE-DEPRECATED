@@ -101,6 +101,7 @@ class AudioOscillatorController extends ComponentController {
 
       if (getState) {
         this.$scope.audioOscillatorController.createComponentState(action).then((componentState) => {
+          this.$scope.audioOscillatorController.isSubmit = false;
           deferred.resolve(componentState);
         });
       } else {
@@ -176,19 +177,18 @@ class AudioOscillatorController extends ComponentController {
   createComponentState(action) {
     const deferred = this.$q.defer();
     const componentState = this.NodeService.createNewComponentState();
-    const studentData = {};
-    studentData.frequenciesPlayed = this.frequenciesPlayed;
-    studentData.frequenciesPlayedSorted = this.frequenciesPlayedSorted;
-    studentData.numberOfFrequenciesPlayed = this.numberOfFrequenciesPlayed;
-    studentData.minFrequencyPlayed = this.minFrequencyPlayed;
-    studentData.maxFrequencyPlayed = this.maxFrequencyPlayed;
-    studentData.submitCounter = this.submitCounter;
     componentState.isSubmit = this.isSubmit;
-    componentState.studentData = studentData;
     componentState.componentType = 'AudioOscillator';
     componentState.nodeId = this.nodeId;
     componentState.componentId = this.componentId;
-    this.isSubmit = false;
+    componentState.studentData = {
+      frequenciesPlayed: this.frequenciesPlayed,
+      frequenciesPlayedSorted: this.frequenciesPlayedSorted,
+      numberOfFrequenciesPlayed: this.numberOfFrequenciesPlayed,
+      minFrequencyPlayed: this.minFrequencyPlayed,
+      maxFrequencyPlayed: this.maxFrequencyPlayed,
+      submitCounter: this.submitCounter
+    };
     this.createComponentStateAdditionalProcessing(deferred, componentState, action);
     return deferred.promise;
   }
@@ -426,14 +426,14 @@ class AudioOscillatorController extends ComponentController {
   oscillatorTypeChanged() {
     this.drawOscilloscopeGrid();
 
-    if(this.isAudioPlaying()) {
+    if (this.isAudioPlaying()) {
       this.restartPlayer();
     }
   }
 
   frequencyChanged() {
     this.drawOscilloscopeGrid();
-    if(this.isAudioPlaying()) {
+    if (this.isAudioPlaying()) {
       this.restartPlayer();
     }
   }
