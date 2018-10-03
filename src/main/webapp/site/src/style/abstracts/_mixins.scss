@@ -53,6 +53,12 @@
     min-width: 0;
   }
 
+  .mat-raised-button {
+    &[disabled] {
+      box-shadow: none;
+    }
+  }
+
   .mat-card {
     border-radius: $card-border-radius;
   }

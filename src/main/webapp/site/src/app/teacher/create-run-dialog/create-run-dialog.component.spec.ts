@@ -140,6 +140,6 @@ describe('CreateRunDialogComponent', () => {
     expect(component.isCreating).toBe(true);
     expect(submitButton.disabled).toBe(true);
     expect(cancelButton.disabled).toBe(true);
-    expect(submitButton.querySelector('span').innerHTML).toBe('Creating...');
+    expect(submitButton.querySelector('mat-progress-bar')).toBeTruthy();
   });
 });

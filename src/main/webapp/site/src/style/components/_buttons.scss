@@ -10,6 +10,14 @@
   &:not(.mat-icon-button) {
     border-radius: $card-border-radius;
   }
+
+  mat-progress-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+  }
 }
 
 .mat-raised-button {

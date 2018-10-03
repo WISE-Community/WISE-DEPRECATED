@@ -51,8 +51,8 @@
             mat-flat-button
             color="primary"
             [disabled]="form.invalid || isCreating">
-      <span *ngIf="!isCreating">Create Run</span>
-      <span *ngIf="isCreating">Creating...</span>
+      <mat-progress-bar *ngIf="isCreating" mode="indeterminate"></mat-progress-bar>
+      Create Run
     </button>
   </mat-dialog-actions>
 </form>

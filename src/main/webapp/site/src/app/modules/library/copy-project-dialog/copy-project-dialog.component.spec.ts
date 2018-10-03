@@ -3,6 +3,7 @@ import { CopyProjectDialogComponent } from './copy-project-dialog.component';
 import { LibraryService } from "../../../services/library.service";
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material';
 import { Project } from "../../../domain/project";
 import { Observable } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from "@angular/core";
@@ -90,6 +91,6 @@ describe('CopyProjectDialogComponent', () => {
     expect(component.isCopying).toBe(true);
     expect(copyButton.disabled).toBe(true);
     expect(cancelButton.disabled).toBe(true);
-    expect(copyButton.querySelector('span').innerHTML).toBe('Copying...');
+    expect(copyButton.querySelector('mat-progress-bar')).toBeTruthy();
   });
 });

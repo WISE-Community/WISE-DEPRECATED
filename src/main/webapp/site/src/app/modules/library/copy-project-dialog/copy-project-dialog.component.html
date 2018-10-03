@@ -15,7 +15,7 @@
           color="primary"
           (click)="copy()"
           [disabled]="isCopying">
-    <span *ngIf="!isCopying">Copy</span>
-    <span *ngIf="isCopying">Copying...</span>
+    <mat-progress-bar *ngIf="isCopying" mode="indeterminate"></mat-progress-bar>
+    Copy
   </button>
 </mat-dialog-actions>
