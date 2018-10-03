@@ -40,9 +40,6 @@ var MultipleChoiceController = function (_ComponentController) {
     // whether to show the feedback or not
     _this.showFeedback = true;
 
-    // the latest annotations
-    _this.latestAnnotations = null;
-
     // whether this component has been authored with a correct answer
     _this.hasCorrectAnswer = false;
 
@@ -53,9 +50,6 @@ var MultipleChoiceController = function (_ComponentController) {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-
-      // get the latest annotations
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
@@ -123,11 +117,6 @@ var MultipleChoiceController = function (_ComponentController) {
     }
 
     _this.disableComponentIfNecessary();
-
-    if (_this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
 
     /**
      * Get the component state from this component. The parent node will
@@ -229,33 +218,7 @@ var MultipleChoiceController = function (_ComponentController) {
             this.submitCounter = submitCounter;
           }
 
-          this.processLatestSubmit();
-        }
-      }
-    }
-  }, {
-    key: 'processLatestSubmit',
-
-
-    /**
-     * Check if latest component state is a submission and set isSubmitDirty accordingly
-     */
-    value: function processLatestSubmit() {
-      var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-      if (latestState) {
-        var serverSaveTime = latestState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestState.isSubmit) {
-          // latest state is a submission, so set isSubmitDirty to false and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSubmittedMessage(clientSaveTime);
-        } else {
-          // latest state is not a submission, so set isSubmitDirty to true and notify node
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSavedMessage(clientSaveTime);
+          this.processLatestStudentWork();
         }
       }
     }

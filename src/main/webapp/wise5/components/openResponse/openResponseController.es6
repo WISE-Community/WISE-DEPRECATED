@@ -32,17 +32,11 @@ class OpenResponseController extends ComponentController {
     // holds the text that the student has typed
     this.studentResponse = '';
 
-    // holds student attachments like assets
-    this.attachments = [];
-
     // whether rich text editing is enabled
     this.isRichTextEnabled = false;
 
     // whether we're only showing the student work
     this.onlyShowWork = false;
-
-    // the latest annotations
-    this.latestAnnotations = null;
 
     // used to hold a message dialog if we need to use one
     this.messageDialog = null;
@@ -89,9 +83,6 @@ class OpenResponseController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-      // get the latest annotations
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'grading') {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
@@ -114,9 +105,6 @@ class OpenResponseController extends ComponentController {
 
     // set whether rich text is enabled
     this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
-
-    // set whether studentAttachment is enabled
-    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
     if (this.componentContent.completionCriteria != null) {
       this.useCustomCompletionCriteria = true;
@@ -172,13 +160,6 @@ class OpenResponseController extends ComponentController {
     }
 
     this.disableComponentIfNecessary();
-
-    if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
-
-    //$('.openResponse').off('dragover').off('drop');
 
     /**
      * Returns true iff there is student work that hasn't been saved yet
@@ -291,118 +272,30 @@ class OpenResponseController extends ComponentController {
           this.attachments = attachments;
         }
 
-        this.processLatestSubmit();
+        this.processLatestStudentWork();
       }
     }
-  };
+  }
 
-  /**
-   * Check if latest component state is a submission and set isSubmitDirty accordingly
-   */
-  processLatestSubmit() {
-    let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+  hasSubmitMessage() {
+    return true;
+  }
 
-    if (latestState) {
-      let serverSaveTime = latestState.serverSaveTime;
-      let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      if (latestState.isSubmit) {
-        // latest state is a submission, so set isSubmitDirty to false and notify node
-        this.isSubmitDirty = false;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        this.setSubmittedMessage(clientSaveTime);
-      } else {
-        // latest state is not a submission, so set isSubmitDirty to true and notify node
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        this.setSavedMessage(clientSaveTime);
-      }
+  confirmSubmit(numberOfSubmitsLeft) {
+    let message = '';
+    let isPerformSubmit = false;
+
+    if (numberOfSubmitsLeft <= 0) {
+      alert(this.$translate('openResponse.youHaveNoMoreChances'));
+    } else if (numberOfSubmitsLeft == 1) {
+      message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+      isPerformSubmit = confirm(message);
+    } else if (numberOfSubmitsLeft > 1) {
+      message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+      isPerformSubmit = confirm(message);
     }
-  };
 
-  /**
-   * A submit was triggered by the component submit button or node submit button
-   * @param submitTriggeredBy what triggered the submit
-   * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-   */
-  submit(submitTriggeredBy) {
-
-    if (this.isSubmitDirty) {
-      // the student has unsubmitted work
-
-      var performSubmit = true;
-
-      if (this.componentContent.maxSubmitCount != null) {
-        // there is a max submit count
-
-        // calculate the number of submits this student has left
-        var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-        var message = '';
-
-        if (numberOfSubmitsLeft <= 0) {
-
-          // the student does not have any more chances to submit
-          alert(this.$translate('openResponse.youHaveNoMoreChances'));
-          performSubmit = false;
-        } else if (numberOfSubmitsLeft == 1) {
-
-          // ask the student if they are sure they want to submit
-          message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-          //message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
-          performSubmit = confirm(message);
-        } else if (numberOfSubmitsLeft > 1) {
-
-          // ask the student if they are sure they want to submit
-          message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-          //message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
-          performSubmit = confirm(message);
-        }
-      }
-
-      if (performSubmit) {
-
-        /*
-         * set isSubmit to true so that when the component state is
-         * created, it will know that is a submit component state
-         * instead of just a save component state
-         */
-        this.isSubmit = true;
-        this.incrementSubmitCounter();
-
-        // check if the student has used up all of their submits
-        if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-          /*
-           * the student has used up all of their submits so we will
-           * disable the submit button
-           */
-          this.isSubmitButtonDisabled = true;
-        }
-
-        if (this.mode === 'authoring') {
-          /*
-           * we are in authoring mode so we will set values appropriately
-           * here because the 'componentSubmitTriggered' event won't
-           * work in authoring mode
-           */
-          this.isDirty = false;
-          this.isSubmitDirty = false;
-          this.createComponentState('submit');
-        }
-
-        if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-          // tell the parent node that this component wants to submit
-          this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-        } else if (submitTriggeredBy === 'nodeSubmitButton') {
-          // nothing extra needs to be performed
-        }
-      } else {
-        /*
-         * the student has cancelled the submit so if a component state
-         * is created, it will just be a regular save and not submit
-         */
-        this.isSubmit = false;
-      }
-    }
+    return isPerformSubmit;
   }
 
   /**
@@ -760,33 +653,6 @@ class OpenResponseController extends ComponentController {
 
     return annotation;
   }
-
-  removeAttachment(attachment) {
-    if (this.attachments.indexOf(attachment) != -1) {
-      this.attachments.splice(this.attachments.indexOf(attachment), 1);
-      this.studentDataChanged();
-    }
-  }
-
-  /**
-   * Attach student asset to this Component's attachments
-   * @param studentAsset
-   */
-  attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
-        if (copiedAsset != null) {
-          var attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.attachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
-  };
 
   /**
    * Get the number of rows for the textarea

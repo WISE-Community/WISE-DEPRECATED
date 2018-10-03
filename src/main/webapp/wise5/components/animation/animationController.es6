@@ -29,7 +29,6 @@ class AnimationController extends ComponentController {
     this.AnimationService = AnimationService;
     this.NotificationService = NotificationService;
 
-    this.latestAnnotations = null;
     this.width = 800;
     this.height = 600;
     this.pixelsPerXUnit = 1;
@@ -49,7 +48,6 @@ class AnimationController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.isGradingMode()) {
       if (componentState != null) {
         this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
@@ -82,10 +80,6 @@ class AnimationController extends ComponentController {
     }
 
     this.disableComponentIfNecessary();
-
-    if (this.$scope.$parent.nodeController != null) {
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
 
     this.setupSVGAfterTimeout();
 
@@ -864,95 +858,7 @@ class AnimationController extends ComponentController {
       if (submitCounter != null) {
         this.submitCounter = submitCounter;
       }
-      this.processLatestSubmit();
-    }
-  }
-
-  /**
-   * Check if latest component state is a submission and set isSubmitDirty accordingly.
-   */
-  processLatestSubmit() {
-    let latestComponentState =
-        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-    if (latestComponentState) {
-      let serverSaveTime = latestComponentState.serverSaveTime;
-      let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      if (latestComponentState.isSubmit) {
-        this.setIsSubmitDirtyFalse();
-        this.emitComponentSubmitDirty(false);
-        this.setSubmittedMessage(clientSaveTime);
-      } else {
-        this.setIsSubmitDirtyTrue();
-        this.emitComponentSubmitDirty(true);
-        this.setSavedMessage(clientSaveTime);
-      }
-    }
-  }
-
-  setIsSubmitDirtyTrue() {
-    this.setIsSubmitDirty(true);
-  }
-
-  setIsSubmitDirtyFalse() {
-    this.setIsSubmitDirty(false);
-  }
-
-  setIsSubmitDirty(isDirty) {
-    this.isSubmitDirty = isDirty;
-  }
-
-  getIsSubmitDirty() {
-    return this.isSubmitDirty;
-  }
-
-  emitComponentDirty(isDirty) {
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: isDirty});
-  }
-
-  emitComponentSubmitDirty(isDirty) {
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isDirty});
-  }
-
-  /**
-   * A submit was triggered by the component submit button or node submit button.
-   * @param {string} submitTriggeredBy What triggered the submit.
-   * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-   */
-  submit(submitTriggeredBy) {
-    if (this.getIsSubmitDirty()) {
-      let performSubmit = true;
-
-      if (this.hasMaxSubmitCount()) {
-        const numberOfSubmitsLeft = this.getNumberOfSubmitsLeft();
-        performSubmit = this.confirmSubmit(numberOfSubmitsLeft);
-      }
-
-      if (performSubmit) {
-        this.setIsSubmitTrue();
-        this.incrementSubmitCounter();
-
-        if (this.hasSubmitsLeft()) {
-          this.isSubmitButtonDisabled = true;
-        }
-
-        if (this.isAuthoringMode()) {
-          /*
-           * We are in authoring mode so we will set values appropriately
-           * here because the 'componentSubmitTriggered' event won't
-           * work in authoring mode.
-           */
-          this.isDirty = false;
-          this.setIsSubmitDirty(false);
-          this.createComponentState('submit');
-        } else {
-          if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-            this.emitComponentSubmitTriggered();
-          }
-        }
-      } else {
-        this.setIsSubmitFalse();
-      }
+      this.processLatestStudentWork();
     }
   }
 
@@ -970,15 +876,11 @@ class AnimationController extends ComponentController {
     return isPerformSubmit;
   }
 
-  emitComponentSubmitTriggered() {
-    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-  }
-
   studentDataChanged() {
     this.setIsDirty(true);
     this.emitComponentDirty(true);
 
-    this.setIsSubmitDirty(true);
+    this.setIsSubmit(true);
     this.emitComponentSubmitDirty(true);
 
     this.clearSaveText();
@@ -1008,7 +910,7 @@ class AnimationController extends ComponentController {
      * Reset the isSubmit value so that the next component state
      * doesn't maintain the same value.
      */
-    this.setIsSubmitFalse();
+    this.setIsSubmit(false);
 
     /*
      * Perform any additional processing that is required before returning
@@ -1052,6 +954,7 @@ class AnimationController extends ComponentController {
   playButtonClicked() {
     this.setAnimationStateToPlaying();
     this.startAnimation();
+    this.studentDataChanged();
   }
 
   pauseButtonClicked() {

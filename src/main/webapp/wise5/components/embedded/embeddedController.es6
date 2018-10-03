@@ -48,7 +48,6 @@ class EmbeddedController extends ComponentController {
 
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
-    this.latestAnnotations = null;
     this.componentStateId = null;
     this.embeddedApplicationIFrameId = '';
 
@@ -59,7 +58,6 @@ class EmbeddedController extends ComponentController {
     if (this.mode === 'student') {
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
@@ -70,10 +68,6 @@ class EmbeddedController extends ComponentController {
         if (this.mode === 'gradingRevision') {
           this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
         }
-      }
-
-      if (this.mode === 'grading') {
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
       }
     } else if (this.mode === 'onlyShowWork') {
       this.isSaveButtonVisible = false;
@@ -89,10 +83,6 @@ class EmbeddedController extends ComponentController {
 
     this.width = this.componentContent.width ? this.componentContent.width : '100%';
     this.height = this.componentContent.height ? this.componentContent.height : '100%';
-
-    if (this.$scope.$parent.nodeController != null) {
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
 
     /**
      * A connected component has changed its student data so we will
@@ -204,7 +194,7 @@ class EmbeddedController extends ComponentController {
         this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
       } else if (messageEventData.messageType === 'applicationInitialized') {
         this.sendLatestWorkToApplication();
-        this.processLatestSubmit();
+        this.processLatestStudentWork();
 
         // activate iframe-resizer on the embedded app's iframe
         $('#' + this.embeddedApplicationIFrameId).iFrameResize({scrolling: true});
@@ -294,26 +284,6 @@ class EmbeddedController extends ComponentController {
   iframeLoaded(contentLocation) {
     window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.addEventListener('message', this.messageEventListener);
   }
-
-  /**
-   * Check if latest component state is a submission and if not, set isSubmitDirty to true
-   */
-  processLatestSubmit() {
-    let latestState = this.$scope.componentState;
-    if (latestState) {
-      let serverSaveTime = latestState.serverSaveTime;
-      let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      if (latestState.isSubmit) {
-        this.isSubmitDirty = false;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        this.setSubmittedMessage(clientSaveTime);
-      } else {
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        this.setSavedMessage(clientSaveTime);
-      }
-    }
-  };
 
   setURL(url) {
     if (url != null) {

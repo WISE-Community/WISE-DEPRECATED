@@ -34,11 +34,6 @@ class HTMLController extends ComponentController {
       if (this.componentContent != null) {
         this.html = this.componentContent.html;
       }
-
-      if ($scope.$parent.registerComponentController != null) {
-        // register this component with the parent node
-        $scope.$parent.registerComponentController($scope, this.componentContent);
-      }
     }
 
     /*
