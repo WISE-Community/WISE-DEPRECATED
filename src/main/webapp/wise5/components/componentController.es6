@@ -126,6 +126,33 @@ class ComponentController {
     return this.mode === 'onlyShowWork';
   }
 
+  registerListeners() {
+    this.$scope.$on('annotationSavedToServer', (event, args) => {
+      const annotation = args.annotation;
+      if (this.isEventTargetThisComponent(annotation)) {
+        this.latestAnnotations = this.AnnotationService
+          .getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      }
+    });
+
+    this.$scope.$on('nodeSubmitClicked', (event, args) => {
+      if (this.nodeId === args.nodeId) {
+        this.handleNodeSubmit();
+      }
+    });
+
+    /**
+     * Listen for the 'exitNode' event which is fired when the student
+     * exits the parent node. This will perform any necessary cleanup
+     * when the student exits the parent node.
+     */
+    this.$scope.$on('exitNode', (event, args) => {
+      this.cleanupBeforeExiting(event, args);
+    });
+
+    this.registerStudentWorkSavedToServerListener();
+  }
+
   authoringConstructor() {
     this.isPromptVisible = true;
     this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -156,6 +183,21 @@ class ComponentController {
       }
     };
 
+    this.registerAuthoringListeners();
+    this.updateAdvancedAuthoringView();
+  }
+
+  registerAuthoringListeners() {
+    this.$scope.$watch(
+        () => {
+          return this.authoringComponentContent
+        },
+        (newValue, oldValue) => {
+          this.handleAuthoringComponentContentChanged(newValue, oldValue);
+        },
+        true
+    );
+
     this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
       if (this.componentId === args.componentId) {
         this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
@@ -163,36 +205,54 @@ class ComponentController {
       }
     });
 
-    this.updateAdvancedAuthoringView();
+    this.$scope.$on('assetSelected', (event, args) => {
+      this.assetSelected(event, args);
+    });
   }
 
-  registerListeners() {
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
-      const annotation = args.annotation;
-      if (this.nodeId === annotation.nodeId &&
-          this.componentId === annotation.componentId) {
-        this.latestAnnotations = this.AnnotationService
-            .getLatestComponentAnnotations(this.nodeId, this.componentId,
-                this.workgroupId);
-      }
-    });
+  handleAuthoringComponentContentChanged(newValue, oldValue) {
+    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+    this.latestAnnotations = null;
+    this.isDirty = false;
+    this.isSubmitDirty = false;
+    this.submitCounter = 0;
+  }
 
-    this.$scope.$on('nodeSubmitClicked', (event, args) => {
-      if (this.nodeId === args.nodeId) {
-        this.handleNodeSubmit();
-      }
-    });
+  getFullAssetPath(fileName) {
+    const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+    return assetsDirectoryPath + '/' + fileName;
+  }
 
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on('exitNode', (event, args) => {
-      this.cleanupBeforeExiting(event, args);
-    });
+  getSummernoteId(args) {
+    let summernoteId = '';
+    if (args.target == 'prompt') {
+      summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
+    } else if (args.target == 'rubric') {
+      summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+    }
+    return summernoteId;
+  }
 
-    this.registerStudentWorkSavedToServerListener();
+  restoreSummernoteCursorPosition(summernoteId) {
+    $('#' + summernoteId).summernote('editor.restoreRange');
+    $('#' + summernoteId).summernote('editor.focus');
+  }
+
+  insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
+    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+  }
+
+  insertVideoIntoSummernote(summernoteId, fullAssetPath) {
+    var videoElement = document.createElement('video');
+    videoElement.controls = 'true';
+    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+    $('#' + summernoteId).summernote('insertNode', videoElement);
+  }
+
+  assetSelected(event, args) {
+
   }
 
   registerComponentWithParentNode() {
@@ -820,7 +880,7 @@ class ComponentController {
   summernoteRubricHTMLChanged() {
 
     // get the summernote rubric html
-    var html = this.summernoteRubricHTML;
+    let html = this.summernoteRubricHTML;
 
     /*
      * remove the absolute asset paths
@@ -925,26 +985,6 @@ class ComponentController {
 
   isEventTargetThisComponent(args) {
     return this.nodeId == args.nodeId && this.componentId == args.componentId;
-  }
-
-  createSummernoteRubricId() {
-    return 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-  }
-
-  restoreSummernoteCursorPosition(summernoteId) {
-    $('#' + summernoteId).summernote('editor.restoreRange');
-    $('#' + summernoteId).summernote('editor.focus');
-  }
-
-  insertImageIntoSummernote(fullAssetPath, fileName) {
-    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-  }
-
-  insertVideoIntoSummernote(fullAssetPath) {
-    const videoElement = document.createElement('video');
-    videoElement.controls = 'true';
-    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-    $('#' + summernoteId).summernote('insertNode', videoElement);
   }
 
   hasMaxSubmitCount() {

@@ -877,10 +877,10 @@ class AnimationController extends ComponentController {
   }
 
   studentDataChanged() {
-    this.setIsDirtyTrue(true);
+    this.setIsDirty(true);
     this.emitComponentDirty(true);
 
-    this.setIsSubmitDirty(true);
+    this.setIsSubmit(true);
     this.emitComponentSubmitDirty(true);
 
     this.clearSaveText();
@@ -954,6 +954,7 @@ class AnimationController extends ComponentController {
   playButtonClicked() {
     this.setAnimationStateToPlaying();
     this.startAnimation();
+    this.studentDataChanged();
   }
 
   pauseButtonClicked() {
