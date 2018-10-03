@@ -66,16 +66,7 @@ var AudioOscillatorController = function (_ComponentController) {
 
     if (!_this.isGradingMode() && !_this.isGradingRevisionMode()) {
       _this.initializeAudioContext();
-
-      /*
-       * draw the oscilloscope grid after angular has finished rendering
-       * the view. we need to wait until after angular has set the
-       * canvas width and height to draw the grid because setting the
-       * dimensions of the canvas will erase the canvas.
-       */
-      $timeout(function () {
-        _this.drawOscilloscopeGrid();
-      }, 0);
+      _this.drawOscilloscopeGridAfterTimeout();
     }
 
     _this.$scope.isDirty = function () {
@@ -143,6 +134,23 @@ var AudioOscillatorController = function (_ComponentController) {
     key: 'initializeAudioContext',
     value: function initializeAudioContext() {
       this.audioContext = new AudioContext();
+    }
+
+    /*
+     * Draw the oscilloscope grid after angular has finished rendering
+     * the view. we need to wait until after angular has set the
+     * canvas width and height to draw the grid because setting the
+     * dimensions of the canvas will erase the canvas.
+     */
+
+  }, {
+    key: 'drawOscilloscopeGridAfterTimeout',
+    value: function drawOscilloscopeGridAfterTimeout() {
+      var _this2 = this;
+
+      this.$timeout(function () {
+        _this2.drawOscilloscopeGrid();
+      }, 0);
     }
   }, {
     key: 'cleanupBeforeExiting',
@@ -279,7 +287,7 @@ var AudioOscillatorController = function (_ComponentController) {
   }, {
     key: 'drawOscilloscope',
     value: function drawOscilloscope() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!this.isPlaying) {
         return;
@@ -301,7 +309,7 @@ var AudioOscillatorController = function (_ComponentController) {
 
       if (this.isDrawAgain()) {
         requestAnimationFrame(function () {
-          _this2.drawOscilloscope();
+          _this3.drawOscilloscope();
         });
       }
     }

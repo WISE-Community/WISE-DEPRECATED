@@ -60,14 +60,7 @@ class AudioOscillatorController extends ComponentController {
 
     if (!this.isGradingMode() && !this.isGradingRevisionMode()) {
       this.initializeAudioContext();
-
-      /*
-       * draw the oscilloscope grid after angular has finished rendering
-       * the view. we need to wait until after angular has set the
-       * canvas width and height to draw the grid because setting the
-       * dimensions of the canvas will erase the canvas.
-       */
-      $timeout(() => {this.drawOscilloscopeGrid()}, 0);
+      this.drawOscilloscopeGridAfterTimeout();
     }
 
     this.$scope.isDirty = function() {
@@ -131,6 +124,16 @@ class AudioOscillatorController extends ComponentController {
 
   initializeAudioContext() {
     this.audioContext = new AudioContext();
+  }
+
+  /*
+   * Draw the oscilloscope grid after angular has finished rendering
+   * the view. we need to wait until after angular has set the
+   * canvas width and height to draw the grid because setting the
+   * dimensions of the canvas will erase the canvas.
+   */
+  drawOscilloscopeGridAfterTimeout() {
+    this.$timeout(() => {this.drawOscilloscopeGrid()}, 0);
   }
 
   cleanupBeforeExiting(event, args) {

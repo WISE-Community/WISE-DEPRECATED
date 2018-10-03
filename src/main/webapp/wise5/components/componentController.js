@@ -131,10 +131,37 @@ var ComponentController = function () {
       return this.mode === 'onlyShowWork';
     }
   }, {
-    key: 'authoringConstructor',
-    value: function authoringConstructor() {
+    key: 'registerListeners',
+    value: function registerListeners() {
       var _this = this;
 
+      this.$scope.$on('annotationSavedToServer', function (event, args) {
+        var annotation = args.annotation;
+        if (_this.nodeId === annotation.nodeId && _this.componentId === annotation.componentId) {
+          _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+        }
+      });
+
+      this.$scope.$on('nodeSubmitClicked', function (event, args) {
+        if (_this.nodeId === args.nodeId) {
+          _this.handleNodeSubmit();
+        }
+      });
+
+      /**
+       * Listen for the 'exitNode' event which is fired when the student
+       * exits the parent node. This will perform any necessary cleanup
+       * when the student exits the parent node.
+       */
+      this.$scope.$on('exitNode', function (event, args) {
+        _this.cleanupBeforeExiting(event, args);
+      });
+
+      this.registerStudentWorkSavedToServerListener();
+    }
+  }, {
+    key: 'authoringConstructor',
+    value: function authoringConstructor() {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
@@ -153,43 +180,74 @@ var ComponentController = function () {
         }
       };
 
-      this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
-        if (_this.componentId === args.componentId) {
-          _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
-          _this.UtilService.hideJSONValidMessage();
-        }
-      });
-
+      this.registerAuthoringListeners();
       this.updateAdvancedAuthoringView();
     }
   }, {
-    key: 'registerListeners',
-    value: function registerListeners() {
+    key: 'registerAuthoringListeners',
+    value: function registerAuthoringListeners() {
       var _this2 = this;
 
-      this.$scope.$on('annotationSavedToServer', function (event, args) {
-        var annotation = args.annotation;
-        if (_this2.nodeId === annotation.nodeId && _this2.componentId === annotation.componentId) {
-          _this2.latestAnnotations = _this2.AnnotationService.getLatestComponentAnnotations(_this2.nodeId, _this2.componentId, _this2.workgroupId);
+      this.$scope.$watch(function () {
+        return _this2.authoringComponentContent;
+      }, function (newValue, oldValue) {
+        _this2.handleAuthoringComponentContentChanged(newValue, oldValue);
+      }, true);
+
+      this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
+        if (_this2.componentId === args.componentId) {
+          _this2.showAdvancedAuthoring = !_this2.showAdvancedAuthoring;
+          _this2.UtilService.hideJSONValidMessage();
         }
       });
 
-      this.$scope.$on('nodeSubmitClicked', function (event, args) {
-        if (_this2.nodeId === args.nodeId) {
-          _this2.handleNodeSubmit();
-        }
+      this.$scope.$on('assetSelected', function (event, args) {
+        _this2.assetSelected(event, args);
       });
-
-      /**
-       * Listen for the 'exitNode' event which is fired when the student
-       * exits the parent node. This will perform any necessary cleanup
-       * when the student exits the parent node.
-       */
-      this.$scope.$on('exitNode', function (event, args) {
-        _this2.cleanupBeforeExiting(event, args);
-      });
-
-      this.registerStudentWorkSavedToServerListener();
+    }
+  }, {
+    key: 'handleAuthoringComponentContentChanged',
+    value: function handleAuthoringComponentContentChanged(newValue, oldValue) {
+      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      this.submitCounter = 0;
+    }
+  }, {
+    key: 'getFullAssetPath',
+    value: function getFullAssetPath(fileName) {
+      var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+      return assetsDirectoryPath + '/' + fileName;
+    }
+  }, {
+    key: 'getSummernoteId',
+    value: function getSummernoteId(args) {
+      var summernoteId = '';
+      if (args.target == 'prompt') {
+        summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
+      } else if (args.target == 'rubric') {
+        summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+      }
+      return summernoteId;
+    }
+  }, {
+    key: 'restoreSummernoteCursorPosition',
+    value: function restoreSummernoteCursorPosition(summernoteId) {
+      $('#' + summernoteId).summernote('editor.restoreRange');
+      $('#' + summernoteId).summernote('editor.focus');
+    }
+  }, {
+    key: 'insertImageIntoSummernote',
+    value: function insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
+      $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+    }
+  }, {
+    key: 'insertImageIntoSummernote',
+    value: function insertImageIntoSummernote(summernoteId, fullAssetPath) {
+      var videoElement = document.createElement('video');
+      videoElement.controls = 'true';
+      videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+      $('#' + summernoteId).summernote('insertNode', videoElement);
     }
   }, {
     key: 'registerComponentWithParentNode',
