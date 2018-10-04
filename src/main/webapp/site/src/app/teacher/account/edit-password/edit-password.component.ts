@@ -10,7 +10,6 @@ import { UserService } from "../../../services/user.service";
 export class EditPasswordComponent implements OnInit {
 
   @ViewChild('changePasswordForm') changePasswordForm;
-  message: string = '';
   isSaving: boolean = false;
 
   newPasswordFormGroup: FormGroup = this.fb.group({
@@ -76,12 +75,7 @@ export class EditPasswordComponent implements OnInit {
     this.isSaving = false;
   }
 
-  displayMessage(message: string) {
-    this.message = message;
-  }
-
   resetForm() {
     this.changePasswordForm.resetForm();
   }
-
 }

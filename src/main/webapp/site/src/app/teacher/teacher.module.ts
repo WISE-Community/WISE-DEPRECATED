@@ -26,21 +26,10 @@ import { EditProfileComponent } from './account/edit-profile/edit-profile.compon
 import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 
 const materialModules = [
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatIconModule,
-  MatMenuModule,
-  MatNativeDateModule,
-  MatProgressBarModule,
-  MatRadioModule,
-  MatTabsModule,
-  MatTableModule,
-  MatTooltipModule
+  MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
+  MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
+  MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatRadioModule,
+  MatTableModule, MatTabsModule, MatTooltipModule
 ];
 @NgModule({
   imports: [
