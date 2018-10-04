@@ -11,6 +11,7 @@ export class EditPasswordComponent implements OnInit {
 
   @ViewChild('changePasswordForm') changePasswordForm;
   message: string = '';
+  saving: boolean = false;
 
   newPasswordFormGroup: FormGroup = this.fb.group({
     newPassword: new FormControl('', [Validators.required]),
@@ -41,6 +42,7 @@ export class EditPasswordComponent implements OnInit {
   }
 
   saveChanges() {
+    this.saving = true;
     const oldPassword: string = this.getControlFieldValue('oldPassword');
     const newPassword: string = this.getControlFieldValue('newPassword');
     const username = this.getUsername();
@@ -64,8 +66,11 @@ export class EditPasswordComponent implements OnInit {
   handleChangePasswordResponse(response) {
     if (response.message == 'success') {
       this.displayMessage("Successfully changed password");
+      this.resetForm();
+      this.saving = false;
     } else if (response.message == 'incorrect password') {
       this.displayMessage("Incorrect Old Password");
+      this.saving = false;
     } else {
       this.displayMessage("Failed to change password");
     }

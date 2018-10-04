@@ -19,8 +19,9 @@ export class EditProfileComponent implements OnInit {
     { id: 'COLLEGE', label: 'College' },
     { id: 'OTHER', label: 'Other' }
   ];
-  message: string = '';
   languages: object[];
+  changed: boolean = false;
+  saving: boolean = false;
 
   editProfileFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -52,6 +53,10 @@ export class EditProfileComponent implements OnInit {
     this.userService.getLanguages().subscribe((response) => {
       this.languages = <object[]>response;
     });
+
+    this.editProfileFormGroup.valueChanges.subscribe(() => {
+      this.changed = true;
+    });
   }
 
   getUser() {
@@ -66,6 +71,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   saveChanges() {
+    this.saving = true;
     const displayName: string = this.getControlFieldValue('displayName');
     const email: string = this.getControlFieldValue('email');
     const city: string = this.getControlFieldValue('city');
@@ -87,13 +93,9 @@ export class EditProfileComponent implements OnInit {
 
   handleUpdateProfileResponse(response) {
     if (response.message == 'success') {
-      this.displayMessage("Successfully updated profile");
+      this.changed = false;
     } else {
-      this.displayMessage("Failed to update profile");
     }
-  }
-
-  displayMessage(message: string) {
-    this.message = message;
+    this.saving = false;
   }
 }
