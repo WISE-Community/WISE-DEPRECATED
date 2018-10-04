@@ -5,16 +5,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { Teacher } from "../../../domain/teacher";
+import { User } from "../../../domain/user";
 
 export class MockUserService {
-  getUser(): BehaviorSubject<Teacher> {
-    const user: Teacher = new Teacher();
+  getUser(): BehaviorSubject<User> {
+    const user: User = new User();
     user.firstName = 'Demo';
-    user.lastName = 'Teacher';
-    user.role = 'teacher';
-    user.userName = 'DemoTeacher';
-    const userBehaviorSubject: BehaviorSubject<Teacher> = new BehaviorSubject<Teacher>(null);
+    user.lastName = 'User';
+    user.userName = 'DemoUser';
+    const userBehaviorSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     userBehaviorSubject.next(user);
     return userBehaviorSubject;
   }
