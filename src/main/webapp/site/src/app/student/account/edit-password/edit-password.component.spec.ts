@@ -3,7 +3,7 @@ import { EditPasswordComponent } from './edit-password.component';
 import { UserService } from "../../../services/user.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule, MatInputModule } from '@angular/material';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 export class MockUserService {
 
@@ -19,13 +19,12 @@ describe('EditPasswordComponent', () => {
       declarations: [ EditPasswordComponent ],
       imports: [
         BrowserAnimationsModule,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatInputModule
+        ReactiveFormsModule
       ],
       providers: [
         { provide: UserService, useClass: MockUserService }
-      ]
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

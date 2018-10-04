@@ -12,8 +12,9 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 export class EditProfileComponent implements OnInit {
 
   user: Student;
-  message: string = '';
   languages: object[];
+  changed: boolean = false;
+  isSaving: boolean = false;
 
   editProfileFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -33,6 +34,10 @@ export class EditProfileComponent implements OnInit {
     this.userService.getLanguages().subscribe((response) => {
       this.languages = <object[]>response;
     });
+
+    this.editProfileFormGroup.valueChanges.subscribe(() => {
+      this.changed = true;
+    });
   }
 
   getUser() {
@@ -47,6 +52,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   saveChanges() {
+    this.isSaving = true;
     const username = this.user.userName;
     const language = this.getControlFieldValue('language');
     this.studentService.updateProfile(username, language)
@@ -61,14 +67,10 @@ export class EditProfileComponent implements OnInit {
 
   handleUpdateProfileResponse(response) {
     if (response.message == 'success') {
-      this.displayMessage("Successfully updated profile");
+      this.changed = false;
     } else {
-      this.displayMessage("Failed to update profile");
+      // Add error notification
     }
+    this.isSaving = false;
   }
-
-  displayMessage(message: string) {
-    this.message = message;
-  }
-
 }

@@ -2,20 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'ngx-moment';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
-  MatButtonModule,
-  MatCardModule,
-  MatIconModule } from '@angular/material';
+  MatButtonModule, MatCardModule, MatIconModule, MatProgressBarModule,
+  MatTabsModule } from '@angular/material';
 
 const materialModules = [
-  MatButtonModule,
-  MatCardModule,
-  MatIconModule
+  MatButtonModule, MatCardModule, MatIconModule, MatProgressBarModule,
+  MatTabsModule
 ];
 
 import { SharedModule } from "../modules/shared/shared.module";
 import { StudentRoutingModule } from './student-routing.module';
-
 import { StudentComponent } from './student.component';
 import { StudentHomeComponent } from './student-home/student-home.component';
 import { StudentEditProfileComponent } from './student-edit-profile/student-edit-profile.component';
@@ -23,7 +21,6 @@ import { StudentRunListComponent } from './student-run-list/student-run-list.com
 import { StudentRunListItemComponent } from './student-run-list-item/student-run-list-item.component';
 import { AuthGuard } from "./auth.guard";
 import { AddProjectDialogComponent } from "./add-project-dialog/add-project-dialog.component";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './account/edit-password/edit-password.component';
