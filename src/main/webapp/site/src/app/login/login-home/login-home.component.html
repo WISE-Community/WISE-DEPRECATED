@@ -34,8 +34,8 @@
                 color="primary"
                 type="submit"
                 [disabled]="processing">
-          <span *ngIf="!processing">Sign In</span>
-          <span *ngIf="processing">Connecting...</span>
+          <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
+          <span>Sign In</span>
         </button>
       </p>
     </form>

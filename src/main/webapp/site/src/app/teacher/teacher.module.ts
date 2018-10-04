@@ -13,8 +13,8 @@ import { FormsModule } from '@angular/forms';
 import {
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
   MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
-  MatMenuModule, MatNativeDateModule, MatRadioModule, MatTableModule,
-  MatTabsModule, MatTooltipModule
+  MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatRadioModule,
+  MatTableModule, MatTabsModule, MatTooltipModule
 } from '@angular/material';
 import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
@@ -36,6 +36,7 @@ const materialModules = [
   MatIconModule,
   MatMenuModule,
   MatNativeDateModule,
+  MatProgressBarModule,
   MatRadioModule,
   MatTabsModule,
   MatTableModule,

@@ -1,29 +1,20 @@
-<p class="copy-confirmation-message">
-  This will create a new copy of this project that will show up in the “My Units” section of the project library. You will be the owner of this project and can edit it.
-</p>
-<p class="copy-confirmation-message">
-  Are you sure you want to copy this project?
-</p>
-<p class="copy-confirmation-message">
-  Name: {{data.project.name}}<br/>
-  Unit ID: {{data.project.id}}
-</p>
-<div class="buttons-div">
+<h2 class="mat-dialog-title">Copy Unit</h2>
+<mat-dialog-content>
+  <div class="info-block">
+    <p class="mat-subheading-2 accent-1">
+      {{ data.project.name }} <span class="mat-caption">(Unit ID: {{ data.project.id }})</span>
+    </p>
+    <p>Copying will create a duplicate of the above unit that will appear in “My Units”. You will be the owner and can edit the content and share the unit with other WISE users.</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end">
+  <button mat-button mat-dialog-close [disabled]="isCopying">Cancel</button>
   <button mat-button
-          mat-raised-button
+          mat-flat-button
           color="primary"
-          class="button"
           (click)="copy()"
           [disabled]="isCopying">
-    <span *ngIf="!isCopying">Copy</span>
-    <span *ngIf="isCopying">Copying...</span>
+    <mat-progress-bar *ngIf="isCopying" mode="indeterminate"></mat-progress-bar>
+    Copy
   </button>
-  <div class="buttons-spacer"></div>
-  <button mat-button
-          mat-raised-button
-          color="primary"
-          (click)="cancel()"
-          class="button">
-    Cancel
-  </button>
-</div>
+</mat-dialog-actions>

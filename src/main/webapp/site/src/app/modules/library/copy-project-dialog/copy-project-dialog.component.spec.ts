@@ -3,6 +3,7 @@ import { CopyProjectDialogComponent } from './copy-project-dialog.component';
 import { LibraryService } from "../../../services/library.service";
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material';
 import { Project } from "../../../domain/project";
 import { Observable } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from "@angular/core";
@@ -33,13 +34,13 @@ describe('CopyProjectDialogComponent', () => {
 
   const getCopyButton = () => {
     const buttons =  fixture.debugElement.nativeElement.querySelectorAll('button');
-    return buttons[0];
-  }
+    return buttons[1];
+  };
 
   const getCancelButton = () => {
     const buttons =  fixture.debugElement.nativeElement.querySelectorAll('button');
-    return buttons[1];
-  }
+    return buttons[0];
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -82,20 +83,14 @@ describe('CopyProjectDialogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should click the submit button and disable it', async() => {
+  it('should disable the submit and cancel buttons when submit is clicked', async() => {
     const copyButton = getCopyButton();
+    const cancelButton = getCancelButton();
     copyButton.click();
     fixture.detectChanges();
     expect(component.isCopying).toBe(true);
     expect(copyButton.disabled).toBe(true);
-    expect(copyButton.querySelector('span').innerHTML).toBe('Copying...');
-  });
-
-  it('should click the cancel button and close the dialog', async() => {
-    const cancelButton = getCancelButton();
-    const dialogRefCloseSpy = spyOn(fixture.debugElement.injector.get(MatDialogRef), 'close');
-    cancelButton.click();
-    fixture.detectChanges();
-    expect(dialogRefCloseSpy).toHaveBeenCalled();
+    expect(cancelButton.disabled).toBe(true);
+    expect(copyButton.querySelector('mat-progress-bar')).toBeTruthy();
   });
 });
