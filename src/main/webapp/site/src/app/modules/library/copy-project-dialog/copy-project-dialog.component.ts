@@ -37,9 +37,4 @@ export class CopyProjectDialogComponent implements OnInit {
       this.libraryService.addPersonalLibraryProject(newLibraryProject);
     });
   }
-
-  cancel() {
-    this.isCopying = false;
-    this.dialogRef.close();
-  }
 }

@@ -20,6 +20,7 @@ export class CreateRunDialogComponent {
   studentsPerTeam: number;
   startDate: any;
   periodOptions: string[] = [];
+  isCreating: boolean = false;
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<CreateRunDialogComponent>,
@@ -66,6 +67,7 @@ export class CreateRunDialogComponent {
   }
 
   create() {
+    this.isCreating = true;
     const combinedPeriods = this.getPeriodsString();
     const startDate = this.form.controls['startDate'].value.getTime();
     const studentsPerTeam = this.form.controls['studentsPerTeam'].value;

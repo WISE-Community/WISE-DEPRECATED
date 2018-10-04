@@ -4,6 +4,7 @@ import { Project } from "../../../domain/project";
 import { TeacherService } from "../../../teacher/teacher.service";
 import { ShareProjectDialogComponent } from "../share-project-dialog/share-project-dialog.component";
 import { UserService } from "../../../services/user.service";
+import { CopyProjectDialogComponent } from "../copy-project-dialog/copy-project-dialog.component";
 
 @Component({
   selector: 'app-library-project-menu',
@@ -53,7 +54,10 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   copyProject() {
-    this.select.emit('copy');
+    this.dialog.open(CopyProjectDialogComponent, {
+      data: { project: this.project },
+      panelClass: 'mat-dialog--sm'
+    });
   }
 
   shareProject() {

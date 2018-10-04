@@ -4,17 +4,50 @@ import { CreateRunDialogComponent } from "./create-run-dialog.component";
 import { MatDialogRef, MatDialog } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatCheckboxModule, MatRadioModule } from "@angular/material";
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
+import { Observable } from 'rxjs';
 import { Project } from "../../domain/project";
+import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 export class MockTeacherService {
+  createRun() {
+    return Observable.create(observer => {
+      const run: Run = new Run();
+      observer.next(run);
+      observer.complete();
+    });
+  }
 
+  addNewRun() {}
+
+  setTabIndex() {}
 }
 
 describe('CreateRunDialogComponent', () => {
   let component: CreateRunDialogComponent;
   let fixture: ComponentFixture<CreateRunDialogComponent>;
+  const project: Project = new Project();
+  project.id = 1;
+  project.metadata = {
+    "title": "Photosynthesis"
+  };
+  project.projectThumb = "photo.png";
+
+  const getSubmitButton = () => {
+    return fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
+  };
+
+  const getCancelButton = () => {
+    const buttons = fixture.debugElement.nativeElement.querySelectorAll('button');
+    return buttons[0];
+  };
+
+  const getForm = () => {
+    return fixture.debugElement.query(By.css('form'));
+  };
+  
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -25,9 +58,26 @@ describe('CreateRunDialogComponent', () => {
       declarations: [ CreateRunDialogComponent ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: [] },
-        { provide: MatDialog, useValue: {} }
+        { provide: MatDialog, useValue: {
+            closeAll: () => {
+
+            }
+          }
+        },
+        {
+          provide: MatDialogRef, useValue: {
+            afterClosed: () => {
+              return Observable.create(observer => {
+                observer.next({});
+                observer.complete();
+              });
+            },
+            close: () => {
+
+            }
+          }
+        },
+        { provide: MAT_DIALOG_DATA, useValue: { project: project } }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -37,12 +87,6 @@ describe('CreateRunDialogComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CreateRunDialogComponent);
     component = fixture.componentInstance;
-    const project: Project = new Project();
-    project.id = 1;
-    project.metadata = {
-      "title": "Photosynthesis"
-    };
-    project.projectThumb = "photo.png";
     component.project = project;
     fixture.detectChanges();
   });
@@ -56,21 +100,46 @@ describe('CreateRunDialogComponent', () => {
     expect(compiled.textContent).toContain('Photosynthesis');
   });
 
-  it('should getPeriodsString', () => {
-    component.periodOptions = ["1","2","3","4","5","6","7","8"];
-    component.periodsGroup = new FormArray(component.periodOptions.map(period =>
-      new FormGroup({
-      name: new FormControl(period),
-      checkbox: new FormControl(false)
-    })));
+  it('should get periods string', () => {
     component.periodsGroup.controls[0].get("checkbox").setValue(true);
     component.periodsGroup.controls[2].get("checkbox").setValue(true);
     component.periodsGroup.controls[4].get("checkbox").setValue(true);
-    component.customPeriods = new FormControl('hello');
+    component.customPeriods.setValue('hello');
     expect(component.getPeriodsString()).toEqual("1,3,5,hello");
   });
 
-  //it('should invalidate form when no period is selected', () => {
-  // TODO: jon implement me
-  //});
+  it('should disable submit button and invalidate form on initial state (when no period is selected)', () => {
+    const submitButton = getSubmitButton();
+    expect(component.form.valid).toBeFalsy();
+    expect(submitButton.disabled).toBe(true);
+  });
+
+  it('should validate form when period is selected or custom period is entered', () => {
+    component.periodsGroup.controls[0].get("checkbox").setValue(true);
+    fixture.detectChanges();
+    expect(component.form.valid).toBeTruthy();
+    component.periodsGroup.controls[0].get("checkbox").setValue(false);
+    component.customPeriods.setValue('Section A, Section B');
+    fixture.detectChanges();
+    expect(component.form.valid).toBeTruthy();
+  });
+
+  it('should enable submit button when form is valid', () => {
+    const submitButton = getSubmitButton();
+    component.periodsGroup.controls[0].get("checkbox").setValue(true);
+    fixture.detectChanges();
+    expect(submitButton.disabled).toBe(false);
+  });
+
+  it('should disable the submit and cancel buttons when form is submitted', async() => {
+    const submitButton = getSubmitButton();
+    const cancelButton = getCancelButton();
+    const form = getForm();
+    form.triggerEventHandler('submit', null);
+    fixture.detectChanges();
+    expect(component.isCreating).toBe(true);
+    expect(submitButton.disabled).toBe(true);
+    expect(cancelButton.disabled).toBe(true);
+    expect(submitButton.querySelector('mat-progress-bar')).toBeTruthy();
+  });
 });

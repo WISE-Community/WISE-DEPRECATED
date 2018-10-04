@@ -4,7 +4,6 @@ import { LibraryService } from "../../../services/library.service";
 import { UserService } from "../../../services/user.service";
 import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
 import { NGSSStandards } from "../ngssStandards";
-import { CopyProjectDialogComponent } from "../copy-project-dialog/copy-project-dialog.component";
 
 @Component({
   selector: 'app-library-project-details',
@@ -58,24 +57,6 @@ export class LibraryProjectDetailsComponent implements OnInit {
         }
       }
     }
-  }
-
-  menuAction(action: String) {
-    switch (action) {
-      case 'copy':
-        this.copyProject();
-        break;
-      case 'share':
-        break;
-      case 'edit':
-        break;
-    }
-  }
-
-  copyProject() {
-    this.dialog.open(CopyProjectDialogComponent, {
-      data: this.data
-    });
   }
 
   runProject() {

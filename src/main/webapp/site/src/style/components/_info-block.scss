@@ -1,4 +1,10 @@
 .info-block {
   border-radius: $card-border-radius;
-  padding: 8px;
+  padding: 12px;
+
+  p {
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
 }
