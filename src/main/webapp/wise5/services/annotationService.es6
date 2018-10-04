@@ -367,25 +367,27 @@ class AnnotationService {
           if (annotation.type === 'score' || annotation.type === 'autoScore') {
             const tempNodeId = annotation.nodeId;
             if (nodeId == tempNodeId) {
-              const componentId = annotation.componentId;
-              const data = annotation.data;
-              const scoreFound = tempNodeId + '-' + componentId;
-              if (scoresFound.indexOf(scoreFound) == -1) {
-                if (data != null) {
-                  const value = data.value;
-                  if (!isNaN(value)) {
-                    if (score == null) {
-                      score = value;
-                    } else {
-                      score += value;
-                    }
+              const tempComponentId = annotation.componentId;
+              if (this.componentExists(tempNodeId, tempComponentId)) {
+                const data = annotation.data;
+                const scoreFound = tempNodeId + '-' + tempComponentId;
+                if (scoresFound.indexOf(scoreFound) == -1) {
+                  if (data != null) {
+                    const value = data.value;
+                    if (!isNaN(value)) {
+                      if (score == null) {
+                        score = value;
+                      } else {
+                        score += value;
+                      }
 
-                    /*
-                     * remember that we have found a score for this component
-                     * so that we don't double count it if the teacher scored
-                     * the component more than once
-                     */
-                    scoresFound.push(scoreFound);
+                      /*
+                       * remember that we have found a score for this component
+                       * so that we don't double count it if the teacher scored
+                       * the component more than once
+                       */
+                      scoresFound.push(scoreFound);
+                    }
                   }
                 }
               }
@@ -396,6 +398,10 @@ class AnnotationService {
     }
 
     return score;
+  }
+
+  componentExists(nodeId, componentId) {
+    return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId) != null;
   }
 
   /**
