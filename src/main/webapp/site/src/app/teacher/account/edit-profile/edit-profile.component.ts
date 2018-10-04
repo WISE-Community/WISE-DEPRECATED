@@ -21,7 +21,7 @@ export class EditProfileComponent implements OnInit {
   ];
   languages: object[];
   changed: boolean = false;
-  saving: boolean = false;
+  isSaving: boolean = false;
 
   editProfileFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -71,7 +71,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   saveChanges() {
-    this.saving = true;
+    this.isSaving = true;
     const displayName: string = this.getControlFieldValue('displayName');
     const email: string = this.getControlFieldValue('email');
     const city: string = this.getControlFieldValue('city');
@@ -97,6 +97,6 @@ export class EditProfileComponent implements OnInit {
     } else {
       // Add error notification
     }
-    this.saving = false;
+    this.isSaving = false;
   }
 }

@@ -114,10 +114,10 @@
     <button mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="!editProfileFormGroup.valid || !changed || saving"
+            [disabled]="!editProfileFormGroup.valid || !changed || isSaving"
             fxFlex
             fxFlex.gt-xs="0 0 auto">
-      <mat-progress-bar mode="indeterminate" *ngIf="saving"></mat-progress-bar>
+      <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
       <span>Save Changes</span>
     </button>
   </div>
