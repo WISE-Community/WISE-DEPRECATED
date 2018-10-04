@@ -95,6 +95,7 @@ export class EditProfileComponent implements OnInit {
     if (response.message == 'success') {
       this.changed = false;
     } else {
+      // Add error notification
     }
     this.saving = false;
   }
