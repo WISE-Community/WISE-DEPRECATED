@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { finalize } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 import { UserService } from "../../../services/user.service";
 
 @Component({
@@ -23,7 +25,8 @@ export class EditPasswordComponent implements OnInit {
   });
 
   constructor(private fb: FormBuilder,
-      private userService: UserService) { }
+      private userService: UserService,
+      public snackBar: MatSnackBar) { }
 
   ngOnInit() {
   }
@@ -45,9 +48,15 @@ export class EditPasswordComponent implements OnInit {
     const oldPassword: string = this.getControlFieldValue('oldPassword');
     const newPassword: string = this.getControlFieldValue('newPassword');
     const username = this.getUsername();
-    this.userService.changePassword(username, oldPassword, newPassword).subscribe((response) => {
-      this.handleChangePasswordResponse(response);
-    });
+    this.userService.changePassword(username, oldPassword, newPassword)
+        .pipe(
+          finalize(() => {
+            this.isSaving = false;
+          })
+        )
+        .subscribe((response) => {
+          this.handleChangePasswordResponse(response);
+        });
   }
 
   getControlFieldValue(fieldName) {
@@ -65,14 +74,14 @@ export class EditPasswordComponent implements OnInit {
   handleChangePasswordResponse(response) {
     if (response.message == 'success') {
       this.resetForm();
+      this.snackBar.open(`Password changed.`);
     } else if (response.message == 'incorrect password') {
       const error = { 'incorrectPassword': true };
       const oldPasswordControl = this.changePasswordFormGroup.get('oldPassword');
       oldPasswordControl.setErrors(error);
     } else {
-      // Add error notification
+      this.snackBar.open(`An error occurred. Please try again.`);
     }
-    this.isSaving = false;
   }
 
   resetForm() {

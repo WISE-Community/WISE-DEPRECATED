@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 import { Student } from "../../../domain/student";
 import { UserService } from "../../../services/user.service";
 import { StudentService } from "../../student.service";
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-profile',
@@ -25,7 +27,8 @@ export class EditProfileComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private studentService: StudentService,
-              private userService: UserService) {
+              private userService: UserService,
+              public snackBar: MatSnackBar) {
     this.user = <Student>this.getUser().getValue();
     this.setControlFieldValue('firstName', this.user.firstName);
     this.setControlFieldValue('lastName', this.user.lastName);
@@ -56,9 +59,14 @@ export class EditProfileComponent implements OnInit {
     const username = this.user.userName;
     const language = this.getControlFieldValue('language');
     this.studentService.updateProfile(username, language)
-      .subscribe((response) => {
-        this.handleUpdateProfileResponse(response);
-      })
+        .pipe(
+          finalize(() => {
+            this.isSaving = false;
+          })
+        )
+        .subscribe((response) => {
+          this.handleUpdateProfileResponse(response);
+        })
   }
 
   getControlFieldValue(fieldName) {
@@ -68,8 +76,9 @@ export class EditProfileComponent implements OnInit {
   handleUpdateProfileResponse(response) {
     if (response.message == 'success') {
       this.changed = false;
+      this.snackBar.open(`Profile updated.`);
     } else {
-      // Add error notification
+      this.snackBar.open(`An error occurred. Please try again.`);
     }
     this.isSaving = false;
   }

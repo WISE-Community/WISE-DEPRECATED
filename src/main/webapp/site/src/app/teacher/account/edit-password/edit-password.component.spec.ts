@@ -2,8 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditPasswordComponent } from './edit-password.component';
 import { UserService } from "../../../services/user.service";
 import { BehaviorSubject, Observable } from 'rxjs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatSnackBarModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { User } from "../../../domain/user";
 
@@ -42,7 +44,9 @@ describe('EditPasswordComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ EditPasswordComponent ],
       imports: [
-        ReactiveFormsModule
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        MatSnackBarModule
       ],
       providers: [
         { provide: UserService, useClass: MockUserService }

@@ -2,6 +2,8 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -87,6 +89,14 @@ export function getAuthServiceConfigs(configService: ConfigService) {
       deps: [
         ConfigService
       ]
+    },
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: {
+        duration: 10000,
+        verticalPosition: 'bottom',
+        horizontalPosition: 'start'
+      }
     }
   ],
   bootstrap: [AppComponent]
