@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource,
+  MatSnackBar } from "@angular/material";
 import { TeacherService } from "../../../teacher/teacher.service";
 import { LibraryService } from "../../../services/library.service";
 import { ShareItemDialogComponent } from "../share-item-dialog/share-item-dialog.component";
@@ -19,8 +20,9 @@ export class ShareProjectDialogComponent extends ShareItemDialogComponent {
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public libraryService: LibraryService,
-              public teacherService: TeacherService) {
-    super(dialogRef, data, teacherService);
+              public teacherService: TeacherService,
+              public snackBar: MatSnackBar) {
+    super(dialogRef, data, teacherService, snackBar);
     this.project = data.project;
     this.projectId = data.project.id;
     this.libraryService.getProjectInfo(this.projectId).subscribe((project: Project) => {
