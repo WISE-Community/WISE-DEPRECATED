@@ -1,7 +1,8 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpErrorInterceptor } from "./http-error.interceptor";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 
@@ -17,8 +18,6 @@ import { StudentService } from './student/student.service';
 import { TeacherModule } from './teacher/teacher.module';
 import { UserService } from './services/user.service';
 import { TeacherService } from "./teacher/teacher.service";
-import { CommonModule } from "@angular/common";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RegisterModule } from "./register/register.module";
 
 import {
@@ -97,6 +96,11 @@ export function getAuthServiceConfigs(configService: ConfigService) {
         verticalPosition: 'bottom',
         horizontalPosition: 'start'
       }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]
