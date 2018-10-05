@@ -48,7 +48,7 @@
 		</c:if>
 
 		<br>
-		<div>Please choose a CSV file with student account information. <a href="${contextPath}/portal/pages/resources/WISE_BatchCreateUserAccounts_Sample.csv"><spring:message code="admin.account.batchcreateuseraccounts.sampleFile" /></a></div>
+		<div>Please choose a CSV file with student account information. <a href="${contextPath}/pages/resources/WISE_BatchCreateUserAccounts_Sample.csv"><spring:message code="admin.account.batchcreateuseraccounts.sampleFile" /></a></div>
 		<br/>
 		<form:form method="post" action="batchcreateuseraccounts.html"
 				   commandName="csvFile" id="csvFileForm" enctype="multipart/form-data" autocomplete='off' onsubmit="return validateForm();">
