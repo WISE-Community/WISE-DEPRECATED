@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable ,  of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, finalize, tap, map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { User } from '../domain/user';
-import { HttpParams } from "../../../../../../../node_modules/@angular/common/http";
+import { HttpParams } from "@angular/common/http";
 import { ConfigService } from './config.service';
 
 @Injectable()
@@ -46,34 +46,14 @@ export class UserService {
   retrieveUser(): Observable<User> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     return this.http.get<User>(this.userUrl, { headers: headers })
-      .pipe(
-        tap((user) => {
-          if (user != null && user.id != null) {
-            this.isAuthenticated = true;
-          }
-          this.user$.next(user);
-        }),
-        catchError(this.handleError('getUser', new User())));
-  }
-
-  /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+        .pipe(
+          tap((user) => {
+            if (user != null && user.id != null) {
+              this.isAuthenticated = true;
+            }
+            this.user$.next(user);
+          })
+        );
   }
 
   authenticate(credentials, callback) {
@@ -112,10 +92,6 @@ export class UserService {
   isGoogleIdExists(googleUserId: string) {
     let params = new HttpParams().set("googleUserId", googleUserId);
     return this.http.get<User>(this.checkGoogleUserIdUrl, { params: params });
-  }
-
-  private log(message: string) {
-    console.log('UserService: ' + message);
   }
 
   changePassword(username, oldPassword, newPassword) {
