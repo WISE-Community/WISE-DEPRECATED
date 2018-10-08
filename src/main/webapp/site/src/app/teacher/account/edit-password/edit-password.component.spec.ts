@@ -63,36 +63,36 @@ describe('EditPasswordComponent', () => {
   });
 
   it('should disable submit button and invalidate form on initial state', () => {
-    const submitButton = getSubmitButton();
     expect(component.changePasswordFormGroup.valid).toBeFalsy();
+    const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(true);
   });
 
   it('should enable submit button when form is valid', () => {
-    const submitButton = getSubmitButton();
     component.changePasswordFormGroup.get('oldPassword').setValue('a');
     component.newPasswordFormGroup.get('newPassword').setValue('a');
     component.newPasswordFormGroup.get('confirmNewPassword').setValue('a');
     fixture.detectChanges();
+    const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(false);
     expect(component.changePasswordFormGroup.valid).toBeTruthy();
   });
 
   it('should disable submit button and invalidate form when new password and confirm new password fields do not match', () => {
-    const submitButton = getSubmitButton();
     component.changePasswordFormGroup.get('oldPassword').setValue('a');
     component.newPasswordFormGroup.get('newPassword').setValue('a');
     component.newPasswordFormGroup.get('confirmNewPassword').setValue('b');
     fixture.detectChanges();
+    const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(true);
     expect(component.changePasswordFormGroup.valid).toBeFalsy();
   });
 
   it('should disable submit button when form is submitted', async() => {
-    const submitButton = getSubmitButton();
     const form = getForm();
     form.triggerEventHandler('submit', null);
     fixture.detectChanges();
+    const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(true);
   });
 });
