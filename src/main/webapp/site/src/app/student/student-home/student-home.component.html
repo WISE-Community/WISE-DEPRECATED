@@ -1,9 +1,7 @@
 <header fxLayout="row" class="content__header">
-  <mat-icon aria-label="User avatar">account_circle</mat-icon>
-  <div fxLayout="column">
-    <h1 id="studentName" class="accent">{{ user.firstName}} {{ user.lastName }}</h1>
-    <a routerLink="/student/profile/edit">Edit Profile</a>
-  </div>
+  <h1 class="accent" fxLayoutAlign="center center">
+    <mat-icon>home</mat-icon>Student Home
+  </h1>
 </header>
 <section>
   <app-student-run-list></app-student-run-list>
