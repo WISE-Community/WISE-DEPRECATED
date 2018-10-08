@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { UserService } from "../../../services/user.service";
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-password',
@@ -10,7 +10,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 export class EditPasswordComponent implements OnInit {
 
   @ViewChild('changePasswordForm') changePasswordForm;
-  message: string = '';
+  isSaving: boolean = false;
 
   newPasswordFormGroup: FormGroup = this.fb.group({
     newPassword: new FormControl('', [Validators.required]),
@@ -41,6 +41,7 @@ export class EditPasswordComponent implements OnInit {
   }
 
   saveChanges() {
+    this.isSaving = true;
     const oldPassword: string = this.getControlFieldValue('oldPassword');
     const newPassword: string = this.getControlFieldValue('newPassword');
     const username = this.getUsername();
@@ -63,17 +64,15 @@ export class EditPasswordComponent implements OnInit {
 
   handleChangePasswordResponse(response) {
     if (response.message == 'success') {
-      this.displayMessage("Successfully changed password");
+      this.resetForm();
     } else if (response.message == 'incorrect password') {
-      this.displayMessage("Incorrect Old Password");
+      const error = { 'incorrectPassword': true };
+      const oldPasswordControl = this.changePasswordFormGroup.get('oldPassword');
+      oldPasswordControl.setErrors(error);
     } else {
-      this.displayMessage("Failed to change password");
+      // Add error notification
     }
-    this.resetForm();
-  }
-
-  displayMessage(message: string) {
-    this.message = message;
+    this.isSaving = false;
   }
 
   resetForm() {

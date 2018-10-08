@@ -12,9 +12,16 @@ import { TeacherService } from "../../teacher.service";
 export class EditProfileComponent implements OnInit {
 
   user: Teacher;
-  schoolLevels: string[] = ["ELEMENTARY_SCHOOL", "MIDDLE_SCHOOL", "HIGH_SCHOOL", "COLLEGE", "OTHER"];
-  message: string = '';
+  schoolLevels: any[] = [
+    { id: 'ELEMENTARY_SCHOOL', label: 'Elementary School' },
+    { id: 'MIDDLE_SCHOOL', label: 'Middle School' },
+    { id: 'HIGH_SCHOOL', label: 'High School' },
+    { id: 'COLLEGE', label: 'College' },
+    { id: 'OTHER', label: 'Other' }
+  ];
   languages: object[];
+  changed: boolean = false;
+  isSaving: boolean = false;
 
   editProfileFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -46,6 +53,10 @@ export class EditProfileComponent implements OnInit {
     this.userService.getLanguages().subscribe((response) => {
       this.languages = <object[]>response;
     });
+
+    this.editProfileFormGroup.valueChanges.subscribe(() => {
+      this.changed = true;
+    });
   }
 
   getUser() {
@@ -60,6 +71,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   saveChanges() {
+    this.isSaving = true;
     const displayName: string = this.getControlFieldValue('displayName');
     const email: string = this.getControlFieldValue('email');
     const city: string = this.getControlFieldValue('city');
@@ -81,13 +93,10 @@ export class EditProfileComponent implements OnInit {
 
   handleUpdateProfileResponse(response) {
     if (response.message == 'success') {
-      this.displayMessage("Successfully updated profile");
+      this.changed = false;
     } else {
-      this.displayMessage("Failed to update profile");
+      // Add error notification
     }
-  }
-
-  displayMessage(message: string) {
-    this.message = message;
+    this.isSaving = false;
   }
 }

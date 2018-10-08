@@ -23,7 +23,7 @@ const runObj = {
     id: 4,
     firstName: "Spongebob",
     lastName: "Squarepants",
-    runPermissions: [1,3]
+    permissions: [1,3]
   }],
   project: {
     id: 9,
