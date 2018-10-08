@@ -5,7 +5,7 @@ import { MatDialogRef, MatDialog } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatCheckboxModule, MatRadioModule } from "@angular/material";
 import { ReactiveFormsModule } from "@angular/forms";
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -18,6 +18,16 @@ export class MockTeacherService {
       observer.next(run);
       observer.complete();
     });
+  }
+
+  addNewRun() {}
+
+  setTabIndex() {}
+}
+
+export class MockTeacherServiceError {
+  createRun() {
+    return throwError(new Error('Test error'));
   }
 
   addNewRun() {}
@@ -39,11 +49,6 @@ describe('CreateRunDialogComponent', () => {
     return fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
   };
 
-  const getCancelButton = () => {
-    const buttons = fixture.debugElement.nativeElement.querySelectorAll('button');
-    return buttons[0];
-  };
-
   const getForm = () => {
     return fixture.debugElement.query(By.css('form'));
   };
@@ -57,13 +62,10 @@ describe('CreateRunDialogComponent', () => {
       ],
       declarations: [ CreateRunDialogComponent ],
       providers: [
-        { provide: TeacherService, useClass: MockTeacherService },
+        { provide: TeacherService, useValue: new MockTeacherService() },
         { provide: MatDialog, useValue: {
-            closeAll: () => {
-
-            }
-          }
-        },
+            closeAll: () => {}
+          }},
         {
           provide: MatDialogRef, useValue: {
             afterClosed: () => {
@@ -88,6 +90,8 @@ describe('CreateRunDialogComponent', () => {
     fixture = TestBed.createComponent(CreateRunDialogComponent);
     component = fixture.componentInstance;
     component.project = project;
+    component.dialog = TestBed.get(MatDialog);
+    spyOn(component.dialog, 'closeAll').and.callThrough();
     fixture.detectChanges();
   });
 
@@ -131,15 +135,21 @@ describe('CreateRunDialogComponent', () => {
     expect(submitButton.disabled).toBe(false);
   });
 
-  it('should disable the submit and cancel buttons when form is submitted', async() => {
-    const submitButton = getSubmitButton();
-    const cancelButton = getCancelButton();
+  it('should close the dialog when form is successfully submitted', async() => {
+    component.periodsGroup.controls[0].get("checkbox").setValue(true);
     const form = getForm();
     form.triggerEventHandler('submit', null);
     fixture.detectChanges();
-    expect(component.isCreating).toBe(true);
-    expect(submitButton.disabled).toBe(true);
-    expect(cancelButton.disabled).toBe(true);
-    expect(submitButton.querySelector('mat-progress-bar')).toBeTruthy();
+    expect(component.dialog.closeAll).toHaveBeenCalled();
+  });
+
+  it('should re-enable the submit button when form is unsuccessfully submitted', async() => {
+    TestBed.overrideProvider(TeacherService, {useValue: new MockTeacherServiceError()});
+    component.periodsGroup.controls[0].get("checkbox").setValue(true);
+    const form = getForm();
+    form.triggerEventHandler('submit', null);
+    fixture.detectChanges();
+    const submitButton = getSubmitButton();
+    expect(submitButton.disabled).toBe(false);
   });
 });
