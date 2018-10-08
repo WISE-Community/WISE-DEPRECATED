@@ -45,10 +45,4 @@ describe('StudentHomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should show student home page', () => {
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#studentName').textContent)
-      .toContain('Demo User');
-  });
 });
