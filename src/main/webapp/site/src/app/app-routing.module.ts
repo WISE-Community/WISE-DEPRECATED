@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { AboutComponent } from './about/about.component';
+import { ContactModule } from "./contact/contact.module";
 import { FeaturesComponent } from './features/features.component';
 import { HomeModule } from "./home/home.module";
 import { LoginModule } from "./login/login.module";
@@ -16,6 +17,7 @@ const routes: Routes = [
   // { path: '', loadChildren: 'app/modules/home.module#HomeModule' },
   { path: '', loadChildren: () => HomeModule },
   { path: 'about', component: AboutComponent },
+  { path: 'contact', loadChildren: () => ContactModule },
   { path: 'features', component: FeaturesComponent },
   { path: 'join', loadChildren: () => RegisterModule },
   { path: 'login', loadChildren: () => LoginModule },

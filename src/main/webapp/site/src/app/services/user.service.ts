@@ -16,6 +16,7 @@ export class UserService {
   private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
   private changePasswordUrl = 'api/user/password';
   private languagesUrl = 'api/user/languages';
+  private contactUrl = 'api/user/contact';
   isAuthenticated = false;
   redirectUrl: string; // redirect here after logging in
 
@@ -125,5 +126,23 @@ export class UserService {
   updateStudentUser(language) {
     const user = <Student>this.getUser().getValue();
     user.language = language;
+  }
+
+  sendContactMessage(name, email, issueType, summary, description, runId, projectId, userAgent) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('name', name);
+    body = body.set('email', email);
+    body = body.set('issueType', issueType);
+    body = body.set('summary', summary);
+    body = body.set('description', description);
+    if (runId != null) {
+      body = body.set('runId', runId);
+    }
+    if (projectId != null) {
+      body = body.set('projectId', projectId);
+    }
+    body = body.set('userAgent', userAgent);
+    return this.http.post<any>(this.contactUrl, body, { headers: headers });
   }
 }

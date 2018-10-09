@@ -9,6 +9,7 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ConfigService } from "./services/config.service";
+import { ContactModule } from "./contact/contact.module";
 import { HeaderModule } from './modules/header/header.module';
 import { HomeModule } from "./home/home.module";
 import { FooterModule } from './modules/footer/footer.module';

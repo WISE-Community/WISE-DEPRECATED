@@ -1,0 +1,74 @@
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<div class="contact mat-app-background" fxLayout="column" fxLayoutAlign="start center">
+  <mat-card class="contact__form">
+    <mat-card-content>
+      <form role="form" style="flex-direction: column" (submit)="submit(formDirective)" [formGroup]="contactFormGroup">
+        <h2 class="accent center">Contact WISE</h2>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="name"
+                   name="name"
+                   placeholder="Name"
+                   formControlName="name" />
+            <mat-error *ngIf="contactFormGroup.controls['name'].hasError('required')">Name Required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="email"
+                   name="email"
+                   placeholder="Email"
+                   formControlName="email" />
+            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('required')">Email Required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <mat-select placeholder="Issue Type"
+                        formControlName="issueType">
+              <mat-option *ngFor="let issueType of issueTypes" [value]="issueType.key">
+                {{issueType.value}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="contactFormGroup.controls['issueType'].hasError('required')">Issue Type Required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="summary"
+                   name="summary"
+                   placeholder="Summary"
+                   formControlName="summary" />
+            <mat-error *ngIf="contactFormGroup.controls['summary'].hasError('required')">City Required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <textarea matInput
+                      id="description"
+                      name="description"
+                      placeholder="Description"
+                      formControlName="description"
+                      rows="10"
+                      cols="10">
+            </textarea>
+            <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')">State Required</mat-error>
+          </mat-form-field>
+        </p>
+        <button fxFlex mat-raised-button color="primary" type="submit"
+                [disabled]="!contactFormGroup.valid || isSendingRequest">
+          Submit
+        </button>
+        <div>{{ message }}</div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
