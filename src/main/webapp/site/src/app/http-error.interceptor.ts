@@ -22,7 +22,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           console.error(`Backend returned code ${err.status}, body was: ${err.error}`);
         }
 
-        this.snackBar.open(`An error occurred. Please check your connection try again.`);
+        this.snackBar.open(`An error occurred. Please check your connection and try again.`);
 
         // return an observable with an empty result
         return throwError('');
