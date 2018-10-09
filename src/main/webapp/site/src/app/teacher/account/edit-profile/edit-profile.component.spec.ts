@@ -9,8 +9,12 @@ import { MatSelectModule, MatCardModule, MatInputModule } from '@angular/materia
 import { TeacherService } from "../../teacher.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { By } from '@angular/platform-browser';
+import { User } from "../../../domain/user";
 
 export class MockUserService {
+
+  user: User;
+
   getUser(): BehaviorSubject<Teacher> {
     const user: Teacher = new Teacher();
     user.firstName = 'Demo';
@@ -26,6 +30,7 @@ export class MockUserService {
     user.schoolLevel = 'High School';
     user.schoolName = 'Berkeley High';
     user.language = 'English';
+    this.user = user;
     const userBehaviorSubject: BehaviorSubject<Teacher> = new BehaviorSubject<Teacher>(null);
     userBehaviorSubject.next(user);
     return userBehaviorSubject;
@@ -35,6 +40,18 @@ export class MockUserService {
       observer.next([]);
       observer.complete();
     });
+  }
+
+  updateTeacherUser(displayName, email, city, state, country, schoolName, schoolLevel, language) {
+    const user: Teacher = <Teacher>this.getUser().getValue();
+    user.displayName = displayName;
+    user.email = email;
+    user.city = city;
+    user.state = state;
+    user.country = country;
+    user.schoolName = schoolName;
+    user.schoolLevel = schoolLevel;
+    user.language = language;
   }
 }
 
@@ -112,5 +129,14 @@ describe('EditProfileComponent', () => {
     form.triggerEventHandler('submit', null);
     fixture.detectChanges();
     expect(submitButton.disabled).toBe(true);
+  });
+
+  it('should update the user', async() => {
+    const form = getForm();
+    component.editProfileFormGroup.get('language').setValue('Spanish');
+    form.triggerEventHandler('submit', null);
+    fixture.detectChanges();
+    const testBedUserService = TestBed.get(UserService);
+    expect(testBedUserService.user.language).toBe('Spanish');
   });
 });
