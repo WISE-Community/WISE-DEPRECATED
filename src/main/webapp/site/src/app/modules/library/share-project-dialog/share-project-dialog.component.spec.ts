@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ShareProjectDialogComponent } from './share-project-dialog.component';
 import { TeacherService } from "../../../teacher/teacher.service";
 import { Observable } from 'rxjs';
@@ -6,6 +7,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatAutocompleteModule,
+  MatSnackBarModule,
   MatTableModule } from '@angular/material';
 import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
@@ -54,7 +56,9 @@ describe('ShareProjectDialogComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ShareProjectDialogComponent ],
       imports: [
+        BrowserAnimationsModule,
         MatAutocompleteModule,
+        MatSnackBarModule,
         MatTableModule
       ],
       providers: [

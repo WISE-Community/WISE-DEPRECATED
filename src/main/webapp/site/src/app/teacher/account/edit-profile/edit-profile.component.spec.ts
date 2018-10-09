@@ -5,7 +5,9 @@ import { Teacher } from "../../../domain/teacher";
 import { Observable, BehaviorSubject } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatSelectModule, MatCardModule, MatInputModule } from '@angular/material';
+import {
+  MatInputModule, MatSelectModule,
+  MatSnackBarModule } from '@angular/material';
 import { TeacherService } from "../../teacher.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { By } from '@angular/platform-browser';
@@ -87,9 +89,9 @@ describe('EditProfileComponent', () => {
       imports: [
         BrowserAnimationsModule,
         ReactiveFormsModule,
+        MatInputModule,
         MatSelectModule,
-        MatCardModule,
-        MatInputModule
+        MatSnackBarModule
       ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },

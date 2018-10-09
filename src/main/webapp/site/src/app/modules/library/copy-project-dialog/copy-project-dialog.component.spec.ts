@@ -1,21 +1,26 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CopyProjectDialogComponent } from './copy-project-dialog.component';
 import { LibraryService } from "../../../services/library.service";
-import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatProgressBarModule } from '@angular/material';
 import { Project } from "../../../domain/project";
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { LibraryProject } from "../libraryProject";
 
 export class MockLibraryService {
-  newProjectSource$ = fakeAsyncResponse({});
+  newProjectSource = new Subject<LibraryProject>();
+  newProjectSource$ = this.newProjectSource.asObservable();
+
   copyProject() {
     return Observable.create(observer => {
       const project: Project = new Project();
       observer.next(project);
       observer.complete();
     });
+  }
+
+  addPersonalLibraryProject() {
+    this.newProjectSource.next(new LibraryProject());
   }
 }
 
@@ -35,11 +40,6 @@ describe('CopyProjectDialogComponent', () => {
   const getCopyButton = () => {
     const buttons =  fixture.debugElement.nativeElement.querySelectorAll('button');
     return buttons[1];
-  };
-
-  const getCancelButton = () => {
-    const buttons =  fixture.debugElement.nativeElement.querySelectorAll('button');
-    return buttons[0];
   };
 
   beforeEach(async(() => {
@@ -76,6 +76,8 @@ describe('CopyProjectDialogComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CopyProjectDialogComponent);
     component = fixture.componentInstance;
+    component.dialog = TestBed.get(MatDialog);
+    spyOn(component.dialog, 'closeAll').and.callThrough();
     fixture.detectChanges();
   });
 
@@ -83,14 +85,10 @@ describe('CopyProjectDialogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should disable the submit and cancel buttons when submit is clicked', async() => {
+  it('should close the dialog when copy is successful', async() => {
     const copyButton = getCopyButton();
-    const cancelButton = getCancelButton();
     copyButton.click();
     fixture.detectChanges();
-    expect(component.isCopying).toBe(true);
-    expect(copyButton.disabled).toBe(true);
-    expect(cancelButton.disabled).toBe(true);
-    expect(copyButton.querySelector('mat-progress-bar')).toBeTruthy();
+    expect(component.dialog.closeAll).toHaveBeenCalled();
   });
 });

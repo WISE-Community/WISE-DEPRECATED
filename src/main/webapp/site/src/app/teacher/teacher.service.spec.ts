@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { TeacherService } from './teacher.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TeacherService } from './teacher.service';
 
 describe('TeacherService', () => {
   beforeEach(() => {

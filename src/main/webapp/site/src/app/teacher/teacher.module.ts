@@ -14,7 +14,7 @@ import {
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
   MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
   MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatRadioModule,
-  MatTableModule, MatTabsModule, MatTooltipModule
+  MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule
 } from '@angular/material';
 import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
@@ -29,7 +29,7 @@ const materialModules = [
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
   MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
   MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatRadioModule,
-  MatTableModule, MatTabsModule, MatTooltipModule
+  MatSnackBarModule, MatTabsModule, MatTableModule, MatTooltipModule
 ];
 @NgModule({
   imports: [

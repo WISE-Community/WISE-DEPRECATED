@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { finalize } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 import { UserService } from "../../../services/user.service";
 import { Teacher } from "../../../domain/teacher";
 import { TeacherService } from "../../teacher.service";
@@ -38,7 +40,8 @@ export class EditProfileComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
         private teacherService: TeacherService,
-        private userService: UserService) {
+        private userService: UserService,
+        public snackBar: MatSnackBar) {
     this.user = <Teacher>this.getUser().getValue();
     this.setControlFieldValue('firstName', this.user.firstName);
     this.setControlFieldValue('lastName', this.user.lastName);
@@ -82,10 +85,15 @@ export class EditProfileComponent implements OnInit {
     const language: string = this.getControlFieldValue('language');
     const username = this.user.userName;
     this.teacherService.updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language)
+        .pipe(
+          finalize(() => {
+            this.isSaving = false;
+          })
+        )
         .subscribe((response) => {
-      this.handleUpdateProfileResponse(response);
-      this.userService.updateTeacherUser(displayName, email, city, state, country, schoolName, schoolLevel, language);
-    })
+          this.handleUpdateProfileResponse(response);
+          this.userService.updateTeacherUser(displayName, email, city, state, country, schoolName, schoolLevel, language);
+        })
   }
 
   getControlFieldValue(fieldName) {
@@ -95,9 +103,9 @@ export class EditProfileComponent implements OnInit {
   handleUpdateProfileResponse(response) {
     if (response.message == 'success') {
       this.changed = false;
+      this.snackBar.open(`Profile updated.`);
     } else {
-      // Add error notification
+      this.snackBar.open(`An error occurred. Please try again.`);
     }
-    this.isSaving = false;
   }
 }

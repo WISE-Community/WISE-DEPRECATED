@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable ,  of } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Project } from "../domain/project";
 import { Teacher } from "../domain/teacher";
 import { Run } from "../domain/run";
-import { Subject } from "rxjs";
 
 @Injectable()
 export class TeacherService {
@@ -15,7 +14,6 @@ export class TeacherService {
   private runPermissionUrl = 'api/teacher/run/permission';
   private projectPermissionUrl = 'api/teacher/project/permission';
   private usernamesUrl = 'api/teacher/usernames';
-  private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
   private createRunUrl = 'api/teacher/run/create';
   private runUrl = 'api/teacher/run';
   private newProjectSource = new Subject<Project>();
@@ -53,25 +51,6 @@ export class TeacherService {
         const userName = response;
         callback(userName);
       });
-  }
-
-  /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      this.log(`${operation} failed: ${error.message}`);
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
-  private log(message: string) {
-    console.log('TeacherService: ' + message);
   }
 
   createRun(projectId: number, periods: string, studentsPerTeam: number, startDate: number): Observable<Run> {

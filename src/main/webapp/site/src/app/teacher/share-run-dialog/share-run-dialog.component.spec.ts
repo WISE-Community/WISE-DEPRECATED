@@ -1,12 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ShareRunDialogComponent } from './share-run-dialog.component';
 import { Observable } from "rxjs";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TeacherService } from "../teacher.service";
 import { Run } from "../../domain/run";
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatAutocompleteModule,
+  MatSnackBarModule,
   MatTableModule } from "@angular/material";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 
@@ -68,7 +70,9 @@ describe('ShareRunDialogComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ShareRunDialogComponent ],
       imports: [
+        BrowserAnimationsModule,
         MatAutocompleteModule,
+        MatSnackBarModule,
         MatTableModule
       ],
       providers: [

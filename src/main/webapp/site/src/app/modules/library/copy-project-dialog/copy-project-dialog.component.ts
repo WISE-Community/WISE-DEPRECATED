@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { LibraryProjectDetailsComponent } from "../library-project-details/library-project-details.component";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { finalize } from 'rxjs/operators';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 
@@ -31,10 +32,16 @@ export class CopyProjectDialogComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(() => {
       scrollTo(0, 0);
     });
-    this.libraryService.copyProject(this.data.project.id).subscribe((newProject: LibraryProject) => {
-      const newLibraryProject: LibraryProject = new LibraryProject(newProject);
-      newLibraryProject.visible = true;
-      this.libraryService.addPersonalLibraryProject(newLibraryProject);
-    });
+    this.libraryService.copyProject(this.data.project.id)
+        .pipe(
+          finalize(() => {
+            this.isCopying = false;
+          })
+        )
+        .subscribe((newProject: LibraryProject) => {
+          const newLibraryProject: LibraryProject = new LibraryProject(newProject);
+          newLibraryProject.visible = true;
+          this.libraryService.addPersonalLibraryProject(newLibraryProject);
+        });
   }
 }

@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { finalize } from 'rxjs/operators';
 import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
@@ -73,6 +74,11 @@ export class CreateRunDialogComponent {
     const studentsPerTeam = this.form.controls['studentsPerTeam'].value;
     this.teacherService.createRun(
         this.project.id, combinedPeriods, studentsPerTeam, startDate)
+        .pipe(
+          finalize(() => {
+            this.isCreating = false;
+          })
+        )
         .subscribe((newRun: Run) => {
           const run = new Run(newRun);
           this.teacherService.addNewRun(run);

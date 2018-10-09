@@ -39,11 +39,6 @@ describe('CreateRunDialogComponent', () => {
     return fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
   };
 
-  const getCancelButton = () => {
-    const buttons = fixture.debugElement.nativeElement.querySelectorAll('button');
-    return buttons[0];
-  };
-
   const getForm = () => {
     return fixture.debugElement.query(By.css('form'));
   };
@@ -59,11 +54,8 @@ describe('CreateRunDialogComponent', () => {
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: MatDialog, useValue: {
-            closeAll: () => {
-
-            }
-          }
-        },
+            closeAll: () => {}
+          }},
         {
           provide: MatDialogRef, useValue: {
             afterClosed: () => {
@@ -88,6 +80,8 @@ describe('CreateRunDialogComponent', () => {
     fixture = TestBed.createComponent(CreateRunDialogComponent);
     component = fixture.componentInstance;
     component.project = project;
+    component.dialog = TestBed.get(MatDialog);
+    spyOn(component.dialog, 'closeAll').and.callThrough();
     fixture.detectChanges();
   });
 
@@ -131,15 +125,11 @@ describe('CreateRunDialogComponent', () => {
     expect(submitButton.disabled).toBe(false);
   });
 
-  it('should disable the submit and cancel buttons when form is submitted', async() => {
-    const submitButton = getSubmitButton();
-    const cancelButton = getCancelButton();
+  it('should close the dialog when form is successfully submitted', async() => {
+    component.periodsGroup.controls[0].get("checkbox").setValue(true);
     const form = getForm();
     form.triggerEventHandler('submit', null);
     fixture.detectChanges();
-    expect(component.isCreating).toBe(true);
-    expect(submitButton.disabled).toBe(true);
-    expect(cancelButton.disabled).toBe(true);
-    expect(submitButton.querySelector('mat-progress-bar')).toBeTruthy();
+    expect(component.dialog.closeAll).toHaveBeenCalled();
   });
 });
