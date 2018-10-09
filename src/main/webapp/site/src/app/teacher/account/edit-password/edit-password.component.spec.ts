@@ -4,7 +4,7 @@ import { UserService } from "../../../services/user.service";
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Provider } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { User } from "../../../domain/user";
@@ -20,11 +20,18 @@ export class MockUserService {
     return userBehaviorSubject;
   }
 
-  changePassword() {
-    return Observable.create(observer => {
-      observer.next({});
-      observer.complete();
-    });
+  changePassword(userName, oldPassword, newPassword) {
+    if (oldPassword === 'a') {
+      return Observable.create(observer => {
+        observer.next({ message: 'success' });
+        observer.complete();
+      });
+    } else {
+      return Observable.create(observer => {
+        observer.next({ message: 'incorrect password' });
+        observer.complete();
+      });
+    }
   }
 }
 
@@ -44,23 +51,19 @@ describe('EditPasswordComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ EditPasswordComponent ],
       imports: [
-        BrowserAnimationsModule,
-        ReactiveFormsModule,
-        MatSnackBarModule
+        BrowserAnimationsModule, ReactiveFormsModule, MatSnackBarModule
       ],
       providers: [
-        { provide: UserService, useClass: MockUserService }
+        { provide: UserService, useValue: new MockUserService() }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(EditPasswordComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -74,8 +77,8 @@ describe('EditPasswordComponent', () => {
 
   it('should enable submit button when form is valid', () => {
     component.changePasswordFormGroup.get('oldPassword').setValue('a');
-    component.newPasswordFormGroup.get('newPassword').setValue('a');
-    component.newPasswordFormGroup.get('confirmNewPassword').setValue('a');
+    component.newPasswordFormGroup.get('newPassword').setValue('b');
+    component.newPasswordFormGroup.get('confirmNewPassword').setValue('b');
     fixture.detectChanges();
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(false);
@@ -92,7 +95,22 @@ describe('EditPasswordComponent', () => {
     expect(component.changePasswordFormGroup.valid).toBeFalsy();
   });
 
-  it('should disable submit button when form is submitted', async() => {
+  it('should disable submit button and set incorrectPassword error when old password is incorrect', async () => {
+    component.changePasswordFormGroup.get('oldPassword').setValue('b');
+    component.newPasswordFormGroup.get('newPassword').setValue('c');
+    component.newPasswordFormGroup.get('confirmNewPassword').setValue('c');
+    const form = getForm();
+    form.triggerEventHandler('submit', null);
+    fixture.detectChanges();
+    const submitButton = getSubmitButton();
+    expect(submitButton.disabled).toBe(true);
+    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword')).toBe(true);
+  });
+
+  it('should disable submit button when form is successfully submitted', async () => {
+    component.changePasswordFormGroup.get('oldPassword').setValue('a');
+    component.newPasswordFormGroup.get('newPassword').setValue('b');
+    component.newPasswordFormGroup.get('confirmNewPassword').setValue('b');
     const form = getForm();
     form.triggerEventHandler('submit', null);
     fixture.detectChanges();

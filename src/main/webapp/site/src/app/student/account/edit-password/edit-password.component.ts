@@ -49,14 +49,14 @@ export class EditPasswordComponent implements OnInit {
     const newPassword: string = this.getControlFieldValue('newPassword');
     const username = this.getUsername();
     this.userService.changePassword(username, oldPassword, newPassword)
-        .pipe(
-          finalize(() => {
-            this.isSaving = false;
-          })
-        )
-        .subscribe((response) => {
-          this.handleChangePasswordResponse(response);
-        });
+      .pipe(
+        finalize(() => {
+          this.isSaving = false;
+        })
+      )
+      .subscribe((response) => {
+        this.handleChangePasswordResponse(response);
+      });
   }
 
   getControlFieldValue(fieldName) {
@@ -79,8 +79,6 @@ export class EditPasswordComponent implements OnInit {
       const error = { 'incorrectPassword': true };
       const oldPasswordControl = this.changePasswordFormGroup.get('oldPassword');
       oldPasswordControl.setErrors(error);
-    } else {
-      this.snackBar.open(`An error occurred. Please try again.`);
     }
   }
 

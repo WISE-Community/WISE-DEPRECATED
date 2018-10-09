@@ -79,8 +79,6 @@ export class EditPasswordComponent implements OnInit {
       const error = { 'incorrectPassword': true };
       const oldPasswordControl = this.changePasswordFormGroup.get('oldPassword');
       oldPasswordControl.setErrors(error);
-    } else {
-      this.snackBar.open(`An error occurred. Please try again.`);
     }
   }
 
