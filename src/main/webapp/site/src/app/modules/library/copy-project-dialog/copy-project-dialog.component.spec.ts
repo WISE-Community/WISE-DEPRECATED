@@ -18,13 +18,6 @@ export class MockLibraryService {
   }
 }
 
-export class MockLibraryServiceError {
-  newProjectSource$ = fakeAsyncResponse({});
-  copyProject() {
-    return throwError(new Error('test error'));
-  }
-}
-
 describe('CopyProjectDialogComponent', () => {
   let component: CopyProjectDialogComponent;
   let fixture: ComponentFixture<CopyProjectDialogComponent>;
@@ -47,7 +40,7 @@ describe('CopyProjectDialogComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ CopyProjectDialogComponent ],
       providers: [
-        { provide: LibraryService, useValue: new MockLibraryService() },
+        { provide: LibraryService, useClass: MockLibraryService },
         { provide: MatDialog, useValue: {
             closeAll: () => {
 
@@ -91,13 +84,5 @@ describe('CopyProjectDialogComponent', () => {
     copyButton.click();
     fixture.detectChanges();
     expect(component.dialog.closeAll).toHaveBeenCalled();
-  });
-
-  it('should re-enable the copy button when copy is unsuccessful', async() => {
-    TestBed.overrideProvider(LibraryService, {useValue: new MockLibraryServiceError()});
-    const copyButton = getCopyButton();
-    copyButton.click();
-    fixture.detectChanges();
-    expect(copyButton.disabled).toBe(false);
   });
 });

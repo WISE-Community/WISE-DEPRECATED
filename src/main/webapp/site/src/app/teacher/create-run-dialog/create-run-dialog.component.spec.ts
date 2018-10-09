@@ -5,7 +5,7 @@ import { MatDialogRef, MatDialog } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatCheckboxModule, MatRadioModule } from "@angular/material";
 import { ReactiveFormsModule } from "@angular/forms";
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -18,16 +18,6 @@ export class MockTeacherService {
       observer.next(run);
       observer.complete();
     });
-  }
-
-  addNewRun() {}
-
-  setTabIndex() {}
-}
-
-export class MockTeacherServiceError {
-  createRun() {
-    return throwError(new Error('Test error'));
   }
 
   addNewRun() {}
@@ -62,7 +52,7 @@ describe('CreateRunDialogComponent', () => {
       ],
       declarations: [ CreateRunDialogComponent ],
       providers: [
-        { provide: TeacherService, useValue: new MockTeacherService() },
+        { provide: TeacherService, useClass: MockTeacherService },
         { provide: MatDialog, useValue: {
             closeAll: () => {}
           }},
@@ -141,15 +131,5 @@ describe('CreateRunDialogComponent', () => {
     form.triggerEventHandler('submit', null);
     fixture.detectChanges();
     expect(component.dialog.closeAll).toHaveBeenCalled();
-  });
-
-  it('should re-enable the submit button when form is unsuccessfully submitted', async() => {
-    TestBed.overrideProvider(TeacherService, {useValue: new MockTeacherServiceError()});
-    component.periodsGroup.controls[0].get("checkbox").setValue(true);
-    const form = getForm();
-    form.triggerEventHandler('submit', null);
-    fixture.detectChanges();
-    const submitButton = getSubmitButton();
-    expect(submitButton.disabled).toBe(false);
   });
 });
