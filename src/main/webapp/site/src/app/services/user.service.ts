@@ -5,6 +5,8 @@ import { tap } from 'rxjs/operators';
 import { User } from '../domain/user';
 import { HttpParams } from "@angular/common/http";
 import { ConfigService } from './config.service';
+import { Teacher } from "../domain/teacher";
+import { Student } from "../domain/student";
 
 @Injectable()
 export class UserService {
@@ -106,5 +108,22 @@ export class UserService {
   getLanguages() {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     return this.http.get<any>(this.languagesUrl, { headers: headers });
+  }
+
+  updateTeacherUser(displayName, email, city, state, country, schoolName, schoolLevel, language) {
+    const user: Teacher = <Teacher>this.getUser().getValue();
+    user.displayName = displayName;
+    user.email = email;
+    user.city = city;
+    user.state = state;
+    user.country = country;
+    user.schoolName = schoolName;
+    user.schoolLevel = schoolLevel;
+    user.language = language;
+  }
+
+  updateStudentUser(language) {
+    const user = <Student>this.getUser().getValue();
+    user.language = language;
   }
 }

@@ -66,6 +66,7 @@ export class EditProfileComponent implements OnInit {
         )
         .subscribe((response) => {
           this.handleUpdateProfileResponse(response);
+          this.userService.updateStudentUser(language);
         })
   }
 
