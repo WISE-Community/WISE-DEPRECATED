@@ -9,8 +9,12 @@ import { MatSelectModule, MatInputModule } from '@angular/material';
 import { StudentService } from "../../student.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { By } from '@angular/platform-browser';
+import { Student } from "../../../domain/student";
 
 export class MockUserService {
+
+  user: User;
+
   getUser(): BehaviorSubject<User> {
     const user: User = new User();
     user.firstName = 'Demo';
@@ -19,6 +23,7 @@ export class MockUserService {
     user.userName = 'du0101';
     user.id = 123456;
     user.language = 'English';
+    this.user = user;
     const userBehaviorSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     userBehaviorSubject.next(user);
     return userBehaviorSubject;
@@ -29,6 +34,11 @@ export class MockUserService {
       observer.next([]);
       observer.complete();
     });
+  }
+
+  updateStudentUser(language) {
+    const user = <Student>this.getUser().getValue();
+    user.language = language;
   }
 }
 
@@ -51,6 +61,11 @@ describe('EditProfileComponent', () => {
 
   const getForm = () => {
     return fixture.debugElement.query(By.css('form'));
+  };
+
+  const submitForm = () => {
+    const form = getForm();
+    form.triggerEventHandler('submit', null);
   };
 
   beforeEach(async(() => {
@@ -105,5 +120,13 @@ describe('EditProfileComponent', () => {
     form.triggerEventHandler('submit', null);
     fixture.detectChanges();
     expect(submitButton.disabled).toBe(true);
+  });
+
+  it('should update the user', async() => {
+    component.editProfileFormGroup.get('language').setValue('Spanish');
+    submitForm();
+    fixture.detectChanges();
+    const testBedUserService = TestBed.get(UserService);
+    expect(testBedUserService.user.language).toBe('Spanish');
   });
 });

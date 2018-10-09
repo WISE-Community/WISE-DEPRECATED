@@ -58,6 +58,7 @@ export class EditProfileComponent implements OnInit {
     this.studentService.updateProfile(username, language)
       .subscribe((response) => {
         this.handleUpdateProfileResponse(response);
+        this.userService.updateStudentUser(language);
       })
   }
 

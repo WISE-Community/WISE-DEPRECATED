@@ -84,6 +84,7 @@ export class EditProfileComponent implements OnInit {
     this.teacherService.updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language)
         .subscribe((response) => {
       this.handleUpdateProfileResponse(response);
+      this.userService.updateTeacherUser(displayName, email, city, state, country, schoolName, schoolLevel, language);
     })
   }
 
