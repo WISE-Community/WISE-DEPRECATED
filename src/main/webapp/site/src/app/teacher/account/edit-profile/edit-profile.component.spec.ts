@@ -76,6 +76,11 @@ describe('EditProfileComponent', () => {
     return fixture.debugElement.query(By.css('form'));
   };
 
+  const submitForm = () => {
+    const form = getForm();
+    form.triggerEventHandler('submit', null);
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ EditProfileComponent ],
@@ -132,9 +137,8 @@ describe('EditProfileComponent', () => {
   });
 
   it('should update the user', async() => {
-    const form = getForm();
     component.editProfileFormGroup.get('language').setValue('Spanish');
-    form.triggerEventHandler('submit', null);
+    submitForm();
     fixture.detectChanges();
     const testBedUserService = TestBed.get(UserService);
     expect(testBedUserService.user.language).toBe('Spanish');
