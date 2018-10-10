@@ -21,8 +21,8 @@
 				<div class="panelHeader"><spring:message code="signup.header"/></div>
 				<div class="infoContentBox">
 					<h4><spring:message code="signup.accountType"/></h4>
-					<div><a href="${contextPath}/student/join" class="wisebutton" title="<spring:message code="signup.student"/>"><spring:message code="signup.student"/></a></div>
-					<div><a href="${contextPath}/teacher/join" class="wisebutton" title="<spring:message code="signup.teacher"/>"><spring:message code="signup.teacher"/></a></div>
+					<div><a href="${contextPath}/legacy/student/join" class="wisebutton" title="<spring:message code="signup.student"/>"><spring:message code="signup.student"/></a></div>
+					<div><a href="${contextPath}/legacy/teacher/join" class="wisebutton" title="<spring:message code="signup.teacher"/>"><spring:message code="signup.teacher"/></a></div>
 					<div style="margin-top:1em;"><spring:message code="signup.whichAccount" /></div>
 					<div class="instructions"><spring:message code="signup.studentDescription" /></div>
 					<div class="instructions"><spring:message code="signup.teacherDescription" /></div>

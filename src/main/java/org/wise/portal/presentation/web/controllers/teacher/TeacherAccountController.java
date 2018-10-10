@@ -61,6 +61,7 @@ import java.util.Properties;
  */
 @Controller
 @SessionAttributes({"teacherAccountForm", "changePasswordParameters"})
+@RequestMapping(value = "/legacy/teacher")
 public class TeacherAccountController {
 
   @Autowired
@@ -89,7 +90,7 @@ public class TeacherAccountController {
    * @param modelMap the model object that contains values for the page to use when rendering the view
    * @return the path of the view to display
    */
-  @RequestMapping(value = "/teacher/join", method = RequestMethod.GET)
+  @RequestMapping(value = "/join", method = RequestMethod.GET)
   public String initializeFormNewTeacher(ModelMap modelMap) throws Exception {
     TeacherAccountForm teacherAccountForm = new TeacherAccountForm();
     modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
@@ -102,7 +103,7 @@ public class TeacherAccountController {
    * Switched user (e.g. admin/researcher logged in as this user) should not be able to view/modify
    * user account.
    */
-  @RequestMapping(value = "/teacher/account", method = RequestMethod.GET)
+  @RequestMapping(value = "/account", method = RequestMethod.GET)
   public String updateMyAccountPage(ModelMap modelMap) {
     if (ControllerUtil.isUserPreviousAdministrator()) {
       return "errors/accessdenied";
@@ -152,7 +153,7 @@ public class TeacherAccountController {
    * @param modelMap the object that contains values to be displayed on the page
    * @return the path of the view to display
    */
-  @RequestMapping(value = "/teacher/join", method = RequestMethod.POST)
+  @RequestMapping(value = "/join", method = RequestMethod.POST)
   protected String createNewTeacher(
       @ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm,
       BindingResult bindingResult,
@@ -191,7 +192,7 @@ public class TeacherAccountController {
    * @param modelMap the object that contains values to be displayed on the page
    * @return the path of the view to display
    */
-  @RequestMapping(value = "/teacher/account", method = RequestMethod.POST)
+  @RequestMapping(value = "/account", method = RequestMethod.POST)
   protected String updateExistingTeacher(
       @ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm,
       BindingResult bindingResult,
@@ -222,7 +223,7 @@ public class TeacherAccountController {
    * @param modelMap the object that contains values to be displayed on the page
    * @return the path of the view to display
    */
-  @RequestMapping(value = "/teacher/account/password", method = RequestMethod.POST)
+  @RequestMapping(value = "/account/password", method = RequestMethod.POST)
   protected String updateExistingTeacherPassword(
       @ModelAttribute("changePasswordParameters") ChangePasswordParameters params,
       BindingResult bindingResult,

@@ -54,7 +54,7 @@ import java.util.regex.Pattern;
  * @version
  */
 @Controller
-@RequestMapping("/forgotaccount/teacher")
+@RequestMapping("/legacy/forgotaccount/teacher")
 public class ForgotAccountTeacherIndexController {
 
   @Autowired

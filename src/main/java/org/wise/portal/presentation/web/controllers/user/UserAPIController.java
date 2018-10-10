@@ -28,7 +28,7 @@ import java.util.Properties;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping("/site/api/user")
+@RequestMapping("/api/user")
 public class UserAPIController {
 
   @Autowired

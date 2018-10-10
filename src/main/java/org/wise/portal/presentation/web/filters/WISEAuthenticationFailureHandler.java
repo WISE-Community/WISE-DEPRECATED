@@ -23,6 +23,18 @@
  */
 package org.wise.portal.presentation.web.filters;
 
+import net.tanesha.recaptcha.ReCaptcha;
+import net.tanesha.recaptcha.ReCaptchaFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,20 +45,6 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.tanesha.recaptcha.ReCaptcha;
-import net.tanesha.recaptcha.ReCaptchaFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.transaction.annotation.Transactional;
-import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.service.user.UserService;
 
 /**
  * @author Hiroki Terashima
@@ -103,7 +101,7 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
       }
     } else if (request.getServletPath().contains("google-login")) {
       String contextPath = request.getContextPath();
-      response.sendRedirect(contextPath + "/site/login/googleUserNotFound");
+      response.sendRedirect(contextPath + "/login/googleUserNotFound");
       return;
     }
     this.setDefaultFailureUrl(this.determineFailureUrl(request, response, exception));

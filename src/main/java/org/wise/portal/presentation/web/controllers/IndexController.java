@@ -23,8 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -38,13 +36,14 @@ import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.project.ProjectService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Controller for WISE main home page
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/")
+@RequestMapping("/legacy")
 public class IndexController {
 
   @Autowired

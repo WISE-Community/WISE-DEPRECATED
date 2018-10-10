@@ -66,7 +66,7 @@ import java.util.*;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping("/site/api/student")
+@RequestMapping("/api/student")
 public class StudentAPIController {
 
   @Autowired

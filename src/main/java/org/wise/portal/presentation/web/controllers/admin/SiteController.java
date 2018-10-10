@@ -40,13 +40,13 @@ import javax.servlet.http.HttpServletRequest;
  * @author Geoffrey Kwan
  */
 @Controller
-@RequestMapping("/site")
+@RequestMapping("/")
 public class SiteController {
 
   @RequestMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy"},
       method = RequestMethod.GET)
   protected String showSite() {
-    return "forward:/site/index.html";
+    return "forward:/index.html";
   }
 
   @ResponseBody
