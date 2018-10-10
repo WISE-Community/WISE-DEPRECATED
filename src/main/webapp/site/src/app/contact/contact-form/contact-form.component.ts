@@ -2,6 +2,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder, NgForm } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../../services/user.service";
+import { Teacher } from "../../domain/teacher";
+import { Student } from "../../domain/student";
 
 @Component({
   selector: 'app-contact-form',
@@ -22,7 +24,6 @@ export class ContactFormComponent implements OnInit {
   ]
   contactFormGroup: FormGroup = this.fb.group({
     name: new FormControl( '', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
     issueType: new FormControl('', [Validators.required]),
     summary: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required])
@@ -30,31 +31,52 @@ export class ContactFormComponent implements OnInit {
   message: string = "";
   runId: number;
   projectId: number;
+  isStudent: boolean = false;
   isSendingRequest = false;
 
   constructor(private fb: FormBuilder,
               private userService: UserService,
               private route: ActivatedRoute,
               private router: Router) {
-
+    this.isStudent = this.userService.isStudent();
   }
 
   ngOnInit() {
+    if (!this.isStudent) {
+      this.contactFormGroup.addControl('email', new FormControl('', [Validators.required]));
+    }
     this.route.queryParams.subscribe(params => {
       this.runId = params['runId'];
       this.projectId = params['projectId'];
     });
+    this.populateFieldsIfSignedIn();
   }
 
-  submit(formDirective) {
+  populateFieldsIfSignedIn() {
+    if (this.userService.isSignedIn()) {
+      if (this.userService.isTeacher()) {
+        const user = <Teacher>this.userService.getUser().getValue();
+        this.setControlFieldValue('name', user.firstName + ' ' + user.lastName);
+        this.setControlFieldValue('email', user.email);
+      } else if (this.userService.isStudent()) {
+        const user = <Student>this.userService.getUser().getValue();
+        this.setControlFieldValue('name', user.firstName + ' ' + user.lastName);
+      }
+    }
+  }
+
+  submit() {
     const name = this.getControlFieldValue('name');
-    const email = this.getControlFieldValue('email');
     const issueType = this.getControlFieldValue('issueType');
     const summary = this.getControlFieldValue('summary');
     const description = this.getControlFieldValue('description');
     const runId = this.runId;
     const projectId = this.projectId;
     const userAgent = navigator.userAgent;
+    let email = null;
+    if (!this.isStudent) {
+      email = this.getControlFieldValue('email');
+    }
     this.isSendingRequest = true;
     this.userService.sendContactMessage(
       name, email, issueType, summary, description, runId, projectId, userAgent)
@@ -71,6 +93,10 @@ export class ContactFormComponent implements OnInit {
 
   getControlFieldValue(fieldName) {
     return this.contactFormGroup.get(fieldName).value;
+  }
+
+  setControlFieldValue(name: string, value: string) {
+    this.contactFormGroup.controls[name].setValue(value);
   }
 
   clearControlFieldValue(fieldName) {

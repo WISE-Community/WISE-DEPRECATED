@@ -187,21 +187,28 @@ public class UserAPIController {
 
   @ResponseBody
   @RequestMapping(value = "/contact", method = RequestMethod.POST)
-  protected String sendContactMessage(@RequestParam("name") String name,
-                                      @RequestParam("email") String email,
-                                      @RequestParam("issueType") String issueType,
-                                      @RequestParam("summary") String summary,
-                                      @RequestParam("description") String description,
-                                      @RequestParam(value = "runId", required = false) Long runId,
-                                      @RequestParam(value = "projectId", required = false) Integer projectId,
-                                      @RequestParam("userAgent") String userAgent) throws JSONException {
+  protected String sendContactMessage(
+      @RequestParam(value = "name") String name,
+      @RequestParam(value = "email", required = false) String email,
+      @RequestParam(value = "issueType") String issueType,
+      @RequestParam(value = "summary") String summary,
+      @RequestParam(value = "description") String description,
+      @RequestParam(value = "runId", required = false) Long runId,
+      @RequestParam(value = "projectId", required = false) Integer projectId,
+      @RequestParam(value = "userAgent", required = false) String userAgent) throws JSONException {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    boolean isStudent = signedInUser.isStudent();
     String issueTypeValue = getIssueTypeValue(issueType);
-    String fromEmail = email;
-    String[] toEmails = getContactMessageRecipients();
+    String fromEmail = wiseProperties.getProperty("portalemailaddress");
+    String[] toEmails = getContactMessageRecipients(email, runId);
     String[] cc = new String[0];
     String subject = getSubject(issueTypeValue, summary);
-    String body = getContactEmailBody(name, email, issueTypeValue, summary, description, runId, projectId, userAgent);
+    String body = getContactEmailBody(name, email, issueTypeValue, summary, description, runId, projectId, userAgent, isStudent);
+    JSONObject response = sendEmail(fromEmail, toEmails, cc, subject, body);
+    return response.toString();
+  }
 
+  private JSONObject sendEmail(String fromEmail, String[] toEmails, String[] cc, String subject, String body) throws JSONException {
     JSONObject response = new JSONObject();
     try {
       mailService.postMail(toEmails, subject, body, fromEmail, cc);
@@ -210,7 +217,7 @@ public class UserAPIController {
       e.printStackTrace();
       response.put("status", "failure");
     }
-    return response.toString();
+    return response;
   }
 
   private String getSubject(String issueType, String summary) {
@@ -218,39 +225,30 @@ public class UserAPIController {
     return "[" + contactWISEString + "] " + issueType + ": " + summary;
   }
 
-  protected String[] getContactMessageRecipients() {
+  protected String[] getContactMessageRecipients(String email, Long runId) {
     String contactEmailString = wiseProperties.getProperty("contact_email");
     String[] recipients = contactEmailString.split(",");
-    return recipients;
+    ArrayList<String> allRecipients = new ArrayList<String>(Arrays.asList(recipients));
+    if (email != null) {
+      allRecipients.add(email);
+    } else if (runId != null) {
+      allRecipients.add(getTeacherEmail(runId));
+    }
+    return allRecipients.toArray(new String[allRecipients.size()]);
   }
 
   private String getContactEmailBody(String name, String email, String issueType,
                                      String summary, String description, Long runId,
-                                     Integer projectId, String userAgent) {
+                                     Integer projectId, String userAgent, Boolean isStudent) {
 
     StringBuffer body = new StringBuffer();
-    appendLine(body, "Your message has been sent. Thank you for contacting WISE. We will try to get back to you as soon as possible.\n");
-    appendLine(body, "Description: " + description);
-    appendLine(body, "Name: " + name);
-    appendLine(body, "Email: " + email);
-
-    if (runId != null) {
-      try {
-        Run run = runService.retrieveById(runId);
-        Project project = run.getProject();
-        appendLine(body, "Run ID: " + runId);
-        appendLine(body, "Project Name: " + project.getName());
-        appendLine(body, "Project ID: " + project.getId());
-      } catch (ObjectNotFoundException e) {
-      }
-    } else if (projectId != null) {
-      try {
-        Project project = projectService.getById(projectId);
-        appendLine(body, "Project Name: " + project.getName());
-        appendLine(body, "Project ID: " + projectId);
-      } catch (ObjectNotFoundException e) {
-      }
+    if (isStudent) {
+      addStudentGeneratedRequestBody(body, description, name, runId);
+    } else {
+      addTeacherGeneratedRequestBody(body, description, name, email);
     }
+
+    addProjectAndRunDetailsToBody(body, runId, projectId);
 
     try {
       addUserSystemDetailsToBody(body, userAgent);
@@ -268,6 +266,62 @@ public class UserAPIController {
   private String getIssueTypeValue(String issueType) {
     IssueType.setProperties(i18nProperties);
     return IssueType.valueOf(issueType).toString();
+  }
+
+  private void addStudentGeneratedRequestBody(StringBuffer body, String description, String name, Long runId) {
+    if (runId != null) {
+      User teacher = getTeacherForRun(runId);
+      TeacherUserDetails teacherUserDetails = (TeacherUserDetails) teacher.getUserDetails();
+      String displayName = teacherUserDetails.getDisplayname();
+      appendLine(body, "Dear " + displayName + ",\n");
+      appendLine(body, "One of your students has submitted a WISE trouble ticket. We recommend that you follow up with your student if necessary. If you need further assistance, you can 'Reply to all' on this email to contact us.\n");
+    }
+    appendLine(body, "Description: " + description);
+    appendLine(body, "Name: " + name);
+  }
+
+  private User getTeacherForRun(Long runId) {
+    try {
+      Run run = runService.retrieveById(runId);
+      User owner = run.getOwner();
+      return owner;
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private String getTeacherEmail(Long runId) {
+    User teacher = getTeacherForRun(runId);
+    TeacherUserDetails teacherUserDetails = (TeacherUserDetails) teacher.getUserDetails();
+    return teacherUserDetails.getEmailAddress();
+  }
+
+  private void addTeacherGeneratedRequestBody(StringBuffer body, String description, String name, String email) {
+    appendLine(body, "Your message has been sent. Thank you for contacting WISE. We will try to get back to you as soon as possible.\n");
+    appendLine(body, "Description: " + description);
+    appendLine(body, "Name: " + name);
+    appendLine(body, "Email: " + email);
+  }
+
+  private void addProjectAndRunDetailsToBody(StringBuffer body, Long runId, Integer projectId) {
+    if (runId != null) {
+      try {
+        Run run = runService.retrieveById(runId);
+        Project project = run.getProject();
+        appendLine(body, "Project Name: " + project.getName());
+        appendLine(body, "Project ID: " + project.getId());
+        appendLine(body, "Run ID: " + runId);
+      } catch (ObjectNotFoundException e) {
+      }
+    } else if (projectId != null) {
+      try {
+        Project project = projectService.getById(projectId);
+        appendLine(body, "Project Name: " + project.getName());
+        appendLine(body, "Project ID: " + projectId);
+      } catch (ObjectNotFoundException e) {
+      }
+    }
   }
 
   private void addUserSystemDetailsToBody(StringBuffer body, String userAgent)

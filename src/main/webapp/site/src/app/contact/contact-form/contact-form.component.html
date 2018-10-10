@@ -7,7 +7,7 @@
 <div class="contact mat-app-background" fxLayout="column" fxLayoutAlign="start center">
   <mat-card class="contact__form">
     <mat-card-content>
-      <form role="form" style="flex-direction: column" (submit)="submit(formDirective)" [formGroup]="contactFormGroup">
+      <form role="form" style="flex-direction: column" (submit)="submit()" [formGroup]="contactFormGroup">
         <h2 class="accent center">Contact WISE</h2>
         <p>
           <mat-form-field fxFlex>
@@ -19,7 +19,7 @@
             <mat-error *ngIf="contactFormGroup.controls['name'].hasError('required')">Name Required</mat-error>
           </mat-form-field>
         </p>
-        <p>
+        <p *ngIf="!isStudent">
           <mat-form-field fxFlex>
             <input matInput
                    id="email"

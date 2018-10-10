@@ -31,6 +31,10 @@ export class UserService {
     return this.getUser().getValue().id;
   }
 
+  isSignedIn(): boolean {
+    return this.isAuthenticated;
+  }
+
   isStudent(): boolean {
     return this.isAuthenticated &&
       this.user$.getValue().role === 'student';
@@ -130,9 +134,17 @@ export class UserService {
 
   sendContactMessage(name, email, issueType, summary, description, runId, projectId, userAgent) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    const body = this.generateContactMessageParams(
+        name, email, issueType, summary, description, runId, projectId, userAgent);
+    return this.http.post<any>(this.contactUrl, body, { headers: headers });
+  }
+
+  generateContactMessageParams(name, email, issueType, summary, description, runId, projectId, userAgent) {
     let body = new HttpParams();
     body = body.set('name', name);
-    body = body.set('email', email);
+    if (email != null) {
+      body = body.set('email', email);
+    }
     body = body.set('issueType', issueType);
     body = body.set('summary', summary);
     body = body.set('description', description);
@@ -143,6 +155,6 @@ export class UserService {
       body = body.set('projectId', projectId);
     }
     body = body.set('userAgent', userAgent);
-    return this.http.post<any>(this.contactUrl, body, { headers: headers });
+    return body;
   }
 }
