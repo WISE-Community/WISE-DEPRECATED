@@ -10,6 +10,7 @@ import { Project } from "../../../domain/project";
 import { NGSSStandards } from "../ngssStandards";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LibraryService } from "../../../services/library.service";
+import { ConfigService } from "../../../services/config.service";
 
 @Component({ selector: 'app-library-project-menu', template: '' })
 export class LibraryProjectMenuStubComponent {
@@ -35,6 +36,12 @@ export class MockUserService {
   }
 }
 
+export class MockConfigService {
+  getContextPath(): string {
+    return "";
+  }
+}
+
 describe('LibraryProjectDetailsComponent', () => {
   let component: LibraryProjectDetailsComponent;
   let fixture: ComponentFixture<LibraryProjectDetailsComponent>;
@@ -46,6 +53,7 @@ describe('LibraryProjectDetailsComponent', () => {
       providers: [
         { provide: LibraryService, useClass: MockLibraryService },
         { provide: UserService, useClass: MockUserService },
+        { provide: ConfigService, useClass: MockConfigService },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: [] },
         { provide: MatDialog, useClass: MockMatDialog }

@@ -5,6 +5,7 @@ import { TeacherService } from "../../../teacher/teacher.service";
 import { ShareProjectDialogComponent } from "../share-project-dialog/share-project-dialog.component";
 import { UserService } from "../../../services/user.service";
 import { CopyProjectDialogComponent } from "../copy-project-dialog/copy-project-dialog.component";
+import { ConfigService } from "../../../services/config.service";
 
 @Component({
   selector: 'app-library-project-menu',
@@ -26,13 +27,14 @@ export class LibraryProjectMenuComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
               public teacherService: TeacherService,
-              public userService: UserService) {
+              public userService: UserService,
+              private configService: ConfigService) {
   }
 
   ngOnInit() {
     this.isCanEdit = this.isOwner() || this.isSharedOwnerWithEditPermission();
     this.isCanShare = this.isOwner();
-    this.editLink = `/wise/author/authorproject.html?projectId=${ this.project.id }`;
+    this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${ this.project.id }`;
   }
 
   isOwner() {

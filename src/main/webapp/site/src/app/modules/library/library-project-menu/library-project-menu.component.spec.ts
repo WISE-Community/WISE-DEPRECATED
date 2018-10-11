@@ -7,6 +7,7 @@ import { UserService } from "../../../services/user.service";
 import { User } from "../../../domain/user";
 import { Observable } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ConfigService } from "../../../services/config.service";
 
 export class MockUserService {
   getUser(): Observable<User[]> {
@@ -30,6 +31,12 @@ export class MockTeacherService {
 
 }
 
+export class MockConfigService {
+  getContextPath(): string {
+    return "";
+  }
+}
+
 describe('LibraryProjectMenuComponent', () => {
 
   let component: LibraryProjectMenuComponent;
@@ -42,6 +49,7 @@ describe('LibraryProjectMenuComponent', () => {
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
+        { provide: ConfigService, useClass: MockConfigService },
         { provide: MatDialog }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
