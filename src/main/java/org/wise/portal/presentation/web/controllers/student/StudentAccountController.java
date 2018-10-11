@@ -72,6 +72,7 @@ import org.wise.portal.service.user.UserService;
  */
 @Controller
 @SessionAttributes("studentAccountForm")
+@RequestMapping(value = "/legacy/student")
 public class StudentAccountController {
 
   @Autowired
@@ -100,7 +101,7 @@ public class StudentAccountController {
     DuplicateUsernameException.class, ObjectNotFoundException.class,
     PeriodNotFoundException.class, HibernateOptimisticLockingFailureException.class,
     StaleObjectStateException.class})
-  @RequestMapping(value = "/student/join", method = RequestMethod.POST)
+  @RequestMapping(value = "/join", method = RequestMethod.POST)
   public synchronized String createStudent(
       @ModelAttribute("studentAccountForm") StudentAccountForm accountForm,
       BindingResult result,
@@ -189,7 +190,7 @@ public class StudentAccountController {
    * @param modelMap the object that contains values to be displayed on the page
    * @return the path of the view to display
    */
-  @RequestMapping(value = "/student/updatestudentaccount.html", method = RequestMethod.POST)
+  @RequestMapping(value = "/updatestudentaccount.html", method = RequestMethod.POST)
   protected String updateExitingStudent(
       @ModelAttribute("studentAccountForm") StudentAccountForm accountForm,
       BindingResult bindingResult,
@@ -246,7 +247,7 @@ public class StudentAccountController {
     return mav;
   }
 
-  @RequestMapping(value = "/student/join", method = RequestMethod.GET)
+  @RequestMapping(value = "/join", method = RequestMethod.GET)
   public String initializeFormNewStudent(ModelMap model) {
     model.put("genders", Gender.values());
     model.put("accountQuestions",AccountQuestion.values());
@@ -257,7 +258,7 @@ public class StudentAccountController {
     return "student/join";
   }
 
-  @RequestMapping(value = "/student/updatestudentaccount.html", method = RequestMethod.GET)
+  @RequestMapping(value = "/updatestudentaccount.html", method = RequestMethod.GET)
   public String initializeFormExistingStudent(ModelMap model) {
     User user = ControllerUtil.getSignedInUser();
     model.put("genders", Gender.values());

@@ -178,7 +178,7 @@ public class ForgotAccountTeacherIndexController {
         // in case contextPath is relative, in the form "/wise"
         portalContextURL = ControllerUtil.getPortalUrlString(request);
       }
-      String passwordResetLink = portalContextURL + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
+      String passwordResetLink = portalContextURL + "/legacy/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
 
       String portalName = wiseProperties.getProperty("wise.name");
 

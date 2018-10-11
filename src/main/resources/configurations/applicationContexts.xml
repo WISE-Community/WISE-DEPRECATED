@@ -827,7 +827,7 @@
   </bean>
 
   <bean id="authFailureHandler" class="org.wise.portal.presentation.web.filters.WISEAuthenticationFailureHandler">
-    <property name="authenticationFailureUrl" value="/login?failed=true" />
+    <property name="authenticationFailureUrl" value="/legacy/login?failed=true" />
   </bean>
 
   <bean id="authenticationProcessingFilter"

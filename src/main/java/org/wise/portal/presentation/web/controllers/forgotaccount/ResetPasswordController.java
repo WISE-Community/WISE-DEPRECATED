@@ -45,7 +45,7 @@ import org.wise.portal.service.mail.MailService;
 import org.wise.portal.service.user.UserService;
 
 @Controller
-@RequestMapping("/forgotaccount/resetpassword.html")
+@RequestMapping("/legacy/forgotaccount/resetpassword.html")
 public class ResetPasswordController {
 
   @Autowired

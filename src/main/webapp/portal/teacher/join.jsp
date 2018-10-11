@@ -192,7 +192,7 @@ function createAccount() {
 
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}/" title="<spring:message code="wiseHomepage"/>"></a>
+				<a id="name" href="${contextPath}/legacy" title="<spring:message code="wiseHomepage"/>"></a>
 			</div>
 
 			<div class="infoContent">
@@ -335,7 +335,7 @@ function createAccount() {
 
 				 	 <div id="regButtons">
 				 	  	<a style="margin-bottom:1em;" id="createAccountLink" class="wisebutton" onclick="checkForExistingAccountsAndCreateAccount()"><spring:message code="teacher.registerteacher.createAccount"/></a>
-				 	  	<a href="${contextPath}/"><spring:message code="teacher.registerteacher.cancel"/></a>
+				 	  	<a href="${contextPath}/legacy"><spring:message code="teacher.registerteacher.cancel"/></a>
 					 </div>
 					</form:form>
 					<div id="existingAccounts" style="display:none"></div>
