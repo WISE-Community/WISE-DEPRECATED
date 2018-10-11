@@ -34,7 +34,7 @@ export class StudentRunListItemComponent implements OnInit {
   ngOnInit() {
     this.thumbStyle = this.getThumbStyle();
     this.runLink = `${this.configService.getContextPath()}/student/teamsignin.html?runId=${this.run.id}`;
-    this.problemLink = `${this.configService.getContextPath()}/contact/contactwise.html?projectId=${this.run.project.id}&runId=${this.run.id}`;
+    this.problemLink = `${this.configService.getContextPath()}/site/contact?runId=${this.run.id}`;
     this.configService.getConfig().subscribe(config => {
       if (config != null) {
         if (this.run.startTime > config.currentTime) {

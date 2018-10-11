@@ -70,6 +70,7 @@
                     [siteKey]="recaptchaPublicKey"></re-captcha>
         <button fxFlex mat-raised-button color="primary" type="submit"
                 [disabled]="!contactFormGroup.valid || isSendingRequest">
+          <mat-progress-bar *ngIf="isSendingRequest" mode="indeterminate"></mat-progress-bar>
           Submit
         </button>
         <div>{{ message }}</div>

@@ -19,6 +19,7 @@ export class RunMenuComponent implements OnInit {
 
   editLink: string = '';
   previewLink: string = '';
+  reportProblemLink: string = '';
 
   constructor(private dialog: MatDialog,
               private teacherService: TeacherService,
@@ -28,6 +29,7 @@ export class RunMenuComponent implements OnInit {
   ngOnInit() {
     this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${this.run.project.id}`;
     this.previewLink = `${this.configService.getContextPath()}/previewproject.html?projectId=${this.run.project.id}`;
+    this.reportProblemLink = `${this.configService.getContextPath()}/site/contact?runId=${this.run.id}`;
   }
 
   shareRun() {
