@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ContactRoutingModule } from './contact-routing.module';
-
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -24,6 +23,8 @@ import {
 import { SharedModule } from "../modules/shared/shared.module";
 import { ContactFormComponent } from './contact-form/contact-form.component';
 import { ContactCompleteComponent } from './contact-complete/contact-complete.component';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
 
 const materialModules = [
   MatAutocompleteModule,
@@ -51,7 +52,9 @@ const materialModules = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    materialModules
+    materialModules,
+    RecaptchaModule.forRoot(),
+    RecaptchaFormsModule
   ],
   declarations: [
     ContactFormComponent,

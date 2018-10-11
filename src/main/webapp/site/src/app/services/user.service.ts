@@ -132,14 +132,16 @@ export class UserService {
     user.language = language;
   }
 
-  sendContactMessage(name, email, issueType, summary, description, runId, projectId, userAgent) {
+  sendContactMessage(
+      name, email, issueType, summary, description, runId, projectId, userAgent, recaptchaResponse) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     const body = this.generateContactMessageParams(
-        name, email, issueType, summary, description, runId, projectId, userAgent);
+        name, email, issueType, summary, description, runId, projectId, userAgent, recaptchaResponse);
     return this.http.post<any>(this.contactUrl, body, { headers: headers });
   }
 
-  generateContactMessageParams(name, email, issueType, summary, description, runId, projectId, userAgent) {
+  generateContactMessageParams(
+      name, email, issueType, summary, description, runId, projectId, userAgent, recaptchaResponse) {
     let body = new HttpParams();
     body = body.set('name', name);
     if (email != null) {
@@ -155,6 +157,9 @@ export class UserService {
       body = body.set('projectId', projectId);
     }
     body = body.set('userAgent', userAgent);
+    if (recaptchaResponse != null) {
+      body = body.set('recaptchaResponse', recaptchaResponse);
+    }
     return body;
   }
 }

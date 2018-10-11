@@ -24,6 +24,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.project.ProjectService;
@@ -136,6 +137,7 @@ public class UserAPIController {
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
+    configJSON.put("recaptchaPublicKey", wiseProperties.get("recaptcha_public_key"));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
   }
@@ -195,17 +197,44 @@ public class UserAPIController {
       @RequestParam(value = "description") String description,
       @RequestParam(value = "runId", required = false) Long runId,
       @RequestParam(value = "projectId", required = false) Integer projectId,
-      @RequestParam(value = "userAgent", required = false) String userAgent) throws JSONException {
+      @RequestParam(value = "userAgent", required = false) String userAgent,
+      @RequestParam(value = "recaptchaResponse", required = false) String recaptchaResponse) throws JSONException {
+
+    if (isSignedIn() || (!isSignedIn() && isRecaptchaResponseValid(recaptchaResponse))) {
+      boolean isStudent = isStudent();
+      String issueTypeValue = getIssueTypeValue(issueType);
+      String fromEmail = wiseProperties.getProperty("portalemailaddress");
+      String[] toEmails = getContactMessageRecipients(email, runId);
+      String[] cc = new String[0];
+      String subject = getSubject(issueTypeValue, summary);
+      String body = getContactEmailBody(
+        name, email, issueTypeValue, summary, description, runId, projectId, userAgent, isStudent);
+      JSONObject response = sendEmail(fromEmail, toEmails, cc, subject, body);
+      return response.toString();
+    } else {
+      JSONObject response = new JSONObject();
+      response.put("status", "failure");
+      return response.toString();
+    }
+  }
+
+  private boolean isSignedIn() {
+    return ControllerUtil.getSignedInUser() != null;
+  }
+
+  private boolean isStudent() {
     User signedInUser = ControllerUtil.getSignedInUser();
-    boolean isStudent = signedInUser.isStudent();
-    String issueTypeValue = getIssueTypeValue(issueType);
-    String fromEmail = wiseProperties.getProperty("portalemailaddress");
-    String[] toEmails = getContactMessageRecipients(email, runId);
-    String[] cc = new String[0];
-    String subject = getSubject(issueTypeValue, summary);
-    String body = getContactEmailBody(name, email, issueTypeValue, summary, description, runId, projectId, userAgent, isStudent);
-    JSONObject response = sendEmail(fromEmail, toEmails, cc, subject, body);
-    return response.toString();
+    boolean isStudent = false;
+    if (signedInUser != null) {
+      isStudent = signedInUser.isStudent();
+    }
+    return isStudent;
+  }
+
+  private boolean isRecaptchaResponseValid(String recaptchaResponse) {
+    String recaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
+    String recaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    return WISEAuthenticationProcessingFilter.checkReCaptchaResponse(recaptchaPrivateKey, recaptchaPublicKey, recaptchaResponse);
   }
 
   private JSONObject sendEmail(String fromEmail, String[] toEmails, String[] cc, String subject, String body) throws JSONException {

@@ -40,4 +40,8 @@ export class ConfigService {
   getGoogleClientId() {
     return this.config$.getValue().googleClientId;
   }
+
+  getRecaptchaPublicKey() {
+    return this.config$.getValue().recaptchaPublicKey;
+  }
 }

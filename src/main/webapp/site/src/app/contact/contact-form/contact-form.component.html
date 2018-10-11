@@ -27,6 +27,7 @@
                    placeholder="Email"
                    formControlName="email" />
             <mat-error *ngIf="contactFormGroup.controls['email'].hasError('required')">Email Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('email')">Invalid Email</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -63,6 +64,10 @@
             <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')">State Required</mat-error>
           </mat-form-field>
         </p>
+        <re-captcha *ngIf="this.recaptchaPublicKey != null && !isSignedIn"
+                    formControlName="recaptcha"
+                    (resolved)="recaptchResolved($event)"
+                    [siteKey]="recaptchaPublicKey"></re-captcha>
         <button fxFlex mat-raised-button color="primary" type="submit"
                 [disabled]="!contactFormGroup.valid || isSendingRequest">
           Submit
