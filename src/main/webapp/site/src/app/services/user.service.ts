@@ -16,7 +16,7 @@ export class UserService {
   private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
   private changePasswordUrl = 'api/user/password';
   private languagesUrl = 'api/user/languages';
-  private contactUrl = 'api/user/contact';
+  private contactUrl = 'api/contact';
   isAuthenticated = false;
   redirectUrl: string; // redirect here after logging in
 

@@ -64,7 +64,7 @@
             <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')">State Required</mat-error>
           </mat-form-field>
         </p>
-        <re-captcha *ngIf="this.recaptchaPublicKey != null && !isSignedIn"
+        <re-captcha *ngIf="isRecaptchaEnabled"
                     formControlName="recaptcha"
                     (resolved)="recaptchResolved($event)"
                     [siteKey]="recaptchaPublicKey"></re-captcha>
