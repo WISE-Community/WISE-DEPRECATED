@@ -173,7 +173,7 @@ public class TeacherAPIController {
     teacherUserDetails.setFirstname(teacherFields.get("firstName"));
     teacherUserDetails.setLastname(teacherFields.get("lastName"));
     String email = teacherFields.get("email");
-    teacherUserDetails.setEmailAddress(teacherFields.get("email"));
+    teacherUserDetails.setEmailAddress(email);
     teacherUserDetails.setCity(teacherFields.get("city"));
     teacherUserDetails.setState(teacherFields.get("state"));
     teacherUserDetails.setCountry(teacherFields.get("country"));
