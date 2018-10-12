@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,12 @@ import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -52,6 +55,12 @@ public class TeacherAPIController {
 
   @Autowired
   private UserDetailsService userDetailsService;
+
+  @Autowired
+  protected IMailFacade mailService;
+
+  @Autowired
+  protected MessageSource messageSource;
 
   @RequestMapping(value = "/config", method = RequestMethod.GET)
   protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
@@ -163,6 +172,7 @@ public class TeacherAPIController {
     TeacherUserDetails teacherUserDetails = new TeacherUserDetails();
     teacherUserDetails.setFirstname(teacherFields.get("firstName"));
     teacherUserDetails.setLastname(teacherFields.get("lastName"));
+    String email = teacherFields.get("email");
     teacherUserDetails.setEmailAddress(teacherFields.get("email"));
     teacherUserDetails.setCity(teacherFields.get("city"));
     teacherUserDetails.setState(teacherFields.get("state"));
@@ -181,7 +191,23 @@ public class TeacherAPIController {
     Locale locale = request.getLocale();
     teacherUserDetails.setLanguage(locale.getLanguage());
     User createdUser = this.userService.createUser(teacherUserDetails);
-    return createdUser.getUserDetails().getUsername();
+    String username = createdUser.getUserDetails().getUsername();
+    sendCreateTeacherAccountEmail(username, email, locale);
+    return username;
+  }
+
+  private void sendCreateTeacherAccountEmail(String username, String email, Locale locale) {
+    String fromEmail = wiseProperties.getProperty("portalemailaddress");
+    String [] recipients = {email};
+    String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
+    String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, locale);
+    String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {username}, Locale.US);
+    String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {username}, defaultBody, locale);
+    try {
+      mailService.postMail(recipients, subject, message, fromEmail);
+    } catch (MessagingException e) {
+      e.printStackTrace();
+    }
   }
 
   @ResponseBody
