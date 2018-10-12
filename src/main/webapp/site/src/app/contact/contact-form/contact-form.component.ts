@@ -63,7 +63,9 @@ export class ContactFormComponent implements OnInit {
   }
 
   showEmailIfNecessary() {
-    if (!this.isStudent) {
+    if (this.isStudent) {
+      this.contactFormGroup.removeControl('email');
+    } else {
       this.contactFormGroup.addControl('email', new FormControl('', [Validators.required, Validators.email]));
     }
   }
