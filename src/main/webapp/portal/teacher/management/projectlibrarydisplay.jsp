@@ -2035,6 +2035,7 @@
 					{
 						"identifier": "language", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language"/>", "column": 7,
 						"options": [
+							{"query": "arabic", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_arabic"/>"},
 							{"query": "chinese", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_chinese"/>"},
 							{"query": "dutch", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_dutch"/>"},
 							{"query": "english", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_english"/>"},
