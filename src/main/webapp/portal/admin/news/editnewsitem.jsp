@@ -14,6 +14,9 @@
 <c:if test="${textDirection == 'rtl' }">
 		<link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
 </c:if>
+<style media="screen">
+	html, body {margin:0;padding:20px;xwidth:90%;height:100;}
+</style>
 
 </head>
 <body>
@@ -45,7 +48,7 @@
 			</select>
 		</dd>
 		<dt><label for="newsField"><spring:message code="message" /></label></dt>
-		<dd><textarea rows="20" cols="100" id="news" name="news">${newsItem.news}</textarea></dd>
+		<dd><textarea rows="20" id="news" name="news" style="width:100%;">${newsItem.news}</textarea></dd>
 		</dl>
 	    <input type="hidden" id="newsItemId" name="newsItemId" value="${newsItem.id}"></input>
 	    <input type="hidden" id="action" name="action" value="edit"></input>
