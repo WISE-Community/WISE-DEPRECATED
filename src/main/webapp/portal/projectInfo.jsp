@@ -8,6 +8,9 @@
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>

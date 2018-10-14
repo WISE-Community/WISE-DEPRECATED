@@ -16,17 +16,7 @@
 <link href="${contextPath}/<spring:theme code="tinycarousel.css"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 <c:if test="${textDirection == 'rtl' }">
-    <style>
-    #about {
-    position: absolute;
-    left: 0px;
-}
-
-#news {
-    position: relative;
-    right: none;
-}
-</style>
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
 </c:if>
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>

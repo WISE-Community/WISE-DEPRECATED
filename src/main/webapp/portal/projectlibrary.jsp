@@ -15,6 +15,9 @@
 <link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="tiptip.css"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>

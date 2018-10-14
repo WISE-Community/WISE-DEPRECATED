@@ -8,6 +8,9 @@
 <title><spring:message code="forgotaccount.selectaccounttype.findYourPassword" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 <script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
 </head>
