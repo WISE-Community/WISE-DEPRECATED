@@ -28,10 +28,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.util.Properties" %>
+<% 
+Properties wiseProperties = new Properties();
+wiseProperties.load(getClass().getClassLoader().getResourceAsStream("wise.properties"));
+String defaultLocale = wiseProperties.getProperty("defaultLocale");
+request.setAttribute("defaultLocale", defaultLocale);
+%>
 
 <!-- $Id$ -->
 
 <c:set var="sessionLocale" value="${sessionScope['org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE']}"/>
-<c:set var="locale" value="${ empty sessionLocale ? pageContext.request.locale : sessionLocale }" />
-<c:set var="textDirection" value="${'iw' == locale ? 'rtl' : 'ltr'}" />
+<c:set var="locale" value="${ empty sessionLocale ? defaultLocale : sessionLocale }" />
+<c:set var="textDirection" value="${'iw' == locale || 'ar' == locale ? 'rtl' : 'ltr'}" />
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
