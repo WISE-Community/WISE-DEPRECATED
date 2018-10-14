@@ -1,7 +1,7 @@
 <%@ include file="../../include.jsp"%>
 
 <!DOCTYPE html>
-<html dir="${textDirection}">
+<html x-dir="${textDirection}"> <%-- The page always ltr --%>
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
