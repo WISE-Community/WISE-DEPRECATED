@@ -101,10 +101,14 @@
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
-								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
+										    		    <p class="metadata">
+										    		      <c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
+										    		      <c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}"><spring:message code="teacher.projects.projectinfo.meta_duration" /> ${project.metadata.totalTime} | </c:if>
+										    		      <c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
+										    		    </p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="<spring:message code="project_details" />"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -128,10 +132,14 @@
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
-								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
+										    			<p class="metadata">
+										    		      <c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
+										    		      <c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}"><spring:message code="teacher.projects.projectinfo.meta_duration" /> ${project.metadata.totalTime} | </c:if>
+										    		      <c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
+										    			</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="<spring:message code="project_details" />"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -155,10 +163,14 @@
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
-								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
+										    			<p class="metadata">
+										    		      <c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
+										    		      <c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}"><spring:message code="teacher.projects.projectinfo.meta_duration" /> ${project.metadata.totalTime} | </c:if>
+										    		      <c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
+										    			</p>	
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="<spring:message code="project_details" />"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -183,10 +195,14 @@
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
-								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
+										    			<p class="metadata">
+										    		      <c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
+										    		      <c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}"><spring:message code="teacher.projects.projectinfo.meta_duration" /> ${project.metadata.totalTime} | </c:if>
+										    		      <c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
+										    			</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="<spring:message code="project_details" />"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -210,10 +226,14 @@
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
-								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
+										    			<p class="metadata">
+										    		      <c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
+										    		      <c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}"><spring:message code="teacher.projects.projectinfo.meta_duration" /> ${project.metadata.totalTime} | </c:if>
+										    		      <c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
+										    			</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="<spring:message code="project_details" />"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -237,10 +257,14 @@
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
-								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
+										    			<p class="metadata">
+										    		      <c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
+										    		      <c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}"><spring:message code="teacher.projects.projectinfo.meta_duration" /> ${project.metadata.totalTime} | </c:if>
+										    		      <c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
+										    			</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="<spring:message code="project_details" />"><spring:message code="index.projects_moreDetails" /></a><a href="previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -270,7 +294,7 @@
 					<div class="panelContent"><img src="${contextPath}/<spring:theme code="wise_teaching"/>" alt="<spring:message code="index.wiseInActionTitle" />" /></div>
 				</a>
 				<a id="researchTech" href="http://wise-research.berkeley.edu" target="_blank" class="panelSection">
-					<div class="panelHead"><span><!--<spring:message code="index.wiseResearchAndTech" />-->Research</span><span class="panelLink">+</span></div>
+					<div class="panelHead"><span><spring:message code="index.wiseResearchAndTech" /></span><span class="panelLink">+</span></div>
 					<div class="panelContent"><img src="${contextPath}/<spring:theme code="wise_research"/>" alt="<spring:message code="index.wiseResearchAndTechTitle" />" /></div>
 				</a>
 				<div style="clear:both;"></div>
@@ -314,7 +338,7 @@
 				modal:true,
 				close: function(){ $(this).html(''); },
 				buttons: {
-					Close: function(){
+					"<spring:message code="close" />": function(){
 						$(this).dialog('close');
 					}
 				}

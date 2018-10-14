@@ -14,6 +14,20 @@
 		<link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
 </c:if>
 
+<style media="screen">
+	#periodSelect #periodTabs {
+		float:left;
+	}
+	[dir=rtl] #periodSelect #periodTabs {
+		float:right;
+	}
+	.link-save {
+		float:right;
+	}
+	[dir=rtl] .link-save {
+		float:left;
+	}
+</style>
 <head>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
@@ -80,7 +94,7 @@ $(document).ready(function(){
 			position: 'center',
 			close: function(){ $(this).remove(); },
 			buttons: {
-				Close: function(){$(this).dialog('close');}
+				'<spring:message code="close" />': function(){$(this).dialog('close');}
 			}
 		});
 		$("#studentInfoDialog > #studentInfoIfrm").attr('src',path);
@@ -101,7 +115,7 @@ $(document).ready(function(){
 			position: 'center',
 			close: function(){ $(this).remove(); },
 			buttons: {
-				Close: function(){$(this).dialog('close');}
+				'<spring:message code="close" />': function(){$(this).dialog('close');}
 			}
 		});
 		$("#studentPasswordDialog > #studentPasswordIfrm").attr('src',path);
@@ -130,7 +144,7 @@ $(document).ready(function(){
 				$(this).remove();
 			},
 			buttons: {
-				Close: function(){$(this).dialog('close');}
+				'<spring:message code="close" />': function(){$(this).dialog('close');}
 			}
 		});
 		$("#studentPeriodDialog > #studentPeriodIfrm").attr('src',path);
@@ -159,7 +173,7 @@ $(document).ready(function(){
 				$(this).remove();
 			},
 			buttons: {
-				Close: function(){$(this).dialog('close');}
+				'<spring:message code="close" />': function(){$(this).dialog('close');}
 			}
 		});
 		$("#removeStudentDialog > #removeStudentIfrm").attr('src',path);
@@ -180,7 +194,7 @@ $(document).ready(function(){
 			position: 'center',
 			close: function(){ $(this).remove(); },
 			buttons: {
-				Close: function(){$(this).dialog('close');}
+				'<spring:message code="close" />': function(){$(this).dialog('close');}
 			}
 		});
 		$("#changeAllPasswordsDialog > #changeAllPasswordsIfrm").attr('src',path);
@@ -428,13 +442,13 @@ var displayNotification = function(message) {
 						<a href="studentlist?runId=${run.id}" target="_blank"><img class="icon" alt="print" src="${contextPath}/<spring:theme code="print"/>" /><span><spring:message code="teacher.management.viewmystudents.print"/></span></a>
 						<a href="studentListExport?runId=${run.id}"><img class="icon" alt="excel" src="${contextPath}/<spring:theme code="address_book"/>" /><span><spring:message code="teacher.management.viewmystudents.export"/></span></a>
 					</div>
-					<div style="float:right;">
+					<div class="link-save" style="">
 						<a class="saveButton disabled" id="saveButton" onclick=""><spring:message code="teacher.management.viewmystudents.save"/></a>
 					</div>
 				</div>
 				
 				<div id="periodSelect" class="gradingHeader">
-					<div id="periodTabs" style="float:left;">
+					<div id="periodTabs">
 						<ul>
 						<li><a style="color:#FFF;padding: 2px 0;text-decoration: none !important;cursor: text !important;margin-left: 0;"><spring:message code="teacher.management.viewmystudents.changePeriodLabel"/> </a></li>
 						<c:forEach var="viewmystudentsperiod" varStatus="periodStatus" items="${viewmystudentsallperiods}">
@@ -488,7 +502,7 @@ var displayNotification = function(message) {
 						                <c:forEach var="mem" items="${viewmystudentsperiod.grouplessStudents}">
 									      <li class="grouplesslist" id="li_${mem.id}_groupless">
 									      
-									         <span class="userNameWithinView">${mem.userDetails.firstname} ${mem.userDetails.lastname} (${mem.userDetails.username})</span>
+									         <span class="userNameWithinView">${mem.userDetails.firstname} ${mem.userDetails.lastname} <span dir=ltr>(${mem.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
 							    			     <a class="userLinks changePassword" id="changePassword_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>
@@ -515,7 +529,7 @@ var displayNotification = function(message) {
 									      <c:forEach var="workgroupMember" items="${workgroupInPeriod.members}">
 									      
 									        <li class="workgrouplist" id="li_${workgroupMember.id}_${workgroupInPeriod.id}">
-									         <span class="userNameWithinView">${workgroupMember.userDetails.firstname} ${workgroupMember.userDetails.lastname} (${workgroupMember.userDetails.username})</span>
+									         <span class="userNameWithinView">${workgroupMember.userDetails.firstname} ${workgroupMember.userDetails.lastname} <span dir=ltr>(${workgroupMember.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
 							    			     <a class="userLinks changePassword" id="changePassword_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>

@@ -133,8 +133,8 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 						<table class='existingTags' id="tagTable_${project.id}_${tag.id}">
 							<tbody>
 								<tr>
-									<td><input id="tagEdit_${project.id}_${tag.id}" type='text' value='${tag.name}' onchange="tagChanged($(this).attr('id'))"/></td>
-									<td><input id="removeTag_${project.id}_${tag.id}" type='button' value='remove' onclick="removeTag($(this).attr('id'))"/></td>
+									<td><input id="tagEdit_${project.id}_${tag.id}" type='text' value='${tag.name}' onchange="tagChanged($(this).attr('id'))" readonly/></td>
+									<td><input id="removeTag_${project.id}_${tag.id}" type='button' value='remove' onclick="removeTag($(this).attr('id'))" readonly/></td>
 								</tr>
 							</tbody>
 						</table>

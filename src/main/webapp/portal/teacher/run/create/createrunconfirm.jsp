@@ -50,16 +50,16 @@
 							<h5><spring:message code="teacher.run.create.createrunconfirm.youHaveSelected"/>&nbsp;<spring:message code="teacher.run.create.createrunconfirm.projectToRun"/></h5>
 							
 							<div class="projectSummary projectBox">
-								<div class="projectTitle">${project.name} (ID: ${project.id})</div> <!-- TODO: Add thumb, library icon and tag if library project, shared info -->
+								<div class="projectTitle">${project.name} (<spring:message code="id_label" /> ${project.id})</div> <!-- TODO: Add thumb, library icon and tag if library project, shared info -->
 								<div class="summaryInfo">
 									<div class="basicInfo">
 										<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
-										<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}">Grades ${project.metadata.gradeRange} | </c:if>
-										<c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}">Duration: ${project.metadata.totalTime} | </c:if>
+										<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
+										<c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}"><spring:message code="teacher.projects.projectinfo.meta_duration" />: ${project.metadata.totalTime} | </c:if>
 										<c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
-										<div style="float:right;">Created: <fmt:formatDate value="${project.dateCreated}" type="date" dateStyle="medium" /></div>
+										<div class="basicCreated"><spring:message code="teacher.management.projectlibrarydisplay.created" /> <fmt:formatDate value="${project.dateCreated}" type="date" dateStyle="medium" /></div>
 									</div>
-									<div id="summaryText_${project.id}" class="summaryText"><span style="font-weight:bold;">Summary:</span> ${project.metadata.summary}</div>
+									<div id="summaryText_${project.id}" class="summaryText"><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_summary" /></span> ${project.metadata.summary}</div>
 									<div class="details" id="details_${project.id}">
 										<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;">Tags:</span> ${project.metadata.keywords}</p></c:if>
 										<c:if test="${project.metadata.techDetailsString != null && project.metadata.techDetailsString != ''}"><p><span style="font-weight:bold;">Tech Requirements:</span> ${project.metadata.techDetailsString}</p></c:if>
@@ -70,7 +70,7 @@
 										<c:if test="${lastEdited == null || lastEdited == ''}">
 											<c:set var="lastEdited" value="${project.dateCreated}" />
 										</c:if>
-										<p><span style="font-weight:bold;">Last Updated:</span> <fmt:formatDate value="${lastEdited}" type="both" dateStyle="medium" timeStyle="short" /></p>
+										<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_lastUpdated" /></span> <fmt:formatDate value="${lastEdited}" type="both" dateStyle="medium" timeStyle="short" /></p>
 									</div>
 								</div>
 							</div>

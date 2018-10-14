@@ -5,6 +5,26 @@
 <c:if test="${textDirection == 'rtl' }">
 		<link href="${contextPath}/<spring:theme code="facetedfilter-rtl.css"/>" rel="stylesheet" type="text/css" >
 </c:if>
+<style media="screen">
+	.basicCreated {
+		float:right;
+	}
+	[dir=rtl] .basicCreated {
+		float:left;
+	}
+	.link-details {
+		float:right; text-align:right;
+	}
+	[dir=rtl] .link-details {
+		float:left; text-align:left;
+	}
+	.link-child {
+		float:left; text-align:left;
+	}
+	[dir=rtl] .link-child {
+		float:right; text-align:right;
+	}
+</style>
 
 <%@ page buffer="100kb" %>
 
@@ -158,7 +178,7 @@
 																<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
 																<c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}">${project.metadata.totalTime} | </c:if>
 																<c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
-																<div style="float:right;">
+																<div class="basicCreated">
 																	<c:choose>
 																		<c:when test="${hasRun && (isChild || isChildNoRoot)}">
 																			<span class="runCopy"><spring:message code="teacher.management.projectlibrarydisplay.createdForRun" /> ${projectRunIdMap[project.id]}: <fmt:formatDate value="${projectRunDateMap[project.id]}" type="date" dateStyle="medium" /> </span><img class='tooltip' src="${contextPath}/<spring:theme code="helpicon"/>" title="<spring:message code="teacher.management.projectlibrarydisplay.help_runCopy" />" data-tooltip-anchor="left" data-tooltip-class="info" data-tooltip-event="click" data-tooltip-title="<spring:message code="teacher.management.projectlibrarydisplay.help_runCopy_title" />" alt="help" />
@@ -236,7 +256,7 @@
 													</div>
 													<div style="clear:both;"></div>
 													<div class="detailsLinks">
-														<div style="float:right; text-align:right">
+														<div class="link-details" style="">
 															<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 														</div>
 														<div style="clear:both;"></div>
@@ -473,7 +493,7 @@
 													</div>
 													<div style="clear:both;"></div>
 													<div class="detailsLinks">
-														<div style="float:right; text-align:right">
+														<div class="link-details" style="float:right; text-align:right">
 															<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 														</div>
 														<div style="clear:both;"></div>
@@ -610,7 +630,7 @@
 																<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
 																<c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}">${project.metadata.totalTime} | </c:if>
 																<c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
-																<div style="float:right;">
+																<div class="basicCreated">
 																	<spring:message code="teacher.management.projectlibrarydisplay.created" /> <fmt:formatDate value="${project.dateCreated}" type="date" dateStyle="medium" />
 																</div>
 															</div>
@@ -668,7 +688,7 @@
 													</div>
 													<div style="clear:both;"></div>
 													<div class="detailsLinks">
-														<div style="float:right; text-align:right">
+														<div class="link-details" style="">
 															<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 														</div>
 														<div style="clear:both;"></div>
@@ -826,7 +846,7 @@
 																		<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
 																		<c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}">${project.metadata.totalTime} | </c:if>
 																		<c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
-																		<div style="float:right;">
+																		<div class="basicCreated">
 																			<c:choose>
 																				<c:when test="${hasRun && (isChild || isChildNoRoot)}">
 																					<span class="runCopy"><spring:message code="teacher.management.projectlibrarydisplay.createdForRun" /> ${projectRunIdMap[project.id]}: <fmt:formatDate value="${projectRunDateMap[project.id]}" type="date" dateStyle="medium" /> </span><img class='tooltip' src="${contextPath}/<spring:theme code="helpicon"/>" title="<spring:message code="teacher.management.projectlibrarydisplay.help_runCopy" />" data-tooltip-anchor="left" data-tooltip-class="info" data-tooltip-event="click" data-tooltip-title="<spring:message code="teacher.management.projectlibrarydisplay.help_runCopy_title" />" alt="help" />
@@ -904,7 +924,7 @@
 															</div>
 															<div style="clear:both;"></div>
 															<div class="detailsLinks">
-																<div style="float:right; text-align:right">
+																<div class="link-details" style="">
 																	<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 																</div>
 																<div style="clear:both;"></div>
@@ -1132,7 +1152,7 @@
 															</div>
 															<div style="clear:both;"></div>
 															<div class="detailsLinks">
-																<div style="float:right; text-align:right">
+																<div class="link-details" style="">
 																	<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 																</div>
 																<div style="clear:both;"></div>
@@ -1315,7 +1335,7 @@
 															</div>
 															<div style="clear:both;"></div>
 															<div class="detailsLinks">
-																<div style="float:right; text-align:right">
+																<div class="link-details" style="float:right; text-align:right">
 																	<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 																</div>
 																<div style="clear:both;"></div>
@@ -1673,7 +1693,7 @@
 							copyLabel = ' <spring:message code="copy" />';
 						}
 					}
-					var $childLink = $('<div style="float:left;"><a data-id="' + id + '" class="childToggle">' + numChildren + copyLabel + ' +</a></div>');
+					var $childLink = $('<div class="link-child"><a data-id="' + id + '" class="childToggle">' + numChildren + copyLabel + ' +</a></div>');
 					$(this).find('.detailsLinks').prepend($childLink);
 					if($(this).hasClass('missingRoot')){
 						$childLink.find('.childToggle').addClass('missingRoot');
