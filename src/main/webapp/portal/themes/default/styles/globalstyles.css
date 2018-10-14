@@ -1121,6 +1121,9 @@ form {margin:0px; padding:0px;}
 	text-decoration:underline;
 }
 
+.link-print {
+  float:right;
+}
 a.printLesson {
 	background: url("../images/print.png") no-repeat scroll left center transparent;
     color: #00748F;

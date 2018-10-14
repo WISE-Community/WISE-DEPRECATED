@@ -30,7 +30,7 @@
 		<div id="pageContent">
 
 			<div class="contentPanel">
-				<div class="panelHeader"><spring:message code="pages.gettingstarted.title" /> <span style="float:right;"><a class="printLesson" onClick="window.print();return false"><spring:message code="print" /></a></span></div>
+				<div class="panelHeader"><spring:message code="pages.gettingstarted.title" /> <span class="link-print"><a class="printLesson" onClick="window.print();return false"><spring:message code="print" /></a></span></div>
 				<div class="panelContent">
 
 					<div class="sectionHead"><spring:message code="pages.gettingstarted.technical" /></div>

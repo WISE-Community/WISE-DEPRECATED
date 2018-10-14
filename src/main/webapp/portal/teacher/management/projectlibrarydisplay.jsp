@@ -199,7 +199,7 @@
 																	<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																	<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																		<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																			<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																			<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																		</div>
 																		<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																			<div class="basicInfo sectionContent">
@@ -436,7 +436,7 @@
 																	<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																	<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																		<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																			<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																			<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																		</div>
 																		<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																			<div class="basicInfo sectionContent">
@@ -641,7 +641,7 @@
 																	<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																	<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																		<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																			<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																			<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																		</div>
 																		<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																			<div class="basicInfo sectionContent">
@@ -867,7 +867,7 @@
 																			<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																			<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																				<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																					<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																					<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																				</div>
 																				<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																					<div class="basicInfo sectionContent">
@@ -1095,7 +1095,7 @@
 																			<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																			<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																				<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																					<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																					<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																				</div>
 																				<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																					<div class="basicInfo sectionContent">
@@ -1288,7 +1288,7 @@
 																			<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																			<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																				<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																					<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																					<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																				</div>
 																				<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																					<div class="basicInfo sectionContent">
