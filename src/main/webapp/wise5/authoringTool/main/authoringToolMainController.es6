@@ -31,6 +31,12 @@ class AuthoringToolMainController {
     this.inProcessOfCreatingProject = false;
     this.showCreatingProjectMessage = false;
     this.showErrorCreatingProjectMessage = false;
+    
+    this.is_rtl = ($('html').attr('dir')=='rtl');
+    this.icons = {prev: 'arrow_back', next: 'arrow_forward'};
+    if (this.is_rtl) {
+      this.icons = {prev: 'arrow_forward', next: 'arrow_back'};
+    }
 
     this.$rootScope.$on('logOut', () => {
       this.saveEvent('logOut', 'Navigation', null, null);
