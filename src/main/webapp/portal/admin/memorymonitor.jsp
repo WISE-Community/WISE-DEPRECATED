@@ -3,7 +3,7 @@
 <%@ page import="java.lang.management.*" %>
 <%@ page import="java.util.*" %>
 
-<html dir="${textDirection}">
+<html x-dir="${textDirection}"> <%-- The page always ltr --%>
 <head>
 <link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 <title>WISE Memory Monitor</title>
