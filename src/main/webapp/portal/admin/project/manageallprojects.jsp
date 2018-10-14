@@ -123,7 +123,7 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 	    		</c:choose>
 	    	</select></td>
 	    <td>
-			<input id="maxTotalAssetsSize_${project.id}" type='text' size=8 value='${project.maxTotalAssetsSize}' onblur="updateMaxTotalAssetsSize(${project.id},this.value)" '/>
+			<input id="maxTotalAssetsSize_${project.id}" type='text' size=8 value='${project.maxTotalAssetsSize}' onblur="updateMaxTotalAssetsSize(${project.id},this.value)" />
 	    </td>
 		<td>
 			<div class="existingTagsDiv">
