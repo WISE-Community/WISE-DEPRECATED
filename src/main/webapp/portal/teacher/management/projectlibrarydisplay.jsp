@@ -2,6 +2,9 @@
 <link href="${contextPath}/<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="tiptip.css"/>" media="screen" rel="stylesheet" type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+		<link href="${contextPath}/<spring:theme code="facetedfilter-rtl.css"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <%@ page buffer="100kb" %>
 
