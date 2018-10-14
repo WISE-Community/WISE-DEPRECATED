@@ -15,8 +15,18 @@
         .projectButton {
           margin-right: 15px;
         }
+        html[dir=rtl] .projectButton {
+          margin-right: auto;
+          margin-left: 15px;
+        }
+        .main-box {
+          margin-top: 20px; margin-bottom: 20px; margin-left: 40px;
+        }
+        html[dir=rtl] .main-box {
+          margin-top: 20px; margin-bottom: 20px; margin-right: 40px; margin-left:auto;
+        }
       </style>
-      <div style="margin-top: 20px; margin-bottom: 20px; margin-left: 40px;">
+      <div class="main-box">
         <md-button id="goHomeButton"
                class="md-raised md-primary"
                style="font-weight: bold; padding: 10px; display: inline-block;"
