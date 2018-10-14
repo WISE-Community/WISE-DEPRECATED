@@ -51,13 +51,13 @@ function dump(translationString) {
 // toggle show/hide rows that have already been translated
 function onlyShowMissingTranslation() {
   if($("#onlyShowMissingTranslationInput:checked").length == 1) {
-    $("tr textarea").each(function() {
+    $("tr textarea.foreignText").each(function() {
       if ($(this).val() != "") {
         $(this).parents(".translationRow").hide();
       }
     });
   } else {
-    $("tr textarea").each(function() {
+    $("tr textarea.foreignText").each(function() {
       if ($(this).val() != "") {
         $(this).parents(".translationRow").show();
       }
