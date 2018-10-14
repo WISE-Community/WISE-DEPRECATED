@@ -121,6 +121,9 @@
 	float:left;
 	margin-bottom:.5em;
 }
+[dir=rtl] .projectThumb {
+	float:right;
+}
 
 .projectThumb img {
 	height:75px;
@@ -132,6 +135,10 @@
 .summaryInfo {
 	margin-left:85px;
 	margin-bottom:.5em;
+}
+[dir=rtl] .summaryInfo {
+	margin-left:auto;
+	margin-right:85px;
 }
 
 .libraryIcon, .sharedIcon {
@@ -296,10 +303,19 @@ a.viewLesson:hover {
 	/*max-width: 310px;*/
 	float:left;
 }
+[dir=rtl] .projectHeader .projectInfo {
+	/*max-width: 310px;*/
+	float:right;
+	text-align:right;
+}
 
 .projectHeader .projectTools {
 	text-align:right;
 	float:right;
+}
+[dir=rtl] .projectHeader .projectTools {
+	text-align:left;
+	float:left;
 }
 
 .projectHeader div {
@@ -388,6 +404,9 @@ td.projectInfo {
 	text-align:left;
 	vertical-align:top;
 }
+[dir=rtl] .runTitleTable th, [dir=rtl] .projectDetails th {
+	text-align:right;
+}
 
 .runTitleTable.admin th {
 	width:115px;
@@ -410,6 +429,9 @@ td.projectInfo {
 	margin:0;
 	text-align:left;
 }
+[dir=rtl] .runBox {
+	text-align:right;
+}
 
 .tableHeaderMain {
 	background-color: #DFFFE3;
@@ -417,6 +439,9 @@ td.projectInfo {
     padding: 0.25em 0.5em;
     text-align: left;
     border: 1px solid #999999;
+}
+[dir=rtl] .tableHeaderMain {
+	text-align: right;
 }
 
 .projectTable .tableHeaderMain {
@@ -492,6 +517,9 @@ ul.actionList  {
     font-size: 0.95em;
     padding: 0.25em 0;
     text-align: left;
+}
+[dir=rtl] ul.actionList  {
+	text-align: right;
 }
 
 ul.actionList:last-child {

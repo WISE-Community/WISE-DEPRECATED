@@ -12,6 +12,10 @@ $menu-sidebar-width: 56px;
         stroke-width: 2px;
     }
 }
+[dir=rtl] .menu-progress {
+  right:auto;
+  left:12px;
+}
 
 .menu-sidenav {
 
@@ -50,6 +54,10 @@ $menu-sidebar-width: 56px;
     @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
         display: none;
     }
+}
+[dir=rtl] .menu-sidebar {
+  right:0;
+  left:auto;
 }
 
 .md-button.md-icon-button.menu-sidebar__link {

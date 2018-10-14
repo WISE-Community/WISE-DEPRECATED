@@ -2,6 +2,19 @@
    this stylesheet will be included after all ltr stylesheets and overrides 
    styles specifically for rtl direction sessions */
 
+html, body, a {
+	text-align:right;
+}
+
+body {
+	text-align:right !important;
+}
+
+caption, th {
+	text-align: right;
+}
+
+.welcome-menu li{text-align:left;}
 #about {
 	position: absolute;
 	left: 0px;
@@ -14,4 +27,137 @@
 
 #pageContent {
     text-align:right;	
+}
+
+#features {
+	float: right;
+}
+
+#projectShowcase {
+	float: left;
+}
+
+.showcase .panelSection {
+	float: right;
+	margin-right: auto;
+	margin-left: 36px;
+}
+#researchTech {
+	margin: 0 0 0 -3px;
+  float: left;
+  display: block;
+}
+
+#contentFooter li {
+	border-right: 0;
+	border-left: 1px solid #ccc;
+  padding: 0 .2em 0 .5em;
+}
+#contentFooter li.first {
+  padding-left: .5em;
+  padding-right: 0;
+}
+#contentFooter li.last {
+	border-left: 0;
+  padding-right: auto;
+  padding-left: 0;
+}
+#footerLinks #wiseLinks, #footerText{
+	float:right;
+}
+#footerLinks #wiseOpenSource, #footerLogos{
+	float:left;
+}
+
+#curriculumSubjectsBox {
+	text-align:right;
+}
+#closeSubjects {
+	float: left;
+}
+#userInfoBlock {
+	text-align:left;
+}
+.sidebarLeft {
+    float: right;
+}
+.contentRight {
+	margin-left: auto;
+	margin-right: 260px;
+}
+
+.pageTitle {
+	float: left;
+}
+
+img.icon {
+	margin: -.4em 0 -.4em 0.1em;
+}
+
+#passwordReminderParameters table td[align=right] {text-align:left;}
+#passwordReminderParameters table td[align=left] {text-align:right;}
+
+.link-print {
+  float:left;
+}
+
+.panelLink {
+	float:left;
+  margin-left: .5em;
+  margin-right: auto;
+}
+
+.theme-wise .nivo-controlNav {
+	left: 20px;
+	right: auto;
+}
+
+.ui-tabs .ui-tabs-nav li {
+	float:right;
+}
+
+.FF_sidebar {
+	float:right !important;
+}
+.dataTables_wrapper {
+	text-align:right !important;
+	margin-left: auto !important;
+	margin-right: 241px;
+}
+
+.FF_sidebar .dataTables_filter, .FF_sidebar .dataTables_length, .FF_sidebar .dataTables_info, .FF_sidebar .dataTables_paginate, .FF_sidebar .custom_filter {
+	text-align:right !important;
+}
+
+.dataTables_sort {
+	float: left !important;
+	text-align:left !important;
+}
+.dataTables_length {
+	float: right !important;
+	text-align: right !important;
+}
+.dataTables_paginate {
+	float:left !important;
+	text-align:left !important;
+}
+.dataTables_info {
+	/* float: right !important; */
+	text-align: right !important;
+}
+
+
+.theme-wise .nivo-controlNav a {
+	float: right !important;
+}
+
+.ui-dialog .ui-dialog-title {
+	float: right !important;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+  right: auto !important;
+	left: 0.5em !important;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+	float: left !important;
 }

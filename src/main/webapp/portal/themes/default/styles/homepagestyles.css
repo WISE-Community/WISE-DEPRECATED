@@ -34,6 +34,10 @@
 	right:218px;
 }
 
+[dir=rtl] #projectHeader {
+	right:338px;
+}
+
 span.featureContent {
 	background-color: #fdf9eb;
 	background-color: rgba(255, 255, 255, .7);
@@ -330,6 +334,10 @@ div.projectLink a {
 	left: 5px;
 	top: 5px;
 }
+[dir=rtl] #telsLink{
+	left:auto;
+	right:5px;
+}
 
 #telsLinkLabel {
 	color: #007391;
@@ -338,6 +346,10 @@ div.projectLink a {
 	top: 17px;
 	font-size: 1.25em;
 	width: 210px;
+}
+[dir=rtl] #telsLinkLabel{
+	left:auto;
+	right:225px;
 }
 
 #telsLink img {
@@ -350,6 +362,10 @@ div.projectLink a {
 	right:5px;
 }
 
+[dir=rtl] #openSourceHeader {
+	left:5px;
+	right:auto;
+}
 #openSourceContent {
 	position: absolute;
 	right: 5px;
@@ -357,4 +373,9 @@ div.projectLink a {
 	width: 490px;
 	text-align: right;
 	color: #745A33;
+}
+[dir=rtl] #openSourceContent {
+	left: 5px;
+	right: auto;
+	text-align: left;
 }
