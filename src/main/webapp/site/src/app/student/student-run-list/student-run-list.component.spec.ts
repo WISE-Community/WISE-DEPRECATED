@@ -60,6 +60,6 @@ describe('StudentRunListComponent', () => {
 
   it('should show number of runs', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#myProjectCount').textContent).toContain('My Projects (3)');
+    expect(compiled.querySelector('#myProjectCount').textContent).toContain('My Units (3)');
   })
 });
