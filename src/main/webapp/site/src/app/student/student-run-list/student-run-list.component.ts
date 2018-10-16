@@ -12,18 +12,10 @@ import { MatDialog } from "@angular/material/dialog";
 })
 export class StudentRunListComponent implements OnInit {
 
-  runs: StudentRun[] = []; // array of StudentRun objects for current user
-  filteredRuns: StudentRun[] = []; // filtered array of StudentRun objects to show in template
-  search: string = ''; // search string for filtering run list
-  // sort options for run list
-  sortOptions: any[] = [
-    { value: 'startTimeDesc', viewValue: 'Newest' },
-    { value: 'startTimeAsc', viewValue: 'Oldest' },
-    { value: 'projectNameAsc', viewValue: 'Project Name (A-Z)' },
-    { value: 'projectNameDesc', viewValue: 'Project Name (Z-A)' }
-  ];
-  sortValue: string = 'startTimeDesc';
-  loaded: boolean = false; // whether array of runs has been retrieved from server
+  runs: StudentRun[] = [];
+  filteredRuns: StudentRun[] = [];
+  search: string = '';
+  loaded: boolean = false;
 
   constructor(private studentService: StudentService, public dialog: MatDialog) {
     studentService.newRunSource$.subscribe(run => {
@@ -42,7 +34,6 @@ export class StudentRunListComponent implements OnInit {
         this.runs = runs;
         this.filteredRuns = runs;
         this.searchUpdated(this.search);
-        this.sortUpdated(this.sortValue);
         this.loaded = true;
       });
   }
@@ -50,11 +41,6 @@ export class StudentRunListComponent implements OnInit {
   searchUpdated(value: string) {
     this.search = value;
     this.filteredRuns = this.search ? this.performFilter(this.search) : this.runs;
-  }
-
-  sortUpdated(value: string) {
-    this.sortValue = value;
-    this.performSort(this.sortValue);
   }
 
   performFilter(filterValue: string) {
@@ -70,53 +56,6 @@ export class StudentRunListComponent implements OnInit {
         }
       })
     );
-  }
-
-  performSort(sortValue: string) {
-    switch(sortValue) {
-      case 'startTimeDesc': {
-        this.filteredRuns.sort( (a: StudentRun, b: StudentRun) => {
-          return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
-        });
-        break;
-      }
-      case 'startTimeAsc': {
-        this.filteredRuns.sort( (a: StudentRun, b :StudentRun) => {
-          return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
-        });
-        break;
-      }
-      case 'projectNameAsc': {
-        this.filteredRuns.sort( (a: StudentRun, b: StudentRun) => {
-          const nameA = a.name.toLocaleLowerCase(); // ignore upper and lowercase
-          const nameB = b.name.toLocaleLowerCase(); // ignore upper and lowercase
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-          // names must be equal
-          return 0;
-        });
-        break;
-      }
-      case 'projectNameDesc': {
-        this.filteredRuns.sort( (a: StudentRun, b: StudentRun) => {
-          const nameA = a.name.toLocaleLowerCase(); // ignore upper and lowercase
-          const nameB = b.name.toLocaleLowerCase(); // ignore upper and lowercase
-          if (nameB < nameA) {
-            return -1;
-          }
-          if (nameB > nameA) {
-            return 1;
-          }
-          // names must be equal
-          return 0;
-        });
-        break;
-      }
-    }
   }
 
   showAddRun() {
