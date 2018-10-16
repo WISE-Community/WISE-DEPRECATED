@@ -1889,25 +1889,27 @@ View.prototype.getIdeaAttributeValue = function(idea, attributeId) {
         //get the attributes from the idea
         var attributes = idea.attributes;
 
-        //loop through all the attributes
-        for(var x=0; x<attributes.length; x++) {
+        if (attributes != null) {
+          //loop through all the attributes
+          for(var x=0; x<attributes.length; x++) {
             //get an attribute
             var attribute = attributes[x];
 
             if(attribute != null) {
-                //get an attribute id
-                var tempAttributeId = attribute.id;
+              //get an attribute id
+              var tempAttributeId = attribute.id;
 
-                //check if this is the attribute id we want
-                if(attributeId == tempAttributeId) {
-                    /*
-                     * we have found the attribute id we want so we will obtain the
-                     * attribute value
-                     */
-                    value = attribute.value;
-                    break;
-                }
+              //check if this is the attribute id we want
+              if(attributeId == tempAttributeId) {
+                /*
+                 * we have found the attribute id we want so we will obtain the
+                 * attribute value
+                 */
+                value = attribute.value;
+                break;
+              }
             }
+          }
         }
     }
 
