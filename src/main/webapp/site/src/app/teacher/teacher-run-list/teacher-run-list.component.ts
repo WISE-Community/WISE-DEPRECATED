@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { DateFormatPipe } from 'ngx-moment';
-import { TeacherService } from "../teacher.service";
-import { TeacherRun } from "../teacher-run";
+import { TeacherService } from '../teacher.service';
+import { TeacherRun } from '../teacher-run';
 
 @Component({
   selector: 'app-teacher-run-list',
   templateUrl: './teacher-run-list.component.html',
-  styleUrls: ['./teacher-run-list.component.scss']
+  styleUrls: ['./teacher-run-list.component.scss'],
 })
 export class TeacherRunListComponent implements OnInit {
-
   runs: TeacherRun[] = [];
   personalRuns: TeacherRun[] = [];
   sharedRuns: TeacherRun[] = [];
@@ -20,9 +19,7 @@ export class TeacherRunListComponent implements OnInit {
   loaded: boolean = false; // whether array of runs has been retrieved from server
   searchValue: string = '';
   periods: string[] = [];
-  filterOptions: any[] = [
-    { 'value': '', 'label': 'All Periods' }
-  ];
+  filterOptions: any[] = [{ value: '', label: 'All Periods' }];
   filterValue: string = '';
   isPersonalRunsRetrieved: boolean = false;
   isSharedRunsRetrieved: boolean = false;
@@ -32,6 +29,7 @@ export class TeacherRunListComponent implements OnInit {
       let teacherRun: TeacherRun = run as TeacherRun;
       teacherRun.isHighlighted = true;
       this.runs.unshift(teacherRun);
+      this.runs.sort(this.sortByStartTimeDesc);
       this.populatePeriods([teacherRun]);
       this.sortPeriods();
       this.populateFilterOptions();
@@ -45,29 +43,27 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   getRuns(): void {
-    this.teacherService.getRuns()
-      .subscribe(runs => {
-        this.personalRuns = [];
-        for (let personalRun of runs) {
-          this.personalRuns.push(new TeacherRun(personalRun));
-        }
-        this.isPersonalRunsRetrieved = true;
-        this.processRunsIfReady();
-      });
+    this.teacherService.getRuns().subscribe(runs => {
+      this.personalRuns = [];
+      for (let personalRun of runs) {
+        this.personalRuns.push(new TeacherRun(personalRun));
+      }
+      this.isPersonalRunsRetrieved = true;
+      this.processRunsIfReady();
+    });
   }
 
   getSharedRuns(): void {
-    this.teacherService.getSharedRuns()
-      .subscribe(runs => {
-        this.sharedRuns = [];
-        for (let sharedRun of runs) {
-          const teacherRun = new TeacherRun(sharedRun);
-          teacherRun.shared = true;
-          this.sharedRuns.push(teacherRun);
-        }
-        this.isSharedRunsRetrieved = true;
-        this.processRunsIfReady();
-      });
+    this.teacherService.getSharedRuns().subscribe(runs => {
+      this.sharedRuns = [];
+      for (let sharedRun of runs) {
+        const teacherRun = new TeacherRun(sharedRun);
+        teacherRun.shared = true;
+        this.sharedRuns.push(teacherRun);
+      }
+      this.isSharedRunsRetrieved = true;
+      this.processRunsIfReady();
+    });
   }
 
   processRunsIfReady() {
@@ -78,7 +74,7 @@ export class TeacherRunListComponent implements OnInit {
 
   processRuns() {
     const runs = this.personalRuns.concat(this.sharedRuns);
-    runs.sort(this.sortByRunIdDesc);
+    runs.sort(this.sortByStartTimeDesc);
     this.runs = runs;
     this.filteredRuns = runs;
     this.populatePeriods(runs);
@@ -88,10 +84,12 @@ export class TeacherRunListComponent implements OnInit {
     this.loaded = true;
   }
 
-  sortByRunIdDesc(a, b) {
-    if (a.id < b.id) {
+  sortByStartTimeDesc(a, b) {
+    let aStartDate = new Date(a.startTime);
+    let bStartDate = new Date(b.startTime);
+    if (aStartDate < bStartDate) {
       return 1;
-    } else if (a.id > b.id) {
+    } else if (aStartDate > bStartDate) {
       return -1;
     } else {
       return 0;
@@ -115,7 +113,7 @@ export class TeacherRunListComponent implements OnInit {
 
   populateFilterOptions(): void {
     for (let period of this.periods) {
-      this.filterOptions.push({ 'value': period, 'label': period });
+      this.filterOptions.push({ value: period, label: period });
     }
   }
 
@@ -130,20 +128,20 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   runSpansYears(run: TeacherRun) {
-    const startYear = (new DateFormatPipe()).transform(run.startTime, 'Y');
-    const endYear = (new DateFormatPipe()).transform(run.endTime, 'Y');
+    const startYear = new DateFormatPipe().transform(run.startTime, 'Y');
+    const endYear = new DateFormatPipe().transform(run.endTime, 'Y');
     return startYear != endYear;
   }
 
   runSpansMonths(run: TeacherRun) {
-    const startMonth = (new DateFormatPipe()).transform(run.startTime, 'M');
-    const endMonth = (new DateFormatPipe()).transform(run.endTime, 'M');
+    const startMonth = new DateFormatPipe().transform(run.startTime, 'M');
+    const endMonth = new DateFormatPipe().transform(run.endTime, 'M');
     return startMonth != endMonth;
   }
 
   runSpansDays(run: TeacherRun) {
-    const startDay = (new DateFormatPipe()).transform(run.startTime, 'D');
-    const endDay = (new DateFormatPipe()).transform(run.endTime, 'D');
+    const startDay = new DateFormatPipe().transform(run.startTime, 'D');
+    const endDay = new DateFormatPipe().transform(run.endTime, 'D');
     return startDay != endDay;
   }
 
@@ -160,7 +158,9 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   performSearchAndFilter(): void {
-    this.filteredRuns = this.searchValue ? this.performSearch(this.searchValue) : this.runs;
+    this.filteredRuns = this.searchValue
+      ? this.performSearch(this.searchValue)
+      : this.runs;
     this.performFilter(this.filterValue);
     this.filteredActiveTotal = 0;
     this.filteredCompletedTotal = 0;
@@ -188,7 +188,7 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   performFilter(value: string) {
-    this.filteredRuns = this.filteredRuns.filter( (run: TeacherRun) => {
+    this.filteredRuns = this.filteredRuns.filter((run: TeacherRun) => {
       if (value !== '') {
         return run.periods.indexOf(value) !== -1;
       } else {
@@ -206,11 +206,20 @@ export class TeacherRunListComponent implements OnInit {
         if (typeof value === 'undefined' || value === null) {
           return false;
         } else if (typeof value === 'object') {
-          return JSON.stringify(value).toLocaleLowerCase().indexOf(searchValue) !== -1;
+          return (
+            JSON.stringify(value)
+              .toLocaleLowerCase()
+              .indexOf(searchValue) !== -1
+          );
         } else {
-          return value.toString().toLocaleLowerCase().indexOf(searchValue) !== -1;
+          return (
+            value
+              .toString()
+              .toLocaleLowerCase()
+              .indexOf(searchValue) !== -1
+          );
         }
-      })
+      }),
     );
   }
 
