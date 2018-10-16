@@ -29,6 +29,7 @@ export class TeacherRunListComponent implements OnInit {
       let teacherRun: TeacherRun = run as TeacherRun;
       teacherRun.isHighlighted = true;
       this.runs.unshift(teacherRun);
+      this.runs.sort(this.sortByStartTimeDesc);
       this.populatePeriods([teacherRun]);
       this.sortPeriods();
       this.populateFilterOptions();
@@ -84,9 +85,11 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   sortByStartTimeDesc(a, b) {
-    if (a.startTime < b.startTime) {
+    let aStartDate = new Date(a.startTime);
+    let bStartDate = new Date(b.startTime);
+    if (aStartDate < bStartDate) {
       return 1;
-    } else if (a.startTime > b.startTime) {
+    } else if (aStartDate > bStartDate) {
       return -1;
     } else {
       return 0;
