@@ -75,7 +75,7 @@ export class ContactFormComponent implements OnInit {
       this.configService.getConfig().subscribe((config) => {
         if (config != null) {
           this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
-          if (this.recaptchaPublicKey != null) {
+          if (this.recaptchaPublicKey != null && this.recaptchaPublicKey != '') {
             this.contactFormGroup.addControl('recaptcha', new FormControl('', [Validators.required]));
             this.isRecaptchaEnabled = true;
           }
