@@ -29,6 +29,8 @@
       <p>
         <ng-container *ngIf="search">Units found: {{ filteredRuns.length }}</ng-container>
         <ng-container *ngIf="!search">My WISE units: {{ filteredRuns.length }}</ng-container>
+        <span class="mat-caption" *ngIf="filteredRuns.length"> (<ng-container *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} scheduled, </ng-container>{{ filteredActiveTotal }} active, {{ filteredCompletedTotal }} completed)</span>.
+        <a *ngIf="search" href="#" (click)="!!reset()">Reset</a>
       </p>
     </div>
     <div id="studentRuns" *ngFor="let run of filteredRuns">

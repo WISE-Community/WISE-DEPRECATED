@@ -23,7 +23,24 @@ export class MockStudentService {
     projectThumb: "/wise/curriculum/360/assets/project_thumb.png"
   });
   getRuns(): Observable<StudentRun[]> {
-    const runs : any[] = [{id:1,name:"Photosynthesis"},{id:2,name:"Plate Tectonics"},{id:3,name:"Chemical Reactions"}];
+    const runs : any[] = [
+      {
+        id:1,
+        name:"Photosynthesis",
+        startTime: "2018-08-22 00:00:00.0"
+      },
+      {
+        id:2,
+        name:"Plate Tectonics",
+        startTime: "2018-08-23 00:00:00.0"
+      },
+      {
+        id:3,
+        name:"Chemical Reactions",
+        startTime: "2018-08-20 00:00:00.0",
+        endTime: "2018-08-22 00:00:00.0"
+      }
+      ];
     return Observable.create( observer => {
       observer.next(runs);
       observer.complete();
@@ -60,6 +77,6 @@ describe('StudentRunListComponent', () => {
 
   it('should show number of runs', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#unitCount').textContent).toContain('My WISE units: 3');
+    expect(compiled.querySelector('#unitCount').textContent).toContain('My WISE units: 3 (2 active, 1 completed).');
   })
 });

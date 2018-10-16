@@ -14,6 +14,9 @@ export class StudentRunListComponent implements OnInit {
 
   runs: StudentRun[] = [];
   filteredRuns: StudentRun[] = [];
+  filteredActiveTotal: number = 0;
+  filteredCompletedTotal: number = 0;
+  filteredScheduledTotal: number = 0;
   search: string = '';
   loaded: boolean = false;
 
@@ -38,9 +41,33 @@ export class StudentRunListComponent implements OnInit {
       });
   }
 
+  runIsActive(run: StudentRun) {
+    if (run.endTime) {
+      return false;
+    }
+    const startTime = new Date(run.startTime).getTime();
+    const now = new Date().getTime();
+    if (startTime <= now) {
+      return true;
+    }
+    return false;
+  }
+
   searchUpdated(value: string) {
     this.search = value;
     this.filteredRuns = this.search ? this.performFilter(this.search) : this.runs;
+    this.filteredActiveTotal = 0;
+    this.filteredCompletedTotal = 0;
+    this.filteredScheduledTotal = 0;
+    for (let run of this.filteredRuns) {
+      if (run.endTime) {
+        this.filteredCompletedTotal++;
+      } else if (this.runIsActive(run)) {
+        this.filteredActiveTotal++;
+      } else {
+        this.filteredScheduledTotal++;
+      }
+    }
   }
 
   performFilter(filterValue: string) {
@@ -56,6 +83,10 @@ export class StudentRunListComponent implements OnInit {
         }
       })
     );
+  }
+
+  reset(): void {
+    this.searchUpdated('');
   }
 
   showAddRun() {
