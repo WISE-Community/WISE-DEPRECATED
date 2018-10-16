@@ -177,8 +177,9 @@ public class TeacherAPIController {
     teacherUserDetails.setCity(teacherFields.get("city"));
     teacherUserDetails.setState(teacherFields.get("state"));
     teacherUserDetails.setCountry(teacherFields.get("country"));
-    if (teacherFields.containsKey("googleUserId")) {
-      teacherUserDetails.setGoogleUserId(teacherFields.get("googleUserId"));
+    String googleUserId = teacherFields.get("googleUserId");
+    if (isUsingGoogleUserId(googleUserId)) {
+      teacherUserDetails.setGoogleUserId(googleUserId);
       teacherUserDetails.setPassword(RandomStringUtils.random(10, true, true));
     } else {
       teacherUserDetails.setPassword(teacherFields.get("password"));
@@ -192,22 +193,31 @@ public class TeacherAPIController {
     teacherUserDetails.setLanguage(locale.getLanguage());
     User createdUser = this.userService.createUser(teacherUserDetails);
     String username = createdUser.getUserDetails().getUsername();
-    sendCreateTeacherAccountEmail(username, email, locale);
+    sendCreateTeacherAccountEmail(email, username, googleUserId, locale);
     return username;
   }
 
-  private void sendCreateTeacherAccountEmail(String username, String email, Locale locale) {
+  private void sendCreateTeacherAccountEmail(String email, String username, String googleUserId, Locale locale) {
     String fromEmail = wiseProperties.getProperty("portalemailaddress");
     String [] recipients = {email};
     String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
     String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, locale);
     String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {username}, Locale.US);
-    String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {username}, defaultBody, locale);
+    String message;
+    if (isUsingGoogleUserId(googleUserId)) {
+      message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBodyNoUsername", new Object[] {}, defaultBody, locale);
+    } else {
+      message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {username}, defaultBody, locale);
+    }
     try {
       mailService.postMail(recipients, subject, message, fromEmail);
     } catch (MessagingException e) {
       e.printStackTrace();
     }
+  }
+
+  private boolean isUsingGoogleUserId(String googleUserId) {
+    return googleUserId != null && !googleUserId.equals("");
   }
 
   @ResponseBody
