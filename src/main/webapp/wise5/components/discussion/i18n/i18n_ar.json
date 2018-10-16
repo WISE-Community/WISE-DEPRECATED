@@ -6,5 +6,6 @@
   "discussion.componentTypeLabel": "المناقشة",
   "discussion.post": "منشور ",
   "discussion.repliedToADiscussionYouWereIn": " قام {{userNames}} بالرد على مناقشة تشترك بها!",
-  "discussion.reply": "الرد"
+  "discussion.reply": "الرد",
+  "discussion.shareDiscussionPostWithClass": "شارك مع الفصل"
 }

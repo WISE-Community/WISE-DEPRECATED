@@ -1,7 +1,7 @@
 <%@ include file="../../include.jsp"%>
 
 <!DOCTYPE html>
-<html dir="${textDirection}">
+<html x-dir="${textDirection}"> <%-- The page always ltr --%>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
@@ -43,12 +43,12 @@
 </script>
 </head>
 
-<body>
-<div id="page">
-<div id="pageContent">
-	<h5 style="color: #0000CC;">
+<body style="padding:20px;">
+<div X-id="page">
+<div X-id="pageContent">
+	<!-- h5 style="color: #0000CC;">
 		<a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a>
-	</h5>
+	</h5 -->
 	<br/>
 	Select roles for ${user.userDetails.username}:<br/><br/>
 	<c:forEach var="authority" items="${allAuthorities}">

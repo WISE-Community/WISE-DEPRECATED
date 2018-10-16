@@ -130,9 +130,19 @@ function prepareInputsForHints() {
 	for (var i=0; i<inputs.length; i++){
 		$(inputs[i]).on('focus', function () {
 			var hint = $('.hint', $(this).parent());
-			var xpos = $(this).offset().left + $(this).width() + 15 + 'px';
+			var xpos, side;
+			if ($('html').attr('dir')=='rtl') {
+				xpos = ($(window).width() - ($(this).offset().left )) + 15 + 'px';;
+				side = "right";
+			} else {
+				xpos = $(this).offset().left + $(this).width() + 15 + 'px';
+				side = "left";
+			}
 			var ypos = $(this).offset().top + 'px';
-			hint.css({'left':xpos,'top':ypos}).show();
+			var opts = {};
+			opts[side] = xpos;
+			opts.top = ypos;
+			hint.css(opts).show();
 		});
 		$(inputs[i]).on('blur', function () {
 			$('.hint', $(this).parent()).hide();
@@ -166,9 +176,20 @@ function prepareSubjectsSelect(){
  * Toggle show/hide of the curriculum box
  */
 function showSubjectsSelect() {
-	var xpos = $('#toggleSubjects').offset().left + $('#toggleSubjects').width() + 50 + 'px';
 	var ypos = $('#toggleSubjects').offset().top - 3*$('#curriculumSubjectsBox').height()/4 + 'px';
-	$('#curriculumSubjectsBox').css({'left':xpos,'top':ypos}).fadeToggle();
+	var xpos, side;
+	if ($('html').attr('dir')=='rtl') {
+		xpos = ($(window).width() - ($('#toggleSubjects').offset().left )) + 50 + 'px';
+		side='right';
+	} else {
+		xpos = $('#toggleSubjects').offset().left + $('#toggleSubjects').width() + 50 + 'px';
+		side='left';
+	}
+	var opts = {};
+	opts[side] = xpos;
+	opts.top = ypos;
+	
+	$('#curriculumSubjectsBox').css(opts).fadeToggle();
 };
 
 if(typeof $ != 'undefined'){

@@ -11,6 +11,9 @@
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
     
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jquerymigrate.js"/>" type="text/javascript"></script>
@@ -120,7 +123,7 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 	    		</c:choose>
 	    	</select></td>
 	    <td>
-			<input id="maxTotalAssetsSize_${project.id}" type='text' size=8 value='${project.maxTotalAssetsSize}' onblur="updateMaxTotalAssetsSize(${project.id},this.value)" '/>
+			<input id="maxTotalAssetsSize_${project.id}" type='text' size=8 value='${project.maxTotalAssetsSize}' onblur="updateMaxTotalAssetsSize(${project.id},this.value)" />
 	    </td>
 		<td>
 			<div class="existingTagsDiv">
@@ -130,8 +133,8 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 						<table class='existingTags' id="tagTable_${project.id}_${tag.id}">
 							<tbody>
 								<tr>
-									<td><input id="tagEdit_${project.id}_${tag.id}" type='text' value='${tag.name}' onchange="tagChanged($(this).attr('id'))"/></td>
-									<td><input id="removeTag_${project.id}_${tag.id}" type='button' value='remove' onclick="removeTag($(this).attr('id'))"/></td>
+									<td><input id="tagEdit_${project.id}_${tag.id}" type='text' value='${tag.name}' onchange="tagChanged($(this).attr('id'))" readonly/></td>
+									<td><input id="removeTag_${project.id}_${tag.id}" type='button' value='remove' onclick="removeTag($(this).attr('id'))" readonly/></td>
 								</tr>
 							</tbody>
 						</table>

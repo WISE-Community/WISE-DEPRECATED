@@ -81,6 +81,7 @@ public class IndexController {
     for (Project p: libraryProjectsList) {
       String subject = p.getMetadata().getSubject();
       if (subject != null) {
+        // TODO: compare the translated subjects
         if (subject.equals("Earth Science")) {
           esProjects.add(p);
         } else if (subject.equals("Life Science")) {

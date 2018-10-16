@@ -1,7 +1,7 @@
 <%@ include file="../../include.jsp"%>
 
 <!DOCTYPE html>
-<html dir="${textDirection}">
+<html x-dir="${textDirection}"> <%-- The page always ltr --%>
 <head>
 	<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource" />"></script>

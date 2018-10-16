@@ -54,6 +54,13 @@
 	border-bottom-width:2px;
 }
 
+.studentManageHeader {
+	text-align:left;
+}
+[dir=rtl] .studentManageHeader {
+	text-align:right;
+}
+	
 .manageStudents .gradingContent {
 	margin-top:0;
 	padding:1em;
@@ -99,6 +106,10 @@
 .manageDataStyle {
 	font-weight:bold;
 	margin-right:.5em;
+}
+[dir=rtl] .manageDataStyle {
+	margin-right:auto;
+	margin-left:.5em;
 }
 
 #periodHeaderBar li {
@@ -187,10 +198,18 @@ ul.draglist_alt li {
 	margin-right:.25em;
 	color: #585F0C;
 }
+[dir=rtl] .userNameWithinView {
+	margin-right:auto;
+	margin-left:.25em;
+}
 	
 .userLinksBar {
 	position:absolute;
 	right:1em;
+}
+[dir=rtl] .userLinksBar {
+	right:auto;
+	left:1em;
 }
 	  
 .userLinks {

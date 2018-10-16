@@ -156,7 +156,7 @@ public class AdminIndexController {
       // do nothing
     }
 
-    if (wiseInstanceName.isEmpty()) {
+    if (wiseInstanceName == null || wiseInstanceName.isEmpty()) {
       wiseInstanceName = wiseProperties.getProperty("wise.name", "noName");
     }
 

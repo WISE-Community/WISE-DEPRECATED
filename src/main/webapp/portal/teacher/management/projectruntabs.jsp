@@ -1,6 +1,9 @@
 <link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+		<link href="${contextPath}/<spring:theme code="facetedfilter-rtl.css"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 
 <div id="runTabs" class="panelTabs">
