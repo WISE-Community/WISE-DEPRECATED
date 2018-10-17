@@ -1,7 +1,34 @@
-<div class="main main--fullwidth">
-  <section class="section--fullwidth">
-    <div class="content">
-      <p>news works!</p>
-    </div>
-  </section>
+<div class="main app-background">
+  <div class="content">
+    <header fxLayout="row" class="content__header">
+      <h1 class="accent" fxLayoutAlign="center center">
+        <mat-icon>event</mat-icon>News
+      </h1>
+    </header>
+    <section>
+      <div class="content-block">
+        <app-timeline>
+          <ng-container *ngFor="let newsItem of allNewsItems; let i=index">
+            <app-timeline-item *ngIf="i < 10 || showAll">
+              <app-timeline-item-label>
+                <span class="mat-body-2">{{ newsItem.date | amDateFormat:'MMM D, Y' }}</span>
+              </app-timeline-item-label>
+              <app-timeline-item-content>
+                <mat-card>
+                  <mat-card-content>
+                    <h2 class="news-title mat-body-2">{{newsItem.title}}</h2>
+                    <div class="mat-body-2" [innerHTML]="sanitizer.bypassSecurityTrustHtml(newsItem.news)"></div>
+                  </mat-card-content>
+                </mat-card>
+              </app-timeline-item-content>
+            </app-timeline-item>
+          </ng-container>
+        </app-timeline>
+        <div class="content-block__actions"
+             *ngIf="allNewsItems.length > 10 && !showAll" >
+          <a mat-raised-button color="accent" (click)="showAll = true">Show More</a>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
