@@ -22,8 +22,40 @@
         <a *ngIf="search" href="#" (click)="!!reset()">Reset</a>
       </p>
     </div>
-    <div id="studentRuns" *ngFor="let run of filteredRuns">
-      <app-student-run-list-item [run]="run"></app-student-run-list-item>
+    <app-timeline>
+      <ng-container *ngFor="let run of filteredRuns; let i=index">
+        <app-timeline-item [active]="runIsActive(run)" *ngIf="i < 10 || showAll">
+          <app-timeline-item-label>
+            <ng-container *ngIf="run.endTime">
+              <ng-container *ngIf="runSpansYears(run)">
+                <span class="mat-body-2">{{ run.startTime | amDateFormat:'MMM D' }}</span>
+                <span class="secondary-text"> {{ run.startTime | amDateFormat:'Y' }}</span> -
+                <span class="mat-body-2"> {{ run.endTime | amDateFormat:'MMM D' }}</span>
+                <span class="secondary-text"> {{ run.endTime | amDateFormat:'Y' }}</span>
+              </ng-container>
+              <ng-container *ngIf="!runSpansYears(run)">
+                <span class="mat-body-2">{{ run.startTime | amDateFormat:'MMM D' }}</span>
+                <ng-container *ngIf="runSpansDays(run)"> -
+                  <span class="mat-body-2" *ngIf="runSpansMonths(run)">{{ run.endTime | amDateFormat:'MMM D' }}</span>
+                  <span class="mat-body-2" *ngIf="!runSpansMonths(run)">{{ run.endTime | amDateFormat:'D' }}</span>
+                </ng-container>
+                <span class="secondary-text"> {{ run.endTime | amDateFormat:'Y' }}</span>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!run.endTime">
+              <span class="mat-body-2">{{ run.startTime | amDateFormat:'MMM D' }}</span>
+              <span class="secondary-text"> {{ run.startTime | amDateFormat:'Y' }}</span>
+            </ng-container>
+          </app-timeline-item-label>
+          <app-timeline-item-content>
+            <app-student-run-list-item [run]="run"></app-student-run-list-item>
+          </app-timeline-item-content>
+        </app-timeline-item>
+      </ng-container>
+    </app-timeline>
+    <div class="content-block__actions"
+         *ngIf="filteredRuns.length > 10 && !showAll" >
+      <a mat-raised-button color="accent" (click)="showAll = true">Show More</a>
     </div>
   </div>
 </div>
