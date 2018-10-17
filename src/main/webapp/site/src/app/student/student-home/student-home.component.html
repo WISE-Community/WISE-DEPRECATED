@@ -1,7 +1,21 @@
-<header fxLayout="row" class="content__header">
-  <h1 class="accent" fxLayoutAlign="center center">
+<header fxLayout="row wrap"
+        fxLayout.xs="column"
+        class="content__header"
+        fxLayoutAlign="start center"
+        fxLayoutAlign.xs="start"
+        fxLayoutGap="16px">
+  <h1 class="accent" fxLayoutAlign="start center">
     <mat-icon>home</mat-icon>Student Home
   </h1>
+  <span fxFlex fxHide.xs fxShow></span>
+  <button mat-raised-button
+          (click)="showAddRun()"
+          aria-label="Add unit"
+          color="accent"
+          fxFlex="0 0 auto">
+    <mat-icon>add</mat-icon>
+    Add Unit
+  </button>
 </header>
 <section>
   <app-student-run-list></app-student-run-list>

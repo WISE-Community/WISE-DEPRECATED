@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
-import { AddProjectDialogComponent } from "../add-project-dialog/add-project-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-student-run-list',
@@ -20,10 +18,11 @@ export class StudentRunListComponent implements OnInit {
   search: string = '';
   loaded: boolean = false;
 
-  constructor(private studentService: StudentService, public dialog: MatDialog) {
+  constructor(private studentService: StudentService) {
     studentService.newRunSource$.subscribe(run => {
       run.isHighlighted = true;
       this.runs.unshift(run);
+      scrollTo(0, 0);
     });
   }
 
@@ -87,13 +86,5 @@ export class StudentRunListComponent implements OnInit {
 
   reset(): void {
     this.searchUpdated('');
-  }
-
-  showAddRun() {
-    const dialogRef = this.dialog.open(AddProjectDialogComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      scrollTo(0, 0);
-    });
   }
 }

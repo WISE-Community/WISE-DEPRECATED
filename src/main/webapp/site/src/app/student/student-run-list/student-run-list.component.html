@@ -1,15 +1,4 @@
 <div class="student-run-list">
-  <div fxLayoutAlign="end">
-    <button mat-raised-button
-            (click)="showAddRun()"
-            aria-label="Add unit"
-            color="accent"
-            fxFlex="0 0 auto"
-            fxFlex.xs="0 0 100%">
-      <mat-icon>add</mat-icon>
-      Add Unit
-    </button>
-  </div>
   <div class="notice" *ngIf="!runs.length && loaded">
     <p>Hey there! Looks like you don't have any WISE units yet.</p>
     <p>Ask your teacher for an <b>Access Code</b> and then tap the <b>Add Unit</b> button to get started.</p>

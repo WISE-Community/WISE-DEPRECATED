@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable } from "rxjs";
+import { MatDialog } from "@angular/material/dialog";
 import { User } from "../../domain/user";
 import { UserService } from "../../services/user.service";
 import { StudentHomeComponent } from "./student-home.component";
@@ -28,7 +29,8 @@ describe('StudentHomeComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ StudentHomeComponent ],
       providers: [
-        { provide: UserService, useClass: MockUserService }
+        { provide: UserService, useClass: MockUserService },
+        { provide: MatDialog, useValue: {} }
       ],
       imports: [],
       schemas: [ NO_ERRORS_SCHEMA ]

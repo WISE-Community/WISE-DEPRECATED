@@ -10,12 +10,3 @@ h1 {
     font-size: mat-font-size($config, title);
   }
 }
-
-mat-icon {
-  padding-right: 8px;
-  @include mat-icon-size(52px);
-
-  @media (min-width: breakpoint('sm.min')) {
-    @include mat-icon-size(56px);
-  }
-}

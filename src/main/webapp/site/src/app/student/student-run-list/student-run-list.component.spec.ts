@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { defer, Observable } from "rxjs";
-import { MatDialog } from "@angular/material/dialog";
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import { StudentRunListComponent } from "./student-run-list.component";
@@ -57,8 +56,7 @@ describe('StudentRunListComponent', () => {
       declarations: [ StudentRunListComponent ],
       imports: [],
       providers: [
-        { provide: StudentService, useClass: MockStudentService },
-        { provide: MatDialog, useValue: {} }
+        { provide: StudentService, useClass: MockStudentService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
