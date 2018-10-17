@@ -26,6 +26,7 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
 import { HeroSectionComponent } from './hero-section/hero-section.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SelectMenuComponent } from './select-menu/select-menu.component';
+import { ShareItemDialogComponent } from "../library/share-item-dialog/share-item-dialog.component";
 
 @NgModule({
   imports: [

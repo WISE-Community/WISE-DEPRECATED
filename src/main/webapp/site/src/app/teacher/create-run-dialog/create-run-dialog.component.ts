@@ -62,6 +62,10 @@ export class CreateRunDialogComponent {
     }
   }
 
+  get selectedPeriodsControl() {
+    return <FormArray>this.form.get("selectedPeriods");
+  }
+
   mapPeriods(items: any[]): string[] {
     const selectedPeriods = items.filter((item) => item.checkbox).map((item) => item.name);
     return selectedPeriods.length ? selectedPeriods : [];

@@ -2,8 +2,7 @@
   <div fxLayout="row" fxLayoutAlign="start start">
     <app-search-bar [placeholderText]="'Keyword search'"
                     [value]="searchValue"
-                    (update)="searchUpdated($event)"
-                    [disable]="searchDisabled">
+                    (update)="searchUpdated($event)">
     </app-search-bar>
     <button class="library-filters-toggle input-control--appearance-fill"
             mat-icon-button

@@ -6,11 +6,6 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
 import { map, debounceTime } from 'rxjs/operators';
 import { Project } from "../../../domain/project";
 
-@Component({
-  selector: 'app-share-item-dialog',
-  templateUrl: './share-item-dialog.component.html',
-  styleUrls: ['./share-item-dialog.component.scss']
-})
 export abstract class ShareItemDialogComponent implements OnInit {
 
   project: Project;
