@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
+import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -100,6 +101,21 @@ public class StudentAPIController {
     return runListJSONArray.toString();
   }
 
+  private JSONObject getOwnerJSON(User owner) throws JSONException {
+    JSONObject ownerJSON = new JSONObject();
+    try {
+      ownerJSON.put("id", owner.getId());
+      TeacherUserDetails ownerUserDetails = (TeacherUserDetails) owner.getUserDetails();
+      ownerJSON.put("displayName", ownerUserDetails.getDisplayname());
+      ownerJSON.put("userName", ownerUserDetails.getUsername());
+      ownerJSON.put("firstName", ownerUserDetails.getFirstname());
+      ownerJSON.put("lastName", ownerUserDetails.getLastname());
+    } catch(org.hibernate.ObjectNotFoundException e) {
+      System.out.println(e);
+    }
+    return ownerJSON;
+  }
+
   /**
    * @param user The signed in User.
    * @param run The run object.
@@ -135,8 +151,7 @@ public class StudentAPIController {
     runJSON.put("startTime", run.getStarttime());
     runJSON.put("endTime", run.getEndtime());
     runJSON.put("project", ControllerUtil.getProjectJSON(project));
-    runJSON.put("owner", run.getOwner());
-    runJSON.put("sharedOwners", run.getSharedowners());
+    runJSON.put("owner", getOwnerJSON(run.getOwner()));
 
     /*
      * The workgroup can be null if the student registered for a run but
