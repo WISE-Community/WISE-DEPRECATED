@@ -29,8 +29,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -76,8 +76,8 @@ public class ContactAPIController {
       boolean isStudent = isStudent();
       String issueTypeValue = getIssueTypeValue(issueType);
       String fromEmail = wiseProperties.getProperty("portalemailaddress");
-      String[] toEmails = getContactMessageRecipients(email, runId);
-      String[] cc = new String[0];
+      String[] toEmails = getContactMessageToEmails(runId, isStudent);
+      String[] cc = getContactMessageCCs(email, isStudent);
       String subject = getSubject(issueTypeValue, summary);
       String body = getContactEmailBody(
           name, email, description, runId, projectId, userAgent, isStudent);
@@ -114,11 +114,10 @@ public class ContactAPIController {
 
   private boolean isStudent() {
     User signedInUser = ControllerUtil.getSignedInUser();
-    boolean isStudent = false;
     if (signedInUser != null) {
-      isStudent = signedInUser.isStudent();
+      return signedInUser.isStudent();
     }
-    return isStudent;
+    return false;
   }
 
   private String getIssueTypeValue(String issueType) {
@@ -149,21 +148,26 @@ public class ContactAPIController {
     return "[" + contactWISEString + "] " + issueType + ": " + summary;
   }
 
-  protected String[] getContactMessageRecipients(String email, Long runId) {
-    String contactEmailString = wiseProperties.getProperty("contact_email");
-    String[] recipients = contactEmailString.split(",");
-    ArrayList<String> allRecipients = new ArrayList<String>(Arrays.asList(recipients));
-    if (email != null) {
-      allRecipients.add(email);
-    } else if (runId != null) {
-      allRecipients.add(getTeacherEmail(runId));
+  protected String[] getContactMessageToEmails(Long runId, boolean isStudent) {
+    if (isStudent) {
+      return new String[] {getTeacherEmail(runId)};
+    } else {
+      String contactEmailString = wiseProperties.getProperty("contact_email");
+      return contactEmailString.split(",");
     }
-    return allRecipients.toArray(new String[allRecipients.size()]);
+  }
+
+  protected String[] getContactMessageCCs(String email, boolean isStudent) {
+    if (isStudent) {
+      String contactEmailString = wiseProperties.getProperty("contact_email");
+      return contactEmailString.split(",");
+    } else {
+      return new String[] {email};
+    }
   }
 
   private String getContactEmailBody(String name, String email, String description, Long runId,
         Integer projectId, String userAgent, Boolean isStudent) {
-
     StringBuffer body = new StringBuffer();
     if (isStudent) {
       addStudentGeneratedRequestBody(body, description, name, runId);
@@ -187,11 +191,10 @@ public class ContactAPIController {
       User teacher = getTeacherForRun(runId);
       TeacherUserDetails teacherUserDetails = (TeacherUserDetails) teacher.getUserDetails();
       String displayName = teacherUserDetails.getDisplayname();
-      appendLine(body, "Dear " + displayName + ",\n");
-      appendLine(body, "One of your students has submitted a WISE trouble ticket. We recommend that you follow up with your student if necessary. If you need further assistance, you can 'Reply to all' on this email to contact us.\n");
+      appendLine(body, getTranslationString("contact.email.studentGenerated", displayName));
     }
-    appendLine(body, "Description: " + description);
-    appendLine(body, "Name: " + name);
+    appendLine(body, getTranslationString("contact.email.description", description));
+    appendLine(body, getTranslationString("contact.email.name", name));
   }
 
   private User getTeacherForRun(Long runId) {
@@ -213,10 +216,10 @@ public class ContactAPIController {
 
   private void addTeacherGeneratedRequestBody(StringBuffer body, String description, String name,
         String email) {
-    appendLine(body, "Your message has been sent. Thank you for contacting WISE. We will try to get back to you as soon as possible.\n");
-    appendLine(body, "Description: " + description);
-    appendLine(body, "Name: " + name);
-    appendLine(body, "Email: " + email);
+    appendLine(body, getTranslationString("contact.email.teacherGenerated", name));
+    appendLine(body, getTranslationString("contact.email.description", description));
+    appendLine(body, getTranslationString("contact.email.name", name));
+    appendLine(body, getTranslationString("contact.email.email", email));
   }
 
   private void addProjectAndRunDetailsToBody(StringBuffer body, Long runId, Integer projectId) {
@@ -224,16 +227,16 @@ public class ContactAPIController {
       try {
         Run run = runService.retrieveById(runId);
         Project project = run.getProject();
-        appendLine(body, "Project Name: " + project.getName());
-        appendLine(body, "Project ID: " + project.getId());
-        appendLine(body, "Run ID: " + runId);
+        appendLine(body, getTranslationString("contact.email.projectName", project.getName()));
+        appendLine(body, getTranslationString("contact.email.projectId", project.getId().toString()));
+        appendLine(body, getTranslationString("contact.email.runId", runId.toString()));
       } catch (ObjectNotFoundException e) {
       }
     } else if (projectId != null) {
       try {
         Project project = projectService.getById(projectId);
-        appendLine(body, "Project Name: " + project.getName());
-        appendLine(body, "Project ID: " + projectId);
+        appendLine(body, getTranslationString("contact.email.projectName", project.getName()));
+        appendLine(body, getTranslationString("contact.email.projectId", project.getId().toString()));
       } catch (ObjectNotFoundException e) {
       }
     }
@@ -249,22 +252,31 @@ public class ContactAPIController {
   }
 
   private void addOperatingSystemToBody(StringBuffer body, JSONObject userSystemDetails) {
+    appendLine(body, getTranslationString("contact.email.operatingSystem", getOperatingSystem(userSystemDetails)));
+  }
+
+  private String getOperatingSystem(JSONObject userSystemDetails) {
     try {
       String operatingSystemName = userSystemDetails.getString("operating_system");
       String operatingSystemVersion = userSystemDetails.getString("operating_system_version_full");
-      appendLine(body, "Operating System: " + operatingSystemName + " " + operatingSystemVersion);
+      return operatingSystemName + " " + operatingSystemVersion;
     } catch(JSONException e) {
     }
+    return "";
   }
 
   private void addBrowserToBody(StringBuffer body, JSONObject userSystemDetails) {
+    appendLine(body, getTranslationString("contact.email.browser", getBrowser(userSystemDetails)));
+  }
+
+  private String getBrowser(JSONObject userSystemDetails) {
     try {
       String browserName = userSystemDetails.getString("browser_name");
       String browserVersion = userSystemDetails.getString("browser_version_full");
-      appendLine(body, "Browser: " + browserName + " " + browserVersion);
+      return browserName + " " + browserVersion;
     } catch(JSONException e) {
-
     }
+    return "";
   }
 
   private boolean wisePropertiesHasUserAgentParseKey() {
@@ -318,5 +330,9 @@ public class ContactAPIController {
       e.printStackTrace();
     }
     return false;
+  }
+
+  private String getTranslationString(String key, String param1) {
+    return MessageFormat.format(i18nProperties.getProperty(key), param1);
   }
 }

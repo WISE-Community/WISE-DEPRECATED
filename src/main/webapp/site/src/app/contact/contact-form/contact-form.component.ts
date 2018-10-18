@@ -14,15 +14,7 @@ import { ConfigService } from "../../services/config.service";
 })
 export class ContactFormComponent implements OnInit {
 
-  issueTypes: object[] = [
-    { key: "TROUBLE_LOGGING_IN", value: "Trouble Signing In" },
-    { key: "NEED_HELP_USING_WISE", value: "Need Help Using WISE" },
-    { key: "PROJECT_PROBLEMS", value: "Problems with a Project" },
-    { key: "STUDENT_MANAGEMENT", value: "Student Management" },
-    { key: "AUTHORING", value: "Need Help with Authoring" },
-    { key: "FEEDBACK", value: "Feedback to WISE" },
-    { key: "OTHER", value: "Other Problem" }
-  ]
+  issueTypes: object[] = [];
   contactFormGroup: FormGroup = this.fb.group({
     name: new FormControl( '', [Validators.required]),
     issueType: new FormControl('', [Validators.required]),
@@ -53,6 +45,8 @@ export class ContactFormComponent implements OnInit {
     this.showEmailIfNecessary();
     this.showRecaptchaIfNecessary();
     this.populateFieldsIfSignedIn();
+    this.populateIssueTypes();
+    this.setIssueTypeIfNecessary();
   }
 
   obtainRunIdOrProjectIdIfNecessary() {
@@ -94,6 +88,34 @@ export class ContactFormComponent implements OnInit {
         this.setControlFieldValue('name', user.firstName + ' ' + user.lastName);
         this.setControlFieldValue('email', user.email);
       }
+    }
+  }
+
+  populateIssueTypes() {
+    if (this.isStudent) {
+      this.issueTypes = [
+        { key: "TROUBLE_LOGGING_IN", value: "Trouble Signing In" },
+        { key: "NEED_HELP_USING_WISE", value: "Need Help Using WISE" },
+        { key: "PROJECT_PROBLEMS", value: "Problems with a Project" },
+        { key: "FEEDBACK", value: "Feedback to WISE" },
+        { key: "OTHER", value: "Other Problem" }
+      ];
+    } else {
+      this.issueTypes = [
+        { key: "TROUBLE_LOGGING_IN", value: "Trouble Signing In" },
+        { key: "NEED_HELP_USING_WISE", value: "Need Help Using WISE" },
+        { key: "PROJECT_PROBLEMS", value: "Problems with a Project" },
+        { key: "STUDENT_MANAGEMENT", value: "Student Management" },
+        { key: "AUTHORING", value: "Need Help with Authoring" },
+        { key: "FEEDBACK", value: "Feedback to WISE" },
+        { key: "OTHER", value: "Other Problem" }
+      ];
+    }
+  }
+
+  setIssueTypeIfNecessary() {
+    if (this.isStudent && this.runId != null) {
+      this.setControlFieldValue('issueType', 'PROJECT_PROBLEMS')
     }
   }
 
