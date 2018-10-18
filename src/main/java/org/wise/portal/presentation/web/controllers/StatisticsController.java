@@ -118,6 +118,7 @@ public class StatisticsController {
       return null;
     } else {
       ModelAndView modelAndView = new ModelAndView();
+      modelAndView.addObject("wiseBaseURL", request.getContextPath());
       return modelAndView;
     }
   }
