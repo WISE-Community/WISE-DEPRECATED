@@ -29,7 +29,11 @@ export class TeacherProjectLibraryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authoringToolLink = `${this.configService.getContextPath()}/author`;
+    this.configService.getConfig().subscribe((config) => {
+      if (config != null) {
+        this.authoringToolLink = `${this.configService.getContextPath()}/author`;
+      }
+    });
   }
 
   updateNumberOfOfficialProjectsVisible(count) {
