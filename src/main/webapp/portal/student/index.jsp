@@ -87,7 +87,7 @@
             Cancel: function(){ $(this).dialog('destroy'); }
           }
         });
-        $("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "${contextPath}/student/updatestudentaccount.html");
+        $("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "${contextPath}/legacy/student/updatestudentaccount.html");
 
       });
 

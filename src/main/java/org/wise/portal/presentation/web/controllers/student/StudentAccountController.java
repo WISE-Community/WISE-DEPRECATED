@@ -227,8 +227,8 @@ public class StudentAccountController {
     String domainWithPort = domain + ":" + request.getLocalPort();
     String referrer = request.getHeader("referer");
     String contextPath = request.getContextPath();
-    String registerUrl = contextPath + "/student/join";
-    String updateAccountInfoUrl = contextPath + "/student/updatestudentaccount.html";
+    String registerUrl = contextPath + "/legacy/student/join";
+    String updateAccountInfoUrl = contextPath + "/legacy/student/updatestudentaccount.html";
 
     if (referrer != null &&
       (referrer.contains(domain + registerUrl) ||
