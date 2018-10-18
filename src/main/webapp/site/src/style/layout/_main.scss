@@ -1,13 +1,13 @@
 .main {
-  padding: 112px 16px 48px;
+  padding: 112px 8px 48px;
   flex: 1 0 auto;
 
   @media (min-width: breakpoint('sm.min')) {
-    padding: 144px 48px 84px;
+    padding: 128px 24px 64px;
   }
 
   @media (min-width: breakpoint('md.min')) {
-    padding-top: 128px;
+    padding: 128px 40px 78px;
   }
 
   @media (min-width: breakpoint('lg.min')) {

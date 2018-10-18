@@ -17,6 +17,12 @@
 }
 
 .content__header {
+  margin-bottom: 8px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    margin-bottom: 16px;
+  }
+
   @media (min-width: breakpoint('md.min')) {
     margin: 16px 0 16px;
   }

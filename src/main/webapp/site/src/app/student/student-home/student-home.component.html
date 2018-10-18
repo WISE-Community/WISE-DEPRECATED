@@ -8,14 +8,15 @@
     <mat-icon>home</mat-icon>Student Home
   </h1>
   <span fxFlex fxHide.xs fxShow></span>
-  <button mat-raised-button
-          (click)="showAddRun()"
-          aria-label="Add unit"
-          color="accent"
-          fxFlex="0 0 auto">
-    <mat-icon>add</mat-icon>
-    Add Unit
-  </button>
+  <div>
+    <button mat-raised-button
+            (click)="showAddRun()"
+            aria-label="Add unit"
+            color="accent">
+      <mat-icon>add</mat-icon>
+      Add Unit
+    </button>
+  </div>
 </header>
 <section>
   <app-student-run-list></app-student-run-list>

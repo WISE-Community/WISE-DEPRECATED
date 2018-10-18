@@ -59,8 +59,18 @@
     }
   }
 
+  .mat-card-actions {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .mat-card {
     border-radius: $card-border-radius;
+    padding: 16px;
+
+    >.mat-card-actions:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .mat-dialog-container {

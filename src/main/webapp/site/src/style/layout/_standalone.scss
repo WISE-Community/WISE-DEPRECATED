@@ -2,12 +2,24 @@
   padding: 32px;
 
   .mat-card-content {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
+
+    @media (min-width: breakpoint('sm.min')) {
+      margin-bottom: 24px;
+    }
   }
 
   .mat-card-actions {
     margin: 0;
     padding: 16px 0;
+
+    @media (min-width: breakpoint('sm.min')) {
+      padding-top: 24px;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -24,6 +36,10 @@
 .standalone__content {
   max-width: breakpoint('sm.min');
   margin: 0 auto 16px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding: 24px !important;
+  }
 }
 
 .standalone__content--sm {
@@ -31,8 +47,11 @@
 }
 
 .standalone__title {
-  margin-bottom: 8px;
   text-align: center;
+
+  @media (max-width: breakpoint('xs.max')) {
+    margin-bottom: 8px;
+  }
 }
 
 .standalone__error {

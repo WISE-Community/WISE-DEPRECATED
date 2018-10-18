@@ -1,40 +1,71 @@
+<ng-template #runInfo>
+  <div fxShow fxHide.xs>
+    Teacher: {{ run.owner.displayName }} |
+    Period: {{ run.periodName }} |
+    Code: {{ run.runCode }}
+  </div>
+  <div fxHide fxShow.xs>
+    Teacher: {{ run.owner.displayName }}<br />
+    Period: {{ run.periodName }}<br />
+    Code: {{ run.runCode }}<br />
+  </div>
+  <div *ngIf="run.workgroupMembers">Team:
+    <span *ngFor="let user of run.workgroupMembers; let isLast=last">
+      {{ user.firstname }}{{ isLast ? '' : ', '}}
+    </span>
+  </div>
+</ng-template>
+
 <mat-card [ngClass]="{ 'highlighted': run.isHighlighted }">
   <mat-card-content fxLayout="row">
     <div mat-card-avatar [style.background-image]="thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
         <div fxLayout="column">
-          <mat-card-title>{{ run.name }}</mat-card-title>
-          <mat-card-subtitle>
-            <div class="mat-body-2" fxShow fxHide.gt-xs>
-              <span *ngIf="!run.endTime" class="success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
-              <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
-            </div>
-            <div>
-              Teacher: {{ run.owner.displayName }}
-              &nbsp;&bull;&nbsp;
-              Period: {{ run.periodName }}
-              &nbsp;&bull;&nbsp;
-              Code: {{ run.runCode }}
-            </div>
-            <div>Team:
-              <span *ngFor="let user of run.workgroupMembers; let isLast=last">
-                {{ user.firstname }}{{ isLast ? '' : ', '}}
-              </span>
-            </div>
+          <mat-card-title [class.secondary-text]="run.endTime">
+            {{ run.name }}
+          </mat-card-title>
+          <mat-card-subtitle fxHide fxShow.gt-xs>
+            <ng-container *ngTemplateOutlet="runInfo"></ng-container>
           </mat-card-subtitle>
         </div>
-        <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
-        <div fxFlex="0 1 auto" fxFlex.xs="100%" fxHide fxShow.gt-xs>
-          <span *ngIf="!run.endTime && !isAvailable" class="mat-card-title">Will start on: {{ run.startTime | amDateFormat:'ll' }}</span>
-          <span *ngIf="!run.endTime && isAvailable" class="mat-card-title success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
-          <span *ngIf="run.endTime" class="mat-card-title">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
-        </div>
-          </div>
+      </div>
+    </mat-card-content>
+    <mat-card-content fxHide fxShow.xs>
+      <div class="info-block" [class.secondary-text]="run.endTime">
+        <ng-container *ngTemplateOutlet="runInfo"></ng-container>
+      </div>
     </mat-card-content>
   <mat-card-actions>
-    <span fxFlex="1 1 auto"></span>
-    <a mat-button *ngIf="!run.endTime && isAvailable" href="{{ problemLink }}" class="secondary-text">Report Problem</a>
-    <a mat-raised-button *ngIf="!run.endTime && isAvailable" href="{{ runLink }}" color="primary">Launch</a>
-    <a mat-button *ngIf="run.endTime" href="{{ runLink }}" class="secondary-text">Review</a>
+    <div fxLayout="row wrap"
+         fxLayout.xs="column"
+         fxLayoutAlign.gt-xs="start center"
+         fxLayoutGap="8px">
+      <span fxFlex="1 1 auto" fxShow fxHide.xs></span>
+      <a mat-button *ngIf="!run.endTime && isAvailable"
+         href="{{ problemLink }}"
+         fxFlex="0 0 auto"
+         fxFlex.xs="100">
+        Report Problem
+      </a>
+      <a mat-flat-button
+         *ngIf="!run.endTime"
+         href="{{ runLink }}"
+         color="primary"
+         [disabled]="!isAvailable"
+         fxFlex="0 0 auto"
+         fxFlex.xs="100">
+        <mat-icon>play_circle_filled</mat-icon>
+        Launch
+      </a>
+      <a mat-flat-button
+         *ngIf="run.endTime"
+         href="{{ runLink }}"
+         color="primary"
+         fxFlex="0 0 auto"
+         fxFlex.xs="100">
+        <mat-icon>visibility</mat-icon>
+        Review
+      </a>
+    </div>
   </mat-card-actions>
 </mat-card>
