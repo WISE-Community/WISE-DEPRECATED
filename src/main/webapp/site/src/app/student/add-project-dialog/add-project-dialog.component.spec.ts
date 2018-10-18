@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AddProjectDialogComponent } from './add-project-dialog.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatDialogRef } from "@angular/material/dialog";
 import { StudentService } from "../student.service";
 import {
+  MatDialog,
   MatInputModule,
   MatSelectModule
 } from "@angular/material";
@@ -20,10 +20,19 @@ describe('AddProjectDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AddProjectDialogComponent ],
-      imports: [ BrowserAnimationsModule, MatSelectModule, MatInputModule ],
+      imports: [
+        BrowserAnimationsModule,
+        MatSelectModule,
+        MatInputModule
+      ],
       providers: [
         { provide: StudentService, useClass: MockStudentService },
-        { provide: MatDialogRef, useValue: {} }
+        { provide: MatDialog, useValue: {
+            closeAll: () => {
+
+            }
+          }
+        }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

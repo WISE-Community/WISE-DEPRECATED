@@ -4,12 +4,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'ngx-moment';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
-  MatButtonModule, MatCardModule, MatIconModule, MatProgressBarModule,
-  MatTabsModule } from '@angular/material';
+  MatButtonModule, MatCardModule, MatDialogModule, MatIconModule,
+  MatProgressBarModule, MatTabsModule } from '@angular/material';
 
 const materialModules = [
-  MatButtonModule, MatCardModule, MatIconModule, MatProgressBarModule,
-  MatTabsModule
+  MatButtonModule, MatCardModule, MatDialogModule, MatIconModule,
+  MatProgressBarModule, MatTabsModule
 ];
 
 import { SharedModule } from "../modules/shared/shared.module";
