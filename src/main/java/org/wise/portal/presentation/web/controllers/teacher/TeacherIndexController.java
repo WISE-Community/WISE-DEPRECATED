@@ -23,13 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher;
 
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
-import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +36,7 @@ import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Controller for WISE Teacher index page
@@ -50,7 +44,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/teacher")
+@RequestMapping("/legacy/teacher")
 public class TeacherIndexController {
 
   @Autowired

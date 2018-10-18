@@ -366,7 +366,7 @@ function checkRunCode() {
 
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}/" title="WISE Homepage"></a>
+				<a id="name" href="${contextPath}/legacy" title="WISE Homepage"></a>
 			</div>
 
 			<div class="infoContent">
@@ -502,7 +502,7 @@ function checkRunCode() {
 
 				  	<div style="margin-top:1em;">
 				 	  	<a style="margin-bottom:1em;" class="wisebutton" onclick="checkForExistingAccountsAndCreateAccount()"><spring:message code="student.registerstudent.createAccount"/></a>
-				 	  	<a href="${contextPath}/"><spring:message code="cancel"/></a>
+				 	  	<a href="${contextPath}/legacy"><spring:message code="cancel"/></a>
 					 </div>
 
 					 </form:form>

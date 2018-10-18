@@ -23,12 +23,11 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.newsitem.NewsItem;
@@ -38,13 +37,14 @@ import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.project.ProjectService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Controller for WISE main home page
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/")
+@RequestMapping("/legacy")
 public class IndexController {
 
   @Autowired
@@ -61,6 +61,21 @@ public class IndexController {
 
   // path to project thumbnail image relative to project folder
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
+
+  @RequestMapping(value = "/join", method = RequestMethod.GET)
+  protected String showJoinPage() {
+    return "join";
+  }
+
+  @RequestMapping(value = "/pages/{filename}", method = RequestMethod.GET)
+  protected String showStaticPages(@PathVariable String filename) {
+    return "pages/" + filename;
+  }
+
+  @RequestMapping(value = "/forgotaccount/selectaccounttype", method = RequestMethod.GET)
+  protected String showForgotAccountSelectAccountPage() {
+    return "forgotaccount/selectaccounttype";
+  }
 
   /**
    * Displays the home page with news items and public library projects

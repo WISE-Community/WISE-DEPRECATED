@@ -57,13 +57,13 @@ $(document).ready(function() {
 
 						<table id="teacherQuickLinks">
 							<tr>
-								<td><a href="${contextPath}/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
+								<td><a href="${contextPath}/legacy/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
 							</tr>
 							<tr>
-								<td><a id="projectLibraryLink" href="${contextPath}/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
+								<td><a id="projectLibraryLink" href="${contextPath}/legacy/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
 							</tr>
 							<tr>
-								<td><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
+								<td><a href="${contextPath}/legacy/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
 							</tr>
 							<c:if test="${discourseSSOLoginURL != null}">
 							   <tr>

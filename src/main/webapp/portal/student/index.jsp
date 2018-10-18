@@ -87,7 +87,7 @@
             Cancel: function(){ $(this).dialog('destroy'); }
           }
         });
-        $("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "${contextPath}/student/updatestudentaccount.html");
+        $("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "${contextPath}/legacy/student/updatestudentaccount.html");
 
       });
 
@@ -283,7 +283,7 @@
                               <a id="viewAnnouncements_${studentRunInfo.run.id}" class="viewAnnouncements"><spring:message code="student.index.viewAnnouncements"/></a>
                             </li>
                             <li>
-                              <a href="${contextPath}/contact/contactwise.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}">
+                              <a href="${contextPath}/legacy/contact/contactwise.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}">
                                 <spring:message code="student.index.reportProblem"/>
                               </a>
                             </li>

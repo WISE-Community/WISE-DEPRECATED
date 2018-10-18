@@ -4,6 +4,7 @@ import { LibraryService } from "../../../services/library.service";
 import { UserService } from "../../../services/user.service";
 import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
 import { NGSSStandards } from "../ngssStandards";
+import { ConfigService } from "../../../services/config.service";
 
 @Component({
   selector: 'app-library-project-details',
@@ -15,18 +16,21 @@ export class LibraryProjectDetailsComponent implements OnInit {
   isRunProject: false;
   ngss: NGSSStandards = new NGSSStandards();
   ngssWebUrl: string = 'https://www.nextgenscience.org/search-standards?keys=';
+  previewLink: string;
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private libraryService: LibraryService,
-              private userService: UserService) {
+              private userService: UserService,
+              private configService: ConfigService) {
     this.isTeacher = userService.isTeacher();
     this.isRunProject = data.isRunProject;
     this.setNGSS();
   }
 
   ngOnInit() {
+    this.previewLink = `${this.configService.getContextPath()}/previewproject.html?projectId=${this.data.project.id}`;
   }
 
   onClose(): void {

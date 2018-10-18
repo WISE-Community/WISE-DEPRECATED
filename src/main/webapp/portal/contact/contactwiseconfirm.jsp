@@ -34,7 +34,7 @@
 					<div><spring:message code="contact.contactwiseconfirm.messageSuccessfullySent" /></div>
 					<div><spring:message code="contact.contactwiseconfirm.weWillRespondQuicklyAsPossible" /></div>
 				</div>
-				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/legacy" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 		<div style="clear: both;"></div>

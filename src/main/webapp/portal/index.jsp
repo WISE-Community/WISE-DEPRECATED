@@ -91,10 +91,10 @@
 				<div id="features">
 					<div id="featureHeader" class="feature"><span class="featureContent"><spring:message code="index.features" /></span></div>
 					<div id="featuresContent">
-						<p><a href="pages/features.html"><spring:message code="index.features_learningEnvironment" /></a></p>
-						<p><a href="pages/teacher-tools.html"><spring:message code="index.features_teacherTools" /></a></p>
-						<p><a href="pages/gettingstarted.html"><spring:message code="index.features_gettingStarted" /></a></p>
-						<p id="checkCompatibility"><a href="pages/check.html"><spring:message code="index.features_checkCompatibility" /></a></p>
+						<p><a href="legacy/pages/features.html"><spring:message code="index.features_learningEnvironment" /></a></p>
+						<p><a href="legacy/pages/teacher-tools.html"><spring:message code="index.features_teacherTools" /></a></p>
+						<p><a href="legacy/pages/gettingstarted.html"><spring:message code="index.features_gettingStarted" /></a></p>
+						<p id="checkCompatibility"><a href="legacy/pages/check.html"><spring:message code="index.features_checkCompatibility" /></a></p>
 					</div>
 				</div>
 				<div id="projectShowcase">
@@ -271,11 +271,11 @@
 			</div>
 
 			<div class="showcase">
-				<a id="wiseAdvantage" href="pages/wise-advantage.html" class="panelSection">
+				<a id="wiseAdvantage" href="legacy/pages/wise-advantage.html" class="panelSection">
 					<div class="panelHead"><span><spring:message code="index.wiseAdvantage" /></span><span class="panelLink">+</span></div>
 					<div class="panelContent"><img src="${contextPath}/<spring:theme code="wise_in_classroom"/>" alt="<spring:message code="index.wiseAdvantageTitle" />" /></div>
 				</a>
-				<a id="wiseInAction" href="pages/wise-in-action.html" class="panelSection">
+				<a id="wiseInAction" href="legacy/pages/wise-in-action.html" class="panelSection">
 					<div class="panelHead"><span><spring:message code="index.wiseInAction" /></span><span class="panelLink">+</span></div>
 					<div class="panelContent"><img src="${contextPath}/<spring:theme code="wise_teaching"/>" alt="<spring:message code="index.wiseInActionTitle" />" /></div>
 				</a>

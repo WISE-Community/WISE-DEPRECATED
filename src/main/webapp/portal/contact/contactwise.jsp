@@ -128,7 +128,7 @@
 
 					</form:form>
 				</div>
-				<a href="${contextPath}/" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/legacy" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 		<div style="clear: both;"></div>

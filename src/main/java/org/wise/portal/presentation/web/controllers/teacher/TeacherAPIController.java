@@ -38,7 +38,7 @@ import java.util.*;
  * @author Hiroki Terashima
  */
 @RestController
-@RequestMapping("/site/api/teacher")
+@RequestMapping("/api/teacher")
 public class TeacherAPIController {
 
   @Autowired

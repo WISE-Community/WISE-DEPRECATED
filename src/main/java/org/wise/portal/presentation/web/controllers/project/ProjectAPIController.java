@@ -39,7 +39,7 @@ import java.util.TreeSet;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping("/site/api/project")
+@RequestMapping("/api/project")
 public class ProjectAPIController {
 
   @Autowired

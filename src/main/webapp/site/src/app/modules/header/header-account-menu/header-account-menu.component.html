@@ -47,12 +47,28 @@
     </a>
     <a *ngIf="role === 'researcher'"
        mat-menu-item
+       href="admin">
+      <mat-icon>settings</mat-icon>
+      <span>Researcher Tools</span>
+    </a>
+    <!--
+    <a *ngIf="role === 'researcher'"
+       mat-menu-item
        routerLink="/researcher"
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>settings</mat-icon>
       <span>Researcher Tools</span>
     </a>
+    -->
+    <a *ngIf="role === 'admin'"
+       mat-menu-item
+       href="admin">
+      <mat-icon>settings</mat-icon>
+      <span>Admin Tools</span>
+    </a>
+
+    <!--
     <a *ngIf="role === 'admin'"
        mat-menu-item
        routerLink="/admin"
@@ -61,6 +77,7 @@
       <mat-icon>settings</mat-icon>
       <span>Admin Tools</span>
     </a>
+    -->
     <a *ngIf="role === 'student'"
        mat-menu-item
        routerLink="/student/help"

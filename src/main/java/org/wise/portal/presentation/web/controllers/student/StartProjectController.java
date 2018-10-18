@@ -128,7 +128,7 @@ public class StartProjectController {
 
     Run run = runService.retrieveById(runId);
     if (run.getStarttime().after(new Timestamp(System.currentTimeMillis()))) {
-      return new ModelAndView("errors/friendlyerror");
+      return new ModelAndView("errors/friendlyError");
     }
 
     Group period = run.getPeriodOfStudent(user);

@@ -72,7 +72,7 @@ import org.wise.portal.service.user.UserService;
 
 @Controller
 @SessionAttributes("contactWISEForm")
-@RequestMapping("/contact/contactwise.html")
+@RequestMapping("/legacy/contact/contactwise.html")
 public class ContactWiseController {
 
   @Autowired

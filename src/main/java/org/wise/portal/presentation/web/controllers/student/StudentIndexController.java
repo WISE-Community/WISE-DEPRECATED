@@ -23,8 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -40,12 +38,17 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Controller for Student's index page
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/student")
+@RequestMapping("/legacy/student")
 public class StudentIndexController {
 
   @Autowired

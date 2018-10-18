@@ -15,7 +15,7 @@ import org.wise.portal.service.project.ProjectService;
  * @author Geoffrey Kwan
  */
 @RestController
-@RequestMapping("/site/api/teacher/project/permission")
+@RequestMapping("/api/teacher/project/permission")
 public class TeacherProjectPermissionsAPIController {
 
   @Autowired

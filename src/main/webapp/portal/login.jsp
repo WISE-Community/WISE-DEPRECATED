@@ -32,7 +32,7 @@ function validateLoginForm() {
 			<div class="infoContent loginContent">
 				<div class="panelHeader"><spring:message code="signIn"/></div>
 				<div>
-					<form id="home" method="post" action="j_acegi_security_check" onsubmit="return validateLoginForm()" autocomplete="off">
+					<form id="home" method="post" action="${contextPath}/j_acegi_security_check" onsubmit="return validateLoginForm()" autocomplete="off">
 						<div id="signinForm">
 							<div class="errorMsgNoBg">
 								<c:choose>
@@ -65,7 +65,7 @@ function validateLoginForm() {
 				        <ul id="signInLinkPosition"> <!-- TODO: make these open in top window -->
 						    <li><a href="forgotaccount/selectaccounttype" class="forgotlink"><spring:message code="login.forgot"/></a></li>
 				       	    <li><a href="join" class="joinlink"><spring:message code="login.createAccount"/></a></li>
-				       	    <li><a href="${contextPath}/" class="joinlink"><spring:message code="returnHome"/></a></li>
+				       	    <li><a href="${contextPath}/legacy" class="joinlink"><spring:message code="returnHome"/></a></li>
 				        </ul>
 			 		</div>
 				</div>

@@ -17,7 +17,7 @@
 
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/legacy" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
 
 			<div class="infoContent">
@@ -27,10 +27,10 @@
 						<spring:message code="forgotaccount.teacher.success.anEmailHasBeenSent"/>
 					</div>
 					<div>
-						<spring:message code="forgotaccount.teacher.success.ifYouHaveAnyOtherProblemsOrQuestions"/> <a href="${contextPath}/contact/contactwise.html"> <spring:message code="forgotaccount.teacher.success.contactWISE"/></a>
+						<spring:message code="forgotaccount.teacher.success.ifYouHaveAnyOtherProblemsOrQuestions"/> <a href="${contextPath}/legacy/contact/contactwise.html"> <spring:message code="forgotaccount.teacher.success.contactWISE"/></a>
 					</div>
 				</div>
-				<a href="${contextPath}" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/legacy" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

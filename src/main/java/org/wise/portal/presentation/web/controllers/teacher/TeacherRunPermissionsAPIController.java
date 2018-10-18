@@ -15,7 +15,7 @@ import org.wise.portal.service.run.RunService;
  * @author Geoffrey Kwan
  */
 @RestController
-@RequestMapping("/site/api/teacher/run/permission")
+@RequestMapping("/api/teacher/run/permission")
 public class TeacherRunPermissionsAPIController {
 
   @Autowired

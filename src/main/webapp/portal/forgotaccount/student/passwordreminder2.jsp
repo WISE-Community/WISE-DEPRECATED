@@ -18,7 +18,7 @@
 
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage" />"><spring:message code="wiseHome" /></a>
+				<a id="name" href="${contextPath}/legacy" title="<spring:message code="wiseHomepage" />"><spring:message code="wiseHome" /></a>
 			</div>
 
 			<div class="infoContent">
@@ -50,7 +50,7 @@
 							</spring:bind>
 					</div>
 				</div>
-				<a href="${contextPath}" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/legacy" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>
