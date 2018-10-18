@@ -20,6 +20,7 @@ import { TeacherModule } from './teacher/teacher.module';
 import { UserService } from './services/user.service';
 import { TeacherService } from "./teacher/teacher.service";
 import { RegisterModule } from "./register/register.module";
+import { NewsModule } from "./news/news.module";
 
 import {
   SocialLoginModule,
@@ -67,7 +68,8 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     RegisterModule,
     StudentModule,
     TeacherModule,
-    SocialLoginModule
+    SocialLoginModule,
+    NewsModule
   ],
   providers: [
     ConfigService,

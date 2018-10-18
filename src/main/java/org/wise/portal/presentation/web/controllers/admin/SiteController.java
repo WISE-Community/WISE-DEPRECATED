@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/site")
 public class SiteController {
 
-  @RequestMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/contact", "/contact/**"},
+  @RequestMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news", "/contact", "/contact/**"},
       method = RequestMethod.GET)
   protected String showSite() {
     return "forward:/site/index.html";
