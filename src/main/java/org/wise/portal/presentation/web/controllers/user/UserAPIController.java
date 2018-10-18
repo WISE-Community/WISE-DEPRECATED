@@ -1,5 +1,12 @@
 package org.wise.portal.presentation.web.controllers.user;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,18 +14,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.general.contactwise.IssueType;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.presentation.web.response.SimpleResponse;
+import org.wise.portal.service.mail.IMailFacade;
+import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 /**
  * Controller for User REST API
@@ -36,6 +52,9 @@ public class UserAPIController {
 
   @Autowired
   protected UserService userService;
+
+  @Autowired
+  protected IMailFacade mailService;
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   protected String getUserInfo(ModelMap modelMap,
@@ -107,6 +126,7 @@ public class UserAPIController {
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
+    configJSON.put("recaptchaPublicKey", wiseProperties.get("recaptcha_public_key"));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
   }

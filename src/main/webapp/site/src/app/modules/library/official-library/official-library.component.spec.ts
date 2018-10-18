@@ -3,11 +3,13 @@ import { OfficialLibraryComponent } from './official-library.component';
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { LibraryGroup } from "../libraryGroup";
 
 export class MockLibraryService {
   libraryGroupsSource$ = fakeAsyncResponse({});
   officialLibraryProjectsSource$ = fakeAsyncResponse([]);
   projectFilterOptionsSource$ = fakeAsyncResponse([]);
+  implementationModelOptions: LibraryGroup[] = [];
   getOfficialLibraryProjects() {
 
   }
