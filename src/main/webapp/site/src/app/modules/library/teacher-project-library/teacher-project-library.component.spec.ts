@@ -6,12 +6,25 @@ import { fakeAsyncResponse } from "../../../student/student-run-list/student-run
 
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ConfigService } from "../../../services/config.service";
+import { Config } from "../../../domain/config";
+import { Observable } from 'rxjs';
 
 export class MockLibraryService {
   tabIndexSource$ = fakeAsyncResponse(1);
 }
 
 export class MockConfigService {
+  getConfig(): Observable<Config> {
+    const config: Config = {
+      contextPath: "/wise",
+      logOutURL: "/logout",
+      currentTime: 20180730
+    };
+    return Observable.create(observer => {
+      observer.next(config);
+      observer.complete();
+    });
+  }
   getContextPath(): string {
     return "";
   }
