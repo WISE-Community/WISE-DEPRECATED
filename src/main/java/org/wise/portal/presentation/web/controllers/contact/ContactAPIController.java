@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Properties;
 
 @RestController
-@RequestMapping("/site/api/contact")
+@RequestMapping("/api/contact")
 public class ContactAPIController {
 
   @Autowired
