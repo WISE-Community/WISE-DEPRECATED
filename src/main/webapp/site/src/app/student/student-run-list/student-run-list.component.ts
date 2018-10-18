@@ -93,7 +93,12 @@ export class StudentRunListComponent implements OnInit {
     // TODO: extract this for global use?
     return this.runs.filter((run: StudentRun) =>
       Object.keys(run).some(prop => {
-        let value = run[prop];
+        let value: any;
+        if (prop === 'owner') {
+          value = run[prop].displayName;
+        } else {
+          value = run[prop];
+        }
         if (typeof value === 'undefined' || value === null) {
           return false;
         } else {
