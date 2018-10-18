@@ -4,17 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.newsitem.NewsItem;
-import org.wise.portal.domain.user.User;
 import org.wise.portal.service.newsitem.NewsItemService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -25,7 +20,7 @@ public class NewsAPIController {
   private NewsItemService newsItemService;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
-  protected String getNews(ModelMap modelMap, HttpServletRequest request) throws JSONException {
+  protected String getNews() {
     List<NewsItem> newsItems = newsItemService.retrieveAllNewsItem();
     JSONArray newsItemsJSON = getNewsItemsJSON(newsItems);
     return newsItemsJSON.toString();
@@ -47,24 +42,9 @@ public class NewsAPIController {
       newsItemJSON.put("news", newsItem.getNews());
       newsItemJSON.put("title", newsItem.getTitle());
       newsItemJSON.put("type", newsItem.getType());
-      newsItemJSON.put("owner", getOwnerJSON(newsItem.getOwner()));
     } catch (JSONException e) {
       e.printStackTrace();
     }
     return newsItemJSON;
-  }
-
-  private JSONObject getOwnerJSON(User user) {
-    JSONObject ownerJSON = new JSONObject();
-    try {
-      ownerJSON.put("id", user.getId());
-      MutableUserDetails userDetails = user.getUserDetails();
-      ownerJSON.put("firstName", userDetails.getFirstname());
-      ownerJSON.put("lastName", userDetails.getLastname());
-      ownerJSON.put("displayName", ((TeacherUserDetails) userDetails).getDisplayname());
-    } catch(JSONException e) {
-      e.printStackTrace();
-    }
-    return ownerJSON;
   }
 }

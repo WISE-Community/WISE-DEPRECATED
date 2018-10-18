@@ -22,8 +22,4 @@ export class NewsComponent implements OnInit {
     });
   }
 
-  getAllNewsItems() {
-    return this.allNewsItems;
-  }
-
 }
