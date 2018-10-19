@@ -1,32 +1,31 @@
-<div>
-  <h2>Add a Project</h2>
-  <form [formGroup]="addProjectForm">
-    <mat-form-field class="example-full-width add-run-input">
-      <input name="runCode" matInput placeholder="Project Code" value="" (keyup)="checkRunCode($event)" [formControl]="runCodeFormControl">
-      <mat-error *ngIf="runCodeFormControl.hasError('invalidRunCodeSyntax') || runCodeFormControl.hasError('invalidRunCode')">Invalid Project Code</mat-error>
-    </mat-form-field>
-    <mat-form-field class="add-run-input">
-      <mat-select [disabled]="registerRunPeriods.length == 0" [(value)]="selectedPeriod" placeholder="Choose Period">
-        <mat-option *ngFor="let period of registerRunPeriods" value="{{ period }}">{{ period }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button mat-raised-button (click)="submit()"
-            [disabled]="registerRunRunCode == '' || selectedPeriod == ''"
-            aria-label="Submit add project"
-            color="accent"
-            class="add-run-input">
-      Submit
+<h2>Add Unit</h2>
+<form [formGroup]="addProjectForm">
+  <mat-dialog-content fxLayout="column">
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Access Code</mat-label>
+        <input formControlName="runCode" matInput value="" (keyup)="checkRunCode($event)">
+        <mat-error *ngIf="runCodeFormControl.hasError('invalidRunCodeSyntax') || runCodeFormControl.hasError('invalidRunCode')">Invalid Access Code</mat-error>
+        <mat-error *ngIf="runCodeFormControl.hasError('alreadyAddedRun')">You have already added this unit.</mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Choose Period</mat-label>
+        <mat-select formControlName="period" [(value)]="selectedPeriod">
+          <mat-option *ngFor="let period of registerRunPeriods" value="{{ period }}">{{ period }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end">
+    <button mat-button mat-dialog-close [disabled]="isAdding">Cancel</button>
+    <button mat-button
+            mat-flat-button
+            color="primary"
+            (click)="submit()"
+            [disabled]="addProjectForm.invalid || isAdding">
+      <mat-progress-bar *ngIf="isAdding" mode="indeterminate"></mat-progress-bar>
+      Add
     </button>
-    <button mat-raised-button (click)="cancel()"
-            aria-label="Cancel add project"
-            color="accent"
-            class="add-run-input">
-      Cancel
-    </button>
-    <div class="already-added-run-error-message-div">
-      <div></div>
-      <div><mat-error *ngIf="alreadyAddedRun">You have already added this project</mat-error></div>
-      <div></div>
-    </div>
-  </form>
-</div>
+  </mat-dialog-actions>

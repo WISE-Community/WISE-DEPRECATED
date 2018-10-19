@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatDialog } from "@angular/material";
 import { StudentService } from "../student.service";
-import { AbstractControl, FormControl, FormGroup, ValidatorFn } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-add-project-dialog',
@@ -16,45 +16,41 @@ export class AddProjectDialogComponent implements OnInit {
   selectedPeriod: string = '';
   runCodeFormControl = new FormControl('', [runCodeValidator(this.validRunCodeSyntaxRegEx)]);
   addProjectForm: FormGroup = new FormGroup({
-    runCode: this.runCodeFormControl
+    runCode: this.runCodeFormControl,
+    period: new FormControl({value: '', disabled: true}, Validators.required)
   });
-  alreadyAddedRun: boolean = false;
+  isAdding = false;
 
-  constructor(public dialogRef: MatDialogRef<AddProjectDialogComponent>,
-      private studentService: StudentService) {
+  constructor(public dialog: MatDialog,
+              private studentService: StudentService) {
   }
 
   ngOnInit() {
   }
 
   submit() {
+    this.isAdding = true;
     this.studentService.addRun(this.registerRunRunCode, this.selectedPeriod).subscribe((studentRun) => {
       if (studentRun.error) {
-        this.alreadyAddedRun = true;
+        this.addProjectForm.controls['runCode'].setErrors({'alreadyAddedRun': true});
+        this.isAdding = false;
       } else {
         this.studentService.addNewProject(studentRun);
-        this.closeDialog();
+        this.dialog.closeAll();
+        this.isAdding = false;
       }
     });
-  }
-
-  cancel() {
-    this.closeDialog();
-  }
-
-  closeDialog() {
-    this.dialogRef.close();
   }
 
   clearPeriods() {
     this.selectedPeriod = '';
     this.registerRunPeriods = [];
+    this.addProjectForm.controls['period'].disable();
   }
 
   checkRunCode(event: KeyboardEvent) {
     const runCode = (<HTMLInputElement>event.target).value;
     this.registerRunRunCode = runCode;
-    this.alreadyAddedRun = false;
     if (this.isValidRunCodeSyntax(runCode)) {
       this.studentService.getRunInfo(runCode).subscribe(runInfo => {
         if (runInfo.error) {
@@ -62,6 +58,7 @@ export class AddProjectDialogComponent implements OnInit {
           this.addProjectForm.controls['runCode'].setErrors({'invalidRunCode': true});
         } else {
           this.registerRunPeriods = runInfo.periods;
+          this.addProjectForm.controls['period'].enable();
         }
       });
     } else {
