@@ -4,7 +4,7 @@
     <p>
       <mat-form-field appearance="fill">
         <mat-label>Access Code</mat-label>
-        <input name="runCode" matInput value="" (keyup)="checkRunCode($event)" [formControl]="runCodeFormControl">
+        <input formControlName="runCode" matInput value="" (keyup)="checkRunCode($event)">
         <mat-error *ngIf="runCodeFormControl.hasError('invalidRunCodeSyntax') || runCodeFormControl.hasError('invalidRunCode')">Invalid Access Code</mat-error>
         <mat-error *ngIf="runCodeFormControl.hasError('alreadyAddedRun')">You have already added this unit.</mat-error>
       </mat-form-field>
@@ -12,7 +12,7 @@
     <p>
       <mat-form-field appearance="fill">
         <mat-label>Choose Period</mat-label>
-        <mat-select [disabled]="registerRunPeriods.length == 0" [(value)]="selectedPeriod" [formControl]="periodFormControl">
+        <mat-select formControlName="period" [(value)]="selectedPeriod">
           <mat-option *ngFor="let period of registerRunPeriods" value="{{ period }}">{{ period }}</mat-option>
         </mat-select>
       </mat-form-field>

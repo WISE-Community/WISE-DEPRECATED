@@ -17,7 +17,7 @@ export class AddProjectDialogComponent implements OnInit {
   runCodeFormControl = new FormControl('', [runCodeValidator(this.validRunCodeSyntaxRegEx)]);
   addProjectForm: FormGroup = new FormGroup({
     runCode: this.runCodeFormControl,
-    period: new FormControl('', Validators.required)
+    period: new FormControl({value: '', disabled: true}, Validators.required)
   });
   isAdding = false;
 
@@ -45,6 +45,7 @@ export class AddProjectDialogComponent implements OnInit {
   clearPeriods() {
     this.selectedPeriod = '';
     this.registerRunPeriods = [];
+    this.addProjectForm.controls['period'].disable();
   }
 
   checkRunCode(event: KeyboardEvent) {
@@ -57,6 +58,7 @@ export class AddProjectDialogComponent implements OnInit {
           this.addProjectForm.controls['runCode'].setErrors({'invalidRunCode': true});
         } else {
           this.registerRunPeriods = runInfo.periods;
+          this.addProjectForm.controls['period'].enable();
         }
       });
     } else {
