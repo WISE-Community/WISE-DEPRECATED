@@ -6,11 +6,6 @@ import { LibraryService } from "../../../services/library.service";
 import { Standard } from "../standard";
 import { LibraryProject } from "../libraryProject";
 
-@Component({
-  selector: 'app-library',
-  templateUrl: './library.component.html',
-  styleUrls: ['./library.component.scss']
-})
 export abstract class LibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];

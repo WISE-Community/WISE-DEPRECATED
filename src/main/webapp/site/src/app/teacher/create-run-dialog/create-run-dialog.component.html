@@ -6,7 +6,7 @@
     </p>
     <h3>1. Choose Periods</h3>
     <div formArrayName="selectedPeriods">
-      <span *ngFor="let control of form.controls.selectedPeriods.controls"
+      <span *ngFor="let control of selectedPeriodsControl.controls"
            [formGroup]="control">
         <mat-checkbox formControlName="checkbox">
           {{ control.controls.name.value }}
