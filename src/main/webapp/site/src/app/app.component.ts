@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { MediaChange, ObservableMedia } from '@angular/flex-layout';
+import { UtilService } from "./services/util.service";
 
 @Component({
   selector: 'app-root',
@@ -10,9 +13,14 @@ import { MatIconRegistry } from '@angular/material';
 })
 export class AppComponent {
   title = 'app';
+  showMobileMenu: boolean = false;
+  mediaWatcher: Subscription;
 
-  constructor(private router: Router, iconRegistry: MatIconRegistry,
-      sanitizer: DomSanitizer) {
+  constructor(private router: Router,
+              iconRegistry: MatIconRegistry,
+              sanitizer: DomSanitizer,
+              utilService: UtilService,
+              media: ObservableMedia) {
     iconRegistry.addSvgIcon(
       'ki-elicit',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/ki-elicit.svg')
@@ -37,6 +45,15 @@ export class AppComponent {
       'twitter',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter.svg')
     );
+    utilService.getMobileMenuState()
+      .subscribe(state => {
+        this.showMobileMenu = state;
+      });
+    this.mediaWatcher = media.subscribe((change: MediaChange) => {
+      if (media.isActive('gt-sm')) {
+        utilService.showMobileMenu(false);
+      }
+    });
   }
 
   showHeaderAndFooter(): boolean {

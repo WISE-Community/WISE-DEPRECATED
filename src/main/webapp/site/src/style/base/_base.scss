@@ -1,15 +1,11 @@
-html, body {
-  height: 100%;
-}
-
 body {
   margin: 0;
 }
 
-.app-root {
-  display: flex;
-  flex-direction: column;
+.root-content.mat-sidenav-container {
+  position: absolute;
   height: 100%;
+  width: 100%;
 }
 
 a {

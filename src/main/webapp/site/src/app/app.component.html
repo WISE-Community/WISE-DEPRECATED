@@ -1,3 +1,10 @@
-<app-header class="dark-theme" *ngIf="showHeaderAndFooter()"></app-header>
-<router-outlet></router-outlet>
-<app-footer *ngIf="showHeaderAndFooter()"></app-footer>
+<mat-sidenav-container class="root-content">
+  <mat-sidenav #mainMenu [(opened)]="showMobileMenu" position="end">
+    Mobile menu content
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header class="dark-theme" *ngIf="showHeaderAndFooter()"></app-header>
+    <router-outlet></router-outlet>
+    <app-footer *ngIf="showHeaderAndFooter()"></app-footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

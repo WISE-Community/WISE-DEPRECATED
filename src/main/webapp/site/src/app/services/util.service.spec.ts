@@ -21,4 +21,8 @@ describe('UtilService', () => {
     expect(service.getLastName("Spongebob Squarepants")).toEqual("Squarepants");
   }));
 
+  it('should set and get the mobile menu state', inject([UtilService], (service: UtilService) => {
+    service.showMobileMenu();
+    expect(service.getMobileMenuState().getValue()).toEqual(true);
+  }));
 });

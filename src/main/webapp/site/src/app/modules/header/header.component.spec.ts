@@ -9,6 +9,7 @@ import { ConfigService } from '../../services/config.service';
 import { UserService } from "../../services/user.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { Config } from "../../domain/config";
+import { UtilService } from "../../services/util.service";
 
 export class MockUserService {
   getUser(): Observable<User> {
@@ -18,6 +19,10 @@ export class MockUserService {
       observer.complete();
     });
   }
+}
+
+export class MockUtilService {
+  showMainMenu() {}
 }
 
 export class MockConfigService {
@@ -50,7 +55,8 @@ describe('HeaderComponent', () => {
       declarations: [ HeaderComponent ],
       providers: [
         { provide: UserService, useClass: MockUserService },
-        { provide: ConfigService, useClass: MockConfigService }
+        { provide: ConfigService, useClass: MockConfigService },
+        { provide: UtilService, useClass: MockUtilService },
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

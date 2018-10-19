@@ -7,7 +7,7 @@
       <span fxFlex="1 1 auto"></span>
       <app-header-links fxHide fxShow.gt-sm [user]="user" [location]="location"></app-header-links>
       <app-header-account-menu *ngIf="role" [user]="user"></app-header-account-menu>
-      <button mat-icon-button fxHide.gt-sm>
+      <button *ngIf="!location" mat-icon-button fxHide.gt-sm (click)="showMobileMenu()">
         <mat-icon aria-label="Main menu">menu</mat-icon>
       </button>
     </div>

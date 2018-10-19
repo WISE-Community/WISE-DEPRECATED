@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from "./http-error.interceptor";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -69,7 +69,8 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     StudentModule,
     TeacherModule,
     SocialLoginModule,
-    NewsModule
+    NewsModule,
+    MatSidenavModule
   ],
   providers: [
     ConfigService,
