@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { DateFormatPipe } from 'ngx-moment';
 
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
-import { AddProjectDialogComponent } from "../add-project-dialog/add-project-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-student-run-list',
@@ -12,23 +11,19 @@ import { MatDialog } from "@angular/material/dialog";
 })
 export class StudentRunListComponent implements OnInit {
 
-  runs: StudentRun[] = []; // array of StudentRun objects for current user
-  filteredRuns: StudentRun[] = []; // filtered array of StudentRun objects to show in template
-  search: string = ''; // search string for filtering run list
-  // sort options for run list
-  sortOptions: any[] = [
-    { value: 'startTimeDesc', viewValue: 'Newest' },
-    { value: 'startTimeAsc', viewValue: 'Oldest' },
-    { value: 'projectNameAsc', viewValue: 'Project Name (A-Z)' },
-    { value: 'projectNameDesc', viewValue: 'Project Name (Z-A)' }
-  ];
-  sortValue: string = 'startTimeDesc';
-  loaded: boolean = false; // whether array of runs has been retrieved from server
+  runs: StudentRun[] = [];
+  filteredRuns: StudentRun[] = [];
+  filteredActiveTotal: number = 0;
+  filteredCompletedTotal: number = 0;
+  filteredScheduledTotal: number = 0;
+  search: string = '';
+  loaded: boolean = false;
 
-  constructor(private studentService: StudentService, public dialog: MatDialog) {
+  constructor(private studentService: StudentService) {
     studentService.newRunSource$.subscribe(run => {
       run.isHighlighted = true;
       this.runs.unshift(run);
+      scrollTo(0, 0);
     });
   }
 
@@ -42,19 +37,55 @@ export class StudentRunListComponent implements OnInit {
         this.runs = runs;
         this.filteredRuns = runs;
         this.searchUpdated(this.search);
-        this.sortUpdated(this.sortValue);
         this.loaded = true;
       });
+  }
+
+  runIsActive(run: StudentRun) {
+    if (run.endTime) {
+      return false;
+    }
+    const startTime = new Date(run.startTime).getTime();
+    const now = new Date().getTime();
+    if (startTime <= now) {
+      return true;
+    }
+    return false;
+  }
+
+  runSpansYears(run: StudentRun) {
+    const startYear = (new DateFormatPipe()).transform(run.startTime, 'Y');
+    const endYear = (new DateFormatPipe()).transform(run.endTime, 'Y');
+    return startYear != endYear;
+  }
+
+  runSpansMonths(run: StudentRun) {
+    const startMonth = (new DateFormatPipe()).transform(run.startTime, 'M');
+    const endMonth = (new DateFormatPipe()).transform(run.endTime, 'M');
+    return startMonth != endMonth;
+  }
+
+  runSpansDays(run: StudentRun) {
+    const startDay = (new DateFormatPipe()).transform(run.startTime, 'D');
+    const endDay = (new DateFormatPipe()).transform(run.endTime, 'D');
+    return startDay != endDay;
   }
 
   searchUpdated(value: string) {
     this.search = value;
     this.filteredRuns = this.search ? this.performFilter(this.search) : this.runs;
-  }
-
-  sortUpdated(value: string) {
-    this.sortValue = value;
-    this.performSort(this.sortValue);
+    this.filteredActiveTotal = 0;
+    this.filteredCompletedTotal = 0;
+    this.filteredScheduledTotal = 0;
+    for (let run of this.filteredRuns) {
+      if (run.endTime) {
+        this.filteredCompletedTotal++;
+      } else if (this.runIsActive(run)) {
+        this.filteredActiveTotal++;
+      } else {
+        this.filteredScheduledTotal++;
+      }
+    }
   }
 
   performFilter(filterValue: string) {
@@ -62,7 +93,12 @@ export class StudentRunListComponent implements OnInit {
     // TODO: extract this for global use?
     return this.runs.filter((run: StudentRun) =>
       Object.keys(run).some(prop => {
-        let value = run[prop];
+        let value: any;
+        if (prop === 'owner') {
+          value = run[prop].displayName;
+        } else {
+          value = run[prop];
+        }
         if (typeof value === 'undefined' || value === null) {
           return false;
         } else {
@@ -72,58 +108,7 @@ export class StudentRunListComponent implements OnInit {
     );
   }
 
-  performSort(sortValue: string) {
-    switch(sortValue) {
-      case 'startTimeDesc': {
-        this.filteredRuns.sort( (a: StudentRun, b: StudentRun) => {
-          return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
-        });
-        break;
-      }
-      case 'startTimeAsc': {
-        this.filteredRuns.sort( (a: StudentRun, b :StudentRun) => {
-          return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
-        });
-        break;
-      }
-      case 'projectNameAsc': {
-        this.filteredRuns.sort( (a: StudentRun, b: StudentRun) => {
-          const nameA = a.name.toLocaleLowerCase(); // ignore upper and lowercase
-          const nameB = b.name.toLocaleLowerCase(); // ignore upper and lowercase
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-          // names must be equal
-          return 0;
-        });
-        break;
-      }
-      case 'projectNameDesc': {
-        this.filteredRuns.sort( (a: StudentRun, b: StudentRun) => {
-          const nameA = a.name.toLocaleLowerCase(); // ignore upper and lowercase
-          const nameB = b.name.toLocaleLowerCase(); // ignore upper and lowercase
-          if (nameB < nameA) {
-            return -1;
-          }
-          if (nameB > nameA) {
-            return 1;
-          }
-          // names must be equal
-          return 0;
-        });
-        break;
-      }
-    }
-  }
-
-  showAddRun() {
-    const dialogRef = this.dialog.open(AddProjectDialogComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      scrollTo(0, 0);
-    });
+  reset(): void {
+    this.searchUpdated('');
   }
 }

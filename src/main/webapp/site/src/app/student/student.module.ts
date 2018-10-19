@@ -24,6 +24,7 @@ import { AddProjectDialogComponent } from "./add-project-dialog/add-project-dial
 import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './account/edit-password/edit-password.component';
+import { TimelineModule } from "../modules/timeline/timeline.module";
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { EditPasswordComponent } from './account/edit-password/edit-password.com
     MomentModule,
     materialModules,
     SharedModule,
-    StudentRoutingModule
+    StudentRoutingModule,
+    TimelineModule
   ],
   declarations: [
     AddProjectDialogComponent,

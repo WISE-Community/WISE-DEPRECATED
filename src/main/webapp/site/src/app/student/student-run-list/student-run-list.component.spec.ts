@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { defer, Observable } from "rxjs";
-import { MatDialog } from "@angular/material/dialog";
+import { MomentModule } from 'ngx-moment';
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import { StudentRunListComponent } from "./student-run-list.component";
@@ -23,7 +23,24 @@ export class MockStudentService {
     projectThumb: "/wise/curriculum/360/assets/project_thumb.png"
   });
   getRuns(): Observable<StudentRun[]> {
-    const runs : any[] = [{id:1,name:"Photosynthesis"},{id:2,name:"Plate Tectonics"},{id:3,name:"Chemical Reactions"}];
+    const runs : any[] = [
+      {
+        id:1,
+        name:"Photosynthesis",
+        startTime: "2018-08-22 00:00:00.0"
+      },
+      {
+        id:2,
+        name:"Plate Tectonics",
+        startTime: "2018-08-23 00:00:00.0"
+      },
+      {
+        id:3,
+        name:"Chemical Reactions",
+        startTime: "2018-08-20 00:00:00.0",
+        endTime: "2018-08-22 00:00:00.0"
+      }
+      ];
     return Observable.create( observer => {
       observer.next(runs);
       observer.complete();
@@ -38,10 +55,9 @@ describe('StudentRunListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ StudentRunListComponent ],
-      imports: [],
+      imports: [ MomentModule ],
       providers: [
-        { provide: StudentService, useClass: MockStudentService },
-        { provide: MatDialog, useValue: {} }
+        { provide: StudentService, useClass: MockStudentService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -60,6 +76,6 @@ describe('StudentRunListComponent', () => {
 
   it('should show number of runs', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#myProjectCount').textContent).toContain('My Projects (3)');
+    expect(compiled.querySelector('#unitCount').textContent).toContain('My WISE units: 3 (2 active, 1 completed).');
   })
 });

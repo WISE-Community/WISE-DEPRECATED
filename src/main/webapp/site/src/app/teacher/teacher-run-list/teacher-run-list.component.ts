@@ -149,8 +149,8 @@ export class TeacherRunListComponent implements OnInit {
     if (run.endTime) {
       return false;
     }
-    let startTime = new Date(run.startTime).getTime();
-    let now = new Date().getTime();
+    const startTime = new Date(run.startTime).getTime();
+    const now = new Date().getTime();
     if (startTime <= now) {
       return true;
     }
@@ -165,7 +165,6 @@ export class TeacherRunListComponent implements OnInit {
     this.filteredActiveTotal = 0;
     this.filteredCompletedTotal = 0;
     this.filteredScheduledTotal = 0;
-    let now: Date = new Date();
     for (let run of this.filteredRuns) {
       if (run.endTime) {
         this.filteredCompletedTotal++;

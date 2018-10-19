@@ -2,26 +2,11 @@
   '~style/abstracts/variables',
   '~style/abstracts/functions';
 
-.mat-card {
-  padding-top: 12px;
-
-  @media (min-width: breakpoint('sm.min')) {
-    padding: 16px 28px 28px;
-  }
-}
-
-.mat-card-content {
-  margin: 0 -4px 8px;
-
-  @media (min-width: breakpoint('sm.min')) {
-    margin: 0 -12px 8px;
-  }
-}
-
 .mat-card-avatar {
   background-size: cover;
   border-radius: 4px;
   margin-right: 12px;
+  margin-bottom: 4px;
 
   @media (min-width: breakpoint('sm.min')) {
     height: 60px;
@@ -39,28 +24,10 @@
   margin-bottom: 2px;
 }
 
-.mat-card-actions {
-  .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
-    &:last-of-type {
-      margin-right: 0;
-    }
-
-    .mat-icon {
-      @media (max-width: breakpoint('xs.max')) {
-        display: none;
-      }
-    }
-  }
-}
-
 app-run-menu {
   margin: -8px -8px 0 0;
 }
 
 .highlighted {
   background-color: lightyellow;
-}
-
-.run-list-item__shared-owner {
-  color: red;
 }
