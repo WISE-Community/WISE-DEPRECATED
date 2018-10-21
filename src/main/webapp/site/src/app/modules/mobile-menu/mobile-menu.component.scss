@@ -1,0 +1,21 @@
+@import '~@angular/material/theming';
+
+// Create a config with the default typography levels.
+$config: mat-typography-config();
+
+.mobile-menu {
+  width: 300px;
+  padding: 16px;
+}
+
+.mobile-menu__close {
+  height: 48px;
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+
+a {
+  text-transform: none;
+  text-align: start;
+  font-size: mat-font-size($config, subheading-2);
+}

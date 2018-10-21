@@ -1,6 +1,9 @@
-<mat-sidenav-container class="root-content">
-  <mat-sidenav #mainMenu [(opened)]="showMobileMenu" position="end">
-    Mobile menu content
+<mat-sidenav-container fullscreen>
+  <mat-sidenav #mobileMenu
+               class="primary-bg"
+               [(opened)]="showMobileMenu"
+               position="end">
+    <app-mobile-menu></app-mobile-menu>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-header class="dark-theme" *ngIf="showHeaderAndFooter()"></app-header>

@@ -27,6 +27,7 @@ import {
   AuthServiceConfig,
   GoogleLoginProvider,
 } from "angularx-social-login";
+import { MobileMenuModule } from "./modules/mobile-menu/mobile-menu.module";
 
 export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
   return (): Promise<any> => {
@@ -65,6 +66,7 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     HeaderModule,
     HomeModule,
     LoginModule,
+    MobileMenuModule,
     RegisterModule,
     StudentModule,
     TeacherModule,

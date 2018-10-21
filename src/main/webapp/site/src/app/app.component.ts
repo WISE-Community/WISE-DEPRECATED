@@ -54,6 +54,9 @@ export class AppComponent {
         utilService.showMobileMenu(false);
       }
     });
+    router.events.subscribe((event) => {
+      utilService.showMobileMenu(false);
+    });
   }
 
   showHeaderAndFooter(): boolean {
