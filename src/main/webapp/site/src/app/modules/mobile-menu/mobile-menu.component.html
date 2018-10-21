@@ -9,7 +9,10 @@
     <a mat-button routerLink="/features" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Features</a>
     <a mat-button routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">About Us</a>
     <a mat-button routerLink="/news" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">News</a>
-    <div *ngIf="!signedIn" fxLayout="column" fxLayoutGap="8px">
+    <div id="mobileMenuAccountLinks"
+         *ngIf="!signedIn"
+         fxLayout="column"
+         fxLayoutGap="8px">
       <mat-divider></mat-divider>
       <a mat-button routerLink="/login">Sign In</a>
       <a mat-button routerLink="/join">Create Account</a>
