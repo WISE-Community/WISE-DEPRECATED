@@ -3,14 +3,43 @@ import { AppComponent } from './app.component';
 import { Component } from "@angular/core";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MediaChange, ObservableMedia } from '@angular/flex-layout';
+import { Observable } from 'rxjs';
+import { UtilService } from "./services/util.service";
 
 @Component({selector: 'router-outlet', template: ''})
 class RouterOutletStubComponent { }
 
+export class MockUtilService {
+  getMobileMenuState(): Observable<boolean> {
+    return Observable.create(observer => {
+      const state: boolean = false;
+      observer.next(state);
+      observer.complete();
+    });
+  }
+}
+
+export class MockObservableMedia {
+  isActive(query: string): boolean {
+    return false;
+  }
+
+  subscribe(): Observable<MediaChange> {
+    return Observable.create(observer => {
+      observer.next(new MediaChange());
+      observer.complete();
+    });
+  }
+}
+
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [],
+      providers: [
+        { provide: UtilService, useClass: MockUtilService },
+        { provide: ObservableMedia, useClass: MockObservableMedia }
+      ],
       declarations: [ AppComponent ],
       imports: [ RouterTestingModule ],
       schemas: [ NO_ERRORS_SCHEMA ]

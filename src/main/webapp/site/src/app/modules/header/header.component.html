@@ -1,5 +1,5 @@
-<header>
-  <mat-toolbar class="header section--slant">
+<header class="header">
+  <mat-toolbar class="header__content section--slant">
     <div class="content" fxLayout="row" fxLayoutAlign="start center">
       <a routerLink="/" class="header__logo">
         <img src="assets/img/wise-web-header-img.png" alt="WISE header logo" />
@@ -7,7 +7,7 @@
       <span fxFlex="1 1 auto"></span>
       <app-header-links fxHide fxShow.gt-sm [user]="user" [location]="location"></app-header-links>
       <app-header-account-menu *ngIf="role" [user]="user"></app-header-account-menu>
-      <button mat-icon-button fxHide.gt-sm>
+      <button *ngIf="!location" mat-icon-button fxHide.gt-sm (click)="showMobileMenu()">
         <mat-icon aria-label="Main menu">menu</mat-icon>
       </button>
     </div>

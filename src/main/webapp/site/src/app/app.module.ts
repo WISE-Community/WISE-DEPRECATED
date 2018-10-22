@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from "./http-error.interceptor";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +27,7 @@ import {
   AuthServiceConfig,
   GoogleLoginProvider,
 } from "angularx-social-login";
+import { MobileMenuModule } from "./modules/mobile-menu/mobile-menu.module";
 
 export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
   return (): Promise<any> => {
@@ -65,11 +66,13 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     HeaderModule,
     HomeModule,
     LoginModule,
+    MobileMenuModule,
     RegisterModule,
     StudentModule,
     TeacherModule,
     SocialLoginModule,
-    NewsModule
+    NewsModule,
+    MatSidenavModule
   ],
   providers: [
     ConfigService,
