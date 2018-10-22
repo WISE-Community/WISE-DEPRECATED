@@ -1,6 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from "@angular/router/testing";
-import { MatIconModule } from "@angular/material";
 import { Observable } from 'rxjs';
 import { NO_ERRORS_SCHEMA, Provider } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -38,7 +37,7 @@ describe('MobileMenuComponent', () => {
 
   function createComponent(providers: Provider[] = []) {
     TestBed.configureTestingModule({
-      imports: [ RouterTestingModule, MatIconModule ],
+      imports: [ RouterTestingModule ],
       declarations: [ MobileMenuComponent ],
       providers: [
         { provide: UserService, useValue: new MockUserServiceLogIn() }
