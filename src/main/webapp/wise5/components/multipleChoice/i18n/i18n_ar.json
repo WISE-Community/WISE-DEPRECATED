@@ -1,1 +1,16 @@
-{}
+{
+  "multipleChoice.addChoice": "إضافة خيار",
+  "multipleChoice.areYouSureYouWantToDeleteThisChoice": "هل أنت متأكد من رغبتك في حذف هذا الخيار؟",
+  "multipleChoice.checkbox": "خانة اختيار",
+  "multipleChoice.choiceText": "نص الخيار",
+  "multipleChoice.chooseAnImage": "اختيار صورة",
+  "multipleChoice.componentTypeLabel": "خيار متعدد",
+  "multipleChoice.multipleAnswer": "إجابة متعددة",
+  "multipleChoice.radio": "تبادلي",
+  "multipleChoice.selectionType": "نوع الاختيار",
+  "multipleChoice.singleAnswer": "إجابة واحدة",
+  "multipleChoice.thereAreNoChoicesClickTheAddChoiceButtonToAddAChoice": "لا توجد خيارات. انقر فوق زر \"إضافة خيار\" لإضافة خيار.",
+  "multipleChoice.userChose": "لقد اختار المستخدم '{{نص الخيار}}' (رقم معرف الخيار: {{choiceld}}) في هذا المكون.",
+  "multipleChoice.youHaveUsedXofYAttempt": "لقد استخدمت {{x}} من محاولة{{y}} ",
+  "multipleChoice.youHaveUsedXofYAttempts": "لقد استخدمت {{x}} من عدد محاولات {{y}} "
+}

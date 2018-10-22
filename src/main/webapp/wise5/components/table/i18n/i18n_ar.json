@@ -1,1 +1,24 @@
-{}
+{
+  "table.areYouSureYouWantToDecreaseTheNumberOfColumns": "هل أنت متأكد من رغبتك في تقليل عدد الصفوف؟",
+  "table.areYouSureYouWantToDecreaseTheNumberOfRows": "هل أنت متأكد من رغبتك في تقليل عدد الأعمدة؟",
+  "table.areYouSureYouWantToDeleteThisColumn": "هل أنت متأكد من رغبتك في حذف هذا العمود؟",
+  "table.areYouSureYouWantToDeleteThisRow": "هل أنت متأكد من رغبتك في حذف هذا الصف؟",
+  "table.cellSize": "حجم الخلية",
+  "table.cellText": "نص الخلية",
+  "table.columnCellSizes": "أحجام خلية العمود",
+  "table.columns": "الأعمدة",
+  "table.componentTypeLabel": "جدول",
+  "table.deleteColumn": "حذف عمود",
+  "table.deleteRow": "حذف صف",
+  "table.editableByStudent": "قابل للتحرير من قِبل الطلاب",
+  "table.globalCellSize": "حجم الخلية عامة",
+  "table.importData": "استيراد البيانات",
+  "table.insertColumnAfter": "إدراج عمود بعد",
+  "table.insertColumnBefore": "إدراج عمود قبل ",
+  "table.insertRowAfter": "إدراج صف بعد",
+  "table.insertRowBefore": "إدراج صف قبل",
+  "table.makeAllCellsEditable": "جعل جميع الخلايا قابلة للتحرير",
+  "table.makeAllCellsUneditable": "جعل جميع الخلايا غير قابلة للتحرير",
+  "table.onlyShowDataAtMouseXPosition": "لا تعرض البيانات إلا في موضع الماوس X",
+  "table.rows": "صفوف"
+}

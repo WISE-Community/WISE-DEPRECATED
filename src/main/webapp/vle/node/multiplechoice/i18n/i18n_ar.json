@@ -1,0 +1,106 @@
+{
+    "help": {
+        "description": "The word 'help'",
+        "value": "التعليمات"
+    },
+    "multiple_choice": {
+        "description": "The text 'Multiple Choice'",
+        "value": "خيارات متعددة"
+    },
+    "question": {
+        "description": "The word 'question'",
+        "value": "سؤال "
+    },
+    "answers": {
+        "description": "The word 'answers'",
+        "value": "إجابات"
+    },
+    "challenge_question": {
+        "description": "The text 'Challenge Question'",
+        "value": "سؤال التحدي"
+    },
+    "you_have_completed_this_step": {
+        "description": "The text that notifies the student that they have completed the step",
+        "value": "لقد أكملت هذه الخطوة."
+    },
+    "current_possible_score": {
+        "description": "The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly",
+        "value": "التقييم الحالي الممكن"
+    },
+    "check_answer": {
+        "description": "The text for the button to check the answer",
+        "value": "تحقق من الإجابة"
+    },
+    "try_again": {
+        "description": "The text for the button to try again when the student answered incorrectly",
+        "value": "المحاولة مجددًا"
+    },
+    "save_answer": {
+        "description": "The text for the button to save the answer if there is no correct answer",
+        "value": "حفظ الإجابة"
+    },
+    "edit_answer": {
+        "description": "The text for the button to edit the answer if there is no correct answer",
+        "value": "تعديل الإجابة"
+    },
+    "this_is_attempt_x": {
+        "description": "Message to display to student which attempt they're on",
+        "value": "هذه هي المحاولة رقم {0}"
+    },
+    "you_received": {
+        "description": "The text 'You received' to show you received x points",
+        "value": "لقد حصلت على"
+    },
+    "points": {
+        "description": "The text 'point(s).' to show you received x points",
+        "value": "نقطة / نقاط."
+    },
+    "you_have_selected_too_many_please_select": {
+        "description": "The text that tells the student they have selected too many checkboxes",
+        "value": "لقد حددت الكثير جدًا من الخيارات. يرجى فقط تحديد"
+    },
+    "you_have_not_selected_enough_please_select": {
+        "description": "The text that tells the student they have not selected enough items",
+        "value": "لم تحدد ما يكفي. يرجى تحديد "
+    },
+    "choices": {
+        "description": "The text 'choices.' to tell the student they have ",
+        "value": "الخيارات."
+    },
+    "you_have_completed_this_question": {
+        "description": "The text that tells the student they have completed this question",
+        "value": "لقد أكملت هذه السؤال بنجاح."
+    },
+    "please_review": {
+        "description": "The beginning of the text that tells the student to please review a previous step before trying again",
+        "value": "يرجى المعاينة"
+    },
+    "step": {
+        "description": "The text 'Step'",
+        "value": "الخطوة"
+    },
+    "before_trying_again": {
+        "description": "The end of the text that tells the student to please visit a previous step before trying again",
+        "value": " السابقة لإعادة محاولة تنفيذ هذه الخطوة."
+    },
+    "you_must_visit": {
+        "description": "The beginning of the text that tells the student to please visit a previous step before trying again",
+        "value": "يجب عليك زيارة"
+    },
+    "auto_graded_score": {
+        "description": "The label for the auto graded score in the grading view",
+        "value": "تقييم التصنيف التلقائي"
+    },
+    "take_me_there": {
+        "description": "The button text 'take me there' to show students when they answer the Challenge Question incorrectly.",
+        "value": "انتقل إلى هناك!"
+    },
+    "close_dialog": {
+        "description": "The button text 'close' to close the dialog.",
+        "value": "إغلاق"
+    },
+    "back_to_cq": {
+        "description": "The button text 'Back to Challenge Question' to bring student back to the Challenge Question step.",
+        "value": "الرجوع إلى سؤال التحدي"
+    }
+}

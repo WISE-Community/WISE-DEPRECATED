@@ -37,12 +37,6 @@ class ConceptMapController extends ComponentController {
     // holds the text that the student has typed
     this.studentResponse = '';
 
-    // holds student attachments like assets
-    this.attachments = [];
-
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // used to hold a message dialog if we need to use one
     this.messageDialog = null;
 
@@ -125,17 +119,11 @@ class ConceptMapController extends ComponentController {
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.availableNodes = this.componentContent.nodes;
       this.availableLinks = this.componentContent.links;
-
-      // get the latest annotations
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
       this.isDisabled = true;
-
-      // get the latest annotations
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
 
       let componentState = this.$scope.componentState;
 
@@ -283,9 +271,6 @@ class ConceptMapController extends ComponentController {
 
     var componentState = null;
 
-    // set whether studentAttachment is enabled
-    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
     // get the component state from the scope
     componentState = this.$scope.componentState;
 
@@ -417,11 +402,6 @@ class ConceptMapController extends ComponentController {
 
     this.disableComponentIfNecessary();
 
-    if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
-
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
@@ -456,7 +436,7 @@ class ConceptMapController extends ComponentController {
           this.attachments = attachments;
         }
 
-        this.processLatestSubmit();
+        this.processLatestStudentWork();
       }
     }
   };
@@ -609,27 +589,6 @@ class ConceptMapController extends ComponentController {
       }
     }
   }
-
-  /**
-   * Check if latest component state is a submission and set isSubmitDirty accordingly
-   */
-  processLatestSubmit() {
-    let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-    if (latestState) {
-      if (latestState.isSubmit) {
-        // latest state is a submission, so set isSubmitDirty to false and notify node
-        this.isSubmitDirty = false;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        this.setSubmittedMessage(latestState.clientSaveTime);
-      } else {
-        // latest state is not a submission, so set isSubmitDirty to true and notify node
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        this.setSavedMessage(latestState.clientSaveTime);
-      }
-    }
-  };
 
   /**
    * A submit was triggered by the component submit button or node submit button
@@ -1023,33 +982,6 @@ class ConceptMapController extends ComponentController {
 
     return annotation;
   }
-
-  removeAttachment(attachment) {
-    if (this.attachments.indexOf(attachment) != -1) {
-      this.attachments.splice(this.attachments.indexOf(attachment), 1);
-      this.studentDataChanged();
-    }
-  };
-
-  /**
-   * Attach student asset to this Component's attachments
-   * @param studentAsset
-   */
-  attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
-        if (copiedAsset != null) {
-          var attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.attachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
-  };
 
   /**
    * Get the text the student typed

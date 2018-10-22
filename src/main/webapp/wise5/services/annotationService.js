@@ -472,25 +472,27 @@ var AnnotationService = function () {
             if (annotation.type === 'score' || annotation.type === 'autoScore') {
               var tempNodeId = annotation.nodeId;
               if (nodeId == tempNodeId) {
-                var componentId = annotation.componentId;
-                var data = annotation.data;
-                var scoreFound = tempNodeId + '-' + componentId;
-                if (scoresFound.indexOf(scoreFound) == -1) {
-                  if (data != null) {
-                    var value = data.value;
-                    if (!isNaN(value)) {
-                      if (score == null) {
-                        score = value;
-                      } else {
-                        score += value;
-                      }
+                var tempComponentId = annotation.componentId;
+                if (this.componentExists(tempNodeId, tempComponentId)) {
+                  var data = annotation.data;
+                  var scoreFound = tempNodeId + '-' + tempComponentId;
+                  if (scoresFound.indexOf(scoreFound) == -1) {
+                    if (data != null) {
+                      var value = data.value;
+                      if (!isNaN(value)) {
+                        if (score == null) {
+                          score = value;
+                        } else {
+                          score += value;
+                        }
 
-                      /*
-                       * remember that we have found a score for this component
-                       * so that we don't double count it if the teacher scored
-                       * the component more than once
-                       */
-                      scoresFound.push(scoreFound);
+                        /*
+                         * remember that we have found a score for this component
+                         * so that we don't double count it if the teacher scored
+                         * the component more than once
+                         */
+                        scoresFound.push(scoreFound);
+                      }
                     }
                   }
                 }
@@ -501,6 +503,11 @@ var AnnotationService = function () {
       }
 
       return score;
+    }
+  }, {
+    key: 'componentExists',
+    value: function componentExists(nodeId, componentId) {
+      return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId) != null;
     }
 
     /**

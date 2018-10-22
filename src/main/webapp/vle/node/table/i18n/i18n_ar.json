@@ -1,0 +1,126 @@
+{
+    "import_data": {
+        "description": "The label for the import data button",
+        "value": "استيراد البيانات"
+    },
+    "reset_table": {
+        "description": "The label for the reset table button",
+        "value": "إعادة تعيين الجدول"
+    },
+    "add_row": {
+        "description": "The label for the add row button",
+        "value": "إضافة صف"
+    },
+    "delete_row": {
+        "description": "The label for the delete row button",
+        "value": "حذف صف"
+    },
+    "add_column": {
+        "description": "The label for the add column button",
+        "value": "إضافة عمود"
+    },
+    "delete_column": {
+        "description": "The label for the delete column button",
+        "value": "حذف عمود"
+    },
+    "make_graph": {
+        "description": "The label for the make graph button",
+        "value": "تصميم رسم بياني"
+    },
+    "show_starter_sentence": {
+        "description": "The label for the show starter sentence button",
+        "value": "عرض جملة البدء"
+    },
+    "save": {
+        "description": "The label for the save button",
+        "value": "حفظ"
+    },
+    "click_make_graph": {
+        "description": "The message to tell the student to click the make graph button",
+        "value": "انقر فوق \"تصميم رسم بياني\" لتحويل البيانات إلى رسم بياني"
+    },
+    "are_you_sure_you_want_reset": {
+        "description": "The message to ask the student if they are sure they want to reset the table",
+        "value": "هل أنت متأكد من رغبتك في إعادة تعيين الجدول؟"
+    },
+    "table_has_changed_click_make_graph": {
+        "description": "The message to tell the student that the table has changed so they should click the make graph button",
+        "value": "تم تغيير الجدول، انقر فوق \"تصميم رسم بياني\" لتحويل البيانات الجديدة إلى رسم بياني"
+    },
+    "x_axis": {
+        "description": "The label for the x axis",
+        "value": "محور X"
+    },
+    "y_axis": {
+        "description": "The label for the y axis",
+        "value": "محور Y"
+    },
+    "x_min": {
+        "description": "The label for the x min",
+        "value": "أدنى X"
+    },
+    "x_max": {
+        "description": "The label for the x max",
+        "value": "أقصى X"
+    },
+    "y_min": {
+        "description": "The label for the y min",
+        "value": "أدنى Y"
+    },
+    "y_max": {
+        "description": "The label for the y max",
+        "value": "أقصى Y"
+    },
+    "error_data_in_table_invalid": {
+        "description": "The error message that is displayed when the student tries to make the graph with invalid table data",
+        "value": "خطأ: البيانات الموجودة بالجدول غير صالحة، يرجى تصحيحها والمحاولة مجددًا"
+    },
+    "error_unable_to_draw_chart": {
+        "description": "The error message that is displayed when we are unable to draw the chart",
+        "value": "خطأ: غير ممكن رسم خارطة"
+    },
+    "invalid_x_min": {
+        "description": "The error message to show when the x min value is invalid",
+        "value": "قيمة أدنى X غير صالحة"
+    },
+    "invalid_x_max": {
+        "description": "The error message to show when the x max value is invalid",
+        "value": "قيمة أقصى X غير صالحة "
+    },
+    "invalid_y_min": {
+        "description": "The error message to show when the y min value is invalid",
+        "value": "قيمة أدنى Y غير صالحة"
+    },
+    "invalid_y_max": {
+        "description": "The error message to show when y max value is invalid",
+        "value": "قيمة أقصى Y غير صالحة"
+    },
+    "error_you_must_fix": {
+        "description": "The error message to tell the student they need to fix the problems before they can make the graph",
+        "value": "خطأ: يجب عليك تصحيح المشكلات التالية قبل تصميم الرسم البياني"
+    },
+    "are_you_sure_delete_column": {
+        "description": "The confirmation message to ask the student if they are sure they want to delete the column",
+        "value": "هل أنت متأكد من رغبتك في حذف العمود الموجود ناحية اليمين؟"
+    },
+    "error_may_not_delete_original_columns": {
+        "description": "The error message telling the student they can't delete columns that were authored by the teacher",
+        "value": "خطأ: قد لا تحذف أيًا من الأعمدة الأصلية"
+    },
+    "are_you_sure_delete_row": {
+        "description": "The confirmation message to ask the student if they are sure they want to delete the row",
+        "value": "هل أنت متأكد من رغبتك في حذف الصف الموجود بالأسفل؟"
+    },
+    "error_may_not_delete_original_rows": {
+        "description": "The error message telling the student they can't delete rows that were authored by the teacher",
+        "value": "خطأ: لا يمكنك حذف أي من الصفوف الأصلية"
+    },
+    "loading": {
+        "description": "The loading message",
+        "value": "جارٍ التحميل..."
+    },
+    "saved_feedback": {
+        "description": "Notification that the table data was saved",
+        "value": "تم الحفظ!"
+    }
+}

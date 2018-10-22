@@ -10,13 +10,16 @@
   "match.correctBucketButWrongPosition": "Correct bucket but wrong position",
   "match.deleteBucket": "Delete Bucket",
   "match.deleteChoice": "Delete Choice",
+  "match.enterChoiceText": "Enter Choice Text",
   "match.incorrectPositionFeedback": "Incorrect Position Feedback",
   "match.position": "Position",
   "match.showPrivateNotesAsChoices": "Show Private Notes As Choices",
   "match.showSourceBucketOnTheLeftAndTargetBucketsOnTheRight": "Show Source Bucket on the Left and Target Buckets on the Right",
   "match.sourceBucketName": "Source Bucket Name (this is where all the choices initially show up)",
+  "match.studentCanCreateChoices": "Student Can Create Choices",
   "match.targetBucketName": "Target Bucket Name",
   "match.targetBuckets": "Target Buckets",
   "match.thereAreNoChoices": "There are no choices. Click the \"Add Choice\" button to add a choice.",
-  "match.thereAreNoTargetBuckets": "There are no target buckets. Click the \"Add Target Bucket\" button to add a bucket."
+  "match.thereAreNoTargetBuckets": "There are no target buckets. Click the \"Add Target Bucket\" button to add a bucket.",
+  "match.typeSomething": "Type Something"
 }

@@ -339,11 +339,8 @@ class StudentStatusService {
           if (nodeStatuses.hasOwnProperty(p)) {
             let nodeStatus = nodeStatuses[p];
             let nodeId = nodeStatus.nodeId;
-            if (nodeStatus.isVisible && !this.ProjectService.isGroupNode(nodeId)) {
-              // node is visible and is not a group
-              // get node max score
+            if (nodeStatus.isVisible && this.ProjectService.isApplicationNode(nodeId)) {
               let nodeMaxScore = this.ProjectService.getMaxScoreForNode(nodeId);
-
               if (nodeMaxScore) {
                 // there is a max score for the node, so add to total
                 // TODO geoffreykwan: trying to add to null?

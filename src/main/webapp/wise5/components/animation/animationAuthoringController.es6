@@ -40,50 +40,43 @@ class AnimationAuthoringController extends AnimationController {
       { type: 'Animation' },
       { type: 'Graph' }
     ];
+  }
 
-    $scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.refreshContentInAuthoringPreview();
-    }.bind(this), true);
-
-    this.$scope.$on('assetSelected', (event, args) => {
-      if (this.isEventTargetThisComponent(args)) {
-        const fileName = args.assetItem.fileName;
-        if (args.target == 'rubric') {
-          const summernoteId = this.createSummernoteRubricId();
-          this.restoreSummernoteCursorPosition(summernoteId);
-          const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-          const fullAssetPath = assetsDirectoryPath + '/' + fileName;
-          if (this.UtilService.isImage(fileName)) {
-            this.insertImageIntoSummernote(fullAssetPath, fileName);
-          } else if (this.UtilService.isVideo(fileName)) {
-            this.insertVideoIntoSummernote(fullAssetPath);
-          }
-        } else if (args.target == 'image') {
-          args.targetObject.image = fileName;
-        } else if (args.target == 'imageMovingLeft') {
-          args.targetObject.imageMovingLeft = fileName;
-        } else if (args.target == 'imageMovingRight') {
-          args.targetObject.imageMovingRight = fileName;
-        }
-      }
-      this.authoringViewComponentChanged();
-      this.$mdDialog.hide();
-    });
+  handleAuthoringComponentContentChanged(newValue, oldValue) {
+    super.handleAuthoringComponentContentChanged(newValue, oldValue);
+    this.refreshContentInAuthoringPreview();
   }
 
   refreshContentInAuthoringPreview() {
-    this.submitCounter = 0;
-    this.latestAnnotations = null;
-    this.isDirty = false;
-    this.isSubmitDirty = false;
-    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
     this.removeAllObjectsFromSVG();
     this.initializeCoordinates();
-    this.setup();
+    this.setupSVG();
+  }
+
+  assetSelected(event, args) {
+    if (this.isEventTargetThisComponent(args)) {
+      const fileName = args.assetItem.fileName;
+      if (args.target == 'rubric') {
+        const summernoteId = this.getSummernoteId(args);
+        this.restoreSummernoteCursorPosition(summernoteId);
+        const fullAssetPath = this.getFullAssetPath(fileName);
+        if (this.UtilService.isImage(fileName)) {
+          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+        } else if (this.UtilService.isVideo(fileName)) {
+          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+        }
+      } else if (args.target == 'image') {
+        args.targetObject.image = fileName;
+        this.authoringViewComponentChanged();
+      } else if (args.target == 'imageMovingLeft') {
+        args.targetObject.imageMovingLeft = fileName;
+        this.authoringViewComponentChanged();
+      } else if (args.target == 'imageMovingRight') {
+        args.targetObject.imageMovingRight = fileName;
+        this.authoringViewComponentChanged();
+      }
+    }
+    this.$mdDialog.hide();
   }
 
   removeAllObjectsFromSVG() {

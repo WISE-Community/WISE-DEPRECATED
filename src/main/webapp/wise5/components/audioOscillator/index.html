@@ -84,7 +84,7 @@
           </md-input-container>
           <md-input-container style='margin-right: 20px;'>
             <md-button class='playStopButton md-raised md-primary'
-                ng-click='audioOscillatorController.playStopClicked()'>
+                ng-click='audioOscillatorController.togglePlay()'>
               <md-icon ng-if='!audioOscillatorController.isPlaying'>play_arrow</md-icon>
               <md-icon ng-if='audioOscillatorController.isPlaying'>stop</md-icon>
               <md-tooltip md-direction='top'

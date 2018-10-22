@@ -13,6 +13,9 @@
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css">
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<c:if test="${textDirection == 'rtl' }">
+		<link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
@@ -47,10 +50,10 @@ function addNewsItem() {
 		modal: true,
 		width: '700',
 		height: '600',
-		title: 'Add News Item',
+		title: '<spring:message code="admin.news.addNewsItem" />',
 		close: function(){ $(this).html(''); },
 		buttons: {
-			Close: function(){
+			'<spring:message code="close" />': function(){
 				$(this).dialog('close');
 			}
 		}
@@ -63,10 +66,10 @@ function editNewsItem(newsItemId) {
 		modal: true,
 		width: '700',
 		height: '600',
-		title: 'Edit News Item',
+		title: '<spring:message code="admin.news.editNewsItem" />',
 		close: function(){ $(this).html(''); },
 		buttons: {
-			Close: function(){
+			'<spring:message code="close" />': function(){
 				$(this).dialog('close');
 			}
 		}
@@ -75,6 +78,7 @@ function editNewsItem(newsItemId) {
 </script>
 </head>
 <body>
+<div id="pageWrapper">
 <%@ include file="../../headermain.jsp"%>
 <div id="page">
 <div id="pageContent">
@@ -125,5 +129,6 @@ function editNewsItem(newsItemId) {
 </div>
 <div id="editNewsItemDialog" class="dialog"></div>
 <div id="addNewsItemDialog" class="dialog"></div>
+</div>
 </body>
 </html>

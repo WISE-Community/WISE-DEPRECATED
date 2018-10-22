@@ -13,7 +13,7 @@
                        aria-label="{{ 'previousItem' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!stepToolsCtrl.prevId" ng-click="stepToolsCtrl.goToPrevNode()">
-                <md-icon> chevron_left </md-icon>
+                <md-icon> {{ stepToolsCtrl.icons.prev }} </md-icon>
                 <md-tooltip md-direction="bottom">{{ 'PREVIOUS_STEP' | translate }}</md-tooltip>
             </md-button>
             <node-icon node-id="stepToolsCtrl.nodeId" size="18" icon="stepToolsCtrl.nodeStatus.icon" style="width: 40; text-align: center;"></node-icon>
@@ -40,7 +40,7 @@
                        aria-label="{{ 'nextItem' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!stepToolsCtrl.nextId" ng-click="stepToolsCtrl.goToNextNode()">
-                <md-icon> chevron_right </md-icon>
+                <md-icon> {{ stepToolsCtrl.icons.next }} </md-icon>
                 <md-tooltip md-direction="bottom">{{ 'NEXT_STEP' | translate }}</md-tooltip>
             </md-button>
         </div>

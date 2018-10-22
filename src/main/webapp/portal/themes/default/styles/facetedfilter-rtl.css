@@ -1,0 +1,10 @@
+.FF_sidebar .clear_search, .clear_filters {
+	float:left;
+}
+.FF_sidebar .clear_filters {
+	float:left;
+}
+.FF_sidebar .remove_search, .FF_sidebar .remove_filter {
+	left: 0;
+	right: auto;
+}

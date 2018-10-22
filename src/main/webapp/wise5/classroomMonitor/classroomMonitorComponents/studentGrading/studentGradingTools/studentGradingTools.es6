@@ -14,6 +14,12 @@ class StudentGradingToolsController {
     this.ConfigService = ConfigService;
     this.TeacherDataService = TeacherDataService;
     this.$translate = this.$filter('translate');
+    
+    this.is_rtl = ($('html').attr('dir') == 'rtl');
+    this.icons = { prev: 'chevron_left', next: 'chevron_right' };
+    if (this.is_rtl) {
+      this.icons = { prev: 'chevron_right', next: 'chevron_left' };
+    }
 
     this.$onInit = () => {
       this.selectTeamPlaceholder = this.$translate('selectATeam');
@@ -124,7 +130,7 @@ const StudentGradingTools = {
       <md-button aria-label="{{ 'previousTeam' | translate }}"
                  class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevTeam()">
-        <md-icon> chevron_left </md-icon>
+        <md-icon> {{ $ctrl.icons.prev }} </md-icon>
         <md-tooltip md-direction="bottom">{{ 'previousTeam' | translate }}</md-tooltip>
       </md-button>
       <md-icon class="md-30" hide-xs
@@ -135,7 +141,7 @@ const StudentGradingTools = {
       <md-button aria-label="{{ 'nextTeam' | translate }}"
                  class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextTeam()">
-        <md-icon> chevron_right </md-icon>
+        <md-icon> {{ $ctrl.icons.next }} </md-icon>
         <md-tooltip md-direction="bottom">{{ 'nextTeam' | translate }}</md-tooltip>
       </md-button>
     </div>`,

@@ -1,0 +1,26 @@
+{
+    "toggle_nav_button_text": {
+        "description": "Text on the Toggle Navigation button when navigation UI is on (visible)",
+        "value": "ملء الشاشة"
+    },
+    "toggle_nav_button_title": {
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)",
+        "value": "وضع ملء الشاشة (إخفاء قائمة التنقل)"
+    },
+    "toggle_nav_button_text_off": {
+        "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)",
+        "value": "عرض القائمة"
+    },
+    "toggle_nav_button_title_off": {
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)",
+        "value": "عرض قائمة التنقل"
+    },
+    "navigation_expand_all": {
+        "description": "Text on a button to show all navigation items",
+        "value": "توسيع الكل"
+    },
+    "navigation_collapse_all": {
+        "description": "Text on a button to hide all navigation items",
+        "value": "طي"
+    }
+}

@@ -8,18 +8,25 @@
   <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
   <link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
   <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+  <c:if test="${textDirection == 'rtl' }">
+      <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+  </c:if>
 
   <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
   <script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
   <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
   <script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
+  <style media="screen">
+    .infoContent {text-align:left;}
+    [dir=rtl] .infoContent {text-align:right;}
+  </style>
 </head>
 <body>
 <div id="pageWrapper">
   <%@ include file="../headermain.jsp"%>
   <div id="page">
     <div id="pageContent">
-      <div class="infoContent" style="text-align:left">
+      <div class="infoContent">
         <div class="panelHeader"><spring:message code="teacher.management.updatemyaccount.header" /></div>
         <div class="infoContentBox">
           <div><spring:message code="teacher.management.updatemyaccountinfo.instructions"/></div>

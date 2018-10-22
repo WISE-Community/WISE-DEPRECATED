@@ -1,0 +1,70 @@
+{
+    "title": {
+        "description": "The title for a brainstorm step",
+        "value": "العصف الذهني عند الطلاب"
+    },
+    "my_response": {
+        "description": "The text 'My Response' right above the textbox where the student types in their response",
+        "value": "ردي "
+    },
+    "instructions": {
+        "description": "The instructions for the brainstorm step",
+        "value": "اقرأ موضوع العصف الذهني التالي، ثم اكتب ردك في المساحة الفارغة المخصصة للكتابة. <br/>انقر فوق <em>{0}</em> لحفظ عملك ومراجعة ردود الطلاب الآخرين."
+    },
+    "save": {
+        "description": "The text 'Save' on the button to save and post a brainstorm response",
+        "value": "حفظ"
+    },
+    "save_preview_mode": {
+        "description": "The text to show when user clicks on the Save button in preview mode.",
+        "value": "يمكنك حفظ إجابتك وعرض إجابات الطلاب الآخرين عند تثبيت هذا المشروع لعرضه أثناء التعلم في الفصل الدراسي."
+    },
+    "other_student_responses": {
+        "description": "The text 'Other Student Responses' that is displayed above the list of other students' responses",
+        "value": "ردود الطلاب الآخرين"
+    },
+    "check_for_new_responses": {
+        "description": "The text 'Check for New Responses' that is displayed on a button that triggers the loading of other students' responses",
+        "value": "تحقق من الردود الجديدة"
+    },
+    "check_for_new_responses_preview_mode": {
+        "description": "The text to show when user clicks on the Check for New Responses button in preview mode.",
+        "value": "يمكنك عرض إجابات الطلاب الآخرين عند إعداد هذا المشروع لعرضه في الفصل الدراسي."
+    },
+    "showStarterSentence": {
+        "description": "Text for link to show the starter sentence for the step",
+        "value": "عرض جملة البدء"
+    },
+    "save_noContent": {
+        "description": "Text to display when user tries to save an empty post or replay",
+        "value": "لا يوجد شيء لحفظه"
+    },
+    "save_success": {
+        "description": "Save success confirmation message",
+        "value": "تم حفظ المنشور!"
+    },
+    "save_fail": {
+        "description": "Error text to display when server fails to save user's post or reply",
+        "value": "خطأ: فشل حفظ المنشور. يرجى المحاولة مجددًا أو إبلاغ معلمك."
+    },
+    "flag_inappropriate": {
+        "description": "Text to display when a comment has been removed",
+        "value": "تم تمييز هذا التعليق كتعليق غير لائق."
+    },
+    "postedByLabel": {
+        "description": "Label text indicating user that posted a message",
+        "value": "تم النشر بواسطة :"
+    },
+    "post_reply": {
+        "description": "Text for button/link to add a new reply to a brainstorm post",
+        "value": "رد على المنشور"
+    },
+    "noStarter": {
+        "description": "Text to display when user requests to display starter sentence but step does not have one set",
+        "value": "لا يوجد جملة بدء مخصصة لأجل {0} هذا."
+    },
+    "importAssetButtonTitle": {
+        "description": "Text to display on the button to import asset and use in a brainstorm post",
+        "value": "استخدم الأصل الخاص بي "
+    }
+}

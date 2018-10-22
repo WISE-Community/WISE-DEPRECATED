@@ -1,0 +1,366 @@
+{
+    "OK": {
+        "description": "Text for the word 'OK'",
+        "value": "موافق"
+    },
+    "Yes": {
+        "description": "Text for the word 'Yes'",
+        "value": "نعم"
+    },
+    "Cancel": {
+        "description": "Text for the word 'Cancel'",
+        "value": "إلغاء"
+    },
+    "Submit": {
+        "description": "Text for the word 'Submit'",
+        "value": "إرسال"
+    },
+    "Save": {
+        "description": "Text for the word 'Save'",
+        "value": "حفظ"
+    },
+    "loading": {
+        "description": "Message to display when draw tool is loading",
+        "value": "تحميل رسم WISE"
+    },
+    "stamps_title": {
+        "description": "Title for the choose a stamp tool",
+        "value": "اختيار تعليق توضيحي:"
+    },
+    "stamps_button": {
+        "description": "Title text for the stamp tool button",
+        "value": "أداة التعليقات التوضيحية"
+    },
+    "eraseDrawing_button": {
+        "description": "Title for the erase drawing tool button",
+        "value": "حذف الرسم الحالي"
+    },
+    "eraseDrawing_dialog_title": {
+        "description": "Title for the erase drawing dialog",
+        "value": "حذف الرسم"
+    },
+    "eraseDrawing_dialog_warning": {
+        "description": "Warning text for the erase drawing dialog",
+        "value": "تحذير! سوف يتسبب هذا في حذف رسمك الحالي واستخدام الحالة الافتراضية بدلاً منه."
+    },
+    "eraseDrawing_dialog_instructions": {
+        "description": "Instructions text for the erase drawing dialog",
+        "value": "إذا كنت ترغب في الاستمرار، فانقر فوق \"موافق\"."
+    },
+    "description_header_add": {
+        "description": "Link text for the header of the description input block",
+        "value": "(انقر للإضافة)"
+    },
+    "description_header_title": {
+        "description": "Title text for the header of the description input block",
+        "value": "انقر للتحرير"
+    },
+    "description_header_label": {
+        "description": "Label text for the header of the description input block",
+        "value": "الوصف:"
+    },
+    "description_header_labelSnapshot": {
+        "description": "Label text for the header of the description input block when snapshots (frames) are enabled",
+        "value": "وصف الإطار: "
+    },
+    "description_header_maximized": {
+        "description": "Instructions text for the header of the description input block",
+        "value": "(أدخل نصك في الصندوق أدناه)"
+    },
+    "description_edit_link": {
+        "description": "Text for the edit description link/button",
+        "value": "تحرير"
+    },
+    "description_edit_title": {
+        "description": "Title text for the edit description link/button",
+        "value": "تحرير الوصف"
+    },
+    "importStudentAsset_button": {
+        "description": "Title for the import student asset tool button",
+        "value": "استيراد ملف"
+    },
+    "prompt_link": {
+        "description": "Text for the prompt (instructions) link/button",
+        "value": "الإرشادات"
+    },
+    "prompt_title": {
+        "description": "Title text for the prompt (instructions) link/button",
+        "value": "مراجعة التعليمات "
+    },
+    "autoGrade_result": {
+        "description": "Feedback showing users the auto score resulting from their submission",
+        "value": "أعاد نظام التسجيل التلقائي {0} من {1}."
+    },
+    "autoGrade_confirm": {
+        "description": "Confirmation message to show users when they are submitting an answer for auto grading and feedback",
+        "value": "أعاد نظام التسجيل التلقائي {0} من {1}."
+    },
+    "autoGrade_complete": {
+        "description": "Confirmation message alerting users that they have used all of their auto score submissions",
+        "value": "أحسنت!\n\nلقد أنهيت جميع فرص الإرسال.\n\nيمكنك الاستمرار في تحرير عملك إذا كنت بحاجة لذلك."
+    },
+    "autoGrade_submissionComplete": {
+        "description": "Confirmation message to display when users submit an auto scored answer",
+        "value": "شكرًا لك على إرسالك لعملك."
+    },
+    "autoGrade_noWork": {
+        "description": "Message to display when students have not added any work to an auto scored step but press the submit button",
+        "value": "يُرجى إضافة بعض العناصر لإجابتك قبل إرسال العمل."
+    },
+    "sizeLimit_title": {
+        "description": "Title text for dialog alerting users that the drawing has exceeded the allowed file size",
+        "value": "الرسم كبير جدًا"
+    },
+    "sizeLimit_warning": {
+        "description": "Warning text for dialog alerting users that the drawing has exceeded the allowed file size",
+        "value": "تحذير! رسمك الحالي كبير جدًا."
+    },
+    "sizeLimit_instructions": {
+        "description": "Instructions text for dialog alerting users that the drawing has exceeded the allowed file size",
+        "value": "إذا كنت ترغب في حفظ هذا الرسم، فيرجى حذف بعض العناصر من الصورة. شكرًا لك!"
+    },
+    "snapshots_header": {
+        "description": "Header text for the snapshots (frames) panel",
+        "value": "إطارات"
+    },
+    "snapshots_closeTitle": {
+        "description": "Title/tooltip text for the link to close (hide) the snapshots panel",
+        "value": "إغلاق"
+    },
+    "snapshots_playback_playOnce": {
+        "description": "Title/tooltip text for the button to play through the snapshots like a flipbook animation one time",
+        "value": "تشغيل (مرة)"
+    },
+    "snapshots_playback_playLoop": {
+        "description": "Title/tooltip text for the button to play through the snapshots like a flipbook animation on a loop",
+        "value": "تشغيل (متكرر)"
+    },
+    "snapshots_playback_pause": {
+        "description": "Title/tooltip text for the button to pause snapshot playback",
+        "value": "إيقاف مؤقت"
+    },
+    "snapshots_playback_speed": {
+        "description": "Title/tooltip text for the slider control to edit the speed at which snapshots are played back",
+        "value": "سرعة إعادة تشغيل "
+    },
+    "snapshots_playback_units": {
+        "description": "Text for the unit measurement (per second) of the speed at which snapshots are played back",
+        "value": "/ثانية"
+    },
+    "snapshots_addNew_title": {
+        "description": "Title/tooltip text for add new snapshot (frame) link",
+        "value": "إضافة إطار جديد"
+    },
+    "snapshots_addNew_link": {
+        "description": "Text for add new snapshot (frame) link",
+        "value": "إطار جديد +"
+    },
+    "snapshots_toggle_title": {
+        "description": "Title/tooltip text for the link to toggle snapshots (frames) panel opened and closed",
+        "value": "عرض / إخفاء الإطارات"
+    },
+    "snapshots_toggle_link": {
+        "description": "Text for the link to toggle snapshots (frames) panel opened and closed",
+        "value": "إطارات (لقطات)"
+    },
+    "snapshots_dialog_delete_title": {
+        "description": "Title for the delete snapshot (frame) dialog",
+        "value": "حذف إطار"
+    },
+    "snapshots_dialog_delete_warning": {
+        "description": "Warning users will see when they attempt to delete a snapshot",
+        "value": "تحذير! هذه العملية دائمة."
+    },
+    "snapshots_dialog_delete_confirm": {
+        "description": "Confirmation text users will see when they attempt to delete a snapshot",
+        "value": "هل أنت متأكد من رغبتك في حذف هذا الإطار إلى الأبد؟"
+    },
+    "snapshots_dialog_tooMany_title": {
+        "description": "Title for the dialog alerting users when they attempt to add a snapshot but have reached the maximum number allowed",
+        "value": "عدد الإطارات زائد عن الحد المناسب"
+    },
+    "snapshots_dialog_tooMany_warning": {
+        "description": "Warning for alerting users when they attempt to add a snapshot but have reached the maximum number allowed",
+        "value": "عذرًا! مسموح لك فقط بإطارات <span id='maxSnaps'>{0}</span>."
+    },
+    "snapshots_dialog_tooMany_instructions": {
+        "description": "Instructions for users when they attempt to add a snapshot but have reached the maximum number allowed",
+        "value": "إذا كنت ترغب في إنشاء إطار آخر، فيرجى حذف أحد أُطرك الحالية من خلال النقر فوق \"X\" يمينًا في الزاوية العليا من الإطار الذي ترغب في حذفه."
+    },
+    "snapshots_snapHover": {
+        "description": "Mouseover/tooltip text for a snapshot thumbnail",
+        "value": "انقر للفتح، انقر واسحب لإعادة الطلب"
+    },
+    "snapshots_snapDelete_title": {
+        "description": "Title/tooltip text for delete snapshot links",
+        "value": "حذف إطار"
+    },
+    "annotator_loading": {
+        "description": "Message to display when annotator is loading",
+        "value": "تحميل مضيف تعليقات WISE"
+    },
+    "annotator_newLabel": {
+        "description": "Text for button to add a new label",
+        "value": "ملصق جديد"
+    },
+    "annotator_newLabel_instructions": {
+        "description": "Instructions text for how to create new label",
+        "value": "حدد الموقع على الصورة أو"
+    },
+    "annotator_editLabel_instructions": {
+        "description": "Instructions text for how to create new label (for non-touch screens)",
+        "value": "انقر فوق ملصق حالي لتحريره أو حذفه"
+    },
+    "annotator_editLabel_instructions_touch": {
+        "description": "Instructions text for how to create new label (for touch screens)",
+        "value": "انقر فوق ملصق حالي لتحريره أو حذفه"
+    },
+    "annotator_deleteLabel": {
+        "description": "Text for button to delete a label",
+        "value": "حذف"
+    },
+    "annotator_deleteConfirm": {
+        "description": "Confirmation warning text for deleting a label",
+        "value": "هل أنت متأكد من رغبتك في حذف هذا الملصق بشكل دائم؟"
+    },
+    "annotator_save": {
+        "description": "Text for save button",
+        "value": "حفظ"
+    },
+    "annotator_explain": {
+        "description": "Default text for button to add explanation",
+        "value": "مستعد للشرح"
+    },
+    "annotator_explain_instructions": {
+        "description": "Default instructions for the explanation text input area",
+        "value": "اشرح ملصقاتك"
+    },
+    "annotator_explain_placeholder": {
+        "description": "Placeholder text for the explanation text input area",
+        "value": "أدخل ردك"
+    },
+    "annotator_maxWarning": {
+        "description": "Alert text to show when user has reached maximum number of allowed labels.",
+        "value": "عذرًا، لقد وصلت للحد الأقصى من عدد الملصقات ({0}). إذا كنت ترغب في إضافة المزيد، فيرجى حذف بعض الملصقات والمحاولة مرة أخرى."
+    },
+    "annotator_minWarning": {
+        "description": "Alert text to show when user tries to go below minimum number of allowed labels.",
+        "value": "عذرًا، لا يمكنك حذف هذا الملصق. يجب أن يكون لديك {0} ملصقًا نشطًا على الأقل."
+    },
+    "annotator_editLabelText": {
+        "description": "Label for the edit label text input field",
+        "value": "نص الملصق:"
+    },
+    "annotator_edit_title": {
+        "description": "Title for the edit label dialog",
+        "value": "تحرير الملصق"
+    },
+    "annotator_authoring_require": {
+        "description": "",
+        "value": "اطلب من الطلاب استكمال هذه الخطوة قبل الاستمرار:"
+    },
+    "annotator_authoring_imageLabel": {
+        "description": "Label for control in authoring to select the image file to annotate in annotator step authoring",
+        "value": "ملف الصور المطلوب إضافة تعليقات توضيحية عليه:"
+    },
+    "annotator_authoring_imageBrowse": {
+        "description": "Label for button in authoring to select image file to annotate in annotator step authoring",
+        "value": "تصفح"
+    },
+    "annotator_authoring_importLabel": {
+        "description": "Label for control in authoring to import their own image file to annotate in annotator step authoring",
+        "value": "اسمح للطلاب باستيراد صورهم الخاصة:"
+    },
+    "annotator_authoring_importText": {
+        "description": "Helper text for control in authoring to import their own image file to annotate in annotator step authoring",
+        "value": "(ملاحظة: سوف تلغي صور الطلاب الخاصة المستوردة أي صورة افتراضية محددة أعلاه)."
+    },
+    "annotator_authoring_maxLabel": {
+        "description": "Label for maximum number of allowed labels input in annotator step authoring",
+        "value": "أقصى عدد مسموح به من الملصقات (0 يعني عددًا غير محدود):"
+    },
+    "annotator_authoring_minLabel": {
+        "description": "Label for minimum number of required labels input in annotator step authoring",
+        "value": "أقصى عدد من الملصقات المطلوبة:"
+    },
+    "annotator_authoring_promptLabel": {
+        "description": "Label for the prompt input in annotator step authoring",
+        "value": "تعليمات عامة (اختيارية):"
+    },
+    "annotator_authoring_defaultColor_label": {
+        "description": "Label for the default label color select in annotator step authoring",
+        "value": "لون الملصق الافتراضي:"
+    },
+    "annotator_authoring_responseLabel": {
+        "description": "Label for the enable student response box checkbox in annotator step authoring",
+        "value": "تمكين صندوق ردود الطلاب:"
+    },
+    "annotator_authoring_responseInstructionsLabel": {
+        "description": "Label for the student response instructions input in annotator step authoring",
+        "value": "تعليمات لصندوق ردود الطلاب:"
+    },
+    "annotator_authoring_responseInstructions": {
+        "description": "Default instructions for the student response box in an annotator step",
+        "value": "اشرح عملك:"
+    },
+    "annotator_authoring_responseButtonLabel": {
+        "description": "Label for the text input for the student response button text in an annotator step",
+        "value": "نص لزر ردود الطلاب:"
+    },
+    "annotator_colors_black": {
+        "description": "Text for the color 'Black')",
+        "value": "أسود"
+    },
+    "annotator_colors_blue": {
+        "description": "Text for the color 'Blue')",
+        "value": "أزرق"
+    },
+    "annotator_colors_green": {
+        "description": "Text for the color 'Green')",
+        "value": "أخضر"
+    },
+    "annotator_colors_maroon": {
+        "description": "Text for the color 'Maroon')",
+        "value": "كستنائي"
+    },
+    "annotator_colors_navy": {
+        "description": "Text for the color 'Navy Blue')",
+        "value": "أزرق داكن"
+    },
+    "annotator_colors_orange": {
+        "description": "Text for the color 'Orange')",
+        "value": "برتقالي"
+    },
+    "annotator_colors_purple": {
+        "description": "Text for the color 'Purple')",
+        "value": "أرجواني"
+    },
+    "annotator_colors_red": {
+        "description": "Text for the color 'Red')",
+        "value": "أحمر"
+    },
+    "annotator_colors_teal": {
+        "description": "Text for the color 'Teal')",
+        "value": "أزرق مخضر\n"
+    },
+    "annotator_colors_yellow": {
+        "description": "Text for the color 'Yellow')",
+        "value": "أصفر"
+    },
+    "annotator_grading_header": {
+        "description": "Header text for the annotator grading view",
+        "value": "عمل الطلاب للخطوة {0}:"
+    },
+    "annotator_import": {
+        "description": "Text for the import file button in an annotator step",
+        "value": "استيراد ملف"
+    },
+    "annotator_importFailed": {
+        "description": "Error message to display when importing a file failed in an annotator step",
+        "value": "فشل استيراد الملف. حاول تحديد ملف صور مختلف."
+    },
+    "annotator_loadFailed": {
+        "description": "Error message to display when loading content failed in an annotator step",
+        "value": "فشل التحميل. يرجى طلب التحقق من محتوى الخطوة من معلمك أو المسؤول."
+    }
+}

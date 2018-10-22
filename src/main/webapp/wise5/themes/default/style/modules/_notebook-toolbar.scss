@@ -20,3 +20,11 @@
 .notebook-toolbar__add-icon {
     border-radius: 50%;
 }
+
+#closeNotebookSettingsButton {
+  float:right;
+}
+
+[dir=rtl] #closeNotebookSettingsButton {
+  float:left;
+}
