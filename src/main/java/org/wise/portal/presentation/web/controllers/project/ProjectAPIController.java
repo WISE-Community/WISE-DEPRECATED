@@ -4,19 +4,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
-import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
-import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.author.project.WISE5AuthorProjectController;
@@ -28,11 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
- * Controller for Project REST API
+ * Project REST API
  *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
@@ -51,30 +45,46 @@ public class ProjectAPIController {
   @Autowired
   private Properties wiseProperties;
 
-  // path to project thumbnail image relative to project folder
-  // TODO: make this dynamic, part of project metadata?
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
   @RequestMapping(value = "/library", method = RequestMethod.GET)
-  protected String getLibraryProjects(ModelMap modelMap) {
-    String projectLibraryGroups = "[]";
-    try {
-      Portal portal = portalService.getById(new Integer(1));
-      projectLibraryGroups = portal.getProjectLibraryGroups();
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
-    try {
-      JSONArray projectLibraryGroupsJSON = new JSONArray(projectLibraryGroups);
-      for (int g = 0; g < projectLibraryGroupsJSON.length(); g++) {
-        JSONObject projectLibraryGroup = projectLibraryGroupsJSON.getJSONObject(g);
+  protected String getLibraryProjects(ModelMap modelMap) throws ObjectNotFoundException,
+      JSONException {
+    Portal portal = portalService.getById(new Integer(1));
+    String projectLibraryGroups = portal.getProjectLibraryGroups();
+    JSONArray projectLibraryGroupsJSON = new JSONArray(projectLibraryGroups);
+    for (int g = 0; g < projectLibraryGroupsJSON.length(); g++) {
+      JSONObject projectLibraryGroup = projectLibraryGroupsJSON.getJSONObject(g);
+      if (canAccess(projectLibraryGroup)) {
         populateProjectMetadata(projectLibraryGroup);
+      } else {
+        projectLibraryGroupsJSON.remove(g--);
       }
-      return projectLibraryGroupsJSON.toString();
-    } catch (JSONException e) {
-      e.printStackTrace();
     }
-    return projectLibraryGroups;
+    return projectLibraryGroupsJSON.toString();
+  }
+
+  private boolean canAccess(JSONObject projectLibraryGroup) throws JSONException {
+    if (!projectLibraryGroup.has("accessRoles")) {
+      return true;
+    }
+    User signedInUser = ControllerUtil.getSignedInUser();
+    if (signedInUser == null) {
+      return false;
+    } else {
+      JSONArray accessRoles = projectLibraryGroup.getJSONArray("accessRoles");
+      for (int a = 0; a < accessRoles.length(); a++) {
+        String accessRole = accessRoles.getString(a);
+        if (accessRole.equals("admin") && signedInUser.isAdmin()) {
+          return true;
+        } else if (accessRole.equals("researcher") && signedInUser.isResearcher()) {
+          return true;
+        } else if (accessRole.equals("teacher") && signedInUser.isTeacher()) {
+          return true;
+        }
+      }
+      return false;
+    }
   }
 
   @RequestMapping(value = "/community", method = RequestMethod.GET)
@@ -121,7 +131,12 @@ public class ProjectAPIController {
     if (projectLibraryGroup.getString("type").equals("group")) {
       JSONArray children = projectLibraryGroup.getJSONArray("children");
       for (int c = 0; c < children.length(); c++) {
-        populateProjectMetadata(children.getJSONObject(c));
+        JSONObject child = children.getJSONObject(c);
+        if (canAccess(child)) {
+          populateProjectMetadata(child);
+        } else {
+          children.remove(c--);
+        }
       }
     } else if (projectLibraryGroup.getString("type").equals("project")) {
       Integer projectId = projectLibraryGroup.getInt("id");
