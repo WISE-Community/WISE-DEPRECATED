@@ -18,7 +18,7 @@ export class MockConfigService {
     const config: Config = {
       contextPath: "/wise",
       logOutURL: "/logout",
-      currentTime: 20180730
+      currentTime: "2018-10-17 00:00:00.0"
     };
     return Observable.create(observer => {
       observer.next(config);
