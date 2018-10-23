@@ -81,6 +81,10 @@ public class UserImpl implements User {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
   }
 
+  public boolean isResearcher() {
+    return this.userDetails.hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE);
+  }
+
   public boolean isTrustedAuthor() {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
   }
