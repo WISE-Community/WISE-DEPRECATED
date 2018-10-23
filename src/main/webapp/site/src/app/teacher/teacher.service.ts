@@ -16,6 +16,10 @@ export class TeacherService {
   private usernamesUrl = 'api/teacher/usernames';
   private createRunUrl = 'api/teacher/run/create';
   private runUrl = 'api/teacher/run';
+  private addPeriodToRunUrl = 'api/teacher/run/add/period';
+  private deletePeriodFromRunUrl = 'api/teacher/run/delete/period';
+  private updateRunStudentsPerTeamUrl = 'api/teacher/run/update/studentsperteam';
+  private updateRunStartTimeUrl = 'api/teacher/run/update/starttime';
   private newProjectSource = new Subject<Project>();
   public newProjectSource$ = this.newProjectSource.asObservable();
   private newRunSource = new Subject<Run>();
@@ -137,5 +141,41 @@ export class TeacherService {
 
   setTabIndex(index: number) {
     this.tabIndexSource.next(index);
+  }
+
+  addPeriodToRun(runId: number, periodName: string) {
+    const url = `${this.addPeriodToRunUrl}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('runId', runId + '');
+    body = body.set('periodName', periodName);
+    return this.http.post<Object>(url, body, {headers: headers});
+  }
+
+  deletePeriodFromRun(runId: number, periodName: string) {
+    const url = `${this.deletePeriodFromRunUrl}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('runId', runId + '');
+    body = body.set('periodName', periodName);
+    return this.http.post<Object>(url, body, {headers: headers});
+  }
+
+  updateRunStudentsPerTeam(runId: number, studentsPerTeam: number) {
+    const url = `${this.updateRunStudentsPerTeamUrl}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('runId', runId + '');
+    body = body.set('studentsPerTeam', studentsPerTeam + '');
+    return this.http.post<Object>(url, body, {headers: headers});
+  }
+
+  updateRunStartTime(runId: number, startTime: string) {
+    const url = `${this.updateRunStartTimeUrl}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('runId', runId + '');
+    body = body.set('startTime', startTime);
+    return this.http.post<Object>(url, body, {headers: headers});
   }
 }

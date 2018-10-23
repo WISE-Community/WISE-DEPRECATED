@@ -10,6 +10,7 @@ import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -113,6 +114,7 @@ public class TeacherAPIController {
     }
     runJSON.put("periods", periodsArray);
     runJSON.put("numStudents", getNumStudentsInRun(run));
+    runJSON.put("studentsPerTeam", run.getMaxWorkgroupSize());
     runJSON.put("owner", getOwnerJSON(run.getOwner()));
     runJSON.put("sharedOwners", getRunSharedOwners(run));
     runJSON.put("project", getProjectJSON(run.getProject()));
@@ -360,5 +362,115 @@ public class TeacherAPIController {
     } else {
       throw new NotAuthorizedException("username is not the same as signed in user");
     }
+  }
+
+  @RequestMapping(value = "/run/add/period", method = RequestMethod.POST)
+  protected String addPeriodToRun(HttpServletRequest request,
+                                  @RequestParam("runId") Long runId,
+                                  @RequestParam("periodName") String periodName) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response = null;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      try {
+        if (run.getPeriodByName(periodName) != null) {
+          response = createFailureResponse("periodNameAlreadyExists");
+        }
+      } catch(PeriodNotFoundException e) {
+        runService.addPeriodToRun(runId, periodName);
+        response = createSuccessResponse();
+      }
+    } else {
+      response = createFailureResponse("noPermissionToAddPeriod");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
+  @RequestMapping(value = "/run/delete/period", method = RequestMethod.POST)
+  protected String deletePeriodFromRun(HttpServletRequest request,
+                                  @RequestParam("runId") Long runId,
+                                  @RequestParam("periodName") String periodName) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response = null;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      Group period = run.getPeriodByName(periodName);
+      if (period.getMembers().size() == 0) {
+        runService.deletePeriodFromRun(runId, periodName);
+        response = createSuccessResponse();
+      } else {
+        response = createFailureResponse("notAllowedToDeletePeriodWithStudents");
+      }
+    } else {
+      response = createFailureResponse("noPermissionToDeletePeriod");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
+  @RequestMapping(value = "/run/update/studentsperteam", method = RequestMethod.POST)
+  protected String editRunStudentsPerTeam(HttpServletRequest request,
+        @RequestParam("runId") Long runId,
+        @RequestParam("studentsPerTeam") Integer studentsPerTeam) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      runService.setMaxWorkgroupSize(runId, studentsPerTeam);
+      response = createSuccessResponse();
+    } else {
+      response = createFailureResponse("noPermissionToChangeStudentsPerTeam");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
+  @RequestMapping(value = "/run/update/starttime", method = RequestMethod.POST)
+  protected String editRunStartTime(HttpServletRequest request,
+        @RequestParam("runId") Long runId,
+        @RequestParam("startTime") String startTime) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      runService.setStartTime(runId, startTime);
+      response = createSuccessResponse();
+    } else {
+      response = createFailureResponse("noPermissionToChangeStartDate");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
+  private JSONObject createSuccessResponse() {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "success");
+    } catch(JSONException e) {
+
+    }
+    return response;
+  }
+
+  private JSONObject createFailureResponse(String messageCode) {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "failure");
+      response.put("messageCode", messageCode);
+    } catch(JSONException e) {
+
+    }
+    return response;
+  }
+
+  private JSONObject addRunToResponse(JSONObject response, Run run) {
+    try {
+      JSONObject runJSON = getRunJSON(run);
+      response.put("run", runJSON);
+    } catch(JSONException e) {
+
+    }
+    return response;
   }
 }

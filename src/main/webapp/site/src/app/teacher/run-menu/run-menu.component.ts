@@ -6,6 +6,7 @@ import { LibraryProjectDetailsComponent } from "../../modules/library/library-pr
 import { UserService } from "../../services/user.service";
 import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
+import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
 
 @Component({
   selector: 'app-run-menu',
@@ -66,5 +67,15 @@ export class RunMenuComponent implements OnInit {
 
   canShare() {
     return this.run.canGradeAndManage(this.userService.getUserId());
+  }
+
+  showEditRunDetails() {
+    const run = this.run;
+    this.dialog.open(RunSettingsDialogComponent, {
+      ariaLabel: 'Run Settings',
+      data: { run: run },
+      panelClass: 'mat-dialog--md',
+      autoFocus: false
+    });
   }
 }

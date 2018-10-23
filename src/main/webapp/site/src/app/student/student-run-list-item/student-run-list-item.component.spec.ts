@@ -11,7 +11,11 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 export class MockConfigService {
   getConfig(): Observable<Config> {
-    const config : Config = {"contextPath":"vle","logOutURL":"/logout","currentTime":20180730};
+    const config : Config = {
+      "contextPath":"vle",
+      "logOutURL":"/logout",
+      "currentTime":"2018-10-17 00:00:00.0"
+    };
     return Observable.create( observer => {
       observer.next(config);
       observer.complete();
@@ -46,7 +50,7 @@ describe('StudentRunListItemComponent', () => {
     owner.displayName = "Mr. Happy";
     run.owner = owner;
     run.projectThumb = "Happy.png";
-    run.startTime = 20180612;
+    run.startTime = '2018-10-17 00:00:00.0';
     const project: Project = new Project();
     project.id = 1;
     project.name = "Test Project";
@@ -68,7 +72,7 @@ describe('StudentRunListItemComponent', () => {
   });
 
   it('should say a run is not available yet', () => {
-    component.run.startTime = 20180801;
+    component.run.startTime = '2100-10-17 00:00:00.0';
     component.ngOnInit();
     expect(component.isAvailable).toBeFalsy();
   });
