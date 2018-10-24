@@ -29,7 +29,7 @@ export class LoginHomeComponent implements OnInit {
         this.isGoogleAuthenticationEnabled = config.googleClientId != null;
       }
     });
-    this.route.queryParams.subscribe(params => {
+    this.route.params.subscribe(params => {
       if (params['username'] != null) {
         this.credentials.username = params['username'];
         this.isShowGoogleLogin = false;
