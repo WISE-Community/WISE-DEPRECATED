@@ -33,6 +33,7 @@ import org.wise.portal.dao.group.GroupDao;
 import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.user.UserDao;
+import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.group.Group;
@@ -659,6 +660,43 @@ public class RunServiceImpl implements RunService {
       group.setName(name);
       this.groupDao.save(group);
       periods.add(group);
+      this.runDao.save(run);
+    } catch(ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Transactional()
+  public void deletePeriodFromRun(Long runId, String name) {
+    try {
+      Run run = this.retrieveById(runId);
+      Group period = run.getPeriodByName(name);
+      Set<Group> periods = run.getPeriods();
+      periods.remove(period);
+      this.runDao.save(run);
+    } catch(ObjectNotFoundException e) {
+      e.printStackTrace();
+    } catch(PeriodNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Transactional()
+  public void setMaxWorkgroupSize(Long runId, Integer studentsPerTeam) {
+    try {
+      Run run = this.retrieveById(runId);
+      run.setMaxWorkgroupSize(studentsPerTeam);
+      this.runDao.save(run);
+    } catch(ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Transactional()
+  public void setStartTime(Long runId, String startTime) {
+    try {
+      Run run = this.retrieveById(runId);
+      run.setStarttime(new Date(startTime));
       this.runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();

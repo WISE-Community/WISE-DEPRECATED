@@ -5,10 +5,11 @@ export class Run {
   id: number;
   name: string;
   runCode: string;
-  startTime: number;
+  startTime: string;
   endTime: number;
   projectThumb: string;
   numStudents: number;
+  studentsPerTeam: number;
   periods: string[];
   owner: User;
   sharedOwners: User[] = [];

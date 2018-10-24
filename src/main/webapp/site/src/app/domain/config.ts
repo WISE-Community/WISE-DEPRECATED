@@ -3,5 +3,5 @@ export class Config {
   googleClientId?: string;
   recaptchaPublicKey?: string;
   logOutURL: string;
-  currentTime: number;
+  currentTime: string;
 }

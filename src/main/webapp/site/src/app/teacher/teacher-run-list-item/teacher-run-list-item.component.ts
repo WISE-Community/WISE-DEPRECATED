@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser';
 import { TeacherRun } from "../teacher-run";
-import { Run } from "../../domain/run";
 import { ConfigService } from "../../services/config.service";
 
 @Component({

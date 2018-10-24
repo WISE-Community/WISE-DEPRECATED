@@ -24,6 +24,7 @@ import { TimelineModule } from "../modules/timeline/timeline.module";
 import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './account/edit-password/edit-password.component';
+import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-dialog.component';
 
 const materialModules = [
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
@@ -50,6 +51,7 @@ const materialModules = [
     TeacherRunListComponent,
     TeacherRunListItemComponent,
     RunMenuComponent,
+    RunSettingsDialogComponent,
     ShareRunDialogComponent,
     EditComponent,
     EditProfileComponent,
@@ -57,6 +59,7 @@ const materialModules = [
   ],
   entryComponents: [
     CreateRunDialogComponent,
+    RunSettingsDialogComponent,
     ShareRunDialogComponent
   ],
   providers: [
