@@ -11,6 +11,7 @@ import { LoginModule } from "./login/login.module";
 import { PrivacyComponent } from "./privacy/privacy.component";
 import { RegisterModule } from "./register/register.module";
 import { NewsModule } from "./news/news.module";
+import { HelpModule } from "./help/help.module";
 
 const routes: Routes = [
   // https://github.com/angular/angular-cli/issues/9825
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'contact', loadChildren: () => ContactModule },
   { path: 'features', component: FeaturesComponent },
+  { path: 'help', loadChildren: () => HelpModule },
   { path: 'join', loadChildren: () => RegisterModule },
   { path: 'login', loadChildren: () => LoginModule },
   { path: 'news', loadChildren: () => NewsModule },

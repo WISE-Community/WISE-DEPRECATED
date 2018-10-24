@@ -9,7 +9,6 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from '@angular/materi
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ConfigService } from "./services/config.service";
-import { ContactModule } from "./contact/contact.module";
 import { HeaderModule } from './modules/header/header.module';
 import { HomeModule } from "./home/home.module";
 import { FooterModule } from './modules/footer/footer.module';
@@ -28,6 +27,7 @@ import {
   GoogleLoginProvider,
 } from "angularx-social-login";
 import { MobileMenuModule } from "./modules/mobile-menu/mobile-menu.module";
+import { HelpModule } from "./help/help.module";
 
 export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
   return (): Promise<any> => {
@@ -64,6 +64,7 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     AppRoutingModule,
     FooterModule,
     HeaderModule,
+    HelpModule,
     HomeModule,
     LoginModule,
     MobileMenuModule,
