@@ -5,6 +5,7 @@ import { UserService } from "../../services/user.service";
 import { Teacher } from "../../domain/teacher";
 import { Student } from "../../domain/student";
 import { ConfigService } from "../../services/config.service";
+import { StudentService } from "../../student/student.service";
 
 @Component({
   selector: 'app-contact-form',
@@ -30,10 +31,12 @@ export class ContactFormComponent implements OnInit {
   recaptchaPublicKey: string = "";
   recaptchaResponse: string = "";
   message: string = "";
+  teachers: any[] = [];
 
   constructor(private fb: FormBuilder,
               private userService: UserService,
               private configService: ConfigService,
+              private studentService: StudentService,
               private route: ActivatedRoute,
               private router: Router) {
   }
@@ -42,6 +45,7 @@ export class ContactFormComponent implements OnInit {
     this.isSignedIn = this.userService.isSignedIn();
     this.isStudent = this.userService.isStudent();
     this.obtainRunIdOrProjectIdIfNecessary();
+    this.obtainTeacherListIfNecessary();
     this.showEmailIfNecessary();
     this.showRecaptchaIfNecessary();
     this.populateFieldsIfSignedIn();
@@ -54,6 +58,22 @@ export class ContactFormComponent implements OnInit {
       this.runId = params['runId'];
       this.projectId = params['projectId'];
     });
+  }
+
+  obtainTeacherListIfNecessary() {
+    if (this.isStudent && this.runId == null && this.projectId == null) {
+      this.studentService.getTeacherList().subscribe((teacherList) => {
+        this.teachers = teacherList;
+        if (this.studentHasTeacher()) {
+          this.contactFormGroup.addControl('teacher', new FormControl('', [Validators.required]));
+          this.setControlFieldValue('teacher', this.teachers[0].username);
+        }
+      });
+    }
+  }
+
+  studentHasTeacher() {
+    return this.teachers.length > 0;
   }
 
   showEmailIfNecessary() {
@@ -122,6 +142,7 @@ export class ContactFormComponent implements OnInit {
   submit() {
     const name = this.getName();
     const email = this.getEmail();
+    const teacherUsername = this.getTeacherUsername();
     const issueType = this.getIssueType();
     const summary = this.getSummary();
     const description = this.getDescription();
@@ -130,8 +151,8 @@ export class ContactFormComponent implements OnInit {
     const userAgent = this.getUserAgent();
     const recaptchaResponse = this.getRecaptchaResponse();
     this.setIsSendingRequest(true);
-    this.userService.sendContactMessage(name, email, issueType, summary, description, runId,
-        projectId, userAgent, recaptchaResponse)
+    this.userService.sendContactMessage(name, email, teacherUsername, issueType, summary,
+        description, runId, projectId, userAgent, recaptchaResponse)
       .subscribe((response) => {
         this.handleSendContactMessageResponse(response);
       });
@@ -188,6 +209,14 @@ export class ContactFormComponent implements OnInit {
 
   getProjectId() {
     return this.projectId;
+  }
+
+  getTeacherUsername() {
+    if (this.isStudent && this.studentHasTeacher()) {
+      return this.getControlFieldValue('teacher');
+    } else {
+      return null;
+    }
   }
 
   getUserAgent() {

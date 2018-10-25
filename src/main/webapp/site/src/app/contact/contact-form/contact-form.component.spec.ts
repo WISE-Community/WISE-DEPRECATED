@@ -7,6 +7,7 @@ import { MatInputModule, MatSelectModule } from "@angular/material";
 import { UserService } from "../../services/user.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ConfigService } from "../../services/config.service";
+import { StudentService } from "../../student/student.service";
 import { User } from "../../domain/user";
 import { BehaviorSubject } from 'rxjs';
 
@@ -33,6 +34,10 @@ export class MockUserService {
 export class MockConfigService {
 }
 
+export class MockStudentService {
+
+}
+
 describe('ContactFormComponent', () => {
   let component: ContactFormComponent;
   let fixture: ComponentFixture<ContactFormComponent>;
@@ -49,7 +54,8 @@ describe('ContactFormComponent', () => {
       ],
       providers: [
         { provide: ConfigService, useClass: MockConfigService },
-        { provide: UserService, useClass: MockUserService }
+        { provide: UserService, useClass: MockUserService },
+        { provide: StudentService, useClass: MockStudentService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
