@@ -40,7 +40,7 @@
             <div style="color:red; font-weight:bold; border:red 1px dotted; padding:5px;"><c:out value="${errorMsg}" /></div><br/>
         </c:if>
 
-        <h1>Update Shared Projects</h1>
+        <h1>Update Shared Projects Permissions</h1>
         <br/>
         <h2>Overview</h2>
         <br/>
