@@ -72,7 +72,7 @@ export class RegisterTeacherFormComponent implements OnInit {
       this.populateTeacherUser();
       this.teacherService.registerTeacherAccount(this.teacherUser, (userName) => {
         this.router.navigate(['join/teacher/complete',
-          { username: userName }
+          { username: userName, isUsingGoogleId: this.isUsingGoogleId() }
         ]);
       });
     }

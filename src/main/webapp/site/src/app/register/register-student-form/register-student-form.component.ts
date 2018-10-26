@@ -87,7 +87,7 @@ export class RegisterStudentFormComponent implements OnInit {
       this.populateStudentUser();
       this.studentService.registerStudentAccount(this.studentUser, (userName) => {
         this.router.navigate(['join/student/complete',
-          { username: userName }
+          { username: userName, isUsingGoogleId: this.isUsingGoogleId() }
         ]);
       });
     }
@@ -101,8 +101,11 @@ export class RegisterStudentFormComponent implements OnInit {
         this.studentUser[key] = this.createStudentAccountFormGroup.get(key).value;
       }
     }
-    this.studentUser['password'] = this.getPassword();
-    delete this.studentUser['passwords'];
+    if (!this.isUsingGoogleId()) {
+      this.studentUser['password'] = this.getPassword();
+      delete this.studentUser['passwords'];
+      delete this.studentUser['googleUserId'];
+    }
   }
 
   getPassword() {
