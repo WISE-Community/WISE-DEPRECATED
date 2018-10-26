@@ -32,25 +32,34 @@ public class UpdateProjectSharedPermissionsAPIController {
                                           @RequestParam(value = "max", required = false) Long max) {
     User signedInUser = ControllerUtil.getSignedInUser();
     if (signedInUser.isAdmin()) {
-      StringBuffer sb = new StringBuffer();
+      long startTime = System.currentTimeMillis();
+      StringBuffer projectsSB = new StringBuffer();
       Integer sharedProjectsCount = 0;
 
       List<Project> allSharedProjects = projectService.getAllSharedProjects();
       for (Project project: allSharedProjects) {
         Long projectId = (Long) project.getId();
         if (isInRange(projectId, min, max)) {
-          outputProject(sb, project);
+          outputProject(projectsSB, project);
           sharedProjectsCount += 1;
         }
       }
+      long endTime = System.currentTimeMillis();
+      Long elapsedTimeInSeconds = calculateElapsedTime(startTime, endTime);
 
-      outputMin(sb, min);
-      outputLineBreak(sb);
-      outputMax(sb, max);
-      outputLineBreak(sb);
-      outputSharedProjectCount(sb, sharedProjectsCount);
-      outputLineBreak(sb);
-      return sb.toString();
+      StringBuffer summarySB = new StringBuffer();
+      outputMin(summarySB, min);
+      outputLineBreak(summarySB);
+      outputMax(summarySB, max);
+      outputLineBreak(summarySB);
+      outputSharedProjectCount(summarySB, sharedProjectsCount);
+      outputLineBreak(summarySB);
+      outputElapsedTime(summarySB, elapsedTimeInSeconds);
+      outputLineBreak(summarySB);
+      outputLineBreak(summarySB);
+
+      projectsSB.insert(0, summarySB);
+      return projectsSB.toString();
     } else {
       return getPermissionDeniedMessage();
     }
@@ -67,7 +76,8 @@ public class UpdateProjectSharedPermissionsAPIController {
                                             @RequestParam(value = "max", required = false) Long max) {
     User signedInUser = ControllerUtil.getSignedInUser();
     if (signedInUser.isAdmin()) {
-      StringBuffer sb = new StringBuffer();
+      long startTime = System.currentTimeMillis();
+      StringBuffer projectsSB = new StringBuffer();
       int sharedProjectsCount = 0;
       int sharedProjectsChangedCount = 0;
       int sharedOwnersChangedCount = 0;
@@ -81,25 +91,37 @@ public class UpdateProjectSharedPermissionsAPIController {
             sharedOwnersChangedCount += tempSharedOwnersChangedCount;
             sharedProjectsChangedCount += 1;
           }
-          outputProject(sb, project);
+          outputProject(projectsSB, project);
           sharedProjectsCount += 1;
         }
       }
+      long endTime = System.currentTimeMillis();
+      Long elapsedTimeInSeconds = calculateElapsedTime(startTime, endTime);
 
-      outputMin(sb, min);
-      outputLineBreak(sb);
-      outputMax(sb, max);
-      outputLineBreak(sb);
-      outputSharedProjectCount(sb, sharedProjectsCount);
-      outputLineBreak(sb);
-      outputSharedProjectsChangedCount(sb, sharedProjectsChangedCount);
-      outputLineBreak(sb);
-      outputSharedOwnersChangedCount(sb, sharedOwnersChangedCount);
-      outputLineBreak(sb);
-      return sb.toString();
+      StringBuffer summarySB = new StringBuffer();
+      outputMin(summarySB, min);
+      outputLineBreak(summarySB);
+      outputMax(summarySB, max);
+      outputLineBreak(summarySB);
+      outputSharedProjectCount(summarySB, sharedProjectsCount);
+      outputLineBreak(summarySB);
+      outputSharedProjectsChangedCount(summarySB, sharedProjectsChangedCount);
+      outputLineBreak(summarySB);
+      outputSharedOwnersChangedCount(summarySB, sharedOwnersChangedCount);
+      outputLineBreak(summarySB);
+      outputElapsedTime(summarySB, elapsedTimeInSeconds);
+      outputLineBreak(summarySB);
+      outputLineBreak(summarySB);
+
+      projectsSB.insert(0, summarySB);
+      return projectsSB.toString();
     } else {
       return getPermissionDeniedMessage();
     }
+  }
+
+  private Long calculateElapsedTime(Long startTime, Long endTime) {
+    return (endTime - startTime) / 1000;
   }
 
   private boolean isInRange(Long id, Long min, Long max) {
@@ -225,6 +247,10 @@ public class UpdateProjectSharedPermissionsAPIController {
 
   private StringBuffer outputMax(StringBuffer sb, Long max) {
     return outputString(sb, "Max: " + max);
+  }
+
+  private StringBuffer outputElapsedTime(StringBuffer sb, Long seconds) {
+    return outputString(sb, "Elapsed Time: " + seconds + " seconds");
   }
 
   private StringBuffer outputSharedProjectCount(StringBuffer sb, Integer sharedProjectsCount) {
