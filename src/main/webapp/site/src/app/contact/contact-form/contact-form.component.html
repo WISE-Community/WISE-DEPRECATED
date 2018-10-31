@@ -30,6 +30,17 @@
             <mat-error *ngIf="contactFormGroup.controls['email'].hasError('email')">Invalid Email</mat-error>
           </mat-form-field>
         </p>
+        <p *ngIf="isStudent && teachers.length > 0">
+          <mat-form-field fxFlex>
+            <mat-select placeholder="Teacher"
+                        formControlName="teacher">
+              <mat-option *ngFor="let teacher of teachers" [value]="teacher.username">
+                {{teacher.displayName}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="contactFormGroup.controls['teacher'].hasError('required')">Teacher Required</mat-error>
+          </mat-form-field>
+        </p>
         <p>
           <mat-form-field fxFlex>
             <mat-select placeholder="Issue Type"
