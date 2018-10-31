@@ -2,8 +2,8 @@
   <mat-icon aria-label="Run Menu">more_vert</mat-icon>
 </button>
 <mat-menu #runMenu="matMenu" xPosition="before">
-  <div class="header-account-menu">
-    <div class="run-info mat-subheading-1">Run ID: {{ run.id }}</div>
+  <div>
+    <div class="run-info mat-body-2">Run ID: {{ run.id }}</div>
     <mat-divider></mat-divider>
     <a mat-menu-item (click)="showEditRunDetails()">
       <mat-icon>settings</mat-icon>

@@ -1,5 +1,8 @@
 <header fxLayout="row" class="content__header">
-  <h1 class="accent" fxLayoutAlign="center center">
+  <h1 class="accent"
+      fxLayoutAlign="center center"
+      ngClass="mat-display-1"
+      [ngClass.xs]="{ 'mat-display-1': false }">
     <mat-icon>edit</mat-icon>Edit Profile
   </h1>
 </header>

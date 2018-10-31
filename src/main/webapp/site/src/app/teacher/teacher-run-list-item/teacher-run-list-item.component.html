@@ -21,16 +21,18 @@
   </div>
   <div>Access Code: {{ run.runCode }}</div>
   <div *ngIf="run.shared" class="info">
-    Shared by {{ run.owner.displayName }} |
+    Shared by {{ run.owner.displayName }}
   </div>
 </ng-template>
 
 <mat-card [ngClass]="{ 'highlighted': run.isHighlighted }">
-  <mat-card-content fxLayout="row">
+  <mat-card-content fxLayout="row" fxLayoutGap="12px">
     <div mat-card-avatar [style.background-image]="run.project.thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
       <div fxLayout="column">
-        <mat-card-title [class.secondary-text]="run.endTime">{{ run.project.name }}</mat-card-title>
+        <mat-card-title [class.secondary-text]="run.endTime" class="mat-body-2">
+          {{ run.project.name }}
+        </mat-card-title>
         <mat-card-subtitle fxHide fxShow.gt-xs>
           <ng-container *ngTemplateOutlet="runInfo"></ng-container>
         </mat-card-subtitle>
@@ -55,11 +57,20 @@
          color="primary"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
-        <mat-icon class="primary">settings</mat-icon>
+        <mat-icon>settings</mat-icon>
         Settings
       </a>
-      <a *ngIf="!isScheduled()"
+      <a *ngIf="!isScheduled() && !run.endTime"
          mat-flat-button
+         href="{{ gradeAndManageLink }}"
+         color="primary"
+         fxFlex="0 0 auto"
+         fxFlex.xs="100">
+        <mat-icon>build</mat-icon>
+        Teacher Tools
+      </a>
+      <a *ngIf="!isScheduled() && run.endTime"
+         mat-button
          href="{{ gradeAndManageLink }}"
          color="primary"
          fxFlex="0 0 auto"

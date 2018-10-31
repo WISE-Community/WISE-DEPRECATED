@@ -1,18 +1,18 @@
 <h2 class="mat-dialog-title">Use with Class</h2>
 <form [formGroup]="form" (ngSubmit)="create()">
   <mat-dialog-content class="mat-dialog-content--scroll" fxLayout="column">
-    <p class="mat-subheading-2 accent-1">
+    <p class="mat-subheading-1 accent-1">
       {{ project.metadata.title }} <span class="mat-caption">(Unit ID: {{ project.id }})</span>
     </p>
     <h3>1. Choose Periods</h3>
-    <div formArrayName="selectedPeriods">
+    <p formArrayName="selectedPeriods">
       <span *ngFor="let control of selectedPeriodsControl.controls"
            [formGroup]="control">
         <mat-checkbox formControlName="checkbox">
           {{ control.controls.name.value }}
         </mat-checkbox>
       </span>
-    </div>
+    </p>
     <mat-form-field appearance="fill" class="mat-form-field--longhint">
       <mat-label>Add your own periods</mat-label>
       <input matInput
