@@ -1,0 +1,76 @@
+<mat-card class="standalone__content mat-elevation-z4 center">
+  <mat-card-content>
+    <form role="form"
+          fxLayout="column"
+          (submit)="submit()"
+          [formGroup]="forgotStudentUsernameFormGroup">
+      <h2 class="standalone__title accent">Forgot Student Username</h2>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>First Name</mat-label>
+          <input matInput
+                 id="firstName"
+                 name="firstName"
+                 formControlName="firstName"
+                 autofocus
+                 required />
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['firstName'].hasError('required')">First Name Required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Last Name</mat-label>
+          <input matInput
+                 id="lastName"
+                 name="lastName"
+                 formControlName="lastName"
+                 required />
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['lastName'].hasError('required')">Last Name Required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Birthday (Month)</mat-label>
+          <mat-select formControlName="birthMonth" required>
+            <mat-option *ngFor="let month of months" [value]="month.value">
+              {{month.text}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthMonth'].hasError('required')">Month Required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Birthday (Day)</mat-label>
+          <mat-select formControlName="birthDay" required>
+            <mat-option *ngFor="let day of days" [value]="day">
+              {{day}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthDay'].hasError('required')">Day Required</mat-error>
+        </mat-form-field>
+      </p>
+      <button mat-flat-button
+              color="primary"
+              [disabled]="!forgotStudentUsernameFormGroup.valid"
+              type="submit">
+        Search
+      </button>
+    </form>
+    <br/>
+    <div>
+      <div [ngClass]="{'error-message': isErrorMessage}">{{message}}</div>
+      <br/>
+      <div *ngFor="let username of foundUsernames">
+        <a (click)="loginWithUsername(username)" class="cursor-link">{{username}}</a>
+      </div>
+      <div *ngIf="showCreateNewAccountLink">
+        <br/>
+        <a (click)="createNewAccount()"
+           class="cursor-link">
+          Create New Account
+        </a>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

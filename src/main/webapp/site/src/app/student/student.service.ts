@@ -18,6 +18,10 @@ export class StudentService {
   private securityQuestionsUrl = 'api/student/register/questions';
   private updateProfileUrl = 'api/student/profile/update';
   private teacherListUrl = 'api/student/teacher-list';
+  private usernameSearchUrl = 'api/student/username/search';
+  private getSecurityQuestionUrl = 'api/student/password/security-question';
+  private checkSecurityAnswerUrl = 'api/student/password/security-question';
+  private changePasswordUrl = 'api/student/password/change';
 
   private newRunSource = new Subject<StudentRun>();
   newRunSource$ = this.newRunSource.asObservable();
@@ -80,5 +84,34 @@ export class StudentService {
 
   getTeacherList() {
     return this.http.get<any>(this.teacherListUrl);
+  }
+
+  getStudentUsernames(firstName, lastName, birthMonth, birthDay) {
+    let params = new HttpParams().set('firstName', firstName);
+    params = params.set('lastName', lastName);
+    params = params.set('birthMonth', birthMonth);
+    params = params.set('birthDay', birthDay);
+    return this.http.get<string[]>(this.usernameSearchUrl, { params: params });
+  }
+
+  getSecurityQuestion(username) {
+    const params = new HttpParams().set('username', username);
+    return this.http.get<any>(this.getSecurityQuestionUrl, { params: params });
+  }
+
+  checkSecurityAnswer(username, answer) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let params = new HttpParams().set('username', username);
+    params = params.set('answer', answer);
+    return this.http.post<any>(this.checkSecurityAnswerUrl, params, { headers: headers });
+  }
+
+  changePassword(username, answer, password, confirmPassword) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let params = new HttpParams().set('username', username);
+    params = params.set('answer', answer);
+    params = params.set('password', password);
+    params = params.set('confirmPassword', confirmPassword);
+    return this.http.post<any>(this.changePasswordUrl, params, { headers: headers });
   }
 }
