@@ -21,13 +21,14 @@ import { UserService } from './services/user.service';
 import { TeacherService } from "./teacher/teacher.service";
 import { RegisterModule } from "./register/register.module";
 import { NewsModule } from "./news/news.module";
+import { MobileMenuModule } from "./modules/mobile-menu/mobile-menu.module";
+import { FeaturesModule } from "./features/features.module";
 
 import {
   SocialLoginModule,
   AuthServiceConfig,
   GoogleLoginProvider,
 } from "angularx-social-login";
-import { MobileMenuModule } from "./modules/mobile-menu/mobile-menu.module";
 
 export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
   return (): Promise<any> => {
@@ -72,7 +73,8 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     TeacherModule,
     SocialLoginModule,
     NewsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    FeaturesModule
   ],
   providers: [
     ConfigService,

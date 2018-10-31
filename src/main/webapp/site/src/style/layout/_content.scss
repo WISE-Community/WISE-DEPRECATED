@@ -19,16 +19,19 @@
 .content__header {
   margin-bottom: 8px;
 
+  h1 .mat-icon {
+    padding: 0 8px;
+  }
+
   @media (min-width: breakpoint('sm.min')) {
-    margin-bottom: 16px;
+    margin-bottom: 0;
+
+    h1 .mat-icon {
+      @include mat-icon-size(32px);
+    }
   }
 
   @media (min-width: breakpoint('md.min')) {
-    margin: 16px 0 16px;
-  }
-
-  h1 .mat-icon {
-    padding-right: 8px;
-    @include mat-icon-size(32px);
+    margin-top: 16px;
   }
 }

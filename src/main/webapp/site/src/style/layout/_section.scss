@@ -1,5 +1,6 @@
 .section {
   position: relative;
+  padding-bottom: 32px;
 }
 
 .section--fullwidth {
@@ -13,7 +14,9 @@
 }
 
 .section__header {
-  margin-bottom: 32px;
+  @media (max-width: breakpoint('xs.max')) {
+    padding-bottom: 16px;
+  }
 }
 
 .section__tab {
@@ -26,11 +29,11 @@
 
 .section--slant {
   padding-top: 48px;
-  padding-bottom: 64px;
+  padding-bottom: 22px;
 
   @media (min-width: breakpoint('sm.min')) {
     padding-top: 64px;
-    padding-bottom: 104px;
+    padding-bottom: 72px;
   }
 
   &::before {

@@ -10,6 +10,31 @@
   // Create theme-specific styles
   color: map-get($foreground, text);
 
+  // Define a custom typography config
+  $custom-typography: mat-typography-config(
+    $body-1: mat-typography-level(16px, 22px, 400),
+    $body-2: mat-typography-level(16px, 22px, 500),
+    $subheading-1: mat-typography-level(18px, 28px, 400),
+    $subheading-2: mat-typography-level(18px, 28px, 500)
+  );
+
+  // Override specific Material typography levels
+  &.mat-typography, .mat-body, .mat-body-1 {
+    @include mat-typography-level-to-styles($custom-typography, body-1);
+  }
+
+  .mat-body-2 {
+    @include mat-typography-level-to-styles($custom-typography, body-2);
+  }
+
+  .mat-subheading-1 {
+    @include mat-typography-level-to-styles($custom-typography, subheading-1);
+  }
+
+  .mat-subheading-2 {
+    @include mat-typography-level-to-styles($custom-typography, subheading-2);
+  }
+
   a {
     &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button) {
       color: map-get($colors, primary);
@@ -25,6 +50,38 @@
 
   a.active {
     color: map-get($colors, primary);
+  }
+
+  h1, h2, .mat-display-1, .mat-display-2, .mat-display-3, .mat-display-4 {
+    font-family: Raleway, sans-serif;
+  }
+
+  h1 {
+    .mat-icon {
+      @include mat-icon-size(mat-font-size($config, headline));
+    }
+  }
+
+  h2 {
+    .mat-icon {
+      @include mat-icon-size(mat-font-size($config, title));
+    }
+  }
+
+  .mat-display-1 {
+      margin-bottom: 36px;
+
+    .mat-icon {
+      @include mat-icon-size(mat-font-size($config, display-1));
+    }
+  }
+
+  .mat-display-2 {
+    margin-bottom: 40px;
+
+    .mat-icon {
+      @include mat-icon-size(mat-font-size($config, display-2));
+    }
   }
 
   form {
@@ -96,6 +153,10 @@
     &.mat-expanded {
       @include mat-elevation(6);
     }
+  }
+
+  .mat-form-field {
+    font-size: 14px;
   }
 
   .mat-menu-item {
