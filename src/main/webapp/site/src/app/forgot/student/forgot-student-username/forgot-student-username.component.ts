@@ -36,6 +36,7 @@ export class ForgotStudentUsernameComponent implements OnInit {
   message: string;
   isErrorMessage: boolean = false;
   showCreateNewAccountLink: boolean = false;
+  processing: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -58,17 +59,20 @@ export class ForgotStudentUsernameComponent implements OnInit {
   }
 
   submit() {
+    this.clearMessage();
     if (this.forgotStudentUsernameFormGroup.valid) {
+      this.processing = true;
       const firstName = this.getControlFieldValue('firstName');
       const lastName = this.getControlFieldValue('lastName');
       const birthMonth = parseInt(this.getControlFieldValue('birthMonth'));
       const birthDay = parseInt(this.getControlFieldValue('birthDay'));
       this.studentService.getStudentUsernames(firstName, lastName, birthMonth, birthDay)
-        .subscribe((response) => {
-          this.foundUsernames = response;
-          this.setMessageForFoundUsernames();
-          this.showCreateNewAccountLink = true;
-        });
+          .subscribe((response) => {
+        this.foundUsernames = response;
+        this.setMessageForFoundUsernames();
+        this.showCreateNewAccountLink = true;
+        this.processing = false;
+      });
     }
   }
 
@@ -109,6 +113,10 @@ export class ForgotStudentUsernameComponent implements OnInit {
 
   setMessage(message) {
     this.message = message;
+  }
+
+  clearMessage() {
+    this.setMessage('');
   }
 
   getControlFieldValue(fieldName) {

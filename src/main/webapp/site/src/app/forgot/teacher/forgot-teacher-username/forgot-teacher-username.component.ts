@@ -13,9 +13,9 @@ export class ForgotTeacherUsernameComponent implements OnInit {
   forgotTeacherUsernameFormGroup: FormGroup = this.fb.group({
     email: new FormControl('', [Validators.required, Validators.email])
   });
-  isSendingRequest: boolean = false;
   message: string = '';
   isCreateNewAccountLinkVisible: boolean = false;
+  processing: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -37,13 +37,12 @@ export class ForgotTeacherUsernameComponent implements OnInit {
   }
 
   submit() {
-    this.isSendingRequest = true;
+    this.processing = true;
     this.clearMessage();
     this.hideCreateNewAccountLink();
 
     const email = this.getEmail();
     this.teacherService.sendForgotUsernameEmail(email).subscribe((response) => {
-      this.isSendingRequest = false;
       if (response.status === 'success') {
         this.goToSuccessPage();
       } else {
@@ -54,6 +53,7 @@ export class ForgotTeacherUsernameComponent implements OnInit {
           this.setFailedToSendEmailMessage();
         }
       }
+      this.processing = false;
     });
   }
 
@@ -75,7 +75,7 @@ export class ForgotTeacherUsernameComponent implements OnInit {
   }
 
   clearMessage() {
-    this.message = '';
+    this.setMessage('');
   }
 
   showCreateNewAccountLink() {

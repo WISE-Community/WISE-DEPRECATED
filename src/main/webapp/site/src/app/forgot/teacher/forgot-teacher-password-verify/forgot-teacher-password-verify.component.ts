@@ -15,6 +15,7 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
     verificationCode: new FormControl('', [Validators.required])
   });
   message: string;
+  processing: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -34,6 +35,8 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
   }
 
   submit() {
+    this.processing = true;
+    this.clearMessage();
     const verificationCode = this.getControlFieldValue('verificationCode');
     this.teacherService.checkVerificationCode(this.username, verificationCode)
         .subscribe((response) => {
@@ -48,6 +51,7 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
           this.setTooManyVerificationCodeAttemptsMessage();
         }
       }
+      this.processing = false;
     });
   }
 
@@ -70,6 +74,10 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
 
   setMessage(message) {
     this.message = message;
+  }
+
+  clearMessage() {
+    this.setMessage('');
   }
 
   goToChangePasswordPage() {

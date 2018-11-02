@@ -14,6 +14,8 @@ export class ForgotStudentPasswordComponent implements OnInit {
     username: new FormControl('', [Validators.required])
   });
   message: string;
+  showForgotUsernameLink: boolean = false;
+  processing: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -23,6 +25,9 @@ export class ForgotStudentPasswordComponent implements OnInit {
   }
 
   submit() {
+    this.processing = true;
+    this.clearMessage();
+    this.showForgotUsernameLink = false;
     const username = this.getUsername();
     this.studentService.getSecurityQuestion(username).subscribe((response) => {
       if (response.status === 'success') {
@@ -30,8 +35,10 @@ export class ForgotStudentPasswordComponent implements OnInit {
       } else {
         if (response.messageCode === 'usernameNotFound') {
           this.setUsernameNotFoundMessage();
+          this.showForgotUsernameLink = true;
         }
       }
+      this.processing = false;
     });
   }
 
@@ -58,11 +65,21 @@ export class ForgotStudentPasswordComponent implements OnInit {
   }
 
   setUsernameNotFoundMessage() {
-    const message = `Username not found. Please make sure you are typing your username correctly and try again.`;
+    const message = `We could not find that username. 
+      Please make sure you are typing your username correctly and try again.
+      If you have forgotten your username, please use the forgot username page below.`;
     this.setMessage(message);
   }
 
   setMessage(message) {
     this.message = message;
+  }
+
+  clearMessage() {
+    this.setMessage('');
+  }
+
+  goToForgotStudentUsernamePage() {
+    this.router.navigate(['forgot/student/username']);
   }
 }

@@ -18,6 +18,7 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
     confirmPassword: new FormControl('', [Validators.required])
   });
   message: string = '';
+  processing: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -35,6 +36,7 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
     const password = this.getPassword();
     const confirmPassword = this.getConfirmPassword();
     if (this.isPasswordsMatch(password, confirmPassword)) {
+      this.processing = true;
       this.studentService.changePassword(this.username, this.answer, password, confirmPassword)
           .subscribe((response) => {
         if (response.status === 'success') {
@@ -42,6 +44,7 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
         } else {
           this.setErrorOccurredMessage();
         }
+        this.processing = false;
       });
     } else {
       this.setPasswordsDoNotMatchMessage();

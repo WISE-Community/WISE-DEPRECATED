@@ -18,6 +18,7 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
     answer: new FormControl('', [Validators.required])
   });
   message: string;
+  processing: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -31,6 +32,8 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
   }
 
   submit() {
+    this.processing = true;
+    this.clearMessage();
     this.studentService.checkSecurityAnswer(this.username, this.getAnswer())
         .subscribe((response) => {
       if (response.status === 'success') {
@@ -42,6 +45,7 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
           this.setInvalidUsernameMessage();
         }
       }
+      this.processing = false;
     });
   }
 
@@ -58,7 +62,9 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
   }
 
   setIncorrectAnswerMessage() {
-    const message = `Incorrect answer, please try again.`;
+    const message = `Incorrect answer, please try again.
+        If you really can't remember the answer to your security question,
+        please ask your teacher to change your password.`;
     this.setMessage(message);
   }
 
@@ -69,6 +75,10 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
 
   setMessage(message) {
     this.message = message;
+  }
+
+  clearMessage() {
+    this.setMessage('');
   }
 
   goToChangePasswordPage() {

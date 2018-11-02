@@ -62,7 +62,7 @@ public class StudentForgotAccountAPIController {
   protected String getSecurityQuestion(@RequestParam("username") String username) throws JSONException {
     User user = userService.retrieveUserByUsername(username);
     JSONObject response = new JSONObject();
-    if (user != null) {
+    if (user != null && user.isStudent()) {
       String accountQuestionKey = getAccountQuestion(user);
       String question = AccountQuestion.getValue(accountQuestionKey);
       response.put("question", question);

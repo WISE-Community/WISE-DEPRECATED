@@ -19,9 +19,10 @@
       </p>
       <button mat-flat-button
               color="primary"
-              [disabled]="!forgotTeacherUsernameFormGroup.valid || isSendingRequest"
+              [disabled]="!forgotTeacherUsernameFormGroup.valid || processing"
               type="submit">
-        Submit
+        <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
+        <span>Submit</span>
       </button>
     </form>
     <br/>

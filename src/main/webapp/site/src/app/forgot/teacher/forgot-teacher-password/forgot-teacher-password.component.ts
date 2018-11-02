@@ -14,6 +14,8 @@ export class ForgotTeacherPasswordComponent implements OnInit {
     username: new FormControl('', [Validators.required])
   });
   message: string = '';
+  showForgotUsernameLink: boolean = false;
+  processing: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -31,6 +33,9 @@ export class ForgotTeacherPasswordComponent implements OnInit {
   }
 
   submit() {
+    this.processing = true;
+    this.clearMessage();
+    this.showForgotUsernameLink = false;
     const username = this.getControlFieldValue('username');
     this.teacherService.getVerificationCodeEmail(username).subscribe((response) => {
       if (response.status === 'success') {
@@ -38,17 +43,21 @@ export class ForgotTeacherPasswordComponent implements OnInit {
       } else {
         if (response.messageCode === 'usernameNotFound') {
           this.setUsernameNotFoundMessage();
+          this.showForgotUsernameLink = true;
         } else if (response.messageCode === 'tooManyVerificationCodeAttempts') {
           this.setTooManyVerificationCodeAttemptsMessage();
         } else if (response.messageCode === 'failedToSendEmail') {
           this.setFailedToSendEmailMessage();
         }
       }
+      this.processing = false;
     });
   }
 
   setUsernameNotFoundMessage() {
-    const message = `Username not found. Please make sure you are typing your username correctly and try again.`;
+    const message = `We could not find that username.
+        Please make sure you are typing your username correctly and try again.
+        If you have forgotten your username, please use the forgot username page below.`;
     this.setMessage(message);
   }
 
@@ -67,6 +76,14 @@ export class ForgotTeacherPasswordComponent implements OnInit {
 
   setMessage(message) {
     this.message = message;
+  }
+
+  clearMessage() {
+    this.setMessage('');
+  }
+
+  goToForgotTeacherUsernamePage() {
+    this.router.navigate(['forgot/teacher/username']);
   }
 
   goToVerificationCodePage() {
