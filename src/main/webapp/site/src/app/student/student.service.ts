@@ -18,10 +18,10 @@ export class StudentService {
   private securityQuestionsUrl = 'api/student/register/questions';
   private updateProfileUrl = 'api/student/profile/update';
   private teacherListUrl = 'api/student/teacher-list';
-  private usernameSearchUrl = 'api/student/username/search';
-  private getSecurityQuestionUrl = 'api/student/password/security-question';
-  private checkSecurityAnswerUrl = 'api/student/password/security-question';
-  private changePasswordUrl = 'api/student/password/change';
+  private usernameSearchUrl = 'api/student/forgot/username/search';
+  private getSecurityQuestionUrl = 'api/student/forgot/password/security-question';
+  private checkSecurityAnswerUrl = 'api/student/forgot/password/security-question';
+  private changePasswordUrl = 'api/student/forgot/password/change';
 
   private newRunSource = new Subject<StudentRun>();
   newRunSource$ = this.newRunSource.asObservable();

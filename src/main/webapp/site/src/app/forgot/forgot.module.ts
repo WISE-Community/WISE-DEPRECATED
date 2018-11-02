@@ -15,6 +15,10 @@ import { ForgotTeacherPasswordComponent } from './teacher/forgot-teacher-passwor
 import { ForgotStudentPasswordSecurityComponent } from './student/forgot-student-password-security/forgot-student-password-security.component';
 import { ForgotStudentPasswordChangeComponent } from './student/forgot-student-password-change/forgot-student-password-change.component';
 import { ForgotStudentPasswordCompleteComponent } from './student/forgot-student-password-complete/forgot-student-password-complete.component';
+import { ForgotTeacherUsernameCompleteComponent } from './teacher/forgot-teacher-username-complete/forgot-teacher-username-complete.component';
+import { ForgotTeacherPasswordChangeComponent } from './teacher/forgot-teacher-password-change/forgot-teacher-password-change.component';
+import { ForgotTeacherPasswordCompleteComponent } from './teacher/forgot-teacher-password-complete/forgot-teacher-password-complete.component';
+import { ForgotTeacherPasswordVerifyComponent } from './teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component';
 
 @NgModule({
   imports: [
@@ -35,7 +39,11 @@ import { ForgotStudentPasswordCompleteComponent } from './student/forgot-student
     ForgotTeacherPasswordComponent,
     ForgotStudentPasswordSecurityComponent,
     ForgotStudentPasswordChangeComponent,
-    ForgotStudentPasswordCompleteComponent
+    ForgotStudentPasswordCompleteComponent,
+    ForgotTeacherUsernameCompleteComponent,
+    ForgotTeacherPasswordChangeComponent,
+    ForgotTeacherPasswordCompleteComponent,
+    ForgotTeacherPasswordVerifyComponent
   ],
   exports: [
     ForgotComponent

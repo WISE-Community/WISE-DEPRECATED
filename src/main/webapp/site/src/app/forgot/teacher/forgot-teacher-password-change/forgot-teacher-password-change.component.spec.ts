@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ForgotTeacherPasswordComponent } from './forgot-teacher-password.component';
+import { ForgotTeacherPasswordChangeComponent } from './forgot-teacher-password-change.component';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -10,13 +10,13 @@ export class MockTeacherService {
 
 }
 
-describe('ForgotTeacherPasswordComponent', () => {
-  let component: ForgotTeacherPasswordComponent;
-  let fixture: ComponentFixture<ForgotTeacherPasswordComponent>;
+describe('ForgotTeacherPasswordChangeComponent', () => {
+  let component: ForgotTeacherPasswordChangeComponent;
+  let fixture: ComponentFixture<ForgotTeacherPasswordChangeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherPasswordComponent ],
+      declarations: [ ForgotTeacherPasswordChangeComponent ],
       imports: [
         RouterTestingModule,
         ReactiveFormsModule
@@ -30,7 +30,7 @@ describe('ForgotTeacherPasswordComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ForgotTeacherPasswordComponent);
+    fixture = TestBed.createComponent(ForgotTeacherPasswordChangeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

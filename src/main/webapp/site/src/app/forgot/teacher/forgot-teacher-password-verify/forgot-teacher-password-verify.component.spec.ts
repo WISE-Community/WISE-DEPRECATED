@@ -1,22 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ForgotTeacherPasswordComponent } from './forgot-teacher-password.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {ReactiveFormsModule} from '@angular/forms';
+import { ForgotTeacherPasswordVerifyComponent } from './forgot-teacher-password-verify.component';
 import {TeacherService} from '../../../teacher/teacher.service';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {ReactiveFormsModule} from '@angular/forms';
+import {RouterTestingModule} from '@angular/router/testing';
 
 export class MockTeacherService {
 
 }
 
-describe('ForgotTeacherPasswordComponent', () => {
-  let component: ForgotTeacherPasswordComponent;
-  let fixture: ComponentFixture<ForgotTeacherPasswordComponent>;
+describe('ForgotTeacherPasswordVerifyComponent', () => {
+  let component: ForgotTeacherPasswordVerifyComponent;
+  let fixture: ComponentFixture<ForgotTeacherPasswordVerifyComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherPasswordComponent ],
+      declarations: [ ForgotTeacherPasswordVerifyComponent ],
       imports: [
         RouterTestingModule,
         ReactiveFormsModule
@@ -30,7 +30,7 @@ describe('ForgotTeacherPasswordComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ForgotTeacherPasswordComponent);
+    fixture = TestBed.createComponent(ForgotTeacherPasswordVerifyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

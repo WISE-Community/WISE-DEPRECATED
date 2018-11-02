@@ -31,12 +31,12 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
   }
 
   submit() {
-    this.clearMessages();
+    this.clearMessage();
     const password = this.getPassword();
     const confirmPassword = this.getConfirmPassword();
     if (this.isPasswordsMatch(password, confirmPassword)) {
-      this.studentService.changePassword(this.username, this.answer, password, confirmPassword).
-          subscribe((response) => {
+      this.studentService.changePassword(this.username, this.answer, password, confirmPassword)
+          .subscribe((response) => {
         if (response.status === 'success') {
           this.goToSuccessPage();
         } else {
@@ -78,10 +78,6 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
 
   setMessage(message) {
     this.message = message;
-  }
-
-  clearMessages() {
-    this.clearMessage();
   }
 
   clearMessage() {
