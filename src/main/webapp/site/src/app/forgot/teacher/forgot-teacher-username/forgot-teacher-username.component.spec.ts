@@ -24,6 +24,31 @@ describe('ForgotTeacherUsernameComponent', () => {
   let component: ForgotTeacherUsernameComponent;
   let fixture: ComponentFixture<ForgotTeacherUsernameComponent>;
 
+  const submitAndReceiveResponse = (teacherServiceFunctionName, status, messageCode) => {
+    const teacherService = TestBed.get(TeacherService);
+    const observableResponse = createObservableResponse(status, messageCode);
+    spyOn(teacherService, teacherServiceFunctionName).and.returnValue(observableResponse);
+    component.submit();
+    fixture.detectChanges();
+  };
+
+  const createObservableResponse = (status, messageCode) => {
+    const observableResponse = Observable.create(observer => {
+      const response = {
+        status: status,
+        messageCode: messageCode
+      };
+      observer.next(response);
+      observer.complete();
+    });
+    return observableResponse;
+  };
+
+  const getErrorMessage = () => {
+    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
+    return errorMessageDiv.textContent;
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotTeacherUsernameComponent ],
@@ -50,37 +75,13 @@ describe('ForgotTeacherUsernameComponent', () => {
   });
 
   it('should show a failed to send email message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'failedToSendEmail'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'sendForgotUsernameEmail').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('The server has encountered an error and was unable to send the email to you');
+    submitAndReceiveResponse('sendForgotUsernameEmail', 'failure', 'failedToSendEmail');
+    expect(getErrorMessage()).toContain('The server has encountered an error and was unable to send the email to you');
   });
 
   it('should show an email not found message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'emailNotFound'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'sendForgotUsernameEmail').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('We did not find a WISE account associated with the email you entered');
+    submitAndReceiveResponse('sendForgotUsernameEmail', 'failure', 'emailNotFound');
+    expect(getErrorMessage()).toContain('We did not find a WISE account associated with the email you entered');
   });
 
   it('should navigate to the success page', () => {

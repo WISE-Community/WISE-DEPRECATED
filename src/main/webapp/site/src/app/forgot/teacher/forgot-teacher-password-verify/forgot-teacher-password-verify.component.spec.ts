@@ -24,6 +24,31 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
   let component: ForgotTeacherPasswordVerifyComponent;
   let fixture: ComponentFixture<ForgotTeacherPasswordVerifyComponent>;
 
+  const submitAndReceiveResponse = (teacherServiceFunctionName, status, messageCode) => {
+    const teacherService = TestBed.get(TeacherService);
+    const observableResponse = createObservableResponse(status, messageCode);
+    spyOn(teacherService, teacherServiceFunctionName).and.returnValue(observableResponse);
+    component.submit();
+    fixture.detectChanges();
+  };
+
+  const createObservableResponse = (status, messageCode) => {
+    const observableResponse = Observable.create(observer => {
+      const response = {
+        status: status,
+        messageCode: messageCode
+      };
+      observer.next(response);
+      observer.complete();
+    });
+    return observableResponse;
+  };
+
+  const getErrorMessage = () => {
+    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
+    return errorMessageDiv.textContent;
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotTeacherPasswordVerifyComponent ],
@@ -50,54 +75,18 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
   });
 
   it('should show the verification code has expired message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'verificationCodeExpired'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'checkVerificationCode').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('The verification code has expired');
+    submitAndReceiveResponse('checkVerificationCode', 'failure', 'verificationCodeExpired');
+    expect(getErrorMessage()).toContain('The verification code has expired');
   });
 
   it('should show the verification code is incorrect message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'verificationCodeIncorrect'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'checkVerificationCode').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('The verification code is incorrect');
+    submitAndReceiveResponse('checkVerificationCode', 'failure', 'verificationCodeIncorrect');
+    expect(getErrorMessage()).toContain('The verification code is incorrect');
   });
 
   it('should show the too many verification code attempts message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'tooManyVerificationCodeAttempts'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'checkVerificationCode').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('You have submitted an incorrect verification code too many times recently');
+    submitAndReceiveResponse('checkVerificationCode', 'failure', 'tooManyVerificationCodeAttempts');
+    expect(getErrorMessage()).toContain('You have submitted an incorrect verification code too many times recently');
   });
 
   it('should navigate to the change password page', () => {

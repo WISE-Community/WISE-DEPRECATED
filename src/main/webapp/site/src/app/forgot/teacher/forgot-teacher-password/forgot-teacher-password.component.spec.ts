@@ -24,6 +24,31 @@ describe('ForgotTeacherPasswordComponent', () => {
   let component: ForgotTeacherPasswordComponent;
   let fixture: ComponentFixture<ForgotTeacherPasswordComponent>;
 
+  const submitAndReceiveResponse = (teacherServiceFunctionName, status, messageCode) => {
+    const teacherService = TestBed.get(TeacherService);
+    const observableResponse = createObservableResponse(status, messageCode);
+    spyOn(teacherService, teacherServiceFunctionName).and.returnValue(observableResponse);
+    component.submit();
+    fixture.detectChanges();
+  };
+
+  const createObservableResponse = (status, messageCode) => {
+    const observableResponse = Observable.create(observer => {
+      const response = {
+        status: status,
+        messageCode: messageCode
+      };
+      observer.next(response);
+      observer.complete();
+    });
+    return observableResponse;
+  };
+
+  const getErrorMessage = () => {
+    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
+    return errorMessageDiv.textContent;
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotTeacherPasswordComponent ],
@@ -50,54 +75,18 @@ describe('ForgotTeacherPasswordComponent', () => {
   });
 
   it('should show the username not found message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'usernameNotFound'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'getVerificationCodeEmail').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('We could not find that username');
+    submitAndReceiveResponse('getVerificationCodeEmail', 'failure', 'usernameNotFound');
+    expect(getErrorMessage()).toContain('We could not find that username');
   });
 
   it('should show the too many verification code attempts message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'tooManyVerificationCodeAttempts'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'getVerificationCodeEmail').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('You have submitted an incorrect verification code too many times recently');
+    submitAndReceiveResponse('getVerificationCodeEmail', 'failure', 'tooManyVerificationCodeAttempts');
+    expect(getErrorMessage()).toContain('You have submitted an incorrect verification code too many times recently');
   });
 
   it('should show the failed to send email message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'failedToSendEmail'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'getVerificationCodeEmail').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('The server has encountered an error and was unable to send the email to you');
+    submitAndReceiveResponse('getVerificationCodeEmail', 'failure', 'failedToSendEmail');
+    expect(getErrorMessage()).toContain('The server has encountered an error and was unable to send the email to you');
   });
 
   it('should navigate to the forgot teacher username page', () => {

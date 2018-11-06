@@ -42,7 +42,11 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
         if (response.status === 'success') {
           this.goToSuccessPage();
         } else {
-          this.setErrorOccurredMessage();
+          if (response.messageCode === 'invalidPassword') {
+             this.setInvalidPasswordMessage();
+          } else {
+            this.setErrorOccurredMessage();
+          }
         }
         this.processing = false;
       });
@@ -73,6 +77,10 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
 
   setPasswordsDoNotMatchMessage() {
     this.setMessage('Passwords do not match.');
+  }
+
+  setInvalidPasswordMessage() {
+    this.setMessage('Password is invalid, please try another password.');
   }
 
   setErrorOccurredMessage() {

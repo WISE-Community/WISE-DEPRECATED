@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StudentService } from '../../../student/student.service';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs/index';
 
 export class MockStudentService {
 
@@ -15,6 +16,11 @@ export class MockStudentService {
 describe('ForgotStudentPasswordChangeComponent', () => {
   let component: ForgotStudentPasswordChangeComponent;
   let fixture: ComponentFixture<ForgotStudentPasswordChangeComponent>;
+
+  const getErrorMessage = () => {
+    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
+    return errorMessageDiv.textContent;
+  };
 
   const getSubmitButton = () => {
     return fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
@@ -58,6 +64,14 @@ describe('ForgotStudentPasswordChangeComponent', () => {
     fixture.detectChanges();
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(false);
+  });
+
+  it('should display the passwords do not match message', () => {
+    component.setControlFieldValue('password', 'a');
+    component.setControlFieldValue('confirmPassword', 'b');
+    component.submit();
+    fixture.detectChanges();
+    expect(getErrorMessage()).toContain('Passwords do not match');
   });
 
   it('should navigate to the complete page', () => {

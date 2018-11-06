@@ -25,6 +25,31 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
   let component: ForgotTeacherPasswordChangeComponent;
   let fixture: ComponentFixture<ForgotTeacherPasswordChangeComponent>;
 
+  const submitAndReceiveResponse = (teacherServiceFunctionName, status, messageCode) => {
+    const teacherService = TestBed.get(TeacherService);
+    const observableResponse = createObservableResponse(status, messageCode);
+    spyOn(teacherService, teacherServiceFunctionName).and.returnValue(observableResponse);
+    component.submit();
+    fixture.detectChanges();
+  };
+
+  const createObservableResponse = (status, messageCode) => {
+    const observableResponse = Observable.create(observer => {
+      const response = {
+        status: status,
+        messageCode: messageCode
+      };
+      observer.next(response);
+      observer.complete();
+    });
+    return observableResponse;
+  };
+
+  const getErrorMessage = () => {
+    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
+    return errorMessageDiv.textContent;
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotTeacherPasswordChangeComponent ],
@@ -51,71 +76,23 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
   });
 
   it('should show the too many verification code attempts message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'tooManyVerificationCodeAttempts'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'changePassword').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('You have submitted an incorrect verification code too many times recently');
+    submitAndReceiveResponse('changePassword', 'failure', 'tooManyVerificationCodeAttempts');
+    expect(getErrorMessage()).toContain('You have submitted an incorrect verification code too many times recently');
   });
 
   it('should show the verification code expired message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'verificationCodeExpired'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'changePassword').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('The verification code has expired');
+    submitAndReceiveResponse('changePassword', 'failure', 'verificationCodeExpired');
+    expect(getErrorMessage()).toContain('The verification code has expired');
   });
 
   it('should show the verification code incorrect message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'verificationCodeIncorrect'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'changePassword').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('The verification code is in correct');
+    submitAndReceiveResponse('changePassword', 'failure', 'verificationCodeIncorrect');
+    expect(getErrorMessage()).toContain('The verification code is in correct');
   });
 
   it('should show the passwords do not match message', () => {
-    const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
-      const response = {
-        status: 'failure',
-        messageCode: 'passwordsDoNotMatch'
-      };
-      observer.next(response);
-      observer.complete();
-    });
-    spyOn(teacherService, 'changePassword').and.returnValue(observableResponse);
-    component.submit();
-    fixture.detectChanges();
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    expect(errorMessageDiv.textContent).toContain('Passwords do not match');
+    submitAndReceiveResponse('changePassword', 'failure', 'passwordsDoNotMatch');
+    expect(getErrorMessage()).toContain('Passwords do not match');
   });
 
   it('should go to the complete page', () => {

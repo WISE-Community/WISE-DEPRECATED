@@ -111,6 +111,9 @@ public class StudentForgotAccountAPIController {
           userService.updateUserPassword(user, password);
           response.put("status", "success");
           response.put("messageCode", "passwordChanged");
+        } else {
+          response.put("status", "failure");
+          response.put("messageCode", "invalidPassword");
         }
       } else {
         response.put("status", "failure");
@@ -139,7 +142,9 @@ public class StudentForgotAccountAPIController {
   }
 
   private boolean newPasswordsAreValid(String password1, String password2) {
-    if (password1 != null && password2 != null && password1.equals(password2)) {
+    if (password1 != null && password2 != null &&
+        !password1.equals("") && !password2.equals("") &&
+        password1.equals(password2)) {
       return true;
     } else {
       return false;

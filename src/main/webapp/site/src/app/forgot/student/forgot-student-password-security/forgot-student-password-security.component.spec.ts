@@ -7,14 +7,48 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StudentService } from '../../../student/student.service';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs/index';
 
 export class MockStudentService {
-
+  checkSecurityAnswer(username: string, answer: string): Observable<any> {
+    return Observable.create(observer => {
+      observer.next({
+        status: 'success',
+        messageCode: 'correctAnswer'
+      });
+      observer.complete();
+    });
+  }
 }
 
 describe('ForgotStudentPasswordSecurityComponent', () => {
   let component: ForgotStudentPasswordSecurityComponent;
   let fixture: ComponentFixture<ForgotStudentPasswordSecurityComponent>;
+
+  const submitAndReceiveResponse = (studentServiceFunctionName, status, messageCode) => {
+    const studentService = TestBed.get(StudentService);
+    const observableResponse = createObservableResponse(status, messageCode);
+    spyOn(studentService, studentServiceFunctionName).and.returnValue(observableResponse);
+    component.submit();
+    fixture.detectChanges();
+  };
+
+  const createObservableResponse = (status, messageCode) => {
+    const observableResponse = Observable.create(observer => {
+      const response = {
+        status: status,
+        messageCode: messageCode
+      };
+      observer.next(response);
+      observer.complete();
+    });
+    return observableResponse;
+  };
+
+  const getErrorMessage = () => {
+    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
+    return errorMessageDiv.textContent;
+  };
 
   const getSubmitButton = () => {
     return fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
@@ -57,6 +91,11 @@ describe('ForgotStudentPasswordSecurityComponent', () => {
     fixture.detectChanges();
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(false);
+  });
+
+  it('should show the incorrect answer message', () => {
+    submitAndReceiveResponse('checkSecurityAnswer', 'failure', 'incorrectAnswer');
+    expect(getErrorMessage()).toContain('Incorrect answer');
   });
 
   it('should navigate to change password page', () => {
