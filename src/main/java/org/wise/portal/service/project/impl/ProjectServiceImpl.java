@@ -673,4 +673,8 @@ public class ProjectServiceImpl implements ProjectService {
   public List<Project> getProjectsWithoutRuns(User user) {
     return projectDao.getProjectsWithoutRuns(user);
   }
+
+  public List<Project> getAllSharedProjects() {
+    return projectDao.getAllSharedProjects();
+  }
 }
