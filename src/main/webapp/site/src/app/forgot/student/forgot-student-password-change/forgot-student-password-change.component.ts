@@ -42,8 +42,12 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
         if (response.status === 'success') {
           this.goToSuccessPage();
         } else {
-          if (response.messageCode === 'invalidPassword') {
-             this.setInvalidPasswordMessage();
+          if (response.messageCode === 'passwordIsBlank') {
+            this.setPasswordIsBlankMessage();
+          } else if (response.messageCode === 'passwordsDoNotMatch') {
+            this.setPasswordsDoNotMatchMessage();
+          } else if (response.messageCode === 'invalidPassword') {
+            this.setInvalidPasswordMessage();
           } else {
             this.setErrorOccurredMessage();
           }
@@ -75,8 +79,12 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
     return password === confirmPassword;
   }
 
+  setPasswordIsBlankMessage() {
+    this.setMessage('Password cannot be blank, please enter a password.');
+  }
+
   setPasswordsDoNotMatchMessage() {
-    this.setMessage('Passwords do not match.');
+    this.setMessage('Passwords do not match, please try again.');
   }
 
   setInvalidPasswordMessage() {

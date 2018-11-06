@@ -174,6 +174,7 @@ public class TeacherForgotAccountAPIController {
       boolean isTooManyVerificationCodeAttempts = isTooManyVerificationCodeAttempts(user);
       boolean isVerificationCodeExpired = isVerificationCodeExpired(user);
       boolean isVerificationCodeCorrect = isVerificationCodeCorrect(user, verificationCode);
+      boolean isPasswordBlank = isPasswordBlank(password, confirmPassword);
       boolean isPasswordsMatch = isPasswordsMatch(password, confirmPassword);
 
       if (isTooManyVerificationCodeAttempts) {
@@ -182,9 +183,11 @@ public class TeacherForgotAccountAPIController {
         response = getVerificationCodeExpiredFailureResponse();
       } else if (!isVerificationCodeCorrect) {
         response = getVerificationCodeIncorrectFailureResponse();
+      } else if (isPasswordBlank) {
+        response = getPasswordIsBlankFailureResponse();
       } else if (!isPasswordsMatch) {
         response = getPasswordsDoNotMatchFailureResponse();
-      } else if (!isVerificationCodeExpired && isVerificationCodeCorrect && isPasswordsMatch) {
+      } else if (!isVerificationCodeExpired && isVerificationCodeCorrect && !isPasswordBlank && isPasswordsMatch) {
         userService.updateUserPassword(user, password);
         response = getVerificationCodeCorrectSuccessResponse();
         clearVerificationCodeData(user);
@@ -227,6 +230,9 @@ public class TeacherForgotAccountAPIController {
     user.getUserDetails().setResetPasswordVerificationCodeRequestTime(now);
     userService.updateUser(user);
     return verificationCode;
+  }
+  private boolean isPasswordBlank(String password1, String password2) {
+    return password1 == null || password2 == null || password1.equals("") || password2.equals("");
   }
 
   private boolean isPasswordsMatch(String password, String confirmPassword) {
@@ -294,6 +300,13 @@ public class TeacherForgotAccountAPIController {
     JSONObject response = new JSONObject();
     response.put("status", "success");
     response.put("messageCode", "verificationCodeCorrect");
+    return response;
+  }
+
+  private JSONObject getPasswordIsBlankFailureResponse() throws JSONException {
+    JSONObject response = new JSONObject();
+    response.put("status", "failure");
+    response.put("messageCode", "passwordIsBlank");
     return response;
   }
 

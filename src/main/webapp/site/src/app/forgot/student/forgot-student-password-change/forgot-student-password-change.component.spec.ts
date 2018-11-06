@@ -10,12 +10,40 @@ import {Router} from '@angular/router';
 import {Observable} from 'rxjs/index';
 
 export class MockStudentService {
-
+  changePassword(username: string, answer: string, password: string, confirmPassword: string): Observable<any> {
+    return Observable.create(observer => {
+      observer.next({
+        status: 'success',
+        messageCode: 'passwordChanged'
+      });
+      observer.complete();
+    });
+  }
 }
 
 describe('ForgotStudentPasswordChangeComponent', () => {
   let component: ForgotStudentPasswordChangeComponent;
   let fixture: ComponentFixture<ForgotStudentPasswordChangeComponent>;
+
+  const submitAndReceiveResponse = (studentServiceFunctionName, status, messageCode) => {
+    const studentService = TestBed.get(StudentService);
+    const observableResponse = createObservableResponse(status, messageCode);
+    spyOn(studentService, studentServiceFunctionName).and.returnValue(observableResponse);
+    component.submit();
+    fixture.detectChanges();
+  };
+
+  const createObservableResponse = (status, messageCode) => {
+    const observableResponse = Observable.create(observer => {
+      const response = {
+        status: status,
+        messageCode: messageCode
+      };
+      observer.next(response);
+      observer.complete();
+    });
+    return observableResponse;
+  };
 
   const getErrorMessage = () => {
     const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
@@ -64,6 +92,11 @@ describe('ForgotStudentPasswordChangeComponent', () => {
     fixture.detectChanges();
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(false);
+  });
+
+  it('should display the password cannot be blank message', () => {
+    submitAndReceiveResponse('changePassword', 'failure', 'passwordIsBlank');
+    expect(getErrorMessage()).toContain('Password cannot be blank');
   });
 
   it('should display the passwords do not match message', () => {

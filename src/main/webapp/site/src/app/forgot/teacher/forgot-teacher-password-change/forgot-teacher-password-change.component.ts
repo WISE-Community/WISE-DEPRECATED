@@ -46,6 +46,8 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
             this.setVerificationCodeExpiredMessage();
           } else if (response.messageCode === 'verificationCodeIncorrect') {
             this.setVerificationCodeIncorrectMessage();
+          } else if (response.messageCode === 'passwordIsBlank') {
+            this.setPasswordIsBlankMessage();
           } else if (response.messageCode === 'passwordsDoNotMatch') {
             this.setPasswordsDoNotMatchMessage();
           } else {
@@ -96,8 +98,12 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
     this.setMessage(message);
   }
 
+  setPasswordIsBlankMessage() {
+    this.setMessage('Password cannot be blank, please enter a password.');
+  }
+
   setPasswordsDoNotMatchMessage() {
-    this.setMessage('Passwords do not match.');
+    this.setMessage('Passwords do not match, please try again.');
   }
 
   setErrorOccurredMessage() {

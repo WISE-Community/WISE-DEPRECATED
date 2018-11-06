@@ -90,6 +90,11 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
     expect(getErrorMessage()).toContain('The verification code is in correct');
   });
 
+  it('should display the password cannot be blank message', () => {
+    submitAndReceiveResponse('changePassword', 'failure', 'passwordIsBlank');
+    expect(getErrorMessage()).toContain('Password cannot be blank');
+  });
+
   it('should show the passwords do not match message', () => {
     submitAndReceiveResponse('changePassword', 'failure', 'passwordsDoNotMatch');
     expect(getErrorMessage()).toContain('Passwords do not match');

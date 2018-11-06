@@ -107,7 +107,13 @@ public class StudentForgotAccountAPIController {
     JSONObject response = new JSONObject();
     if (user != null) {
       if (isAnswerCorrect(user, answer)) {
-        if (newPasswordsAreValid(password, confirmPassword)) {
+        if (isPasswordBlank(password, confirmPassword)) {
+          response.put("status", "failure");
+          response.put("messageCode", "passwordIsBlank");
+        } else if(!isPasswordsMatch(password, confirmPassword)) {
+          response.put("status", "failure");
+          response.put("messageCode", "passwordsDoNotMatch");
+        } else if(isPasswordsMatch(password, confirmPassword)) {
           userService.updateUserPassword(user, password);
           response.put("status", "success");
           response.put("messageCode", "passwordChanged");
@@ -149,5 +155,13 @@ public class StudentForgotAccountAPIController {
     } else {
       return false;
     }
+  }
+
+  private boolean isPasswordBlank(String password1, String password2) {
+    return password1 == null || password2 == null || password1.equals("") || password2.equals("");
+  }
+
+  private boolean isPasswordsMatch(String password1, String password2) {
+    return password1.equals(password2);
   }
 }
