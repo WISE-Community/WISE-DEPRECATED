@@ -13,7 +13,7 @@
       </div>
     </ng-template>
     <ng-template #taglineTemplate>
-      <div [@flipInX]="{value: '*', params: {delay: '3500ms'}}">
+      <div [@flipInX]="{value: '*', params: {delay: '3500ms'}}" i18n="Home welcome page main description">
         <span>Integrated</span> science learning and teaching with technology
       </div>
     </ng-template>
@@ -22,7 +22,7 @@
     <div class="section--fullwidth section--slant mat-app-background">
       <div class="content">
         <h1 class="accent section__header" ngClass="mat-display-1"
-            [ngClass.xs]="{ 'mat-display-1': false }">
+            [ngClass.xs]="{ 'mat-display-1': false }" i18n="Outline of services by WISE">
           The WISE Advantage
         </h1>
         <div fxLayout="row"
@@ -55,7 +55,7 @@
     <div class="section--fullwidth section--slant section--slant--rtl app-background">
       <div class="content">
         <h1 class="accent section__header" ngClass="mat-display-1"
-            [ngClass.xs]="{ 'mat-display-1': false }">
+            [ngClass.xs]="{ 'mat-display-1': false }" i18n="Curriculum offerings">
           Curriculum Offerings
         </h1>
         <app-home-page-project-library></app-home-page-project-library>
@@ -66,8 +66,8 @@
               fxLayoutGap="16px"
               fxLayoutAlign="center center"
               fxLayoutWrap>
-            <span>Ready to try WISE in the Classroom?</span>
-            <a mat-raised-button color="accent" routerLink="/join">
+            <span i18n="Enquire if the user is ready to try WISE">Ready to try WISE in the Classroom?</span>
+            <a mat-raised-button color="accent" routerLink="/join" i18n="Sign up button text">
               Sign up for free!
             </a>
           </h2>
@@ -83,7 +83,7 @@
             [ngClass.xs]="{ 'mat-display-1': false }"
             fxLayoutAlign="start center"
             fxLayoutGap="16px">
-          <span>Connect</span>
+          <span i18n="A directive to connect with WISE community/FAQs/Contact WISE">Connect</span>
           <a href="https://www.facebook.com/wisetels/"
              target="_blank" mat-icon-button>
             <mat-icon svgIcon="facebook"

@@ -1,7 +1,7 @@
 <div class="main app-background">
   <div class="content">
     <header fxLayout="row" class="content__header">
-      <h1 class="accent" fxLayoutAlign="center center">
+      <h1 class="accent" fxLayoutAlign="center center" i18n="Title for news page">
         <mat-icon>event</mat-icon>News
       </h1>
     </header>
@@ -26,7 +26,7 @@
         </app-timeline>
         <div class="content-block__actions"
              *ngIf="allNewsItems.length > 10 && !showAll" >
-          <a mat-raised-button color="accent" (click)="showAll = true">Show More</a>
+          <a mat-raised-button color="accent" (click)="showAll = true" i18n="Show more content button text">Show More</a>
         </div>
       </div>
     </section>
