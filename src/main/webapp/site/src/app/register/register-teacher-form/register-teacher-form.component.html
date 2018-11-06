@@ -144,11 +144,12 @@
         </p>
       </div>
       <p>
-        <button fxFlex mat-flat-button color="primary" type="submit">
-          Create Account
+        <button fxFlex mat-flat-button color="primary" type="submit" [disabled]="processing">
+          <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
+          <span>Create Account</span>
         </button>
       </p>
     </form>
   </mat-card-content>
 </mat-card>
-                    
+
