@@ -87,7 +87,7 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
       questionKey: this.questionKey,
       answer: this.getAnswer()
     };
-    this.router.navigate(['forgot/student/password/change'],
+    this.router.navigate(['/forgot/student/password/change'],
       {queryParams: params, skipLocationChange: true});
   }
 }

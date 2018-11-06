@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StudentService } from '../../../student/student.service';
+import {Router} from '@angular/router';
 
 export class MockStudentService {
 
@@ -28,7 +29,7 @@ describe('ForgotStudentPasswordChangeComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        { provide: StudentService, userClass: MockStudentService }
+        { provide: StudentService, useClass: MockStudentService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -57,5 +58,18 @@ describe('ForgotStudentPasswordChangeComponent', () => {
     fixture.detectChanges();
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(false);
+  });
+
+  it('should navigate to the complete page', () => {
+    const router = TestBed.get(Router);
+    const navigateSpy = spyOn(router, 'navigate');
+    const username = 'SpongebobS0101';
+    component.username = username;
+    component.goToSuccessPage();
+    const params = {
+      username: username
+    };
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/complete'],
+      {queryParams: params, skipLocationChange: true});
   });
 });

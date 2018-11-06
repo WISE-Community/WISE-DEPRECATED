@@ -60,7 +60,7 @@ export class ForgotStudentPasswordComponent implements OnInit {
       questionKey: questionKey,
       question: question
     };
-    this.router.navigate(['forgot/student/password/security'],
+    this.router.navigate(['/forgot/student/password/security'],
         {queryParams: params, skipLocationChange: true});
   }
 
@@ -80,6 +80,6 @@ export class ForgotStudentPasswordComponent implements OnInit {
   }
 
   goToForgotStudentUsernamePage() {
-    this.router.navigate(['forgot/student/username']);
+    this.router.navigate(['/forgot/student/username']);
   }
 }

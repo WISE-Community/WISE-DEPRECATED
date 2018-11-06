@@ -83,7 +83,7 @@ export class ForgotTeacherPasswordComponent implements OnInit {
   }
 
   goToForgotTeacherUsernamePage() {
-    this.router.navigate(['forgot/teacher/username']);
+    this.router.navigate(['/forgot/teacher/username']);
   }
 
   goToVerificationCodePage() {

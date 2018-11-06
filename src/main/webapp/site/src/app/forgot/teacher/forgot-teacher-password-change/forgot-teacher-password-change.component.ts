@@ -116,7 +116,7 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
     const params = {
       username: this.username
     };
-    this.router.navigate(['forgot/teacher/password/complete'],
+    this.router.navigate(['/forgot/teacher/password/complete'],
       {queryParams: params, skipLocationChange: true});
   }
 }

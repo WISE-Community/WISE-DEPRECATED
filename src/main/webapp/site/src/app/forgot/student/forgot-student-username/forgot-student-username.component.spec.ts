@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatInputModule, MatSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {Router} from '@angular/router';
 
 export class MockStudentService {
 
@@ -31,7 +32,7 @@ describe('ForgotStudentUsernameComponent', () => {
         MatInputModule
       ],
       providers: [
-        { provide: StudentService, userClass: MockStudentService }
+        { provide: StudentService, useClass: MockStudentService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -78,10 +79,47 @@ describe('ForgotStudentUsernameComponent', () => {
   it('should enable the search button when all the input fields are filled in', () => {
     component.setControlFieldValue('firstName', 'Spongebob');
     component.setControlFieldValue('lastName', 'Squarepants');
-    component.setControlFieldValue('birthMonth', 'birthMonth');
-    component.setControlFieldValue('birthDay', 'birthDay');
+    component.setControlFieldValue('birthMonth', '1');
+    component.setControlFieldValue('birthDay', '01');
     fixture.detectChanges();
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(false);
+  });
+
+  it('should navigate to the login page', () => {
+    const router = TestBed.get(Router);
+    const navigateSpy = spyOn(router, 'navigate');
+    const username = 'SpongebobS0101';
+    component.loginWithUsername(username);
+    const params = { username: username };
+    expect(navigateSpy).toHaveBeenCalledWith(['/login', params]);
+  });
+
+  it('should navigate to the login page when a username is clicked', () => {
+    const router = TestBed.get(Router);
+    const navigateSpy = spyOn(router, 'navigate');
+    component.foundUsernames = ['SpongebobS0101'];
+    fixture.detectChanges();
+    const usernameLink = fixture.debugElement.nativeElement.querySelector('.cursor-link');
+    usernameLink.click();
+    const params = { username: 'SpongebobS0101' };
+    expect(navigateSpy).toHaveBeenCalledWith(['/login', params]);
+  });
+
+  it('should navigate to the register page', () => {
+    const router = TestBed.get(Router);
+    const navigateSpy = spyOn(router, 'navigate');
+    component.createNewAccount();
+    expect(navigateSpy).toHaveBeenCalledWith(['/join']);
+  });
+
+  it('should navigate to the register page when the create new account link is clicked', () => {
+    const router = TestBed.get(Router);
+    const navigateSpy = spyOn(router, 'navigate');
+    component.showCreateNewAccountLink = true;
+    fixture.detectChanges();
+    const createNewAccountLink = fixture.debugElement.nativeElement.querySelector('.cursor-link');
+    createNewAccountLink.click();
+    expect(navigateSpy).toHaveBeenCalledWith(['/join']);
   });
 });

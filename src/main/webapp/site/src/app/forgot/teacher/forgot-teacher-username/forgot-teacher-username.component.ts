@@ -91,6 +91,6 @@ export class ForgotTeacherUsernameComponent implements OnInit {
   }
 
   goToSuccessPage() {
-    this.router.navigate(['forgot/teacher/username/complete']);
+    this.router.navigate(['/forgot/teacher/username/complete']);
   }
 }

@@ -91,7 +91,7 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
     const params = {
       username: this.username
     };
-    this.router.navigate(['forgot/student/password/complete'],
+    this.router.navigate(['/forgot/student/password/complete'],
       {queryParams: params, skipLocationChange: true});
   }
 }
