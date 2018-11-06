@@ -172,8 +172,10 @@ public class TeacherAPIController {
     @RequestBody Map<String, String> teacherFields, HttpServletRequest request
   ) throws DuplicateUsernameException {
     TeacherUserDetails teacherUserDetails = new TeacherUserDetails();
-    teacherUserDetails.setFirstname(teacherFields.get("firstName"));
-    teacherUserDetails.setLastname(teacherFields.get("lastName"));
+    String firstName = teacherFields.get("firstName");
+    String lastName = teacherFields.get("lastName");
+    teacherUserDetails.setFirstname(firstName);
+    teacherUserDetails.setLastname(lastName);
     String email = teacherFields.get("email");
     teacherUserDetails.setEmailAddress(email);
     teacherUserDetails.setCity(teacherFields.get("city"));
@@ -186,7 +188,8 @@ public class TeacherAPIController {
     } else {
       teacherUserDetails.setPassword(teacherFields.get("password"));
     }
-    teacherUserDetails.setDisplayname(teacherUserDetails.getFirstname() + " " + teacherUserDetails.getLastname());
+    String displayName = firstName + " " + lastName;
+    teacherUserDetails.setDisplayname(displayName);
     teacherUserDetails.setEmailValid(true);
     teacherUserDetails.setSchoollevel(Schoollevel.valueOf(teacherFields.get("schoolLevel")));
     teacherUserDetails.setSchoolname(teacherFields.get("schoolName"));
@@ -195,27 +198,33 @@ public class TeacherAPIController {
     teacherUserDetails.setLanguage(locale.getLanguage());
     User createdUser = this.userService.createUser(teacherUserDetails);
     String username = createdUser.getUserDetails().getUsername();
-    sendCreateTeacherAccountEmail(email, username, googleUserId, locale);
+    sendCreateTeacherAccountEmail(email, displayName, username, googleUserId, locale, request);
     return username;
   }
 
-  private void sendCreateTeacherAccountEmail(String email, String username, String googleUserId, Locale locale) {
+  private void sendCreateTeacherAccountEmail(String email, String displayName, String username, String googleUserId, Locale locale,
+        HttpServletRequest request) {
     String fromEmail = wiseProperties.getProperty("portalemailaddress");
     String [] recipients = {email};
     String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
     String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, locale);
     String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {username}, Locale.US);
+    String gettingStartedUrl = getGettingStartedUrl(request);
     String message;
     if (isUsingGoogleUserId(googleUserId)) {
-      message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBodyNoUsername", new Object[] {}, defaultBody, locale);
+      message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBodyNoUsername", new Object[] {displayName, gettingStartedUrl}, defaultBody, locale);
     } else {
-      message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {username}, defaultBody, locale);
+      message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {displayName, username, gettingStartedUrl}, defaultBody, locale);
     }
     try {
       mailService.postMail(recipients, subject, message, fromEmail);
     } catch (MessagingException e) {
       e.printStackTrace();
     }
+  }
+
+  private String getGettingStartedUrl(HttpServletRequest request) {
+    return ControllerUtil.getPortalUrlString(request) + "/help/getting-started";
   }
 
   private boolean isUsingGoogleUserId(String googleUserId) {
