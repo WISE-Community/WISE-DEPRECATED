@@ -41,7 +41,6 @@ export class TeacherRunListComponent implements OnInit {
           this.showAll = true;
         }
       }
-      // teacherService.setTabIndex(0);
       setTimeout(() => {
         document.getElementById(`run${teacherRun.id}`).scrollIntoView({behavior: "smooth"})
       }, 1500);
