@@ -23,6 +23,7 @@ export class TeacherRunListComponent implements OnInit {
   filterValue: string = '';
   isPersonalRunsRetrieved: boolean = false;
   isSharedRunsRetrieved: boolean = false;
+  showAll: boolean = false;
 
   constructor(private teacherService: TeacherService) {
     teacherService.newRunSource$.subscribe(run => {
@@ -33,7 +34,17 @@ export class TeacherRunListComponent implements OnInit {
       this.populatePeriods([teacherRun]);
       this.sortPeriods();
       this.populateFilterOptions();
-      this.performSearchAndFilter();
+      this.reset();
+      if (!this.showAll) {
+        let index = this.getRunIndex(teacherRun);
+        if (index > 9) {
+          this.showAll = true;
+        }
+      }
+      // teacherService.setTabIndex(0);
+      setTimeout(() => {
+        document.getElementById(`run${teacherRun.id}`).scrollIntoView({behavior: "smooth"})
+      }, 1500);
     });
   }
 
@@ -51,6 +62,15 @@ export class TeacherRunListComponent implements OnInit {
       this.isPersonalRunsRetrieved = true;
       this.processRunsIfReady();
     });
+  }
+
+  getRunIndex(run: TeacherRun) {
+    for (let i = 0; i < this.runs.length; i++) {
+      if (this.runs[i].id === run.id) {
+        return i;
+      }
+    }
+    return null;
   }
 
   getSharedRuns(): void {
