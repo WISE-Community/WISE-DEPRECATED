@@ -45,6 +45,7 @@ export class RegisterStudentFormComponent implements OnInit {
     birthMonth: new FormControl('', [Validators.required]),
     birthDay: new FormControl({value: '', disabled: true}, [Validators.required])
   });
+  processing: boolean = false;
 
   constructor(private router: Router, private route: ActivatedRoute,
               private studentService: StudentService,
@@ -84,11 +85,13 @@ export class RegisterStudentFormComponent implements OnInit {
 
   createAccount() {
     if (this.createStudentAccountFormGroup.valid) {
+      this.processing = true;
       this.populateStudentUser();
       this.studentService.registerStudentAccount(this.studentUser, (userName) => {
         this.router.navigate(['join/student/complete',
           { username: userName, isUsingGoogleId: this.isUsingGoogleId() }
         ]);
+        this.processing = false;
       });
     }
   }
