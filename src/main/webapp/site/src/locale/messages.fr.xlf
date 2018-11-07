@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="e09d2c4a4998dc5d590688fb43e98937047137e1" datatype="html">
+        <source>
+        <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Integrated<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> science learning and teaching with technology
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Home welcome page main description</note>
+      </trans-unit>
+      <trans-unit id="c9862327b7973e1d966bc744d6efe4da295ecf86" datatype="html">
+        <source>
+          The WISE Advantage
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Outline of services by WISE</note>
+      </trans-unit>
+      <trans-unit id="7b26e0d3e5ab23b18e4e9fe4fdbb7f7e6b534790" datatype="html">
+        <source>
+          Curriculum Offerings
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Curriculum offerings</note>
+      </trans-unit>
+      <trans-unit id="dcd4eff483113708f4fd91f98236bee705e676a8" datatype="html">
+        <source>Ready to try WISE in the Classroom?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Enquire if the user is ready to try WISE</note>
+      </trans-unit>
+      <trans-unit id="9f3372f932b36439637b49337efb797c36e497ee" datatype="html">
+        <source>
+              Sign up for free!
+            </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Sign up button text</note>
+      </trans-unit>
+      <trans-unit id="da6aa9950c74cadd85a3bf26272f34f28d8338c8" datatype="html">
+        <source>Connect</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">A directive to connect with WISE community/FAQs/Contact WISE</note>
+      </trans-unit>
+      <trans-unit id="9e0045a1fd9102287227101bff15ef7d4a7ab3c4" datatype="html">
+        <source>about works!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Application status: about works!</note>
+      </trans-unit>
+      <trans-unit id="f78eeef068eb7eeed07ecc952fa7ca2672ca7706" datatype="html">
+        <source>features works!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Application status: features works!</note>
+      </trans-unit>
+      <trans-unit id="51d583eae34e00ff68b64c83bb27a77927206e5c" datatype="html">
+        <source>WISE Terms of Use &amp; Privacy Policy</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Page title for WISE terms of use and privacy policy</note>
+      </trans-unit>
+      <trans-unit id="632476f072cc8007d0fd769265b1dd21675f9b19" datatype="html">
+        <source>Table of Contents</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">Links to sub-sections</note>
+      </trans-unit>
+      <trans-unit id="73546446e442c1b3861297089d5436ee268b4866" datatype="html">
+        <source>User Agreement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">User Agreement</note>
+      </trans-unit>
+      <trans-unit id="bc5c8fc1c4e71b3ee81861339adbe75a81f330bd" datatype="html">
+        <source>Information We Collect</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Information We Collect</note>
+      </trans-unit>
+      <trans-unit id="3b2c25aac9bb263b63bc9310da65eb68324d83da" datatype="html">
+        <source>How We Use the Data</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">How We Use the Data</note>
+      </trans-unit>
+      <trans-unit id="fdceccac4c4cd3ede00411684560fc40b0b9df41" datatype="html">
+        <source>Rules of Use</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Rules of Use</note>
+      </trans-unit>
+      <trans-unit id="d3a3efa42b14f2671bf3418fe0a7462293334ac0" datatype="html">
+        <source>Information Security</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Information Security</note>
+      </trans-unit>
+      <trans-unit id="a364c9c2a87d2b9cf91adffebe1e931310d94d60" datatype="html">
+        <source>State &amp; Federal Laws</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">State &amp; Federal Laws</note>
+      </trans-unit>
+      <trans-unit id="75d5b0f2bf76429bfac084e2e1e1002c01c320ad" datatype="html">
+        <source>Changes &amp; Updates</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Changes &amp; Updates</note>
+      </trans-unit>
+      <trans-unit id="c71ec135691e1a3f46c9e23169364a1e2c557a5a" datatype="html">
+        <source>
+    <x id="START_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;h2&gt;"/>1. User Agreement<x id="CLOSE_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;/h2&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>We understand how important privacy is to our community, especially the teachers and students all over the world who use WISE resources in their educational endeavors. This policy explains what information we collect, how we use it, and what we do to keep it safe.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>These Terms of Use and Privacy Policy constitute an agreement between you and the Web-based Inquiry Science Environment team that governs your use of wise.berkeley.edu and all associated services and websites (collectively &quot;WISE&quot;). The WISE team is a federally-funded research group headquartered at the University of California, Berkeley and is a non-profit organization.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us at <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://wise.berkeley.edu/contact/contactwise.html<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH_1" ctype="x-p" equiv-text="&lt;p&gt;"/>This policy was last updated on September 8, 2017.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">User agreement section</note>
+      </trans-unit>
+      <trans-unit id="acea21f3a12256798c9b5bad09da2ed54a5aa915" datatype="html">
+        <source>
+
+    <x id="START_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;h2&gt;"/>2. Information We Collect<x id="CLOSE_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;/h2&gt;"/>
+
+    <x id="START_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;h4&gt;"/>Personal Information<x id="CLOSE_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;/h4&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>In order to use some features of WISE, you will need to register by creating a user account. Creating an account is optional, but without an account you will not be able to create or publish curriculum projects or use WISE curricula to capture, store, review, or assess student work.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>When creating a WISE teacher account, we ask you to provide your first and last name, email address, password, city, state, country, school name, school level, and school subjects. To create a WISE student account, we ask you to provide your first and last name, birth day and month, gender, and password, and choose a security question and answer.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>To help ensure unauthorized use of your account, please keep your password secret. You are solely responsible for any use of your account, even if your account is used by another person. If any use of your account violates the Terms of Use, your account may be suspended or deleted.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>If you believe that your account is no longer secure for any reason, please change your password. If you cannot access your account to change your password, contact us at <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://wise.berkeley.edu/contact/contactwise.html<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+
+    <x id="START_HEADING_LEVEL4_1" ctype="x-h4" equiv-text="&lt;h4&gt;"/>User-Generated Content<x id="CLOSE_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;/h4&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>When students submit work in a WISE project run (while logged into their accounts), we save their responses to questions and any content they create within the WISE platform. Teachers can review the responses and artifacts students create in the WISE runs they own. Teachers can also grade student work and provide feedback. Scores and comments generated by teachers through the WISE platform are stored by WISE and can be viewed by the students they are sent to.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>Curriculum projects that teachers author using the WISE platform are also saved and stored on our servers and may be published to a public project library that is accessible to other WISE users or visitors (with the owner&apos;s permission). Please note: Every WISE project hosted by the WISE site (whether it is shared in a public project library or not) is viewable by anyone using the internet via the project&apos;s unique URL.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>Some sections or features of WISE may allow you to share information concerning your opinions, experiences, or preferences about WISE content or other topics. For example, you might be able to voluntarily review or rate WISE resources, answer user questions, designate favorite WISE projects, respond to surveys, share personal information or social media profile links to your public WISE profile, etc. Information you provide will be stored by WISE and may be shared with other WISE users either anonymously or not (as long as you provide permission). Unless otherwise expressly provided for in this policy, WISE shall have no liability to you or to any third party with respect to information submitted voluntarily by you via the WISE site.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>
+
+    <x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/><x id="START_HEADING_LEVEL4_2" ctype="x-h4" equiv-text="&lt;h4&gt;"/>Licensing<x id="CLOSE_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;/h4&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>https://creativecommons.org/licenses/by-sa/4.0/<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. The WISE team reserves the right to remove any content that, in the WISE team&apos;s discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>
+    <x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>You may link to or include outside resources or materials in your WISE projects or in any public parts of the WISE site, but it is your responsibility to obtain any necessary permission from the original owners and include any required attribution for your use of such content. WISE will not be held responsible for the unauthorized use by a WISE account holder of any third-party content in WISE projects or on any other sections of the WISE site.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+
+    <x id="START_HEADING_LEVEL4_3" ctype="x-h4" equiv-text="&lt;h4&gt;"/>Auto-Generated Data<x id="CLOSE_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;/h4&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>When students and teachers use WISE, we save event data such as mouse clicks, time spent viewing pages, and other site interactions. This data is used for research purposes and for automated analyses and tools within WISE project runs. (See ‘How We Use the Data&apos; for more information.)<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+
+    <x id="START_HEADING_LEVEL4_4" ctype="x-h4" equiv-text="&lt;h4&gt;"/>Cookies<x id="CLOSE_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;/h4&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>When you log in, WISE will ask your browser to put a &quot;cookie&quot; on your computer. This allows WISE to remember that you are logged in when you go to a different page. You can delete this cookie at any time through your browser&apos;s settings.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+
+    <x id="START_HEADING_LEVEL4_5" ctype="x-h4" equiv-text="&lt;h4&gt;"/>Google Analytics<x id="CLOSE_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;/h4&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>WISE uses Google Analytics to help us understand our site usage. We use data like which pages you visit and clicks you make to help us improve the site.  Information collected and processed by Google Analytics includes user IP addresses, network locations, and geographic locations. Some browsers allow you to opt-out of the Google Analytics tracking by installing add-ons for your browser.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Information collected section</note>
+      </trans-unit>
+      <trans-unit id="6a8488b242fba957a000f081da2f4230773d3c88" datatype="html">
+        <source>
+    <x id="START_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;h2&gt;"/>3. How We Use the Data<x id="CLOSE_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;/h2&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>We will not sell your information to anyone under any circumstances.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>The WISE team uses de-identified user data to perform research. Researchers in the Graduate School of Education at The University of California at Berkeley and partner institutions may use de-identified data to perform data analyses and explore research topics. This data includes both user-generated and auto-generated content (see &apos;Information We Collect&apos; section). Results of our research may be shared with educators and other researchers through conferences, journals, and other publications.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>When generating and analyzing research data, student names are removed from all student work and replaced with identification numbers. This process of replacing names with identification numbers is performed automatically by the WISE platform when exporting research data and will be performed by teachers if any other student work (e.g., from other instructional materials) is to be analyzed by researchers.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>Email addresses for teacher accounts are used for communication: (a) for support, and (b) for occasional public announcements from the WISE Team. Teacher email addresses are also used to facilitate resetting of passwords.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>We do not ask students for their email address and do not share any student personal information with outside parties. Only the students&apos; teachers can access student names and usernames within WISE (for purposes of reviewing student work, grading, sending feedback, etc). Each participating teacher will have access to his or her own students&apos; project work and will not be able to see any information from other teachers&apos; students. Teachers are also able to reset passwords for their students.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>A small set of WISE administrators are able to access user account information and data for support and technical purposes. A few select researchers may access teacher accounts to view anonymized student work or support teachers in setting up and managing projects and runs.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>We will not disclose your personally identifying information to any other parties except in the following cases: 1) In cases where you (or a legal guardian) have provided your express consent; 2) As required by applicable law; or 3) With the appropriate authorities (including schools, school districts, and law enforcement, when necessary) for the purposes of protecting the safety of users, other individuals, or the security of the site.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Data usage section</note>
+      </trans-unit>
+      <trans-unit id="ecd35613b389e7e8e18ae2d6082971a6fc12fa56" datatype="html">
+        <source>
+    <x id="START_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;h2&gt;"/>4. Rules of Use<x id="CLOSE_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;/h2&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>WISE promotes and supports freedom of speech and expression and strives to create a welcoming, supportive, and productive community of educators and learners.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>You may not use WISE to promote bigotry, discrimination, hatred, or violence against any individual or group. You may not expose any other person&apos;s identifying or contact information without that person&apos;s permission. Threatening, harassing, or intimidating any other person is not allowed and we reserve the right to remove any user-generated content that, in our discretion, does so. Projects, discussion posts, and user-profile pages containing offensive or sexually explicit material will not be tolerated and removed from the site immediately once brought to the attention of the WISE team.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>You may not deliberately perform actions that are intended to negatively affect the WISE website or its users. You may not post links to harmful sites to download viruses or malware.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>All user-generated content is provided as-is. The WISE Team is not responsible for the accuracy or reliability of any user-generated content available through WISE. The WISE Team does not endorse any views, opinions, or advice expressed in user-generated content. You agree to relieve the WISE Team of any and all liability arising from your user-generated content.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>If you notice any offensive material or user-generated content that are in violation with the rules above, you must report them to the WISE Team using our contact form at <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://wise.berkeley.edu/contact/contactwise.html<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Rules of data usage section</note>
+      </trans-unit>
+      <trans-unit id="dbf3882d4a0fe6bb03908ab563695ba7c121bc12" datatype="html">
+        <source>
+    <x id="START_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;h2&gt;"/>5. Information Security<x id="CLOSE_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;/h2&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>The security of your information is important to us and we try to maintain a high standard for security by using technical safeguards. We will try our best to keep your data safe. However, no system can ever be 100% secure so we can not guarantee your personal information will be 100% safe from unauthorized access, either while stored on our site or our databases or while being transmitted to WISE over the internet.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>You can help us protect against unauthorized access to your account by choosing a strong password and keeping your password secret at all times.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">Information security section</note>
+      </trans-unit>
+      <trans-unit id="6ee4252bb47cd61e6ffcf26e5369e5c64886538a" datatype="html">
+        <source>
+    <x id="START_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;h2&gt;"/>6. State &amp; Federal Laws<x id="CLOSE_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;/h2&gt;"/>
+
+    <x id="START_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;h4&gt;"/>California Privacy Rights for Minors<x id="CLOSE_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;/h4&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child&apos;s content or information, please contact us at https://wise.berkeley.edu/contact/contactwise.html for assistance or you can delete specific information from you or your child&apos;s account.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+
+    <x id="START_HEADING_LEVEL4_1" ctype="x-h4" equiv-text="&lt;h4&gt;"/>Family Educational Rights and Privacy Act (FERPA)<x id="CLOSE_HEADING_LEVEL4" ctype="x-h4" equiv-text="&lt;/h4&gt;"/>
+    <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>We take care to be familiar with FERPA legislation and we take all possible measures to ensure your compliance with FERPA&apos;s requirements when you use WISE. We are confident that the protection of data outlined in this document satisfies its requirements.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">State and federal laws section</note>
+      </trans-unit>
+      <trans-unit id="97a9e7102077a63d767d9fa5a6a9b538de042232" datatype="html">
+        <source>
+    <x id="START_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;h2&gt;"/>7. Changes and Updates to the Terms of Use &amp; Privacy Policy<x id="CLOSE_HEADING_LEVEL2" ctype="x-h2" equiv-text="&lt;/h2&gt;"/>
+      <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>We may occasionally update or modify our Terms of Use and Privacy Policy. We will always display the date this document was last updated. If we make significant changes to these terms, we will display a prominent notice on the WISE home page and may notify users via registered email.  We encourage you to review this document periodically. By continuing to use WISE after any changes to this document, you acknowledge that you agree to the current version of these terms.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+      <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>If you have any questions or concerns about this document or the WISE site, please contact us at <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://wise.berkeley.edu/contact/contactwise.html<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. We can also be reached by mail at:<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+      <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>
+        UC Berkeley Graduate School of Education<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>
+        Web-based Inquiry Science Environment (WISE)<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>
+        Attn: David Crowell<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>
+        2121 Berkeley Way, Room 4203<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>
+        Berkeley, CA 94720-1670
+      <x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Changes and updates to terms of use and privacy policy</note>
+      </trans-unit>
+      <trans-unit id="3fdb49f59b7dbcd4ef2e9a4fdff71007b32b2933" datatype="html">
+        <source>Contact WISE</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Contact WISE</note>
+      </trans-unit>
+      <trans-unit id="eb09d77c62b04e21746a5951cab7cf3f86a8614a" datatype="html">
+        <source>Name Required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Directive indicating that Name is required</note>
+      </trans-unit>
+      <trans-unit id="2eec622f225cf56a27cd443fbe45c00232754e0e" datatype="html">
+        <source>Email Required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Directive indicating that Email is required</note>
+      </trans-unit>
+      <trans-unit id="7a69cf8e716fe0458fffe8b8a67948dfeb2b3eb6" datatype="html">
+        <source>Invalid Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Directive indicating that an invalid email was provided</note>
+      </trans-unit>
+      <trans-unit id="44645e64c03597bbe46c61c4d889850ea22679d7" datatype="html">
+        <source>Issue Type Required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <note priority="1" from="description">Directive indicating that Issue Type is required</note>
+      </trans-unit>
+      <trans-unit id="04adb8a20ce1efbfb074593b8f271ca9937e621b" datatype="html">
+        <source>City Required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Directive indicating that City is Required</note>
+      </trans-unit>
+      <trans-unit id="256d191f3a76ae4fcdf2b562bfb3b9cda4e3f2cd" datatype="html">
+        <source>State Required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Directive indicating that State is required</note>
+      </trans-unit>
+      <trans-unit id="87aa28c506c7350b10b1b82fbe2469bd89c3b21e" datatype="html">
+        <source>
+          <x id="START_TAG_MAT-PROGRESS-BAR" ctype="x-mat-progress-bar" equiv-text="&lt;mat-progress-bar&gt;"/><x id="CLOSE_TAG_MAT-PROGRESS-BAR" ctype="x-mat-progress-bar" equiv-text="&lt;/mat-progress-bar&gt;"/>
+          Submit
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">Submit button text</note>
+      </trans-unit>
+      <trans-unit id="52059c1ae90f6b404998c807a71083773b0dca43" datatype="html">
+        <source>
+    Your message has been sent. Thank you for contacting WISE. We will try to get back to you as soon as possible.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-complete/contact-complete.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Message sent confirmation message</note>
+      </trans-unit>
+      <trans-unit id="5188d31a40280769b26824365ba14fa4b870bdcd" datatype="html">
+        <source>Return to Home Page</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-complete/contact-complete.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Button to route to Home Page</note>
+      </trans-unit>
+      <trans-unit id="263e1717422fe3b5810e9a2e55b87e477b35d1ed" datatype="html">
+        <source>Sign in to WISE</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Message to sign in to WISE</note>
+      </trans-unit>
+      <trans-unit id="cf89cf2c175e2a0a3bf631094e463210e1ee54e9" datatype="html">
+        <source>
+        Username and password not recognized. Please try again.
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Error message for username and password not recognized</note>
+      </trans-unit>
+      <trans-unit id="08c74dc9762957593b91f6eb5d65efdfc975bf48" datatype="html">
+        <source>Username</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Label for username</note>
+      </trans-unit>
+      <trans-unit id="c32ef07f8803a223a83ed17024b38e8d82292407" datatype="html">
+        <source>Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Label for password</note>
+      </trans-unit>
+      <trans-unit id="ba4f24bf9bf3dc4db3d6bc1b8b63339295f0b806" datatype="html">
+        <source>Sign In</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Label for sign in button</note>
+      </trans-unit>
+      <trans-unit id="796891d08f2999d7d966b7b3f3fb1b3eeef615b5" datatype="html">
+        <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Forgot username or password?<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Label for forgot username and password button</note>
+      </trans-unit>
+      <trans-unit id="c6c31f501feef87ab274bd3a000b99eeb7434cff" datatype="html">
+        <source>New to WISE? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Join for free!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login-google-user-not-found/login-google-user-not-found.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">Message to prompt new user to join WISE</note>
+      </trans-unit>
+      <trans-unit id="27e0210fe052114e00bc5fb61542cb9118f590cf" datatype="html">
+        <source>
+    Your Google User ID was not found in WISE.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login-google-user-not-found/login-google-user-not-found.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">Message for Google user not found</note>
+      </trans-unit>
+      <trans-unit id="ee9474b0749187830b5dc5f6c3f8ac95c922c645" datatype="html">
+        <source>
+        <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>event<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/>News
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/news/news.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Title for news page</note>
+      </trans-unit>
+      <trans-unit id="ca98710638193518e4fe1302f8977d2db4f2b842" datatype="html">
+        <source>Show More</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/news/news.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Show more content button text</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
