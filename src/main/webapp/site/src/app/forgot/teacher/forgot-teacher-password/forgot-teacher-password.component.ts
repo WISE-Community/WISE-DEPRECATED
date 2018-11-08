@@ -64,7 +64,7 @@ export class ForgotTeacherPasswordComponent implements OnInit {
   setTooManyVerificationCodeAttemptsMessage() {
     const message = `You have submitted an incorrect verification code too many times recently.
         For security reasons, we will lock the ability to change your password for 10 minutes.
-        Please try again in a little while.`;
+        After 10 minutes, you can try again.`;
     this.setMessage(message);
   }
 

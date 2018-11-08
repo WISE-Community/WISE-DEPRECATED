@@ -14,6 +14,7 @@ import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.user.UserService;
 
 import javax.mail.MessagingException;
+import javax.naming.ldap.Control;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +47,8 @@ public class TeacherForgotAccountAPIController {
       String [] to = new String[] {email};
       String subject = "Your WISE Username";
       String signInUrl = getSignInUrl(request);
-      String body = "Username: " + username + "\n\nPlease sign in at " + signInUrl + "\n\nThank you for choosing WISE\n - WISE Team";
+      String contactUrl = getContactUrl(request);
+      String body = "Your WISE username: " + username + "\n\nPlease sign in at " + signInUrl + "\n\nIf you did not make this request, someone may be trying to access your account. Please contact us at\n" + contactUrl + "\n\n - WISE Team";
       boolean successfullySentEmail = sendEmail(to, subject, body, from);
       if (successfullySentEmail) {
         response = getEmailSentSuccessResponse();
@@ -72,7 +74,8 @@ public class TeacherForgotAccountAPIController {
   }
 
   @RequestMapping(value = "/password/verification-code", method = RequestMethod.GET)
-  protected String sendVerificationCodeEmail(@RequestParam("username") String username)
+  protected String sendVerificationCodeEmail(HttpServletRequest request,
+                                             @RequestParam("username") String username)
     throws JSONException {
     JSONObject response;
     User user = userService.retrieveUserByUsername(username);
@@ -80,7 +83,7 @@ public class TeacherForgotAccountAPIController {
       if (isTooManyVerificationCodeAttempts(user)) {
         response = getVerificationCodeTooManyAttemptsFailureResponse();
       } else {
-        boolean successfullySentEmail = sendVerificationCodeEmail(user);
+        boolean successfullySentEmail = sendVerificationCodeEmail(request, user);
         if (successfullySentEmail) {
           response = getEmailSentSuccessResponse();
         } else {
@@ -94,13 +97,14 @@ public class TeacherForgotAccountAPIController {
     return response.toString();
   }
 
-  private boolean sendVerificationCodeEmail(User user) {
+  private boolean sendVerificationCodeEmail(HttpServletRequest request, User user) {
     String from = wiseProperties.getProperty("portalemailaddress");
     String email = user.getUserDetails().getEmailAddress();
     String [] to = new String[] {email};
     String subject = "Reset WISE Password Verification Code";
     String verificationCode = getVerificationCode(user);
-    String body = "You have requested to change your password. After you enter the verification code, you will be able to change your password.\n\nVerification code: " + verificationCode + "\n\nThank you for choosing WISE\n - WISE Team";
+    String contactUrl = getContactUrl(request);
+    String body = "You have requested to change your password. After you enter the verification code, you will be able to change your password.\n\nVerification code: " + verificationCode + "\n\nIf you did not make this request, someone may be trying to access your account. Please contact us at\n" + contactUrl + "\n\n - WISE Team";
     boolean successfullySentEmail = sendEmail(to, subject, body, from);
     return successfullySentEmail;
   }
@@ -146,7 +150,11 @@ public class TeacherForgotAccountAPIController {
         response = getVerificationCodeExpiredFailureResponse();
       } else if (!isVerificationCodeCorrect) {
         incrementFailedVerificationCodeAttempt(user);
-        response = getVerificationCodeIncorrectFailureResponse();
+        if (isTooManyVerificationCodeAttempts(user)) {
+          response = getVerificationCodeTooManyAttemptsFailureResponse();
+        } else {
+          response = getVerificationCodeIncorrectFailureResponse();
+        }
       } else if (!isVerificationCodeExpired && isVerificationCodeCorrect) {
         response = getVerificationCodeCorrectSuccessResponse();
       }
@@ -214,7 +222,7 @@ public class TeacherForgotAccountAPIController {
     Date verificationCodeCreationTime = user.getUserDetails().getResetPasswordVerificationCodeRequestTime();
     Date now = new Date();
     long timeDifferenceInMilliseconds = getTimeDifferenceInMilliseconds(now, verificationCodeCreationTime);
-    int expirationInMinutes = 15;
+    int expirationInMinutes = 10;
     int expirationInMilliseconds = expirationInMinutes * 60 * 1000;
     return timeDifferenceInMilliseconds > expirationInMilliseconds;
   }
@@ -315,5 +323,9 @@ public class TeacherForgotAccountAPIController {
     response.put("status", "failure");
     response.put("messageCode", "passwordsDoNotMatch");
     return response;
+  }
+
+  private String getContactUrl(HttpServletRequest request) {
+    return ControllerUtil.getPortalUrlString(request) + "/contact";
   }
 }

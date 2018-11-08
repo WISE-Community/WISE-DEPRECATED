@@ -18,6 +18,8 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
   });
   message: string = '';
   processing: boolean = false;
+  isSubmitButtonEnabled: boolean = true;
+  showForgotPasswordLink = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -33,6 +35,7 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
     this.clearMessage();
     const password = this.getPassword();
     const confirmPassword = this.getConfirmPassword();
+    this.showForgotPasswordLink = false;
     if (this.isPasswordsMatch(password, confirmPassword)) {
       this.processing = true;
       this.teacherService.changePassword(this.username, this.verificationCode, password, confirmPassword)
@@ -42,8 +45,14 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
         } else {
           if (response.messageCode === 'tooManyVerificationCodeAttempts') {
             this.setTooManyVerificationCodeAttemptsMessage();
+            this.disablePasswordInputs();
+            this.disableSubmitButton();
+            this.showForgotPasswordLink = true;
           } else if (response.messageCode === 'verificationCodeExpired') {
             this.setVerificationCodeExpiredMessage();
+            this.disablePasswordInputs();
+            this.disableSubmitButton();
+            this.showForgotPasswordLink = true;
           } else if (response.messageCode === 'verificationCodeIncorrect') {
             this.setVerificationCodeIncorrectMessage();
           } else if (response.messageCode === 'passwordIsBlank') {
@@ -69,8 +78,12 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
     return this.getControlFieldValue('confirmPassword');
   }
 
+  getControlField(fieldName) {
+    return this.changePasswordFormGroup.get(fieldName);
+  }
+
   getControlFieldValue(fieldName) {
-    return this.changePasswordFormGroup.get(fieldName).value;
+    return this.getControlField(fieldName).value;
   }
 
   setControlFieldValue(name: string, value: string) {
@@ -82,7 +95,8 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
   }
 
   setVerificationCodeExpiredMessage() {
-    const message = 'The verification code has expired. Please generate a new one.';
+    const message = `The verification code has expired. Verification codes are valid for 10 minutes.
+        Please go back to the Teacher Forgot Password page to generate a new one.`;
     this.setMessage(message);
   }
 
@@ -94,7 +108,7 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
   setTooManyVerificationCodeAttemptsMessage() {
     const message = `You have submitted an incorrect verification code too many times recently.
         For security reasons, we will lock the ability to change your password for 10 minutes.
-        Please try again in a little while.`;
+        After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.`;
     this.setMessage(message);
   }
 
@@ -116,6 +130,19 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
 
   clearMessage() {
     this.setMessage('');
+  }
+
+  disablePasswordInputs() {
+    this.getControlField('password').disable();
+    this.getControlField('confirmPassword').disable();
+  }
+
+  disableSubmitButton() {
+    this.isSubmitButtonEnabled = false;
+  }
+
+  goToForgotPasswordPage() {
+    this.router.navigate(['/forgot/teacher/password']);
   }
 
   goToSuccessPage() {
