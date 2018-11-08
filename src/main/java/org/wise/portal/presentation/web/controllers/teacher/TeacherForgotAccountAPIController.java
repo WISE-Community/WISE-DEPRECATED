@@ -49,10 +49,10 @@ public class TeacherForgotAccountAPIController {
       String username = user.getUserDetails().getUsername();
       String from = wiseProperties.getProperty("portalemailaddress");
       String [] to = new String[] {email};
-      String subject = "Your WISE Username";
+      String subject = messageSource.getMessage("forgotaccount.teacher.username.email.subject", new Object[] {}, Locale.US);
       String signInUrl = getSignInUrl(request);
       String contactUrl = getContactUrl(request);
-      String body = messageSource.getMessage("forgotaccount.teacher.username.email", new Object[] {username, signInUrl, contactUrl}, Locale.US);
+      String body = messageSource.getMessage("forgotaccount.teacher.username.email.body", new Object[] {username, signInUrl, contactUrl}, Locale.US);
       boolean successfullySentEmail = sendEmail(to, subject, body, from);
       if (successfullySentEmail) {
         response = getEmailSentSuccessResponse();
@@ -104,10 +104,10 @@ public class TeacherForgotAccountAPIController {
     String from = wiseProperties.getProperty("portalemailaddress");
     String email = user.getUserDetails().getEmailAddress();
     String [] to = new String[] {email};
-    String subject = "Reset WISE Password Verification Code";
+    String subject = messageSource.getMessage("forgotaccount.teacher.verificationcode.email.subject", new Object[] {}, Locale.US);
     String verificationCode = getVerificationCode(user);
     String contactUrl = getContactUrl(request);
-    String body = messageSource.getMessage("forgotaccount.teacher.verificationcode.email", new Object[] {verificationCode, contactUrl}, Locale.US);
+    String body = messageSource.getMessage("forgotaccount.teacher.verificationcode.email.body", new Object[] {verificationCode, contactUrl}, Locale.US);
     boolean successfullySentEmail = sendEmail(to, subject, body, from);
     return successfullySentEmail;
   }
