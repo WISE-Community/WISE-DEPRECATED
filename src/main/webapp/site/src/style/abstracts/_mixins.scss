@@ -14,11 +14,16 @@
   $custom-typography: mat-typography-config(
     $body-1: mat-typography-level(16px, 22px, 400),
     $body-2: mat-typography-level(16px, 22px, 500),
-    $subheading-1: mat-typography-level(18px, 28px, 400),
-    $subheading-2: mat-typography-level(18px, 28px, 500)
+    $caption: mat-typography-level(13px, 20px, 400),
+    $subheading-1: mat-typography-level(17px, 24px, 400),
+    $subheading-2: mat-typography-level(17px, 24px, 500)
   );
 
   // Override specific Material typography levels
+  .mat-caption, .mat-small {
+    @include mat-typography-level-to-styles($custom-typography, caption);
+  }
+
   &.mat-typography, .mat-body, .mat-body-1 {
     @include mat-typography-level-to-styles($custom-typography, body-1);
   }
@@ -27,11 +32,11 @@
     @include mat-typography-level-to-styles($custom-typography, body-2);
   }
 
-  .mat-subheading-1 {
+  h4, .mat-subheading-1 {
     @include mat-typography-level-to-styles($custom-typography, subheading-1);
   }
 
-  .mat-subheading-2 {
+  h3, .mat-subheading-2 {
     @include mat-typography-level-to-styles($custom-typography, subheading-2);
   }
 
@@ -96,6 +101,10 @@
 
   .content-block, .info-block, .notice {
     background-color: map-get($colors, notice-bg);
+  }
+
+  .content-block__title {
+    border-color: map-get($background, focused-button);
   }
 
   .cta__headline {

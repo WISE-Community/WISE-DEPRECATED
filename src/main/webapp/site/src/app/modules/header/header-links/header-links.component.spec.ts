@@ -40,7 +40,7 @@ describe('HeaderLinksComponent', () => {
 
   it('should show user welcome message', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.mat-subheading-2').textContent)
+    expect(compiled.querySelector('.header__links').textContent)
       .toContain('Welcome Amanda!');
   });
 });
