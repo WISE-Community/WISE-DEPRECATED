@@ -14,7 +14,6 @@ import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.user.UserService;
 
 import javax.mail.MessagingException;
-import javax.naming.ldap.Control;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
@@ -75,8 +74,7 @@ public class TeacherForgotAccountAPIController {
 
   @RequestMapping(value = "/password/verification-code", method = RequestMethod.GET)
   protected String sendVerificationCodeEmail(HttpServletRequest request,
-                                             @RequestParam("username") String username)
-    throws JSONException {
+        @RequestParam("username") String username) throws JSONException {
     JSONObject response;
     User user = userService.retrieveUserByUsername(username);
     if (user != null && user.isTeacher()) {
@@ -111,9 +109,9 @@ public class TeacherForgotAccountAPIController {
 
   private boolean isTooManyVerificationCodeAttempts(User user) {
     Date recentFailedVerificationCodeAttemptTime =
-      user.getUserDetails().getRecentFailedVerificationCodeAttemptTime();
+        user.getUserDetails().getRecentFailedVerificationCodeAttemptTime();
     Integer numberOfRecentFailedVerificationCodeAttempts =
-      user.getUserDetails().getNumberOfRecentFailedVerificationCodeAttempts();
+        user.getUserDetails().getNumberOfRecentFailedVerificationCodeAttempts();
     if (recentFailedVerificationCodeAttemptTime == null || numberOfRecentFailedVerificationCodeAttempts == null) {
       return false;
     } else {
@@ -142,20 +140,18 @@ public class TeacherForgotAccountAPIController {
     JSONObject response = new JSONObject();
     User user = userService.retrieveUserByUsername(username);
     if (user != null) {
-      boolean isVerificationCodeExpired = isVerificationCodeExpired(user);
-      boolean isVerificationCodeCorrect = isVerificationCodeCorrect(user, verificationCode);
       if (isTooManyVerificationCodeAttempts(user)) {
         response = getVerificationCodeTooManyAttemptsFailureResponse();
-      } else if (isVerificationCodeExpired) {
+      } else if (isVerificationCodeExpired(user)) {
         response = getVerificationCodeExpiredFailureResponse();
-      } else if (!isVerificationCodeCorrect) {
+      } else if (!isVerificationCodeCorrect(user, verificationCode)) {
         incrementFailedVerificationCodeAttempt(user);
         if (isTooManyVerificationCodeAttempts(user)) {
           response = getVerificationCodeTooManyAttemptsFailureResponse();
         } else {
           response = getVerificationCodeIncorrectFailureResponse();
         }
-      } else if (!isVerificationCodeExpired && isVerificationCodeCorrect) {
+      } else if (!isVerificationCodeExpired(user) && isVerificationCodeCorrect(user, verificationCode)) {
         response = getVerificationCodeCorrectSuccessResponse();
       }
     } else {
@@ -179,23 +175,20 @@ public class TeacherForgotAccountAPIController {
     JSONObject response = new JSONObject();
     User user = userService.retrieveUserByUsername(username);
     if (user != null) {
-      boolean isTooManyVerificationCodeAttempts = isTooManyVerificationCodeAttempts(user);
-      boolean isVerificationCodeExpired = isVerificationCodeExpired(user);
-      boolean isVerificationCodeCorrect = isVerificationCodeCorrect(user, verificationCode);
-      boolean isPasswordBlank = isPasswordBlank(password, confirmPassword);
-      boolean isPasswordsMatch = isPasswordsMatch(password, confirmPassword);
-
-      if (isTooManyVerificationCodeAttempts) {
+      if (isTooManyVerificationCodeAttempts(user)) {
         response = getVerificationCodeTooManyAttemptsFailureResponse();
-      } else if (isVerificationCodeExpired) {
+      } else if (isVerificationCodeExpired(user)) {
         response = getVerificationCodeExpiredFailureResponse();
-      } else if (!isVerificationCodeCorrect) {
+      } else if (!isVerificationCodeCorrect(user, verificationCode)) {
         response = getVerificationCodeIncorrectFailureResponse();
-      } else if (isPasswordBlank) {
+      } else if (isPasswordBlank(password, confirmPassword)) {
         response = getPasswordIsBlankFailureResponse();
-      } else if (!isPasswordsMatch) {
+      } else if (!isPasswordsMatch(password, confirmPassword)) {
         response = getPasswordsDoNotMatchFailureResponse();
-      } else if (!isVerificationCodeExpired && isVerificationCodeCorrect && !isPasswordBlank && isPasswordsMatch) {
+      } else if (!isVerificationCodeExpired(user) &&
+          isVerificationCodeCorrect(user, verificationCode) &&
+          !isPasswordBlank(password, confirmPassword) &&
+          isPasswordsMatch(password, confirmPassword)) {
         userService.updateUserPassword(user, password);
         response = getVerificationCodeCorrectSuccessResponse();
         clearVerificationCodeData(user);
@@ -203,7 +196,6 @@ public class TeacherForgotAccountAPIController {
     } else {
       response = getUsernameNotFoundFailureResponse();
     }
-
     return response.toString();
   }
 
@@ -222,8 +214,7 @@ public class TeacherForgotAccountAPIController {
     Date verificationCodeCreationTime = user.getUserDetails().getResetPasswordVerificationCodeRequestTime();
     Date now = new Date();
     long timeDifferenceInMilliseconds = getTimeDifferenceInMilliseconds(now, verificationCodeCreationTime);
-    int expirationInMinutes = 10;
-    int expirationInMilliseconds = expirationInMinutes * 60 * 1000;
+    int expirationInMilliseconds = minutesToMilliseconds(10);
     return timeDifferenceInMilliseconds > expirationInMilliseconds;
   }
 

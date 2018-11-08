@@ -44,17 +44,16 @@ public class StudentForgotAccountAPIController {
 
     String classVar = "studentUserDetails";
     List<User> accountsThatMatch = userService.retrieveByFields(fields, values, classVar);
-
-    return getUsersJSON(accountsThatMatch).toString();
+    return getUsernamesJSON(accountsThatMatch).toString();
   }
 
-  private JSONArray getUsersJSON(List<User> users) {
-    JSONArray usersJSON = new JSONArray();
+  private JSONArray getUsernamesJSON(List<User> users) {
+    JSONArray usernamesJSON = new JSONArray();
     for (User user: users) {
       MutableUserDetails userDetails = user.getUserDetails();
-      usersJSON.put(userDetails.getUsername());
+      usernamesJSON.put(userDetails.getUsername());
     }
-    return usersJSON;
+    return usernamesJSON;
   }
 
   @ResponseBody
@@ -110,10 +109,10 @@ public class StudentForgotAccountAPIController {
         if (isPasswordBlank(password, confirmPassword)) {
           response.put("status", "failure");
           response.put("messageCode", "passwordIsBlank");
-        } else if(!isPasswordsMatch(password, confirmPassword)) {
+        } else if (!isPasswordsMatch(password, confirmPassword)) {
           response.put("status", "failure");
           response.put("messageCode", "passwordsDoNotMatch");
-        } else if(isPasswordsMatch(password, confirmPassword)) {
+        } else if (isPasswordsMatch(password, confirmPassword)) {
           userService.updateUserPassword(user, password);
           response.put("status", "success");
           response.put("messageCode", "passwordChanged");
@@ -145,16 +144,6 @@ public class StudentForgotAccountAPIController {
   private boolean isAnswerCorrect(User user, String answer) {
     String accountSecurityAnswer = getAccountAnswer(user);
     return answer != null && answer.equals(accountSecurityAnswer);
-  }
-
-  private boolean newPasswordsAreValid(String password1, String password2) {
-    if (password1 != null && password2 != null &&
-        !password1.equals("") && !password2.equals("") &&
-        password1.equals(password2)) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   private boolean isPasswordBlank(String password1, String password2) {

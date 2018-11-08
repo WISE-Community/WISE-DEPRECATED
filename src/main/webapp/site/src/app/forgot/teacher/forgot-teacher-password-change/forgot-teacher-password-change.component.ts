@@ -101,7 +101,7 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
   }
 
   setVerificationCodeIncorrectMessage() {
-    const message = 'The verification code is in correct. Please try again.';
+    const message = 'The verification code is incorrect. Please try again.';
     this.setMessage(message);
   }
 
