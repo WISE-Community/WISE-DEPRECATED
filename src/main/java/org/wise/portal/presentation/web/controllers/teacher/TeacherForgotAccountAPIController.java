@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 @RestController
@@ -31,6 +33,9 @@ public class TeacherForgotAccountAPIController {
 
   @Autowired
   protected IMailFacade mailService;
+
+  @Autowired
+  protected MessageSource messageSource;
 
   @RequestMapping(value = "/username", method = RequestMethod.POST)
   protected String sendForgotUsernameEmail(HttpServletRequest request,
@@ -47,7 +52,7 @@ public class TeacherForgotAccountAPIController {
       String subject = "Your WISE Username";
       String signInUrl = getSignInUrl(request);
       String contactUrl = getContactUrl(request);
-      String body = "Your WISE username: " + username + "\n\nPlease sign in at " + signInUrl + "\n\nIf you did not make this request, someone may be trying to access your account. Please contact us at\n" + contactUrl + "\n\n - WISE Team";
+      String body = messageSource.getMessage("forgotaccount.teacher.username.email", new Object[] {username, signInUrl, contactUrl}, Locale.US);
       boolean successfullySentEmail = sendEmail(to, subject, body, from);
       if (successfullySentEmail) {
         response = getEmailSentSuccessResponse();
@@ -102,7 +107,7 @@ public class TeacherForgotAccountAPIController {
     String subject = "Reset WISE Password Verification Code";
     String verificationCode = getVerificationCode(user);
     String contactUrl = getContactUrl(request);
-    String body = "You have requested to change your password. After you enter the verification code, you will be able to change your password.\n\nVerification code: " + verificationCode + "\n\nIf you did not make this request, someone may be trying to access your account. Please contact us at\n" + contactUrl + "\n\n - WISE Team";
+    String body = messageSource.getMessage("forgotaccount.teacher.verificationcode.email", new Object[] {verificationCode, contactUrl}, Locale.US);
     boolean successfullySentEmail = sendEmail(to, subject, body, from);
     return successfullySentEmail;
   }
