@@ -145,6 +145,7 @@ public class TeacherForgotAccountAPIController {
     JSONObject response = new JSONObject();
     User user = userService.retrieveUserByUsername(username);
     if (user != null) {
+      resetVerificationCodeAttemptsIfNecessary(user);
       if (isTooManyVerificationCodeAttempts(user)) {
         response = getVerificationCodeTooManyAttemptsFailureResponse();
       } else if (isVerificationCodeExpired(user)) {
@@ -164,6 +165,13 @@ public class TeacherForgotAccountAPIController {
     }
 
     return response.toString();
+  }
+
+  private void resetVerificationCodeAttemptsIfNecessary(User user) {
+    Date recentFailedVerificationCodeAttemptTime = user.getUserDetails().getRecentFailedVerificationCodeAttemptTime();
+    if (!isWithinLast10Minutes(recentFailedVerificationCodeAttemptTime)) {
+      user.getUserDetails().clearNumberOfRecentFailedVerificationCodeAttempts();
+    }
   }
 
   private void incrementFailedVerificationCodeAttempt(User user) {
