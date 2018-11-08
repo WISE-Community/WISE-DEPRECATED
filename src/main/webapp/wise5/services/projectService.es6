@@ -3983,6 +3983,17 @@ class ProjectService {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
           message += this.$translate('nodeTitleIsVisitable', { nodeTitle: nodeTitle });
         }
+      } else if (name === 'addXNumberOfNotesOnThisStep') {
+        const nodeId = params.nodeId;
+        const requiredNumberOfNotes = params.requiredNumberOfNotes;
+        const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+        if (requiredNumberOfNotes == 1) {
+          message += this.$translate('addXNumberOfNotesOnThisStepSingular',
+            { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: nodeTitle });
+        } else {
+          message += this.$translate('addXNumberOfNotesOnThisStepPlural',
+            { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: nodeTitle });
+        }
       }
     }
     return message;

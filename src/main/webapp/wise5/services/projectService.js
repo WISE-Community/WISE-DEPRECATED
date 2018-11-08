@@ -6258,6 +6258,15 @@ var ProjectService = function () {
             var _nodeTitle9 = this.getNodePositionAndTitleByNodeId(_nodeId9);
             message += this.$translate('nodeTitleIsVisitable', { nodeTitle: _nodeTitle9 });
           }
+        } else if (name === 'addXNumberOfNotesOnThisStep') {
+          var _nodeId10 = params.nodeId;
+          var requiredNumberOfNotes = params.requiredNumberOfNotes;
+          var _nodeTitle10 = this.getNodePositionAndTitleByNodeId(_nodeId10);
+          if (requiredNumberOfNotes == 1) {
+            message += this.$translate('addXNumberOfNotesOnThisStepSingular', { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: _nodeTitle10 });
+          } else {
+            message += this.$translate('addXNumberOfNotesOnThisStepPlural', { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: _nodeTitle10 });
+          }
         }
       }
       return message;
