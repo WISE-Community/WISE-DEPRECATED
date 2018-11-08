@@ -9,7 +9,6 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from '@angular/materi
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ConfigService } from "./services/config.service";
-import { ContactModule } from "./contact/contact.module";
 import { HeaderModule } from './modules/header/header.module';
 import { HomeModule } from "./home/home.module";
 import { FooterModule } from './modules/footer/footer.module';
@@ -22,6 +21,7 @@ import { TeacherService } from "./teacher/teacher.service";
 import { RegisterModule } from "./register/register.module";
 import { NewsModule } from "./news/news.module";
 import { MobileMenuModule } from "./modules/mobile-menu/mobile-menu.module";
+import { HelpModule } from "./help/help.module";
 import { FeaturesModule } from "./features/features.module";
 
 import {
@@ -65,6 +65,7 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     AppRoutingModule,
     FooterModule,
     HeaderModule,
+    HelpModule,
     HomeModule,
     LoginModule,
     MobileMenuModule,

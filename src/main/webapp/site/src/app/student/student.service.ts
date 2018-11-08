@@ -17,6 +17,7 @@ export class StudentService {
   private registerUrl = 'api/student/register';
   private securityQuestionsUrl = 'api/student/register/questions';
   private updateProfileUrl = 'api/student/profile/update';
+  private teacherListUrl = 'api/student/teacher-list';
 
   private newRunSource = new Subject<StudentRun>();
   newRunSource$ = this.newRunSource.asObservable();
@@ -75,5 +76,9 @@ export class StudentService {
     body = body.set('username', username);
     body = body.set('language', language);
     return this.http.post<any>(this.updateProfileUrl, body, { headers: headers });
+  }
+
+  getTeacherList() {
+    return this.http.get<any>(this.teacherListUrl);
   }
 }

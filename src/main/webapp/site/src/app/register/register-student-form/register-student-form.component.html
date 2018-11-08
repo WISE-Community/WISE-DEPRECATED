@@ -111,8 +111,9 @@
       <p>
         By clicking "Create Account", you agree to our <a href="privacy" target="_blank">Privacy Policy & Terms of Use</a>
       </p>
-      <button mat-flat-button color="primary" type="submit">
-        Create Account
+      <button mat-flat-button color="primary" type="submit" [disabled]="processing">
+        <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
+        <span>Create Account</span>
       </button>
     </form>
   </mat-card-content>

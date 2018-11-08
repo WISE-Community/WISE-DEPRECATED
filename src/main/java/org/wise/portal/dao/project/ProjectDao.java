@@ -148,4 +148,6 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
   List<Project> getProjectCopies(Long projectId);
 
   List<Project> getProjectsWithoutRuns(User user);
+
+  List<Project> getAllSharedProjects();
 }

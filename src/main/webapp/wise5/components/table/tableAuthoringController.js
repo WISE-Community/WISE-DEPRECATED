@@ -32,6 +32,8 @@ var TableAuthoringController = function (_TableController) {
     var _this = _possibleConstructorReturn(this, (TableAuthoringController.__proto__ || Object.getPrototypeOf(TableAuthoringController)).call(this, $anchorScroll, $filter, $location, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, TableService, UtilService));
 
     _this.allowedConnectedComponentTypes = [{
+      type: 'Embedded'
+    }, {
       type: 'Graph'
     }, {
       type: 'Table'

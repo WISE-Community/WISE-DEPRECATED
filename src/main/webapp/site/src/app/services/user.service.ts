@@ -132,20 +132,23 @@ export class UserService {
     user.language = language;
   }
 
-  sendContactMessage(
-      name, email, issueType, summary, description, runId, projectId, userAgent, recaptchaResponse) {
+  sendContactMessage(name, email, teacherUsername, issueType, summary, description, runId,
+        projectId, userAgent, recaptchaResponse) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    const body = this.generateContactMessageParams(
-        name, email, issueType, summary, description, runId, projectId, userAgent, recaptchaResponse);
+    const body = this.generateContactMessageParams(name, email, teacherUsername, issueType,
+          summary, description, runId, projectId, userAgent, recaptchaResponse);
     return this.http.post<any>(this.contactUrl, body, { headers: headers });
   }
 
-  generateContactMessageParams(
-      name, email, issueType, summary, description, runId, projectId, userAgent, recaptchaResponse) {
+  generateContactMessageParams(name, email, teacherUsername, issueType, summary, description, runId,
+        projectId, userAgent, recaptchaResponse) {
     let body = new HttpParams();
     body = body.set('name', name);
     if (email != null) {
       body = body.set('email', email);
+    }
+    if (teacherUsername != null) {
+      body = body.set('teacherUsername', teacherUsername);
     }
     body = body.set('issueType', issueType);
     body = body.set('summary', summary);
