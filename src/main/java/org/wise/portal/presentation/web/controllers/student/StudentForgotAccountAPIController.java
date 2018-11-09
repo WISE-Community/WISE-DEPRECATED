@@ -62,9 +62,9 @@ public class StudentForgotAccountAPIController {
     User user = userService.retrieveUserByUsername(username);
     JSONObject response = new JSONObject();
     if (user != null && user.isStudent()) {
-      String accountQuestionKey = getAccountQuestion(user);
-      String question = AccountQuestion.getValue(accountQuestionKey);
-      response.put("question", question);
+      String accountQuestionKey = getAccountQuestionKey(user);
+      String accountQuestionValue = getAccountQuestionValue(accountQuestionKey);
+      response.put("question", accountQuestionValue);
       response.put("questionKey", accountQuestionKey);
       response.put("status", "success");
       response.put("messageCode", "usernameFound");
@@ -131,13 +131,16 @@ public class StudentForgotAccountAPIController {
     return response.toString();
   }
 
-  private String getAccountQuestion(User user) {
-    AccountQuestion.setProperties(i18nProperties);
+  private String getAccountQuestionKey(User user) {
     return ((StudentUserDetails) user.getUserDetails()).getAccountQuestion();
   }
 
-  private String getAccountAnswer(User user) {
+  private String getAccountQuestionValue(String accountQuestionKey) {
     AccountQuestion.setProperties(i18nProperties);
+    return AccountQuestion.getValue(accountQuestionKey);
+  }
+
+  private String getAccountAnswer(User user) {
     return ((StudentUserDetails) user.getUserDetails()).getAccountAnswer();
   }
 
