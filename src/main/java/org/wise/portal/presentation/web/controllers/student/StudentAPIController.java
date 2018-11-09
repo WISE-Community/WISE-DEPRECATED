@@ -378,11 +378,15 @@ public class StudentAPIController {
   }
 
   protected JSONObject getSecurityQuestionJSONObject(AccountQuestion accountQuestionKey) throws JSONException {
-    String accountQuestion = i18nProperties.getProperty("accountquestions." + accountQuestionKey);
+    String accountQuestion = getAccountQuestionValue(accountQuestionKey.name());
     JSONObject accountQuestionObject = new JSONObject();
     accountQuestionObject.put("key", accountQuestionKey);
     accountQuestionObject.put("value", accountQuestion);
     return accountQuestionObject;
+  }
+
+  private String getAccountQuestionValue(String accountQuestionKey) {
+    return i18nProperties.getProperty("accountquestions." + accountQuestionKey);
   }
 
   @RequestMapping(value = "/profile/update", method = RequestMethod.POST)
