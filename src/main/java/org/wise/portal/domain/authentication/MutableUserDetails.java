@@ -243,4 +243,28 @@ public interface MutableUserDetails extends UserDetails, Persistable {
    * @param numberOfLogins
    */
   void incrementNumberOfLogins();
+
+  Date getResetPasswordVerificationCodeRequestTime();
+
+  void setResetPasswordVerificationCodeRequestTime(Date date);
+
+  void clearResetPasswordVerificationCodeRequestTime();
+
+  String getResetPasswordVerificationCode();
+
+  void setResetPasswordVerificationCode(String verificationCode);
+
+  void clearResetPasswordVerificationCode();
+
+  Date getRecentFailedVerificationCodeAttemptTime();
+
+  void setRecentFailedVerificationCodeAttemptTime(Date date);
+
+  void clearRecentFailedVerificationCodeAttemptTime();
+
+  Integer getNumberOfRecentFailedVerificationCodeAttempts();
+
+  void incrementNumberOfRecentFailedVerificationCodeAttempts();
+
+  void clearNumberOfRecentFailedVerificationCodeAttempts();
 }
