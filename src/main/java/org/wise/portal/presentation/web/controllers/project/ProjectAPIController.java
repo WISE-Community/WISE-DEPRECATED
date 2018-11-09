@@ -168,15 +168,9 @@ public class ProjectAPIController {
     return projectThumb;
   }
 
-  /**
-   * Handle user's request to register a new WISE5 project.
-   * Registers the new project in DB and returns the new project ID
-   * If the parentProjectId is specified, the user is requesting to copy that project
-   */
   @RequestMapping(value = "/copy", method = RequestMethod.POST)
   protected String copyProject(HttpServletRequest request,
-      @RequestParam("projectId") String projectId) throws ObjectNotFoundException, IOException,
-      JSONException {
+      @RequestParam("projectId") String projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (!WISE5AuthorProjectController.hasAuthorPermissions(user)) {
       return "";
@@ -185,33 +179,7 @@ public class ProjectAPIController {
     if (parentProject != null && (this.projectService.canReadProject(parentProject, user) ||
           parentProject.isOfficialProject() ||
           parentProject.isCommunityProject())) {
-      String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-      String parentProjectJSONAbsolutePath = curriculumBaseDir + parentProject.getModulePath();
-      File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);
-      File parentProjectDir = parentProjectJSONFile.getParentFile();
-
-      String newProjectDirectoryPath = WISE5AuthorProjectController.copyProjectDirectory(parentProjectDir);
-      String modulePath = "/" + newProjectDirectoryPath + "/project.json";
-
-      ProjectParameters pParams = new ProjectParameters();
-      pParams.setModulePath(modulePath);
-      pParams.setOwner(user);
-      pParams.setProjectname(parentProject.getName());
-      pParams.setProjectType(ProjectType.LD);
-      pParams.setWiseVersion(new Integer(5));
-      pParams.setParentProjectId(Long.valueOf(projectId));
-
-      ProjectMetadata parentProjectMetadata = parentProject.getMetadata(); // get the parent project's metadata
-      if (parentProjectMetadata != null) {
-        ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
-        pParams.setMetadata(newProjectMetadata);
-      } else {
-        ProjectMetadata metadata = new ProjectMetadataImpl();
-        metadata.setTitle(parentProject.getName());
-        pParams.setMetadata(metadata);
-      }
-
-      Project project = projectService.createProject(pParams);
+      Project project = projectService.copyProject(Integer.parseInt(projectId), user);
       return ControllerUtil.getProjectJSON(project).toString();
     }
     return "";
