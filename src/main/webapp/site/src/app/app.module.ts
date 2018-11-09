@@ -4,7 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from "./http-error.interceptor";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from '@angular/material';
+import { MatDialogModule, MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from '@angular/material';
+import {
+  SocialLoginModule,
+  AuthServiceConfig,
+  GoogleLoginProvider,
+} from "angularx-social-login";
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -23,12 +28,8 @@ import { NewsModule } from "./news/news.module";
 import { MobileMenuModule } from "./modules/mobile-menu/mobile-menu.module";
 import { HelpModule } from "./help/help.module";
 import { FeaturesModule } from "./features/features.module";
-
-import {
-  SocialLoginModule,
-  AuthServiceConfig,
-  GoogleLoginProvider,
-} from "angularx-social-login";
+import { AnnouncementComponent } from './announcement/announcement.component';
+import { AnnouncementDialogComponent } from './app.component';
 
 export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
   return (): Promise<any> => {
@@ -56,6 +57,8 @@ export function getAuthServiceConfigs(configService: ConfigService) {
 @NgModule({
   declarations: [
     AppComponent,
+    AnnouncementComponent,
+    AnnouncementDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -74,9 +77,11 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     TeacherModule,
     SocialLoginModule,
     NewsModule,
+    FeaturesModule,
     MatSidenavModule,
-    FeaturesModule
+    MatDialogModule
   ],
+  entryComponents: [ AnnouncementDialogComponent ],
   providers: [
     ConfigService,
     StudentService,

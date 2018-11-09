@@ -1,0 +1,26 @@
+$height: 40px;
+
+.announcement {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  left: 0;
+  min-height: $height;
+  z-index: 3;
+}
+
+.announcement__content {
+  min-height: $height;
+}
+
+.announcement__dismiss.mat-icon-button {
+  position: absolute;
+  right: 4px;
+  top: 0;
+}
+
+.has-announcement {
+  .header {
+    top: 40px !important;
+  }
+}

@@ -96,7 +96,7 @@
   }
 
   .app-background {
-    background-color: map-get($colors, control-bg);
+    background-color: map-get($colors, app-bg);
   }
 
   .content-block, .info-block, .notice {
