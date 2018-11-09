@@ -43,18 +43,18 @@ $breakpoints: (
   ),
   lg: (
     min: 1280px,
-    max: 1919px
+    max: 1599px
   ),
   gt-lg: (
-    min: 1920px,
+    min: 1600px,
     max: none
   ),
   lt-xl: (
     min: none,
-    max: 1919px
+    max: 1599px
   ),
   xl: (
-    min: 1920px,
+    min: 1600px,
     max: none
   )
 );

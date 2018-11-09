@@ -1,8 +1,11 @@
 <div class="main app-background">
   <div class="content">
     <header fxLayout="row" class="content__header">
-      <h1 class="accent" fxLayoutAlign="center center">
-        <mat-icon>event</mat-icon>News
+      <h1 class="accent"
+          fxLayoutAlign="center center"
+          ngClass="mat-display-1"
+          [ngClass.xs]="{ 'mat-display-1': false }">
+        <mat-icon>rss_feed</mat-icon><span>What's New?</span>
       </h1>
     </header>
     <section>
@@ -11,7 +14,7 @@
           <ng-container *ngFor="let newsItem of allNewsItems; let i=index">
             <app-timeline-item *ngIf="i < 10 || showAll">
               <app-timeline-item-label>
-                <span class="mat-body-2">{{ newsItem.date | amDateFormat:'MMM D, Y' }}</span>
+                <strong>{{ newsItem.date | amDateFormat:'MMM D, Y' }}</strong>
               </app-timeline-item-label>
               <app-timeline-item-content>
                 <mat-card>

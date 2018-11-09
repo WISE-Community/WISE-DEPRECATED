@@ -62,7 +62,7 @@ describe('NewsComponent', () => {
   };
 
   const getNewsDate = (timelineItem) => {
-    return timelineItem.querySelector('span').innerHTML;
+    return timelineItem.querySelector('strong').innerHTML;
   };
 
   const getNewsTitle = (timelineItem) => {

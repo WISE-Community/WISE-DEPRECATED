@@ -4,8 +4,11 @@
         fxLayoutAlign="start center"
         fxLayoutAlign.xs="start"
         fxLayoutGap="16px">
-  <h1 class="accent" fxLayoutAlign="start center">
-    <mat-icon>home</mat-icon>Student Home
+  <h1 class="accent"
+      fxLayoutAlign="start center"
+      ngClass="mat-display-1"
+      [ngClass.xs]="{ 'mat-display-1': false }">
+    <mat-icon>home</mat-icon><span>Student Home</span>
   </h1>
   <span fxFlex fxHide.xs fxShow></span>
   <div>
