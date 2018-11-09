@@ -1,20 +1,44 @@
+$padding-top: 112px;
+$padding-top-gt-xs: 128px;
+$padding-top-gt-md: 144px;
+$padding-top-fullwidth: 80px;
+$announcement-height: 40px;
+
 .main {
-  padding: 120px 8px 48px;
+  padding: $padding-top 8px 48px;
   flex: 1 0 auto;
 
   @media (min-width: breakpoint('sm.min')) {
-    padding: 132px 24px 64px;
+    padding: $padding-top-gt-xs 24px 64px;
   }
 
   @media (min-width: breakpoint('md.min')) {
-    padding: 132px 40px 78px;
+    padding: $padding-top-gt-xs 40px 78px;
   }
 
   @media (min-width: breakpoint('lg.min')) {
-    padding-top: 160px;
+    padding-top: $padding-top-gt-md;
   }
 }
 
 .main--fullwidth {
-  padding: 80px 0 0;
+  padding: $padding-top-fullwidth 0 0;
+}
+
+.has-announcement {
+  .main {
+    padding-top: $padding-top + $announcement-height;
+
+    @media (min-width: breakpoint('sm.min')) {
+      padding-top: $padding-top-gt-xs + $announcement-height;
+    }
+
+    @media (min-width: breakpoint('lg.min')) {
+      padding-top: $padding-top-gt-md + $announcement-height;
+    }
+  }
+
+  .main--fullwidth {
+    padding-top: $padding-top-fullwidth + $announcement-height;
+  }
 }
