@@ -192,6 +192,16 @@ var NodeAuthoringController = function () {
         value: "requiredNumberOfWords",
         text: this.$translate('requiredNumberOfWords')
       }]
+    }, {
+      value: "addXNumberOfNotesOnThisStep",
+      text: this.$translate('addXNumberOfNotesOnThisStep'),
+      params: [{
+        value: "nodeId",
+        text: this.$translate('step')
+      }, {
+        value: "requiredNumberOfNotes",
+        text: this.$translate('requiredNumberOfNotes')
+      }]
     }];
 
     // available transitionCriterias

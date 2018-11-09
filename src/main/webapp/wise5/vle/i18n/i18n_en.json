@@ -5,6 +5,8 @@
   "accountMenuTotalScore": "Total Score",
   "actionRequired": "Action Required",
   "addComment": "Add comment...",
+  "addXNumberOfNotesOnThisStepSingular": "Add <b>{{requiredNumberOfNotes}}</b> note on <b>{{nodeTitle}}</b>",
+  "addXNumberOfNotesOnThisStepPlural": "Add <b>{{requiredNumberOfNotes}}</b> notes on <b>{{nodeTitle}}</b>",
   "addItem": "Add Item",
   "addItemTo": "Add Item to",
   "addNewNote": "Add New Note",
