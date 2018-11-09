@@ -994,12 +994,14 @@ class ProjectService {
       const targetId = constraint.targetId;
       const action = constraint.action;
 
-      if (action === 'makeAllNodesAfterThisNotVisible' &&
-          this.isNodeIdAfter(targetId, node.id)) {
-        result = true;
-      } else if (action === 'makeAllNodesAfterThisNotVisitable' &&
-          this.isNodeIdAfter(targetId, node.id)) {
-        result = true;
+      if (action === 'makeAllNodesAfterThisNotVisible') {
+        if (this.isNodeIdAfter(targetId, node.id)) {
+          result = true;
+        }
+      } else if (action === 'makeAllNodesAfterThisNotVisitable') {
+        if (this.isNodeIdAfter(targetId, node.id)) {
+          result = true;
+        }
       } else {
         const targetNode = this.getNodeById(targetId);
         if (targetNode != null) {
@@ -1026,10 +1028,14 @@ class ProjectService {
    */
   isNodeIdAfter(nodeId1, nodeId2) {
     if (this.isApplicationNode(nodeId1)) {
-      const pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
-      for (let pathToEnd of pathsFromNodeId1ToEnd) {
-        if (pathToEnd.indexOf(nodeId2) != -1) {
-          return true;
+      if (nodeId1 == nodeId2) {
+        return false;
+      } else {
+        const pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
+        for (let pathToEnd of pathsFromNodeId1ToEnd) {
+          if (pathToEnd.indexOf(nodeId2) != -1) {
+            return true;
+          }
         }
       }
     } else {

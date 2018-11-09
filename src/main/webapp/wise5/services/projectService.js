@@ -1419,10 +1419,14 @@ var ProjectService = function () {
         var targetId = constraint.targetId;
         var action = constraint.action;
 
-        if (action === 'makeAllNodesAfterThisNotVisible' && this.isNodeIdAfter(targetId, node.id)) {
-          result = true;
-        } else if (action === 'makeAllNodesAfterThisNotVisitable' && this.isNodeIdAfter(targetId, node.id)) {
-          result = true;
+        if (action === 'makeAllNodesAfterThisNotVisible') {
+          if (this.isNodeIdAfter(targetId, node.id)) {
+            result = true;
+          }
+        } else if (action === 'makeAllNodesAfterThisNotVisitable') {
+          if (this.isNodeIdAfter(targetId, node.id)) {
+            result = true;
+          }
         } else {
           var targetNode = this.getNodeById(targetId);
           if (targetNode != null) {
@@ -1451,30 +1455,34 @@ var ProjectService = function () {
      */
     value: function isNodeIdAfter(nodeId1, nodeId2) {
       if (this.isApplicationNode(nodeId1)) {
-        var pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
-        var _iteratorNormalCompletion15 = true;
-        var _didIteratorError15 = false;
-        var _iteratorError15 = undefined;
+        if (nodeId1 == nodeId2) {
+          return false;
+        } else {
+          var pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
+          var _iteratorNormalCompletion15 = true;
+          var _didIteratorError15 = false;
+          var _iteratorError15 = undefined;
 
-        try {
-          for (var _iterator15 = pathsFromNodeId1ToEnd[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-            var pathToEnd = _step15.value;
-
-            if (pathToEnd.indexOf(nodeId2) != -1) {
-              return true;
-            }
-          }
-        } catch (err) {
-          _didIteratorError15 = true;
-          _iteratorError15 = err;
-        } finally {
           try {
-            if (!_iteratorNormalCompletion15 && _iterator15.return) {
-              _iterator15.return();
+            for (var _iterator15 = pathsFromNodeId1ToEnd[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+              var pathToEnd = _step15.value;
+
+              if (pathToEnd.indexOf(nodeId2) != -1) {
+                return true;
+              }
             }
+          } catch (err) {
+            _didIteratorError15 = true;
+            _iteratorError15 = err;
           } finally {
-            if (_didIteratorError15) {
-              throw _iteratorError15;
+            try {
+              if (!_iteratorNormalCompletion15 && _iterator15.return) {
+                _iterator15.return();
+              }
+            } finally {
+              if (_didIteratorError15) {
+                throw _iteratorError15;
+              }
             }
           }
         }

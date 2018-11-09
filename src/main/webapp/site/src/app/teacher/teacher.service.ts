@@ -20,6 +20,11 @@ export class TeacherService {
   private deletePeriodFromRunUrl = 'api/teacher/run/delete/period';
   private updateRunStudentsPerTeamUrl = 'api/teacher/run/update/studentsperteam';
   private updateRunStartTimeUrl = 'api/teacher/run/update/starttime';
+  private forgotUsernameUrl = 'api/teacher/forgot/username';
+  private forgotPasswordUrl = 'api/teacher/forgot/password';
+  private getVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
+  private checkVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
+  private changePasswordUrl = 'api/teacher/forgot/password/change';
   private newProjectSource = new Subject<Project>();
   public newProjectSource$ = this.newProjectSource.asObservable();
   private newRunSource = new Subject<Run>();
@@ -177,5 +182,41 @@ export class TeacherService {
     body = body.set('runId', runId + '');
     body = body.set('startTime', startTime);
     return this.http.post<Object>(url, body, {headers: headers});
+  }
+
+  sendForgotUsernameEmail(email) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    const params = new HttpParams().set('email', email);
+    return this.http.post<any>(this.forgotUsernameUrl, params, { headers: headers });
+  }
+
+  sendForgotPasswordEmail(username) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    const params = new HttpParams().set('username', username);
+    return this.http.post<any>(this.forgotPasswordUrl, params, { headers: headers });
+  }
+
+  getVerificationCodeEmail(username) {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    const params = new HttpParams().set('username', username);
+    return this.http.get<any>(this.getVerificationCodeUrl, { headers: headers, params: params });
+  }
+
+  checkVerificationCode(username, verificationCode) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let params = new HttpParams();
+    params = params.set('username', username);
+    params = params.set('verificationCode', verificationCode);
+    return this.http.post<any>(this.checkVerificationCodeUrl, params, { headers: headers });
+  }
+
+  changePassword(username, verificationCode, password, confirmPassword) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let params = new HttpParams();
+    params = params.set('username', username);
+    params = params.set('verificationCode', verificationCode);
+    params = params.set('password', password);
+    params = params.set('confirmPassword', confirmPassword);
+    return this.http.post<any>(this.changePasswordUrl, params, { headers: headers });
   }
 }

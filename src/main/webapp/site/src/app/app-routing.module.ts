@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'contact', loadChildren: './contact/contact.module#ContactModule' },
   { path: 'features', loadChildren: './features/features.module#FeaturesModule' },
+  { path: 'forgot', loadChildren: './forgot/forgot.module#ForgotModule' },
   { path: 'help', loadChildren: './help/help.module#HelpModule' },
   { path: 'join', loadChildren: './register/register.module#RegisterModule' },
   { path: 'login', loadChildren: './login/login.module#LoginModule' },
