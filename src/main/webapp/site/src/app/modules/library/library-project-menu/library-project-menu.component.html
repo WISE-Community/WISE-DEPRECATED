@@ -3,6 +3,10 @@
 </button>
 <mat-menu #projectMenu="matMenu" xPosition="before">
   <div class="header-account-menu">
+    <a mat-menu-item disable> 
+      <!-- *ngIf="ifChildElement"> -->
+      Parent ID: 
+    </a>    
     <a mat-menu-item (click)="copyProject()">
       <mat-icon>content_copy</mat-icon> Copy
     </a>
