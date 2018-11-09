@@ -136,8 +136,7 @@ public class StudentForgotAccountAPIController {
   }
 
   private String getAccountQuestionValue(String accountQuestionKey) {
-    AccountQuestion.setProperties(i18nProperties);
-    return AccountQuestion.getValue(accountQuestionKey);
+    return i18nProperties.getProperty("accountquestions." + accountQuestionKey);
   }
 
   private String getAccountAnswer(User user) {

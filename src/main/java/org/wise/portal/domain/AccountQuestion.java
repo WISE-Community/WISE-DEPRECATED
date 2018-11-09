@@ -37,23 +37,4 @@ public enum AccountQuestion {
   QUESTION_FOUR,
   QUESTION_FIVE,
   QUESTION_SIX;
-
-  private static Properties i18nProperties;
-
-  public static void setProperties(Properties properties) {
-    i18nProperties = properties;
-  }
-
-  public static String getValue(String key) {
-    return i18nProperties.getProperty("accountquestions." + key);
-  }
-
-  @Override
-  public String toString() {
-    return i18nProperties.getProperty("accountquestions." + this.name());
-  }
-
-  public String getName() {
-    return name();
-  }
 }
