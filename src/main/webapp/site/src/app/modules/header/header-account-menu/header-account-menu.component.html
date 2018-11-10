@@ -6,7 +6,7 @@
 </button>
 <mat-menu #accountMenu="matMenu" xPosition="before">
   <div class="header-account-menu">
-    <div class="mat-subheading-1 user-info" fxLayout="row" fxLayoutAlign="left center">
+    <div class="user-info" fxLayout="row" fxLayoutAlign="left center">
       <mat-icon aria-label="Account avatar" *ngIf="role === 'student' else teacherAvatar">account_circle</mat-icon>
       <ng-template #teacherAvatar>
         <mat-icon aria-label="Account avatar">account_box</mat-icon>

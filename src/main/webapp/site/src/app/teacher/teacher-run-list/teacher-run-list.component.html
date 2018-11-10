@@ -39,22 +39,22 @@
         <app-timeline-item-label>
           <ng-container *ngIf="run.endTime">
             <ng-container *ngIf="runSpansYears(run)">
-              <span class="mat-body-2">{{ run.startTime | amDateFormat:'MMM D' }}</span>
+              <span><strong>{{ run.startTime | amDateFormat:'MMM D' }}</strong></span>
               <span class="secondary-text"> {{ run.startTime | amDateFormat:'Y' }}</span> -
-              <span class="mat-body-2"> {{ run.endTime | amDateFormat:'MMM D' }}</span>
+              <span><strong> {{ run.endTime | amDateFormat:'MMM D' }}</strong></span>
               <span class="secondary-text"> {{ run.endTime | amDateFormat:'Y' }}</span>
             </ng-container>
             <ng-container *ngIf="!runSpansYears(run)">
-              <span class="mat-body-2">{{ run.startTime | amDateFormat:'MMM D' }}</span>
+              <span><strong>{{ run.startTime | amDateFormat:'MMM D' }}</strong></span>
               <ng-container *ngIf="runSpansDays(run)"> -
-                <span class="mat-body-2" *ngIf="runSpansMonths(run)">{{ run.endTime | amDateFormat:'MMM D' }}</span>
-                <span class="mat-body-2" *ngIf="!runSpansMonths(run)">{{ run.endTime | amDateFormat:'D' }}</span>
+                <strong *ngIf="runSpansMonths(run)">{{ run.endTime | amDateFormat:'MMM D' }}</strong>
+                <strong *ngIf="!runSpansMonths(run)">{{ run.endTime | amDateFormat:'D' }}</strong>
               </ng-container>
               <span class="secondary-text"> {{ run.endTime | amDateFormat:'Y' }}</span>
             </ng-container>
           </ng-container>
           <ng-container *ngIf="!run.endTime">
-            <span class="mat-body-2">{{ run.startTime | amDateFormat:'MMM D' }}</span>
+            <span><strong>{{ run.startTime | amDateFormat:'MMM D' }}</strong></span>
             <span class="secondary-text"> {{ run.startTime | amDateFormat:'Y' }}</span>
           </ng-container>
         </app-timeline-item-label>

@@ -6,7 +6,7 @@
       <ng-container *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></ng-container>
     </span>
     <span fxFlex></span>
-    <mat-icon color="primary">add</mat-icon>
+    <mat-icon color="primary">add_circle</mat-icon>
   </div>
   <div>
     <mat-icon *ngIf="isSvgIcon"
@@ -18,7 +18,7 @@
     <ng-template #defaultHeadline>{{ headline }}</ng-template>
     <ng-template #defaultContent>{{ content }}</ng-template>
     <div *ngIf="content || contentRef"
-         class="cta__tagline mat-subheading-2">
+         class="cta__tagline mat-subheading-1">
       <ng-container *ngTemplateOutlet="contentRef ? contentRef: defaultContent"></ng-container>
     </div>
   </div>

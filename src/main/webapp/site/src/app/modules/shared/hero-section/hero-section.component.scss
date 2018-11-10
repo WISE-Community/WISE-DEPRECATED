@@ -44,15 +44,12 @@ $config: mat-typography-config();
 }
 
 h1.hero__headline {
-  @include mat-typography-level-to-styles($config, display-1);
-
   .mat-icon {
     @include mat-icon-size(mat-font-size($config, display-1));
   }
 
   @media (min-width: breakpoint('sm.min')) {
     margin-bottom: 24px;
-    @include mat-typography-level-to-styles($config, display-3);
 
     .mat-icon {
       @include mat-icon-size(mat-font-size($config, display-3));
@@ -73,22 +70,16 @@ h1.hero__headline--withtagline {
 }
 
 h2.hero__tagline {
-  @include mat-typography-level-to-styles($config, headline);
-  line-height: mat-line-height($config, subheading-2);
+  font-weight: 400;
+  margin-bottom: 0 !important;
 
   .mat-icon {
     @include mat-icon-size(mat-font-size($config, headline));
   }
 
   @media (min-width: breakpoint('sm.min')) {
-    @include mat-typography-level-to-styles($config, display-1);
-
     .mat-icon {
       @include mat-icon-size(mat-font-size($config, display-1));
     }
   }
-}
-
-h2.hero__tagline {
-  font-weight: 300;
 }

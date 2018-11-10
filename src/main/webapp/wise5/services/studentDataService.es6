@@ -100,6 +100,10 @@ class StudentDataService {
         this.handleAnnotationReceived(annotation);
       }
     });
+
+    this.$rootScope.$on('notebookUpdated', (event, args) => {
+      this.updateNodeStatuses();
+    });
   }
 
   retrieveStudentData() {
@@ -509,6 +513,8 @@ class StudentDataService {
         result = this.evaluateUsedXSubmitsCriteria(criteria);
       } else if (functionName === 'wroteXNumberOfWords') {
         result = this.evaluateNumberOfWordsWrittenCriteria(criteria);
+      } else if (functionName === 'addXNumberOfNotesOnThisStep') {
+        result = this.evaluateAddXNumberOfNotesOnThisStepCriteria(criteria);
       } else if (functionName === '') {
 
       }
@@ -933,6 +939,31 @@ class StudentDataService {
       }
     }
     return false;
+  }
+
+  evaluateAddXNumberOfNotesOnThisStepCriteria(criteria) {
+    const params = criteria.params;
+    const nodeId = params.nodeId;
+    const requiredNumberOfNotes = params.requiredNumberOfNotes;
+    const notebookService = this.$injector.get('NotebookService');
+    try {
+      const notebook = notebookService.getNotebookByWorkgroup();
+      const notebookItemsByNodeId = this.getNotebookItemsByNodeId(notebook, nodeId);
+      return notebookItemsByNodeId.length >= requiredNumberOfNotes;
+    } catch (e) {
+
+    }
+    return false;
+  }
+
+  getNotebookItemsByNodeId(notebook, nodeId) {
+    const notebookItemsByNodeId = [];
+    for (let notebookItem of notebook.allItems) {
+      if (notebookItem.nodeId === nodeId) {
+        notebookItemsByNodeId.push(notebookItem);
+      }
+    }
+    return notebookItemsByNodeId;
   }
 
   /**

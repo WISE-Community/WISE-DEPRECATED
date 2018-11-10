@@ -4,12 +4,12 @@
       <div class="mat-card-avatar" [style.background-image]="data.project.thumbStyle"></div>
       <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
         <div fxLayout="column">
-          <div class="mat-card-title">{{ data.project.metadata.title }}</div>
+          <div class="mat-card-title mat-body-2">{{ data.project.metadata.title }}</div>
           <div class="mat-card-subtitle">
             <div>
               Grade level: <span *ngFor="let g of data.project.metadata.grades; let isLast=last">{{ g }}{{ isLast ? '' : ', ' }}</span>
               &nbsp;|&nbsp;
-              Duration: {{ data.project.metadata.totalTime }}<br />
+              {{ data.project.metadata.totalTime }}<br />
               Unit ID: {{ data.project.id }}<!--| Last Updated: {{ data.project.lastUpdated }}>-->
             </div>
           </div>
@@ -24,14 +24,14 @@
   <div class="library-project-details__info info-block">
     <div class="library-project-details__summary" [innerHTML]="data.project.metadata.summary"></div>
     <p *ngIf="ngss.disciplines.length">
-      <span class="mat-body-2">Discipline:</span>
+      <strong>Discipline:</strong>
       <ng-container *ngFor="let discipline of ngss.disciplines; let isLast=last">
         {{ discipline.name }}{{ isLast ? '' : ' / ' }}
       </ng-container>
     </p>
-    <p *ngIf="data.project.metadata.features"><span class="mat-body-2">Features:</span> {{ data.project.metadata.features }}</p>
+    <p *ngIf="data.project.metadata.features"><strong>Features:</strong> {{ data.project.metadata.features }}</p>
     <p *ngIf="ngss.dciArrangements.length">
-      <span class="mat-body-2">Performance Expectations: </span>
+      <strong>Performance Expectations: </strong>
       <ng-container *ngFor="let dcia of ngss.dciArrangements; let isLast=last">
         <a href="{{ data.ngssWebUrl }}{{ dcia.id }}" target="_blank">{{ dcia.id }} {{ dcia.name }}</a>
         <ng-container *ngIf="dcia.children.length">

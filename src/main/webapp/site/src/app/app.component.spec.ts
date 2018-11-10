@@ -5,6 +5,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MediaChange, ObservableMedia } from '@angular/flex-layout';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 import { UtilService } from "./services/util.service";
 
 @Component({selector: 'router-outlet', template: ''})
@@ -38,7 +39,13 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: UtilService, useClass: MockUtilService },
-        { provide: ObservableMedia, useClass: MockObservableMedia }
+        { provide: ObservableMedia, useClass: MockObservableMedia },
+        { provide: MatDialog, useValue: {
+            closeAll: () => {
+
+            }
+          }
+        }
       ],
       declarations: [ AppComponent ],
       imports: [ RouterTestingModule ],

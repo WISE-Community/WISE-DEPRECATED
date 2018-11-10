@@ -633,6 +633,13 @@
                    style="width: 400px;"
                    ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
             <div ng-if='param.value == "requiredNumberOfWords" && (criteria.params.requiredNumberOfWords == null || criteria.params.requiredNumberOfWords == "")'><span style="color: red">{{ 'pleaseEnterTheRequiredNumberOfWords' | translate }}</span></div>
+            <input type='number'
+                   ng-if='param.value == "requiredNumberOfNotes"'
+                   ng-model='criteria.params.requiredNumberOfNotes'
+                   ng-model-options='{ debounce: 1000 }'
+                   style="width: 400px;"
+                   ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
+            <div ng-if='param.value == "requiredNumberOfNotes" && (criteria.params.requiredNumberOfNotes == null || criteria.params.requiredNumberOfNotes == "")'><span style="color: red">{{ 'pleaseEnterTheRequiredNumberOfNotes' | translate }}</span></div>
           </md-input-container>
         </div>
         <div style="margin-left: 50px;">

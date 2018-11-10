@@ -1,6 +1,6 @@
 <nav class="header__links" [ngSwitch]="location" fxLayout="row" fxLayoutAlign="start center">
-  <span class="mat-subheading-2" *ngSwitchCase="'teacher'">Welcome {{ user.firstName }}!</span>
-  <span class="mat-subheading-2" *ngSwitchCase="'student'">Welcome {{ user.firstName }}!</span>
+  <span *ngSwitchCase="'teacher'">Welcome {{ user.firstName }}!</span>
+  <span *ngSwitchCase="'student'">Welcome {{ user.firstName }}!</span>
   <ng-container *ngSwitchDefault>
     <a mat-button routerLink="/features" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Features</a>
     <a mat-button routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">About Us</a>

@@ -17,11 +17,12 @@
 </ng-template>
 
 <mat-card [ngClass]="{ 'highlighted': run.isHighlighted }">
-  <mat-card-content fxLayout="row">
+  <mat-card-content fxLayout="row" fxLayoutGap="12px">
     <div mat-card-avatar [style.background-image]="thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
         <div fxLayout="column">
-          <mat-card-title [class.secondary-text]="run.endTime">
+          <mat-card-title [class.secondary-text]="run.endTime"
+                          class="mat-body-2">
             {{ run.name }}
           </mat-card-title>
           <mat-card-subtitle fxHide fxShow.gt-xs>

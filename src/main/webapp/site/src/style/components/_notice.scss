@@ -3,7 +3,7 @@
   padding: 0.725em;
   margin: 24px auto;
   border-radius: 3px;
-  font-weight: 500;
+  font-size: mat-font-size($config, body-1);
 
   @media (min-width: breakpoint('sm.min')) {
     max-width: 80%;

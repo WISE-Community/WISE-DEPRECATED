@@ -1,0 +1,44 @@
+@import
+  '~@angular/material/theming',
+  '~style/abstracts/functions',
+  '~style/abstracts/variables';
+
+.library-project-details {
+}
+
+.mat-card-avatar {
+  background-size: cover;
+  border-radius: 4px;
+  margin-right: 12px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    height: 64px;
+    width: 64px;
+  }
+}
+
+.mat-card-title {
+  margin-bottom: 4px;
+
+  @media (max-width: breakpoint('xs.max')) {
+    @include mat-typography-level-to-styles($config, body-1);
+    font-weight: 500;
+  }
+}
+
+.mat-card-subtitle {
+  margin-bottom: 2px;
+}
+
+.library-project-details__info {
+  margin: 16px 0 8px;
+  padding: 8px 12px;
+}
+
+.library-project-details__summary {
+  margin-bottom: 12px;
+}
+
+.library-project-details__pe {
+  display: inline-block;
+}

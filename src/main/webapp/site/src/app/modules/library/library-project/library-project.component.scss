@@ -81,46 +81,6 @@ $config: mat-typography-config();
   padding: 12px 8px;
 }
 
-.library-project-details {
-  .mat-card-avatar {
-    background-size: cover;
-    border-radius: 4px;
-    margin-right: 12px;
-
-    @media (min-width: breakpoint('sm.min')) {
-      height: 60px;
-      width: 60px;
-    }
-  }
-
-  .mat-card-title {
-    margin-bottom: 6px;
-    font-weight: 500;
-    font-size: mat-font-size($config, subheading-1);
-  }
-
-  .mat-card-subtitle {
-    margin-bottom: 2px;
-  }
-}
-
-.library-project-details__info {
-  margin: 16px 0 8px;
-  padding: 8px 12px;
-
-  p {
-    margin: 4px 0;
-  }
-}
-
-.library-project-details__summary {
-  margin: 4px 0;
-}
-
-.library-project-details__pe {
-  display: inline-block;
-}
-
 .library-project__shared-owner {
   color: red;
 }
