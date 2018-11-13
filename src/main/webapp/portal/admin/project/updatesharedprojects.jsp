@@ -65,7 +65,7 @@
         <br/>
 
         Min Project ID (optional): <input id="min"/>
-        Max Project ID (optioanl): <input id="max"/>
+        Max Project ID (optional): <input id="max"/>
         <button onclick="view()">View</button>
         <button onclick="update()">Update</button>
     </div>
