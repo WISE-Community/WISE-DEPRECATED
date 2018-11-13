@@ -1,15 +1,13 @@
-[{
-  "type": "group",
-  "id": "californiaIntegrated",
-  "name": "California Integrated",
-  "children": [{
+[
+  {
     "type": "group",
     "name": "6th Grade",
-    "children": [{
-      "type": "project",
-      "notes": "Test",
-      "id": 24447
-    },
+    "children": [
+      {
+        "type": "project",
+        "notes": "Test",
+        "id": 24447
+      },
       {
         "type": "project",
         "notes": "Nested branch",
@@ -17,29 +15,15 @@
       }
     ]
   },
-    {
-      "type": "group",
-      "name": "7th Grade",
-      "children": [{
+  {
+    "type": "group",
+    "name": "7th Grade",
+    "children": [
+      {
         "type": "project",
         "notes": "How Can We Recycle Old Tires? 2018",
         "id": 24358
-      }]
-    }
-  ]
-},
-  {
-    "type": "group",
-    "id": "disciplineSpecific",
-    "name": "Discipline Specific",
-    "children": [{
-      "type": "group",
-      "name": "8th Grade",
-      "children": [{
-        "type": "project",
-        "notes": "How Can We Recycle Old Tires? Kingdom of Saudi Arabia",
-        "id": 24445
-      }]
-    }]
+      }
+    ]
   }
 ]
