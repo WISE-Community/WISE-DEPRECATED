@@ -109,15 +109,7 @@ public class ManagePortalController {
    */
   public void addOfficialTagToProjectLibraryGroup(String projectLibraryGroup)
       throws JSONException {
-    JSONArray arrangements = new JSONArray(projectLibraryGroup);
-    for (int i = 0; i < arrangements.length(); i++) {
-      JSONObject arrangement = arrangements.getJSONObject(i);
-      addOfficialTagToArrangement(arrangement);
-    }
-  }
-
-  private void addOfficialTagToArrangement(JSONObject arrangement) throws JSONException {
-    JSONArray groups = arrangement.getJSONArray("children");
+    JSONArray groups = new JSONArray(projectLibraryGroup);
     for (int i = 0; i < groups.length(); i++) {
       JSONObject group = groups.getJSONObject(i);
       addOfficialTagToGroup(group);
