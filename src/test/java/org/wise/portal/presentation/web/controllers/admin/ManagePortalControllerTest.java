@@ -36,7 +36,6 @@ public class ManagePortalControllerTest extends TestCase {
     EasyMock.expect(projectService.addTagToProject("official", new Long(24447))).andReturn(1);
     EasyMock.expect(projectService.addTagToProject("official", new Long(24449))).andReturn(1);
     EasyMock.expect(projectService.addTagToProject("official", new Long(24358))).andReturn(1);
-    EasyMock.expect(projectService.addTagToProject("official", new Long(24445))).andReturn(1);
     EasyMock.replay(projectService);
     controller.addOfficialTagToProjectLibraryGroup(projectLibraryGroupJSONString);
     EasyMock.verify(projectService);
