@@ -15,9 +15,11 @@
                 rows='2'
                 cols='100'></textarea>
       <br/>
-      <md-input-container style='width: 250px; margin-top: 30px;'>
+      <md-input-container style='width: 310px; margin-top: 30px;'>
         <label>{{ 'openResponse.textareaHeightNumberOfRows' | translate }}</label>
         <input type='number'
+               min="1"
+               placeholder="3"
                ng-model='openResponseController.authoringComponentContent.numRows'
                ng-model-options='{ debounce: 1000 }'
                ng-change='openResponseController.authoringViewComponentChanged()'/>
