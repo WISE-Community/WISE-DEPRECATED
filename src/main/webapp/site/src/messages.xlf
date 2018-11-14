@@ -450,6 +450,16 @@
         </context-group>
         <note priority="1" from="description">Show more content button text</note>
       </trans-unit>
+      <trans-unit id="7fc025a27e48ca68f2d6f8d9bf106d33cef9b170" datatype="html">
+        <source>
+    <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>home<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/>Teacher Home
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">Teacher home page title</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>
