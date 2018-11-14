@@ -21,9 +21,7 @@
 <!ELEMENT ex (#PCDATA)>
 ]>
 <messagebundle>
-  <msg id="4232832752975628536" desc="Outline of services by WISE">
-    <source>app/home/home.component.html:25,27</source>
-  </msg>
+  <msg id="4232832752975628536" desc="Outline of services by WISE"><source>app/home/home.component.html:25,27</source>WISEアドバンテージ</msg>
   <msg id="659806975066593272" desc="Curriculum offerings">
     <source>app/home/home.component.html:58,60</source>
   </msg>
