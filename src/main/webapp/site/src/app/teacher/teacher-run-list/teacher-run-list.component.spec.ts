@@ -89,4 +89,8 @@ describe('TeacherRunListComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should sort runs by start date', () => {
+    // expect(runs).toBeSorted();
+  })
+
 });

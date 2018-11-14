@@ -5,17 +5,17 @@
           matTooltipPosition="above">
       {{run.periods.length}}
       <ng-container [ngPlural]="run.periods.length">
-        <ng-template ngPluralCase="=0">periods</ng-template>
-        <ng-template ngPluralCase="=1">period</ng-template>
-        <ng-template ngPluralCase="other">periods</ng-template>
+        <ng-template ngPluralCase="=0" i18n="periods label">periods</ng-template>
+        <ng-template ngPluralCase="=1" i18n="period label">period</ng-template>
+        <ng-template ngPluralCase="other" i18n="periods label">periods</ng-template>
       </ng-container>
     </span> |
     <a href="{{ manageStudentsLink }}">
       {{run.numStudents}}
       <ng-container [ngPlural]="run.numStudents">
-        <ng-template ngPluralCase="=0">students</ng-template>
-        <ng-template ngPluralCase="=1">student</ng-template>
-        <ng-template ngPluralCase="other">students</ng-template>
+        <ng-template ngPluralCase="=0" i18n="students label">students</ng-template>
+        <ng-template ngPluralCase="=1" i18n="student label">student</ng-template>
+        <ng-template ngPluralCase="other" i18n="students label">students</ng-template>
       </ng-container>
     </a>
   </div>
@@ -54,7 +54,7 @@
          mat-button
          color="primary"
          fxFlex="0 0 auto"
-         fxFlex.xs="100">
+         fxFlex.xs="100" i18n="settings button text">
         <mat-icon class="primary">settings</mat-icon>
         Settings
       </a>
@@ -63,7 +63,7 @@
          href="{{ gradeAndManageLink }}"
          color="primary"
          fxFlex="0 0 auto"
-         fxFlex.xs="100">
+         fxFlex.xs="100" i18n="Teacher Tools text">
         <mat-icon>build</mat-icon>
         Teacher Tools
       </a>
