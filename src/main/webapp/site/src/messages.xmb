@@ -28,7 +28,7 @@
   <msg id="659806975066593272" desc="Curriculum offerings"><source>app/home/home.component.html:56,58</source>
           Curriculum Offerings
         </msg>
-  <msg id="8254507243031097369" desc="Enquire if the user is ready to try WISE"><source>app/home/home.component.html:67</source>Ready to try WISE in the Classroom?</msg>
+  <msg id="8254507243031097369"><source>app/home/home.component.html:67</source>Ready to try WISE in the Classroom?</msg>
   <msg id="357328427269654231" desc="Sign up button text"><source>app/home/home.component.html:68,70</source>
               Sign up for free!
             </msg>
