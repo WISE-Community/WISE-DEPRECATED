@@ -33,9 +33,9 @@
     <p *ngIf="ngss.dciArrangements.length">
       <strong>Performance Expectations: </strong>
       <ng-container *ngFor="let dcia of ngss.dciArrangements; let isLast=last">
-        <a href="{{ data.ngssWebUrl }}{{ dcia.id }}" target="_blank">{{ dcia.id }} {{ dcia.name }}</a>
+        <a href="{{ ngssWebUrl }}{{ dcia.id }}" target="_blank">{{ dcia.id }} {{ dcia.name }}</a>
         <ng-container *ngIf="dcia.children.length">
-          (<ng-container *ngFor="let pe of dcia.children; let isLastChild=last"><a class="library-project-details__pe" href="{{ data.ngssWebUrl }}{{ pe.id }}"
+          (<ng-container *ngFor="let pe of dcia.children; let isLastChild=last"><a class="library-project-details__pe" href="{{ ngssWebUrl }}{{ pe.id }}"
                                                                                    target="_blank" matTooltip="{{ pe.name }}"
                                                                                    [matTooltipPosition]="'above'">{{ pe.id }}</a>{{ isLastChild ? '' : ', ' }}</ng-container>)
         </ng-container>{{ isLast ? '' : ' / ' }}
