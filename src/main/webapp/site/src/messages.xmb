@@ -21,21 +21,19 @@
 <!ELEMENT ex (#PCDATA)>
 ]>
 <messagebundle>
-  <msg id="3161298091634700832" desc="Home welcome page main description"><source>app/home/home.component.html:16,18</source>
-        <ph name="START_TAG_SPAN"><ex>&lt;span&gt;</ex></ph>Integrated<ph name="CLOSE_TAG_SPAN"><ex>&lt;/span&gt;</ex></ph> science learning and teaching with technology
-      </msg>
-  <msg id="4232832752975628536" desc="Outline of services by WISE"><source>app/home/home.component.html:25,27</source>
+  <msg id="5988052957783033183"><source>app/home/home.component.html:16</source>Integrated science learning and teaching with technology</msg>
+  <msg id="4232832752975628536" desc="Outline of services by WISE"><source>app/home/home.component.html:23,25</source>
           The WISE Advantage
         </msg>
-  <msg id="659806975066593272" desc="Curriculum offerings"><source>app/home/home.component.html:58,60</source>
+  <msg id="659806975066593272" desc="Curriculum offerings"><source>app/home/home.component.html:56,58</source>
           Curriculum Offerings
         </msg>
-  <msg id="8254507243031097369" desc="Enquire if the user is ready to try WISE"><source>app/home/home.component.html:69</source>Ready to try WISE in the Classroom?</msg>
-  <msg id="357328427269654231" desc="Sign up button text"><source>app/home/home.component.html:70,72</source>
+  <msg id="8254507243031097369" desc="Enquire if the user is ready to try WISE"><source>app/home/home.component.html:67</source>Ready to try WISE in the Classroom?</msg>
+  <msg id="357328427269654231" desc="Sign up button text"><source>app/home/home.component.html:68,70</source>
               Sign up for free!
             </msg>
-  <msg id="813263746069473514" desc="A directive to connect with WISE community/FAQs/Contact WISE"><source>app/home/home.component.html:86</source>Connect</msg>
-  <msg id="2512863172921388537" desc="Application status: about works!"><source>app/about/about.component.html:4</source>about works!</msg>
+  <msg id="813263746069473514" desc="A directive to connect with WISE community/FAQs/Contact WISE"><source>app/home/home.component.html:84</source>Connect</msg>
+  <msg id="2512863172921388537"><source>app/about/about.component.html:4</source>about works!</msg>
   <msg id="9086072246623614892" desc="Application status: features works!"><source>app/features/features.component.html:4</source>features works!</msg>
   <msg id="8295851396168346196" desc="Page title for WISE terms of use and privacy policy"><source>app/privacy/privacy.component.html:6</source>WISE Terms of Use &amp; Privacy Policy</msg>
   <msg id="8716695021900630124" desc="Links to sub-sections"><source>app/privacy/privacy.component.html:9</source>Table of Contents</msg>
@@ -126,7 +124,7 @@
         Berkeley, CA 94720-1670
       <ph name="CLOSE_PARAGRAPH"><ex>&lt;/p&gt;</ex></ph>
   </msg>
-  <msg id="7533853265286649557" desc="Contact WISE"><source>app/contact/contact-form/contact-form.component.html:11</source>Contact WISE</msg>
+  <msg id="7533853265286649557"><source>app/contact/contact-form/contact-form.component.html:11</source>Contact WISE</msg>
   <msg id="929357247065511687" desc="Directive indicating that Name is required"><source>app/contact/contact-form/contact-form.component.html:19</source>Name Required</msg>
   <msg id="6444105556997266625" desc="Directive indicating that Email is required"><source>app/contact/contact-form/contact-form.component.html:29</source>Email Required</msg>
   <msg id="2762478885865197015" desc="Directive indicating that an invalid email was provided"><source>app/contact/contact-form/contact-form.component.html:30</source>Invalid Email</msg>
@@ -137,10 +135,8 @@
           <ph name="START_TAG_MAT_PROGRESS_BAR"><ex>&lt;mat-progress-bar&gt;</ex></ph><ph name="CLOSE_TAG_MAT_PROGRESS_BAR"><ex>&lt;/mat-progress-bar&gt;</ex></ph>
           Submit
         </msg>
-  <msg id="5850188775165013337" desc="Message sent confirmation message"><source>app/contact/contact-complete/contact-complete.component.html:11,13</source>
-    Your message has been sent. Thank you for contacting WISE. We will try to get back to you as soon as possible.
-  </msg>
-  <msg id="7487604240957282537" desc="Button to route to Home Page"><source>app/contact/contact-complete/contact-complete.component.html:14</source>Return to Home Page</msg>
+  <msg id="5011054507806173463"><source>app/contact/contact-complete/contact-complete.component.html:11</source>Your message has been sent. Thank you for contacting WISE. We will try to get back to you as soon as possible.</msg>
+  <msg id="7487604240957282537"><source>app/contact/contact-complete/contact-complete.component.html:12</source>Return to Home Page</msg>
   <msg id="8908890980912469693" desc="Choose periods sub header"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:7</source>1. Choose Periods</msg>
   <msg id="1140981832941308887" desc="Add your own periods prompt text"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:17</source>Add your own periods</msg>
   <msg id="2497311052915140660" desc="Directions to enter custom periods"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:22</source>For &quot;Period 9&quot;, just enter the number 9. Separate periods with commas (e.g. &quot;Section 1, Section 2&quot;). Manually named periods should be no more than 16 characters long.</msg>
