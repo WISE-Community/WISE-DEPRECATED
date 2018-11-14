@@ -3,9 +3,7 @@
     <form role="form" (submit)="login()">
       <h2 class="standalone__title accent" i18n="Message to sign in to WISE">Sign in to WISE</h2>
       <p class="warn center standalone__error inactive"
-         [ngClass]="{'active': error}" i18n="Error message for username and password not recognized">
-        Username and password not recognized. Please try again.
-      </p>
+         [ngClass]="{'active': error}" i18n>Username and password not recognized. Please try again.</p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n="Label for username">Username</mat-label>
