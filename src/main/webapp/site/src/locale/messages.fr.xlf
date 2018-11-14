@@ -6,9 +6,6 @@
         <source>
         <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Integrated<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> science learning and teaching with technology
       </source>
-      <target>
-         <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Testing override Bonjour<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> science learning and teaching with technology
-        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">16</context>
@@ -363,6 +360,101 @@
         </context-group>
         <note priority="1" from="description">Button to route to Home Page</note>
       </trans-unit>
+      <trans-unit id="a2d9400df68d9f4e89fe24f6a3f40bc5322f19f2" datatype="html">
+        <source>1. Choose Periods</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">Choose periods sub header</note>
+      </trans-unit>
+      <trans-unit id="91272b78c905b6e7e35774c484eb61a33cd3dd12" datatype="html">
+        <source>Add your own periods</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Add your own periods prompt text</note>
+      </trans-unit>
+      <trans-unit id="b13b5b62a4356cdcd81f358640fb7863fdde1361" datatype="html">
+        <source>For &quot;Period 9&quot;, just enter the number 9. Separate periods with commas (e.g. &quot;Section 1, Section 2&quot;). Manually named periods should be no more than 16 characters long.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Directions to enter custom periods</note>
+      </trans-unit>
+      <trans-unit id="6b0dd0933835c1e0d9e3ed4a19c8eb88a9df417b" datatype="html">
+        <source>2. Choose Students Per Team</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Choose students per team sub header</note>
+      </trans-unit>
+      <trans-unit id="9d555462d5dfa262c5a52813461a84e681d5f57a" datatype="html">
+        <source>
+        Only 1 student
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Selection label for 1 student</note>
+      </trans-unit>
+      <trans-unit id="bc81690fc7c21abb01f12243fbb20f7bf65e0a17" datatype="html">
+        <source>
+        1-3 students
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Selection label for 1-3 students</note>
+      </trans-unit>
+      <trans-unit id="59b5e0b6d51cb195690bd20893a61f39525e4cc6" datatype="html">
+        <source>3. Choose Start Date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Choose start date sub header</note>
+      </trans-unit>
+      <trans-unit id="77bbe324b08f6636fb50f673cea05313b86fb692" datatype="html">
+        <source>Start date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Start date label</note>
+      </trans-unit>
+      <trans-unit id="6becdc6f27b75d5697cfd21fa1c80856ee184e64" datatype="html">
+        <source>Start date is required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <note priority="1" from="description">Directive for start date is required</note>
+      </trans-unit>
+      <trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <note priority="1" from="description">Cancel button text</note>
+      </trans-unit>
+      <trans-unit id="faa7f9ffce218aba449cda3e84e2079b76fea9c1" datatype="html">
+        <source>
+      <x id="START_TAG_MAT-PROGRESS-BAR" ctype="x-mat-progress-bar" equiv-text="&lt;mat-progress-bar&gt;"/><x id="CLOSE_TAG_MAT-PROGRESS-BAR" ctype="x-mat-progress-bar" equiv-text="&lt;/mat-progress-bar&gt;"/>
+      Create Run
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Create button text</note>
+      </trans-unit>
       <trans-unit id="263e1717422fe3b5810e9a2e55b87e477b35d1ed" datatype="html">
         <source>Sign in to WISE</source>
         <context-group purpose="location">
@@ -451,7 +543,535 @@
           <context context-type="sourcefile">app/news/news.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
         <note priority="1" from="description">Show more content button text</note>
+      </trans-unit>
+      <trans-unit id="7fc025a27e48ca68f2d6f8d9bf106d33cef9b170" datatype="html">
+        <source>
+    <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>home<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/>Teacher Home
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">Teacher home page title</note>
+      </trans-unit>
+      <trans-unit id="ef9f56cbe1a21a6e280287558417b1cddfcc14f3" datatype="html">
+        <source>
+  <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>Hey there! Looks like you haven&apos;t run any WISE units in your classes yet.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+  <x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>Select &quot;Browse Units&quot; to find titles to use with your students.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/>
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Alert text for not having any runs</note>
+      </trans-unit>
+      <trans-unit id="b395c884716585cac530cff95bfc5b9af11604d5" datatype="html">
+        <source>Units found: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Units found label</note>
+      </trans-unit>
+      <trans-unit id="bb69003923083cbc54cbf707ff9b1f461f10a840" datatype="html">
+        <source>Total classroom units: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Total classroom units label</note>
+      </trans-unit>
+      <trans-unit id="06c663bf1474713f57551123a46b34318543b67d" datatype="html">
+        <source>Reset</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Reset search label</note>
+      </trans-unit>
+      <trans-unit id="9a208893f13987ce5a706b3b5e4fed09e486cb5d" datatype="html">
+        <source>periods</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">periods label</note>
+      </trans-unit>
+      <trans-unit id="97d146f3502e6472ae9aca1b2bdacfb3ae9c40a4" datatype="html">
+        <source>period</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">period label</note>
+      </trans-unit>
+      <trans-unit id="c1e3525227cd71f6849b07d4d0babd32b1e1ea9d" datatype="html">
+        <source>students</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">students label</note>
+      </trans-unit>
+      <trans-unit id="de9dcd15573cb1dcf344993c1eae59f09a2a6ba5" datatype="html">
+        <source>student</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">student label</note>
+      </trans-unit>
+      <trans-unit id="8b82f7563036bcdc6eabde3f5a01188dc39f6eef" datatype="html">
+        <source>
+        <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>settings<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/>
+        Settings
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">settings button text</note>
+      </trans-unit>
+      <trans-unit id="da70ab2def515d187699c2a858ba3172da8741c8" datatype="html">
+        <source>
+        <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>build<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/>
+        Teacher Tools
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Teacher Tools text</note>
+      </trans-unit>
+      <trans-unit id="c5e61b5953035dffac28fac9f454b7d8ce21dd36" datatype="html">
+        <source>Share Classroom Run</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Share Classroom Run title</note>
+      </trans-unit>
+      <trans-unit id="ee4d90b52495d483667dffbd2236c15b0c722cbb" datatype="html">
+        <source>Enter teacher username</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">Enter teacher username directive</note>
+      </trans-unit>
+      <trans-unit id="39e715b9ebc52d3b9c9a0b629419034bf1610efa" datatype="html">
+        <source>Teacher is already on shared list.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Alert message for teacher already on shared list</note>
+      </trans-unit>
+      <trans-unit id="cff1428d10d59d14e45edec3c735a27b5482db59" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Name column title</note>
+      </trans-unit>
+      <trans-unit id="70f45880fce6ac5d8e468e25e82aefbba8098cfe" datatype="html">
+        <source>Permissions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Permissions column title</note>
+      </trans-unit>
+      <trans-unit id="6bb341b630776ecae2f12fcc817ba2a281d6935f" datatype="html">
+        <source>
+          Owner. Full permissions.
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Permission label for Owner</note>
+      </trans-unit>
+      <trans-unit id="ba04cd26cfc1093921e7196b9c934a2e45c5ca2d" datatype="html">
+        <source>View Student Work</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Permission label for view student work</note>
+      </trans-unit>
+      <trans-unit id="93315f528b07c5cc6aa5eba3c97ac7815711d320" datatype="html">
+        <source>View Student Names</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <note priority="1" from="description">Permission label for view student names</note>
+      </trans-unit>
+      <trans-unit id="f95fae4dbd1692e5faa4c26a1c3b6ea1ae55f862" datatype="html">
+        <source>Grade and Manage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Permission label for grade and manage</note>
+      </trans-unit>
+      <trans-unit id="66b2e8f48c13af491ad76683bc68fb0b07df83c4" datatype="html">
+        <source>Edit Unit Content</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Permission label for edit unit content</note>
+      </trans-unit>
+      <trans-unit id="2557df54afff79a2d5045cc5c33ce6e8a18a2ce3" datatype="html">
+        <source>
+    Done
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">Done button text</note>
+      </trans-unit>
+      <trans-unit id="32f41f2afbd1719ea56da292e89a340d43bcf7dd" datatype="html">
+        <source>Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Run id label</note>
+      </trans-unit>
+      <trans-unit id="3e2a583f531f7dd9f089f68a6968e444c372c3e8" datatype="html">
+        <source>Preview</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Preview run option</note>
+      </trans-unit>
+      <trans-unit id="3ee54b66b7f53827035c3055f228bc2bf2550dab" datatype="html">
+        <source>Unit Info</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Unit Info run option</note>
+      </trans-unit>
+      <trans-unit id="6a7bd392c66daf784d909ea00e8530e93c232dd6" datatype="html">
+        <source>Edit Content</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Edit Content run option</note>
+      </trans-unit>
+      <trans-unit id="0bd8b27f60a1f098a53e06328426d818e3508ff9" datatype="html">
+        <source>Share</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Share run option</note>
+      </trans-unit>
+      <trans-unit id="5bbe77fbbc93c3a34cea3b4b7c99aac62e670e08" datatype="html">
+        <source>Report Problem</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Report a Problem run option</note>
+      </trans-unit>
+      <trans-unit id="badb17be064215d2049e9827e08d92ad0db6f44e" datatype="html">
+        <source>Cancel Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Cancel Unit run option</note>
+      </trans-unit>
+      <trans-unit id="b6d79c6ff771d7b86ce572306867a1705200f957" datatype="html">
+        <source>Restart</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Restart run option</note>
+      </trans-unit>
+      <trans-unit id="bc38cb37c2ca90b3825bdb79d8c116eddba23a53" datatype="html">
+        <source>End Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">End Unit run option</note>
+      </trans-unit>
+      <trans-unit id="a10ba7d09249ec7f346ec1a13a39955cd75efc62" datatype="html">
+        <source>
+    <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>edit<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/>Edit Profile
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit/edit.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">Edit profile title</note>
+      </trans-unit>
+      <trans-unit id="c83b838d845690bcb897f775f53b5316535306dc" datatype="html">
+        <source>First Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">First name label</note>
+      </trans-unit>
+      <trans-unit id="dfb446b53f5c04e99f7deed2f454d3e959e1d324" datatype="html">
+        <source>First Name required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">First name required label</note>
+      </trans-unit>
+      <trans-unit id="166b2cc65003221ff5f3ec05d5baca41e6821396" datatype="html">
+        <source>Last Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Last name label</note>
+      </trans-unit>
+      <trans-unit id="17de8a2f90413b5c8a6d622d9cfa4c5eda8bb742" datatype="html">
+        <source>Last Name required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Last name required label</note>
+      </trans-unit>
+      <trans-unit id="e438ba78cbafdb5bcbce0820bfaad995a504f222" datatype="html">
+        <source>Display Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Display name label</note>
+      </trans-unit>
+      <trans-unit id="a46da4e5dedf077f8ee26fa4af926df0fc909e0c" datatype="html">
+        <source>This is the name your students will see.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Directive telling teachers what name students will see</note>
+      </trans-unit>
+      <trans-unit id="8633775b7643de744fc8b916ccef6b1c8700e83e" datatype="html">
+        <source>Display Name required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Display name required label</note>
+      </trans-unit>
+      <trans-unit id="244aae9346da82b0922506c2d2581373a15641cc" datatype="html">
+        <source>Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Email label</note>
+      </trans-unit>
+      <trans-unit id="234ce1f48e2e7c754873c9728092e878e08cf71d" datatype="html">
+        <source>Email required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <note priority="1" from="description">Email required label</note>
+      </trans-unit>
+      <trans-unit id="5c7012b5a926b32d9e45fefdcc8a1a3cb6f023d0" datatype="html">
+        <source>City</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">City label</note>
+      </trans-unit>
+      <trans-unit id="526394b14298e223b7e076e1b0cd15e54b03fe22" datatype="html">
+        <source>City required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">City required label</note>
+      </trans-unit>
+      <trans-unit id="1417d4b0e633084ccb2b0bdb43d119c17ac0cd01" datatype="html">
+        <source>State required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">State required label</note>
+      </trans-unit>
+      <trans-unit id="a43f25a9ac40e8e2441ff0be7a36b8e5d15534df" datatype="html">
+        <source>Country</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Country label</note>
+      </trans-unit>
+      <trans-unit id="ef20a8366401a5c10bb1b459b34d40d828dba200" datatype="html">
+        <source>Country required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Country required label</note>
+      </trans-unit>
+      <trans-unit id="2f3ba3fa63119eb68067c64a34cf1ff37b8e790a" datatype="html">
+        <source>School Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">School name label</note>
+      </trans-unit>
+      <trans-unit id="804ee3edbc2df4841b73e55dfee3f0a2217e09ce" datatype="html">
+        <source>School Name required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">School name required label</note>
+      </trans-unit>
+      <trans-unit id="bb50c6e4315c4b5991486747158cba2db8460886" datatype="html">
+        <source>School Level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">School level label</note>
+      </trans-unit>
+      <trans-unit id="a3f4acdc98e1b9e7af0f27f1c4f420b8298e7f3e" datatype="html">
+        <source>School Level required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+        <note priority="1" from="description">School level required error message</note>
+      </trans-unit>
+      <trans-unit id="fe46ccaae902ce974e2441abe752399288298619" datatype="html">
+        <source>Language</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Language label</note>
+      </trans-unit>
+      <trans-unit id="cabad35c321f1c28ef7c11f848cd458bb934e304" datatype="html">
+        <source>Language required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">Language required error message</note>
+      </trans-unit>
+      <trans-unit id="afa960379d26eb20fd22e6e10537c1c5ec74c5d1" datatype="html">
+        <source>Save Changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">Save changes button name</note>
+      </trans-unit>
+      <trans-unit id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d" datatype="html">
+        <source>Current Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Current password label</note>
+      </trans-unit>
+      <trans-unit id="9b79b69a1ba8ba29e68a45acd0829da17da704ce" datatype="html">
+        <source>Current Password required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Current password required label</note>
+      </trans-unit>
+      <trans-unit id="0315d84608647a2d4a2b2e7e509d10ad0ec78536" datatype="html">
+        <source>Current Password is incorrect</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Current password incorrect label</note>
+      </trans-unit>
+      <trans-unit id="c7014c6360e94b236286b869c3fe0ea9911c0387" datatype="html">
+        <source>New Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">New password label</note>
+      </trans-unit>
+      <trans-unit id="ae26b4e37fa94304d1fa1b0c46b10ad979bcecfa" datatype="html">
+        <source>New Password required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">New password required label</note>
+      </trans-unit>
+      <trans-unit id="b81fbd1b5d0723eba41870071d02065674bdd565" datatype="html">
+        <source>Confirm New Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Confirm new password label</note>
+      </trans-unit>
+      <trans-unit id="4b4b336ca43da85eee55391d95fbc03d921353b5" datatype="html">
+        <source>Confirm Password required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <note priority="1" from="description">Confirm password required label</note>
+      </trans-unit>
+      <trans-unit id="0a9dcaac5aadd48fe716eaff77ab9b21a8bef3af" datatype="html">
+        <source>Passwords do not match</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Passwords do not match error label</note>
+      </trans-unit>
+      <trans-unit id="3a17f38126f1834e8456f6f4f034b04cb89d38db" datatype="html">
+        <source>
+        Change Password
+        <x id="START_TAG_MAT-PROGRESS-BAR" ctype="x-mat-progress-bar" equiv-text="&lt;mat-progress-bar&gt;"/><x id="CLOSE_TAG_MAT-PROGRESS-BAR" ctype="x-mat-progress-bar" equiv-text="&lt;/mat-progress-bar&gt;"/>
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Change password label</note>
       </trans-unit>
     </body>
   </file>
