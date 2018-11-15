@@ -58,8 +58,8 @@ var AudioOscillatorController = function (_ComponentController) {
       }
     }
 
-    if (_this.hasMaxSubmitCount() && _this.hasSubmitsLeft()) {
-      _this.isSubmitButtonDisabled = true;
+    if (_this.hasMaxSubmitCount() && !_this.hasSubmitsLeft()) {
+      _this.disableSubmitButton();
     }
 
     _this.disableComponentIfNecessary();
@@ -69,55 +69,8 @@ var AudioOscillatorController = function (_ComponentController) {
       _this.drawOscilloscopeGridAfterTimeout();
     }
 
-    _this.$scope.isDirty = function () {
-      return this.$scope.audioOscillatorController.isDirty;
-    }.bind(_this);
-
-    /**
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @param isSubmit boolean Whether the request is coming from a submit
-     * action (optional; default is false).
-     * @return A component state containing the student data.
-     */
-    _this.$scope.getComponentState = function (isSubmit) {
-      var _this2 = this;
-
-      var deferred = this.$q.defer();
-      var getState = false;
-      var action = 'change';
-
-      if (isSubmit) {
-        if (this.$scope.audioOscillatorController.isSubmitDirty) {
-          getState = true;
-          action = 'submit';
-        }
-      } else {
-        if (this.$scope.audioOscillatorController.isDirty) {
-          getState = true;
-          action = 'save';
-        }
-      }
-
-      if (getState) {
-        this.$scope.audioOscillatorController.createComponentState(action).then(function (componentState) {
-          _this2.$scope.audioOscillatorController.isSubmit = false;
-          deferred.resolve(componentState);
-        });
-      } else {
-        /*
-         * The student does not have any unsaved changes in this component
-         * so we don't need to save a component state for this component.
-         * We will immediately resolve the promise here.
-         */
-        deferred.resolve();
-      }
-
-      return deferred.promise;
-    }.bind(_this);
-
-    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    _this.initializeScopeGetComponentState(_this.$scope, 'audioOscillatorController');
+    _this.broadcastDoneRenderingComponent();
     return _this;
   }
 
@@ -149,10 +102,10 @@ var AudioOscillatorController = function (_ComponentController) {
   }, {
     key: 'drawOscilloscopeGridAfterTimeout',
     value: function drawOscilloscopeGridAfterTimeout() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.$timeout(function () {
-        _this3.drawOscilloscopeGrid();
+        _this2.drawOscilloscopeGrid();
       }, 0);
     }
   }, {
@@ -289,7 +242,7 @@ var AudioOscillatorController = function (_ComponentController) {
   }, {
     key: 'drawOscilloscope',
     value: function drawOscilloscope() {
-      var _this4 = this;
+      var _this3 = this;
 
       if (!this.isPlaying) {
         return;
@@ -311,7 +264,7 @@ var AudioOscillatorController = function (_ComponentController) {
 
       if (this.isDrawAgain()) {
         requestAnimationFrame(function () {
-          _this4.drawOscilloscope();
+          _this3.drawOscilloscope();
         });
       }
     }
