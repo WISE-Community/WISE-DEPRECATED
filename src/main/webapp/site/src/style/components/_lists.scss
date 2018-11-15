@@ -1,0 +1,18 @@
+.list--icons {
+  padding-left: 0;
+  padding-right: 0;
+
+  li {
+    &:not(:last-of-type) {
+      margin-bottom: 8px;
+    }
+
+    .mat-icon {
+      @include mat-icon-size(32px);
+    }
+
+    span {
+      margin: 6px 8px 0;
+    }
+  }
+}

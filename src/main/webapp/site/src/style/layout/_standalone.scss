@@ -38,7 +38,9 @@
   margin: 0 auto 16px;
 
   @media (min-width: breakpoint('sm.min')) {
-    padding: 24px !important;
+    &.mat-card {
+      padding: 24px !important;
+    }
   }
 }
 

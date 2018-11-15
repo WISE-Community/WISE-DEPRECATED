@@ -40,6 +40,9 @@ class TableAuthoringController extends TableController {
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
       {
+        type: 'Embedded'
+      },
+      {
         type: 'Graph'
       },
       {

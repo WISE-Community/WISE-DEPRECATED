@@ -259,4 +259,15 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     sqlQuery.setParameter("ownerId", user.getId());
     return sqlQuery.list();
   }
+
+  public List<Project> getAllSharedProjects() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    SQLQuery sqlQuery = session
+      .createSQLQuery("SELECT * FROM projects as p "
+        + "where p.id in "
+        + "(select distinct projects_fk from projects_related_to_shared_owners)"
+        + "order by id desc");
+    sqlQuery.addEntity("project", ProjectImpl.class);
+    return sqlQuery.list();
+  }
 }

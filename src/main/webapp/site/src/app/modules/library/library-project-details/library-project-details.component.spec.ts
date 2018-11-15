@@ -1,9 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input } from '@angular/core';
 import { Observable } from "rxjs";
-import { MatDialog } from "@angular/material/dialog";
-import { MatDialogRef } from '@angular/material/dialog';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { LibraryProjectDetailsComponent } from './library-project-details.component';
 import { UserService } from "../../../services/user.service";
 import { Project } from "../../../domain/project";

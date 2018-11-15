@@ -60,7 +60,7 @@ fi
 
 if [ $1 = "dev" ]; then
   # starts npm watch-all in background, which transpiles es6 to js and watches changes to sass files
-  npm run watch-all&
+  npm run watch-all-site&
 fi
 
 mvn clean tomcat7:run

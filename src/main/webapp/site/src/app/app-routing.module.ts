@@ -4,24 +4,18 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { AboutComponent } from './about/about.component';
-import { ContactModule } from "./contact/contact.module";
-import { FeaturesComponent } from './features/features.component';
-import { HomeModule } from "./home/home.module";
-import { LoginModule } from "./login/login.module";
 import { PrivacyComponent } from "./privacy/privacy.component";
-import { RegisterModule } from "./register/register.module";
-import { NewsModule } from "./news/news.module";
 
 const routes: Routes = [
-  // https://github.com/angular/angular-cli/issues/9825
-  // { path: '', loadChildren: 'app/modules/home.module#HomeModule' },
-  { path: '', loadChildren: () => HomeModule },
+  { path: '', loadChildren: './home/home.module#HomeModule' },
   { path: 'about', component: AboutComponent },
-  { path: 'contact', loadChildren: () => ContactModule },
-  { path: 'features', component: FeaturesComponent },
-  { path: 'join', loadChildren: () => RegisterModule },
-  { path: 'login', loadChildren: () => LoginModule },
-  { path: 'news', loadChildren: () => NewsModule },
+  { path: 'contact', loadChildren: './contact/contact.module#ContactModule' },
+  { path: 'features', loadChildren: './features/features.module#FeaturesModule' },
+  { path: 'forgot', loadChildren: './forgot/forgot.module#ForgotModule' },
+  { path: 'help', loadChildren: './help/help.module#HelpModule' },
+  { path: 'join', loadChildren: './register/register.module#RegisterModule' },
+  { path: 'login', loadChildren: './login/login.module#LoginModule' },
+  { path: 'news', loadChildren: './news/news.module#NewsModule' },
   { path: 'privacy', component: PrivacyComponent }
 ];
 
@@ -37,7 +31,7 @@ export class XhrInterceptor implements HttpInterceptor {
 }
 
 @NgModule({
-  declarations: [ AboutComponent, FeaturesComponent, PrivacyComponent ],
+  declarations: [ AboutComponent, PrivacyComponent ],
   imports: [ RouterModule.forRoot(routes), FormsModule ],
   exports: [ RouterModule ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }]

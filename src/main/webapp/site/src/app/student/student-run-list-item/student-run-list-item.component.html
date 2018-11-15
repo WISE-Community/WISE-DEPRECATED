@@ -1,15 +1,15 @@
 <ng-template #runInfo>
   <div fxShow fxHide.xs>
-    Teacher: {{ run.owner.displayName }} |
-    Period: {{ run.periodName }} |
-    Code: {{ run.runCode }}
+    <ng-container i18n>Teacher:</ng-container> {{ run.owner.displayName }} |
+    <ng-container i18n>Period:</ng-container> {{ run.periodName }} |
+    <ng-container i18n>Code:</ng-container> {{ run.runCode }}
   </div>
   <div fxHide fxShow.xs>
-    Teacher: {{ run.owner.displayName }}<br />
-    Period: {{ run.periodName }}<br />
-    Code: {{ run.runCode }}<br />
+    <ng-container i18n>Teacher:</ng-container> {{ run.owner.displayName }}<br />
+    <ng-container i18n>Period:</ng-container> {{ run.periodName }}<br />
+    <ng-container i18n>Code:</ng-container> {{ run.runCode }}<br />
   </div>
-  <div *ngIf="run.workgroupMembers">Team:
+  <div *ngIf="run.workgroupMembers"><ng-container i18n>Team:</ng-container>
     <span *ngFor="let user of run.workgroupMembers; let isLast=last">
       {{ user.firstname }}{{ isLast ? '' : ', '}}
     </span>
@@ -17,11 +17,12 @@
 </ng-template>
 
 <mat-card [ngClass]="{ 'highlighted': run.isHighlighted }">
-  <mat-card-content fxLayout="row">
+  <mat-card-content fxLayout="row" fxLayoutGap="12px">
     <div mat-card-avatar [style.background-image]="thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
         <div fxLayout="column">
-          <mat-card-title [class.secondary-text]="run.endTime">
+          <mat-card-title [class.secondary-text]="run.endTime"
+                          class="mat-body-2">
             {{ run.name }}
           </mat-card-title>
           <mat-card-subtitle fxHide fxShow.gt-xs>
@@ -45,7 +46,7 @@
          href="{{ problemLink }}"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
-        Report Problem
+        <ng-container i18n>Report Problem</ng-container>
       </a>
       <a mat-flat-button
          *ngIf="!run.endTime"
@@ -55,7 +56,7 @@
          fxFlex="0 0 auto"
          fxFlex.xs="100">
         <mat-icon>play_circle_filled</mat-icon>
-        Launch
+        <ng-container i18n>Launch</ng-container>
       </a>
       <a mat-flat-button
          *ngIf="run.endTime"
@@ -64,7 +65,7 @@
          fxFlex="0 0 auto"
          fxFlex.xs="100">
         <mat-icon>visibility</mat-icon>
-        Review
+        <ng-container i18n>Review</ng-container>
       </a>
     </div>
   </mat-card-actions>

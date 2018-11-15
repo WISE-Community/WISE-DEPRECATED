@@ -10,8 +10,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class NewsComponent implements OnInit {
 
-  private allNewsItems: any = [];
-  private showAll: boolean = false;
+  allNewsItems: any = [];
+  showAll: boolean = false;
 
   constructor(private newsService: NewsService,
               private sanitizer: DomSanitizer) { }
@@ -21,5 +21,4 @@ export class NewsComponent implements OnInit {
       this.allNewsItems = allNewsItems;
     });
   }
-
 }

@@ -37,6 +37,7 @@ export class RegisterTeacherFormComponent implements OnInit {
     agree: new FormControl('')
   }, { validator: this.agreeCheckboxValidator });
   isSubmitted = false;
+  processing: boolean = false;
 
   constructor(private router: Router, private route: ActivatedRoute,
               private teacherService: TeacherService,
@@ -69,11 +70,13 @@ export class RegisterTeacherFormComponent implements OnInit {
   createAccount() {
     this.isSubmitted = true;
     if (this.createTeacherAccountFormGroup.valid) {
+      this.processing = true;
       this.populateTeacherUser();
       this.teacherService.registerTeacherAccount(this.teacherUser, (userName) => {
         this.router.navigate(['join/teacher/complete',
-          { username: userName }
+          { username: userName, isUsingGoogleId: this.isUsingGoogleId() }
         ]);
+        this.processing = false;
       });
     }
   }

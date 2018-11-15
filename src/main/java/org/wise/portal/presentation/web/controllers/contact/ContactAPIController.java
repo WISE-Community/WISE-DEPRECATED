@@ -63,6 +63,7 @@ public class ContactAPIController {
   protected String sendContactMessage(
     @RequestParam(value = "name") String name,
     @RequestParam(value = "email", required = false) String email,
+    @RequestParam(value = "teacherUsername", required = false) String teacherUsername,
     @RequestParam(value = "issueType") String issueType,
     @RequestParam(value = "summary") String summary,
     @RequestParam(value = "description") String description,
@@ -76,11 +77,11 @@ public class ContactAPIController {
       boolean isStudent = isStudent();
       String issueTypeValue = getIssueTypeValue(issueType);
       String fromEmail = wiseProperties.getProperty("portalemailaddress");
-      String[] toEmails = getContactMessageToEmails(runId, isStudent);
+      String[] toEmails = getContactMessageToEmails(isStudent, runId, teacherUsername);
       String[] cc = getContactMessageCCs(email, isStudent);
       String subject = getSubject(issueTypeValue, summary);
       String body = getContactEmailBody(
-          name, email, description, runId, projectId, userAgent, isStudent);
+          name, email, teacherUsername, description, runId, projectId, userAgent, isStudent);
       JSONObject response = sendEmail(fromEmail, toEmails, cc, subject, body);
       return response.toString();
     } else {
@@ -148,13 +149,16 @@ public class ContactAPIController {
     return "[" + contactWISEString + "] " + issueType + ": " + summary;
   }
 
-  protected String[] getContactMessageToEmails(Long runId, boolean isStudent) {
+  protected String[] getContactMessageToEmails(boolean isStudent, Long runId, String teacherUsername) {
     if (isStudent) {
-      return new String[] {getTeacherEmail(runId)};
-    } else {
-      String contactEmailString = wiseProperties.getProperty("contact_email");
-      return contactEmailString.split(",");
+      if (runId != null) {
+        return new String[] {getTeacherEmail(runId)};
+      } else if (teacherUsername != null) {
+        return new String[] {getTeacherEmail(teacherUsername)};
+      }
     }
+    String contactEmailString = wiseProperties.getProperty("contact_email");
+    return contactEmailString.split(",");
   }
 
   protected String[] getContactMessageCCs(String email, boolean isStudent) {
@@ -166,11 +170,11 @@ public class ContactAPIController {
     }
   }
 
-  private String getContactEmailBody(String name, String email, String description, Long runId,
-        Integer projectId, String userAgent, Boolean isStudent) {
+  private String getContactEmailBody(String name, String email, String teacherUsername,
+        String description, Long runId, Integer projectId, String userAgent, Boolean isStudent) {
     StringBuffer body = new StringBuffer();
     if (isStudent) {
-      addStudentGeneratedRequestBody(body, description, name, runId);
+      addStudentGeneratedRequestBody(body, description, name, runId, teacherUsername);
     } else {
       addTeacherGeneratedRequestBody(body, description, name, email);
     }
@@ -186,9 +190,14 @@ public class ContactAPIController {
   }
 
   private void addStudentGeneratedRequestBody(StringBuffer body, String description, String name,
-        Long runId) {
+        Long runId, String teacherUsername) {
+    User teacher = null;
     if (runId != null) {
-      User teacher = getTeacherForRun(runId);
+      teacher = getTeacherForRun(runId);
+    } else if (teacherUsername != null) {
+      teacher = getTeacherByUsername(teacherUsername);
+    }
+    if (teacher != null) {
       TeacherUserDetails teacherUserDetails = (TeacherUserDetails) teacher.getUserDetails();
       String displayName = teacherUserDetails.getDisplayname();
       appendLine(body, getTranslationString("contact.email.studentGenerated", displayName));
@@ -212,6 +221,16 @@ public class ContactAPIController {
     User teacher = getTeacherForRun(runId);
     TeacherUserDetails teacherUserDetails = (TeacherUserDetails) teacher.getUserDetails();
     return teacherUserDetails.getEmailAddress();
+  }
+
+  private String getTeacherEmail(String teacherUsername) {
+    User teacher = getTeacherByUsername(teacherUsername);
+    TeacherUserDetails teacherUserDetails = (TeacherUserDetails) teacher.getUserDetails();
+    return teacherUserDetails.getEmailAddress();
+  }
+
+  private User getTeacherByUsername(String teacherUsername) {
+    return userService.retrieveUserByUsername(teacherUsername);
   }
 
   private void addTeacherGeneratedRequestBody(StringBuffer body, String description, String name,

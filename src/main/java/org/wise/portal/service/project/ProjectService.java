@@ -43,11 +43,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
-
 /**
  * A Service for Projects
  *
@@ -345,4 +340,6 @@ public interface ProjectService {
   void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
 
   List<Project> getProjectsWithoutRuns(User user);
+
+  List<Project> getAllSharedProjects();
 }

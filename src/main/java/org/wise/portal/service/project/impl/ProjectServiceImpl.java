@@ -614,7 +614,9 @@ public class ProjectServiceImpl implements ProjectService {
     String projectFolderPath = FileManager.getProjectFolderPath(parentProject);
     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
     String newProjectDirname = FileManager.copyProject(curriculumBaseDir, projectFolderPath);
-    String newProjectPath = "/" + newProjectDirname + "/project.json";
+    String projectModulePath = parentProject.getModulePath();
+    String projectJSONFilename = projectModulePath.substring(projectModulePath.lastIndexOf("/") + 1);
+    String newProjectPath = "/" + newProjectDirname + "/" + projectJSONFilename;
     String newProjectName = parentProject.getName();
     Long parentProjectId = (Long) parentProject.getId();
     ProjectParameters pParams = new ProjectParameters();
@@ -622,7 +624,7 @@ public class ProjectServiceImpl implements ProjectService {
     pParams.setOwner(user);
     pParams.setProjectname(newProjectName);
     pParams.setProjectType(ProjectType.LD);
-    pParams.setWiseVersion(5);
+    pParams.setWiseVersion(parentProject.getWiseVersion());
     pParams.setParentProjectId(parentProjectId);
     ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
     if (parentProjectMetadata != null) {
@@ -672,5 +674,9 @@ public class ProjectServiceImpl implements ProjectService {
 
   public List<Project> getProjectsWithoutRuns(User user) {
     return projectDao.getProjectsWithoutRuns(user);
+  }
+
+  public List<Project> getAllSharedProjects() {
+    return projectDao.getAllSharedProjects();
   }
 }

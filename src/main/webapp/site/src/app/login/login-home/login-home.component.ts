@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { UserService } from '../../services/user.service';
 import { ConfigService } from '../../services/config.service';
@@ -16,15 +16,23 @@ export class LoginHomeComponent implements OnInit {
   error: boolean = false;
   processing: boolean = false;
   isGoogleAuthenticationEnabled: boolean = false;
+  isShowGoogleLogin: boolean = true;
 
   constructor(private userService: UserService, private http: HttpClient,
-      private router: Router, private configService: ConfigService) {
+      private router: Router, private route: ActivatedRoute,
+      private configService: ConfigService) {
   }
 
   ngOnInit(): void {
     this.configService.getConfig().subscribe((config) => {
       if (config != null) {
         this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+      }
+    });
+    this.route.params.subscribe(params => {
+      if (params['username'] != null) {
+        this.credentials.username = params['username'];
+        this.isShowGoogleLogin = false;
       }
     });
   }

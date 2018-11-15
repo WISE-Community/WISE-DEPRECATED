@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
+import { MatDialog, MatDialogRef } from "@angular/material";
 import { Subscription } from 'rxjs';
 import { MediaChange, ObservableMedia } from '@angular/flex-layout';
 import { UtilService } from "./services/util.service";
+import { ConfigService } from "./services/config.service";
 
 @Component({
   selector: 'app-root',
@@ -15,12 +17,14 @@ export class AppComponent {
   title = 'app';
   showMobileMenu: boolean = false;
   mediaWatcher: Subscription;
+  hasAnnouncement: boolean = true;
 
   constructor(private router: Router,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer,
               utilService: UtilService,
-              media: ObservableMedia) {
+              media: ObservableMedia,
+              public dialog: MatDialog) {
     iconRegistry.addSvgIcon(
       'ki-elicit',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/ki-elicit.svg')
@@ -62,5 +66,35 @@ export class AppComponent {
   showHeaderAndFooter(): boolean {
     return !this.router.url.includes('/login') &&
       !this.router.url.includes('/join');
+  }
+
+  showAnnouncementDetails() {
+    this.dialog.open(AnnouncementDialogComponent, {
+      panelClass: 'mat-dialog--md'
+    });
+  }
+
+  dismissAnnouncement() {
+    this.hasAnnouncement = false;
+  }
+}
+
+@Component({
+  selector: 'announcement-dialog',
+  templateUrl: 'announcement-dialog.component.html',
+})
+export class AnnouncementDialogComponent {
+  constructor(public dialogRef: MatDialogRef<AnnouncementDialogComponent>,
+              private router: Router,
+              public configService: ConfigService) {
+  }
+
+  contact() {
+    this.dialogRef.close();
+    this.router.navigate(['/contact']);
+  }
+
+  visitLegacy() {
+    document.location.href = this.configService.getContextPath() + '/legacy';
   }
 }

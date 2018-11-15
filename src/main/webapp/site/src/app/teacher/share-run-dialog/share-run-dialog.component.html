@@ -1,10 +1,10 @@
-<h2 class="mat-dialog-title">Share Classroom Run</h2>
+<h2 class="mat-dialog-title" i18n>Share Classroom Run</h2>
 <mat-dialog-content class="mat-dialog-content--scroll">
-  <p class="mat-subheading-2">
-    {{ run.name }} <span class="mat-caption">(Run ID: {{ run.id }})</span>
+  <p class="mat-subheading-1 accent-1">
+    {{ run.name }} <span class="mat-caption">(<ng-container i18n>Run ID:</ng-container> {{ run.id }})</span>
   </p>
   <mat-form-field appearance="fill">
-    <mat-label>Enter teacher username</mat-label>
+    <mat-label i18n>Enter teacher username</mat-label>
     <mat-icon matPrefix>search</mat-icon>
     <input id="share-run-dialog-search"
            type="text"
@@ -20,7 +20,9 @@
       <mat-icon>close</mat-icon>
     </button>
     <mat-hint *ngIf="duplicate && allTeacherUsernames.includes(teacherSearchControl.value)"
-              class="info">Teacher is already on shared list.</mat-hint>
+              class="info">
+      <ng-container i18n>Teacher is already on shared list.</ng-container>
+    </mat-hint>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="shareRun()">
       <mat-option *ngFor="let teacherUsername of filteredTeacherUsernames | async"
                   [value]="teacherUsername">
@@ -30,32 +32,38 @@
   </mat-form-field>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
     <ng-container matColumnDef="name" sticky>
-      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <th mat-header-cell *matHeaderCellDef i18n>Name</th>
       <td mat-cell *matCellDef="let sharedOwner">
         <ng-container *ngIf="sharedOwner.isOwner">
           {{ run.owner.firstName }} {{ run.owner.lastName }}
         </ng-container>
         <ng-container *ngIf="!sharedOwner.isOwner">
-          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a href="#" (click)="!!unshareRun(sharedOwner)" class="warn">Revoke</a>)
+          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a href="#" (click)="!!unshareRun(sharedOwner)" class="warn" i18n>Revoke</a>)
         </ng-container>
       </td>
     </ng-container>
     <ng-container matColumnDef="permissions">
-      <th mat-header-cell *matHeaderCellDef>Permissions</th>
+      <th mat-header-cell *matHeaderCellDef i18n>Permissions</th>
       <td mat-cell *matCellDef="let sharedOwner">
-        <ng-container *ngIf="sharedOwner.isOwner">
-          Owner. Full permissions.
-        </ng-container>
+        <ng-container *ngIf="sharedOwner.isOwner" i18n>Owner. Full permissions.</ng-container>
         <ng-container *ngIf="!sharedOwner.isOwner">
           <div fxLayout="row wrap" fxLayoutGap="12px">
             <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[1]"
-                          disabled="true">View Student Work</mat-checkbox>
+                          disabled="true">
+              <ng-container i18n>View Student Work</ng-container>
+            </mat-checkbox>
             <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[3]"
-                          (change)="runPermissionChanged(sharedOwner.id, 3, sharedOwner.runPermissions[3])">View Student Names</mat-checkbox>
+                          (change)="runPermissionChanged(sharedOwner.id, 3, sharedOwner.runPermissions[3])">
+              <ng-container i18n>View Student Names</ng-container>
+            </mat-checkbox>
             <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[2]"
-                          (change)="runPermissionChanged(sharedOwner.id, 2, sharedOwner.runPermissions[2])">Grade and Manage</mat-checkbox>
+                          (change)="runPermissionChanged(sharedOwner.id, 2, sharedOwner.runPermissions[2])">
+              <ng-container i18n>Grade and Manage</ng-container>
+            </mat-checkbox>
             <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]"
-                          (change)="projectPermissionChanged(project, sharedOwner.id, 2, sharedOwner.projectPermissions[2])">Edit Unit Content</mat-checkbox>
+                          (change)="projectPermissionChanged(project, sharedOwner.id, 2, sharedOwner.projectPermissions[2])">
+              <ng-container i18n>Edit Unit Content</ng-container>
+            </mat-checkbox>
           </div>
         </ng-container>
       </td>
@@ -65,8 +73,6 @@
   </table>
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="end">
-  <button mat-flat-button color="primary" mat-dialog-close>
-    Done
-  </button>
+  <button mat-flat-button color="primary" mat-dialog-close i18n>Done</button>
 </mat-dialog-actions>
 

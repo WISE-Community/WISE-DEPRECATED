@@ -34,17 +34,16 @@ export abstract class LibraryComponent implements OnInit {
   /**
    * Add given project or all child projects from a given group to the list of projects
    * @param item
-   * @param {string} implementationModel
+   * @param {LibraryProject[]} projects
    */
-  populateProjects(item: any, implementationModel: string, projects: LibraryProject[]): void {
+  populateProjects(item: any, projects: LibraryProject[]): void {
     if (item.type === 'project') {
       item.visible = true;
-      item.implementationModel = implementationModel;
       projects.push(item);
     } else if (item.type === 'group') {
       let children = item.children;
       for (let child of children) {
-        this.populateProjects(child, implementationModel, projects);
+        this.populateProjects(child, projects);
       }
     }
   }
@@ -130,18 +129,8 @@ export abstract class LibraryComponent implements OnInit {
       }
       project.visible = searchMatch || filterMatch;
     }
-    this.setImplementationModelOptions();
     let numProjectsVisible = this.countVisibleProjects(this.projects);
     this.emitNumberOfProjectsVisible(numProjectsVisible);
-  }
-
-  setImplementationModelOptions() {
-    this.implementationModelOptions = [];
-    for (let i = 0; i < this.libraryService.implementationModelOptions.length; i++) {
-      const option = {...this.libraryService.implementationModelOptions[i]};
-      option.name = option.name + ` (${this.countVisibleProjects(this.projects, option.id)})`;
-      this.implementationModelOptions.push(option);
-    }
   }
 
   emitNumberOfProjectsVisible(numProjectsVisible) {
@@ -262,16 +251,7 @@ export abstract class LibraryComponent implements OnInit {
     return false;
   }
 
-  countVisibleProjects(set: LibraryProject[], implementationModel: string = ''): number {
-    if (implementationModel) {
-      return set.filter((project) => 'project' && project.visible &&
-        project.implementationModel === implementationModel).length;
-    } else {
-      return set.filter((project) => 'project' && project.visible).length;
-    }
-  }
-
-  implementationModelUpdated(value: string): void {
-    this.implementationModelValue = value;
+  countVisibleProjects(set: LibraryProject[]): number {
+    return set.filter((project) => 'project' && project.visible).length;
   }
 }

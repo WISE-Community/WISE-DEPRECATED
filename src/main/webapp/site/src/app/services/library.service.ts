@@ -39,23 +39,14 @@ export class LibraryService {
   private tabIndexSource = new Subject<number>();
   public tabIndexSource$ = this.tabIndexSource.asObservable();
 
-  implementationModelValue: string = '';
-  implementationModelOptions: LibraryGroup[] = [];
-
   constructor(private http: HttpClient) { }
 
   getOfficialLibraryProjects() {
     this.http.get<LibraryGroup[]>(this.libraryGroupsUrl).subscribe((libraryGroups) => {
       this.libraryGroups = libraryGroups;
-      this.implementationModelOptions = [];
       const projects: LibraryProject[] = [];
       for (let group of this.libraryGroups) {
-        if (!this.implementationModelValue) {
-          this.implementationModelValue = group.id;
-        }
-        this.implementationModelOptions.push(group);
-
-        this.populateProjects(group, group.id, projects);
+        this.populateProjects(group, projects);
       }
       this.officialLibraryProjectsSource.next(projects);
       this.libraryGroupsSource.next(libraryGroups);
@@ -98,17 +89,16 @@ export class LibraryService {
   /**
    * Add given project or all child projects from a given group to the list of projects
    * @param item
-   * @param {string} implementationModel
+   * @param {LibraryProject[]} projects
    */
-  populateProjects(item: any, implementationModel: string, projects: LibraryProject[]): void {
+  populateProjects(item: any, projects: LibraryProject[]): void {
     if (item.type === 'project') {
       item.visible = true;
-      item.implementationModel = implementationModel;
       projects.push(item);
     } else if (item.type === 'group') {
       let children = item.children;
       for (let child of children) {
-        this.populateProjects(child, implementationModel, projects);
+        this.populateProjects(child, projects);
       }
     }
   }

@@ -13,18 +13,13 @@
       </div>
     </ng-template>
     <ng-template #taglineTemplate>
-      <div [@flipInX]="{value: '*', params: {delay: '3500ms'}}">
-        <span>Integrated</span> science learning and teaching with technology
-      </div>
+      <div [@flipInX]="{value: '*', params: {delay: '3500ms'}}" i18n>Integrated science learning and teaching with technology</div>
     </ng-template>
   </app-hero-section>
   <section class="section">
     <div class="section--fullwidth section--slant mat-app-background">
       <div class="content">
-        <h1 class="accent section__header" ngClass="mat-display-1"
-            [ngClass.xs]="{ 'mat-display-1': false }">
-          The WISE Advantage
-        </h1>
+        <h1 class="accent section__header" ngClass="mat-display-1" [ngClass.xs]="{ 'mat-display-1': false }" i18n>The WISE Advantage</h1>
         <div fxLayout="row"
              fxLayout.xs="column"
              fxLayoutAlign="center stretch"
@@ -35,8 +30,11 @@
           <app-blurb fxFlex
                      fxFlex.gt-xs="33"
                      imgSrc="assets/img/wise-students-building.jpg"
-                     imgDescription="WISE students building"
-                     content="Free, standards-aligned, and research-based inquiry curricula that address NGSS 3D proficiency"></app-blurb>
+                     imgDescription="WISE students building">
+            <ng-template #contentTemplate>
+              Free, standards-aligned, and research-based inquiry curricula that address <a href="http://www.nextgenscience.org/three-dimensions" target="_blank">NGSS 3D proficiency</a>
+            </ng-template>
+          </app-blurb>
           <app-blurb fxFlex
                      fxFlex.gt-xs="33"
                      imgSrc="assets/img/wise-project-view.jpg"
@@ -54,10 +52,7 @@
   <section class="section">
     <div class="section--fullwidth section--slant section--slant--rtl app-background">
       <div class="content">
-        <h1 class="accent section__header" ngClass="mat-display-1"
-            [ngClass.xs]="{ 'mat-display-1': false }">
-          Curriculum Offerings
-        </h1>
+        <h1 class="accent section__header" ngClass="mat-display-1" [ngClass.xs]="{ 'mat-display-1': false }" i18n>Curriculum Offerings</h1>
         <app-home-page-project-library></app-home-page-project-library>
         <div class="library__links">
           <h2 class="accent-1 center"
@@ -66,10 +61,8 @@
               fxLayoutGap="16px"
               fxLayoutAlign="center center"
               fxLayoutWrap>
-            <span>Ready to try WISE in the Classroom?</span>
-            <a mat-raised-button color="accent" routerLink="/join">
-              Sign up for free!
-            </a>
+            <span i18n>Ready to try WISE in the Classroom?</span>
+            <a mat-raised-button color="accent" routerLink="/join" i18n>Sign up for free!</a>
           </h2>
         </div>
       </div>
@@ -83,7 +76,7 @@
             [ngClass.xs]="{ 'mat-display-1': false }"
             fxLayoutAlign="start center"
             fxLayoutGap="16px">
-          <span>Connect</span>
+          <span i18n>Connect</span>
           <a href="https://www.facebook.com/wisetels/"
              target="_blank" mat-icon-button>
             <mat-icon svgIcon="facebook"

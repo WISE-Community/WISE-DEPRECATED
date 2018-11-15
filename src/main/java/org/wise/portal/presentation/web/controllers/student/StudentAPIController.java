@@ -378,11 +378,15 @@ public class StudentAPIController {
   }
 
   protected JSONObject getSecurityQuestionJSONObject(AccountQuestion accountQuestionKey) throws JSONException {
-    String accountQuestion = i18nProperties.getProperty("accountquestions." + accountQuestionKey);
+    String accountQuestion = getAccountQuestionValue(accountQuestionKey.name());
     JSONObject accountQuestionObject = new JSONObject();
     accountQuestionObject.put("key", accountQuestionKey);
     accountQuestionObject.put("value", accountQuestion);
     return accountQuestionObject;
+  }
+
+  private String getAccountQuestionValue(String accountQuestionKey) {
+    return i18nProperties.getProperty("accountquestions." + accountQuestionKey);
   }
 
   @RequestMapping(value = "/profile/update", method = RequestMethod.POST)
@@ -400,5 +404,32 @@ public class StudentAPIController {
     } else {
       throw new NotAuthorizedException("username is not the same as signed in user");
     }
+  }
+
+  @RequestMapping(value = "/teacher-list", method = RequestMethod.GET)
+  protected String getTeacherList() {
+    JSONArray teacherList = new JSONArray();
+    User user = ControllerUtil.getSignedInUser();
+    if (user != null) {
+      HashMap<String, Boolean> foundTeachers = new HashMap<String, Boolean>();
+      List<Run> runList = runService.getRunList(user);
+      for (Run run: runList) {
+        User owner = run.getOwner();
+        TeacherUserDetails userDetails = (TeacherUserDetails) owner.getUserDetails();
+        String username = userDetails.getUsername();
+        if (foundTeachers.get(username) == null) {
+          try {
+            JSONObject teacherJSON = new JSONObject();
+            teacherJSON.put("username", username);
+            teacherJSON.put("displayName", userDetails.getDisplayname());
+            teacherList.put(teacherJSON);
+            foundTeachers.put(username, true);
+          } catch(JSONException e) {
+
+          }
+        }
+      }
+    }
+    return teacherList.toString();
   }
 }

@@ -23,6 +23,8 @@
  */
 package org.wise.portal.domain;
 
+import java.util.Properties;
+
 /**
  * Enumeration class for account questions
  *

@@ -27,6 +27,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.run.Run;
@@ -448,4 +449,10 @@ public interface RunService {
    * @param name name of the new period to add to the run
    */
   void addPeriodToRun(Long runId, String name);
+
+  void deletePeriodFromRun(Long runId, String name);
+
+  void setMaxWorkgroupSize(Long runId, Integer studentsPerTeam);
+
+  void setStartTime(Long runId, String startTime);
 }

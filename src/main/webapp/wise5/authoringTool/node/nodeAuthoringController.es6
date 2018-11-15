@@ -252,6 +252,20 @@ class NodeAuthoringController {
             text: this.$translate('requiredNumberOfWords')
           }
         ]
+      },
+      {
+        value: "addXNumberOfNotesOnThisStep",
+        text: this.$translate('addXNumberOfNotesOnThisStep'),
+        params: [
+          {
+            value: "nodeId",
+            text: this.$translate('step')
+          },
+          {
+            value: "requiredNumberOfNotes",
+            text: this.$translate('requiredNumberOfNotes')
+          }
+        ]
       }
     ];
 

@@ -1,7 +1,7 @@
 <div class="student-run-list">
   <div class="notice" *ngIf="!runs.length && loaded">
-    <p>Hey there! Looks like you don't have any WISE units yet.</p>
-    <p>Ask your teacher for an <b>Access Code</b> and then tap the <b>Add Unit</b> button to get started.</p>
+    <p i18n>Hey there! Looks like you don't have any WISE units yet.</p>
+    <p><ng-container i18n>Ask your teacher for an</ng-container> <b><ng-container i18n>Access Code</ng-container></b> <ng-container i18n>and then tap the</ng-container> <b><ng-container i18n>Add Unit</ng-container></b> <ng-container i18n>button to get started</ng-container>.</p>
   </div>
   <div class="content-block" *ngIf="runs.length">
     <div class="content-block__header dark-theme primary-bg"
@@ -16,10 +16,10 @@
     </div>
     <div id="unitCount" *ngIf="loaded" class="notice">
       <p>
-        <ng-container *ngIf="search">Units found: {{ filteredRuns.length }}</ng-container>
-        <ng-container *ngIf="!search">My WISE units: {{ filteredRuns.length }}</ng-container>
-        <span class="mat-caption" *ngIf="filteredRuns.length"> (<ng-container *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} scheduled, </ng-container>{{ filteredActiveTotal }} active, {{ filteredCompletedTotal }} completed)</span>.
-        <a *ngIf="search" href="#" (click)="!!reset()">Reset</a>
+        <ng-container *ngIf="search"><ng-container i18n>Units found:</ng-container> {{ filteredRuns.length }}</ng-container>
+        <ng-container *ngIf="!search"><ng-container i18n>My WISE units:</ng-container> {{ filteredRuns.length }}</ng-container>
+        <span class="mat-caption" *ngIf="filteredRuns.length"> (<ng-container *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} <ng-container i18n>scheduled</ng-container>, </ng-container>{{ filteredActiveTotal }} <ng-container i18n>active</ng-container>, {{ filteredCompletedTotal }} <ng-container i18n>completed</ng-container>)</span>.
+        <a *ngIf="search" href="#" (click)="!!reset()" i18n>Reset</a>
       </p>
     </div>
     <app-timeline>
@@ -28,22 +28,22 @@
           <app-timeline-item-label>
             <ng-container *ngIf="run.endTime">
               <ng-container *ngIf="runSpansYears(run)">
-                <span class="mat-body-2">{{ run.startTime | amDateFormat:'MMM D' }}</span>
+                <span><strong>{{ run.startTime | amDateFormat:'MMM D' }}</strong></span>
                 <span class="secondary-text"> {{ run.startTime | amDateFormat:'Y' }}</span> -
-                <span class="mat-body-2"> {{ run.endTime | amDateFormat:'MMM D' }}</span>
+                <span><strong> {{ run.endTime | amDateFormat:'MMM D' }}</strong></span>
                 <span class="secondary-text"> {{ run.endTime | amDateFormat:'Y' }}</span>
               </ng-container>
               <ng-container *ngIf="!runSpansYears(run)">
-                <span class="mat-body-2">{{ run.startTime | amDateFormat:'MMM D' }}</span>
+                <span><strong>{{ run.startTime | amDateFormat:'MMM D' }}</strong></span>
                 <ng-container *ngIf="runSpansDays(run)"> -
-                  <span class="mat-body-2" *ngIf="runSpansMonths(run)">{{ run.endTime | amDateFormat:'MMM D' }}</span>
-                  <span class="mat-body-2" *ngIf="!runSpansMonths(run)">{{ run.endTime | amDateFormat:'D' }}</span>
+                  <strong *ngIf="runSpansMonths(run)">{{ run.endTime | amDateFormat:'MMM D' }}</strong>
+                  <strong *ngIf="!runSpansMonths(run)">{{ run.endTime | amDateFormat:'D' }}</strong>
                 </ng-container>
                 <span class="secondary-text"> {{ run.endTime | amDateFormat:'Y' }}</span>
               </ng-container>
             </ng-container>
             <ng-container *ngIf="!run.endTime">
-              <span class="mat-body-2">{{ run.startTime | amDateFormat:'MMM D' }}</span>
+              <span><strong>{{ run.startTime | amDateFormat:'MMM D' }}</strong></span>
               <span class="secondary-text"> {{ run.startTime | amDateFormat:'Y' }}</span>
             </ng-container>
           </app-timeline-item-label>
@@ -55,7 +55,7 @@
     </app-timeline>
     <div class="content-block__actions"
          *ngIf="filteredRuns.length > 10 && !showAll" >
-      <a mat-raised-button color="accent" (click)="showAll = true">Show More</a>
+      <a mat-raised-button color="accent" (click)="showAll = true" i18n>Show More</a>
     </div>
   </div>
 </div>
