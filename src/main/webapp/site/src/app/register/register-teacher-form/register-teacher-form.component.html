@@ -4,92 +4,92 @@
           fxLayout="column"
           (submit)="createAccount()"
           [formGroup]="createTeacherAccountFormGroup">
-      <h2 class="standalone__title accent">Create Teacher Account</h2>
+      <h2 class="standalone__title accent" i18n>Create Teacher Account</h2>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>First Name</mat-label>
+          <mat-label i18n>First Name</mat-label>
           <input matInput
                  id="firstName"
                  name="firstName"
                  formControlName="firstName"
                  autofocus
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['firstName'].hasError('required')">First Name Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['firstName'].hasError('required')" i18n>First Name Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Last Name</mat-label>
+          <mat-label i18n>Last Name</mat-label>
           <input matInput
                  id="lastName"
                  name="lastName"
                  formControlName="lastName"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['lastName'].hasError('required')">Last Name Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['lastName'].hasError('required')" i18n>Last Name Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field class="mat-form-field--extra-sub"
                         appearance="fill"
                         fxFlex>
-          <mat-label>Email</mat-label>
+          <mat-label i18n>Email</mat-label>
           <input matInput
                  id="email"
                  name="email"
                  formControlName="email"
                  required />
-          <mat-hint>We’ll never share your email address or personal information with anyone without your consent.</mat-hint>
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['email'].hasError('required')">Email Required</mat-error>
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['email'].hasError('email')">Please enter a valid email address</mat-error>
+          <mat-hint i18n>We’ll never share your email address or personal information with anyone without your consent.</mat-hint>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['email'].hasError('required')" i18n>Email Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['email'].hasError('email')" i18n>Please enter a valid email address</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>City</mat-label>
+          <mat-label i18n>City</mat-label>
           <input matInput
                  id="city"
                  name="city"
                  formControlName="city"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['city'].hasError('required')">City Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['city'].hasError('required')" i18n>City Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>State</mat-label>
+          <mat-label i18n>State</mat-label>
           <input matInput
                  id="state"
                  name="state"
                  formControlName="state"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['state'].hasError('required')">State Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['state'].hasError('required')" i18n>State Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Country</mat-label>
+          <mat-label i18n>Country</mat-label>
           <input matInput
                  id="country"
                  name="country"
                  formControlName="country"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['country'].hasError('required')">Country Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['country'].hasError('required')" i18n>Country Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>School Name</mat-label>
+          <mat-label i18n>School Name</mat-label>
           <input matInput
                  id="schoolName"
                  name="schoolName"
                  formControlName="schoolName"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['schoolName'].hasError('required')">School Name Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['schoolName'].hasError('required')" i18n>School Name Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>School Level</mat-label>
+          <mat-label i18n>School Level</mat-label>
           <mat-select placeholder="School Level"
                       [(value)]="teacherUser.schoolLevel"
                       formControlName="schoolLevel"
@@ -98,12 +98,12 @@
               {{schoolLevel.label}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['schoolLevel'].hasError('required')">School Level Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['schoolLevel'].hasError('required')" i18n>School Level Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>How did you hear about us?</mat-label>
+          <mat-label i18n>How did you hear about us?</mat-label>
           <input matInput
                  id="howDidYouHearAboutUs"
                  name="howDidYouHearAboutUs"
@@ -113,40 +113,40 @@
       <div *ngIf="teacherUser.googleUserId == null" formGroupName="passwords">
         <p>
           <mat-form-field appearance="fill" fxFlex>
-            <mat-label>Password</mat-label>
+            <mat-label i18n>Password</mat-label>
             <input matInput
                    id="password"
                    type="password"
                    name="password"
                    formControlName="password"
                    required />
-            <mat-error *ngIf="passwordsFormGroup.controls['password'].hasError('required')">Password Required</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.controls['password'].hasError('required')" i18n>Password Required</mat-error>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field appearance="fill" fxFlex>
-            <mat-label>Confirm Password</mat-label>
+            <mat-label i18n>Confirm Password</mat-label>
             <input matInput
                    id="confirmPassword"
                    type="password"
                    name="confirmPassword"
                    formControlName="confirmPassword"
                    required />
-            <mat-error *ngIf="passwordsFormGroup.controls['confirmPassword'].hasError('required')">Confirm Password Required</mat-error>
-            <mat-error *ngIf="passwordsFormGroup.hasError('passwordDoesNotMatch')">Password does not match</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.controls['confirmPassword'].hasError('required')" i18n>Confirm Password Required</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.hasError('passwordDoesNotMatch')" i18n>Password does not match</mat-error>
           </mat-form-field>
         </p>
       </div>
       <div class="mat-form-field--extra-sub">
         <p>
-          <mat-checkbox class="mat-checkbox--inline" formControlName="agree">I agree to the <a href="privacy" target="_blank">WISE Privacy Policy & Terms of Use</a> *</mat-checkbox>
-          <mat-error *ngIf="isSubmitted && createTeacherAccountFormGroup.hasError('agreeNotChecked')">You must agree to the Privacy Policy & Terms of Use</mat-error>
+          <mat-checkbox class="mat-checkbox--inline" formControlName="agree"><ng-container i18n>I agree to the</ng-container> <a href="privacy" target="_blank" i18n>WISE Privacy Policy & Terms of Use</a> *</mat-checkbox>
+          <mat-error *ngIf="isSubmitted && createTeacherAccountFormGroup.hasError('agreeNotChecked')" i18n>You must agree to the Privacy Policy & Terms of Use</mat-error>
         </p>
       </div>
       <p>
         <button fxFlex mat-flat-button color="primary" type="submit" [disabled]="processing">
           <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
-          <span>Create Account</span>
+          <span i18n>Create Account</span>
         </button>
       </p>
     </form>

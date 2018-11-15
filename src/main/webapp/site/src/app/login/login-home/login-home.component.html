@@ -1,14 +1,11 @@
 <mat-card class="standalone__content standalone__content--sm mat-elevation-z4">
   <mat-card-content>
     <form role="form" (submit)="login()">
-      <h2 class="standalone__title accent">Sign in to WISE</h2>
-      <p class="warn center standalone__error inactive"
-         [ngClass]="{'active': error}">
-        Username and password not recognized. Please try again.
-      </p>
+      <h2 class="standalone__title accent" i18n>Sign in to WISE</h2>
+      <p class="warn center standalone__error inactive" [ngClass]="{'active': error}" i18n>Username and password not recognized. Please try again.</p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Username</mat-label>
+          <mat-label i18n>Username</mat-label>
           <input matInput
                  id="username"
                  name="username"
@@ -19,7 +16,7 @@
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Password</mat-label>
+          <mat-label i18n>Password</mat-label>
           <input matInput
                  id="password"
                  name="password"
@@ -35,7 +32,7 @@
                 type="submit"
                 [disabled]="processing">
           <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
-          <span>Sign In</span>
+          <span i18n>Sign In</span>
         </button>
       </p>
     </form>
@@ -46,14 +43,15 @@
                 color="accent"
                 mat-flat-button
                 (click)="socialSignIn('google')">
-          <img src="assets/img/icons/g-logo.png" alt="Google logo" />Sign in with Google
+          <img src="assets/img/icons/g-logo.png" alt="Google logo"/>
+          <ng-container i18n>Sign in with Google</ng-container>
         </button>
       </p>
     </div>
   </mat-card-content>
   <mat-divider></mat-divider>
   <mat-card-actions>
-    <p><a routerLink="/forgot">Forgot username or password?</a></p>
-    <p>New to WISE? <a routerLink="/join">Join for free!</a></p>
+    <p><a routerLink="/lost" i18n>Forgot username or password?</a></p>
+    <p><ng-container i18n>New to WISE?</ng-container> <a routerLink="/join" i18n>Join for free!</a></p>
   </mat-card-actions>
 </mat-card>

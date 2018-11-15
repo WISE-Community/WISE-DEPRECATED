@@ -7,7 +7,7 @@
     <mat-select-trigger *ngIf="multiple">
      {{ selectField.value ? selectField.value[0] : '' }}
       <span *ngIf="selectField.value?.length > 1">
-        (+{{ selectField.value.length - 1 }} more)
+        (+{{ selectField.value.length - 1 }} <ng-container i18n>more</ng-container>)
       </span>
     </mat-select-trigger>
     <mat-option *ngFor="let option of options" [value]="option[valueProp]">

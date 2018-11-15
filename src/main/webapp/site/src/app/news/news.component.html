@@ -5,7 +5,7 @@
           fxLayoutAlign="center center"
           ngClass="mat-display-1"
           [ngClass.xs]="{ 'mat-display-1': false }">
-        <mat-icon>rss_feed</mat-icon><span>What's New?</span>
+        <mat-icon>rss_feed</mat-icon><span i18n>What's New?</span>
       </h1>
     </header>
     <section>
@@ -29,7 +29,7 @@
         </app-timeline>
         <div class="content-block__actions"
              *ngIf="allNewsItems.length > 10 && !showAll" >
-          <a mat-raised-button color="accent" (click)="showAll = true">Show More</a>
+          <a mat-raised-button color="accent" (click)="showAll = true" i18n>Show More</a>
         </div>
       </div>
     </section>

@@ -6,105 +6,105 @@
        fxLayoutGap.gt-xs="16px grid">
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>First Name</mat-label>
+        <mat-label i18n>First Name</mat-label>
         <input matInput
                id="firstName"
                name="firstName"
                formControlName="firstName" />
-        <mat-error *ngIf="editProfileFormGroup.controls['firstName'].hasError('required')">First Name required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['firstName'].hasError('required')" i18n>First Name required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>Last Name</mat-label>
+        <mat-label i18n>Last Name</mat-label>
         <input matInput
                id="lastName"
                name="lastName"
                formControlName="lastName" />
-        <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')">Last Name required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')" i18n>Last Name required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>Display Name</mat-label>
+        <mat-label i18n>Display Name</mat-label>
         <input matInput
                id="displayName"
                name="displayName"
                formControlName="displayName" />
-        <mat-hint>This is the name your students will see.</mat-hint>
-        <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')">Display Name required</mat-error>
+        <mat-hint i18n>This is the name your students will see.</mat-hint>
+        <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')" i18n>Display Name required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>Email</mat-label>
+        <mat-label i18n>Email</mat-label>
         <input matInput
                id="email"
                name="email"
                formControlName="email" />
-        <mat-error *ngIf="editProfileFormGroup.controls['email'].hasError('required')">Email required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['email'].hasError('required')" i18n>Email required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>City</mat-label>
+        <mat-label i18n>City</mat-label>
         <input matInput
                id="city"
                name="city"
                formControlName="city" />
-        <mat-error *ngIf="editProfileFormGroup.controls['city'].hasError('required')">City required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['city'].hasError('required')" i18n>City required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>State</mat-label>
+        <mat-label i18n>State</mat-label>
         <input matInput
                id="state"
                name="state"
                formControlName="state" />
-        <mat-error *ngIf="editProfileFormGroup.controls['state'].hasError('required')">State required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['state'].hasError('required')" i18n>State required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>Country</mat-label>
+        <mat-label i18n>Country</mat-label>
         <input matInput
                id="country"
                name="country"
                formControlName="country" />
-        <mat-error *ngIf="editProfileFormGroup.controls['country'].hasError('required')">Country required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['country'].hasError('required')" i18n>Country required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>School Name</mat-label>
+        <mat-label i18n>School Name</mat-label>
         <input matInput
                id="schoolName"
                name="schoolName"
                formControlName="schoolName" />
-        <mat-error *ngIf="editProfileFormGroup.controls['schoolName'].hasError('required')">School Name required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['schoolName'].hasError('required')" i18n>School Name required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>School Level</mat-label>
+        <mat-label i18n>School Level</mat-label>
         <mat-select formControlName="schoolLevel">
           <mat-option *ngFor="let schoolLevel of schoolLevels" [value]="schoolLevel.id">
             {{schoolLevel.label}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="editProfileFormGroup.controls['schoolLevel'].hasError('required')">School Level required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['schoolLevel'].hasError('required')" i18n>School Level required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>Language</mat-label>
+        <mat-label i18n>Language</mat-label>
         <mat-select formControlName="language">
           <mat-option *ngFor="let language of languages" [value]="language.locale">
             {{language.language}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="editProfileFormGroup.controls['language'].hasError('required')">Language required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['language'].hasError('required')" i18n>Language required</mat-error>
       </mat-form-field>
     </p>
   </div>
@@ -116,7 +116,7 @@
             fxFlex
             fxFlex.gt-xs="0 0 auto">
       <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
-      <span>Save Changes</span>
+      <span i18n>Save Changes</span>
     </button>
   </div>
 </form>

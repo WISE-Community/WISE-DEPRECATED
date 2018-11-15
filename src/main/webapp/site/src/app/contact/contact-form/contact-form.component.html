@@ -8,7 +8,7 @@
   <mat-card class="contact__form">
     <mat-card-content>
       <form role="form" style="flex-direction: column" (submit)="submit()" [formGroup]="contactFormGroup">
-        <h2 class="accent center">Contact WISE</h2>
+        <h2 class="accent center" i18n>Contact WISE</h2>
         <p>
           <mat-form-field fxFlex>
             <input matInput
@@ -16,7 +16,7 @@
                    name="name"
                    placeholder="Name"
                    formControlName="name" />
-            <mat-error *ngIf="contactFormGroup.controls['name'].hasError('required')">Name Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['name'].hasError('required')" i18n>Name Required</mat-error>
           </mat-form-field>
         </p>
         <p *ngIf="!isStudent">
@@ -26,8 +26,8 @@
                    name="email"
                    placeholder="Email"
                    formControlName="email" />
-            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('required')">Email Required</mat-error>
-            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('email')">Invalid Email</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('required')" i18n>Email Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('email')" i18n>Invalid Email</mat-error>
           </mat-form-field>
         </p>
         <p *ngIf="isStudent && teachers.length > 0">
@@ -49,7 +49,7 @@
                 {{issueType.value}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="contactFormGroup.controls['issueType'].hasError('required')">Issue Type Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['issueType'].hasError('required')" i18n>Issue Type Required</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -59,7 +59,7 @@
                    name="summary"
                    placeholder="Summary"
                    formControlName="summary" />
-            <mat-error *ngIf="contactFormGroup.controls['summary'].hasError('required')">City Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['summary'].hasError('required')" i18n>City Required</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -72,7 +72,7 @@
                       rows="10"
                       cols="10">
             </textarea>
-            <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')">State Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')" i18n>State Required</mat-error>
           </mat-form-field>
         </p>
         <re-captcha *ngIf="isRecaptchaEnabled"
@@ -82,7 +82,7 @@
         <button fxFlex mat-raised-button color="primary" type="submit"
                 [disabled]="!contactFormGroup.valid || isSendingRequest">
           <mat-progress-bar *ngIf="isSendingRequest" mode="indeterminate"></mat-progress-bar>
-          Submit
+          <ng-container i18n>Submit</ng-container>
         </button>
         <div>{{ message }}</div>
       </form>
