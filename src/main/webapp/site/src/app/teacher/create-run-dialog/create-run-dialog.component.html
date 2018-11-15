@@ -46,7 +46,7 @@
     <button type="submit"
             mat-flat-button
             color="primary"
-            [disabled]="form.invalid || isCreating" i18n>
+            [disabled]="form.invalid || isCreating">
       <mat-progress-bar *ngIf="isCreating" mode="indeterminate"></mat-progress-bar>
       <ng-container i18n>Create Run</ng-container>
     </button>
