@@ -1,10 +1,10 @@
 <nav class="header__links" [ngSwitch]="location" fxLayout="row" fxLayoutAlign="start center">
-  <span class="mat-subheading-2" *ngSwitchCase="'teacher'">Welcome {{ user.firstName }}!</span>
-  <span class="mat-subheading-2" *ngSwitchCase="'student'">Welcome {{ user.firstName }}!</span>
+  <span class="mat-subheading-2" *ngSwitchCase="'teacher'" i18n>Welcome {{ user.firstName }}!</span>
+  <span class="mat-subheading-2" *ngSwitchCase="'student'" i18n>Welcome {{ user.firstName }}!</span>
   <ng-container *ngSwitchDefault>
-    <a mat-button routerLink="/features" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Features</a>
-    <a mat-button routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">About Us</a>
-    <a mat-button routerLink="/news" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">News</a>
+    <a mat-button routerLink="/features" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>Features</a>
+    <a mat-button routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>About Us</a>
+    <a mat-button routerLink="/news" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>News</a>
   </ng-container>
   <app-header-signin *ngIf="!role"></app-header-signin>
 </nav>

@@ -1,10 +1,10 @@
-<h2 class="mat-dialog-title">Share Unit</h2>
+<h2 class="mat-dialog-title" i18n>Share Unit</h2>
 <mat-dialog-content class="mat-dialog-content--scroll">
   <p class="mat-subheading-2">
-    {{ project.name }} <span class="mat-caption">(Unit ID: {{ project.id }})</span>
+    {{ project.name }} <span class="mat-caption">(<ng-container i18n>Unit ID:</ng-container> {{ project.id }})</span>
   </p>
   <mat-form-field appearance="fill">
-    <mat-label>Enter teacher username</mat-label>
+    <mat-label i18n>Enter teacher username</mat-label>
     <mat-icon matPrefix>search</mat-icon>
     <input id="share-project-dialog-search"
            type="text"
@@ -36,25 +36,23 @@
           {{ project.owner.firstName }} {{ project.owner.lastName }}
         </ng-container>
         <ng-container *ngIf="!sharedOwner.isOwner">
-          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a href="#" (click)="!!unshareProject(sharedOwner)" class="warn">Revoke</a>)
+          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a href="#" (click)="!!unshareProject(sharedOwner)" class="warn" i18n>Revoke</a>)
         </ng-container>
       </td>
     </ng-container>
     <ng-container matColumnDef="permissions">
-      <th mat-header-cell *matHeaderCellDef>Permissions</th>
+      <th mat-header-cell *matHeaderCellDef i18n>Permissions</th>
       <td mat-cell *matCellDef="let sharedOwner">
-        <ng-container *ngIf="sharedOwner.isOwner">
-          Owner. Full permissions.
-        </ng-container>
+        <ng-container *ngIf="sharedOwner.isOwner" i18n>Owner. Full permissions.</ng-container>
         <ng-container *ngIf="!sharedOwner.isOwner">
           <div fxLayout="row wrap" fxLayoutGap="12px">
             <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[1]"
                           disabled="true">
-              View & Use with Students
+              <ng-container i18n>View & Use with Students</ng-container>
             </mat-checkbox>
             <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]"
                           (change)="projectPermissionChanged(project, sharedOwner.id, 2, sharedOwner.projectPermissions[2])">
-              Edit Unit Content
+              <ng-container i18n>Edit Unit Content</ng-container>
             </mat-checkbox>
           </div>
         </ng-container>
@@ -65,7 +63,5 @@
   </table>
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="end">
-  <button mat-flat-button color="primary" mat-dialog-close>
-    Done
-  </button>
+  <button mat-flat-button color="primary" mat-dialog-close i18n>Done</button>
 </mat-dialog-actions>

@@ -33,7 +33,7 @@
           <div fxLayout="column" class="library-group__title">
             <div>{{ child.name }}</div>
             <div class="mat-caption">
-              {{ countVisibleProjects(child.children, implementationModelValue) }} unit(s)
+              {{ countVisibleProjects(child.children, implementationModelValue) }} <ng-container i18n>unit(s)</ng-container>
             </div>
           </div>
           <app-library-group-thumbs [group]="child"
