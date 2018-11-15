@@ -1,10 +1,10 @@
-<h2 class="mat-dialog-title">Use with Class</h2>
+<h2 class="mat-dialog-title" i18n>Use with Class</h2>
 <form [formGroup]="form" (ngSubmit)="create()">
   <mat-dialog-content class="mat-dialog-content--scroll" fxLayout="column">
     <p class="mat-subheading-2 accent-1">
-      {{ project.metadata.title }} <span class="mat-caption">(Unit ID: {{ project.id }})</span>
+      {{ project.metadata.title }} <span class="mat-caption">(<ng-container i18n>Unit ID:</ng-container> {{ project.id }})</span>
     </p>
-    <h3 i18n="Choose periods sub header">1. Choose Periods</h3>
+    <h3 i18n>1. Choose Periods</h3>
     <div formArrayName="selectedPeriods">
       <span *ngFor="let control of selectedPeriodsControl.controls"
            [formGroup]="control">
@@ -14,45 +14,41 @@
       </span>
     </div>
     <mat-form-field appearance="fill" class="mat-form-field--longhint">
-      <mat-label i18n="Add your own periods prompt text">Add your own periods</mat-label>
+      <mat-label i18n>Add your own periods</mat-label>
       <input matInput
              id="customPeriods"
              name="customPeriods"
              formControlName="customPeriods" />
-      <mat-hint i18n="Directions to enter custom periods">For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.</mat-hint>
+      <mat-hint i18n>For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.</mat-hint>
     </mat-form-field>
     <mat-divider></mat-divider>
-    <h3 i18n="Choose students per team sub header">2. Choose Students Per Team</h3>
+    <h3 i18n>2. Choose Students Per Team</h3>
     <mat-radio-group #rGroup
                      formControlName="studentsPerTeam"
                      fxLayoutGap="16px">
-      <mat-radio-button value="1" radioGroup="rGroup" i18n="Selection label for 1 student">
-        Only 1 student
-      </mat-radio-button>
-      <mat-radio-button value="3" radioGroup="rGroup" i18n="Selection label for 1-3 students">
-        1-3 students
-      </mat-radio-button>
+      <mat-radio-button value="1" radioGroup="rGroup" i18n>Only 1 student</mat-radio-button>
+      <mat-radio-button value="3" radioGroup="rGroup" i18n>1-3 students</mat-radio-button>
     </mat-radio-group>
     <mat-divider></mat-divider>
-    <h3 i18n="Choose start date sub header">3. Choose Start Date</h3>
+    <h3 i18n>3. Choose Start Date</h3>
     <mat-form-field appearance="fill" fxFlexAlign="start">
-      <mat-label i18n="Start date label">Start date</mat-label>
+      <mat-label i18n>Start date</mat-label>
       <input matInput
              [matDatepicker]="picker"
              formControlName="startDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
-      <mat-error i18n="Directive for start date is required">Start date is required</mat-error>
+      <mat-error i18n>Start date is required</mat-error>
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
-    <button mat-button mat-dialog-close [disabled]="isCreating" i18n="Cancel button text">Cancel</button>
+    <button mat-button mat-dialog-close [disabled]="isCreating" i18n>Cancel</button>
     <button type="submit"
             mat-flat-button
             color="primary"
-            [disabled]="form.invalid || isCreating" i18n="Create button text">
+            [disabled]="form.invalid || isCreating" i18n>
       <mat-progress-bar *ngIf="isCreating" mode="indeterminate"></mat-progress-bar>
-      Create Run
+      <ng-container i18n>Create Run</ng-container>
     </button>
   </mat-dialog-actions>
 </form>

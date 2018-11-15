@@ -5,23 +5,23 @@
           matTooltipPosition="above">
       {{run.periods.length}}
       <ng-container [ngPlural]="run.periods.length">
-        <ng-template ngPluralCase="=0" i18n="periods label">periods</ng-template>
-        <ng-template ngPluralCase="=1" i18n="period label">period</ng-template>
-        <ng-template ngPluralCase="other" i18n="periods label">periods</ng-template>
+        <ng-template ngPluralCase="=0" i18n>periods</ng-template>
+        <ng-template ngPluralCase="=1" i18n>period</ng-template>
+        <ng-template ngPluralCase="other" i18n>periods</ng-template>
       </ng-container>
     </span> |
     <a href="{{ manageStudentsLink }}">
       {{run.numStudents}}
       <ng-container [ngPlural]="run.numStudents">
-        <ng-template ngPluralCase="=0" i18n="students label">students</ng-template>
-        <ng-template ngPluralCase="=1" i18n="student label">student</ng-template>
-        <ng-template ngPluralCase="other" i18n="students label">students</ng-template>
+        <ng-template ngPluralCase="=0" i18n>students</ng-template>
+        <ng-template ngPluralCase="=1" i18n>student</ng-template>
+        <ng-template ngPluralCase="other" i18n>students</ng-template>
       </ng-container>
     </a>
   </div>
-  <div>Access Code: {{ run.runCode }}</div>
+  <div><ng-container i18n>Access Code:</ng-container> {{ run.runCode }}</div>
   <div *ngIf="run.shared" class="info">
-    Shared by {{ run.owner.displayName }} |
+    <ng-container i18n>Shared by</ng-container> {{ run.owner.displayName }} |
   </div>
 </ng-template>
 
@@ -54,18 +54,18 @@
          mat-button
          color="primary"
          fxFlex="0 0 auto"
-         fxFlex.xs="100" i18n="settings button text">
+         fxFlex.xs="100">
         <mat-icon class="primary">settings</mat-icon>
-        Settings
+        <ng-container i18n>Settings</ng-container>
       </a>
       <a *ngIf="!isScheduled()"
          mat-flat-button
          href="{{ gradeAndManageLink }}"
          color="primary"
          fxFlex="0 0 auto"
-         fxFlex.xs="100" i18n="Teacher Tools text">
+         fxFlex.xs="100">
         <mat-icon>build</mat-icon>
-        Teacher Tools
+        <ng-container i18n>Teacher Tools</ng-container>
       </a>
     </div>
   </mat-card-actions>
