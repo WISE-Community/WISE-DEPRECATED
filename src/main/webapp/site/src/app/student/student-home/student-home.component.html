@@ -4,8 +4,9 @@
         fxLayoutAlign="start center"
         fxLayoutAlign.xs="start"
         fxLayoutGap="16px">
-  <h1 class="accent" fxLayoutAlign="start center" i18n="Student home title">
-    <mat-icon>home</mat-icon>Student Home
+  <h1 class="accent" fxLayoutAlign="start center">
+    <mat-icon>home</mat-icon>
+    <ng-container i18n>Student Home</ng-container>
   </h1>
   <span fxFlex fxHide.xs fxShow></span>
   <div>
@@ -14,7 +15,7 @@
             aria-label="Add unit"
             color="accent">
       <mat-icon>add</mat-icon>
-      Add Unit
+      <ng-container i18n>Add Unit</ng-container>
     </button>
   </div>
 </header>

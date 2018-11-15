@@ -1,9 +1,9 @@
 <mat-card class="standalone__content standalone__content--sm  mat-elevation-z4">
   <mat-card-content>
-    <h2 class="standalone__title accent">Create Teacher Account</h2>
+    <h2 class="standalone__title accent" i18n>Create Teacher Account</h2>
     <p>
       <mat-form-field appearance="fill" fxFlex>
-        <mat-label>Email</mat-label>
+        <mat-label i18n>Email</mat-label>
         <input matInput
                id="email"
                name="email"
@@ -15,7 +15,7 @@
               mat-raised-button
               color="primary"
               (click)="signUp()">
-        Sign Up
+        <ng-container i18n>Sign Up</ng-container>
       </button>
     </p>
     <span *ngIf="isGoogleAuthenticationEnabled">
@@ -25,7 +25,7 @@
                 color="accent"
                 mat-raised-button
                 (click)="socialSignIn('google')">
-          <img src="assets/img/icons/g-logo.png" alt="Google logo" />Sign up with Google
+          <img src="assets/img/icons/g-logo.png" alt="Google logo" /><ng-container i18n>Sign up with Google</ng-container>
         </button>
       </p>
     </span>
