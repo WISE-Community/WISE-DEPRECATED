@@ -89,12 +89,13 @@ describe('TeacherRunListComponent', () => {
   });
 
   function isRunsSortedByStartTimeDesc(runs: TeacherRun[]): boolean {
-    let previous: string = null;
+    let previous: Date = null;
     for (let run of runs) {
-      if (previous && previous < run.startTime) {
+      let current = new Date(run.startTime);
+      if (previous && previous < current) {
         return false;
       }
-      previous = run.startTime;
+      previous = current;
     }
     return true;
   }
