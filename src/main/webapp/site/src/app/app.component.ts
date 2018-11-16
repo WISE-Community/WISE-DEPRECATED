@@ -50,6 +50,14 @@ export class AppComponent {
       'twitter',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter.svg')
     );
+    iconRegistry.addSvgIcon(
+      'facebook-ffffff',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/facebook-ffffff.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'twitter-ffffff',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter-ffffff.svg')
+    );
     utilService.getMobileMenuState()
       .subscribe(state => {
         this.showMobileMenu = state;
