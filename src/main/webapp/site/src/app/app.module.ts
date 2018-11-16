@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from "./http-error.interceptor";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { RouterModule } from '@angular/router';
 import { MatDialogModule, MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from '@angular/material';
 import {
   SocialLoginModule,
@@ -79,7 +80,11 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     NewsModule,
     FeaturesModule,
     MatSidenavModule,
-    MatDialogModule
+    MatDialogModule,
+    RouterModule.forRoot([], {
+      scrollPositionRestoration: 'enabled',
+      anchorScrolling: 'enabled',
+    })
   ],
   entryComponents: [ AnnouncementDialogComponent ],
   providers: [
