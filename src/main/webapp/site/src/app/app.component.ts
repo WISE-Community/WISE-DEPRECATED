@@ -99,7 +99,8 @@ export class AppComponent {
 
   showHeaderAndFooter(): boolean {
     return !this.router.url.includes('/login') &&
-      !this.router.url.includes('/join');
+      !this.router.url.includes('/join') &&
+      !this.router.url.includes('/contact');
   }
 
   showAnnouncementDetails() {

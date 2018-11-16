@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder, NgForm } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { finalize } from 'rxjs/operators';
 import { UserService } from "../../services/user.service";
 import { Teacher } from "../../domain/teacher";
 import { Student } from "../../domain/student";
@@ -30,8 +31,9 @@ export class ContactFormComponent implements OnInit {
   isRecaptchaEnabled: boolean = false;
   recaptchaPublicKey: string = "";
   recaptchaResponse: string = "";
-  message: string = "";
   teachers: any[] = [];
+  failure: boolean = false;
+  complete: boolean = false;
 
   constructor(private fb: FormBuilder,
               private userService: UserService,
@@ -140,6 +142,7 @@ export class ContactFormComponent implements OnInit {
   }
 
   submit() {
+    this.failure = false;
     const name = this.getName();
     const email = this.getEmail();
     const teacherUsername = this.getTeacherUsername();
@@ -153,6 +156,11 @@ export class ContactFormComponent implements OnInit {
     this.setIsSendingRequest(true);
     this.userService.sendContactMessage(name, email, teacherUsername, issueType, summary,
         description, runId, projectId, userAgent, recaptchaResponse)
+      .pipe(
+        finalize(() => {
+          this.setIsSendingRequest(false);
+        })
+      )
       .subscribe((response) => {
         this.handleSendContactMessageResponse(response);
       });
@@ -160,10 +168,9 @@ export class ContactFormComponent implements OnInit {
 
   handleSendContactMessageResponse(response: any) {
     if (response.status == "success") {
-      this.setMessage("Your message has been sent. Thank you for contacting WISE. We will try to get back to you as soon as possible.");
-      this.routeToContactCompletePage();
+      this.complete = true;
     } else if (response.status == "failure") {
-      this.setMessage("There was a problem with submitting the form. Please try again.");
+      this.failure = true;
       if (this.isRecaptchaEnabled) {
         this.resetRecaptcha();
       }
@@ -241,9 +248,5 @@ export class ContactFormComponent implements OnInit {
 
   setIsSendingRequest(value: boolean) {
     this.isSendingRequest = value;
-  }
-
-  setMessage(message: string) {
-    this.message = message;
   }
 }

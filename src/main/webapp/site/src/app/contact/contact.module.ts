@@ -22,7 +22,6 @@ import {
 } from '@angular/material';
 import { SharedModule } from "../modules/shared/shared.module";
 import { ContactFormComponent } from './contact-form/contact-form.component';
-import { ContactCompleteComponent } from './contact-complete/contact-complete.component';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
 
@@ -57,12 +56,10 @@ const materialModules = [
     RecaptchaFormsModule
   ],
   declarations: [
-    ContactFormComponent,
-    ContactCompleteComponent
+    ContactFormComponent
   ],
   exports: [
     ContactFormComponent,
-    ContactCompleteComponent,
     materialModules
   ]
 })
