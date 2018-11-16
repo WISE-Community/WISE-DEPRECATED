@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { MatDialog, MatDialogRef } from "@angular/material";
@@ -18,6 +18,7 @@ export class AppComponent {
   showMobileMenu: boolean = false;
   mediaWatcher: Subscription;
   hasAnnouncement: boolean = true;
+  popstate: boolean = false;
 
   constructor(private router: Router,
               iconRegistry: MatIconRegistry,
@@ -60,6 +61,31 @@ export class AppComponent {
     });
     router.events.subscribe((event) => {
       utilService.showMobileMenu(false);
+    });
+  }
+
+  ngOnInit() {
+    /** Temporary hack to ensure scroll to top on router navigation (excluding
+     * back/forward browser button presses)
+     * TODO: remove when https://github.com/angular/material2/issues/4280 is resolved
+     */
+    this.router.events.subscribe((ev: any) => {
+      const sidenavContentElement = document.querySelector(
+        '.mat-sidenav-content',
+      );
+      if (!sidenavContentElement) {
+        return;
+      }
+      if (ev instanceof NavigationStart) {
+        this.popstate = ev.navigationTrigger === 'popstate';
+      } else if (ev instanceof NavigationEnd) {
+        if (!this.popstate) {
+          sidenavContentElement.scroll({
+            left: 0,
+            top: 0
+          });
+        }
+      }
     });
   }
 
