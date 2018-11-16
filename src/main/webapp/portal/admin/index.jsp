@@ -229,7 +229,7 @@
 						</div>
 						<div class="sectionContent">
 							<h5>
-								<a href="${contextPath}/admin/news/managenewsitems.html"><spring:message
+								<a href="${contextPath}/admin/news/manage"><spring:message
 										code='admin.index.workWithNewsItems' /></a>
 							</h5>
 						</div>
