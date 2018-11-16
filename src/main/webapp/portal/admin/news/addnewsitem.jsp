@@ -22,7 +22,7 @@
 <body>
 <h3><spring:message code="admin.news.addNewsItem" /></h3>
 
-	<form:form method="post" action="addnewsitems.html" id="addnewsitems" autocomplete='off'>
+	<form:form method="post" id="addnewsitems" autocomplete='off'>
 		<dl>
 		<dt><label for="titleField"><spring:message code="title" /></label></dt>
 		<dd><input name="title" size="75" id="titleField"></input> </dd>
@@ -35,8 +35,6 @@
 		<dd><textarea rows="20" name="news" id="newsField" style="width:100%;"></textarea></dd>
 		</dl>
    	    <input type="submit" id="save" value="<spring:message code="submit" />" />
-	    <input type="hidden" id="action" name="action" value="add"></input>
-
 	</form:form>
 </body>
 </html>
