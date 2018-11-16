@@ -80,7 +80,7 @@
     -->
     <a *ngIf="role === 'student'"
        mat-menu-item
-       routerLink="/student/help"
+       routerLink="/help"
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>help</mat-icon>
@@ -88,7 +88,7 @@
     </a>
     <a *ngIf="role !== 'student'"
        mat-menu-item
-       routerLink="/teacher/help"
+       routerLink="/help"
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>help</mat-icon>
