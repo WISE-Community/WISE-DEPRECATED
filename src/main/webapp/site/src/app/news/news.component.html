@@ -19,8 +19,8 @@
               <app-timeline-item-content>
                 <mat-card>
                   <mat-card-content>
-                    <h2 class="news-title mat-body-2">{{newsItem.title}}</h2>
-                    <div class="mat-body-2" [innerHTML]="sanitizer.bypassSecurityTrustHtml(newsItem.news)"></div>
+                    <h2 class="accent-1">{{newsItem.title}}</h2>
+                    <div class="mat-body-1" [innerHTML]="sanitizer.bypassSecurityTrustHtml(newsItem.news)"></div>
                   </mat-card-content>
                 </mat-card>
               </app-timeline-item-content>
