@@ -19,7 +19,7 @@
 
 .features__intro {
   $intro-border-radius: 70% 40% 60% 40%;
-  @include feature-styles($intro-border-radius);
+  @include feature-styles($intro-border-radius, 0);
 
   @media (min-width: breakpoint('sm.min')) {
     margin-top: -64px;
