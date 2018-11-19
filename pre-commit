@@ -28,3 +28,7 @@ if [[ $? != 0 ]] ; then
   echo "Aborting commit. Please add the newly updated files to your commit and try again."
   exit 1
 fi
+
+# generate and add updated messages.xmb file to git
+ng xi18n  --i18n-format=xmb
+git add src/main/webapp/site/src/messages.xmb
