@@ -3,7 +3,9 @@
   <span *ngSwitchCase="'student'"><ng-container i18n>Welcome</ng-container> {{ user.firstName }}!</span>
   <ng-container *ngSwitchDefault>
     <a mat-button routerLink="/features" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>Features</a>
+    <!-- TODO: put back when About Us page is completed
     <a mat-button routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>About Us</a>
+    -->
     <a mat-button routerLink="/news" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>News</a>
   </ng-container>
   <app-header-signin *ngIf="!role"></app-header-signin>

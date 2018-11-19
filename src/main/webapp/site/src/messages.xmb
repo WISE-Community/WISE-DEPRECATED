@@ -21,16 +21,15 @@
 <!ELEMENT ex (#PCDATA)>
 ]>
 <messagebundle>
-  <msg id="1267967133679326155"><source>app/modules/footer/footer.component.html:6</source><source>app/modules/mobile-menu/mobile-menu.component.html:18</source><source>app/register/register-teacher-form/register-teacher-form.component.html:149</source><source>app/register/register-student-form/register-student-form.component.html:116</source><source>app/register/register-google-user-already-exists/register-google-user-already-exists.component.html:3</source>Create Account</msg>
+  <msg id="1267967133679326155"><source>app/modules/footer/footer.component.html:6</source><source>app/modules/mobile-menu/mobile-menu.component.html:20</source><source>app/register/register-teacher-form/register-teacher-form.component.html:149</source><source>app/register/register-student-form/register-student-form.component.html:116</source><source>app/register/register-google-user-already-exists/register-google-user-already-exists.component.html:3</source>Create Account</msg>
   <msg id="6599364831830861985"><source>app/modules/footer/footer.component.html:7</source><source>app/modules/mobile-menu/mobile-menu.component.html:9</source><source>app/modules/header/header-links/header-links.component.html:5</source>Features</msg>
-  <msg id="5736481176444461852"><source>app/modules/footer/footer.component.html:8</source><source>app/modules/mobile-menu/mobile-menu.component.html:10</source><source>app/modules/header/header-links/header-links.component.html:6</source>About Us</msg>
-  <msg id="841934696444961534"><source>app/modules/footer/footer.component.html:9</source><source>app/modules/mobile-menu/mobile-menu.component.html:11</source><source>app/modules/header/header-links/header-links.component.html:7</source>News</msg>
-  <msg id="2957506008467670172"><source>app/modules/footer/footer.component.html:13</source>Help + FAQs</msg>
-  <msg id="7524563838003613794"><source>app/modules/footer/footer.component.html:14</source>Privacy + Use</msg>
-  <msg id="759687838251957893"><source>app/modules/footer/footer.component.html:15</source>Contact Us</msg>
-  <msg id="2968291498422342675"><source>app/modules/footer/footer.component.html:42</source>Powered by the <ph name="START_LINK"><ex>&lt;a&gt;</ex></ph>TELS Community<ph name="CLOSE_LINK"><ex>&lt;/a&gt;</ex></ph> and <ph name="START_LINK_1"><ex>&lt;a&gt;</ex></ph>WISE Open Source Technology<ph name="CLOSE_LINK"><ex>&lt;/a&gt;</ex></ph>.</msg>
-  <msg id="160004303566063380"><source>app/modules/footer/footer.component.html:43</source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</msg>
-  <msg id="4909230862206231648"><source>app/modules/footer/footer.component.html:64</source>©1996-2018, <ph name="START_LINK"><ex>&lt;a&gt;</ex></ph>UC Berkeley<ph name="CLOSE_LINK"><ex>&lt;/a&gt;</ex></ph> | Web-based Inquiry Science Environment</msg>
+  <msg id="841934696444961534"><source>app/modules/footer/footer.component.html:11</source><source>app/modules/mobile-menu/mobile-menu.component.html:13</source><source>app/modules/header/header-links/header-links.component.html:9</source>News</msg>
+  <msg id="2957506008467670172"><source>app/modules/footer/footer.component.html:15</source>Help + FAQs</msg>
+  <msg id="7524563838003613794"><source>app/modules/footer/footer.component.html:16</source>Privacy + Use</msg>
+  <msg id="759687838251957893"><source>app/modules/footer/footer.component.html:17</source>Contact Us</msg>
+  <msg id="2968291498422342675"><source>app/modules/footer/footer.component.html:44</source>Powered by the <ph name="START_LINK"><ex>&lt;a&gt;</ex></ph>TELS Community<ph name="CLOSE_LINK"><ex>&lt;/a&gt;</ex></ph> and <ph name="START_LINK_1"><ex>&lt;a&gt;</ex></ph>WISE Open Source Technology<ph name="CLOSE_LINK"><ex>&lt;/a&gt;</ex></ph>.</msg>
+  <msg id="160004303566063380"><source>app/modules/footer/footer.component.html:45</source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</msg>
+  <msg id="4909230862206231648"><source>app/modules/footer/footer.component.html:66</source>©1996-2018, <ph name="START_LINK"><ex>&lt;a&gt;</ex></ph>UC Berkeley<ph name="CLOSE_LINK"><ex>&lt;/a&gt;</ex></ph> | Web-based Inquiry Science Environment</msg>
   <msg id="7011425206383801543"><source>app/modules/shared/select-menu/select-menu.component.html:10</source>more</msg>
   <msg id="5988052957783033183"><source>app/home/home.component.html:16</source>Integrated science learning and teaching with technology</msg>
   <msg id="583338895004479897"><source>app/home/home.component.html:22</source>The WISE Advantage</msg>
@@ -39,7 +38,7 @@
   <msg id="8559814757060095671"><source>app/home/home.component.html:65</source>Sign up for free!</msg>
   <msg id="813263746069473514"><source>app/home/home.component.html:79</source>Connect</msg>
   <msg id="5607217884667805734"><source>app/modules/mobile-menu/mobile-menu.component.html:8</source>WISE Home</msg>
-  <msg id="840692109692540367"><source>app/modules/mobile-menu/mobile-menu.component.html:17</source><source>app/modules/header/header-signin/header-signin.component.html:2</source><source>app/login/login-home/login-home.component.html:35</source><source>app/forgot/student/forgot-student-password-complete/forgot-student-password-complete.component.html:10</source><source>app/forgot/teacher/forgot-teacher-username-complete/forgot-teacher-username-complete.component.html:10</source><source>app/forgot/teacher/forgot-teacher-password-complete/forgot-teacher-password-complete.component.html:10</source>Sign In</msg>
+  <msg id="840692109692540367"><source>app/modules/mobile-menu/mobile-menu.component.html:19</source><source>app/modules/header/header-signin/header-signin.component.html:2</source><source>app/login/login-home/login-home.component.html:35</source><source>app/forgot/student/forgot-student-password-complete/forgot-student-password-complete.component.html:10</source><source>app/forgot/teacher/forgot-teacher-username-complete/forgot-teacher-username-complete.component.html:10</source><source>app/forgot/teacher/forgot-teacher-password-complete/forgot-teacher-password-complete.component.html:10</source>Sign In</msg>
   <msg id="8347669775629259774"><source>app/features/features.component.html:9</source>WISE Features</msg>
   <msg id="8556196612943053942"><source>app/features/features.component.html:19</source>A powerful online platform for designing, developing, and implementing science inquiry units</msg>
   <msg id="2007517500401542211"><source>app/features/features.component.html:20</source>Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</msg>
@@ -55,28 +54,23 @@
   <msg id="448591955315646784"><source>app/features/features.component.html:70</source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</msg>
   <msg id="1691431025787184750"><source>app/features/features.component.html:81</source>Standards-Aligned Curricula</msg>
   <msg id="3421879500452781330"><source>app/features/features.component.html:82</source>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers&apos; core curricular scope and sequence and are iteratively refined through classroom-based research.</msg>
-  <msg id="2893037502054180413"><source>app/features/features.component.html:83</source>WISE units support the </msg>
-  <msg id="9125977097055177707"><source>app/features/features.component.html:83</source>Next Generation Science Standards (NGSS)</msg>
-  <msg id="2109260397154815552"><source>app/features/features.component.html:83</source>encourage </msg>
-  <msg id="8212767422053886344"><source>app/features/features.component.html:83</source>3-dimensional learning</msg>
-  <msg id="2523260453123857910"><source>app/features/features.component.html:83</source>and can be adapted to address local standards.</msg>
-  <msg id="3061759404112933589"><source>app/features/features.component.html:85</source>Design Process &amp; Goals</msg>
-  <msg id="8888811813186765969"><source>app/features/features.component.html:112</source>Powerful Learning Technologies</msg>
-  <msg id="5634308453529260787"><source>app/features/features.component.html:113</source>WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</msg>
-  <msg id="5248430401992741721"><source>app/features/features.component.html:114</source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</msg>
-  <msg id="8550806866234190053"><source>app/features/features.component.html:125</source>Comprehensive Instructional Supports</msg>
-  <msg id="5377690935553499206"><source>app/features/features.component.html:126</source>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</msg>
-  <msg id="697170139507601018"><source>app/features/features.component.html:127</source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</msg>
-  <msg id="8669839450693538583"><source>app/features/features.component.html:136</source>Featured Teacher Tools:</msg>
-  <msg id="6857127320537626439"><source>app/features/features.component.html:140</source>Real-time progress monitor</msg>
-  <msg id="7161764554026859890"><source>app/features/features.component.html:144</source>Grade and give feedback + sample scoring rubrics</msg>
-  <msg id="6477686568651049496"><source>app/features/features.component.html:148</source>Automatically scored assessment items</msg>
-  <msg id="5056811246235405886"><source>app/features/features.component.html:152</source>Pause student screens</msg>
-  <msg id="160407261487118431"><source>app/features/features.component.html:156</source>Share and collaborate with colleagues</msg>
-  <msg id="1147391623414245928"><source>app/features/features.component.html:160</source>Authoring environment that supports customization and creation of new units</msg>
-  <msg id="8776062133060796238"><source>app/features/features.component.html:164</source>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</msg>
-  <msg id="2999839698626817915"><source>app/features/features.component.html:173</source>Explore what WISE has to offer!</msg>
-  <msg id="1594128309539616928"><source>app/features/features.component.html:174</source>Join for free</msg>
+  <msg id="5638660881402055106"><source>app/features/features.component.html:84</source>WISE units support the <ph name="START_LINK"><ex>&lt;a&gt;</ex></ph>Next Generation Science Standards (NGSS)<ph name="CLOSE_LINK"><ex>&lt;/a&gt;</ex></ph>, encourage <ph name="START_LINK_1"><ex>&lt;a&gt;</ex></ph>3-dimensional learning<ph name="CLOSE_LINK"><ex>&lt;/a&gt;</ex></ph>, and can be adapted to address local standards.</msg>
+  <msg id="8888811813186765969"><source>app/features/features.component.html:115</source>Powerful Learning Technologies</msg>
+  <msg id="5634308453529260787"><source>app/features/features.component.html:116</source>WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</msg>
+  <msg id="5248430401992741721"><source>app/features/features.component.html:117</source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</msg>
+  <msg id="8550806866234190053"><source>app/features/features.component.html:128</source>Comprehensive Instructional Supports</msg>
+  <msg id="5377690935553499206"><source>app/features/features.component.html:129</source>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</msg>
+  <msg id="697170139507601018"><source>app/features/features.component.html:130</source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</msg>
+  <msg id="8669839450693538583"><source>app/features/features.component.html:139</source>Featured Teacher Tools:</msg>
+  <msg id="6857127320537626439"><source>app/features/features.component.html:143</source>Real-time progress monitor</msg>
+  <msg id="7161764554026859890"><source>app/features/features.component.html:147</source>Grade and give feedback + sample scoring rubrics</msg>
+  <msg id="6477686568651049496"><source>app/features/features.component.html:151</source>Automatically scored assessment items</msg>
+  <msg id="5056811246235405886"><source>app/features/features.component.html:155</source>Pause student screens</msg>
+  <msg id="160407261487118431"><source>app/features/features.component.html:159</source>Share and collaborate with colleagues</msg>
+  <msg id="1147391623414245928"><source>app/features/features.component.html:163</source>Authoring environment that supports customization and creation of new units</msg>
+  <msg id="8776062133060796238"><source>app/features/features.component.html:167</source>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</msg>
+  <msg id="2999839698626817915"><source>app/features/features.component.html:176</source>Explore what WISE has to offer!</msg>
+  <msg id="1594128309539616928"><source>app/features/features.component.html:177</source>Join for free</msg>
   <msg id="2512863172921388537"><source>app/about/about.component.html:4</source>about works!</msg>
   <msg id="8295851396168346196"><source>app/privacy/privacy.component.html:6</source>WISE Terms of Use &amp; Privacy Policy</msg>
   <msg id="8716695021900630124"><source>app/privacy/privacy.component.html:9</source><source>app/help/teacher-faq/teacher-faq.component.html:6</source><source>app/help/student-faq/student-faq.component.html:6</source>Table of Contents</msg>
@@ -459,8 +453,7 @@
   <msg id="8066562879192184833"><source>app/teacher/teacher-run-list-item/teacher-run-list-item.component.html:17</source>student</msg>
   <msg id="1060271292573993498"><source>app/teacher/teacher-run-list-item/teacher-run-list-item.component.html:22</source>Access Code:</msg>
   <msg id="7305444542671206121"><source>app/teacher/teacher-run-list-item/teacher-run-list-item.component.html:24</source>Shared by</msg>
-  <msg id="4930506384627295710"><source>app/teacher/teacher-run-list-item/teacher-run-list-item.component.html:61</source>Settings</msg>
-  <msg id="7990203103279647002"><source>app/teacher/teacher-run-list-item/teacher-run-list-item.component.html:70</source>Teacher Tools</msg>
+  <msg id="7990203103279647002"><source>app/teacher/teacher-run-list-item/teacher-run-list-item.component.html:62</source>Teacher Tools</msg>
   <msg id="4110887194150077193"><source>app/teacher/share-run-dialog/share-run-dialog.component.html:1</source>Share Classroom Run</msg>
   <msg id="2794317449519844335"><source>app/teacher/share-run-dialog/share-run-dialog.component.html:4</source><source>app/teacher/run-menu/run-menu.component.html:6</source>Run ID:</msg>
   <msg id="2037653347478926361"><source>app/teacher/share-run-dialog/share-run-dialog.component.html:24</source>Teacher is already on shared list.</msg>
@@ -470,9 +463,6 @@
   <msg id="70213949916056305"><source>app/teacher/share-run-dialog/share-run-dialog.component.html:61</source>Grade and Manage</msg>
   <msg id="2634396349466458330"><source>app/teacher/run-menu/run-menu.component.html:18</source>Unit Info</msg>
   <msg id="2218066853816353238"><source>app/teacher/run-menu/run-menu.component.html:22</source>Edit Content</msg>
-  <msg id="3328505004981075275"><source>app/teacher/run-menu/run-menu.component.html:35</source>Cancel Unit</msg>
-  <msg id="1236604279860679031"><source>app/teacher/run-menu/run-menu.component.html:39</source>Restart</msg>
-  <msg id="1825538589701335684"><source>app/teacher/run-menu/run-menu.component.html:43</source>End Unit</msg>
   <msg id="3013055597615607317"><source>app/teacher/account/edit-profile/edit-profile.component.html:29</source>Display Name</msg>
   <msg id="3287932925160486049"><source>app/teacher/account/edit-profile/edit-profile.component.html:34</source>This is the name your students will see.</msg>
   <msg id="6270930966140952368"><source>app/teacher/account/edit-profile/edit-profile.component.html:35</source>Display Name required</msg>

@@ -52,14 +52,6 @@
          fxLayoutAlign="center"
          fxLayoutAlign.gt-xs="end center"
          fxLayoutGap="8px">
-      <a *ngIf="isScheduled()"
-         mat-button
-         color="primary"
-         fxFlex="0 0 auto"
-         fxFlex.xs="100">
-        <mat-icon>settings</mat-icon>
-        <ng-container i18n>Settings</ng-container>
-      </a>
       <a *ngIf="!isScheduled() && !run.endTime"
          mat-flat-button
          href="{{ gradeAndManageLink }}"

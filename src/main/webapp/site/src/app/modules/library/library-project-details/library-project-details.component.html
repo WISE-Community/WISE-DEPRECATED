@@ -7,9 +7,9 @@
           <div class="mat-card-title mat-body-2">{{ data.project.metadata.title }}</div>
           <div class="mat-card-subtitle">
             <div>
-              <ng-container i18n>Grade level:</ng-container> <span *ngFor="let g of data.project.metadata.grades; let isLast=last">{{ g }}{{ isLast ? '' : ', ' }}</span>
-              &nbsp;|&nbsp;
-              <ng-container i18n>Duration:</ng-container> {{ data.project.metadata.totalTime }}<br />
+              <ng-container *ngIf="data.project.metadata.grades.length" i18n>Grade level:</ng-container><span *ngFor="let g of data.project.metadata.grades; let isLast=last"> {{ g }}{{ isLast ? '' : ', ' }}</span>
+              <span *ngIf="data.project.metadata.grades.length && data.project.metadata.totalTime">&nbsp;|&nbsp;</span>
+              <ng-container *ngIf="data.project.metadata.totalTime" i18n>Duration:</ng-container> {{ data.project.metadata.totalTime }}<br />
               <ng-container i18n>Unit ID:</ng-container> {{ data.project.id }}<!--| Last Updated: {{ data.project.lastUpdated }}>-->
             </div>
           </div>
