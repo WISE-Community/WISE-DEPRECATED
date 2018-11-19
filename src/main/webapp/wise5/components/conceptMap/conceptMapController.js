@@ -25,7 +25,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ConceptMapController = function (_ComponentController) {
   _inherits(ConceptMapController, _ComponentController);
 
-  function ConceptMapController($anchorScroll, $filter, $location, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+  function ConceptMapController($anchorScroll, $filter, $location, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, ConceptMapController);
 
     var _this = _possibleConstructorReturn(this, (ConceptMapController.__proto__ || Object.getPrototypeOf(ConceptMapController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
@@ -35,7 +35,6 @@ var ConceptMapController = function (_ComponentController) {
     _this.$q = $q;
     _this.$timeout = $timeout;
     _this.ConceptMapService = ConceptMapService;
-    _this.CRaterService = CRaterService;
 
     _this.width = 800;
     _this.height = 600;
@@ -793,31 +792,6 @@ var ConceptMapController = function (_ComponentController) {
       return annotation;
     }
   }, {
-    key: 'isCRaterEnabled',
-    value: function isCRaterEnabled() {
-      return this.CRaterService.isCRaterEnabled(this.componentContent);
-    }
-  }, {
-    key: 'isCRaterScoreOnSave',
-    value: function isCRaterScoreOnSave() {
-      return this.CRaterService.isCRaterScoreOnSave(this.componentContent);
-    }
-  }, {
-    key: 'isCRaterScoreOnSubmit',
-    value: function isCRaterScoreOnSubmit() {
-      return this.CRaterService.isCRaterScoreOnSubmit(this.componentContent);
-    }
-  }, {
-    key: 'isCRaterScoreOnChange',
-    value: function isCRaterScoreOnChange() {
-      return this.CRaterService.isCRaterScoreOnChange(this.componentContent);
-    }
-  }, {
-    key: 'isCRaterScoreOnExit',
-    value: function isCRaterScoreOnExit() {
-      return this.CRaterService.isCRaterScoreOnExit(this.componentContent);
-    }
-  }, {
     key: 'linkTypeSelected',
     value: function linkTypeSelected(selectedLink) {
       if (this.highlightedElement != null && this.highlightedElement.constructor.name === 'ConceptMapLink') {
@@ -1313,84 +1287,12 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'getNewConceptMapNodeId',
     value: function getNewConceptMapNodeId() {
-      var nextAvailableNodeIdNumber = 1;
-      var usedNumbers = [];
-      var _iteratorNormalCompletion8 = true;
-      var _didIteratorError8 = false;
-      var _iteratorError8 = undefined;
-
-      try {
-        for (var _iterator8 = this.nodes[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-          var node = _step8.value;
-
-          var nodeId = node.getId();
-          var nodeIdNumber = parseInt(nodeId.replace('studentNode', ''));
-          usedNumbers.push(nodeIdNumber);
-        }
-      } catch (err) {
-        _didIteratorError8 = true;
-        _iteratorError8 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion8 && _iterator8.return) {
-            _iterator8.return();
-          }
-        } finally {
-          if (_didIteratorError8) {
-            throw _iteratorError8;
-          }
-        }
-      }
-
-      if (usedNumbers.length > 0) {
-        var maxNumberUsed = Math.max.apply(Math, usedNumbers);
-        if (!isNaN(maxNumberUsed)) {
-          nextAvailableNodeIdNumber = maxNumberUsed + 1;
-        }
-      }
-
-      return 'studentNode' + nextAvailableNodeIdNumber;
+      return this.ConceptMapService.getNextAvailableId(this.nodes, 'studentNode');
     }
   }, {
     key: 'getNewConceptMapLinkId',
     value: function getNewConceptMapLinkId() {
-      var nextAvailableLinkIdNumber = 1;
-      var usedNumbers = [];
-      var _iteratorNormalCompletion9 = true;
-      var _didIteratorError9 = false;
-      var _iteratorError9 = undefined;
-
-      try {
-        for (var _iterator9 = this.links[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-          var link = _step9.value;
-
-          var linkId = link.getId();
-          var linkIdNumber = parseInt(linkId.replace('studentLink', ''));
-          usedNumbers.push(linkIdNumber);
-        }
-      } catch (err) {
-        _didIteratorError9 = true;
-        _iteratorError9 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion9 && _iterator9.return) {
-            _iterator9.return();
-          }
-        } finally {
-          if (_didIteratorError9) {
-            throw _iteratorError9;
-          }
-        }
-      }
-
-      if (usedNumbers.length > 0) {
-        var maxNumberUsed = Math.max.apply(Math, usedNumbers);
-        if (!isNaN(maxNumberUsed)) {
-          nextAvailableLinkIdNumber = maxNumberUsed + 1;
-        }
-      }
-
-      return 'studentLink' + nextAvailableLinkIdNumber;
+      return this.ConceptMapService.getNextAvailableId(this.links, 'studentLink');
     }
   }, {
     key: 'setNodeMouseEvents',
@@ -1467,13 +1369,13 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'enableNodeDragging',
     value: function enableNodeDragging() {
-      var _iteratorNormalCompletion10 = true;
-      var _didIteratorError10 = false;
-      var _iteratorError10 = undefined;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator10 = this.nodes[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-          var node = _step10.value;
+        for (var _iterator8 = this.nodes[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var node = _step8.value;
 
           var group = node.getGroup();
           // get the bounds that we will allow the node group to be dragged in dragged in
@@ -1484,6 +1386,63 @@ var ConceptMapController = function (_ComponentController) {
             maxY: this.height
           };
           group.draggable(options);
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
+          }
+        }
+      }
+    }
+  }, {
+    key: 'disableNodeDragging',
+    value: function disableNodeDragging() {
+      var _iteratorNormalCompletion9 = true;
+      var _didIteratorError9 = false;
+      var _iteratorError9 = undefined;
+
+      try {
+        for (var _iterator9 = this.nodes[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var node = _step9.value;
+
+          var group = node.getGroup();
+          group.draggable(false);
+        }
+      } catch (err) {
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion9 && _iterator9.return) {
+            _iterator9.return();
+          }
+        } finally {
+          if (_didIteratorError9) {
+            throw _iteratorError9;
+          }
+        }
+      }
+    }
+  }, {
+    key: 'moveLinkTextToFront',
+    value: function moveLinkTextToFront() {
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
+
+      try {
+        for (var _iterator10 = this.links[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var link = _step10.value;
+
+          link.moveTextGroupToFront();
         }
       } catch (err) {
         _didIteratorError10 = true;
@@ -1501,8 +1460,8 @@ var ConceptMapController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'disableNodeDragging',
-    value: function disableNodeDragging() {
+    key: 'moveNodesToFront',
+    value: function moveNodesToFront() {
       var _iteratorNormalCompletion11 = true;
       var _didIteratorError11 = false;
       var _iteratorError11 = undefined;
@@ -1512,7 +1471,7 @@ var ConceptMapController = function (_ComponentController) {
           var node = _step11.value;
 
           var group = node.getGroup();
-          group.draggable(false);
+          group.front();
         }
       } catch (err) {
         _didIteratorError11 = true;
@@ -1525,63 +1484,6 @@ var ConceptMapController = function (_ComponentController) {
         } finally {
           if (_didIteratorError11) {
             throw _iteratorError11;
-          }
-        }
-      }
-    }
-  }, {
-    key: 'moveLinkTextToFront',
-    value: function moveLinkTextToFront() {
-      var _iteratorNormalCompletion12 = true;
-      var _didIteratorError12 = false;
-      var _iteratorError12 = undefined;
-
-      try {
-        for (var _iterator12 = this.links[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-          var link = _step12.value;
-
-          link.moveTextGroupToFront();
-        }
-      } catch (err) {
-        _didIteratorError12 = true;
-        _iteratorError12 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion12 && _iterator12.return) {
-            _iterator12.return();
-          }
-        } finally {
-          if (_didIteratorError12) {
-            throw _iteratorError12;
-          }
-        }
-      }
-    }
-  }, {
-    key: 'moveNodesToFront',
-    value: function moveNodesToFront() {
-      var _iteratorNormalCompletion13 = true;
-      var _didIteratorError13 = false;
-      var _iteratorError13 = undefined;
-
-      try {
-        for (var _iterator13 = this.nodes[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-          var node = _step13.value;
-
-          var group = node.getGroup();
-          group.front();
-        }
-      } catch (err) {
-        _didIteratorError13 = true;
-        _iteratorError13 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion13 && _iterator13.return) {
-            _iterator13.return();
-          }
-        } finally {
-          if (_didIteratorError13) {
-            throw _iteratorError13;
           }
         }
       }
@@ -1623,6 +1525,69 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'removeAllNodes',
     value: function removeAllNodes() {
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
+
+      try {
+        for (var _iterator12 = this.nodes[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var node = _step12.value;
+
+          node.remove();
+        }
+      } catch (err) {
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
+          }
+        } finally {
+          if (_didIteratorError12) {
+            throw _iteratorError12;
+          }
+        }
+      }
+
+      this.nodes = [];
+    }
+  }, {
+    key: 'getNodeById',
+    value: function getNodeById(id) {
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
+
+      try {
+        for (var _iterator13 = this.nodes[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var node = _step13.value;
+
+          var nodeId = node.getId();
+          if (id === nodeId) {
+            return node;
+          }
+        }
+      } catch (err) {
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
+          }
+        } finally {
+          if (_didIteratorError13) {
+            throw _iteratorError13;
+          }
+        }
+      }
+
+      return null;
+    }
+  }, {
+    key: 'getNodeByGroupId',
+    value: function getNodeByGroupId(id) {
       var _iteratorNormalCompletion14 = true;
       var _didIteratorError14 = false;
       var _iteratorError14 = undefined;
@@ -1631,7 +1596,10 @@ var ConceptMapController = function (_ComponentController) {
         for (var _iterator14 = this.nodes[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
           var node = _step14.value;
 
-          node.remove();
+          var groupId = node.getGroupId();
+          if (id === groupId) {
+            return node;
+          }
         }
       } catch (err) {
         _didIteratorError14 = true;
@@ -1648,22 +1616,22 @@ var ConceptMapController = function (_ComponentController) {
         }
       }
 
-      this.nodes = [];
+      return null;
     }
   }, {
-    key: 'getNodeById',
-    value: function getNodeById(id) {
+    key: 'getLinkById',
+    value: function getLinkById(id) {
       var _iteratorNormalCompletion15 = true;
       var _didIteratorError15 = false;
       var _iteratorError15 = undefined;
 
       try {
-        for (var _iterator15 = this.nodes[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-          var node = _step15.value;
+        for (var _iterator15 = this.links[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+          var link = _step15.value;
 
-          var nodeId = node.getId();
-          if (id === nodeId) {
-            return node;
+          var linkId = link.getId();
+          if (id === linkId) {
+            return link;
           }
         }
       } catch (err) {
@@ -1684,19 +1652,19 @@ var ConceptMapController = function (_ComponentController) {
       return null;
     }
   }, {
-    key: 'getNodeByGroupId',
-    value: function getNodeByGroupId(id) {
+    key: 'getLinkByGroupId',
+    value: function getLinkByGroupId(id) {
       var _iteratorNormalCompletion16 = true;
       var _didIteratorError16 = false;
       var _iteratorError16 = undefined;
 
       try {
-        for (var _iterator16 = this.nodes[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-          var node = _step16.value;
+        for (var _iterator16 = this.links[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+          var link = _step16.value;
 
-          var groupId = node.getGroupId();
+          var groupId = link.getGroupId();
           if (id === groupId) {
-            return node;
+            return link;
           }
         }
       } catch (err) {
@@ -1717,19 +1685,19 @@ var ConceptMapController = function (_ComponentController) {
       return null;
     }
   }, {
-    key: 'getLinkById',
-    value: function getLinkById(id) {
+    key: 'getNodeByConnectorId',
+    value: function getNodeByConnectorId(id) {
       var _iteratorNormalCompletion17 = true;
       var _didIteratorError17 = false;
       var _iteratorError17 = undefined;
 
       try {
-        for (var _iterator17 = this.links[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-          var link = _step17.value;
+        for (var _iterator17 = this.nodes[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+          var node = _step17.value;
 
-          var linkId = link.getId();
-          if (id === linkId) {
-            return link;
+          var connectorId = node.getConnectorId();
+          if (id === connectorId) {
+            return node;
           }
         }
       } catch (err) {
@@ -1743,72 +1711,6 @@ var ConceptMapController = function (_ComponentController) {
         } finally {
           if (_didIteratorError17) {
             throw _iteratorError17;
-          }
-        }
-      }
-
-      return null;
-    }
-  }, {
-    key: 'getLinkByGroupId',
-    value: function getLinkByGroupId(id) {
-      var _iteratorNormalCompletion18 = true;
-      var _didIteratorError18 = false;
-      var _iteratorError18 = undefined;
-
-      try {
-        for (var _iterator18 = this.links[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-          var link = _step18.value;
-
-          var groupId = link.getGroupId();
-          if (id === groupId) {
-            return link;
-          }
-        }
-      } catch (err) {
-        _didIteratorError18 = true;
-        _iteratorError18 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion18 && _iterator18.return) {
-            _iterator18.return();
-          }
-        } finally {
-          if (_didIteratorError18) {
-            throw _iteratorError18;
-          }
-        }
-      }
-
-      return null;
-    }
-  }, {
-    key: 'getNodeByConnectorId',
-    value: function getNodeByConnectorId(id) {
-      var _iteratorNormalCompletion19 = true;
-      var _didIteratorError19 = false;
-      var _iteratorError19 = undefined;
-
-      try {
-        for (var _iterator19 = this.nodes[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-          var node = _step19.value;
-
-          var connectorId = node.getConnectorId();
-          if (id === connectorId) {
-            return node;
-          }
-        }
-      } catch (err) {
-        _didIteratorError19 = true;
-        _iteratorError19 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion19 && _iterator19.return) {
-            _iterator19.return();
-          }
-        } finally {
-          if (_didIteratorError19) {
-            throw _iteratorError19;
           }
         }
       }
@@ -1847,27 +1749,27 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'removeAllLinks',
     value: function removeAllLinks() {
-      var _iteratorNormalCompletion20 = true;
-      var _didIteratorError20 = false;
-      var _iteratorError20 = undefined;
+      var _iteratorNormalCompletion18 = true;
+      var _didIteratorError18 = false;
+      var _iteratorError18 = undefined;
 
       try {
-        for (var _iterator20 = this.links[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-          var link = _step20.value;
+        for (var _iterator18 = this.links[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+          var link = _step18.value;
 
           link.remove();
         }
       } catch (err) {
-        _didIteratorError20 = true;
-        _iteratorError20 = err;
+        _didIteratorError18 = true;
+        _iteratorError18 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion20 && _iterator20.return) {
-            _iterator20.return();
+          if (!_iteratorNormalCompletion18 && _iterator18.return) {
+            _iterator18.return();
           }
         } finally {
-          if (_didIteratorError20) {
-            throw _iteratorError20;
+          if (_didIteratorError18) {
+            throw _iteratorError18;
           }
         }
       }
@@ -2203,13 +2105,13 @@ var ConceptMapController = function (_ComponentController) {
            * Loop through all the image objects. Each object contains
            * an image href and a Base64 image.
            */
-          var _iteratorNormalCompletion21 = true;
-          var _didIteratorError21 = false;
-          var _iteratorError21 = undefined;
+          var _iteratorNormalCompletion19 = true;
+          var _didIteratorError19 = false;
+          var _iteratorError19 = undefined;
 
           try {
-            for (var _iterator21 = images[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-              var imagePair = _step21.value;
+            for (var _iterator19 = images[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+              var imagePair = _step19.value;
 
               // get the image href e.g. /wise/curriculum/25/assets/Sun.png
               var imageHref = imagePair.imageHref;
@@ -2229,16 +2131,16 @@ var ConceptMapController = function (_ComponentController) {
 
             // create a canvas to draw the image on
           } catch (err) {
-            _didIteratorError21 = true;
-            _iteratorError21 = err;
+            _didIteratorError19 = true;
+            _iteratorError19 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion21 && _iterator21.return) {
-                _iterator21.return();
+              if (!_iteratorNormalCompletion19 && _iterator19.return) {
+                _iterator19.return();
               }
             } finally {
-              if (_didIteratorError21) {
-                throw _iteratorError21;
+              if (_didIteratorError19) {
+                throw _iteratorError19;
               }
             }
           }
@@ -2298,13 +2200,13 @@ var ConceptMapController = function (_ComponentController) {
       var mergedLinks = [];
       var backgroundPath = null;
       var stretchBackground = null;
-      var _iteratorNormalCompletion22 = true;
-      var _didIteratorError22 = false;
-      var _iteratorError22 = undefined;
+      var _iteratorNormalCompletion20 = true;
+      var _didIteratorError20 = false;
+      var _iteratorError20 = undefined;
 
       try {
-        for (var _iterator22 = componentStates[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-          var componentState = _step22.value;
+        for (var _iterator20 = componentStates[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+          var componentState = _step20.value;
 
           if (componentState.componentType === 'ConceptMap') {
             var studentData = componentState.studentData;
@@ -2323,16 +2225,16 @@ var ConceptMapController = function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError22 = true;
-        _iteratorError22 = err;
+        _didIteratorError20 = true;
+        _iteratorError20 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion22 && _iterator22.return) {
-            _iterator22.return();
+          if (!_iteratorNormalCompletion20 && _iterator20.return) {
+            _iterator20.return();
           }
         } finally {
-          if (_didIteratorError22) {
-            throw _iteratorError22;
+          if (_didIteratorError20) {
+            throw _iteratorError20;
           }
         }
       }
@@ -2401,7 +2303,7 @@ var ConceptMapController = function (_ComponentController) {
   return ConceptMapController;
 }(_componentController2.default);
 
-ConceptMapController.$inject = ['$anchorScroll', '$filter', '$location', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+ConceptMapController.$inject = ['$anchorScroll', '$filter', '$location', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

@@ -16,7 +16,6 @@ class ConceptMapController extends ComponentController {
       AnnotationService,
       ConceptMapService,
       ConfigService,
-      CRaterService,
       NodeService,
       NotebookService,
       ProjectService,
@@ -32,7 +31,6 @@ class ConceptMapController extends ComponentController {
     this.$q = $q;
     this.$timeout = $timeout;
     this.ConceptMapService = ConceptMapService;
-    this.CRaterService = CRaterService;
 
     this.width = 800;
     this.height = 600;
@@ -288,7 +286,7 @@ class ConceptMapController extends ComponentController {
       const x = node.x;
       const y = node.y;
       const width = node.width;
-      const height = node.height
+      const height = node.height;
       const conceptMapNode = this.ConceptMapService.newConceptMapNode(
         this.draw, instanceId, originalId, filePath, label,
         x, y, width, height, this.componentContent.showNodeLabels);
@@ -630,26 +628,6 @@ class ConceptMapController extends ComponentController {
     const annotation = this.AnnotationService.createAutoCommentAnnotation(
       runId, periodId, nodeId, componentId, toWorkgroupId, data);
     return annotation;
-  }
-
-  isCRaterEnabled() {
-    return this.CRaterService.isCRaterEnabled(this.componentContent);
-  }
-
-  isCRaterScoreOnSave() {
-    return this.CRaterService.isCRaterScoreOnSave(this.componentContent);
-  }
-
-  isCRaterScoreOnSubmit() {
-    return this.CRaterService.isCRaterScoreOnSubmit(this.componentContent);
-  }
-
-  isCRaterScoreOnChange() {
-    return this.CRaterService.isCRaterScoreOnChange(this.componentContent);
-  }
-
-  isCRaterScoreOnExit() {
-    return this.CRaterService.isCRaterScoreOnExit(this.componentContent);
   }
 
   linkTypeSelected(selectedLink) {
@@ -1104,41 +1082,11 @@ class ConceptMapController extends ComponentController {
   }
 
   getNewConceptMapNodeId() {
-    let nextAvailableNodeIdNumber = 1;
-    const usedNumbers = [];
-    for (let node of this.nodes) {
-      const nodeId = node.getId();
-      const nodeIdNumber = parseInt(nodeId.replace('studentNode', ''));
-      usedNumbers.push(nodeIdNumber);
-    }
-
-    if (usedNumbers.length > 0) {
-      const maxNumberUsed = Math.max.apply(Math, usedNumbers);
-      if (!isNaN(maxNumberUsed)) {
-        nextAvailableNodeIdNumber = maxNumberUsed + 1;
-      }
-    }
-
-    return 'studentNode' + nextAvailableNodeIdNumber;
+    return this.ConceptMapService.getNextAvailableId(this.nodes, 'studentNode');
   }
 
   getNewConceptMapLinkId() {
-    let nextAvailableLinkIdNumber = 1;
-    const usedNumbers = [];
-    for (let link of this.links) {
-      const linkId = link.getId();
-      const linkIdNumber = parseInt(linkId.replace('studentLink', ''));
-      usedNumbers.push(linkIdNumber);
-    }
-
-    if (usedNumbers.length > 0) {
-      const maxNumberUsed = Math.max.apply(Math, usedNumbers);
-      if (!isNaN(maxNumberUsed)) {
-        nextAvailableLinkIdNumber = maxNumberUsed + 1;
-      }
-    }
-
-    return 'studentLink' + nextAvailableLinkIdNumber;
+    return this.ConceptMapService.getNextAvailableId(this.links, 'studentLink');
   }
 
   setNodeMouseEvents(conceptMapNode) {
@@ -1825,7 +1773,6 @@ ConceptMapController.$inject = [
   'AnnotationService',
   'ConceptMapService',
   'ConfigService',
-  'CRaterService',
   'NodeService',
   'NotebookService',
   'ProjectService',
