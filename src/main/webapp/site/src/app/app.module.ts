@@ -31,6 +31,7 @@ import { HelpModule } from "./help/help.module";
 import { FeaturesModule } from "./features/features.module";
 import { AnnouncementComponent } from './announcement/announcement.component';
 import { AnnouncementDialogComponent } from './app.component';
+import { AboutModule } from "./about/about.module";
 
 export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
   return (): Promise<any> => {
@@ -81,6 +82,7 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     FeaturesModule,
     MatSidenavModule,
     MatDialogModule,
+    AboutModule,
     RouterModule.forRoot([], {
       scrollPositionRestoration: 'enabled',
       anchorScrolling: 'enabled',
