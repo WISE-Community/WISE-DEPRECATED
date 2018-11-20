@@ -7,6 +7,7 @@ import { UserService } from "../../services/user.service";
 import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
+import { EndRunDialogComponent } from '../end-run-dialog/end-run-dialog.component';
 
 @Component({
   selector: 'app-run-menu',
@@ -73,6 +74,16 @@ export class RunMenuComponent implements OnInit {
     const run = this.run;
     this.dialog.open(RunSettingsDialogComponent, {
       ariaLabel: 'Run Settings',
+      data: { run: run },
+      panelClass: 'mat-dialog--md',
+      autoFocus: false
+    });
+  }
+
+  showEndRunDialog() {
+    const run = this.run;
+    this.dialog.open(EndRunDialogComponent, {
+      ariaLabel: 'End Run',
       data: { run: run },
       panelClass: 'mat-dialog--md',
       autoFocus: false

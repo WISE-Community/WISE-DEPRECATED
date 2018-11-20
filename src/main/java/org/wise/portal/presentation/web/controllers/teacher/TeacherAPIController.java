@@ -396,6 +396,22 @@ public class TeacherAPIController {
     return response.toString();
   }
 
+  @RequestMapping(value = "/run/end/{runId}", method = RequestMethod.PUT)
+  protected String endRun(HttpServletRequest request,
+                                  @PathVariable Long runId) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response = null;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      runService.endRun(run);
+      response = createSuccessResponse();
+    } else {
+      response = createFailureResponse("noPermissionToEndRun");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
   @RequestMapping(value = "/run/delete/period", method = RequestMethod.POST)
   protected String deletePeriodFromRun(HttpServletRequest request,
                                   @RequestParam("runId") Long runId,

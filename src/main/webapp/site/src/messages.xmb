@@ -326,7 +326,7 @@
   <msg id="5615583660036576020"><source>app/modules/library/library-project-details/library-project-details.component.html:27</source>Discipline:</msg>
   <msg id="3217999400450328473"><source>app/modules/library/library-project-details/library-project-details.component.html:32</source>Features:</msg>
   <msg id="7971576739312280479"><source>app/modules/library/library-project-details/library-project-details.component.html:34</source>Performance Expectations: </msg>
-  <msg id="7819314041543176992"><source>app/modules/library/library-project-details/library-project-details.component.html:51</source>Close</msg>
+  <msg id="7819314041543176992"><source>app/modules/library/library-project-details/library-project-details.component.html:51</source><source>app/teacher/end-run-dialog/end-run-dialog.component.html:17</source>Close</msg>
   <msg id="7981908945533690041"><source>app/modules/library/library-project-details/library-project-details.component.html:54</source>supervised_user_circle</msg>
   <msg id="1295614462098694869"><source>app/modules/library/library-project-details/library-project-details.component.html:61</source><source>app/teacher/run-menu/run-menu.component.html:14</source>Preview</msg>
   <msg id="5383011891382211495"><source>app/modules/library/library-project/library-project.component.html:9</source>Owned by</msg>
@@ -461,8 +461,14 @@
   <msg id="2009649809507065415"><source>app/teacher/share-run-dialog/share-run-dialog.component.html:53</source>View Student Work</msg>
   <msg id="4163051378030591989"><source>app/teacher/share-run-dialog/share-run-dialog.component.html:57</source>View Student Names</msg>
   <msg id="70213949916056305"><source>app/teacher/share-run-dialog/share-run-dialog.component.html:61</source>Grade and Manage</msg>
+  <msg id="135709947954147754"><source>app/teacher/end-run-dialog/end-run-dialog.component.html:1</source>Run ID</msg>
+  <msg id="4138154341191997933"><source>app/teacher/end-run-dialog/end-run-dialog.component.html:3</source>Are you sure you want to end this run? Ending the run will prevent your students from working on the project. You can continue to grade their work.</msg>
+  <msg id="2573452080110908492"><source>app/teacher/end-run-dialog/end-run-dialog.component.html:4</source>The run has been successfully ended.</msg>
+  <msg id="1858900073259743895"><source>app/teacher/end-run-dialog/end-run-dialog.component.html:5</source>There was an error ending this run. Please try again later.</msg>
+  <msg id="3413029366212013791"><source>app/teacher/end-run-dialog/end-run-dialog.component.html:15</source>End Run</msg>
   <msg id="2634396349466458330"><source>app/teacher/run-menu/run-menu.component.html:18</source>Unit Info</msg>
   <msg id="2218066853816353238"><source>app/teacher/run-menu/run-menu.component.html:22</source>Edit Content</msg>
+  <msg id="1825538589701335684"><source>app/teacher/run-menu/run-menu.component.html:44</source>End Unit</msg>
   <msg id="3013055597615607317"><source>app/teacher/account/edit-profile/edit-profile.component.html:29</source>Display Name</msg>
   <msg id="3287932925160486049"><source>app/teacher/account/edit-profile/edit-profile.component.html:34</source>This is the name your students will see.</msg>
   <msg id="6270930966140952368"><source>app/teacher/account/edit-profile/edit-profile.component.html:35</source>Display Name required</msg>
