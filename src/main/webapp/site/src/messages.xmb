@@ -353,7 +353,7 @@
   <msg id="397098723873502323"><source>app/modules/library/share-project-dialog/share-project-dialog.component.html:66</source><source>app/teacher/share-run-dialog/share-run-dialog.component.html:76</source>Done</msg>
   <msg id="1111779696786090540"><source>app/modules/library/copy-project-dialog/copy-project-dialog.component.html:1</source>Copy Unit</msg>
   <msg id="3168871428490445721"><source>app/modules/library/copy-project-dialog/copy-project-dialog.component.html:7</source>Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</msg>
-  <msg id="4323470180912194028"><source>app/modules/library/copy-project-dialog/copy-project-dialog.component.html:17</source><source>app/modules/library/library-project-menu/library-project-menu.component.html:7</source>Copy</msg>
+  <msg id="4323470180912194028"><source>app/modules/library/copy-project-dialog/copy-project-dialog.component.html:18</source><source>app/modules/library/library-project-menu/library-project-menu.component.html:7</source>Copy</msg>
   <msg id="7585826646011739428"><source>app/modules/library/library-project-menu/library-project-menu.component.html:10</source>Edit</msg>
   <msg id="7419704019640008953"><source>app/modules/library/library-project-menu/library-project-menu.component.html:13</source><source>app/teacher/run-menu/run-menu.component.html:26</source>Share</msg>
   <msg id="7808756054397155068"><source>app/modules/library/library-filters/library-filters.component.html:70</source><source>app/student/student-run-list/student-run-list.component.html:22</source><source>app/teacher/teacher-run-list/teacher-run-list.component.html:32</source>Reset</msg>

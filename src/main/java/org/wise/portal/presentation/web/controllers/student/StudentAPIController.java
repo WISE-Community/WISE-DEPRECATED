@@ -146,6 +146,7 @@ public class StudentAPIController {
     runJSON.put("id", run.getId());
     runJSON.put("name", run.getName());
     runJSON.put("periodName", run.getPeriodOfStudent(user).getName());
+    runJSON.put("studentsPerTeam", run.getMaxWorkgroupSize());
     runJSON.put("projectThumb", projectThumb);
     runJSON.put("runCode", run.getRuncode());
     runJSON.put("startTime", run.getStarttime());
