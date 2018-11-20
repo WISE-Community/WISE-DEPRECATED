@@ -121,16 +121,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param index the index of the node that we will move
    */
   authoringViewMoveNodeUpButtonClicked(index) {
-    this.authoringViewMoveObjectUp(this.authoringComponentContent.nodes, index);
-  }
-
-  authoringViewMoveObjectUp(objects, index) {
-    if (index !== 0) {
-      const object = objects[index];
-      objects.splice(index, 1);
-      objects.splice(index - 1, 0, object);
-      this.authoringViewComponentChanged();
-    }
+    this.UtilService.moveObjectUp(this.authoringComponentContent.nodes, index);
+    this.authoringViewComponentChanged();
   }
 
   /**
@@ -138,16 +130,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param index the index of the node that we will move
    */
   authoringViewMoveNodeDownButtonClicked(index) {
-    this.authoringViewMoveObjectDown(this.authoringComponentContent.nodes, index);
-  }
-
-  authoringViewMoveObjectDown(objects, index) {
-    if (index !== objects.length - 1) {
-      const object = objects[index];
-      objects.splice(index, 1);
-      objects.splice(index + 1, 0, object);
-      this.authoringViewComponentChanged();
-    }
+    this.UtilService.moveObjectDown(this.authoringComponentContent.nodes, index);
+    this.authoringViewComponentChanged();
   }
 
   /**
@@ -171,7 +155,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param index the index of the link
    */
   authoringViewMoveLinkUpButtonClicked(index) {
-    this.authoringViewMoveObjectUp(this.authoringComponentContent.links, index);
+    this.UtilService.moveObjectUp(this.authoringComponentContent.links, index);
+    this.authoringViewComponentChanged();
   }
 
   /**
@@ -179,7 +164,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param index the index of the link
    */
   authoringViewMoveLinkDownButtonClicked(index) {
-    this.authoringViewMoveObjectDown(this.authoringComponentContent.links, index);
+    this.UtilService.moveObjectDown(this.authoringComponentContent.links, index);
+    this.authoringViewComponentChanged();
   }
 
   /**
@@ -281,7 +267,6 @@ class ConceptMapAuthoringController extends ConceptMapController {
     this.authoringComponentContent.rules.push(newRule);
     let showSubmitButton = false;
     if (this.authoringComponentContent.rules.length > 0) {
-      // there are scoring rules so we will show the submit button
       showSubmitButton = true;
     }
 
@@ -294,7 +279,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param index the index of the rule
    */
   authoringViewMoveRuleUpButtonClicked(index) {
-    this.authoringViewMoveObjectUp(this.authoringComponentContent.rules, index);
+    this.UtilService.moveObjectUp(this.authoringComponentContent.rules, index);
+    this.authoringViewComponentChanged();
   }
 
   /**
@@ -302,7 +288,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param index the index of the rule
    */
   authoringViewMoveRuleDownButtonClicked(index) {
-    this.authoringViewMoveObjectDown(this.authoringComponentContent.rules, index);
+    this.UtilService.moveObjectDown(this.authoringComponentContent.rules, index);
+    this.authoringViewComponentChanged();
   }
 
   /*
@@ -393,7 +380,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
     for (let component of components) {
       if (component != null) {
         if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
+            component.id != this.componentId) {
           numberOfAllowedComponents += 1;
           allowedComponent = component;
         }
@@ -416,7 +403,6 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param connectedComponent the connected component that has changed
    */
   authoringConnectedComponentComponentIdChanged(connectedComponent) {
-    // default the type to import work
     connectedComponent.type = 'importWork';
     this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
     this.authoringViewComponentChanged();

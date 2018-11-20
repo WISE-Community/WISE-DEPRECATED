@@ -174,13 +174,12 @@ class ComponentController {
   }
 
   getDirtyWorkToSendToParentAction(childController, isSubmit) {
-    let action = 'change';
     if (isSubmit && childController.isSubmitDirty) {
-      action = 'submit';
+      return 'submit';
     } else if (childController.isDirty) {
-      action = 'save';
+      return 'save';
     }
-    return action;
+    return 'change';
   }
 
   authoringConstructor() {

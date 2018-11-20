@@ -1460,7 +1460,6 @@ class ConceptMapService extends ComponentService {
   }
 
   /**
-   *
    * @param objects An array of nodes or links.
    * @param prefix The prefix for the given type of objects
    * For example the prefix for 'studentNode3' would be

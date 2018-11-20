@@ -186,13 +186,12 @@ var ComponentController = function () {
   }, {
     key: 'getDirtyWorkToSendToParentAction',
     value: function getDirtyWorkToSendToParentAction(childController, isSubmit) {
-      var action = 'change';
       if (isSubmit && childController.isSubmitDirty) {
-        action = 'submit';
+        return 'submit';
       } else if (childController.isDirty) {
-        action = 'save';
+        return 'save';
       }
-      return action;
+      return 'change';
     }
   }, {
     key: 'authoringConstructor',

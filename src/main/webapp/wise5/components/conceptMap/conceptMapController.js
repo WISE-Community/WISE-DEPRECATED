@@ -75,7 +75,6 @@ var ConceptMapController = function (_ComponentController) {
       _this.availableLinks = _this.componentContent.links;
     } else if (_this.isGradingMode() || _this.isGradingRevisionMode()) {
       var componentState = _this.$scope.componentState;
-
       if (componentState) {
         if (_this.mode === 'gradingRevision') {
           _this.setIdsWithNodeIdComponentIdWorkgroupIdComponentStateIdPrefix(componentState);
@@ -1082,8 +1081,6 @@ var ConceptMapController = function (_ComponentController) {
         }
 
         var isDragging = true;
-
-        // redraw the link with the new coordinates
         this.activeLink.updateCoordinates(x1, y1, x2, y2, isDragging);
       }
     }
@@ -1356,9 +1353,9 @@ var ConceptMapController = function (_ComponentController) {
     key: 'clearHighlightedElement',
     value: function clearHighlightedElement() {
       if (this.highlightedElement != null) {
-        if (this.highlightedElement.constructor.name == 'ConceptMapNode') {
+        if (this.highlightedElement.constructor.name === 'ConceptMapNode') {
           this.highlightedElement.hideBorder();
-        } else if (this.highlightedElement.constructor.name == 'ConceptMapLink') {
+        } else if (this.highlightedElement.constructor.name === 'ConceptMapLink') {
           this.hideLinkTypeChooser();
         }
         this.highlightedElement.isHighlighted(false);
@@ -2115,11 +2112,7 @@ var ConceptMapController = function (_ComponentController) {
 
               // get the image href e.g. /wise/curriculum/25/assets/Sun.png
               var imageHref = imagePair.imageHref;
-
-              // get the Base64 image
               var base64Image = imagePair.base64Image;
-
-              // create a regex to match the image href
               var imageRegEx = new RegExp(imageHref, 'g');
 
               /*
@@ -2128,8 +2121,6 @@ var ConceptMapController = function (_ComponentController) {
                */
               svgString = svgString.replace(imageRegEx, base64Image);
             }
-
-            // create a canvas to draw the image on
           } catch (err) {
             _didIteratorError19 = true;
             _iteratorError19 = err;
@@ -2147,8 +2138,6 @@ var ConceptMapController = function (_ComponentController) {
 
           var myCanvas = document.createElement('canvas');
           var ctx = myCanvas.getContext('2d');
-
-          // create an svg blob
           var svg = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
           var domURL = self.URL || self.webkitURL || self;
           var url = domURL.createObjectURL(svg);
@@ -2159,25 +2148,17 @@ var ConceptMapController = function (_ComponentController) {
            * in the onload callback function
            */
           var thisUtilService = _this7.UtilService;
-
-          // the function that is called after the image is fully loaded
           image.onload = function (event) {
-
-            // get the image that was loaded
             var image = event.target;
 
             // set the dimensions of the canvas
             myCanvas.width = image.width;
             myCanvas.height = image.height;
             ctx.drawImage(image, 0, 0);
-
-            // get the canvas as a Base64 string
             var base64Image = myCanvas.toDataURL('image/png');
 
             // get the image object
             var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
-
-            // create a notebook item with the image populated into it
             _this7.NotebookService.addNote($event, imageObject);
           };
 

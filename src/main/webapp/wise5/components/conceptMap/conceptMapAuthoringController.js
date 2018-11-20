@@ -107,17 +107,8 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
   _createClass(ConceptMapAuthoringController, [{
     key: 'authoringViewMoveNodeUpButtonClicked',
     value: function authoringViewMoveNodeUpButtonClicked(index) {
-      this.authoringViewMoveObjectUp(this.authoringComponentContent.nodes, index);
-    }
-  }, {
-    key: 'authoringViewMoveObjectUp',
-    value: function authoringViewMoveObjectUp(objects, index) {
-      if (index !== 0) {
-        var object = objects[index];
-        objects.splice(index, 1);
-        objects.splice(index - 1, 0, object);
-        this.authoringViewComponentChanged();
-      }
+      this.UtilService.moveObjectUp(this.authoringComponentContent.nodes, index);
+      this.authoringViewComponentChanged();
     }
 
     /**
@@ -128,17 +119,8 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
   }, {
     key: 'authoringViewMoveNodeDownButtonClicked',
     value: function authoringViewMoveNodeDownButtonClicked(index) {
-      this.authoringViewMoveObjectDown(this.authoringComponentContent.nodes, index);
-    }
-  }, {
-    key: 'authoringViewMoveObjectDown',
-    value: function authoringViewMoveObjectDown(objects, index) {
-      if (index !== objects.length - 1) {
-        var object = objects[index];
-        objects.splice(index, 1);
-        objects.splice(index + 1, 0, object);
-        this.authoringViewComponentChanged();
-      }
+      this.UtilService.moveObjectDown(this.authoringComponentContent.nodes, index);
+      this.authoringViewComponentChanged();
     }
 
     /**
@@ -167,7 +149,8 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
   }, {
     key: 'authoringViewMoveLinkUpButtonClicked',
     value: function authoringViewMoveLinkUpButtonClicked(index) {
-      this.authoringViewMoveObjectUp(this.authoringComponentContent.links, index);
+      this.UtilService.moveObjectUp(this.authoringComponentContent.links, index);
+      this.authoringViewComponentChanged();
     }
 
     /**
@@ -178,7 +161,8 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
   }, {
     key: 'authoringViewMoveLinkDownButtonClicked',
     value: function authoringViewMoveLinkDownButtonClicked(index) {
-      this.authoringViewMoveObjectDown(this.authoringComponentContent.links, index);
+      this.UtilService.moveObjectDown(this.authoringComponentContent.links, index);
+      this.authoringViewComponentChanged();
     }
 
     /**
@@ -320,7 +304,6 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
       this.authoringComponentContent.rules.push(newRule);
       var showSubmitButton = false;
       if (this.authoringComponentContent.rules.length > 0) {
-        // there are scoring rules so we will show the submit button
         showSubmitButton = true;
       }
 
@@ -336,7 +319,8 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
   }, {
     key: 'authoringViewMoveRuleUpButtonClicked',
     value: function authoringViewMoveRuleUpButtonClicked(index) {
-      this.authoringViewMoveObjectUp(this.authoringComponentContent.rules, index);
+      this.UtilService.moveObjectUp(this.authoringComponentContent.rules, index);
+      this.authoringViewComponentChanged();
     }
 
     /**
@@ -347,7 +331,8 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
   }, {
     key: 'authoringViewMoveRuleDownButtonClicked',
     value: function authoringViewMoveRuleDownButtonClicked(index) {
-      this.authoringViewMoveObjectDown(this.authoringComponentContent.rules, index);
+      this.UtilService.moveObjectDown(this.authoringComponentContent.rules, index);
+      this.authoringViewComponentChanged();
     }
 
     /*
@@ -499,7 +484,6 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
   }, {
     key: 'authoringConnectedComponentComponentIdChanged',
     value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
-      // default the type to import work
       connectedComponent.type = 'importWork';
       this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
       this.authoringViewComponentChanged();

@@ -188,6 +188,10 @@ describe('ConceptMapController', () => {
     const moveLinkTextToFrontSpy = spyOn(conceptMapController, 'moveLinkTextToFront');
     const moveNodesToFrontSpy = spyOn(conceptMapController, 'moveNodesToFront');
     conceptMapController.setStudentWork(componentState);
+    expect(setNodeMouseEventsSpy).toHaveBeenCalled();
+    expect(setLinkMouseEventsSpy).toHaveBeenCalled();
+    expect(moveLinkTextToFrontSpy).toHaveBeenCalled();
+    expect(moveNodesToFrontSpy).toHaveBeenCalled();
     expect(conceptMapController.nodes.length).toEqual(2);
     expect(conceptMapController.links.length).toEqual(1);
   });

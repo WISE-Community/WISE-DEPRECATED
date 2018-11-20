@@ -209,6 +209,10 @@ describe('ConceptMapController', function () {
     var moveLinkTextToFrontSpy = spyOn(conceptMapController, 'moveLinkTextToFront');
     var moveNodesToFrontSpy = spyOn(conceptMapController, 'moveNodesToFront');
     conceptMapController.setStudentWork(componentState);
+    expect(setNodeMouseEventsSpy).toHaveBeenCalled();
+    expect(setLinkMouseEventsSpy).toHaveBeenCalled();
+    expect(moveLinkTextToFrontSpy).toHaveBeenCalled();
+    expect(moveNodesToFrontSpy).toHaveBeenCalled();
     expect(conceptMapController.nodes.length).toEqual(2);
     expect(conceptMapController.links.length).toEqual(1);
   });

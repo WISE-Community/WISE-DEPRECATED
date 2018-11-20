@@ -71,7 +71,6 @@ class ConceptMapController extends ComponentController {
       this.availableLinks = this.componentContent.links;
     } else if (this.isGradingMode() || this.isGradingRevisionMode()) {
       const componentState = this.$scope.componentState;
-
       if (componentState) {
         if (this.mode === 'gradingRevision') {
           this.setIdsWithNodeIdComponentIdWorkgroupIdComponentStateIdPrefix(componentState);
@@ -80,7 +79,6 @@ class ConceptMapController extends ComponentController {
         }
       } else {
         this.setIdsWithNodeIdComponentIdWorkgroupId();
-
       }
     } else if (this.isOnlyShowWorkMode()) {
       const componentState = this.$scope.componentState;
@@ -208,7 +206,7 @@ class ConceptMapController extends ComponentController {
     if (this.isStudentMode()) {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
-      }  else if (this.ConceptMapService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (this.ConceptMapService.componentStateHasStudentWork(componentState, this.componentContent)) {
         componentState = this.ProjectService.injectAssetPaths(componentState);
         this.setStudentWork(componentState);
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
@@ -632,7 +630,7 @@ class ConceptMapController extends ComponentController {
 
   linkTypeSelected(selectedLink) {
     if (this.highlightedElement != null &&
-      this.highlightedElement.constructor.name === 'ConceptMapLink') {
+        this.highlightedElement.constructor.name === 'ConceptMapLink') {
       const link = this.highlightedElement;
       const label = selectedLink.label;
       const color = selectedLink.color;
@@ -902,8 +900,6 @@ class ConceptMapController extends ComponentController {
       }
 
       const isDragging = true;
-
-      // redraw the link with the new coordinates
       this.activeLink.updateCoordinates(x1, y1, x2, y2, isDragging);
     }
   }
@@ -1135,7 +1131,7 @@ class ConceptMapController extends ComponentController {
     element.isHighlighted(true);
     element.showDeleteButton();
 
-    if(element.constructor.name === 'ConceptMapNode') {
+    if (element.constructor.name === 'ConceptMapNode') {
       element.showBorder();
     } else if (element.constructor.name === 'ConceptMapLink') {
       this.showLinkTypeChooser();
@@ -1145,9 +1141,9 @@ class ConceptMapController extends ComponentController {
 
   clearHighlightedElement() {
     if (this.highlightedElement != null) {
-      if(this.highlightedElement.constructor.name == 'ConceptMapNode') {
+      if (this.highlightedElement.constructor.name === 'ConceptMapNode') {
         this.highlightedElement.hideBorder();
-      } else if (this.highlightedElement.constructor.name == 'ConceptMapLink') {
+      } else if (this.highlightedElement.constructor.name === 'ConceptMapLink') {
         this.hideLinkTypeChooser();
       }
       this.highlightedElement.isHighlighted(false);
@@ -1618,11 +1614,7 @@ class ConceptMapController extends ComponentController {
         for (let imagePair of images) {
           // get the image href e.g. /wise/curriculum/25/assets/Sun.png
           const imageHref = imagePair.imageHref;
-
-          // get the Base64 image
           const base64Image = imagePair.base64Image;
-
-          // create a regex to match the image href
           const imageRegEx = new RegExp(imageHref, 'g');
 
           /*
@@ -1632,11 +1624,8 @@ class ConceptMapController extends ComponentController {
           svgString = svgString.replace(imageRegEx, base64Image);
         }
 
-        // create a canvas to draw the image on
         const myCanvas = document.createElement('canvas');
         const ctx = myCanvas.getContext('2d');
-
-        // create an svg blob
         const svg = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
         const domURL = self.URL || self.webkitURL || self;
         const url = domURL.createObjectURL(svg);
@@ -1647,25 +1636,17 @@ class ConceptMapController extends ComponentController {
          * in the onload callback function
          */
         const thisUtilService = this.UtilService;
-
-        // the function that is called after the image is fully loaded
         image.onload = (event) => {
-
-          // get the image that was loaded
           const image = event.target;
 
           // set the dimensions of the canvas
           myCanvas.width = image.width;
           myCanvas.height = image.height;
           ctx.drawImage(image, 0, 0);
-
-          // get the canvas as a Base64 string
           const base64Image = myCanvas.toDataURL('image/png');
 
           // get the image object
           const imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
-
-          // create a notebook item with the image populated into it
           this.NotebookService.addNote($event, imageObject);
         };
 

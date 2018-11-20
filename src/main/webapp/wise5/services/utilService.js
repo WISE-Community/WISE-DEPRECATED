@@ -1306,6 +1306,24 @@ var UtilService = function () {
     value: function setIsJSONValidMessage(isJSONValid) {
       this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
     }
+  }, {
+    key: 'moveObjectUp',
+    value: function moveObjectUp(objects, index) {
+      if (index !== 0) {
+        var object = objects[index];
+        objects.splice(index, 1);
+        objects.splice(index - 1, 0, object);
+      }
+    }
+  }, {
+    key: 'moveObjectDown',
+    value: function moveObjectDown(objects, index) {
+      if (index !== objects.length - 1) {
+        var object = objects[index];
+        objects.splice(index, 1);
+        objects.splice(index + 1, 0, object);
+      }
+    }
   }]);
 
   return UtilService;

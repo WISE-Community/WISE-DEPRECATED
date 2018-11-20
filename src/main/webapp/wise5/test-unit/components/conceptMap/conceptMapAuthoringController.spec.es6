@@ -84,6 +84,7 @@ describe('ConceptMapAuthoringController', () => {
     };
     $scope = $rootScope.$new();
     $scope.componentContent = JSON.parse(JSON.stringify(component));
+    $scope.authoringComponentContent = JSON.parse(JSON.stringify(component));
 
     conceptMapAuthoringController = $controller('ConceptMapAuthoringController', { $scope: $scope });
     conceptMapAuthoringController.nodeId = 'node1';
@@ -91,24 +92,22 @@ describe('ConceptMapAuthoringController', () => {
 
   it('should move the object up', () => {
     const authoringViewComponentChangedSpy = spyOn(conceptMapAuthoringController, 'authoringViewComponentChanged');
-    const objects = [1, 2, 3, 4, 5];
-    conceptMapAuthoringController.authoringViewMoveObjectUp(objects, 1);
-    expect(objects[0]).toEqual(2);
-    expect(objects[1]).toEqual(1);
-    expect(objects[2]).toEqual(3);
-    expect(objects[3]).toEqual(4);
-    expect(objects[4]).toEqual(5);
+    conceptMapAuthoringController.authoringViewMoveNodeUpButtonClicked(1);
+    expect(authoringViewComponentChangedSpy).toHaveBeenCalled();
+    expect(conceptMapAuthoringController.authoringComponentContent.nodes[0].id).toEqual('node2');
+    expect(conceptMapAuthoringController.authoringComponentContent.nodes[1].id).toEqual('node1');
+    expect(conceptMapAuthoringController.authoringComponentContent.nodes[2].id).toEqual('node3');
+    expect(conceptMapAuthoringController.authoringComponentContent.nodes[3].id).toEqual('node4');
   });
 
   it('should move the object down', () => {
     const authoringViewComponentChangedSpy = spyOn(conceptMapAuthoringController, 'authoringViewComponentChanged');
-    const objects = [1, 2, 3, 4, 5];
-    conceptMapAuthoringController.authoringViewMoveObjectDown(objects, 1);
-    expect(objects[0]).toEqual(1);
-    expect(objects[1]).toEqual(3);
-    expect(objects[2]).toEqual(2);
-    expect(objects[3]).toEqual(4);
-    expect(objects[4]).toEqual(5);
+    conceptMapAuthoringController.authoringViewMoveNodeDownButtonClicked(1);
+    expect(authoringViewComponentChangedSpy).toHaveBeenCalled();
+    expect(conceptMapAuthoringController.authoringComponentContent.nodes[0].id).toEqual('node1');
+    expect(conceptMapAuthoringController.authoringComponentContent.nodes[1].id).toEqual('node3');
+    expect(conceptMapAuthoringController.authoringComponentContent.nodes[2].id).toEqual('node2');
+    expect(conceptMapAuthoringController.authoringComponentContent.nodes[3].id).toEqual('node4');
   });
 
 });
