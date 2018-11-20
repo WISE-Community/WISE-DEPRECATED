@@ -16,7 +16,8 @@
     $body-2: mat-typography-level(16px, 22px, 500),
     $caption: mat-typography-level(13px, 20px, 400),
     $subheading-1: mat-typography-level(17px, 24px, 400),
-    $subheading-2: mat-typography-level(17px, 24px, 500)
+    $subheading-2: mat-typography-level(17px, 24px, 500),
+    $headline: mat-typography-level(24px, 32px, 500)
   );
 
   // Override specific Material typography levels
@@ -38,6 +39,10 @@
 
   h3, .mat-subheading-2 {
     @include mat-typography-level-to-styles($custom-typography, subheading-2);
+  }
+
+  h1, .mat-headline {
+    @include mat-typography-level-to-styles($custom-typography, headline);
   }
 
   a {
