@@ -1,34 +1,17 @@
 #!/bin/bash
-export PATH=/usr/local/bin:$PATH
-files=$(git diff --cached --name-only | grep '\.js\?$')
+echo "*** WISE pre-commit hook: Begin ***"
 
-# Prevent ESLint help message if no files matched
-if [[ $files = "" ]] ; then
-  exit 0
-fi
+# Generate and add updated messages.xmb file to git
+echo "*** WISE pre-commit hook: Generating messages.xmb ***"
+ng xi18n  --i18n-format=xmb
+git add src/main/webapp/site/src/messages.xmb
 
-failed=0
-for file in ${files}; do
-  git show :$file | ./node_modules/eslint/bin/eslint.js --stdin --stdin-filename $file
-  if [[ $? != 0 ]] ; then
-    echo $file
-    failed=1
-  fi
-done;
-
-#if [[ $failed != 0 ]] ; then
-  #echo "ESLint check failed, commit denied"
-  #exit $failed
-#fi
-
-# run the update-i18n command and abort commit if there were any changes
-./node_modules/gulp/bin/gulp.js update-i18n
-
+# Run npm test. Abort commit if tests fail
+echo "*** WISE pre-commit hook: Running \"npm test\" ***"
+npm test
 if [[ $? != 0 ]] ; then
-  echo "Aborting commit. Please add the newly updated files to your commit and try again."
+  echo "*** WISE pre-commit hook: npm test failed. Aborting commit ***"
   exit 1
 fi
 
-# generate and add updated messages.xmb file to git
-ng xi18n  --i18n-format=xmb
-git add src/main/webapp/site/src/messages.xmb
+echo "*** WISE pre-commit hook: End ***"
