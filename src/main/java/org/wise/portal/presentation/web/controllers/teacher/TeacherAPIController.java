@@ -63,7 +63,7 @@ public class TeacherAPIController {
   @Autowired
   protected MessageSource messageSource;
 
-  @RequestMapping(value = "/config", method = RequestMethod.GET)
+  @RequestMapping(value = "/config", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
     JSONObject configJSON = new JSONObject();
     String contextPath = request.getContextPath();
@@ -73,7 +73,7 @@ public class TeacherAPIController {
     return configJSON.toString();
   }
 
-  @RequestMapping(value = "/runs", method = RequestMethod.GET)
+  @RequestMapping(value = "/runs", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getRuns() throws JSONException {
     User user = ControllerUtil.getSignedInUser();
     List<Run> runs = runService.getRunListByOwner(user);
@@ -81,7 +81,7 @@ public class TeacherAPIController {
     return runsJSONArray.toString();
   }
 
-  @RequestMapping(value = "/sharedruns", method = RequestMethod.GET)
+  @RequestMapping(value = "/sharedruns", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getSharedRuns() throws JSONException {
     User user = ControllerUtil.getSignedInUser();
     List<Run> runs = runService.getRunListBySharedOwner(user);
@@ -150,7 +150,7 @@ public class TeacherAPIController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/run/{runId}", method = RequestMethod.GET)
+  @RequestMapping(value = "/run/{runId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getRun(@PathVariable Long runId)
       throws ObjectNotFoundException, JSONException {
     Run run = runService.retrieveById(runId);
@@ -161,13 +161,13 @@ public class TeacherAPIController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/usernames", method = RequestMethod.GET)
+  @RequestMapping(value = "/usernames", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected List<String> getAllTeacherUsernames() {
     return userDetailsService.retrieveAllUsernames("TeacherUserDetails");
   }
 
   @ResponseBody
-  @RequestMapping(value = "/register", method = RequestMethod.POST)
+  @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
   protected String createTeacherAccount(
     @RequestBody Map<String, String> teacherFields, HttpServletRequest request
   ) throws DuplicateUsernameException {
@@ -312,7 +312,7 @@ public class TeacherAPIController {
     return numStudents;
   }
 
-  @RequestMapping(value = "/run/create", method = RequestMethod.POST)
+  @RequestMapping(value = "/run/create", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
   protected String createRun(HttpServletRequest request,
                              @RequestParam("projectId") String projectId,
                              @RequestParam("periods") String periods,

@@ -56,7 +56,7 @@ public class UserAPIController {
   @Autowired
   protected IMailFacade mailService;
 
-  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  @RequestMapping(value = "/user", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getUserInfo(ModelMap modelMap,
       @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
     User user = ControllerUtil.getSignedInUser();
@@ -120,7 +120,7 @@ public class UserAPIController {
     }
   }
 
-  @RequestMapping(value = "/config", method = RequestMethod.GET)
+  @RequestMapping(value = "/config", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
     JSONObject configJSON = new JSONObject();
     String contextPath = request.getContextPath();

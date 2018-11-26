@@ -25,7 +25,7 @@ public class StudentForgotAccountAPIController {
   private Properties i18nProperties;
 
   @ResponseBody
-  @RequestMapping(value = "/username/search", method = RequestMethod.GET)
+  @RequestMapping(value = "/username/search", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getStudentUsernames(@RequestParam("firstName") String firstName,
                                        @RequestParam("lastName") String lastName,
                                        @RequestParam("birthMonth") Integer birthMonth,
@@ -57,7 +57,7 @@ public class StudentForgotAccountAPIController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/password/security-question", method = RequestMethod.GET)
+  @RequestMapping(value = "/password/security-question", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getSecurityQuestion(@RequestParam("username") String username) throws JSONException {
     User user = userService.retrieveUserByUsername(username);
     JSONObject response = new JSONObject();

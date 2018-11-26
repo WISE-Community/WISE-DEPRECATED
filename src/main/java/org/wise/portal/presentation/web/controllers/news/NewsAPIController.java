@@ -19,7 +19,7 @@ public class NewsAPIController {
   @Autowired
   private NewsItemService newsItemService;
 
-  @RequestMapping(value = "", method = RequestMethod.GET)
+  @RequestMapping(value = "", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getNews() {
     List<NewsItem> newsItems = newsItemService.retrieveAllNewsItem();
     JSONArray newsItemsJSON = getNewsItemsJSON(newsItems);

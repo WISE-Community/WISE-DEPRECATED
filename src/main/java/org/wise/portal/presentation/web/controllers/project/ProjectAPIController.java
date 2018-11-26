@@ -47,7 +47,7 @@ public class ProjectAPIController {
 
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
-  @RequestMapping(value = "/library", method = RequestMethod.GET)
+  @RequestMapping(value = "/library", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getLibraryProjects(ModelMap modelMap) throws ObjectNotFoundException,
       JSONException {
     Portal portal = portalService.getById(new Integer(1));
@@ -87,14 +87,14 @@ public class ProjectAPIController {
     }
   }
 
-  @RequestMapping(value = "/community", method = RequestMethod.GET)
+  @RequestMapping(value = "/community", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getCommunityLibrayProjects(ModelMap modelMap) throws JSONException {
     List<Project> teacherSharedProjects = projectService.getTeacherSharedProjectList();
     JSONArray projectsJSON = getProjectsJSON(teacherSharedProjects);
     return projectsJSON.toString();
   }
 
-  @RequestMapping(value = "/personal", method = RequestMethod.GET)
+  @RequestMapping(value = "/personal", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getPersonalLibrayProjects(ModelMap modelMap) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
     List<Project> projectsWithoutRuns = projectService.getProjectsWithoutRuns(signedInUser);
@@ -102,7 +102,7 @@ public class ProjectAPIController {
     return projectsJSON.toString();
   }
 
-  @RequestMapping(value = "/shared", method = RequestMethod.GET)
+  @RequestMapping(value = "/shared", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getSharedLibrayProjects(ModelMap modelMap) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
     List<Project> sharedProjectList = projectService.getSharedProjectList(signedInUser);
@@ -111,7 +111,7 @@ public class ProjectAPIController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/info/{projectId}", method = RequestMethod.GET)
+  @RequestMapping(value = "/info/{projectId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getRun(@PathVariable Long projectId) throws ObjectNotFoundException,
       JSONException {
     Project project = projectService.getById(projectId);
@@ -168,7 +168,7 @@ public class ProjectAPIController {
     return projectThumb;
   }
 
-  @RequestMapping(value = "/copy", method = RequestMethod.POST)
+  @RequestMapping(value = "/copy", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
   protected String copyProject(HttpServletRequest request,
       @RequestParam("projectId") String projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();

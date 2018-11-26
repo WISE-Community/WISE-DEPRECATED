@@ -89,7 +89,7 @@ public class StudentAPIController {
   // TODO: make this dynamic, part of project metadata?
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
-  @RequestMapping(value = "/runs", method = RequestMethod.GET)
+  @RequestMapping(value = "/runs", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String handleGET(ModelMap modelMap,
       @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
     User user = ControllerUtil.getSignedInUser();
@@ -186,7 +186,7 @@ public class StudentAPIController {
    * @return A JSON object string containing information about the run such as the id, run code, title,
    * teacher name, and periods.
    */
-  @RequestMapping(value = "/run/info", method = RequestMethod.GET)
+  @RequestMapping(value = "/run/info", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getRunCodeInfo(@RequestParam("runCode") String runCode) throws JSONException {
     JSONObject runRegisterInfo = new JSONObject();
     try {
@@ -214,7 +214,7 @@ public class StudentAPIController {
    * that contains the information about the run. If the student is not successfully added to the
    * run, we will return a JSON object string containing an error field with an error string.
    */
-  @RequestMapping(value = "/run/register", method = RequestMethod.POST)
+  @RequestMapping(value = "/run/register", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
   protected String addStudentToRun(@RequestParam("runCode") String runCode,
       @RequestParam("period") String period) {
     JSONObject responseJSONObject = new JSONObject();
@@ -297,7 +297,7 @@ public class StudentAPIController {
     return periodsJSONArray;
   }
 
-  @RequestMapping(value = "/config", method = RequestMethod.GET)
+  @RequestMapping(value = "/config", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
     JSONObject configJSON = new JSONObject();
     String contextPath = request.getContextPath();
@@ -323,7 +323,7 @@ public class StudentAPIController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/register", method = RequestMethod.POST)
+  @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
   protected String createStudentAccount(
       @RequestBody Map<String, String> studentFields, HttpServletRequest request)
       throws DuplicateUsernameException {
@@ -367,7 +367,7 @@ public class StudentAPIController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/register/questions", method = RequestMethod.GET)
+  @RequestMapping(value = "/register/questions", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getSecurityQuestions() throws JSONException {
     JSONArray questions = new JSONArray();
     AccountQuestion[] accountQuestionKeys = AccountQuestion.class.getEnumConstants();
@@ -406,7 +406,7 @@ public class StudentAPIController {
     }
   }
 
-  @RequestMapping(value = "/teacher-list", method = RequestMethod.GET)
+  @RequestMapping(value = "/teacher-list", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
   protected String getTeacherList() {
     JSONArray teacherList = new JSONArray();
     User user = ControllerUtil.getSignedInUser();
