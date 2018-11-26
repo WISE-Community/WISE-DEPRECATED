@@ -1459,6 +1459,31 @@ class ConceptMapService extends ComponentService {
     return deferred.promise;
   }
 
+  /**
+   * @param objects An array of nodes or links.
+   * @param prefix The prefix for the given type of objects
+   * For example the prefix for 'studentNode3' would be
+   * 'studentNode'
+   */
+  getNextAvailableId(objects, prefix) {
+    let nextAvailableNumber = 1;
+    const usedNumbers = [];
+    for (let object of objects) {
+      const objectId = object.id;
+      const objectIdNumber = parseInt(objectId.replace(prefix, ''));
+      usedNumbers.push(objectIdNumber);
+    }
+
+    if (usedNumbers.length > 0) {
+      const maxNumberUsed = Math.max.apply(Math, usedNumbers);
+      if (!isNaN(maxNumberUsed)) {
+        nextAvailableNumber = maxNumberUsed + 1;
+      }
+    }
+
+    return prefix + nextAvailableNumber;
+  }
+
   // end of ConceptMapService class
 }
 

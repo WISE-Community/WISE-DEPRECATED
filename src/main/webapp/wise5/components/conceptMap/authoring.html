@@ -69,17 +69,17 @@
           <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes'
                   value='{{node.label}}'>{{node.label}}</option>
         </select>
-        <button ng-click='conceptMapController.authoringViewRuleUpButtonClicked($index)'>{{ 'UP' | translate }}</button>
-        <button ng-click='conceptMapController.authoringViewRuleDownButtonClicked($index)'>{{ 'DOWN' | translate }}</button>
+        <button ng-click="conceptMapController.authoringViewMoveRuleUpButtonClicked($index)">{{ 'UP' | translate }}</button>
+        <button ng-click="conceptMapController.authoringViewMoveRuleDownButtonClicked($index)">{{ 'DOWN' | translate }}</button>
         <button ng-click='conceptMapController.authoringViewRuleDeleteButtonClicked($index)'>{{ 'DELETE' | translate }}</button>
         <br/>
         <div style='text-indent: 80px'>
-          <button ng-click='conceptMapController.authoringViewAddCategoryClicked(rule)'>{{ 'conceptMap.addCategoryOptional' | translate }}</button>
+          <button ng-click="conceptMapController.authoringViewAddCategoryToRule(rule)">{{ 'conceptMap.addCategoryOptional' | translate }}</button>
           <span ng-repeat='category in rule.categories track by $index'>
             <input ng-model='rule.categories[$index]'
                    ng-change='conceptMapController.authoringViewComponentChanged()'
                    ng-model-options='{ debounce: 1000 }'/>
-            <button ng-click='conceptMapController.authoringViewDeleteCategoryClicked(rule, $index)'>x</button>
+            <button ng-click="conceptMapController.authoringViewDeleteCategoryFromRule(rule, $index)">x</button>
           </span>
         </div>
         <br/>
@@ -442,7 +442,7 @@
                  ng-model-options='{ debounce: 1000 }'/>
         </md-input-container>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='conceptMapController.authoringViewNodeUpButtonClicked($index)'>
+                   ng-click="conceptMapController.authoringViewMoveNodeUpButtonClicked($index)">
           <md-icon>arrow_upward</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -450,7 +450,7 @@
           </md-tooltip>
         </md-button>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='conceptMapController.authoringViewNodeDownButtonClicked($index)'>
+                   ng-click="conceptMapController.authoringViewMoveNodeDownButtonClicked($index)">
           <md-icon>arrow_downward</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -497,7 +497,7 @@
                  ng-model-options='{ debounce: 1000 }'/>
         </md-input-container>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='conceptMapController.authoringViewLinkUpButtonClicked($index)'>
+                   ng-click="conceptMapController.authoringViewMoveLinkUpButtonClicked($index)">
           <md-icon>arrow_upward</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -505,7 +505,7 @@
           </md-tooltip>
         </md-button>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='conceptMapController.authoringViewLinkDownButtonClicked($index)'>
+                   ng-click="conceptMapController.authoringViewMoveLinkDownButtonClicked($index)">
           <md-icon>arrow_downward</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>

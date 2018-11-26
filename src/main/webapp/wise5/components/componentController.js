@@ -160,6 +160,40 @@ var ComponentController = function () {
       this.registerStudentWorkSavedToServerListener();
     }
   }, {
+    key: 'initializeScopeGetComponentState',
+    value: function initializeScopeGetComponentState(scope, childControllerName) {
+      var _this2 = this;
+
+      scope.getComponentState = function (isSubmit) {
+        var deferred = _this2.$q.defer();
+        var childController = scope[childControllerName];
+        if (_this2.hasDirtyWorkToSendToParent(childController, isSubmit)) {
+          var action = _this2.getDirtyWorkToSendToParentAction(childController, isSubmit);
+          childController.createComponentState(action).then(function (componentState) {
+            deferred.resolve(componentState);
+          });
+        } else {
+          deferred.resolve();
+        }
+        return deferred.promise;
+      };
+    }
+  }, {
+    key: 'hasDirtyWorkToSendToParent',
+    value: function hasDirtyWorkToSendToParent(childController, isSubmit) {
+      return isSubmit && childController.isSubmitDirty || childController.isDirty;
+    }
+  }, {
+    key: 'getDirtyWorkToSendToParentAction',
+    value: function getDirtyWorkToSendToParentAction(childController, isSubmit) {
+      if (isSubmit && childController.isSubmitDirty) {
+        return 'submit';
+      } else if (childController.isDirty) {
+        return 'save';
+      }
+      return 'change';
+    }
+  }, {
     key: 'authoringConstructor',
     value: function authoringConstructor() {
       this.isPromptVisible = true;
@@ -186,23 +220,23 @@ var ComponentController = function () {
   }, {
     key: 'registerAuthoringListeners',
     value: function registerAuthoringListeners() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$scope.$watch(function () {
-        return _this2.authoringComponentContent;
+        return _this3.authoringComponentContent;
       }, function (newValue, oldValue) {
-        _this2.handleAuthoringComponentContentChanged(newValue, oldValue);
+        _this3.handleAuthoringComponentContentChanged(newValue, oldValue);
       }, true);
 
       this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
-        if (_this2.componentId === args.componentId) {
-          _this2.showAdvancedAuthoring = !_this2.showAdvancedAuthoring;
-          _this2.UtilService.hideJSONValidMessage();
+        if (_this3.componentId === args.componentId) {
+          _this3.showAdvancedAuthoring = !_this3.showAdvancedAuthoring;
+          _this3.UtilService.hideJSONValidMessage();
         }
       });
 
       this.$scope.$on('assetSelected', function (event, args) {
-        _this2.assetSelected(event, args);
+        _this3.assetSelected(event, args);
       });
     }
   }, {
@@ -348,13 +382,18 @@ var ComponentController = function () {
       }
     }
   }, {
+    key: 'disableSubmitButton',
+    value: function disableSubmitButton() {
+      this.isSubmitButtonDisabled = true;
+    }
+  }, {
     key: 'performSubmit',
     value: function performSubmit(submitTriggeredBy) {
       this.setIsSubmit(true);
       this.incrementSubmitCounter();
 
       if (!this.hasSubmitsLeft()) {
-        this.isSubmitButtonDisabled = true;
+        this.disableSubmitButton();
       }
 
       if (this.isAuthoringMode()) {
@@ -412,7 +451,7 @@ var ComponentController = function () {
   }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.setIsDirty(true);
       this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
@@ -431,7 +470,7 @@ var ComponentController = function () {
 
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
-        _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: _this3.componentId, componentState: componentState });
+        _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: _this4.componentId, componentState: componentState });
       });
     }
   }, {
@@ -650,13 +689,13 @@ var ComponentController = function () {
   }, {
     key: 'importWorkByStudentWorkId',
     value: function importWorkByStudentWorkId(studentWorkId) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
         if (componentState != null) {
-          _this4.setStudentWork(componentState);
-          _this4.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-          _this4.$rootScope.$broadcast('closeNotebook');
+          _this5.setStudentWork(componentState);
+          _this5.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this5.$rootScope.$broadcast('closeNotebook');
         }
       });
     }
@@ -1188,7 +1227,7 @@ var ComponentController = function () {
   }, {
     key: 'attachStudentAsset',
     value: function attachStudentAsset(studentAsset) {
-      var _this5 = this;
+      var _this6 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1198,11 +1237,21 @@ var ComponentController = function () {
               iconURL: copiedAsset.iconURL
             };
 
-            _this5.attachments.push(attachment);
-            _this5.studentDataChanged();
+            _this6.attachments.push(attachment);
+            _this6.studentDataChanged();
           }
         });
       }
+    }
+  }, {
+    key: 'hasMaxScore',
+    value: function hasMaxScore() {
+      return this.componentContent.maxScore != null && this.componentContent.maxScore != '';
+    }
+  }, {
+    key: 'getMaxScore',
+    value: function getMaxScore() {
+      return this.componentContent.maxScore;
     }
   }]);
 

@@ -79,38 +79,13 @@ var AnimationController = function (_ComponentController) {
       }
     }
 
-    if (_this.hasStudentUsedAllSubmits()) {
+    if (_this.hasMaxSubmitCount() && !_this.hasSubmitsLeft()) {
       _this.disableSubmitButton();
     }
 
     _this.disableComponentIfNecessary();
 
     _this.setupSVGAfterTimeout();
-
-    _this.$scope.isDirty = function () {
-      return _this.$scope.animationController.isDirty;
-    };
-
-    /*
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @param {boolean} isSubmit boolean whether the request is coming from a submit
-     * action (optional; default is false)
-     * @return {promise} a promise of a component state containing the student data
-     */
-    _this.$scope.getComponentState = function (isSubmit) {
-      var deferred = _this.$q.defer();
-      if (_this.hasDirtyWorkToSendToParent(isSubmit)) {
-        var action = _this.getDirtyWorkToSendToParentAction(isSubmit);
-        _this.$scope.animationController.createComponentState(action).then(function (componentState) {
-          deferred.resolve(componentState);
-        });
-      } else {
-        deferred.resolve();
-      }
-      return deferred.promise;
-    };
 
     /**
      * A connected component has changed its student data so we will
@@ -127,6 +102,7 @@ var AnimationController = function (_ComponentController) {
       }
     };
 
+    _this.initializeScopeGetComponentState(_this.$scope, 'animationController');
     _this.broadcastDoneRenderingComponent();
     return _this;
   }
@@ -170,27 +146,6 @@ var AnimationController = function (_ComponentController) {
     key: 'hasStudentUsedAllSubmits',
     value: function hasStudentUsedAllSubmits() {
       return this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount;
-    }
-  }, {
-    key: 'disableSubmitButton',
-    value: function disableSubmitButton() {
-      this.isSubmitButtonDisabled = true;
-    }
-  }, {
-    key: 'hasDirtyWorkToSendToParent',
-    value: function hasDirtyWorkToSendToParent(isSubmit) {
-      return isSubmit && this.$scope.animationController.isSubmitDirty || this.$scope.animationController.isDirty;
-    }
-  }, {
-    key: 'getDirtyWorkToSendToParentAction',
-    value: function getDirtyWorkToSendToParentAction(isSubmit) {
-      var action = 'change';
-      if (isSubmit && this.$scope.animationController.isSubmitDirty) {
-        action = 'submit';
-      } else if (this.$scope.animationController.isDirty) {
-        action = 'save';
-      }
-      return action;
     }
   }, {
     key: 'handleNodeSubmit',
