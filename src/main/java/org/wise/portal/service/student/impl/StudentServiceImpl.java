@@ -59,24 +59,21 @@ public class StudentServiceImpl implements StudentService {
   @Autowired
   private WorkgroupService workgroupService;
 
-  /**
-   * @see StudentService#addStudentToRun(User, Projectcode)
-   */
   public synchronized void addStudentToRun(User studentUser, Projectcode projectcode)
-    throws ObjectNotFoundException, PeriodNotFoundException, StudentUserAlreadyAssociatedWithRunException {
+      throws ObjectNotFoundException, PeriodNotFoundException,
+      StudentUserAlreadyAssociatedWithRunException {
     // TODO HT: figure out if we need a Transactional annotation for this method
     // possible problem: groupService.addMembers is transactional
     // we probably need a rollback though
     String runcode = projectcode.getRuncode();
     String periodName = projectcode.getRunPeriod();
 
-    Run run = this.runService.retrieveRunByRuncode(runcode);
+    Run run = runService.retrieveRunByRuncode(runcode);
     if (!run.isStudentAssociatedToThisRun(studentUser)) {
       Group period = run.getPeriodByName(periodName);
       Long groupId = period.getId();
-      this.groupService.addMember(groupId, studentUser);
+      groupService.addMember(groupId, studentUser);
 
-      //if teacher specified only one student/workgroup, create workgroup now
       if (run.getMaxWorkgroupSize() == 1) {
         String name = "Workgroup for user: " + studentUser.getUserDetails().getUsername();
         Set<User> members = new HashSet<User>();
@@ -88,9 +85,6 @@ public class StudentServiceImpl implements StudentService {
     }
   }
 
-  /**
-   * @see org.wise.portal.service.student.StudentService#getTeachersOfStudent(User)
-   */
   public List<User> getTeachersOfStudent(User studentUser) {
     List<Run> runList = runService.getRunList(studentUser);
     List<User> teachers = new ArrayList<User>();
@@ -101,26 +95,18 @@ public class StudentServiceImpl implements StudentService {
     return teachers;
   }
 
-  /**
-   * @see StudentService#isStudentAssociatedWithTeacher(User, User)
-   */
   public boolean isStudentAssociatedWithTeacher(User studentUser, User teacherUser) {
     List<User> teachersOfStudent = getTeachersOfStudent(studentUser);
     return teachersOfStudent.contains(teacherUser);
   }
 
-  /**
-   * @see StudentService#removeStudentFromRun(User, Run)
-   */
   public void removeStudentFromRun(User studentUser, Run run) {
     if (run.isStudentAssociatedToThisRun(studentUser)) {
       StudentRunInfo studentRunInfo = getStudentRunInfo(studentUser, run);
-
       Group period = run.getPeriodOfStudent(studentUser);
       Set<User> membersToRemove = new HashSet<User>();
       membersToRemove.add(studentUser);
-      this.groupService.removeMembers(period, membersToRemove);
-
+      groupService.removeMembers(period, membersToRemove);
       Workgroup workgroup = studentRunInfo.getWorkgroup();
       if (workgroup != null) {
         Set<User> membersToRemoveFromWorkgroup = new HashSet<User>();
@@ -130,9 +116,6 @@ public class StudentServiceImpl implements StudentService {
     }
   }
 
-  /**
-   * @see StudentService#getStudentRunInfo(User, Run)
-   */
   public StudentRunInfo getStudentRunInfo(User studentUser, Run run) {
     StudentRunInfo studentRunInfo = new StudentRunInfo();
     studentRunInfo.setRun(run);
@@ -145,7 +128,6 @@ public class StudentServiceImpl implements StudentService {
       Workgroup workgroupForThisRun = workgroupsForThisRun.get(0);
       studentRunInfo.setWorkgroup(workgroupForThisRun);
     }
-
     return studentRunInfo;
   }
 }

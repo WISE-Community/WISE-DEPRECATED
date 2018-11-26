@@ -55,7 +55,7 @@ public class ManageUserRolesController {
   private UserDetailsService userDetailsService;
 
   @RequestMapping(method = RequestMethod.GET)
-  protected String handleGET(HttpServletRequest request, ModelMap modelMap) throws Exception {
+  protected String handleGET(HttpServletRequest request, ModelMap modelMap) {
     List<MutableGrantedAuthority> allAuthorities = userDetailsService.retrieveAllAuthorities();
     modelMap.put("allAuthorities", allAuthorities);
     String username = request.getParameter("userName");
@@ -71,7 +71,6 @@ public class ManageUserRolesController {
     String username = request.getParameter("userName");
     User user = userService.retrieveUserByUsername(username);
     modelMap.put("user", user);
-
     if (request.getParameter("action") != null) {
       String action = request.getParameter("action");
       String authorityName = request.getParameter("authorityName");

@@ -92,7 +92,7 @@ public class StudentAccountController {
   /**
    * Creates a new student user and saves to data store
    * @param accountForm the model object that contains values for the page to use when
-   *                    rendering the view
+   * rendering the view
    * @param request the http request object
    * @param modelMap the object that contains values to be displayed on the page
    * @return the path of the view to display
@@ -113,7 +113,7 @@ public class StudentAccountController {
     Calendar birthday       = Calendar.getInstance();
     int birthmonth = Integer.parseInt(accountForm.getBirthmonth());
     int birthdate = Integer.parseInt(accountForm.getBirthdate());
-    birthday.set(Calendar.MONTH, birthmonth-1);  // month is 0-based
+    birthday.set(Calendar.MONTH, birthmonth - 1);  // month is 0-based
     birthday.set(Calendar.DATE, birthdate);
     userDetails.setBirthday(birthday.getTime());
     userDetails.setLanguage(wiseProperties.getProperty("defaultLocale", "en"));
@@ -232,17 +232,14 @@ public class StudentAccountController {
     String updateAccountInfoUrl = contextPath + "/legacy/student/updatestudentaccount.html";
 
     if (referrer != null &&
-      (referrer.contains(domain + registerUrl) ||
+        (referrer.contains(domain + registerUrl) ||
         referrer.contains(domainWithPort + registerUrl))) {
-      // if student was on register page, have them re-fill out the form.
       mav.setView(new RedirectView(registerUrl));
     } else if (referrer != null &&
-      (referrer.contains(domain + updateAccountInfoUrl) ||
+        (referrer.contains(domain + updateAccountInfoUrl) ||
         referrer.contains(domainWithPort + updateAccountInfoUrl))) {
-      // if student was on update account page, redirect them back to home page
       mav.setView(new RedirectView(contextPath + "/index.html"));
     } else {
-      // if student was on any other page, redirect them back to home page
       mav.setView(new RedirectView(contextPath + "/index.html"));
     }
     return mav;

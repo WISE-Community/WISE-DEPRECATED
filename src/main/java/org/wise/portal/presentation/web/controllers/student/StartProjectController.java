@@ -115,7 +115,7 @@ public class StartProjectController {
         // this means that the run has not been set up, or the student has not
         // associated with the project run yet.
         response.getWriter().print("You cannot see this yet. Either your teacher has not " +
-          "set up the run, or you have not added the run. Please talk to your teacher.");
+            "set up the run, or you have not added the run. Please talk to your teacher.");
         return null;
       }
     }
@@ -130,13 +130,11 @@ public class StartProjectController {
     if (run.getStarttime().after(new Timestamp(System.currentTimeMillis()))) {
       return new ModelAndView("errors/friendlyError");
     }
-
     Group period = run.getPeriodOfStudent(user);
     List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
     assert(workgroups.size() <= 1);
-
     Workgroup workgroup = null;
-    if (workgroups.size() == 0) {  // student is not yet in a workgroup
+    if (workgroups.size() == 0) {
       if (bymyself) {
         // if bymyself=true was passed in as request
         // create new workgroup with this student in it
@@ -149,7 +147,7 @@ public class StartProjectController {
         int currentLoopIndex = 0;
         while(currentLoopIndex < maxLoop) {
           try {
-            this.runService.updateRunStatistics(run.getId());
+            runService.updateRunStatistics(run.getId());
           } catch (HibernateOptimisticLockingFailureException holfe) {
             // multiple students tried to update run statistics at the same time, resulting in the exception. try again.
             currentLoopIndex++;
@@ -162,7 +160,6 @@ public class StartProjectController {
           // if it reaches here, it means that HibernateOptimisticLockingFailureException was not thrown, so we can exit the loop.
           break;
         }
-
         notifyServletSession(request, run);
         Long workgroupId = workgroup.getId();
         JSONArray presentUserIds = new JSONArray();
@@ -171,10 +168,8 @@ public class StartProjectController {
         addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
         return projectService.launchProject(workgroup, request.getContextPath());
       } else {
-        // need to create a workgroup for this user, take them to create workgroup wizard
         ModelAndView modelAndView = new ModelAndView(SELECT_TEAM_URL);
         modelAndView.addObject("runId", runId);
-
         Integer maxWorkgroupSize = run.getMaxWorkgroupSize();
         if (maxWorkgroupSize == null) {
           String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
@@ -186,14 +181,11 @@ public class StartProjectController {
     } else if (workgroups.size() == 1) {
       workgroup = workgroups.get(0);
       if (workgroup.getMembers().size() == 1) {
-        // launch the project if the student is already in a workgroup and she is the only member
-
-        // update run statistics
         int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.
         int currentLoopIndex = 0;
         while(currentLoopIndex < maxLoop) {
           try {
-            this.runService.updateRunStatistics(run.getId());
+            runService.updateRunStatistics(run.getId());
           } catch (HibernateOptimisticLockingFailureException holfe) {
             // multiple students tried to update run statistics at the same time, resulting in the exception. try again.
             currentLoopIndex++;
@@ -289,7 +281,7 @@ public class StartProjectController {
   private void addStudentAttendanceEntry(Long workgroupId, Long runId, JSONArray presentUserIds,
       JSONArray absentUserIds) {
     Date loginTimestamp = new Date();
-    this.studentAttendanceService.addStudentAttendanceEntry(
+    studentAttendanceService.addStudentAttendanceEntry(
         workgroupId, runId, loginTimestamp, presentUserIds.toString(), absentUserIds.toString());
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -32,14 +32,13 @@ import org.wise.portal.domain.Persistable;
  * implementations.
  *
  * @author Cynick Young
- *
- * @see org.acegisecurity.acls.sid.Sid
+ * @see Sid
  */
 public interface MutableAclSid extends Sid, Persistable {
 
   /**
-   * Tests whether this instance of <code>Sid</code> was created as a principal.
-   *
+   * Tests whether this instance of <code>Sid</code> was created as a
+   * principal.
    * @return <code>true</code> if this instance of <code>Sid</code> has
    *         been created using a principal, <code>false</code> if this has
    *         been created using a granted authority, and <code>null</code>
@@ -48,24 +47,22 @@ public interface MutableAclSid extends Sid, Persistable {
   Boolean isPrincipal();
 
   /**
-   * Gets the <code>Sid</code> as a <code>String</code> if this instance has been created
-   * using a principal.
-   *
+   * Gets the <code>Sid</code> as a <code>String</code> if this instance
+   * has been created using a principal.
    * @return the principal
    * @throws UnsupportedOperationException if this instance of Sid is not a principal
    */
   String getPrincipal();
 
   /**
-   * Sets the <code>Sid</code> using an <code>Authentication</code> principal.
-   *
+   * Sets the <code>Sid</code> using an <code>Authentication</code>
+   * principal.
    * @param authentication to set
    */
   void setPrincipal(Authentication authentication);
 
   /**
    * Sets the <code>Sid</code> using a <code>GrantedAuthority</code>.
-   *
    * @param grantedAuthority to set
    */
   void setGrantedAuthority(GrantedAuthority grantedAuthority);
@@ -73,7 +70,6 @@ public interface MutableAclSid extends Sid, Persistable {
   /**
    * Gets the <code>Sid</code> as a <code>String</code> if this instance
    * has been created using a granted authority.
-   *
    * @return the granted authority
    * @throws UnsupportedOperationException if this instance of Sid is not a granted authority
    */

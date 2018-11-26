@@ -93,36 +93,25 @@ public class StudentAttendanceImpl implements StudentAttendance {
     setAbsentUserIds(absentUserIds);
   }
 
-  /**
-   * Get the JSONObject representation of this StudentAttendanceImpl object
-   * @see org.wise.portal.domain.attendance.StudentAttendance#toJSONObject()
-   */
   public JSONObject toJSONObject() {
     JSONObject jsonObject = new JSONObject();
 
     try {
-      //set the ids
       jsonObject.put("id", getId());
       jsonObject.put("workgroupId", getWorkgroupId());
       jsonObject.put("runId", getRunId());
 
-      //get the login timestamp
       Date loginTimestamp = getLoginTimestamp();
-
-      if(loginTimestamp != null) {
-        //get the timestamp in milliseconds
+      if (loginTimestamp != null) {
         jsonObject.put("loginTimestamp", loginTimestamp.getTime());
       } else {
         jsonObject.put("loginTimestamp", JSONObject.NULL);
       }
-
-      //set the present and absent user ids
       jsonObject.put("presentUserIds", new JSONArray(getPresentUserIds()));
       jsonObject.put("absentUserIds", new JSONArray(getAbsentUserIds()));
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return jsonObject;
   }
 }

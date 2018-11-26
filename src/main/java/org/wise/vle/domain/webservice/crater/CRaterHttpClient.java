@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -45,7 +45,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Controller for using the CRater scoring servlet via HTTP
- *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  */
@@ -54,7 +53,6 @@ public class CRaterHttpClient {
   /**
    * Handles POSTing a CRater Request to the CRater Servlet and returns the
    * CRater response string.
-   *
    * @param cRaterUrl the CRater url
    * @param bodyData the xml body data to be sent to the CRater server
    * @return the response from the CRater server
@@ -83,7 +81,6 @@ public class CRaterHttpClient {
 
   /**
    * Sends student work to the CRater server and receives the score as the response
-   *
    * @param cRaterUrl the CRater scoring url
    * @param cRaterClientId the client id e.g. WISETEST
    * @param itemId the item id e.g. Photo_Sun
@@ -91,10 +88,9 @@ public class CRaterHttpClient {
    * @param studentData the student work
    * @return responseBody as a String, or null if there was an error during the request to CRater.
    */
-  public static String getCRaterScoringResponse(String cRaterUrl, String cRaterClientId, String itemId, String responseId, String studentData) {
+  public static String getCRaterScoringResponse(String cRaterUrl, String cRaterClientId,
+      String itemId, String responseId, String studentData) {
     String responseString = null;
-
-    //create the body data to request the score for the student work
     String bodyData = "<crater-request includeRNS='N'><client id='" + cRaterClientId + "'/><items><item id='" + itemId + "'>"
       +"<responses><response id='" + responseId + "'><![CDATA["+studentData+"]]></response></responses></item></items></crater-request>";
 
@@ -104,21 +100,16 @@ public class CRaterHttpClient {
 
   /**
    * Makes a request to the CRater server for the scoring rubric for a specific item id.
-   *
    * @param cRaterUrl the CRater verification url
    * @param cRaterClientId the client id e.g. WISETEST
    * @param itemId the item id e.g. Photo_Sun
    * @return the scoring rubric for the item id
    */
-  public static String getCRaterVerificationResponse(String cRaterUrl, String cRaterClientId, String itemId) {
+  public static String getCRaterVerificationResponse(String cRaterUrl, String cRaterClientId,
+      String itemId) {
     String responseString = null;
-
-    //create the body data to request the scoring rubric
     String bodyData = "<crater-verify><client id='" + cRaterClientId + "'/><items><item id='" + itemId + "'/></items></crater-verify>";
-
-    //make the post to the CRater server and receive the response
     responseString = post(cRaterUrl, bodyData);
-
     return responseString;
   }
 

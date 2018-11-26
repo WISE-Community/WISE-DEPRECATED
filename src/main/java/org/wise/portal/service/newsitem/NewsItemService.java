@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -32,15 +32,12 @@ import org.wise.portal.domain.user.User;
 
 /**
  * A service for working with <code>NewsItem</code> objects.
- *
  * @author Patrick Lawler
- *
  */
 public interface NewsItemService {
 
   /**
    * Creates a new NewsItem in the data store.
-   *
    * @param date date news item was created
    * @param owner user who created this news item
    * @param title news item title
@@ -52,21 +49,18 @@ public interface NewsItemService {
 
   /**
    * Retrieves all NewsItem from the data store.
-   *
    * @return a Set of NewsItem
    */
   List<NewsItem> retrieveAllNewsItem();
 
   /**
    * Retrieves all NewsItem by specified type
-   *
    * @return a Set of NewsItem of specified type
    */
   List<NewsItem> retrieveByType(String type);
 
   /**
    * Retrieves a NewsItem given an ID
-   *
    * @param id <code>Integer</code> id of news item to retrieve
    * @return NewsItem
    * @throws ObjectNotFoundException
@@ -75,7 +69,6 @@ public interface NewsItemService {
 
   /**
    * Updates a NewsItem in the data store.
-   *
    * @param id news item id
    * @param date date news item was created
    * @param owner user who created this news item
@@ -89,9 +82,7 @@ public interface NewsItemService {
 
   /**
    * Deletes a NewsItem from the data store.
-   *
    * @param newsItemId <code>Integer</code>
    */
   void deleteNewsItem(Integer newsItemId);
-
 }

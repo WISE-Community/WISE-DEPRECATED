@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -36,8 +36,7 @@ public interface MutableAclTargetObject extends Persistable {
   String getClassname();
 
   /**
-   * @param classname
-   *                the classname to set
+   * @param classname the classname to set
    */
   void setClassname(String classname);
 

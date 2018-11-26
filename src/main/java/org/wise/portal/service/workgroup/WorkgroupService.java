@@ -77,7 +77,7 @@ public interface WorkgroupService {
    * @param workgroupId <code>Long</code> workgroupId to use for lookup
    * @return <code>Workgroup</code> the Workgroup object with the workgroupId
    * @throws <code>ObjectNotFoundException</code> when workgroupId cannot
-   *     be used to find an existing workgroup
+   * be used to find an existing workgroup
    */
   Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException;
 
@@ -89,7 +89,7 @@ public interface WorkgroupService {
    *
    * @return <code>Workgroup</code> the Workgroup object with the workgroupId
    * @throws <code>ObjectNotFoundException</code> when workgroupId cannot
-   *     be used to find an existing workgroup
+   * be used to find an existing workgroup
    */
   Workgroup retrieveById(Long workgroupId, boolean doEagerFetch);
 

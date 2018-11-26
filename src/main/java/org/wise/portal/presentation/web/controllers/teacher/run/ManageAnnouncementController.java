@@ -72,19 +72,16 @@ public class ManageAnnouncementController {
    */
   @RequestMapping(method = RequestMethod.GET)
   protected String viewAnnouncements(
-    ModelMap modelMap,
-    @RequestParam(value = "runId") Long runId,
-    @RequestParam(value = "announcementId", required = false) Integer announcementId) throws Exception {
-
+      ModelMap modelMap,
+      @RequestParam(value = "runId") Long runId,
+      @RequestParam(value = "announcementId", required = false) Integer announcementId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(runId);
 
-    // check that the logged-in user has permission for this run
     if (user.isAdmin() ||
-      user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
-      this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
-      this.aclService.hasPermission(run, BasePermission.WRITE, user)) {
-
+        user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
+        aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+        aclService.hasPermission(run, BasePermission.WRITE, user)) {
       modelMap.put("run", run);
       if (announcementId != null) {
         modelMap.put("announcement", announcementService.retrieveById(announcementId));
@@ -107,27 +104,23 @@ public class ManageAnnouncementController {
    */
   @RequestMapping(method = RequestMethod.POST)
   protected String manageAnnouncements(
-    ModelMap modelMap,
-    HttpServletRequest request,
-    @RequestParam(value = "command") String command,
-    @RequestParam(value = "runId") Long runId,
-    @RequestParam(value = "announcementId", required = false) Integer announcementId) throws Exception {
-
+      ModelMap modelMap,
+      HttpServletRequest request,
+      @RequestParam(value = "command") String command,
+      @RequestParam(value = "runId") Long runId,
+      @RequestParam(value = "announcementId", required = false) Integer announcementId)
+      throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(runId);
-
-    // check that the logged-in user has permission for this run
     if (user.isAdmin() ||
       user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
-      this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
-      this.aclService.hasPermission(run, BasePermission.WRITE, user)) {
+      aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+      aclService.hasPermission(run, BasePermission.WRITE, user)) {
 
-      // either add/edit/remove announcement
       if ("remove".equals(command)) {
         Announcement announcement = announcementService.retrieveById(announcementId);
         runService.removeAnnouncementFromRun(run.getId(), announcement);
         announcementService.deleteAnnouncement(announcement.getId());
-
       } else if ("edit".equals(command)) {
         Announcement announcement = announcementService.retrieveById(announcementId);
         AnnouncementParameters params = new AnnouncementParameters();
@@ -136,19 +129,15 @@ public class ManageAnnouncementController {
         params.setTimestamp(announcement.getTimestamp());
         params.setTitle(request.getParameter("title"));
         params.setAnnouncement(request.getParameter("announcement"));
-
         announcementService.updateAnnouncement(params.getId(), params);
-
       } else if ("create".equals(command)) {
         AnnouncementParameters params = new AnnouncementParameters();
         params.setRunId(runId);
         params.setTimestamp(Calendar.getInstance().getTime());
         params.setTitle(request.getParameter("title"));
         params.setAnnouncement(request.getParameter("announcement"));
-
         Announcement announcement = announcementService.createAnnouncement(params);
         runService.addAnnouncementToRun(params.getRunId(), announcement);
-
       }
 
       modelMap.put("run", run);

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -333,7 +333,6 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void setFirstname(String firstname) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
@@ -345,7 +344,6 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void setLastname(String lastname) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
@@ -357,7 +355,6 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void setSignupdate(Date signupdate) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
@@ -393,13 +390,11 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void setNumberOfLogins(Integer numberOfLogins) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
   public void setLastLoginTime(Date lastLoginTime) {
     // TODO Auto-generated method stub
-
   }
 
   public String getLanguage() {
@@ -413,7 +408,6 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void incrementNumberOfLogins() {
     // TODO Auto-generated method stub
-
   }
 
   public void setResetPasswordVerificationCodeRequestTime(Date date) {

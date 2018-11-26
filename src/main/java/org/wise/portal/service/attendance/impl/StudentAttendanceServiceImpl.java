@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -42,44 +42,31 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
 
   /**
    * Create a new row in the student attendance table
-   * @see org.wise.portal.service.attendance.StudentAttendanceService#addStudentAttendanceEntry(java.lang.Long, java.lang.Long, java.util.Date, java.lang.String, java.lang.String)
+   * @see StudentAttendanceService#addStudentAttendanceEntry(Long, Long, Date, String, String)
    */
   @Transactional()
-  public void addStudentAttendanceEntry(Long workgroupId, Long runId, Date loginTimestamp, String presentUserIds, String absentUserIds) {
-    StudentAttendance studentAttendance = new StudentAttendanceImpl(workgroupId, runId, loginTimestamp, presentUserIds, absentUserIds);
+  public void addStudentAttendanceEntry(Long workgroupId, Long runId, Date loginTimestamp,
+      String presentUserIds, String absentUserIds) {
+    StudentAttendance studentAttendance = new StudentAttendanceImpl(workgroupId, runId,
+        loginTimestamp, presentUserIds, absentUserIds);
     studentAttendanceDao.save(studentAttendance);
   }
 
   /**
    * Get the a list of StudentAttendance object that have the given runId
    * @param runId the id of the run we want StudentAttendance objects for
-   * @see org.wise.portal.service.attendance.StudentAttendanceService#getStudentAttendanceByRunId(java.lang.Long)
+   * @see StudentAttendanceService#getStudentAttendanceByRunId(Long)
    */
   public List<StudentAttendance> getStudentAttendanceByRunId(Long runId) {
-    List<StudentAttendance> studentAttendanceList = studentAttendanceDao.getStudentAttendanceByRunId(runId);
+    List<StudentAttendance> studentAttendanceList =
+        studentAttendanceDao.getStudentAttendanceByRunId(runId);
     return studentAttendanceList;
   }
 
   @Override
   public List<StudentAttendance> getStudentAttendanceByRunIdAndPeriod(Long runId, int lookBackNumDays) {
-    List<StudentAttendance> studentAttendanceList = studentAttendanceDao.getStudentAttendanceByRunIdAndPeriod(runId,lookBackNumDays);
+    List<StudentAttendance> studentAttendanceList =
+        studentAttendanceDao.getStudentAttendanceByRunIdAndPeriod(runId,lookBackNumDays);
     return studentAttendanceList;
-  }
-
-  /**
-   *
-   * @see org.wise.portal.service.attendance.StudentAttendanceService#getStudentAttendanceDao()
-   */
-  public StudentAttendanceDao<StudentAttendance> getStudentAttendanceDao() {
-    return studentAttendanceDao;
-  }
-
-  /**
-   *
-   * @see org.wise.portal.service.attendance.StudentAttendanceService#setStudentAttendanceDao(org.wise.portal.dao.attendance.StudentAttendanceDao)
-   */
-  public void setStudentAttendanceDao(
-    StudentAttendanceDao<StudentAttendance> studentAttendanceDao) {
-    this.studentAttendanceDao = studentAttendanceDao;
   }
 }

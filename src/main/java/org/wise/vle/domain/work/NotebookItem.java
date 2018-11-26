@@ -46,8 +46,8 @@ import java.util.Calendar;
  */
 @Entity
 @Table(name = "notebookItems",  indexes = {
-  @Index(columnList = "runId", name = "notebookItemsRunIdIndex"),
-  @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
+    @Index(columnList = "runId", name = "notebookItemsRunIdIndex"),
+    @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
 @Getter
 @Setter
 public class NotebookItem extends PersistableDomain {
@@ -117,10 +117,6 @@ public class NotebookItem extends PersistableDomain {
     return NotebookItem.class;
   }
 
-  /**
-   * Get the JSON representation of the NotebookItem
-   * @return a JSONObject with the values from the NotebookItem
-   */
   public JSONObject toJSON() {
     JSONObject notebookItemJSONObject = new JSONObject();
     try {
@@ -191,7 +187,6 @@ public class NotebookItem extends PersistableDomain {
       if (serverDeleteTime != null) {
         notebookItemJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
       }
-
       if (groups != null) {
         notebookItemJSONObject.put("groups", new JSONArray(groups));
       }

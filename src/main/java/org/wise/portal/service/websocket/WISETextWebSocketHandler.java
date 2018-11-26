@@ -78,19 +78,14 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
   @Autowired
   ServletContext servletContext;
 
-  // stores run id to set of student connections
   private static Hashtable<Long, Set<WISEWebSocketSession>> runToStudentConnections = new Hashtable<Long,Set<WISEWebSocketSession>>();
 
-  // stores run id to set of teacher connections
   private static Hashtable<Long, Set<WISEWebSocketSession>> runToTeacherConnections = new Hashtable<Long,Set<WISEWebSocketSession>>();
 
-  // stores project id to set of author (teacher) connections
   private static Hashtable<Long, Set<WISEWebSocketSession>> projectToAuthorConnections = new Hashtable<Long,Set<WISEWebSocketSession>>();
 
-  // stores mappings between WebSocketSession objects and WISEWebSocketSession objects
   private static Hashtable<WebSocketSession, WISEWebSocketSession> sessionToWISEWebSocketSession = new Hashtable<WebSocketSession, WISEWebSocketSession>();
 
-  // stores mappings between User objects and WISEWebSocketSession objects
   private static Hashtable<User, WISEWebSocketSession> userToWISEWebSocketSession = new Hashtable<User, WISEWebSocketSession>();
 
   /**
@@ -110,7 +105,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    */
   @Override
   @Transactional
-  public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+  public void handleTextMessage(WebSocketSession session, TextMessage message) {
     Object payload = message.getPayload();
     handleMessage(session, payload.toString());
   }
@@ -130,7 +125,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @param session the websocket session object
    * @throws IOException
    */
-  public void onOpen(WebSocketSession session) throws IOException {
+  public void onOpen(WebSocketSession session) {
     Map<String, Object> attributes = session.getAttributes();
     Object signedInUserObject = attributes.get("signedInUser");
     User signedInUser = null;
@@ -181,10 +176,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    */
   private void handleUserConnecting(WISEWebSocketSession wiseWebSocketSession) {
     try {
-      /*
-       * create the message JSON to notify other signed in users that
-       * this user has connected
-       */
+      // create the message JSON to notify other signed in users that this user has connected
       JSONObject messageJSON = new JSONObject();
       if (wiseWebSocketSession.isTeacher()) {
         messageJSON.put("messageType", "teacherConnected");
@@ -230,7 +222,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @param session the websocket session that has closed
    * @throws IOException
    */
-  public void onClose(WebSocketSession session) throws IOException {
+  public void onClose(WebSocketSession session) {
     WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
     removeSession(wiseWebSocketSession);
     handleUserDisconnecting(wiseWebSocketSession);
@@ -438,7 +430,6 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     HashMap<String, ArrayList<String>> openedProjectsToSessions =
         (HashMap<String, ArrayList<String>>)
         servletContext.getAttribute("openedProjectsToSessions");
-
     if (openedProjectsToSessions == null) {
       openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
       servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
@@ -516,16 +507,10 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
   private Long getLongValueFromURI(URI uri, String key) {
     Long value = null;
     if (uri != null) {
-      //get the query e.g. runId=1&periodId=1&workgroupId=2
       String query = uri.getQuery();
-
       /*
        * split the query by '&' so that we obtain something like
-       * [
-       * "runId=1",
-       * "periodId=1",
-       * "workgroupId=2",
-       * ]
+       * [ "runId=1", "periodId=1", "workgroupId=2" ]
        */
       if (query != null) {
         String[] querySplit = query.split("&");
@@ -533,18 +518,15 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
           if (parameter != null) {
             /*
              * split the string by '=' so we obtain something like
-             * [
-             * "runId",
-             * "1"
-             * ]
+             * [ "runId", "1" ]
              */
             String[] parameterSplit = parameter.split("=");
             if (parameterSplit != null && parameterSplit.length >= 2) {
-              //get the individual elements which will be the key and value
+              // get the individual elements which will be the key and value
               String parameterName = parameterSplit[0];
               String parameterValue = parameterSplit[1];
 
-              //check if the key matches the one we want
+              // check if the key matches the one we want
               if (key.equals(parameterName)) {
                 try {
                   value = Long.parseLong(parameterValue);

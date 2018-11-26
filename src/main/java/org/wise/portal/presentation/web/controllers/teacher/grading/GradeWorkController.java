@@ -100,12 +100,10 @@ public class GradeWorkController {
 
     User user = ControllerUtil.getSignedInUser();
     if (user.isAdmin() ||
-      this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-      this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-
+        this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
+        this.runService.hasRunPermission(run, user, BasePermission.READ)) {
       String contextPath = request.getContextPath();
       String getClassroomMonitorConfigUrl = contextPath + "/config/classroomMonitor/" + runId;
-
       ModelAndView modelAndView = new ModelAndView("classroomMonitor");
       modelAndView.addObject("configURL", getClassroomMonitorConfigUrl);
       return modelAndView;
@@ -144,22 +142,17 @@ public class GradeWorkController {
       if (projectType.equals(ProjectType.LD)) {
         User user = ControllerUtil.getSignedInUser();
         if (user.isAdmin() ||
-          this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-          this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-
+            runService.hasRunPermission(run, user, BasePermission.WRITE) ||
+            runService.hasRunPermission(run, user, BasePermission.READ)) {
           String contextPath = request.getContextPath();
-
           String getGradeWorkUrl = contextPath + "/vle/gradework.html";
           String getGradingConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
-
-          // get the classroom monitor urls
           String getClassroomMonitorUrl = contextPath + "/vle/classroomMonitor.html";
           String getClassroomMonitorConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
-
-          if (this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
+          if (runService.hasRunPermission(run, user, BasePermission.WRITE)) {
             getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
             getClassroomMonitorUrl += "?loadScriptsIndividually&permission=write";
-          } else if (this.runService.hasRunPermission(run, user, BasePermission.READ)) {
+          } else if (runService.hasRunPermission(run, user, BasePermission.READ)) {
             getGradeWorkUrl += "?loadScriptsIndividually&permission=read";
             getClassroomMonitorUrl += "?loadScriptsIndividually&permission=read";
           }
@@ -198,17 +191,11 @@ public class GradeWorkController {
   private ModelAndView handlePostMaxScore(
       HttpServletRequest request, HttpServletResponse response, Run run) {
     try {
-      //get the nodeId
       String nodeId = request.getParameter("nodeId");
-
-      //get the new max score value
       String maxScoreValue = request.getParameter("maxScoreValue");
-
       int maxScore = 0;
 
-      //check if a max score value was provided
       if (maxScoreValue != null && !maxScoreValue.equals("")) {
-        //parse the new max score value
         maxScore = Integer.parseInt(maxScoreValue);
       }
 
@@ -220,22 +207,17 @@ public class GradeWorkController {
        */
       String maxScoreReturnJSON = "";
 
-      //get the current run extras
       String extras = run.getExtras();
 
       JSONObject jsonExtras;
       JSONArray maxScores;
 
-      //check if there are extras
       if (extras == null || extras.equals("")) {
-        //there are no extras so we will have to create it
         jsonExtras = new JSONObject("{'summary':'','contact':'','title':'','comptime':'','graderange':'','subject':'','techreqs':'','maxScores':[],'author':'','totaltime':''}");
       } else {
-        //create a JSONObject from the run extras
         jsonExtras = new JSONObject(extras);
       }
 
-      //get the maxScores from the extras
       maxScores = (JSONArray) jsonExtras.get("maxScores");
 
       /*
@@ -244,57 +226,25 @@ public class GradeWorkController {
        */
       boolean maxScoreUpdated = false;
 
-      //loop through all the max scores in the current run extras
-      for(int x=0; x<maxScores.length(); x++) {
-        //get a max score entry
+      for (int x = 0; x < maxScores.length(); x++) {
         JSONObject maxScoreObj = (JSONObject) maxScores.get(x);
-
-        //get the node id
         String maxScoreObjNodeId = (String) maxScoreObj.get("nodeId");
-
-        //check if the node id matches the one new one we need to save
         if (nodeId.equals(maxScoreObjNodeId)) {
-          //it matches so we will update the score
           maxScoreObj.put("maxScoreValue", maxScore);
-
-          /*
-           * generate the json string for the updated max score entry
-           * so we can send it back in the response
-           */
           maxScoreReturnJSON = maxScoreObj.toString();
-
           maxScoreUpdated = true;
         }
       }
 
-      //check if we were able to find an existing entry to update it
       if (!maxScoreUpdated) {
-        /*
-         * we did not find an existing entry to update so we will
-         * create a new entry
-         */
         JSONObject newMaxScore = new JSONObject();
-
-        //set the values
         newMaxScore.put("nodeId", nodeId);
-
-        //set the max score
         newMaxScore.put("maxScoreValue", maxScore);
-
-        /*
-         * generate the json string for the updated max score entry
-         * so we can send it back in the response
-         */
         maxScoreReturnJSON = newMaxScore.toString();
-
-        //put the new entry back into the maxScores JSON object
         maxScores.put(newMaxScore);
       }
 
-      //save the run extras back
       runService.setExtras(run, jsonExtras.toString());
-
-      //send the new max score entry back to the client
       response.getWriter().print(maxScoreReturnJSON);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -303,7 +253,6 @@ public class GradeWorkController {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
     return null;
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -54,8 +54,8 @@ public class DeleteProjectController {
 
   /**
    * @param projectIdStr
-   * @param revive if deleting the project, the value should be null or anything besides the string "true"
-   *               if reviving the project, the value should be the string "true"
+   * @param revive if deleting the project, the value should be null or anything besides
+   * the string "true". if reviving the project, the value should be the string "true"
    * @param request
    * @param response
    * @return
@@ -63,54 +63,35 @@ public class DeleteProjectController {
    */
   @RequestMapping("/teacher/projects/deleteproject.html")
   protected ModelAndView handleRequestInternal(
-    @RequestParam("projectId") String projectIdStr,
-    @RequestParam("revive") String revive,
-    HttpServletRequest request,
-    HttpServletResponse response) throws Exception {
-
-    //set the default response string
+      @RequestParam("projectId") String projectIdStr,
+      @RequestParam("revive") String revive,
+      HttpServletRequest request,
+      HttpServletResponse response) throws Exception {
     String responseString = "failure";
-
     if (projectIdStr != null && !projectIdStr.equals("")) {
       Long projectId = Long.parseLong(projectIdStr);
-
       if (projectId != null) {
-
         try {
-          //get the project
           Project project = projectService.getById(projectId);
-
           if (project != null) {
-            //get the currently signed in user
             User signedInUser = ControllerUtil.getSignedInUser();
-
-            // get the owner of the project
             User owner = project.getOwner();
-
-            // get the id of the signed in user and the id of the owner of the project
             Long signedInUserId = signedInUser.getId();
             Long ownerId = owner.getId();
-
             if (signedInUserId == ownerId) {
-              //the owner is trying to delete the project so we will allow it
-
               if (revive != null && revive.equals("true")) {
-                //we are unarchiving the project
                 project.setDeleted(false);
                 project.setDateDeleted(null);
 
                 try {
-                  //update the project in the database
                   projectService.updateProject(project, signedInUser);
                   responseString = "success";
                 } catch (NotAuthorizedException e) {
                   e.printStackTrace();
                 }
-                // also, if project is used in a run, unarchive it also
                 try {
                   List<Run> runsUsingProject = this.runService.getProjectRuns(projectId);
                   if (!runsUsingProject.isEmpty()) {
-                    // since a project can now only be run once, just use the first run in the list
                     Run run = runsUsingProject.get(0);
                     runService.startRun(run);
                   }
@@ -118,23 +99,19 @@ public class DeleteProjectController {
                   // ignore exceptions
                 }
               } else {
-                //we are deleting (archiving) the project
                 project.setDeleted(true);
                 project.setDateDeleted(new Date());
 
                 try {
-                  //update the project in the database
                   projectService.updateProject(project, signedInUser);
                   responseString = "success";
                 } catch (NotAuthorizedException e) {
                   e.printStackTrace();
                 }
 
-                // also, if project is used in a run, archive it also
                 try {
                   List<Run> runsUsingProject = this.runService.getProjectRuns(projectId);
                   if (!runsUsingProject.isEmpty()) {
-                    // since a project can now only be run once, just use the first run in the list
                     Run run = runsUsingProject.get(0);
                     runService.endRun(run);
                   }
@@ -144,10 +121,6 @@ public class DeleteProjectController {
 
               }
             } else {
-              /*
-               * someone besides the owner is trying to delete the project
-               * so we will not allow it
-               */
               responseString = "failure: not owner";
             }
           } else {
@@ -162,10 +135,7 @@ public class DeleteProjectController {
     } else {
       responseString = "failure: invalid project id";
     }
-
-    //write the response string
     response.getWriter().write(responseString);
-
     return null;
   }
 }

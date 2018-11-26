@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -43,9 +43,9 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
+
 /**
  * @author Patrick Lawler
- *
  */
 @Controller
 @SessionAttributes("changePeriodParameters")
@@ -70,10 +70,8 @@ public class ChangeStudentPeriodController {
 
   protected final static String USER_ID = "userId";
 
-  //the path to this form view
   protected String formView = "/teacher/management/changestudentperiod";
 
-  //the path to the success view
   protected String successView = "teacher/management/changestudentperiodsuccess";
 
   /**
@@ -82,14 +80,13 @@ public class ChangeStudentPeriodController {
    * @param request the http request
    * @return the path of the view to display
    */
-  @RequestMapping(method=RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
     ChangePeriodParameters params = new ChangePeriodParameters();
     params.setStudent(userService.retrieveById(Long.parseLong(request.getParameter(USER_ID))));
     params.setRun(runService.retrieveById(Long.parseLong(request.getParameter(RUN_ID))));
     params.setProjectcode(request.getParameter(PROJECT_CODE));
     model.addAttribute("changePeriodParameters", params);
-
     return formView;
   }
 
@@ -100,40 +97,32 @@ public class ChangeStudentPeriodController {
    * @param sessionStatus the session status object
    * @return the path of the view to display
    */
-  @RequestMapping(method=RequestMethod.POST)
+  @RequestMapping(method = RequestMethod.POST)
   protected String onSubmit(
-    @ModelAttribute("changePeriodParameters") ChangePeriodParameters params,
-    BindingResult bindingResult,
-    SessionStatus sessionStatus) {
+      @ModelAttribute("changePeriodParameters") ChangePeriodParameters params,
+      BindingResult bindingResult,
+      SessionStatus sessionStatus) {
     String view = "";
-
-    //validate the parameters
     changePeriodParametersValidator.validate(params, bindingResult);
-
-    if(bindingResult.hasErrors()) {
-      //there were errors
+    if (bindingResult.hasErrors()) {
       view = "errors/accessdenied";
     } else {
-      //there were no errors
       User callingUser = ControllerUtil.getSignedInUser();
 
-      if(this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.WRITE) ||
-        this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.ADMINISTRATION)) {
+      if (runService.hasRunPermission(params.getRun(), callingUser, BasePermission.WRITE) ||
+          runService.hasRunPermission(params.getRun(), callingUser, BasePermission.ADMINISTRATION)) {
         try {
-          if(!params.getProjectcodeTo().equals(params.getProjectcode())){
+          if (!params.getProjectcodeTo().equals(params.getProjectcode())) {
             studentService.removeStudentFromRun(params.getStudent(), params.getRun());
             studentService.addStudentToRun(params.getStudent(), new Projectcode(params.getRun().getRuncode(), params.getProjectcodeTo()));
           }
         } catch (Exception e){
-
         }
-
         view = successView;
       } else {
         view = "errors/accessdenied";
       }
     }
-
     sessionStatus.setComplete();
     return view;
   }

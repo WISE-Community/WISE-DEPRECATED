@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -35,30 +35,28 @@ import org.wise.portal.domain.impl.ChangePeriodParameters;
 @Component
 public class ChangePeriodParametersValidator implements Validator {
 
-  public boolean supports(Class clazz){
+  public boolean supports(Class clazz) {
     return ChangePeriodParameters.class.isAssignableFrom(clazz);
   }
 
-  public void validate(Object params, Errors errors){
-
+  public void validate(Object params, Errors errors) {
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "run", "error.changeperiod.run");
-
     if (errors.getErrorCount() != 0) {
       return;
     }
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "student", "error.changeperiod.student");
-
     if (errors.getErrorCount() != 0) {
       return;
     }
 
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectcode", "error.changeperiod.projectcode");
-
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectcode",
+        "error.changeperiod.projectcode");
     if (errors.getErrorCount() != 0) {
       return;
     }
 
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectcodeTo", "error.changeperiod.projectcode-To");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectcodeTo",
+        "error.changeperiod.projectcode-To");
   }
 }
