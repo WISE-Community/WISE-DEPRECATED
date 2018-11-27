@@ -1,5 +1,5 @@
 <h2 class="mat-dialog-title"><ng-container>End Run</ng-container>: {{ run.name }} <span class="mat-caption">(<ng-container i18n>Run ID</ng-container>: {{ run.id }})</span></h2>
-<mat-dialog-content class="mat-dialog-content--scroll" fxLayout="column">
+<mat-dialog-content fxLayout="column">
   <p *ngIf="!isError && !isEnded" i18n>Are you sure you want to end this run? Ending the run will prevent your students from working on the project. You can continue to grade their work.</p>
   <p *ngIf="isEnded" i18n>The run has been successfully ended.</p>
   <p *ngIf="isError" i18n>There was an error ending this run. Please try again later.</p>
