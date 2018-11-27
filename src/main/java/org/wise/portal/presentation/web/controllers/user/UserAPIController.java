@@ -44,7 +44,7 @@ import java.util.*;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping(value = "/api/user", produces = "text/plain;charset=UTF-8")
 public class UserAPIController {
 
   @Autowired
@@ -56,7 +56,7 @@ public class UserAPIController {
   @Autowired
   protected IMailFacade mailService;
 
-  @RequestMapping(value = "/user", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+  @RequestMapping(value = "/user", method = RequestMethod.GET)
   protected String getUserInfo(ModelMap modelMap,
       @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
     User user = ControllerUtil.getSignedInUser();
@@ -120,7 +120,7 @@ public class UserAPIController {
     }
   }
 
-  @RequestMapping(value = "/config", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+  @RequestMapping(value = "/config", method = RequestMethod.GET)
   protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
     JSONObject configJSON = new JSONObject();
     String contextPath = request.getContextPath();

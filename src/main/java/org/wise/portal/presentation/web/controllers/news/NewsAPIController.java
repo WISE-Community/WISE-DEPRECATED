@@ -13,13 +13,13 @@ import org.wise.portal.service.newsitem.NewsItemService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/news")
+@RequestMapping(value = "/api/news", produces = "text/plain;charset=UTF-8")
 public class NewsAPIController {
 
   @Autowired
   private NewsItemService newsItemService;
 
-  @RequestMapping(value = "", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+  @RequestMapping(value = "", method = RequestMethod.GET)
   protected String getNews() {
     List<NewsItem> newsItems = newsItemService.retrieveAllNewsItem();
     JSONArray newsItemsJSON = getNewsItemsJSON(newsItems);
