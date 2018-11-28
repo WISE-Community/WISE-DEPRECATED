@@ -15,6 +15,7 @@ export class TeacherService {
   private projectPermissionUrl = 'api/teacher/project/permission';
   private usernamesUrl = 'api/teacher/usernames';
   private createRunUrl = 'api/teacher/run/create';
+  private endRunUrl = 'api/teacher/run/end';
   private runUrl = 'api/teacher/run';
   private addPeriodToRunUrl = 'api/teacher/run/add/period';
   private deletePeriodFromRunUrl = 'api/teacher/run/delete/period';
@@ -70,6 +71,12 @@ export class TeacherService {
     body = body.set('studentsPerTeam', studentsPerTeam + "");
     body = body.set('startDate', startDate + "");
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
+  }
+
+  endRun(runId: number) {
+    const url = `${this.endRunUrl}/${runId}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.put<Object>(url, null, {headers: headers});
   }
 
   retrieveAllTeacherUsernames(): Observable<string[]> {

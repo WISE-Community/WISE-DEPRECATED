@@ -25,6 +25,7 @@ import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-dialog.component';
+import { EndRunDialogComponent } from './end-run-dialog/end-run-dialog.component';
 
 const materialModules = [
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
@@ -55,10 +56,12 @@ const materialModules = [
     ShareRunDialogComponent,
     EditComponent,
     EditProfileComponent,
-    EditPasswordComponent
+    EditPasswordComponent,
+    EndRunDialogComponent
   ],
   entryComponents: [
     CreateRunDialogComponent,
+    EndRunDialogComponent,
     RunSettingsDialogComponent,
     ShareRunDialogComponent
   ],
