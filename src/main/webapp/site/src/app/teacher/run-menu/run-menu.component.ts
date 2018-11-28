@@ -76,7 +76,7 @@ export class RunMenuComponent implements OnInit {
       ariaLabel: 'Run Settings',
       data: { run: run },
       panelClass: 'mat-dialog--md',
-      autoFocus: false
+      autoFocus: true
     });
   }
 
@@ -86,7 +86,7 @@ export class RunMenuComponent implements OnInit {
       ariaLabel: 'End Run',
       data: { run: run },
       panelClass: 'mat-dialog--sm',
-      autoFocus: false
+      autoFocus: true
     });
   }
 }
