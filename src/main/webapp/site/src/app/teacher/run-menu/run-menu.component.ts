@@ -85,7 +85,7 @@ export class RunMenuComponent implements OnInit {
     this.dialog.open(EndRunDialogComponent, {
       ariaLabel: 'End Run',
       data: { run: run },
-      panelClass: 'mat-dialog--md',
+      panelClass: 'mat-dialog--sm',
       autoFocus: false
     });
   }
