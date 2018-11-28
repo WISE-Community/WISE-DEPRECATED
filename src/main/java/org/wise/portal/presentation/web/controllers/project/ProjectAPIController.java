@@ -33,7 +33,7 @@ import java.util.Properties;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping("/api/project")
+@RequestMapping(value = "/api/project", produces = "text/plain;charset=UTF-8")
 public class ProjectAPIController {
 
   @Autowired
