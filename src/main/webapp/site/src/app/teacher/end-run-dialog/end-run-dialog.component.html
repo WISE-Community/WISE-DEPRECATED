@@ -1,9 +1,7 @@
 <h2 class="mat-dialog-title"><ng-container>End Unit</ng-container></h2>
 <mat-dialog-content fxLayout="column">
   <div class="info-block">
-    <p class="mat-subheading-2 accent-1">
-      {{ run.name }} <span class="mat-caption">(<ng-container i18n>ID</ng-container>: {{ run.id }})</span>
-    </p>
+    <p class="mat-subheading-2 accent-1">{{ run.name }}</p>
     <p *ngIf="!isError && !isEnded" i18n>Are you sure you want to end the unit? This will prevent your students from adding to or changing their work. You can continue to review and grade.</p>
     <p *ngIf="isEnded" i18n>The unit has been successfully ended.</p>
     <p *ngIf="isError" i18n>There was an error ending this unit. Please try again later.</p>
