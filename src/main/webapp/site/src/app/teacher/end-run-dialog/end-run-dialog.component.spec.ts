@@ -92,14 +92,14 @@ describe('EndRunDialogComponent', () => {
   it('should show run info', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('Photosynthesis');
-    expect(compiled.textContent).not.toContain('The run has been successfully ended.');
+    expect(compiled.textContent).not.toContain('The unit has been successfully ended.');
   });
 
   it('should show error message', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).not.toContain('The run has been successfully ended.');
     submitAndReceiveResponse('endRun', 'error', "noPermissionToEndRun", run);
-    expect(compiled.textContent).toContain('There was an error ending this run. Please try again later.');
+    expect(compiled.textContent).toContain('There was an error ending this unit. Please try again later.');
   });
 
   it('should successfully end the run', () => {
@@ -109,6 +109,6 @@ describe('EndRunDialogComponent', () => {
     run.endTime = new Date('2018-11-19 00:00:00.0').getMilliseconds();
     submitAndReceiveResponse('endRun', 'success', null, run);
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.textContent).toContain('The run has been successfully ended.');
+    expect(compiled.textContent).toContain('The unit has been successfully ended.');
   });
 });
