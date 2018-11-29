@@ -2119,4 +2119,8 @@ public class FileManager {
     }
     return projectFolderPath;
   }
+
+  public static String getProjectAssetsFolderPath(Project project) {
+    return getProjectFolderPath(project) + "/assets";
+  }
 }
