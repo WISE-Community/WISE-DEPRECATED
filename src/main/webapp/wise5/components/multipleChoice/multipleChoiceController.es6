@@ -34,7 +34,7 @@ class MultipleChoiceController extends ComponentController {
     this.showFeedback = true;
 
     // whether this component has been authored with a correct answer
-    this.hasCorrectAnswer = false;
+    this.componentHasCorrectAnswer = false;
 
     // whether the latest component state was a submit
     this.isLatestComponentStateSubmit = false;
@@ -60,7 +60,7 @@ class MultipleChoiceController extends ComponentController {
     }
 
     // check if there is a correct answer
-    this.hasCorrectAnswer = this.hasCorrectChoices();
+    this.componentHasCorrectAnswer = this.hasCorrectChoices();
 
     this.showFeedback = this.componentContent.showFeedback;
 
@@ -238,7 +238,6 @@ class MultipleChoiceController extends ComponentController {
 
     // get the choices the student chose
     var studentChoices = this.studentChoices;
-
     if (studentChoices != null) {
       if (this.isRadio()) {
         // this is a radio button step
@@ -509,61 +508,70 @@ class MultipleChoiceController extends ComponentController {
         choice.showFeedback = false;
       }
     }
-  };
+  }
 
-  /**
-   * Check the answer the student has submitted and display feedback
-   * for the choices the student has checked
-   */
   checkAnswer() {
-    var isCorrect = false;
+    if (this.getChoiceType() === 'radio') {
+      this.checkSingleAnswer();
+    } else if (this.getChoiceType() === 'checkbox') {
+      this.checkMultipleAnswer();
+    }
+  }
 
-    // check if any correct choices have been authored
-    if (this.hasFeedback() || this.hasCorrectAnswer) {
-
-      var isCorrectSoFar = true;
-
-      // get all the authored choices
-      var choices = this.getChoices();
-
-      // loop through all the choices and check if each should be checked or not
-
-      for (var c = 0; c < choices.length; c++) {
-        var choice = choices[c];
-
-        if (choice != null) {
-          var choiceId = choice.id;
-
-          // whether the choice is correct
-          var isChoiceCorrect = choice.isCorrect;
-
-          if (isChoiceCorrect == null) {
-            isChoiceCorrect = false;
-          }
-
-          // whether the student checked the choice
-          var isChoiceChecked = this.isChecked(choiceId);
-
-          if (isChoiceCorrect != isChoiceChecked) {
-            // the student answered this choice incorrectly
-            isCorrectSoFar = false;
-          }
-
-          // show the feedback if it exists and the student checked it
-          if (this.showFeedback && isChoiceChecked && choice.feedback != null && choice.feedback !== '') {
-            choice.showFeedback = true;
-            choice.feedbackToShow = choice.feedback;
-          }
+  checkSingleAnswer() {
+    let isCorrect = false;
+    const choices = this.getChoices();
+    for (let choice of choices) {
+      if (this.componentHasCorrectAnswer) {
+        if (choice.isCorrect && this.isChecked(choice.id)) {
+          isCorrect = true;
         }
       }
-
-      isCorrect = isCorrectSoFar;
+      this.displayFeedbackOnChoiceIfNecessary(choice);
     }
-
-    if (this.hasCorrectAnswer) {
+    if (this.componentHasCorrectAnswer) {
       this.isCorrect = isCorrect;
     }
-  };
+  }
+
+  checkMultipleAnswer() {
+    let isCorrect = null;
+    const choices = this.getChoices();
+    for (let choice of choices) {
+      if (this.componentHasCorrectAnswer) {
+        if (this.isStudentChoiceValueCorrect(choice)) {
+          if (isCorrect === null) {
+            isCorrect = true;
+          } else {
+            isCorrect = isCorrect && true;
+          }
+        } else {
+          isCorrect = false;
+        }
+      }
+      this.displayFeedbackOnChoiceIfNecessary(choice);
+    }
+    if (this.componentHasCorrectAnswer) {
+      this.isCorrect = isCorrect;
+    }
+  }
+
+  displayFeedbackOnChoiceIfNecessary(choice) {
+    if (this.showFeedback && this.isChecked(choice.id)) {
+      choice.showFeedback = true;
+      choice.feedbackToShow = choice.feedback;
+    }
+  }
+
+  isStudentChoiceValueCorrect(choice) {
+    if (choice.isCorrect && this.isChecked(choice.id)) {
+      return true;
+    } else if (!choice.isCorrect && !this.isChecked(choice.id)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   /**
    * Get the correct choice for a radio button component
@@ -606,7 +614,6 @@ class MultipleChoiceController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-
     // create a new component state
     var componentState = this.NodeService.createNewComponentState();
 
