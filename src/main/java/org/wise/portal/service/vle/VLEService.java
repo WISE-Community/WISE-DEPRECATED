@@ -259,7 +259,6 @@ public interface VLEService {
 
 
   //CRaterRequest functions
-
   CRaterRequest getCRaterRequestById(Long id);
 
   void saveCRaterRequest(CRaterRequest cRaterRequest);

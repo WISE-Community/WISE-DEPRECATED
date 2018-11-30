@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -33,10 +33,10 @@ public class AuthorityNotFoundException extends Exception {
   private String message;
 
   public AuthorityNotFoundException(String authority) {
-    this.message = "Granted Authority:" + authority + " not found.";
+    message = "Granted Authority:" + authority + " not found.";
   }
 
   public String getMessage() {
-    return this.message;
+    return message;
   }
 }

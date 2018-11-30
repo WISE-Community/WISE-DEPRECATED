@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents). Created
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3.
@@ -65,7 +65,6 @@ public class PortfolioController {
     boolean allowedAccess = isAllowedAcess(signedInUser,runId,workgroupId);
 
     if (!allowedAccess) {
-      //user is not allowed to make this request
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
       return null;
     }
@@ -75,12 +74,9 @@ public class PortfolioController {
         String portfolioJSONString = request.getParameter("portfolio");
         JSONObject portfolioJSONObject = new JSONObject(portfolioJSONString);
         Portfolio portfolioToSave = new Portfolio(portfolioJSONObject);
-
-        // get the last Portfolio that was saved
         Portfolio lastSavedPortfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
-        // save iff this is first time saving portfolio, or if this portfolio to save and the last-saved portfolio are not the same
         if (lastSavedPortfolio == null ||
-          (lastSavedPortfolio != null &&
+            (lastSavedPortfolio != null &&
             portfolioToSave.getItems() != null &&
             !portfolioToSave.getItems().equals(lastSavedPortfolio.getItems()))) {
           vleService.savePortfolio(portfolioToSave);
@@ -89,11 +85,10 @@ public class PortfolioController {
         e.printStackTrace();
       }
     }
-
     return null;
   }
 
-  @RequestMapping(method=RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   public ModelAndView doGet(
       HttpServletRequest request,
       HttpServletResponse response) throws IOException {
@@ -108,7 +103,7 @@ public class PortfolioController {
       }
     }
 
-    String workgroupIdStr = (String) request.getParameter("workgroupId");
+    String workgroupIdStr = request.getParameter("workgroupId");
     Long workgroupId = null;
     if (workgroupIdStr != null) {
       try {
@@ -120,27 +115,22 @@ public class PortfolioController {
 
     boolean allowedAccess = isAllowedAcess(signedInUser,runId,workgroupId);
     if (!allowedAccess) {
-      //user is not allowed to make this request
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
       return null;
     }
 
     if (runId != null && workgroupId != null) {
-      //get the Portfolio
       Portfolio portfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
 
       if (portfolio == null) {
-        //make the Portfolio if it does not exist
         portfolio = new Portfolio(runId,workgroupId);
       }
 
       if (portfolio != null) {
-        //get the Portfolio JSONString
         String portfolioJSONString = portfolio.toJSONString();
         response.getWriter().print(portfolioJSONString);
       }
     }
-
     return null;
   }
 
@@ -151,13 +141,13 @@ public class PortfolioController {
    */
   private boolean isAllowedAcess(User signedInUser, Long runId, Long workgroupId) {
     if (SecurityUtils.isAdmin(signedInUser)) {
-      //the user is an admin so we will allow this request
       return true;
-    } else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
-      //the user is a teacher that is an owner or shared owner of the run so we will allow this request
+    } else if (SecurityUtils.isTeacher(signedInUser) &&
+        SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
       return true;
-    } else if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
-      //the student is in the run and in the workgroup so we will allow this request
+    } else if (SecurityUtils.isStudent(signedInUser) &&
+        SecurityUtils.isUserInRun(signedInUser, runId) &&
+        SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
       return true;
     }
     return false;

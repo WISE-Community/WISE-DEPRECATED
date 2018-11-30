@@ -41,7 +41,6 @@ public interface UserService {
   /**
    * Given a MutableUserDetails object with a unique name, creates a new user. If username is
    * not unique throws a DuplicateUsernameException.
-   *
    * @param userDetails A user object.
    * @return A reference to a <code>User</code> object
    * @throws DuplicateUsernameException If username is not unique.
@@ -50,7 +49,6 @@ public interface UserService {
 
   /**
    * Retrieve user with the given user details.
-   *
    * @param userDetails that has valid authentication credentials
    * @return <code>User</code> associated with the given user details
    */
@@ -58,7 +56,6 @@ public interface UserService {
 
   /**
    * Retrieve user with the give username
-   *
    * @param username
    * @return <code>User</code> associated with the given username
    */
@@ -67,7 +64,6 @@ public interface UserService {
   /**
    * Retrieve users with a similar username as the one provided
    * Does a LIKE comparison
-   *
    * @param username
    * @return <code>User</code> associated with the given username
    */
@@ -75,7 +71,6 @@ public interface UserService {
 
   /**
    * Retrieve users with the given emailAddress
-   *
    * @param emailAddress
    * @return <code>Users</code> associated with the given emailaddress
    */
@@ -83,22 +78,19 @@ public interface UserService {
 
   /**
    * Retrieve user with the given google user id.
-   *
    * @param googleUserId
    * @return <code>User</code> with the given google user id.
    */
   User retrieveUserByGoogleUserId(String googleUserId);
 
-    /**
-     * Retrieve a list of users whose accounts have been disabled
-     *
-     * @return <code>Users</code> whose accounts have been disabled
-     */
+  /**
+   * Retrieve a list of users whose accounts have been disabled
+   * @return <code>Users</code> whose accounts have been disabled
+   */
   List<User> retrieveDisabledUsers();
 
   /**
    * Encodes a new password and updates a user in the persistent data store.
-   *
    * @param user The user that you want to update
    * @param newPassword The UN-ENCODED new password that you want to put in place for
    * this user
@@ -110,7 +102,6 @@ public interface UserService {
 
   /**
    * Gets all users from persistent data store.
-   *
    * Note: this is server-intensive. Consider using retrieveAllUsernames() instead
    *
    * @return a Set of all users.
@@ -124,7 +115,6 @@ public interface UserService {
 
   /**
    * Retrieves User domain object using unique userId
-   *
    * @param userId <code>Long</code> userId to use for lookup
    * @return <code>User</code> the User object with the given userId
    * @throws ObjectNotFoundException when userId cannot be used to find the existing user

@@ -19,7 +19,7 @@
        [routerLinkActiveOptions]="{exact: true}"
        mat-menu-item routerLink="/student">
       <mat-icon>home</mat-icon>
-      <span>Student Home</span>
+      <span i18n>Student Home</span>
     </a>
     <a *ngIf="role !== 'student'"
        mat-menu-item
@@ -27,7 +27,7 @@
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>home</mat-icon>
-      <span>Teacher Home</span>
+      <span i18n>Teacher Home</span>
     </a>
     <a *ngIf="role === 'student'"
        mat-menu-item
@@ -35,7 +35,7 @@
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>edit</mat-icon>
-      <span>Edit Profile</span>
+      <span i18n>Edit Profile</span>
     </a>
     <a *ngIf="role !== 'student'"
        mat-menu-item
@@ -43,13 +43,13 @@
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>edit</mat-icon>
-      <span>Edit Profile</span>
+      <span i18n>Edit Profile</span>
     </a>
     <a *ngIf="role === 'researcher'"
        mat-menu-item
        href="admin">
       <mat-icon>settings</mat-icon>
-      <span>Researcher Tools</span>
+      <span i18n>Researcher Tools</span>
     </a>
     <!--
     <a *ngIf="role === 'researcher'"
@@ -65,7 +65,7 @@
        mat-menu-item
        href="admin">
       <mat-icon>settings</mat-icon>
-      <span>Admin Tools</span>
+      <span i18n>Admin Tools</span>
     </a>
 
     <!--
@@ -80,24 +80,24 @@
     -->
     <a *ngIf="role === 'student'"
        mat-menu-item
-       routerLink="/student/help"
+       routerLink="/help"
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>help</mat-icon>
-      <span>Help</span>
+      <span i18n>Help</span>
     </a>
     <a *ngIf="role !== 'student'"
        mat-menu-item
-       routerLink="/teacher/help"
+       routerLink="/help"
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>help</mat-icon>
-      <span>Help</span>
+      <span i18n>Help</span>
     </a>
     <mat-divider></mat-divider>
     <a mat-menu-item href="{{ logOutURL }}">
       <mat-icon color="warn">exit_to_app</mat-icon>
-      <span class="warn">Sign Out</span>
+      <span class="warn" i18n>Sign Out</span>
     </a>
   </div>
 </mat-menu>

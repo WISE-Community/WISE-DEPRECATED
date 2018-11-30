@@ -47,7 +47,6 @@ import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
  * WISE implementation of group
- *
  * @author Cynick Young
  */
 @Entity

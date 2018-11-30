@@ -32,8 +32,8 @@ public interface SpringConfiguration {
    * beans in the Spring container.
    *
    * @return <code>String[]</code> such that each string in the array
-   *         defines the location of an applicationContext XML configuration
-   *         file used by the Spring container
+   * defines the location of an applicationContext XML configuration
+   * file used by the Spring container
    */
   String[] getRootApplicationContextConfigLocations();
 
@@ -42,8 +42,8 @@ public interface SpringConfiguration {
    * DispatcherServlet context.
    *
    * @return <code>String[]</code> such that each string in the array
-   *         defines the location of an XML configuration file used by the
-   *         DispatcherServlet context
+   * defines the location of an XML configuration file used by the
+   * DispatcherServlet context
    */
   String[] getDispatcherServletContextConfigLocations();
 }

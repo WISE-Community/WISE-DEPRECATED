@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * <p>
  * This software is distributed under the GNU General Public License, v3,
@@ -43,8 +43,8 @@ public class WISEJdbcMutableAclService extends JdbcMutableAclService {
     if (wiseProperties.containsKey("hibernate.connection.driver_class")) {
       String driverClass = (String) wiseProperties.get("hibernate.connection.driver_class");
       if ("com.mysql.jdbc.Driver".equals(driverClass)) {
-        this.setClassIdentityQuery("SELECT @@IDENTITY");
-        this.setSidIdentityQuery("SELECT @@IDENTITY");
+        setClassIdentityQuery("SELECT @@IDENTITY");
+        setSidIdentityQuery("SELECT @@IDENTITY");
       }
     }
   }

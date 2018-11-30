@@ -85,8 +85,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
   public static final Integer recentFailedLoginTimeLimit = 15;
   public static final Integer recentFailedLoginAttemptsLimit = 5;
 
-  private static final Log LOGGER = LogFactory
-    .getLog(WISEAuthenticationProcessingFilter.class);
+  private static final Log LOGGER = LogFactory.getLog(WISEAuthenticationProcessingFilter.class);
 
   /**
    * Check if the user is required to enter ReCaptcha text. If the
@@ -94,32 +93,19 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
    * user has entered the correct ReCaptcha text. If ReCaptcha is
    * not required or if the ReCaptcha has been entered correctly,
    * continue on with the authentication process.
-   *
-   * @param request
-   * @param response
    */
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request,
       HttpServletResponse response) throws AuthenticationException {
-    // check if the user is required to enter ReCaptcha text
     if (isReCaptchaRequired(request, response)) {
-      // the user is required to enter ReCaptcha text
-
       String errorMessage = null;
-
       if (!isReCaptchaResponseValid(request, response)) {
-        //the user has not answered the ReCaptcha correctly
         errorMessage = "Please verify that you are not a robot.";
       }
 
       if (errorMessage != null) {
         try {
-                    /*
-                     * the user has not been authenticated because they did not
-                     * pass the ReCaptcha
-                     */
           unsuccessfulAuthentication(request, response, new AuthenticationException(errorMessage) {});
-
           return null;
         } catch (IOException e) {
           e.printStackTrace();
@@ -128,7 +114,6 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         }
       }
     }
-
     return super.attemptAuthentication(request, response);
   }
 
@@ -142,52 +127,29 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
    */
   public boolean isReCaptchaRequired(HttpServletRequest request, HttpServletResponse response) {
     boolean result = false;
-
-    //get the public and private keys from the wise.properties
     String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
     String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-
-    //check if the public and private ReCaptcha keys are valid
     boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
-
     if (reCaptchaKeyValid) {
-      //the ReCaptcha keys are valid
-
-      //get the user name that was entered into the user name field
       String userName = request.getParameter("username");
-
-      //get the user object
       User user = userService.retrieveUserByUsername(userName);
-
-            /*
-             * get the user so we can check if they have been failing to login
-             * multiple times recently and if so, we will display a captcha to
-             * make sure they are not a bot. the public and private keys must be set in
-             * the wise.properties otherwise we will not use captcha at all. we
-             * will also check to make sure the captcha keys are valid otherwise
-             * we won't use the captcha at all either.
-             */
+      /*
+       * get the user so we can check if they have been failing to login
+       * multiple times recently and if so, we will display a captcha to
+       * make sure they are not a bot. the public and private keys must be set in
+       * the wise.properties otherwise we will not use captcha at all. we
+       * will also check to make sure the captcha keys are valid otherwise
+       * we won't use the captcha at all either.
+       */
       if (user != null) {
-        //get the user details
-        MutableUserDetails mutableUserDetails = (MutableUserDetails) user.getUserDetails();
-
+        MutableUserDetails mutableUserDetails = user.getUserDetails();
         if (mutableUserDetails != null) {
-          //get the current time
           Date currentTime = new Date();
-
-          //get the recent time they failed to log in
           Date recentFailedLoginTime = mutableUserDetails.getRecentFailedLoginTime();
-
           if (recentFailedLoginTime != null) {
-            //get the time difference
             long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
-
-            //check if the time difference is less than 15 minutes
             if (timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
-              //get the number of failed login attempts since recentFailedLoginTime
               Integer numberOfRecentFailedLoginAttempts = mutableUserDetails.getNumberOfRecentFailedLoginAttempts();
-
-              //check if the user failed to log in 5 or more times
               if (numberOfRecentFailedLoginAttempts != null &&
                 numberOfRecentFailedLoginAttempts >= WISEAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
                 result = true;
@@ -197,30 +159,22 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         }
       }
     }
-
     return result;
   }
 
   /**
    * Check if the user has entered the correct text for ReCaptcha
-   * @param request
-   * @param response
    * @return whether the user has entered the correct text for ReCaptcha
    */
-  protected boolean isReCaptchaResponseValid(HttpServletRequest request, HttpServletResponse response) {
+  protected boolean isReCaptchaResponseValid(HttpServletRequest request,
+      HttpServletResponse response) {
     Boolean result = false;
-
-    //get the public and private keys from the wise.properties
     String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
     String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-
-    // get the google reCaptcha response
     String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-
     if (checkReCaptchaResponse(reCaptchaPrivateKey, reCaptchaPublicKey, gRecaptchaResponse)) {
       result = true;
     }
-
     return result;
   }
 
@@ -234,35 +188,26 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
    */
   public static boolean isReCaptchaKeyValid(String reCaptchaPublicKey, String recaptchaPrivateKey) {
     boolean isValid = false;
-
     if (reCaptchaPublicKey != null && !"".equals(reCaptchaPublicKey) && recaptchaPrivateKey != null && !"".equals(recaptchaPrivateKey)) {
-
-      //make a new instace of the captcha so we can make sure the key is valid
       ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, recaptchaPrivateKey, false);
-
-            /*
-             * get the html that will display the captcha
-             * e.g.
-             * <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=yourpublickey"></script>
-             */
+      /*
+       * get the html that will display the captcha
+       * e.g.
+       * <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=yourpublickey"></script>
+       */
       String recaptchaHtml = c.createRecaptchaHtml(null, null);
-
-            /*
-             * try to retrieve the src url by matching everything between the
-             * quotes of src=""
-             *
-             * e.g. http://api.recaptcha.net/challenge?k=yourpublickey
-             */
+      /*
+       * try to retrieve the src url by matching everything between the
+       * quotes of src=""
+       *
+       * e.g. http://api.recaptcha.net/challenge?k=yourpublickey
+       */
       Pattern pattern = Pattern.compile(".*src=\"(.*)\".*");
       Matcher matcher = pattern.matcher(recaptchaHtml);
       matcher.find();
       String match = matcher.group(1);
 
       try {
-                /*
-                 * get the response text from the url
-                 */
-
         URL url = new URL(match);
         URLConnection urlConnection = url.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -275,44 +220,36 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         }
         in.close();
 
-        //the response text from the url
         String responseText = text.toString();
 
-                /*
-                 * if the public key was invalid the text returned from the url will
-                 * look like
-                 *
-                 * document.write('Input error: k: Format of site key was invalid\n');
-                 */
+        /*
+         * if the public key was invalid the text returned from the url will
+         * look like
+         *
+         * document.write('Input error: k: Format of site key was invalid\n');
+         */
         if (!responseText.contains("Input error")) {
-          //the text from the server does not contain the error so the key is valid
           isValid = true;
         }
       } catch (MalformedURLException e) {
-                /*
-                 * if there was a problem connecting to the server this function will return
-                 * false so that users can still log in and won't be stuck because the
-                 * recaptcha server is down.
-                 */
+        /*
+         * if there was a problem connecting to the server this function will return
+         * false so that users can still log in and won't be stuck because the
+         * recaptcha server is down.
+         */
         e.printStackTrace();
       } catch (IOException e) {
         e.printStackTrace();
       }
     }
-
     return isValid;
   }
 
   @Override
-  protected void successfulAuthentication(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    FilterChain chain,
-    Authentication authentication)
-    throws IOException, ServletException {
+  protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+      FilterChain chain, Authentication authentication) throws IOException, ServletException {
     HttpSession session = request.getSession();
 
-    //get the user
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     User user = userService.retrieveUser(userDetails);
     session.setAttribute(User.CURRENT_USER_SESSION_KEY, user);
@@ -321,21 +258,21 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
       LOGGER.debug("UserDetails logging in: " + userDetails.getUsername());
     }
 
-    // add new session in a allLoggedInUsers servletcontext HashMap variable
     String sessionId = session.getId();
-    HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) session.getServletContext().getAttribute("allLoggedInUsers");
+    HashMap<String, User> allLoggedInUsers =
+        (HashMap<String, User>) session.getServletContext().getAttribute("allLoggedInUsers");
     if (allLoggedInUsers == null) {
       allLoggedInUsers = new HashMap<String, User>();
-      session.getServletContext().setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
+      session.getServletContext()
+          .setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
     }
     allLoggedInUsers.put(sessionId, user);
-
     super.successfulAuthentication(request, response, chain, authentication);
   }
 
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response, AuthenticationException failed)
+      HttpServletResponse response, AuthenticationException failed)
     throws IOException, ServletException {
     super.unsuccessfulAuthentication(request, response, failed);
   }
@@ -347,30 +284,20 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
    * @param gRecaptchaResponse the response
    * @return whether the user answered the ReCaptcha successfully
    */
-  public static boolean checkReCaptchaResponse(String reCaptchaPrivateKey, String reCaptchaPublicKey, String gRecaptchaResponse) {
-
+  public static boolean checkReCaptchaResponse(String reCaptchaPrivateKey,
+      String reCaptchaPublicKey, String gRecaptchaResponse) {
     boolean isValid = false;
-
-    //check if the public key is valid in case the admin entered it wrong
     boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
-
     if (reCaptchaKeyValid &&
-      reCaptchaPrivateKey != null &&
-      reCaptchaPublicKey != null &&
-      gRecaptchaResponse != null &&
-      !gRecaptchaResponse.equals("")) {
-
+        reCaptchaPrivateKey != null &&
+        reCaptchaPublicKey != null &&
+        gRecaptchaResponse != null &&
+        !gRecaptchaResponse.equals("")) {
       try {
-
-        // the url to verify the response
         URL verifyURL = new URL("https://www.google.com/recaptcha/api/siteverify");
         HttpsURLConnection connection = (HttpsURLConnection) verifyURL.openConnection();
         connection.setRequestMethod("POST");
-
-        // set the params
         String postParams = "secret=" + reCaptchaPrivateKey + "&response=" + gRecaptchaResponse;
-
-        // make the request to verify if the user answered the ReCaptcha successfully
         connection.setDoOutput(true);
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
         outputStream.writeBytes(postParams);
@@ -381,7 +308,6 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         String inputLine = null;
         StringBuffer responseString = new StringBuffer();
 
-        // read the response from the verify request
         while((inputLine = bufferedReader.readLine()) != null) {
           responseString.append(inputLine);
         }
@@ -389,10 +315,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         bufferedReader.close();
 
         try {
-          // create a JSON object from the response
           JSONObject responseObject = new JSONObject(responseString.toString());
-
-          // get the value of the success field
           isValid = responseObject.getBoolean("success");
         } catch (JSONException e) {
           e.printStackTrace();
@@ -403,7 +326,6 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         e.printStackTrace();
       }
     }
-
     return isValid;
   }
 }

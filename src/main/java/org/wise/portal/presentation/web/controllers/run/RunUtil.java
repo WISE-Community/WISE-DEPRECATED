@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,43 +53,26 @@ public class RunUtil {
    */
   public static JSONObject getMyUserInfo(Run run, WorkgroupService workgroupService) {
     JSONObject myUserInfoJSONObject = new JSONObject();
-
-    //get the singed in user
     User signedInUser = ControllerUtil.getSignedInUser();
-
-    //get the workgroup
-    List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, signedInUser);
+    List<Workgroup> workgroupListByRunAndUser =
+        workgroupService.getWorkgroupListByRunAndUser(run, signedInUser);
     if (workgroupListByRunAndUser.size()==0 && signedInUser.isAdmin()) {
-      // an admin user is trying to run or view grades for a run
-
     } else {
       Workgroup workgroup = workgroupListByRunAndUser.get(0);
-
-      //get the workgroup id
       Long workgroupId = workgroup.getId();
-
-      //get name of the users in the workgroup
       String userNamesFromWorkgroup = getUserNamesFromWorkgroup(workgroup);
-
       try {
-        //put all the username and workgroup id into the JSONObject
         myUserInfoJSONObject.put("userName", userNamesFromWorkgroup);
         myUserInfoJSONObject.put("workgroupId", workgroupId);
       } catch (JSONException e) {
         e.printStackTrace();
       }
-
-      //get the period the user is in
       Group periodGroup = workgroup.getPeriod();
-
-      //check if the workgroup has a period (teacher's do not have a period)
       if (periodGroup != null) {
-        //get the period name and id
         String periodName = periodGroup.getName();
         String periodId = periodGroup.getId().toString();
 
         try {
-          //put the period name and id into the JSONObject
           myUserInfoJSONObject.put("periodName", periodName);
           myUserInfoJSONObject.put("periodId", periodId);
         } catch (JSONException e) {
@@ -98,7 +80,6 @@ public class RunUtil {
         }
       }
     }
-
     return myUserInfoJSONObject;
   }
 
@@ -109,10 +90,9 @@ public class RunUtil {
    * @param workgroupService
    * @return a JSONArray containing classmate info
    */
-  public static JSONArray getClassmateUserInfos(Run run, WorkgroupService workgroupService, RunService runService) {
+  public static JSONArray getClassmateUserInfos(Run run, WorkgroupService workgroupService,
+      RunService runService) {
     JSONArray classmateUserInfosJSONArray = new JSONArray();
-
-    //get the workgroups in the run
     Set<Workgroup> workgroups = null;
     try {
       workgroups = runService.getWorkgroups(run.getId());
@@ -121,43 +101,30 @@ public class RunUtil {
     }
 
     if (workgroups != null) {
-      //loop through all the workgroups in the run and add all the classmate workgroups
-      for(Workgroup workgroup : workgroups) {
+      for (Workgroup workgroup : workgroups) {
         try {
           JSONObject classmateJSONObject = new JSONObject();
 
           if (!workgroup.isTeacherWorkgroup()) {
-            //the workgroup is a student workgroup
             classmateJSONObject.put("workgroupId", workgroup.getId());
-
-            //get the members of the workgroup
             Set<User> members = workgroup.getMembers();
-
-            //array list to hold all the wise ids for this workgroup
             ArrayList<Long> wiseIdsArrayList = new ArrayList<Long>();
 
-            //loop through all the members in the workgroup to retrieve their wise ids
             Iterator<User> membersIter = members.iterator();
-            while(membersIter.hasNext()) {
+            while (membersIter.hasNext()) {
               User user = membersIter.next();
               Long wiseId = user.getId();
               wiseIdsArrayList.add(wiseId);
             }
 
-            //sort the wise ids numerically
             Collections.sort(wiseIdsArrayList);
-
             JSONArray wiseIdsJSONArray = new JSONArray();
-
-            //put the wise ids into the JSONArray
-            for(int x=0; x<wiseIdsArrayList.size(); x++) {
+            for (int x = 0; x < wiseIdsArrayList.size(); x++) {
               Long wiseId = wiseIdsArrayList.get(x);
               wiseIdsJSONArray.put(wiseId);
             }
 
-            //put the wise ids array into the classmate object
             classmateJSONObject.put("wiseIds", wiseIdsJSONArray);
-
             if (workgroup.getPeriod() != null) {
               classmateJSONObject.put("periodId", workgroup.getPeriod().getId());
               classmateJSONObject.put("periodName", workgroup.getPeriod().getName());
@@ -165,13 +132,8 @@ public class RunUtil {
               classmateJSONObject.put("periodId", JSONObject.NULL);
             }
 
-            //get the student user ids as a string delimited by ':'
             String userIdsFromWorkgroup = getUserIdsFromWorkgroup(workgroup);
-
-            //put the student user ids string into the json object
             classmateJSONObject.put("userIds", userIdsFromWorkgroup);
-
-            //add the student to the list of classmates array
             classmateUserInfosJSONArray.put(classmateJSONObject);
           }
         } catch (JSONException e) {
@@ -179,7 +141,6 @@ public class RunUtil {
         }
       }
     }
-
     return classmateUserInfosJSONArray;
   }
 
@@ -191,28 +152,19 @@ public class RunUtil {
    * and name
    */
   public static JSONObject getTeacherUserInfo(Run run, WorkgroupService workgroupService) {
-    // the JSONObject that will hold the owner teacher user info
     JSONObject teacherUserInfo = new JSONObject();
-
     if (run != null) {
-      // get the owners of the run (there should only be one)
       User owner = run.getOwner();
-
-      // get the workgroups of the owner
       List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByRunAndUser(run, owner);
-
-      // there should only be one workgroup for the owner
       Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
 
       try {
-        //set the values into the owner JSONObject
         teacherUserInfo.put("workgroupId", teacherWorkgroup.getId());
         teacherUserInfo.put("userName", teacherWorkgroup.generateWorkgroupName());
       } catch (JSONException e) {
         e.printStackTrace();
       }
     }
-
     return teacherUserInfo;
   }
 
@@ -223,43 +175,28 @@ public class RunUtil {
    * @return a JSONArray containing shared teacher user infos
    */
   public static JSONArray getSharedTeacherUserInfos(Run run, WorkgroupService workgroupService) {
-
-    //the JSONArray that will hold the shared teacher user infos
     JSONArray sharedTeacherUserInfos = new JSONArray();
-
     if (run != null) {
-      //get the shared owners
       Iterator<User> sharedOwnersIterator = run.getSharedowners().iterator();
-
-      //loop through the shared owners
-      while(sharedOwnersIterator.hasNext()) {
-        //get a shared owner
+      while (sharedOwnersIterator.hasNext()) {
         User sharedOwner = sharedOwnersIterator.next();
+        List<Workgroup> sharedTeacherWorkgroups =
+            workgroupService.getWorkgroupListByRunAndUser(run, sharedOwner);
 
-        //get the workgroups
-        List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByRunAndUser(run, sharedOwner);
-
-        //there should only be one workgroup for the shared owner
         if (sharedTeacherWorkgroups.size() > 0) {
           Workgroup sharedTeacherWorkgroup = sharedTeacherWorkgroups.get(0);
-
-          //make a JSONObject for this shared owner
           JSONObject sharedTeacherUserInfo = new JSONObject();
 
           try {
-            //set the values into the shared owner JSONObject
             sharedTeacherUserInfo.put("workgroupId", sharedTeacherWorkgroup.getId());
             sharedTeacherUserInfo.put("userName", sharedTeacherWorkgroup.generateWorkgroupName());
           } catch (JSONException e) {
             e.printStackTrace();
           }
-
-          //add the shared owner to the array
           sharedTeacherUserInfos.put(sharedTeacherUserInfo);
         }
       }
     }
-
     return sharedTeacherUserInfos;
   }
 
@@ -279,9 +216,7 @@ public class RunUtil {
     }
 
     try {
-      //get the date the run was created
       Date startTime = run.getStarttime();
-
       if (startTime != null) {
         runInfo.put("startTime", startTime.getTime());
       } else {
@@ -292,9 +227,7 @@ public class RunUtil {
     }
 
     try {
-      //get the date the run was archived or null if never archived
       Date endTime = run.getEndtime();
-
       if (endTime != null) {
         runInfo.put("endTime", endTime.getTime());
       } else {
@@ -303,7 +236,6 @@ public class RunUtil {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return runInfo;
   }
 
@@ -317,18 +249,12 @@ public class RunUtil {
     String firstName = "";
     String lastName = "";
     String userName = "";
-
-    //get the user details, we need to cast to our own MutableUserDetails class
-    MutableUserDetails userDetails = (org.wise.portal.domain.authentication.MutableUserDetails) user.getUserDetails();
-
-    //get the first name, last name, and login
+    MutableUserDetails userDetails = user.getUserDetails();
     if (userDetails != null) {
       userName = userDetails.getUsername();
       firstName = userDetails.getFirstname();
       lastName = userDetails.getLastname();
     }
-
-    //append the user's name and login so it looks like Jennifer Chiu (JenniferC829)
     return firstName + " " + lastName + " (" + userName + ")";
   }
 
@@ -340,27 +266,17 @@ public class RunUtil {
    * "Jennifer Chiu (JenniferC829):helen zhang (helenz1115a)"
    */
   public static String getUserNamesFromWorkgroup(Workgroup workgroup) {
-    //the string buffer to maintain the user names for the logged in user
     StringBuffer userNames = new StringBuffer();
     Set<User> members = workgroup.getMembers();
     Iterator<User> iterator = members.iterator();
-    while(iterator.hasNext()) {
-      //get a user
+    while (iterator.hasNext()) {
       User user = iterator.next();
-
-      //get the first name last name and login as a string like Geoffrey Kwan (GeoffreyKwan)
       String firstNameLastNameLogin = getFirstNameLastNameLogin(user);
-
-      //separate the names with a :
       if (userNames.length() != 0) {
         userNames.append(":");
       }
-
-      //add the first name last name and login for this user
       userNames.append(firstNameLastNameLogin);
     }
-
-    //return the : delimited user names that are in this workgroup
     return userNames.toString();
   }
 
@@ -370,31 +286,17 @@ public class RunUtil {
    * @return a string containing the wise ids delimited by ':'
    */
   public static String getUserIdsFromWorkgroup(Workgroup workgroup) {
-    //the string buffer to maintain the user names
     StringBuffer userIds = new StringBuffer();
-
-    //get the members of the group in an iterator
     Set<User> members = workgroup.getMembers();
     Iterator<User> iterator = members.iterator();
-
-    //loop through each member
-    while(iterator.hasNext()) {
-      //get a member
+    while (iterator.hasNext()) {
       User user = iterator.next();
-
-      //get the wise student id
       Long userId = user.getId();
-
-      //separate the names with a :
       if (userIds.length() != 0) {
         userIds.append(":");
       }
-
-      //add the wise student id for this user
       userIds.append(userId);
     }
-
-    //return the : delimited user names that are in this workgroup
     return userIds.toString();
   }
 }

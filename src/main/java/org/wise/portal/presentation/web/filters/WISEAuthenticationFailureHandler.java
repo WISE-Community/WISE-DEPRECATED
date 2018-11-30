@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -46,7 +46,23 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.tanesha.recaptcha.ReCaptcha;
+import net.tanesha.recaptcha.ReCaptchaFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
+
 /**
+ * Handles failed authentication attempts
  * @author Hiroki Terashima
  */
 public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -74,12 +90,12 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
   @Override
   @Transactional
   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-      AuthenticationException exception) throws java.io.IOException, javax.servlet.ServletException {
+      AuthenticationException exception) throws IOException, ServletException {
     String userName = request.getParameter("username");
     if (userName != null) {
       User user = userService.retrieveUserByUsername(userName);
       if (user != null) {
-        MutableUserDetails userDetails = (MutableUserDetails) user.getUserDetails();
+        MutableUserDetails userDetails = user.getUserDetails();
         Date recentFailedLoginTime = userDetails.getRecentFailedLoginTime();
         Date currentTime = new Date();
         Integer numberOfRecentFailedLoginAttempts = 1;
@@ -92,7 +108,8 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
            * if the difference is greater than 15 minutes we will reset the counter.
            */
           if (timeDifference < (recentFailedLoginTimeLimit * 60 * 1000)) {
-            numberOfRecentFailedLoginAttempts = userDetails.getNumberOfRecentFailedLoginAttempts() + 1;
+            numberOfRecentFailedLoginAttempts =
+                userDetails.getNumberOfRecentFailedLoginAttempts() + 1;
           }
         }
         userDetails.setNumberOfRecentFailedLoginAttempts(numberOfRecentFailedLoginAttempts);
@@ -104,7 +121,7 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
       response.sendRedirect(contextPath + "/login/googleUserNotFound");
       return;
     }
-    this.setDefaultFailureUrl(this.determineFailureUrl(request, response, exception));
+    setDefaultFailureUrl(determineFailureUrl(request, response, exception));
     super.onAuthenticationFailure(request, response, exception);
   }
 
@@ -114,31 +131,20 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
    * to log in 5 or more times in the last 15 minutes. If so, it will
    * require the failure url page to display a captcha.
    */
-  protected String determineFailureUrl(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-
+  protected String determineFailureUrl(HttpServletRequest request, HttpServletResponse response,
+      AuthenticationException failed) {
     String url = authenticationFailureUrl;
-
-    //get the failed message
     String failedMessage = failed.getMessage();
-
-    //check if the user is required to enter ReCaptcha text
     boolean isReCaptchaRequired = isReCaptchaRequired(request, response);
-
-    if(isReCaptchaRequired) {
-      //the user is required to enter ReCaptcha text
-
-      if(failedMessage.equals("Please verify that you are not a robot.")) {
-        //the user has left the ReCaptcha field empty
+    if (isReCaptchaRequired) {
+      if (failedMessage.equals("Please verify that you are not a robot.")) {
         url = authenticationFailureUrl + "&requireCaptcha=true&reCaptchaFailed=true";
       }  else {
-        //the user is required to enter ReCaptcha text
         url = authenticationFailureUrl + "&requireCaptcha=true";
       }
     } else {
-      //the user incorrectly entered the username or password
       url = authenticationFailureUrl;
     }
-
     return url;
   }
 
@@ -152,21 +158,13 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
    */
   public boolean isReCaptchaRequired(HttpServletRequest request, HttpServletResponse response) {
     boolean result = false;
-
-    //get the public and private keys from the wise.properties
     String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
     String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
-    //check if the public and private ReCaptcha keys are valid
     boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
 
-    if(reCaptchaKeyValid) {
-      //the ReCaptcha keys are valid
-
-      //get the user name that was entered into the user name field
+    if (reCaptchaKeyValid) {
       String userName = request.getParameter("username");
-
-      //get the user object
       User user = userService.retrieveUserByUsername(userName);
 
       /*
@@ -177,29 +175,17 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
        * will also check to make sure the captcha keys are valid otherwise
        * we won't use the captcha at all either.
        */
-      if(user != null) {
-        //get the user details
-        MutableUserDetails mutableUserDetails = (MutableUserDetails) user.getUserDetails();
-
-        if(mutableUserDetails != null) {
-          //get the current time
+      if (user != null) {
+        MutableUserDetails mutableUserDetails = user.getUserDetails();
+        if (mutableUserDetails != null) {
           Date currentTime = new Date();
-
-          //get the recent time they failed to log in
           Date recentFailedLoginTime = mutableUserDetails.getRecentFailedLoginTime();
-
-          if(recentFailedLoginTime != null) {
-            //get the time difference
+          if (recentFailedLoginTime != null) {
             long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
-
-            //check if the time difference is less than 15 minutes
-            if(timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
-              //get the number of failed login attempts since recentFailedLoginTime
+            if (timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
               Integer numberOfRecentFailedLoginAttempts = mutableUserDetails.getNumberOfRecentFailedLoginAttempts();
-
-              //check if the user failed to log in 5 or more times
-              if(numberOfRecentFailedLoginAttempts != null &&
-                numberOfRecentFailedLoginAttempts >= WISEAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
+              if (numberOfRecentFailedLoginAttempts != null &&
+                  numberOfRecentFailedLoginAttempts >= WISEAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
                 result = true;
               }
             }
@@ -207,7 +193,6 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         }
       }
     }
-
     return result;
   }
 
@@ -222,9 +207,7 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
   public static boolean isReCaptchaKeyValid(String reCaptchaPublicKey, String recaptchaPrivateKey) {
     boolean isValid = false;
 
-    if(reCaptchaPublicKey != null && recaptchaPrivateKey != null) {
-
-      //make a new instace of the captcha so we can make sure th key is valid
+    if (reCaptchaPublicKey != null && recaptchaPrivateKey != null) {
       ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, recaptchaPrivateKey, false);
 
       /*
@@ -246,9 +229,6 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
       String match = matcher.group(1);
 
       try {
-        /*
-         * get the response text from the url
-         */
         URL url = new URL(match);
         URLConnection urlConnection = url.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -261,7 +241,6 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         }
         in.close();
 
-        //the response text from the url
         String responseText = text.toString();
 
         /*
@@ -271,7 +250,6 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
          * document.write('Input error: k: Format of site key was invalid\n');
          */
         if(!responseText.contains("Input error")) {
-          //the text from the server does not contain the error so the key is valid
           isValid = true;
         }
       } catch (MalformedURLException e) {
@@ -285,27 +263,17 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         e.printStackTrace();
       }
     }
-
     return isValid;
   }
 
-  /**
-   * @param wiseProperties the wiseProperties to set
-   */
   public void setWiseProperties(Properties wiseProperties) {
     this.wiseProperties = wiseProperties;
   }
 
-  /**
-   * @param userService the userService to set
-   */
   public void setUserService(UserService userService) {
     this.userService = userService;
   }
 
-  /**
-   * @param authenticationFailureUrl the authenticationFailureUrl to set
-   */
   public void setAuthenticationFailureUrl(String authenticationFailureUrl) {
     this.authenticationFailureUrl = authenticationFailureUrl;
   }

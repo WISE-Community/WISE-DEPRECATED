@@ -61,21 +61,19 @@ public class LookupUserController {
   private LookupUserParametersValidator lookupUserParametersValidator;
 
   @RequestMapping(method = RequestMethod.POST)
-  protected ModelAndView onSubmit(@ModelAttribute("lookupUserParameters") LookupUserParameters param,
-                                  BindingResult result, HttpServletRequest request){
-
+  protected ModelAndView onSubmit(
+      @ModelAttribute("lookupUserParameters") LookupUserParameters param,
+      BindingResult result, HttpServletRequest request) {
     lookupUserParametersValidator.validate(param, result);
     if (result.hasErrors()) {
       return null;
     }
 
     Object term;
-
     String lookupField = param.getLookupField();
     String lookupCriteria = param.getLookupCriteria();
     String lookupData = param.getLookupData();
 
-    // if searching for ID, make the term object in a Long.
     if ("id".equals(lookupField)) {
       term = Long.parseLong(lookupData);
     } else if ("gender".equals(lookupField)) {
@@ -95,10 +93,9 @@ public class LookupUserController {
       userDetailsType = "studentUserDetails";
     }
 
-    List<User> users = this.userService.retrieveByField(lookupField, lookupCriteria, term, userDetailsType);
-
+    List<User> users =
+        userService.retrieveByField(lookupField, lookupCriteria, term, userDetailsType);
     ModelAndView modelAndView = new ModelAndView("admin/account/manageusers");
-    // put the usernames in an array
     List<String> usernames = new ArrayList<String>();
     for (User user : users) {
       usernames.add(user.getUserDetails().getUsername());
@@ -113,7 +110,6 @@ public class LookupUserController {
         modelAndView.addObject("teachers", usernames);
       }
     }
-
     return modelAndView;
   }
 
@@ -121,7 +117,6 @@ public class LookupUserController {
   public ModelAndView initializeForm(ModelMap model, HttpServletRequest request) {
     ModelAndView mav = new ModelAndView();
     mav.addObject("lookupUserParameters", new LookupUserParameters());
-
     String userType = request.getParameter("userType");
     model.put("userType", userType);
     if ("teacher".equals(userType)) {
@@ -129,14 +124,14 @@ public class LookupUserController {
     } else {
       model.put("fields", StudentFields.values());
     }
-
     return mav;
   }
 
   private Schoollevel getLevel(String level) {
     for (Schoollevel schoolLevel : Schoollevel.values()) {
-      if (schoolLevel.toString().toUpperCase().contains(level.toUpperCase()))
+      if (schoolLevel.toString().toUpperCase().contains(level.toUpperCase())) {
         return schoolLevel;
+      }
     }
     return Schoollevel.OTHER;
   }

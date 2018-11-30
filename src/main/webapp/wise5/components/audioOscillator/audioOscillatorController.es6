@@ -52,8 +52,8 @@ class AudioOscillatorController extends ComponentController {
       }
     }
 
-    if (this.hasMaxSubmitCount() && this.hasSubmitsLeft()) {
-      this.isSubmitButtonDisabled = true;
+    if (this.hasMaxSubmitCount() && !this.hasSubmitsLeft()) {
+      this.disableSubmitButton();
     }
 
     this.disableComponentIfNecessary();
@@ -63,53 +63,8 @@ class AudioOscillatorController extends ComponentController {
       this.drawOscilloscopeGridAfterTimeout();
     }
 
-    this.$scope.isDirty = function() {
-      return this.$scope.audioOscillatorController.isDirty;
-    }.bind(this);
-
-    /**
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @param isSubmit boolean Whether the request is coming from a submit
-     * action (optional; default is false).
-     * @return A component state containing the student data.
-     */
-    this.$scope.getComponentState = function(isSubmit) {
-      const deferred = this.$q.defer();
-      let getState = false;
-      let action = 'change';
-
-      if (isSubmit) {
-        if (this.$scope.audioOscillatorController.isSubmitDirty) {
-          getState = true;
-          action = 'submit';
-        }
-      } else {
-        if (this.$scope.audioOscillatorController.isDirty) {
-          getState = true;
-          action = 'save';
-        }
-      }
-
-      if (getState) {
-        this.$scope.audioOscillatorController.createComponentState(action).then((componentState) => {
-          this.$scope.audioOscillatorController.isSubmit = false;
-          deferred.resolve(componentState);
-        });
-      } else {
-        /*
-         * The student does not have any unsaved changes in this component
-         * so we don't need to save a component state for this component.
-         * We will immediately resolve the promise here.
-         */
-        deferred.resolve();
-      }
-
-      return deferred.promise;
-    }.bind(this);
-
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    this.initializeScopeGetComponentState(this.$scope, 'audioOscillatorController');
+    this.broadcastDoneRenderingComponent();
   }
 
   initializeDefaultSettings() {

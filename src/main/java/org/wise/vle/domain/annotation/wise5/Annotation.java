@@ -42,9 +42,7 @@ import java.sql.Timestamp;
 
 /**
  * WISE5 Annotation Domain Object
- * Annotations are what users annotate on other
- * user's work, such as Comments, Scores, Flags.
- *
+ * Annotations are what users annotate on other user's work, such as Comments, Scores, Flags.
  * @author Hiroki Terashima
  */
 @Entity(name = "wise5Annotation")
@@ -109,75 +107,71 @@ public class Annotation extends PersistableDomain {
     return Annotation.class;
   }
 
-  /**
-   * Get the JSON representation of the Event
-   * @return a JSONObject with the values from the Event
-   */
   public JSONObject toJSON() {
     JSONObject eventJSONObject = new JSONObject();
 
     try {
-      if (this.id != null) {
-        eventJSONObject.put("id", this.id);
+      if (id != null) {
+        eventJSONObject.put("id", id);
       }
 
-      if (this.run != null) {
-        Long runId = this.run.getId();
+      if (run != null) {
+        Long runId = run.getId();
         eventJSONObject.put("runId", runId);
       }
 
-      if (this.period != null) {
-        Long periodId = this.period.getId();
+      if (period != null) {
+        Long periodId = period.getId();
         eventJSONObject.put("periodId", periodId);
       }
 
-      if (this.fromWorkgroup != null) {
-        Long fromWorkgroupId = this.fromWorkgroup.getId();
+      if (fromWorkgroup != null) {
+        Long fromWorkgroupId = fromWorkgroup.getId();
         eventJSONObject.put("fromWorkgroupId", fromWorkgroupId);
       }
 
-      if (this.toWorkgroup != null) {
-        Long toWorkgroupId = this.toWorkgroup.getId();
+      if (toWorkgroup != null) {
+        Long toWorkgroupId = toWorkgroup.getId();
         eventJSONObject.put("toWorkgroupId", toWorkgroupId);
       }
 
-      if (this.nodeId != null) {
-        eventJSONObject.put("nodeId", this.nodeId);
+      if (nodeId != null) {
+        eventJSONObject.put("nodeId", nodeId);
       }
 
-      if (this.componentId != null) {
-        eventJSONObject.put("componentId", this.componentId);
+      if (componentId != null) {
+        eventJSONObject.put("componentId", componentId);
       }
 
-      if (this.studentWork != null) {
-        eventJSONObject.put("studentWorkId", this.studentWork.getId());
+      if (studentWork != null) {
+        eventJSONObject.put("studentWorkId", studentWork.getId());
       }
 
-      if (this.localNotebookItemId != null) {
-        eventJSONObject.put("localNotebookItemId", this.localNotebookItemId);
+      if (localNotebookItemId != null) {
+        eventJSONObject.put("localNotebookItemId", localNotebookItemId);
       }
 
-      if (this.notebookItem != null) {
-        eventJSONObject.put("notebookItemId", this.notebookItem.getId());
+      if (notebookItem != null) {
+        eventJSONObject.put("notebookItemId", notebookItem.getId());
       }
 
-      if (this.type != null) {
-        eventJSONObject.put("type", this.type);
+      if (type != null) {
+        eventJSONObject.put("type", type);
       }
 
-      if (this.data != null) {
+      if (data != null) {
         try {
-          eventJSONObject.put("data", new JSONObject(this.data));
+          eventJSONObject.put("data", new JSONObject(data));
         } catch (JSONException e) {
-          eventJSONObject.put("data", this.data);
+          eventJSONObject.put("data", data);
         }
       }
 
-      if (this.clientSaveTime != null) {
+      if (clientSaveTime != null) {
         eventJSONObject.put("clientSaveTime", clientSaveTime.getTime());
       }
 
-      if (this.serverSaveTime != null) {
+      if (serverSaveTime != null) {
         eventJSONObject.put("serverSaveTime", serverSaveTime.getTime());
       }
 

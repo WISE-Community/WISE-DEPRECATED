@@ -21,5 +21,4 @@ export class NewsComponent implements OnInit {
       this.allNewsItems = allNewsItems;
     });
   }
-
 }

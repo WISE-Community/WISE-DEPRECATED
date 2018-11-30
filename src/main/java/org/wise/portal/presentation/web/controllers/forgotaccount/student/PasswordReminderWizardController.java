@@ -75,9 +75,7 @@ public class PasswordReminderWizardController {
    */
   @RequestMapping
   public String getInitialPage(final ModelMap modelMap) {
-    // put your initial command
     modelMap.addAttribute("passwordReminderParameters", new PasswordReminderParameters());
-    // populate the model Map as needed
     return "forgotaccount/student/passwordreminder";
   }
 
@@ -92,11 +90,8 @@ public class PasswordReminderWizardController {
       SessionStatus status,
       ModelMap modelMap,
       final HttpServletResponse response) {
-
     switch (currentPage) {
       case 1:
-        // handle the submit username
-
         try {
           String username = passwordReminderParameters.getUsername();
           username = StringUtils.trimToNull(username);
@@ -106,9 +101,7 @@ public class PasswordReminderWizardController {
           } else if (!StringUtils.isAlphanumeric(username)) {
             result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorNoUsername");
           } else {
-            // check to see if user exists and ensure that user is a student
             User user = userService.retrieveUserByUsername(username);
-
             if (user == null || !(user.getUserDetails() instanceof StudentUserDetails)) {
               result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorUsernameNotFound");
             }
@@ -120,36 +113,23 @@ public class PasswordReminderWizardController {
           return "forgotaccount/student/passwordreminder";
         }
 
-        // passed validation, put username and account question into page
         String username = passwordReminderParameters.getUsername();
-
         username = StringUtils.trimToNull(username);
         User user = userService.retrieveUserByUsername(username);
-
         StudentUserDetails userDetails = (StudentUserDetails) user.getUserDetails();
-
         modelMap.put(USERNAME, userDetails.getUsername());
         modelMap.put(ACCOUNT_QUESTION, userDetails.getAccountQuestion());
-
         passwordReminderParameters.setAccountQuestion(userDetails.getAccountQuestion());
         passwordReminderParameters.setAccountAnswer(userDetails.getAccountAnswer());
-
         return "forgotaccount/student/passwordreminder2";
       case 2:
-        // handle the submit with account answer
-
         ValidationUtils.rejectIfEmptyOrWhitespace(result,
-          "submittedAccountAnswer", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
+            "submittedAccountAnswer", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
 
-        String submittedAccountAnswer = passwordReminderParameters
-          .getSubmittedAccountAnswer();
-
+        String submittedAccountAnswer = passwordReminderParameters.getSubmittedAccountAnswer();
         String accountAnswer = passwordReminderParameters.getAccountAnswer();
-
         accountAnswer = StringUtils.lowerCase(accountAnswer);
-
         submittedAccountAnswer = StringUtils.lowerCase(submittedAccountAnswer);
-
         if (accountAnswer == null) {
           /*
            * the account answer is null perhaps because the session has
@@ -158,36 +138,28 @@ public class PasswordReminderWizardController {
            */
           return "forgotaccount/student/passwordreminder";
         } else if (!accountAnswer.equals(submittedAccountAnswer)) {
-          //they have provided an incorrect account answer
           result.reject("presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
         }
 
         if (result.hasErrors()) {
           modelMap.put(USERNAME, passwordReminderParameters.getUsername());
           modelMap.put(ACCOUNT_QUESTION, passwordReminderParameters.getAccountQuestion());
-
           return "forgotaccount/student/passwordreminder2";
         }
-
-        // passed validation, go to next page
         return "forgotaccount/student/passwordreminder3";
       case 3:
-        // handle the submit with new passwords
+        ValidationUtils.rejectIfEmptyOrWhitespace(result,
+            "verifyPassword", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
 
         ValidationUtils.rejectIfEmptyOrWhitespace(result,
-          "verifyPassword", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
-
-        ValidationUtils.rejectIfEmptyOrWhitespace(result,
-          "newPassword", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
+            "newPassword", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
 
         if (result.hasErrors()) {
           return "forgotaccount/student/passwordreminder3";
         }
 
         String newPassword = passwordReminderParameters.getNewPassword();
-
         String verifyPassword = passwordReminderParameters.getVerifyPassword();
-
         if (!verifyPassword.equals(newPassword)) {
           result.reject("presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
         }
@@ -195,23 +167,16 @@ public class PasswordReminderWizardController {
           return "forgotaccount/student/passwordreminder3";
         }
 
-        // passed validation, save new password
         String usernameSubmitted = passwordReminderParameters.getUsername();
-
         usernameSubmitted = StringUtils.trimToNull(usernameSubmitted);
         User userSubmitted = userService.retrieveUserByUsername(usernameSubmitted);
-
         if (newPassword != null) {
           userService.updateUserPassword(userSubmitted, newPassword);
         }
-
-        //clear the command object from the session
         status.setComplete();
-
         modelMap.put("username", passwordReminderParameters.get(PasswordReminderParameters.USERNAME));
         return "forgotaccount/student/passwordreminder4";
     }
-
     return null;
   }
 }

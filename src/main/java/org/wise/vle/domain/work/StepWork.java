@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -89,11 +89,11 @@ public class StepWork extends PersistableDomain {
    */
   public JSONObject getNodeStateByTimestamp(Long timestampIn) {
     try {
-      JSONObject dataJSON = new JSONObject(this.data);
+      JSONObject dataJSON = new JSONObject(data);
       if (dataJSON != null) {
         JSONArray valueArray = dataJSON.getJSONArray("nodeStates");
         if (valueArray != null) {
-          for (int i=0; i<valueArray.length(); i++) {
+          for (int i = 0; i < valueArray.length(); i++) {
             JSONObject nodeStateObj = valueArray.getJSONObject(i);
             long timestampFromNodeState = nodeStateObj.getLong("timestamp");
             if (timestampIn != null && timestampIn.equals(timestampFromNodeState)) {
@@ -117,13 +117,12 @@ public class StepWork extends PersistableDomain {
   public String getCRaterItemId() {
     String cRaterItemId = null;
     try {
-      JSONObject dataJSON = new JSONObject(this.data);
+      JSONObject dataJSON = new JSONObject(data);
       if (dataJSON != null) {
         JSONArray nodeStateArray = dataJSON.getJSONArray("nodeStates");
         if (nodeStateArray != null) {
-          for (int i=0; i<nodeStateArray.length(); i++) {
+          for (int i = 0; i < nodeStateArray.length(); i++) {
             JSONObject nodeStateObj = nodeStateArray.getJSONObject(i);
-
             if(nodeStateObj.has("cRaterItemId")) {
               cRaterItemId = nodeStateObj.getString("cRaterItemId");
               break;
@@ -145,13 +144,12 @@ public class StepWork extends PersistableDomain {
   public String getCRaterItemType() {
     String cRaterItemType = null;
     try {
-      JSONObject dataJSON = new JSONObject(this.data);
+      JSONObject dataJSON = new JSONObject(data);
       if (dataJSON != null) {
         JSONArray nodeStateArray = dataJSON.getJSONArray("nodeStates");
         if (nodeStateArray != null) {
-          for (int i=0; i<nodeStateArray.length(); i++) {
+          for (int i = 0; i < nodeStateArray.length(); i++) {
             JSONObject nodeStateObj = nodeStateArray.getJSONObject(i);
-
             if(nodeStateObj.has("cRaterItemType")) {
               cRaterItemType = nodeStateObj.getString("cRaterItemType");
               break;
@@ -164,6 +162,7 @@ public class StepWork extends PersistableDomain {
     }
     return cRaterItemType;
   }
+
   /**
    * Returns the timestamp of the latest NodeState in this StepWork.
    * This is the same as the NodeStateId. If no NodeState exists in this StepWork,
@@ -173,12 +172,12 @@ public class StepWork extends PersistableDomain {
   public long getLastNodeStateTimestamp() {
     long timestamp = 0;
     try {
-      JSONObject dataJSON = new JSONObject(this.data);
+      JSONObject dataJSON = new JSONObject(data);
       if (dataJSON != null) {
         JSONArray nodeStateArray = dataJSON.getJSONArray("nodeStates");
         if (nodeStateArray != null && nodeStateArray.length() > 0) {
           JSONObject nodeStateObj = nodeStateArray.getJSONObject(nodeStateArray.length() - 1);
-          if(nodeStateObj.has("timestamp")) {
+          if (nodeStateObj.has("timestamp")) {
             timestamp = nodeStateObj.getLong("timestamp");
           }
         }
@@ -189,23 +188,16 @@ public class StepWork extends PersistableDomain {
     return timestamp;
   }
 
-  /**
-   * Get the JSON representation of the StepWork
-   * @return a JSONObject with the values from the StepWork
-   */
   public JSONObject toJSON() {
     JSONObject stepWorkJSONObject = new JSONObject();
     try {
       stepWorkJSONObject.put("id", getId());
-
       UserInfo userInfo = getUserInfo();
       Long workgroupId = userInfo.getWorkgroupId();
       stepWorkJSONObject.put("workgroupId", workgroupId);
-
       String data = getData();
       JSONObject dataJSON = new JSONObject(data);
       stepWorkJSONObject.put("data", dataJSON);
-
     } catch (JSONException e) {
       e.printStackTrace();
     }

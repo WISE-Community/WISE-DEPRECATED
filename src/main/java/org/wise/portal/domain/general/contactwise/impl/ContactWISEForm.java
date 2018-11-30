@@ -41,6 +41,7 @@ import org.wise.portal.service.user.UserService;
 
 /**
  * @author Hiroki Terashima
+ * @author Geoffrey Kwan
  */
 @Getter
 @Setter
@@ -87,7 +88,7 @@ public class ContactWISEForm implements Serializable {
   public String getMailMessage() {
     StringBuffer message = new StringBuffer();
 
-    if(getIsStudent()) {
+    if (getIsStudent()) {
       // a student is submitting this contact form and we are cc'ing their teacher
       message.append("Dear " + getTeacherName() + ",");
       message.append("\n\n");
@@ -102,7 +103,7 @@ public class ContactWISEForm implements Serializable {
      * do not display the Email line if email is null or blank.
      * this variable will be null if the user is a student.
      */
-    if(email != null && !email.equals("")) {
+    if (email != null && !email.equals("")) {
       message.append("Email: " + email + "\n");
     }
 
@@ -110,7 +111,7 @@ public class ContactWISEForm implements Serializable {
     message.append("Project ID: " + projectId + "\n");
 
     // display the run id if it is not null
-    if(runId != null) {
+    if (runId != null) {
       message.append("Run ID: " + runId + "\n");
     }
 
@@ -118,7 +119,6 @@ public class ContactWISEForm implements Serializable {
     message.append("Summary: " + summary + "\n");
     message.append("Description: " + description + "\n");
 
-    // get the operating system name and version
     String operatingSystem = "";
 
     if (this.operatingSystemName != null) {
@@ -133,7 +133,6 @@ public class ContactWISEForm implements Serializable {
       message.append("Operating System: " + operatingSystem + "\n");
     }
 
-    // get the browser name and version
     String browser = "";
 
     if (this.browserName != null) {
@@ -150,8 +149,8 @@ public class ContactWISEForm implements Serializable {
 
     message.append("User System: " + usersystem + "\n");
 
-    if(getIsStudent()) {
-      //a student is submitting this contact form and we are cc'ing their teacher
+    if (getIsStudent()) {
+      // a student is submitting this contact form and we are cc'ing their teacher
       message.append("\nWe recommend that you follow up with your student if necessary. If you need further assistance, you can 'Reply to all' on this email to contact us.");
     }
 
@@ -163,7 +162,7 @@ public class ContactWISEForm implements Serializable {
   }
 
   public void setIsStudent(User user) {
-    if(user != null && user.getUserDetails() instanceof StudentUserDetails) {
+    if (user != null && user.getUserDetails() instanceof StudentUserDetails) {
       isStudent = true;
     }
   }

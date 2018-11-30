@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -27,7 +27,6 @@ import org.wise.portal.domain.project.Tag;
 
 /**
  * A Service for tags
- *
  * @author Patrick Lawler
  */
 public interface TagService {
@@ -35,7 +34,6 @@ public interface TagService {
   /**
    * Given a <code>Long</code> tag id, returns the tag associated with that
    * id, returns null if it does not exist.
-   *
    * @param Integer - id
    * @return Tag - tag
    */
@@ -44,7 +42,6 @@ public interface TagService {
   /**
    * Given a <code>String</code> name, returns the <code>Tag</code> tag with
    * the given name if it exists, creates and returns one if not.
-   *
    * @param String - name
    * @return Tag - tag
    */
@@ -53,7 +50,6 @@ public interface TagService {
   /**
    * Returns <code>boolean</code> true iff the given <code>Tag</code> tag is
    * a tag that was retrieved from the database, returns false otherwise.
-   *
    * @param Tag - tag
    * @return boolean
    */
@@ -63,7 +59,6 @@ public interface TagService {
    * Given a <code>Long</code> tag id of a tag that has just been removed
    * from a project, checks to see if this now makes this tag an orphan
    * and removes it from the database if it is.
-   *
    * @param Integer - tag id
    */
   void removeIfOrphaned(Integer tagId);

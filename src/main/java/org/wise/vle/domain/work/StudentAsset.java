@@ -44,8 +44,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "studentAssets",  indexes = {
-  @Index(columnList = "runId", name = "studentAssetsRunIdIndex"),
-  @Index(columnList = "workgroupId", name = "studentAssetsWorkgroupIdIndex")})
+    @Index(columnList = "runId", name = "studentAssetsRunIdIndex"),
+    @Index(columnList = "workgroupId", name = "studentAssetsWorkgroupIdIndex")})
 @Getter
 @Setter
 public class StudentAsset extends PersistableDomain {
@@ -111,69 +111,68 @@ public class StudentAsset extends PersistableDomain {
   public JSONObject toJSON() {
     JSONObject studentWorkJSONObject = new JSONObject();
     try {
-      if (this.id != null) {
-        studentWorkJSONObject.put("id", this.id);
+      if (id != null) {
+        studentWorkJSONObject.put("id", id);
       }
 
-      if (this.run != null) {
-        Long runId = this.run.getId();
+      if (run != null) {
+        Long runId = run.getId();
         studentWorkJSONObject.put("runId", runId);
       }
 
-      if (this.period != null) {
-        Long periodId = this.period.getId();
+      if (period != null) {
+        Long periodId = period.getId();
         studentWorkJSONObject.put("periodId", periodId);
       }
 
-      if (this.workgroup != null) {
-        Long workgroupId = this.workgroup.getId();
+      if (workgroup != null) {
+        Long workgroupId = workgroup.getId();
         studentWorkJSONObject.put("workgroupId", workgroupId);
       }
 
-      if (this.nodeId != null) {
-        studentWorkJSONObject.put("nodeId", this.nodeId);
+      if (nodeId != null) {
+        studentWorkJSONObject.put("nodeId", nodeId);
       }
 
-      if (this.componentId != null) {
-        studentWorkJSONObject.put("componentId", this.componentId);
+      if (componentId != null) {
+        studentWorkJSONObject.put("componentId", componentId);
       }
 
-      if (this.componentType != null) {
-        studentWorkJSONObject.put("componentType", this.componentType);
+      if (componentType != null) {
+        studentWorkJSONObject.put("componentType", componentType);
       }
 
-      if (this.isReferenced != null) {
-        studentWorkJSONObject.put("isReferenced", this.isReferenced);
+      if (isReferenced != null) {
+        studentWorkJSONObject.put("isReferenced", isReferenced);
       }
 
-      if (this.fileName != null) {
-        studentWorkJSONObject.put("fileName", this.fileName);
+      if (fileName != null) {
+        studentWorkJSONObject.put("fileName", fileName);
       }
 
-      if (this.filePath != null) {
-        studentWorkJSONObject.put("filePath", this.filePath);
+      if (filePath != null) {
+        studentWorkJSONObject.put("filePath", filePath);
       }
 
-      if (this.fileSize != null) {
-        studentWorkJSONObject.put("fileSize", this.fileSize);
+      if (fileSize != null) {
+        studentWorkJSONObject.put("fileSize", fileSize);
       }
 
-      if (this.clientSaveTime != null) {
+      if (clientSaveTime != null) {
         studentWorkJSONObject.put("clientSaveTime", clientSaveTime.getTime());
       }
 
-      if (this.serverSaveTime != null) {
+      if (serverSaveTime != null) {
         studentWorkJSONObject.put("serverSaveTime", serverSaveTime.getTime());
       }
 
-      if (this.clientDeleteTime != null) {
+      if (clientDeleteTime != null) {
         studentWorkJSONObject.put("clientDeleteTime", clientDeleteTime.getTime());
       }
 
-      if (this.serverDeleteTime != null) {
+      if (serverDeleteTime != null) {
         studentWorkJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
       }
-
     } catch (JSONException e) {
       e.printStackTrace();
     }

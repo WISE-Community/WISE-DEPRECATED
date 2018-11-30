@@ -1,0 +1,24 @@
+<h2 class="mat-dialog-title"><ng-container>End Unit</ng-container></h2>
+<mat-dialog-content fxLayout="column">
+  <div class="info-block">
+    <p class="mat-subheading-2 accent-1">{{ run.name }}</p>
+    <p *ngIf="!isError && !isEnded" i18n>Are you sure you want to end the unit? This will prevent your students from adding to or changing their work. You can continue to review and grade.</p>
+    <p *ngIf="isEnded" i18n>The unit has been successfully ended.</p>
+    <p *ngIf="isError" i18n>There was an error ending this unit. Please try again later.</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
+  <button mat-button mat-dialog-close [disabled]="isEnding">
+    <ng-container *ngIf="!isError && !isEnded" i18n>Cancel</ng-container>
+    <ng-container *ngIf="isError || isEnded" i18n>Close</ng-container>
+  </button>
+  <button type="submit"
+          mat-flat-button
+          color="primary"
+          [disabled]="isEnding"
+          (click)="endRun()"
+          *ngIf="!isError && !isEnded">
+    <mat-progress-bar *ngIf="isEnding" mode="indeterminate"></mat-progress-bar>
+    <ng-container i18n>End Unit</ng-container>
+  </button>
+</mat-dialog-actions>

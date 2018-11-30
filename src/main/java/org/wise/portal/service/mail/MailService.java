@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -34,8 +34,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 /**
- * Helps easily construct an email message using the JavaMail Framework
- *
+ * Compose and send email using the JavaMail Framework
  * @author Anthony Perritano
  */
 @Service
@@ -47,10 +46,6 @@ public class MailService implements IMailFacade {
   @Autowired
   private JavaMailSenderImpl javaMailSender;
 
-  /**
-   * @see net.sf.sail.webapp.mail.IMailFacade#postMail(java.lang.String[],
-   *      java.lang.String, java.lang.String, java.lang.String)
-   */
   public void postMail(String[] recipients, String subject, String message, String from)
       throws MessagingException {
     postMail(recipients, subject, message, from, null);
@@ -58,12 +53,12 @@ public class MailService implements IMailFacade {
 
   public void postMail(String[] recipients, String subject, String message,
       String from, String[] cc) throws MessagingException {
-    javaMailSender.setUsername((String) wiseProperties.getProperty("mail.user"));
-    javaMailSender.setPassword((String) wiseProperties.getProperty("mail.password"));
-    javaMailSender.setHost((String) wiseProperties.getProperty("mail.smtp.host"));
-    String portString = (String) wiseProperties.getProperty("mail.smtp.port");
+    javaMailSender.setUsername(wiseProperties.getProperty("mail.user"));
+    javaMailSender.setPassword(wiseProperties.getProperty("mail.password"));
+    javaMailSender.setHost(wiseProperties.getProperty("mail.smtp.host"));
+    String portString = wiseProperties.getProperty("mail.smtp.port");
     javaMailSender.setPort(Integer.valueOf(portString));
-    javaMailSender.setProtocol((String) wiseProperties.getProperty("mail.transport.protocol"));
+    javaMailSender.setProtocol(wiseProperties.getProperty("mail.transport.protocol"));
     javaMailSender.setJavaMailProperties(wiseProperties);
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");

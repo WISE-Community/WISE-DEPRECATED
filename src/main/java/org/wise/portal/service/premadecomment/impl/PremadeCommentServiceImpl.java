@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -27,9 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
-
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,7 +72,6 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
     premadeComment.setOwner(param.getOwner());
     premadeComment.setListPosition(param.getListPosition());
     premadeComment.setLabels(param.getLabels());
-
     premadeCommentDao.save(premadeComment);
     return premadeComment;
   }
@@ -132,7 +128,6 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
   public Set<PremadeComment> retrieveAllPremadeComments() {
     TreeSet<PremadeComment> returnSet = new TreeSet<PremadeComment>();
     List<PremadeComment> returnedList = premadeCommentDao.getList();
-
     returnSet.addAll(returnedList);
     return returnSet;
   }
@@ -152,7 +147,6 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
     premadeCommentList.setGlobal(param.isGlobal());
     premadeCommentList.setProjectId(param.getProjectId());
     premadeCommentList.setPremadeCommentList(param.getList());
-
     premadeCommentListDao.save(premadeCommentList);
     return premadeCommentList;
   }
@@ -181,7 +175,7 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
 
   @Transactional()
   public PremadeCommentList addPremadeCommentToList (Long commentListId, PremadeComment comment)
-    throws ObjectNotFoundException {
+      throws ObjectNotFoundException {
     try {
       PremadeCommentList premadeCommentList = premadeCommentListDao.getById(commentListId);
       premadeCommentList.getPremadeCommentList().add(comment);
@@ -195,7 +189,7 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
 
   @Transactional()
   public PremadeCommentList removePremadeCommentFromList (Long commentListId, PremadeComment comment)
-    throws ObjectNotFoundException {
+      throws ObjectNotFoundException {
     try {
       PremadeCommentList premadeCommentList = premadeCommentListDao.getById(commentListId);
       premadeCommentList.getPremadeCommentList().remove(comment);
@@ -217,65 +211,52 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
   @Transactional()
   public Set<PremadeCommentList> retrieveAllPremadeCommentListsByUser(User user) {
     TreeSet<PremadeCommentList> returnSet = new TreeSet<PremadeCommentList>();
-    returnSet.addAll(this.premadeCommentListDao.getListByOwner(user));
+    returnSet.addAll(premadeCommentListDao.getListByOwner(user));
     return returnSet;
   }
 
   @Transactional()
   public Set<PremadeCommentList> retrieveAllPremadeCommentListsByProject(Long projectId) {
     TreeSet<PremadeCommentList> returnSet = new TreeSet<PremadeCommentList>();
-    returnSet.addAll(this.premadeCommentListDao.getListByProject(projectId));
+    returnSet.addAll(premadeCommentListDao.getListByProject(projectId));
     return returnSet;
   }
 
   @Transactional()
   public Set<PremadeCommentList> retrieveAllPremadeCommentListsByRun(Run run) {
     TreeSet<PremadeCommentList> returnSet = new TreeSet<PremadeCommentList>();
-    returnSet.addAll(this.premadeCommentListDao.getListByRun(run));
+    returnSet.addAll(premadeCommentListDao.getListByRun(run));
     return returnSet;
   }
 
-  /**
-   * @param premadeCommentDao the premadeCommentDao to set
-   */
   public void setPremadeCommentDao(PremadeCommentDao<PremadeComment> premadeCommentDao) {
     this.premadeCommentDao = premadeCommentDao;
   }
 
-  /**
-   * @param premadeCommentListDao the premadeCommentListDao to set
-   */
   public void setPremadeCommentListDao(
     PremadeCommentListDao<PremadeCommentList> premadeCommentListDao) {
     this.premadeCommentListDao = premadeCommentListDao;
   }
 
-  /**
-   *
-   * @see org.wise.portal.service.premadecomment.PremadeCommentService#retrieveAllGlobalPremadeCommentLists()
-   */
   public Set<PremadeCommentList> retrieveAllGlobalPremadeCommentLists() {
     TreeSet<PremadeCommentList> returnSet = new TreeSet<PremadeCommentList>();
-    returnSet.addAll(this.premadeCommentListDao.getListByGlobal());
+    returnSet.addAll(premadeCommentListDao.getListByGlobal());
     return returnSet;
   }
 
-
   @Transactional()
   public PremadeCommentList retrievePremadeCommentListById(Long id) {
-    return this.premadeCommentListDao.getListById(id);
+    return premadeCommentListDao.getListById(id);
   }
-
 
   @Transactional()
   public PremadeComment retrievePremadeCommentById(Long id) {
     PremadeComment premadeComment = null;
     try {
-      premadeComment = this.premadeCommentDao.getById(id);
+      premadeComment = premadeCommentDao.getById(id);
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
-
     return premadeComment;
   }
 
@@ -284,59 +265,34 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
    * @param fromProjectId the project id to copy from
    * @param toProjectId the project id to set in the new lists
    * @param toOwner the owner to set in the new lists
-   * @see org.wise.portal.service.premadecomment.PremadeCommentService#copyPremadeCommentsFromProject(java.lang.Long, java.lang.Long, net.sf.sail.webapp.domain.User)
    */
   @Transactional()
   public void copyPremadeCommentsFromProject(Long fromProjectId, Long toProjectId, User toOwner) {
     if (fromProjectId != null && toProjectId != null) {
-      //get all the premade comment lists for a project
-      Set<PremadeCommentList> premadeCommentListsFromProject = retrieveAllPremadeCommentListsByProject(fromProjectId);
-
-      Iterator<PremadeCommentList> premadeCommentListsFromProjectIterator = premadeCommentListsFromProject.iterator();
-
-      //loop through all the lists
-      while(premadeCommentListsFromProjectIterator.hasNext()) {
-        //get a list
+      Set<PremadeCommentList> premadeCommentListsFromProject =
+          retrieveAllPremadeCommentListsByProject(fromProjectId);
+      Iterator<PremadeCommentList> premadeCommentListsFromProjectIterator =
+          premadeCommentListsFromProject.iterator();
+      while (premadeCommentListsFromProjectIterator.hasNext()) {
         PremadeCommentList fromPremadeCommentList = premadeCommentListsFromProjectIterator.next();
-
-        //get the list name
         String fromLabel = fromPremadeCommentList.getLabel();
-
-        //get the is global value
         boolean fromIsGlobal = fromPremadeCommentList.isGlobal();
-
-        //make the list name using the project id
         String toLabel = makePremadeCommentListNameFromProjectId(toProjectId);
-
-        //create the new list
-        PremadeCommentListParameters toPremadeCommentListParams = new PremadeCommentListParameters(toLabel, toOwner, fromIsGlobal, toProjectId);
-        PremadeCommentList toPremadeCommentList = createPremadeCommentList(toPremadeCommentListParams);
-
-        //get all the premade comments from the old list
+        PremadeCommentListParameters toPremadeCommentListParams =
+            new PremadeCommentListParameters(toLabel, toOwner, fromIsGlobal, toProjectId);
+        PremadeCommentList toPremadeCommentList =
+            createPremadeCommentList(toPremadeCommentListParams);
         Set<PremadeComment> fromPremadeComments = fromPremadeCommentList.getPremadeCommentList();
-
         Iterator<PremadeComment> fromPremadeCommentsIterator = fromPremadeComments.iterator();
-
-        //loop through all the premade comments from the old list
-        while(fromPremadeCommentsIterator.hasNext()) {
-          //get a premade comment
+        while (fromPremadeCommentsIterator.hasNext()) {
           PremadeComment fromPremadeComment = fromPremadeCommentsIterator.next();
-
-          //get the comment
           String fromComment = fromPremadeComment.getComment();
-
-          //get the labels
           String fromLabels = fromPremadeComment.getLabels();
-
-          //get the position
           Long fromListPosition = fromPremadeComment.getListPosition();
-
-          //create the new comment
-          PremadeCommentParameters toPremadeCommentParams = new PremadeCommentParameters(fromComment, toOwner, false, fromListPosition, fromLabels);
+          PremadeCommentParameters toPremadeCommentParams =
+              new PremadeCommentParameters(fromComment, toOwner, false, fromListPosition, fromLabels);
           PremadeComment toPremadeComment = createPremadeComment(toPremadeCommentParams);
-
           try {
-            //put the new comment into our new list
             addPremadeCommentToList(toPremadeCommentList.getId(), toPremadeComment);
           } catch (ObjectNotFoundException e) {
             e.printStackTrace();
@@ -351,52 +307,35 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
    * @param projectId the project id this list is for
    * @return the premade comment list name
    * e.g.
-   *
    * project with a run
    * Project Id: 123, Run Id: 456, Chemical Reactions
-   *
    * project without a run
    * Project Id: 123, Chemical Reactions
    */
   public String makePremadeCommentListNameFromProjectId(Long projectId) {
     String listName = "";
-
     try {
       if (projectId != null) {
-        //get the project
         Project project = projectService.getById(projectId);
-
-        //get the project name
         String projectName = project.getName();
-
-        //get the runs for this project if any
         List<Run> projectRuns = runService.getProjectRuns(projectId);
-
         Long runId = null;
         String runName = null;
-
-        //loop through all the runs (there should actually only be one)
-        for (int x=0; x<projectRuns.size(); x++) {
-          //get the run
+        for (int x = 0; x < projectRuns.size(); x++) {
           Run run = projectRuns.get(x);
-
-          //get the run id and run name
           runId = run.getId();
           runName = run.getName();
         }
 
         if (runId == null) {
-          //this project does not have a run
           listName = "Project Id: " + projectId + ", " + projectName;
         } else {
-          //this project does have a run
           listName = "Project Id: " + projectId + ", " + "Run Id: " + runId + ", " + runName;
         }
       }
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
-
     return listName;
   }
 }

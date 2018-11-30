@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -24,9 +24,7 @@
 package org.wise.portal.service.group;
 
 /**
- * A checked exception thrown when there exists a cycle of groups
- * in the data store
- *
+ * A checked exception thrown when there exists a cycle of groups in the data store
  * @author Hiroki Terashima
  */
 public class CyclicalGroupException extends Exception {

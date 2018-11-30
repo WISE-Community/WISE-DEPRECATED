@@ -7,6 +7,8 @@ import { Project} from "../../domain/project";
 import { TeacherHomeComponent } from "./teacher-home.component";
 import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ConfigService } from "../../services/config.service";
+import { Config } from "../../domain/config";
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -65,6 +67,24 @@ export class MockUserService {
   }
 }
 
+export class MockConfigService {
+  getConfig(): Observable<User[]> {
+    return Observable.create( observer => {
+      const config: Config = {
+        contextPath: "/wise",
+        logOutURL: "/logout",
+        currentTime: "2018-10-17 00:00:00.0"
+      };
+      observer.next(config);
+      observer.complete();
+    });
+  }
+
+  getContextPath(): string {
+    return "/wise";
+  }
+}
+
 describe('TeacherHomeComponent', () => {
   let component: TeacherHomeComponent;
   let fixture: ComponentFixture<TeacherHomeComponent>;
@@ -74,7 +94,8 @@ describe('TeacherHomeComponent', () => {
       declarations: [ TeacherHomeComponent ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: UserService, useClass: MockUserService }
+        { provide: UserService, useClass: MockUserService },
+        { provide: ConfigService, useClass: MockConfigService}
       ],
       imports: [],
       schemas: [ NO_ERRORS_SCHEMA ]

@@ -178,9 +178,6 @@ public class PersistentAclEntry implements ImmutableAclEntry, Serializable {
     this.targetObjectIdentity = targetObjectIdentity;
   }
 
-  /**
-   * @param mask the mask to set
-   */
   @SuppressWarnings("unused")
   private void setMask(Integer mask) {
     this.mask = mask;

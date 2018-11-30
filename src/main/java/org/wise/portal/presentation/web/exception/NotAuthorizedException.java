@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -32,12 +32,12 @@ public class NotAuthorizedException extends Exception {
 
   private String message;
 
-  public NotAuthorizedException(String message){
+  public NotAuthorizedException(String message) {
     this.message = message;
   }
 
   @Override
-  public String getMessage(){
-    return this.message;
+  public String getMessage() {
+    return message;
   }
 }

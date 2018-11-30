@@ -28,8 +28,7 @@ import java.io.Serializable;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 
 /**
- * The class encapsulates all of the data necessary to register/update
- * a TELS user account
+ * The class encapsulates data necessary to register/update a WISE user account
  *
  * @author Hiroki Terashima
  */
@@ -43,46 +42,27 @@ public class UserAccountForm implements Serializable {
 
   private String repeatedPassword;
 
-  /**
-   * @return the newAccount
-   */
   public boolean isNewAccount() {
     return newAccount;
   }
 
-  /**
-   * @param newAccount the newAccount to set
-   */
   public void setNewAccount(boolean newAccount) {
     this.newAccount = newAccount;
   }
 
-  /**
-   * @return the repeatedPassword
-   */
   public String getRepeatedPassword() {
     return repeatedPassword;
   }
 
-  /**
-   * @param repeatedPassword the repeatedPassword to set
-   */
   public void setRepeatedPassword(String repeatedPassword) {
     this.repeatedPassword = repeatedPassword;
   }
 
-  /**
-   * @return the userDetails
-   */
   public MutableUserDetails getUserDetails() {
     return userDetails;
   }
 
-  /**
-   * @param userDetails the userDetails to set
-   */
   public void setUserDetails(MutableUserDetails userDetails) {
     this.userDetails = userDetails;
   }
-
 }

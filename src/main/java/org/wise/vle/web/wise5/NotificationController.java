@@ -47,33 +47,30 @@ public class NotificationController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/notification/{runId}")
   protected void getNotifications(
-    @PathVariable Integer runId,
-    @RequestParam(value = "id", required = false) Integer id,
-    @RequestParam(value = "periodId", required = false) Integer periodId,
-    @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
-    @RequestParam(value = "groupId", required = false) String groupId,
-    @RequestParam(value = "nodeId", required = false) String nodeId,
-    @RequestParam(value = "componentId", required = false) String componentId,
-    HttpServletResponse response) throws IOException {
-
+      @PathVariable Integer runId,
+      @RequestParam(value = "id", required = false) Integer id,
+      @RequestParam(value = "periodId", required = false) Integer periodId,
+      @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
+      @RequestParam(value = "groupId", required = false) String groupId,
+      @RequestParam(value = "nodeId", required = false) String nodeId,
+      @RequestParam(value = "componentId", required = false) String componentId,
+      HttpServletResponse response) throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     try {
       Run run = runService.retrieveById(new Long(runId));
       if (toWorkgroupId != null) {
         Workgroup workgroup = workgroupService.retrieveById(new Long(toWorkgroupId));
         if (signedInUser.getUserDetails() instanceof StudentUserDetails &&
-          (!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
-          ) {
-          // user is student and is not in this run or not in the specified workgroup, so deny access
+            (!run.isStudentAssociatedToThisRun(signedInUser) ||
+            !workgroup.getMembers().contains(signedInUser))) {
           return;
         }
-      } else if (!signedInUser.isAdmin() && !runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
-        // verify that user is the owner of the run
+      } else if (!signedInUser.isAdmin() &&
+          !runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
         return;
       }
-      // otherwise, we can perform the query
-      List<Notification> notificationList = vleService.getNotifications(
-        id, runId, periodId, toWorkgroupId, groupId, nodeId, componentId);
+      List<Notification> notificationList = vleService.getNotifications(id, runId, periodId,
+          toWorkgroupId, groupId, nodeId, componentId);
       JSONArray notifications = new JSONArray();
       for (Notification notification : notificationList) {
         notifications.put(notification.toJSON());
@@ -87,56 +84,50 @@ public class NotificationController {
 
   @RequestMapping(method = RequestMethod.POST, value = "/notification/{runId}")
   protected void postNotification(
-    @PathVariable Integer runId,
-    @RequestParam(value = "notificationId", required = false) Integer notificationId,
-    @RequestParam(value = "periodId", required = true) Integer periodId,
-    @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
-    @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
-    @RequestParam(value = "groupId", required = false) String groupId,
-    @RequestParam(value = "nodeId", required = false) String nodeId,
-    @RequestParam(value = "componentId", required = false) String componentId,
-    @RequestParam(value = "componentType", required = false) String componentType,
-    @RequestParam(value = "type", required = false) String type,
-    @RequestParam(value = "message", required = false) String message,
-    @RequestParam(value = "data", required = false) String data,
-    @RequestParam(value = "timeGenerated", required = true) String timeGenerated,
-    @RequestParam(value = "timeDismissed", required = false) String timeDismissed,
-    HttpServletResponse response) throws IOException {
-
+      @PathVariable Integer runId,
+      @RequestParam(value = "notificationId", required = false) Integer notificationId,
+      @RequestParam(value = "periodId", required = true) Integer periodId,
+      @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
+      @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
+      @RequestParam(value = "groupId", required = false) String groupId,
+      @RequestParam(value = "nodeId", required = false) String nodeId,
+      @RequestParam(value = "componentId", required = false) String componentId,
+      @RequestParam(value = "componentType", required = false) String componentType,
+      @RequestParam(value = "type", required = false) String type,
+      @RequestParam(value = "message", required = false) String message,
+      @RequestParam(value = "data", required = false) String data,
+      @RequestParam(value = "timeGenerated", required = true) String timeGenerated,
+      @RequestParam(value = "timeDismissed", required = false) String timeDismissed,
+      HttpServletResponse response) throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     try {
       Run run = runService.retrieveById(new Long(runId));
-      if (signedInUser.isAdmin() || runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
-        // an admin or teacher of the run can make changes to the notification
+      if (signedInUser.isAdmin() ||
+          runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
       } else if (notificationId != null) {
-        // make sure the person who is updating this notification has permission
         Notification notification = vleService.getNotificationById(notificationId);
-        if (notification == null || !notification.getToWorkgroup().getMembers().contains(signedInUser)) {
+        if (notification == null ||
+            !notification.getToWorkgroup().getMembers().contains(signedInUser)) {
           return;
         }
       } else if (fromWorkgroupId != null) {
         Workgroup fromWorkgroup = workgroupService.retrieveById(new Long(fromWorkgroupId));
         if (signedInUser.getUserDetails() instanceof StudentUserDetails &&
-          (!run.isStudentAssociatedToThisRun(signedInUser) || !fromWorkgroup.getMembers().contains(signedInUser))
-          ) {
-          // user is student and is not in this run or not in the specified workgroup, so deny access
+            (!run.isStudentAssociatedToThisRun(signedInUser) ||
+            !fromWorkgroup.getMembers().contains(signedInUser))) {
           return;
         }
       } else if (toWorkgroupId != null) {
         if (fromWorkgroupId == null) {
-          // check if type of Notification is allowed to not have fromWorkgroupId
           if ("CRaterResult".equals(type)) {
-            // fromWorkgroupId is not required for CRaterScoreResult notifications
           } else {
-            // if we're specifying a toWorkgroup, we must have a fromWorkgroup
             return;
           }
         } else {
           Workgroup fromWorkgroup = workgroupService.retrieveById(new Long(fromWorkgroupId));
           if (signedInUser.getUserDetails() instanceof StudentUserDetails &&
-            (!run.isStudentAssociatedToThisRun(signedInUser) || !fromWorkgroup.getMembers().contains(signedInUser))
-            ) {
-            // user is student and is not in this run or not in the specified workgroup, so deny access
+              (!run.isStudentAssociatedToThisRun(signedInUser) ||
+              !fromWorkgroup.getMembers().contains(signedInUser))) {
             return;
           }
         }
@@ -147,62 +138,54 @@ public class NotificationController {
     }
 
     Notification notification = vleService.saveNotification(
-      notificationId,
-      runId,
-      periodId,
-      fromWorkgroupId,
-      toWorkgroupId,
-      groupId,
-      nodeId,
-      componentId,
-      componentType,
-      type,
-      message,
-      data,
-      timeGenerated,
-      timeDismissed
-    );
+        notificationId,
+        runId,
+        periodId,
+        fromWorkgroupId,
+        toWorkgroupId,
+        groupId,
+        nodeId,
+        componentId,
+        componentType,
+        type,
+        message,
+        data,
+        timeGenerated,
+        timeDismissed);
     response.getWriter().write(notification.toJSON().toString());
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/notification/{runId}/dismiss")
   protected void dismissNotification(
-    @PathVariable Integer runId,
-    @RequestParam(value = "notificationId", required = true) Integer notificationId,
-    @RequestParam(value = "periodId", required = false) Integer periodId,
-    @RequestParam(value = "type", required = true) String type,
-    @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
-    @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
-    @RequestParam(value = "groupId", required = false) String groupId,
-    @RequestParam(value = "timeDismissed", required = false) String timeDismissed,
-    HttpServletResponse response) throws IOException {
-
+      @PathVariable Integer runId,
+      @RequestParam(value = "notificationId", required = true) Integer notificationId,
+      @RequestParam(value = "periodId", required = false) Integer periodId,
+      @RequestParam(value = "type", required = true) String type,
+      @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
+      @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
+      @RequestParam(value = "groupId", required = false) String groupId,
+      @RequestParam(value = "timeDismissed", required = false) String timeDismissed,
+      HttpServletResponse response) throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
-
     try {
       Notification notification = vleService.getNotificationById(notificationId);
       Run run = runService.retrieveById(new Long(runId));
-      // check for permission to edit this notification
-      if (signedInUser.isAdmin() || runService.hasRunPermission(run, signedInUser, BasePermission.READ) ||
-        !notification.getToWorkgroup().getMembers().contains(signedInUser)) {
-        // an admin or teacher, or user who this notification is for can make changes to the notification
+      if (signedInUser.isAdmin() ||
+          runService.hasRunPermission(run, signedInUser, BasePermission.READ) ||
+          !notification.getToWorkgroup().getMembers().contains(signedInUser)) {
       }
       notification = vleService.dismissNotification(notification, timeDismissed);
       if (groupId != null && "CRaterResult".equals(type)) {
-        // if this notification belong to a group of notifications, also dismiss other notifications in the group
         List<Notification> notificationsInGroup = vleService.getNotificationsByGroupId(groupId);
         for (Notification notificationInGroup : notificationsInGroup) {
           if (notificationInGroup.getId().equals(notification.getId())) {
-            // ignore the notification that was dimissed above.
             continue;
           }
           vleService.dismissNotification(notificationInGroup, timeDismissed);
           try {
             if (webSocketHandler != null) {
               WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-
               if (wiseWebSocketHandler != null) {
-                // send this message to websocket
                 String messageParticipants = "";
                 if (notificationInGroup.getToWorkgroup().isTeacherWorkgroup()) {
                   messageParticipants = "studentToTeachers";
@@ -219,7 +202,6 @@ public class NotificationController {
               }
             }
           } catch (Exception e) {
-            // ignore errors that occur during sending notification over websocket.
           }
         }
       }

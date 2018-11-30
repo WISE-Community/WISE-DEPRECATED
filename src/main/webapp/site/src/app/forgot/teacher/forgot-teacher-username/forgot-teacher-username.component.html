@@ -4,17 +4,17 @@
           fxLayout="column"
           (submit)="submit()"
           [formGroup]="forgotTeacherUsernameFormGroup">
-      <h2 class="standalone__title accent">Forgot Teacher Username</h2>
+      <h2 class="standalone__title accent" i18n>Forgot Teacher Username</h2>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Email</mat-label>
+          <mat-label i18n>Email</mat-label>
           <input matInput
                  id="email"
                  name="email"
                  formControlName="email"
                  autofocus
                  required />
-          <mat-error *ngIf="forgotTeacherUsernameFormGroup.controls['email'].hasError('required')">Email Required</mat-error>
+          <mat-error *ngIf="forgotTeacherUsernameFormGroup.controls['email'].hasError('required')" i18n>Email Required</mat-error>
         </mat-form-field>
       </p>
       <button mat-flat-button
@@ -22,7 +22,7 @@
               [disabled]="!forgotTeacherUsernameFormGroup.valid || processing"
               type="submit">
         <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
-        <span>Submit</span>
+        <span i18n>Submit</span>
       </button>
     </form>
     <br/>
@@ -32,7 +32,7 @@
       <div *ngIf="isCreateNewAccountLinkVisible">
         <a (click)="createNewAccount()"
            class="cursor-link">
-          Create New Account
+          <ng-container i18n>Create New Account</ng-container>
         </a>
       </div>
     </div>

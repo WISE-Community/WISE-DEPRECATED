@@ -56,7 +56,7 @@ class AnimationAuthoringController extends AnimationController {
   assetSelected(event, args) {
     if (this.isEventTargetThisComponent(args)) {
       const fileName = args.assetItem.fileName;
-      if (args.target == 'rubric') {
+      if (args.target === 'rubric') {
         const summernoteId = this.getSummernoteId(args);
         this.restoreSummernoteCursorPosition(summernoteId);
         const fullAssetPath = this.getFullAssetPath(fileName);
@@ -65,13 +65,13 @@ class AnimationAuthoringController extends AnimationController {
         } else if (this.UtilService.isVideo(fileName)) {
           this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
         }
-      } else if (args.target == 'image') {
+      } else if (args.target === 'image') {
         args.targetObject.image = fileName;
         this.authoringViewComponentChanged();
-      } else if (args.target == 'imageMovingLeft') {
+      } else if (args.target === 'imageMovingLeft') {
         args.targetObject.imageMovingLeft = fileName;
         this.authoringViewComponentChanged();
-      } else if (args.target == 'imageMovingRight') {
+      } else if (args.target === 'imageMovingRight') {
         args.targetObject.imageMovingRight = fileName;
         this.authoringViewComponentChanged();
       }

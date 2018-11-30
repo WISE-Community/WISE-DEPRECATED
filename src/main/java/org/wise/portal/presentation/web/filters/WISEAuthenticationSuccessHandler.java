@@ -79,14 +79,13 @@ public class WISEAuthenticationSuccessHandler
       if (lastLoginTime != null) {
         pLT = lastLoginTime.getTime();
       }
-      this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH + "?pLT=" + pLT);
+      setDefaultTargetUrl(WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH + "?pLT=" + pLT);
     } else if (userDetails instanceof TeacherUserDetails) {
       if (request.getServletPath().contains("google-login")) {
         String contextPath = request.getContextPath();
         response.sendRedirect(contextPath + "/teacher");
         return;
       }
-
       this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
       GrantedAuthority researcherAuth = null;
       try {
@@ -97,7 +96,7 @@ public class WISEAuthenticationSuccessHandler
       Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
       for (GrantedAuthority authority : authorities) {
         if (researcherAuth.equals(authority)) {
-          this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.RESEARCHER_DEFAULT_TARGET_PATH);
+          setDefaultTargetUrl(WISEAuthenticationProcessingFilter.RESEARCHER_DEFAULT_TARGET_PATH);
         }
       }
 
@@ -109,7 +108,7 @@ public class WISEAuthenticationSuccessHandler
       }
       for (GrantedAuthority authority : authorities) {
         if (adminAuth.equals(authority)) {
-          this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.ADMIN_DEFAULT_TARGET_PATH);
+          setDefaultTargetUrl(WISEAuthenticationProcessingFilter.ADMIN_DEFAULT_TARGET_PATH);
           userIsAdmin = true;
         }
       }
@@ -169,16 +168,10 @@ public class WISEAuthenticationSuccessHandler
     super.handle(request, response, authentication);
   }
 
-  /**
-   * @return the userDetailsService
-   */
   public UserDetailsService getUserDetailsService() {
     return userDetailsService;
   }
 
-  /**
-   * @param userDetailsService the userDetailsService to set
-   */
   public void setUserDetailsService(UserDetailsService userDetailsService) {
     this.userDetailsService = userDetailsService;
   }

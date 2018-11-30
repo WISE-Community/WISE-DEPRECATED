@@ -36,7 +36,7 @@ import org.wise.portal.service.project.ProjectService;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Controller for (un)bookmarking projects.
+ * Controller for bookmarking and unbookmarking projects.
  *
  * @author Patrick Lawler
  */
@@ -55,14 +55,13 @@ public class BookmarkProjectController {
    */
   @RequestMapping(method = RequestMethod.POST, value = "/teacher/project/bookmark")
   protected void bookmarkProject(
-    @RequestParam(value = "projectId") Long projectId,
-    @RequestParam(value = "checked") Boolean checked,
-    HttpServletResponse response) throws Exception {
-
+      @RequestParam("projectId") Long projectId,
+      @RequestParam("checked") Boolean checked,
+      HttpServletResponse response) throws Exception {
     Project project = projectService.getById(projectId);
     User user = ControllerUtil.getSignedInUser();
 
-    if (checked){
+    if (checked) {
       projectService.addBookmarkerToProject(project, user);
     } else {
       projectService.removeBookmarkerFromProject(project, user);

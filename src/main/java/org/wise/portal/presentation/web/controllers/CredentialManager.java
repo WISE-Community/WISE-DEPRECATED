@@ -60,12 +60,12 @@ public final class CredentialManager {
   private static Properties wiseProperties;
 
   @Autowired
-  public void setProjectService(ProjectService projectService){
+  public void setProjectService(ProjectService projectService) {
     CredentialManager.projectService = projectService;
   }
 
   @Autowired
-  public void setWiseProperties(Properties wiseProperties){
+  public void setWiseProperties(Properties wiseProperties) {
     CredentialManager.wiseProperties = wiseProperties;
   }
 
@@ -74,45 +74,36 @@ public final class CredentialManager {
   private static final String PROJECTID = "projectId";
 
   @SuppressWarnings("unchecked")
-  public static void setRequestCredentials(HttpServletRequest request, User user){
+  public static void setRequestCredentials(HttpServletRequest request, User user) {
     String key = KeyGenerator.generateKey();
     ServletContext sc = request.getSession().getServletContext();
-
-    /* retrieve keytosessionids from servlet context if it exists, create otherwise */
     Map<String,String> keyToSessionIds = (Map<String,String>) sc.getAttribute("keyToSessionIds");
-    if(keyToSessionIds==null){
+    if (keyToSessionIds == null) {
       keyToSessionIds = new TreeMap<String,String>();
       sc.setAttribute("keyToSessionIds", keyToSessionIds);
     }
 
-    /* add new key and associated session id to map */
     keyToSessionIds.put(key, request.getSession().getId());
 
-    /* set required request attributes */
-    try{
-      /* set the username ~ key credentials in the request */
-      request.setAttribute("credentials", Base64.encodeObject(user.getUserDetails().getUsername(), Base64.URL_SAFE) + "~" + key);
-
-      /* set allowed path access */
+    try {
+      request.setAttribute("credentials", Base64.encodeObject(user.getUserDetails().getUsername(),
+          Base64.URL_SAFE) + "~" + key);
       setAllowedPathAccess(request);
-
-      /* if this is a file upload, get the file from the request and set it as an attribute */
-      if(request.getClass().getName().endsWith("DefaultMultipartHttpServletRequest")){
-        DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
+      if (request.getClass().getName().endsWith("DefaultMultipartHttpServletRequest")) {
+        DefaultMultipartHttpServletRequest multiRequest =
+            (DefaultMultipartHttpServletRequest) request;
         List<String> filenames = new ArrayList<String>();
         Map<String,byte[]> fileMap = new TreeMap<String,byte[]>();
-
         Iterator<String> iter = multiRequest.getFileNames();
-        while(iter.hasNext()){
-          String filename = (String)iter.next();
+        while (iter.hasNext()) {
+          String filename = iter.next();
           filenames.add(filename);
           fileMap.put(filename, multiRequest.getFile(filename).getBytes());
         }
-
         request.setAttribute("filenames", filenames);
         request.setAttribute("fileMap", fileMap);
       }
-    } catch (IOException e){
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
@@ -120,21 +111,19 @@ public final class CredentialManager {
   public static String getAllowedPathAccess(HttpServletRequest request) {
     String idStr = request.getParameter(PROJECTID);
     String accessPath = wiseProperties.getProperty("curriculum_base_dir");
-
-    if ("studentAssetUpload".equals(request.getParameter("cmd")) || "studentAssetCopyForReference".equals(request.getParameter("command"))) {
+    if ("studentAssetUpload".equals(request.getParameter("cmd")) ||
+        "studentAssetCopyForReference".equals(request.getParameter("command"))) {
       accessPath = wiseProperties.getProperty("studentuploads_base_dir");
     }
-
-    /* if there is a project id parameter, set access level to the project dir */
-    if (idStr != null && !idStr.equals("") && !idStr.equals("none")){
-      try{
+    if (idStr != null && !idStr.equals("") && !idStr.equals("none")) {
+      try {
         Project project = projectService.getById(Long.parseLong(idStr));
         String projectPath = project.getModulePath();
-        if(projectPath != null){
+        if (projectPath != null) {
           File accessFile = new File(accessPath + projectPath);
           accessPath = accessFile.getParentFile().getCanonicalPath();
         }
-      } catch(IOException e){
+      } catch (IOException e) {
         e.printStackTrace();
       } catch (NumberFormatException e) {
         // TODO Auto-generated catch block
@@ -144,7 +133,6 @@ public final class CredentialManager {
         e.printStackTrace();
       }
     }
-
     return accessPath;
   }
 
@@ -157,10 +145,6 @@ public final class CredentialManager {
    * @param request
    */
   public static void setAllowedPathAccess(HttpServletRequest request) {
-    //get the access path
-    String accessPath = getAllowedPathAccess(request);
-
-    //set the access path into the request
-    request.setAttribute("accessPath", accessPath);
+    request.setAttribute("accessPath", getAllowedPathAccess(request));
   }
 }

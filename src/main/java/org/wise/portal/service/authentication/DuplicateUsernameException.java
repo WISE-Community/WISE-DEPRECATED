@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -33,10 +33,10 @@ public class DuplicateUsernameException extends Exception {
   private String message;
 
   public DuplicateUsernameException(String username) {
-    this.message = "Username:" + username + " already in use.";
+    message = "Username:" + username + " already in use.";
   }
 
   public String getMessage() {
-    return this.message;
+    return message;
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -25,7 +25,6 @@ package org.wise.portal.service.premadecomment;
 
 import java.util.Set;
 
-
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.premadecomment.PremadeComment;
 import org.wise.portal.domain.premadecomment.PremadeCommentList;
@@ -44,7 +43,6 @@ public interface PremadeCommentService {
 
   /**
    * Creates a new PremadeComment in the data store.
-   *
    * @param params <code>PremadeCommentParameters</code>
    * @return PremadeComment
    */
@@ -52,14 +50,12 @@ public interface PremadeCommentService {
 
   /**
    * Removes a PremadeComment from the data store using its id.
-   *
    * @param commentID <code>Long</code>
    */
   void deletePremadeComment(Long commentID);
 
   /**
    * Updates the comment in a PremadeComment using its id.
-   *
    * @param premadeCommentID <code>Long</code>
    * @param newComment <code>String</code>
    * @return updated PremadeComment
@@ -71,7 +67,7 @@ public interface PremadeCommentService {
    * Updates the listPosition in a PremadeComment using its id.
    * @param premadeCommentId the id of the premade comment
    * @param listPosition the new list position
-   * @return
+   * @return the updated comment
    * @throws ObjectNotFoundException
    */
   PremadeComment updatePremadeCommentListPosition (Long premadeCommentId, Long listPosition)
@@ -81,7 +77,7 @@ public interface PremadeCommentService {
    * Updates the labels in a PremadeComment
    * @param premadeCommentId the id of the premade comment
    * @param labels the labels
-   * @return
+   * @return the updated comment
    * @throws ObjectNotFoundException
    */
   PremadeComment updatePremadeCommentLabels (Long premadeCommentId, String labels)
@@ -89,14 +85,12 @@ public interface PremadeCommentService {
 
   /**
    * Retrieves all PremadeComments from the data store.
-   *
    * @return a Set<PremadeComment>
    */
   Set<PremadeComment> retrieveAllPremadeComments();
 
   /**
    * Retrieves all PremadeComments associated with a given user.
-   *
    * @param user <code>User</code>
    * @return a Set<PremadeComment>
    */
@@ -104,7 +98,6 @@ public interface PremadeCommentService {
 
   /**
    * Creates a new PremadeCommentList in the data store.
-   *
    * @param params <code>PremadeCommentListParameters</code>
    * @return PremadeCommentList
    */
@@ -118,9 +111,7 @@ public interface PremadeCommentService {
   void deletePremadeCommentList(Long commentListID) throws ObjectNotFoundException;
 
   /**
-   * Updates the label of a PremadeCommentList given its ID
-   * and new label.
-   *
+   * Updates the label of a PremadeCommentList given its ID and new label.
    * @param commentListID <code>Long</code>
    * @param newLabel <code>String</code>
    * @return PremadeCommentList
@@ -143,8 +134,8 @@ public interface PremadeCommentService {
    * Removes a PremadeComment from the list of PremadeCommentList
    * given the PremadeCommentList ID and the PremadeComment
    *
-   * @param commentListID <code>Long</code>
-   * @param PremadeComment <code>PremadeComment</code>
+   * @param commentID <code>Long</code>
+   * @param premadeComment <code>PremadeComment</code>
    * @return PremadeCommentList
    */
   PremadeCommentList removePremadeCommentFromList(Long commentID, PremadeComment premadeComment)
@@ -152,14 +143,12 @@ public interface PremadeCommentService {
 
   /**
    * Retrieves all PremadeCommentLists from the data store.
-   *
    * @return a Set<PremadeCommentList>
    */
   Set<PremadeCommentList> retrieveAllPremadeCommentLists();
 
   /**
    * Retrieves all PremadeCommentLists associated with a given user.
-   *
    * @param user <code>User</code>
    * @return a Set<PremadeCommentList>
    */
@@ -174,7 +163,6 @@ public interface PremadeCommentService {
 
   /**
    * Retrieves all PremadeCommentLists associated with a given run.
-   *
    * @param run <code>Run</code>
    * @return a Set<PremadeCommentList>
    */

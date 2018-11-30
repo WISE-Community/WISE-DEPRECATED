@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -28,9 +28,7 @@ import org.wise.portal.domain.authentication.MutableGrantedAuthority;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 
 /**
- * Provides WISE-specific ROLES on top of what is already
- * available in WISE
- *
+ * Provides WISE-specific ROLES on top of what is already available in WISE
  * @author Hiroki Terashima
  */
 public interface UserDetailsService extends
@@ -81,14 +79,13 @@ public interface UserDetailsService extends
    *
    * @param authority
    * @return A MutableGrantedAuthority object
-   * @throws AuthorityNotFoundException If authority is not in data store.
+   * @throws AuthorityNotFoundException if authority is not in data store.
    */
   GrantedAuthority loadAuthorityByName(String authority)
     throws AuthorityNotFoundException;
 
   /**
    * Returns a list of all existing authorities in the system.
-   *
    * @return A List of MutableGrantedAuthority objects
    */
   List<MutableGrantedAuthority> retrieveAllAuthorities();
@@ -99,7 +96,6 @@ public interface UserDetailsService extends
    * @param userDetails
    */
   void updateUserDetails(final MutableUserDetails userDetails);
-
 
   List<MutableUserDetails> retrieveAllUserDetails(String userDetailsClassName);
 

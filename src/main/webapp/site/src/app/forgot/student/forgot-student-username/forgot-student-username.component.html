@@ -4,50 +4,50 @@
           fxLayout="column"
           (submit)="submit()"
           [formGroup]="forgotStudentUsernameFormGroup">
-      <h2 class="standalone__title accent">Forgot Student Username</h2>
+      <h2 class="standalone__title accent" i18n>Forgot Student Username</h2>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>First Name</mat-label>
+          <mat-label i18n>First Name</mat-label>
           <input matInput
                  id="firstName"
                  name="firstName"
                  formControlName="firstName"
                  autofocus
                  required />
-          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['firstName'].hasError('required')">First Name Required</mat-error>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['firstName'].hasError('required')" i18n>First Name Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Last Name</mat-label>
+          <mat-label i18n>Last Name</mat-label>
           <input matInput
                  id="lastName"
                  name="lastName"
                  formControlName="lastName"
                  required />
-          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['lastName'].hasError('required')">Last Name Required</mat-error>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['lastName'].hasError('required')" i18n>Last Name Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Birthday (Month)</mat-label>
+          <mat-label i18n>Birthday (Month)</mat-label>
           <mat-select formControlName="birthMonth" required>
             <mat-option *ngFor="let month of months" [value]="month.value">
               {{month.text}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthMonth'].hasError('required')">Month Required</mat-error>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthMonth'].hasError('required')" i18n>Month Required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Birthday (Day)</mat-label>
+          <mat-label i18n>Birthday (Day)</mat-label>
           <mat-select formControlName="birthDay" required>
             <mat-option *ngFor="let day of days" [value]="day">
               {{day}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthDay'].hasError('required')">Day Required</mat-error>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthDay'].hasError('required')" i18n>Day Required</mat-error>
         </mat-form-field>
       </p>
       <button mat-flat-button
@@ -55,7 +55,7 @@
               [disabled]="!forgotStudentUsernameFormGroup.valid || processing"
               type="submit">
         <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
-        <span>Search</span>
+        <span i18n>Search</span>
       </button>
     </form>
     <br/>
@@ -69,7 +69,7 @@
         <br/>
         <a (click)="createNewAccount()"
            class="cursor-link">
-          Create New Account
+          <ng-container i18n>Create New Account</ng-container>
         </a>
       </div>
     </div>

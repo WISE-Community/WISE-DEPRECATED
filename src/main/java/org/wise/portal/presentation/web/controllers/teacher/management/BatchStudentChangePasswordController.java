@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -73,10 +73,8 @@ public class BatchStudentChangePasswordController {
   @Autowired
   protected ChangePasswordParametersValidator changePasswordParametersValidator;
 
-  //the path to this form view
   private String formView = "/teacher/management/batchstudentchangepassword";
 
-  //the path to the success view
   private String successView = "/teacher/management/batchstudentchangepasswordsuccess";
 
   private static final String GROUPID_PARAM_NAME = "groupId";
@@ -88,23 +86,21 @@ public class BatchStudentChangePasswordController {
    * @return the path of the view to display
    * @throws Exception
    */
-  @RequestMapping(method=RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-    Run run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
+    Run run = runService.retrieveById(Long.parseLong(request.getParameter("runId")));
 
     if (user.isAdmin() ||
-      this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
-      this.aclService.hasPermission(run, BasePermission.WRITE, user)) {
+        aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+        aclService.hasPermission(run, BasePermission.WRITE, user)) {
       BatchStudentChangePasswordParameters params = new BatchStudentChangePasswordParameters();
       params.setGroupId(Long.parseLong(request.getParameter(GROUPID_PARAM_NAME)));
       params.setTeacherUser(user);
-
       model.addAttribute("batchStudentChangePasswordParameters", params);
     } else {
       throw new NotAuthorizedException("You are not authorized to change these passwords.");
     }
-
     return formView;
   }
 
@@ -116,22 +112,18 @@ public class BatchStudentChangePasswordController {
    * @param bindingResult the object used for validation in which errors will be stored
    * @param sessionStatus the session status object
    */
-  @RequestMapping(method=RequestMethod.POST)
+  @RequestMapping(method = RequestMethod.POST)
   protected String onSubmit(
-    @ModelAttribute("batchStudentChangePasswordParameters") BatchStudentChangePasswordParameters batchStudentChangePasswordParameters,
-    BindingResult bindingResult,
-    SessionStatus sessionStatus) {
+      @ModelAttribute("batchStudentChangePasswordParameters") BatchStudentChangePasswordParameters batchStudentChangePasswordParameters,
+      BindingResult bindingResult,
+      SessionStatus sessionStatus) {
     String view = "";
-
     try {
-      //validate the parameters
       changePasswordParametersValidator.validate(batchStudentChangePasswordParameters, bindingResult);
 
       if (bindingResult.hasErrors()) {
-        //there were errors
         view = formView;
       } else {
-        //there were no errors
         Long groupId = batchStudentChangePasswordParameters.getGroupId();
         Group group = groupService.retrieveById(groupId);
         Iterator<User> membersIter = group.getMembers().iterator();
@@ -142,10 +134,9 @@ public class BatchStudentChangePasswordController {
         sessionStatus.setComplete();
       }
     } catch (ObjectNotFoundException e) {
-      bindingResult.rejectValue("groupId", "error.illegal-groupId"); // add to error list if not there
+      bindingResult.rejectValue("groupId", "error.illegal-groupId");
       view = formView;
     }
-
     return view;
   }
 }

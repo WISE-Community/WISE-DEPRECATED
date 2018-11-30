@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -41,36 +41,27 @@ public class TagServiceImpl implements TagService {
   @Autowired
   private TagDao<Tag> tagDao;
 
-  /**
-   * @see org.wise.portal.service.tag.TagService#getTagById(java.lang.Long)
-   */
   @Transactional(readOnly = true)
   public Tag getTagById(Integer id) {
     try{
-      return this.tagDao.getById(id);
+      return tagDao.getById(id);
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
       return null;
     }
   }
 
-  /**
-   * @see org.wise.portal.service.tag.TagService#createOrGetTag(java.lang.String)
-   */
   @Transactional
   public Tag createOrGetTag(String name) {
-    Tag tag = this.tagDao.getTagByName(name);
+    Tag tag = tagDao.getTagByName(name);
     if (tag == null) {
       tag = new TagImpl();
       tag.setName(name.toLowerCase());
-      this.tagDao.save(tag);
+      tagDao.save(tag);
     }
     return tag;
   }
 
-  /**
-   * @see org.wise.portal.service.tag.TagService#isFromDatabase(org.wise.portal.domain.project.Tag)
-   */
   public boolean isFromDatabase(Tag tag) {
     if (tag.getId() == null) {
       return false;
@@ -79,11 +70,8 @@ public class TagServiceImpl implements TagService {
     }
   }
 
-  /**
-   * @see org.wise.portal.service.tag.TagService#removeIfOrphaned(java.lang.Long)
-   */
   @Transactional
   public void removeIfOrphaned(Integer tagId) {
-    this.tagDao.removeIfOrphaned(tagId);
+    tagDao.removeIfOrphaned(tagId);
   }
 }

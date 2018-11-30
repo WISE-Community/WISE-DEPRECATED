@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -37,38 +37,28 @@ import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 @Component
 public class ChangeWorkgroupParametersValidator implements Validator {
 
-  /**
-   * @see org.springframework.validation.Validator#supports(java.lang.Class)
-   */
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {
     return ChangeWorkgroupParameters.class.isAssignableFrom(clazz);
   }
 
-  /**
-   * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-   */
   public void validate(Object paramsIn, Errors errors) {
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "student", "error.no-student");
-
     if (errors.getErrorCount() != 0) {
       return;
     }
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "runId", "error.no-student");
-
     if (errors.getErrorCount() != 0) {
       return;
     }
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "periodId", "error.no-student");
-
     if (errors.getErrorCount() != 0) {
       return;
     }
 
     ChangeWorkgroupParameters params = (ChangeWorkgroupParameters) paramsIn;
-
     if (params.getWorkgroupFrom() != null) {
       ValidationUtils.rejectIfEmptyOrWhitespace(errors, "workgroupFrom", "error.no-workgroupFrom");
 
@@ -78,7 +68,6 @@ public class ChangeWorkgroupParametersValidator implements Validator {
     }
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "workgroupToId", "error.no-workgroupTo");
-
     if (errors.getErrorCount() != 0) {
       return;
     }

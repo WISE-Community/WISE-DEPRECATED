@@ -62,81 +62,51 @@ public class ProjectMetadataController {
     if (projectId != null) {
       Project project = projectService.getById(Long.parseLong(projectId));
       if (project != null) {
-        ProjectMetadata metadata = project.getMetadata();  // get the metadata
-        User user = ControllerUtil.getSignedInUser();  // get the signed in user
-
+        ProjectMetadata metadata = project.getMetadata();
+        User user = ControllerUtil.getSignedInUser();
         if (command.equals("getProjectMetaData")) {
           if (metadata != null) {
-            // metadata exists so we will get the metadata as a JSON string
             String metadataJSON = metadata.toJSONString();
-
-            // get the JSONObject for the metadata so we can add to it
             JSONObject metadataJSONObj = new JSONObject(metadataJSON);
-
-            // get the parent project id
             Long parentProjectId = project.getParentProjectId();
-
-            // add the project id and parent project id
             metadataJSONObj.put("projectId", Long.parseLong(projectId));
-
             if (parentProjectId == null) {
-              // there is no parent project id so we will set it to null
               metadataJSONObj.put("parentProjectId", JSONObject.NULL);
             } else {
               metadataJSONObj.put("parentProjectId", parentProjectId);
             }
 
-            /*
-             * get the relative project url
-             * e.g.
-             * /135/wise4.project.json
-             */
             String projectUrl = project.getModulePath();
-
             if (projectUrl != null) {
-              /*
-               * get the project folder
-               * e.g.
-               * /135
-               */
               String projectFolder = projectUrl.substring(0, projectUrl.lastIndexOf("/"));
-
-              // put the project folder into the meta data JSON
               metadataJSONObj.put("projectFolder", projectFolder);
             }
-
             response.getWriter().write(metadataJSONObj.toString());
           } else {
-            // metadata does not exist so we will just return an empty JSON object string
             response.getWriter().write("{}");
           }
         } else {
           if (user == null) {
-            // the user is not logged in
             response.getWriter().print("ERROR:LoginRequired");
           } else {
-            // check to see if user can author project or the run that it's in
-            List<Run> runList = this.runService.getProjectRuns((Long) project.getId());
+            List<Run> runList = runService.getProjectRuns((Long) project.getId());
             Run run = null;
             if (!runList.isEmpty()){
               // since a project can now only be run once, just use the first run in the list
               run = runList.get(0);
             }
-            if (this.projectService.canAuthorProject(project, user) ||
-              (run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {
+            if (projectService.canAuthorProject(project, user) ||
+                (run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {
               if (command.equals("postMaxScore")) {
-                // request is to post a max score
                 handlePostMaxScore(request, response);
               }
             } else {
-              // the user does not have write access to the proejct
               response.getWriter().print("ERROR:NotAuthorized");
             }
           }
         }
       }
     }
-
     return null;
   }
 
@@ -151,29 +121,16 @@ public class ProjectMetadataController {
   private ModelAndView handlePostMaxScore(HttpServletRequest request,
       HttpServletResponse response) {
     try {
-
-      String projectIdStr = request.getParameter("projectId");  // get the project id
-
-      Project project = null;
-
+      String projectIdStr = request.getParameter("projectId");
+      Project project;
       if (projectIdStr != null) {
-
-        project = projectService.getById(new Long(projectIdStr));  // get the project
-
+        project = projectService.getById(new Long(projectIdStr));
         if (project != null) {
-
-          User user = ControllerUtil.getSignedInUser();  // get the signed in user
-
+          User user = ControllerUtil.getSignedInUser();
           if (user != null) {
-
-            String nodeId = request.getParameter("nodeId");  // get the nodeId
-
-            // get the new max score value
+            String nodeId = request.getParameter("nodeId");
             String maxScoreValue = request.getParameter("maxScoreValue");
-
             int maxScore = 0;
-
-            // check if a max score value was provided
             if (maxScoreValue != null && !maxScoreValue.equals("")) {
               maxScore = Integer.parseInt(maxScoreValue);   // parse the new max score value
             }
@@ -188,11 +145,9 @@ public class ProjectMetadataController {
 
             if (project != null) {
               ProjectMetadata projectMetadata = project.getMetadata();
-
               if (projectMetadata != null) {
                 String maxScoresString = projectMetadata.getMaxScores();
-                JSONArray maxScoresJSONArray = null;
-
+                JSONArray maxScoresJSONArray;
                 if (maxScoresString == null || maxScoresString.equals("")) {
                   maxScoresJSONArray = new JSONArray();
                 } else {
@@ -200,29 +155,16 @@ public class ProjectMetadataController {
                 }
 
                 boolean maxScoreUpdated = false;
-
                 for (int x = 0; x < maxScoresJSONArray.length(); x++) {
-                  // get a max score entry
                   JSONObject maxScoreObj = (JSONObject) maxScoresJSONArray.get(x);
-
-                  // get the node id
                   String maxScoreObjNodeId = (String) maxScoreObj.get("nodeId");
-
-                  // check if the node id matches the one new one we need to save
                   if (nodeId.equals(maxScoreObjNodeId)) {
-                    // it matches so we will update the score
                     maxScoreObj.put("maxScoreValue", maxScore);
-
-                    /*
-                     * generate the json string for the updated max score entry
-                     * so we can send it back in the response
-                     */
                     maxScoreReturnJSON = maxScoreObj.toString();
                     maxScoreUpdated = true;
                   }
                 }
 
-                // check if we were able to find an existing entry to update it
                 if (!maxScoreUpdated) {
                   /*
                    * we did not find an existing entry to update so we will
@@ -230,24 +172,20 @@ public class ProjectMetadataController {
                    */
                   JSONObject newMaxScore = new JSONObject();
 
-                  newMaxScore.put("nodeId", nodeId); // set the nodeId
-                  newMaxScore.put("maxScoreValue", maxScore);   // set the max score
+                  newMaxScore.put("nodeId", nodeId);
+                  newMaxScore.put("maxScoreValue", maxScore);
 
                   /*
                    * generate the json string for the updated max score entry
                    * so we can send it back in the response
                    */
                   maxScoreReturnJSON = newMaxScore.toString();
-
-                  // put the new entry back into the maxScores JSON object
                   maxScoresJSONArray.put(newMaxScore);
                 }
 
                 projectMetadata.setMaxScores(maxScoresJSONArray.toString());
                 project.setMetadata(projectMetadata);
                 projectService.updateProject(project, user);
-
-                //send the new max score entry back to the client
                 response.getWriter().print(maxScoreReturnJSON);
               }
             }

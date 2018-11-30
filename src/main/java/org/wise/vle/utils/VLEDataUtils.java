@@ -81,12 +81,9 @@ public class VLEDataUtils {
    */
   public static JSONArray getNodeStates(JSONObject nodeVisit) {
     JSONArray nodeStates = null;
-
-    if(nodeVisit != null) {
-      //try to get the nodeStates field if it exists
+    if (nodeVisit != null) {
       nodeStates = nodeVisit.optJSONArray("nodeStates");
     }
-
     return nodeStates;
   }
 
@@ -97,27 +94,16 @@ public class VLEDataUtils {
    * @throws JSONException
    */
   public static boolean isSubmitForPeerReview(JSONObject nodeVisitJSON) throws JSONException {
-    //obtain the node states array from the node visit
     JSONArray jsonArray = nodeVisitJSON.getJSONArray("nodeStates");
-
-    //loop through all the node states
-    for(int x=0; x<jsonArray.length(); x++) {
-
-      //get an element in the array
+    for (int x = 0; x < jsonArray.length(); x++) {
       Object jsonArrayElement = jsonArray.get(x);
-
-      //make sure the element is a JSONObject
-      if(jsonArrayElement instanceof JSONObject) {
-        //get a node state
+      if (jsonArrayElement instanceof JSONObject) {
         JSONObject nodeState = (JSONObject) jsonArrayElement;
-
-        //check if it has the attribute "submitForPeerReview"
-        if(nodeState.optBoolean("submitForPeerReview")) {
+        if (nodeState.optBoolean("submitForPeerReview")) {
           return true;
         }
       }
     }
-
     return false;
   }
 }

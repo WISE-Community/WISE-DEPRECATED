@@ -66,16 +66,12 @@ public class WorkgroupServiceImpl implements WorkgroupService {
   @Autowired
   protected AclService<Workgroup> aclService;
 
-  /**
-   * @see org.wise.portal.service.workgroup.WorkgroupService#createWorkgroup(String, Set, Run, Group)
-   */
   @Transactional()
-  public Workgroup createWorkgroup(String name, Set<User> members, Run run, Group period)
-      throws ObjectNotFoundException {
+  public Workgroup createWorkgroup(String name, Set<User> members, Run run, Group period) {
     Workgroup workgroup = createWorkgroup(members, run, period);
-    this.groupDao.save(workgroup.getGroup());
-    this.workgroupDao.save(workgroup);
-    this.aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
+    groupDao.save(workgroup.getGroup());
+    workgroupDao.save(workgroup);
+    aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
     return workgroup;
   }
 
@@ -105,50 +101,34 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     return workgroup;
   }
 
-  /**
-   * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupListByRunAndUser(Run, User)
-   */
   @Transactional(readOnly = true)
   public List<Workgroup> getWorkgroupListByRunAndUser(Run run, User user) {
-    return this.workgroupDao.getListByRunAndUser(run, user);
+    return workgroupDao.getListByRunAndUser(run, user);
   }
 
-  /**
-   * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupsForUser(User)
-   */
   @Transactional(readOnly = true)
   public List<Workgroup> getWorkgroupsForUser(User user) {
-    // first find all of the runs that user is in.
-    return this.workgroupDao.getListByUser(user);
+    return workgroupDao.getListByUser(user);
   }
 
-  /**
-   * @see org.wise.portal.service.workgroup.WorkgroupService#addMembers(Workgroup, Set)
-   */
   @Transactional()
   public void addMembers(Workgroup workgroup, Set<User> membersToAdd) {
     for (User member : membersToAdd) {
       workgroup.addMember(member);
     }
-    this.groupDao.save(workgroup.getGroup());
-    this.workgroupDao.save(workgroup);
+    groupDao.save(workgroup.getGroup());
+    workgroupDao.save(workgroup);
   }
 
-  /**
-   * @see org.wise.portal.service.workgroup.WorkgroupService#removeMembers(Workgroup, Set)
-   */
   @Transactional()
   public void removeMembers(Workgroup workgroup, Set<User> membersToRemove) {
     for (User member : membersToRemove) {
       workgroup.removeMember(member);
     }
-    this.groupDao.save(workgroup.getGroup());
-    this.workgroupDao.save(workgroup);
+    groupDao.save(workgroup.getGroup());
+    workgroupDao.save(workgroup);
   }
 
-  /**
-   * @see org.wise.portal.service.workgroup.WorkgroupService#updateWorkgroupMembership(ChangeWorkgroupParameters)
-   */
   @Transactional()
   public Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params) throws Exception {
     Workgroup workgroupCreated = null;
@@ -157,7 +137,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     User user = params.getStudent();
     Run run = runService.retrieveById(params.getRunId());
     Group period = groupService.retrieveById(params.getPeriodId());
-
     fromGroup = params.getWorkgroupFrom();
     Set<User> addMemberSet = new HashSet<User>();
     addMemberSet.add(user);
@@ -168,20 +147,17 @@ public class WorkgroupServiceImpl implements WorkgroupService {
       }
     } else {
       toGroup = params.getWorkgroupTo();
-      this.addMembers(toGroup, addMemberSet);
+      addMembers(toGroup, addMemberSet);
     }
 
     if(!(fromGroup == null)){
       Set<User> removeMemberSet = new HashSet<User>();
       removeMemberSet.add(user);
-      this.removeMembers(fromGroup, removeMemberSet);
+      removeMembers(fromGroup, removeMemberSet);
     }
     return workgroupCreated;
   }
 
-  /**
-   * @see org.wise.portal.service.workgroup.WorkgroupService#retrieveById(Long)
-   */
   public Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException {
     return workgroupDao.getById(workgroupId);
   }

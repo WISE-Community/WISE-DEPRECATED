@@ -26,6 +26,7 @@ export class MockTeacherService {
     run1.name = "Photosynthesis";
     run1.numStudents = 30;
     run1.periods = ["1","2"];
+    run1.startTime = '01-01-2018';
     const project1 = new Project();
     project1.id = 1;
     project1.name = "Photosynthesis";
@@ -36,6 +37,7 @@ export class MockTeacherService {
     run2.name = "Plate Tectonics";
     run2.numStudents = 15;
     run2.periods = ["3","4"];
+    run2.startTime = '03-03-2018';
     const project2 = new Project();
     project2.id = 1;
     project2.name = "Plate Tectonics";
@@ -63,6 +65,7 @@ export class MockTeacherService {
       periods: ["1", "2"]
     }
   );
+
 }
 
 describe('TeacherRunListComponent', () => {
@@ -85,8 +88,36 @@ describe('TeacherRunListComponent', () => {
     fixture.detectChanges();
   });
 
+  function isRunsSortedByStartTimeDesc(runs: TeacherRun[]): boolean {
+    let previous: Date = null;
+    for (let run of runs) {
+      let current = new Date(run.startTime);
+      if (previous && previous < current) {
+        return false;
+      }
+      previous = current;
+    }
+    return true;
+  }
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should sort runs by start date', () => {
+    const run3 = new TeacherRun();
+    run3.id = 3;
+    run3.name = "Planet Earth";
+    run3.numStudents = 10;
+    run3.periods = ["6", "7"];
+    run3.startTime = "02-02-2018";
+    const project3 = new Project();
+    project3.id = 1;
+    project3.name = "Planet Earth";
+    project3.projectThumb = "";
+    run3.project = project3;
+    component.runs.push(run3);
+    component.runs.sort(component.sortByStartTimeDesc);
+    expect(isRunsSortedByStartTimeDesc(component.runs)).toBeTruthy();
+  })
 });

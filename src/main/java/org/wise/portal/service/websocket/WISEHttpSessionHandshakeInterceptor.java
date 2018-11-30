@@ -44,11 +44,8 @@ public class WISEHttpSessionHandshakeInterceptor extends HttpSessionHandshakeInt
   @Override
   public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
       WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-
-    // add the signed in user to the attributes so we can access it in the websocket handler
     User signedInUser = ControllerUtil.getSignedInUser();
     attributes.put("signedInUser", signedInUser);
-
     return super.beforeHandshake(request, response, wsHandler, attributes);
   }
 

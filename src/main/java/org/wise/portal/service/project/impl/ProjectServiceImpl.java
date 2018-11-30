@@ -95,35 +95,31 @@ public class ProjectServiceImpl implements ProjectService {
   @Autowired
   private UserDao<User> userDao;
 
-  /**
-   * @see ProjectService#addBookmarkerToProject(Project, User)
-   */
   public void addBookmarkerToProject(Project project, User bookmarker) {
     project.getBookmarkers().add(bookmarker);
-    this.projectDao.save(project);
+    projectDao.save(project);
   }
 
-  public void addSharedTeacherToProject(AddSharedTeacherParameters addSharedTeacherParameters)
-      throws ObjectNotFoundException {
+  public void addSharedTeacherToProject(AddSharedTeacherParameters addSharedTeacherParameters) {
     Project project = addSharedTeacherParameters.getProject();
     String sharedOwnerUsername = addSharedTeacherParameters.getSharedOwnerUsername();
     User user = userService.retrieveUserByUsername(sharedOwnerUsername);
     project.getSharedowners().add(user);
-    this.projectDao.save(project);
+    projectDao.save(project);
 
     String permission = addSharedTeacherParameters.getPermission();
     if (permission.equals(UserDetailsService.PROJECT_WRITE_ROLE)) {
-      this.aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
-      this.aclService.removePermission(project, BasePermission.READ, user);
-      this.aclService.addPermission(project, BasePermission.WRITE, user);
+      aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
+      aclService.removePermission(project, BasePermission.READ, user);
+      aclService.addPermission(project, BasePermission.WRITE, user);
     } else if (permission.equals(UserDetailsService.PROJECT_READ_ROLE)) {
-      this.aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
-      this.aclService.removePermission(project, BasePermission.WRITE, user);
-      this.aclService.addPermission(project, BasePermission.READ, user);
+      aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
+      aclService.removePermission(project, BasePermission.WRITE, user);
+      aclService.addPermission(project, BasePermission.READ, user);
     } else if (permission.equals(UserDetailsService.PROJECT_SHARE_ROLE)) {
-      this.aclService.removePermission(project, BasePermission.READ, user);
-      this.aclService.removePermission(project, BasePermission.WRITE, user);
-      this.aclService.addPermission(project, BasePermission.ADMINISTRATION, user);
+      aclService.removePermission(project, BasePermission.READ, user);
+      aclService.removePermission(project, BasePermission.WRITE, user);
+      aclService.addPermission(project, BasePermission.ADMINISTRATION, user);
     }
   }
 
@@ -144,11 +140,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
-  /**
-   * @see ProjectService#removeSharedTeacherFromProject(String, Project)
-   */
-  public void removeSharedTeacherFromProject(String username, Project project)
-      throws ObjectNotFoundException {
+  public void removeSharedTeacherFromProject(String username, Project project) {
     User user = userService.retrieveUserByUsername(username);
     if (project == null || user == null) {
       return;
@@ -156,11 +148,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     if (project.getSharedowners().contains(user)) {
       project.getSharedowners().remove(user);
-      this.projectDao.save(project);
+      projectDao.save(project);
       try {
-        List<Permission> permissions = this.aclService.getPermissions(project, user);
+        List<Permission> permissions = aclService.getPermissions(project, user);
         for (Permission permission : permissions) {
-          this.aclService.removePermission(project, permission, user);
+          aclService.removePermission(project, permission, user);
         }
       } catch (Exception e) {
         // do nothing. permissions might get be deleted if user requesting the deletion is not the owner of the project.
@@ -168,44 +160,35 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
-  /**
-   * @see ProjectService#createProject(ProjectParameters)
-   */
   @Transactional(rollbackFor = { AlreadyExistsException.class,
     NotFoundException.class, DataIntegrityViolationException.class
   })
   public Project createProject(ProjectParameters projectParameters) throws ObjectNotFoundException {
-    Project project = this.projectDao.createEmptyProject();
+    Project project = projectDao.createEmptyProject();
     project.setModulePath(projectParameters.getModulePath());
     project.setName(projectParameters.getProjectname());
     project.setOwner(projectParameters.getOwner());
     project.setProjectType(projectParameters.getProjectType());
     project.setWISEVersion(projectParameters.getWiseVersion());
     ProjectMetadata metadata = projectParameters.getMetadata();
-
-    // get the parent project id, if any
     Long parentProjectId = projectParameters.getParentProjectId();
     Project parentProject = null;
 
     if (parentProjectId != null) {
-      // get the parent project
       parentProject = getById(parentProjectId);
       project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
     }
 
-    // set original author (if not sent in as a parameter)
     JSONObject metaJSON = new JSONObject(metadata);
     if (metaJSON.has("author")) {
       try {
         String author = metaJSON.getString("author");
         if (author == null || author.equals("null") || author.equals("")) {
           JSONObject authorJSON = new JSONObject();
-
-          // set root id for project (if not already set)
           Long rootId = project.getRootProjectId();
           if (rootId == null) {
             try {
-              rootId = this.identifyRootProjectId(parentProject);
+              rootId = identifyRootProjectId(parentProject);
               project.setRootProjectId(rootId);
             } catch (ObjectNotFoundException e) {
               // TODO Auto-generated catch block
@@ -214,12 +197,13 @@ public class ProjectServiceImpl implements ProjectService {
           }
           try {
             if (rootId != null) {
-              Project rootP = this.getById(rootId);
+              Project rootP = getById(rootId);
               User owner = rootP.getOwner();
-              MutableUserDetails ownerDetails = (MutableUserDetails) owner.getUserDetails();
+              MutableUserDetails ownerDetails = owner.getUserDetails();
               try {
                 authorJSON.put("username", ownerDetails.getUsername());
-                authorJSON.put("fullname", ownerDetails.getFirstname() + " " + ownerDetails.getLastname());
+                authorJSON.put("fullname",
+                    ownerDetails.getFirstname() + " " + ownerDetails.getLastname());
               } catch (JSONException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -243,57 +227,39 @@ public class ProjectServiceImpl implements ProjectService {
     project.setCurrent(true);
     project.setParentProjectId(projectParameters.getParentProjectId());
     project.setDateCreated(new Date());
-    this.projectDao.save(project);
-    this.aclService.addPermission(project, BasePermission.ADMINISTRATION);
+    projectDao.save(project);
+    aclService.addPermission(project, BasePermission.ADMINISTRATION);
 
     if (parentProjectId != null) {
       Long newProjectId = (Long) project.getId();
       User signedInUser = ControllerUtil.getSignedInUser();
-
-      //copy any premade comment lists from the parent project into the new project
       premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
     }
-
     return project;
   }
 
-  /**
-   * @see ProjectService#getBookmarkerProjectList(User)
-   */
-  public List<Project> getBookmarkerProjectList(User bookmarker) throws ObjectNotFoundException {
-    return this.projectDao.getProjectListByUAR(bookmarker, "bookmarker");
+  public List<Project> getBookmarkerProjectList(User bookmarker) {
+    return projectDao.getProjectListByUAR(bookmarker, "bookmarker");
   }
 
-  /**
-   * @see ProjectService#getById(Serializable)
-   */
   @Transactional(readOnly = true)
   public Project getById(Serializable projectId) throws ObjectNotFoundException {
-    Project project = this.projectDao.getById(projectId);
+    Project project = projectDao.getById(projectId);
     project.populateProjectInfo();
     return project;
   }
 
-  /**
-   * @see ProjectService#getProjectList(User)
-   */
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
   public List<Project> getProjectList(User user) {
-    return this.projectDao.getProjectListByOwner(user);
+    return projectDao.getProjectListByOwner(user);
   }
 
-  /**
-   * @see ProjectService#getSharedProjectList(org.wise.portal.domain.user.User)
-   */
   public List<Project> getSharedProjectList(User user) {
-    return this.projectDao.getProjectListByUAR(user, "sharedowner");
+    return projectDao.getProjectListByUAR(user, "sharedowner");
   }
 
-  /**
-   * @see ProjectService#getSharedTeacherRole(Project, User)
-   */
   public String getSharedTeacherRole(Project project, User user) {
-    List<Permission> permissions = this.aclService.getPermissions(project, user);
+    List<Permission> permissions = aclService.getPermissions(project, user);
     // for projects, a user can have at most one permission per project
     if (!permissions.isEmpty()) {
       if (permissions.contains(BasePermission.ADMINISTRATION)) {
@@ -309,23 +275,14 @@ public class ProjectServiceImpl implements ProjectService {
     return null;
   }
 
-  /**
-   * @see ProjectService#getAdminProjectList()
-   */
   public List<Project> getAdminProjectList() {
-    return this.projectDao.getList();
+    return projectDao.getList();
   }
 
-  /**
-   * @see ProjectService#launchProject(Workgroup)
-   */
   public ModelAndView launchProject(Workgroup workgroup, String contextPath) throws Exception {
     return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString(workgroup, contextPath)));
   }
 
-  /**
-   * @see ProjectService#previewProject(PreviewProjectParameters)
-   */
   public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
     Project project = params.getProject();
     if (project.getWiseVersion().equals(4)) {
@@ -376,31 +333,25 @@ public class ProjectServiceImpl implements ProjectService {
     return modelAndView;
   }
 
-  /**
-   * @see ProjectService#removeBookmarkerFromProject(Project, User)
-   */
   @Transactional()
   public void removeBookmarkerFromProject(Project project, User bookmarker) {
     project.getBookmarkers().remove(bookmarker);
-    this.projectDao.save(project);
+    projectDao.save(project);
   }
 
-  /**
-   * @see ProjectService#updateProject(Project, User)
-   */
   public void updateProject(Project project, User user) throws NotAuthorizedException {
     // check to see if user can author project or the run that it's in
-    List<Run> runList = this.runService.getProjectRuns((Long) project.getId());
+    List<Run> runList = runService.getProjectRuns((Long) project.getId());
     Run run = null;
     if (!runList.isEmpty()) {
       // since a project can now only be run once, just use the first run in the list
       run = runList.get(0);
     }
 
-    if (user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
-      this.aclService.hasPermission(project, BasePermission.WRITE, user) ||
+    if (user.isAdmin() || aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
+        aclService.hasPermission(project, BasePermission.WRITE, user) ||
       (run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {
-      this.projectDao.save(project);
+      projectDao.save(project);
     } else {
       throw new NotAuthorizedException("You are not authorized to update this project");
     }
@@ -416,115 +367,91 @@ public class ProjectServiceImpl implements ProjectService {
     Project project = run.getProject();
     Integer wiseVersion = project.getWiseVersion();
     if (wiseVersion.equals(4)) {
-      return contextPath + "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
+      return contextPath + "/student/vle/vle.html?runId=" +
+          run.getId() + "&workgroupId=" + workgroup.getId();
     } else if (wiseVersion.equals(5)) {
       return contextPath + "/student/run/" + run.getId();
     }
     return null;
   }
 
-  /**
-   * @see ProjectService#canCreateRun(Project, User)
-   * Project cannot have a "review" tag to it.
-   */
   public boolean canCreateRun(Project project, User user) {
     Set<String> unallowed_tagnames = new HashSet<String>();
     unallowed_tagnames.add("review");
     return !project.hasTags(unallowed_tagnames) &&
         (FamilyTag.TELS.equals(project.getFamilytag()) ||
-        this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
-        this.aclService.hasPermission(project, BasePermission.READ, user));
+        aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
+        aclService.hasPermission(project, BasePermission.READ, user));
   }
 
-  /**
-   * @see ProjectService#canAuthorProject(Project, User)
-   */
   public boolean canAuthorProject(Project project, User user) {
     return user.isAdmin() ||
-        this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
-        this.aclService.hasPermission(project, BasePermission.WRITE, user);
+        aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
+        aclService.hasPermission(project, BasePermission.WRITE, user);
   }
 
-  /**
-   * @see ProjectService#canReadProject(Project, User)
-   */
   public boolean canReadProject(Project project, User user) {
     return user.isAdmin() ||
-        this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
-        this.aclService.hasPermission(project, BasePermission.WRITE, user) ||
-        this.aclService.hasPermission(project, BasePermission.READ, user);
+        aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
+        aclService.hasPermission(project, BasePermission.WRITE, user) ||
+        aclService.hasPermission(project, BasePermission.READ, user);
   }
 
-  /**
-   * @see ProjectService#addTagToProject(String, Long)
-   */
   @CacheEvict(value = "project", allEntries = true)
   public Integer addTagToProject(String tagString, Long projectId) {
-    Tag tag = this.tagService.createOrGetTag(tagString);
+    Tag tag = tagService.createOrGetTag(tagString);
     Project project = null;
     try {
-      project = this.projectDao.getById(projectId);
+      project = projectDao.getById(projectId);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }
 
-    if (!this.tagService.isFromDatabase(tag)) {
-      tag = this.tagService.createOrGetTag(tag.getName());
+    if (!tagService.isFromDatabase(tag)) {
+      tag = tagService.createOrGetTag(tag.getName());
     }
 
     project.getTags().add(tag);
-    this.projectDao.save(project);
+    projectDao.save(project);
     return (Integer) tag.getId();
   }
 
-  /**
-   * @see ProjectService#removeTagFromProject(Integer, Long)
-   */
   @CacheEvict(value = "project", allEntries = true)
   @Transactional
   public void removeTagFromProject(Integer tagId, Long projectId) {
-    Tag tag = this.tagService.getTagById(tagId);
+    Tag tag = tagService.getTagById(tagId);
     Project project = null;
     try {
-      project = this.projectDao.getById(projectId);
+      project = projectDao.getById(projectId);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }
 
     if (tag != null && project != null) {
       project.getTags().remove(tag);
-      this.projectDao.save(project);
-      this.tagService.removeIfOrphaned((Integer)tag.getId());
+      projectDao.save(project);
+      tagService.removeIfOrphaned((Integer)tag.getId());
     }
   }
 
-  /**
-   * @see ProjectService#updateTag(Integer, Long, String)
-   */
   @Transactional
   public Integer updateTag(Integer tagId, Long projectId, String name) {
-    Tag currentTag = this.tagService.getTagById(tagId);
+    Tag currentTag = tagService.getTagById(tagId);
 
-    /* if the current tag's name is equivalent of the given name to change
-     * to, then we do not need to do anything, so just return the currentTag's id */
+    // if the current tag's name is equivalent of the given name to change
+    // to, then we do not need to do anything, so just return the currentTag's id
     if (currentTag.getName().toLowerCase().equals(name.toLowerCase())) {
       return (Integer) currentTag.getId();
     }
 
-    this.removeTagFromProject(tagId, projectId);
-    return this.addTagToProject(name, projectId);
+    removeTagFromProject(tagId, projectId);
+    return addTagToProject(name, projectId);
   }
 
-  /**
-   * @see ProjectService#isAuthorizedToCreateTag(User, String)
-   */
   public boolean isAuthorizedToCreateTag(User user, String name) {
     return user.isAdmin() || !name.toLowerCase().equals("library");
   }
 
-  /**
-   * @see ProjectService#projectContainsTag(Project, String)
-   */
   public boolean projectContainsTag(Project project, String name) {
     project.getTags().size();  // force-fetch project tags from db
     for (Tag t : project.getTags()) {
@@ -535,9 +462,6 @@ public class ProjectServiceImpl implements ProjectService {
     return false;
   }
 
-  /**
-   * @see ProjectService#getLibraryProjectList()
-   */
   @Transactional
   public List<Project> getLibraryProjectList() {
     Set<String> tagNames = new TreeSet<String>();
@@ -545,10 +469,7 @@ public class ProjectServiceImpl implements ProjectService {
     return getProjectListByTagNames(tagNames);
   }
 
-  /**
-   * @see ProjectService#getPublicLibraryProjectList()
-   */
-  @Cacheable(value="project")
+  @Cacheable("project")
   @Transactional
   public List<Project> getPublicLibraryProjectList() {
     Set<String> tagNames = new TreeSet<String>();
@@ -565,46 +486,31 @@ public class ProjectServiceImpl implements ProjectService {
     return getProjectListByTagNames(tagNames);
   }
 
-  /**
-   * @see ProjectService#getProjectListByTagNames(java.util.Set)
-   */
   public List<Project> getProjectListByTagNames(Set<String> tagNames) {
-    return this.projectDao.getProjectListByTagNames(tagNames);
+    return projectDao.getProjectListByTagNames(tagNames);
   }
 
-  /**
-   * @see ProjectService#getProjectListByAuthorName(String)
-   */
   public List<Project> getProjectListByAuthorName(String authorName) {
-    return this.projectDao.getProjectListByAuthorName(authorName);
+    return projectDao.getProjectListByAuthorName(authorName);
   }
 
-  /**
-   * @see ProjectService#getProjectListByTitle(String)
-   */
   public List<Project> getProjectListByTitle(String title) {
-    return this.projectDao.getProjectListByTitle(title);
+    return projectDao.getProjectListByTitle(title);
   }
 
-  /**
-   * @see ProjectService#getProjectCopies(java.lang.Long)
-   */
   public List<Project> getProjectCopies(Long projectId) {
-    return this.projectDao.getProjectCopies(projectId);
+    return projectDao.getProjectCopies(projectId);
   }
 
-  /**
-   * @see ProjectService#identifyRootProjectId(Project)
-   */
   public Long identifyRootProjectId(Project project) throws ObjectNotFoundException {
     if (project == null) {
       return null;
     } else {
       Long parentProjectId = project.getParentProjectId();
-      if (parentProjectId == null || this.projectContainsTag(project, "library")) {
+      if (parentProjectId == null || projectContainsTag(project, "library")) {
         return (Long) project.getId();
       } else {
-        return this.identifyRootProjectId(this.getById(parentProjectId));
+        return identifyRootProjectId(getById(parentProjectId));
       }
     }
   }

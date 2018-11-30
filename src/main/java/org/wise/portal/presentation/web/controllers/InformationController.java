@@ -88,10 +88,10 @@ public class InformationController {
    */
   @RequestMapping("/userInfo")
   public void handleGetUserInfo(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, NumberFormatException, ObjectNotFoundException{
+      throws IOException, NumberFormatException, ObjectNotFoundException{
     String runIdString = request.getParameter("runId");
     Long runId = Long.parseLong(runIdString);
-    Run run = this.runService.retrieveById(runId);
+    Run run = runService.retrieveById(runId);
     JSONObject userInfo = getUserInfo(run);
     if (userInfo == null) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -104,9 +104,8 @@ public class InformationController {
    * such as run periods given runcode
    */
   @RequestMapping("/runInfo")
-  public void handleRunInfo(
-    @RequestParam("runcode") String runcode,
-    HttpServletResponse response) throws Exception {
+  public void handleRunInfo(@RequestParam("runcode") String runcode,
+      HttpServletResponse response) throws Exception {
     try {
       Run run = runService.retrieveRunByRuncode(runcode);
       Set<Group> periods = run.getPeriods();
@@ -133,7 +132,7 @@ public class InformationController {
    */
   @RequestMapping("/vleconfig")
   public void handleGetConfigWISE4(HttpServletRequest request, HttpServletResponse response)
-    throws ObjectNotFoundException, IOException {
+      throws ObjectNotFoundException, IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     String mode = request.getParameter("mode");
     String contextPath = request.getContextPath();
@@ -149,12 +148,13 @@ public class InformationController {
 
     String runId = request.getParameter("runId");
     if (runId != null) {
-      Run run = this.runService.retrieveById(Long.parseLong(runId));
+      Run run = runService.retrieveById(Long.parseLong(runId));
       Workgroup workgroup = getWorkgroup(run);
       if (workgroup == null && signedInUser == null && !signedInUser.isAdmin()) {
         return;
       }
-      addRunConfigParametersWISE4(request, signedInUser, mode, contextPath, config, runId, run, workgroup);
+      addRunConfigParametersWISE4(request, signedInUser, mode, contextPath, config, runId, run,
+          workgroup);
       printConfigToResponse(response, config);
       return;
     }
@@ -164,11 +164,8 @@ public class InformationController {
    * Handles the get config request for WISE5 preview
    */
   @RequestMapping("/config/preview/{projectIdStr}")
-  public void handleGetConfigWISE5Preview(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    @PathVariable String projectIdStr)
-    throws ObjectNotFoundException, IOException {
+  public void handleGetConfigWISE5Preview(HttpServletRequest request, HttpServletResponse response,
+      @PathVariable String projectIdStr) throws ObjectNotFoundException, IOException {
     try {
       JSONObject config = new JSONObject();
       config.put("mode", "preview");
@@ -192,15 +189,12 @@ public class InformationController {
 
   @RequestMapping("/config/studentRun/{runId}")
   public void handleGetConfigWISE5StudentRun(HttpServletRequest request,
-                                             HttpServletResponse response,
-                                             @PathVariable Long runId)
-    throws ObjectNotFoundException, IOException, JSONException {
+      HttpServletResponse response, @PathVariable Long runId)
+      throws ObjectNotFoundException, IOException, JSONException {
     JSONObject config = new JSONObject();
     config.put("mode", "studentRun");
-
-    Run run = this.runService.retrieveById(runId);
+    Run run = runService.retrieveById(runId);
     getRunConfigParameters(request, config, run);
-
     Project project = run.getProject();
     addCommonConfigParameters(request, config, project);
     printConfigToResponse(response, config);
@@ -208,13 +202,12 @@ public class InformationController {
 
   @RequestMapping("/config/classroomMonitor/{runId}")
   public void handleGetConfigWISE5ClassroomMonitor(HttpServletRequest request,
-                                                   HttpServletResponse response,
-                                                   @PathVariable Long runId)
-    throws ObjectNotFoundException, IOException, JSONException {
+      HttpServletResponse response, @PathVariable Long runId)
+      throws ObjectNotFoundException, IOException, JSONException {
     JSONObject config = new JSONObject();
     config.put("mode", "classroomMonitor");
 
-    Run run = this.runService.retrieveById(runId);
+    Run run = runService.retrieveById(runId);
     getRunConfigParameters(request, config, run);
 
     User signedInUser = ControllerUtil.getSignedInUser();
@@ -268,8 +261,7 @@ public class InformationController {
    * @throws ObjectNotFoundException
    * @throws NumberFormatException
    */
-  private JSONObject getUserInfo(Run run)
-    throws ObjectNotFoundException, NumberFormatException {
+  private JSONObject getUserInfo(Run run) throws ObjectNotFoundException, NumberFormatException {
     String periodId = "";
     Long workgroupId = null;
     String periodName = "";
@@ -313,7 +305,7 @@ public class InformationController {
   }
 
   private JSONObject getMyClassInfoJSONObject(Run run, Workgroup workgroup, User loggedInUser)
-    throws JSONException, ObjectNotFoundException {
+      throws JSONException, ObjectNotFoundException {
     JSONObject myClassInfo = new JSONObject();
     myClassInfo.put("classmateUserInfos", getClassmateUserInfosJSONArray(run, workgroup, loggedInUser));
     myClassInfo.put("teacherUserInfo", getTeacherUserInfoJSONObject(run));
@@ -325,7 +317,8 @@ public class InformationController {
   private JSONArray getSharedTeacherUserInfosJSONArray(Run run) {
     JSONArray sharedTeacherUserInfos = new JSONArray();
     for (User sharedOwner : run.getSharedowners()) {
-      List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByRunAndUser(run, sharedOwner);
+      List<Workgroup> sharedTeacherWorkgroups =
+          workgroupService.getWorkgroupListByRunAndUser(run, sharedOwner);
 
       /*
        * loop through all the shared teacher workgroups in case a shared
@@ -359,12 +352,12 @@ public class InformationController {
     JSONObject teacherUserInfo = new JSONObject();
     User runOwner = run.getOwner();
     try {
-      List<Workgroup> workgroupsForRunOwner = workgroupService.getWorkgroupListByRunAndUser(run, runOwner);
+      List<Workgroup> workgroupsForRunOwner =
+          workgroupService.getWorkgroupListByRunAndUser(run, runOwner);
 
       //get the workgroup since the owner should only have one workgroup in the run
       Workgroup runOwnerWorkgroup = workgroupsForRunOwner.get(0);
 
-      //set the workgroupid and username into the teacher user info
       teacherUserInfo.put("workgroupId", runOwnerWorkgroup.getId());
       teacherUserInfo.put("userName", runOwner.getUserDetails().getUsername());
     } catch (JSONException e1) {
@@ -382,7 +375,7 @@ public class InformationController {
    * @throws ObjectNotFoundException
    */
   private JSONArray getClassmateUserInfosJSONArray(Run run, Workgroup workgroup, User loggedInUser)
-    throws ObjectNotFoundException {
+      throws ObjectNotFoundException {
     JSONArray classmateUserInfos = new JSONArray();
     for (Workgroup classmateWorkgroup : runService.getWorkgroups(run.getId())) {
       if (isClassmateWorkgroup(workgroup, loggedInUser, classmateWorkgroup)) {
@@ -395,7 +388,8 @@ public class InformationController {
   /**
    * @return true iff the classmateWorkgroup is active classmate workgroup
    */
-  private boolean isClassmateWorkgroup(Workgroup workgroup, User loggedInUser, Workgroup classmateWorkgroup) {
+  private boolean isClassmateWorkgroup(Workgroup workgroup, User loggedInUser,
+      Workgroup classmateWorkgroup) {
     return !classmateWorkgroup.getMembers().isEmpty() &&
       !classmateWorkgroup.isTeacherWorkgroup() &&
       (loggedInUser.isAdmin() || classmateWorkgroup.getId() != workgroup.getId()) &&
@@ -403,7 +397,7 @@ public class InformationController {
   }
 
   private JSONObject getMyUserInfoJSONObject(String periodId, String periodName,
-                                             JSONArray userIds, Long workgroupId, String userNames) {
+      JSONArray userIds, Long workgroupId, String userNames) {
     JSONObject myUserInfo = new JSONObject();
     try {
       myUserInfo.put("workgroupId", workgroupId);
@@ -443,8 +437,8 @@ public class InformationController {
   }
 
   private void addPreviewConfigParametersWISE4(
-    HttpServletRequest request, User signedInUser, String mode,
-    String contextPath, JSONObject config, Project project) {
+      HttpServletRequest request, User signedInUser, String mode,
+      String contextPath, JSONObject config, Project project) {
     try {
       config.put("runId", "");
       config.put("runName", "");
@@ -466,7 +460,8 @@ public class InformationController {
   }
 
   private void addRunConfigParametersWISE4(HttpServletRequest request, User signedInUser,
-                                           String mode, String contextPath, JSONObject config, String runId, Run run, Workgroup workgroup) {
+      String mode, String contextPath, JSONObject config, String runId, Run run,
+      Workgroup workgroup) {
     Long workgroupId = null;
     Long periodId = null;
     if (workgroup != null && workgroup.isStudentWorkgroup()) {
@@ -514,8 +509,8 @@ public class InformationController {
   }
 
   private void addCommonConfigParametersWISE4(
-    HttpServletRequest request, User signedInUser, String mode,
-    String contextPath, JSONObject config, Project project) {
+      HttpServletRequest request, User signedInUser, String mode,
+      String contextPath, JSONObject config, Project project) {
     assert project != null;
     try {
       config.put("wiseBaseURL", contextPath);
@@ -554,7 +549,8 @@ public class InformationController {
     }
   }
 
-  private String getPortfolioURL(String runId, String contextPath, Long periodId, Long workgroupId) {
+  private String getPortfolioURL(String runId, String contextPath, Long periodId,
+      Long workgroupId) {
     String portfolioURL = contextPath + "/portfolio?runId=" + runId;
     if (periodId != null) {
       portfolioURL += "&periodId=" + periodId;
@@ -565,8 +561,10 @@ public class InformationController {
     return portfolioURL;
   }
 
-  private String getIdeaBasketURL(String runId, String contextPath, Run run, Long periodId, Long workgroupId) {
-    String ideaBasketURL = contextPath + "/ideaBasket?runId=" + runId + "&projectId=" + run.getProject().getId().toString();
+  private String getIdeaBasketURL(String runId, String contextPath, Run run, Long periodId,
+      Long workgroupId) {
+    String ideaBasketURL = contextPath + "/ideaBasket?runId=" + runId +
+        "&projectId=" + run.getProject().getId().toString();
     if (periodId != null) {
       ideaBasketURL += "&periodId=" + periodId;
     }
@@ -587,7 +585,8 @@ public class InformationController {
     config.put("studentMaxTotalAssetsSize", studentMaxTotalAssetsSizeBytes);
   }
 
-  private void addSessionTimeoutInterval(HttpServletRequest request, JSONObject config) throws JSONException {
+  private void addSessionTimeoutInterval(HttpServletRequest request, JSONObject config)
+      throws JSONException {
     int maxInactiveIntervalMS = request.getSession().getMaxInactiveInterval() * 1000;
     config.put("sessionTimeoutInterval", maxInactiveIntervalMS);
     // check 20 times during the session
@@ -599,8 +598,8 @@ public class InformationController {
     config.put("sessionTimeoutCheckInterval", sessionTimeoutCheckInterval);
   }
 
-  private void addUserTypeAndHomeURL(HttpServletRequest request, User signedInUser, JSONObject config)
-    throws JSONException {
+  private void addUserTypeAndHomeURL(HttpServletRequest request, User signedInUser,
+      JSONObject config) throws JSONException {
     if (signedInUser != null) {
       UserDetails userDetails = (UserDetails) signedInUser.getUserDetails();
       if (userDetails instanceof StudentUserDetails) {
@@ -618,7 +617,7 @@ public class InformationController {
   }
 
   private void setUserLocale(HttpServletRequest request, User signedInUser, JSONObject config)
-    throws JSONException {
+      throws JSONException {
     Locale locale = request.getLocale();
     String userSpecifiedLang = request.getParameter("lang");
     if (userSpecifiedLang != null) {
@@ -641,7 +640,7 @@ public class InformationController {
   }
 
   private void getRunConfigParameters(HttpServletRequest request, JSONObject config, Run run)
-    throws JSONException, ObjectNotFoundException {
+      throws JSONException, ObjectNotFoundException {
     String contextPath = request.getContextPath();
     Long runId = run.getId();
     String annotationsURL = contextPath + "/annotation?type=annotation&runId=" + runId;
@@ -664,7 +663,8 @@ public class InformationController {
     config.put("notificationURL", contextPath + "/notification/" + runId);
   }
 
-  private void printConfigToResponse(HttpServletResponse response, JSONObject config) throws IOException {
+  private void printConfigToResponse(HttpServletResponse response, JSONObject config)
+      throws IOException {
     response.setHeader("Cache-Control", "no-cache");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
@@ -672,7 +672,8 @@ public class InformationController {
     response.getWriter().write(config.toString());
   }
 
-  private void addConstraintsDisabled(HttpServletRequest request, JSONObject config) throws JSONException {
+  private void addConstraintsDisabled(HttpServletRequest request, JSONObject config)
+      throws JSONException {
     String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
     if (isConstraintsDisabledStr != null && Boolean.parseBoolean(isConstraintsDisabledStr)) {
       config.put("isConstraintsDisabled", true);
@@ -681,24 +682,24 @@ public class InformationController {
 
   private boolean hasRunReadAccess(User signedInUser, Run run) {
     return signedInUser.isAdmin() ||
-      this.runService.hasRunPermission(run, signedInUser, BasePermission.WRITE) ||
-      this.runService.hasRunPermission(run, signedInUser, BasePermission.READ);
+      runService.hasRunPermission(run, signedInUser, BasePermission.WRITE) ||
+      runService.hasRunPermission(run, signedInUser, BasePermission.READ);
   }
 
   private boolean hasRunWriteAccess(User signedInUser, Run run) {
     return signedInUser.isAdmin() ||
-      this.runService.hasRunPermission(run, signedInUser, BasePermission.WRITE);
+      runService.hasRunPermission(run, signedInUser, BasePermission.WRITE);
   }
 
   private void addCommonConfigParameters(HttpServletRequest request,
-                                         JSONObject config, Project project) throws JSONException {
+      JSONObject config, Project project) throws JSONException {
     String rawProjectUrl = project.getModulePath();
     addCommonConfigParameters(request, config, project, rawProjectUrl);
   }
 
   private void addCommonConfigParameters(
-    HttpServletRequest request, JSONObject config, Project project,
-    String rawProjectUrl) throws JSONException {
+      HttpServletRequest request, JSONObject config, Project project,
+      String rawProjectUrl) throws JSONException {
     assert project != null;
     String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
     String projectURL = curriculumBaseWWW + rawProjectUrl;

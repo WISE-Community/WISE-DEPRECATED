@@ -230,9 +230,7 @@ public class TeacherAccountController {
       BindingResult bindingResult,
       HttpServletRequest request,
       ModelMap modelMap) throws ObjectNotFoundException {
-
     changePasswordParametersValidator.validate(params, bindingResult);
-
     if (bindingResult.hasErrors()) {
       populateModelMap(modelMap);
       return "teacher/account";
@@ -278,11 +276,9 @@ public class TeacherAccountController {
         locale = new Locale(userLanguage);
       }
     } else {
-      // user default browser locale setting if user hasn't specified locale
       locale = request.getLocale();
     }
-    request.getSession()
-      .setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+    request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
   }
 
   @ExceptionHandler(HttpSessionRequiredException.class)

@@ -39,7 +39,7 @@ import java.util.*;
  * @author Hiroki Terashima
  */
 @RestController
-@RequestMapping("/api/teacher")
+@RequestMapping(value = "/api/teacher", produces = "text/plain;charset=UTF-8")
 public class TeacherAPIController {
 
   @Autowired
@@ -391,6 +391,22 @@ public class TeacherAPIController {
       }
     } else {
       response = createFailureResponse("noPermissionToAddPeriod");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
+  @RequestMapping(value = "/run/end/{runId}", method = RequestMethod.PUT)
+  protected String endRun(HttpServletRequest request,
+                                  @PathVariable Long runId) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response = null;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      runService.endRun(run);
+      response = createSuccessResponse();
+    } else {
+      response = createFailureResponse("noPermissionToEndRun");
     }
     addRunToResponse(response, run);
     return response.toString();

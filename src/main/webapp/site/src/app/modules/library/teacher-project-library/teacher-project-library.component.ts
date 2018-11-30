@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
-import { ConfigService } from "../../../services/config.service";
 
 @Component({
   selector: 'app-teacher-project-library',
@@ -12,28 +11,18 @@ import { ConfigService } from "../../../services/config.service";
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class TeacherProjectLibraryComponent implements OnInit {
+export class TeacherProjectLibraryComponent {
 
   projects: LibraryProject[] = [];
   selectedTabIndex: number = 0;
   numberOfOfficialProjectsVisible;
   numberOfCommunityProjectsVisible;
   numberOfPersonalProjectsVisible;
-  authoringToolLink: string;
 
-  constructor(private libraryService: LibraryService,
-              private configService: ConfigService) {
+  constructor(private libraryService: LibraryService) {
     libraryService.tabIndexSource$.subscribe((tabIndex) => {
       this.selectedTabIndex = tabIndex;
     })
-  }
-
-  ngOnInit() {
-    this.configService.getConfig().subscribe((config) => {
-      if (config != null) {
-        this.authoringToolLink = `${this.configService.getContextPath()}/author`;
-      }
-    });
   }
 
   updateNumberOfOfficialProjectsVisible(count) {

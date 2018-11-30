@@ -102,10 +102,10 @@ public class CreateRunController {
   private WorkgroupService workgroupService;
 
   @Autowired
-  private ProjectService projectService = null;
+  private ProjectService projectService;
 
   @Autowired
-  private IMailFacade mailService = null;
+  private IMailFacade mailService;
 
   @Autowired
   private MessageSource messageSource;
@@ -127,14 +127,12 @@ public class CreateRunController {
    * The default handler (page = 0)
    */
   @RequestMapping
-  public String getInitialPage(
-    @RequestParam("projectId") final String projectId,
-    final ModelMap modelMap) {
+  public String getInitialPage(@RequestParam("projectId") final String projectId,
+      final ModelMap modelMap) {
     User user = ControllerUtil.getSignedInUser();
-
     Project project = null;
     try {
-      project = this.projectService.getById(projectId);
+      project = projectService.getById(projectId);
       if (!projectService.canCreateRun(project, user)) {
         return "errors/accessdenied";
       }
@@ -145,11 +143,10 @@ public class CreateRunController {
     modelMap.put("project", project);
 
     RunParameters runParameters = new RunParameters();
-    runParameters.setOwner(user);  // add the current user as an owner of the run
+    runParameters.setOwner(user);
     runParameters.setProject(project);
     runParameters.setName(project.getName());
 
-    // get the owners and add their usernames to the model
     String ownerUsernames = "";
     Set<User> allOwners = new HashSet<>();
     allOwners.add(project.getOwner());
@@ -160,21 +157,15 @@ public class CreateRunController {
     }
 
     modelMap.put("projectOwners", ownerUsernames.substring(0, ownerUsernames.length() - 1));
-
-    boolean isAllowedToClean = (project.getOwner().equals(user) || project.getSharedowners().contains(user));
-
     modelMap.put("user", user);
     modelMap.put("currentUsername", user.getUserDetails().getUsername());
-    modelMap.put("isAllowedToClean", isAllowedToClean);
-
     modelMap.addAttribute("runParameters", runParameters);
     return "teacher/run/create/createrunconfirm";
   }
 
   @RequestMapping(params = "_cancel")
-  public String processCancel(final HttpServletRequest request,
-                              final HttpServletResponse response,
-                              final SessionStatus status) {
+  public String processCancel(final HttpServletRequest request, final HttpServletResponse response,
+      final SessionStatus status) {
     status.setComplete();
     return "redirect:/teacher/index.html";
   }
@@ -184,14 +175,9 @@ public class CreateRunController {
    * which ones to archive
    */
   @RequestMapping(params = "_page=1")
-  public String processFirstPage(
-    final @ModelAttribute("runParameters") RunParameters runParameters,
-    final BindingResult result,
-    final ModelMap modelMap) {
-
+  public String processFirstPage(final @ModelAttribute("runParameters") RunParameters runParameters,
+      final BindingResult result, final ModelMap modelMap) {
     User user = ControllerUtil.getSignedInUser();
-
-    // for page 2 of the wizard, display existing runs for this user
     List<Run> allRuns = runService.getRunListByOwner(user);
 
     // this is a temporary solution to filtering out runs that the logged-in user owns.
@@ -204,9 +190,7 @@ public class CreateRunController {
         currentRuns.add(run);
       }
     }
-    // end temporary code
     modelMap.put("existingRunList", currentRuns);
-
     return "teacher/run/create/createrunarchive";
   }
 
@@ -216,12 +200,9 @@ public class CreateRunController {
    */
   @RequestMapping(params = "_page=2")
   public String processSecondPage(
-    final @ModelAttribute("runParameters") RunParameters runParameters,
-    final BindingResult result,
-    final ModelMap modelMap) {
-
+      final @ModelAttribute("runParameters") RunParameters runParameters,
+      final BindingResult result, final ModelMap modelMap) {
     modelMap.put("periodNames", DefaultPeriodNames.values());
-
     return "teacher/run/create/createrunperiods";
   }
 
@@ -229,40 +210,36 @@ public class CreateRunController {
    * Third page handler. This is where user selects postLevel and real time settings
    */
   @RequestMapping(params = "_page=3")
-  public String processThirdPage(
-    final @ModelAttribute("runParameters") RunParameters runParameters,
-    final BindingResult result,
-    final ModelMap modelMap,
-    final HttpServletRequest request) {
+  public String processThirdPage(final @ModelAttribute("runParameters") RunParameters runParameters,
+      final BindingResult result, final ModelMap modelMap, final HttpServletRequest request) {
     modelMap.put("periodNames", DefaultPeriodNames.values());
 
     if (runParameters.getPeriodNames() == null ||
-      runParameters.getPeriodNames().size() == 0) {
+        runParameters.getPeriodNames().size() == 0) {
       if (runParameters.getManuallyEnteredPeriods() == "") {
         result.rejectValue("periodNames", "setuprun.error.selectperiods", "You must select one or more periods or manually" +
-          " create your period names.");
-      } else {
-        // check if manually entered periods is an empty string or just "," If yes, throw error
-        if (runParameters.getManuallyEnteredPeriods() == null ||
-          StringUtils.trim(runParameters.getManuallyEnteredPeriods()).length() == 0 ||
-          StringUtils.trim(runParameters.getManuallyEnteredPeriods()).equals(",")) {
-          result.rejectValue("periodNames", "setuprun.error.selectperiods", "You must select one or more periods or manually" +
             " create your period names.");
+      } else {
+        if (runParameters.getManuallyEnteredPeriods() == null ||
+            StringUtils.trim(runParameters.getManuallyEnteredPeriods()).length() == 0 ||
+            StringUtils.trim(runParameters.getManuallyEnteredPeriods()).equals(",")) {
+          result.rejectValue("periodNames", "setuprun.error.selectperiods", "You must select one or more periods or manually" +
+              " create your period names.");
         } else {
           String[] parsed = StringUtils.split(runParameters.getManuallyEnteredPeriods(), ",");
           if (parsed.length == 0) {
             result.rejectValue("periodNames", "setuprun.error.whitespaceornonalphanumeric", "Manually entered" +
-              " periods cannot contain whitespace or non-alphanumeric characters.");
+                " periods cannot contain whitespace or non-alphanumeric characters.");
             return "teacher/run/create/createrunperiods";
           }
           Set<String> parsedAndTrimmed = new TreeSet<String>();
-          for(String current : parsed) {
+          for (String current : parsed) {
             String trimmed = StringUtils.trim(current);
             if (trimmed.length() == 0 || StringUtils.contains(trimmed, " ")
-              || !StringUtils.isAlphanumeric(trimmed)
-              || trimmed.equals(",")) {
+                || !StringUtils.isAlphanumeric(trimmed)
+                || trimmed.equals(",")) {
               result.rejectValue("periodNames", "setuprun.error.whitespaceornonalphanumeric", "Manually entered" +
-                " periods cannot contain whitespace or non-alphanumeric characters.");
+                  " periods cannot contain whitespace or non-alphanumeric characters.");
               break;
             } else {
               parsedAndTrimmed.add(trimmed);
@@ -300,7 +277,7 @@ public class CreateRunController {
     modelMap.put("maxWorkgroupSize", maxWorkgroupSize);
     modelMap.put("implementedPostLevels", IMPLEMENTED_POST_LEVELS);
     modelMap.put("postLevelTextMap", postLevelTextMap);
-    modelMap.put("minPostLevel", this.getMinPostLevel(project));
+    modelMap.put("minPostLevel", getMinPostLevel(project));
     runParameters.setEnableRealTime(true);
     return "teacher/run/create/createrunconfigure";
   }
@@ -310,16 +287,13 @@ public class CreateRunController {
    */
   @RequestMapping(params = "_page=4")
   public String processFourthPage(
-    final @ModelAttribute("runParameters") RunParameters runParameters,
-    final BindingResult result,
-    final ModelMap modelMap) {
-
+      final @ModelAttribute("runParameters") RunParameters runParameters,
+      final BindingResult result,
+      final ModelMap modelMap) {
     Project project = runParameters.getProject();
-    String relativeProjectFilePath = project.getModulePath();  // looks like this: "/109/new.project.json"
+    String relativeProjectFilePath = project.getModulePath();
     int ndx = relativeProjectFilePath.lastIndexOf("/");
-    String projectJSONFilename = relativeProjectFilePath.substring(ndx + 1, relativeProjectFilePath.length());  // looks like this: "new.project.json"
-
-    // get the project name
+    String projectJSONFilename = relativeProjectFilePath.substring(ndx + 1, relativeProjectFilePath.length());
     String projectName = project.getName();
 
     // replace ' with \' so when the project name is displayed on the jsp page, it won't short circuit the string
@@ -330,7 +304,6 @@ public class CreateRunController {
     modelMap.put("projectName", projectName);
     modelMap.put("projectWiseVersion", project.getWiseVersion());
     modelMap.put("projectJSONFilename", projectJSONFilename);
-
     return "teacher/run/create/createrunreview";
   }
 
@@ -343,13 +316,10 @@ public class CreateRunController {
    */
   private Long getMinPostLevel(Project project) {
     Long level = 1l;
-
     ProjectMetadata metadata = project.getMetadata();
-
     if (metadata != null && metadata.getPostLevel() != null) {
       level = metadata.getPostLevel();
     }
-
     return level;
   }
 
@@ -361,13 +331,11 @@ public class CreateRunController {
    */
   @RequestMapping(params = "_finish")
   protected ModelAndView processFinish(
-    final @ModelAttribute("runParameters") RunParameters runParameters,
-    final BindingResult result,
-    final HttpServletRequest request,
-    final HttpServletResponse response,
-    final SessionStatus status)
-    throws Exception {
-
+      final @ModelAttribute("runParameters") RunParameters runParameters,
+      final BindingResult result,
+      final HttpServletRequest request,
+      final HttpServletResponse response,
+      final SessionStatus status) throws Exception {
     Project project = runParameters.getProject();
     Project newProject;  // copied project that will be used for new run.
     if (project.getWiseVersion().equals(5)) {
@@ -401,10 +369,8 @@ public class CreateRunController {
         pParams.setProjectType(ProjectType.LD);
         pParams.setWiseVersion(5);
         pParams.setParentProjectId(parentProjectId);
-        // get the project's metadata from the parent
         ProjectMetadata parentProjectMetadata = project.getMetadata();
         if (parentProjectMetadata != null) {
-          // copy into new metadata object
           ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
           pParams.setMetadata(newProjectMetadata);
         }
@@ -427,13 +393,11 @@ public class CreateRunController {
       Locale userLocale = request.getLocale();
       runParameters.setLocale(userLocale);
       runParameters.setPostLevel(5);   // always use the highest post-level (starting WISE5)
-      run = this.runService.createRun(runParameters);
+      run = runService.createRun(runParameters);
 
       User owner = runParameters.getOwner();
       HashSet<User> members = new HashSet<>();
       members.add(owner);
-
-      // create a workgroup for the owners of the run (teacher)
       workgroupService.createWorkgroup("teacher", members, run, null);
 
     } catch (ObjectNotFoundException e) {
@@ -450,14 +414,11 @@ public class CreateRunController {
       }
     }
 
-    // send email to the recipients in new thread
-    // tries to retrieve the user from the session
     User user = ControllerUtil.getSignedInUser();
     Locale locale = request.getLocale();
-    String fullWiseContextPath = ControllerUtil.getPortalUrlString(request);  // e.g. http://localhost:8080/wise
-
+    String fullWiseContextPath = ControllerUtil.getPortalUrlString(request);
     CreateRunEmailService emailService =
-      new CreateRunEmailService(runParameters, run, user, locale, fullWiseContextPath);
+        new CreateRunEmailService(runParameters, run, user, locale, fullWiseContextPath);
     Thread thread = new Thread(emailService);
     thread.start();
 
@@ -491,8 +452,7 @@ public class CreateRunController {
         }
         sendEmail();
       } catch (MessagingException e) {
-        // what if there was an error sending email?
-        // should uber_admin be notified?
+        // TODO what if there was an error sending email? should uber_admin be notified?
         e.printStackTrace();
       }
     }
@@ -503,22 +463,13 @@ public class CreateRunController {
      */
     private void sendEmail() throws MessagingException {
       RunParameters runParameters = (RunParameters) command;
-      String teacherName = null;
-      String teacherEmail = null;
-      Serializable projectID = null;
-      String schoolName = null;
-      String schoolPeriods = null;
       Date date = new Date();
       SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMMMM d, yyyy");
 
-      TeacherUserDetails teacherUserDetails =
-        (TeacherUserDetails) user.getUserDetails();
-
-      teacherName = teacherUserDetails.getFirstname() + " " +
-        teacherUserDetails.getLastname();
-      teacherEmail = teacherUserDetails.getEmailAddress();
-
-      schoolName = teacherUserDetails.getSchoolname();
+      TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
+      String teacherName = teacherUserDetails.getFirstname() + " " + teacherUserDetails.getLastname();
+      String teacherEmail = teacherUserDetails.getEmailAddress();
+      String schoolName = teacherUserDetails.getSchoolname();
 
       String schoolLocation = "";
       if (teacherUserDetails.getCity() != null) {
@@ -531,7 +482,7 @@ public class CreateRunController {
         schoolLocation += " " + teacherUserDetails.getCountry();
       }
 
-      schoolPeriods = runParameters.printAllPeriods();
+      String schoolPeriods = runParameters.printAllPeriods();
       Set<String> projectcodes = new TreeSet<String>();
       String runcode = run.getRuncode();
       Set<Group> periods = run.getPeriods();
@@ -539,7 +490,7 @@ public class CreateRunController {
         projectcodes.add(runcode + "-" + period.getName());
       }
 
-      projectID = runParameters.getProject().getId();
+      Serializable projectID = runParameters.getProject().getId();
       Long runID = run.getId();
 
       String previewProjectUrl = fullWiseContextPath + "/previewproject.html?projectId="+run.getProject().getId();
@@ -550,7 +501,7 @@ public class CreateRunController {
         new Object[]{wiseProperties.getProperty("wise.name")}, Locale.US);
 
       String subject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject",
-        new Object[]{wiseProperties.getProperty("wise.name")},defaultSubject, this.locale);
+        new Object[]{wiseProperties.getProperty("wise.name")},defaultSubject, locale);
 
 
       String defaultMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage",
@@ -588,7 +539,7 @@ public class CreateRunController {
           previewProjectUrl
         },
         defaultMessage,
-        this.locale);
+        locale);
 
       String fromEmail = wiseProperties.getProperty("portalemailaddress");
 
@@ -597,21 +548,18 @@ public class CreateRunController {
         recipients[0] = DEBUG_EMAIL;
       }
 
-      //sends the email to the admin
       mailService.postMail(recipients, subject, message, fromEmail);
-
-      //also send email to teacher
       String[] teacherRecipient = new String[]{teacherEmail};
 
       String defaultTeacherSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailSubject",
-        new Object[]{run.getProject().getName()}, Locale.US);
+          new Object[]{run.getProject().getName()}, Locale.US);
 
       String teacherSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailSubject",
-        new Object[]{run.getProject().getName()},defaultTeacherSubject, this.locale);
+          new Object[]{run.getProject().getName()},defaultTeacherSubject, locale);
 
       String defaultRunCodeDescription = messageSource.getMessage("teacher.run.create.createrunfinish.everyRunHasUniqueAccessCode", null, Locale.US);
 
-      String runCodeDescription = messageSource.getMessage("teacher.run.create.createrunfinish.everyRunHasUniqueAccessCode", null, defaultRunCodeDescription, this.locale);
+      String runCodeDescription = messageSource.getMessage("teacher.run.create.createrunfinish.everyRunHasUniqueAccessCode", null, defaultRunCodeDescription, locale);
 
       String defaultTeacherMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailMessage",
         new Object[]{
@@ -632,19 +580,18 @@ public class CreateRunController {
           runCodeDescription
         },
         defaultTeacherMessage,
-        this.locale);
+        locale);
 
       if (wiseProperties.containsKey("discourse_url")) {
         String discourseURL = wiseProperties.getProperty("discourse_url");
         if (discourseURL != null && !discourseURL.isEmpty()) {
           // if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
           String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);
-          String pS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, defaultPS, this.locale);
+          String pS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, defaultPS, locale);
           teacherMessage += "\n\n"+pS;
         }
       }
 
-      //sends the email to the teacher
       mailService.postMail(teacherRecipient, teacherSubject, teacherMessage, fromEmail);
     }
   }

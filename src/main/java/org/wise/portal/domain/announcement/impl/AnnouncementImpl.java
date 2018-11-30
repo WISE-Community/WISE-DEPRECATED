@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -61,13 +61,13 @@ public class AnnouncementImpl implements Announcement, Comparable<Announcement> 
   @Transient
   private static final long serialVersionUID = 1L;
 
-  @Column(name = AnnouncementImpl.COLUMN_NAME_TITLE, nullable = false)
+  @Column(name = COLUMN_NAME_TITLE, nullable = false)
   private String title;
 
-  @Column(name = AnnouncementImpl.COLUMN_NAME_TIMESTAMP, nullable = false)
+  @Column(name = COLUMN_NAME_TIMESTAMP, nullable = false)
   private Date timestamp;
 
-  @Column(name = AnnouncementImpl.COLUMN_NAME_ANNOUNCEMENT, length = 5120000, nullable = false, columnDefinition = "mediumtext")
+  @Column(name = COLUMN_NAME_ANNOUNCEMENT, length = 5120000, nullable = false, columnDefinition = "mediumtext")
   private String announcement;
 
   @Id

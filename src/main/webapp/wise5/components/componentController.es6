@@ -153,6 +153,35 @@ class ComponentController {
     this.registerStudentWorkSavedToServerListener();
   }
 
+  initializeScopeGetComponentState(scope, childControllerName) {
+    scope.getComponentState = (isSubmit) => {
+      const deferred = this.$q.defer();
+      const childController = scope[childControllerName];
+      if (this.hasDirtyWorkToSendToParent(childController, isSubmit)) {
+        const action = this.getDirtyWorkToSendToParentAction(childController, isSubmit);
+        childController.createComponentState(action).then((componentState) => {
+          deferred.resolve(componentState);
+        });
+      } else {
+        deferred.resolve();
+      }
+      return deferred.promise;
+    };
+  }
+
+  hasDirtyWorkToSendToParent(childController, isSubmit) {
+    return (isSubmit && childController.isSubmitDirty) || childController.isDirty;
+  }
+
+  getDirtyWorkToSendToParentAction(childController, isSubmit) {
+    if (isSubmit && childController.isSubmitDirty) {
+      return 'submit';
+    } else if (childController.isDirty) {
+      return 'save';
+    }
+    return 'change';
+  }
+
   authoringConstructor() {
     this.isPromptVisible = true;
     this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -340,12 +369,16 @@ class ComponentController {
     }
   }
 
+  disableSubmitButton() {
+    this.isSubmitButtonDisabled = true;
+  }
+
   performSubmit(submitTriggeredBy) {
     this.setIsSubmit(true);
     this.incrementSubmitCounter();
 
     if (!this.hasSubmitsLeft()) {
-      this.isSubmitButtonDisabled = true;
+      this.disableSubmitButton();
     }
 
     if (this.isAuthoringMode()) {
@@ -1040,6 +1073,14 @@ class ComponentController {
         }
       });
     }
+  }
+
+  hasMaxScore() {
+    return this.componentContent.maxScore != null && this.componentContent.maxScore != '';
+  }
+
+  getMaxScore() {
+    return this.componentContent.maxScore;
   }
 }
 

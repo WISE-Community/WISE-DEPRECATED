@@ -40,37 +40,29 @@ public class WISESessionListener implements HttpSessionListener {
 
   public static final String ALL_LOGGED_IN_USERS = "allLoggedInUsers";
 
-  /**
-   * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
-   */
   public void sessionCreated(HttpSessionEvent event) {
   }
 
-  /**
-   * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet.http.HttpSessionEvent)
-   */
   @SuppressWarnings("unchecked")
   public void sessionDestroyed(HttpSessionEvent event) {
     HttpSession session = event.getSession();
     String sessionId = session.getId();
 
-    // remove this user from allLoggedInUsers map
-    HashMap<String, User> allLoggedInUsers = ((HashMap<String, User>) session.getServletContext().getAttribute(ALL_LOGGED_IN_USERS));
+    HashMap<String, User> allLoggedInUsers =
+        ((HashMap<String, User>) session.getServletContext().getAttribute(ALL_LOGGED_IN_USERS));
     if (allLoggedInUsers != null) {
       allLoggedInUsers.remove(sessionId);
     }
 
-    // remove this user from any studentToRuns, if it's a student who was doing a run
-    HashMap<String, Long> studentsToRunIds = ((HashMap<String, Long>) session.getServletContext().getAttribute("studentsToRunIds"));
+    HashMap<String, Long> studentsToRunIds =
+        ((HashMap<String, Long>) session.getServletContext().getAttribute("studentsToRunIds"));
     if (studentsToRunIds != null) {
       studentsToRunIds.remove(sessionId);
     }
 
-    // remove this user from any opened projects, if they opened any project using the authoring tool
     HashMap<String, ArrayList<String>> openedProjectToSessions =
-      (HashMap<String, ArrayList<String>>) session.getServletContext()
+        (HashMap<String, ArrayList<String>>) session.getServletContext()
         .getAttribute("openedProjectsToSessions");
-
     if (openedProjectToSessions != null) {
       Collection<ArrayList<String>> sessionsForAllProjects = openedProjectToSessions.values();
       for (ArrayList<String> sessionsForProject : sessionsForAllProjects) {

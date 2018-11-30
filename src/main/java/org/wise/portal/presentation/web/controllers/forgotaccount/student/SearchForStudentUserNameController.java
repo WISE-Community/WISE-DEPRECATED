@@ -53,10 +53,7 @@ public class SearchForStudentUserNameController {
   @Autowired
   protected SearchForStudentUserNameValidator searchForStudentUserNameValidator;
 
-  // the path to this form view
   protected String formView = "/forgotaccount/student/searchforstudentusername";
-
-  // the path to the success view
   protected String successView = "/forgotaccount/student/searchforstudentusernameresult";
 
   /**
@@ -66,10 +63,8 @@ public class SearchForStudentUserNameController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public String initializeForm(ModelMap model) {
-    // create the parameters object for the page
     PasswordReminderParameters params = new PasswordReminderParameters();
     model.addAttribute("passwordReminderParameters", params);
-
     return formView;
   }
 
@@ -82,56 +77,42 @@ public class SearchForStudentUserNameController {
    */
   @RequestMapping(method = RequestMethod.POST)
   protected String onSubmit(
-    @ModelAttribute("passwordReminderParameters") PasswordReminderParameters params,
-    BindingResult bindingResult,
-    Model model)
-    throws Exception {
-
+      @ModelAttribute("passwordReminderParameters") PasswordReminderParameters params,
+      BindingResult bindingResult, Model model) {
     String[] fields = null;
     String[] values = null;
     String classVar = "";
 
-    // validate the values the user entered
     searchForStudentUserNameValidator.validate(params, bindingResult);
-
-    // check if there were any errors
     if (bindingResult.hasErrors()) {
-      // there were errors so we will reload this page and display errors
       return formView;
     }
 
-    // get the values from the form
     String firstName = params.getFirstName();
     String lastName = params.getLastName();
     String birthMonth = params.getBirthMonth();
     String birthDay = params.getBirthDay();
 
-    // populate the array that will be used to search for the User accounts
     fields = new String[4];
     fields[0] = "firstname";
     fields[1] = "lastname";
     fields[2] = "birthmonth";
     fields[3] = "birthday";
 
-    // populate the array that will be used to search for the User accounts
     values = new String[4];
     values[0] = firstName;
     values[1] = lastName;
     values[2] = birthMonth;
     values[3] = birthDay;
 
-    // the type of object to search
     classVar = "studentUserDetails";
 
-    // find all the accounts with matching values
     List<User> accountsThatMatch = userService.retrieveByFields(fields, values, classVar);
-
     model.addAttribute("users", accountsThatMatch);
     model.addAttribute("firstName", firstName);
     model.addAttribute("lastName", lastName);
     model.addAttribute("birthMonth", birthMonth);
     model.addAttribute("birthDay", birthDay);
-
     return successView;
   }
 }

@@ -70,35 +70,24 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private SaltSource saltSource;
 
-
-  /**
-   * @see UserService#retrieveUser(UserDetails)
-   */
   @Transactional(readOnly = true)
   public User retrieveUser(UserDetails userDetails) {
-    return this.userDao.retrieveByUserDetails(userDetails);
+    return userDao.retrieveByUserDetails(userDetails);
   }
 
-  /**
-   * @see UserService#retrieveUserByUsername(String)
-   */
   @Transactional(readOnly = true)
   public List<User> retrieveUsersByUsername(String username) {
-    return retrieveByField("username", "like",
-        "%" + username + "%", "teacherUserDetails");
+    return retrieveByField("username", "like", "%" + username + "%", "teacherUserDetails");
   }
 
   @Override
   public List<User> retrieveDisabledUsers() {
-    return this.userDao.retrieveDisabledUsers();
+    return userDao.retrieveDisabledUsers();
   }
 
-  /**
-   * @see UserService#retrieveUserByEmailAddress(String)
-   */
   @Transactional(readOnly = true)
   public List<User> retrieveUserByEmailAddress(String emailAddress) {
-    return this.userDao.retrieveByEmailAddress(emailAddress);
+    return userDao.retrieveByEmailAddress(emailAddress);
   }
 
   @Transactional(readOnly = true)
@@ -106,24 +95,17 @@ public class UserServiceImpl implements UserService {
     return this.userDao.retrieveByGoogleUserId(googleUserId);
   }
 
-  /**
-   * @see UserService#createUser(MutableUserDetails)
-   */
   @Override
   @Transactional(rollbackFor = { DuplicateUsernameException.class})
-  public User createUser(final MutableUserDetails userDetails)
-      throws DuplicateUsernameException {
+  public User createUser(final MutableUserDetails userDetails) {
     MutableUserDetails details = userDetails;
-
-    // assign roles
     if (userDetails instanceof StudentUserDetails) {
-      this.assignRole(userDetails, UserDetailsService.STUDENT_ROLE);
+      assignRole(userDetails, UserDetailsService.STUDENT_ROLE);
     } else if (userDetails instanceof TeacherUserDetails) {
-      this.assignRole(userDetails, UserDetailsService.TEACHER_ROLE);
-      this.assignRole(userDetails, UserDetailsService.AUTHOR_ROLE);
+      assignRole(userDetails, UserDetailsService.TEACHER_ROLE);
+      assignRole(userDetails, UserDetailsService.AUTHOR_ROLE);
     }
 
-    // trim firstname and lastname so it doesn't contain leading or trailing spaces
     details.setFirstname(details.getFirstname().trim());
     details.setLastname(details.getLastname().trim());
     details.setNumberOfLogins(0);
@@ -138,26 +120,25 @@ public class UserServiceImpl implements UserService {
         currentUsernameSuffix = details.getNextUsernameSuffix(currentUsernameSuffix);
         String coreUsername = details.getCoreUsername();
         details.setUsername(coreUsername + currentUsernameSuffix);
-        this.checkUserErrors(userDetails.getUsername());
-        this.assignRole(userDetails, UserDetailsService.USER_ROLE);
-        this.encodePassword(userDetails);
+        checkUserErrors(userDetails.getUsername());
+        assignRole(userDetails, UserDetailsService.USER_ROLE);
+        encodePassword(userDetails);
 
         createdUser = new UserImpl();
         createdUser.setUserDetails(userDetails);
-        this.userDao.save(createdUser);
+        userDao.save(createdUser);
         done = true;
       } catch (DuplicateUsernameException e) {
         // the username already exists; try the next possible username
         continue;
       }
     }
-
     return createdUser;
   }
 
   void encodePassword(MutableUserDetails userDetails) {
-    userDetails.setPassword(this.passwordEncoder.encodePassword(userDetails.getPassword(),
-        this.saltSource.getSalt(userDetails)));
+    userDetails.setPassword(passwordEncoder.encodePassword(userDetails.getPassword(),
+        saltSource.getSalt(userDetails)));
   }
 
   public void assignRole(MutableUserDetails userDetails, final String role) {
@@ -175,20 +156,17 @@ public class UserServiceImpl implements UserService {
    */
   private void checkUserErrors(final String username)
     throws DuplicateUsernameException {
-    if (this.userDetailsDao.hasUsername(username)) {
+    if (userDetailsDao.hasUsername(username)) {
       throw new DuplicateUsernameException(username);
     }
   }
 
-  /**
-   * @see UserService#updateUserPassword(User, String)
-   */
   @Transactional()
   public User updateUserPassword(User user, String newPassword) {
     MutableUserDetails userDetails = user.getUserDetails();
     userDetails.setPassword(newPassword);
-    this.encodePassword(userDetails);
-    this.userDao.save(user);
+    encodePassword(userDetails);
+    userDao.save(user);
     return user;
   }
 
@@ -206,35 +184,26 @@ public class UserServiceImpl implements UserService {
   }
 
   public List<User> retrieveAllUsers() {
-    return this.userDao.getList();
+    return userDao.getList();
   }
 
-  /**
-   * @see UserService#retrieveAllUsernames()
-   */
   public List<String> retrieveAllUsernames() {
-    return this.userDao.retrieveAll("userDetails.username");
+    return userDao.retrieveAll("userDetails.username");
   }
 
-  /**
-   * @see UserService#retrieveById(Long)
-   */
   @Transactional(readOnly = true)
   public User retrieveById(Long userId) throws ObjectNotFoundException {
-    return this.userDao.getById(userId);
+    return userDao.getById(userId);
   }
 
   @Transactional
   public void updateUser(User user) {
-    this.userDao.save(user);
+    userDao.save(user);
   }
 
-  /**
-   * @see UserService#retrieveByField(String, String, Object, String)
-   */
   @Transactional()
   public List<User> retrieveByField(String field, String type, Object term, String classVar) {
-    return this.userDao.retrieveByField(field, type, term, classVar);
+    return userDao.retrieveByField(field, type, term, classVar);
   }
 
   /**
@@ -254,19 +223,16 @@ public class UserServiceImpl implements UserService {
    * @return a list of Users that have matching values for the given fields
    */
   public List<User> retrieveByFields(String[] fields, String[] types, String classVar) {
-    return this.userDao.retrieveByFields(fields, types, classVar);
+    return userDao.retrieveByFields(fields, types, classVar);
   }
 
-  /**
-   * @see UserService#retrieveUserByUsername(String)
-   */
   @Override
   public User retrieveUserByUsername(String username) {
     if (username == null || username.isEmpty()) {
       return null;
     }
     try {
-      return this.userDao.retrieveByUsername(username);
+      return userDao.retrieveByUsername(username);
     } catch (EmptyResultDataAccessException e) {
       return null;
     }
@@ -279,7 +245,7 @@ public class UserServiceImpl implements UserService {
    */
   @Transactional()
   public User retrieveByResetPasswordKey(String resetPasswordKey) {
-    return this.userDao.retrieveByResetPasswordKey(resetPasswordKey);
+    return userDao.retrieveByResetPasswordKey(resetPasswordKey);
   }
 
   public boolean isPasswordCorrect(User user, String password) {

@@ -1,6 +1,6 @@
 <div class="notice" *ngIf="!runs.length && loaded">
-  <p>Hey there! Looks like you haven't run any WISE units in your classes yet.</p>
-  <p>Select "Browse Units" to find titles to use with your students.</p>
+  <p i18n>Hey there! Looks like you haven't run any WISE units in your classes yet.</p>
+  <p i18n>Select "Browse Units" to find titles to use with your students.</p>
 </div>
 <div class="content-block" *ngIf="runs.length">
   <div class="content-block__header dark-theme primary-bg"
@@ -26,16 +26,16 @@
   </div>
   <div *ngIf="loaded" class="notice">
     <p>
-      <ng-container *ngIf="searchValue || filterValue">Units found: </ng-container>
-      <ng-container *ngIf="!searchValue && !filterValue">Total classroom units: </ng-container>
-      {{ filteredRuns.length }}<span class="mat-caption" *ngIf="filteredRuns.length"> (<ng-container *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} scheduled, </ng-container>{{ filteredActiveTotal }} active, {{ filteredCompletedTotal }} completed)</span>.
-      <a *ngIf="searchValue || filterValue" href="#" (click)="!!reset()">Reset</a>
+      <ng-container *ngIf="searchValue || filterValue" i18n>Units found: </ng-container>
+      <ng-container *ngIf="!searchValue && !filterValue" i18n>Total classroom units: </ng-container>
+      {{ filteredRuns.length }}<span class="mat-caption" *ngIf="filteredRuns.length"> (<ng-container *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} <ng-container i18n>scheduled</ng-container>, </ng-container>{{ filteredActiveTotal }} <ng-container i18n>active</ng-container>, {{ filteredCompletedTotal }} <ng-container i18n>completed</ng-container>)</span>.
+      <a *ngIf="searchValue || filterValue" href="#" (click)="!!reset()" i18n>Reset</a>
     </p>
   </div>
 
   <app-timeline>
     <ng-container *ngFor="let run of filteredRuns; let i=index">
-      <app-timeline-item [active]="runIsActive(run)" *ngIf="i < 10 || showAll">
+      <app-timeline-item [active]="runIsActive(run)" *ngIf="i < 10 || showAll" id="run{{run.id}}">
         <app-timeline-item-label>
           <ng-container *ngIf="run.endTime">
             <ng-container *ngIf="runSpansYears(run)">
@@ -67,6 +67,6 @@
 
   <div class="content-block__actions"
        *ngIf="filteredRuns.length > 10 && !showAll" >
-    <a mat-raised-button color="accent" (click)="showAll = true">Show More</a>
+    <a mat-raised-button color="accent" (click)="showAll = true" i18n>Show More</a>
   </div>
 </div>

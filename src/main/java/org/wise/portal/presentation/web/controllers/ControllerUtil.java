@@ -32,7 +32,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
-import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -121,12 +120,10 @@ public class ControllerUtil {
   public static String getBaseUrlString(HttpServletRequest request) {
     String host = request.getHeader("Host");
     String portalUrl = request.getScheme() + "://" + request.getServerName() + ":" +
-      request.getServerPort();
-
+        request.getServerPort();
     if (host != null) {
       portalUrl = request.getScheme() + "://" + host;
     }
-
     return portalUrl;
   }
 
@@ -135,9 +132,8 @@ public class ControllerUtil {
    * @return true iff this user is currently logged in as somebody else
    */
   public static boolean isUserPreviousAdministrator() {
-
-    Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-
+    Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext()
+        .getAuthentication().getAuthorities();
     for (GrantedAuthority grantedAuthority : authorities) {
       if (SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR.equals(grantedAuthority.getAuthority())) {
         return true;
@@ -151,7 +147,7 @@ public class ControllerUtil {
    * ex: http://128.32.xxx.11:8080/webapp
    */
   public static String getPortalUrlString(HttpServletRequest request) {
-    return ControllerUtil.getBaseUrlString(request) + request.getContextPath();
+    return getBaseUrlString(request) + request.getContextPath();
   }
 
   /**
@@ -160,14 +156,11 @@ public class ControllerUtil {
    */
   public static String getWISEVersion() {
     String wiseVersion = "";
-
-    // also show WISEVersion
     try {
-      wiseVersion = ControllerUtil.portalService.getWISEVersion();
+      wiseVersion = portalService.getWISEVersion();
     } catch (Exception e) {
       // do nothing
     }
-
     return wiseVersion;
   }
 

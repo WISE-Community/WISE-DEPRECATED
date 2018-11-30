@@ -54,18 +54,11 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 
   private MutableAclService mutableAclService;
 
-  /**
-   * @param mutableAclService
-   *            the mutableAclService to set
-   */
   @Required
   public void setMutableAclService(MutableAclService mutableAclService) {
     this.mutableAclService = mutableAclService;
   }
 
-  /**
-   * @see org.wise.portal.service.acl.AclService#addPermission(Object, Permission)
-   */
   public void addPermission(T object, Permission permission) {
     if (object != null) {
       MutableAcl acl = null;
@@ -77,17 +70,14 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
         acl = mutableAclService.createAcl(objectIdentity);
       }
       // add this new ace at the end of the acl.
-      acl.insertAce(acl.getEntries().size(), permission,
-        new PrincipalSid(this.getAuthentication()), true);
-      this.mutableAclService.updateAcl(acl);
+      acl.insertAce(acl.getEntries().size(), permission, new PrincipalSid(getAuthentication()),
+          true);
+      mutableAclService.updateAcl(acl);
     } else {
       throw new IllegalArgumentException("Cannot create ACL. Object not set.");
     }
   }
 
-  /**
-   * @see org.wise.portal.service.acl.AclService#addPermission(Object, Permission, User)
-   */
   public void addPermission(T object, Permission permission, User user) {
     if (object != null) {
       MutableAcl acl = null;
@@ -100,16 +90,13 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       }
       // add this new ace at the end of the acl.
       acl.insertAce(acl.getEntries().size(), permission,
-        new PrincipalSid(user.getUserDetails().getUsername()), true);
-      this.mutableAclService.updateAcl(acl);
+          new PrincipalSid(user.getUserDetails().getUsername()), true);
+      mutableAclService.updateAcl(acl);
     } else {
       throw new IllegalArgumentException("Cannot create ACL. Object not set.");
     }
   }
 
-  /**
-   * @see org.wise.portal.service.acl.AclService#removePermission(Object, Permission, User)
-   */
   public void removePermission(T object, Permission permission, User user) {
     if (object != null) {
       MutableAcl acl = null;
@@ -123,13 +110,13 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
         return;
       }
       List<AccessControlEntry> aces = acl.getEntries();
-      for (int i=0; i < aces.size(); i++) {
+      for (int i = 0; i < aces.size(); i++) {
         AccessControlEntry ace = aces.get(i);
         if (ace.getPermission().equals(permission) && ace.getSid().equals(sid.get(0))) {
           acl.deleteAce(i);
         }
       }
-      this.mutableAclService.updateAcl(acl);
+      mutableAclService.updateAcl(acl);
     } else {
       throw new IllegalArgumentException("Cannot delete ACL. Object not set.");
     }
@@ -161,8 +148,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       }
       return permissions;
     } else {
-      throw new IllegalArgumentException(
-        "Cannot retrieve ACL. Object not set.");
+      throw new IllegalArgumentException("Cannot retrieve ACL. Object not set.");
     }
   }
 
@@ -193,35 +179,27 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
     }
   }
 
-  /**
-   * @see  org.wise.portal.service.acl.AclService#hasPermission(Object, Permission, User)
-   */
   public boolean hasPermission(T object, Permission permission, User user) {
     if (object != null && permission != null && user != null) {
-      List<Permission> permissions = this.getPermissions(object, user);
+      List<Permission> permissions = getPermissions(object, user);
       for (Permission p : permissions){
         if (p.getMask() >= permission.getMask()){
           return true;
         }
       }
     }
-
     return false;
   }
 
-  /**
-   * @see org.wise.portal.service.acl.AclService#hasPermission(Authentication, Object, Object)
-   */
   public boolean hasPermission(T object, Permission permission, UserDetails userDetails) {
     if (object != null && permission != null && userDetails != null) {
-      List<Permission> permissions = this.getPermissions(object, userDetails);
+      List<Permission> permissions = getPermissions(object, userDetails);
       for (Permission p : permissions) {
         if (p.getMask() >= permission.getMask()) {
           return true;
         }
       }
     }
-
     return false;
   }
 
@@ -255,7 +233,8 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       } else if (permissionMask == BasePermission.WRITE.getMask()) {
         p = BasePermission.WRITE;
       }
-      hasAllPermissions &= this.hasPermission((T) targetDomainObject, p, (UserDetails) authentication.getPrincipal());
+      hasAllPermissions &= hasPermission((T) targetDomainObject, p,
+          (UserDetails) authentication.getPrincipal());
     }
     return hasAllPermissions;
   }

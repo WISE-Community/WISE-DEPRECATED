@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -37,63 +37,51 @@ import org.wise.portal.service.announcement.AnnouncementService;
  * @author Patrick Lawler
  */
 @Service
-public class AnnouncementServiceImpl implements AnnouncementService{
+public class AnnouncementServiceImpl implements AnnouncementService {
 
   @Autowired
   private AnnouncementDao<Announcement> announcementDao;
 
-  /**
-   * @see org.wise.portal.service.announcement.AnnouncementService#createAnnouncement(org.wise.portal.domain.impl.AnnouncementParameters)
-   */
   @Transactional()
-  public Announcement createAnnouncement(AnnouncementParameters params){
+  public Announcement createAnnouncement(AnnouncementParameters params) {
     Announcement announcement = new AnnouncementImpl();
     announcement.setTitle(params.getTitle());
     announcement.setTimestamp(params.getTimestamp());
     announcement.setAnnouncement(params.getAnnouncement());
-
     announcementDao.save(announcement);
     return announcement;
   }
 
-  /**
-   * @see org.wise.portal.service.announcement.AnnouncementService#deleteAnnouncement(long)
-   */
   @Transactional()
-  public void deleteAnnouncement(Integer id){
-    try{
+  public void deleteAnnouncement(Integer id) {
+    try {
       Announcement announcement = announcementDao.getById(id);
       announcementDao.delete(announcement);
     } catch(ObjectNotFoundException e) {
     }
   }
 
-  /**
-   * @see org.wise.portal.service.announcement.AnnouncementService#updateAnnouncement(long, org.wise.portal.domain.impl.AnnouncementParameters)
-   */
   @Transactional()
-  public Announcement updateAnnouncement(Integer id, AnnouncementParameters params) throws ObjectNotFoundException{
-    try{
+  public Announcement updateAnnouncement(Integer id, AnnouncementParameters params)
+      throws ObjectNotFoundException {
+    try {
       Announcement announcement = announcementDao.getById(id);
       announcement.setTitle(params.getTitle());
       announcement.setTimestamp(params.getTimestamp());
       announcement.setAnnouncement(params.getAnnouncement());
       announcementDao.save(announcement);
       return announcement;
-    } catch(ObjectNotFoundException e){
+    } catch(ObjectNotFoundException e) {
       throw e;
     }
   }
 
-  /**
-   * @see org.wise.portal.service.announcement.AnnouncementService#retrieveById(long)
-   */
   @Transactional()
-  public Announcement retrieveById(Integer id) throws ObjectNotFoundException{
-    try{
+  public Announcement retrieveById(Integer id) throws ObjectNotFoundException {
+    try {
       Announcement announcement = announcementDao.getById(id);
       return announcement;
-    } catch(ObjectNotFoundException e){
+    } catch(ObjectNotFoundException e) {
       throw e;
     }
   }
