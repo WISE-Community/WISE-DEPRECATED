@@ -13,7 +13,7 @@ import org.wise.portal.service.newsitem.NewsItemService;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/news", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/api/news", produces = "application/json;charset=UTF-8")
 public class NewsAPIController {
 
   @Autowired

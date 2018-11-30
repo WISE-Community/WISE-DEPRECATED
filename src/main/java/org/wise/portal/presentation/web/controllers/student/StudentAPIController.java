@@ -67,7 +67,7 @@ import java.util.*;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping(value = "/api/student", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/api/student", produces = "application/json;charset=UTF-8")
 public class StudentAPIController {
 
   @Autowired

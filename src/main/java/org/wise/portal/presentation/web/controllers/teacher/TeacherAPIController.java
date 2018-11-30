@@ -39,7 +39,7 @@ import java.util.*;
  * @author Hiroki Terashima
  */
 @RestController
-@RequestMapping(value = "/api/teacher", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/api/teacher", produces = "application/json;charset=UTF-8")
 public class TeacherAPIController {
 
   @Autowired

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Properties;
 
 @RestController
-@RequestMapping(value = "/api/student/forgot", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/api/student/forgot", produces = "application/json;charset=UTF-8")
 public class StudentForgotAccountAPIController {
 
   @Autowired
