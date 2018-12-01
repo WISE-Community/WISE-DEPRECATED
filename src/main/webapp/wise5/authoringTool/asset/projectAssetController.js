@@ -389,7 +389,7 @@ var ProjectAssetController = function () {
   }, {
     key: 'hasTarget',
     value: function hasTarget() {
-      return this.nodeId != null && this.componentId != null && this.target != null;
+      return this.nodeId != null && this.componentId != null && this.target != null || this.target === 'projectIcon';
     }
 
     /**

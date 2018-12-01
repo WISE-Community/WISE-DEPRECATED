@@ -9030,6 +9030,43 @@ var ProjectService = function () {
       var key = nodeId + "_" + componentId;
       return this.additionalProcessingFunctionsMap[key];
     }
+  }, {
+    key: 'getFeaturedProjectIcons',
+    value: function getFeaturedProjectIcons() {
+      var featuredProjectIconsURL = this.ConfigService.getConfigParam('featuredProjectIcons');
+      return this.$http.get(featuredProjectIconsURL).then(function (result) {
+        return result.data;
+      });
+    }
+  }, {
+    key: 'setFeaturedProjectIcon',
+    value: function setFeaturedProjectIcon(projectIcon) {
+      var featuredProjectIconURL = this.ConfigService.getConfigParam('featuredProjectIcon');
+      return this.setProjectIcon(projectIcon, featuredProjectIconURL);
+    }
+  }, {
+    key: 'setCustomProjectIcon',
+    value: function setCustomProjectIcon(projectIcon) {
+      var customProjectIconURL = this.ConfigService.getConfigParam('customProjectIcon');
+      return this.setProjectIcon(projectIcon, customProjectIconURL);
+    }
+  }, {
+    key: 'setProjectIcon',
+    value: function setProjectIcon(projectIcon, projectIconURL) {
+      var projectId = this.ConfigService.getProjectId();
+      var httpParams = {
+        method: 'POST',
+        url: projectIconURL,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          projectId: projectId,
+          projectIcon: projectIcon
+        })
+      };
+      return this.$http(httpParams).then(function (result) {
+        return result.data;
+      });
+    }
   }]);
 
   return ProjectService;

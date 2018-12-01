@@ -26,10 +26,30 @@ var ProjectInfoController = function () {
 
     this.metadata = this.ProjectService.getProjectMetadata();
     this.metadataAuthoring = this.ConfigService.getConfigParam('projectMetadataSettings');
+    this.projectIcons = [];
+    this.projectIcon = '';
+    this.isEditingProjectIcon = false;
+    this.isShowProjectIcon = false;
+    this.isShowProjectIconError = false;
+    this.isShowProjectIconLoading = false;
+    this.loadProjectIcon();
     this.processMetadata();
+    this.registerListeners();
   }
 
   _createClass(ProjectInfoController, [{
+    key: 'registerListeners',
+    value: function registerListeners() {
+      var _this = this;
+
+      this.$scope.$on('assetSelected', function (event, args) {
+        if (args.target === 'projectIcon') {
+          _this.setCustomProjectIcon(args.assetItem.fileName);
+          _this.$mdDialog.hide();
+        }
+      });
+    }
+  }, {
     key: 'processMetadata',
     value: function processMetadata() {
       if (this.metadataAuthoring != null) {
@@ -205,6 +225,110 @@ var ProjectInfoController = function () {
     value: function metadataRadioClicked(metadataField, choice) {
       this.metadata[metadataField.key] = this.getMetadataChoiceText(choice);
       this.ProjectService.saveProject();
+    }
+  }, {
+    key: 'getFeaturedProjectIcons',
+    value: function getFeaturedProjectIcons() {
+      var _this2 = this;
+
+      this.ProjectService.getFeaturedProjectIcons().then(function (featuredProjectIcons) {
+        _this2.projectIcons = featuredProjectIcons;
+      });
+    }
+  }, {
+    key: 'setFeaturedProjectIcon',
+    value: function setFeaturedProjectIcon(projectIcon) {
+      var _this3 = this;
+
+      this.ProjectService.setFeaturedProjectIcon(projectIcon).then(function () {
+        _this3.projectIcon = 'wise5/authoringTool/projectIcons/' + projectIcon;
+        _this3.showProjectIcon();
+        _this3.closeEditProjectIconMode();
+      });
+    }
+  }, {
+    key: 'chooseCustomProjectIcon',
+    value: function chooseCustomProjectIcon() {
+      var params = {
+        isPopup: true,
+        target: 'projectIcon'
+      };
+      this.$rootScope.$broadcast('openAssetChooser', params);
+    }
+  }, {
+    key: 'setCustomProjectIcon',
+    value: function setCustomProjectIcon(projectIcon) {
+      var _this4 = this;
+
+      this.showProjectIconLoading();
+      this.ProjectService.setCustomProjectIcon(projectIcon).then(function () {
+        _this4.loadProjectIconAfterTimeout();
+      });
+    }
+
+    /*
+     * Load the project_thumb.png after a timeout to allow time for the image to be updated on the server
+     * and browser. This is to prevent the browser from displaying the previous project_thumb.png.
+     */
+
+  }, {
+    key: 'loadProjectIconAfterTimeout',
+    value: function loadProjectIconAfterTimeout() {
+      var _this5 = this;
+
+      this.$timeout(function () {
+        _this5.loadProjectIcon();
+        _this5.closeEditProjectIconMode();
+      }, 3000);
+    }
+  }, {
+    key: 'loadProjectIcon',
+    value: function loadProjectIcon() {
+      var _this6 = this;
+
+      this.projectIcon = this.ConfigService.getConfigParam('projectBaseURL') + 'assets/project_thumb.png?timestamp=' + new Date().getTime();
+      var image = new Image();
+      image.onerror = function () {
+        _this6.showProjectIconError();
+      };
+      image.onload = function () {
+        _this6.showProjectIcon();
+      };
+      image.src = this.projectIcon;
+    }
+  }, {
+    key: 'toggleEditProjectIconMode',
+    value: function toggleEditProjectIconMode() {
+      this.isEditingProjectIcon = !this.isEditingProjectIcon;
+      if (this.isEditingProjectIcon) {
+        this.getFeaturedProjectIcons();
+      }
+    }
+  }, {
+    key: 'closeEditProjectIconMode',
+    value: function closeEditProjectIconMode() {
+      this.isEditingProjectIcon = false;
+    }
+  }, {
+    key: 'showProjectIcon',
+    value: function showProjectIcon() {
+      this.isShowProjectIcon = true;
+      this.isShowProjectIconError = false;
+      this.isShowProjectIconLoading = false;
+    }
+  }, {
+    key: 'showProjectIconError',
+    value: function showProjectIconError() {
+      this.isShowProjectIcon = false;
+      this.isShowProjectIconError = true;
+      this.isShowProjectIconLoading = false;
+    }
+  }, {
+    key: 'showProjectIconLoading',
+    value: function showProjectIconLoading() {
+      this.isShowProjectIcon = false;
+      this.isShowProjectIconError = false;
+      this.isShowProjectIconLoading = true;
     }
   }, {
     key: 'save',

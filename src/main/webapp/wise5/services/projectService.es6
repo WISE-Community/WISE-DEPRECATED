@@ -5713,6 +5713,39 @@ class ProjectService {
     let key = nodeId + "_" + componentId;
     return this.additionalProcessingFunctionsMap[key];
   }
+
+  getFeaturedProjectIcons() {
+    const featuredProjectIconsURL = this.ConfigService.getConfigParam('featuredProjectIcons');
+    return this.$http.get(featuredProjectIconsURL).then((result) => {
+      return result.data;
+    });
+  }
+
+  setFeaturedProjectIcon(projectIcon) {
+    const featuredProjectIconURL = this.ConfigService.getConfigParam('featuredProjectIcon');
+    return this.setProjectIcon(projectIcon, featuredProjectIconURL);
+  }
+
+  setCustomProjectIcon(projectIcon) {
+    const customProjectIconURL = this.ConfigService.getConfigParam('customProjectIcon');
+    return this.setProjectIcon(projectIcon, customProjectIconURL);
+  }
+
+  setProjectIcon(projectIcon, projectIconURL) {
+    let projectId = this.ConfigService.getProjectId();
+    const httpParams = {
+      method: 'POST',
+      url: projectIconURL,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        projectId: projectId,
+        projectIcon: projectIcon
+      })
+    };
+    return this.$http(httpParams).then((result) => {
+      return result.data;
+    });
+  }
 }
 
 ProjectService.$inject = [

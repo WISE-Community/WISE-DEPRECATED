@@ -26,9 +26,25 @@ class ProjectInfoController {
     this.$translate = this.$filter('translate');
 
     this.metadata = this.ProjectService.getProjectMetadata();
-    this.metadataAuthoring =
-        this.ConfigService.getConfigParam('projectMetadataSettings');
+    this.metadataAuthoring = this.ConfigService.getConfigParam('projectMetadataSettings');
+    this.projectIcons = [];
+    this.projectIcon = '';
+    this.isEditingProjectIcon = false;
+    this.isShowProjectIcon = false;
+    this.isShowProjectIconError = false;
+    this.isShowProjectIconLoading = false;
+    this.loadProjectIcon();
     this.processMetadata();
+    this.registerListeners();
+  }
+
+  registerListeners() {
+    this.$scope.$on('assetSelected', (event, args) => {
+      if (args.target === 'projectIcon') {
+        this.setCustomProjectIcon(args.assetItem.fileName);
+        this.$mdDialog.hide();
+      }
+    });
   }
 
   processMetadata() {
@@ -115,6 +131,87 @@ class ProjectInfoController {
   metadataRadioClicked(metadataField, choice) {
     this.metadata[metadataField.key] = this.getMetadataChoiceText(choice);
     this.ProjectService.saveProject();
+  }
+
+  getFeaturedProjectIcons() {
+    this.ProjectService.getFeaturedProjectIcons().then((featuredProjectIcons) => {
+      this.projectIcons = featuredProjectIcons;
+    });
+  }
+
+  setFeaturedProjectIcon(projectIcon) {
+    this.ProjectService.setFeaturedProjectIcon(projectIcon).then(() => {
+      this.projectIcon = 'wise5/authoringTool/projectIcons/' + projectIcon;
+      this.showProjectIcon();
+      this.closeEditProjectIconMode();
+    });
+  }
+
+  chooseCustomProjectIcon() {
+    const params = {
+      isPopup: true,
+      target: 'projectIcon'
+    };
+    this.$rootScope.$broadcast('openAssetChooser', params);
+  }
+
+  setCustomProjectIcon(projectIcon) {
+    this.showProjectIconLoading();
+    this.ProjectService.setCustomProjectIcon(projectIcon).then(() => {
+      this.loadProjectIconAfterTimeout();
+    });
+  }
+
+  /*
+   * Load the project_thumb.png after a timeout to allow time for the image to be updated on the server
+   * and browser. This is to prevent the browser from displaying the previous project_thumb.png.
+   */
+  loadProjectIconAfterTimeout() {
+    this.$timeout(() => {
+      this.loadProjectIcon();
+      this.closeEditProjectIconMode();
+    }, 3000);
+  }
+
+  loadProjectIcon() {
+    this.projectIcon = this.ConfigService.getConfigParam('projectBaseURL') + 'assets/project_thumb.png?timestamp=' + new Date().getTime();
+    const image = new Image();
+    image.onerror = () => {
+      this.showProjectIconError();
+    };
+    image.onload = () => {
+      this.showProjectIcon();
+    };
+    image.src = this.projectIcon;
+  }
+
+  toggleEditProjectIconMode() {
+    this.isEditingProjectIcon = !this.isEditingProjectIcon;
+    if (this.isEditingProjectIcon) {
+      this.getFeaturedProjectIcons();
+    }
+  }
+
+  closeEditProjectIconMode() {
+    this.isEditingProjectIcon = false;
+  }
+
+  showProjectIcon() {
+    this.isShowProjectIcon = true;
+    this.isShowProjectIconError = false;
+    this.isShowProjectIconLoading = false;
+  }
+
+  showProjectIconError() {
+    this.isShowProjectIcon = false;
+    this.isShowProjectIconError = true;
+    this.isShowProjectIconLoading = false;
+  }
+
+  showProjectIconLoading() {
+    this.isShowProjectIcon = false;
+    this.isShowProjectIconError = false;
+    this.isShowProjectIconLoading = true;
   }
 
   save() {
