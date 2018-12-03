@@ -1,0 +1,147 @@
+<div class="main app-background">
+  <div class="content">
+    <header fxlayout="row" class="content__header">
+      <h1 class="accent"
+          fxlayoutalign="center center"
+          ngclass="mat-display-1"
+          [ngclass.xs]="{ 'mat-display-1': false }">
+        <mat-icon>info_circle</mat-icon>
+        <span i18n>About Us</span>
+      </h1>
+    </header>
+    <section class="section"
+             fxlayout="column"
+             fxlayout.gt-xs="row"
+             fxlayoutalign="center center"
+             fxlayoutgap="36px"
+             fxlayoutgap.gt-md="64px">
+      <div fxflex="100%" fxflex.gt-xs="50%">
+        <h2 class="accent-1" i18n>WISE is the product of more than 25 years of research on teaching and learning with educational technologies</h2>
+      </div>
+      <div fxflex="100%" fxflex.gt-xs="50%">
+        <div class="about__intros">
+          <img class="about__intro" src="assets/img/about/wise-workshop-group-2018-fun.jpg" alt="WISE teacher workshop 2018" />
+        </div>
+      </div>
+    </section>
+    <section id="research-practice"
+             class="section"
+             fxlayout="column"
+             fxlayout.gt-xs="row"
+             fxlayoutalign="center center"
+             fxlayoutgap="36px"
+             fxlayoutgap.gt-xs="36px"
+             fxlayoutgap.gt-md="64px">
+      <div fxflex="100%" fxflex.gt-xs="50%" fxflexorder="2" fxflexorder.gt-xs="1">
+        <div class="about__research-practice about--l">
+          <img class="about__research" src="assets/img/about/wise-student-and-teacher.jpg" alt="WISE student and teacher" />
+          <img class="about__research" src="assets/img/about/wise-teacher-workshop-design.jpg" alt="WISE teacher workshop design" />
+          <img class="about__research" src="assets/img/about/marcia-wise-workshop.jpg" alt="Marcia at WISE workshop" />
+        </div>
+      </div>
+      <div fxflex="100%" fxflex.gt-xs="50%" fxflexorder="1" fxflexorder.gt-xs="2">
+        <h2 class="accent-1" i18n>Based on Research, Refined Through Practice</h2>
+        <p i18n>Through our collaborations with teachers, administrators, technology designers, and education researchers, we have refined a set of principles which guide the design of all WISE curriculum materials and tools.</p>
+        <p>
+          <ng-container i18n>This means that when implementing WISE units, you can be assured that what you're using is grown from a solid foundation, advised by real teachers' experiences, and tested in classrooms with real students.</ng-container>
+          <br><br>
+          <a mat-raised-button color="accent" href="https://wise-research.berkeley.edu" target="_blank" i18n>Our Research + Team</a>
+        </p>
+      </div>
+    </section>
+    <section id="ki"
+             class="section"
+             fxlayout="column"
+             fxlayout.gt-xs="row"
+             fxlayoutalign="center center"
+             fxlayoutgap="36px"
+             fxlayoutgap.gt-md="64px">
+      <div fxflex="100%" fxflex.gt-xs="50%">
+        <h2 class="accent-1" i18n>Knowledge Integration</h2>
+        <p i18n>As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</p>
+        <p>The <strong>Knowledge Integration (KI)</strong> perspective emphasizes building on and strengthening science understanding by incorporating new ideas and sorting out alternative perspectives using evidence. This framework forms the basis of WISE curriculum design, assessments, and evaluation.</p>
+      </div>
+      <div fxflex="100%" fxflex.gt-xs="50%">
+        <div class="about--r" fxflex>
+          <div class="content-block">
+            <h3 class="content-block__title" i18n>The KI Processes:</h3>
+            <ul class="list--icons">
+              <li fxlayoutalign="start start">
+                <mat-icon class="accent" svgicon="ki-elicit" aria-label="Elicit Ideas"></mat-icon>
+                <span i18n>Elicit Ideas</span>
+              </li>
+              <li fxlayoutalign="start start">
+                <mat-icon class="accent" svgicon="ki-add" aria-label="Add Ideas"></mat-icon>
+                <span i18>Add Ideas</span>
+              </li>
+              <li fxlayoutalign="start start">
+                <mat-icon class="accent" svgicon="ki-distinguish" aria-label="Distinguish Ideas"></mat-icon>
+                <span i18n>Distinguish Ideas</span>
+              </li>
+              <li fxlayoutalign="start start">
+                <mat-icon class="accent" svgicon="ki-connect" aria-label="Connect Ideas"></mat-icon>
+                <span i18n>Connect Ideas</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <h1 class="accent-1 center"
+        ngclass="mat-display-1"
+        [ngclass.xs]="{ 'mat-display-1': false }"
+        i18n>~ WISE Goals ~</h1>
+    <section id="goals"
+             class="section"
+             fxlayout="column"
+             fxlayoutgap="36px"
+             fxlayoutgap.gt-md="64px">
+      <div fxlayout="column"
+           fxlayout.gt-xs="row"
+           fxlayoutgap="24px"
+           fxlayoutgap.gt-xs="36px"
+           fxlayoutgap.gt-md="64px">
+        <div class="content-block about__goal"
+             fxflex="100%"
+             fxflex.gt-xs="50%">
+          <h2 class="accent">Make Science Meaningful</h2>
+          <p>WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</p>
+        </div>
+        <div class="content-block about__goal--alt"
+             fxflex="100%"
+             fxflex.gt-xs="50%">
+          <h2 class="accent">Support Diverse Learners</h2>
+          <p>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</p>
+        </div>
+      </div>
+      <div fxlayout="column"
+           fxlayout.gt-xs="row"
+           fxlayoutgap="24px"
+           fxlayoutgap.gt-xs="36px"
+           fxlayoutgap.gt-md="64px">
+        <div class="content-block about__goal"
+             ngclass.gt-xs="about__goal--alt"
+             fxflex="100%"
+             fxflex.gt-xs="50%">
+          <h2 class="accent">Increase Participation in Science</h2>
+          <p>WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</p>
+        </div>
+        <div class="content-block about__goal"
+             ngclass.xs="about__goal--alt"
+             fxflex="100%"
+             fxflex.gt-xs="50%">
+          <h2 class="accent">Accessible to All</h2>
+          <p>WISE is <strong>free</strong> and <strong>open source</strong>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</p>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="about__pics">
+        <img class="about__pic" src="assets/img/about/wise-students-add-note.jpg" alt="WISE on student computer" />
+        <img class="about__pic" src="assets/img/about/wise-workshop-researcher.jpg" alt="WISE researcher" />
+        <img class="about__pic" src="assets/img/about/wise-teachers-researcher.jpg" alt="WISE teachers and researcher" />
+        <img class="about__pic" src="assets/img/about/wise-tech-teacher-workshop.jpg" alt="WISE developers and teacher" />
+      </div>
+    </section>
+  </div>
+</div>
