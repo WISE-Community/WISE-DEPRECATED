@@ -172,12 +172,6 @@ describe('MultipleChoiceController', () => {
     expect(choice3.feedbackToShow).toBeFalsy();
   });
 
-  it('single answer single correct answer component should show incorrect when no answer is submitted', () => {
-    loadSingleAnswerSingleCorrectAnswerComponent();
-    checkAnswer();
-    expect(multipleChoiceController.isCorrect).toBeFalsy();
-  });
-
   it('single answer single correct answer component should show incorrect when the incorrect answer is submitted', () => {
     loadSingleAnswerSingleCorrectAnswerComponent();
     selectSingleAnswerChoice('y82sng5vqp');
@@ -217,12 +211,6 @@ describe('MultipleChoiceController', () => {
     expect(choice2.feedbackToShow).toEqual('B Feedback');
     expect(choice3.showFeedback).toBeTruthy();
     expect(choice3.feedbackToShow).toEqual('C Feedback');
-  });
-
-  it('multiple answer component should show incorrect when no answers are submitted', () => {
-    loadMultipleAnswerComponent();
-    checkAnswer();
-    expect(multipleChoiceController.isCorrect).toBeFalsy();
   });
 
   it('multiple answer component should show incorrect when the incorrect answer is submitted', () => {

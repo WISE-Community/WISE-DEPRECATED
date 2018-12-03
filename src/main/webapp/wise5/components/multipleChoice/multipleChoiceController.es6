@@ -539,12 +539,8 @@ class MultipleChoiceController extends ComponentController {
     const choices = this.getChoices();
     for (let choice of choices) {
       if (this.componentHasCorrectAnswer) {
-        if (this.isStudentChoiceValueCorrect(choice)) {
-          if (isCorrect === null) {
-            isCorrect = true;
-          } else {
-            isCorrect = isCorrect && true;
-          }
+        if (this.isStudentChoiceValueCorrect(choice) && isCorrect === null) {
+          isCorrect = true;
         } else {
           isCorrect = false;
         }
