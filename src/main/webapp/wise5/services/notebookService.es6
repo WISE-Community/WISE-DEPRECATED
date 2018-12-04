@@ -80,13 +80,13 @@ class NotebookService {
 
   editItem(ev, itemId) {
     this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
-  };
+  }
 
   addNote(ev, file, text = null, studentWorkIds = null, isEditTextEnabled = true, isFileUploadEnabled = true) {
     this.$rootScope.$broadcast('addNote',
         {ev: ev, file: file, text: text, studentWorkIds: studentWorkIds,
           isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled});
-  };
+  }
 
   deleteNote(note) {
     const noteCopy = angular.copy(note);
@@ -107,8 +107,17 @@ class NotebookService {
   }
 
   // looks up notebook item by local notebook item id, including deleted notes
-  getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = this.ConfigService.getWorkgroupId()) {
-    return this.getNotebookItemById(itemId, workgroupId);
+  getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, workgroupId = this.ConfigService.getWorkgroupId()) {
+    const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
+    if (notebookByWorkgroup != null) {
+      const allNotebookItems = notebookByWorkgroup.allItems;
+      for (let notebookItem of allNotebookItems) {
+        if (notebookItem.localNotebookItemId === localNotebookItemId) {
+          return notebookItem;
+        }
+      }
+    }
+    return null;
   }
 
   // returns student's report item if they've done work, or the template if they haven't
@@ -148,11 +157,11 @@ class NotebookService {
     this.getNotebookByWorkgroup().totalSizeMax = this.ConfigService.getStudentMaxTotalAssetsSize();
     this.getNotebookByWorkgroup().usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
     */
-  };
+  }
 
   getNotebookConfig() {
     return this.config;
-  };
+  }
 
   /**
    * Returns the report content for the specified reportId, or null if not exists.
@@ -458,7 +467,7 @@ class NotebookService {
         return result.data;
       });
     }
-  };
+  }
 
   updatePrivateNotebookItem(notebookItem, workgroupId) {
     if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
@@ -560,7 +569,7 @@ class NotebookService {
     };
     let event = isOpen ? "notebookOpened" : "notebookClosed";
     this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-  };
+  }
 }
 
 NotebookService.$inject = [
