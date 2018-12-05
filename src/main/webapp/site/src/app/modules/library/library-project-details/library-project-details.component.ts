@@ -66,7 +66,8 @@ export class LibraryProjectDetailsComponent implements OnInit {
   runProject() {
     this.dialog.open(CreateRunDialogComponent, {
       data: this.data,
-      panelClass: 'mat-dialog--md'
+      panelClass: 'mat-dialog--md',
+      disableClose: true
     });
   }
 }

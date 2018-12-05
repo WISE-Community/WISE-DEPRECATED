@@ -22,6 +22,8 @@ export class CreateRunDialogComponent {
   startDate: any;
   periodOptions: string[] = [];
   isCreating: boolean = false;
+  isCreated: boolean = false;
+  run: Run = null;
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<CreateRunDialogComponent>,
@@ -84,10 +86,12 @@ export class CreateRunDialogComponent {
           })
         )
         .subscribe((newRun: Run) => {
-          const run = new Run(newRun);
-          this.teacherService.addNewRun(run);
-          this.teacherService.setTabIndex(0);
-          this.dialog.closeAll();
+          this.run = new Run(newRun);
+          this.dialogRef.afterClosed().subscribe(result => {
+            this.teacherService.addNewRun(this.run);
+            this.teacherService.setTabIndex(0);
+          });
+          this.isCreated = true;
         });
   }
 
@@ -102,5 +106,9 @@ export class CreateRunDialogComponent {
     } else {
       return customPeriods.toString();
     }
+  }
+
+  closeAll() {
+    this.dialog.closeAll();
   }
 }
