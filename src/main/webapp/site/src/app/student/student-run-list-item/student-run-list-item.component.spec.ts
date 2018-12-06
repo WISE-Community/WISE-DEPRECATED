@@ -36,7 +36,7 @@ describe('StudentRunListItemComponent', () => {
       imports: [ MomentModule ],
       declarations: [ StudentRunListItemComponent ],
       providers: [
-        { provide: ConfigService, useClass: MockConfigService }
+        { provide: ConfigService, useClass: MockConfigService },
         { provide: MatDialog }
         ],
       schemas: [ NO_ERRORS_SCHEMA ]
