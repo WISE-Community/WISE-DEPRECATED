@@ -55,7 +55,9 @@ export class StudentService {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', String(runId));
-    body = body.set('workgroupId', String(workgroupId));
+    if (workgroupId != null) {
+      body = body.set('workgroupId', String(workgroupId));
+    }
     body = body.set('presentUserIds', JSON.stringify(presentUserIds));
     body = body.set('absentUserIds', JSON.stringify(absentUserIds));
     /*

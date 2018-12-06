@@ -225,7 +225,7 @@ public class StudentAPIController {
 
   @RequestMapping(value = "/run/launch", method = RequestMethod.POST)
   protected String launchRun(@RequestParam("runId") Long runId,
-                             @RequestParam("workgroupId") Long workgroupId,
+                             @RequestParam(value = "workgroupId", required = false) Long workgroupId,
                              @RequestParam("presentUserIds") String presentUserIds,
                              @RequestParam("absentUserIds") String absentUserIds,
                              HttpServletRequest request) throws Exception {
@@ -234,12 +234,37 @@ public class StudentAPIController {
     //studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp,
     //  presentUserIds, absentUserIds);
     Run run = runService.retrieveById(runId);
-    Workgroup workgroup = workgroupService.retrieveById(workgroupId);
+    Workgroup workgroup = null;
+    if (workgroupId == null) {
+      User user = ControllerUtil.getSignedInUser();
+      Group period = run.getPeriodOfStudent(user);
+      String name = "Workgroup for user: " + user.getUserDetails().getUsername();
+      JSONArray presentUserIdsJSONArray = new JSONArray(presentUserIds);
+      Set<User> members = createMembers(presentUserIdsJSONArray);
+      workgroup = workgroupService.createWorkgroup(name, members, run, period);
+    } else {
+      workgroup = workgroupService.retrieveById(workgroupId);
+    }
     StartProjectController.notifyServletSession(request, run);
     String startProjectUrl = projectService.generateStudentStartProjectUrlString(workgroup, request.getContextPath());
     JSONObject response = new JSONObject();
     response.put("startProjectUrl", startProjectUrl);
     return response.toString();
+  }
+
+  private Set<User> createMembers(JSONArray userIds)
+      throws JSONException, ObjectNotFoundException {
+    Set<User> members = new HashSet<User>();
+    addUserToMembers(members, userIds);
+    return members;
+  }
+
+  private void addUserToMembers(Set<User> members, JSONArray userIds)
+      throws JSONException, ObjectNotFoundException {
+    for (int p = 0; p < userIds.length(); p++) {
+      long userId = userIds.getInt(p);
+      members.add(userService.retrieveById(userId));
+    }
   }
 
   /**

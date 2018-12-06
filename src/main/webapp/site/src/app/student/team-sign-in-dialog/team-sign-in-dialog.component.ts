@@ -33,14 +33,19 @@ export class TeamSignInDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.run = this.data.run;
     this.user = <Student>this.getUser().getValue();
-    for (let workgroupMember of this.run.workgroupMembers) {
-      if (workgroupMember.id !== this.user.id) {
-        this.teamMembers.push(workgroupMember);
+    if (this.run.workgroupMembers != null) {
+      for (let workgroupMember of this.run.workgroupMembers) {
+        if (workgroupMember.id !== this.user.id) {
+          this.teamMembers.push(workgroupMember);
+          this.markAsNotSignedIn(workgroupMember);
+        }
       }
     }
 
     for (let i = this.teamMembers.length; i < this.run.studentsPerTeam - 1; i++) {
-      this.teamMembers.push(new Student());
+      const student = new Student();
+      this.markAsNotSignedIn(student);
+      this.teamMembers.push(student);
     }
   }
 
@@ -68,6 +73,11 @@ export class TeamSignInDialogComponent implements OnInit {
     return !this.showSignInForm[teamMember.id];
   }
 
+  isShowUsernameField(teamMember) {
+    return this.showSignInForm[teamMember.id] &&
+      !teamMember.isGoogleUser;
+  }
+
   isShowPasswordField(teamMember) {
     return this.showSignInForm[teamMember.id] &&
       !teamMember.isGoogleUser;
@@ -76,20 +86,22 @@ export class TeamSignInDialogComponent implements OnInit {
   isShowSignInWithGoogle(teamMember) {
     return this.showSignInForm[teamMember.id] &&
       this.isGoogleAuthenticationEnabled &&
-      teamMember.isGoogleUser;
+      (teamMember.id == null || teamMember.isGoogleUser);
   }
 
   signIn(user: any) {
     this.userService.checkAuthentication(user.userName, user.password).subscribe((response) => {
-      this.isSignedIn[user.id] = response.isValid;
-      if (response.isValid !== true) {
+      if (response.isValid === true) {
+        user.id = response.userId;
+      } else {
         alert("Invalid username or password. Please try again.");
       }
+      this.isSignedIn[user.id] = response.isValid;
       user.password = null;
     });
   }
 
-  socialSignIn(socialPlatform : string, userId: string) {
+  socialSignIn(socialPlatform : string, teamMember: any) {
     let socialPlatformProvider;
     if (socialPlatform == "google"){
       socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
@@ -97,15 +109,41 @@ export class TeamSignInDialogComponent implements OnInit {
 
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-        const googleUserID = userData.id;
-        this.userService.isGoogleIdCorrect(googleUserID, userId).subscribe((isCorrect) => {
-          this.isSignedIn[userId] = isCorrect;
-          if (!isCorrect) {
-            alert("Incorrect Google User. Please try again.");
-          }
-        });
+        const userId = teamMember.id;
+        const googleUserId = userData.id;
+        if (userId == null) {
+          this.userService.getUserByGoogleId(googleUserId).subscribe((response) => {
+            if (response.status === 'success') {
+              teamMember.id = response.userId;
+              this.isSignedIn[teamMember.id] = true;
+              teamMember.userName = response.userName;
+              this.markAsSignedIn(teamMember);
+            }
+          });
+        } else {
+          this.userService.isGoogleIdCorrect(googleUserId, userId).subscribe((isCorrect) => {
+            this.isSignedIn[userId] = isCorrect;
+            if (isCorrect) {
+              this.markAsSignedIn(teamMember);
+            } else {
+              alert("Incorrect Google User. Please try again.");
+            }
+          });
+        }
       }
     );
+  }
+
+  markAsSignedIn(teamMember: any) {
+    teamMember.status = 'signedIn';
+  }
+
+  markAsNotSignedIn(teamMember: any) {
+    teamMember.status = 'notSignedIn';
+  }
+
+  markAsAbsent(teamMember: any) {
+    teamMember.status = 'absent';
   }
 
   launchRun() {
@@ -113,10 +151,12 @@ export class TeamSignInDialogComponent implements OnInit {
     presentUserIds.push(this.user.id);
     const absentUserIds = [];
     for (let member of this.teamMembers) {
-      if (this.isSignedIn[member.id]) {
-        presentUserIds.push(member.id);
-      } else {
-        absentUserIds.push(member.id);
+      if (member.id != null) {
+        if (this.isSignedIn[member.id]) {
+          presentUserIds.push(member.id);
+        } else {
+          absentUserIds.push(member.id);
+        }
       }
     }
     this.studentService.launchRun(this.run.id, this.run.workgroupId, presentUserIds, absentUserIds)

@@ -139,6 +139,7 @@ public class UserAPIController {
     User user = userService.retrieveUserByUsername(username);
     JSONObject response = new JSONObject();
     response.put("isValid", userService.isPasswordCorrect(user, password));
+    response.put("userId", user.getId());
     return response.toString();
   }
 
@@ -184,10 +185,24 @@ public class UserAPIController {
 
   @ResponseBody
   @RequestMapping(value = "/check-google-user-matches", method = RequestMethod.GET)
-  protected boolean isGoogleIdExist(@RequestParam String googleUserId,
+  protected boolean isGoogleIdMatches(@RequestParam String googleUserId,
                                     @RequestParam String userId) {
     User user = this.userService.retrieveUserByGoogleUserId(googleUserId);
     return user != null && user.getId().toString().equals(userId);
+  }
+
+  @RequestMapping(value = "/google-user", method = RequestMethod.GET)
+  protected String getUserByGoogleId(@RequestParam String googleUserId) throws JSONException {
+    JSONObject response = new JSONObject();
+    User user = this.userService.retrieveUserByGoogleUserId(googleUserId);
+    if (user == null) {
+      response.put("status", "error");
+    } else {
+      response.put("status", "success");
+      response.put("userId", user.getId());
+      response.put("userName", user.getUserDetails().getUsername());
+    }
+    return response.toString();
   }
 
   protected String getLanguageName(String localeString) {
