@@ -1,0 +1,26 @@
+<ng-container i18n>Team Members:</ng-container>
+<p i18n>{{user.firstName}} {{user.lastName}}</p>
+
+<p *ngFor="let teamMember of teamMembers">
+  {{teamMember.firstName}} {{teamMember.lastName}} {{teamMember.userName}}
+  <span *ngIf="!isSignedIn[teamMember.id]">
+    <button *ngIf="isShowSignInButton(teamMember)" (click)="signInTeamMember(teamMember.id)" i18n>Sign In</button>
+    <span *ngIf="isShowPasswordField(teamMember)">
+      <mat-form-field appearance="fill" fxFlex>
+        <mat-label i18n>Password</mat-label>
+        <input matInput type="password"
+               [(ngModel)]="teamMember.password"/>
+      </mat-form-field>
+      <button (click)="signIn(teamMember)" i18n>Sign In</button>
+    </span>
+    <button *ngIf="isShowSignInWithGoogle(teamMember)"
+            class="button--social-login button--google"
+            color="accent"
+            mat-flat-button
+            (click)="socialSignIn('google', teamMember.id)">
+      <img src="assets/img/icons/g-logo.png" alt="Google logo"/>
+      <ng-container i18n>Sign in with Google</ng-container>
+    </button>
+  </span>
+  <span *ngIf="isSignedIn[teamMember.id]">Is signed in!!</span>
+</p>

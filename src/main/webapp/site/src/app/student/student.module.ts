@@ -25,6 +25,7 @@ import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 import { TimelineModule } from "../modules/timeline/timeline.module";
+import { TeamSignInDialogComponent } from './team-sign-in-dialog/team-sign-in-dialog.component';
 
 @NgModule({
   imports: [
@@ -47,10 +48,12 @@ import { TimelineModule } from "../modules/timeline/timeline.module";
     StudentRunListItemComponent,
     EditComponent,
     EditProfileComponent,
-    EditPasswordComponent
+    EditPasswordComponent,
+    TeamSignInDialogComponent
   ],
   entryComponents: [
-    AddProjectDialogComponent
+    AddProjectDialogComponent,
+    TeamSignInDialogComponent
   ],
   providers: [
     AuthGuard

@@ -162,17 +162,18 @@ public class StudentAPIController {
       for (User member : workgroup.getMembers()) {
         MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
         JSONObject memberJSON = new JSONObject();
-        memberJSON.put("id", userDetails.getId());
-        String firstname = userDetails.getFirstname();
-        memberJSON.put("firstname", firstname);
-        String lastname = userDetails.getLastname();
-        memberJSON.put("lastname", lastname);
-        memberJSON.put("username", userDetails.getUsername());
+        memberJSON.put("id", member.getId());
+        String firstName = userDetails.getFirstname();
+        memberJSON.put("firstName", firstName);
+        String lastName = userDetails.getLastname();
+        memberJSON.put("lastName", lastName);
+        memberJSON.put("userName", userDetails.getUsername());
+        memberJSON.put("isGoogleUser", userDetails.isGoogleUser());
         workgroupMembers.put(memberJSON);
         if (workgroupNames.length() > 0) {
           workgroupNames.append(", ");
         }
-        workgroupNames.append(firstname + " " + lastname);
+        workgroupNames.append(firstName + " " + lastName);
       }
       runJSON.put("workgroupId", studentRunInfo.getWorkgroup().getId());
       runJSON.put("workgroupNames", workgroupNames.toString());

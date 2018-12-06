@@ -231,12 +231,6 @@ public class TeacherAPIController {
     return googleUserId != null && !googleUserId.equals("");
   }
 
-  @ResponseBody
-  @RequestMapping(value = "/checkGoogleUserId", method = RequestMethod.GET)
-  protected boolean isGoogleIdExist(@RequestParam String googleUserId) {
-    return this.userService.retrieveUserByGoogleUserId(googleUserId) != null;
-  }
-
   private JSONArray getProjectSharedOwnersJSON(Project project) throws JSONException {
     JSONArray sharedOwners = new JSONArray();
     for (User sharedOwner : project.getSharedowners()) {

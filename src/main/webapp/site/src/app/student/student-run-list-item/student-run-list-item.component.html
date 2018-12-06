@@ -11,7 +11,7 @@
   </div>
   <div *ngIf="run.workgroupMembers"><ng-container i18n>Team:</ng-container>
     <span *ngFor="let user of run.workgroupMembers; let isLast=last">
-      {{ user.firstname }}{{ isLast ? '' : ', '}}
+      {{ user.firstName }}{{ isLast ? '' : ', '}}
     </span>
   </div>
 </ng-template>
@@ -50,7 +50,7 @@
       </a>
       <a mat-flat-button
          *ngIf="!run.endTime"
-         href="{{ runLink }}"
+         (click)="launchRun()"
          color="primary"
          [disabled]="!isAvailable"
          fxFlex="0 0 auto"
