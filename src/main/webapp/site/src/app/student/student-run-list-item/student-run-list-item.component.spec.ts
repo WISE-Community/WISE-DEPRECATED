@@ -8,6 +8,7 @@ import { MomentModule } from "ngx-moment";
 import { Project } from "../../domain/project";
 import { User } from "../../domain/user";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { MatDialog } from "@angular/material";
 
 export class MockConfigService {
   getConfig(): Observable<Config> {
@@ -34,7 +35,10 @@ describe('StudentRunListItemComponent', () => {
     TestBed.configureTestingModule({
       imports: [ MomentModule ],
       declarations: [ StudentRunListItemComponent ],
-      providers: [ { provide: ConfigService, useClass: MockConfigService } ],
+      providers: [
+        { provide: ConfigService, useClass: MockConfigService }
+        { provide: MatDialog }
+        ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

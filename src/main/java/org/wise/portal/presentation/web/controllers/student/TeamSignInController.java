@@ -307,10 +307,6 @@ public class TeamSignInController {
     form.setUsername1(signedInUsername);
     String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
     int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
-    String googleClientId = wiseProperties.getProperty("google.clientId");
-    if (googleClientId != null) {
-      form.enableGoogleSignIn();
-    }
 
     try {
       Run run = runService.retrieveById(runId);
