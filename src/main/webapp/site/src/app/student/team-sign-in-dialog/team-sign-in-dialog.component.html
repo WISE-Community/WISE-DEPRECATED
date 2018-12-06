@@ -3,8 +3,10 @@
 
 <p *ngFor="let teamMember of teamMembers">
   {{teamMember.firstName}} {{teamMember.lastName}} {{teamMember.userName}}
+  <span *ngIf="isSignedIn[teamMember.id]">Status: Signed In</span>
+  <span *ngIf="!isSignedIn[teamMember.id]">Status: Absent</span>
   <span *ngIf="!isSignedIn[teamMember.id]">
-    <button *ngIf="isShowSignInButton(teamMember)" (click)="signInTeamMember(teamMember.id)" i18n>Sign In</button>
+    <button *ngIf="isShowSignInButton(teamMember)" (click)="signInTeamMember(teamMember)" i18n>Sign In</button>
     <span *ngIf="isShowPasswordField(teamMember)">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label i18n>Password</mat-label>
@@ -21,6 +23,9 @@
       <img src="assets/img/icons/g-logo.png" alt="Google logo"/>
       <ng-container i18n>Sign in with Google</ng-container>
     </button>
+    <button *ngIf="!isShowSignInButton(teamMember)" (click)="cancelSignInTeamMember(teamMember)" i18n>Cancel</button>
   </span>
-  <span *ngIf="isSignedIn[teamMember.id]">Is signed in!!</span>
 </p>
+<button (click)="launchRun()" i18n>Launch Unit</button>
+
+

@@ -10,6 +10,7 @@ import { AuthService } from "angularx-social-login";
 import { MatDialog } from "@angular/material";
 import { MAT_DIALOG_DATA } from "../../../../../../../../node_modules/@angular/material/dialog";
 import { User } from "../../domain/user";
+import { StudentService } from '../student.service';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {
@@ -20,6 +21,18 @@ export class MockUserService {
     const userBehaviorSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     userBehaviorSubject.next(user);
     return userBehaviorSubject;
+  }
+}
+
+export class MockStudentService {
+  launchRun(runId: string, workgroupId: string, presentUserIds: string[], absentUserIds: string[]): Observable<any> {
+    return Observable.create(observer => {
+      observer.next({
+        status: 'success',
+        messageCode: 'passwordChanged'
+      });
+      observer.complete();
+    });
   }
 }
 
@@ -73,7 +86,8 @@ describe('TeamSignInDialogComponent', () => {
         { provide: AuthService, useClass: MockAuthService },
         { provide: ConfigService, useClass: MockConfigService },
         { provide: MAT_DIALOG_DATA, useValue: { run: runObj } },
-        { provide: UserService, useClass: MockUserService }
+        { provide: UserService, useClass: MockUserService },
+        { provide: StudentService, useClass: MockStudentService }
         ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

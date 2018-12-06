@@ -5,6 +5,7 @@ import { StudentRun } from "../student-run";
 import { MAT_DIALOG_DATA } from "@angular/material";
 import { AuthService, GoogleLoginProvider } from "angularx-social-login";
 import { ConfigService } from "../../services/config.service";
+import { StudentService } from "../student.service";
 
 @Component({
   selector: 'app-team-sign-in-dialog',
@@ -28,6 +29,7 @@ export class TeamSignInDialogComponent implements OnInit {
   constructor(private configService: ConfigService,
               private socialAuthService: AuthService,
               private userService: UserService,
+              private studentService: StudentService,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.run = this.data.run;
     this.user = <Student>this.getUser().getValue();
@@ -42,12 +44,24 @@ export class TeamSignInDialogComponent implements OnInit {
     }
   }
 
+  ngOnInit() {
+    this.configService.getConfig().subscribe((config) => {
+      if (config != null) {
+        this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+      }
+    });
+  }
+
   getUser() {
     return this.userService.getUser();
   }
 
-  signInTeamMember(userId) {
-    this.showSignInForm[userId] = true;
+  signInTeamMember(teamMember) {
+    this.showSignInForm[teamMember.id] = true;
+  }
+
+  cancelSignInTeamMember(teamMember) {
+    this.showSignInForm[teamMember.id] = false;
   }
 
   isShowSignInButton(teamMember) {
@@ -94,12 +108,20 @@ export class TeamSignInDialogComponent implements OnInit {
     );
   }
 
-  ngOnInit() {
-    this.configService.getConfig().subscribe((config) => {
-      if (config != null) {
-        this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+  launchRun() {
+    const presentUserIds = [];
+    presentUserIds.push(this.user.id);
+    const absentUserIds = [];
+    for (let member of this.teamMembers) {
+      if (this.isSignedIn[member.id]) {
+        presentUserIds.push(member.id);
+      } else {
+        absentUserIds.push(member.id);
       }
-    });
+    }
+    this.studentService.launchRun(this.run.id, this.run.workgroupId, presentUserIds, absentUserIds)
+        .subscribe((response: any) => {
+          window.location.href = response.startProjectUrl;
+        });
   }
-
 }

@@ -14,6 +14,7 @@ export class StudentService {
   private runsUrl = 'api/student/runs';
   private runInfoUrl = 'api/student/run/info';
   private addRunUrl = 'api/student/run/register';
+  private launchRunUrl = 'api/student/run/launch';
   private registerUrl = 'api/student/register';
   private securityQuestionsUrl = 'api/student/register/questions';
   private updateProfileUrl = 'api/student/profile/update';
@@ -47,6 +48,26 @@ export class StudentService {
     body = body.set('runCode', runCode);
     body = body.set('period', period);
     return this.http.post<StudentRun>(this.addRunUrl, body, { headers: headers });
+  }
+
+  launchRun(runId: number, workgroupId: number, presentUserIds: string[],
+      absentUserIds: string[]) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('runId', String(runId));
+    body = body.set('workgroupId', String(workgroupId));
+    body = body.set('presentUserIds', JSON.stringify(presentUserIds));
+    body = body.set('absentUserIds', JSON.stringify(absentUserIds));
+    /*
+    const body = {
+      runId: runId,
+      workgroupId: workgroupId,
+      presentUserIds: presentUserIds,
+      absentUserIds: absentUserIds
+    };
+    */
+
+    return this.http.post(this.launchRunUrl, body, { headers: headers });
   }
 
   private log(message: string) {

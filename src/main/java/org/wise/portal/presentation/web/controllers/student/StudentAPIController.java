@@ -33,6 +33,8 @@ import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureExcep
 import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
@@ -50,12 +52,16 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
+import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -77,10 +83,19 @@ public class StudentAPIController {
   private StudentService studentService;
 
   @Autowired
+  private StudentAttendanceService studentAttendanceService;
+
+  @Autowired
   private Properties wiseProperties;
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private ProjectService projectService;
+
+  @Autowired
+  private WorkgroupService workgroupService;
 
   @Autowired
   private Properties i18nProperties;
@@ -206,6 +221,25 @@ public class StudentAPIController {
       runRegisterInfo.put("error", "runNotFound");
     }
     return runRegisterInfo.toString();
+  }
+
+  @RequestMapping(value = "/run/launch", method = RequestMethod.POST)
+  protected String launchRun(@RequestParam("runId") Long runId,
+                             @RequestParam("workgroupId") Long workgroupId,
+                             @RequestParam("presentUserIds") String presentUserIds,
+                             @RequestParam("absentUserIds") String absentUserIds,
+                             HttpServletRequest request) throws Exception {
+
+    Date loginTimestamp = new Date();
+    //studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp,
+    //  presentUserIds, absentUserIds);
+    Run run = runService.retrieveById(runId);
+    Workgroup workgroup = workgroupService.retrieveById(workgroupId);
+    StartProjectController.notifyServletSession(request, run);
+    String startProjectUrl = projectService.generateStudentStartProjectUrlString(workgroup, request.getContextPath());
+    JSONObject response = new JSONObject();
+    response.put("startProjectUrl", startProjectUrl);
+    return response.toString();
   }
 
   /**
