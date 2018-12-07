@@ -1,20 +1,20 @@
 <ng-container i18n>Team Members:</ng-container>
-<p i18n>{{user.firstName}} {{user.lastName}}</p>
-
+<p i18n>{{user.firstName}} {{user.lastName}} [{{user.userName}}] Status: Signed In</p>
 <p *ngFor="let teamMember of teamMembers">
-  {{teamMember.firstName}} {{teamMember.lastName}} {{teamMember.userName}}
-  <span>Status:
-    <span *ngIf="teamMember.status === 'signedIn'">Signed In</span>
-    <span *ngIf="teamMember.status === 'notSignedIn'">Not Signed In</span>
-    <span *ngIf="teamMember.status === 'absent'">Absent</span>
+  <span *ngIf="isExistingStudent(teamMember)">
+    {{teamMember.firstName}} {{teamMember.lastName}} [{{teamMember.userName}}]
   </span>
-  <span *ngIf="teamMember.status === 'notSignedIn'">
+  <span>Status:
+    <span *ngIf="isSignedIn(teamMember)">Signed In</span>
+    <span *ngIf="isNotSignedIn(teamMember)">Not Signed In</span>
+    <span *ngIf="isAbsent(teamMember)">Absent</span>
+  </span>
+  <span *ngIf="isNotSignedIn(teamMember)">
     <button (click)="markAsAbsent(teamMember)">
       Absent
     </button>
   </span>
-  <span *ngIf="!isSignedIn[teamMember.id]">
-    <button *ngIf="isShowSignInButton(teamMember)" (click)="signInTeamMember(teamMember)" i18n>Sign In</button>
+  <span *ngIf="isNotSignedIn(teamMember)">
     <span *ngIf="isShowUsernameField(teamMember)">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label i18n>Username</mat-label>
@@ -28,6 +28,7 @@
         <input matInput type="password"
                [(ngModel)]="teamMember.password"/>
       </mat-form-field>
+      <button (click)="signIn(teamMember)" i18n>Sign In</button>
     </span>
     <button *ngIf="isShowSignInWithGoogle(teamMember)"
             class="button--social-login button--google"
@@ -37,9 +38,6 @@
       <img src="assets/img/icons/g-logo.png" alt="Google logo"/>
       <ng-container i18n>Sign in with Google</ng-container>
     </button>
-    <button *ngIf="!isShowSignInButton(teamMember)" (click)="cancelSignInTeamMember(teamMember)" i18n>Cancel</button>
   </span>
 </p>
-<button (click)="launchRun()" i18n>Launch Unit</button>
-
-
+<button (click)="launchRun()" [disabled]="!isCanLaunch()" i18n>Launch Unit</button>

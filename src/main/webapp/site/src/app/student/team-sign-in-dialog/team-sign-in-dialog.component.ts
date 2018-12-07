@@ -15,16 +15,11 @@ import { StudentService } from "../student.service";
 export class TeamSignInDialogComponent implements OnInit {
 
   user: Student;
-
   run: StudentRun = new StudentRun();
-
   teamMembers: any[] = [];
-
   showSignInForm: any = {};
-
-  isSignedIn: any = {};
-
   isGoogleAuthenticationEnabled: boolean = false;
+  canLaunch: boolean = false;
 
   constructor(private configService: ConfigService,
               private socialAuthService: AuthService,
@@ -61,43 +56,39 @@ export class TeamSignInDialogComponent implements OnInit {
     return this.userService.getUser();
   }
 
-  signInTeamMember(teamMember) {
-    this.showSignInForm[teamMember.id] = true;
-  }
-
-  cancelSignInTeamMember(teamMember) {
-    this.showSignInForm[teamMember.id] = false;
-  }
-
-  isShowSignInButton(teamMember) {
-    return !this.showSignInForm[teamMember.id];
-  }
-
   isShowUsernameField(teamMember) {
-    return this.showSignInForm[teamMember.id] &&
-      !teamMember.isGoogleUser;
+    return !this.isExistingStudent(teamMember);
   }
 
   isShowPasswordField(teamMember) {
-    return this.showSignInForm[teamMember.id] &&
-      !teamMember.isGoogleUser;
+    return this.isNotSignedIn(teamMember) && !this.isGoogleUser(teamMember);
   }
 
   isShowSignInWithGoogle(teamMember) {
-    return this.showSignInForm[teamMember.id] &&
-      this.isGoogleAuthenticationEnabled &&
-      (teamMember.id == null || teamMember.isGoogleUser);
+    return this.isNotSignedIn(teamMember) && this.isGoogleAuthenticationEnabled &&
+        (!this.isExistingStudent(teamMember) || this.isGoogleUser(teamMember));
   }
 
-  signIn(user: any) {
-    this.userService.checkAuthentication(user.userName, user.password).subscribe((response) => {
+  signIn(teamMember: any) {
+    this.userService.checkAuthentication(teamMember.userName, teamMember.password).subscribe((response) => {
       if (response.isValid === true) {
-        user.id = response.userId;
+        this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
+              .subscribe((canBeAddedToWorkgroupResponse) => {
+          if (canBeAddedToWorkgroupResponse.status) {
+            teamMember.id = response.userId;
+            teamMember.userName = response.userName;
+            teamMember.firstName = response.firstName;
+            teamMember.lastName = response.lastName;
+            this.markAsSignedIn(teamMember);
+          } else {
+            alert(response.firstName + ' ' + response.lastName + ' is already in another workgroup.');
+            teamMember.userName = null;
+          }
+        });
       } else {
         alert("Invalid username or password. Please try again.");
       }
-      this.isSignedIn[user.id] = response.isValid;
-      user.password = null;
+      teamMember.password = null;
     });
   }
 
@@ -109,24 +100,30 @@ export class TeamSignInDialogComponent implements OnInit {
 
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-        const userId = teamMember.id;
         const googleUserId = userData.id;
-        if (userId == null) {
-          this.userService.getUserByGoogleId(googleUserId).subscribe((response) => {
-            if (response.status === 'success') {
-              teamMember.id = response.userId;
-              this.isSignedIn[teamMember.id] = true;
-              teamMember.userName = response.userName;
-              this.markAsSignedIn(teamMember);
-            }
-          });
-        } else {
-          this.userService.isGoogleIdCorrect(googleUserId, userId).subscribe((isCorrect) => {
-            this.isSignedIn[userId] = isCorrect;
+        if (this.isExistingStudent(teamMember)) {
+          this.userService.isGoogleIdCorrect(googleUserId, teamMember.id).subscribe((isCorrect) => {
             if (isCorrect) {
               this.markAsSignedIn(teamMember);
             } else {
               alert("Incorrect Google User. Please try again.");
+            }
+          });
+        } else {
+          this.userService.getUserByGoogleId(googleUserId).subscribe((response) => {
+            if (response.status === 'success') {
+              this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
+                .subscribe((canBeAddedToWorkgroupResponse) => {
+                  if (canBeAddedToWorkgroupResponse.status) {
+                    teamMember.id = response.userId;
+                    teamMember.userName = response.userName;
+                    teamMember.firstName = response.firstName;
+                    teamMember.lastName = response.lastName;
+                    this.markAsSignedIn(teamMember);
+                  } else {
+                    alert(response.firstName + ' ' + response.lastName + ' is already in another workgroup.');
+                  }
+                });
             }
           });
         }
@@ -146,13 +143,42 @@ export class TeamSignInDialogComponent implements OnInit {
     teamMember.status = 'absent';
   }
 
+  isGoogleUser(teamMember: any) {
+    return teamMember.isGoogleUser;
+  }
+
+  isSignedIn(teamMember: any) {
+    return teamMember.status === 'signedIn';
+  }
+
+  isNotSignedIn(teamMember: any) {
+    return teamMember.status === 'notSignedIn';
+  }
+
+  isAbsent(teamMember: any) {
+    return teamMember.status === 'absent';
+  }
+
+  isExistingStudent(teamMember: any) {
+    return teamMember.id != null;
+  }
+
+  isCanLaunch() {
+    for (let teamMember of this.teamMembers) {
+      if (this.isExistingStudent(teamMember) && this.isNotSignedIn(teamMember)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   launchRun() {
     const presentUserIds = [];
     presentUserIds.push(this.user.id);
     const absentUserIds = [];
     for (let member of this.teamMembers) {
       if (member.id != null) {
-        if (this.isSignedIn[member.id]) {
+        if (member.status === 'signedIn') {
           presentUserIds.push(member.id);
         } else {
           absentUserIds.push(member.id);

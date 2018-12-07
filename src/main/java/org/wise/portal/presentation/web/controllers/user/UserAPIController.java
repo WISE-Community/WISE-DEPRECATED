@@ -135,11 +135,14 @@ public class UserAPIController {
 
   @RequestMapping(value = "/check-authentication", method = RequestMethod.POST)
   protected String checkAuthentication(@RequestParam("username") String username,
-      @RequestParam("password") String password) throws JSONException {
+                                       @RequestParam("password") String password) throws JSONException {
     User user = userService.retrieveUserByUsername(username);
     JSONObject response = new JSONObject();
     response.put("isValid", userService.isPasswordCorrect(user, password));
     response.put("userId", user.getId());
+    response.put("userName", user.getUserDetails().getUsername());
+    response.put("firstName", user.getUserDetails().getFirstname());
+    response.put("lastName", user.getUserDetails().getLastname());
     return response.toString();
   }
 
@@ -201,6 +204,8 @@ public class UserAPIController {
       response.put("status", "success");
       response.put("userId", user.getId());
       response.put("userName", user.getUserDetails().getUsername());
+      response.put("firstName", user.getUserDetails().getFirstname());
+      response.put("lastName", user.getUserDetails().getLastname());
     }
     return response.toString();
   }

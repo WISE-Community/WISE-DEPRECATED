@@ -229,22 +229,22 @@ public class StudentAPIController {
                              @RequestParam("presentUserIds") String presentUserIds,
                              @RequestParam("absentUserIds") String absentUserIds,
                              HttpServletRequest request) throws Exception {
-
-    Date loginTimestamp = new Date();
-    //studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp,
-    //  presentUserIds, absentUserIds);
     Run run = runService.retrieveById(runId);
-    Workgroup workgroup = null;
+    JSONArray presentUserIdsJSONArray = new JSONArray(presentUserIds);
+    Set<User> presentMembers = createMembers(presentUserIdsJSONArray);
+    Workgroup workgroup;
     if (workgroupId == null) {
       User user = ControllerUtil.getSignedInUser();
       Group period = run.getPeriodOfStudent(user);
       String name = "Workgroup for user: " + user.getUserDetails().getUsername();
-      JSONArray presentUserIdsJSONArray = new JSONArray(presentUserIds);
-      Set<User> members = createMembers(presentUserIdsJSONArray);
-      workgroup = workgroupService.createWorkgroup(name, members, run, period);
+      workgroup = workgroupService.createWorkgroup(name, presentMembers, run, period);
     } else {
       workgroup = workgroupService.retrieveById(workgroupId);
+      workgroupService.addMembers(workgroup, presentMembers);
     }
+    Date loginTimestamp = new Date();
+    studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp,
+        presentUserIds, absentUserIds);
     StartProjectController.notifyServletSession(request, run);
     String startProjectUrl = projectService.generateStudentStartProjectUrlString(workgroup, request.getContextPath());
     JSONObject response = new JSONObject();
@@ -492,5 +492,24 @@ public class StudentAPIController {
       }
     }
     return teacherList.toString();
+  }
+
+  @RequestMapping(value = "/can-be-added-to-workgroup", method = RequestMethod.GET)
+  protected String canBeAddedToWorkgroup(@RequestParam("runId") Long runId,
+                                         @RequestParam(value = "workgroupId", required = false) Long workgroupId,
+                                         @RequestParam("userId") Long userId) throws JSONException, ObjectNotFoundException {
+    User user = userService.retrieveById(userId);
+    Run run = runService.retrieveById(runId);
+    JSONObject response = new JSONObject();
+    response.put("status", false);
+    Workgroup workgroup = null;
+    if (workgroupId != null) {
+      workgroup = workgroupService.retrieveById(workgroupId);
+    }
+    if (!workgroupService.isUserInAnyWorkgroupForRun(user, run) ||
+        (workgroup != null && workgroupService.isUserInWorkgroupForRun(user, run, workgroup))) {
+      response.put("status", true);
+    }
+    return response.toString();
   }
 }
