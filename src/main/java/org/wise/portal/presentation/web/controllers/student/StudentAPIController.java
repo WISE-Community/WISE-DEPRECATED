@@ -242,6 +242,13 @@ public class StudentAPIController {
       workgroup = workgroupService.retrieveById(workgroupId);
       workgroupService.addMembers(workgroup, presentMembers);
     }
+    Projectcode projectcode = new Projectcode(run.getRuncode(), workgroup.getPeriod().getName());
+    for (User presentMember : presentMembers) {
+      if (!run.isStudentAssociatedToThisRun(presentMember)) {
+        studentService.addStudentToRun(presentMember, projectcode);
+      }
+    }
+
     Date loginTimestamp = new Date();
     studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp,
         presentUserIds, absentUserIds);
