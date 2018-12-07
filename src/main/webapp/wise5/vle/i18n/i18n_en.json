@@ -17,6 +17,7 @@
   "areYouSureYouWantToDeleteThisItem": "Are you sure you want to delete this item?",
   "autoLogoutMessage": "You have been inactive for a long time. Do you want to stay logged in?",
   "automatedFeedbackLabel": "Computer Feedback",
+  "branchPathTakenFromTo": "Take the branch path from <b>{{fromNodeTitle}}</b> to <b>{{toNodeTitle}}</b>",
   "cancel": "Cancel",
   "chooseABranchPath": "Choose a Branch Path",
   "chooseItemToSnipToNotebook": "Choose Item to Snip to Notebook",
