@@ -5,7 +5,6 @@
       <ng-container i18n>Your username is:</ng-container> <span class="mat-title">{{username}}</span>.
     </p>
     <p *ngIf="!isUsingGoogleId" i18n>Please write this down. You will need it when signing in to WISE in the future.</p>
-    <p i18n>Please write this down. You will need it when signing in to WISE in the future.</p>
     <mat-card-actions>
       <a *ngIf="!isUsingGoogleId" mat-flat-button color="primary" (click)="login()" i18n>Sign In to Get Started</a>
       <a *ngIf="isUsingGoogleId" class="button--social-login button--google"
