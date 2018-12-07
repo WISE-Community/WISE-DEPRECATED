@@ -2966,6 +2966,54 @@
         </context-group>
         <target xml:lang="ar" state="needs-translation">Create Run</target>
       </trans-unit>
+      <trans-unit id="db6e4c2b4925a66905d9a41e398e18b1e1b3a69d" datatype="html">
+        <source>Success! This unit has been added to your Class Schedule.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <target xml:lang="ar" state="needs-translation">Success! This unit has been added to your Class Schedule.</target>
+      </trans-unit>
+      <trans-unit id="08386d4e77c0a63a78f010c21160833578891b20" datatype="html">
+        <source>Access Code: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <target xml:lang="ar" state="needs-translation">Access Code: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
+      </trans-unit>
+      <trans-unit id="534ba8ba6d05fed93bd074e67fb6d03d2e466b46" datatype="html">
+        <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <target xml:lang="ar" state="needs-translation">Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</target>
+      </trans-unit>
+      <trans-unit id="f2069492a5ba2249fb5f24e59009120d73623289" datatype="html">
+        <source>You can always find the Access Code for each classroom unit in your Class Schedule.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <target xml:lang="ar" state="needs-translation">You can always find the Access Code for each classroom unit in your Class Schedule.</target>
+      </trans-unit>
+      <trans-unit id="8dd413cee2228118c536f503709329a4d1a395e2" datatype="html">
+        <source>Done</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <target xml:lang="ar" state="needs-translation">Done</target>
+      </trans-unit>
       <trans-unit id="07ab43ffb10e6bed417b203bfdc02cdda6aa1b61" datatype="html">
         <source>Grade level:</source>
         <context-group purpose="location">
@@ -3121,18 +3169,6 @@
           <context context-type="linenumber">65</context>
         </context-group>
         <target xml:lang="ar" state="needs-translation">Edit Unit Content</target>
-      </trans-unit>
-      <trans-unit id="8dd413cee2228118c536f503709329a4d1a395e2" datatype="html">
-        <source>Done</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">76</context>
-        </context-group>
-        <target xml:lang="ar" state="needs-translation">Done</target>
       </trans-unit>
       <trans-unit id="d1acaeb5fa466988ff526619702c4bf21e0a5e15" datatype="html">
         <source>Copy Unit</source>
