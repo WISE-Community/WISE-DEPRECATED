@@ -52,6 +52,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.response.ErrorResponse;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.project.ProjectService;
@@ -233,30 +234,69 @@ public class StudentAPIController {
     JSONArray presentUserIdsJSONArray = new JSONArray(presentUserIds);
     Set<User> presentMembers = createMembers(presentUserIdsJSONArray);
     Workgroup workgroup;
-    if (workgroupId == null) {
-      User user = ControllerUtil.getSignedInUser();
-      Group period = run.getPeriodOfStudent(user);
-      String name = "Workgroup for user: " + user.getUserDetails().getUsername();
-      workgroup = workgroupService.createWorkgroup(name, presentMembers, run, period);
+    User user = ControllerUtil.getSignedInUser();
+    if (isCreateNewWorkgroup(workgroupId)) {
+      if (run.isStudentAssociatedToThisRun(user)) {
+        Group period = run.getPeriodOfStudent(user);
+        String name = "Workgroup for user: " + user.getUserDetails().getUsername();
+        workgroup = workgroupService.createWorkgroup(name, presentMembers, run, period);
+        JSONObject response = performLaunchRun(runId, workgroupId, presentUserIds, absentUserIds,
+            request, run, presentMembers, workgroup);
+        return response.toString();
+      } else {
+        ErrorResponse errorResponse = new ErrorResponse("signedInUserNotAssociatedWithRun");
+        return errorResponse.toString();
+      }
     } else {
       workgroup = workgroupService.retrieveById(workgroupId);
-      workgroupService.addMembers(workgroup, presentMembers);
+      if (workgroupService.isUserInWorkgroupForRun(user, run, workgroup)) {
+        workgroupService.addMembers(workgroup, presentMembers);
+        JSONObject response = performLaunchRun(runId, workgroupId, presentUserIds, absentUserIds,
+            request, run, presentMembers, workgroup);
+        return response.toString();
+      } else {
+        ErrorResponse errorResponse = new ErrorResponse("signedInUserNotInSpecifiedWorkgroup");
+        return errorResponse.toString();
+      }
     }
+  }
+
+  private JSONObject performLaunchRun(Long runId, Long workgroupId, String presentUserIds,
+      String absentUserIds, HttpServletRequest request, Run run, Set<User> presentMembers,
+      Workgroup workgroup) throws ObjectNotFoundException, PeriodNotFoundException,
+      StudentUserAlreadyAssociatedWithRunException, JSONException {
+    addStudentsToRunIfNecessary(run, presentMembers, workgroup);
+    saveStudentAttendance(runId, workgroupId, presentUserIds, absentUserIds);
+    StartProjectController.notifyServletSession(request, run);
+    return generateStartProjectUrlResponse(request, workgroup);
+  }
+
+  private boolean isCreateNewWorkgroup(Long workgroupId) {
+    return workgroupId == null;
+  }
+
+  private void addStudentsToRunIfNecessary(Run run, Set<User> presentMembers, Workgroup workgroup)
+      throws ObjectNotFoundException, PeriodNotFoundException, StudentUserAlreadyAssociatedWithRunException {
     Projectcode projectcode = new Projectcode(run.getRuncode(), workgroup.getPeriod().getName());
     for (User presentMember : presentMembers) {
       if (!run.isStudentAssociatedToThisRun(presentMember)) {
         studentService.addStudentToRun(presentMember, projectcode);
       }
     }
+  }
 
+  private void saveStudentAttendance(Long runId, Long workgroupId, String presentUserIds,
+      String absentUserIds) {
     Date loginTimestamp = new Date();
     studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp,
         presentUserIds, absentUserIds);
-    StartProjectController.notifyServletSession(request, run);
+  }
+
+  private JSONObject generateStartProjectUrlResponse(HttpServletRequest request, Workgroup workgroup) throws JSONException {
     String startProjectUrl = projectService.generateStudentStartProjectUrlString(workgroup, request.getContextPath());
     JSONObject response = new JSONObject();
     response.put("startProjectUrl", startProjectUrl);
-    return response.toString();
+    return response;
   }
 
   private Set<User> createMembers(JSONArray userIds)

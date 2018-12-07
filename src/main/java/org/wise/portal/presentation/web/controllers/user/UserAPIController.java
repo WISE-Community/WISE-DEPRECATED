@@ -180,13 +180,11 @@ public class UserAPIController {
     return supportedLocalesJSONArray.toString();
   }
 
-  @ResponseBody
   @RequestMapping(value = "/check-google-user-exists", method = RequestMethod.GET)
   protected boolean isGoogleIdExist(@RequestParam String googleUserId) {
     return this.userService.retrieveUserByGoogleUserId(googleUserId) != null;
   }
 
-  @ResponseBody
   @RequestMapping(value = "/check-google-user-matches", method = RequestMethod.GET)
   protected boolean isGoogleIdMatches(@RequestParam String googleUserId,
                                     @RequestParam String userId) {
