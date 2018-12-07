@@ -16,6 +16,7 @@ export class TeacherService {
   private usernamesUrl = 'api/teacher/usernames';
   private createRunUrl = 'api/teacher/run/create';
   private endRunUrl = 'api/teacher/run/end';
+  private restartRunUrl = 'api/teacher/run/restart'
   private runUrl = 'api/teacher/run';
   private addPeriodToRunUrl = 'api/teacher/run/add/period';
   private deletePeriodFromRunUrl = 'api/teacher/run/delete/period';
@@ -75,6 +76,12 @@ export class TeacherService {
 
   endRun(runId: number) {
     const url = `${this.endRunUrl}/${runId}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.put<Object>(url, null, {headers: headers});
+  }
+
+  restartRun(runId: number) {
+    const url = `${this.restartRunUrl}/${runId}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.put<Object>(url, null, {headers: headers});
   }
