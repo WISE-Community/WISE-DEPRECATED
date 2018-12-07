@@ -334,6 +334,11 @@
   <msg id="6583026510154883429"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:41</source>Start date is required</msg>
   <msg id="2159130950882492111"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:45</source><source>app/modules/library/copy-project-dialog/copy-project-dialog.component.html:11</source><source>app/student/add-project-dialog/add-project-dialog.component.html:22</source><source>app/teacher/end-run-dialog/end-run-dialog.component.html:12</source>Cancel</msg>
   <msg id="4885447847699614190"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:51</source>Create Run</msg>
+  <msg id="8743229654109161633"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:58</source>Success! This unit has been added to your Class Schedule.</msg>
+  <msg id="7131472524532589549"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:60</source>Access Code: <ph name="INTERPOLATION"><ex>{{ run.runCode }}</ex></ph></msg>
+  <msg id="101275536586441345"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:61</source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select &quot;Add Unit&quot; from the student home page.</msg>
+  <msg id="2680603535278172536"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:62</source>You can always find the Access Code for each classroom unit in your Class Schedule.</msg>
+  <msg id="397098723873502323"><source>app/teacher/create-run-dialog/create-run-dialog.component.html:66</source><source>app/modules/library/share-project-dialog/share-project-dialog.component.html:66</source><source>app/teacher/share-run-dialog/share-run-dialog.component.html:76</source>Done</msg>
   <msg id="2054850261792078221"><source>app/modules/library/library-project-details/library-project-details.component.html:10</source>Grade level:</msg>
   <msg id="4220765745195024064"><source>app/modules/library/library-project-details/library-project-details.component.html:12</source>Duration:</msg>
   <msg id="5615583660036576020"><source>app/modules/library/library-project-details/library-project-details.component.html:27</source>Discipline:</msg>
@@ -350,7 +355,6 @@
   <msg id="3269988252422699348"><source>app/modules/library/share-project-dialog/share-project-dialog.component.html:46</source><source>app/teacher/share-run-dialog/share-run-dialog.component.html:48</source>Owner. Full permissions.</msg>
   <msg id="5739850312648872844"><source>app/modules/library/share-project-dialog/share-project-dialog.component.html:51</source>View &amp; Use with Students</msg>
   <msg id="1390774485357917198"><source>app/modules/library/share-project-dialog/share-project-dialog.component.html:55</source><source>app/teacher/share-run-dialog/share-run-dialog.component.html:65</source>Edit Unit Content</msg>
-  <msg id="397098723873502323"><source>app/modules/library/share-project-dialog/share-project-dialog.component.html:66</source><source>app/teacher/share-run-dialog/share-run-dialog.component.html:76</source>Done</msg>
   <msg id="1111779696786090540"><source>app/modules/library/copy-project-dialog/copy-project-dialog.component.html:1</source>Copy Unit</msg>
   <msg id="3168871428490445721"><source>app/modules/library/copy-project-dialog/copy-project-dialog.component.html:7</source>Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</msg>
   <msg id="4323470180912194028"><source>app/modules/library/copy-project-dialog/copy-project-dialog.component.html:18</source><source>app/modules/library/library-project-menu/library-project-menu.component.html:7</source>Copy</msg>
