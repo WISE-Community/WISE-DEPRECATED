@@ -332,7 +332,7 @@ public class RunServiceImplTest extends TestCase {
     }
 
     public void testStartRun_on_Ongoing_Run() {
-    	// this test also tests the isRestarted() method.
+    	// this test also tests the isEnded() method.
     	assertNull(run.getEndtime());
     	assertFalse(run.isEnded());
     	EasyMock.replay(this.mockRunDao);
@@ -344,7 +344,7 @@ public class RunServiceImplTest extends TestCase {
     }
     
     public void testStartRun_on_Ended_Run() {
-    	// this test also tests the isRestarted() method.
+    	// this test also tests the isEnded() method.
     	Date endtime = Calendar.getInstance().getTime();
     	run.setEndtime(endtime);
     	assertTrue(run.isEnded());
