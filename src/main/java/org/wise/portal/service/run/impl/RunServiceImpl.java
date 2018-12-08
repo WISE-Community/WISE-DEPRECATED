@@ -340,7 +340,8 @@ public class RunServiceImpl implements RunService {
     if (run.getSharedowners().contains(user)) {
       run.getSharedowners().remove(user);
       runDao.save(run);
-      Project runProject = (Project) Hibernate.unproxy(run.getProject());
+      // call unProxy when we upgrade to hibernate 5.2
+      Project runProject = (Project) run.getProject();
       runProject.getSharedowners().remove(user);
       projectDao.save(runProject);
 

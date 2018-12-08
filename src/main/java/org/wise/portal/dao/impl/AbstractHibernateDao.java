@@ -44,41 +44,21 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
     setSessionFactory(factory);
   }
 
-  /**
-   * @see org.wise.portal.dao.SimpleDao#delete(java.lang.Object)
-   */
   @Transactional
   public void delete(T object) {
     this.getHibernateTemplate().delete(object);
   }
 
-  /**
-   * @see org.wise.portal.dao.SimpleDao#save(java.lang.Object)
-   */
   @Transactional
   public void save(T object) {
     this.getHibernateTemplate().saveOrUpdate(object);
   }
 
-  /**
-   * @see org.wise.portal.dao.SimpleDao#getList()
-   */
   @SuppressWarnings("unchecked")
   public List<T> getList() {
     return (List<T>) this.getHibernateTemplate().find(this.getFindAllQuery());
   }
 
-  /**
-   * Gets a string that will perform a query to retrieve all available objects
-   * from the persistent data store.
-   *
-   * @return <code>String</code> query
-   */
-  protected abstract String getFindAllQuery();
-
-  /**
-   * @see org.wise.portal.dao.SimpleDao#getById(Serializable)
-   */
   @SuppressWarnings("unchecked")
   public T getById(Serializable id) throws ObjectNotFoundException {
     T object = null;
@@ -101,10 +81,13 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
   }
 
   /**
-   * Gets the class of the persistent entity.
+   * Gets a string that will perform a query to retrieve all available objects
+   * from the persistent data store.
    *
-   * @return the Class
+   * @return <code>String</code> query
    */
+  protected abstract String getFindAllQuery();
+
   protected abstract Class<? extends T> getDataObjectClass();
 
 }

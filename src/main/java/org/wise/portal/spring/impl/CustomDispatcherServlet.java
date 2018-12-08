@@ -30,6 +30,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.wise.portal.spring.SpringConfiguration;
 
+import javax.servlet.annotation.WebServlet;
+
 /**
  * @author Cynick Young
  */
