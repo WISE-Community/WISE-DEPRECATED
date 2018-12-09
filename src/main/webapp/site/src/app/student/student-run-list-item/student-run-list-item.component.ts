@@ -50,7 +50,7 @@ export class StudentRunListItemComponent implements OnInit {
   }
 
   getRunLink() {
-    if (this.run.studentsPerTeam === 1) {
+    if (this.run.maxStudentsPerTeam === 1) {
       return `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
     } else {
       return `${this.configService.getContextPath()}/student/teamsignin.html?runId=${this.run.id}`;

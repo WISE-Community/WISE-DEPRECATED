@@ -114,7 +114,7 @@ public class TeacherAPIController {
     }
     runJSON.put("periods", periodsArray);
     runJSON.put("numStudents", getNumStudentsInRun(run));
-    runJSON.put("studentsPerTeam", run.getMaxWorkgroupSize());
+    runJSON.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
     runJSON.put("owner", getOwnerJSON(run.getOwner()));
     runJSON.put("sharedOwners", getRunSharedOwners(run));
     runJSON.put("project", getProjectJSON(run.getProject()));
@@ -316,12 +316,12 @@ public class TeacherAPIController {
   protected String createRun(HttpServletRequest request,
                              @RequestParam("projectId") String projectId,
                              @RequestParam("periods") String periods,
-                             @RequestParam("studentsPerTeam") String studentsPerTeam,
+                             @RequestParam("maxStudentsPerTeam") String maxStudentsPerTeam,
                              @RequestParam("startDate") String startDate) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Locale locale = request.getLocale();
     Set<String> periodNames = createPeriodNamesSet(periods);
-    Run run = runService.createRun(Integer.parseInt(projectId), user, periodNames, Integer.parseInt(studentsPerTeam),
+    Run run = runService.createRun(Integer.parseInt(projectId), user, periodNames, Integer.parseInt(maxStudentsPerTeam),
         Long.parseLong(startDate), locale);
     JSONObject runJSON = getRunJSON(run);
     return runJSON.toString();
@@ -437,12 +437,12 @@ public class TeacherAPIController {
   @RequestMapping(value = "/run/update/studentsperteam", method = RequestMethod.POST)
   protected String editRunStudentsPerTeam(HttpServletRequest request,
         @RequestParam("runId") Long runId,
-        @RequestParam("studentsPerTeam") Integer studentsPerTeam) throws Exception {
+        @RequestParam("maxStudentsPerTeam") Integer maxStudentsPerTeam) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(runId);
     JSONObject response;
     if (run.isTeacherAssociatedToThisRun(user)) {
-      runService.setMaxWorkgroupSize(runId, studentsPerTeam);
+      runService.setMaxWorkgroupSize(runId, maxStudentsPerTeam);
       response = createSuccessResponse();
     } else {
       response = createFailureResponse("noPermissionToChangeStudentsPerTeam");

@@ -14,7 +14,7 @@ export class RunSettingsDialogComponent implements OnInit {
 
   run: Run;
   newPeriodName: string;
-  studentsPerTeam: string;
+  maxStudentsPerTeam: string;
   startDate: any;
   previousStartDate: any;
   deletePeriodMessage: string = '';
@@ -34,7 +34,7 @@ export class RunSettingsDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService) {
     this.run = data.run;
-    this.studentsPerTeam = this.run.studentsPerTeam + '';
+    this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
     this.startDate = new Date(this.run.startTime);
     this.rememberPreviousStartDate();
   }
@@ -87,14 +87,14 @@ export class RunSettingsDialogComponent implements OnInit {
     }
   }
 
-  changeStudentsPerTeam(studentsPerTeam) {
-    let studentsPerTeamText = studentsPerTeam;
-    if (studentsPerTeam == 3) {
+  changeStudentsPerTeam(maxStudentsPerTeam) {
+    let studentsPerTeamText = maxStudentsPerTeam;
+    if (maxStudentsPerTeam == 3) {
       studentsPerTeamText = '1-3';
     }
     if (confirm(`Are you sure you want to change the students per team to ${studentsPerTeamText}?`)) {
       this.teacherService.updateRunStudentsPerTeam(
-          this.run.id, studentsPerTeam).subscribe((response: any) => {
+          this.run.id, maxStudentsPerTeam).subscribe((response: any) => {
         if (response.status == 'success') {
           this.run = response.run;
           this.updateDataRun(this.run);
@@ -165,7 +165,7 @@ export class RunSettingsDialogComponent implements OnInit {
 
   updateDataRun(run) {
     this.data.run.periods = run.periods;
-    this.data.run.studentsPerTeam = run.studentsPerTeam;
+    this.data.run.maxStudentsPerTeam = run.maxStudentsPerTeam;
     this.data.run.startTime = run.startTime;
   }
 }
