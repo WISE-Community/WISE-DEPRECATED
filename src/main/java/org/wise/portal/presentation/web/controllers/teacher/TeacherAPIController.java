@@ -445,7 +445,7 @@ public class TeacherAPIController {
       runService.setMaxWorkgroupSize(runId, maxStudentsPerTeam);
       response = createSuccessResponse();
     } else {
-      response = createFailureResponse("noPermissionToChangeStudentsPerTeam");
+      response = createFailureResponse("noPermissionToChangeMaxStudentsPerTeam");
     }
     addRunToResponse(response, run);
     return response.toString();

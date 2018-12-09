@@ -19,14 +19,14 @@ export class RunSettingsDialogComponent implements OnInit {
   previousStartDate: any;
   deletePeriodMessage: string = '';
   addPeriodMessage: string = '';
-  studentsPerTeamMessage: string = '';
+  maxStudentsPerTeamMessage: string = '';
   startDateMessage: string = '';
 
   periodNameAlreadyExists = 'There is already a period with that name.';
   noPermissionToAddPeriod = 'You do not have the permission to add periods to this run.';
   notAllowedToDeletePeriodWithStudents = 'You are not allowed to delete a period that contains students.';
   noPermissionToDeletePeriod = 'You do not have the permission to delete periods from this run.';
-  noPermissionToChangeStudentsPerTeam = 'You do not have the permission to change the number of students per team for this run.';
+  noPermissionToChangeMaxStudentsPerTeam = 'You do not have the permission to change the number of students per team for this run.';
   noPermissionToChangeStartDate = 'You do not have the permission to change the start date for this run.';
 
   constructor(public dialog: MatDialog,
@@ -87,12 +87,12 @@ export class RunSettingsDialogComponent implements OnInit {
     }
   }
 
-  changeStudentsPerTeam(maxStudentsPerTeam) {
-    let studentsPerTeamText = maxStudentsPerTeam;
+  changeMaxStudentsPerTeam(maxStudentsPerTeam) {
+    let maxStudentsPerTeamText = maxStudentsPerTeam;
     if (maxStudentsPerTeam == 3) {
-      studentsPerTeamText = '1-3';
+      maxStudentsPerTeamText = '1-3';
     }
-    if (confirm(`Are you sure you want to change the students per team to ${studentsPerTeamText}?`)) {
+    if (confirm(`Are you sure you want to change the students per team to ${maxStudentsPerTeamText}?`)) {
       this.teacherService.updateRunStudentsPerTeam(
           this.run.id, maxStudentsPerTeam).subscribe((response: any) => {
         if (response.status == 'success') {
@@ -100,7 +100,7 @@ export class RunSettingsDialogComponent implements OnInit {
           this.updateDataRun(this.run);
           this.clearErrorMessages();
         } else {
-          this.studentsPerTeamMessage = this.translateMessageCode(response.messageCode);
+          this.maxStudentsPerTeamMessage = this.translateMessageCode(response.messageCode);
         }
       });
       return true;
@@ -143,7 +143,7 @@ export class RunSettingsDialogComponent implements OnInit {
   clearErrorMessages() {
     this.deletePeriodMessage = '';
     this.addPeriodMessage = '';
-    this.studentsPerTeamMessage = '';
+    this.maxStudentsPerTeamMessage = '';
     this.startDateMessage = '';
   }
 
@@ -156,8 +156,8 @@ export class RunSettingsDialogComponent implements OnInit {
       return this.notAllowedToDeletePeriodWithStudents;
     } else if (messageCode == 'noPermissionToDeletePeriod') {
       return this.noPermissionToDeletePeriod;
-    } else if (messageCode == 'noPermissionToChangeStudentsPerTeam') {
-      return this.noPermissionToChangeStudentsPerTeam;
+    } else if (messageCode == 'noPermissionToChangeMaxStudentsPerTeam') {
+      return this.noPermissionToChangeMaxStudentsPerTeam;
     } else if (messageCode == 'noPermissionToChangeStartDate') {
       return this.noPermissionToChangeStartDate;
     }

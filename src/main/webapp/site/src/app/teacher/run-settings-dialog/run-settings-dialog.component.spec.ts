@@ -22,7 +22,7 @@ export class MockTeacherService {
       observer.complete();
     });
   }
-  changeStudentsPerTeam(runId, maxStudentsPerTeam) {
+  changeMaxStudentsPerTeam(runId, maxStudentsPerTeam) {
     return Observable.create(observer => {
       const response: any = {};
       observer.next(response);

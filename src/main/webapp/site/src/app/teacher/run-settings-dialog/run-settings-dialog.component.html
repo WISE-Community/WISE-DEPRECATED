@@ -39,16 +39,16 @@
         <mat-radio-group [(ngModel)]="maxStudentsPerTeam"
                          #rGroup
                          fxLayoutGap="16px">
-          <mat-radio-button value="1" radioGroup="rGroup" (click)="changeStudentsPerTeam(1)">
+          <mat-radio-button value="1" radioGroup="rGroup" (click)="changeMaxStudentsPerTeam(1)">
             Only 1 student
           </mat-radio-button>
-          <mat-radio-button value="3" radioGroup="rGroup" (click)="changeStudentsPerTeam(3)">
+          <mat-radio-button value="3" radioGroup="rGroup" (click)="changeMaxStudentsPerTeam(3)">
             1-3 students
           </mat-radio-button>
         </mat-radio-group>
       </div>
       <div>
-        <span class="error-message">{{studentsPerTeamMessage}}</span>
+        <span class="error-message">{{maxStudentsPerTeamMessage}}</span>
       </div>
     </div>
   </div>
