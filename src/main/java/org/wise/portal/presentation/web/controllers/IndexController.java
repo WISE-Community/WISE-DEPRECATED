@@ -84,7 +84,6 @@ public class IndexController {
   protected String showHomePage(
       HttpServletRequest request,
       ModelMap modelMap) throws Exception {
-    /*
     // TODO: allow each WISE instance to specify these
     List<Project> esProjects = new ArrayList<Project>();
     List<Project> lsProjects = new ArrayList<Project>();
@@ -135,7 +134,6 @@ public class IndexController {
     modelMap.put("chemProjects", chemProjects);
     modelMap.put("physProjects", physProjects);
     modelMap.put("projectThumbMap", projectThumbMap);
-    */
     return "index";
   }
 
