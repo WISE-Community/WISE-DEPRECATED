@@ -100,7 +100,7 @@ public class WISE5AuthorProjectController {
   @Autowired
   private WebSocketHandler webSocketHandler;
 
-  private String featuredProjectIconsPathDir = "src/main/webapp/wise5/authoringTool/projectIcons";
+  private String featuredProjectIconsFolderRelativePath = "wise5/authoringTool/projectIcons";
 
   /**
    * Handle user's request to launch the Authoring Tool without a specified project
@@ -203,7 +203,7 @@ public class WISE5AuthorProjectController {
   }
 
   private File getRandomFeaturedProjectIcon() {
-    File featuredProjectIconsDir = new File(featuredProjectIconsPathDir);
+    File featuredProjectIconsDir = new File(getFeaturedProjectIconsFolderPathString());
     File[] featuredProjectIcons = featuredProjectIconsDir.listFiles();
     if (featuredProjectIcons.length > 0) {
       return featuredProjectIcons[new Random().nextInt(featuredProjectIcons.length)];
@@ -215,7 +215,7 @@ public class WISE5AuthorProjectController {
   @ResponseBody
   @RequestMapping(value = "/project/featured/icons", method = RequestMethod.GET)
   protected String getFeaturedProjectIcons() {
-    File featuredProjectIconsDir = new File(featuredProjectIconsPathDir);
+    File featuredProjectIconsDir = new File(getFeaturedProjectIconsFolderPathString());
     File[] featuredProjectIcons = featuredProjectIconsDir.listFiles();
     JSONArray featuredProjectIconPaths = new JSONArray();
     for (File featuredProjectIcon : featuredProjectIcons) {
@@ -267,8 +267,13 @@ public class WISE5AuthorProjectController {
     return response.toString();
   }
 
+  private String getFeaturedProjectIconsFolderPathString() {
+    String webappPath = servletContext.getRealPath(File.separator);
+    return webappPath + featuredProjectIconsFolderRelativePath;
+  }
+
   private Path getFeaturedProjectIconPath(String fileName) {
-    return Paths.get(featuredProjectIconsPathDir + "/" + fileName);
+    return Paths.get(getFeaturedProjectIconsFolderPathString() + "/" + fileName);
   }
 
   /**
