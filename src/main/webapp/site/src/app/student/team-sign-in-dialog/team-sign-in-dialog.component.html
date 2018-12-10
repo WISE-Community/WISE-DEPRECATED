@@ -1,43 +1,70 @@
-<ng-container i18n>Team Members:</ng-container>
-<p i18n>{{user.firstName}} {{user.lastName}} [{{user.userName}}] Status: Signed In</p>
-<p *ngFor="let teamMember of teamMembers">
-  <span *ngIf="isExistingStudent(teamMember)">
-    {{teamMember.firstName}} {{teamMember.lastName}} [{{teamMember.userName}}]
-  </span>
-  <span>Status:
-    <span *ngIf="isSignedIn(teamMember)">Signed In</span>
-    <span *ngIf="isNotSignedIn(teamMember)">Not Signed In</span>
-    <span *ngIf="isAbsent(teamMember)">Absent</span>
-  </span>
-  <span *ngIf="isNotSignedIn(teamMember)">
-    <button (click)="markAsAbsent(teamMember)">
-      Absent
-    </button>
-  </span>
-  <span *ngIf="isNotSignedIn(teamMember)">
-    <span *ngIf="isShowUsernameField(teamMember)">
-      <mat-form-field appearance="fill" fxFlex>
-        <mat-label i18n>Username</mat-label>
-        <input matInput
-               [(ngModel)]="teamMember.userName"/>
-      </mat-form-field>
-    </span>
-    <span *ngIf="isShowPasswordField(teamMember)">
-      <mat-form-field appearance="fill" fxFlex>
-        <mat-label i18n>Password</mat-label>
-        <input matInput type="password"
-               [(ngModel)]="teamMember.password"/>
-      </mat-form-field>
-      <button (click)="signIn(teamMember)" i18n>Sign In</button>
-    </span>
-    <button *ngIf="isShowSignInWithGoogle(teamMember)"
-            class="button--social-login button--google"
-            color="accent"
-            mat-flat-button
-            (click)="socialSignIn('google', teamMember)">
-      <img src="assets/img/icons/g-logo.png" alt="Google logo"/>
-      <ng-container i18n>Sign in with Google</ng-container>
-    </button>
-  </span>
-</p>
-<button (click)="launchRun()" [disabled]="!isCanLaunch()" i18n>Launch Unit</button>
+<h2 class="mat-dialog-title" i18n>Team Sign In</h2>
+<mat-dialog-content class="mat-dialog-content--scroll">
+  <p class="mat-subheading-2 accent-1">{{ run.name }}</p>
+  <mat-divider></mat-divider>
+  <p class="mat-body-2" fxLayoutAlign="start center" fxLayoutGap="2px">
+    <mat-icon class="success" i18n-aria-label aria-label="Signed In">check</mat-icon>
+    <span>{{user.firstName}} {{user.lastName}} <span class="mat-caption">({{ user.userName }})</span></span>
+  </p>
+  <ng-container *ngFor="let teamMember of teamMembers; let i = index;">
+    <mat-divider></mat-divider>
+    <ng-container *ngIf="isExistingStudent(teamMember)">
+      <p fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap.xs="8px">
+        <span fxLayoutAlign="start center" fxLayoutGap="2px">
+          <mat-icon *ngIf="isSignedIn(teamMember)"
+                    class="success"
+                    i18n-aria-label 
+                    aria-label="Signed In">
+            check
+          </mat-icon>
+          <span class="mat-body-2">{{ teamMember.firstName }} {{ teamMember.lastName }} <span class="mat-caption">({{ teamMember.userName }})</span></span>
+        </span>
+        <span fxFlex fxShow fxHide.xs></span>
+        <span *ngIf="isExistingStudent(teamMember) && !isSignedIn(teamMember)">
+          <mat-checkbox (change)="toggleAbsent(teamMember, $event.checked)">Absent</mat-checkbox>
+        </span>
+      </p>
+    </ng-container>
+    <ng-container *ngIf="!isSignedIn(teamMember)">
+      <p *ngIf="!isExistingStudent(teamMember)" 
+         class="mat-body-2 center">
+        <button mat-button color="primary" (click)="hiddenMembers[i] = !hiddenMembers[i]" i18n>Add Teammate</button>
+      </p>
+      <ng-container *ngIf="!hiddenMembers[i]">
+        <mat-form-field *ngIf="isShowUsernameField(teamMember)" appearance="fill" fxFlex>
+          <mat-label i18n>Username</mat-label>
+          <input matInput [(ngModel)]="teamMember.userName"/>
+        </mat-form-field>
+        <div *ngIf="isShowPasswordField(teamMember)" 
+             fxLayoutAlign="start start" 
+             fxLayoutGap="8px">
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label i18n>Password</mat-label>
+            <input matInput type="password" [(ngModel)]="teamMember.password"/>
+          </mat-form-field>
+          <button class="login-btn" 
+                  mat-flat-button color="primary" 
+                  (click)="signIn(teamMember)"
+                  i18n-aria-label
+                  aria-label="Sign In">
+            <mat-icon>check</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="isShowSignInWithGoogle(teamMember)" [class.center]="!isExistingStudent(teamMember)">
+          <p *ngIf="!isExistingStudent(teamMember)" class="mat-body-2">- OR -</p>
+          <button class="button--social-login button--google"
+                  color="accent"
+                  mat-flat-button
+                  (click)="socialSignIn('google', teamMember)">
+            <img src="assets/img/icons/g-logo.png" alt="Google logo"/>
+            <ng-container i18n>Sign in with Google</ng-container>
+          </button>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
+  <button mat-button mat-dialog-close i18n>Cancel</button>
+  <button mat-flat-button (click)="launchRun()" [disabled]="!isCanLaunch()" i18n>Launch Unit</button>
+</mat-dialog-actions>

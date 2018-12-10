@@ -17,6 +17,7 @@ export class TeamSignInDialogComponent implements OnInit {
   user: Student;
   run: StudentRun = new StudentRun();
   teamMembers: any[] = [];
+  hiddenMembers: boolean[] = [];
   showSignInForm: any = {};
   isGoogleAuthenticationEnabled: boolean = false;
   canLaunch: boolean = false;
@@ -31,6 +32,7 @@ export class TeamSignInDialogComponent implements OnInit {
     if (this.run.workgroupMembers != null) {
       for (let workgroupMember of this.run.workgroupMembers) {
         if (workgroupMember.id !== this.user.id) {
+          this.hiddenMembers.push(false);
           this.teamMembers.push(workgroupMember);
           this.markAsNotSignedIn(workgroupMember);
         }
@@ -40,6 +42,7 @@ export class TeamSignInDialogComponent implements OnInit {
     for (let i = this.teamMembers.length; i < this.run.studentsPerTeam - 1; i++) {
       const student = new Student();
       this.markAsNotSignedIn(student);
+      this.hiddenMembers.push(true);
       this.teamMembers.push(student);
     }
   }
@@ -81,7 +84,7 @@ export class TeamSignInDialogComponent implements OnInit {
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
           } else {
-            alert(response.firstName + ' ' + response.lastName + ' is already in another workgroup.');
+            alert(response.firstName + ' ' + response.lastName + ' is already on another team.');
             teamMember.userName = null;
           }
         });
@@ -106,7 +109,7 @@ export class TeamSignInDialogComponent implements OnInit {
             if (isCorrect) {
               this.markAsSignedIn(teamMember);
             } else {
-              alert("Incorrect Google User. Please try again.");
+              alert("Incorrect Google user. Please try again.");
             }
           });
         } else {
@@ -121,7 +124,7 @@ export class TeamSignInDialogComponent implements OnInit {
                     teamMember.lastName = response.lastName;
                     this.markAsSignedIn(teamMember);
                   } else {
-                    alert(response.firstName + ' ' + response.lastName + ' is already in another workgroup.');
+                    alert(response.firstName + ' ' + response.lastName + ' is already on another team.');
                   }
                 });
             }
@@ -139,8 +142,8 @@ export class TeamSignInDialogComponent implements OnInit {
     teamMember.status = 'notSignedIn';
   }
 
-  markAsAbsent(teamMember: any) {
-    teamMember.status = 'absent';
+  toggleAbsent(teamMember: any, isAbsent: boolean) {
+    isAbsent ? teamMember.status = 'absent' : teamMember.status = 'notSignedIn';
   }
 
   isGoogleUser(teamMember: any) {
