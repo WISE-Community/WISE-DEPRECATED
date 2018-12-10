@@ -48,7 +48,7 @@
          fxFlex.xs="100">
         <ng-container i18n>Report Problem</ng-container>
       </a>
-      <a mat-flat-button
+      <button mat-flat-button
          *ngIf="!run.endTime"
          (click)="launchRun()"
          color="primary"
@@ -57,16 +57,16 @@
          fxFlex.xs="100">
         <mat-icon>play_circle_filled</mat-icon>
         <ng-container i18n>Launch</ng-container>
-      </a>
-      <a mat-flat-button
+      </button>
+      <button mat-flat-button
          *ngIf="run.endTime"
-         href="{{ runLink }}"
+         (click)="launchRun()"
          color="primary"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
         <mat-icon>visibility</mat-icon>
         <ng-container i18n>Review</ng-container>
-      </a>
+    </button>
     </div>
   </mat-card-actions>
 </mat-card>
