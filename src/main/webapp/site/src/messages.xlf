@@ -187,6 +187,10 @@
           <context context-type="linenumber">35</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/forgot/student/forgot-student-password-complete/forgot-student-password-complete.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
@@ -2642,6 +2646,10 @@
           <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
@@ -2922,6 +2930,10 @@
           <context context-type="linenumber">8</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
@@ -2949,6 +2961,10 @@
           <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
@@ -2969,11 +2985,15 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
           <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cabe636014527fb69951e0f36b7aec9697e00c71" datatype="html">
@@ -3422,7 +3442,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="34ddf1b79aa0ae0e5ced9f0f1de2af2cd5d883ba" datatype="html">
@@ -3541,10 +3561,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
           <context context-type="linenumber">7</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
-          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="36a606470097ddf0c32a250c8a902441729ca8ca" datatype="html">
@@ -3696,6 +3712,38 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/news/news.component.html</context>
           <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="13c602751734f72430891c9781167bf53c612481" datatype="html">
+        <source>Team Sign In</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="756301ed182522fac63571d5cf61d3095dfb325a" datatype="html">
+        <source>Signed In</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f880a8881701a609d4471ceb44122110831c6dca" datatype="html">
+        <source>Add Teammate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7db97e28a034d08df9488f5990cd17e2de2b3fb5" datatype="html">
+        <source>Launch Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dbe6d72ccb1cef61c338292357b793077b7ed08a" datatype="html">

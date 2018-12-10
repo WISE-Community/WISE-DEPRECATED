@@ -9,7 +9,7 @@ import { MatDialogModule, MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from
 import {
   SocialLoginModule,
   AuthServiceConfig,
-  GoogleLoginProvider,
+  GoogleLoginProvider, LoginOpt,
 } from "angularx-social-login";
 
 import { AppComponent } from './app.component';
@@ -45,11 +45,14 @@ export function initialize(configService: ConfigService, userService: UserServic
 
 export function getAuthServiceConfigs(configService: ConfigService) {
   const autServiceConfig: AuthServiceConfig = new AuthServiceConfig([]);
+  const googleLoginOptions: LoginOpt = {
+    prompt: 'select_account'
+  };
   configService.getConfig().subscribe((config) => {
     if (config != null) {
       if (configService.getGoogleClientId() != null) {
         autServiceConfig.providers.set(GoogleLoginProvider.PROVIDER_ID,
-          new GoogleLoginProvider(configService.getGoogleClientId()));
+          new GoogleLoginProvider(configService.getGoogleClientId(), googleLoginOptions));
       }
     }
   });

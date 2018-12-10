@@ -4,12 +4,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'ngx-moment';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
-  MatButtonModule, MatCardModule, MatDialogModule, MatIconModule,
-  MatProgressBarModule, MatTabsModule } from '@angular/material';
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
+  MatDividerModule, MatIconModule, MatProgressBarModule, 
+  MatTabsModule } from '@angular/material';
 
 const materialModules = [
-  MatButtonModule, MatCardModule, MatDialogModule, MatIconModule,
-  MatProgressBarModule, MatTabsModule
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
+  MatDividerModule, MatIconModule, MatProgressBarModule, 
+  MatTabsModule
 ];
 
 import { SharedModule } from "../modules/shared/shared.module";
@@ -25,6 +27,7 @@ import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 import { TimelineModule } from "../modules/timeline/timeline.module";
+import { TeamSignInDialogComponent } from './team-sign-in-dialog/team-sign-in-dialog.component';
 
 @NgModule({
   imports: [
@@ -47,10 +50,12 @@ import { TimelineModule } from "../modules/timeline/timeline.module";
     StudentRunListItemComponent,
     EditComponent,
     EditProfileComponent,
-    EditPasswordComponent
+    EditPasswordComponent,
+    TeamSignInDialogComponent
   ],
   entryComponents: [
-    AddProjectDialogComponent
+    AddProjectDialogComponent,
+    TeamSignInDialogComponent
   ],
   providers: [
     AuthGuard
