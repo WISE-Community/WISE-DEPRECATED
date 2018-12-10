@@ -1,7 +1,7 @@
 <div class="student-run-list">
   <div class="notice" *ngIf="!runs.length && loaded">
     <p i18n>Hey there! Looks like you don't have any WISE units yet.</p>
-    <p><ng-container i18n>Ask your teacher for an</ng-container> <b><ng-container i18n>Access Code</ng-container></b> <ng-container i18n>and then tap the</ng-container> <b><ng-container i18n>Add Unit</ng-container></b> <ng-container i18n>button to get started</ng-container>.</p>
+    <p i18n>Ask your teacher for an <b>Access Code</b> and then tap the <b>Add Unit</b> button to get started.</p>
   </div>
   <div class="content-block" *ngIf="runs.length">
     <div class="content-block__header dark-theme primary-bg"
@@ -16,9 +16,9 @@
     </div>
     <div id="unitCount" *ngIf="loaded" class="notice">
       <p>
-        <ng-container *ngIf="search"><ng-container i18n>Units found:</ng-container> {{ filteredRuns.length }}</ng-container>
-        <ng-container *ngIf="!search"><ng-container i18n>My WISE units:</ng-container> {{ filteredRuns.length }}</ng-container>
-        <span class="mat-caption" *ngIf="filteredRuns.length"> (<ng-container *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} <ng-container i18n>scheduled</ng-container>, </ng-container>{{ filteredActiveTotal }} <ng-container i18n>active</ng-container>, {{ filteredCompletedTotal }} <ng-container i18n>completed</ng-container>)</span>.
+        <ng-container *ngIf="search" i18n>Units found: {{ filteredRuns.length }}</ng-container>
+        <ng-container *ngIf="!search" i18n>My WISE units: {{ filteredRuns.length }}</ng-container>
+        <span class="mat-caption" *ngIf="filteredRuns.length"> (<span *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} <ng-container i18n>scheduled</ng-container>, </span>{{ filteredActiveTotal }} <ng-container i18n>active</ng-container>, {{ filteredCompletedTotal }} <ng-container i18n>completed</ng-container>)</span>.
         <a *ngIf="search" href="#" (click)="!!reset()" i18n>Reset</a>
       </p>
     </div>

@@ -139,7 +139,7 @@
       </div>
       <div class="mat-form-field--extra-sub">
         <p>
-          <mat-checkbox class="mat-checkbox--inline" formControlName="agree"><ng-container i18n>I agree to the </ng-container><a href="privacy" target="_blank" i18n>WISE Privacy Policy & Terms of Use</a> *</mat-checkbox>
+          <mat-checkbox class="mat-checkbox--inline" formControlName="agree"><ng-container i18n>I agree to the <a href="privacy" target="_blank">WISE Privacy Policy & Terms of Use</a> *</ng-container></mat-checkbox>
           <mat-error *ngIf="isSubmitted && createTeacherAccountFormGroup.hasError('agreeNotChecked')" i18n>You must agree to the Privacy Policy & Terms of Use</mat-error>
         </p>
       </div>

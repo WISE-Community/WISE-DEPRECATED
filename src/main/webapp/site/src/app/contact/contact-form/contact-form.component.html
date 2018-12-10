@@ -49,7 +49,7 @@
                 {{teacher.displayName}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="contactFormGroup.controls['teacher'].hasError('required')">Teacher Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['teacher'].hasError('required')" i18n>Teacher Required</mat-error>
           </mat-form-field>
         </p>
         <p>

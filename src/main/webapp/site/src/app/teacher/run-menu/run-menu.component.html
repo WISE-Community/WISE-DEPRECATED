@@ -3,7 +3,7 @@
 </button>
 <mat-menu #runMenu="matMenu" xPosition="before">
   <div>
-    <div class="run-info mat-body-2"><ng-container i18n>Run ID:</ng-container> {{ run.id }}</div>
+    <div class="run-info mat-body-2" i18n>Run ID: {{ run.id }}</div>
     <mat-divider></mat-divider>
     <a mat-menu-item (click)="showEditRunDetails()">
       <mat-icon>settings</mat-icon>
