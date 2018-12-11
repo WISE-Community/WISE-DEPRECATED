@@ -490,16 +490,9 @@ class LabelController extends ComponentController {
     }
   }
 
-  /**
-   * Called when the student clicks on the new label button to enter
-   * create label mode
-   */
   newLabelButtonClicked() {
-    this.createLabelMode = true;
-    this.isCancelButtonVisible = true;
-    this.editLabelMode = false;
-    this.selectedLabel = null;
-  };
+    this.createLabelOnCanvas();
+  }
 
   /**
    * Called when the student clicks on the cancel button to exit
@@ -796,66 +789,6 @@ class LabelController extends ComponentController {
         this.selectedLabel = null;
         this.editLabelMode = false;
       }
-
-      // check if the student is in create label mode
-      if (this.createLabelMode) {
-        /*
-         * the student is in create label mode so we will create a new label
-         * where they have clicked
-         */
-
-        // turn off create label mode and hide the cancel button
-        this.createLabelMode = false;
-        this.isCancelButtonVisible = false;
-
-        var event = options.e;
-
-        if (event != null) {
-          // get the x and y position that the student clicked on
-          var x = event.layerX;
-          var y = event.layerY;
-
-          /*
-           * set the location of the text object to be down to the right
-           * of the position the student clicked on
-           */
-          let textX = null;
-          let textY = null;
-          if (this.enableCircles) {
-            // place the text to the bottom right of the circle
-            if (this.isStudentDataVersion(1)) {
-              // text is relatively positioned
-              textX = 100;
-              textY = 100;
-            } else {
-              // text is absolutely positioned
-              textX = x + 100;
-              textY = y + 100;
-            }
-          } else {
-            // circles are not enabled so we are only using the text
-            textX = x;
-            textY = y;
-          }
-
-          let canEdit = true;
-          let canDelete = true;
-
-          // create a new label
-          var newLabel = this.createLabel(x, y, textX, textY,
-              this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
-
-          // add the label to the canvas
-          this.addLabelToCanvas(this.canvas, newLabel);
-
-          /*
-           * make the new label selected so that the student can edit
-           * the text
-           */
-          this.selectLabel(newLabel);
-          this.studentDataChanged();
-        }
-      }
     }));
 
     // listen for the object moving event
@@ -995,6 +928,108 @@ class LabelController extends ComponentController {
 
     return canvas;
   };
+
+  createLabelOnCanvas() {
+    /*
+     * the student is in create label mode so we will create a new label
+     * where they have clicked
+     */
+
+    // turn off create label mode and hide the cancel button
+    this.createLabelMode = false;
+    this.isCancelButtonVisible = false;
+
+    var event = {};
+
+    if (event != null) {
+      // get the x and y position that the student clicked on
+      var x = 100;
+      var y = 100;
+
+      const newPointLocation = this.getNextPointLocation();
+      x = newPointLocation.pointX;
+      y = newPointLocation.pointY;
+
+      /*
+       * set the location of the text object to be down to the right
+       * of the position the student clicked on
+       */
+      let textX = null;
+      let textY = null;
+      if (this.enableCircles) {
+        // place the text to the bottom right of the circle
+        if (this.isStudentDataVersion(1)) {
+          // text is relatively positioned
+          textX = 100;
+          textY = 100;
+        } else {
+          // text is absolutely positioned
+          textX = x + 100;
+          textY = y + 100;
+        }
+      } else {
+        // circles are not enabled so we are only using the text
+        textX = x;
+        textY = y;
+      }
+
+      let canEdit = true;
+      let canDelete = true;
+
+      // create a new label
+      var newLabel = this.createLabel(x, y, textX, textY,
+        this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
+
+      // add the label to the canvas
+      this.addLabelToCanvas(this.canvas, newLabel);
+
+      /*
+       * make the new label selected so that the student can edit
+       * the text
+       */
+      this.selectLabel(newLabel);
+      this.studentDataChanged();
+    }
+  }
+
+  getNextPointLocation() {
+    let unoccupiedPointLocation = this.getUnoccupiedPointLocation();
+    if (unoccupiedPointLocation == null) {
+      return {pointX: 50, pointY: 50};
+    } else {
+      return unoccupiedPointLocation;
+    }
+  }
+
+  getOccupiedPointLocations() {
+    let labels = this.getLabelData();
+    const occupiedPointLocations = [];
+    for (let label of labels) {
+      occupiedPointLocations.push({pointX: label.pointX, pointY: label.pointY});
+    }
+    return occupiedPointLocations;
+  }
+
+  isPointOccupied(occupiedPointLocations, pointX, pointY) {
+    for (let occupiedPointLocation of occupiedPointLocations) {
+      if (occupiedPointLocation.pointX == pointX && occupiedPointLocation.pointY == pointY) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getUnoccupiedPointLocation() {
+    const occupiedPointLocations = this.getOccupiedPointLocations();
+    for (let y = 50; y < this.canvasHeight; y += 150) {
+      for (let x = 50; x < this.canvasWidth; x += 150) {
+        if (!this.isPointOccupied(occupiedPointLocations, x, y)) {
+          return {pointX: x, pointY: y};
+        }
+      }
+    }
+    return null;
+  }
 
   /**
    * Set the background image
