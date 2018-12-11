@@ -18,7 +18,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
@@ -150,6 +150,20 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">The WISE Advantage</target>
       </trans-unit>
+      <trans-unit id="8127b5c0780e941a1948d8ac7b49af813bd7df98" datatype="html">
+        <source>
+              Free, standards-aligned, and research-based inquiry curricula that address <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>NGSS 3D proficiency<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+            </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">
+              
+              Free, standards-aligned, and research-based inquiry curricula that address <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>NGSS 3D proficiency<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+            
+            </target>
+      </trans-unit>
       <trans-unit id="23bd67ab9c1e8b08481bd99aa471c2a29b587143" datatype="html">
         <source>Curriculum Offerings</source>
         <context-group purpose="location">
@@ -195,10 +209,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
           <context context-type="linenumber">17</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-signin/header-signin.component.html</context>
-          <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
@@ -582,6 +592,70 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">~ WISE Goals ~</target>
       </trans-unit>
+      <trans-unit id="a8c4f4b7ff2dc03b066549737367901b95c1f556" datatype="html">
+        <source>Make Science Meaningful</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Make Science Meaningful</target>
+      </trans-unit>
+      <trans-unit id="d1d5c7485a7278e9df8a76c3481541ef3d231792" datatype="html">
+        <source>WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</target>
+      </trans-unit>
+      <trans-unit id="ae2bc001ed6c6fb5416b490b7c6dbe2260697024" datatype="html">
+        <source>Support Diverse Learners</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Support Diverse Learners</target>
+      </trans-unit>
+      <trans-unit id="e582a65e12f2b176d3eef63cd4caa67d68cfb5b9" datatype="html">
+        <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</target>
+      </trans-unit>
+      <trans-unit id="92bb340c07c783bf551cd704462f3d7efa15f8a4" datatype="html">
+        <source>Increase Participation in Science</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Increase Participation in Science</target>
+      </trans-unit>
+      <trans-unit id="eb68c61cc5bb54a55a39d5ad7702268ba2c656f2" datatype="html">
+        <source>WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</target>
+      </trans-unit>
+      <trans-unit id="d528a21d07675cb0c41c688a22371f4cc925a969" datatype="html">
+        <source>Accessible to All</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Accessible to All</target>
+      </trans-unit>
+      <trans-unit id="416ce0bcfd9bbe81b9ccc34d764504df4c8088d1" datatype="html">
+        <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</target>
+      </trans-unit>
       <trans-unit id="51d583eae34e00ff68b64c83bb27a77927206e5c" datatype="html">
         <source>WISE Terms of Use &amp; Privacy Policy</source>
         <context-group purpose="location">
@@ -686,13 +760,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">These Terms of Use and Privacy Policy constitute an agreement between you and the Web-based Inquiry Science Environment team that governs your use of wise.berkeley.edu and all associated services and websites (collectively "WISE"). The WISE team is a federally-funded research group headquartered at the University of California, Berkeley and is a non-profit organization.</target>
       </trans-unit>
-      <trans-unit id="b5781d843dbfe16efc70420cbcd0cd2bcdfb7f8b" datatype="html">
-        <source>Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us at </source>
+      <trans-unit id="b35b13440a00be341535fafb52bf90eae8c7456c" datatype="html">
+        <source>Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us at </target>
+        <target xml:lang="zh-CN" state="needs-translation">Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="5403166a98d789195745d246a5135c0416d77fe2" datatype="html">
         <source>This policy was last updated on September 8, 2017.</source>
@@ -742,13 +816,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">To help ensure unauthorized use of your account, please keep your password secret. You are solely responsible for any use of your account, even if your account is used by another person. If any use of your account violates the Terms of Use, your account may be suspended or deleted.</target>
       </trans-unit>
-      <trans-unit id="a9a6f1524137a2558e7acdef9246bde24193426f" datatype="html">
-        <source>If you believe that your account is no longer secure for any reason, please change your password. If you cannot access your account to change your password, contact us at </source>
+      <trans-unit id="fb6011f7bb1a29887f28e6d6347878061932492d" datatype="html">
+        <source>If you believe that your account is no longer secure for any reason, please change your password. If you cannot access your account to change your password, contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">If you believe that your account is no longer secure for any reason, please change your password. If you cannot access your account to change your password, contact us at </target>
+        <target xml:lang="zh-CN" state="needs-translation">If you believe that your account is no longer secure for any reason, please change your password. If you cannot access your account to change your password, contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="2cf496fcb22b06a82a9af4e628dbc97524e51dfb" datatype="html">
         <source>User-Generated Content</source>
@@ -790,21 +864,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Licensing</target>
       </trans-unit>
-      <trans-unit id="c1dc40ffec97445908ac0bc38b3dea5a8ae37aa4" datatype="html">
-        <source>All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit </source>
+      <trans-unit id="d3cee34156cc74603c393d78d45916c7f94c8a8f" datatype="html">
+        <source>All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://creativecommons.org/licenses/by-sa/4.0/<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit </target>
-      </trans-unit>
-      <trans-unit id="859195442c27a15acd5b3fb83459934c2744229a" datatype="html">
-        <source>The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</target>
+        <target xml:lang="zh-CN" state="needs-translation">All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://creativecommons.org/licenses/by-sa/4.0/<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</target>
       </trans-unit>
       <trans-unit id="d832788aab0ba91d394cc36c4c63bedb07a7e5ea" datatype="html">
         <source>You may link to or include outside resources or materials in your WISE projects or in any public parts of the WISE site, but it is your responsibility to obtain any necessary permission from the original owners and include any required attribution for your use of such content. WISE will not be held responsible for the unauthorized use by a WISE account holder of any third-party content in WISE projects or on any other sections of the WISE site.</source>
@@ -966,13 +1032,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">All user-generated content is provided as-is. The WISE Team is not responsible for the accuracy or reliability of any user-generated content available through WISE. The WISE Team does not endorse any views, opinions, or advice expressed in user-generated content. You agree to relieve the WISE Team of any and all liability arising from your user-generated content.</target>
       </trans-unit>
-      <trans-unit id="a62d44b3e895449acf4503a3ed057797983e2321" datatype="html">
-        <source>If you notice any offensive material or user-generated content that are in violation with the rules above, you must report them to the WISE Team using our contact form at </source>
+      <trans-unit id="58bf2f522bfb669f040c49d745a07badf14f8157" datatype="html">
+        <source>If you notice any offensive material or user-generated content that are in violation with the rules above, please report them to the WISE Team using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">If you notice any offensive material or user-generated content that are in violation with the rules above, you must report them to the WISE Team using our contact form at </target>
+        <target xml:lang="zh-CN" state="needs-translation">If you notice any offensive material or user-generated content that are in violation with the rules above, please report them to the WISE Team using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="83e835d7ae5255ef507a1ed474c87044d226fde0" datatype="html">
         <source>5. Information Security</source>
@@ -1014,13 +1080,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">California Privacy Rights for Minors</target>
       </trans-unit>
-      <trans-unit id="604cb8a33a26645514cc27ca75db79466e4324a9" datatype="html">
-        <source>If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child's content or information, please contact us at https://wise.berkeley.edu/contact/contactwise.html for assistance or you can delete specific information from you or your child's account.</source>
+      <trans-unit id="07bee5a94bc5a2dd9e6ae5a3718009e22c1e2308" datatype="html">
+        <source>If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child's content or information, please contact us at https://wise.berkeley.edu/contact for assistance or you can delete specific information from you or your child's account.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">89</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child's content or information, please contact us at https://wise.berkeley.edu/contact/contactwise.html for assistance or you can delete specific information from you or your child's account.</target>
+        <target xml:lang="zh-CN" state="needs-translation">If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child's content or information, please contact us at https://wise.berkeley.edu/contact for assistance or you can delete specific information from you or your child's account.</target>
       </trans-unit>
       <trans-unit id="a696cb5c99995dd1420b2dd62b2c6409888b9605" datatype="html">
         <source>Family Educational Rights and Privacy Act (FERPA)</source>
@@ -1054,21 +1120,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">We may occasionally update or modify our Terms of Use and Privacy Policy. We will always display the date this document was last updated. If we make significant changes to these terms, we will display a prominent notice on the WISE home page and may notify users via registered email.  We encourage you to review this document periodically. By continuing to use WISE after any changes to this document, you acknowledge that you agree to the current version of these terms.</target>
       </trans-unit>
-      <trans-unit id="e6bb2b963971045a0d3ec6416f25fd5a26df9e76" datatype="html">
-        <source>If you have any questions or concerns about this document or the WISE site, please contact us at </source>
+      <trans-unit id="88698050f16ebf91474ddae66b687f795af7e57b" datatype="html">
+        <source>If you have any questions or concerns about this document or the WISE site, please contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. We can also be reached by mail at:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">98</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">If you have any questions or concerns about this document or the WISE site, please contact us at </target>
-      </trans-unit>
-      <trans-unit id="d29759560f39c39b0e41d95354fb82fbe9cc9f1a" datatype="html">
-        <source>We can also be reached by mail at:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/privacy/privacy.component.html</context>
-          <context context-type="linenumber">98</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">We can also be reached by mail at:</target>
+        <target xml:lang="zh-CN" state="needs-translation">If you have any questions or concerns about this document or the WISE site, please contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. We can also be reached by mail at:</target>
       </trans-unit>
       <trans-unit id="a53ebef13aa69d9f02d5e74bad14f75519260813" datatype="html">
         <source>UC Berkeley Graduate School of Education</source>
@@ -1110,29 +1168,18 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Berkeley, CA 94720-1670</target>
       </trans-unit>
-      <trans-unit id="cfc2f436ec2beffb042e7511a73c89c372e86a6c" datatype="html">
-        <source>Register</source>
+      <trans-unit id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c" datatype="html">
+        <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Sign In<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-signin/header-signin.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">1</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Register</target>
+        <target xml:lang="zh-CN" state="needs-translation">
+  
+  <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Sign In<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+
+</target>
       </trans-unit>
       <trans-unit id="65cc4ab3b4c438e07c89be2b677d08369fb62da2" datatype="html">
         <source>Welcome</source>
@@ -1234,45 +1281,27 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Getting Started</target>
       </trans-unit>
-      <trans-unit id="25d57ddcab55e4aa58926d1b22885e2be6fca3c5" datatype="html">
-        <source>All users must create their own account. Teachers must create a teacher account and students must create a student account. Users can create an account by going to the </source>
+      <trans-unit id="d8a1b53c813ad335ed55f8201498c45af536f8b5" datatype="html">
+        <source>Creating an Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">6</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">All users must create their own account. Teachers must create a teacher account and students must create a student account. Users can create an account by going to the </target>
+        <target xml:lang="zh-CN" state="needs-translation">Creating an Account</target>
       </trans-unit>
-      <trans-unit id="68db5d47f06fb844eb30da659ec82fdcc9ebef6f" datatype="html">
-        <source>WISE Home Page</source>
+      <trans-unit id="d38483514cb4d3dfdb109d7a3381dee14b11cfc1" datatype="html">
+        <source>
+    All users must create their own account. Teachers must create a teacher account and students must create a student account. Users can create an account by going to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and clicking on the <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> link at the upper right of the screen.
+  </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">7</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">WISE Home Page</target>
-      </trans-unit>
-      <trans-unit id="7e35e26e75cea100581c9d1fbe1237c72af9d4e9" datatype="html">
-        <source> and clicking on the </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation"> and clicking on the </target>
-      </trans-unit>
-      <trans-unit id="fa4631bd2124ead4889834a435fdb0ffe5bea36c" datatype="html">
-        <source> link at the upper right of the screen.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation"> link at the upper right of the screen.</target>
+        <target xml:lang="zh-CN" state="needs-translation">
+    
+    All users must create their own account. Teachers must create a teacher account and students must create a student account. Users can create an account by going to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and clicking on the <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> link at the upper right of the screen.
+  
+  </target>
       </trans-unit>
       <trans-unit id="8667ecd04a352367c4c964c92a7763320d3f8946" datatype="html">
         <source>Here are instructions on how to create a teacher account.</source>
@@ -1282,57 +1311,29 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Here are instructions on how to create a teacher account.</target>
       </trans-unit>
-      <trans-unit id="7ce8c7f709d2f8b2ffdb82c653f3a905e3f0c0a5" datatype="html">
-        <source>Go to the </source>
+      <trans-unit id="2964f6a797ee681e920953a80029f041f0edc7bf" datatype="html">
+        <source>Go to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Go to the </target>
+        <target xml:lang="zh-CN" state="needs-translation">Go to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
-      <trans-unit id="318844eecae941041d3d8e4a9bf7dcae736a4693" datatype="html">
-        <source>Click the </source>
+      <trans-unit id="b6140858fd535cc6f3236e4446df5c52fa2caa1d" datatype="html">
+        <source>Click the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> link at the upper right of the screen.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">208</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Click the </target>
+        <target xml:lang="zh-CN" state="needs-translation">Click the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> link at the upper right of the screen.</target>
       </trans-unit>
-      <trans-unit id="1166c601d1d45ffe87db8bb3c57aaf3512768eb7" datatype="html">
-        <source>Click on </source>
+      <trans-unit id="2e06e81d5bce0468d498f4f754a63511b54a31f1" datatype="html">
+        <source>Click on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Teacher<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Click on </target>
-      </trans-unit>
-      <trans-unit id="6237ff3a29d96a2418eb0007bebc0be1dda21cdd" datatype="html">
-        <source>Teacher</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Teacher</target>
+        <target xml:lang="zh-CN" state="needs-translation">Click on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Teacher<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="802cc87d8831d0d77405a7acd6d0ac904580d1f8" datatype="html">
         <source>Choose to sign up with your email or with your Google Account.</source>
@@ -1650,13 +1651,17 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">How do I create an account?</target>
       </trans-unit>
-      <trans-unit id="34667ccb17afe9f6c4bcb950093b10ca4c1689bf" datatype="html">
-        <source> page.</source>
+      <trans-unit id="64649250206d05fcf6402616f25611f8282e964c" datatype="html">
+        <source>Go to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> page.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation"> page.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Go to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> page.</target>
       </trans-unit>
       <trans-unit id="500e3831ebdee994afba617d0be7ff667d7f6432" datatype="html">
         <source>Click on "Teacher".</source>
@@ -1997,6 +2002,14 @@
           <context context-type="linenumber">85</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Warning</target>
+      </trans-unit>
+      <trans-unit id="4ad84d4f3bbc9a37b27cd1ff908aea5fa83dccf3" datatype="html">
+        <source>If you move a student to a different period, they will lose all of their work.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">If you move a student to a different period, they will lose all of their work.</target>
       </trans-unit>
       <trans-unit id="bfe729cbf22d109dbf516f23ddff904b60f0b601" datatype="html">
         <source>I do not remember my teacher access code that students need to create their account for my new students.</source>
@@ -2394,8 +2407,8 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">The WISE web site won't load on my web browser. What do I do?</target>
       </trans-unit>
-      <trans-unit id="336126bb008a2df97181d1ae3845c88629c6518c" datatype="html">
-        <source>You can try </source>
+      <trans-unit id="af71879ff4b2c7e9d79167d67a8558c4fd64ee09" datatype="html">
+        <source>You can try <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>clearing your browser cache<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and then reloading the WISE web site.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">191</context>
@@ -2404,31 +2417,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">You can try </target>
-      </trans-unit>
-      <trans-unit id="4a8afa7ad63221a7721030d6f65c4e96596d6751" datatype="html">
-        <source>clearing your browser cache</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">191</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">clearing your browser cache</target>
-      </trans-unit>
-      <trans-unit id="87337d8f612a53dbadc0f92d524f759f913c3f33" datatype="html">
-        <source> and then reloading the WISE web site.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">191</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation"> and then reloading the WISE web site.</target>
+        <target xml:lang="zh-CN" state="needs-translation">You can try <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>clearing your browser cache<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and then reloading the WISE web site.</target>
       </trans-unit>
       <trans-unit id="2b8d27d2ef531e0cdf597e90b8c80e339d679ad3" datatype="html">
         <source>You can try using a different web browser. We recommend using Chrome or Firefox.</source>
@@ -2518,8 +2507,8 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Click on your account icon at the top right of the page. This should open a drop down with options.</target>
       </trans-unit>
-      <trans-unit id="d064b16864a85c6bc3cd208c2bf7fde4eb1116d3" datatype="html">
-        <source>"Edit Profile"</source>
+      <trans-unit id="a8484540c88600524e3d99bffc641f5588cc4ecc" datatype="html">
+        <source>Click the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>"Edit Profile"<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> option.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">208</context>
@@ -2528,19 +2517,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">58</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">"Edit Profile"</target>
-      </trans-unit>
-      <trans-unit id="246fe945c14ce281adbc2d368583782648e38731" datatype="html">
-        <source> option.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">208</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation"> option.</target>
+        <target xml:lang="zh-CN" state="needs-translation">Click the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>"Edit Profile"<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> option.</target>
       </trans-unit>
       <trans-unit id="9d5b98a0d8b80864e5e2382f9c2f056f8b9393e5" datatype="html">
         <source>Near the bottom there will be a "Language" setting.</source>
@@ -2602,8 +2579,8 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Who do I contact when I have a problem I can't solve?</target>
       </trans-unit>
-      <trans-unit id="68285f534a15917652bc9c784ff33fc8df06dbc6" datatype="html">
-        <source>The </source>
+      <trans-unit id="f0bf08ca7362c92db6be004201f0d9e142a61532" datatype="html">
+        <source>The <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact WISE form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">216</context>
@@ -2612,31 +2589,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">66</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">The </target>
-      </trans-unit>
-      <trans-unit id="3820cb202990c6f0caa954ce92660b70ccd1fd41" datatype="html">
-        <source>Contact WISE form</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">216</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Contact WISE form</target>
-      </trans-unit>
-      <trans-unit id="b70c68c0b31052902ef435caa064d7122114bbd3" datatype="html">
-        <source> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">216</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation"> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</target>
+        <target xml:lang="zh-CN" state="needs-translation">The <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact WISE form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</target>
       </trans-unit>
       <trans-unit id="3ba2943f558468dbbc717d0d93b708c05640f297" datatype="html">
         <source>Student Frequently Asked Questions</source>
@@ -2646,21 +2599,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Student Frequently Asked Questions</target>
       </trans-unit>
-      <trans-unit id="53a7056185801d3bbd337b7f5409bc15ea2ae108" datatype="html">
-        <source> page</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation"> page</target>
-      </trans-unit>
-      <trans-unit id="61727bf4fa2cb34dc5bdf598b6cb917d0c44ac86" datatype="html">
-        <source>Student</source>
+      <trans-unit id="6f352eaa805d09d80fce681e63d73b007a681142" datatype="html">
+        <source>Click on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Student</target>
+        <target xml:lang="zh-CN" state="needs-translation">Click on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="ae21d5a7a66ab2122f138b30d6aec4e8538ee94c" datatype="html">
         <source>I forgot my username, how can I find it?</source>
@@ -2718,21 +2663,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Log into WISE with your student account.</target>
       </trans-unit>
-      <trans-unit id="270a18846771288a31a549353ab2f86d77c82043" datatype="html">
-        <source>Click on the "Add Unit" button at the top right of the </source>
+      <trans-unit id="bb5b64fcfcf15dfdc125061775f9a1a5396735c9" datatype="html">
+        <source>Click on the "Add Unit" button at the top right of the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Click on the "Add Unit" button at the top right of the </target>
-      </trans-unit>
-      <trans-unit id="b08765949ba6c837555d41a84a9349cf8a8394dc" datatype="html">
-        <source>Student Home Page</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Student Home Page</target>
+        <target xml:lang="zh-CN" state="needs-translation">Click on the "Add Unit" button at the top right of the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="318e90549e03b7a6a6fc59f3253708f3b9ed94ce" datatype="html">
         <source>Enter the Access Code from your teacher.</source>
@@ -2806,6 +2743,18 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.</target>
       </trans-unit>
+      <trans-unit id="fca6a4b970e109ec338e1bead266db6468668156" datatype="html">
+        <source>
+        Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/home-page-project-library/home-page-project-library.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">
+        Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.
+      </target>
+      </trans-unit>
       <trans-unit id="92a474eb532d00ae040a81de8705d2e0ea5c5b5d" datatype="html">
         <source>Search &amp; Filter</source>
         <context-group purpose="location">
@@ -2846,29 +2795,21 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Use with Class</target>
       </trans-unit>
-      <trans-unit id="0df7db6708679ce6d00589b5ff07eb989454528c" datatype="html">
-        <source>Unit ID:</source>
+      <trans-unit id="a40392824621859bfd694580f1bb21debbc50eb0" datatype="html">
+        <source>(Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Unit ID:</target>
+        <target xml:lang="zh-CN" state="needs-translation">(Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="a2d9400df68d9f4e89fe24f6a3f40bc5322f19f2" datatype="html">
         <source>1. Choose Periods</source>
@@ -2932,6 +2873,10 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Start date</target>
       </trans-unit>
       <trans-unit id="6becdc6f27b75d5697cfd21fa1c80856ee184e64" datatype="html">
@@ -2939,6 +2884,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">41</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Start date is required</target>
       </trans-unit>
@@ -2988,6 +2937,10 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Access Code: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
       </trans-unit>
       <trans-unit id="534ba8ba6d05fed93bd074e67fb6d03d2e466b46" datatype="html">
@@ -3030,19 +2983,27 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Grade level:</target>
       </trans-unit>
-      <trans-unit id="e17a1d75189da843f541f7764f188f2b19a97df2" datatype="html">
-        <source>Duration:</source>
+      <trans-unit id="e13ffc854abc67144abff922fe42c140bc412965" datatype="html">
+        <source>Duration: <x id="INTERPOLATION" equiv-text="{{ data.project.metadata.totalTime }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">13</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Duration:</target>
+        <target xml:lang="zh-CN" state="needs-translation">Duration: <x id="INTERPOLATION" equiv-text="{{ data.project.metadata.totalTime }}"/></target>
+      </trans-unit>
+      <trans-unit id="fdd95bdfe358fc8b6ad9763ed2955bc52ca7c5d3" datatype="html">
+        <source>Unit ID: <x id="INTERPOLATION" equiv-text="{{ data.project.id }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Unit ID: <x id="INTERPOLATION" equiv-text="{{ data.project.id }}"/></target>
       </trans-unit>
       <trans-unit id="c38ef07814e33a674bada9fe331ffd114cec319d" datatype="html">
         <source>Discipline:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Discipline:</target>
       </trans-unit>
@@ -3050,7 +3011,7 @@
         <source>Features:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Features:</target>
       </trans-unit>
@@ -3058,7 +3019,7 @@
         <source>Performance Expectations: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Performance Expectations: </target>
       </trans-unit>
@@ -3066,7 +3027,7 @@
         <source>Close</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
@@ -3074,19 +3035,11 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Close</target>
       </trans-unit>
-      <trans-unit id="87036091439025fbc7cbc38b6b59ac711b6d7a6c" datatype="html">
-        <source>supervised_user_circle</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">supervised_user_circle</target>
-      </trans-unit>
       <trans-unit id="3e2a583f531f7dd9f089f68a6968e444c372c3e8" datatype="html">
         <source>Preview</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
@@ -3094,13 +3047,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Preview</target>
       </trans-unit>
-      <trans-unit id="2bd55bf770687e725e3f787c37ece198c5d0c370" datatype="html">
-        <source>Owned by</source>
+      <trans-unit id="1e65ab634e7e56dc26d8af14840e7190b2859708" datatype="html">
+        <source>Owned by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Owned by</target>
+        <target xml:lang="zh-CN" state="needs-translation">Owned by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></target>
       </trans-unit>
       <trans-unit id="cf981dceeed8f731260f5eff3c51a5ea148cf8fe" datatype="html">
         <source>Share Unit</source>
@@ -3185,6 +3138,14 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Copy Unit</target>
+      </trans-unit>
+      <trans-unit id="2883a2c78d97119d2ab3002336e04da6657a7dfd" datatype="html">
+        <source>(Unit ID: <x id="INTERPOLATION" equiv-text="{{ data.project.id }}"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">(Unit ID: <x id="INTERPOLATION" equiv-text="{{ data.project.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="459457d652be00e6fe313f88d938d4f063c3b3e0" datatype="html">
         <source>Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</source>
@@ -3350,8 +3311,8 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Forgot username or password?</target>
       </trans-unit>
-      <trans-unit id="20cfc6e6b50120e4e9953c8461e06e26651cb8e9" datatype="html">
-        <source>New to WISE? </source>
+      <trans-unit id="c6c31f501feef87ab274bd3a000b99eeb7434cff" datatype="html">
+        <source>New to WISE? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Join for free!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
           <context context-type="linenumber">55</context>
@@ -3360,19 +3321,7 @@
           <context context-type="sourcefile">app/login/login-google-user-not-found/login-google-user-not-found.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">New to WISE? </target>
-      </trans-unit>
-      <trans-unit id="00ff261008696d9347c88b3ba3d8174cb3fa9e19" datatype="html">
-        <source>Join for free!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/login/login-google-user-not-found/login-google-user-not-found.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Join for free!</target>
+        <target xml:lang="zh-CN" state="needs-translation">New to WISE? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Join for free!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
       </trans-unit>
       <trans-unit id="050473ed2d269f07090850ebf8f56f635436869e" datatype="html">
         <source>Your Google User ID was not found in WISE.</source>
@@ -3754,21 +3703,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Password does not match</target>
       </trans-unit>
-      <trans-unit id="0443f289e9b89d9afdf81e40a340ba2fccb0a46d" datatype="html">
-        <source>I agree to the </source>
+      <trans-unit id="bc1675556b151ef6a4e3031221cdb172cc3b9d5c" datatype="html">
+        <source>I agree to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> *</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
           <context context-type="linenumber">142</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">I agree to the </target>
-      </trans-unit>
-      <trans-unit id="3576071b5b6104c09f07f668fcc79448d8ce9816" datatype="html">
-        <source>WISE Privacy Policy &amp; Terms of Use</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">142</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">WISE Privacy Policy &amp; Terms of Use</target>
+        <target xml:lang="zh-CN" state="needs-translation">I agree to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> *</target>
       </trans-unit>
       <trans-unit id="63fa2c4efa44cd8a08579763cdd62f981a8b1aaa" datatype="html">
         <source>You must agree to the Privacy Policy &amp; Terms of Use</source>
@@ -3790,17 +3731,23 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Your WISE account has been created!</target>
       </trans-unit>
-      <trans-unit id="5cda027bdbd3c49814594df3a629b43bbac4f43a" datatype="html">
-        <source>Your username is:</source>
+      <trans-unit id="5aef459db579dd07ae9bc8685beccbac4fc1f7a8" datatype="html">
+        <source>
+      Your username is: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{username}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>.
+    </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">4</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Your username is:</target>
+        <target xml:lang="zh-CN" state="needs-translation">
+      
+      Your username is: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{username}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>.
+    
+    </target>
       </trans-unit>
       <trans-unit id="b6c571f49a9876275382c366aabd8aac85dbbd8f" datatype="html">
         <source>You should receive an email with your account details shortly.</source>
@@ -3938,21 +3885,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Security Question Answer Required</target>
       </trans-unit>
-      <trans-unit id="87569d7aacad30426e7a14757bfd9f5e2fd205ff" datatype="html">
-        <source>By clicking "Create Account", you agree to our </source>
+      <trans-unit id="60abd69611e9432d4d506e292e421a9a26bfa454" datatype="html">
+        <source>By clicking "Create Account", you agree to our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">111</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">By clicking "Create Account", you agree to our </target>
-      </trans-unit>
-      <trans-unit id="92b75a2a6149ca770b862686c58e5b4869dac7f6" datatype="html">
-        <source>Privacy Policy &amp; Terms of Use</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">112</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Privacy Policy &amp; Terms of Use</target>
+        <target xml:lang="zh-CN" state="needs-translation">By clicking "Create Account", you agree to our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
       </trans-unit>
       <trans-unit id="34fe434c734c4d0366fc952715e5f93e68e55ba3" datatype="html">
         <source>Please write this down. You will need it when signing in to WISE in the future.</source>
@@ -3961,6 +3900,14 @@
           <context context-type="linenumber">7</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Please write this down. You will need it when signing in to WISE in the future.</target>
+      </trans-unit>
+      <trans-unit id="558a4e3546333e209423ef98d8e846c143ba0804" datatype="html">
+        <source>Hi! There is already a WISE user with this Google account.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Hi! There is already a WISE user with this Google account.</target>
       </trans-unit>
       <trans-unit id="36a606470097ddf0c32a250c8a902441729ca8ca" datatype="html">
         <source>Add Unit</source>
@@ -3972,10 +3919,6 @@
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Add Unit</target>
       </trans-unit>
       <trans-unit id="190a0caf6ddac8b5347008c55791abc9e26655d8" datatype="html">
@@ -3983,10 +3926,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">6</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">4</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Access Code</target>
       </trans-unit>
@@ -4038,45 +3977,29 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Hey there! Looks like you don't have any WISE units yet.</target>
       </trans-unit>
-      <trans-unit id="1163b08af14b03b3b354f3b65e690f4b686537b1" datatype="html">
-        <source>Ask your teacher for an</source>
+      <trans-unit id="aba3e9a4c258ce63221b9496a392384d00b6e471" datatype="html">
+        <source>Ask your teacher for an <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Access Code<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and then tap the <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Add Unit<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> button to get started.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Ask your teacher for an</target>
+        <target xml:lang="zh-CN" state="needs-translation">Ask your teacher for an <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Access Code<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and then tap the <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Add Unit<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> button to get started.</target>
       </trans-unit>
-      <trans-unit id="1a4d6e20862e621c97538f759b2da66b373dce25" datatype="html">
-        <source>and then tap the</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">and then tap the</target>
-      </trans-unit>
-      <trans-unit id="2a9bdad521f4ed9a3b01c292908b304d98859ae5" datatype="html">
-        <source>button to get started</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">button to get started</target>
-      </trans-unit>
-      <trans-unit id="17df2b9732b27acdaf2cc209b1670858885f5b91" datatype="html">
-        <source>Units found:</source>
+      <trans-unit id="5b6d466cdfc67986fb402712d003dd3a455a3507" datatype="html">
+        <source>Units found: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Units found:</target>
+        <target xml:lang="zh-CN" state="needs-translation">Units found: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
-      <trans-unit id="9450509b28b88633d33270f3823fc8ef208c31a5" datatype="html">
-        <source>My WISE units:</source>
+      <trans-unit id="cba86a51e8ee210e24b4d9b47ceffed1e70b61d1" datatype="html">
+        <source>My WISE units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">My WISE units:</target>
+        <target xml:lang="zh-CN" state="needs-translation">My WISE units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit id="543935afc44141d45216131ada149945aa784b27" datatype="html">
         <source>scheduled</source>
@@ -4502,27 +4425,29 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">student</target>
       </trans-unit>
-      <trans-unit id="330e6123a9ec40228517cdf5cd9d55ae60dfb1f8" datatype="html">
-        <source>Access Code:</source>
+      <trans-unit id="6278c64baffd2cf910afb237ca4095118eceab61" datatype="html">
+        <source>
+    Shared by <x id="INTERPOLATION" equiv-text="{{ run.owner.displayName }}"/> |
+  </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">23</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Access Code:</target>
-      </trans-unit>
-      <trans-unit id="b92880190a0ea3860617801acb2bcdff3af4c910" datatype="html">
-        <source>Shared by</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Shared by</target>
+        <target xml:lang="zh-CN" state="needs-translation">
+    
+    Shared by <x id="INTERPOLATION" equiv-text="{{ run.owner.displayName }}"/> |
+  
+  </target>
       </trans-unit>
       <trans-unit id="f31a4ac5cfc26f2d23677bd24f59219dc5f1c491" datatype="html">
         <source>Teacher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Teacher Tools</target>
       </trans-unit>
@@ -4534,17 +4459,17 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Share Classroom Run</target>
       </trans-unit>
-      <trans-unit id="425b7ea8bdd13d5fd0082473794c008ede845fec" datatype="html">
-        <source>Run ID:</source>
+      <trans-unit id="b2e61582bbd238946269a615512bdf8a69880cfd" datatype="html">
+        <source>(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">Run ID:</target>
+        <target xml:lang="zh-CN" state="needs-translation">(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="39e715b9ebc52d3b9c9a0b629419034bf1610efa" datatype="html">
         <source>Teacher is already on shared list.</source>
@@ -4586,6 +4511,122 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Grade and Manage</target>
       </trans-unit>
+      <trans-unit id="86c7da5590ddc67da867d902bac10686aa967b80" datatype="html">
+        <source>Edit Run Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Edit Run Settings</target>
+      </trans-unit>
+      <trans-unit id="9bf1aa6f7fb3bbd582901cb91902e94a0a64fc90" datatype="html">
+        <source>Periods</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Periods</target>
+      </trans-unit>
+      <trans-unit id="d7acc4c320f2cec1d3d4e86dfa25ac5f5e6783b9" datatype="html">
+        <source>
+        Delete
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">
+        Delete
+      </target>
+      </trans-unit>
+      <trans-unit id="d31281c41fb2fcaf463097e8a21349f445ad5e91" datatype="html">
+        <source>New Period Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">New Period Name</target>
+      </trans-unit>
+      <trans-unit id="ea3b923304da4a0ed63fe29fffb92fd688e9efa8" datatype="html">
+        <source>
+      Add Period
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">
+      Add Period
+    </target>
+      </trans-unit>
+      <trans-unit id="9e52801929bc9e355f8de5c5c13ba357055d1bdf" datatype="html">
+        <source>Students Per Team</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Students Per Team</target>
+      </trans-unit>
+      <trans-unit id="51a5e568f8f1569db587a31b29b0cceabfc540e9" datatype="html">
+        <source>
+            Only 1 student
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">
+            Only 1 student
+          </target>
+      </trans-unit>
+      <trans-unit id="3401aeac771d0d2a5a7aa03acfb2f313460fae39" datatype="html">
+        <source>
+            1-3 students
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">
+            1-3 students
+          </target>
+      </trans-unit>
+      <trans-unit id="3e6acd589d8b82cafd8546409da0a36469d297a0" datatype="html">
+        <source>Start Date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Start Date</target>
+      </trans-unit>
+      <trans-unit id="396111f33ef48eef016cd0eedb7be2ef882d7430" datatype="html">
+        <source>
+    Close
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">
+    Close
+  </target>
+      </trans-unit>
+      <trans-unit id="bc38cb37c2ca90b3825bdb79d8c116eddba23a53" datatype="html">
+        <source>End Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">End Unit</target>
+      </trans-unit>
       <trans-unit id="2e9bdcab399cafcfce0f01eac36f7da4d4353fae" datatype="html">
         <source>Are you sure you want to end the unit? This will prevent your students from adding to or changing their work. You can continue to review and grade.</source>
         <context-group purpose="location">
@@ -4610,17 +4651,13 @@
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">There was an error ending this unit. Please try again later.</target>
       </trans-unit>
-      <trans-unit id="bc38cb37c2ca90b3825bdb79d8c116eddba23a53" datatype="html">
-        <source>End Unit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
+      <trans-unit id="32f41f2afbd1719ea56da292e89a340d43bcf7dd" datatype="html">
+        <source>Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">6</context>
         </context-group>
-        <target xml:lang="zh-CN" state="needs-translation">End Unit</target>
+        <target xml:lang="zh-CN" state="needs-translation">Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/></target>
       </trans-unit>
       <trans-unit id="3ee54b66b7f53827035c3055f228bc2bf2550dab" datatype="html">
         <source>Unit Info</source>
@@ -4765,6 +4802,14 @@
           <context context-type="linenumber">41</context>
         </context-group>
         <target xml:lang="zh-CN" state="needs-translation">Invalid Email</target>
+      </trans-unit>
+      <trans-unit id="308859e15dc9cc2666f0350097268543674b78d3" datatype="html">
+        <source>Teacher Required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <target xml:lang="zh-CN" state="needs-translation">Teacher Required</target>
       </trans-unit>
       <trans-unit id="44645e64c03597bbe46c61c4d889850ea22679d7" datatype="html">
         <source>Issue Type Required</source>
