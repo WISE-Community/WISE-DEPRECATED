@@ -444,4 +444,8 @@ public class PersistentUserDetails implements MutableUserDetails {
   public void clearNumberOfRecentFailedVerificationCodeAttempts() {
     this.numberOfRecentFailedVerificationCodeAttempts = null;
   }
+
+  public boolean isGoogleUser() {
+    return this.googleUserId != null && !this.googleUserId.isEmpty();
+  }
 }

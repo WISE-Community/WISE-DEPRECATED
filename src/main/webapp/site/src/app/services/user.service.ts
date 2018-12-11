@@ -13,7 +13,10 @@ export class UserService {
 
   private userUrl = 'api/user/user';
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
+  private checkGoogleUserExistsUrl = 'api/user/check-google-user-exists';
+  private checkGoogleUserMatchesUrl = 'api/user/check-google-user-matches';
+  private googleUserUrl = 'api/user/google-user';
+  private checkAuthenticationUrl = 'api/user/check-authentication';
   private changePasswordUrl = 'api/user/password';
   private languagesUrl = 'api/user/languages';
   private contactUrl = 'api/contact';
@@ -63,6 +66,14 @@ export class UserService {
         );
   }
 
+  checkAuthentication(username, password) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('username', username);
+    body = body.set('password', password);
+    return this.http.post<any>(this.checkAuthenticationUrl, body, { headers: headers });
+  }
+
   authenticate(credentials, callback) {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -98,7 +109,20 @@ export class UserService {
 
   isGoogleIdExists(googleUserId: string) {
     let params = new HttpParams().set("googleUserId", googleUserId);
-    return this.http.get<User>(this.checkGoogleUserIdUrl, { params: params });
+    return this.http.get<User>(this.checkGoogleUserExistsUrl, { params: params });
+  }
+
+  isGoogleIdCorrect(googleUserId: string, userId: string) {
+    let params = new HttpParams();
+    params = params.set("googleUserId", googleUserId);
+    params = params.set("userId", userId);
+    return this.http.get<User>(this.checkGoogleUserMatchesUrl, { params: params });
+  }
+
+  getUserByGoogleId(googleUserId: string) {
+    let params = new HttpParams();
+    params = params.set("googleUserId", googleUserId);
+    return this.http.get<any>(this.googleUserUrl, { params: params });
   }
 
   changePassword(username, oldPassword, newPassword) {
