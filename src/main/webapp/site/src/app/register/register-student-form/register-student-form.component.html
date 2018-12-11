@@ -108,9 +108,7 @@
           </mat-form-field>
         </p>
       </div>
-      <p>
-        <ng-container i18n>By clicking "Create Account", you agree to our </ng-container><a href="privacy" target="_blank" i18n>Privacy Policy & Terms of Use</a>
-      </p>
+      <p i18n>By clicking "Create Account", you agree to our <a href="privacy" target="_blank">Privacy Policy & Terms of Use</a></p>
       <button mat-flat-button color="primary" type="submit" [disabled]="processing">
         <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
         <span i18n>Create Account</span>
