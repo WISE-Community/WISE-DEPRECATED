@@ -972,65 +972,31 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'createLabelOnCanvas',
     value: function createLabelOnCanvas() {
-      /*
-       * the student is in create label mode so we will create a new label
-       * where they have clicked
-       */
-
-      // turn off create label mode and hide the cancel button
       this.createLabelMode = false;
       this.isCancelButtonVisible = false;
-
-      var event = {};
-
-      if (event != null) {
-        // get the x and y position that the student clicked on
-        var x = 100;
-        var y = 100;
-
-        var newPointLocation = this.getNextPointLocation();
-        x = newPointLocation.pointX;
-        y = newPointLocation.pointY;
-
-        /*
-         * set the location of the text object to be down to the right
-         * of the position the student clicked on
-         */
-        var textX = null;
-        var textY = null;
-        if (this.enableCircles) {
-          // place the text to the bottom right of the circle
-          if (this.isStudentDataVersion(1)) {
-            // text is relatively positioned
-            textX = 100;
-            textY = 100;
-          } else {
-            // text is absolutely positioned
-            textX = x + 100;
-            textY = y + 100;
-          }
-        } else {
-          // circles are not enabled so we are only using the text
-          textX = x;
-          textY = y;
-        }
-
-        var canEdit = true;
-        var canDelete = true;
-
-        // create a new label
-        var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
-
-        // add the label to the canvas
-        this.addLabelToCanvas(this.canvas, newLabel);
-
-        /*
-         * make the new label selected so that the student can edit
-         * the text
-         */
-        this.selectLabel(newLabel);
-        this.studentDataChanged();
-      }
+      var newLabelLocation = this.getNewLabelLocation();
+      var canEdit = true;
+      var canDelete = true;
+      var newLabel = this.createLabel(newLabelLocation.pointX, newLabelLocation.pointY, newLabelLocation.textX, newLabelLocation.textY, this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
+      this.addLabelToCanvas(this.canvas, newLabel);
+      this.selectLabel(newLabel);
+      this.studentDataChanged();
+    }
+  }, {
+    key: 'getNewLabelLocation',
+    value: function getNewLabelLocation() {
+      var nextPointLocation = this.getNextPointLocation();
+      var pointX = nextPointLocation.pointX;
+      var pointY = nextPointLocation.pointY;
+      var newTextLocation = this.getNextTextLocation(pointX, pointY);
+      var textX = newTextLocation.textX;
+      var textY = newTextLocation.textY;
+      return {
+        pointX: pointX,
+        pointY: pointY,
+        textX: textX,
+        textY: textY
+      };
     }
   }, {
     key: 'getNextPointLocation',
@@ -1041,6 +1007,29 @@ var LabelController = function (_ComponentController) {
       } else {
         return unoccupiedPointLocation;
       }
+    }
+  }, {
+    key: 'getNextTextLocation',
+    value: function getNextTextLocation(pointX, pointY) {
+      var textX = null;
+      var textY = null;
+      if (this.enableCircles) {
+        // place the text to the bottom right of the circle
+        if (this.isStudentDataVersion(1)) {
+          // text is relatively positioned
+          textX = 100;
+          textY = 100;
+        } else {
+          // text is absolutely positioned
+          textX = pointX + 100;
+          textY = pointY + 100;
+        }
+      } else {
+        // circles are not enabled so we are only using the text
+        textX = pointX;
+        textY = pointY;
+      }
+      return { textX: textX, textY: textY };
     }
   }, {
     key: 'getOccupiedPointLocations',
@@ -1358,6 +1347,9 @@ var LabelController = function (_ComponentController) {
         hasControls: false,
         hasBorders: true,
         borderColor: 'red',
+        borderDashArray: [8, 8],
+        borderScaleFactor: 3,
+        borderOpacityWhenMoving: 1,
         selectable: true,
         cursorWidth: 0,
         editable: false,
@@ -1503,6 +1495,8 @@ var LabelController = function (_ComponentController) {
      * @param label the label object
      */
     value: function selectLabel(label) {
+      var _this4 = this;
+
       // create a reference to the selected label
       this.selectedLabel = label;
 
@@ -1527,32 +1521,29 @@ var LabelController = function (_ComponentController) {
            * viewable area and can not be seen. If the value is positive, it means
            * the element is currently in the viewable area and can be seen.
            */
-          var editLabelTextInputTop = $('#editLabelTextInput').offset().top;
+          var offset = $('#editLabelTextInput').offset();
+          if (offset != null) {
+            var editLabelTextInputTop = offset.top;
 
-          /*
-           * Check if the edit label text input is viewable. We want to make sure
-           * the input is in view. If the input is not in view and we give it
-           * focus, it will have the undesirable effect of scrolling the view up
-           * so that the input comes into view. We don't want it to scroll because
-           * it's jarring when the student is trying to select a label in the
-           * canvas.
-           */
-          if (editLabelTextInputTop > 100) {
-            // the input is in view so we will give it focus.
-            angular.element('#editLabelTextInput').focus();
+            /*
+             * Check if the edit label text input is viewable. We want to make sure
+             * the input is in view. If the input is not in view and we give it
+             * focus, it will have the undesirable effect of scrolling the view up
+             * so that the input comes into view. We don't want it to scroll because
+             * it's jarring when the student is trying to select a label in the
+             * canvas.
+             */
+            if (editLabelTextInputTop > 100) {
+              // the input is in view so we will give it focus.
+              angular.element('#editLabelTextInput').focus();
+            }
           }
-        });
+          _this4.canvas.setActiveObject(label.text);
+        }, 1000);
       } else {
         // hide label text input
         this.editLabelMode = false;
       }
-
-      /*
-       * force angular to refresh, otherwise angular will wait until the
-       * user generates another input (such as moving the mouse) before
-       * refreshing
-       */
-      this.$scope.$apply();
     }
 
     /**
@@ -1793,7 +1784,7 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
-      var _this4 = this;
+      var _this5 = this;
 
       var mergedComponentState = this.NodeService.createNewComponentState();
 
@@ -1832,10 +1823,10 @@ var LabelController = function (_ComponentController) {
                   // create an image from the concept map data
                   this.LabelService.createImageFromText(response, null, null, charactersPerLine, null, spaceInbetweenLines, fontSize).then(function (image) {
                     // set the image as the background
-                    _this4.setBackgroundImage(image);
+                    _this5.setBackgroundImage(image);
 
                     // make the work dirty so that it gets saved
-                    _this4.studentDataChanged();
+                    _this5.studentDataChanged();
                   });
                 }
               }
@@ -1909,10 +1900,10 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this5 = this;
+      var _this6 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this5.setBackgroundImage(image.url);
+        _this6.setBackgroundImage(image.url);
       });
     }
 

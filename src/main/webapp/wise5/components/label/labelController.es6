@@ -326,7 +326,7 @@ class LabelController extends ComponentController {
           });
         }
       }
-    }
+    };
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
@@ -930,66 +930,32 @@ class LabelController extends ComponentController {
   };
 
   createLabelOnCanvas() {
-    /*
-     * the student is in create label mode so we will create a new label
-     * where they have clicked
-     */
-
-    // turn off create label mode and hide the cancel button
     this.createLabelMode = false;
     this.isCancelButtonVisible = false;
-
-    var event = {};
-
-    if (event != null) {
-      // get the x and y position that the student clicked on
-      var x = 100;
-      var y = 100;
-
-      const newPointLocation = this.getNextPointLocation();
-      x = newPointLocation.pointX;
-      y = newPointLocation.pointY;
-
-      /*
-       * set the location of the text object to be down to the right
-       * of the position the student clicked on
-       */
-      let textX = null;
-      let textY = null;
-      if (this.enableCircles) {
-        // place the text to the bottom right of the circle
-        if (this.isStudentDataVersion(1)) {
-          // text is relatively positioned
-          textX = 100;
-          textY = 100;
-        } else {
-          // text is absolutely positioned
-          textX = x + 100;
-          textY = y + 100;
-        }
-      } else {
-        // circles are not enabled so we are only using the text
-        textX = x;
-        textY = y;
-      }
-
-      let canEdit = true;
-      let canDelete = true;
-
-      // create a new label
-      var newLabel = this.createLabel(x, y, textX, textY,
+    const newLabelLocation = this.getNewLabelLocation();
+    const canEdit = true;
+    const canDelete = true;
+    const newLabel = this.createLabel(newLabelLocation.pointX, newLabelLocation.pointY,
+        newLabelLocation.textX, newLabelLocation.textY,
         this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
+    this.addLabelToCanvas(this.canvas, newLabel);
+    this.selectLabel(newLabel);
+    this.studentDataChanged();
+  }
 
-      // add the label to the canvas
-      this.addLabelToCanvas(this.canvas, newLabel);
-
-      /*
-       * make the new label selected so that the student can edit
-       * the text
-       */
-      this.selectLabel(newLabel);
-      this.studentDataChanged();
-    }
+  getNewLabelLocation() {
+    const nextPointLocation = this.getNextPointLocation();
+    const pointX = nextPointLocation.pointX;
+    const pointY = nextPointLocation.pointY;
+    const newTextLocation = this.getNextTextLocation(pointX, pointY);
+    const textX = newTextLocation.textX;
+    const textY = newTextLocation.textY;
+    return {
+      pointX: pointX,
+      pointY: pointY,
+      textX: textX,
+      textY: textY
+    };
   }
 
   getNextPointLocation() {
@@ -999,6 +965,28 @@ class LabelController extends ComponentController {
     } else {
       return unoccupiedPointLocation;
     }
+  }
+
+  getNextTextLocation(pointX, pointY) {
+    let textX = null;
+    let textY = null;
+    if (this.enableCircles) {
+      // place the text to the bottom right of the circle
+      if (this.isStudentDataVersion(1)) {
+        // text is relatively positioned
+        textX = 100;
+        textY = 100;
+      } else {
+        // text is absolutely positioned
+        textX = pointX + 100;
+        textY = pointY + 100;
+      }
+    } else {
+      // circles are not enabled so we are only using the text
+      textX = pointX;
+      textY = pointY;
+    }
+    return {textX: textX, textY: textY};
   }
 
   getOccupiedPointLocations() {
@@ -1206,6 +1194,9 @@ class LabelController extends ComponentController {
       hasControls: false,
       hasBorders: true,
       borderColor: 'red',
+      borderDashArray: [8, 8],
+      borderScaleFactor: 3,
+      borderOpacityWhenMoving: 1,
       selectable: true,
       cursorWidth: 0,
       editable: false,
@@ -1362,32 +1353,29 @@ class LabelController extends ComponentController {
          * viewable area and can not be seen. If the value is positive, it means
          * the element is currently in the viewable area and can be seen.
          */
-        var editLabelTextInputTop = $('#editLabelTextInput').offset().top;
+        const offset = $('#editLabelTextInput').offset();
+        if (offset != null) {
+          const editLabelTextInputTop = offset.top;
 
-        /*
-         * Check if the edit label text input is viewable. We want to make sure
-         * the input is in view. If the input is not in view and we give it
-         * focus, it will have the undesirable effect of scrolling the view up
-         * so that the input comes into view. We don't want it to scroll because
-         * it's jarring when the student is trying to select a label in the
-         * canvas.
-         */
-        if (editLabelTextInputTop > 100) {
-          // the input is in view so we will give it focus.
-          angular.element('#editLabelTextInput').focus();
+          /*
+           * Check if the edit label text input is viewable. We want to make sure
+           * the input is in view. If the input is not in view and we give it
+           * focus, it will have the undesirable effect of scrolling the view up
+           * so that the input comes into view. We don't want it to scroll because
+           * it's jarring when the student is trying to select a label in the
+           * canvas.
+           */
+          if (editLabelTextInputTop > 100) {
+            // the input is in view so we will give it focus.
+            angular.element('#editLabelTextInput').focus();
+          }
         }
-      });
+        this.canvas.setActiveObject(label.text);
+      }, 1000);
     } else {
       // hide label text input
       this.editLabelMode = false;
     }
-
-    /*
-     * force angular to refresh, otherwise angular will wait until the
-     * user generates another input (such as moving the mouse) before
-     * refreshing
-     */
-    this.$scope.$apply();
   }
 
   /**
