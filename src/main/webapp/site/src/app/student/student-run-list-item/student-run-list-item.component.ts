@@ -51,7 +51,7 @@ export class StudentRunListItemComponent implements OnInit {
   }
 
 launchRun() {
-    if (this.run.maxstudentsPerTeam === 1 || this.run.endTime) {
+    if (this.run.maxStudentsPerTeam === 1 || this.run.endTime) {
       window.location.href = `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
     } else {
       this.dialog.open(TeamSignInDialogComponent, {

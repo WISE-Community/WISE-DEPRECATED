@@ -39,7 +39,7 @@ export class TeamSignInDialogComponent implements OnInit {
       }
     }
 
-    for (let i = this.teamMembers.length; i < this.run.studentsPerTeam - 1; i++) {
+    for (let i = this.teamMembers.length; i < this.run.maxStudentsPerTeam - 1; i++) {
       const student = new Student();
       this.markAsNotSignedIn(student);
       this.hiddenMembers.push(true);
