@@ -16,5 +16,6 @@
           [disabled]="isCopying">
     <mat-progress-bar *ngIf="isCopying" mode="indeterminate"></mat-progress-bar>
     <ng-container i18n>Copy</ng-container>
+    <ng-container *ngIf="data.project.owner" i18n><a href="">Edit</a></ng-container>
   </button>
 </mat-dialog-actions>
