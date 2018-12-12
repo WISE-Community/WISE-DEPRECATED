@@ -13,7 +13,6 @@ import java.util.Arrays;
 
 @SpringBootApplication
 @ImportResource({"configurations/applicationContexts.xml", "configurations/dispatcherServletContexts.xml"})
-//@ImportResource({"configurations/applicationContexts.xml"})
 public class Application {
 
   public static void main(String[] args) {
