@@ -2,9 +2,7 @@
   <div *ngIf="headline || headlineRef"
        class="cta__headline primary"
        fxLayoutAlign="center center">
-    <span>
-      <ng-container *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></ng-container>
-    </span>
+    <span *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></span>
     <span fxFlex></span>
     <mat-icon color="primary">add_circle</mat-icon>
   </div>
@@ -19,7 +17,7 @@
     <ng-template #defaultContent>{{ content }}</ng-template>
     <div *ngIf="content || contentRef"
          class="cta__tagline mat-subheading-1">
-      <ng-container *ngTemplateOutlet="contentRef ? contentRef: defaultContent"></ng-container>
+      <span *ngTemplateOutlet="contentRef ? contentRef: defaultContent"></span>
     </div>
   </div>
 </ng-template>
@@ -28,7 +26,7 @@
    mat-button
    class="cta">
   <div class="cta__wrap">
-    <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+    <span *ngTemplateOutlet="linkContent"></span>
   </div>
 </a>
 
@@ -37,6 +35,6 @@
    class="cta"
    routerLink="{{ destination }}">
   <div class="cta__wrap">
-    <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+    <span *ngTemplateOutlet="linkContent"></span>
   </div>
 </a>

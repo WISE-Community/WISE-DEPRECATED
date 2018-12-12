@@ -258,4 +258,6 @@ public interface MutableUserDetails extends UserDetails, Persistable {
   void incrementNumberOfRecentFailedVerificationCodeAttempts();
 
   void clearNumberOfRecentFailedVerificationCodeAttempts();
+
+  boolean isGoogleUser();
 }

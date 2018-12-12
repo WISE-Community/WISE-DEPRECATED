@@ -14,6 +14,7 @@ export class StudentService {
   private runsUrl = 'api/student/runs';
   private runInfoUrl = 'api/student/run/info';
   private addRunUrl = 'api/student/run/register';
+  private launchRunUrl = 'api/student/run/launch';
   private registerUrl = 'api/student/register';
   private securityQuestionsUrl = 'api/student/register/questions';
   private updateProfileUrl = 'api/student/profile/update';
@@ -22,6 +23,7 @@ export class StudentService {
   private getSecurityQuestionUrl = 'api/student/forgot/password/security-question';
   private checkSecurityAnswerUrl = 'api/student/forgot/password/security-question';
   private changePasswordUrl = 'api/student/forgot/password/change';
+  private canBeAddedToWorkgroupUrl = 'api/student/can-be-added-to-workgroup';
 
   private newRunSource = new Subject<StudentRun>();
   newRunSource$ = this.newRunSource.asObservable();
@@ -47,6 +49,19 @@ export class StudentService {
     body = body.set('runCode', runCode);
     body = body.set('period', period);
     return this.http.post<StudentRun>(this.addRunUrl, body, { headers: headers });
+  }
+
+  launchRun(runId: number, workgroupId: number, presentUserIds: string[],
+      absentUserIds: string[]) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('runId', String(runId));
+    if (workgroupId != null) {
+      body = body.set('workgroupId', String(workgroupId));
+    }
+    body = body.set('presentUserIds', JSON.stringify(presentUserIds));
+    body = body.set('absentUserIds', JSON.stringify(absentUserIds));
+    return this.http.post(this.launchRunUrl, body, { headers: headers });
   }
 
   private log(message: string) {
@@ -113,5 +128,14 @@ export class StudentService {
     params = params.set('password', password);
     params = params.set('confirmPassword', confirmPassword);
     return this.http.post<any>(this.changePasswordUrl, params, { headers: headers });
+  }
+
+  canBeAddedToWorkgroup(runId, workgroupId, userId) {
+    let params = new HttpParams().set('runId', runId);
+    params = params.set('userId', userId);
+    if (workgroupId != null) {
+      params = params.set('workgroupId', workgroupId);
+    }
+    return this.http.get<any>(this.canBeAddedToWorkgroupUrl, { params: params });
   }
 }

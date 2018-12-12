@@ -16,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.general.contactwise.IssueType;
 import org.wise.portal.domain.project.Project;
@@ -112,6 +113,7 @@ public class UserAPIController {
         language = "en";
       }
       userJSON.put("language", language);
+      userJSON.put("isGoogleUser", userDetails.isGoogleUser());
 
       return userJSON.toString();
     } else {
@@ -129,6 +131,19 @@ public class UserAPIController {
     configJSON.put("recaptchaPublicKey", wiseProperties.get("recaptcha_public_key"));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
+  }
+
+  @RequestMapping(value = "/check-authentication", method = RequestMethod.POST)
+  protected String checkAuthentication(@RequestParam("username") String username,
+                                       @RequestParam("password") String password) throws JSONException {
+    User user = userService.retrieveUserByUsername(username);
+    JSONObject response = new JSONObject();
+    response.put("isValid", userService.isPasswordCorrect(user, password));
+    response.put("userId", user.getId());
+    response.put("userName", user.getUserDetails().getUsername());
+    response.put("firstName", user.getUserDetails().getFirstname());
+    response.put("lastName", user.getUserDetails().getLastname());
+    return response.toString();
   }
 
   @ResponseBody
@@ -163,6 +178,34 @@ public class UserAPIController {
       supportedLocalesJSONArray.put(localeAndLanguage);
     }
     return supportedLocalesJSONArray.toString();
+  }
+
+  @RequestMapping(value = "/check-google-user-exists", method = RequestMethod.GET)
+  protected boolean isGoogleIdExist(@RequestParam String googleUserId) {
+    return this.userService.retrieveUserByGoogleUserId(googleUserId) != null;
+  }
+
+  @RequestMapping(value = "/check-google-user-matches", method = RequestMethod.GET)
+  protected boolean isGoogleIdMatches(@RequestParam String googleUserId,
+                                    @RequestParam String userId) {
+    User user = this.userService.retrieveUserByGoogleUserId(googleUserId);
+    return user != null && user.getId().toString().equals(userId);
+  }
+
+  @RequestMapping(value = "/google-user", method = RequestMethod.GET)
+  protected String getUserByGoogleId(@RequestParam String googleUserId) throws JSONException {
+    JSONObject response = new JSONObject();
+    User user = this.userService.retrieveUserByGoogleUserId(googleUserId);
+    if (user == null) {
+      response.put("status", "error");
+    } else {
+      response.put("status", "success");
+      response.put("userId", user.getId());
+      response.put("userName", user.getUserDetails().getUsername());
+      response.put("firstName", user.getUserDetails().getFirstname());
+      response.put("lastName", user.getUserDetails().getLastname());
+    }
+    return response.toString();
   }
 
   protected String getLanguageName(String localeString) {
