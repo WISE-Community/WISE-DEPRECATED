@@ -63,12 +63,12 @@ export class TeacherService {
       });
   }
 
-  createRun(projectId: number, periods: string, studentsPerTeam: number, startDate: number): Observable<Run> {
+  createRun(projectId: number, periods: string, maxStudentsPerTeam: number, startDate: number): Observable<Run> {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('projectId', projectId + "");
     body = body.set('periods', periods);
-    body = body.set('studentsPerTeam', studentsPerTeam + "");
+    body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + "");
     body = body.set('startDate', startDate + "");
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
   }
@@ -173,12 +173,12 @@ export class TeacherService {
     return this.http.post<Object>(url, body, {headers: headers});
   }
 
-  updateRunStudentsPerTeam(runId: number, studentsPerTeam: number) {
+  updateRunStudentsPerTeam(runId: number, maxStudentsPerTeam: number) {
     const url = `${this.updateRunStudentsPerTeamUrl}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', runId + '');
-    body = body.set('studentsPerTeam', studentsPerTeam + '');
+    body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + '');
     return this.http.post<Object>(url, body, {headers: headers});
   }
 

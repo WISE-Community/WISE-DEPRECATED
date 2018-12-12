@@ -215,17 +215,17 @@ public class RunServiceImpl implements RunService {
   }
 
   public Run createRun(Integer projectId, User user, Set<String> periodNames,
-        Integer studentsPerTeam, Long startDate, Locale locale) throws Exception {
+        Integer maxStudentsPerTeam, Long startDate, Locale locale) throws Exception {
     Project project = projectService.copyProject(projectId, user);
     RunParameters runParameters = createRunParameters(project, user, periodNames,
-        studentsPerTeam, startDate, locale);
+        maxStudentsPerTeam, startDate, locale);
     Run run = createRun(runParameters);
     createTeacherWorkgroup(run, user);
     return run;
   }
 
   public RunParameters createRunParameters(Project project, User user, Set<String> periodNames,
-        Integer studentsPerTeam, Long startDate, Locale locale) {
+        Integer maxStudentsPerTeam, Long startDate, Locale locale) {
     RunParameters runParameters = new RunParameters();
     runParameters.setOwner(user);
     runParameters.setName(project.getName());
@@ -233,7 +233,7 @@ public class RunServiceImpl implements RunService {
     runParameters.setLocale(locale);
     runParameters.setPostLevel(5);
     runParameters.setPeriodNames(periodNames);
-    runParameters.setMaxWorkgroupSize(studentsPerTeam);
+    runParameters.setMaxWorkgroupSize(maxStudentsPerTeam);
     runParameters.setStartTime(new Date(startDate));
     return runParameters;
   }
@@ -582,10 +582,10 @@ public class RunServiceImpl implements RunService {
   }
 
   @Transactional()
-  public void setMaxWorkgroupSize(Long runId, Integer studentsPerTeam) {
+  public void setMaxWorkgroupSize(Long runId, Integer maxStudentsPerTeam) {
     try {
       Run run = this.retrieveById(runId);
-      run.setMaxWorkgroupSize(studentsPerTeam);
+      run.setMaxWorkgroupSize(maxStudentsPerTeam);
       this.runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
