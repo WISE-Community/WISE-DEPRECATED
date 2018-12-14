@@ -66,9 +66,8 @@
             </span>
           </div>
           <component-annotations ng-if='embeddedController.mode === "student"'
-                       score-annotation='embeddedController.latestAnnotations.score'
-                       comment-annotation='embeddedController.latestAnnotations.comment'
-                       max-score='embeddedController.componentContent.maxScore'></component-annotations>
+              annotations='embeddedController.latestAnnotations'
+              max-score='embeddedController.componentContent.maxScore'></component-annotations>
         </div>
       </div>
     </div>

@@ -1082,6 +1082,35 @@ class ComponentController {
   getMaxScore() {
     return this.componentContent.maxScore;
   }
+
+  createAutoScoreAnnotation(data) {
+    return this.createAutoAnnotation('autoScore', data);
+  }
+
+  createAutoCommentAnnotation(data) {
+    return this.createAutoAnnotation('autoComment', data);
+  }
+
+  createAutoAnnotation(type, data) {
+    const runId = this.ConfigService.getRunId();
+    const periodId = this.ConfigService.getPeriodId();
+    const nodeId = this.nodeId;
+    const componentId = this.componentId;
+    const toWorkgroupId = this.ConfigService.getWorkgroupId();
+    if (type === 'autoScore') {
+      return this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+    } else if (type === 'autoComment') {
+      return this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+    }
+  }
+
+  updateLatestScoreAnnotation(annotation) {
+    this.latestAnnotations.score = annotation;
+  }
+
+  updateLatestCommentAnnotation(annotation) {
+    this.latestAnnotations.comment = annotation;
+  }
 }
 
 ComponentController.$inject = [];
