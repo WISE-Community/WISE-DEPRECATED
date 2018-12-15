@@ -22,14 +22,14 @@ export class MockTeacherService {
       observer.complete();
     });
   }
-  changeStudentsPerTeam(runId, studentsPerTeam) {
+  changeMaxStudentsPerTeam(runId, maxStudentsPerTeam) {
     return Observable.create(observer => {
       const response: any = {};
       observer.next(response);
       observer.complete();
     });
   }
-  updateStartTime(runId, studentsPerTeam) {
+  updateStartTime(runId, maxStudentsPerTeam) {
     return Observable.create(observer => {
       const response: any = {};
       observer.next(response);
@@ -51,7 +51,7 @@ describe('RunSettingsDialogComponent', () => {
       id: 1,
       name: 'Test Project',
       periods: ['1', '2', '3'],
-      studentsPerTeam: 1,
+      maxStudentsPerTeam: 1,
       startTime: '2018-10-17 00:00:00.0'
     });
     TestBed.configureTestingModule({
@@ -109,7 +109,7 @@ describe('RunSettingsDialogComponent', () => {
   });
 
   it('should change the students per team', () => {
-    component.studentsPerTeam = "3";
+    component.maxStudentsPerTeam = "3";
     const radioGroup = fixture.debugElement.nativeElement.querySelector('mat-radio-group');
     fixture.detectChanges();
     expect(radioGroup.ngModel).toBe("3");

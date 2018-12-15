@@ -223,7 +223,7 @@
 
 // Set Angular Material icon button size (use mat-icon size as the $size parameter)
 @mixin mat-icon-button-size($size: 24px) {
-  $button-size: $size + 16px;
+  $button-size: ($size*1) + 16px;
 
   height: $button-size;
   width: $button-size;

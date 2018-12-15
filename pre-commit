@@ -3,7 +3,7 @@ echo "*** WISE pre-commit hook: Begin ***"
 
 # Generate and add updated messages.xmb file to git
 echo "*** WISE pre-commit hook: Generating messages.xmb ***"
-ng xi18n  --i18n-format=xmb
+ng xi18n
 git add src/main/webapp/site/src/messages.xmb
 
 # Run npm test. Abort commit if tests fail

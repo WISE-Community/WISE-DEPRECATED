@@ -146,6 +146,9 @@ public class ProjectAPIController {
         projectLibraryGroup.put("metadata", metadata.toJSONObject());
         projectLibraryGroup.put("projectThumb", getProjectThumb(project));
         projectLibraryGroup.put("name", project.getName());
+        projectLibraryGroup.put("owner", ControllerUtil.getOwnerJSON(project.getOwner()));
+        projectLibraryGroup.put("sharedOwners", ControllerUtil.getProjectSharedOwnersJSON(project));
+        projectLibraryGroup.put("dateCreated", project.getDateCreated());
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }

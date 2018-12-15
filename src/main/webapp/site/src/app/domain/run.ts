@@ -9,7 +9,7 @@ export class Run {
   endTime: number;
   projectThumb: string;
   numStudents: number;
-  studentsPerTeam: number;
+  maxStudentsPerTeam: number;
   periods: string[];
   owner: User;
   sharedOwners: User[] = [];

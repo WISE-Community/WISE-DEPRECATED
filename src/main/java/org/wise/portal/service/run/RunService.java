@@ -55,7 +55,7 @@ public interface RunService {
    */
   Run createRun(RunParameters runParameters) throws ObjectNotFoundException;
 
-  Run createRun(Integer projectId, User user, Set<String> periodNames, Integer studentsPerTeam,
+  Run createRun(Integer projectId, User user, Set<String> periodNames, Integer maxStudentsPerTeam,
       Long startDate, Locale locale) throws Exception;
 
   /**
@@ -411,7 +411,7 @@ public interface RunService {
 
   void deletePeriodFromRun(Long runId, String name);
 
-  void setMaxWorkgroupSize(Long runId, Integer studentsPerTeam);
+  void setMaxWorkgroupSize(Long runId, Integer maxStudentsPerTeam);
 
   void setStartTime(Long runId, String startTime);
 }

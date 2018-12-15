@@ -19,9 +19,9 @@
       </ng-container>
     </a>
   </div>
-  <div><ng-container i18n>Access Code:</ng-container> {{ run.runCode }}</div>
-  <div *ngIf="run.shared" class="info">
-    <ng-container i18n>Shared by</ng-container> {{ run.owner.displayName }} |
+  <div i18n>Access Code: {{ run.runCode }}</div>
+  <div *ngIf="run.shared" class="info" i18n>
+    Shared by {{ run.owner.displayName }} |
   </div>
 </ng-template>
 
@@ -68,7 +68,7 @@
          fxFlex="0 0 auto"
          fxFlex.xs="100">
         <mat-icon>build</mat-icon>
-        Teacher Tools
+        <ng-container i18n>Teacher Tools</ng-container>
       </a>
     </div>
   </mat-card-actions>

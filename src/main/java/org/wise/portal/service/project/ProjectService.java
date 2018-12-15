@@ -145,6 +145,8 @@ public interface ProjectService {
    */
   ModelAndView launchProject(Workgroup workgroup, String contextPath) throws Exception;
 
+  String generateStudentStartProjectUrlString(Workgroup workgroup, String contextPath);
+
   /**
    * Launches a Preview of the Project.
    * @param previewProjectParameters parameters required to preview the project

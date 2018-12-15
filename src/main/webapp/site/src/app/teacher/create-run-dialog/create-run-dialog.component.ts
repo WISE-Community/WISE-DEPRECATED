@@ -18,7 +18,7 @@ export class CreateRunDialogComponent {
   project: Project;
   periodsGroup: FormArray;
   customPeriods: FormControl;
-  studentsPerTeam: number;
+  maxStudentsPerTeam: number;
   startDate: any;
   periodOptions: string[] = [];
   isCreating: boolean = false;
@@ -31,7 +31,7 @@ export class CreateRunDialogComponent {
               private teacherService: TeacherService,
               private fb: FormBuilder) {
     this.project = data.project;
-    this.studentsPerTeam = 3;
+    this.maxStudentsPerTeam = 3;
     this.startDate = new Date();
   }
 
@@ -53,7 +53,7 @@ export class CreateRunDialogComponent {
       selectedPeriods: this.periodsGroup,
       customPeriods: this.customPeriods,
       periods: hiddenControl,
-      studentsPerTeam: new FormControl('3', Validators.required),
+      maxStudentsPerTeam: new FormControl('3', Validators.required),
       startDate: new FormControl(new Date(), Validators.required)
     });
   }
@@ -77,9 +77,9 @@ export class CreateRunDialogComponent {
     this.isCreating = true;
     const combinedPeriods = this.getPeriodsString();
     const startDate = this.form.controls['startDate'].value.getTime();
-    const studentsPerTeam = this.form.controls['studentsPerTeam'].value;
+    const maxStudentsPerTeam = this.form.controls['maxStudentsPerTeam'].value;
     this.teacherService.createRun(
-        this.project.id, combinedPeriods, studentsPerTeam, startDate)
+        this.project.id, combinedPeriods, maxStudentsPerTeam, startDate)
         .pipe(
           finalize(() => {
             this.isCreating = false;

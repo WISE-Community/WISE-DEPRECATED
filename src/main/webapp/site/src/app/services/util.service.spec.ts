@@ -13,11 +13,11 @@ describe('UtilService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('should get the firstname', inject([UtilService], (service: UtilService) => {
+  it('should get the firstName', inject([UtilService], (service: UtilService) => {
     expect(service.getFirstName("Spongebob Squarepants")).toEqual("Spongebob");
   }));
 
-  it('should get the lastname', inject([UtilService], (service: UtilService) => {
+  it('should get the lastName', inject([UtilService], (service: UtilService) => {
     expect(service.getLastName("Spongebob Squarepants")).toEqual("Squarepants");
   }));
 
