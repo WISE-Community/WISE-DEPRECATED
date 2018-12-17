@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RunSettingsDialogComponent } from './run-settings-dialog.component';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBarModule } from "@angular/material";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
@@ -56,6 +56,7 @@ describe('RunSettingsDialogComponent', () => {
     });
     TestBed.configureTestingModule({
       declarations: [ RunSettingsDialogComponent ],
+      imports: [ MatSnackBarModule ],
       providers: [
         { provide: MatDialog, useValue: {} },
         { provide: MatDialogRef, useValue: {} },
@@ -78,7 +79,7 @@ describe('RunSettingsDialogComponent', () => {
   });
 
   it('should populate the periods', () => {
-    const periodContainers =  fixture.debugElement.nativeElement.querySelectorAll('.period-container');
+    const periodContainers =  fixture.debugElement.nativeElement.querySelectorAll('.info-block');
     expect(periodContainers.length).toBe(3);
   });
 
@@ -97,14 +98,14 @@ describe('RunSettingsDialogComponent', () => {
   it('should add a period', () => {
     component.run.periods.push("4");
     fixture.detectChanges();
-    const periodContainers =  fixture.debugElement.nativeElement.querySelectorAll('.period-container');
+    const periodContainers = fixture.debugElement.nativeElement.querySelectorAll('.info-block');
     expect(periodContainers.length).toBe(4);
   });
 
   it('should delete a period', () => {
     component.run.periods.splice(2, 1);
     fixture.detectChanges();
-    const periodContainers =  fixture.debugElement.nativeElement.querySelectorAll('.period-container');
+    const periodContainers = fixture.debugElement.nativeElement.querySelectorAll('.info-block');
     expect(periodContainers.length).toBe(2);
   });
 
