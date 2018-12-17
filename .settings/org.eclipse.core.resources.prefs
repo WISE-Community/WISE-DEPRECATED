@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
 encoding//src/main/resources/i18n=UTF-8
 encoding//src/main/resources/i18n/i18n_es.properties=UTF-8
 encoding//src/main/resources/i18n/i18n_iw.properties=UTF-8
@@ -24,3 +26,6 @@ encoding//src/main/webapp/vle/view/i18n/i18n_nl_NL.json=UTF-8
 encoding//src/main/webapp/vle/view/i18n/i18n_tr.json=UTF-8
 encoding//src/main/webapp/vle/view/i18n/i18n_zh_CN.json=UTF-8
 encoding//src/main/webapp/vle/view/i18n/i18n_zh_TW.json=UTF-8
+encoding//src/test/java=UTF-8
+encoding//src/test/resources=UTF-8
+encoding/<project>=UTF-8

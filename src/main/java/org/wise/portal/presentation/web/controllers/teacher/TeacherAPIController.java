@@ -445,7 +445,6 @@ public class TeacherAPIController {
         } catch (ObjectNotFoundException e1) {
           e1.printStackTrace();
         }
-
         if (workgroups != null) {
           for (Workgroup workgroup : workgroups) {
             if (workgroup.isStudentWorkgroup() && workgroup.getMembers().size() > 1) {
