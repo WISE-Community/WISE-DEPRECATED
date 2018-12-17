@@ -1495,8 +1495,6 @@ var LabelController = function (_ComponentController) {
      * @param label the label object
      */
     value: function selectLabel(label) {
-      var _this4 = this;
-
       // create a reference to the selected label
       this.selectedLabel = label;
 
@@ -1507,43 +1505,42 @@ var LabelController = function (_ComponentController) {
          */
         this.selectedLabelText = label.text.text;
 
-        // show the label text input
         this.editLabelMode = true;
-
-        /*
-         * Give focus to the label text input element so the student can immediately
-         * start typing.
-         */
-        this.$timeout(function () {
-          /*
-           * Get the y position of the top of the edit label text input. If this
-           * value is negative, it means the element is above the currently
-           * viewable area and can not be seen. If the value is positive, it means
-           * the element is currently in the viewable area and can be seen.
-           */
-          var offset = $('#editLabelTextInput').offset();
-          if (offset != null) {
-            var editLabelTextInputTop = offset.top;
-
-            /*
-             * Check if the edit label text input is viewable. We want to make sure
-             * the input is in view. If the input is not in view and we give it
-             * focus, it will have the undesirable effect of scrolling the view up
-             * so that the input comes into view. We don't want it to scroll because
-             * it's jarring when the student is trying to select a label in the
-             * canvas.
-             */
-            if (editLabelTextInputTop > 100) {
-              // the input is in view so we will give it focus.
-              angular.element('#editLabelTextInput').focus();
-            }
-          }
-          _this4.canvas.setActiveObject(label.text);
-        }, 1000);
+        this.canvas.setActiveObject(label.text);
+        this.giveFocusToLabelTextInput();
       } else {
         // hide label text input
         this.editLabelMode = false;
       }
+    }
+  }, {
+    key: 'giveFocusToLabelTextInput',
+    value: function giveFocusToLabelTextInput() {
+      this.$timeout(function () {
+        /*
+         * Get the y position of the top of the edit label text input. If this
+         * value is negative, it means the element is above the currently
+         * viewable area and can not be seen. If the value is positive, it means
+         * the element is currently in the viewable area and can be seen.
+         */
+        var offset = $('#editLabelTextInput').offset();
+        if (offset != null) {
+          var editLabelTextInputTop = offset.top;
+
+          /*
+           * Check if the edit label text input is viewable. We want to make sure
+           * the input is in view. If the input is not in view and we give it
+           * focus, it will have the undesirable effect of scrolling the view up
+           * so that the input comes into view. We don't want it to scroll because
+           * it's jarring when the student is trying to select a label in the
+           * canvas.
+           */
+          if (editLabelTextInputTop > 100) {
+            // the input is in view so we will give it focus.
+            angular.element('#editLabelTextInput').focus();
+          }
+        }
+      });
     }
 
     /**
@@ -1784,7 +1781,7 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
-      var _this5 = this;
+      var _this4 = this;
 
       var mergedComponentState = this.NodeService.createNewComponentState();
 
@@ -1823,10 +1820,10 @@ var LabelController = function (_ComponentController) {
                   // create an image from the concept map data
                   this.LabelService.createImageFromText(response, null, null, charactersPerLine, null, spaceInbetweenLines, fontSize).then(function (image) {
                     // set the image as the background
-                    _this5.setBackgroundImage(image);
+                    _this4.setBackgroundImage(image);
 
                     // make the work dirty so that it gets saved
-                    _this5.studentDataChanged();
+                    _this4.studentDataChanged();
                   });
                 }
               }
@@ -1900,10 +1897,10 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this6 = this;
+      var _this5 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this6.setBackgroundImage(image.url);
+        _this5.setBackgroundImage(image.url);
       });
     }
 

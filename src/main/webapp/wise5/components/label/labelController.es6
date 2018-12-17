@@ -1339,43 +1339,41 @@ class LabelController extends ComponentController {
        */
       this.selectedLabelText = label.text.text;
 
-      // show the label text input
       this.editLabelMode = true;
-
-      /*
-       * Give focus to the label text input element so the student can immediately
-       * start typing.
-       */
-      this.$timeout(() => {
-        /*
-         * Get the y position of the top of the edit label text input. If this
-         * value is negative, it means the element is above the currently
-         * viewable area and can not be seen. If the value is positive, it means
-         * the element is currently in the viewable area and can be seen.
-         */
-        const offset = $('#editLabelTextInput').offset();
-        if (offset != null) {
-          const editLabelTextInputTop = offset.top;
-
-          /*
-           * Check if the edit label text input is viewable. We want to make sure
-           * the input is in view. If the input is not in view and we give it
-           * focus, it will have the undesirable effect of scrolling the view up
-           * so that the input comes into view. We don't want it to scroll because
-           * it's jarring when the student is trying to select a label in the
-           * canvas.
-           */
-          if (editLabelTextInputTop > 100) {
-            // the input is in view so we will give it focus.
-            angular.element('#editLabelTextInput').focus();
-          }
-        }
-        this.canvas.setActiveObject(label.text);
-      }, 1000);
+      this.canvas.setActiveObject(label.text);
+      this.giveFocusToLabelTextInput();
     } else {
       // hide label text input
       this.editLabelMode = false;
     }
+  }
+
+  giveFocusToLabelTextInput() {
+    this.$timeout(() => {
+      /*
+       * Get the y position of the top of the edit label text input. If this
+       * value is negative, it means the element is above the currently
+       * viewable area and can not be seen. If the value is positive, it means
+       * the element is currently in the viewable area and can be seen.
+       */
+      const offset = $('#editLabelTextInput').offset();
+      if (offset != null) {
+        const editLabelTextInputTop = offset.top;
+
+        /*
+         * Check if the edit label text input is viewable. We want to make sure
+         * the input is in view. If the input is not in view and we give it
+         * focus, it will have the undesirable effect of scrolling the view up
+         * so that the input comes into view. We don't want it to scroll because
+         * it's jarring when the student is trying to select a label in the
+         * canvas.
+         */
+        if (editLabelTextInputTop > 100) {
+          // the input is in view so we will give it focus.
+          angular.element('#editLabelTextInput').focus();
+        }
+      }
+    });
   }
 
   /**
