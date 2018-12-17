@@ -326,7 +326,7 @@ class LabelController extends ComponentController {
           });
         }
       }
-    }
+    };
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
@@ -490,16 +490,9 @@ class LabelController extends ComponentController {
     }
   }
 
-  /**
-   * Called when the student clicks on the new label button to enter
-   * create label mode
-   */
   newLabelButtonClicked() {
-    this.createLabelMode = true;
-    this.isCancelButtonVisible = true;
-    this.editLabelMode = false;
-    this.selectedLabel = null;
-  };
+    this.createLabelOnCanvas();
+  }
 
   /**
    * Called when the student clicks on the cancel button to exit
@@ -796,66 +789,6 @@ class LabelController extends ComponentController {
         this.selectedLabel = null;
         this.editLabelMode = false;
       }
-
-      // check if the student is in create label mode
-      if (this.createLabelMode) {
-        /*
-         * the student is in create label mode so we will create a new label
-         * where they have clicked
-         */
-
-        // turn off create label mode and hide the cancel button
-        this.createLabelMode = false;
-        this.isCancelButtonVisible = false;
-
-        var event = options.e;
-
-        if (event != null) {
-          // get the x and y position that the student clicked on
-          var x = event.layerX;
-          var y = event.layerY;
-
-          /*
-           * set the location of the text object to be down to the right
-           * of the position the student clicked on
-           */
-          let textX = null;
-          let textY = null;
-          if (this.enableCircles) {
-            // place the text to the bottom right of the circle
-            if (this.isStudentDataVersion(1)) {
-              // text is relatively positioned
-              textX = 100;
-              textY = 100;
-            } else {
-              // text is absolutely positioned
-              textX = x + 100;
-              textY = y + 100;
-            }
-          } else {
-            // circles are not enabled so we are only using the text
-            textX = x;
-            textY = y;
-          }
-
-          let canEdit = true;
-          let canDelete = true;
-
-          // create a new label
-          var newLabel = this.createLabel(x, y, textX, textY,
-              this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
-
-          // add the label to the canvas
-          this.addLabelToCanvas(this.canvas, newLabel);
-
-          /*
-           * make the new label selected so that the student can edit
-           * the text
-           */
-          this.selectLabel(newLabel);
-          this.studentDataChanged();
-        }
-      }
     }));
 
     // listen for the object moving event
@@ -995,6 +928,96 @@ class LabelController extends ComponentController {
 
     return canvas;
   };
+
+  createLabelOnCanvas() {
+    this.createLabelMode = false;
+    this.isCancelButtonVisible = false;
+    const newLabelLocation = this.getNewLabelLocation();
+    const canEdit = true;
+    const canDelete = true;
+    const newLabel = this.createLabel(newLabelLocation.pointX, newLabelLocation.pointY,
+        newLabelLocation.textX, newLabelLocation.textY,
+        this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
+    this.addLabelToCanvas(this.canvas, newLabel);
+    this.selectLabel(newLabel);
+    this.studentDataChanged();
+  }
+
+  getNewLabelLocation() {
+    const nextPointLocation = this.getNextPointLocation();
+    const pointX = nextPointLocation.pointX;
+    const pointY = nextPointLocation.pointY;
+    const newTextLocation = this.getNextTextLocation(pointX, pointY);
+    const textX = newTextLocation.textX;
+    const textY = newTextLocation.textY;
+    return {
+      pointX: pointX,
+      pointY: pointY,
+      textX: textX,
+      textY: textY
+    };
+  }
+
+  getNextPointLocation() {
+    let unoccupiedPointLocation = this.getUnoccupiedPointLocation();
+    if (unoccupiedPointLocation == null) {
+      return {pointX: 50, pointY: 50};
+    } else {
+      return unoccupiedPointLocation;
+    }
+  }
+
+  getNextTextLocation(pointX, pointY) {
+    let textX = null;
+    let textY = null;
+    if (this.enableCircles) {
+      // place the text to the bottom right of the circle
+      if (this.isStudentDataVersion(1)) {
+        // text is relatively positioned
+        textX = 100;
+        textY = 100;
+      } else {
+        // text is absolutely positioned
+        textX = pointX + 100;
+        textY = pointY + 100;
+      }
+    } else {
+      // circles are not enabled so we are only using the text
+      textX = pointX;
+      textY = pointY;
+    }
+    return {textX: textX, textY: textY};
+  }
+
+  getOccupiedPointLocations() {
+    let labels = this.getLabelData();
+    const occupiedPointLocations = [];
+    for (let label of labels) {
+      occupiedPointLocations.push({pointX: label.pointX, pointY: label.pointY});
+    }
+    return occupiedPointLocations;
+  }
+
+  isPointOccupied(occupiedPointLocations, pointX, pointY) {
+    for (let occupiedPointLocation of occupiedPointLocations) {
+      if (occupiedPointLocation.pointX == pointX && occupiedPointLocation.pointY == pointY) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getUnoccupiedPointLocation() {
+    const occupiedPointLocations = this.getOccupiedPointLocations();
+    for (let y = 50; y < this.canvasHeight; y += 150) {
+      for (let x = 50; x < this.canvasWidth; x += 150) {
+        if (!this.isPointOccupied(occupiedPointLocations, x, y)) {
+          return {pointX: x, pointY: y};
+        }
+      }
+    }
+    return null;
+  }
 
   /**
    * Set the background image
@@ -1171,6 +1194,9 @@ class LabelController extends ComponentController {
       hasControls: false,
       hasBorders: true,
       borderColor: 'red',
+      borderDashArray: [8, 8],
+      borderScaleFactor: 3,
+      borderOpacityWhenMoving: 1,
       selectable: true,
       cursorWidth: 0,
       editable: false,
@@ -1313,21 +1339,26 @@ class LabelController extends ComponentController {
        */
       this.selectedLabelText = label.text.text;
 
-      // show the label text input
       this.editLabelMode = true;
+      this.canvas.setActiveObject(label.text);
+      this.giveFocusToLabelTextInput();
+    } else {
+      // hide label text input
+      this.editLabelMode = false;
+    }
+  }
 
+  giveFocusToLabelTextInput() {
+    this.$timeout(() => {
       /*
-       * Give focus to the label text input element so the student can immediately
-       * start typing.
+       * Get the y position of the top of the edit label text input. If this
+       * value is negative, it means the element is above the currently
+       * viewable area and can not be seen. If the value is positive, it means
+       * the element is currently in the viewable area and can be seen.
        */
-      this.$timeout(() => {
-        /*
-         * Get the y position of the top of the edit label text input. If this
-         * value is negative, it means the element is above the currently
-         * viewable area and can not be seen. If the value is positive, it means
-         * the element is currently in the viewable area and can be seen.
-         */
-        var editLabelTextInputTop = $('#editLabelTextInput').offset().top;
+      const offset = $('#editLabelTextInput').offset();
+      if (offset != null) {
+        const editLabelTextInputTop = offset.top;
 
         /*
          * Check if the edit label text input is viewable. We want to make sure
@@ -1341,18 +1372,8 @@ class LabelController extends ComponentController {
           // the input is in view so we will give it focus.
           angular.element('#editLabelTextInput').focus();
         }
-      });
-    } else {
-      // hide label text input
-      this.editLabelMode = false;
-    }
-
-    /*
-     * force angular to refresh, otherwise angular will wait until the
-     * user generates another input (such as moving the mouse) before
-     * refreshing
-     */
-    this.$scope.$apply();
+      }
+    });
   }
 
   /**
