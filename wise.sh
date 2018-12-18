@@ -28,7 +28,7 @@ fi
 
 if [ $1 = "package" ]; then
   ng build --configuration=production
-  mvn clean -Dmaven.test.skip=true package
+  ./mvnw clean -Dmaven.test.skip=true package
   exit 0
 fi
 
@@ -63,5 +63,5 @@ if [ $1 = "dev" ]; then
   npm run watch-all-site&
 fi
 
-mvn spring-boot:run
+./mvnw spring-boot:run
 exit 0
