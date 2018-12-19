@@ -11,10 +11,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DataExportController = function () {
-    function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, MatchService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
+    function DataExportController($filter, $injector, $mdDialog, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, MatchService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
         _classCallCheck(this, DataExportController);
 
+        this.$filter = $filter;
         this.$injector = $injector;
+        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -31,7 +33,7 @@ var DataExportController = function () {
         this.exportType = null; // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
         this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
-
+        this.$translate = this.$filter('translate');
         this.availableComponentDataExports = ['Discussion', 'Match'];
 
         this.setDefaultExportSettings();
@@ -63,6 +65,7 @@ var DataExportController = function () {
         value: function _export() {
             var exportType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
+            this.showDownloadingExportMessage();
             if (exportType == null) {
                 exportType = this.exportType;
             }
@@ -91,11 +94,10 @@ var DataExportController = function () {
                 this.exportStudentAssets();
             } else if (exportType === "oneWorkgroupPerRow") {
                 this.exportOneWorkgroupPerRow();
-            } else if (exportType === "componentData") {
-                this.showExportComponentDataPage();
             } else if (exportType === "rawData") {
                 this.exportRawData();
             }
+            this.hideDownloadingExportMessage();
         }
 
         /**
@@ -3016,11 +3018,13 @@ var DataExportController = function () {
     }, {
         key: 'exportComponentClicked',
         value: function exportComponentClicked(nodeId, component) {
+            this.showDownloadingExportMessage();
             if (component.type == 'Match') {
                 this.exportMatchComponent(nodeId, component);
             } else if (component.type === 'Discussion') {
                 this.exportDiscussionComponent(nodeId, component);
             }
+            this.hideDownloadingExportMessage();
         }
 
         /**
@@ -3038,8 +3042,7 @@ var DataExportController = function () {
             this.TeacherDataService.getExport("allStudentWork").then(function (result) {
                 var columnNames = [];
                 var columnNameToNumber = {};
-                var rows = [];
-                rows.push(_this7.generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber));
+                var rows = [_this7.generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber)];
                 rows = rows.concat(_this7.generateDiscussionComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
                 var fileName = _this7.generateDiscussionExportFileName(nodeId, component.id);
                 _this7.generateCSVFile(rows, fileName);
@@ -3687,12 +3690,25 @@ var DataExportController = function () {
                 }
             }
         }
+    }, {
+        key: 'showDownloadingExportMessage',
+        value: function showDownloadingExportMessage() {
+            this.$mdDialog.show({
+                template: '\n                <div align="center">\n                    <div style="width: 200px; height: 100px; margin: 20px;">\n                      <span>{{ \'downloadingExport\' | translate }}</span>\n                      <br/>\n                      <br/>\n                      <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n                    </div>\n                </div>\n            ',
+                clickOutsideToClose: false
+            });
+        }
+    }, {
+        key: 'hideDownloadingExportMessage',
+        value: function hideDownloadingExportMessage() {
+            this.$mdDialog.hide();
+        }
     }]);
 
     return DataExportController;
 }();
 
-DataExportController.$inject = ['$injector', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'FileSaver', 'MatchService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
+DataExportController.$inject = ['$filter', '$injector', '$mdDialog', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'FileSaver', 'MatchService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
 
 exports.default = DataExportController;
 //# sourceMappingURL=dataExportController.js.map

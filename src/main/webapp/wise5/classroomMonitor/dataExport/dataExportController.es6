@@ -2,7 +2,9 @@
 
 class DataExportController {
 
-    constructor($injector,
+    constructor($filter,
+                $injector,
+                $mdDialog,
                 $rootScope,
                 $scope,
                 $state,
@@ -16,7 +18,9 @@ class DataExportController {
                 TeacherWebSocketService,
                 UtilService) {
 
+        this.$filter = $filter
         this.$injector = $injector;
+        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -33,7 +37,7 @@ class DataExportController {
         this.exportType = null;  // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
         this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
-
+        this.$translate = this.$filter('translate');
         this.availableComponentDataExports = [
             'Discussion',
             'Match'
@@ -57,6 +61,7 @@ class DataExportController {
      * latestWork, allWork, and events will call this function with a null exportType.
      */
     export(exportType = null) {
+        this.showDownloadingExportMessage();
         if (exportType == null) {
             exportType = this.exportType;
         }
@@ -80,11 +85,10 @@ class DataExportController {
             this.exportStudentAssets();
         } else if (exportType === "oneWorkgroupPerRow") {
             this.exportOneWorkgroupPerRow();
-        } else if (exportType === "componentData") {
-            this.showExportComponentDataPage();
-        } else if (exportType === "rawData") {
+        }  else if (exportType === "rawData") {
             this.exportRawData();
         }
+        this.hideDownloadingExportMessage();
     }
 
     /**
@@ -2928,11 +2932,13 @@ class DataExportController {
      * @param component The component content object.
      */
     exportComponentClicked(nodeId, component) {
+        this.showDownloadingExportMessage();
         if (component.type == 'Match') {
             this.exportMatchComponent(nodeId, component);
         } else if (component.type === 'Discussion') {
             this.exportDiscussionComponent(nodeId, component);
         }
+        this.hideDownloadingExportMessage();
     }
 
     /**
@@ -2945,8 +2951,7 @@ class DataExportController {
         this.TeacherDataService.getExport("allStudentWork").then((result) => {
             const columnNames = [];
             const columnNameToNumber = {};
-            let rows = [];
-            rows.push(this.generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber));
+            let rows = [this.generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber)];
             rows = rows.concat(this.generateDiscussionComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
             const fileName = this.generateDiscussionExportFileName(nodeId, component.id);
             this.generateCSVFile(rows, fileName);
@@ -3421,10 +3426,32 @@ class DataExportController {
             }
         }
     }
+
+    showDownloadingExportMessage() {
+        this.$mdDialog.show({
+            template: `
+                <div align="center">
+                    <div style="width: 200px; height: 100px; margin: 20px;">
+                      <span>{{ 'downloadingExport' | translate }}</span>
+                      <br/>
+                      <br/>
+                      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                    </div>
+                </div>
+            `,
+            clickOutsideToClose: false
+        });
+    }
+
+    hideDownloadingExportMessage() {
+        this.$mdDialog.hide();
+    }
 }
 
 DataExportController.$inject = [
+    '$filter',
     '$injector',
+    '$mdDialog',
     '$rootScope',
     '$scope',
     '$state',
