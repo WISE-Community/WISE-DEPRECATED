@@ -3192,13 +3192,13 @@ var DataExportController = function () {
             row[columnNameToNumber["Component Part Number"]] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1;
             row[columnNameToNumber["Component ID"]] = component.id;
             row[columnNameToNumber["Component Type"]] = component.type;
-            row[columnNameToNumber["Component Prompt"]] = component.prompt;
+            row[columnNameToNumber["Component Prompt"]] = this.UtilService.removeHTMLTags(component.prompt);
             row[columnNameToNumber["Student Data"]] = componentState.studentData;
             row[columnNameToNumber["Student Work ID"]] = componentState.id;
             row[columnNameToNumber["Thread ID"]] = threadId;
             row[columnNameToNumber["Workgroup ID"]] = workgroupId;
             row[columnNameToNumber["Post Level"]] = this.getPostLevel(componentState);
-            row[columnNameToNumber["Post Text"]] = componentState.studentData.response;
+            row[columnNameToNumber["Post Text"]] = this.UtilService.removeHTMLTags(componentState.studentData.response);
 
             return row;
         }
