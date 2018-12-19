@@ -32,7 +32,7 @@ var DataExportController = function () {
         this.componentTypeToComponentService = {};
         this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
 
-        this.availableComponentDataExports = ['Match'];
+        this.availableComponentDataExports = ['Discussion', 'Match'];
 
         this.setDefaultExportSettings();
         this.project = this.ProjectService.project;
@@ -3018,7 +3018,261 @@ var DataExportController = function () {
         value: function exportComponentClicked(nodeId, component) {
             if (component.type == 'Match') {
                 this.exportMatchComponent(nodeId, component);
+            } else if (component.type === 'Discussion') {
+                this.exportDiscussionComponent(nodeId, component);
             }
+        }
+
+        /**
+         * Generate an export for a specific Discussion component.
+         * TODO: Move these Discussion export functions to the DiscussionService.
+         * @param nodeId The node id.
+         * @param component The component content object.
+         */
+
+    }, {
+        key: 'exportDiscussionComponent',
+        value: function exportDiscussionComponent(nodeId, component) {
+            var _this7 = this;
+
+            this.TeacherDataService.getExport("allStudentWork").then(function (result) {
+                var columnNames = [];
+                var columnNameToNumber = {};
+                var rows = [];
+                rows.push(_this7.generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber));
+                rows = rows.concat(_this7.generateDiscussionComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
+                var fileName = _this7.generateDiscussionExportFileName(nodeId, component.id);
+                _this7.generateCSVFile(rows, fileName);
+            });
+        }
+    }, {
+        key: 'generateDiscussionComponentHeaderRow',
+        value: function generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber) {
+            this.populateDiscussionColumnNames(component, columnNames, columnNameToNumber);
+            var headerRow = [];
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+                for (var _iterator3 = columnNames[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var columnName = _step3.value;
+
+                    headerRow.push(columnName);
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
+                    }
+                }
+            }
+
+            return headerRow;
+        }
+    }, {
+        key: 'populateDiscussionColumnNames',
+        value: function populateDiscussionColumnNames(component, columnNames, columnNameToNumber) {
+            var defaultDiscussionColumnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Student Data", "Thread ID", "Student Work ID", "Post Level", "Post Text"];
+            for (var c = 0; c < defaultDiscussionColumnNames.length; c++) {
+                var defaultDiscussionColumnName = defaultDiscussionColumnNames[c];
+                columnNameToNumber[defaultDiscussionColumnName] = c;
+                columnNames.push(defaultDiscussionColumnName);
+            }
+        }
+    }, {
+        key: 'generateDiscussionComponentWorkRows',
+        value: function generateDiscussionComponentWorkRows(component, columnNames, columnNameToNumber, nodeId) {
+            var rows = [];
+            var componentStates = this.TeacherDataService.getComponentStatesByComponentId(component.id);
+            var structuredPosts = this.getStructuredPosts(componentStates);
+            var rowCounter = 1;
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = Object.keys(structuredPosts)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var threadId = _step4.value;
+
+                    var topLevelPost = structuredPosts[threadId];
+                    rows.push(this.generateDiscussionComponentWorkRow(component, topLevelPost.workgroupId, columnNames, columnNameToNumber, nodeId, component.id, rowCounter, topLevelPost, threadId));
+                    rowCounter++;
+                    if (topLevelPost.replies != null) {
+                        var _iteratorNormalCompletion5 = true;
+                        var _didIteratorError5 = false;
+                        var _iteratorError5 = undefined;
+
+                        try {
+                            for (var _iterator5 = topLevelPost.replies[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                                var replyPost = _step5.value;
+
+                                rows.push(this.generateDiscussionComponentWorkRow(component, replyPost.workgroupId, columnNames, columnNameToNumber, nodeId, component.id, rowCounter, replyPost, threadId));
+                                rowCounter++;
+                            }
+                        } catch (err) {
+                            _didIteratorError5 = true;
+                            _iteratorError5 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                                    _iterator5.return();
+                                }
+                            } finally {
+                                if (_didIteratorError5) {
+                                    throw _iteratorError5;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
+            }
+
+            return rows;
+        }
+    }, {
+        key: 'generateDiscussionComponentWorkRow',
+        value: function generateDiscussionComponentWorkRow(component, workgroupId, columnNames, columnNameToNumber, nodeId, componentId, rowCounter, componentState, threadId) {
+            var row = new Array(columnNames.length);
+            row.fill("");
+            var wiseId1 = "";
+            var wiseId2 = "";
+            var wiseId3 = "";
+            var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+            if (userInfo.users[0] != null) {
+                wiseId1 = userInfo.users[0].id;
+            }
+            if (userInfo.users[1] != null) {
+                wiseId2 = userInfo.users[0].id;
+            }
+            if (userInfo.users[2] != null) {
+                wiseId3 = userInfo.users[0].id;
+            }
+
+            row[columnNameToNumber["#"]] = rowCounter;
+            row[columnNameToNumber["WISE ID 1"]] = wiseId1;
+            row[columnNameToNumber["WISE ID 2"]] = wiseId2;
+            row[columnNameToNumber["WISE ID 3"]] = wiseId3;
+            row[columnNameToNumber["Class Period"]] = userInfo.periodName;
+            row[columnNameToNumber["Project ID"]] = this.ConfigService.getProjectId();
+            row[columnNameToNumber["Project Name"]] = this.ProjectService.getProjectTitle();
+            row[columnNameToNumber["Run ID"]] = this.ConfigService.getRunId();
+
+            if (componentState.serverSaveTime != null) {
+                row[columnNameToNumber["Server Timestamp"]] = this.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
+            }
+
+            if (componentState.clientSaveTime != null) {
+                var clientSaveTime = new Date(componentState.clientSaveTime);
+                row[columnNameToNumber["Client Timestamp"]] = clientSaveTime.toDateString() + " " + clientSaveTime.toLocaleTimeString();
+            }
+
+            row[columnNameToNumber["Node ID"]] = nodeId;
+            row[columnNameToNumber["Step Title"]] = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+            row[columnNameToNumber["Component Part Number"]] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1;
+            row[columnNameToNumber["Component ID"]] = component.id;
+            row[columnNameToNumber["Component Type"]] = component.type;
+            row[columnNameToNumber["Component Prompt"]] = this.UtilService.removeHTMLTags(component.prompt);
+            row[columnNameToNumber["Student Data"]] = componentState.studentData;
+            row[columnNameToNumber["Student Work ID"]] = componentState.id;
+            row[columnNameToNumber["Thread ID"]] = threadId;
+            row[columnNameToNumber["Workgroup ID"]] = workgroupId;
+            row[columnNameToNumber["Post Level"]] = this.getPostLevel(componentState);
+            row[columnNameToNumber["Post Text"]] = this.UtilService.removeHTMLTags(componentState.studentData.response);
+
+            return row;
+        }
+    }, {
+        key: 'getStructuredPosts',
+        value: function getStructuredPosts(componentStates) {
+            var structuredPosts = {};
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = componentStates[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var componentState = _step6.value;
+
+                    if (this.isTopLevelPost(componentState)) {
+                        structuredPosts[componentState.id] = componentState;
+                    } else if (this.isReply(componentState)) {
+                        this.addReplyToTopLevelPost(structuredPosts, componentState);
+                    }
+                }
+            } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
+                    }
+                } finally {
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
+                    }
+                }
+            }
+
+            return structuredPosts;
+        }
+    }, {
+        key: 'isTopLevelPost',
+        value: function isTopLevelPost(componentState) {
+            return componentState.studentData.componentStateIdReplyingTo == null;
+        }
+    }, {
+        key: 'isReply',
+        value: function isReply(componentState) {
+            return componentState.studentData.componentStateIdReplyingTo != null;
+        }
+    }, {
+        key: 'addReplyToTopLevelPost',
+        value: function addReplyToTopLevelPost(structuredPosts, replyComponentState) {
+            var parentComponentStateId = replyComponentState.studentData.componentStateIdReplyingTo;
+            var parentPost = structuredPosts[parentComponentStateId];
+            if (parentPost.replies == null) {
+                parentPost.replies = [];
+            }
+            parentPost.replies.push(replyComponentState);
+        }
+    }, {
+        key: 'getPostLevel',
+        value: function getPostLevel(componentState) {
+            if (this.isTopLevelPost(componentState)) {
+                return 1;
+            } else if (this.isReply(componentState)) {
+                return 2;
+            }
+        }
+    }, {
+        key: 'generateDiscussionExportFileName',
+        value: function generateDiscussionExportFileName(nodeId, componentId) {
+            var runId = this.ConfigService.getRunId();
+            var stepNumber = this.ProjectService.getNodePositionById(nodeId);
+            var componentNumber = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1;
+            return runId + '_step_' + stepNumber + '_component_' + componentNumber + '_discussion_work.csv';
         }
 
         /**
@@ -3031,7 +3285,7 @@ var DataExportController = function () {
     }, {
         key: 'exportMatchComponent',
         value: function exportMatchComponent(nodeId, component) {
-            var _this7 = this;
+            var _this8 = this;
 
             // request the student data from the server and then generate the export
             this.TeacherDataService.getExport("allStudentWork").then(function (result) {
@@ -3045,24 +3299,24 @@ var DataExportController = function () {
                 var rows = [];
 
                 // add the header row to the rows
-                rows.push(_this7.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
+                rows.push(_this8.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
 
                 // add the student work rows
-                rows = rows.concat(_this7.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
+                rows = rows.concat(_this8.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
 
                 // generate the file name of the csv file
                 var fileName = "";
-                var runId = _this7.ConfigService.getRunId();
-                var stepNumber = _this7.ProjectService.getNodePositionById(nodeId);
-                var componentNumber = _this7.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
-                if (_this7.workSelectionType === 'exportAllWork') {
+                var runId = _this8.ConfigService.getRunId();
+                var stepNumber = _this8.ProjectService.getNodePositionById(nodeId);
+                var componentNumber = _this8.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
+                if (_this8.workSelectionType === 'exportAllWork') {
                     fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_all_match_work.csv';
-                } else if (_this7.workSelectionType === 'exportLatestWork') {
+                } else if (_this8.workSelectionType === 'exportLatestWork') {
                     fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_latest_match_work.csv';
                 }
 
                 // generate the csv file and have the client download it
-                _this7.generateCSVFile(rows, fileName);
+                _this8.generateCSVFile(rows, fileName);
             });
         }
 
@@ -3098,13 +3352,13 @@ var DataExportController = function () {
             }
 
             // Add the header cells for the choices
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
 
             try {
-                for (var _iterator3 = component.choices[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var _choice = _step3.value;
+                for (var _iterator7 = component.choices[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var _choice = _step7.value;
 
                     columnNameToNumber[_choice.id] = columnNames.length;
                     columnNames.push(_choice.value);
@@ -3112,43 +3366,43 @@ var DataExportController = function () {
 
                 // Add the header cells for the choice correctness
             } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
+                _didIteratorError7 = true;
+                _iteratorError7 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                        _iterator3.return();
+                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                        _iterator7.return();
                     }
                 } finally {
-                    if (_didIteratorError3) {
-                        throw _iteratorError3;
+                    if (_didIteratorError7) {
+                        throw _iteratorError7;
                     }
                 }
             }
 
             if (this.includeCorrectnessColumns && this.MatchService.hasCorrectAnswer(component)) {
-                var _iteratorNormalCompletion4 = true;
-                var _didIteratorError4 = false;
-                var _iteratorError4 = undefined;
+                var _iteratorNormalCompletion8 = true;
+                var _didIteratorError8 = false;
+                var _iteratorError8 = undefined;
 
                 try {
-                    for (var _iterator4 = component.choices[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                        var choice = _step4.value;
+                    for (var _iterator8 = component.choices[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                        var choice = _step8.value;
 
                         columnNameToNumber[choice.id + '-boolean'] = columnNames.length;
                         columnNames.push(choice.value);
                     }
                 } catch (err) {
-                    _didIteratorError4 = true;
-                    _iteratorError4 = err;
+                    _didIteratorError8 = true;
+                    _iteratorError8 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                            _iterator4.return();
+                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                            _iterator8.return();
                         }
                     } finally {
-                        if (_didIteratorError4) {
-                            throw _iteratorError4;
+                        if (_didIteratorError8) {
+                            throw _iteratorError8;
                         }
                     }
                 }
@@ -3173,28 +3427,28 @@ var DataExportController = function () {
             var headerRow = [];
 
             // generate the header row by looping through all the column names
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+            var _iteratorNormalCompletion9 = true;
+            var _didIteratorError9 = false;
+            var _iteratorError9 = undefined;
 
             try {
-                for (var _iterator5 = columnNames[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var columnName = _step5.value;
+                for (var _iterator9 = columnNames[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                    var columnName = _step9.value;
 
                     // add the column name to the header row
                     headerRow.push(columnName);
                 }
             } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
+                _didIteratorError9 = true;
+                _iteratorError9 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
+                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                        _iterator9.return();
                     }
                 } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
+                    if (_didIteratorError9) {
+                        throw _iteratorError9;
                     }
                 }
             }
@@ -3224,29 +3478,29 @@ var DataExportController = function () {
 
             var rowCounter = 1;
 
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
+            var _iteratorNormalCompletion10 = true;
+            var _didIteratorError10 = false;
+            var _iteratorError10 = undefined;
 
             try {
-                for (var _iterator6 = workgroups[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var workgroup = _step6.value;
+                for (var _iterator10 = workgroups[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                    var workgroup = _step10.value;
 
                     var rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
                     rows = rows.concat(rowsForWorkgroup);
                     rowCounter += rowsForWorkgroup.length;
                 }
             } catch (err) {
-                _didIteratorError6 = true;
-                _iteratorError6 = err;
+                _didIteratorError10 = true;
+                _iteratorError10 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                        _iterator6.return();
+                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                        _iterator10.return();
                     }
                 } finally {
-                    if (_didIteratorError6) {
-                        throw _iteratorError6;
+                    if (_didIteratorError10) {
+                        throw _iteratorError10;
                     }
                 }
             }
@@ -3343,23 +3597,23 @@ var DataExportController = function () {
              */
             var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, matchComponentState);
 
-            var _iteratorNormalCompletion7 = true;
-            var _didIteratorError7 = false;
-            var _iteratorError7 = undefined;
+            var _iteratorNormalCompletion11 = true;
+            var _didIteratorError11 = false;
+            var _iteratorError11 = undefined;
 
             try {
-                for (var _iterator7 = matchComponentState.studentData.buckets[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                    var bucket = _step7.value;
+                for (var _iterator11 = matchComponentState.studentData.buckets[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                    var bucket = _step11.value;
 
 
                     // loop through all the choices that the student put in this bucket
-                    var _iteratorNormalCompletion8 = true;
-                    var _didIteratorError8 = false;
-                    var _iteratorError8 = undefined;
+                    var _iteratorNormalCompletion12 = true;
+                    var _didIteratorError12 = false;
+                    var _iteratorError12 = undefined;
 
                     try {
-                        for (var _iterator8 = bucket.items[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                            var item = _step8.value;
+                        for (var _iterator12 = bucket.items[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+                            var item = _step12.value;
 
                             // put the bucket name in the column corresponding to the choice
                             row[columnNameToNumber[item.id]] = bucket.value;
@@ -3369,31 +3623,31 @@ var DataExportController = function () {
                             }
                         }
                     } catch (err) {
-                        _didIteratorError8 = true;
-                        _iteratorError8 = err;
+                        _didIteratorError12 = true;
+                        _iteratorError12 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                                _iterator8.return();
+                            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                                _iterator12.return();
                             }
                         } finally {
-                            if (_didIteratorError8) {
-                                throw _iteratorError8;
+                            if (_didIteratorError12) {
+                                throw _iteratorError12;
                             }
                         }
                     }
                 }
             } catch (err) {
-                _didIteratorError7 = true;
-                _iteratorError7 = err;
+                _didIteratorError11 = true;
+                _iteratorError11 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                        _iterator7.return();
+                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                        _iterator11.return();
                     }
                 } finally {
-                    if (_didIteratorError7) {
-                        throw _iteratorError7;
+                    if (_didIteratorError11) {
+                        throw _iteratorError11;
                     }
                 }
             }
