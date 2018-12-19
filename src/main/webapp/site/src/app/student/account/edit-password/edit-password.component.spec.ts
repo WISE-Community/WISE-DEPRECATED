@@ -4,7 +4,7 @@ import { UserService } from "../../../services/user.service";
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NO_ERRORS_SCHEMA, Provider } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { User } from "../../../domain/user";

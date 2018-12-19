@@ -17,6 +17,7 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
@@ -436,8 +437,16 @@ public class TeacherAPIController {
     Run run = runService.retrieveById(runId);
     JSONObject response;
     if (run.isTeacherAssociatedToThisRun(user)) {
-      runService.setMaxWorkgroupSize(runId, maxStudentsPerTeam);
-      response = createSuccessResponse();
+      boolean canChange = true;
+      if (maxStudentsPerTeam == 1) {
+        canChange = runService.canDecreaseMaxStudentsPerTeam(run.getId());
+      }
+      if (canChange) {
+        runService.setMaxWorkgroupSize(runId, maxStudentsPerTeam);
+        response = createSuccessResponse();
+      } else {
+        response = createFailureResponse("notAllowedToDecreaseMaxStudentsPerTeam");
+      }
     } else {
       response = createFailureResponse("noPermissionToChangeMaxStudentsPerTeam");
     }
