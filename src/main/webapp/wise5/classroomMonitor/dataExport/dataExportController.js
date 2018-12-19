@@ -3080,11 +3080,11 @@ var DataExportController = function () {
     }, {
         key: 'populateDiscussionColumnNames',
         value: function populateDiscussionColumnNames(component, columnNames, columnNameToNumber) {
-            var defaultMatchColumnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Student Data", "Thread ID", "Student Work ID", "Post Level", "Post Text"];
-            for (var c = 0; c < defaultMatchColumnNames.length; c++) {
-                var defaultMatchColumnName = defaultMatchColumnNames[c];
-                columnNameToNumber[defaultMatchColumnName] = c;
-                columnNames.push(defaultMatchColumnName);
+            var defaultDiscussionColumnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Student Data", "Thread ID", "Student Work ID", "Post Level", "Post Text"];
+            for (var c = 0; c < defaultDiscussionColumnNames.length; c++) {
+                var defaultDiscussionColumnName = defaultDiscussionColumnNames[c];
+                columnNameToNumber[defaultDiscussionColumnName] = c;
+                columnNames.push(defaultDiscussionColumnName);
             }
         }
     }, {
@@ -3217,7 +3217,7 @@ var DataExportController = function () {
                     if (this.isTopLevelPost(componentState)) {
                         structuredPosts[componentState.id] = componentState;
                     } else if (this.isReply(componentState)) {
-                        this.addReplyToTopLevelPost(structuredPosts, componentState.studentData.componentStateIdReplyingTo, componentState);
+                        this.addReplyToTopLevelPost(structuredPosts, componentState);
                     }
                 }
             } catch (err) {
@@ -3249,7 +3249,8 @@ var DataExportController = function () {
         }
     }, {
         key: 'addReplyToTopLevelPost',
-        value: function addReplyToTopLevelPost(structuredPosts, parentComponentStateId, replyComponentState) {
+        value: function addReplyToTopLevelPost(structuredPosts, replyComponentState) {
+            var parentComponentStateId = replyComponentState.studentData.componentStateIdReplyingTo;
             var parentPost = structuredPosts[parentComponentStateId];
             if (parentPost.replies == null) {
                 parentPost.replies = [];

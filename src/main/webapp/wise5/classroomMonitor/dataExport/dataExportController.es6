@@ -2963,7 +2963,7 @@ class DataExportController {
     }
 
     populateDiscussionColumnNames(component, columnNames, columnNameToNumber) {
-        const defaultMatchColumnNames = [
+        const defaultDiscussionColumnNames = [
             "#",
             "Workgroup ID",
             "WISE ID 1",
@@ -2992,10 +2992,10 @@ class DataExportController {
             "Post Level",
             "Post Text"
         ];
-        for (let c = 0; c < defaultMatchColumnNames.length; c++) {
-            const defaultMatchColumnName = defaultMatchColumnNames[c];
-            columnNameToNumber[defaultMatchColumnName] = c;
-            columnNames.push(defaultMatchColumnName);
+        for (let c = 0; c < defaultDiscussionColumnNames.length; c++) {
+            const defaultDiscussionColumnName = defaultDiscussionColumnNames[c];
+            columnNameToNumber[defaultDiscussionColumnName] = c;
+            columnNames.push(defaultDiscussionColumnName);
         }
     }
 
@@ -3082,8 +3082,7 @@ class DataExportController {
             if (this.isTopLevelPost(componentState)) {
                 structuredPosts[componentState.id] = componentState;
             } else if (this.isReply(componentState)) {
-                this.addReplyToTopLevelPost(structuredPosts,
-                    componentState.studentData.componentStateIdReplyingTo, componentState);
+                this.addReplyToTopLevelPost(structuredPosts, componentState);
             }
         }
         return structuredPosts;
@@ -3097,7 +3096,8 @@ class DataExportController {
         return componentState.studentData.componentStateIdReplyingTo != null;
     }
 
-    addReplyToTopLevelPost(structuredPosts, parentComponentStateId, replyComponentState) {
+    addReplyToTopLevelPost(structuredPosts, replyComponentState) {
+        const parentComponentStateId = replyComponentState.studentData.componentStateIdReplyingTo;
         const parentPost = structuredPosts[parentComponentStateId];
         if (parentPost.replies == null) {
             parentPost.replies = [];
