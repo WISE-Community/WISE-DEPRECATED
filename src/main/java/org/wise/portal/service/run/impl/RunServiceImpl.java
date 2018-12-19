@@ -512,6 +512,18 @@ public class RunServiceImpl implements RunService {
     return aclService.hasPermission(run, permission, user);
   }
 
+  public boolean canDecreaseMaxStudentsPerTeam(Long runId) {
+    Set<Workgroup> workgroups = this.getWorkgroups(runId);
+    if (workgroups != null) {
+      for (Workgroup workgroup : workgroups) {
+        if (workgroup.isStudentWorkgroup() && workgroup.getMembers().size() > 1) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   public List<Run> getRunsRunWithinPeriod(String period) {
     return runDao.getRunsRunWithinPeriod(period);
   }

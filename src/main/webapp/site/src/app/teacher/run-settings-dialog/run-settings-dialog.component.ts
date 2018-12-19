@@ -28,7 +28,7 @@ export class RunSettingsDialogComponent implements OnInit {
   notAllowedToDeletePeriodWithStudents = 'You are not allowed to delete a period that contains students.';
   noPermissionToDeletePeriod = 'You do not have permission to delete periods from this unit.';
   noPermissionToChangeMaxStudentsPerTeam = 'You do not have permission to change the number of students per team for this unit.';
-  notAllowedToLowerMaxStudentsPerTeam = 'You are not allowed to reduce the number of students per team because this unit already has teams with more than 1 student.';
+  notAllowedToDecreaseMaxStudentsPerTeam = 'You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.';
   noPermissionToChangeStartDate = 'You do not have permission to change the start date for this unit.';
 
   constructor(public dialog: MatDialog,
@@ -183,8 +183,8 @@ export class RunSettingsDialogComponent implements OnInit {
       return this.noPermissionToDeletePeriod;
     } else if (messageCode == 'noPermissionToChangeMaxStudentsPerTeam') {
       return this.noPermissionToChangeMaxStudentsPerTeam;
-    } else if (messageCode = 'notAllowedToLowerMaxStudentsPerTeam') {
-      return this.notAllowedToLowerMaxStudentsPerTeam;
+    } else if (messageCode = 'notAllowedToDecreaseMaxStudentsPerTeam') {
+      return this.notAllowedToDecreaseMaxStudentsPerTeam;
     } else if (messageCode == 'noPermissionToChangeStartDate') {
       return this.noPermissionToChangeStartDate;
     }

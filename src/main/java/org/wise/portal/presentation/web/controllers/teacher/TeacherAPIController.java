@@ -437,28 +437,15 @@ public class TeacherAPIController {
     Run run = runService.retrieveById(runId);
     JSONObject response;
     if (run.isTeacherAssociatedToThisRun(user)) {
-      Boolean canChange = true;
+      boolean canChange = true;
       if (maxStudentsPerTeam == 1) {
-        Set<Workgroup> workgroups = null;
-        try {
-          workgroups = runService.getWorkgroups(run.getId());
-        } catch (ObjectNotFoundException e1) {
-          e1.printStackTrace();
-        }
-        if (workgroups != null) {
-          for (Workgroup workgroup : workgroups) {
-            if (workgroup.isStudentWorkgroup() && workgroup.getMembers().size() > 1) {
-              canChange = false;
-              break;
-            }
-          }
-        }
+        canChange = runService.canDecreaseMaxStudentsPerTeam(run.getId());
       }
       if (canChange) {
         runService.setMaxWorkgroupSize(runId, maxStudentsPerTeam);
         response = createSuccessResponse();
       } else {
-        response = createFailureResponse("notAllowedToLowerMaxStudentsPerTeam");
+        response = createFailureResponse("notAllowedToDecreaseMaxStudentsPerTeam");
       }
     } else {
       response = createFailureResponse("noPermissionToChangeMaxStudentsPerTeam");

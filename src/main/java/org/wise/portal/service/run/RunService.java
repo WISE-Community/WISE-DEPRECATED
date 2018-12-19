@@ -364,6 +364,15 @@ public interface RunService {
   boolean hasRunPermission(Run run, User user, Permission permission);
 
   /**
+   * Returns <code>boolean</code> true if the run with the given
+   * <code>runId</code> does not have any student workgroups that contain more
+   * than 1 user, returns false otherwise.
+   * @param runId
+   * @return boolean
+   */
+  boolean canDecreaseMaxStudentsPerTeam(Long runId);
+
+  /**
    * Returns a <code>List<Run></code> list of runs that were run within the
    * given <code>String</code> period. Valid periods are "today","week" and "month".
    * @param period
