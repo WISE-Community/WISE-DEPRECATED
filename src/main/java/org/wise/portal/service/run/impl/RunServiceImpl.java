@@ -305,11 +305,28 @@ public class RunServiceImpl implements RunService {
       this.aclService.addPermission(run, RunPermission.VIEW_STUDENT_WORK, user);
       List<Integer> newPermissions = new ArrayList<>();
       newPermissions.add(RunPermission.VIEW_STUDENT_WORK.getMask());
+      createSharedTeacherWorkgroupIfNecessary(run, user);
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
         user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
     } else {
       throw new TeacherAlreadySharedWithRunException(teacherUsername + " is already shared with this run");
     }
+  }
+
+  private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user) throws ObjectNotFoundException {
+    if (workgroupService.getWorkgroupListByRunAndUser(run, user).size() == 0) {
+      return createSharedTeacherWorkgroup(run, user);
+    }
+    return null;
+  }
+
+  private Workgroup createSharedTeacherWorkgroup(Run run, User user) throws ObjectNotFoundException {
+    if (user.isTeacher()) {
+      Set<User> sharedOwners = new HashSet<User>();
+      sharedOwners.add(user);
+      return workgroupService.createWorkgroup("teacher", sharedOwners, run, null);
+    }
+    return null;
   }
 
   public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
