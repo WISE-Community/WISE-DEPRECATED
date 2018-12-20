@@ -198,7 +198,8 @@ class ComponentAnnotationsController {
                 this.nodeId = this.annotations.comment ? this.annotations.comment.nodeId : this.annotations.score.nodeId;
                 this.componentId = this.annotations.comment ? this.annotations.comment.componentId : this.annotations.score.nodeId;
 
-                if (!this.ProjectService.displayAnnotation(this.annotations.score)) {
+                if (this.annotations.score != null &&
+                        !this.ProjectService.displayAnnotation(this.annotations.score)) {
                     // we do not want to show the score
                     this.showScore = false;
                 } else {
@@ -206,7 +207,8 @@ class ComponentAnnotationsController {
 
                 }
 
-                if (!this.ProjectService.displayAnnotation(this.annotations.comment)) {
+                if (this.annotations.comment != null &&
+                        !this.ProjectService.displayAnnotation(this.annotations.comment)) {
                     // we do not want to show the comment
                     this.showComment = false;
                 } else {
