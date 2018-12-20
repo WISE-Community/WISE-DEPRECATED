@@ -27,21 +27,8 @@ class ComponentService {
       prompt: '',
       showSaveButton: false,
       showSubmitButton: false
-    }
+    };
   }
-
-  /**
-   * Populate a component state with the data from another component state
-   * @param {object} componentStateFromOtherComponent the component state to obtain the data from
-   * @return {object} a new component state that contains the student data from the other
-   * component state
-   */
-  populateComponentState(componentStateFromOtherComponent) {
-    const studentDataCopy = this.UtilService.makeCopyOfJSONObject(componentStateFromOtherComponent.studentData);
-    const componentState = this.StudentDataService.createComponentState();
-    componentState.studentData = studentDataCopy;
-    return componentState;
-  };
 
   /**
    * Check if the component was completed

@@ -446,7 +446,7 @@
           <md-icon>code</md-icon>
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
         </md-button>
-        <span ng-if='openResponseController.jsonStringChanged'>
+        <span ng-if='openResponseController.isJSONStringChanged'>
           {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
         </span>
         <div ng-if='openResponseController.showJSONAuthoring'>

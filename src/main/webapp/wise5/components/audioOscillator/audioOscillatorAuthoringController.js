@@ -67,23 +67,6 @@ var AudioOscillatorAuthoringController = function (_AudioOscillatorContr) {
       this.drawOscilloscopeGridAfterTimeout();
     }
   }, {
-    key: 'assetSelected',
-    value: function assetSelected(event, args) {
-      if (this.isEventTargetThisComponent(args)) {
-        var assetItem = args.assetItem;
-        var fileName = assetItem.fileName;
-        var fullAssetPath = this.getFullAssetPath(fileName);
-        var summernoteId = this.getSummernoteId(args);
-        this.restoreSummernoteCursorPosition(summernoteId);
-        if (this.UtilService.isImage(fileName)) {
-          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-        } else if (this.UtilService.isVideo(fileName)) {
-          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-        }
-      }
-      this.$mdDialog.hide();
-    }
-  }, {
     key: 'authoringViewOscillatorTypeClicked',
     value: function authoringViewOscillatorTypeClicked() {
       this.authoringComponentContent.oscillatorTypes = [];

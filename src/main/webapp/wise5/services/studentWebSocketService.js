@@ -56,7 +56,7 @@ var StudentWebSocketService = function () {
      * @param data the data from the message
      */
     value: function handleWebSocketMessageReceived(data) {
-      this.$rootScope.$broadcast('webSocketMessageRecieved', { data: data });
+      this.$rootScope.$broadcast('webSocketMessageReceived', { data: data });
     }
   }, {
     key: "handleMessage",
