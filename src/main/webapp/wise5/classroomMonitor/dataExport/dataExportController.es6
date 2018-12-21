@@ -61,7 +61,6 @@ class DataExportController {
      * latestWork, allWork, and events will call this function with a null exportType.
      */
     export(exportType = null) {
-        this.showDownloadingExportMessage();
         if (exportType == null) {
             exportType = this.exportType;
         }
@@ -88,7 +87,6 @@ class DataExportController {
         }  else if (exportType === "rawData") {
             this.exportRawData();
         }
-        this.hideDownloadingExportMessage();
     }
 
     /**
@@ -110,7 +108,7 @@ class DataExportController {
      * @param exportType the export type e.g. "allStudentWork" or "latestStudentWork"
      */
     exportStudentWork(exportType) {
-
+        this.showDownloadingExportMessage();
         var selectedNodes = null;
         var selectedNodesMap = null;
 
@@ -310,6 +308,7 @@ class DataExportController {
 
             // generate the csv file and have the client download it
             this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -894,7 +893,7 @@ class DataExportController {
      * Export the events
      */
     exportEvents() {
-
+        this.showDownloadingExportMessage();
         var selectedNodes = null;
         var selectedNodesMap = null;
 
@@ -1086,6 +1085,7 @@ class DataExportController {
 
             // generate the csv file and have the client download it
             this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -1291,7 +1291,7 @@ class DataExportController {
     }
 
     exportNotebookItems(exportType) {
-
+        this.showDownloadingExportMessage();
         this.TeacherDataService.getExport(exportType).then((result) => {
             let runId = this.ConfigService.getRunId();
             let exportFilename = "";
@@ -1399,12 +1399,13 @@ class DataExportController {
             // timeout is required for FF.
             window.setTimeout(() => {
                 URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
+                this.hideDownloadingExportMessage();
             }, 3000);
         });
     }
 
     exportNotifications() {
-
+        this.showDownloadingExportMessage();
         this.TeacherDataService.getExport("notifications").then((result) => {
             let runId = this.ConfigService.getRunId();
             let exportFilename = "";
@@ -1470,12 +1471,16 @@ class DataExportController {
             // timeout is required for FF.
             window.setTimeout(() => {
                 URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
+                this.hideDownloadingExportMessage();
             }, 3000);
         });
     }
 
     exportStudentAssets() {
-        this.TeacherDataService.getExport("studentAssets");
+        this.showDownloadingExportMessage();
+        this.TeacherDataService.getExport("studentAssets").then(() => {
+            this.hideDownloadingExportMessage();
+        });
     }
 
     /**
@@ -1730,6 +1735,7 @@ class DataExportController {
      * Create a csv export file with one workgroup per row
      */
     exportOneWorkgroupPerRow() {
+        this.showDownloadingExportMessage();
         var selectedNodes = null;
 
         /*
@@ -2060,6 +2066,7 @@ class DataExportController {
 
             // generate the csv file and have the client download it
             this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -2703,6 +2710,7 @@ class DataExportController {
      * Export the raw data
      */
     exportRawData() {
+        this.showDownloadingExportMessage();
         var selectedNodes = null;
 
         /*
@@ -2865,6 +2873,7 @@ class DataExportController {
 
             // generate a file and download it to the user's computer
             this.FileSaver.saveAs(blob, runId + "_raw_data.json");
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -2932,13 +2941,11 @@ class DataExportController {
      * @param component The component content object.
      */
     exportComponentClicked(nodeId, component) {
-        this.showDownloadingExportMessage();
         if (component.type == 'Match') {
             this.exportMatchComponent(nodeId, component);
         } else if (component.type === 'Discussion') {
             this.exportDiscussionComponent(nodeId, component);
         }
-        this.hideDownloadingExportMessage();
     }
 
     /**
@@ -2948,6 +2955,7 @@ class DataExportController {
      * @param component The component content object.
      */
     exportDiscussionComponent(nodeId, component) {
+      this.showDownloadingExportMessage();
         this.TeacherDataService.getExport("allStudentWork").then((result) => {
             const columnNames = [];
             const columnNameToNumber = {};
@@ -2955,6 +2963,7 @@ class DataExportController {
             rows = rows.concat(this.generateDiscussionComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
             const fileName = this.generateDiscussionExportFileName(nodeId, component.id);
             this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -3029,25 +3038,21 @@ class DataExportController {
                                        nodeId, componentId, rowCounter, componentState, threadId) {
         const row = new Array(columnNames.length);
         row.fill("");
-        let wiseId1 = "";
-        let wiseId2 = "";
-        let wiseId3 = "";
         const userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-        if (userInfo.users[0] != null) {
-            wiseId1 = userInfo.users[0].id;
-        }
-        if (userInfo.users[1] != null) {
-            wiseId2 = userInfo.users[0].id;
-        }
-        if (userInfo.users[2] != null) {
-            wiseId3 = userInfo.users[0].id;
+        if (userInfo != null) {
+          if (userInfo.users[0] != null) {
+            row[columnNameToNumber["WISE ID 1"]] = userInfo.users[0].id;
+          }
+          if (userInfo.users[1] != null) {
+            row[columnNameToNumber["WISE ID 2"]] = userInfo.users[1].id;
+          }
+          if (userInfo.users[2] != null) {
+            row[columnNameToNumber["WISE ID 3"]] = userInfo.users[2].id;
+          }
+          row[columnNameToNumber["Class Period"]] = userInfo.periodName;
         }
 
         row[columnNameToNumber["#"]] = rowCounter;
-        row[columnNameToNumber["WISE ID 1"]] = wiseId1;
-        row[columnNameToNumber["WISE ID 2"]] = wiseId2;
-        row[columnNameToNumber["WISE ID 3"]] = wiseId3;
-        row[columnNameToNumber["Class Period"]] = userInfo.periodName;
         row[columnNameToNumber["Project ID"]] = this.ConfigService.getProjectId();
         row[columnNameToNumber["Project Name"]] = this.ProjectService.getProjectTitle();
         row[columnNameToNumber["Run ID"]] = this.ConfigService.getRunId();
@@ -3133,6 +3138,7 @@ class DataExportController {
      * @param component The component content object.
      */
     exportMatchComponent(nodeId, component) {
+        this.showDownloadingExportMessage();
         // request the student data from the server and then generate the export
         this.TeacherDataService.getExport("allStudentWork").then((result) => {
             // the column names in the header row
@@ -3163,6 +3169,7 @@ class DataExportController {
 
             // generate the csv file and have the client download it
             this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
     }
 
