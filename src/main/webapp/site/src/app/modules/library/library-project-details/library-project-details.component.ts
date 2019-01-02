@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { LibraryService } from "../../../services/library.service";
 import { UserService } from "../../../services/user.service";
 import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
+import { UseWithClassWarningDialogComponent } from "../../../teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component";
 import { NGSSStandards } from "../ngssStandards";
 import { ConfigService } from "../../../services/config.service";
 
@@ -17,6 +18,7 @@ export class LibraryProjectDetailsComponent implements OnInit {
   ngss: NGSSStandards = new NGSSStandards();
   ngssWebUrl: string = 'https://www.nextgenscience.org/search-standards?keys=';
   previewLink: string;
+  isWise4: boolean = true;
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
@@ -64,10 +66,17 @@ export class LibraryProjectDetailsComponent implements OnInit {
   }
 
   runProject() {
-    this.dialog.open(CreateRunDialogComponent, {
-      data: this.data,
-      panelClass: 'mat-dialog--md',
-      disableClose: true
-    });
+    if (this.isWise4) {
+      this.dialog.open(UseWithClassWarningDialogComponent, {
+        data: this.data,
+        panelClass: 'mat-dialog--sm'
+      })
+    } else {
+      this.dialog.open(CreateRunDialogComponent, {
+        data: this.data,
+        panelClass: 'mat-dialog--md',
+        disableClose: true
+      })
+    }
   }
 }
