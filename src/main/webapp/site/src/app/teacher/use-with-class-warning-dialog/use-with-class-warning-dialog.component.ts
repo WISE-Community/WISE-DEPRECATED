@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CreateRunDialogComponent } from "../create-run-dialog/create-run-dialog.component";
 import { Project } from "../../domain/project";
@@ -8,7 +8,7 @@ import { Project } from "../../domain/project";
   templateUrl: './use-with-class-warning-dialog.component.html',
   styleUrls: ['./use-with-class-warning-dialog.component.scss']
 })
-export class UseWithClassWarningDialogComponent implements OnInit {
+export class UseWithClassWarningDialogComponent {
   project: Project;
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<UseWithClassWarningDialogComponent>,
@@ -16,12 +16,9 @@ export class UseWithClassWarningDialogComponent implements OnInit {
     this.project = data.project;
   }
 
-  ngOnInit() {
-  }
-
   proceedAnyway() {
     this.dialog.open(CreateRunDialogComponent, {
-      data: this.data,
+      data: this.project,
       panelClass: 'mat-dialog--md',
       disableClose: true
     })

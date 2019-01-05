@@ -69,7 +69,7 @@ export class LibraryProjectDetailsComponent implements OnInit {
     if (this.isWise4) {
       this.dialog.open(UseWithClassWarningDialogComponent, {
         data: this.data,
-        panelClass: 'mat-dialog--sm'
+        panelClass: 'mat-dialog--md'
       })
     } else {
       this.dialog.open(CreateRunDialogComponent, {
