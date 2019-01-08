@@ -94,7 +94,7 @@ public class TeacherAPIController {
     JSONArray runsJSONArray = new JSONArray();
     for (Run run : runs) {
       JSONObject runJSON = getRunJSON(run);
-      JSONObject projectJSON = getProjectJSON(run.getProject());
+      JSONObject projectJSON = ControllerUtil.getProjectJSON(run.getProject());
       runJSON.put("project", projectJSON);
       runsJSONArray.put(runJSON);
     }
@@ -118,7 +118,7 @@ public class TeacherAPIController {
     runJSON.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
     runJSON.put("owner", getOwnerJSON(run.getOwner()));
     runJSON.put("sharedOwners", getRunSharedOwners(run));
-    runJSON.put("project", getProjectJSON(run.getProject()));
+    runJSON.put("project", ControllerUtil.getProjectJSON(run.getProject()));
     return runJSON;
   }
 
@@ -156,7 +156,7 @@ public class TeacherAPIController {
       throws ObjectNotFoundException, JSONException {
     Run run = runService.retrieveById(runId);
     JSONObject runJSON = getRunJSON(run);
-    JSONObject projectJSON = getProjectJSON(run.getProject());
+    JSONObject projectJSON = ControllerUtil.getProjectJSON(run.getProject());
     runJSON.put("project", projectJSON);
     return runJSON.toString();
   }
