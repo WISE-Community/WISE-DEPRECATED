@@ -4,7 +4,7 @@ echo "*** WISE pre-commit hook: Begin ***"
 # Generate and add updated messages.xlf file to git
 echo "*** WISE pre-commit hook: Generating messages.xlf ***"
 ng xi18n
-ngx-extractor
+npm run ngx-extractor
 git add src/main/webapp/site/src/messages.xlf
 
 # Run npm test. Abort commit if tests fail
