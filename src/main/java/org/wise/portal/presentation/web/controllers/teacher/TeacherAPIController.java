@@ -122,19 +122,6 @@ public class TeacherAPIController {
     return runJSON;
   }
 
-  private JSONObject getProjectJSON(Project project) throws JSONException {
-    JSONObject projectJSON = new JSONObject();
-    projectJSON.put("id", project.getId());
-    projectJSON.put("name", project.getName());
-    projectJSON.put("dateCreated", project.getDateCreated());
-    projectJSON.put("dateArchived", project.getDateDeleted());
-    projectJSON.put("projectThumb", getProjectThumbIconPath(project));
-    projectJSON.put("owner", getOwnerJSON(project.getOwner()));
-    projectJSON.put("sharedOwners", getProjectSharedOwnersJSON(project));
-    projectJSON.put("metadata", project.getMetadata().toJSONObject());
-    return projectJSON;
-  }
-
   private JSONObject getOwnerJSON(User owner) throws JSONException {
     JSONObject ownerJSON = new JSONObject();
     try {
