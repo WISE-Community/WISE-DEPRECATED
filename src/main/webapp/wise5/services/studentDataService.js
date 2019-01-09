@@ -793,6 +793,8 @@ var StudentDataService = function () {
           result = this.evaluateNumberOfWordsWrittenCriteria(criteria);
         } else if (functionName === 'addXNumberOfNotesOnThisStep') {
           result = this.evaluateAddXNumberOfNotesOnThisStepCriteria(criteria);
+        } else if (functionName === 'filledXNumberOfRows') {
+          result = this.evaluateFillXNumberOfRowsCriteria(criteria);
         } else if (functionName === '') {}
       }
       return result;
@@ -1434,6 +1436,19 @@ var StudentDataService = function () {
         return notebookItemsByNodeId.length >= requiredNumberOfNotes;
       } catch (e) {}
       return false;
+    }
+  }, {
+    key: 'evaluateFillXNumberOfRowsCriteria',
+    value: function evaluateFillXNumberOfRowsCriteria(criteria) {
+      var params = criteria.params;
+      var nodeId = params.nodeId;
+      var componentId = params.componentId;
+      var requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
+      var tableHasHeaderRow = params.tableHasHeaderRow;
+      var requireAllCellsInARowToBeFilled = params.requireAllCellsInARowToBeFilled;
+      var tableService = this.$injector.get('TableService');
+      var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+      return componentState != null && tableService.hasRequiredNumberOfFilledRows(componentState, requiredNumberOfFilledRows, tableHasHeaderRow, requireAllCellsInARowToBeFilled);
     }
   }, {
     key: 'getNotebookItemsByNodeId',
