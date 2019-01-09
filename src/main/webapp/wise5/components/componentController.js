@@ -1317,6 +1317,40 @@ var ComponentController = function () {
     value: function getMaxScore() {
       return this.componentContent.maxScore;
     }
+  }, {
+    key: 'createAutoScoreAnnotation',
+    value: function createAutoScoreAnnotation(data) {
+      return this.createAutoAnnotation('autoScore', data);
+    }
+  }, {
+    key: 'createAutoCommentAnnotation',
+    value: function createAutoCommentAnnotation(data) {
+      return this.createAutoAnnotation('autoComment', data);
+    }
+  }, {
+    key: 'createAutoAnnotation',
+    value: function createAutoAnnotation(type, data) {
+      var runId = this.ConfigService.getRunId();
+      var periodId = this.ConfigService.getPeriodId();
+      var nodeId = this.nodeId;
+      var componentId = this.componentId;
+      var toWorkgroupId = this.ConfigService.getWorkgroupId();
+      if (type === 'autoScore') {
+        return this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      } else if (type === 'autoComment') {
+        return this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      }
+    }
+  }, {
+    key: 'updateLatestScoreAnnotation',
+    value: function updateLatestScoreAnnotation(annotation) {
+      this.latestAnnotations.score = annotation;
+    }
+  }, {
+    key: 'updateLatestCommentAnnotation',
+    value: function updateLatestCommentAnnotation(annotation) {
+      this.latestAnnotations.comment = annotation;
+    }
   }]);
 
   return ComponentController;
