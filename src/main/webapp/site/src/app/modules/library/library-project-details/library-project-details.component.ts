@@ -18,7 +18,6 @@ export class LibraryProjectDetailsComponent implements OnInit {
   ngss: NGSSStandards = new NGSSStandards();
   ngssWebUrl: string = 'https://www.nextgenscience.org/search-standards?keys=';
   previewLink: string;
-  isWise4: boolean = true;
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
@@ -66,7 +65,7 @@ export class LibraryProjectDetailsComponent implements OnInit {
   }
 
   runProject() {
-    if (this.isWise4) {
+    if (this.data.project.wiseVersion == "4") {
       this.dialog.open(UseWithClassWarningDialogComponent, {
         data: this.data,
         panelClass: 'mat-dialog--md'

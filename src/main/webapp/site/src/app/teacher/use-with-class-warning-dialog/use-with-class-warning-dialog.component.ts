@@ -17,12 +17,12 @@ export class UseWithClassWarningDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    console.log(this.project);
   }
 
   proceedAnyway() {
     this.dialog.open(CreateRunDialogComponent, {
-      data: this.project,
+      data: this.data,
       panelClass: 'mat-dialog--md',
       disableClose: true
     })
