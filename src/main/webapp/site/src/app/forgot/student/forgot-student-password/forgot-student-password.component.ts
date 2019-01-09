@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { I18n } from "@ngx-translate/i18n-polyfill";
 import { StudentService } from '../../../student/student.service';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-student-password',
@@ -31,17 +32,22 @@ export class ForgotStudentPasswordComponent implements OnInit {
     this.clearMessage();
     this.showForgotUsernameLink = false;
     const username = this.getUsername();
-    this.studentService.getSecurityQuestion(username).subscribe((response) => {
-      if (response.status === 'success') {
-        this.goToQuestionPage(username, response.questionKey, response.question);
-      } else {
-        if (response.messageCode === 'usernameNotFound') {
-          this.setUsernameNotFoundMessage();
-          this.showForgotUsernameLink = true;
+    this.studentService.getSecurityQuestion(username)
+      .pipe(
+        finalize(() => {
+          this.processing = false;
+        })
+      )
+      .subscribe((response) => {
+        if (response.status === 'success') {
+          this.goToQuestionPage(username, response.questionKey, response.question);
+        } else {
+          if (response.messageCode === 'usernameNotFound') {
+            this.setUsernameNotFoundMessage();
+            this.showForgotUsernameLink = true;
+          }
         }
-      }
-      this.processing = false;
-    });
+      });
   }
 
   getUsername() {

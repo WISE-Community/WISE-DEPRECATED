@@ -14,7 +14,7 @@
                  formControlName="firstName"
                  autofocus
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['firstName'].hasError('required')" i18n>First Name Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['firstName'].hasError('required')" i18n>First Name required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -25,7 +25,7 @@
                  name="lastName"
                  formControlName="lastName"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['lastName'].hasError('required')" i18n>Last Name Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['lastName'].hasError('required')" i18n>Last Name required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -39,7 +39,7 @@
                  formControlName="email"
                  required />
           <mat-hint i18n>We’ll never share your email address or personal information with anyone without your consent.</mat-hint>
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['email'].hasError('required')" i18n>Email Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['email'].hasError('required')" i18n>Email required</mat-error>
           <mat-error *ngIf="createTeacherAccountFormGroup.controls['email'].hasError('email')" i18n>Please enter a valid email address</mat-error>
         </mat-form-field>
       </p>
@@ -51,7 +51,7 @@
                  name="city"
                  formControlName="city"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['city'].hasError('required')" i18n>City Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['city'].hasError('required')" i18n>City required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -62,7 +62,7 @@
                  name="state"
                  formControlName="state"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['state'].hasError('required')" i18n>State Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['state'].hasError('required')" i18n>State required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -73,7 +73,7 @@
                  name="country"
                  formControlName="country"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['country'].hasError('required')" i18n>Country Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['country'].hasError('required')" i18n>Country required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -84,7 +84,7 @@
                  name="schoolName"
                  formControlName="schoolName"
                  required />
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['schoolName'].hasError('required')" i18n>School Name Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['schoolName'].hasError('required')" i18n>School Name required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -98,7 +98,7 @@
               {{schoolLevel.label}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="createTeacherAccountFormGroup.controls['schoolLevel'].hasError('required')" i18n>School Level Required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['schoolLevel'].hasError('required')" i18n>School Level required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -120,7 +120,7 @@
                    name="password"
                    formControlName="password"
                    required />
-            <mat-error *ngIf="passwordsFormGroup.controls['password'].hasError('required')" i18n>Password Required</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.controls['password'].hasError('required')" i18n>Password required</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -132,7 +132,7 @@
                    name="confirmPassword"
                    formControlName="confirmPassword"
                    required />
-            <mat-error *ngIf="passwordsFormGroup.controls['confirmPassword'].hasError('required')" i18n>Confirm Password Required</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.controls['confirmPassword'].hasError('required')" i18n>Confirm Password required</mat-error>
             <mat-error *ngIf="passwordsFormGroup.hasError('passwordDoesNotMatch')" i18n>Password does not match</mat-error>
           </mat-form-field>
         </p>

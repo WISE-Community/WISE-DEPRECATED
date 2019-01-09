@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { I18n } from "@ngx-translate/i18n-polyfill";
 import {StudentService} from '../../../student/student.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-student-password-security',
@@ -37,16 +38,20 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
     this.processing = true;
     this.clearMessage();
     this.studentService.checkSecurityAnswer(this.username, this.getAnswer())
-        .subscribe((response) => {
-      if (response.status === 'success') {
-        this.goToChangePasswordPage();
-      } else {
-        if (response.messageCode === 'incorrectAnswer') {
-          this.setIncorrectAnswerMessage();
+      .pipe(
+        finalize(() => {
+          this.processing = false;
+        })
+      )
+      .subscribe((response) => {
+        if (response.status === 'success') {
+          this.goToChangePasswordPage();
+        } else {
+          if (response.messageCode === 'incorrectAnswer') {
+            this.setIncorrectAnswerMessage();
+          }
         }
-      }
-      this.processing = false;
-    });
+      });
   }
 
   getAnswer() {

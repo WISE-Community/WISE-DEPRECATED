@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { I18n } from "@ngx-translate/i18n-polyfill";
 import { UtilService } from '../../../services/util.service';
 import { StudentService } from '../../../student/student.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-student-username',
@@ -69,12 +70,16 @@ export class ForgotStudentUsernameComponent implements OnInit {
       const birthMonth = parseInt(this.getControlFieldValue('birthMonth'));
       const birthDay = parseInt(this.getControlFieldValue('birthDay'));
       this.studentService.getStudentUsernames(firstName, lastName, birthMonth, birthDay)
-          .subscribe((response) => {
-        this.foundUsernames = response;
-        this.setMessageForFoundUsernames();
-        this.showSearchResults = true;
-        this.processing = false;
-      });
+        .pipe(
+          finalize(() => {
+            this.processing = false;
+          })
+        )
+        .subscribe((response) => {
+          this.foundUsernames = response;
+          this.setMessageForFoundUsernames();
+          this.showSearchResults = true;
+        });
     }
   }
 
