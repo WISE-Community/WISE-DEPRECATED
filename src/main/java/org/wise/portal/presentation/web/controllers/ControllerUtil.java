@@ -216,7 +216,7 @@ public class ControllerUtil {
     projectJSON.put("projectThumb", getProjectThumbIconPath(project));
     projectJSON.put("owner", getOwnerJSON(project.getOwner()));
     projectJSON.put("sharedOwners", getProjectSharedOwnersJSON(project));
-    projectJSON.put("wiseVersion", getWISEVersion());
+    projectJSON.put("wiseVersion", project.getWiseVersion());
     return projectJSON;
   }
 
