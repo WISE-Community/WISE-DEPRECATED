@@ -268,7 +268,7 @@ class NodeAuthoringController {
         ]
       },
       {
-        value: "filledXNumberOfRows",
+        value: "fillXNumberOfRows",
         text: this.$translate('fillXNumberOfRows'),
         params: [
           {
@@ -282,7 +282,7 @@ class NodeAuthoringController {
           {
             value: "requiredNumberOfFilledRows",
             defaultValue: null,
-            text: this.$translate('requiredNumberOfFilledRows')
+            text: this.$translate('requiredNumberOfFilledRowsNotIncludingHeaderRow')
           },
           {
             value: "tableHasHeaderRow",

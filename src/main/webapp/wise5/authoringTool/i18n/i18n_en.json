@@ -254,7 +254,7 @@
     "removeBranch": "Remove Branch",
     "requireAllCellsInARowToBeFilled": "Require All Cells In a Row To Be Filled",
     "requireTextOnEveryNote": "Require students to write text on every note",
-    "requiredNumberOfFilledRows": "Required Number of Filled Rows",
+    "requiredNumberOfFilledRowsNotIncludingHeaderRow": "Required Number of Filled Rows (Not Including Header Row)",
     "requiredNumberOfWords": "Required Number of Words",
     "requiredSubmitCount": "Required Submit Count",
     "saveErrorAdvancedAuthoring": "Error saving advanced authoring, possibly due to malformed JSON content. Check that your JSON is valid. Your changes have not been saved.",

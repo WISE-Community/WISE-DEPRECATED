@@ -6267,7 +6267,7 @@ var ProjectService = function () {
           } else {
             message += this.$translate('addXNumberOfNotesOnThisStepPlural', { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: _nodeTitle10 });
           }
-        } else if (name === 'filledXNumberOfRows') {
+        } else if (name === 'fillXNumberOfRows') {
           var requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
           var _nodeId11 = params.nodeId;
           var _nodeTitle11 = this.getNodePositionAndTitleByNodeId(_nodeId11);

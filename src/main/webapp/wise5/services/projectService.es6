@@ -3994,7 +3994,7 @@ class ProjectService {
           message += this.$translate('addXNumberOfNotesOnThisStepPlural',
             { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: nodeTitle });
         }
-      } else if (name === 'filledXNumberOfRows') {
+      } else if (name === 'fillXNumberOfRows') {
         const requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
         const nodeId = params.nodeId;
         const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);

@@ -644,7 +644,7 @@
                    type='number'
                    ng-model="criteria.params.requiredNumberOfFilledRows"
                    ng-model-options='{ debounce: 1000 }'
-                   style="width: 400px;"
+                   style="width: 450px;"
                    ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
             <div ng-if='param.value == "requiredNumberOfFilledRows" && (criteria.params.requiredNumberOfFilledRows == null || criteria.params.requiredNumberOfFilledRows == "")'><span style="color: red">{{ 'pleaseEnterTheRequiredNumberOfFilledRows' | translate }}</span></div>
             <md-checkbox ng-if="param.value == 'tableHasHeaderRow'"

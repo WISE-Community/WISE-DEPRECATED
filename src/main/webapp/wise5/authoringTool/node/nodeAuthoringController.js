@@ -203,7 +203,7 @@ var NodeAuthoringController = function () {
         text: this.$translate('requiredNumberOfNotes')
       }]
     }, {
-      value: "filledXNumberOfRows",
+      value: "fillXNumberOfRows",
       text: this.$translate('fillXNumberOfRows'),
       params: [{
         value: "nodeId",
@@ -214,7 +214,7 @@ var NodeAuthoringController = function () {
       }, {
         value: "requiredNumberOfFilledRows",
         defaultValue: null,
-        text: this.$translate('requiredNumberOfFilledRows')
+        text: this.$translate('requiredNumberOfFilledRowsNotIncludingHeaderRow')
       }, {
         value: "tableHasHeaderRow",
         defaultValue: true,

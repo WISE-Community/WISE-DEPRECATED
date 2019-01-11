@@ -515,7 +515,7 @@ class StudentDataService {
         result = this.evaluateNumberOfWordsWrittenCriteria(criteria);
       } else if (functionName === 'addXNumberOfNotesOnThisStep') {
         result = this.evaluateAddXNumberOfNotesOnThisStepCriteria(criteria);
-      } else if (functionName === 'filledXNumberOfRows') {
+      } else if (functionName === 'fillXNumberOfRows') {
         result = this.evaluateFillXNumberOfRowsCriteria(criteria);
       } else if (functionName === '') {
 
