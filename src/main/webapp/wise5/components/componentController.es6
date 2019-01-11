@@ -313,24 +313,32 @@ class ComponentController {
 
   registerStudentWorkSavedToServerListener() {
     this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-      const componentState = args.studentWork;
-      if (componentState && this.nodeId === componentState.nodeId
-          && this.componentId === componentState.componentId) {
-        this.setIsDirty(false);
-        this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: this.getIsDirty()});
-        const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
-        if (componentState.isSubmit) {
-          this.setSubmittedMessage(clientSaveTime);
-          this.lockIfNecessary();
-          this.setIsSubmitDirty(false);
-          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: this.isSubmitDirty});
-        } else if (componentState.isAutoSave) {
-          this.setAutoSavedMessage(clientSaveTime);
-        } else {
-          this.setSavedMessage(clientSaveTime);
-        }
-      }
+      this.handleStudentWorkSavedToServer(event, args);
     });
+  }
+
+  handleStudentWorkSavedToServer(event, args) {
+    const componentState = args.studentWork;
+    if (this.isForThisComponent(componentState)) {
+      this.setIsDirty(false);
+      this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: this.getIsDirty()});
+      const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
+      if (componentState.isSubmit) {
+        this.setSubmittedMessage(clientSaveTime);
+        this.lockIfNecessary();
+        this.setIsSubmitDirty(false);
+        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: this.isSubmitDirty});
+      } else if (componentState.isAutoSave) {
+        this.setAutoSavedMessage(clientSaveTime);
+      } else {
+        this.setSavedMessage(clientSaveTime);
+      }
+    }
+    this.handleStudentWorkSavedToServerAdditionalProcessing(event, args);
+  }
+
+  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
+
   }
 
   handleNodeSubmit() {
@@ -1074,7 +1082,11 @@ class ComponentController {
   }
 
   isEventTargetThisComponent(args) {
-    return this.nodeId == args.nodeId && this.componentId == args.componentId;
+    return this.isForThisComponent(args);
+  }
+
+  isForThisComponent(object) {
+    return this.nodeId == object.nodeId && this.componentId == object.componentId;
   }
 
   hasMaxSubmitCount() {
