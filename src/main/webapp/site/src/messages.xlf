@@ -1194,6 +1194,18 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
       </trans-unit><trans-unit id="d8a1b53c813ad335ed55f8201498c45af536f8b5" datatype="html">
         <source>Creating an Account</source>
         <context-group purpose="location">
@@ -1404,6 +1416,62 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="688edac32995bc4fd9d4d04172c545200250a958" datatype="html">
+        <source>Teacher FAQ</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="d8f48c61abfa7f1be0a4b4c00eca42c3c29f35be" datatype="html">
+        <source>Questions from teachers.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="419c84ee97b4daf0f91e70af256dc7a4e8e11de8" datatype="html">
+        <source>Student FAQ</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
+          <context context-type="linenumber">242</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="5eef4cac2276bc97a3b1cc8a29b21436112bdaab" datatype="html">
+        <source>Questions from students.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
+          <context context-type="linenumber">244</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="38e95ec15a2f0fb793f968881f7579478c680f40" datatype="html">
@@ -2241,6 +2309,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit><trans-unit id="0b66532dc98434ee7c1a4b609e3f3a7d49c23d60" datatype="html">
+        <source>Information for new users.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="3ba2943f558468dbbc717d0d93b708c05640f297" datatype="html">
         <source>Student Frequently Asked Questions</source>
