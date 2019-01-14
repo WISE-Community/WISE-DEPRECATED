@@ -100,23 +100,79 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">129</context>
         </context-group>
+      </trans-unit><trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
+        <source>WISE on Facebook</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+      </trans-unit><trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html">
+        <source>WISE on Twitter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
       </trans-unit><trans-unit id="d8f2e89cc8dde7834ae2c3337aff293e23aec97f" datatype="html">
         <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="3e1904c6c60cfbdcfde26154fe8ed09b5ce0f9f4" datatype="html">
         <source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit><trans-unit id="0dc5b912bfe8d326a1af3975c6a7d049521eae12" datatype="html">
+        <source>National Science Foundation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit><trans-unit id="eb6ec6c4564dfbd4ffc8020d00aa0c48400f629b" datatype="html">
+        <source>UC Berkeley</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit><trans-unit id="8f885baf51f23ab4c81a547cd984d9355bea0239" datatype="html">
+        <source>Concord Consortium</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit><trans-unit id="f8a12f0f1530051d1bc70b7df85a11832436cf00" datatype="html">
+        <source>SAIL (Scalable Architecture for Interactive Learning)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit><trans-unit id="6d21387dacc5dac5c5d1dbee7cc49de1fc78c229" datatype="html">
         <source>©1996-2018, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit><trans-unit id="470b3fb4b02529d4f9f25850711632271fd27508" datatype="html">
+        <source>WISE header logo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="32b2b5a41c731dedcd41bc360ffdc42a36fe481f" datatype="html">
+        <source>Main menu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header.component.html</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit><trans-unit id="7f32abe3fc638f65c0d3eb269d478ee49ad41ebe" datatype="html">
         <source>more</source>
@@ -243,18 +299,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">87</context>
-        </context-group>
-      </trans-unit><trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
-        <source>WISE on Facebook</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">91</context>
-        </context-group>
-      </trans-unit><trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html">
-        <source>WISE on Twitter</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit><trans-unit id="34dc5c906ca725ffe2bfacaa6983bfdc30561ddb" datatype="html">
         <source>Learn what&apos;s new in the WISE community.</source>
@@ -1122,11 +1166,31 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
+      </trans-unit><trans-unit id="d222f6ff9f7e28fdb4e8b2af47898446cf2eafe4" datatype="html">
+        <source>Account Menu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="879fef27271d8247d791381cf1f9bb0eb8974166" datatype="html">
+        <source>Account avatar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
       </trans-unit><trans-unit id="c4e3e4170654ee5a353d29a0c34b8008cd25a635" datatype="html">
         <source>Student Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
@@ -1136,7 +1200,7 @@
         <source>Teacher Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
@@ -1146,11 +1210,11 @@
         <source>Edit Profile</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit/edit.component.html</context>
@@ -1164,29 +1228,29 @@
         <source>Researcher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit><trans-unit id="593d1ae1c4b71457eda8476df2bb52624a3c6e74" datatype="html">
         <source>Admin Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit><trans-unit id="85b79c9064aed1ead31ace985f31aa1363f6bdaf" datatype="html">
         <source>Help</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit><trans-unit id="640eec093c685babaa3265137215e3cc92ad704d" datatype="html">
         <source>Sign Out</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit><trans-unit id="486c6addfeb93356cab8bbb37310c8f61534e1f2" datatype="html">
         <source>Getting Started</source>
