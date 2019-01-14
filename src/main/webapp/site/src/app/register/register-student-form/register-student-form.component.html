@@ -43,8 +43,8 @@
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>Birthday (Month)</mat-label>
           <mat-select formControlName="birthMonth" required>
-            <mat-option *ngFor="let month of months" [value]="month">
-              {{month}}
+            <mat-option *ngFor="let month of months" [value]="month.code">
+              {{month.label}}
             </mat-option>
           </mat-select>
           <mat-error *ngIf="createStudentAccountFormGroup.controls['birthMonth'].hasError('required')" i18n>Month required</mat-error>
