@@ -55,8 +55,7 @@
          [disabled]="!isAvailable"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
-        <mat-icon>play_circle_filled</mat-icon>
-        <ng-container i18n>Launch</ng-container>
+        <mat-icon>play_circle_filled</mat-icon>&nbsp;<ng-container i18n>Launch</ng-container>
       </button>
       <button mat-flat-button
          *ngIf="run.endTime"
@@ -64,8 +63,7 @@
          color="primary"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
-        <mat-icon>visibility</mat-icon>
-        <ng-container i18n>Review</ng-container>
+        <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Review</ng-container>
     </button>
     </div>
   </mat-card-actions>
