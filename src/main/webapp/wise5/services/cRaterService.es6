@@ -6,64 +6,24 @@ class CRaterService {
 
   /**
    * Make a CRater request to score student data
-   * @param cRaterItemType the CRater item type e.g. 'HENRY'
-   * @param cRaterRequestType the CRater request type 'scoring' or 'verify'
    * @param cRaterResponseId a randomly generated id used to keep track
    * of the request
    * @param studentData the student data
    * @returns a promise that returns the result of the CRater request
    */
-  makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType,
-      cRaterResponseId, studentData) {
-    const httpParams = {};
-    httpParams.method = 'GET';
-    httpParams.url = this.ConfigService.getCRaterRequestURL();
-    httpParams.params = {
-      cRaterItemType: cRaterItemType,
-      itemId: cRaterItemId,
-      cRaterRequestType: cRaterRequestType,
-      responseId: cRaterResponseId,
-      studentData: studentData,
-      wiseRunMode: 'preview'
+  makeCRaterScoringRequest(cRaterItemId, cRaterResponseId, studentData) {
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getCRaterRequestURL() + '/score',
+      params: {
+        itemId: cRaterItemId,
+        responseId: cRaterResponseId,
+        studentData: studentData
+      }
     };
-
-    // make the CRater request
     return this.$http(httpParams).then((response) => {
       return response;
     });
-  }
-
-  /**
-   * Make a CRater request to score student data
-   * @param cRaterItemType the CRater item type e.g. 'HENRY'
-   * @param cRaterResponseId a randomly generated id used to keep track
-   * of the request
-   * @param studentData the student data
-   * @returns a promise that returns the result of the CRater request
-   */
-  makeCRaterScoringRequest(cRaterItemType, cRaterItemId, studentData) {
-    const cRaterRequestType = 'scoring';
-    const cRaterResponseId = new Date().getTime();
-    return this.makeCRaterRequest(cRaterItemType,
-      cRaterItemId,
-      cRaterRequestType,
-      cRaterResponseId,
-      studentData);
-  }
-
-  /**
-   * Make a CRater request to verifythe item type and item id
-   * @param cRaterItemType the CRater item type e.g. 'HENRY'
-   * @param cRaterResponseId a randomly generated id used to keep track
-   * of the request
-   * @param studentData the student data
-   * @returns a promise that returns the result of the CRater request
-   */
-  makeCRaterVerifyRequest(cRaterItemType, cRaterItemId, studentData) {
-    const cRaterRequestType = 'verify';
-    const cRaterResponseId = new Date().getTime();
-    return this.makeCRaterRequest(cRaterItemType, cRaterItemId,
-        cRaterRequestType, cRaterResponseId, studentData);
   }
 
   /**
@@ -300,42 +260,17 @@ class CRaterService {
    * @param itemId A string.
    * @return A promise that returns whether the item id is valid.
    */
-  verifyCRaterItemId(itemId) {
-    const httpParams = {};
-    httpParams.method = 'GET';
-    httpParams.url = this.ConfigService.getCRaterRequestURL();
-    httpParams.params = {
-      cRaterItemType: 'CRATER',
-      itemId: itemId,
-      cRaterRequestType: 'verify'
+  makeCRaterVerifyRequest(itemId) {
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getCRaterRequestURL() + '/verify',
+      params: {
+        itemId: itemId
+      }
     };
     return this.$http(httpParams).then((response) => {
-      return this.isCRaterVerifyResponseValid(response.data);
+      return response.data.isAvailable;
     });
-  }
-
-  /**
-   * Parse the response to determine if the item id is valid.
-   * @param response A response string from a CRater verify request.
-   * @returns {boolean} Whether the item id is valid.
-   */
-  isCRaterVerifyResponseValid(response) {
-    /*
-     * Create the regex to match the part of the response that specifies whether
-     * the item id is valid or not.
-     *
-     * Example valid item id
-     * <item id="Chloroplast" avail="Y">
-     *
-     * Example invalid item id
-     * <item id="Chloroplast" avail="N">
-     */
-    let regEx = /item id=".*?" avail="(\w)"/;
-    let result = regEx.exec(response);
-    if (result[1] == 'Y') {
-      return true;
-    }
-    return false;
   }
 }
 

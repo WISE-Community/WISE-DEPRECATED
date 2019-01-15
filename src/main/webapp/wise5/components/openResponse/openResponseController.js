@@ -412,10 +412,7 @@ var OpenResponseController = function (_ComponentController) {
 
       if (performCRaterScoring) {
         // we need to perform CRater scoring
-
-        var cRaterItemType = this.CRaterService.getCRaterItemType(this.componentContent);
         var cRaterItemId = this.CRaterService.getCRaterItemId(this.componentContent);
-        var cRaterRequestType = 'scoring';
         var cRaterResponseId = new Date().getTime();
         var studentData = this.studentResponse;
 
@@ -429,7 +426,7 @@ var OpenResponseController = function (_ComponentController) {
         });
 
         // make the CRater request to score the student data
-        this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then(function (result) {
+        this.CRaterService.makeCRaterScoringRequest(cRaterItemId, cRaterResponseId, studentData).then(function (result) {
 
           if (result != null) {
 
