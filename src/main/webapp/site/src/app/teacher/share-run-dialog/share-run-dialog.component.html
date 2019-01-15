@@ -15,6 +15,7 @@
             matSuffix
             mat-icon-button
             [ngClass]="{'invisible': !teacherSearchControl.value}"
+            i18n-aria-label
             aria-label="Clear"
             (click)="teacherSearchControl.setValue('')">
       <mat-icon>close</mat-icon>

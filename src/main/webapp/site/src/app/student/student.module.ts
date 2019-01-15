@@ -44,7 +44,6 @@ import { TeamSignInDialogComponent } from './team-sign-in-dialog/team-sign-in-di
     AddProjectDialogComponent,
     StudentComponent,
     StudentHomeComponent,
-    StudentEditProfileComponent,
     StudentRunListComponent,
     StudentRunListItemComponent,
     EditComponent,

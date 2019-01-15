@@ -22,7 +22,7 @@ export abstract class ShareItemDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any,
               public teacherService: TeacherService,
               public snackBar: MatSnackBar,
-              private i18n: I18n) {
+              public i18n: I18n) {
     this.teacherService.retrieveAllTeacherUsernames().subscribe((teacherUsernames) => {
       this.allTeacherUsernames = teacherUsernames;
     })
