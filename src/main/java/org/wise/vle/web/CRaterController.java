@@ -23,24 +23,16 @@
  */
 package org.wise.vle.web;
 
-import java.io.IOException;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
+
+import java.util.Properties;
 
 @RestController
 public class CRaterController {
