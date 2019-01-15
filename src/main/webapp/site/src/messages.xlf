@@ -782,6 +782,18 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">143</context>
         </context-group>
+      </trans-unit><trans-unit id="200502912bfe3f4b49e1da25067287453a24e78c" datatype="html">
+        <source>Welcome to our new site!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/app.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="1801bfa6ba6eb7a02fd61bafb37e35f5d0aebfdc" datatype="html">
+        <source>Learn More</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/app.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
       </trans-unit><trans-unit id="ea4d9fe61420a3fce81cf54c4c615e3c19c646a6" datatype="html">
         <source>Dismiss</source>
         <context-group purpose="location">
@@ -4899,6 +4911,20 @@
         <source>The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5d6fe85e070e0a0291dcb60f4a95ac1cb9a4a991" datatype="html">
+        <source>An error occurred: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="050662d81fa6f59adbcc1190eee2435910b9e927" datatype="html">
+        <source>An error occurred. Please check your connection and try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
