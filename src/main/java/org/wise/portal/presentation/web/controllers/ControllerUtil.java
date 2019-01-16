@@ -20,8 +20,12 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import net.tanesha.recaptcha.ReCaptcha;
+import net.tanesha.recaptcha.ReCaptchaFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,20 +37,28 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.stereotype.Component;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A utility class for use by all controllers
@@ -298,5 +310,174 @@ public class ControllerUtil {
       return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + "/assets/project_thumb.png";
     }
     return "";
+  }
+
+  /**
+   * Check if the user is required to answer ReCaptcha. The user is required
+   * to answer ReCaptcha if the ReCaptcha keys are valid and the user has
+   * previously failed to log in 5 or more times in the last 15 minutes.
+   * @param request
+   * @return whether the user needs to submit text for ReCaptcha
+   */
+  public static boolean isReCaptchaRequired(HttpServletRequest request) {
+    boolean result = false;
+    String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
+    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+
+    boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+
+    if (reCaptchaKeyValid) {
+      String userName = request.getParameter("username");
+      User user = userService.retrieveUserByUsername(userName);
+
+      /*
+       * get the user so we can check if they have been failing to login
+       * multiple times recently and if so, we will display a captcha to
+       * make sure they are not a bot. the public and private keys must be set in
+       * the wise.properties otherwise we will not use captcha at all. we
+       * will also check to make sure the captcha keys are valid otherwise
+       * we won't use the captcha at all either.
+       */
+      if (user != null) {
+        MutableUserDetails mutableUserDetails = user.getUserDetails();
+        if (mutableUserDetails != null) {
+          Date currentTime = new Date();
+          Date recentFailedLoginTime = mutableUserDetails.getRecentFailedLoginTime();
+          if (recentFailedLoginTime != null) {
+            long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
+            if (timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
+              Integer numberOfRecentFailedLoginAttempts = mutableUserDetails.getNumberOfRecentFailedLoginAttempts();
+              if (numberOfRecentFailedLoginAttempts != null &&
+                numberOfRecentFailedLoginAttempts >= WISEAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
+                result = true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Check to make sure the public key is valid. We can only check if the public
+   * key is valid. If the private key is invalid the admin will have to realize that.
+   * We also check to make sure the connection to the ReCaptcha server is working.
+   * @param reCaptchaPublicKey the public key
+   * @param recaptchaPrivateKey the private key
+   * @return whether the ReCaptcha is valid and should be used
+   */
+  public static boolean isReCaptchaKeyValid(String reCaptchaPublicKey, String recaptchaPrivateKey) {
+    boolean isValid = false;
+
+    if (reCaptchaPublicKey != null && recaptchaPrivateKey != null) {
+      ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, recaptchaPrivateKey, false);
+
+      /*
+       * get the html that will display the captcha
+       * e.g.
+       * <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=yourpublickey"></script>
+       */
+      String recaptchaHtml = c.createRecaptchaHtml(null, null);
+
+      /*
+       * try to retrieve the src url by matching everything between the
+       * quotes of src=""
+       *
+       * e.g. http://api.recaptcha.net/challenge?k=yourpublickey
+       */
+      Pattern pattern = Pattern.compile(".*src=\"(.*)\".*");
+      Matcher matcher = pattern.matcher(recaptchaHtml);
+      matcher.find();
+      String match = matcher.group(1);
+
+      try {
+        URL url = new URL(match);
+        URLConnection urlConnection = url.openConnection();
+        BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+        StringBuffer text = new StringBuffer();
+        String inputLine;
+
+        while ((inputLine = in.readLine()) != null) {
+          text.append(inputLine);
+        }
+        in.close();
+
+        String responseText = text.toString();
+
+        /*
+         * if the public key was invalid the text returned from the url will
+         * look like
+         *
+         * document.write('Input error: k: Format of site key was invalid\n');
+         */
+        if(!responseText.contains("Input error")) {
+          isValid = true;
+        }
+      } catch (MalformedURLException e) {
+        /*
+         * if there was a problem connecting to the server this function will return
+         * false so that users can still log in and won't be stuck because the
+         * recaptcha server is down.
+         */
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    return isValid;
+  }
+
+  /**
+   * Check if the response is valid
+   * @param reCaptchaPrivateKey the ReCaptcha private key
+   * @param reCaptchaPublicKey the ReCaptcha public key
+   * @param gRecaptchaResponse the response
+   * @return whether the user answered the ReCaptcha successfully
+   */
+  public static boolean checkReCaptchaResponse(String reCaptchaPrivateKey,
+                                               String reCaptchaPublicKey, String gRecaptchaResponse) {
+    boolean isValid = false;
+    boolean reCaptchaKeyValid = ControllerUtil.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+    if (reCaptchaKeyValid &&
+      reCaptchaPrivateKey != null &&
+      reCaptchaPublicKey != null &&
+      gRecaptchaResponse != null &&
+      !gRecaptchaResponse.equals("")) {
+      try {
+        URL verifyURL = new URL("https://www.google.com/recaptcha/api/siteverify");
+        HttpsURLConnection connection = (HttpsURLConnection) verifyURL.openConnection();
+        connection.setRequestMethod("POST");
+        String postParams = "secret=" + reCaptchaPrivateKey + "&response=" + gRecaptchaResponse;
+        connection.setDoOutput(true);
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+        outputStream.writeBytes(postParams);
+        outputStream.flush();
+        outputStream.close();
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine = null;
+        StringBuffer responseString = new StringBuffer();
+
+        while((inputLine = bufferedReader.readLine()) != null) {
+          responseString.append(inputLine);
+        }
+
+        bufferedReader.close();
+
+        try {
+          JSONObject responseObject = new JSONObject(responseString.toString());
+          isValid = responseObject.getBoolean("success");
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+      } catch (MalformedURLException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    return isValid;
   }
 }

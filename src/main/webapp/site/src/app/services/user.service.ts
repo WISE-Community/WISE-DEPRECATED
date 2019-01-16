@@ -21,6 +21,7 @@ export class UserService {
   private languagesUrl = 'api/user/languages';
   private contactUrl = 'api/contact';
   isAuthenticated = false;
+  isRecaptchaRequired = false;
   redirectUrl: string; // redirect here after logging in
 
   constructor(private http: HttpClient, private configService: ConfigService) {
@@ -53,14 +54,16 @@ export class UserService {
     return this.retrieveUser().toPromise();
   }
 
-  retrieveUser(): Observable<User> {
-    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    return this.http.get<User>(this.userUrl, { headers: headers })
+  retrieveUser(username?: string): Observable<User> {
+    //const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    let params = new HttpParams().set("username", username);
+    return this.http.get<User>(this.userUrl, { params: params })
         .pipe(
           tap((user) => {
             if (user != null && user.id != null) {
               this.isAuthenticated = true;
             }
+            this.isRecaptchaRequired = user.isRecaptchaRequired;
             this.user$.next(user);
           })
         );
@@ -78,18 +81,16 @@ export class UserService {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded'
     };
-    let formData = "username=" + credentials.username + "&password=" + credentials.password;
+    let formData = `username=${credentials.username}&password=${credentials.password}&site=new`;
+    if (credentials.recaptchaResponse != null) {
+      formData += `&g-recaptcha-response=${credentials.recaptchaResponse}`;
+    }
     const logInURL = `${this.configService.getContextPath()}/j_acegi_security_check`;
     this.http.post(logInURL,
         formData,
         { headers: headers, responseType: "text" })
         .subscribe(response => {
-          if (response.includes("WISE Student")) {
-            this.isAuthenticated = true;
-          } else {
-            this.isAuthenticated = false;
-          }
-          this.retrieveUser().subscribe((user) => {
+          this.retrieveUser(credentials.username).subscribe((user) => {
             return callback && callback();
           });
         });

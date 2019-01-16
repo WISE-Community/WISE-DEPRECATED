@@ -12,11 +12,14 @@ import { ConfigService } from '../../services/config.service';
 })
 export class LoginHomeComponent implements OnInit {
 
-  credentials: any = {username: '', password: ''};
-  error: boolean = false;
+  credentials: any = {username: '', password: '', recaptchaResponse: null};
+  passwordError: boolean = false;
   processing: boolean = false;
   isGoogleAuthenticationEnabled: boolean = false;
   isShowGoogleLogin: boolean = true;
+  recaptchaPublicKey: string = "";
+  recaptchaResponse: string = "";
+  isRecaptchaRequired: boolean = false;
 
   constructor(private userService: UserService, private http: HttpClient,
       private router: Router, private route: ActivatedRoute,
@@ -27,6 +30,7 @@ export class LoginHomeComponent implements OnInit {
     this.configService.getConfig().subscribe((config) => {
       if (config != null) {
         this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+        this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
       }
     });
     this.route.params.subscribe(params => {
@@ -39,13 +43,18 @@ export class LoginHomeComponent implements OnInit {
   
   login(): boolean {
     this.processing = true;
-    this.error = false;
+    this.passwordError = false;
     this.userService.authenticate(this.credentials, () => {
       if (this.userService.isAuthenticated) {
         this.router.navigateByUrl(this.userService.getRedirectUrl());
       } else {
-        this.error = true;
         this.processing = false;
+        this.isRecaptchaRequired = this.userService.isRecaptchaRequired;
+        if (this.isRecaptchaRequired) {
+          this.passwordError = false;
+        } else {
+          this.passwordError = true;
+        }
       }
     });
     return false;
@@ -53,5 +62,10 @@ export class LoginHomeComponent implements OnInit {
 
   public socialSignIn(socialPlatform : string) {
     window.location.href = `${this.configService.getContextPath()}/google-login`;
+  }
+
+  recaptchaResolved(recaptchaResponse) {
+    this.recaptchaResponse = recaptchaResponse;
+    this.credentials.recaptchaResponse = recaptchaResponse;
   }
 }
