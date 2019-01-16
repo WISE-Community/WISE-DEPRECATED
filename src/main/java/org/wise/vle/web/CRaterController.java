@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
 
 import java.util.Properties;
@@ -49,14 +48,17 @@ public class CRaterController {
     String cRaterScoringUrl = wiseProperties.getProperty("cRater_scoring_url");
     String responseString = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl,
         cRaterClientId, itemId, responseId, studentData);
-    JSONObject studentNodeStateResponse = null;
-    Long nodeStateId = null;
-    JSONObject cRaterResponseJSONObj = Annotation.createCRaterNodeStateAnnotation(
-        nodeStateId,
-        CRaterHttpClient.getScore(responseString),
-        CRaterHttpClient.getConcepts(responseString),
-        studentNodeStateResponse,
-        responseString);
+    JSONObject cRaterResponseJSONObj = new JSONObject();
+    try {
+      if (CRaterHttpClient.isSingleScore(responseString)) {
+        cRaterResponseJSONObj.put("score", CRaterHttpClient.getScore(responseString));
+      } else {
+        cRaterResponseJSONObj.put("scores", CRaterHttpClient.getScores(responseString));
+      }
+      cRaterResponseJSONObj.put("cRaterResponse", responseString);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
     return cRaterResponseJSONObj.toString();
   }
 
