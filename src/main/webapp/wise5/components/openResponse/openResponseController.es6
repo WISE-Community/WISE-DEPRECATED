@@ -428,15 +428,21 @@ class OpenResponseController extends ComponentController {
             let score = data.score;
             let concepts = data.concepts;
             let previousScore = null;
+            if (data.scores != null) {
+              const maxSoFarFunc = (accumulator, currentValue) => { return Math.max(accumulator, currentValue.score); };
+              score = data.scores.reduce(maxSoFarFunc, 0);
+            }
 
             if (score != null) {
-
-              // create the auto score annotation
-              let autoScoreAnnotationData = {};
-              autoScoreAnnotationData.value = score;
-              autoScoreAnnotationData.maxAutoScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
-              autoScoreAnnotationData.concepts = concepts;
-              autoScoreAnnotationData.autoGrader = 'cRater';
+              const autoScoreAnnotationData = {
+                value: score,
+                maxAutoScore: this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId),
+                concepts: concepts,
+                autoGrader: 'cRater'
+              };
+              if (data.scores != null) {
+                autoScoreAnnotationData.scores = data.scores;
+              }
 
               let autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
 

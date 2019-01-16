@@ -445,15 +445,23 @@ var OpenResponseController = function (_ComponentController) {
               var score = data.score;
               var concepts = data.concepts;
               var previousScore = null;
+              if (data.scores != null) {
+                var maxSoFarFunc = function maxSoFarFunc(accumulator, currentValue) {
+                  return Math.max(accumulator, currentValue.score);
+                };
+                score = data.scores.reduce(maxSoFarFunc, 0);
+              }
 
               if (score != null) {
-
-                // create the auto score annotation
-                var autoScoreAnnotationData = {};
-                autoScoreAnnotationData.value = score;
-                autoScoreAnnotationData.maxAutoScore = _this2.ProjectService.getMaxScoreForComponent(_this2.nodeId, _this2.componentId);
-                autoScoreAnnotationData.concepts = concepts;
-                autoScoreAnnotationData.autoGrader = 'cRater';
+                var autoScoreAnnotationData = {
+                  value: score,
+                  maxAutoScore: _this2.ProjectService.getMaxScoreForComponent(_this2.nodeId, _this2.componentId),
+                  concepts: concepts,
+                  autoGrader: 'cRater'
+                };
+                if (data.scores != null) {
+                  autoScoreAnnotationData.scores = data.scores;
+                }
 
                 var autoScoreAnnotation = _this2.createAutoScoreAnnotation(autoScoreAnnotationData);
 

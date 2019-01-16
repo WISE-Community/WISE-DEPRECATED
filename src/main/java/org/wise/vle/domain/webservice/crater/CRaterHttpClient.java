@@ -24,6 +24,7 @@
 package org.wise.vle.domain.webservice.crater;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -34,6 +35,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -45,6 +47,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Controller for using the CRater scoring servlet via HTTP
@@ -60,12 +63,14 @@ public class CRaterHttpClient {
    * @param bodyData the xml body data to be sent to the CRater server
    * @return the response from the CRater server
    */
-  public static String post(String cRaterUrl, String bodyData) {
+  public static String post(String cRaterUrl, String cRaterPassword, String bodyData) {
     String responseString = null;
     if (cRaterUrl != null) {
       HttpClient client = HttpClientBuilder.create().build();
       HttpPost post = new HttpPost(cRaterUrl);
       try {
+        String authHeader = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(("extsyscrtr02dev:" + cRaterPassword).getBytes());
+        post.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
         post.setEntity(new StringEntity(bodyData, ContentType.TEXT_XML));
         HttpResponse response = client.execute(post);
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
@@ -85,34 +90,36 @@ public class CRaterHttpClient {
   /**
    * Sends student work to the CRater server and receives the score as the response
    * @param cRaterUrl the CRater scoring url
+   * @param cRaterPassword the CRater authorization password
    * @param cRaterClientId the client id e.g. WISETEST
    * @param itemId the item id e.g. Photo_Sun
    * @param responseId the node state timestamp
    * @param studentData the student work
    * @return responseBody as a String, or null if there was an error during the request to CRater.
    */
-  public static String getCRaterScoringResponse(String cRaterUrl, String cRaterClientId,
+  public static String getCRaterScoringResponse(String cRaterUrl, String cRaterPassword, String cRaterClientId,
       String itemId, String responseId, String studentData) {
     String responseString = null;
     String bodyData = "<crater-request includeRNS='N'><client id='" + cRaterClientId + "'/><items><item id='" + itemId + "'>"
       +"<responses><response id='" + responseId + "'><![CDATA["+studentData+"]]></response></responses></item></items></crater-request>";
 
-    responseString = post(cRaterUrl, bodyData);
+    responseString = post(cRaterUrl, cRaterPassword, bodyData);
     return responseString;
   }
 
   /**
    * Makes a request to the CRater server for the scoring rubric for a specific item id.
    * @param cRaterUrl the CRater verification url
+   * @param cRaterPassword the CRater authorization password
    * @param cRaterClientId the client id e.g. WISETEST
    * @param itemId the item id e.g. Photo_Sun
    * @return the scoring rubric for the item id
    */
-  public static String getCRaterVerificationResponse(String cRaterUrl, String cRaterClientId,
+  public static String getCRaterVerificationResponse(String cRaterUrl, String cRaterPassword, String cRaterClientId,
       String itemId) {
     String responseString = null;
     String bodyData = "<crater-verify><client id='" + cRaterClientId + "'/><items><item id='" + itemId + "'/></items></crater-verify>";
-    responseString = post(cRaterUrl, bodyData);
+    responseString = post(cRaterUrl, cRaterPassword, bodyData);
     return responseString;
   }
 

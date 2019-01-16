@@ -109,6 +109,7 @@ public class VLEAnnotationController {
     String nodeId = request.getParameter("nodeId");
     String cRaterScoringUrl = wiseProperties.getProperty("cRater_scoring_url");
     String cRaterClientId = wiseProperties.getProperty("cRater_client_id");
+    String cRaterPassword = wiseProperties.getProperty("cRater_password");
     Vector<JSONObject> flaggedAnnotationsList = new Vector<JSONObject>();
     HashMap<Long, Long> classmateWorkgroupIdToPeriodIdMap = new HashMap<Long, Long>();
 
@@ -313,7 +314,7 @@ public class VLEAnnotationController {
 
     if ("annotation".equals(requestedType) && "cRater".equals(annotationType)) {
       annotation = getCRaterAnnotation(vleService, nodeStateId, runId, stepWorkId, annotationType,
-          cRaterScoringUrl, cRaterClientId);
+          cRaterScoringUrl, cRaterPassword, cRaterClientId);
     }
 
     JSONObject annotationsJSONObj = null;
@@ -446,7 +447,7 @@ public class VLEAnnotationController {
    * getting the CRater response
    */
   public static Annotation getCRaterAnnotation(VLEService vleService, Long nodeStateId,
-      String runId, Long stepWorkId, String annotationType, String cRaterScoringUrl,
+      String runId, Long stepWorkId, String annotationType, String cRaterScoringUrl, String cRaterPassword,
       String cRaterClientId) {
     String cRaterResponseId = stepWorkId.toString();
     Annotation annotation = null;
@@ -473,7 +474,7 @@ public class VLEAnnotationController {
           }
 
           String cRaterItemId = stepWork.getCRaterItemId();
-          String cRaterResponseXML = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl, cRaterClientId, cRaterItemId, cRaterResponseId, studentResponse);
+          String cRaterResponseXML = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl, cRaterPassword, cRaterClientId, cRaterItemId, cRaterResponseId, studentResponse);
           if (cRaterResponseXML != null) {
             JSONObject cRaterResponseJSONObj = new JSONObject();
             JSONObject studentNodeStateResponse = stepWork.getNodeStateByTimestamp(nodeStateId);
@@ -511,7 +512,7 @@ public class VLEAnnotationController {
         }
 
         String cRaterItemId = stepWork.getCRaterItemId();
-        String cRaterResponseXML = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl, cRaterClientId, cRaterItemId, cRaterResponseId, studentResponse);
+        String cRaterResponseXML = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl, cRaterPassword, cRaterClientId, cRaterItemId, cRaterResponseId, studentResponse);
         if (cRaterResponseXML != null) {
           if (cRaterResponseXML.contains("<error code=")) {
           } else {

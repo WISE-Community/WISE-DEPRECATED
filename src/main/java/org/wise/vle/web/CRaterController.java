@@ -46,8 +46,9 @@ public class CRaterController {
       @RequestParam(value = "studentData") String studentData) {
     String cRaterClientId = wiseProperties.getProperty("cRater_client_id");
     String cRaterScoringUrl = wiseProperties.getProperty("cRater_scoring_url");
+    String cRaterPassword = wiseProperties.getProperty("cRater_password");
     String responseString = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl,
-        cRaterClientId, itemId, responseId, studentData);
+      cRaterPassword, cRaterClientId, itemId, responseId, studentData);
     JSONObject cRaterResponseJSONObj = new JSONObject();
     try {
       if (CRaterHttpClient.isSingleScore(responseString)) {
@@ -67,8 +68,9 @@ public class CRaterController {
       @RequestParam(value = "itemId") String itemId) throws JSONException {
     String cRaterClientId = wiseProperties.getProperty("cRater_client_id");
     String cRaterVerificationUrl = wiseProperties.getProperty("cRater_verification_url");
+    String cRaterPassword = wiseProperties.getProperty("cRater_password");
     String verificationResponse = CRaterHttpClient.getCRaterVerificationResponse(
-        cRaterVerificationUrl, cRaterClientId, itemId);
+        cRaterVerificationUrl, cRaterPassword, cRaterClientId, itemId);
     JSONObject response = new JSONObject();
     response.put("isAvailable", verificationResponse.matches("(.*)avail=\"Y\"(.*)"));
     return response.toString();

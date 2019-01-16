@@ -435,6 +435,7 @@ public class DailyAdminJob {
   private void handleIncompleteCRaterRequests() {
     String cRaterScoringUrl = this.wiseProperties.getProperty("cRater_scoring_url");
     String cRaterClientId = this.wiseProperties.getProperty("cRater_client_id");
+    String cRaterPassword = this.wiseProperties.getProperty("cRaterPassword");
     String henryScoringUrl = this.wiseProperties.getProperty("henry_scoring_url");
     String henryClientId = this.wiseProperties.getProperty("henry_client_id");
 
@@ -465,7 +466,7 @@ public class DailyAdminJob {
         String annotationType = "cRater";
 
         //make the request to score the student CRater work
-        VLEAnnotationController.getCRaterAnnotation(this.vleService, nodeStateId, runId, stepWorkId, annotationType, scoringUrl, clientId);
+        VLEAnnotationController.getCRaterAnnotation(this.vleService, nodeStateId, runId, stepWorkId, annotationType, scoringUrl, cRaterPassword, clientId);
 
         //sleep for 10 seconds between each request
         try {
