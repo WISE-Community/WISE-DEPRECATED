@@ -412,10 +412,7 @@ var OpenResponseController = function (_ComponentController) {
 
       if (performCRaterScoring) {
         // we need to perform CRater scoring
-
-        var cRaterItemType = this.CRaterService.getCRaterItemType(this.componentContent);
         var cRaterItemId = this.CRaterService.getCRaterItemId(this.componentContent);
-        var cRaterRequestType = 'scoring';
         var cRaterResponseId = new Date().getTime();
         var studentData = this.studentResponse;
 
@@ -429,7 +426,7 @@ var OpenResponseController = function (_ComponentController) {
         });
 
         // make the CRater request to score the student data
-        this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then(function (result) {
+        this.CRaterService.makeCRaterScoringRequest(cRaterItemId, cRaterResponseId, studentData).then(function (result) {
 
           if (result != null) {
 
@@ -448,15 +445,23 @@ var OpenResponseController = function (_ComponentController) {
               var score = data.score;
               var concepts = data.concepts;
               var previousScore = null;
+              if (data.scores != null) {
+                var maxSoFarFunc = function maxSoFarFunc(accumulator, currentValue) {
+                  return Math.max(accumulator, currentValue.score);
+                };
+                score = data.scores.reduce(maxSoFarFunc, 0);
+              }
 
               if (score != null) {
-
-                // create the auto score annotation
-                var autoScoreAnnotationData = {};
-                autoScoreAnnotationData.value = score;
-                autoScoreAnnotationData.maxAutoScore = _this2.ProjectService.getMaxScoreForComponent(_this2.nodeId, _this2.componentId);
-                autoScoreAnnotationData.concepts = concepts;
-                autoScoreAnnotationData.autoGrader = 'cRater';
+                var autoScoreAnnotationData = {
+                  value: score,
+                  maxAutoScore: _this2.ProjectService.getMaxScoreForComponent(_this2.nodeId, _this2.componentId),
+                  concepts: concepts,
+                  autoGrader: 'cRater'
+                };
+                if (data.scores != null) {
+                  autoScoreAnnotationData.scores = data.scores;
+                }
 
                 var autoScoreAnnotation = _this2.createAutoScoreAnnotation(autoScoreAnnotationData);
 

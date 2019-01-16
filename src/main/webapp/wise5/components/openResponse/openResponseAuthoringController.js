@@ -782,7 +782,7 @@ var OpenResponseAuthoringController = function (_OpenResponseControll) {
       // turn on the "Verifying..." text
       this.isVerifyingCRaterItemId = true;
 
-      this.CRaterService.verifyCRaterItemId(itemId).then(function (isValid) {
+      this.CRaterService.makeCRaterVerifyRequest(itemId).then(function (isValid) {
         // turn off the "Verifying..." text
         _this2.isVerifyingCRaterItemId = false;
 
@@ -794,8 +794,6 @@ var OpenResponseAuthoringController = function (_OpenResponseControll) {
 
   return OpenResponseAuthoringController;
 }(_openResponseController2.default);
-
-;
 
 OpenResponseAuthoringController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'NotebookService', 'NotificationService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 

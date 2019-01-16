@@ -740,7 +740,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     // turn on the "Verifying..." text
     this.isVerifyingCRaterItemId = true;
 
-    this.CRaterService.verifyCRaterItemId(itemId).then((isValid) => {
+    this.CRaterService.makeCRaterVerifyRequest(itemId).then((isValid) => {
       // turn off the "Verifying..." text
       this.isVerifyingCRaterItemId = false;
 
@@ -748,7 +748,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
       this.cRaterItemIdIsValid = isValid;
     });
   }
-};
+}
 
 OpenResponseAuthoringController.$inject = [
   '$filter',
