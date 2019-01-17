@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -18,8 +18,8 @@ export class LoginHomeComponent implements OnInit {
   isGoogleAuthenticationEnabled: boolean = false;
   isShowGoogleLogin: boolean = true;
   recaptchaPublicKey: string = "";
-  recaptchaResponse: string = "";
   isRecaptchaRequired: boolean = false;
+  @ViewChild('recaptchaRef') recaptchaRef: any;
 
   constructor(private userService: UserService, private http: HttpClient,
       private router: Router, private route: ActivatedRoute,
@@ -39,6 +39,14 @@ export class LoginHomeComponent implements OnInit {
         this.isShowGoogleLogin = false;
       }
     });
+    this.route.queryParams.subscribe(params => {
+      if (params['username'] != null) {
+        this.credentials.username = params['username'];
+      }
+      if (params['is-recaptcha-required'] != null) {
+        this.isRecaptchaRequired = JSON.parse(params['is-recaptcha-required']);
+      }
+    });
   }
   
   login(): boolean {
@@ -50,8 +58,18 @@ export class LoginHomeComponent implements OnInit {
       } else {
         this.processing = false;
         this.isRecaptchaRequired = this.userService.isRecaptchaRequired;
+        this.credentials.password = null;
         if (this.isRecaptchaRequired) {
           this.passwordError = false;
+          this.recaptchaRef.reset();
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {
+              'username': this.credentials.username,
+              'is-recaptcha-required': true
+            },
+            queryParamsHandling: 'merge'
+          });
         } else {
           this.passwordError = true;
         }
@@ -65,7 +83,6 @@ export class LoginHomeComponent implements OnInit {
   }
 
   recaptchaResolved(recaptchaResponse) {
-    this.recaptchaResponse = recaptchaResponse;
     this.credentials.recaptchaResponse = recaptchaResponse;
   }
 }

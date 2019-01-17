@@ -107,12 +107,12 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
           responseJSON.put("requireRecaptcha", true);
           String contextPath = request.getContextPath();
           response.sendRedirect(contextPath + "/login/recaptcha");
-          return;
         } else {
           String contextPath = request.getContextPath();
           response.sendRedirect(contextPath + "/login");
         }
         response.getWriter().write(responseJSON.toString());
+        return;
       } catch (JSONException e) {
       }
     } else {
@@ -122,7 +122,6 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
   }
 
   private boolean isNewSite(HttpServletRequest request) {
-    request.getHeader("referer")
     String site = request.getParameter("site");
     return "new".equals(site);
   }

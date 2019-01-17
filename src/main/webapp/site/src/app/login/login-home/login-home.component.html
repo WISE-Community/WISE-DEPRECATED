@@ -28,7 +28,8 @@
       </p>
       <p *ngIf="isRecaptchaRequired"
            class="recaptcha-container">
-        <re-captcha (resolved)="recaptchaResolved($event)"
+        <re-captcha #recaptchaRef="reCaptcha"
+                    (resolved)="recaptchaResolved($event)"
                     [siteKey]="recaptchaPublicKey"></re-captcha>
       </p>
       <p>
