@@ -20,10 +20,6 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 import org.json.JSONArray;
@@ -43,12 +39,13 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -67,6 +64,9 @@ import java.util.regex.Pattern;
  */
 @Component
 public class ControllerUtil {
+
+  public static final Integer recentFailedLoginTimeLimitInMinutes = 10;
+  public static final Integer recentFailedLoginAttemptsLimit = 10;
 
   private static UserService userService;
 
@@ -315,48 +315,54 @@ public class ControllerUtil {
   /**
    * Check if the user is required to answer ReCaptcha. The user is required
    * to answer ReCaptcha if the ReCaptcha keys are valid and the user has
-   * previously failed to log in 5 or more times in the last 15 minutes.
+   * previously failed to log in 10 or more times in the last 10 minutes.
    * @param request
    * @return whether the user needs to submit text for ReCaptcha
    */
   public static boolean isReCaptchaRequired(HttpServletRequest request) {
-    boolean result = false;
     String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
     String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-
     boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
-
     if (reCaptchaKeyValid) {
       String userName = request.getParameter("username");
       User user = userService.retrieveUserByUsername(userName);
+      if(user != null && isRecentFailedLoginWithinTimeLimit(user) &&
+          isRecentNumberOfFailedLoginAttemptsOverLimit(user)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-      /*
-       * get the user so we can check if they have been failing to login
-       * multiple times recently and if so, we will display a captcha to
-       * make sure they are not a bot. the public and private keys must be set in
-       * the wise.properties otherwise we will not use captcha at all. we
-       * will also check to make sure the captcha keys are valid otherwise
-       * we won't use the captcha at all either.
-       */
-      if (user != null) {
-        MutableUserDetails mutableUserDetails = user.getUserDetails();
-        if (mutableUserDetails != null) {
-          Date currentTime = new Date();
-          Date recentFailedLoginTime = mutableUserDetails.getRecentFailedLoginTime();
-          if (recentFailedLoginTime != null) {
-            long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
-            if (timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
-              Integer numberOfRecentFailedLoginAttempts = mutableUserDetails.getNumberOfRecentFailedLoginAttempts();
-              if (numberOfRecentFailedLoginAttempts != null &&
-                numberOfRecentFailedLoginAttempts >= WISEAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
-                result = true;
-              }
-            }
-          }
+  public static boolean isRecentFailedLoginWithinTimeLimit(User user) {
+    MutableUserDetails mutableUserDetails = user.getUserDetails();
+    if (mutableUserDetails != null) {
+      Date currentTime = new Date();
+      Date recentFailedLoginTime = mutableUserDetails.getRecentFailedLoginTime();
+      if (recentFailedLoginTime != null) {
+        long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
+        if (timeDifference < (convertMinutesToMilliseconds(recentFailedLoginTimeLimitInMinutes))) {
+          return true;
         }
       }
     }
-    return result;
+    return false;
+  }
+
+  public static long convertMinutesToMilliseconds(Integer minutes) {
+    return Long.valueOf(minutes) * 60 * 1000;
+  }
+
+  public static boolean isRecentNumberOfFailedLoginAttemptsOverLimit(User user) {
+    MutableUserDetails mutableUserDetails = user.getUserDetails();
+    if (mutableUserDetails != null) {
+      Integer numberOfRecentFailedLoginAttempts = mutableUserDetails.getNumberOfRecentFailedLoginAttempts();
+      if (numberOfRecentFailedLoginAttempts != null &&
+        numberOfRecentFailedLoginAttempts >= recentFailedLoginAttemptsLimit) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

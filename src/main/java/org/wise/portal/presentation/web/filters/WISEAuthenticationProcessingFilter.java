@@ -83,9 +83,6 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
   public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/legacy/teacher";  // TODO eventually researcher will have their own page...
   public static final String LOGIN_DISABLED_MESSGE_PAGE = "/pages/maintenance.html";
 
-  public static final Integer recentFailedLoginTimeLimit = 15;
-  public static final Integer recentFailedLoginAttemptsLimit = 5;
-
   private static final Log LOGGER = LogFactory.getLog(WISEAuthenticationProcessingFilter.class);
 
   /**

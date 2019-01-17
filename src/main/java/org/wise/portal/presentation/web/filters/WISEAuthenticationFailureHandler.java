@@ -49,17 +49,13 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
   @Autowired
   private UserService userService;
 
-  public static final Integer recentFailedLoginTimeLimit = 15;
-
-  public static final Integer recentFailedLoginAttemptsLimit = 5;
-
   private String authenticationFailureUrl;
 
   /**
    * The user has failed to log in because they either entered
    * an incorrect password or an incorrect ReCaptcha text. We will
    * increment the counter that keeps track of the number of times
-   * they have failed to log in within the last 15 minutes.
+   * they have failed to log in within the last 10 minutes.
    * @param request
    * @param response
    */
@@ -72,21 +68,11 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
       User user = userService.retrieveUserByUsername(userName);
       if (user != null) {
         MutableUserDetails userDetails = user.getUserDetails();
-        Date recentFailedLoginTime = userDetails.getRecentFailedLoginTime();
-        Date currentTime = new Date();
         Integer numberOfRecentFailedLoginAttempts = 1;
-        if (recentFailedLoginTime != null) {
-          long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
-
-          /*
-           * check if the time difference is less than 15 minutes. if the time difference
-           * is less than 15 minutes we will increment the failed attempts counter.
-           * if the difference is greater than 15 minutes we will reset the counter.
-           */
-          if (timeDifference < (recentFailedLoginTimeLimit * 60 * 1000)) {
-            numberOfRecentFailedLoginAttempts =
-                userDetails.getNumberOfRecentFailedLoginAttempts() + 1;
-          }
+        Date currentTime = new Date();
+        if (ControllerUtil.isRecentFailedLoginWithinTimeLimit(user)) {
+          numberOfRecentFailedLoginAttempts =
+            userDetails.getNumberOfRecentFailedLoginAttempts() + 1;
         }
         userDetails.setNumberOfRecentFailedLoginAttempts(numberOfRecentFailedLoginAttempts);
         userDetails.setRecentFailedLoginTime(currentTime);
@@ -129,7 +115,7 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
   /**
    * Get the failure url. This function checks if the public and private
    * keys for the captcha have been provided and if the user has failed
-   * to log in 5 or more times in the last 15 minutes. If so, it will
+   * to log in 10 or more times in the last 10 minutes. If so, it will
    * require the failure url page to display a captcha.
    */
   protected String determineFailureUrl(HttpServletRequest request, HttpServletResponse response,

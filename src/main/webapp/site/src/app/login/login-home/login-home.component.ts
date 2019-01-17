@@ -61,21 +61,31 @@ export class LoginHomeComponent implements OnInit {
         this.credentials.password = null;
         if (this.isRecaptchaRequired) {
           this.passwordError = false;
-          this.recaptchaRef.reset();
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: {
-              'username': this.credentials.username,
-              'is-recaptcha-required': true
-            },
-            queryParamsHandling: 'merge'
-          });
+          this.addParametersToURL();
+          this.resetRecaptcha();
         } else {
           this.passwordError = true;
         }
       }
     });
     return false;
+  }
+
+  public addParametersToURL() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        'username': this.credentials.username,
+        'is-recaptcha-required': true
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  public resetRecaptcha() {
+    if (this.recaptchaRef != null) {
+      this.recaptchaRef.reset();
+    }
   }
 
   public socialSignIn(socialPlatform : string) {
