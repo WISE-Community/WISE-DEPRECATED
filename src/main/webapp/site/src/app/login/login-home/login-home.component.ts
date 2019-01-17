@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -12,11 +12,14 @@ import { ConfigService } from '../../services/config.service';
 })
 export class LoginHomeComponent implements OnInit {
 
-  credentials: any = {username: '', password: ''};
-  error: boolean = false;
+  credentials: any = {username: '', password: '', recaptchaResponse: null};
+  passwordError: boolean = false;
   processing: boolean = false;
   isGoogleAuthenticationEnabled: boolean = false;
   isShowGoogleLogin: boolean = true;
+  recaptchaPublicKey: string = "";
+  isRecaptchaRequired: boolean = false;
+  @ViewChild('recaptchaRef') recaptchaRef: any;
 
   constructor(private userService: UserService, private http: HttpClient,
       private router: Router, private route: ActivatedRoute,
@@ -27,6 +30,7 @@ export class LoginHomeComponent implements OnInit {
     this.configService.getConfig().subscribe((config) => {
       if (config != null) {
         this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+        this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
       }
     });
     this.route.params.subscribe(params => {
@@ -35,23 +39,60 @@ export class LoginHomeComponent implements OnInit {
         this.isShowGoogleLogin = false;
       }
     });
+    this.route.queryParams.subscribe(params => {
+      if (params['username'] != null) {
+        this.credentials.username = params['username'];
+      }
+      if (params['is-recaptcha-required'] != null) {
+        this.isRecaptchaRequired = JSON.parse(params['is-recaptcha-required']);
+      }
+    });
   }
   
   login(): boolean {
     this.processing = true;
-    this.error = false;
+    this.passwordError = false;
     this.userService.authenticate(this.credentials, () => {
       if (this.userService.isAuthenticated) {
         this.router.navigateByUrl(this.userService.getRedirectUrl());
       } else {
-        this.error = true;
         this.processing = false;
+        this.isRecaptchaRequired = this.userService.isRecaptchaRequired;
+        this.credentials.password = null;
+        if (this.isRecaptchaRequired) {
+          this.passwordError = false;
+          this.addParametersToURL();
+          this.resetRecaptcha();
+        } else {
+          this.passwordError = true;
+        }
       }
     });
     return false;
   }
 
+  public addParametersToURL() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        'username': this.credentials.username,
+        'is-recaptcha-required': true
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  public resetRecaptcha() {
+    if (this.recaptchaRef != null) {
+      this.recaptchaRef.reset();
+    }
+  }
+
   public socialSignIn(socialPlatform : string) {
     window.location.href = `${this.configService.getContextPath()}/google-login`;
+  }
+
+  recaptchaResolved(recaptchaResponse) {
+    this.credentials.recaptchaResponse = recaptchaResponse;
   }
 }

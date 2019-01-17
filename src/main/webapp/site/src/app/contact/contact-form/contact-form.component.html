@@ -86,9 +86,10 @@
             <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')" i18n>State Required</mat-error>
           </mat-form-field>
         </p>
-        <p *ngIf="isRecaptchaEnabled">
+        <p *ngIf="isRecaptchaEnabled"
+           class="recaptcha-container">
           <re-captcha formControlName="recaptcha"
-                      (resolved)="recaptchResolved($event)"
+                      (resolved)="recaptchaResolved($event)"
                       [siteKey]="recaptchaPublicKey"></re-captcha>
         </p>
         <p class="warn center standalone__error inactive" [ngClass]="{'failure': error}" i18n>Sorry, there was a problem submitting the form. Please try again.</p>

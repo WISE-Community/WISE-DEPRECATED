@@ -234,7 +234,7 @@ export class ContactFormComponent implements OnInit {
     this.router.navigate(['contact/complete', {}]);
   }
 
-  recaptchResolved(recaptchaResponse) {
+  recaptchaResolved(recaptchaResponse) {
     this.recaptchaResponse = recaptchaResponse;
   }
 
