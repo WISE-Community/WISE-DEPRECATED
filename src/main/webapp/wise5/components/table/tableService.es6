@@ -284,7 +284,6 @@ class TableService extends ComponentService {
     } else {
       return this.isAtLeastOneCellFilledInRow(row);
     }
-    return false;
   }
 
   isAllCellsFilledInRow(row) {

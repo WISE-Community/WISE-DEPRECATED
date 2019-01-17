@@ -309,7 +309,6 @@ var TableService = function (_ComponentService) {
       } else {
         return this.isAtLeastOneCellFilledInRow(row);
       }
-      return false;
     }
   }, {
     key: 'isAllCellsFilledInRow',
