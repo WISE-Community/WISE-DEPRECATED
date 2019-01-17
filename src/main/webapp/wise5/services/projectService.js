@@ -6267,6 +6267,15 @@ var ProjectService = function () {
           } else {
             message += this.$translate('addXNumberOfNotesOnThisStepPlural', { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: _nodeTitle10 });
           }
+        } else if (name === 'fillXNumberOfRows') {
+          var requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
+          var _nodeId11 = params.nodeId;
+          var _nodeTitle11 = this.getNodePositionAndTitleByNodeId(_nodeId11);
+          if (requiredNumberOfFilledRows == 1) {
+            message += this.$translate('youMustFillInXRow', { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: _nodeTitle11 });
+          } else {
+            message += this.$translate('youMustFillInXRows', { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: _nodeTitle11 });
+          }
         }
       }
       return message;

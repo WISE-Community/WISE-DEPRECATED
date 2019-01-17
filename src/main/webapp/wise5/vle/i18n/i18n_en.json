@@ -111,5 +111,7 @@
   "visitNodeTitle": "Visit <b>{{nodeTitle}}</b>",
   "writeXNumberOfWordsOnNodeTitle": "Write <b>{{requiredNumberOfWords}}</b> words on <b>{{nodeTitle}}</b>",
   "yes": "Yes",
+  "youMustFillInXRow": "You must fill in <b>{{requiredNumberOfFilledRows}}</b> row in the <b>Table</b> on <b>{{nodeTitle}}</b>",
+  "youMustFillInXRows": "You must fill in <b>{{requiredNumberOfFilledRows}}</b> rows in the <b>Table</b> on <b>{{nodeTitle}}</b>",
   "yourTeacherHasPausedAllTheScreensInTheClass": "Your teacher has paused all the screens in the class."
 }
