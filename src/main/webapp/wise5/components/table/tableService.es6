@@ -280,13 +280,9 @@ class TableService extends ComponentService {
 
   isRowFilled(row, requireAllCellsInARowToBeFilled) {
     if (requireAllCellsInARowToBeFilled) {
-      if (this.isAllCellsFilledInRow(row)) {
-        return true;
-      }
+      return this.isAllCellsFilledInRow(row);
     } else {
-      if (this.isAtLeastOneCellFilledInRow(row)) {
-        return true;
-      }
+      return this.isAtLeastOneCellFilledInRow(row);
     }
     return false;
   }
