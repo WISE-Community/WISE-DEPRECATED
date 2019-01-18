@@ -30,7 +30,6 @@ import java.io.InputStreamReader;
 import java.util.EnumSet;
 
 import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.hibernate.tool.schema.TargetType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -75,12 +74,14 @@ public class DBInitExporter {
       final boolean printScriptToConsole = false, exportScriptToDb = false,
           justDrop = false, justCreate = true;
 
+      /*
       final SchemaExport schemaExport = new SchemaExport();
       schemaExport
           .setDelimiter(";").setFormat(true).setHaltOnError(true)
           .setOutputFile(outputFilename);
       schemaExport.execute(EnumSet.of(TargetType.STDOUT, TargetType.SCRIPT),
           SchemaExport.Action.BOTH, MetadataProvider.getMetadata());
+          */
 
       // now append initial data, which we read in from import.sql
       File initialDataFile = new File("src/main/resources/import.sql");
