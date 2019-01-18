@@ -392,7 +392,7 @@ var ComponentController = function () {
       this.setIsSubmit(true);
       this.incrementSubmitCounter();
 
-      if (!this.hasSubmitsLeft()) {
+      if (!this.canSubmit()) {
         this.disableSubmitButton();
       }
 
@@ -1175,6 +1175,11 @@ var ComponentController = function () {
     key: 'isEventTargetThisComponent',
     value: function isEventTargetThisComponent(args) {
       return this.nodeId == args.nodeId && this.componentId == args.componentId;
+    }
+  }, {
+    key: 'canSubmit',
+    value: function canSubmit() {
+      return !this.hasMaxSubmitCount() || this.hasSubmitsLeft();
     }
   }, {
     key: 'hasMaxSubmitCount',

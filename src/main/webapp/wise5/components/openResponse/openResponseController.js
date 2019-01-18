@@ -151,12 +151,7 @@ var OpenResponseController = function (_ComponentController) {
       _this.setStudentWork(componentState);
     }
 
-    // check if the student has used up all of their submits
-    if (_this.componentContent.maxSubmitCount != null && _this.submitCounter >= _this.componentContent.maxSubmitCount) {
-      /*
-       * the student has used up all of their chances to submit so we
-       * will disable the submit button
-       */
+    if (!_this.canSubmit()) {
       _this.isSubmitButtonDisabled = true;
     }
 
