@@ -203,7 +203,6 @@ export class LibraryFiltersComponent implements OnInit {
   }
 
   resetFilterOptions() {
-    this.searchValue = '';
     this.dciArrangementValue = [];
     this.disciplineValue = [];
     this.peValue = [];

@@ -117,17 +117,12 @@ export abstract class LibraryComponent implements OnInit {
     this.dciArrangementValue = filterOptions.dciArrangementValue;
     this.peValue = filterOptions.peValue;
     for (let project of this.projects) {
-      let searchMatch = false;
       let filterMatch = false;
-      if (this.searchValue) {
-        searchMatch = this.isSearchMatch(project, this.searchValue);
-      }
-      if (!searchMatch && this.hasFilters()) {
+      let searchMatch = this.isSearchMatch(project, this.searchValue);
+      if (searchMatch) {
         filterMatch = this.isFilterMatch(project);
-      } else if (!this.searchValue) {
-        filterMatch = true;
       }
-      project.visible = searchMatch || filterMatch;
+      project.visible = searchMatch && filterMatch;
     }
     let numProjectsVisible = this.countVisibleProjects(this.projects);
     this.emitNumberOfProjectsVisible(numProjectsVisible);
@@ -185,25 +180,29 @@ export abstract class LibraryComponent implements OnInit {
    * @return {boolean}
    */
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
-    let data: any = project.metadata;
-    data.id = project.id;
-    return Object.keys(data).some(prop => {
-      // only check for match in specific metadata fields
-      if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
-        prop != 'features' &&  prop != 'standardsAddressed' && prop != 'id') {
-        return false;
-      } else {
-        let value = data[prop];
-        if (prop === 'standardsAddressed') {
-          value = JSON.stringify(value);
-        }
-        if (typeof value === 'undefined' || value === null) {
+    if (searchValue) {
+      let data: any = project.metadata;
+      data.id = project.id;
+      return Object.keys(data).some(prop => {
+        // only check for match in specific metadata fields
+        if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
+          prop != 'features' &&  prop != 'standardsAddressed' && prop != 'id') {
           return false;
         } else {
-          return value.toString().toLocaleLowerCase().indexOf(searchValue) !== -1;
+          let value = data[prop];
+          if (prop === 'standardsAddressed') {
+            value = JSON.stringify(value);
+          }
+          if (typeof value === 'undefined' || value === null) {
+            return false;
+          } else {
+            return value.toString().toLocaleLowerCase().indexOf(searchValue) !== -1;
+          }
         }
-      }
-    });
+      });
+    } else {
+      return true;
+    }
   }
 
   /**
@@ -212,24 +211,36 @@ export abstract class LibraryComponent implements OnInit {
    * @return {boolean}
    */
   isFilterMatch(project: LibraryProject): boolean {
-    const standardsAddressed = project.metadata.standardsAddressed;
-    if (standardsAddressed.ngss) {
-      const ngss = standardsAddressed.ngss;
-      if (this.dciArrangementValue.length) {
-        const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
-        for (let val of dciArrangements) {
-          for (let filter of this.dciArrangementValue) {
-            if (val.id === filter) {
-              return true;
+     if (this.hasFilters()) {
+      const standardsAddressed = project.metadata.standardsAddressed;
+      if (standardsAddressed.ngss) {
+        const ngss = standardsAddressed.ngss;
+        if (this.dciArrangementValue.length) {
+          const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
+          for (let val of dciArrangements) {
+            for (let filter of this.dciArrangementValue) {
+              if (val.id === filter) {
+                return true;
+              }
             }
           }
         }
-      }
-      if (this.peValue.length) {
-        const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
-        for (let arrangement of dciArrangements) {
-          for (let val of arrangement.children) {
-            for (let filter of this.peValue) {
+        if (this.peValue.length) {
+          const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
+          for (let arrangement of dciArrangements) {
+            for (let val of arrangement.children) {
+              for (let filter of this.peValue) {
+                if (val.id === filter) {
+                  return true;
+                }
+              }
+            }
+          }
+        }
+        if (this.disciplineValue.length) {
+          const disciplines: Standard[] = ngss.disciplines ? ngss.disciplines : [];
+          for (let val of disciplines) {
+            for (let filter of this.disciplineValue) {
               if (val.id === filter) {
                 return true;
               }
@@ -237,18 +248,10 @@ export abstract class LibraryComponent implements OnInit {
           }
         }
       }
-      if (this.disciplineValue.length) {
-        const disciplines: Standard[] = ngss.disciplines ? ngss.disciplines : [];
-        for (let val of disciplines) {
-          for (let filter of this.disciplineValue) {
-            if (val.id === filter) {
-              return true;
-            }
-          }
-        }
-      }
+      return false;
+    } else {
+      return true;
     }
-    return false;
   }
 
   countVisibleProjects(set: LibraryProject[]): number {
