@@ -1,13 +1,10 @@
-<div class="library library-teacher notice-bg-bg" fxLayout="column" fxLayout.gt-sm="row">
-  <div class="content-block dark-theme library__header library-teacher__header primary-bg"
-       fxFlex.gt-sm="33">
-    <h3 i18n>Search & Filter</h3>
+<div class="library library-teacher notice-bg-bg">
+  <div class="content-block controls dark-theme library__header library-teacher__header primary-bg">
     <app-library-filters></app-library-filters>
   </div>
-  <div class="library__content library-teacher__content" fxFlex.gt-sm="67">
-    <mat-tab-group [(selectedIndex)]="selectedTabIndex"
+  <div class="library__content library-teacher__content">
+    <mat-tab-group [selectedIndex]="selectedTabIndex"
                    aria-label="Select unit library view"
-                   backgroundColor="primary"
                    mat-stretch-tabs>
       <mat-tab label="WISE Tested ({{numberOfOfficialProjectsVisible}})">
         <div class="notice" i18n>Suggested unit sequences developed and tested by the WISE team</div>

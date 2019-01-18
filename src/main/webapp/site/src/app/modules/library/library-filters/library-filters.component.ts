@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { NGSSStandards } from "../ngssStandards";
@@ -8,13 +8,18 @@ import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 @Component({
   selector: 'app-library-filters',
   templateUrl: './library-filters.component.html',
-  styleUrls: ['./library-filters.component.scss']
+  styleUrls: ['./library-filters.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
+
 export class LibraryFiltersComponent implements OnInit {
 
   allProjects: LibraryProject[] = [];
   libraryProjects: LibraryProject[] = [];
   communityProjects: LibraryProject[] = [];
+
+  @Input()
+  split: boolean = false;
 
   @Output()
   update: EventEmitter<object> = new EventEmitter<object>();
