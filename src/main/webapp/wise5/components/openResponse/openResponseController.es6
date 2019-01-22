@@ -150,12 +150,7 @@ class OpenResponseController extends ComponentController {
       this.setStudentWork(componentState);
     }
 
-    // check if the student has used up all of their submits
-    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-      /*
-       * the student has used up all of their chances to submit so we
-       * will disable the submit button
-       */
+    if (!this.canSubmit()) {
       this.isSubmitButtonDisabled = true;
     }
 

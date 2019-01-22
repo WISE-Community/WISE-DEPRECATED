@@ -390,7 +390,7 @@ class ComponentController {
     this.setIsSubmit(true);
     this.incrementSubmitCounter();
 
-    if (!this.hasSubmitsLeft()) {
+    if (!this.canSubmit()) {
       this.disableSubmitButton();
     }
 
@@ -1075,6 +1075,10 @@ class ComponentController {
 
   isEventTargetThisComponent(args) {
     return this.nodeId == args.nodeId && this.componentId == args.componentId;
+  }
+
+  canSubmit() {
+    return !this.hasMaxSubmitCount() || this.hasSubmitsLeft();
   }
 
   hasMaxSubmitCount() {
