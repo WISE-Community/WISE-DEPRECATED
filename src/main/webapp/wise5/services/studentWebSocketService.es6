@@ -42,7 +42,7 @@ class StudentWebSocketService {
    * @param data the data from the message
    */
   handleWebSocketMessageReceived(data) {
-    this.$rootScope.$broadcast('webSocketMessageRecieved', {data: data});
+    this.$rootScope.$broadcast('webSocketMessageReceived', {data: data});
   };
 
   /**
