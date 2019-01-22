@@ -1013,15 +1013,12 @@ View.prototype.removeFromPOSTInProgressArray = function(nodeVisit) {
  * @param timeout the timeout for the request in milliseconds
  */
 View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData, sync, timeout) {
-	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestURL');
+	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestURL') + '/score';
 
 	var cRaterArgs = {
-			cRaterItemType:cRaterItemType,
 			itemId:cRaterItemId,
-			cRaterRequestType:cRaterRequestType,
 			responseId:cRaterResponseId,
-			studentData:studentData,
-			wiseRunMode:"preview"
+			studentData:studentData
 	};
 	
 	//make the call to GET the annotation

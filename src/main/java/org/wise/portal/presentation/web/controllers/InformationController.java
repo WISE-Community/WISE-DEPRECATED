@@ -526,7 +526,7 @@ public class InformationController {
       addProjectBaseURL(config, projectURL);
       config.put("studentUploadsBaseURL",  wiseProperties.getProperty("studentuploads_base_www"));
       config.put("theme", "WISE");
-      config.put("cRaterRequestURL", contextPath + "/cRater");
+      config.put("cRaterRequestURL", contextPath + "/c-rater");
       config.put("mainHomePageURL", contextPath);
       config.put("renewSessionURL", contextPath + "/session/renew");
       config.put("sessionLogOutURL", contextPath + "/logout");
@@ -713,7 +713,7 @@ public class InformationController {
     config.put("projectURL", projectURL);
     addProjectBaseURL(config, projectURL);
     config.put("studentUploadsBaseURL", wiseProperties.getProperty("studentuploads_base_www"));
-    config.put("cRaterRequestURL", contextPath + "/cRater");
+    config.put("cRaterRequestURL", contextPath + "/c-rater");
     config.put("contextPath", contextPath);
     config.put("mainHomePageURL", contextPath);
     config.put("renewSessionURL", contextPath + "/session/renew");

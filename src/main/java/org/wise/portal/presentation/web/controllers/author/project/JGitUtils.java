@@ -24,8 +24,8 @@ package org.wise.portal.presentation.web.controllers.author.project;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -65,7 +65,12 @@ public class JGitUtils {
     boolean doCreate = false;
     Repository gitRepository = getGitRepository(dirPath, doCreate);
     if (gitRepository == null) {
-      return IterableUtils.emptyIterable();
+      return new Iterable<RevCommit>() {
+        @Override
+        public Iterator<RevCommit> iterator() {
+          return null;
+        }
+      };
     } else {
       Git git = new Git(gitRepository);
       Iterable<RevCommit> commits = git.log().all().call();

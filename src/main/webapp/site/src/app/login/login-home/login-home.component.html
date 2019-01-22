@@ -2,7 +2,8 @@
   <mat-card-content>
     <form role="form" (submit)="login()">
       <h2 class="standalone__title accent" i18n>Sign in to WISE</h2>
-      <p class="warn center standalone__error inactive" [ngClass]="{'active': error}" i18n>Username and password not recognized. Please try again.</p>
+      <p class="warn center standalone__error inactive" [ngClass]="{'active': passwordError}" i18n>Username and password not recognized. Please try again.</p>
+      <p *ngIf="isRecaptchaRequired" class="warn center standalone__error inactive" [ngClass]="{'active': isRecaptchaRequired}" i18n>Please try again and verify that you are not a robot.</p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>Username</mat-label>
@@ -24,6 +25,12 @@
                  [disabled]="processing"
                  [(ngModel)]="credentials.password" />
         </mat-form-field>
+      </p>
+      <p *ngIf="isRecaptchaRequired"
+           class="recaptcha-container">
+        <re-captcha #recaptchaRef="reCaptcha"
+                    (resolved)="recaptchaResolved($event)"
+                    [siteKey]="recaptchaPublicKey"></re-captcha>
       </p>
       <p>
         <button fxFlex

@@ -130,13 +130,9 @@ public class TeacherForgotAccountAPIController {
       return false;
     } else {
       long timeDifferenceInMilliseconds = getTimeDifferenceInMilliseconds(new Date(), date);
-      int tenMinutesInMilliseconds = minutesToMilliseconds(10);
+      long tenMinutesInMilliseconds = ControllerUtil.convertMinutesToMilliseconds(10);
       return timeDifferenceInMilliseconds < tenMinutesInMilliseconds;
     }
-  }
-
-  private int minutesToMilliseconds(int minutes) {
-    return minutes * 60 * 1000;
   }
 
   @RequestMapping(value = "/password/verification-code", method = RequestMethod.POST)
@@ -227,7 +223,7 @@ public class TeacherForgotAccountAPIController {
     Date verificationCodeCreationTime = user.getUserDetails().getResetPasswordVerificationCodeRequestTime();
     Date now = new Date();
     long timeDifferenceInMilliseconds = getTimeDifferenceInMilliseconds(now, verificationCodeCreationTime);
-    int expirationInMilliseconds = minutesToMilliseconds(10);
+    long expirationInMilliseconds = ControllerUtil.convertMinutesToMilliseconds(10);
     return timeDifferenceInMilliseconds > expirationInMilliseconds;
   }
 

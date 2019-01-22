@@ -418,7 +418,7 @@ var ComponentController = function () {
       this.setIsSubmit(true);
       this.incrementSubmitCounter();
 
-      if (!this.hasSubmitsLeft()) {
+      if (!this.canSubmit()) {
         this.disableSubmitButton();
       }
 
@@ -1255,6 +1255,11 @@ var ComponentController = function () {
       return this.nodeId == object.nodeId && this.componentId == object.componentId;
     }
   }, {
+    key: 'canSubmit',
+    value: function canSubmit() {
+      return !this.hasMaxSubmitCount() || this.hasSubmitsLeft();
+    }
+  }, {
     key: 'hasMaxSubmitCount',
     value: function hasMaxSubmitCount() {
       return this.getMaxSubmitCount() != null;
@@ -1371,6 +1376,5 @@ var ComponentController = function () {
 }();
 
 ComponentController.$inject = [];
-
 exports.default = ComponentController;
 //# sourceMappingURL=componentController.js.map

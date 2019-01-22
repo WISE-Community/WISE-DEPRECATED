@@ -156,12 +156,9 @@ class TableController extends ComponentController {
           // the table has changed
           this.$scope.tableController.isDirty = true;
         } else if (componentType === 'Embedded') {
-
-          // set the table data
           this.$scope.tableController.setStudentWork(componentState);
-
-          // the table has changed
           this.$scope.tableController.isDirty = true;
+          this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         }
       }
     }.bind(this);

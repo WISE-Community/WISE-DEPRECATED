@@ -30,16 +30,6 @@
              ng-model='openResponseController.authoringComponentContent.enableCRater'
              ng-change='openResponseController.authoringViewEnableCRaterClicked()'/>
       <div ng-if='openResponseController.authoringComponentContent.enableCRater'>
-        <span>{{ 'openResponse.type' | translate }}:</span>
-        <input type='radio'
-               ng-model='openResponseController.authoringComponentContent.cRater.itemType'
-               value='CRATER'
-               ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.cRater' | translate }}</span>
-        <input type='radio'
-               ng-model='openResponseController.authoringComponentContent.cRater.itemType'
-               value='HENRY'
-               ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.henry' | translate }}</span>
-        <br/>
         <span>{{ 'openResponse.itemId' | translate }}:</span>
         <input type='text'
                ng-model='openResponseController.authoringComponentContent.cRater.itemId'

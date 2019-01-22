@@ -18,8 +18,6 @@ var CRaterService = function () {
 
   /**
    * Make a CRater request to score student data
-   * @param cRaterItemType the CRater item type e.g. 'HENRY'
-   * @param cRaterRequestType the CRater request type 'scoring' or 'verify'
    * @param cRaterResponseId a randomly generated id used to keep track
    * of the request
    * @param studentData the student data
@@ -28,58 +26,20 @@ var CRaterService = function () {
 
 
   _createClass(CRaterService, [{
-    key: 'makeCRaterRequest',
-    value: function makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData) {
-      var httpParams = {};
-      httpParams.method = 'GET';
-      httpParams.url = this.ConfigService.getCRaterRequestURL();
-      httpParams.params = {
-        cRaterItemType: cRaterItemType,
-        itemId: cRaterItemId,
-        cRaterRequestType: cRaterRequestType,
-        responseId: cRaterResponseId,
-        studentData: studentData,
-        wiseRunMode: 'preview'
+    key: 'makeCRaterScoringRequest',
+    value: function makeCRaterScoringRequest(cRaterItemId, cRaterResponseId, studentData) {
+      var httpParams = {
+        method: 'GET',
+        url: this.ConfigService.getCRaterRequestURL() + '/score',
+        params: {
+          itemId: cRaterItemId,
+          responseId: cRaterResponseId,
+          studentData: studentData
+        }
       };
-
-      // make the CRater request
       return this.$http(httpParams).then(function (response) {
         return response;
       });
-    }
-
-    /**
-     * Make a CRater request to score student data
-     * @param cRaterItemType the CRater item type e.g. 'HENRY'
-     * @param cRaterResponseId a randomly generated id used to keep track
-     * of the request
-     * @param studentData the student data
-     * @returns a promise that returns the result of the CRater request
-     */
-
-  }, {
-    key: 'makeCRaterScoringRequest',
-    value: function makeCRaterScoringRequest(cRaterItemType, cRaterItemId, studentData) {
-      var cRaterRequestType = 'scoring';
-      var cRaterResponseId = new Date().getTime();
-      return this.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData);
-    }
-
-    /**
-     * Make a CRater request to verifythe item type and item id
-     * @param cRaterItemType the CRater item type e.g. 'HENRY'
-     * @param cRaterResponseId a randomly generated id used to keep track
-     * of the request
-     * @param studentData the student data
-     * @returns a promise that returns the result of the CRater request
-     */
-
-  }, {
-    key: 'makeCRaterVerifyRequest',
-    value: function makeCRaterVerifyRequest(cRaterItemType, cRaterItemId, studentData) {
-      var cRaterRequestType = 'verify';
-      var cRaterResponseId = new Date().getTime();
-      return this.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData);
     }
 
     /**
@@ -391,48 +351,18 @@ var CRaterService = function () {
      */
 
   }, {
-    key: 'verifyCRaterItemId',
-    value: function verifyCRaterItemId(itemId) {
-      var _this = this;
-
-      var httpParams = {};
-      httpParams.method = 'GET';
-      httpParams.url = this.ConfigService.getCRaterRequestURL();
-      httpParams.params = {
-        cRaterItemType: 'CRATER',
-        itemId: itemId,
-        cRaterRequestType: 'verify'
+    key: 'makeCRaterVerifyRequest',
+    value: function makeCRaterVerifyRequest(itemId) {
+      var httpParams = {
+        method: 'GET',
+        url: this.ConfigService.getCRaterRequestURL() + '/verify',
+        params: {
+          itemId: itemId
+        }
       };
       return this.$http(httpParams).then(function (response) {
-        return _this.isCRaterVerifyResponseValid(response.data);
+        return response.data.isAvailable;
       });
-    }
-
-    /**
-     * Parse the response to determine if the item id is valid.
-     * @param response A response string from a CRater verify request.
-     * @returns {boolean} Whether the item id is valid.
-     */
-
-  }, {
-    key: 'isCRaterVerifyResponseValid',
-    value: function isCRaterVerifyResponseValid(response) {
-      /*
-       * Create the regex to match the part of the response that specifies whether
-       * the item id is valid or not.
-       *
-       * Example valid item id
-       * <item id="Chloroplast" avail="Y">
-       *
-       * Example invalid item id
-       * <item id="Chloroplast" avail="N">
-       */
-      var regEx = /item id=".*?" avail="(\w)"/;
-      var result = regEx.exec(response);
-      if (result[1] == 'Y') {
-        return true;
-      }
-      return false;
     }
   }]);
 

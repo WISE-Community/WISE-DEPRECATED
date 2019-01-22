@@ -398,7 +398,7 @@ class ComponentController {
     this.setIsSubmit(true);
     this.incrementSubmitCounter();
 
-    if (!this.hasSubmitsLeft()) {
+    if (!this.canSubmit()) {
       this.disableSubmitButton();
     }
 
@@ -1089,6 +1089,10 @@ class ComponentController {
     return this.nodeId == object.nodeId && this.componentId == object.componentId;
   }
 
+  canSubmit() {
+    return !this.hasMaxSubmitCount() || this.hasSubmitsLeft();
+  }
+
   hasMaxSubmitCount() {
     return this.getMaxSubmitCount() != null;
   }
@@ -1183,5 +1187,4 @@ class ComponentController {
 }
 
 ComponentController.$inject = [];
-
 export default ComponentController;
