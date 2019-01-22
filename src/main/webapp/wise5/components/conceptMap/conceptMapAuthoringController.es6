@@ -90,30 +90,30 @@ class ConceptMapAuthoringController extends ConceptMapController {
         this.setupSVG();
       }
     }.bind(this), true);
+  }
 
-    this.$scope.$on('assetSelected', (event, args) => {
-      if (this.isEventTargetThisComponent(args)) {
-        const fileName = args.assetItem.fileName;
-        if (args.target === 'rubric') {
-          const summernoteId = this.getSummernoteId(args);
-          this.restoreSummernoteCursorPosition(summernoteId);
-          const fullAssetPath = this.getFullAssetPath(fileName);
-          if (this.UtilService.isImage(fileName)) {
-            this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-          } else if (this.UtilService.isVideo(fileName)) {
-            this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-          }
-        } else if (args.target === 'background') {
-          this.authoringComponentContent.background = fileName;
-          this.authoringViewComponentChanged();
-        } else if (args.target != null && args.target.indexOf('node') == 0) {
-          const node = this.authoringViewGetNodeById(args.target);
-          node.fileName = fileName;
-          this.authoringViewComponentChanged();
+  assetSelected(event, args) {
+    if (this.isEventTargetThisComponent(args)) {
+      const fileName = args.assetItem.fileName;
+      if (args.target === 'rubric') {
+        const summernoteId = this.getSummernoteId(args);
+        this.restoreSummernoteCursorPosition(summernoteId);
+        const fullAssetPath = this.getFullAssetPath(fileName);
+        if (this.UtilService.isImage(fileName)) {
+          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+        } else if (this.UtilService.isVideo(fileName)) {
+          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
         }
+      } else if (args.target === 'background') {
+        this.authoringComponentContent.background = fileName;
+        this.authoringViewComponentChanged();
+      } else if (args.target != null && args.target.indexOf('node') == 0) {
+        const node = this.authoringViewGetNodeById(args.target);
+        node.fileName = fileName;
+        this.authoringViewComponentChanged();
       }
-      this.$mdDialog.hide();
-    });
+    }
+    this.$mdDialog.hide();
   }
 
   /**
