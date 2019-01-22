@@ -325,24 +325,33 @@ var ComponentController = function () {
       var _this4 = this;
 
       this.$scope.$on('studentWorkSavedToServer', function (event, args) {
-        var componentState = args.studentWork;
-        if (componentState && _this4.nodeId === componentState.nodeId && _this4.componentId === componentState.componentId) {
-          _this4.setIsDirty(false);
-          _this4.$scope.$emit('componentDirty', { componentId: _this4.componentId, isDirty: _this4.getIsDirty() });
-          var clientSaveTime = _this4.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
-          if (componentState.isSubmit) {
-            _this4.setSubmittedMessage(clientSaveTime);
-            _this4.lockIfNecessary();
-            _this4.setIsSubmitDirty(false);
-            _this4.$scope.$emit('componentSubmitDirty', { componentId: _this4.componentId, isDirty: _this4.isSubmitDirty });
-          } else if (componentState.isAutoSave) {
-            _this4.setAutoSavedMessage(clientSaveTime);
-          } else {
-            _this4.setSavedMessage(clientSaveTime);
-          }
-        }
+        _this4.handleStudentWorkSavedToServer(event, args);
       });
     }
+  }, {
+    key: 'handleStudentWorkSavedToServer',
+    value: function handleStudentWorkSavedToServer(event, args) {
+      var componentState = args.studentWork;
+      if (this.isForThisComponent(componentState)) {
+        this.setIsDirty(false);
+        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: this.getIsDirty() });
+        var clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
+        if (componentState.isSubmit) {
+          this.setSubmittedMessage(clientSaveTime);
+          this.lockIfNecessary();
+          this.setIsSubmitDirty(false);
+          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: this.isSubmitDirty });
+        } else if (componentState.isAutoSave) {
+          this.setAutoSavedMessage(clientSaveTime);
+        } else {
+          this.setSavedMessage(clientSaveTime);
+        }
+      }
+      this.handleStudentWorkSavedToServerAdditionalProcessing(event, args);
+    }
+  }, {
+    key: 'handleStudentWorkSavedToServerAdditionalProcessing',
+    value: function handleStudentWorkSavedToServerAdditionalProcessing(event, args) {}
   }, {
     key: 'handleNodeSubmit',
     value: function handleNodeSubmit() {
@@ -1238,7 +1247,12 @@ var ComponentController = function () {
   }, {
     key: 'isEventTargetThisComponent',
     value: function isEventTargetThisComponent(args) {
-      return this.nodeId == args.nodeId && this.componentId == args.componentId;
+      return this.isForThisComponent(args);
+    }
+  }, {
+    key: 'isForThisComponent',
+    value: function isForThisComponent(object) {
+      return this.nodeId == object.nodeId && this.componentId == object.componentId;
     }
   }, {
     key: 'canSubmit',
@@ -1362,6 +1376,5 @@ var ComponentController = function () {
 }();
 
 ComponentController.$inject = [];
-
 exports.default = ComponentController;
 //# sourceMappingURL=componentController.js.map
