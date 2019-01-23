@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { LibraryGroup } from "../libraryGroup";
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
@@ -7,9 +7,13 @@ import { LibraryComponent } from "../library/library.component";
 @Component({
   selector: 'app-official-library',
   templateUrl: './official-library.component.html',
-  styleUrls: ['./official-library.component.scss']
+  styleUrls: ['./official-library.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class OfficialLibraryComponent extends LibraryComponent {
+
+  @Input()
+  split: boolean = false;
 
   projects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];
