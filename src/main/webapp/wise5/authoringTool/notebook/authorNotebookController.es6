@@ -24,6 +24,7 @@ class AuthorNotebookController {
     this.$translate = this.$filter('translate');
     this.projectId = this.$stateParams.projectId;
     this.project = this.ProjectService.project;
+    this.reportIdToAuthoringNote = {};
 
     if (this.project.notebook == null) {
       // some old projects may not have the notebook settings,
@@ -31,53 +32,7 @@ class AuthorNotebookController {
       let projectTemplate = this.ProjectService.getNewProjectTemplate();
       this.project.notebook = projectTemplate.notebook;
     }
-    let notes = this.project.notebook.itemTypes.report.notes;
-    if (notes != null) {
-      for (const note of notes) {
-        if (note != null) {
-          const reportId = note.reportId;
-          note.summernoteId = 'summernoteNotebook_' + reportId;
-          let noteContent = this.ProjectService.replaceAssetPaths(note.content);
-          noteContent = this.UtilService.replaceWISELinks(noteContent);
-          note.summernoteHTML = noteContent;
-
-          // the tooltip text for the insert WISE asset button
-          const insertAssetString = this.$translate('INSERT_ASSET');
-
-          /*
-           * create the custom button for inserting WISE assets into
-           * summernote
-           */
-          const insertAssetButton =
-              this.UtilService.createInsertAssetButton(
-                  this, this.projectId, null, null, reportId, insertAssetString);
-
-          /*
-           * the options that specifies the tools to display in the
-           * summernote prompt
-           */
-          note.summernoteOptions = {
-            toolbar: [
-              ['style', ['style']],
-              ['font', ['bold', 'underline', 'clear']],
-              ['fontname', ['fontname']],
-              ['fontsize', ['fontsize']],
-              ['color', ['color']],
-              ['para', ['ul', 'ol', 'paragraph']],
-              ['table', ['table']],
-              ['insert', ['link', 'video']],
-              ['view', ['fullscreen', 'codeview', 'help']],
-              ['customButton', ['insertAssetButton']]
-            ],
-            height: 300,
-            disableDragAndDrop: true,
-            buttons: {
-              insertAssetButton: insertAssetButton
-            }
-          };
-        }
-      }
-    }
+    this.initializeNotesAuthoring();
 
     /*
      * Listen for the assetSelected event which occurs when the user
@@ -134,6 +89,79 @@ class AuthorNotebookController {
     this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists("public");
   }
 
+  initializeNotesAuthoring() {
+    let notes = this.project.notebook.itemTypes.report.notes;
+    if (notes != null) {
+      for (const note of notes) {
+        this.initializeNoteAuthoring(note);
+      }
+    }
+  }
+
+  initializeNoteAuthoring(note) {
+    const authoringReportNote = {};
+    const reportId = note.reportId;
+    authoringReportNote.summernoteId = 'summernoteNotebook_' + reportId;
+    let noteContent = this.ProjectService.replaceAssetPaths(note.content);
+    noteContent = this.UtilService.replaceWISELinks(noteContent);
+    authoringReportNote.summernoteHTML = noteContent;
+
+    // the tooltip text for the insert WISE asset button
+    const insertAssetString = this.$translate('INSERT_ASSET');
+
+    /*
+     * create the custom button for inserting WISE assets into
+     * summernote
+     */
+    const insertAssetButton =
+      this.UtilService.createInsertAssetButton(
+        this, this.projectId, null, null, reportId, insertAssetString);
+
+    /*
+     * the options that specifies the tools to display in the
+     * summernote prompt
+     */
+    authoringReportNote.summernoteOptions = {
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['fontname', ['fontname']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['table', ['table']],
+        ['insert', ['link', 'video']],
+        ['view', ['fullscreen', 'codeview', 'help']],
+        ['customButton', ['insertAssetButton']]
+      ],
+      height: 300,
+      disableDragAndDrop: true,
+      buttons: {
+        insertAssetButton: insertAssetButton
+      }
+    };
+
+    this.setReportIdToAuthoringNote(reportId, authoringReportNote);
+  }
+
+  setReportIdToAuthoringNote(reportId, authoringReportNote) {
+    this.reportIdToAuthoringNote[reportId] = authoringReportNote;
+  }
+
+  getAuthoringReportNote(id) {
+    return this.reportIdToAuthoringNote[id];
+  }
+
+  getReportNote(id) {
+    const notes = this.project.notebook.itemTypes.report.notes;
+    for (let note of notes) {
+      if (note.reportId === id) {
+        return note;
+      }
+    }
+    return null;
+  }
+
   /**
    * Adds a new report note item to this project's notebook.
    * Currently we limit 1 report note per project.
@@ -151,47 +179,31 @@ class AuthorNotebookController {
     }
   }
 
-  exit() {
-    let notes = this.project.notebook.itemTypes.report.notes;
-    if (notes != null) {
-      for (let note of notes) {
-        if (note != null) {
-          // remove the temporary fields that were used for bookkeeping
-          delete note['summernoteId'];
-          delete note['summernoteHTML'];
-          delete note['summernoteOptions'];
-        }
-      }
-    }
-    let commitMessage = this.$translate('madeChangesToNotebook');
-    this.ProjectService.saveProject(commitMessage);
-    this.$state.go('root.project', {projectId: this.projectId});
-  }
-
   /**
    * A note was changed
    * @param note the note that was changed
    */
-  summernoteHTMLChanged(note) {
-    if (note != null) {
-      let summernoteHTML = note.summernoteHTML;
-      /*
-       * remove the absolute asset paths
-       * e.g.
-       * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-       * will be changed to
-       * <img src='sun.png'/>
-       */
-      summernoteHTML =
-          this.ConfigService.removeAbsoluteAssetPaths(summernoteHTML);
+  summernoteHTMLChanged(reportId) {
+    const note = this.getReportNote(reportId);
+    const authoringNote = this.getAuthoringReportNote(reportId);
+    let summernoteHTML = authoringNote.summernoteHTML;
 
-      /*
-       * replace <a> and <button> elements with <wiselink> elements when
-       * applicable
-       */
-      summernoteHTML = this.UtilService.insertWISELinks(summernoteHTML);
-      note.content = summernoteHTML;
-    }
+    /*
+     * remove the absolute asset paths
+     * e.g.
+     * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+     * will be changed to
+     * <img src='sun.png'/>
+     */
+    summernoteHTML = this.ConfigService.removeAbsoluteAssetPaths(summernoteHTML);
+
+    /*
+     * replace <a> and <button> elements with <wiselink> elements when
+     * applicable
+     */
+    summernoteHTML = this.UtilService.insertWISELinks(summernoteHTML);
+    note.content = summernoteHTML;
+    this.save();
   }
 
   togglePublicNotebook() {
@@ -204,6 +216,14 @@ class AuthorNotebookController {
 
   disablePublicSpace() {
     this.SpaceService.removeSpace("public");
+  }
+
+  authoringViewComponentChanged() {
+    this.save();
+  }
+
+  save() {
+    this.ProjectService.saveProject();
   }
 }
 

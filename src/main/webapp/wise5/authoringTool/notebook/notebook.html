@@ -1,49 +1,152 @@
-<button id="closeNotebookSettingsButton" ng-click='authorNotebookController.exit()' translate="SAVE"></button>
-
 <h4>{{ 'notebookSettings' | translate }}</h4>
-
-<input id="enableNotebookCheckbox" type="checkbox" ng-model="authorNotebookController.project.notebook.enabled"/>{{ 'enableNotebook' | translate }}<br/>
-
-<ul ng-show="authorNotebookController.project.notebook.enabled">
-    <li>{{ 'notebookLabel' | translate }} <input ng-model="authorNotebookController.project.notebook.label" /></li>
-    <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.enableAddNew"/>{{ 'enableAddNoteButton' | translate }}</li>
-    <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enabled"/>{{ 'enableNoteItemType' | translate }}</li>
-    <ul id="notebookNoteItemType" ng-show="authorNotebookController.project.notebook.itemTypes.note.enabled">
-        <li>{{ 'labelSingular' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.singular" /></li>
-        <li>{{ 'labelPlural' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.plural" /></li>
-        <li>{{ 'labelLink' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.link" /></li>
-        <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.requireTextOnEveryNote"/>{{ 'requireTextOnEveryNote' | translate }}</li>
-        <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableClipping"/>{{ 'enableClipping' | translate }}</li>
-        <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableStudentUploads"/>{{ 'enableStudentUploads' | translate }}</li>
-    </ul>
-    <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.report.enabled"/>{{ 'enableReportItemType' | translate }}</li>
-    <ul id="notebookReportItemType" ng-show="authorNotebookController.project.notebook.itemTypes.report.enabled">
-        <li>{{ 'labelSingular' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.singular" /></li>
-        <li>{{ 'labelPlural' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.plural" /></li>
-        <li>{{ 'labelLink' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.link" /></li>
-        <li>{{ 'reportNotes' | translate }}</li>
-        <button ng-click="authorNotebookController.addReportNote()"
-                ng-show="authorNotebookController.project.notebook.itemTypes.report.notes == null ||
-            authorNotebookController.project.notebook.itemTypes.report.notes.length < 1">{{ 'addReportNote' | translate }}</button>
-        <ul ng-repeat="reportNote in authorNotebookController.project.notebook.itemTypes.report.notes">
-            <li>{{ 'title' | translate }} <input ng-model="reportNote.title" ng-model-options='{ debounce: 1000 }' /></li>
-            <li>{{ 'MAX_SCORE' | translate }} <input ng-model="reportNote.maxScore" ng-model-options='{ debounce: 1000 }' /></li>
-            <li>{{ 'description' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.description" ng-model-options='{ debounce: 1000 }' /></li>
-            <li>{{ 'prompt' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.prompt" ng-model-options='{ debounce: 1000 }' /></li>
-            <li>{{ 'content' | translate }} <!--<textarea rows="15" cols="50" ng-model="reportNote.content" />-->
-                <summernote id='{{reportNote.summernoteId}}'
-                    ng-model='reportNote.summernoteHTML'
-                    ng-change='authorNotebookController.summernoteHTMLChanged(reportNote)'
-                    config='reportNote.summernoteOptions'
-                    ng-model-options='{ debounce: 1000 }'
-                    rows='10'
-                    cols='100'>
-                </summernote>
-            </li>
-        </ul>
-    </ul>
-</ul>
-
-<!--
-<input id="enablePublicNotebookCheckbox" type="checkbox" ng-model="authorNotebookController.isPublicNotebookEnabled" ng-click="authorNotebookController.togglePublicNotebook()"/>{{ 'enablePublicNotebook' | translate }}
--->
+<md-switch ng-model="authorNotebookController.project.notebook.enabled"
+           class="md-primary"
+           ng-change="authorNotebookController.authoringViewComponentChanged()">
+  Notebook
+</md-switch>
+<div ng-if="authorNotebookController.project.notebook.enabled"
+     style="margin-left: 40px;">
+  <md-input-container>
+    <label>
+      {{ 'notebookLabel' | translate }}
+    </label>
+    <input ng-model="authorNotebookController.project.notebook.label"
+           ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+  </md-input-container>
+  <md-switch ng-model="authorNotebookController.project.notebook.itemTypes.note.enabled"
+             class="md-primary"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"
+             style="margin-left: 0px;">
+    Enable Note
+  </md-switch>
+  <div ng-if="authorNotebookController.project.notebook.itemTypes.note.enabled"
+       style="border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;">
+    <md-input-container>
+      <label>
+        {{ 'labelSingular' | translate }}
+      </label>
+      <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.singular"
+             ng-model-options="{ debounce: 1000 }"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+    </md-input-container>
+    <md-input-container>
+      <label>
+        {{ 'labelPlural' | translate }}
+      </label>
+      <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.plural"
+             ng-model-options="{ debounce: 1000 }"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+    </md-input-container>
+    <md-input-container>
+      <label>
+        {{ 'labelLink' | translate }}
+      </label>
+      <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.link"
+             ng-model-options="{ debounce: 1000 }"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+    </md-input-container>
+    <br/>
+    <md-checkbox ng-model="authorNotebookController.project.notebook.enableAddNew"
+                 class="md-primary"
+                 ng-change="authorNotebookController.authoringViewComponentChanged()">
+      Enable Global Add Note Button
+    </md-checkbox>
+    <br/>
+    <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.requireTextOnEveryNote"
+                 ng-change="authorNotebookController.authoringViewComponentChanged()">
+      {{ 'requireTextOnEveryNote' | translate }}
+    </md-checkbox>
+    <br/>
+    <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.enableClipping"
+                 ng-change="authorNotebookController.authoringViewComponentChanged()">
+      {{ 'enableClipping' | translate }}
+    </md-checkbox>
+    <br/>
+    <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.enableStudentUploads"
+                 ng-change="authorNotebookController.authoringViewComponentChanged()">
+      {{ 'enableStudentUploads' | translate }}
+    </md-checkbox>
+  </div>
+  <md-switch ng-model="authorNotebookController.project.notebook.itemTypes.report.enabled"
+             class="md-primary"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"
+             style="margin-left: 0px;">
+    Enable Report
+  </md-switch>
+  <div ng-if="authorNotebookController.project.notebook.itemTypes.report.enabled"
+       style="border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;">
+    <md-input-container>
+      <label>
+        {{ 'labelSingular' | translate }}
+      </label>
+      <input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.singular"
+             ng-model-options="{ debounce: 1000 }"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+    </md-input-container>
+    <md-input-container>
+      <label>
+        {{ 'labelPlural' | translate }}
+      </label>
+      <input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.plural"
+             ng-model-options="{ debounce: 1000 }"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+    </md-input-container>
+    <md-input-container>
+      <label>
+        {{ 'labelLink' | translate }}
+      </label>
+      <input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.link"
+             ng-model-options="{ debounce: 1000 }"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+    </md-input-container>
+    <div ng-repeat="reportNote in authorNotebookController.project.notebook.itemTypes.report.notes">
+      <md-input-container>
+        <label>
+          {{ 'title' | translate }}
+        </label>
+        <input ng-model="reportNote.title"
+               ng-model-options="{ debounce: 1000 }"
+               ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+      </md-input-container>
+      <br/>
+      <md-input-container>
+        <label>
+          {{ 'MAX_SCORE' | translate }}
+        </label>
+        <input ng-model="reportNote.maxScore"
+               ng-model-options="{ debounce: 1000 }"
+               ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+      </md-input-container>
+      <br/>
+      <md-input-container>
+        <label>
+          {{ 'description' | translate }}
+        </label>
+        <textarea rows="5" cols="100" ng-model="reportNote.description"
+                  ng-model-options="{ debounce: 1000 }"
+                  ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+      </md-input-container>
+      <br/>
+      <md-input-container>
+        <label>
+          {{ 'prompt' | translate }}
+        </label>
+        <textarea rows="5" cols="100" ng-model="reportNote.prompt"
+                  ng-model-options="{ debounce: 1000 }"
+                  ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+      </md-input-container>
+      <br/>
+      <label>
+        {{ 'starterText' | translate }}
+      </label>
+      <summernote id="{{reportNote.summernoteId}}"
+                  ng-model="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteHTML"
+                  ng-change="authorNotebookController.summernoteHTMLChanged(reportNote.reportId)"
+                  config="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteOptions"
+                  ng-model-options="{ debounce: 1000 }"
+                  rows="10"
+                  cols="100">
+      </summernote>
+    </div>
+  </div>
+</div>
