@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-group-thumbs.component';
 import { LibraryProjectComponent } from './library-project/library-project.component';
 import { LibraryProjectDetailsComponent } from "./library-project-details/library-project-details.component";
-import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon/library-project-discipline-icon.component';
+import { LibraryProjectDisciplinesComponent } from './library-project-disciplines/library-project-disciplines.component';
 import { LibraryProjectMenuComponent } from "./library-project-menu/library-project-menu.component";
 import { LibraryService } from "../../services/library.service";
 import { RouterModule } from '@angular/router';
@@ -72,7 +72,7 @@ const materialModules = [
     LibraryGroupThumbsComponent,
     LibraryProjectComponent,
     LibraryProjectDetailsComponent,
-    LibraryProjectDisciplineIconComponent,
+    LibraryProjectDisciplinesComponent,
     LibraryProjectMenuComponent,
     LibraryFiltersComponent,
     HomePageProjectLibraryComponent,

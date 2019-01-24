@@ -1,9 +1,9 @@
-<div fxLayout="row wrap" fxLayoutAlign="start">
+<div fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="start">
   <ng-container *ngFor="let project of projects">
     <app-library-project *ngIf="project.visible"
                          [project]="project"
-                         fxFlex="50"
-                         fxFlex.sm="33"
-                         fxFlex.gt-sm="25"></app-library-project>
+                         fxFlex.sm="50"
+                         fxFlex.md="33"
+                         fxFlex.gt-md="25"></app-library-project>
   </ng-container>
 </div>
