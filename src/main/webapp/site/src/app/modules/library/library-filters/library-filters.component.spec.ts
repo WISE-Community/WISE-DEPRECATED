@@ -10,6 +10,8 @@ import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 export class MockLibraryService {
   public officialLibraryProjectsSource$ = fakeAsyncResponse([]);
   public communityLibraryProjectsSource$ = fakeAsyncResponse([]);
+  public sharedLibraryProjectsSource$ = fakeAsyncResponse([]);
+  public personalLibraryProjectsSource$ = fakeAsyncResponse([]);
   filterOptions(projectFilterOptions: ProjectFilterOptions) {
 
   }
@@ -34,6 +36,7 @@ describe('LibraryFiltersComponent', () => {
     fixture = TestBed.createComponent(LibraryFiltersComponent);
     component = fixture.componentInstance;
     component.libraryProjects = projects;
+    component.loadedLibraryCount = 4;
     component.ngOnChanges({projects: new SimpleChange(null, projects, true)});
     fixture.detectChanges();
   });

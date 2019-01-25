@@ -4,6 +4,7 @@ import { LibraryService } from "../../../services/library.service";
 import { NGSSStandards } from "../ngssStandards";
 import { Standard } from "../standard";
 import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-library-filters',
@@ -17,6 +18,9 @@ export class LibraryFiltersComponent implements OnInit {
   allProjects: LibraryProject[] = [];
   libraryProjects: LibraryProject[] = [];
   communityProjects: LibraryProject[] = [];
+  sharedProjects: LibraryProject[] = [];
+  personalProjects: LibraryProject[] = [];
+  loadedLibraryCount: number = 0;
 
   @Input()
   split: boolean = false;
@@ -34,14 +38,42 @@ export class LibraryFiltersComponent implements OnInit {
   showFilters: boolean = false;
 
   constructor(private libraryService: LibraryService) {
-    libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
-      this.libraryProjects = libraryProjects;
-      this.populateFilterOptions();
-    });
-    libraryService.communityLibraryProjectsSource$.subscribe((communityProjects) => {
-      this.communityProjects = communityProjects;
-      this.populateFilterOptions();
-    });
+    libraryService.officialLibraryProjectsSource$
+      .pipe(
+        finalize(() => {
+          this.libraryLoaded();
+        })
+      )
+      .subscribe((libraryProjects: LibraryProject[]) => {
+        this.libraryProjects = libraryProjects;
+      });
+    libraryService.communityLibraryProjectsSource$
+      .pipe(
+        finalize(() => {
+          this.libraryLoaded();
+        })
+      )
+      .subscribe((communityProjects: LibraryProject[]) => {
+        this.communityProjects = communityProjects;
+      });
+    libraryService.sharedLibraryProjectsSource$
+      .pipe(
+        finalize(() => {
+          this.libraryLoaded();
+        })
+      )
+      .subscribe((sharedProjects) => {
+        this.sharedProjects = sharedProjects;
+      });
+    libraryService.personalLibraryProjectsSource$
+      .pipe(
+        finalize(() => {
+          this.libraryLoaded();
+        })
+      )
+      .subscribe((personalProjects) => {
+        this.personalProjects = personalProjects;
+      });
   }
 
   ngOnInit() {
@@ -53,10 +85,18 @@ export class LibraryFiltersComponent implements OnInit {
     }
   }
 
+  libraryLoaded() {
+    this.loadedLibraryCount++;
+    this.populateFilterOptions();
+  }
+
   /**
    * Iterate through list of projects to populate metadata filter options
    */
   populateFilterOptions(): void {
+    if (this.loadedLibraryCount < 4) {
+      return;
+    }
     this.allProjects = this.getAllProjects();
     for (let project of this.allProjects) {
       const standardsAddressed = project.metadata.standardsAddressed;
@@ -84,7 +124,10 @@ export class LibraryFiltersComponent implements OnInit {
   }
 
   getAllProjects() {
-    return this.libraryProjects.concat(this.communityProjects);
+    return this.libraryProjects
+      .concat(this.communityProjects)
+      .concat(this.sharedProjects)
+      .concat(this.personalProjects);
   }
 
   createDCIStandard(standardIn: any) {
