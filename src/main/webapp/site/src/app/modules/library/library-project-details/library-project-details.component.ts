@@ -65,7 +65,7 @@ export class LibraryProjectDetailsComponent implements OnInit {
   }
 
   runProject() {
-    if (this.data.project.wiseVersion == "4") {
+    if (true /*this.data.project.wiseVersion === 4*/) {
       this.dialog.open(UseWithClassWarningDialogComponent, {
         data: this.data,
         panelClass: 'mat-dialog--md'
