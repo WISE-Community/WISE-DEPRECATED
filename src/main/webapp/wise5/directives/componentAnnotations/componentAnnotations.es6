@@ -99,7 +99,7 @@ class ComponentAnnotationsController {
         }
 
         return latest;
-    };
+    }
 
     /**
      * Calculate the save time of the latest annotation
@@ -115,7 +115,7 @@ class ComponentAnnotationsController {
         }
 
         return time;
-    };
+    }
 
     /**
      * Find nodeExited time of the latest node visit for this component
@@ -135,7 +135,7 @@ class ComponentAnnotationsController {
         }
 
         return visitTime;
-    };
+    }
 
     /**
      * Find and the latest save time for this component
@@ -150,7 +150,7 @@ class ComponentAnnotationsController {
         }
 
         return saveTime;
-    };
+    }
 
     /**
      * Check whether the current annotation for this component is new to the
@@ -173,7 +173,7 @@ class ComponentAnnotationsController {
         }
 
         return isNew;
-    };
+    }
 
     /**
      * Set the label based on whether this is an automated or teacher annotation
@@ -190,34 +190,23 @@ class ComponentAnnotationsController {
                 this.icon = "person";
             }
         }
-    };
+    }
 
     processAnnotations() {
         if (this.annotations != null) {
             if (this.annotations.comment || this.annotations.score) {
-                this.nodeId = this.annotations.comment ? this.annotations.comment.nodeId : this.annotations.score.nodeId;
-                this.componentId = this.annotations.comment ? this.annotations.comment.componentId : this.annotations.score.nodeId;
-
-                if (!this.ProjectService.displayAnnotation(this.annotations.score)) {
-                    // we do not want to show the score
-                    this.showScore = false;
-                } else {
-                    this.showScore = true;
-
-                }
-
-                if (!this.ProjectService.displayAnnotation(this.annotations.comment)) {
-                    // we do not want to show the comment
-                    this.showComment = false;
-                } else {
-                    this.showComment = true;
-                }
-
-                // set the annotation label and icon
+                this.nodeId = this.annotations.comment ?
+                        this.annotations.comment.nodeId : this.annotations.score.nodeId;
+                this.componentId = this.annotations.comment ?
+                        this.annotations.comment.componentId : this.annotations.score.nodeId;
+                this.showScore = this.annotations.score != null &&
+                        this.ProjectService.displayAnnotation(this.annotations.score);
+                this.showComment = this.annotations.comment != null &&
+                        this.ProjectService.displayAnnotation(this.annotations.comment);
                 this.setLabelAndIcon();
             }
         }
-    };
+    }
 }
 
 ComponentAnnotationsController.$inject = [

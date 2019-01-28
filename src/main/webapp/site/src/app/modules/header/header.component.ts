@@ -43,9 +43,9 @@ export class HeaderComponent implements OnInit {
 
   setLocation() {
     this.url = this.router.url;
-    if (this.url.includes('/teacher')) {
+    if (this.url.match(/^\/teacher/)) {
       this.location = 'teacher';
-    } else if (this.url.includes('/student')) {
+    } else if (this.url.match(/^\/student/)) {
       this.location = 'student';
     } else {
       this.location = '';
