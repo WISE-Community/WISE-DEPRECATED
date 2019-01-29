@@ -1,4 +1,23 @@
-<h4>{{ 'notebookSettings' | translate }}</h4>
+<div style="display: flex; justify-content: space-between;">
+  <div>
+    <h4>{{ 'notebookSettings' | translate }}</h4>
+  </div>
+  <div></div>
+  <div class="preview-toolbar">
+    <md-button id="previewProjectButton"
+               class="topButton md-raised md-primary"
+               ng-click="projectController.previewProject()">
+      <md-icon>visibility</md-icon>
+      <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'previewProject' | translate }}</md-tooltip>
+    </md-button>
+    <md-button id="previewProjectWithoutConstraintsButton"
+               class="topButton md-raised md-primary"
+               ng-click="projectController.previewProjectWithoutConstraints()">
+      <md-icon>visibility_off</md-icon>
+      <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'previewProjectWithoutConstraints' | translate }}</md-tooltip>
+    </md-button>
+  </div>
+</div>
 <md-switch ng-model="authorNotebookController.project.notebook.enabled"
            class="md-primary"
            ng-change="authorNotebookController.authoringViewComponentChanged()">
@@ -114,6 +133,7 @@
           {{ 'MAX_SCORE' | translate }}
         </label>
         <input ng-model="reportNote.maxScore"
+               type="number"
                ng-model-options="{ debounce: 1000 }"
                ng-change="authorNotebookController.authoringViewComponentChanged()"/>
       </md-input-container>
