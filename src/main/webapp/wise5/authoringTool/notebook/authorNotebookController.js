@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthorNotebookController = function () {
-  function AuthorNotebookController($filter, $mdDialog, $state, $stateParams, $scope, $timeout, ConfigService, ProjectService, SpaceService, UtilService) {
+  function AuthorNotebookController($filter, $mdDialog, $state, $stateParams, $scope, ConfigService, ProjectService, SpaceService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, AuthorNotebookController);
@@ -19,7 +19,6 @@ var AuthorNotebookController = function () {
     this.$state = $state;
     this.$stateParams = $stateParams;
     this.$scope = $scope;
-    this.$timeout = $timeout;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.SpaceService = SpaceService;
@@ -30,61 +29,31 @@ var AuthorNotebookController = function () {
     this.reportIdToAuthoringNote = {};
 
     if (this.project.notebook == null) {
-      // some old projects may not have the notebook settings,
-      // so copy default settings from template project.
       var projectTemplate = this.ProjectService.getNewProjectTemplate();
       this.project.notebook = projectTemplate.notebook;
     }
+
     this.initializeNotesAuthoring();
 
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
     this.$scope.$on('assetSelected', function (event, args) {
-      // make sure the event was fired for this component
-      if (args != null && args.projectId == _this.projectId && args.assetItem != null && args.assetItem.fileName != null && args.target != null) {
-        /*
-         * get the assets directory path
-         * e.g.
-         * /wise/curriculum/3/
-         */
+      if (args.projectId == _this.projectId && args.assetItem != null && args.assetItem.fileName != null && args.target != null) {
         var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
         var fileName = args.assetItem.fileName;
         var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-        // the target is the summernote prompt element
         var reportId = args.target;
         var summernoteId = 'summernoteNotebook_' + reportId;
         if (_this.UtilService.isImage(fileName)) {
-          /*
-           * move the cursor back to its position when the asset chooser
-           * popup was clicked
-           */
-          $('#' + summernoteId).summernote('editor.restoreRange');
-          $('#' + summernoteId).summernote('editor.focus');
-
-          // add the image html
-          $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+          _this.UtilService.restoreSummernoteCursorPosition(summernoteId);
+          _this.UtilService.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
         } else if (_this.UtilService.isVideo(fileName)) {
-          /*
-           * move the cursor back to its position when the asset chooser
-           * popup was clicked
-           */
-          $('#' + summernoteId).summernote('editor.restoreRange');
-          $('#' + summernoteId).summernote('editor.focus');
-
-          // insert the video element
-          var videoElement = document.createElement('video');
-          videoElement.controls = 'true';
-          videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-          $('#' + summernoteId).summernote('insertNode', videoElement);
+          _this.UtilService.restoreSummernoteCursorPosition(summernoteId);
+          _this.UtilService.insertVideoIntoSummernote(summernoteId, fullAssetPath);
         }
       }
       _this.$mdDialog.hide();
     });
 
-    this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists("public");
+    this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists('public');
   }
 
   _createClass(AuthorNotebookController, [{
@@ -128,19 +97,10 @@ var AuthorNotebookController = function () {
       noteContent = this.UtilService.replaceWISELinks(noteContent);
       authoringReportNote.summernoteHTML = noteContent;
 
-      // the tooltip text for the insert WISE asset button
-      var insertAssetString = this.$translate('INSERT_ASSET');
+      //create the custom button for inserting WISE assets into summernote
+      var insertAssetButton = this.UtilService.createInsertAssetButton(this, this.projectId, null, null, reportId, this.$translate('INSERT_ASSET'));
 
-      /*
-       * create the custom button for inserting WISE assets into
-       * summernote
-       */
-      var insertAssetButton = this.UtilService.createInsertAssetButton(this, this.projectId, null, null, reportId, insertAssetString);
-
-      /*
-       * the options that specifies the tools to display in the
-       * summernote prompt
-       */
+      //the options that specifies the tools to display in the summernote prompt
       authoringReportNote.summernoteOptions = {
         toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
         height: 300,
@@ -204,8 +164,6 @@ var AuthorNotebookController = function () {
   }, {
     key: 'addReportNote',
     value: function addReportNote() {
-      // some old projects may not have the notebook settings,
-      // so copy default settings from template project.
       var projectTemplate = this.ProjectService.getNewProjectTemplate();
       if (this.project.notebook.itemTypes.report.notes == null) {
         this.project.notebook.itemTypes.report.notes = [];
@@ -248,15 +206,15 @@ var AuthorNotebookController = function () {
     key: 'togglePublicNotebook',
     value: function togglePublicNotebook() {
       if (this.isPublicNotebookEnabled) {
-        this.SpaceService.addSpace("public", "Public");
+        this.SpaceService.addSpace('public', 'Public');
       } else {
-        this.SpaceService.removeSpace("public");
+        this.SpaceService.removeSpace('public');
       }
     }
   }, {
     key: 'disablePublicSpace',
     value: function disablePublicSpace() {
-      this.SpaceService.removeSpace("public");
+      this.SpaceService.removeSpace('public');
     }
   }, {
     key: 'authoringViewComponentChanged',
@@ -273,7 +231,7 @@ var AuthorNotebookController = function () {
   return AuthorNotebookController;
 }();
 
-AuthorNotebookController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', '$timeout', 'ConfigService', 'ProjectService', 'SpaceService', 'UtilService'];
+AuthorNotebookController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', 'ConfigService', 'ProjectService', 'SpaceService', 'UtilService'];
 
 exports.default = AuthorNotebookController;
 //# sourceMappingURL=authorNotebookController.js.map

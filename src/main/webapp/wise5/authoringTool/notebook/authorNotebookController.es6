@@ -27,70 +27,36 @@ class AuthorNotebookController {
     this.reportIdToAuthoringNote = {};
 
     if (this.project.notebook == null) {
-      // some old projects may not have the notebook settings,
-      // so copy default settings from template project.
-      let projectTemplate = this.ProjectService.getNewProjectTemplate();
+      const projectTemplate = this.ProjectService.getNewProjectTemplate();
       this.project.notebook = projectTemplate.notebook;
     }
+
     this.initializeNotesAuthoring();
 
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
     this.$scope.$on('assetSelected', (event, args) => {
-      // make sure the event was fired for this component
-      if (args != null && args.projectId == this.projectId &&
-          args.assetItem != null && args.assetItem.fileName != null &&
-          args.target != null) {
-        /*
-         * get the assets directory path
-         * e.g.
-         * /wise/curriculum/3/
-         */
-        let assetsDirectoryPath =
-            this.ConfigService.getProjectAssetsDirectoryPath();
-        let fileName = args.assetItem.fileName;
-        let fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-        // the target is the summernote prompt element
-        let reportId = args.target;
-        let summernoteId = 'summernoteNotebook_' + reportId;
+      if (args.projectId == this.projectId && args.assetItem != null &&
+          args.assetItem.fileName != null && args.target != null) {
+        const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+        const fileName = args.assetItem.fileName;
+        const fullAssetPath = assetsDirectoryPath + '/' + fileName;
+        const reportId = args.target;
+        const summernoteId = 'summernoteNotebook_' + reportId;
         if (this.UtilService.isImage(fileName)) {
-          /*
-           * move the cursor back to its position when the asset chooser
-           * popup was clicked
-           */
-          $('#' + summernoteId).summernote('editor.restoreRange');
-          $('#' + summernoteId).summernote('editor.focus');
-
-          // add the image html
-          $('#' + summernoteId)
-              .summernote('insertImage', fullAssetPath, fileName);
+          this.UtilService.restoreSummernoteCursorPosition(summernoteId);
+          this.UtilService.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
         } else if (this.UtilService.isVideo(fileName)) {
-          /*
-           * move the cursor back to its position when the asset chooser
-           * popup was clicked
-           */
-          $('#' + summernoteId).summernote('editor.restoreRange');
-          $('#' + summernoteId).summernote('editor.focus');
-
-          // insert the video element
-          let videoElement = document.createElement('video');
-          videoElement.controls = 'true';
-          videoElement.innerHTML =
-              '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-          $('#' + summernoteId).summernote('insertNode', videoElement);
+          this.UtilService.restoreSummernoteCursorPosition(summernoteId);
+          this.UtilService.insertVideoIntoSummernote(summernoteId, fullAssetPath);
         }
       }
       this.$mdDialog.hide();
     });
 
-    this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists("public");
+    this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists('public');
   }
 
   initializeNotesAuthoring() {
-    let notes = this.project.notebook.itemTypes.report.notes;
+    const notes = this.project.notebook.itemTypes.report.notes;
     if (notes != null) {
       for (const note of notes) {
         this.initializeNoteAuthoring(note);
@@ -106,21 +72,12 @@ class AuthorNotebookController {
     noteContent = this.UtilService.replaceWISELinks(noteContent);
     authoringReportNote.summernoteHTML = noteContent;
 
-    // the tooltip text for the insert WISE asset button
-    const insertAssetString = this.$translate('INSERT_ASSET');
+    //create the custom button for inserting WISE assets into summernote
+    const insertAssetButton = this.UtilService.createInsertAssetButton(
+        this, this.projectId, null, null, reportId,
+        this.$translate('INSERT_ASSET'));
 
-    /*
-     * create the custom button for inserting WISE assets into
-     * summernote
-     */
-    const insertAssetButton =
-      this.UtilService.createInsertAssetButton(
-        this, this.projectId, null, null, reportId, insertAssetString);
-
-    /*
-     * the options that specifies the tools to display in the
-     * summernote prompt
-     */
+    //the options that specifies the tools to display in the summernote prompt
     authoringReportNote.summernoteOptions = {
       toolbar: [
         ['style', ['style']],
@@ -167,9 +124,7 @@ class AuthorNotebookController {
    * Currently we limit 1 report note per project.
    */
   addReportNote() {
-    // some old projects may not have the notebook settings,
-    // so copy default settings from template project.
-    let projectTemplate = this.ProjectService.getNewProjectTemplate();
+    const projectTemplate = this.ProjectService.getNewProjectTemplate();
     if (this.project.notebook.itemTypes.report.notes == null) {
       this.project.notebook.itemTypes.report.notes = [];
     }
@@ -208,14 +163,14 @@ class AuthorNotebookController {
 
   togglePublicNotebook() {
     if (this.isPublicNotebookEnabled) {
-      this.SpaceService.addSpace("public", "Public");
+      this.SpaceService.addSpace('public', 'Public');
     } else {
-      this.SpaceService.removeSpace("public");
+      this.SpaceService.removeSpace('public');
     }
   }
 
   disablePublicSpace() {
-    this.SpaceService.removeSpace("public");
+    this.SpaceService.removeSpace('public');
   }
 
   authoringViewComponentChanged() {
