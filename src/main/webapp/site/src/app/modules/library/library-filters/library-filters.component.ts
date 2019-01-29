@@ -4,7 +4,6 @@ import { LibraryService } from "../../../services/library.service";
 import { NGSSStandards } from "../ngssStandards";
 import { Standard } from "../standard";
 import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
-import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-library-filters',
@@ -38,41 +37,21 @@ export class LibraryFiltersComponent implements OnInit {
   showFilters: boolean = false;
 
   constructor(private libraryService: LibraryService) {
-    libraryService.officialLibraryProjectsSource$
-      .pipe(
-        finalize(() => {
-          this.libraryLoaded();
-        })
-      )
-      .subscribe((libraryProjects: LibraryProject[]) => {
+    libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects: LibraryProject[]) => {
         this.libraryProjects = libraryProjects;
+        this.libraryLoaded();
       });
-    libraryService.communityLibraryProjectsSource$
-      .pipe(
-        finalize(() => {
-          this.libraryLoaded();
-        })
-      )
-      .subscribe((communityProjects: LibraryProject[]) => {
+    libraryService.communityLibraryProjectsSource$.subscribe((communityProjects: LibraryProject[]) => {
         this.communityProjects = communityProjects;
+        this.libraryLoaded();
       });
-    libraryService.sharedLibraryProjectsSource$
-      .pipe(
-        finalize(() => {
-          this.libraryLoaded();
-        })
-      )
-      .subscribe((sharedProjects) => {
+    libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
         this.sharedProjects = sharedProjects;
+        this.libraryLoaded();
       });
-    libraryService.personalLibraryProjectsSource$
-      .pipe(
-        finalize(() => {
-          this.libraryLoaded();
-        })
-      )
-      .subscribe((personalProjects) => {
+    libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
         this.personalProjects = personalProjects;
+        this.libraryLoaded();
       });
   }
 
