@@ -5,7 +5,7 @@
   <div class="header-account-menu">
     <a mat-menu-item disabled> 
       <!-- *ngIf="ifChildElement"> -->
-      Parent ID: 
+      <ng-container i18n>Parent ID:</ng-container> {{ project.id }}
     </a>    
     <a mat-menu-item (click)="copyProject()">
       <mat-icon>content_copy</mat-icon> <ng-container i18n>Copy</ng-container>
