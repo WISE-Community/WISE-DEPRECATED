@@ -86,7 +86,7 @@ export class TeamSignInDialogComponent implements OnInit {
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
           } else {
-            alert(this.i18n(`${response.firstName} ${response.lastName} is already on another team.`));
+            alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
             teamMember.userName = null;
           }
         });
@@ -126,7 +126,7 @@ export class TeamSignInDialogComponent implements OnInit {
                     teamMember.lastName = response.lastName;
                     this.markAsSignedIn(teamMember);
                   } else {
-                    alert(this.i18n(`${response.firstName} ${response.lastName} is already on another team.`));
+                    alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
                   }
                 });
             }

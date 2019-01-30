@@ -101,7 +101,7 @@ export class RunSettingsDialogComponent implements OnInit {
     if (maxStudentsPerTeam == 3) {
       maxStudentsPerTeamText = this.i18n('1-3');
     }
-    if (confirm(this.i18n(`Are you sure you want to change the students per team to ${maxStudentsPerTeamText}?`))) {
+    if (confirm(this.i18n('Are you sure you want to change the students per team to {{value}}?', {value: maxStudentsPerTeamText}))) {
       this.teacherService.updateRunStudentsPerTeam(
           this.run.id, maxStudentsPerTeam).subscribe((response: any) => {
         if (response.status == 'success') {
@@ -127,7 +127,7 @@ export class RunSettingsDialogComponent implements OnInit {
     if (this.startDate) {
       const startDate = this.startDate;
       const formattedStartDate = moment(startDate).format('ddd MMM DD YYYY');
-      if (confirm(this.i18n(`Are you sure you want to change the start date to ${formattedStartDate}?`))) {
+      if (confirm(this.i18n('Are you sure you want to change the start date to {{date}}?', {date: formattedStartDate}))) {
         this.teacherService.updateRunStartTime(this.run.id, startDate).subscribe((response: any) => {
           if (response.status == 'success') {
             this.run = response.run;

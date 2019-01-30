@@ -21,7 +21,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         } else {
           // The backend returned an unsuccessful response code.
           // The response body may contain clues as to what went wrong.
-          console.error(this.i18n(`Backend returned code ${err.status}, body was: ${err.error}`));
+          console.error(this.i18n('Backend returned code {{status}}, body was: {{error}}', {status: err.status, error: err.error}));
         }
 
         this.snackBar.open(this.i18n(`An error occurred. Please check your connection and try again.`));

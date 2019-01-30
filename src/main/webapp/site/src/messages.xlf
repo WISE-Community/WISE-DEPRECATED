@@ -5071,6 +5071,71 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="5093f1c7a1a2d4ef9a87d65d94c536a3d6b1e175" datatype="html">
+        <source>Backend returned code <x id="INTERPOLATION" equiv-text="{{status}}"/>, body was: <x id="INTERPOLATION_1" equiv-text="{{error}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="46e4ba42c378685244d606204ade725e243a5572" datatype="html">
+        <source>Sharing permissions updated for <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/share-run-dialog/share-run-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/share-run-dialog/share-run-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="33b9dd7d7bbb965d7208dcf0e33cc0545a3030a2" datatype="html">
+        <source>Added shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="a468fe0f9732107893d00498816aaf811c0e4190" datatype="html">
+        <source>Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="85cc0a779b7da91dba954ffc0a2409811cfe8acd" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/> is already on another team.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="333c363b9afc8c58567fc7686c3d2184d99f47a6" datatype="html">
+        <source>Are you sure you want to change the students per team to <x id="INTERPOLATION" equiv-text="{{value}}"/>?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e9949fc7530006d3b20bfe00b30bfddbb60aac13" datatype="html">
+        <source>Are you sure you want to change the start date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -98,13 +98,13 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   addRunPermissionToSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = true;
-    this.snackBar.open(this.i18n(`Sharing permissions updated for ${ sharedOwner.username }.`));
+    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
   }
 
   removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = false;
-    this.snackBar.open(this.i18n(`Sharing permissions updated for ${ sharedOwner.username }.`));
+    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
   }
 
   shareRun() {
