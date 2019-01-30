@@ -8,6 +8,7 @@ import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
 import { EndRunDialogComponent } from '../end-run-dialog/end-run-dialog.component';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-run-menu',
@@ -26,7 +27,8 @@ export class RunMenuComponent implements OnInit {
   constructor(private dialog: MatDialog,
               private teacherService: TeacherService,
               private userService: UserService,
-              private configService: ConfigService) { }
+              private configService: ConfigService,
+              private i18n: I18n) { }
 
   ngOnInit() {
     this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${this.run.project.id}`;
@@ -44,7 +46,7 @@ export class RunMenuComponent implements OnInit {
   showUnitDetails() {
     const project = this.run.project;
     this.dialog.open(LibraryProjectDetailsComponent, {
-      ariaLabel: 'Project Details',
+      ariaLabel: this.i18n('Project Details'),
       data: { project: project, isRunProject: true },
       panelClass: 'mat-dialog--md'
     });
@@ -73,7 +75,7 @@ export class RunMenuComponent implements OnInit {
   showEditRunDetails() {
     const run = this.run;
     this.dialog.open(RunSettingsDialogComponent, {
-      ariaLabel: 'Run Settings',
+      ariaLabel: this.i18n('Run Settings'),
       data: { run: run },
       panelClass: 'mat-dialog--md',
       autoFocus: true
@@ -83,7 +85,7 @@ export class RunMenuComponent implements OnInit {
   showEndRunDialog() {
     const run = this.run;
     this.dialog.open(EndRunDialogComponent, {
-      ariaLabel: 'End Run',
+      ariaLabel: this.i18n('End Run'),
       data: { run: run },
       panelClass: 'mat-dialog--sm',
       autoFocus: true

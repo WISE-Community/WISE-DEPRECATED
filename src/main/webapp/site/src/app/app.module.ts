@@ -1,4 +1,6 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, TRANSLATIONS, LOCALE_ID, TRANSLATIONS_FORMAT,
+  MissingTranslationStrategy } from '@angular/core';
+import { I18n, MISSING_TRANSLATION_STRATEGY } from '@ngx-translate/i18n-polyfill';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -59,6 +61,11 @@ export function getAuthServiceConfigs(configService: ConfigService) {
   return autServiceConfig;
 }
 
+declare const require;
+export function translationsFactory(locale: string) {
+  return locale === 'en-US' ? '' : require(`raw-loader!../locale/messages.${locale}.xlf`);
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -97,6 +104,14 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     StudentService,
     TeacherService,
     UserService,
+    {
+      provide: TRANSLATIONS,
+      useFactory: translationsFactory,
+      deps: [LOCALE_ID]
+    },
+    { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
+    { provide: MISSING_TRANSLATION_STRATEGY, useValue: MissingTranslationStrategy.Ignore },
+    I18n,
     {
       provide: APP_INITIALIZER,
       useFactory: initialize,

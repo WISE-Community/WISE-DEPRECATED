@@ -1,13 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ForgotStudentUsernameComponent } from './forgot-student-username.component';
 import { StudentService } from '../../../student/student.service';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatInputModule, MatSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+import { translationsFactory } from '../../../app.module';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 export class MockStudentService {
 
@@ -32,7 +33,14 @@ describe('ForgotStudentUsernameComponent', () => {
         MatInputModule
       ],
       providers: [
-        { provide: StudentService, useClass: MockStudentService }
+        { provide: StudentService, useClass: MockStudentService },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -52,22 +60,28 @@ describe('ForgotStudentUsernameComponent', () => {
   it('should show the no usernames found message', () => {
     component.foundUsernames = [];
     component.setMessageForFoundUsernames();
+    component.showSearchResults = true;
     fixture.detectChanges();
-    expect(fixture.debugElement.nativeElement.textContent).toContain('We did not find any usernames');
+    const message = fixture.debugElement.nativeElement.querySelector('.warn');
+    expect(message.textContent).toContain('We did not find any usernames');
   });
 
   it('should show the found a username message', () => {
     component.foundUsernames = ['SpongebobSquarepants'];
     component.setMessageForFoundUsernames();
+    component.showSearchResults = true;
     fixture.detectChanges();
-    expect(fixture.debugElement.nativeElement.textContent).toContain('We have found a username');
+    const message = fixture.debugElement.nativeElement.querySelector('.info');
+    expect(message.textContent).toContain('We found a username');
   });
 
   it('should show the found multiple usernames message', () => {
     component.foundUsernames = ['SpongebobSquarepants', 'PatrickStar'];
     component.setMessageForFoundUsernames();
+    component.showSearchResults = true;
     fixture.detectChanges();
-    expect(fixture.debugElement.nativeElement.textContent).toContain('We have found multiple usernames');
+    const message = fixture.debugElement.nativeElement.querySelector('.info');
+    expect(message.textContent).toContain('We found multiple usernames');
   });
 
   it('should disable the search button when the fields are not filled in', () => {
@@ -99,27 +113,11 @@ describe('ForgotStudentUsernameComponent', () => {
     const router = TestBed.get(Router);
     const navigateSpy = spyOn(router, 'navigate');
     component.foundUsernames = ['SpongebobS0101'];
+    component.showSearchResults = true;
     fixture.detectChanges();
-    const usernameLink = fixture.debugElement.nativeElement.querySelector('.cursor-link');
+    const usernameLink = fixture.debugElement.nativeElement.querySelector('a');
     usernameLink.click();
     const params = { username: 'SpongebobS0101' };
     expect(navigateSpy).toHaveBeenCalledWith(['/login', params]);
-  });
-
-  it('should navigate to the register page', () => {
-    const router = TestBed.get(Router);
-    const navigateSpy = spyOn(router, 'navigate');
-    component.createNewAccount();
-    expect(navigateSpy).toHaveBeenCalledWith(['/join']);
-  });
-
-  it('should navigate to the register page when the create new account link is clicked', () => {
-    const router = TestBed.get(Router);
-    const navigateSpy = spyOn(router, 'navigate');
-    component.showCreateNewAccountLink = true;
-    fixture.detectChanges();
-    const createNewAccountLink = fixture.debugElement.nativeElement.querySelector('.cursor-link');
-    createNewAccountLink.click();
-    expect(navigateSpy).toHaveBeenCalledWith(['/join']);
   });
 });

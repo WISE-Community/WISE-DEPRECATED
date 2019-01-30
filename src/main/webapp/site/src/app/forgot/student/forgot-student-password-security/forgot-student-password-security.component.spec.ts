@@ -1,13 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ForgotStudentPasswordSecurityComponent } from './forgot-student-password-security.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, LOCALE_ID, TRANSLATIONS_FORMAT, TRANSLATIONS } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { I18n } from "@ngx-translate/i18n-polyfill";
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/index';
 import { StudentService } from '../../../student/student.service';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/index';
+import { translationsFactory } from "../../../app.module";
 
 export class MockStudentService {
   checkSecurityAnswer(username: string, answer: string): Observable<any> {
@@ -46,7 +47,7 @@ describe('ForgotStudentPasswordSecurityComponent', () => {
   };
 
   const getErrorMessage = () => {
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
+    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.warn');
     return errorMessageDiv.textContent;
   };
 
@@ -63,7 +64,14 @@ describe('ForgotStudentPasswordSecurityComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        { provide: StudentService, useClass: MockStudentService }
+        { provide: StudentService, useClass: MockStudentService },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

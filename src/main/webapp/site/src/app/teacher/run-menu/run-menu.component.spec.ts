@@ -8,7 +8,9 @@ import { ConfigService } from "../../services/config.service";
 import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
 import { TeacherRun } from "../teacher-run";
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
+import { translationsFactory } from '../../app.module';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 export class MockTeacherService {
 
@@ -50,7 +52,14 @@ describe('RunMenuComponent', () => {
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
         { provide: ConfigService, useClass: MockConfigService },
-        { provide: MatDialog, useValue: {} }
+        { provide: MatDialog, useValue: {} },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

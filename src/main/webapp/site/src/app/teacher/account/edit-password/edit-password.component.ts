@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms"
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { UserService } from "../../../services/user.service";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-edit-password',
@@ -26,7 +27,8 @@ export class EditPasswordComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
       private userService: UserService,
-      public snackBar: MatSnackBar) { }
+      public snackBar: MatSnackBar,
+      private i18n: I18n) { }
 
   ngOnInit() {
   }
@@ -74,7 +76,7 @@ export class EditPasswordComponent implements OnInit {
   handleChangePasswordResponse(response) {
     if (response.message == 'success') {
       this.resetForm();
-      this.snackBar.open(`Password changed.`);
+      this.snackBar.open(this.i18n(`Password changed.`));
     } else if (response.message == 'incorrect password') {
       const error = { 'incorrectPassword': true };
       const oldPasswordControl = this.changePasswordFormGroup.get('oldPassword');

@@ -1,10 +1,11 @@
 #!/bin/bash
 echo "*** WISE pre-commit hook: Begin ***"
 
-# Generate and add updated messages.xmb file to git
-echo "*** WISE pre-commit hook: Generating messages.xmb ***"
+# Generate and add updated messages.xlf file to git
+echo "*** WISE pre-commit hook: Generating messages.xlf ***"
 ng xi18n
-git add src/main/webapp/site/src/messages.xmb
+npm run ngx-extractor
+git add src/main/webapp/site/src/messages.xlf
 
 # Run npm test. Abort commit if tests fail
 echo "*** WISE pre-commit hook: Running \"npm test\" ***"
