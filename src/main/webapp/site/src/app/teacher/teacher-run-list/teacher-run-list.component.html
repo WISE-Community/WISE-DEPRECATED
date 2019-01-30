@@ -29,7 +29,7 @@
       <ng-container *ngIf="searchValue || filterValue" i18n>Units found: </ng-container>
       <ng-container *ngIf="!searchValue && !filterValue" i18n>Total classroom units: </ng-container>
       {{ filteredRuns.length }}<span class="mat-caption" *ngIf="filteredRuns.length"> (<span *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} <ng-container i18n>scheduled</ng-container>, </span>{{ filteredActiveTotal }} <ng-container i18n>active</ng-container>, {{ filteredCompletedTotal }} <ng-container i18n>completed</ng-container>)</span>.
-      <a *ngIf="searchValue || filterValue" href="#" (click)="!!reset()" i18n>Reset</a>
+      <a *ngIf="searchValue || filterValue" [routerLink]="" (click)="reset()" i18n>Reset</a>
     </p>
   </div>
 

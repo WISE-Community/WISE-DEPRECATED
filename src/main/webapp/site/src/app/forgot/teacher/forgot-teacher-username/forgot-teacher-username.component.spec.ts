@@ -1,12 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ForgotTeacherUsernameComponent } from './forgot-teacher-username.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {TeacherService} from '../../../teacher/teacher.service';
-import {Observable} from 'rxjs/index';
-import {Router} from '@angular/router';
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TeacherService } from '../../../teacher/teacher.service';
+import { Observable } from 'rxjs/index';
+import { Router } from '@angular/router';
+import { translationsFactory } from '../../../app.module';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 export class MockTeacherService {
   sendForgotUsernameEmail(email: string): Observable<any> {
@@ -45,8 +46,8 @@ describe('ForgotTeacherUsernameComponent', () => {
   };
 
   const getErrorMessage = () => {
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    return errorMessageDiv.textContent;
+    const errorMessage = fixture.debugElement.nativeElement.querySelector('.warn');
+    return errorMessage.textContent;
   };
 
   beforeEach(async(() => {
@@ -57,7 +58,14 @@ describe('ForgotTeacherUsernameComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        { provide: TeacherService, useClass: MockTeacherService }
+        { provide: TeacherService, useClass: MockTeacherService },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -76,12 +84,12 @@ describe('ForgotTeacherUsernameComponent', () => {
 
   it('should show a failed to send email message', () => {
     submitAndReceiveResponse('sendForgotUsernameEmail', 'failure', 'failedToSendEmail');
-    expect(getErrorMessage()).toContain('The server has encountered an error and was unable to send the email to you');
+    expect(getErrorMessage()).toContain('The server has encountered an error');
   });
 
   it('should show an email not found message', () => {
     submitAndReceiveResponse('sendForgotUsernameEmail', 'failure', 'emailNotFound');
-    expect(getErrorMessage()).toContain('We did not find a WISE account associated with the email you entered');
+    expect(getErrorMessage()).toContain('We did not find a WISE account associated with that email');
   });
 
   it('should navigate to the success page', () => {
@@ -101,12 +109,5 @@ describe('ForgotTeacherUsernameComponent', () => {
     component.submit();
     fixture.detectChanges();
     expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/username/complete']);
-  });
-
-  it('should navigate to the create new account page', () => {
-    const router = TestBed.get(Router);
-    const navigateSpy = spyOn(router, 'navigate');
-    component.createNewAccount();
-    expect(navigateSpy).toHaveBeenCalledWith(['/join']);
   });
 });

@@ -1,13 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ForgotStudentPasswordCompleteComponent } from './forgot-student-password-complete.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 describe('ForgotStudentPasswordCompleteComponent', () => {
   let component: ForgotStudentPasswordCompleteComponent;
   let fixture: ComponentFixture<ForgotStudentPasswordCompleteComponent>;
+
+  const getSignInButton = () => {
+    return fixture.debugElement.nativeElement.querySelector('button');
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,7 +36,7 @@ describe('ForgotStudentPasswordCompleteComponent', () => {
   });
 
   it('should show the sign in button', () => {
-    const signInButton = fixture.debugElement.nativeElement.querySelector('a');
+    const signInButton = getSignInButton();
     expect(signInButton.textContent).toContain('Sign In');
   });
 
@@ -42,8 +45,9 @@ describe('ForgotStudentPasswordCompleteComponent', () => {
     const navigateSpy = spyOn(router, 'navigate');
     const username = 'SpongebobS0101';
     component.username = username;
-    component.goToLoginPage();
     const params = { username: username };
+    const signInButton = getSignInButton();
+    signInButton.click();
     expect(navigateSpy).toHaveBeenCalledWith(['/login', params]);
   });
 });

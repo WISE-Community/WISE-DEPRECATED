@@ -19,7 +19,7 @@
         <ng-container *ngIf="search" i18n>Units found: {{ filteredRuns.length }}</ng-container>
         <ng-container *ngIf="!search" i18n>My WISE units: {{ filteredRuns.length }}</ng-container>
         <span class="mat-caption" *ngIf="filteredRuns.length"> (<span *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} <ng-container i18n>scheduled</ng-container>, </span>{{ filteredActiveTotal }} <ng-container i18n>active</ng-container>, {{ filteredCompletedTotal }} <ng-container i18n>completed</ng-container>)</span>.
-        <a *ngIf="search" href="#" (click)="!!reset()" i18n>Reset</a>
+        <a *ngIf="search" [routerLink]="" (click)="reset()" i18n>Reset</a>
       </p>
     </div>
     <app-timeline>

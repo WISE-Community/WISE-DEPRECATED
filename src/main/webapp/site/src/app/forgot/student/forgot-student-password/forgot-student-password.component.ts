@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { I18n } from "@ngx-translate/i18n-polyfill";
 import { StudentService } from '../../../student/student.service';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-student-password',
@@ -19,7 +21,8 @@ export class ForgotStudentPasswordComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private router: Router,
-              private studentService: StudentService) { }
+              private studentService: StudentService,
+              private i18n: I18n) { }
 
   ngOnInit() {
   }
@@ -29,17 +32,22 @@ export class ForgotStudentPasswordComponent implements OnInit {
     this.clearMessage();
     this.showForgotUsernameLink = false;
     const username = this.getUsername();
-    this.studentService.getSecurityQuestion(username).subscribe((response) => {
-      if (response.status === 'success') {
-        this.goToQuestionPage(username, response.questionKey, response.question);
-      } else {
-        if (response.messageCode === 'usernameNotFound') {
-          this.setUsernameNotFoundMessage();
-          this.showForgotUsernameLink = true;
+    this.studentService.getSecurityQuestion(username)
+      .pipe(
+        finalize(() => {
+          this.processing = false;
+        })
+      )
+      .subscribe((response) => {
+        if (response.status === 'success') {
+          this.goToQuestionPage(username, response.questionKey, response.question);
+        } else {
+          if (response.messageCode === 'usernameNotFound') {
+            this.setUsernameNotFoundMessage();
+            this.showForgotUsernameLink = true;
+          }
         }
-      }
-      this.processing = false;
-    });
+      });
   }
 
   getUsername() {
@@ -65,9 +73,7 @@ export class ForgotStudentPasswordComponent implements OnInit {
   }
 
   setUsernameNotFoundMessage() {
-    const message = `We could not find that username. 
-      Please make sure you are typing your username correctly and try again.
-      If you have forgotten your username, please use the forgot username page below.`;
+    const message = this.i18n(`We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.`);
     this.setMessage(message);
   }
 
@@ -77,9 +83,5 @@ export class ForgotStudentPasswordComponent implements OnInit {
 
   clearMessage() {
     this.setMessage('');
-  }
-
-  goToForgotStudentUsernamePage() {
-    this.router.navigate(['/forgot/student/username']);
   }
 }

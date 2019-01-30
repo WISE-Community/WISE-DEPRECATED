@@ -5,6 +5,7 @@ import { TeacherService } from "../../../teacher/teacher.service";
 import { LibraryService } from "../../../services/library.service";
 import { ShareItemDialogComponent } from "../share-item-dialog/share-item-dialog.component";
 import { Project } from "../../../domain/project";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-share-project-dialog',
@@ -21,8 +22,9 @@ export class ShareProjectDialogComponent extends ShareItemDialogComponent {
               @Inject(MAT_DIALOG_DATA) public data: any,
               public libraryService: LibraryService,
               public teacherService: TeacherService,
-              public snackBar: MatSnackBar) {
-    super(dialogRef, data, teacherService, snackBar);
+              public snackBar: MatSnackBar,
+              i18n: I18n) {
+    super(dialogRef, data, teacherService, snackBar, i18n);
     this.project = data.project;
     this.projectId = data.project.id;
     this.libraryService.getProjectInfo(this.projectId).subscribe((project: Project) => {

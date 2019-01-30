@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material';
 import { Student } from "../../../domain/student";
 import { UserService } from "../../../services/user.service";
 import { StudentService } from "../../student.service";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-edit-profile',
@@ -28,7 +29,8 @@ export class EditProfileComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private studentService: StudentService,
               private userService: UserService,
-              public snackBar: MatSnackBar) {
+              public snackBar: MatSnackBar,
+              private i18n: I18n) {
     this.user = <Student>this.getUser().getValue();
     this.setControlFieldValue('firstName', this.user.firstName);
     this.setControlFieldValue('lastName', this.user.lastName);
@@ -77,9 +79,9 @@ export class EditProfileComponent implements OnInit {
   handleUpdateProfileResponse(response) {
     if (response.message == 'success') {
       this.changed = false;
-      this.snackBar.open(`Profile updated.`);
+      this.snackBar.open(this.i18n(`Profile updated.`));
     } else {
-      this.snackBar.open(`An error occurred. Please try again.`);
+      this.snackBar.open(this.i18n(`An error occurred. Please try again.`));
     }
     this.isSaving = false;
   }

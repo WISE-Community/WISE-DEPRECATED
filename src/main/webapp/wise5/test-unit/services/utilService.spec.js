@@ -92,5 +92,45 @@ describe('UtilService', function () {
       expect(UtilService.arrayHasNonNullElement(arrayToCheck)).toEqual(true);
     });
   });
+
+  describe('moveObjectUp()', function () {
+    it('should move an object up when the object is not the top element', function () {
+      var myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
+      var elementToMove = 1;
+      UtilService.moveObjectUp(myArray, elementToMove);
+      expect(myArray[0].name).toEqual('b');
+      expect(myArray[1].name).toEqual('a');
+      expect(myArray[2].name).toEqual('c');
+    });
+
+    it('should not move an object up when the object is the top element', function () {
+      var myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
+      var elementToMove = 0;
+      UtilService.moveObjectUp(myArray, elementToMove);
+      expect(myArray[0].name).toEqual('a');
+      expect(myArray[1].name).toEqual('b');
+      expect(myArray[2].name).toEqual('c');
+    });
+  });
+
+  describe('moveObjectDown()', function () {
+    it('should move an object down when the object is not the bottom element', function () {
+      var myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
+      var elementToMove = 1;
+      UtilService.moveObjectDown(myArray, elementToMove);
+      expect(myArray[0].name).toEqual('a');
+      expect(myArray[1].name).toEqual('c');
+      expect(myArray[2].name).toEqual('b');
+    });
+
+    it('should not move an object down when the object is the bottom element', function () {
+      var myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
+      var elementToMove = 2;
+      UtilService.moveObjectDown(myArray, elementToMove);
+      expect(myArray[0].name).toEqual('a');
+      expect(myArray[1].name).toEqual('b');
+      expect(myArray[2].name).toEqual('c');
+    });
+  });
 });
 //# sourceMappingURL=utilService.spec.js.map

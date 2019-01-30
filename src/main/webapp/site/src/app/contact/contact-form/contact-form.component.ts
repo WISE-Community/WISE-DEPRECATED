@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder, NgForm } from "@angular/forms";
+import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { finalize } from 'rxjs/operators';
+import { I18n } from "@ngx-translate/i18n-polyfill";
 import { UserService } from "../../services/user.service";
 import { Teacher } from "../../domain/teacher";
 import { Student } from "../../domain/student";
@@ -40,7 +41,8 @@ export class ContactFormComponent implements OnInit {
               private configService: ConfigService,
               private studentService: StudentService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private i18n: I18n) {
   }
 
   ngOnInit() {
@@ -116,21 +118,21 @@ export class ContactFormComponent implements OnInit {
   populateIssueTypes() {
     if (this.isStudent) {
       this.issueTypes = [
-        { key: "TROUBLE_LOGGING_IN", value: "Trouble Signing In" },
-        { key: "NEED_HELP_USING_WISE", value: "Need Help Using WISE" },
-        { key: "PROJECT_PROBLEMS", value: "Problems with a Project" },
-        { key: "FEEDBACK", value: "Feedback to WISE" },
-        { key: "OTHER", value: "Other Problem" }
+        { key: "TROUBLE_LOGGING_IN", value: this.i18n("Trouble Signing In") },
+        { key: "NEED_HELP_USING_WISE", value: this.i18n("Need Help Using WISE") },
+        { key: "PROJECT_PROBLEMS", value: this.i18n("Problems with a Project") },
+        { key: "FEEDBACK", value: this.i18n("Feedback to WISE") },
+        { key: "OTHER", value: this.i18n("Other Problem") }
       ];
     } else {
       this.issueTypes = [
-        { key: "TROUBLE_LOGGING_IN", value: "Trouble Signing In" },
-        { key: "NEED_HELP_USING_WISE", value: "Need Help Using WISE" },
-        { key: "PROJECT_PROBLEMS", value: "Problems with a Project" },
-        { key: "STUDENT_MANAGEMENT", value: "Student Management" },
-        { key: "AUTHORING", value: "Need Help with Authoring" },
-        { key: "FEEDBACK", value: "Feedback to WISE" },
-        { key: "OTHER", value: "Other Problem" }
+        { key: "TROUBLE_LOGGING_IN", value: this.i18n("Trouble Signing In") },
+        { key: "NEED_HELP_USING_WISE", value: this.i18n("Need Help Using WISE") },
+        { key: "PROJECT_PROBLEMS", value: this.i18n("Problems with a Project") },
+        { key: "STUDENT_MANAGEMENT", value: this.i18n("Student Management") },
+        { key: "AUTHORING", value: this.i18n("Need Help with Authoring") },
+        { key: "FEEDBACK", value: this.i18n("Feedback to WISE") },
+        { key: "OTHER", value: this.i18n("Other Problem") }
       ];
     }
   }

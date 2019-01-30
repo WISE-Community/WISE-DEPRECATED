@@ -20,6 +20,7 @@
   "branchPathTakenFromTo": "Take the branch path from <b>{{fromNodeTitle}}</b> to <b>{{toNodeTitle}}</b>",
   "cancel": "Cancel",
   "chooseABranchPath": "Choose a Branch Path",
+  "chooseChoiceOnNodeTitle": "You must choose \"{{choiceText}}\" on \"{{nodeTitle}}\"",
   "chooseItemToSnipToNotebook": "Choose Item to Snip to Notebook",
   "chooseNotebookItemToAdd": "Choose an item to add",
   "collapse": "Collapse",
