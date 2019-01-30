@@ -62,7 +62,7 @@
       <br>
       <p [ngClass]="{'warn': isErrorMessage, 'info': !isErrorMessage}">{{message}}</p>
       <div *ngFor="let username of foundUsernames">
-        <a href="#" (click)="!!loginWithUsername(username)" class="mat-body-2">{{username}}</a>
+        <a [routerLink]="" (click)="loginWithUsername(username)" class="mat-body-2">{{username}}</a>
       </div>
     </div>
   </mat-card-content>

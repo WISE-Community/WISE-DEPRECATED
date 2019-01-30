@@ -37,7 +37,7 @@
           {{ project.owner.firstName }} {{ project.owner.lastName }}
         </ng-container>
         <ng-container *ngIf="!sharedOwner.isOwner">
-          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a href="#" (click)="!!unshareProject(sharedOwner)" class="warn" i18n>Revoke</a>)
+          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a [routerLink]="" (click)="unshareProject(sharedOwner)" class="warn" i18n>Revoke</a>)
         </ng-container>
       </td>
     </ng-container>
