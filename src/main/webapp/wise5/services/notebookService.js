@@ -82,7 +82,11 @@ var NotebookService = function () {
 
     this.notebookConfig = {};
     if (this.ProjectService.project) {
-      this.notebookConfig = this.ProjectService.project.notebook;
+      if (this.ConfigService.getMode() === 'classroomMonitor') {
+        this.notebookConfig = this.ProjectService.project.teacherNotebook;
+      } else {
+        this.notebookConfig = this.ProjectService.project.notebook;
+      }
       // update local notebook config, preserving any defaults that aren't overriden
       if (this.notebookConfig !== null && _typeof(this.notebookConfig) === 'object') {
         this.config = angular.merge(this.config, this.notebookConfig);
