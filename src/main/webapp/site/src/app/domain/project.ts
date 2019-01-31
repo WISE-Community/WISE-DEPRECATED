@@ -14,6 +14,7 @@ export class Project {
   owner: User;
   sharedOwners: User[] = [];
   run: Run;
+  parentId: number;
 
   static readonly VIEW_PERMISSION: number = 1;
   static readonly EDIT_PERMISSION: number = 2;
@@ -43,6 +44,10 @@ export class Project {
   public canEdit(userId) {
     return this.isOwner(userId) ||
         this.isSharedOwnerWithPermission(userId, Project.EDIT_PERMISSION);
+  }
+
+  public isChild() {
+    return this.parentId != null;
   }
 
   isOwner(userId) {
