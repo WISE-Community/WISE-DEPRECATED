@@ -65,17 +65,17 @@ export class LibraryProjectDetailsComponent implements OnInit {
   }
 
   runProject() {
-    if (true /*this.data.project.wiseVersion === 4*/) {
+    if (this.data.project.wiseVersion === 4) {
       this.dialog.open(UseWithClassWarningDialogComponent, {
         data: this.data,
         panelClass: 'mat-dialog--md'
-      })
+      });
     } else {
       this.dialog.open(CreateRunDialogComponent, {
         data: this.data,
         panelClass: 'mat-dialog--md',
         disableClose: true
-      })
+      });
     }
   }
 }

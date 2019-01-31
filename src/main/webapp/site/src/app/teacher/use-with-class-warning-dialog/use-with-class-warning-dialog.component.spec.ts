@@ -5,11 +5,15 @@ import { MatDialog, MatDialogRef } from "@angular/material";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Project } from "../../domain/project";
 import { Observable } from "rxjs";
+import {NO_ERRORS_SCHEMA} from "@angular/core";
 
 describe('UseWithClassWarningDialogComponent', () => {
   let component: UseWithClassWarningDialogComponent;
   let fixture: ComponentFixture<UseWithClassWarningDialogComponent>;
   const project: Project = new Project();
+  project.metadata = {
+    "title": "This is a test"
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -28,7 +32,8 @@ describe('UseWithClassWarningDialogComponent', () => {
             close: () => {}
           }},
         { provide: MAT_DIALOG_DATA, useValue: { project: project }}
-      ]
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
