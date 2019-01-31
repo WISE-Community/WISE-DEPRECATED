@@ -1,9 +1,9 @@
 <button mat-icon-button [matMenuTriggerFor]="runMenu">
-  <mat-icon aria-label="Run Menu">more_vert</mat-icon>
+  <mat-icon i18n-aria-label aria-label="Run Menu">more_vert</mat-icon>
 </button>
 <mat-menu #runMenu="matMenu" xPosition="before">
   <div>
-    <div class="run-info mat-body-2"><ng-container i18n>Run ID:</ng-container> {{ run.id }}</div>
+    <div class="run-info mat-body-2" i18n>Run ID: {{ run.id }}</div>
     <mat-divider></mat-divider>
     <a mat-menu-item (click)="showEditRunDetails()">
       <mat-icon>settings</mat-icon>

@@ -58,6 +58,7 @@ var EmbeddedController = function (_ComponentController) {
 
     _this.componentStateId = null;
     _this.embeddedApplicationIFrameId = '';
+    _this.annotationsToSave = [];
 
     _this.embeddedApplicationIFrameId = 'componentApp_' + _this.componentId;
     _this.componentType = _this.componentContent.type;
@@ -194,6 +195,9 @@ var EmbeddedController = function (_ComponentController) {
 
         this.isDirty = true;
         this.setStudentData(messageEventData.studentData);
+        if (messageEventData.annotations != null) {
+          this.setAnnotations(messageEventData.annotations);
+        }
         this.studentDataChanged();
 
         // tell the parent node that this component wants to save
@@ -214,6 +218,9 @@ var EmbeddedController = function (_ComponentController) {
         this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
       } else if (messageEventData.messageType === 'studentDataChanged') {
         this.setStudentData(messageEventData.studentData);
+        if (messageEventData.annotations != null) {
+          this.setAnnotations(messageEventData.annotations);
+        }
         this.studentDataChanged();
       } else if (messageEventData.messageType === 'getStudentWork') {
         var getStudentWorkParams = messageEventData.getStudentWorkParams;
@@ -246,6 +253,15 @@ var EmbeddedController = function (_ComponentController) {
           projectAssetsPath: this.ConfigService.getConfigParam('projectBaseURL') + 'assets'
         };
         this.sendMessageToApplication(_message);
+      } else if (messageEventData.messageType === 'getLatestAnnotations') {
+        var latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
+        var latestCommentAnnotation = this.AnnotationService.getLatestCommentAnnotation(this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
+        var _message2 = {
+          messageType: 'latestAnnotations',
+          latestScoreAnnotation: latestScoreAnnotation,
+          latestCommentAnnotation: latestCommentAnnotation
+        };
+        this.sendMessageToApplication(_message2);
       }
     });
 
@@ -340,6 +356,14 @@ var EmbeddedController = function (_ComponentController) {
       componentState.nodeId = this.nodeId;
       componentState.componentId = this.componentId;
 
+      if (this.annotationsToSave.length !== 0) {
+        componentState.annotations = this.annotationsToSave;
+      }
+
+      if (action === 'save') {
+        this.clearAnnotationsToSave();
+      }
+
       var deferred = this.$q.defer();
 
       /*
@@ -348,6 +372,11 @@ var EmbeddedController = function (_ComponentController) {
        */
       this.createComponentStateAdditionalProcessing(deferred, componentState, action);
       return deferred.promise;
+    }
+  }, {
+    key: 'clearAnnotationsToSave',
+    value: function clearAnnotationsToSave() {
+      this.annotationsToSave = [];
     }
   }, {
     key: 'sendLatestWorkToApplication',
@@ -683,6 +712,54 @@ var EmbeddedController = function (_ComponentController) {
      */
     value: function setStudentData(studentData) {
       this.studentData = studentData;
+    }
+  }, {
+    key: 'setAnnotations',
+    value: function setAnnotations(annotations) {
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = annotations[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var annotation = _step5.value;
+
+          if (this.isAnnotationValid(annotation)) {
+            if (annotation.type === 'autoScore') {
+              var scoreAnnotation = this.createAutoScoreAnnotation(annotation.data);
+              this.updateLatestScoreAnnotation(scoreAnnotation);
+              this.addToAnnotationsToSave(scoreAnnotation);
+            } else if (annotation.type === 'autoComment') {
+              var commentAnnotation = this.createAutoCommentAnnotation(annotation.data);
+              this.updateLatestCommentAnnotation(commentAnnotation);
+              this.addToAnnotationsToSave(commentAnnotation);
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
+      }
+    }
+  }, {
+    key: 'isAnnotationValid',
+    value: function isAnnotationValid(annotation) {
+      return annotation.type != null && annotation.data != null && annotation.data.value != null;
+    }
+  }, {
+    key: 'addToAnnotationsToSave',
+    value: function addToAnnotationsToSave(annotation) {
+      this.annotationsToSave.push(annotation);
     }
   }]);
 

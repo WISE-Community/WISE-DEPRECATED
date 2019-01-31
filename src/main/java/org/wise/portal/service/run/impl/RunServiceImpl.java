@@ -215,17 +215,17 @@ public class RunServiceImpl implements RunService {
   }
 
   public Run createRun(Integer projectId, User user, Set<String> periodNames,
-        Integer studentsPerTeam, Long startDate, Locale locale) throws Exception {
+        Integer maxStudentsPerTeam, Long startDate, Locale locale) throws Exception {
     Project project = projectService.copyProject(projectId, user);
     RunParameters runParameters = createRunParameters(project, user, periodNames,
-        studentsPerTeam, startDate, locale);
+        maxStudentsPerTeam, startDate, locale);
     Run run = createRun(runParameters);
     createTeacherWorkgroup(run, user);
     return run;
   }
 
   public RunParameters createRunParameters(Project project, User user, Set<String> periodNames,
-        Integer studentsPerTeam, Long startDate, Locale locale) {
+        Integer maxStudentsPerTeam, Long startDate, Locale locale) {
     RunParameters runParameters = new RunParameters();
     runParameters.setOwner(user);
     runParameters.setName(project.getName());
@@ -233,7 +233,7 @@ public class RunServiceImpl implements RunService {
     runParameters.setLocale(locale);
     runParameters.setPostLevel(5);
     runParameters.setPeriodNames(periodNames);
-    runParameters.setMaxWorkgroupSize(studentsPerTeam);
+    runParameters.setMaxWorkgroupSize(maxStudentsPerTeam);
     runParameters.setStartTime(new Date(startDate));
     return runParameters;
   }
@@ -305,11 +305,28 @@ public class RunServiceImpl implements RunService {
       this.aclService.addPermission(run, RunPermission.VIEW_STUDENT_WORK, user);
       List<Integer> newPermissions = new ArrayList<>();
       newPermissions.add(RunPermission.VIEW_STUDENT_WORK.getMask());
+      createSharedTeacherWorkgroupIfNecessary(run, user);
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
         user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
     } else {
       throw new TeacherAlreadySharedWithRunException(teacherUsername + " is already shared with this run");
     }
+  }
+
+  private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user) throws ObjectNotFoundException {
+    if (workgroupService.getWorkgroupListByRunAndUser(run, user).size() == 0) {
+      return createSharedTeacherWorkgroup(run, user);
+    }
+    return null;
+  }
+
+  private Workgroup createSharedTeacherWorkgroup(Run run, User user) throws ObjectNotFoundException {
+    if (user.isTeacher()) {
+      Set<User> sharedOwners = new HashSet<User>();
+      sharedOwners.add(user);
+      return workgroupService.createWorkgroup("teacher", sharedOwners, run, null);
+    }
+    return null;
   }
 
   public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
@@ -340,7 +357,8 @@ public class RunServiceImpl implements RunService {
     if (run.getSharedowners().contains(user)) {
       run.getSharedowners().remove(user);
       runDao.save(run);
-      Project runProject = (Project) Hibernate.unproxy(run.getProject());
+      // call unProxy when we upgrade to hibernate 5.2
+      Project runProject = (Project) run.getProject();
       runProject.getSharedowners().remove(user);
       projectDao.save(runProject);
 
@@ -512,6 +530,18 @@ public class RunServiceImpl implements RunService {
     return aclService.hasPermission(run, permission, user);
   }
 
+  public boolean canDecreaseMaxStudentsPerTeam(Long runId) {
+    Set<Workgroup> workgroups = this.getWorkgroups(runId);
+    if (workgroups != null) {
+      for (Workgroup workgroup : workgroups) {
+        if (workgroup.isStudentWorkgroup() && workgroup.getMembers().size() > 1) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   public List<Run> getRunsRunWithinPeriod(String period) {
     return runDao.getRunsRunWithinPeriod(period);
   }
@@ -582,10 +612,10 @@ public class RunServiceImpl implements RunService {
   }
 
   @Transactional()
-  public void setMaxWorkgroupSize(Long runId, Integer studentsPerTeam) {
+  public void setMaxWorkgroupSize(Long runId, Integer maxStudentsPerTeam) {
     try {
       Run run = this.retrieveById(runId);
-      run.setMaxWorkgroupSize(studentsPerTeam);
+      run.setMaxWorkgroupSize(maxStudentsPerTeam);
       this.runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();

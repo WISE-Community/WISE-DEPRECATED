@@ -17,6 +17,7 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
@@ -39,7 +40,7 @@ import java.util.*;
  * @author Hiroki Terashima
  */
 @RestController
-@RequestMapping(value = "/api/teacher", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/api/teacher", produces = "application/json;charset=UTF-8")
 public class TeacherAPIController {
 
   @Autowired
@@ -93,7 +94,7 @@ public class TeacherAPIController {
     JSONArray runsJSONArray = new JSONArray();
     for (Run run : runs) {
       JSONObject runJSON = getRunJSON(run);
-      JSONObject projectJSON = getProjectJSON(run.getProject());
+      JSONObject projectJSON = ControllerUtil.getProjectJSON(run.getProject());
       runJSON.put("project", projectJSON);
       runsJSONArray.put(runJSON);
     }
@@ -114,24 +115,11 @@ public class TeacherAPIController {
     }
     runJSON.put("periods", periodsArray);
     runJSON.put("numStudents", getNumStudentsInRun(run));
-    runJSON.put("studentsPerTeam", run.getMaxWorkgroupSize());
+    runJSON.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
     runJSON.put("owner", getOwnerJSON(run.getOwner()));
     runJSON.put("sharedOwners", getRunSharedOwners(run));
-    runJSON.put("project", getProjectJSON(run.getProject()));
+    runJSON.put("project", ControllerUtil.getProjectJSON(run.getProject()));
     return runJSON;
-  }
-
-  private JSONObject getProjectJSON(Project project) throws JSONException {
-    JSONObject projectJSON = new JSONObject();
-    projectJSON.put("id", project.getId());
-    projectJSON.put("name", project.getName());
-    projectJSON.put("dateCreated", project.getDateCreated());
-    projectJSON.put("dateArchived", project.getDateDeleted());
-    projectJSON.put("projectThumb", getProjectThumbIconPath(project));
-    projectJSON.put("owner", getOwnerJSON(project.getOwner()));
-    projectJSON.put("sharedOwners", getProjectSharedOwnersJSON(project));
-    projectJSON.put("metadata", project.getMetadata().toJSONObject());
-    return projectJSON;
   }
 
   private JSONObject getOwnerJSON(User owner) throws JSONException {
@@ -155,7 +143,7 @@ public class TeacherAPIController {
       throws ObjectNotFoundException, JSONException {
     Run run = runService.retrieveById(runId);
     JSONObject runJSON = getRunJSON(run);
-    JSONObject projectJSON = getProjectJSON(run.getProject());
+    JSONObject projectJSON = ControllerUtil.getProjectJSON(run.getProject());
     runJSON.put("project", projectJSON);
     return runJSON.toString();
   }
@@ -229,12 +217,6 @@ public class TeacherAPIController {
 
   private boolean isUsingGoogleUserId(String googleUserId) {
     return googleUserId != null && !googleUserId.equals("");
-  }
-
-  @ResponseBody
-  @RequestMapping(value = "/checkGoogleUserId", method = RequestMethod.GET)
-  protected boolean isGoogleIdExist(@RequestParam String googleUserId) {
-    return this.userService.retrieveUserByGoogleUserId(googleUserId) != null;
   }
 
   private JSONArray getProjectSharedOwnersJSON(Project project) throws JSONException {
@@ -316,12 +298,12 @@ public class TeacherAPIController {
   protected String createRun(HttpServletRequest request,
                              @RequestParam("projectId") String projectId,
                              @RequestParam("periods") String periods,
-                             @RequestParam("studentsPerTeam") String studentsPerTeam,
+                             @RequestParam("maxStudentsPerTeam") String maxStudentsPerTeam,
                              @RequestParam("startDate") String startDate) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Locale locale = request.getLocale();
     Set<String> periodNames = createPeriodNamesSet(periods);
-    Run run = runService.createRun(Integer.parseInt(projectId), user, periodNames, Integer.parseInt(studentsPerTeam),
+    Run run = runService.createRun(Integer.parseInt(projectId), user, periodNames, Integer.parseInt(maxStudentsPerTeam),
         Long.parseLong(startDate), locale);
     JSONObject runJSON = getRunJSON(run);
     return runJSON.toString();
@@ -437,15 +419,23 @@ public class TeacherAPIController {
   @RequestMapping(value = "/run/update/studentsperteam", method = RequestMethod.POST)
   protected String editRunStudentsPerTeam(HttpServletRequest request,
         @RequestParam("runId") Long runId,
-        @RequestParam("studentsPerTeam") Integer studentsPerTeam) throws Exception {
+        @RequestParam("maxStudentsPerTeam") Integer maxStudentsPerTeam) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(runId);
     JSONObject response;
     if (run.isTeacherAssociatedToThisRun(user)) {
-      runService.setMaxWorkgroupSize(runId, studentsPerTeam);
-      response = createSuccessResponse();
+      boolean canChange = true;
+      if (maxStudentsPerTeam == 1) {
+        canChange = runService.canDecreaseMaxStudentsPerTeam(run.getId());
+      }
+      if (canChange) {
+        runService.setMaxWorkgroupSize(runId, maxStudentsPerTeam);
+        response = createSuccessResponse();
+      } else {
+        response = createFailureResponse("notAllowedToDecreaseMaxStudentsPerTeam");
+      }
     } else {
-      response = createFailureResponse("noPermissionToChangeStudentsPerTeam");
+      response = createFailureResponse("noPermissionToChangeMaxStudentsPerTeam");
     }
     addRunToResponse(response, run);
     return response.toString();

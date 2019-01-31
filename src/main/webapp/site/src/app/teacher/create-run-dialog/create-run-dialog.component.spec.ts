@@ -15,6 +15,8 @@ export class MockTeacherService {
   createRun() {
     return Observable.create(observer => {
       const run: Run = new Run();
+      run.runCode = 'Dog1234';
+      run.name = 'Photosynthesis';
       observer.next(run);
       observer.complete();
     });
@@ -89,7 +91,7 @@ describe('CreateRunDialogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show run info', () => {
+  it('should show project info', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('Photosynthesis');
   });
@@ -125,11 +127,13 @@ describe('CreateRunDialogComponent', () => {
     expect(submitButton.disabled).toBe(false);
   });
 
-  it('should close the dialog when form is successfully submitted', async() => {
+  it('should show the confirmation message when form is successfully submitted', async() => {
     component.periodsGroup.controls[0].get("checkbox").setValue(true);
     const form = getForm();
     form.triggerEventHandler('submit', null);
     fixture.detectChanges();
-    expect(component.dialog.closeAll).toHaveBeenCalled();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.textContent).toContain('Dog1234');
+    expect(compiled.textContent).toContain('Photosynthesis');
   });
 });

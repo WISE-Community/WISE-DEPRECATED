@@ -3,6 +3,8 @@ import { StudentRun } from '../student-run';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser';
 import { ConfigService } from "../../services/config.service";
+import { MatDialog } from "../../../../../../../../node_modules/@angular/material/dialog";
+import { TeamSignInDialogComponent } from "../team-sign-in-dialog/team-sign-in-dialog.component";
 
 @Component({
   selector: 'app-student-run-list-item',
@@ -14,13 +16,13 @@ export class StudentRunListItemComponent implements OnInit {
   @Input()
   run: StudentRun = new StudentRun();
 
-  runLink: string = '';
   problemLink: string = '';
   thumbStyle: SafeStyle;
   isAvailable: boolean = true;
 
   constructor(private sanitizer: DomSanitizer,
-              private configService: ConfigService) {
+              private configService: ConfigService,
+              public dialog: MatDialog) {
     this.sanitizer = sanitizer;
     this.configService = configService;
   }
@@ -33,7 +35,6 @@ export class StudentRunListItemComponent implements OnInit {
 
   ngOnInit() {
     this.thumbStyle = this.getThumbStyle();
-    this.runLink = this.getRunLink();
     this.problemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
     this.configService.getConfig().subscribe(config => {
       if (config != null) {
@@ -49,11 +50,14 @@ export class StudentRunListItemComponent implements OnInit {
     }
   }
 
-  getRunLink() {
-    if (this.run.studentsPerTeam === 1) {
-      return `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
+launchRun() {
+    if (this.run.maxStudentsPerTeam === 1 || this.run.endTime) {
+      window.location.href = `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
     } else {
-      return `${this.configService.getContextPath()}/student/teamsignin.html?runId=${this.run.id}`;
+      this.dialog.open(TeamSignInDialogComponent, {
+        data: { run: this.run },
+        panelClass: 'mat-dialog--sm'
+      });
     }
   }
 }

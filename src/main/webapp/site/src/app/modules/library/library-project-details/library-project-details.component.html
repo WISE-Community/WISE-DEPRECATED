@@ -7,10 +7,11 @@
           <div class="mat-card-title mat-body-2">{{ data.project.metadata.title }}</div>
           <div class="mat-card-subtitle">
             <div>
-              <ng-container *ngIf="data.project.metadata.grades.length" i18n>Grade level:</ng-container><span *ngFor="let g of data.project.metadata.grades; let isLast=last"> {{ g }}{{ isLast ? '' : ', ' }}</span>
-              <span *ngIf="data.project.metadata.grades.length && data.project.metadata.totalTime">&nbsp;|&nbsp;</span>
-              <ng-container *ngIf="data.project.metadata.totalTime" i18n>Duration:</ng-container> {{ data.project.metadata.totalTime }}<br />
-              <ng-container i18n>Unit ID:</ng-container> {{ data.project.id }}<!--| Last Updated: {{ data.project.lastUpdated }}>-->
+              <ng-container *ngIf="data.project.metadata.grades.length" i18n>Grade level:</ng-container>
+              <span *ngFor="let g of data.project.metadata.grades; let isLast=last"> {{ g }}{{ isLast ? '' : ', ' }}</span>
+              <ng-container *ngIf="data.project.metadata.grades.length && data.project.metadata.totalTime">&nbsp;|&nbsp;</ng-container>
+              <ng-container *ngIf="data.project.metadata.totalTime" i18n>Duration: {{ data.project.metadata.totalTime }}</ng-container><br />
+              <ng-container i18n>Unit ID: {{ data.project.id }}</ng-container>
             </div>
           </div>
         </div>
@@ -31,7 +32,7 @@
     </p>
     <p *ngIf="data.project.metadata.features"><strong i18n>Features:</strong> {{ data.project.metadata.features }}</p>
     <p *ngIf="ngss.dciArrangements.length">
-      <strong i18n>Performance Expectations: </strong>
+      <strong i18n>NGSS Performance Expectations: </strong>
       <ng-container *ngFor="let dcia of ngss.dciArrangements; let isLast=last">
         <a href="{{ ngssWebUrl }}{{ dcia.id }}" target="_blank">{{ dcia.id }} {{ dcia.name }}</a>
         <ng-container *ngIf="dcia.children.length">
@@ -50,14 +51,15 @@
      fxLayoutGap="8px">
   <button mat-button cdkFocusRegionstart (click)="onClose()" i18n>Close</button>
   <button *ngIf="isTeacher && !isRunProject"
-          mat-flat-button color="accent" (click)="runProject()">
-    <mat-icon i18n>supervised_user_circle</mat-icon> <ng-container i18n>Use with Class</ng-container>
+          mat-flat-button 
+          color="accent" 
+          (click)="runProject()">
+    <mat-icon>supervised_user_circle</mat-icon>&nbsp;<ng-container i18n>Use with Class</ng-container>
   </button>
-  <!-- TODO: get preview url using config -->
   <a mat-flat-button
      color="primary"
      href="{{previewLink}}"
      target="_blank">
-    <mat-icon>visibility</mat-icon> <ng-container i18n>Preview</ng-container>
+    <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Preview</ng-container>
   </a>
 </div>

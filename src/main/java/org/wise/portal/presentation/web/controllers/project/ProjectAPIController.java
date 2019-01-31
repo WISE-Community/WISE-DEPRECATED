@@ -33,7 +33,7 @@ import java.util.Properties;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping(value = "/api/project", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/api/project", produces = "application/json;charset=UTF-8")
 public class ProjectAPIController {
 
   @Autowired
@@ -146,6 +146,9 @@ public class ProjectAPIController {
         projectLibraryGroup.put("metadata", metadata.toJSONObject());
         projectLibraryGroup.put("projectThumb", getProjectThumb(project));
         projectLibraryGroup.put("name", project.getName());
+        projectLibraryGroup.put("owner", ControllerUtil.getOwnerJSON(project.getOwner()));
+        projectLibraryGroup.put("sharedOwners", ControllerUtil.getProjectSharedOwnersJSON(project));
+        projectLibraryGroup.put("dateCreated", project.getDateCreated());
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {TeacherService} from '../../../teacher/teacher.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { TeacherService } from '../../../teacher/teacher.service';
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-teacher-password-change',
@@ -24,7 +26,8 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private teacherService: TeacherService) { }
+              private teacherService: TeacherService,
+              private i18n: I18n) { }
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -39,32 +42,36 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
     if (this.isPasswordsMatch(password, confirmPassword)) {
       this.processing = true;
       this.teacherService.changePassword(this.username, this.verificationCode, password, confirmPassword)
-          .subscribe((response) => {
-        if (response.status === 'success') {
-          this.goToSuccessPage();
-        } else {
-          if (response.messageCode === 'tooManyVerificationCodeAttempts') {
-            this.setTooManyVerificationCodeAttemptsMessage();
-            this.disablePasswordInputs();
-            this.disableSubmitButton();
-            this.showForgotPasswordLink = true;
-          } else if (response.messageCode === 'verificationCodeExpired') {
-            this.setVerificationCodeExpiredMessage();
-            this.disablePasswordInputs();
-            this.disableSubmitButton();
-            this.showForgotPasswordLink = true;
-          } else if (response.messageCode === 'verificationCodeIncorrect') {
-            this.setVerificationCodeIncorrectMessage();
-          } else if (response.messageCode === 'passwordIsBlank') {
-            this.setPasswordIsBlankMessage();
-          } else if (response.messageCode === 'passwordsDoNotMatch') {
-            this.setPasswordsDoNotMatchMessage();
+        .pipe(
+          finalize(() => {
+            this.processing = false;
+          })
+        )
+        .subscribe((response) => {
+          if (response.status === 'success') {
+            this.goToSuccessPage();
           } else {
-            this.setErrorOccurredMessage();
+            if (response.messageCode === 'tooManyVerificationCodeAttempts') {
+              this.setTooManyVerificationCodeAttemptsMessage();
+              this.disablePasswordInputs();
+              this.disableSubmitButton();
+              this.showForgotPasswordLink = true;
+            } else if (response.messageCode === 'verificationCodeExpired') {
+              this.setVerificationCodeExpiredMessage();
+              this.disablePasswordInputs();
+              this.disableSubmitButton();
+              this.showForgotPasswordLink = true;
+            } else if (response.messageCode === 'verificationCodeIncorrect') {
+              this.setVerificationCodeIncorrectMessage();
+            } else if (response.messageCode === 'passwordIsBlank') {
+              this.setPasswordIsBlankMessage();
+            } else if (response.messageCode === 'passwordsDoNotMatch') {
+              this.setPasswordsDoNotMatchMessage();
+            } else {
+              this.setErrorOccurredMessage();
+            }
           }
-        }
-        this.processing = false;
-      });
+        });
     } else {
       this.setPasswordsDoNotMatchMessage();
     }
@@ -95,33 +102,30 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
   }
 
   setVerificationCodeExpiredMessage() {
-    const message = `The verification code has expired. Verification codes are valid for 10 minutes.
-        Please go back to the Teacher Forgot Password page to generate a new one.`;
+    const message = this.i18n(`The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.`);
     this.setMessage(message);
   }
 
   setVerificationCodeIncorrectMessage() {
-    const message = 'The verification code is incorrect. Please try again.';
+    const message = this.i18n(`The verification code is invalid. Please try again.`);
     this.setMessage(message);
   }
 
   setTooManyVerificationCodeAttemptsMessage() {
-    const message = `You have submitted an incorrect verification code too many times recently.
-        For security reasons, we will lock the ability to change your password for 10 minutes.
-        After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.`;
+    const message = this.i18n(`You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.`);
     this.setMessage(message);
   }
 
   setPasswordIsBlankMessage() {
-    this.setMessage('Password cannot be blank, please enter a password.');
+    this.setMessage(this.i18n(`Password cannot be blank, please enter a password.`));
   }
 
   setPasswordsDoNotMatchMessage() {
-    this.setMessage('Passwords do not match, please try again.');
+    this.setMessage(this.i18n(`Passwords do not match, please try again.`));
   }
 
   setErrorOccurredMessage() {
-    this.setMessage('An error occurred, please try again.');
+    this.setMessage(this.i18n(`An error occurred, please try again.`));
   }
 
   setMessage(message) {
@@ -139,10 +143,6 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
 
   disableSubmitButton() {
     this.isSubmitButtonEnabled = false;
-  }
-
-  goToForgotPasswordPage() {
-    this.router.navigate(['/forgot/teacher/password']);
   }
 
   goToSuccessPage() {

@@ -21,12 +21,15 @@
            target="_blank"
            mat-icon-button>
           <mat-icon svgIcon="facebook-ffffff"
+                    i18n-aria-label
                     aria-label="WISE on Facebook"></mat-icon>
         </a>
         <a href="https://twitter.com/WISETELS"
            target="_blank"
            mat-icon-button>
-          <mat-icon svgIcon="twitter-ffffff" aria-label="WISE on Twitter"></mat-icon>
+          <mat-icon svgIcon="twitter-ffffff"
+                    i18n-aria-label
+                    aria-label="WISE on Twitter"></mat-icon>
         </a>
       </div>
     </div>
@@ -39,7 +42,7 @@
            fxFlex.gt-sm="1 1 0"
            ngClass="center"
            [ngClass.gt-sm]="{'center': false}">
-        <p i18n>Powered by the <a href="https://wise-research.berkeley.edu" target="_blank">TELS Community</a> and <a href="https://github.com/WISE-Community/WISE" target="_blank">WISE Open Source Technology</a>.</p>
+        <p i18n>Powered by the <a href="https://wise-research.berkeley.edu" target="_blank">TELS Research Community</a> and <a href="https://github.com/WISE-Community/WISE" target="_blank">WISE Open Source Technology</a>.</p>
         <p i18n>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</p>
       </div>
       <div fxFlex="0 0 auto">
@@ -48,20 +51,20 @@
              fxLayoutAlign="center center"
              fxLayoutAlign.gt-sm="end center">
           <a href="https://www.nsf.gov/" target="_blank">
-            <img src="assets/img/footer/nsf-logo.png" alt="National Science Foundation" />
+            <img src="assets/img/footer/nsf-logo.png" i18n-alt alt="National Science Foundation" />
           </a>
           <a href="http://berkeley.edu" target="_blank">
-            <img src="assets/img/footer/uc-berkeley-logo.png" alt="UC Berkeley" />
+            <img src="assets/img/footer/uc-berkeley-logo.png" i18n-alt alt="UC Berkeley" />
           </a>
           <a href="https://concord.org" target="_blank">
-            <img src="assets/img/footer/cc-logo.png" alt="Concord Consortium" />
+            <img src="assets/img/footer/cc-logo.png" i18n-alt alt="Concord Consortium" />
           </a>
-          <img src="assets/img/footer/sail-logo.png" alt="SAIL (Scalable Architecture for Interactive Learning)" />
+          <img src="assets/img/footer/sail-logo.png" i18n-alt alt="SAIL (Scalable Architecture for Interactive Learning)" />
         </div>
         <div class="footer__section"
              fxLayoutAlign="center center"
              fxLayoutAlign.gt-sm="end center">
-          <span class="center" i18n>©1996-2018, <a href="http://berkeley.edu" target="_blank">UC Berkeley</a> | Web-based Inquiry Science Environment</span>
+          <span class="center" i18n>©1996-2018, <a href="https://www.berkeley.edu" target="_blank">UC Berkeley</a> | Web-based Inquiry Science Environment</span>
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, TRANSLATIONS, LOCALE_ID, TRANSLATIONS_FORMAT,
+  MissingTranslationStrategy } from '@angular/core';
+import { I18n, MISSING_TRANSLATION_STRATEGY } from '@ngx-translate/i18n-polyfill';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -9,7 +11,7 @@ import { MatDialogModule, MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from
 import {
   SocialLoginModule,
   AuthServiceConfig,
-  GoogleLoginProvider,
+  GoogleLoginProvider, LoginOpt,
 } from "angularx-social-login";
 
 import { AppComponent } from './app.component';
@@ -45,15 +47,23 @@ export function initialize(configService: ConfigService, userService: UserServic
 
 export function getAuthServiceConfigs(configService: ConfigService) {
   const autServiceConfig: AuthServiceConfig = new AuthServiceConfig([]);
+  const googleLoginOptions: LoginOpt = {
+    prompt: 'select_account'
+  };
   configService.getConfig().subscribe((config) => {
     if (config != null) {
       if (configService.getGoogleClientId() != null) {
         autServiceConfig.providers.set(GoogleLoginProvider.PROVIDER_ID,
-          new GoogleLoginProvider(configService.getGoogleClientId()));
+          new GoogleLoginProvider(configService.getGoogleClientId(), googleLoginOptions));
       }
     }
   });
   return autServiceConfig;
+}
+
+declare const require;
+export function translationsFactory(locale: string) {
+  return locale === 'en-US' ? '' : require(`raw-loader!../locale/messages.${locale}.xlf`);
 }
 
 @NgModule({
@@ -94,6 +104,14 @@ export function getAuthServiceConfigs(configService: ConfigService) {
     StudentService,
     TeacherService,
     UserService,
+    {
+      provide: TRANSLATIONS,
+      useFactory: translationsFactory,
+      deps: [LOCALE_ID]
+    },
+    { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
+    { provide: MISSING_TRANSLATION_STRATEGY, useValue: MissingTranslationStrategy.Ignore },
+    I18n,
     {
       provide: APP_INITIALIZER,
       useFactory: initialize,

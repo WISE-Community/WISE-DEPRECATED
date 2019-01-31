@@ -24,11 +24,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="wise" />
+        <module name="WISE" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="wise" target="1.8" />
+      <module name="WISE" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

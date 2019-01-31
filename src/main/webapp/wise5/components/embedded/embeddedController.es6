@@ -50,7 +50,7 @@ class EmbeddedController extends ComponentController {
 
     this.componentStateId = null;
     this.embeddedApplicationIFrameId = '';
-
+    this.annotationsToSave = [];
 
     this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
     this.componentType = this.componentContent.type;
@@ -188,6 +188,9 @@ class EmbeddedController extends ComponentController {
 
         this.isDirty = true;
         this.setStudentData(messageEventData.studentData);
+        if (messageEventData.annotations != null) {
+          this.setAnnotations(messageEventData.annotations);
+        }
         this.studentDataChanged();
 
         // tell the parent node that this component wants to save
@@ -208,6 +211,9 @@ class EmbeddedController extends ComponentController {
         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isDirty});
       } else if (messageEventData.messageType === 'studentDataChanged') {
         this.setStudentData(messageEventData.studentData);
+        if (messageEventData.annotations != null) {
+          this.setAnnotations(messageEventData.annotations);
+        }
         this.studentDataChanged();
       } else if (messageEventData.messageType === 'getStudentWork') {
         var getStudentWorkParams = messageEventData.getStudentWorkParams;
@@ -238,6 +244,17 @@ class EmbeddedController extends ComponentController {
           messageType: 'projectPath',
           projectPath: this.ConfigService.getConfigParam('projectBaseURL'),
           projectAssetsPath: this.ConfigService.getConfigParam('projectBaseURL') + 'assets'
+        };
+        this.sendMessageToApplication(message);
+      } else if (messageEventData.messageType === 'getLatestAnnotations') {
+        const latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(
+            this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
+        const latestCommentAnnotation = this.AnnotationService.getLatestCommentAnnotation(
+            this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
+        const message = {
+          messageType: 'latestAnnotations',
+          latestScoreAnnotation: latestScoreAnnotation,
+          latestCommentAnnotation: latestCommentAnnotation
         };
         this.sendMessageToApplication(message);
       }
@@ -323,6 +340,14 @@ class EmbeddedController extends ComponentController {
     componentState.nodeId = this.nodeId;
     componentState.componentId = this.componentId;
 
+    if (this.annotationsToSave.length !== 0) {
+      componentState.annotations = this.annotationsToSave;
+    }
+
+    if (action === 'save') {
+      this.clearAnnotationsToSave();
+    }
+
     var deferred = this.$q.defer();
 
     /*
@@ -331,7 +356,11 @@ class EmbeddedController extends ComponentController {
      */
     this.createComponentStateAdditionalProcessing(deferred, componentState, action);
     return deferred.promise;
-  };
+  }
+
+  clearAnnotationsToSave() {
+    this.annotationsToSave = [];
+  }
 
   sendLatestWorkToApplication() {
     let componentState = this.$scope.componentState;
@@ -560,6 +589,30 @@ class EmbeddedController extends ComponentController {
   setStudentData(studentData) {
     this.studentData = studentData;
   };
+
+  setAnnotations(annotations) {
+    for (let annotation of annotations) {
+      if (this.isAnnotationValid(annotation)) {
+        if (annotation.type === 'autoScore') {
+          const scoreAnnotation = this.createAutoScoreAnnotation(annotation.data);
+          this.updateLatestScoreAnnotation(scoreAnnotation);
+          this.addToAnnotationsToSave(scoreAnnotation);
+        } else if (annotation.type === 'autoComment') {
+          const commentAnnotation = this.createAutoCommentAnnotation(annotation.data);
+          this.updateLatestCommentAnnotation(commentAnnotation);
+          this.addToAnnotationsToSave(commentAnnotation);
+        }
+      }
+    }
+  }
+
+  isAnnotationValid(annotation) {
+    return annotation.type != null && annotation.data != null && annotation.data.value != null;
+  }
+
+  addToAnnotationsToSave(annotation) {
+    this.annotationsToSave.push(annotation);
+  }
 }
 
 EmbeddedController.$inject = [

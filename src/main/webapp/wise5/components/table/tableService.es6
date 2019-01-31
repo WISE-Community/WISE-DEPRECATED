@@ -260,6 +260,49 @@ class TableService extends ComponentService {
     }
     return deferred.promise;
   }
+
+  hasRequiredNumberOfFilledRows(componentState, requiredNumberOfFilledRows,
+                                tableHasHeaderRow, requireAllCellsInARowToBeFilled) {
+    const rows = componentState.studentData.tableData;
+    let firstStudentRow = 0;
+    if (tableHasHeaderRow) {
+      firstStudentRow = 1;
+    }
+    let filledRows = 0;
+    for (let r = firstStudentRow; r < rows.length; r++) {
+      const row = rows[r];
+      if (this.isRowFilled(row, requireAllCellsInARowToBeFilled)) {
+        filledRows++;
+      }
+    }
+    return filledRows >= requiredNumberOfFilledRows;
+  }
+
+  isRowFilled(row, requireAllCellsInARowToBeFilled) {
+    if (requireAllCellsInARowToBeFilled) {
+      return this.isAllCellsFilledInRow(row);
+    } else {
+      return this.isAtLeastOneCellFilledInRow(row);
+    }
+  }
+
+  isAllCellsFilledInRow(row) {
+    for (let c of row) {
+      if (c.text == null || c.text == '') {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  isAtLeastOneCellFilledInRow(row) {
+    for (let c of row) {
+      if (c.text != null && c.text != '') {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 TableService.$inject = [

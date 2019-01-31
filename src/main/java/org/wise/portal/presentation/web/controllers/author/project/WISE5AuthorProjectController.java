@@ -66,6 +66,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.regex.*;
 import java.util.stream.Collectors;
@@ -95,6 +99,8 @@ public class WISE5AuthorProjectController {
 
   @Autowired
   private WebSocketHandler webSocketHandler;
+
+  private String featuredProjectIconsFolderRelativePath = "wise5/authoringTool/projectIcons";
 
   /**
    * Handle user's request to launch the Authoring Tool without a specified project
@@ -171,6 +177,7 @@ public class WISE5AuthorProjectController {
 
       Project project = projectService.createProject(pParams);
       response.getWriter().write(project.getId().toString());
+      copyRandomFeaturedProjectIconIntoAssetsFolder(newProjectAssetsDir);
       // commented below until "W5 AT: new commit message convention #1016" is completed
       //commitChangesToProjectJSON(commitMessage, user, newProjectPath.getAbsolutePath());
     } catch(IOException e) {
@@ -180,6 +187,93 @@ public class WISE5AuthorProjectController {
     } catch (JSONException e) {
       e.printStackTrace();
     }
+  }
+
+  private void copyRandomFeaturedProjectIconIntoAssetsFolder(File newProjectAssetsDir) {
+    try {
+      File randomFeaturedProjectIcon = getRandomFeaturedProjectIcon();
+      if (randomFeaturedProjectIcon != null) {
+        Path fromImagePath = Paths.get(randomFeaturedProjectIcon.getPath());
+        Path toImagePath = Paths.get(newProjectAssetsDir.getPath() + "/project_thumb.png");
+        Files.copy(fromImagePath, toImagePath, StandardCopyOption.REPLACE_EXISTING);
+      }
+    } catch(IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private File getRandomFeaturedProjectIcon() {
+    File featuredProjectIconsDir = new File(getFeaturedProjectIconsFolderPathString());
+    File[] featuredProjectIcons = featuredProjectIconsDir.listFiles();
+    if (featuredProjectIcons.length > 0) {
+      return featuredProjectIcons[new Random().nextInt(featuredProjectIcons.length)];
+    } else {
+      return null;
+    }
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/project/featured/icons", method = RequestMethod.GET)
+  protected String getFeaturedProjectIcons() {
+    File featuredProjectIconsDir = new File(getFeaturedProjectIconsFolderPathString());
+    File[] featuredProjectIcons = featuredProjectIconsDir.listFiles();
+    JSONArray featuredProjectIconPaths = new JSONArray();
+    for (File featuredProjectIcon : featuredProjectIcons) {
+      featuredProjectIconPaths.put(featuredProjectIcon.getName());
+    }
+    return featuredProjectIconPaths.toString();
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/project/featured/icon", method = RequestMethod.POST)
+  protected String setFeaturedProjectIcon(@RequestParam("projectId") Long projectId,
+        @RequestParam("projectIcon") String projectIcon)
+        throws JSONException {
+    boolean isCustom = false;
+    return setProjectIcon(projectId, projectIcon, isCustom);
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/project/custom/icon", method = RequestMethod.POST)
+  protected String setCustomProjectIcon(@RequestParam("projectId") Long projectId,
+        @RequestParam("projectIcon") String projectIcon)
+        throws JSONException {
+    boolean isCustom = true;
+    return setProjectIcon(projectId, projectIcon, isCustom);
+  }
+
+  private String setProjectIcon(Long projectId, String projectIcon, boolean isCustom) throws JSONException {
+    try {
+      User user = ControllerUtil.getSignedInUser();
+      Project project = projectService.getById(projectId);
+      if (projectService.canAuthorProject(project, user)) {
+        String projectAssetsFolderPathString = FileManager.getProjectAssetsFolderPath(project);
+        Path fromImagePath = null;
+        if (isCustom) {
+          fromImagePath = Paths.get(projectAssetsFolderPathString + "/" + projectIcon);
+        } else {
+          fromImagePath = getFeaturedProjectIconPath(projectIcon);
+        }
+        Path toImagePath = Paths.get(projectAssetsFolderPathString + "/project_thumb.png");
+        Files.copy(fromImagePath, toImagePath, StandardCopyOption.REPLACE_EXISTING);
+      }
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    JSONObject response = new JSONObject();
+    response.put("projectIcon", projectIcon);
+    return response.toString();
+  }
+
+  private String getFeaturedProjectIconsFolderPathString() {
+    String webappPath = servletContext.getRealPath(File.separator);
+    return webappPath + featuredProjectIconsFolderRelativePath;
+  }
+
+  private Path getFeaturedProjectIconPath(String fileName) {
+    return Paths.get(getFeaturedProjectIconsFolderPathString() + "/" + fileName);
   }
 
   /**
@@ -359,8 +453,11 @@ public class WISE5AuthorProjectController {
       config.put("projectAssetURL", contextPath + "/project/asset/" + projectId);
       config.put("projectBaseURL", projectBaseURL);
       config.put("previewProjectURL", contextPath + "/project/" + projectId);
-      config.put("cRaterRequestURL", contextPath + "/cRater");
+      config.put("cRaterRequestURL", contextPath + "/c-rater");
       config.put("importStepsURL", contextPath + "/project/importSteps/" + projectId);
+      config.put("featuredProjectIcons", contextPath + "/project/featured/icons");
+      config.put("featuredProjectIcon", contextPath + "/project/featured/icon");
+      config.put("customProjectIcon", contextPath + "/project/custom/icon");
       config.put("mode", "author");
 
       if (projectService.canAuthorProject(project, ControllerUtil.getSignedInUser())) {

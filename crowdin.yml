@@ -1,0 +1,3 @@
+files:
+  - source: /src/main/webapp/site/src/messages.xlf
+    translation: /src/main/webapp/site/src/locale/messages.%two_letters_code%.xlf

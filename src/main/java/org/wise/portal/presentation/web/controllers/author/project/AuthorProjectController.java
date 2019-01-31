@@ -1063,7 +1063,7 @@ public class AuthorProjectController {
     String username = user.getUserDetails().getUsername();
     String contextPath = request.getContextPath();
     String projectMetadataURL = contextPath + "/metadata.html";
-    String cRaterRequestURL = contextPath + "/cRater";
+    String cRaterRequestURL = contextPath + "/c-rater";
     String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
     String previewProjectUrl = contextPath + "/previewproject.html";
     String deleteProjectUrl = contextPath + "/teacher/projects/deleteproject.html";

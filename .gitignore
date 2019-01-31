@@ -2,6 +2,7 @@
 *.class
 *.DS_Store
 build
+.classpath
 .jspm
 .m2
 .npm
@@ -22,3 +23,4 @@ hsqldb_test
 src/main/webapp/curriculum/*
 !src/main/webapp/curriculum/demo/
 !src/main/webapp/curriculum/e2e-test1/
+.classpath

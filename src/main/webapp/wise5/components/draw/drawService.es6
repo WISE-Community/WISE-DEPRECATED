@@ -40,58 +40,34 @@ class DrawService extends ComponentService {
   }
 
   getStudentWorkJPEG(componentState) {
-    if (componentState != null) {
-      var studentData = componentState.studentData;
-
-      if (studentData != null && studentData.drawData != null) {
-        var drawData = JSON.parse(studentData.drawData);
-        if (drawData != null && drawData.jpeg != null && drawData.jpeg != '') {
-          return drawData.jpeg;
-        }
-      }
+    const studentData = componentState.studentData;
+    const drawData = JSON.parse(studentData.drawData);
+    if (drawData != null && drawData.jpeg != null && drawData.jpeg != '') {
+      return drawData.jpeg;
     }
     return null;
-  };
+  }
 
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-    let result = false;
-
     if (componentStates && componentStates.length) {
-      let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
-
+      const submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
       if (submitRequired) {
-        // completion requires a submission, so check for isSubmit in any component states
-        for (let i = 0, l = componentStates.length; i < l; i++) {
-          let state = componentStates[i];
-          if (state.isSubmit && state.studentData) {
-            // component state is a submission
-            if (state.studentData.drawData) {
-              // there is draw data so the component is completed
-              // TODO: check for empty drawing or drawing same as initial state
-              result = true;
-              break;
-            }
+        for (let componentState of componentStates) {
+          if (componentState.isSubmit) {
+            return true;
           }
         }
       } else {
-        // get the last component state
-        let l = componentStates.length - 1;
-        let componentState = componentStates[l];
-
-        let studentData = componentState.studentData;
-
-        if (studentData) {
-          if (studentData.drawData) {
-            // there is draw data so the component is completed
-            // TODO: check for empty drawing or drawing same as initial state
-            result = true;
-          }
+        const componentState = componentStates[componentStates.length - 1];
+        if (componentState.studentData.drawData) {
+          // there is draw data so the component is completed
+          // TODO: check for empty drawing or drawing same as initial state
+          return true;
         }
       }
     }
-
-    return result;
-  };
+    return false;
+  }
 
   /**
    * Remove the background object from the draw data in the component state
@@ -99,106 +75,54 @@ class DrawService extends ComponentService {
    * @returns the componentState
    */
   removeBackgroundFromComponentState(componentState) {
-
-    if (componentState != null) {
-      var studentData = componentState.studentData;
-
-      if (studentData != null) {
-
-        // get the draw data string
-        var drawData = studentData.drawData;
-
-        if (drawData != null) {
-
-          // convert the draw data string to an object
-          var drawDataObject = angular.fromJson(drawData);
-
-          if (drawDataObject != null) {
-
-            // get the canvas value
-            var canvas = drawDataObject.canvas;
-
-            if (canvas != null) {
-
-              // remove the background image from the canvas
-              delete canvas.backgroundImage;
-
-              // convert the object back to a JSON string
-              var drawDataJSONString = angular.toJson(drawDataObject);
-
-              if (drawDataJSONString != null) {
-                // set the draw data JSON string back into the student data
-                studentData.drawData = drawDataJSONString;
-              }
-            }
-          }
-        }
-      }
-    };
-
+    const drawData = componentState.studentData.drawData;
+    const drawDataObject = angular.fromJson(drawData);
+    const canvas = drawDataObject.canvas;
+    delete canvas.backgroundImage;
+    const drawDataJSONString = angular.toJson(drawDataObject);
+    componentState.studentData.drawData = drawDataJSONString;
     return componentState;
   }
 
+  /**
+   * @param componentState
+   * @param componentContent (optional)
+   */
   componentStateHasStudentWork(componentState, componentContent) {
-
     if (componentState != null) {
-
-      let studentData = componentState.studentData;
-
-      if (studentData != null) {
-
-        // get the student draw data
-        let drawData = studentData.drawData;
-
-        // get the draw data as a JSON object
-        let drawDataJSON = angular.fromJson(drawData);
-
-        if (componentContent == null) {
-          // the component content was not provided
-
-          if (drawDataJSON != null &&
-            drawDataJSON.canvas != null &&
-            drawDataJSON.canvas.objects != null &&
-            drawDataJSON.canvas.objects.length > 0) {
-
+      const drawDataString = componentState.studentData.drawData;
+      const drawData = angular.fromJson(drawDataString);
+      if (componentContent == null) {
+        if (this.isDrawDataContainsObjects(drawData)) {
+          return true;
+        }
+      } else {
+        if (this.isStarterDrawDataExists(componentContent)) {
+          const starterDrawData = componentContent.starterDrawData;
+          if (this.isStudentDrawDataDifferentFromStarterData(drawDataString, starterDrawData)) {
             return true;
           }
         } else {
-          // the component content was provided
-
-          let starterDrawData = componentContent.starterDrawData;
-
-          if (starterDrawData == null || starterDrawData == '') {
-            // there is no starter draw data
-
-            if (drawDataJSON != null &&
-              drawDataJSON.canvas != null &&
-              drawDataJSON.canvas.objects != null &&
-              drawDataJSON.canvas.objects.length > 0) {
-
-              return true;
-            }
-          } else {
-            /*
-             * there is starter draw data so we will compare it with
-             * the student draw data
-             */
-
-            if (drawData != null &&
-              drawData != '' &&
-              drawData !== starterDrawData) {
-              /*
-               * the student draw data is different than the
-               * starter draw data
-               */
-              return true;
-            }
+          if (this.isDrawDataContainsObjects(drawData)) {
+            return true;
           }
         }
       }
     }
-
     return false;
+  }
+
+  isDrawDataContainsObjects(drawData) {
+    return drawData.canvas != null && drawData.canvas.objects != null &&
+        drawData.canvas.objects.length > 0;
+  }
+
+  isStarterDrawDataExists(componentContent) {
+    return componentContent.starterDrawData != null && componentContent.starterDrawData !== '';
+  }
+
+  isStudentDrawDataDifferentFromStarterData(drawDataString, starterDrawData) {
+    return drawDataString != null && drawDataString !== '' && drawDataString !== starterDrawData;
   }
 
   /**
@@ -208,19 +132,12 @@ class DrawService extends ComponentService {
    * @return A promise that will return an image object.
    */
   generateImageFromRenderedComponentState(componentState) {
-    let deferred = this.$q.defer();
+    const deferred = this.$q.defer();
     let canvas = angular.element('#drawingtool_' + componentState.nodeId + '_' + componentState.componentId + ' canvas');
     if (canvas != null && canvas.length > 0) {
-      // get the top canvas
       canvas = canvas[0];
-
-      // get the canvas as a base64 string
-      let img_b64 = canvas.toDataURL('image/png');
-
-      // get the image object
-      let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-
-      // add the image to the student assets
+      const canvasBase64String = canvas.toDataURL('image/png');
+      const imageObject = this.UtilService.getImageObjectFromBase64String(canvasBase64String);
       this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
         deferred.resolve(asset);
       });

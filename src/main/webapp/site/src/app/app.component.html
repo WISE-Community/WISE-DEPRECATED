@@ -12,7 +12,9 @@
     </mat-sidenav>
     <mat-sidenav-content fxLayout="column">
       <app-announcement *ngIf="showHeaderAndFooter() && hasAnnouncement"
+                        i18n-message
                         message="Welcome to our new site!"
+                        i18n-action
                         action="Learn More"
                         (callback)="showAnnouncementDetails()"
                         (dismiss)="dismissAnnouncement()"></app-announcement>

@@ -10,8 +10,8 @@
   <h2 i18n>General Questions</h2>
   <h3 i18n>How do I create an account?</h3>
   <ol>
-    <li><ng-container i18n>Go to the </ng-container><a href="{{contextPath}}/join" target="_blank" i18n>Register</a><ng-container i18n> page</ng-container>.</li>
-    <li><ng-container i18n>Click on </ng-container><a href="{{contextPath}}/join/student" target="_blank" i18n>Student</a>.</li>
+    <li i18n>Go to the <a href="{{contextPath}}/join" target="_blank">Register</a> page.</li>
+    <li i18n>Click on <a href="{{contextPath}}/join/student" target="_blank">Student</a>.</li>
     <li i18n>Choose to sign up with your email or with your Google Account.</li>
     <li i18n>Fill out the form and submit it.</li>
     <li i18n>If you created an account using your email, you will be given a username that you will need to remember. Your username will be your first name and your last name with no space inbetween. There may be a number added at the end of your username if someone has the same name as you.</li>
@@ -28,7 +28,7 @@
   <p i18n>In order to start working on a project you must obtain an Access Code from your teacher. Once you have an Access Code, follow the directions below.</p>
   <ol>
     <li i18n>Log into WISE with your student account.</li>
-    <li><ng-container i18n>Click on the "Add Unit" button at the top right of the </ng-container><a href="{{contextPath}}/student" target="_blank" i18n>Student Home Page</a>.</li>
+    <li i18n>Click on the "Add Unit" button at the top right of the <a href="{{contextPath}}/student" target="_blank">Student Home Page</a>.</li>
     <li i18n>Enter the Access Code from your teacher.</li>
     <li i18n>Choose your period.</li>
     <li i18n>Click "Add".</li>
@@ -43,7 +43,7 @@
   <h2 i18n>Technical Questions</h2>
   <h3 i18n>The WISE web site won't load on my web browser. What do I do?</h3>
   <ul>
-    <li><ng-container i18n>You can try </ng-container><a href="http://www.wikihow.com/Clear-Your-Browser's-Cache" target="_blank" i18n>clearing your browser cache</a><ng-container i18n> and then reloading the WISE web site.</ng-container></li>
+    <li i18n>You can try <a href="http://www.wikihow.com/Clear-Your-Browser's-Cache" target="_blank">clearing your browser cache</a> and then reloading the WISE web site.</li>
     <li i18n>You can try using a different web browser. We recommend using Chrome or Firefox.</li>
   </ul>
   <h3 i18n>What if I have trouble logging in?</h3>
@@ -55,7 +55,7 @@
   <ol>
     <li i18n>Sign into WISE with your student account.</li>
     <li i18n>Click on your account icon at the top right of the page. This should open a drop down with options.</li>
-    <li><ng-container i18n>Click the </ng-container><a href="{{contextPath}}/student/profile/edit" target="_blank" i18n>"Edit Profile"</a><ng-container i18n> option.</ng-container></li>
+    <li i18n>Click the <a href="{{contextPath}}/student/profile/edit" target="_blank">"Edit Profile"</a> option.</li>
     <li i18n>Near the bottom there will be a "Language" setting.</li>
     <li i18n>Change the language to the language of your choice.</li>
     <li i18n>Note 1: If your language is not listed as an option, or you'd like to help us improve the translation, please contact us and we'll help you get started!</li>
@@ -63,7 +63,7 @@
   </ol>
   <h3 i18n>Who do I contact when I have a problem I can't solve?</h3>
   <ul>
-    <li><ng-container i18n>The </ng-container><a href="{{contextPath}}/contact" target="_blank" i18n>Contact WISE form</a><ng-container i18n> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</ng-container></li>
+    <li i18n>The <a href="{{contextPath}}/contact" target="_blank">Contact WISE form</a> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</li>
   </ul>
 </div>
 <br/>
@@ -79,14 +79,18 @@
                         fxFlex.gt-xs="33"
                         icon="info"
                         iconColor="accent-2"
+                        i18n-headline
                         headline="Getting Started"
+                        i18n-content
                         content="Information for new users."
                         destination="../getting-started"></app-call-to-action>
     <app-call-to-action fxFlex
                         fxFlex.gt-xs="33"
                         icon="school"
                         iconColor="accent"
+                        i18n-headline
                         headline="Teacher FAQ"
+                        i18n-content
                         content="Questions from teachers."
                         destination="../teacher-faq"></app-call-to-action>
   </div>

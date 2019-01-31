@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { I18n } from "@ngx-translate/i18n-polyfill";
 import { UtilService } from '../../../services/util.service';
 import { StudentService } from '../../../student/student.service';
-import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-student-username',
@@ -12,18 +14,18 @@ import { Router } from '@angular/router';
 export class ForgotStudentUsernameComponent implements OnInit {
 
   months: any[] = [
-    { value: 1, text: '01 (Jan)'},
-    { value: 2, text: '02 (Feb)'},
-    { value: 3, text: '03 (Mar)'},
-    { value: 4, text: '04 (Apr)'},
-    { value: 5, text: '05 (May)'},
-    { value: 6, text: '06 (Jun)'},
-    { value: 7, text: '07 (Jul)'},
-    { value: 8, text: '08 (Aug)'},
-    { value: 9, text: '09 (Sep)'},
-    { value: 10, text: '10 (Oct)'},
-    { value: 11, text: '11 (Nov)'},
-    { value: 12, text: '12 (Dec)'}
+    { value: 1, text: this.i18n('01 (Jan)')},
+    { value: 2, text: this.i18n('02 (Feb)')},
+    { value: 3, text: this.i18n('03 (Mar)')},
+    { value: 4, text: this.i18n('04 (Apr)')},
+    { value: 5, text: this.i18n('05 (May)')},
+    { value: 6, text: this.i18n('06 (Jun)')},
+    { value: 7, text: this.i18n('07 (Jul)')},
+    { value: 8, text: this.i18n('08 (Aug)')},
+    { value: 9, text: this.i18n('09 (Sep)')},
+    { value: 10, text: this.i18n('10 (Oct)')},
+    { value: 11, text: this.i18n('11 (Nov)')},
+    { value: 12, text: this.i18n('12 (Dec)')}
   ];
   days: string[] = [];
   forgotStudentUsernameFormGroup: FormGroup = this.fb.group({
@@ -35,13 +37,14 @@ export class ForgotStudentUsernameComponent implements OnInit {
   foundUsernames: string[] = [];
   message: string;
   isErrorMessage: boolean = false;
-  showCreateNewAccountLink: boolean = false;
+  showSearchResults: boolean = false;
   processing: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
               private utilService: UtilService,
-              private studentService: StudentService) { }
+              private studentService: StudentService,
+              private i18n: I18n) { }
 
   ngOnInit() {
     this.forgotStudentUsernameFormGroup.controls['birthMonth'].valueChanges.subscribe(value => {
@@ -67,12 +70,16 @@ export class ForgotStudentUsernameComponent implements OnInit {
       const birthMonth = parseInt(this.getControlFieldValue('birthMonth'));
       const birthDay = parseInt(this.getControlFieldValue('birthDay'));
       this.studentService.getStudentUsernames(firstName, lastName, birthMonth, birthDay)
-          .subscribe((response) => {
-        this.foundUsernames = response;
-        this.setMessageForFoundUsernames();
-        this.showCreateNewAccountLink = true;
-        this.processing = false;
-      });
+        .pipe(
+          finalize(() => {
+            this.processing = false;
+          })
+        )
+        .subscribe((response) => {
+          this.foundUsernames = response;
+          this.setMessageForFoundUsernames();
+          this.showSearchResults = true;
+        });
     }
   }
 
@@ -86,28 +93,22 @@ export class ForgotStudentUsernameComponent implements OnInit {
       this.isErrorMessage = false
     } else if (foundUsernamesCount > 1) {
       this.setMultipleMatchMessage();
-      this.isErrorMessage = true;
+      this.isErrorMessage = false;
     }
   }
 
   setZeroMatchMessage() {
-    const message = `We did not find any usernames that match the information you provided. 
-        Please make sure you entered your information correctly. If you can't find your account, 
-        you will need to create a new account.`;
+    const message = this.i18n(`We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can't find your account, ask a teacher for help or contact us for assistance.`);
     this.setMessage(message);
   }
 
   setSingleMatchMessage() {
-    const message = `We have found a username that matches. 
-        Click on the username to log in with that account. 
-        If this username is not yours, you will need to create a new account.`;
+    const message = this.i18n(`We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.`);
     this.setMessage(message);
   }
 
   setMultipleMatchMessage() {
-    const message = `We have found multiple usernames that match.
-        Try to remember which username is yours and then click on the username to log in with that account. 
-        If none of these usernames are yours, you will need to create a new account.`;
+    const message = this.i18n(`We found multiple usernames that match. If one of these is yours, select it to log in. If you can't find your account, ask a teacher for help or contact us for assistance.`);
     this.setMessage(message);
   }
 
@@ -129,9 +130,5 @@ export class ForgotStudentUsernameComponent implements OnInit {
 
   loginWithUsername(username) {
     this.router.navigate(['/login', { username: username }]);
-  }
-
-  createNewAccount() {
-    this.router.navigate(['/join']);
   }
 }

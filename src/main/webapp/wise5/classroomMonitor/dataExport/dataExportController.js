@@ -11,10 +11,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DataExportController = function () {
-    function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, MatchService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
+    function DataExportController($filter, $injector, $mdDialog, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, MatchService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
         _classCallCheck(this, DataExportController);
 
+        this.$filter = $filter;
         this.$injector = $injector;
+        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -31,8 +33,8 @@ var DataExportController = function () {
         this.exportType = null; // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
         this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
-
-        this.availableComponentDataExports = ['Match'];
+        this.$translate = this.$filter('translate');
+        this.availableComponentDataExports = ['Discussion', 'Match'];
 
         this.setDefaultExportSettings();
         this.project = this.ProjectService.project;
@@ -91,8 +93,6 @@ var DataExportController = function () {
                 this.exportStudentAssets();
             } else if (exportType === "oneWorkgroupPerRow") {
                 this.exportOneWorkgroupPerRow();
-            } else if (exportType === "componentData") {
-                this.showExportComponentDataPage();
             } else if (exportType === "rawData") {
                 this.exportRawData();
             }
@@ -128,6 +128,7 @@ var DataExportController = function () {
         value: function exportStudentWork(exportType) {
             var _this = this;
 
+            this.showDownloadingExportMessage();
             var selectedNodes = null;
             var selectedNodesMap = null;
 
@@ -275,6 +276,7 @@ var DataExportController = function () {
 
                 // generate the csv file and have the client download it
                 _this.generateCSVFile(rows, fileName);
+                _this.hideDownloadingExportMessage();
             });
         }
 
@@ -885,6 +887,7 @@ var DataExportController = function () {
         value: function exportEvents() {
             var _this2 = this;
 
+            this.showDownloadingExportMessage();
             var selectedNodes = null;
             var selectedNodesMap = null;
 
@@ -1036,6 +1039,7 @@ var DataExportController = function () {
 
                 // generate the csv file and have the client download it
                 _this2.generateCSVFile(rows, fileName);
+                _this2.hideDownloadingExportMessage();
             });
         }
 
@@ -1249,6 +1253,7 @@ var DataExportController = function () {
         value: function exportNotebookItems(exportType) {
             var _this3 = this;
 
+            this.showDownloadingExportMessage();
             this.TeacherDataService.getExport(exportType).then(function (result) {
                 var runId = _this3.ConfigService.getRunId();
                 var exportFilename = "";
@@ -1355,6 +1360,7 @@ var DataExportController = function () {
                 // timeout is required for FF.
                 window.setTimeout(function () {
                     URL.revokeObjectURL(csvUrl); // tell browser to release URL reference
+                    _this3.hideDownloadingExportMessage();
                 }, 3000);
             });
         }
@@ -1363,6 +1369,7 @@ var DataExportController = function () {
         value: function exportNotifications() {
             var _this4 = this;
 
+            this.showDownloadingExportMessage();
             this.TeacherDataService.getExport("notifications").then(function (result) {
                 var runId = _this4.ConfigService.getRunId();
                 var exportFilename = "";
@@ -1428,13 +1435,19 @@ var DataExportController = function () {
                 // timeout is required for FF.
                 window.setTimeout(function () {
                     URL.revokeObjectURL(csvUrl); // tell browser to release URL reference
+                    _this4.hideDownloadingExportMessage();
                 }, 3000);
             });
         }
     }, {
         key: 'exportStudentAssets',
         value: function exportStudentAssets() {
-            this.TeacherDataService.getExport("studentAssets");
+            var _this5 = this;
+
+            this.showDownloadingExportMessage();
+            this.TeacherDataService.getExport("studentAssets").then(function () {
+                _this5.hideDownloadingExportMessage();
+            });
         }
 
         /**
@@ -1723,8 +1736,9 @@ var DataExportController = function () {
     }, {
         key: 'exportOneWorkgroupPerRow',
         value: function exportOneWorkgroupPerRow() {
-            var _this5 = this;
+            var _this6 = this;
 
+            this.showDownloadingExportMessage();
             var selectedNodes = null;
 
             /*
@@ -1763,38 +1777,38 @@ var DataExportController = function () {
                 var rows = [];
 
                 // get the project id
-                var projectId = _this5.ConfigService.getProjectId();
+                var projectId = _this6.ConfigService.getProjectId();
 
                 // get the project title
-                var projectTitle = _this5.ProjectService.getProjectTitle();
+                var projectTitle = _this6.ProjectService.getProjectTitle();
 
                 // get the run id
-                var runId = _this5.ConfigService.getRunId();
+                var runId = _this6.ConfigService.getRunId();
 
                 var startDate = "";
 
                 var endDate = "";
 
                 // get the column ids that we will use for this export
-                var columnIds = _this5.getColumnIdsForOneWorkgroupPerRow(selectedNodesMap);
+                var columnIds = _this6.getColumnIdsForOneWorkgroupPerRow(selectedNodesMap);
 
                 // get all the step node ids
-                var nodeIds = _this5.ProjectService.getFlattenedProjectAsNodeIds();
+                var nodeIds = _this6.ProjectService.getFlattenedProjectAsNodeIds();
 
                 // the headers for the description row
                 var descriptionRowHeaders = ["Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date"];
 
                 // generate the mapping from column id to column index
-                var columnIdToColumnIndex = _this5.getColumnIdToColumnIndex(columnIds, descriptionRowHeaders);
+                var columnIdToColumnIndex = _this6.getColumnIdToColumnIndex(columnIds, descriptionRowHeaders);
 
                 // generate the top rows that contain the header cells
-                var topRows = _this5.getOneWorkgroupPerRowTopRows(columnIds, columnIdToColumnIndex, descriptionRowHeaders);
+                var topRows = _this6.getOneWorkgroupPerRowTopRows(columnIds, columnIdToColumnIndex, descriptionRowHeaders);
 
                 // add the top rows
                 rows = rows.concat(topRows);
 
                 // get the workgroups in the class
-                var workgroups = _this5.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this6.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // loop through all the workgroups
                 for (var w = 0; w < workgroups.length; w++) {
@@ -1817,11 +1831,11 @@ var DataExportController = function () {
                         // get the workgroup information
                         var workgroupId = workgroup.workgroupId;
                         var periodName = workgroup.periodName;
-                        var userInfo = _this5.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+                        var userInfo = _this6.ConfigService.getUserInfoByWorkgroupId(workgroupId);
 
                         workgroupRow[columnIdToColumnIndex["Workgroup ID"]] = workgroupId;
 
-                        var extractedWISEIDsAndStudentNames = _this5.extractWISEIDsAndStudentNames(userInfo.users);
+                        var extractedWISEIDsAndStudentNames = _this6.extractWISEIDsAndStudentNames(userInfo.users);
                         var wiseId1 = extractedWISEIDsAndStudentNames["wiseId1"];
                         var wiseId2 = extractedWISEIDsAndStudentNames["wiseId2"];
                         var wiseId3 = extractedWISEIDsAndStudentNames["wiseId3"];
@@ -1832,19 +1846,19 @@ var DataExportController = function () {
                         if (wiseId1 != null) {
                             workgroupRow[columnIdToColumnIndex["WISE ID 1"]] = wiseId1;
                         }
-                        if (studentName1 != null && _this5.includeStudentNames) {
+                        if (studentName1 != null && _this6.includeStudentNames) {
                             workgroupRow[columnIdToColumnIndex["Student Name 1"]] = studentName1;
                         }
                         if (wiseId2 != null) {
                             workgroupRow[columnIdToColumnIndex["WISE ID 2"]] = wiseId2;
                         }
-                        if (studentName2 != null && _this5.includeStudentNames) {
+                        if (studentName2 != null && _this6.includeStudentNames) {
                             workgroupRow[columnIdToColumnIndex["Student Name 2"]] = studentName2;
                         }
                         if (wiseId3 != null) {
                             workgroupRow[columnIdToColumnIndex["WISE ID 3"]] = wiseId3;
                         }
-                        if (studentName3 != null && _this5.includeStudentNames) {
+                        if (studentName3 != null && _this6.includeStudentNames) {
                             workgroupRow[columnIdToColumnIndex["Student Name 3"]] = studentName3;
                         }
 
@@ -1860,7 +1874,7 @@ var DataExportController = function () {
                             var nodeId = nodeIds[n];
 
                             // get all the components in the step
-                            var components = _this5.ProjectService.getComponentsByNodeId(nodeId);
+                            var components = _this6.ProjectService.getComponentsByNodeId(nodeId);
 
                             if (components != null) {
 
@@ -1871,27 +1885,27 @@ var DataExportController = function () {
                                     if (component != null) {
                                         var componentId = component.id;
 
-                                        if (_this5.exportComponent(selectedNodesMap, nodeId, componentId)) {
+                                        if (_this6.exportComponent(selectedNodesMap, nodeId, componentId)) {
                                             // the researcher wants to export this component
 
                                             // get the column prefix
                                             var columnIdPrefix = nodeId + "-" + componentId;
 
                                             // get the latest component state
-                                            var componentState = _this5.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
+                                            var componentState = _this6.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
 
                                             if (componentState != null) {
-                                                if (_this5.includeStudentWorkIds) {
+                                                if (_this6.includeStudentWorkIds) {
                                                     // we are exporting student work ids
                                                     workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = componentState.id;
                                                 }
 
-                                                if (_this5.includeStudentWorkTimestamps) {
+                                                if (_this6.includeStudentWorkTimestamps) {
                                                     // we are exporting student work timestamps
 
                                                     if (componentState.serverSaveTime != null) {
                                                         // get the time stamp as a pretty printed date time string
-                                                        var formattedDateTime = _this5.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
+                                                        var formattedDateTime = _this6.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
 
                                                         // set the time stamp string e.g. Wed Apr 06 2016 9:05:38 AM
                                                         workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = formattedDateTime;
@@ -1899,13 +1913,13 @@ var DataExportController = function () {
                                                 }
 
                                                 // set the student data string
-                                                workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = _this5.getStudentDataString(componentState);
+                                                workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = _this6.getStudentDataString(componentState);
 
-                                                if (_this5.includeScores || _this5.includeComments) {
+                                                if (_this6.includeScores || _this6.includeComments) {
                                                     // we are exporting scores or comments
 
                                                     // get the latest score and comment annotation
-                                                    var latestComponentAnnotations = _this5.AnnotationService.getLatestComponentAnnotations(nodeId, componentId, workgroupId);
+                                                    var latestComponentAnnotations = _this6.AnnotationService.getLatestComponentAnnotations(nodeId, componentId, workgroupId);
 
                                                     if (latestComponentAnnotations != null) {
                                                         var scoreAnnotation = latestComponentAnnotations.score;
@@ -1913,17 +1927,17 @@ var DataExportController = function () {
 
                                                         if (scoreAnnotation != null) {
 
-                                                            if (_this5.includeScoreTimestamps) {
+                                                            if (_this6.includeScoreTimestamps) {
                                                                 // we are exporting score timestamps
 
                                                                 // get the score timestamp as a pretty printed date time
-                                                                var scoreTimestamp = _this5.UtilService.convertMillisecondsToFormattedDateTime(scoreAnnotation.serverSaveTime);
+                                                                var scoreTimestamp = _this6.UtilService.convertMillisecondsToFormattedDateTime(scoreAnnotation.serverSaveTime);
 
                                                                 // set the score timestamp
                                                                 workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = scoreTimestamp;
                                                             }
 
-                                                            if (_this5.includeScores) {
+                                                            if (_this6.includeScores) {
                                                                 // we are exporting scores
 
                                                                 if (scoreAnnotation.data != null && scoreAnnotation.data.value != null) {
@@ -1938,17 +1952,17 @@ var DataExportController = function () {
 
                                                         if (commentAnnotation != null) {
 
-                                                            if (_this5.includeCommentTimestamps) {
+                                                            if (_this6.includeCommentTimestamps) {
                                                                 // we are exporting comment timestamps
 
                                                                 // get the comment timestamp as a pretty printed date time
-                                                                var commentTimestamp = _this5.UtilService.convertMillisecondsToFormattedDateTime(commentAnnotation.serverSaveTime);
+                                                                var commentTimestamp = _this6.UtilService.convertMillisecondsToFormattedDateTime(commentAnnotation.serverSaveTime);
 
                                                                 // set the comment timestamp
                                                                 workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = commentTimestamp;
                                                             }
 
-                                                            if (_this5.includeComments) {
+                                                            if (_this6.includeComments) {
                                                                 // we are exporting comments
 
                                                                 if (commentAnnotation.data != null && commentAnnotation.data.value != null) {
@@ -1967,10 +1981,10 @@ var DataExportController = function () {
                                 }
                             }
 
-                            if (_this5.exportNode(selectedNodesMap, nodeId)) {
+                            if (_this6.exportNode(selectedNodesMap, nodeId)) {
                                 // the researcher wants to export this step
 
-                                if (_this5.ProjectService.isBranchPoint(nodeId)) {
+                                if (_this6.ProjectService.isBranchPoint(nodeId)) {
                                     // this step is a branch point
 
                                     var toNodeId = null;
@@ -1982,7 +1996,7 @@ var DataExportController = function () {
                                      * get the latest branchPathTaken event for this
                                      * step
                                      */
-                                    var latestBranchPathTakenEvent = _this5.TeacherDataService.getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType);
+                                    var latestBranchPathTakenEvent = _this6.TeacherDataService.getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType);
 
                                     if (latestBranchPathTakenEvent != null && latestBranchPathTakenEvent.data != null && latestBranchPathTakenEvent.data.toNodeId != null) {
 
@@ -1990,10 +2004,10 @@ var DataExportController = function () {
                                         toNodeId = latestBranchPathTakenEvent.data.toNodeId;
 
                                         // get the title of the step
-                                        stepTitle = _this5.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
+                                        stepTitle = _this6.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
                                     }
 
-                                    if (_this5.includeBranchPathTakenNodeId) {
+                                    if (_this6.includeBranchPathTakenNodeId) {
                                         // we are exporting the branch path taken node ids
 
                                         if (toNodeId != null) {
@@ -2003,10 +2017,10 @@ var DataExportController = function () {
                                         }
                                     }
 
-                                    if (_this5.includeBranchPathTaken) {
+                                    if (_this6.includeBranchPathTaken) {
                                         // we are exporting branch path taken
 
-                                        var branchLetter = _this5.ProjectService.getBranchLetter(toNodeId);
+                                        var branchLetter = _this6.ProjectService.getBranchLetter(toNodeId);
 
                                         if (stepTitle != null) {
                                             workgroupRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = branchLetter;
@@ -2015,7 +2029,7 @@ var DataExportController = function () {
                                         }
                                     }
 
-                                    if (_this5.includeBranchPathTakenStepTitle) {
+                                    if (_this6.includeBranchPathTakenStepTitle) {
                                         // we are exporting branch path taken step titles
 
                                         if (stepTitle != null) {
@@ -2037,7 +2051,8 @@ var DataExportController = function () {
                 var fileName = runId + "_one_workgroup_per_row.csv";
 
                 // generate the csv file and have the client download it
-                _this5.generateCSVFile(rows, fileName);
+                _this6.generateCSVFile(rows, fileName);
+                _this6.hideDownloadingExportMessage();
             });
         }
 
@@ -2729,8 +2744,9 @@ var DataExportController = function () {
     }, {
         key: 'exportRawData',
         value: function exportRawData() {
-            var _this6 = this;
+            var _this7 = this;
 
+            this.showDownloadingExportMessage();
             var selectedNodes = null;
 
             /*
@@ -2766,34 +2782,34 @@ var DataExportController = function () {
             this.TeacherDataService.getExport("rawData", selectedNodes).then(function (result) {
 
                 // get the run id
-                var runId = _this6.ConfigService.getRunId();
+                var runId = _this7.ConfigService.getRunId();
 
                 var data = {};
 
                 // get the workgroups in the class
-                var workgroups = _this6.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this7.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // make a copy of the workgroups array to prevent referencing issues
-                workgroups = _this6.UtilService.makeCopyOfJSONObject(workgroups);
+                workgroups = _this7.UtilService.makeCopyOfJSONObject(workgroups);
 
                 // loop through all the workgroups
                 for (var w = 0; w < workgroups.length; w++) {
                     var workgroup = workgroups[w];
 
                     if (workgroup != null) {
-                        if (!_this6.includeStudentNames) {
-                            _this6.removeNamesFromWorkgroup(workgroup);
+                        if (!_this7.includeStudentNames) {
+                            _this7.removeNamesFromWorkgroup(workgroup);
                         }
 
                         // get the workgroup id
                         var workgroupId = workgroup.workgroupId;
 
-                        if (_this6.includeStudentWork) {
+                        if (_this7.includeStudentWork) {
                             // the user wants to export the student work
                             workgroup.studentWork = [];
 
                             // get all the component states for the workgroup
-                            var componentStates = _this6.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
+                            var componentStates = _this7.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
 
                             if (componentStates != null) {
 
@@ -2804,7 +2820,7 @@ var DataExportController = function () {
                                     if (componentState != null) {
 
                                         // get the composite id. example 'node2-b34gaf0ug2'
-                                        var compositeId = _this6.getCompositeId(componentState);
+                                        var compositeId = _this7.getCompositeId(componentState);
 
                                         if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
                                             /*
@@ -2818,12 +2834,12 @@ var DataExportController = function () {
                             }
                         }
 
-                        if (_this6.includeAnnotations) {
+                        if (_this7.includeAnnotations) {
                             // the user wants to export the annotations
                             workgroup.annotations = [];
 
                             // get all the annotations for the workgroup
-                            var annotations = _this6.TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
+                            var annotations = _this7.TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
 
                             if (annotations != null) {
 
@@ -2834,7 +2850,7 @@ var DataExportController = function () {
                                     if (annotation != null) {
 
                                         // get the composite id. example 'node2-b34gaf0ug2'
-                                        var compositeId = _this6.getCompositeId(annotation);
+                                        var compositeId = _this7.getCompositeId(annotation);
 
                                         if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
                                             /*
@@ -2848,14 +2864,14 @@ var DataExportController = function () {
                             }
                         }
 
-                        if (_this6.includeEvents) {
+                        if (_this7.includeEvents) {
                             // the user wants to export the events
                             workgroup.events = [];
 
                             var events = [];
 
                             // get all the events for the workgroup
-                            var events = _this6.TeacherDataService.getEventsByWorkgroupId(workgroupId);
+                            var events = _this7.TeacherDataService.getEventsByWorkgroupId(workgroupId);
 
                             if (events != null) {
 
@@ -2866,7 +2882,7 @@ var DataExportController = function () {
                                     if (event != null) {
 
                                         // get the composite id. example 'node2-b34gaf0ug2'
-                                        var compositeId = _this6.getCompositeId(event);
+                                        var compositeId = _this7.getCompositeId(event);
 
                                         if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
                                             /*
@@ -2892,7 +2908,8 @@ var DataExportController = function () {
                 var blob = new Blob([dataJSONString]);
 
                 // generate a file and download it to the user's computer
-                _this6.FileSaver.saveAs(blob, runId + "_raw_data.json");
+                _this7.FileSaver.saveAs(blob, runId + "_raw_data.json");
+                _this7.hideDownloadingExportMessage();
             });
         }
     }, {
@@ -3018,7 +3035,258 @@ var DataExportController = function () {
         value: function exportComponentClicked(nodeId, component) {
             if (component.type == 'Match') {
                 this.exportMatchComponent(nodeId, component);
+            } else if (component.type === 'Discussion') {
+                this.exportDiscussionComponent(nodeId, component);
             }
+        }
+
+        /**
+         * Generate an export for a specific Discussion component.
+         * TODO: Move these Discussion export functions to the DiscussionService.
+         * @param nodeId The node id.
+         * @param component The component content object.
+         */
+
+    }, {
+        key: 'exportDiscussionComponent',
+        value: function exportDiscussionComponent(nodeId, component) {
+            var _this8 = this;
+
+            this.showDownloadingExportMessage();
+            this.TeacherDataService.getExport("allStudentWork").then(function (result) {
+                var columnNames = [];
+                var columnNameToNumber = {};
+                var rows = [_this8.generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber)];
+                rows = rows.concat(_this8.generateDiscussionComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
+                var fileName = _this8.generateDiscussionExportFileName(nodeId, component.id);
+                _this8.generateCSVFile(rows, fileName);
+                _this8.hideDownloadingExportMessage();
+            });
+        }
+    }, {
+        key: 'generateDiscussionComponentHeaderRow',
+        value: function generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber) {
+            this.populateDiscussionColumnNames(component, columnNames, columnNameToNumber);
+            var headerRow = [];
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+                for (var _iterator3 = columnNames[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var columnName = _step3.value;
+
+                    headerRow.push(columnName);
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
+                    }
+                }
+            }
+
+            return headerRow;
+        }
+    }, {
+        key: 'populateDiscussionColumnNames',
+        value: function populateDiscussionColumnNames(component, columnNames, columnNameToNumber) {
+            var defaultDiscussionColumnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Student Data", "Thread ID", "Student Work ID", "Post Level", "Post Text"];
+            for (var c = 0; c < defaultDiscussionColumnNames.length; c++) {
+                var defaultDiscussionColumnName = defaultDiscussionColumnNames[c];
+                columnNameToNumber[defaultDiscussionColumnName] = c;
+                columnNames.push(defaultDiscussionColumnName);
+            }
+        }
+    }, {
+        key: 'generateDiscussionComponentWorkRows',
+        value: function generateDiscussionComponentWorkRows(component, columnNames, columnNameToNumber, nodeId) {
+            var rows = [];
+            var componentStates = this.TeacherDataService.getComponentStatesByComponentId(component.id);
+            var structuredPosts = this.getStructuredPosts(componentStates);
+            var rowCounter = 1;
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = Object.keys(structuredPosts)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var threadId = _step4.value;
+
+                    var topLevelPost = structuredPosts[threadId];
+                    rows.push(this.generateDiscussionComponentWorkRow(component, topLevelPost.workgroupId, columnNames, columnNameToNumber, nodeId, component.id, rowCounter, topLevelPost, threadId));
+                    rowCounter++;
+                    if (topLevelPost.replies != null) {
+                        var _iteratorNormalCompletion5 = true;
+                        var _didIteratorError5 = false;
+                        var _iteratorError5 = undefined;
+
+                        try {
+                            for (var _iterator5 = topLevelPost.replies[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                                var replyPost = _step5.value;
+
+                                rows.push(this.generateDiscussionComponentWorkRow(component, replyPost.workgroupId, columnNames, columnNameToNumber, nodeId, component.id, rowCounter, replyPost, threadId));
+                                rowCounter++;
+                            }
+                        } catch (err) {
+                            _didIteratorError5 = true;
+                            _iteratorError5 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                                    _iterator5.return();
+                                }
+                            } finally {
+                                if (_didIteratorError5) {
+                                    throw _iteratorError5;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
+            }
+
+            return rows;
+        }
+    }, {
+        key: 'generateDiscussionComponentWorkRow',
+        value: function generateDiscussionComponentWorkRow(component, workgroupId, columnNames, columnNameToNumber, nodeId, componentId, rowCounter, componentState, threadId) {
+            var row = new Array(columnNames.length);
+            row.fill("");
+            var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+            if (userInfo != null) {
+                if (userInfo.users[0] != null) {
+                    row[columnNameToNumber["WISE ID 1"]] = userInfo.users[0].id;
+                }
+                if (userInfo.users[1] != null) {
+                    row[columnNameToNumber["WISE ID 2"]] = userInfo.users[1].id;
+                }
+                if (userInfo.users[2] != null) {
+                    row[columnNameToNumber["WISE ID 3"]] = userInfo.users[2].id;
+                }
+                row[columnNameToNumber["Class Period"]] = userInfo.periodName;
+            }
+
+            row[columnNameToNumber["#"]] = rowCounter;
+            row[columnNameToNumber["Project ID"]] = this.ConfigService.getProjectId();
+            row[columnNameToNumber["Project Name"]] = this.ProjectService.getProjectTitle();
+            row[columnNameToNumber["Run ID"]] = this.ConfigService.getRunId();
+
+            if (componentState.serverSaveTime != null) {
+                row[columnNameToNumber["Server Timestamp"]] = this.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
+            }
+
+            if (componentState.clientSaveTime != null) {
+                var clientSaveTime = new Date(componentState.clientSaveTime);
+                row[columnNameToNumber["Client Timestamp"]] = clientSaveTime.toDateString() + " " + clientSaveTime.toLocaleTimeString();
+            }
+
+            row[columnNameToNumber["Node ID"]] = nodeId;
+            row[columnNameToNumber["Step Title"]] = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+            row[columnNameToNumber["Component Part Number"]] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1;
+            row[columnNameToNumber["Component ID"]] = component.id;
+            row[columnNameToNumber["Component Type"]] = component.type;
+            row[columnNameToNumber["Component Prompt"]] = this.UtilService.removeHTMLTags(component.prompt);
+            row[columnNameToNumber["Student Data"]] = componentState.studentData;
+            row[columnNameToNumber["Student Work ID"]] = componentState.id;
+            row[columnNameToNumber["Thread ID"]] = threadId;
+            row[columnNameToNumber["Workgroup ID"]] = workgroupId;
+            row[columnNameToNumber["Post Level"]] = this.getPostLevel(componentState);
+            row[columnNameToNumber["Post Text"]] = this.UtilService.removeHTMLTags(componentState.studentData.response);
+
+            return row;
+        }
+    }, {
+        key: 'getStructuredPosts',
+        value: function getStructuredPosts(componentStates) {
+            var structuredPosts = {};
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = componentStates[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var componentState = _step6.value;
+
+                    if (this.isTopLevelPost(componentState)) {
+                        structuredPosts[componentState.id] = componentState;
+                    } else if (this.isReply(componentState)) {
+                        this.addReplyToTopLevelPost(structuredPosts, componentState);
+                    }
+                }
+            } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
+                    }
+                } finally {
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
+                    }
+                }
+            }
+
+            return structuredPosts;
+        }
+    }, {
+        key: 'isTopLevelPost',
+        value: function isTopLevelPost(componentState) {
+            return componentState.studentData.componentStateIdReplyingTo == null;
+        }
+    }, {
+        key: 'isReply',
+        value: function isReply(componentState) {
+            return componentState.studentData.componentStateIdReplyingTo != null;
+        }
+    }, {
+        key: 'addReplyToTopLevelPost',
+        value: function addReplyToTopLevelPost(structuredPosts, replyComponentState) {
+            var parentComponentStateId = replyComponentState.studentData.componentStateIdReplyingTo;
+            var parentPost = structuredPosts[parentComponentStateId];
+            if (parentPost.replies == null) {
+                parentPost.replies = [];
+            }
+            parentPost.replies.push(replyComponentState);
+        }
+    }, {
+        key: 'getPostLevel',
+        value: function getPostLevel(componentState) {
+            if (this.isTopLevelPost(componentState)) {
+                return 1;
+            } else if (this.isReply(componentState)) {
+                return 2;
+            }
+        }
+    }, {
+        key: 'generateDiscussionExportFileName',
+        value: function generateDiscussionExportFileName(nodeId, componentId) {
+            var runId = this.ConfigService.getRunId();
+            var stepNumber = this.ProjectService.getNodePositionById(nodeId);
+            var componentNumber = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1;
+            return runId + '_step_' + stepNumber + '_component_' + componentNumber + '_discussion_work.csv';
         }
 
         /**
@@ -3031,8 +3299,9 @@ var DataExportController = function () {
     }, {
         key: 'exportMatchComponent',
         value: function exportMatchComponent(nodeId, component) {
-            var _this7 = this;
+            var _this9 = this;
 
+            this.showDownloadingExportMessage();
             // request the student data from the server and then generate the export
             this.TeacherDataService.getExport("allStudentWork").then(function (result) {
                 // the column names in the header row
@@ -3045,24 +3314,25 @@ var DataExportController = function () {
                 var rows = [];
 
                 // add the header row to the rows
-                rows.push(_this7.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
+                rows.push(_this9.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
 
                 // add the student work rows
-                rows = rows.concat(_this7.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
+                rows = rows.concat(_this9.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
 
                 // generate the file name of the csv file
                 var fileName = "";
-                var runId = _this7.ConfigService.getRunId();
-                var stepNumber = _this7.ProjectService.getNodePositionById(nodeId);
-                var componentNumber = _this7.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
-                if (_this7.workSelectionType === 'exportAllWork') {
+                var runId = _this9.ConfigService.getRunId();
+                var stepNumber = _this9.ProjectService.getNodePositionById(nodeId);
+                var componentNumber = _this9.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
+                if (_this9.workSelectionType === 'exportAllWork') {
                     fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_all_match_work.csv';
-                } else if (_this7.workSelectionType === 'exportLatestWork') {
+                } else if (_this9.workSelectionType === 'exportLatestWork') {
                     fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_latest_match_work.csv';
                 }
 
                 // generate the csv file and have the client download it
-                _this7.generateCSVFile(rows, fileName);
+                _this9.generateCSVFile(rows, fileName);
+                _this9.hideDownloadingExportMessage();
             });
         }
 
@@ -3098,13 +3368,13 @@ var DataExportController = function () {
             }
 
             // Add the header cells for the choices
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
 
             try {
-                for (var _iterator3 = component.choices[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var _choice = _step3.value;
+                for (var _iterator7 = component.choices[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var _choice = _step7.value;
 
                     columnNameToNumber[_choice.id] = columnNames.length;
                     columnNames.push(_choice.value);
@@ -3112,43 +3382,43 @@ var DataExportController = function () {
 
                 // Add the header cells for the choice correctness
             } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
+                _didIteratorError7 = true;
+                _iteratorError7 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                        _iterator3.return();
+                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                        _iterator7.return();
                     }
                 } finally {
-                    if (_didIteratorError3) {
-                        throw _iteratorError3;
+                    if (_didIteratorError7) {
+                        throw _iteratorError7;
                     }
                 }
             }
 
             if (this.includeCorrectnessColumns && this.MatchService.hasCorrectAnswer(component)) {
-                var _iteratorNormalCompletion4 = true;
-                var _didIteratorError4 = false;
-                var _iteratorError4 = undefined;
+                var _iteratorNormalCompletion8 = true;
+                var _didIteratorError8 = false;
+                var _iteratorError8 = undefined;
 
                 try {
-                    for (var _iterator4 = component.choices[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                        var choice = _step4.value;
+                    for (var _iterator8 = component.choices[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                        var choice = _step8.value;
 
                         columnNameToNumber[choice.id + '-boolean'] = columnNames.length;
                         columnNames.push(choice.value);
                     }
                 } catch (err) {
-                    _didIteratorError4 = true;
-                    _iteratorError4 = err;
+                    _didIteratorError8 = true;
+                    _iteratorError8 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                            _iterator4.return();
+                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                            _iterator8.return();
                         }
                     } finally {
-                        if (_didIteratorError4) {
-                            throw _iteratorError4;
+                        if (_didIteratorError8) {
+                            throw _iteratorError8;
                         }
                     }
                 }
@@ -3173,28 +3443,28 @@ var DataExportController = function () {
             var headerRow = [];
 
             // generate the header row by looping through all the column names
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+            var _iteratorNormalCompletion9 = true;
+            var _didIteratorError9 = false;
+            var _iteratorError9 = undefined;
 
             try {
-                for (var _iterator5 = columnNames[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var columnName = _step5.value;
+                for (var _iterator9 = columnNames[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                    var columnName = _step9.value;
 
                     // add the column name to the header row
                     headerRow.push(columnName);
                 }
             } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
+                _didIteratorError9 = true;
+                _iteratorError9 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
+                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                        _iterator9.return();
                     }
                 } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
+                    if (_didIteratorError9) {
+                        throw _iteratorError9;
                     }
                 }
             }
@@ -3224,29 +3494,29 @@ var DataExportController = function () {
 
             var rowCounter = 1;
 
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
+            var _iteratorNormalCompletion10 = true;
+            var _didIteratorError10 = false;
+            var _iteratorError10 = undefined;
 
             try {
-                for (var _iterator6 = workgroups[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var workgroup = _step6.value;
+                for (var _iterator10 = workgroups[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                    var workgroup = _step10.value;
 
                     var rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
                     rows = rows.concat(rowsForWorkgroup);
                     rowCounter += rowsForWorkgroup.length;
                 }
             } catch (err) {
-                _didIteratorError6 = true;
-                _iteratorError6 = err;
+                _didIteratorError10 = true;
+                _iteratorError10 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                        _iterator6.return();
+                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                        _iterator10.return();
                     }
                 } finally {
-                    if (_didIteratorError6) {
-                        throw _iteratorError6;
+                    if (_didIteratorError10) {
+                        throw _iteratorError10;
                     }
                 }
             }
@@ -3343,23 +3613,23 @@ var DataExportController = function () {
              */
             var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, matchComponentState);
 
-            var _iteratorNormalCompletion7 = true;
-            var _didIteratorError7 = false;
-            var _iteratorError7 = undefined;
+            var _iteratorNormalCompletion11 = true;
+            var _didIteratorError11 = false;
+            var _iteratorError11 = undefined;
 
             try {
-                for (var _iterator7 = matchComponentState.studentData.buckets[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                    var bucket = _step7.value;
+                for (var _iterator11 = matchComponentState.studentData.buckets[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                    var bucket = _step11.value;
 
 
                     // loop through all the choices that the student put in this bucket
-                    var _iteratorNormalCompletion8 = true;
-                    var _didIteratorError8 = false;
-                    var _iteratorError8 = undefined;
+                    var _iteratorNormalCompletion12 = true;
+                    var _didIteratorError12 = false;
+                    var _iteratorError12 = undefined;
 
                     try {
-                        for (var _iterator8 = bucket.items[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                            var item = _step8.value;
+                        for (var _iterator12 = bucket.items[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+                            var item = _step12.value;
 
                             // put the bucket name in the column corresponding to the choice
                             row[columnNameToNumber[item.id]] = bucket.value;
@@ -3369,31 +3639,31 @@ var DataExportController = function () {
                             }
                         }
                     } catch (err) {
-                        _didIteratorError8 = true;
-                        _iteratorError8 = err;
+                        _didIteratorError12 = true;
+                        _iteratorError12 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                                _iterator8.return();
+                            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                                _iterator12.return();
                             }
                         } finally {
-                            if (_didIteratorError8) {
-                                throw _iteratorError8;
+                            if (_didIteratorError12) {
+                                throw _iteratorError12;
                             }
                         }
                     }
                 }
             } catch (err) {
-                _didIteratorError7 = true;
-                _iteratorError7 = err;
+                _didIteratorError11 = true;
+                _iteratorError11 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                        _iterator7.return();
+                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                        _iterator11.return();
                     }
                 } finally {
-                    if (_didIteratorError7) {
-                        throw _iteratorError7;
+                    if (_didIteratorError11) {
+                        throw _iteratorError11;
                     }
                 }
             }
@@ -3433,12 +3703,25 @@ var DataExportController = function () {
                 }
             }
         }
+    }, {
+        key: 'showDownloadingExportMessage',
+        value: function showDownloadingExportMessage() {
+            this.$mdDialog.show({
+                template: '\n                <div align="center">\n                    <div style="width: 200px; height: 100px; margin: 20px;">\n                      <span>{{ \'downloadingExport\' | translate }}</span>\n                      <br/>\n                      <br/>\n                      <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n                    </div>\n                </div>\n            ',
+                clickOutsideToClose: false
+            });
+        }
+    }, {
+        key: 'hideDownloadingExportMessage',
+        value: function hideDownloadingExportMessage() {
+            this.$mdDialog.hide();
+        }
     }]);
 
     return DataExportController;
 }();
 
-DataExportController.$inject = ['$injector', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'FileSaver', 'MatchService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
+DataExportController.$inject = ['$filter', '$injector', '$mdDialog', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'FileSaver', 'MatchService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
 
 exports.default = DataExportController;
 //# sourceMappingURL=dataExportController.js.map

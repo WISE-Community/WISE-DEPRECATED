@@ -1,80 +1,48 @@
-<h2 class="mat-dialog-title">Edit Run Settings</h2>
-<mat-dialog-content class="mat-dialog-content--scroll" fxLayout="column">
-  <p class="mat-subheading-2">
-    {{ run.name }} <span class="mat-caption">(Run ID: {{ run.id }})</span>
-  </p>
-  <mat-divider></mat-divider>
-  <h3>Periods</h3>
-  <div class="periods-container">
-    <span *ngFor="let period of run.periods" class="period-container">
-      <span class="period-name">{{period}}</span>
-      <button mat-flat-button color="accent"
-              (click)="deletePeriod(period)">
-        Delete
+<h2 class="mat-dialog-title" i18n>Edit Settings</h2>
+<mat-dialog-content class="mat-dialog-content--scroll">
+  <p class="mat-subheading-2 accent-1">{{ run.name }}</p>
+  <h3 i18n>Periods</h3>
+  <div fxLayoutGap="8px" fxLayout="row wrap">
+    <div *ngFor="let period of run.periods" class="info-block" fxLayoutAlign="center center">
+      <span class="mat-body-2 ">{{ period }}</span>
+      <button mat-icon-button color="accent" (click)="deletePeriod(period)"
+              i18n-aria-label aria-label="Delete period">
+        <mat-icon>close</mat-icon>
       </button>
-    </span>
-    <div class="error-message">{{deletePeriodMessage}}</div>
+    </div>
   </div>
-  <div>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
     <mat-form-field appearance="fill">
-      <mat-label>New Period Name</mat-label>
-      <input [(ngModel)]="newPeriodName"
-             (keyup)="newPeriodNameKeyUp($event)"
-             matInput
-             id="newPeriod"
-             name="newPeriod" />
+      <mat-label i18n>Add new period</mat-label>
+      <input [(ngModel)]="newPeriodName" (keyup)="newPeriodNameKeyUp($event)"
+             (keyup.enter)="addPeriod()" matInput id="newPeriod" name="newPeriod" />
+      <button mat-icon-button matSuffix color="primary" (click)="addPeriod()" 
+              i18n-aria-label aria-label="Add period">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+      <mat-hint *ngIf="addPeriodMessage" class="warn">{{ addPeriodMessage }}</mat-hint>
     </mat-form-field>
-    <button mat-flat-button color="primary"
-            class="add-period-button"
-            (click)="addPeriod()">
-      Add Period
-    </button>
-    <span class="error-message">{{addPeriodMessage}}</span>
   </div>
   <mat-divider></mat-divider>
-  <h3>Students Per Team</h3>
-  <div>
-    <div class="flex-div">
-      <div>
-        <mat-radio-group [(ngModel)]="studentsPerTeam"
-                         #rGroup
-                         fxLayoutGap="16px">
-          <mat-radio-button value="1" radioGroup="rGroup" (click)="changeStudentsPerTeam(1)">
-            Only 1 student
-          </mat-radio-button>
-          <mat-radio-button value="3" radioGroup="rGroup" (click)="changeStudentsPerTeam(3)">
-            1-3 students
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div>
-        <span class="error-message">{{studentsPerTeamMessage}}</span>
-      </div>
-    </div>
-  </div>
+  <h3 i18n>Students Per Team</h3>
+  <mat-radio-group [(ngModel)]="maxStudentsPerTeam" #rGroup fxLayoutGap="16px">
+    <mat-radio-button value="1" radioGroup="rGroup" (click)="changeMaxStudentsPerTeam(1)"
+                      i18n>Only 1 student</mat-radio-button>
+    <mat-radio-button value="3" radioGroup="rGroup" (click)="changeMaxStudentsPerTeam(3)"
+                      i18n>1-3 students</mat-radio-button>
+  </mat-radio-group>
   <mat-divider></mat-divider>
-  <h3>Start Date</h3>
-  <div class="flex-div">
-    <div>
-      <mat-form-field appearance="fill" fxFlexAlign="start">
-        <mat-label>Start date</mat-label>
-        <input [(ngModel)]="startDate"
-               matInput
-               [matDatepicker]="picker"
-               (dateChange)="updateStartTime()"
-               disabled>
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker [disabled]="false"></mat-datepicker>
-        <mat-error>Start date is required</mat-error>
-      </mat-form-field>
-    </div>
-    <div>
-      <span class="error-message">{{startDateMessage}}</span>
-    </div>
-  </div>
+  <h3 i18n>Start Date</h3>
+  <mat-form-field appearance="fill" fxFlexAlign="start">
+    <mat-label i18n>Start date</mat-label>
+    <input [(ngModel)]="startDate" matInput [matDatepicker]="picker"
+           (dateChange)="updateStartTime()">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker [disabled]="false"></mat-datepicker>
+    <mat-error i18n>Start date is required.</mat-error>
+    <mat-hint *ngIf="startDateMessage" class="warn">{{ startDateMessage }}</mat-hint>
+  </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="end">
-  <button mat-flat-button color="primary" mat-dialog-close>
-    Close
-  </button>
+  <button mat-flat-button color="primary" mat-dialog-close i18n>Done</button>
 </mat-dialog-actions>

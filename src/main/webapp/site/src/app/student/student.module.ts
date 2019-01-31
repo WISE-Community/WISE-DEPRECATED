@@ -4,19 +4,20 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'ngx-moment';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
-  MatButtonModule, MatCardModule, MatDialogModule, MatIconModule,
-  MatProgressBarModule, MatTabsModule } from '@angular/material';
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
+  MatDividerModule, MatIconModule, MatProgressBarModule, 
+  MatTabsModule } from '@angular/material';
 
 const materialModules = [
-  MatButtonModule, MatCardModule, MatDialogModule, MatIconModule,
-  MatProgressBarModule, MatTabsModule
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
+  MatDividerModule, MatIconModule, MatProgressBarModule, 
+  MatTabsModule
 ];
 
 import { SharedModule } from "../modules/shared/shared.module";
 import { StudentRoutingModule } from './student-routing.module';
 import { StudentComponent } from './student.component';
 import { StudentHomeComponent } from './student-home/student-home.component';
-import { StudentEditProfileComponent } from './student-edit-profile/student-edit-profile.component';
 import { StudentRunListComponent } from './student-run-list/student-run-list.component';
 import { StudentRunListItemComponent } from './student-run-list-item/student-run-list-item.component';
 import { AuthGuard } from "./auth.guard";
@@ -25,6 +26,7 @@ import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
 import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 import { TimelineModule } from "../modules/timeline/timeline.module";
+import { TeamSignInDialogComponent } from './team-sign-in-dialog/team-sign-in-dialog.component';
 
 @NgModule({
   imports: [
@@ -42,15 +44,16 @@ import { TimelineModule } from "../modules/timeline/timeline.module";
     AddProjectDialogComponent,
     StudentComponent,
     StudentHomeComponent,
-    StudentEditProfileComponent,
     StudentRunListComponent,
     StudentRunListItemComponent,
     EditComponent,
     EditProfileComponent,
-    EditPasswordComponent
+    EditPasswordComponent,
+    TeamSignInDialogComponent
   ],
   entryComponents: [
-    AddProjectDialogComponent
+    AddProjectDialogComponent,
+    TeamSignInDialogComponent
   ],
   providers: [
     AuthGuard

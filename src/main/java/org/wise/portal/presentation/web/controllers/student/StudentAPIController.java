@@ -33,6 +33,8 @@ import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureExcep
 import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
@@ -50,12 +52,17 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.response.ErrorResponse;
+import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
+import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -67,7 +74,7 @@ import java.util.*;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping(value = "/api/student", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/api/student", produces = "application/json;charset=UTF-8")
 public class StudentAPIController {
 
   @Autowired
@@ -77,10 +84,19 @@ public class StudentAPIController {
   private StudentService studentService;
 
   @Autowired
+  private StudentAttendanceService studentAttendanceService;
+
+  @Autowired
   private Properties wiseProperties;
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private ProjectService projectService;
+
+  @Autowired
+  private WorkgroupService workgroupService;
 
   @Autowired
   private Properties i18nProperties;
@@ -146,7 +162,7 @@ public class StudentAPIController {
     runJSON.put("id", run.getId());
     runJSON.put("name", run.getName());
     runJSON.put("periodName", run.getPeriodOfStudent(user).getName());
-    runJSON.put("studentsPerTeam", run.getMaxWorkgroupSize());
+    runJSON.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
     runJSON.put("projectThumb", projectThumb);
     runJSON.put("runCode", run.getRuncode());
     runJSON.put("startTime", run.getStarttime());
@@ -162,17 +178,18 @@ public class StudentAPIController {
       for (User member : workgroup.getMembers()) {
         MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
         JSONObject memberJSON = new JSONObject();
-        memberJSON.put("id", userDetails.getId());
-        String firstname = userDetails.getFirstname();
-        memberJSON.put("firstname", firstname);
-        String lastname = userDetails.getLastname();
-        memberJSON.put("lastname", lastname);
-        memberJSON.put("username", userDetails.getUsername());
+        memberJSON.put("id", member.getId());
+        String firstName = userDetails.getFirstname();
+        memberJSON.put("firstName", firstName);
+        String lastName = userDetails.getLastname();
+        memberJSON.put("lastName", lastName);
+        memberJSON.put("userName", userDetails.getUsername());
+        memberJSON.put("isGoogleUser", userDetails.isGoogleUser());
         workgroupMembers.put(memberJSON);
         if (workgroupNames.length() > 0) {
           workgroupNames.append(", ");
         }
-        workgroupNames.append(firstname + " " + lastname);
+        workgroupNames.append(firstName + " " + lastName);
       }
       runJSON.put("workgroupId", studentRunInfo.getWorkgroup().getId());
       runJSON.put("workgroupNames", workgroupNames.toString());
@@ -205,6 +222,96 @@ public class StudentAPIController {
       runRegisterInfo.put("error", "runNotFound");
     }
     return runRegisterInfo.toString();
+  }
+
+  @RequestMapping(value = "/run/launch", method = RequestMethod.POST)
+  protected String launchRun(@RequestParam("runId") Long runId,
+                             @RequestParam(value = "workgroupId", required = false) Long workgroupId,
+                             @RequestParam("presentUserIds") String presentUserIds,
+                             @RequestParam("absentUserIds") String absentUserIds,
+                             HttpServletRequest request) throws Exception {
+    Run run = runService.retrieveById(runId);
+    JSONArray presentUserIdsJSONArray = new JSONArray(presentUserIds);
+    Set<User> presentMembers = createMembers(presentUserIdsJSONArray);
+    Workgroup workgroup;
+    User user = ControllerUtil.getSignedInUser();
+    if (isCreateNewWorkgroup(workgroupId)) {
+      if (run.isStudentAssociatedToThisRun(user)) {
+        Group period = run.getPeriodOfStudent(user);
+        String name = "Workgroup for user: " + user.getUserDetails().getUsername();
+        workgroup = workgroupService.createWorkgroup(name, presentMembers, run, period);
+        JSONObject response = performLaunchRun(runId, workgroupId, presentUserIds, absentUserIds,
+            request, run, presentMembers, workgroup);
+        return response.toString();
+      } else {
+        ErrorResponse errorResponse = new ErrorResponse("signedInUserNotAssociatedWithRun");
+        return errorResponse.toString();
+      }
+    } else {
+      workgroup = workgroupService.retrieveById(workgroupId);
+      if (workgroupService.isUserInWorkgroupForRun(user, run, workgroup)) {
+        workgroupService.addMembers(workgroup, presentMembers);
+        JSONObject response = performLaunchRun(runId, workgroupId, presentUserIds, absentUserIds,
+            request, run, presentMembers, workgroup);
+        return response.toString();
+      } else {
+        ErrorResponse errorResponse = new ErrorResponse("signedInUserNotInSpecifiedWorkgroup");
+        return errorResponse.toString();
+      }
+    }
+  }
+
+  private JSONObject performLaunchRun(Long runId, Long workgroupId, String presentUserIds,
+      String absentUserIds, HttpServletRequest request, Run run, Set<User> presentMembers,
+      Workgroup workgroup) throws ObjectNotFoundException, PeriodNotFoundException,
+      StudentUserAlreadyAssociatedWithRunException, JSONException {
+    addStudentsToRunIfNecessary(run, presentMembers, workgroup);
+    saveStudentAttendance(runId, workgroupId, presentUserIds, absentUserIds);
+    StartProjectController.notifyServletSession(request, run);
+    return generateStartProjectUrlResponse(request, workgroup);
+  }
+
+  private boolean isCreateNewWorkgroup(Long workgroupId) {
+    return workgroupId == null;
+  }
+
+  private void addStudentsToRunIfNecessary(Run run, Set<User> presentMembers, Workgroup workgroup)
+      throws ObjectNotFoundException, PeriodNotFoundException, StudentUserAlreadyAssociatedWithRunException {
+    Projectcode projectcode = new Projectcode(run.getRuncode(), workgroup.getPeriod().getName());
+    for (User presentMember : presentMembers) {
+      if (!run.isStudentAssociatedToThisRun(presentMember)) {
+        studentService.addStudentToRun(presentMember, projectcode);
+      }
+    }
+  }
+
+  private void saveStudentAttendance(Long runId, Long workgroupId, String presentUserIds,
+      String absentUserIds) {
+    Date loginTimestamp = new Date();
+    studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp,
+        presentUserIds, absentUserIds);
+  }
+
+  private JSONObject generateStartProjectUrlResponse(HttpServletRequest request, Workgroup workgroup) throws JSONException {
+    String startProjectUrl = projectService.generateStudentStartProjectUrlString(workgroup, request.getContextPath());
+    JSONObject response = new JSONObject();
+    response.put("startProjectUrl", startProjectUrl);
+    return response;
+  }
+
+  private Set<User> createMembers(JSONArray userIds)
+      throws JSONException, ObjectNotFoundException {
+    Set<User> members = new HashSet<User>();
+    addUserToMembers(members, userIds);
+    return members;
+  }
+
+  private void addUserToMembers(Set<User> members, JSONArray userIds)
+      throws JSONException, ObjectNotFoundException {
+    for (int p = 0; p < userIds.length(); p++) {
+      long userId = userIds.getInt(p);
+      members.add(userService.retrieveById(userId));
+    }
   }
 
   /**
@@ -432,5 +539,24 @@ public class StudentAPIController {
       }
     }
     return teacherList.toString();
+  }
+
+  @RequestMapping(value = "/can-be-added-to-workgroup", method = RequestMethod.GET)
+  protected String canBeAddedToWorkgroup(@RequestParam("runId") Long runId,
+                                         @RequestParam(value = "workgroupId", required = false) Long workgroupId,
+                                         @RequestParam("userId") Long userId) throws JSONException, ObjectNotFoundException {
+    User user = userService.retrieveById(userId);
+    Run run = runService.retrieveById(runId);
+    JSONObject response = new JSONObject();
+    response.put("status", false);
+    Workgroup workgroup = null;
+    if (workgroupId != null) {
+      workgroup = workgroupService.retrieveById(workgroupId);
+    }
+    if (!workgroupService.isUserInAnyWorkgroupForRun(user, run) ||
+        (workgroup != null && workgroupService.isUserInWorkgroupForRun(user, run, workgroup))) {
+      response.put("status", true);
+    }
+    return response.toString();
   }
 }

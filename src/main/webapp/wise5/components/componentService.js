@@ -48,25 +48,6 @@ var ComponentService = function () {
     }
 
     /**
-     * Populate a component state with the data from another component state
-     * @param {object} componentStateFromOtherComponent the component state to obtain the data from
-     * @return {object} a new component state that contains the student data from the other
-     * component state
-     */
-
-  }, {
-    key: 'populateComponentState',
-    value: function populateComponentState(componentStateFromOtherComponent) {
-      var studentDataCopy = this.UtilService.makeCopyOfJSONObject(componentStateFromOtherComponent.studentData);
-      var componentState = this.StudentDataService.createComponentState();
-      componentState.studentData = studentDataCopy;
-      return componentState;
-    }
-  }, {
-    key: 'isCompleted',
-
-
-    /**
      * Check if the component was completed
      * @param component the component object
      * @param componentStates the component states for the specific component
@@ -75,6 +56,9 @@ var ComponentService = function () {
      * @param node parent node of the component
      * @returns {boolean} whether the component was completed
      */
+
+  }, {
+    key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
       return true;
     }
