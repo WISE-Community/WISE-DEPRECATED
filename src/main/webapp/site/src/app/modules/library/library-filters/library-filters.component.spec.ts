@@ -36,7 +36,6 @@ describe('LibraryFiltersComponent', () => {
     fixture = TestBed.createComponent(LibraryFiltersComponent);
     component = fixture.componentInstance;
     component.libraryProjects = projects;
-    component.loadedLibraryCount = 4;
     component.ngOnChanges({projects: new SimpleChange(null, projects, true)});
     fixture.detectChanges();
   });

@@ -19,7 +19,6 @@ export class LibraryFiltersComponent implements OnInit {
   communityProjects: LibraryProject[] = [];
   sharedProjects: LibraryProject[] = [];
   personalProjects: LibraryProject[] = [];
-  loadedLibraryCount: number = 0;
 
   @Input()
   split: boolean = false;
@@ -39,19 +38,19 @@ export class LibraryFiltersComponent implements OnInit {
   constructor(private libraryService: LibraryService) {
     libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects: LibraryProject[]) => {
         this.libraryProjects = libraryProjects;
-        this.libraryLoaded();
+        this.populateFilterOptions();
       });
     libraryService.communityLibraryProjectsSource$.subscribe((communityProjects: LibraryProject[]) => {
         this.communityProjects = communityProjects;
-        this.libraryLoaded();
+        this.populateFilterOptions();
       });
     libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
         this.sharedProjects = sharedProjects;
-        this.libraryLoaded();
+        this.populateFilterOptions();
       });
     libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
         this.personalProjects = personalProjects;
-        this.libraryLoaded();
+        this.populateFilterOptions();
       });
   }
 
@@ -64,18 +63,10 @@ export class LibraryFiltersComponent implements OnInit {
     }
   }
 
-  libraryLoaded() {
-    this.loadedLibraryCount++;
-    this.populateFilterOptions();
-  }
-
   /**
    * Iterate through list of projects to populate metadata filter options
    */
   populateFilterOptions(): void {
-    if (this.loadedLibraryCount < 4) {
-      return;
-    }
     this.allProjects = this.getAllProjects();
     for (let project of this.allProjects) {
       const standardsAddressed = project.metadata.standardsAddressed;
