@@ -685,16 +685,12 @@ var NotebookService = function () {
           } else {
             notebookItem.serverDeleteTime = null;
           }
-          // add/update notebook
           var workgroupId = notebookItem.workgroupId;
           if (_this3.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-            // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
             _this3.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
           } else {
-            // otherwise, we'll create a new notebook field and add the item to the array
             _this3.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
           }
-
           _this3.groupNotebookItems();
           _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem });
           resolve();
@@ -718,11 +714,10 @@ var NotebookService = function () {
           clientSaveTime: Date.parse(new Date()),
           clientDeleteTime: clientDeleteTime
         };
-        if (params.clientSaveTime == null) {
-          params.clientSaveTime = Date.parse(new Date());
+        if (this.ConfigService.getMode() === 'classroomMonitor') {
+          delete params.periodId;
         }
         config.data = $.param(params);
-
         return this.$http(config).then(function (result) {
           var notebookItem = result.data;
           if (notebookItem != null) {
@@ -744,10 +739,8 @@ var NotebookService = function () {
     key: "updatePrivateNotebookItem",
     value: function updatePrivateNotebookItem(notebookItem, workgroupId) {
       if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-        // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
         this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
       } else {
-        // otherwise, we'll create a new notebook field and add the item to the array
         this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
       }
       this.groupNotebookItems();

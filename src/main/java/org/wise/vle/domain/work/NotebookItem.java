@@ -61,7 +61,7 @@ public class NotebookItem extends PersistableDomain {
   private Run run;
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-  @JoinColumn(name = "periodId", nullable = false)
+  @JoinColumn(name = "periodId")
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)

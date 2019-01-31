@@ -62,7 +62,7 @@ public class NotebookController {
   @RequestMapping(method = RequestMethod.POST, value = "/{runId}")
   protected void saveNotebookItem(
     @PathVariable Integer runId,
-    @RequestParam(value = "periodId", required = true) Integer periodId,
+    @RequestParam(value = "periodId", required = false) Integer periodId,
     @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
     @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
     @RequestParam(value = "nodeId", required = false) String nodeId,

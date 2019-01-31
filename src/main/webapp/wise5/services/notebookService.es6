@@ -398,7 +398,7 @@ class NotebookService {
       clientSaveTime = null, clientDeleteTime = null) {
     if (this.ConfigService.isPreview()) {
       return this.$q((resolve, reject) => {
-        let notebookItem = {
+        const notebookItem = {
           content: content,
           localNotebookItemId: localNotebookItemId,
           nodeId: nodeId,
@@ -416,27 +416,23 @@ class NotebookService {
         } else {
           notebookItem.serverDeleteTime = null;
         }
-        // add/update notebook
-        let workgroupId = notebookItem.workgroupId;
+        const workgroupId = notebookItem.workgroupId;
         if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-          // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
           this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
         } else {
-          // otherwise, we'll create a new notebook field and add the item to the array
           this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
         }
-
         this.groupNotebookItems();
         this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
         resolve();
       });
     } else {
-      let config = {
+      const config = {
         method: "POST",
         url: this.ConfigService.getStudentNotebookURL(),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       };
-      let params = {
+      const params = {
         workgroupId: this.ConfigService.getWorkgroupId(),
         periodId: this.ConfigService.getPeriodId(),
         notebookItemId: notebookItemId,
@@ -449,18 +445,17 @@ class NotebookService {
         clientSaveTime: Date.parse(new Date()),
         clientDeleteTime: clientDeleteTime
       };
-      if (params.clientSaveTime == null) {
-        params.clientSaveTime = Date.parse(new Date());
+      if (this.ConfigService.getMode() === 'classroomMonitor') {
+        delete(params.periodId);
       }
       config.data = $.param(params);
-
       return this.$http(config).then((result) => {
-        let notebookItem = result.data;
+        const notebookItem = result.data;
         if (notebookItem != null) {
           if (notebookItem.type === "note" || notebookItem.type === "report") {
             notebookItem.content = angular.fromJson(notebookItem.content);
           }
-          let workgroupId = notebookItem.workgroupId;
+          const workgroupId = notebookItem.workgroupId;
           if (this.isNotebookItemPrivate(notebookItem)) {
             this.updatePrivateNotebookItem(notebookItem, workgroupId);
           }
@@ -475,10 +470,8 @@ class NotebookService {
 
   updatePrivateNotebookItem(notebookItem, workgroupId) {
     if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-      // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
       this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
     } else {
-      // otherwise, we'll create a new notebook field and add the item to the array
       this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
     }
     this.groupNotebookItems();

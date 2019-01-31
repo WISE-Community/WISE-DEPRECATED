@@ -233,7 +233,7 @@ create table notebookItems (
     serverSaveTime datetime not null,
     title varchar(255),
     type varchar(30),
-    periodId bigint not null,
+    periodId bigint,
     runId bigint not null,
     studentAssetId integer,
     studentWorkId integer,
