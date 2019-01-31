@@ -28,6 +28,7 @@ import java.util.List;
  * @author Geoffrey Kwan
  */
 @Controller
+@RequestMapping(value = {"/student/notebook", "/teacher/notebook"})
 public class NotebookController {
 
   @Autowired
@@ -39,7 +40,7 @@ public class NotebookController {
   @Autowired
   private WorkgroupService workgroupService;
 
-  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}")
+  @RequestMapping(method = RequestMethod.GET, value = "/{runId}")
   protected void getNotebookItemsForTeacher(
     @PathVariable Integer runId,
     @RequestParam(value = "id", required = false) Integer id,
@@ -58,7 +59,7 @@ public class NotebookController {
     response.getWriter().write(notebookItems.toString());
   }
 
-  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}")
+  @RequestMapping(method = RequestMethod.POST, value = "/{runId}")
   protected void saveNotebookItem(
     @PathVariable Integer runId,
     @RequestParam(value = "periodId", required = true) Integer periodId,
@@ -99,7 +100,7 @@ public class NotebookController {
     response.getWriter().write(notebookItem.toJSON().toString());
   }
 
-  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}/group/{group}")
+  @RequestMapping(method = RequestMethod.POST, value = "/{runId}/group/{group}")
   protected void addNotebookItemToGroup(
     @PathVariable Integer runId,
     @PathVariable String group,
@@ -118,7 +119,7 @@ public class NotebookController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.DELETE, value = "/student/notebook/{runId}/group/{group}")
+  @RequestMapping(method = RequestMethod.DELETE, value = "/{runId}/group/{group}")
   protected void removeNotebookItemFromGroup(
     @PathVariable Integer runId,
     @PathVariable String group,
@@ -134,7 +135,7 @@ public class NotebookController {
     response.getWriter().write(notebookItem.toJSON().toString());
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/{workgroupId}")
+  @RequestMapping(method = RequestMethod.GET, value = "/{runId}/{workgroupId}")
   protected void getNotebookItemsForStudent(
     @PathVariable Integer runId,
     @PathVariable Integer workgroupId,
@@ -156,7 +157,7 @@ public class NotebookController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/group/{group}")
+  @RequestMapping(method = RequestMethod.GET, value = "/{runId}/group/{group}")
   protected void getNotebookItemsInGroup(
     @PathVariable Integer runId,
     @PathVariable String group,
@@ -177,7 +178,7 @@ public class NotebookController {
     response.getWriter().write(notebookItems.toString());
   }
 
-  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}/parent/{parentNotebookItemId}")
+  @RequestMapping(method = RequestMethod.POST, value = "/{runId}/parent/{parentNotebookItemId}")
   protected void copyNotebookItem(
     @PathVariable Integer runId,
     @PathVariable Integer parentNotebookItemId,

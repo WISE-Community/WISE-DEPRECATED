@@ -391,7 +391,7 @@ public class TeacherDataController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/teacher/notebook/{runId}")
+  @RequestMapping(method = RequestMethod.GET, value = "/teacher/student-notebooks/{runId}")
   protected void getNotebookItems(
       @PathVariable Integer runId,
       @RequestParam(value = "id", required = false) Integer id,

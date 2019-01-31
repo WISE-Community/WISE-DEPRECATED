@@ -45,7 +45,7 @@ import MultipleChoiceComponentModule from '../components/multipleChoice/multiple
 import NodeGradingController from './nodeGrading/nodeGradingController';
 import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeService from '../services/nodeService';
-import Notebook from '../directives/notebook/notebook';
+import NotebookComponents from '../themes/default/notebook/notebookComponents';
 import NotebookGradingController from './notebook/notebookGradingController';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
@@ -65,6 +65,7 @@ import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 
+import 'lib/angular-summernote/dist/angular-summernote.min';
 import moment from 'moment';
 
 const classroomMonitorModule = angular.module('classroomMonitor', [
@@ -93,10 +94,11 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
         'ngMaterial',
         'ngSanitize',
         'ngWebSocket',
-        'notebook',
+        'theme.notebook',
         'openResponseComponentModule',
         'outsideURLComponentModule',
         'pascalprecht.translate',
+        'summernote',
         'tableComponentModule',
         'ui.router'
     ])
