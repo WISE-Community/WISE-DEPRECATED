@@ -44,10 +44,14 @@ export abstract class LibraryComponent implements OnInit {
   ngOnInit() {
   }
 
-  pageChange(event?:PageEvent): void {
+  pageChange(event?:PageEvent, scroll?:boolean): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.setPagination();
+    if (scroll) {
+      const listEl = document.querySelector('.library__content');
+      listEl.scrollIntoView();
+    }
   }
 
   setPageBounds(): void {

@@ -22,5 +22,5 @@
 <mat-paginator [length]="filteredProjects.length"
                [pageSize]="pageSize"
                [pageSizeOptions]="pageSizeOptions"
-               (page)="pageChange($event)">
+               (page)="pageChange($event, true)">
 </mat-paginator>
