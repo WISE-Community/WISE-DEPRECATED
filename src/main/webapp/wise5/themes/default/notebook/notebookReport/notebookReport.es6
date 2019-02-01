@@ -21,7 +21,7 @@ class NotebookReportController {
     this.full = false;
     this.collapsed = true;
     this.dirty = false;
-    this.autoSaveInterval = 30000;  // the auto save interval in milliseconds
+    this.autoSaveInterval = 30000;  // in milliseconds
     this.saveMessage = {
       text: '',
       time: ''
@@ -52,7 +52,9 @@ class NotebookReportController {
       }
     }
 
-    this.reportItem.id = null; // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
+    if (this.mode !== 'classroomMonitor') {
+      this.reportItem.id = null; // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
+    }
     this.reportItemContent = this.ProjectService.injectAssetPaths(this.reportItem.content.content);
     this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
     this.startAutoSaveInterval();
@@ -60,24 +62,14 @@ class NotebookReportController {
     this.summernoteOptions = {
       toolbar: [
         ['edit', ['undo', 'redo']],
-        ['style', ['bold', 'italic', 'underline'/*, 'superscript', 'subscript', 'strikethrough', 'clear'*/]],
-        //['style', ['style']],
-        //['fontface', ['fontname']],
-        //['textsize', ['fontsize']],
-        //['fontclr', ['color']],
-        ['para', ['ul', 'ol', 'paragraph'/*, 'lineheight'*/]],
-        //['height', ['height']],
-        //['table', ['table']],
-        //['insert', ['link','picture','video','hr']],
-        //['view', ['fullscreen', 'codeview']],
-        //['help', ['help']]
+        ['style', ['bold', 'italic', 'underline']],
+        ['para', ['ul', 'ol', 'paragraph']],
         ['customButton', ['customButton']],
         ['print', ['print']]
       ],
       popover: {
         image: [
           ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
-          //['float', ['floatLeft', 'floatRight', 'floatNone']],
           ['remove', ['removeMedia']]
         ]
       },
@@ -266,11 +258,12 @@ const NotebookReport = {
     visible: '<',
     workgroupId: '<',
     onCollapse: '&',
-    onSetInsertMode: '&'
+    onSetInsertMode: '&',
+    mode: '@'
     //onClose: '&'
   },
   template:
-    `<div ng-if="($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>
+    `<div ng-if="$ctrl.mode !== 'classroomMonitor' && ($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>
         <div ng-if="$ctrl.visible" class="notebook-report-container"
               ng-class="{'notebook-report-container__collapsed': $ctrl.collapsed, 'notebook-report-container__full': $ctrl.full && !$ctrl.collapsed}">
             <md-card class="notebook-report md-whiteframe-3dp l-constrained">
@@ -326,6 +319,13 @@ const NotebookReport = {
                     </div>
                 </md-card-actions>
             </md-card>
+        </div>
+        <div ng-if="$ctrl.mode === 'classroomMonitor'">
+            <compile data="$ctrl.reportItemContent"></compile>
+            <notebook-item-grading
+                notebook-item="$ctrl.reportItem">
+            </notebook-item-grading>
+
         </div>`,
   controller: NotebookReportController
 };

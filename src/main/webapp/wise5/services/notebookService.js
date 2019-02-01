@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -79,23 +77,20 @@ var NotebookService = function () {
     };
 
     this.reports = [];
-
-    this.notebookConfig = {};
-    if (this.ProjectService.project) {
-      if (this.ConfigService.getMode() === 'classroomMonitor') {
-        this.notebookConfig = this.ProjectService.project.teacherNotebook;
-      } else {
-        this.notebookConfig = this.ProjectService.project.notebook;
-      }
-      // update local notebook config, preserving any defaults that aren't overriden
-      if (this.notebookConfig !== null && _typeof(this.notebookConfig) === 'object') {
-        this.config = angular.merge(this.config, this.notebookConfig);
-      }
-    }
     this.publicNotebookItems = {};
   }
 
   _createClass(NotebookService, [{
+    key: "getStudentNotebookConfig",
+    value: function getStudentNotebookConfig() {
+      return angular.merge(this.config, this.ProjectService.project.notebook);
+    }
+  }, {
+    key: "getTeacherNotebookConfig",
+    value: function getTeacherNotebookConfig() {
+      return angular.merge(this.config, this.ProjectService.project.teacherNotebook);
+    }
+  }, {
     key: "editItem",
     value: function editItem(ev, itemId) {
       this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
@@ -185,7 +180,7 @@ var NotebookService = function () {
   }, {
     key: "getTemplateReportItemByReportId",
     value: function getTemplateReportItemByReportId(reportId) {
-      var reportNotes = this.notebookConfig.itemTypes.report.notes;
+      var reportNotes = this.config.itemTypes.report.notes;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
@@ -253,7 +248,7 @@ var NotebookService = function () {
   }, {
     key: "getReportNoteContentByReportId",
     value: function getReportNoteContentByReportId(reportId) {
-      var reportNotes = this.notebookConfig.itemTypes.report.notes;
+      var reportNotes = this.config.itemTypes.report.notes;
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
       var _iteratorError3 = undefined;

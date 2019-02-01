@@ -66,20 +66,15 @@ class NotebookService {
     };
 
     this.reports = [];
-
-    this.notebookConfig = {};
-    if (this.ProjectService.project) {
-      if (this.ConfigService.getMode() === 'classroomMonitor') {
-        this.notebookConfig = this.ProjectService.project.teacherNotebook;
-      } else {
-        this.notebookConfig = this.ProjectService.project.notebook;
-      }
-      // update local notebook config, preserving any defaults that aren't overriden
-      if (this.notebookConfig !== null && typeof this.notebookConfig === 'object') {
-        this.config = angular.merge(this.config, this.notebookConfig);
-      }
-    }
     this.publicNotebookItems = {};
+  }
+
+  getStudentNotebookConfig() {
+    return angular.merge(this.config, this.ProjectService.project.notebook);
+  }
+
+  getTeacherNotebookConfig() {
+    return angular.merge(this.config, this.ProjectService.project.teacherNotebook);
   }
 
   editItem(ev, itemId) {
@@ -131,7 +126,7 @@ class NotebookService {
 
   // returns the authored report item
   getTemplateReportItemByReportId(reportId) {
-    const reportNotes = this.notebookConfig.itemTypes.report.notes;
+    const reportNotes = this.config.itemTypes.report.notes;
     for (let reportNote of reportNotes) {
       if (reportNote.reportId == reportId) {
         let templateReportItem = {
@@ -172,7 +167,7 @@ class NotebookService {
    * @param reportId
    */
   getReportNoteContentByReportId(reportId) {
-    const reportNotes = this.notebookConfig.itemTypes.report.notes;
+    const reportNotes = this.config.itemTypes.report.notes;
     for (let reportNote of reportNotes) {
       if (reportNote.reportId === reportId) {
         return reportNote;

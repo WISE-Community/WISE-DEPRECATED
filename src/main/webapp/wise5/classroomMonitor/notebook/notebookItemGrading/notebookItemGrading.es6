@@ -17,9 +17,7 @@ class NotebookItemGradingController {
         this.NotebookService = NotebookService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
-
         this.$translate = this.$filter('translate');
-
         this.notebookItemId = this.notebookItem.id;
         this.localNotebookItemId = this.notebookItem.localNotebookItemId;
         this.toWorkgroupId = this.notebookItem.workgroupId;
@@ -175,30 +173,20 @@ class NotebookItemGradingController {
             this.notebookItemId != null &&
             this.toWorkgroupId != null &&
             type) {
-
-            // get the current time
             let clientSaveTime = new Date().getTime();
-
-            // get the logged in teacher's id
             let fromWorkgroupId = this.ConfigService.getWorkgroupId();
-
-            // get the value
             let value = null;
             if (type === 'score') {
-                value = this.score;
-                // convert the value to a number if possible
-                value = this.UtilService.convertStringToNumber(value);
+                value = this.UtilService.convertStringToNumber(this.score);
             } else if (type === 'comment') {
                 value = this.comment;
             }
 
             if ((type === 'comment' && value) || (type === 'score' && typeof value === 'number' && value >= 0)) {
                 let data = {
-                    value:value
+                    value: value
                 };
-                let componentStateId = null;  // we're not grading studentWork in this view, only notebook items
-
-                // create the annotation object
+                let componentStateId = null;
                 let annotation = this.AnnotationService.createAnnotation(
                     this.annotationId,
                     this.runId,
@@ -214,19 +202,7 @@ class NotebookItemGradingController {
                     data,
                     clientSaveTime);
 
-                // save the annotation to the server
-                this.AnnotationService.saveAnnotation(annotation).then(result => {
-                    /*let localAnnotation = result;
-
-                     if (localAnnotation != null) {
-                     if (this.annotationId == null) {
-                     // set the annotation id if there was no annotation id
-                     this.annotationId = localAnnotation.id;
-                     }
-
-                     this.processAnnotations();
-                     }*/
-                });
+                this.AnnotationService.saveAnnotation(annotation);
             }
         }
     }
@@ -248,7 +224,7 @@ const NotebookItemGrading = {
         maxScore: '<',
         notebookItem: '<'
     },
-    templateUrl: 'wise5/directives/notebookItemGrading/notebookItemGrading.html',
+    templateUrl: 'wise5/classroomMonitor/notebook/notebookItemGrading/notebookItemGrading.html',
     controller: NotebookItemGradingController
 };
 

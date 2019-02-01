@@ -176,10 +176,11 @@ const NotebookNotes = {
     workgroupId: '<',
     onClose: '&',
     onInsert: '&',
-    onSetInsertMode: '&'
+    onSetInsertMode: '&',
+    mode: '@'
   },
   template:
-    `<md-sidenav md-component-id="notes"
+    `<md-sidenav ng-if="$ctrl.mode !== 'classroomMonitor'" md-component-id="notes"
         md-is-open="$ctrl.notesVisible"
         md-whiteframe="4"
         md-disable-backdrop
@@ -224,7 +225,32 @@ const NotebookNotes = {
         </md-tab>
       </md-tabs>
       </md-content>
-    </md-sidenav>`,
+    </md-sidenav>
+    <div ng-if="$ctrl.mode === 'classroomMonitor'" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
+      <div ng-repeat="group in $ctrl.groups"
+          ng-disabled="group.disabled"
+          label="{{group.title}}">
+        <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
+            <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
+              <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>
+              <notebook-item ng-repeat="note in group.items"
+                  config="$ctrl.config"
+                  group="{{group.name}}"
+                  item-id="note.localNotebookItemId"
+                  is-edit-allowed="group.isEditAllowed"
+                  is-choose-mode="$ctrl.insertMode"
+                  note="note"
+                  workgroup-id="note.workgroupId"
+                  on-select="$ctrl.select($ev, note)"
+                  style="display: flex;"
+                  flex="100"
+                  flex-gt-xs="50">
+              </notebook-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    `,
   controller: NotebookNotesController
 };
 
