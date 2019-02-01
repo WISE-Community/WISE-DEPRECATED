@@ -32,8 +32,16 @@
     background-color: transparent;
     min-height: 100px;
   }
+
+  .mat-paginator {
+    background: transparent;
+  }
+  
+  .mat-paginator-range-label {
+    margin: 0 8px;
+  }
 }
 
-.library__groups {
-  display: block;
+.library__list {
+  padding: 8px 0;
 }

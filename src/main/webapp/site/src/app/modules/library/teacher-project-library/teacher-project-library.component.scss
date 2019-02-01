@@ -14,14 +14,23 @@
   }
 }
 
-.library-teacher__content {
-  .notice {
-    margin-bottom: 0;
+.library-teacher__paginate {
+  padding-bottom: 0;
 
-    @media (max-width: breakpoint('xs.max')) {
-      margin-top: 0;
-    }
+  @media (min-width: breakpoint('sm.min')) {
+    padding-top: 0;
   }
+}
+
+.library-teacher__official {
+  @media (min-width: breakpoint('sm.min')) {
+    padding-top: 20px;
+  }
+}
+
+app-official-library {
+  display: block;
+  margin-top: 20px;
 }
 
 .mat-tab-header {

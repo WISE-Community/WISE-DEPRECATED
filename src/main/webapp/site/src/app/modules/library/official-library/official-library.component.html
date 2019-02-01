@@ -1,5 +1,4 @@
-<mat-accordion class="library__groups"
-               multi="true">
+<mat-accordion multi="true">
   <ng-container *ngFor="let group of libraryGroups; let i = index">
     <mat-expansion-panel *ngIf="group.type === 'group'"
                          class="library-group"

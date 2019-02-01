@@ -1,14 +1,16 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ValueProvider, QueryList, ViewChildren, Injectable } from '@angular/core';
 import { LibraryGroup } from "../libraryGroup";
 import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 import { NGSSStandards } from "../ngssStandards";
 import { LibraryService } from "../../../services/library.service";
 import { Standard } from "../standard";
 import { LibraryProject } from "../libraryProject";
+import { PageEvent, MatPaginator, MatPaginatorIntl } from '@angular/material';
 
 export abstract class LibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];
+  filteredProjects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];
   expandedGroups: object = {};
   implementationModelValue: string = '';
@@ -20,32 +22,50 @@ export abstract class LibraryComponent implements OnInit {
   disciplineValue = [];
   peOptions: Standard[] = [];
   peValue = [];
+  filterOptions: ProjectFilterOptions = new ProjectFilterOptions();
   showFilters: boolean = false;
+  pageSizeOptions: number[] = [12, 24, 48, 96];
+  pageIndex: number = 0;
+  pageSize: number = 12;
+  lowIndex: number = 0;
+  highIndex: number = 0;
 
   @Output('update')
   update: EventEmitter<number> = new EventEmitter<number>();
 
+  @ViewChildren(MatPaginator) paginators !: QueryList<MatPaginator>;
+
   constructor(protected libraryService: LibraryService) {
+    libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
+      this.filterUpdated(projectFilterOptions);
+    });
   }
 
   ngOnInit() {
   }
 
-  /**
-   * Add given project or all child projects from a given group to the list of projects
-   * @param item
-   * @param {LibraryProject[]} projects
-   */
-  populateProjects(item: any, projects: LibraryProject[]): void {
-    if (item.type === 'project') {
-      item.visible = true;
-      projects.push(item);
-    } else if (item.type === 'group') {
-      let children = item.children;
-      for (let child of children) {
-        this.populateProjects(child, projects);
-      }
+  pageChange(event?:PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.setPagination();
+  }
+
+  setPageBounds(): void {
+    this.lowIndex = this.pageIndex * this.pageSize;
+    this.highIndex = this.lowIndex + this.pageSize;
+  }
+
+  setPagination(): void {
+    if (this.paginators) {
+      this.paginators.toArray().forEach((paginator) => {
+        paginator.pageIndex = this.pageIndex;
+      });
+      this.setPageBounds();
     }
+  }
+
+  isOnPage(index: number): boolean {
+    return (index >= this.lowIndex && index < this.highIndex);
   }
 
   /**
@@ -111,11 +131,15 @@ export abstract class LibraryComponent implements OnInit {
    * Filter options or search string have changed, so update visible projects
    * @param {ProjectFilterOptions} filterOptions
    */
-  filterUpdated(filterOptions: ProjectFilterOptions): void {
-    this.searchValue = filterOptions.searchValue;
-    this.disciplineValue = filterOptions.disciplineValue;
-    this.dciArrangementValue = filterOptions.dciArrangementValue;
-    this.peValue = filterOptions.peValue;
+  filterUpdated(filterOptions: ProjectFilterOptions = null): void {
+    if (filterOptions) {
+      this.filterOptions = filterOptions;
+    }
+    this.filteredProjects = [];
+    this.searchValue = this.filterOptions.searchValue;
+    this.disciplineValue = this.filterOptions.disciplineValue;
+    this.dciArrangementValue = this.filterOptions.dciArrangementValue;
+    this.peValue = this.filterOptions.peValue;
     for (let project of this.projects) {
       let filterMatch = false;
       let searchMatch = this.isSearchMatch(project, this.searchValue);
@@ -123,13 +147,22 @@ export abstract class LibraryComponent implements OnInit {
         filterMatch = this.isFilterMatch(project);
       }
       project.visible = searchMatch && filterMatch;
+      if (searchMatch && filterMatch) {
+        this.filteredProjects.push(project);
+      }
     }
-    let numProjectsVisible = this.countVisibleProjects(this.projects);
-    this.emitNumberOfProjectsVisible(numProjectsVisible);
+    this.emitNumberOfProjectsVisible();
+    this.pageIndex = 0;
+    this.setPagination();
   }
 
-  emitNumberOfProjectsVisible(numProjectsVisible) {
-    this.update.emit(numProjectsVisible);
+  //emitNumberOfProjectsVisible(numProjectsVisible) {
+  emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
+    if (numProjectsVisible) {
+      this.update.emit(numProjectsVisible);
+    } else {
+      this.update.emit(this.filteredProjects.length);
+    }
   }
 
   /**
