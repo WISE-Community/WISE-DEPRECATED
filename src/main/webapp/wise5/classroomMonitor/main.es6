@@ -256,7 +256,7 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                 })
                 .state('root.notebooks', {
                     url: '/notebook',
-                    templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
+                    templateUrl: 'wise5/classroomMonitor/notebook/notebookGrading.html',
                     controller: 'NotebookGradingController',
                     controllerAs: 'notebookGradingController'
                 });

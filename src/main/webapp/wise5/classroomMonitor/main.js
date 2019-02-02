@@ -371,7 +371,7 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
         controllerAs: 'milestonesController'
     }).state('root.notebooks', {
         url: '/notebook',
-        templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
+        templateUrl: 'wise5/classroomMonitor/notebook/notebookGrading.html',
         controller: 'NotebookGradingController',
         controllerAs: 'notebookGradingController'
     });
