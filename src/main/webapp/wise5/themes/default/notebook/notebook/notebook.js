@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -177,7 +177,7 @@ var NotebookController = function () {
         if (this.notesVisible) {
           this.closeNotes(event);
         } else {
-          this.NotebookService.retrievePublicNotebookItems("public").then(function () {
+          this.NotebookService.retrievePublicNotebookItems('public').then(function () {
             _this2.notesVisible = true;
           });
         }
@@ -198,7 +198,7 @@ var NotebookController = function () {
 
       this.insertMode = value;
       if (value) {
-        this.NotebookService.retrievePublicNotebookItems("public").then(function () {
+        this.NotebookService.retrievePublicNotebookItems('public').then(function () {
           _this3.notesVisible = true;
         });
       }
@@ -207,7 +207,7 @@ var NotebookController = function () {
   }, {
     key: 'insert',
     value: function insert(notebookItem, $event) {
-      if (this.requester == 'report') {
+      if (this.requester === 'report') {
         this.insertContent = angular.copy(notebookItem);
       } else {
         this.$rootScope.$broadcast('notebookItemChosen', { requester: this.requester, notebookItem: notebookItem });

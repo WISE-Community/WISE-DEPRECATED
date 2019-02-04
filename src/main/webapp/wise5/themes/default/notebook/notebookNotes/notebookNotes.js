@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -27,8 +27,8 @@ var NotebookNotesController = function () {
     this.groupNameToGroup = {};
 
     var personalGroup = {
-      title: "Personal",
-      name: "private",
+      title: 'Personal',
+      name: 'private',
       isEditAllowed: true,
       items: []
     };
@@ -62,8 +62,6 @@ var NotebookNotesController = function () {
         }
       }
     }
-
-    ;
 
     this.groups.push(personalGroup);
 
@@ -114,7 +112,7 @@ var NotebookNotesController = function () {
     };
 
     this.$scope.$on('openNotebook', function (event, args) {
-      _this.selectedTabIndex = args.visibleSpace === "public" ? 1 : 0;
+      _this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
     });
 
     this.$rootScope.$on('publicNotebookItemsRetrieved', function (event, args) {
@@ -126,7 +124,7 @@ var NotebookNotesController = function () {
         for (var _iterator3 = _this.groups[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var group = _step3.value;
 
-          if (group.name != 'private') {
+          if (group.name !== 'private') {
             group.items = _this.publicNotebookItems[group.name];
           }
         }
@@ -148,7 +146,7 @@ var NotebookNotesController = function () {
 
     this.$rootScope.$on('notebookUpdated', function (event, args) {
       var notebookItem = args.notebookItem;
-      if ((notebookItem.groups == null || notebookItem.groups.length == 0) && notebookItem.type === "note") {
+      if ((notebookItem.groups == null || notebookItem.groups.length === 0) && notebookItem.type === 'note') {
         _this.updatePrivateNotebookNote(notebookItem);
       }
       if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
@@ -158,7 +156,7 @@ var NotebookNotesController = function () {
   }
 
   _createClass(NotebookNotesController, [{
-    key: "updatePrivateNotebookNote",
+    key: 'updatePrivateNotebookNote',
     value: function updatePrivateNotebookNote(notebookItem) {
       this.updateNotebookNote(this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
       if (this.groupNameToGroup['public'] != null) {
@@ -166,13 +164,13 @@ var NotebookNotesController = function () {
       }
     }
   }, {
-    key: "updatePublicNotebookNote",
+    key: 'updatePublicNotebookNote',
     value: function updatePublicNotebookNote(notebookItem) {
       this.updateNotebookNote(this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
       this.removeNotebookNote(this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId);
     }
   }, {
-    key: "updateNotebookNote",
+    key: 'updateNotebookNote',
     value: function updateNotebookNote(group, localNotebookItemId, workgroupId, notebookItem) {
       var added = false;
       var items = group.items;
@@ -188,7 +186,7 @@ var NotebookNotesController = function () {
       }
     }
   }, {
-    key: "removeNotebookNote",
+    key: 'removeNotebookNote',
     value: function removeNotebookNote(group, localNotebookItemId, workgroupId) {
       var items = group.items;
       for (var i = 0; i < items.length; i++) {
@@ -200,7 +198,7 @@ var NotebookNotesController = function () {
       }
     }
   }, {
-    key: "getTitle",
+    key: 'getTitle',
     value: function getTitle() {
       var title = '';
       if (this.insertMode) {
@@ -211,12 +209,12 @@ var NotebookNotesController = function () {
       return title;
     }
   }, {
-    key: "editItem",
+    key: 'editItem',
     value: function editItem($ev, note) {
       this.$rootScope.$broadcast('editNote', { note: note, ev: $ev });
     }
   }, {
-    key: "select",
+    key: 'select',
     value: function select($ev, note) {
       if (this.insertMode) {
         this.onInsert({ note: note, event: $ev });
@@ -225,17 +223,17 @@ var NotebookNotesController = function () {
       }
     }
   }, {
-    key: "edit",
+    key: 'edit',
     value: function edit(itemId) {
-      alert("Edit the item: " + itemId);
+      alert('Edit the item: ' + itemId);
     }
   }, {
-    key: "close",
+    key: 'close',
     value: function close($event) {
       this.onClose($event);
     }
   }, {
-    key: "cancelInsertMode",
+    key: 'cancelInsertMode',
     value: function cancelInsertMode($event) {
       this.onSetInsertMode({ value: false });
     }
@@ -259,7 +257,7 @@ var NotebookNotes = {
     onSetInsertMode: '&',
     mode: '@'
   },
-  template: "<md-sidenav ng-if=\"$ctrl.mode !== 'classroomMonitor'\" md-component-id=\"notes\"\n        md-is-open=\"$ctrl.notesVisible\"\n        md-whiteframe=\"4\"\n        md-disable-backdrop\n        layout=\"column\"\n        class=\"md-sidenav-right notebook-sidebar\">\n      <md-toolbar>\n          <div class=\"md-toolbar-tools\"\n               ng-class=\"{'insert-mode': $ctrl.insertMode}\"\n               style=\"background-color: {{$ctrl.color}};\">\n              {{$ctrl.getTitle()}}\n              <span flex></span>\n              <md-button ng-click=\"$ctrl.close($event)\"\n                  class=\"md-icon-button\"\n                  aria-label=\"{{ 'Close' | translate }}\">\n                <md-icon>close</md-icon>\n              </md-button>\n          </div>\n      </md-toolbar>\n      <md-content>\n      <md-tabs md-selected=\"$ctrl.selectedTabIndex\" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>\n        <md-tab ng-repeat=\"group in $ctrl.groups\"\n            ng-disabled=\"group.disabled\"\n            label=\"{{group.title}}\">\n          <div class=\"demo-tab tab{{$index%4}}\" style=\"padding: 25px; text-align: center;\">\n              <div class=\"notebook-items\" ng-class=\"{'notebook-items--insert': $ctrl.insertMode}\" layout=\"row\" layout-wrap>\n                <div class=\"md-padding\" ng-if=\"!$ctrl.hasNotes\" translate=\"noNotes\" translate-value-term=\"{{$ctrl.config.itemTypes.note.label.plural}}\"></div>\n                <notebook-item ng-repeat=\"note in group.items\"\n                    config=\"$ctrl.config\"\n                    group=\"{{group.name}}\"\n                    item-id=\"note.localNotebookItemId\"\n                    is-edit-allowed=\"group.isEditAllowed\"\n                    is-choose-mode=\"$ctrl.insertMode\"\n                    note=\"note\"\n                    workgroup-id=\"note.workgroupId\"\n                    on-select=\"$ctrl.select($ev, note)\"\n                    style=\"display: flex;\"\n                    flex=\"100\"\n                    flex-gt-xs=\"50\">\n                </notebook-item>\n            </div>\n          </div>\n        </md-tab>\n      </md-tabs>\n      </md-content>\n    </md-sidenav>\n    <div ng-if=\"$ctrl.mode === 'classroomMonitor'\" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>\n      <div ng-repeat=\"group in $ctrl.groups\"\n          ng-disabled=\"group.disabled\"\n          label=\"{{group.title}}\">\n        <div class=\"demo-tab tab{{$index%4}}\" style=\"padding: 25px; text-align: center;\">\n            <div class=\"notebook-items\" ng-class=\"{'notebook-items--insert': $ctrl.insertMode}\" layout=\"row\" layout-wrap>\n              <div class=\"md-padding\" ng-if=\"!$ctrl.hasNotes\" translate=\"noNotes\" translate-value-term=\"{{$ctrl.config.itemTypes.note.label.plural}}\"></div>\n              <notebook-item ng-repeat=\"note in group.items\"\n                  config=\"$ctrl.config\"\n                  group=\"{{group.name}}\"\n                  item-id=\"note.localNotebookItemId\"\n                  is-edit-allowed=\"group.isEditAllowed\"\n                  is-choose-mode=\"$ctrl.insertMode\"\n                  note=\"note\"\n                  workgroup-id=\"note.workgroupId\"\n                  on-select=\"$ctrl.select($ev, note)\"\n                  style=\"display: flex;\"\n                  flex=\"100\"\n                  flex-gt-xs=\"50\">\n              </notebook-item>\n          </div>\n        </div>\n      </div>\n    </div>\n    ",
+  template: '<md-sidenav ng-if="$ctrl.mode !== \'classroomMonitor\'" md-component-id="notes"\n        md-is-open="$ctrl.notesVisible"\n        md-whiteframe="4"\n        md-disable-backdrop\n        layout="column"\n        class="md-sidenav-right notebook-sidebar">\n      <md-toolbar>\n          <div class="md-toolbar-tools"\n               ng-class="{\'insert-mode\': $ctrl.insertMode}"\n               style="background-color: {{$ctrl.color}};">\n              {{$ctrl.getTitle()}}\n              <span flex></span>\n              <md-button ng-click="$ctrl.close($event)"\n                  class="md-icon-button"\n                  aria-label="{{ \'Close\' | translate }}">\n                <md-icon>close</md-icon>\n              </md-button>\n          </div>\n      </md-toolbar>\n      <md-content>\n      <md-tabs md-selected="$ctrl.selectedTabIndex" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>\n        <md-tab ng-repeat="group in $ctrl.groups"\n            ng-disabled="group.disabled"\n            label="{{group.title}}">\n          <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">\n              <div class="notebook-items" ng-class="{\'notebook-items--insert\': $ctrl.insertMode}" layout="row" layout-wrap>\n                <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>\n                <notebook-item ng-repeat="note in group.items"\n                    config="$ctrl.config"\n                    group="{{group.name}}"\n                    item-id="note.localNotebookItemId"\n                    is-edit-allowed="group.isEditAllowed"\n                    is-choose-mode="$ctrl.insertMode"\n                    note="note"\n                    workgroup-id="note.workgroupId"\n                    on-select="$ctrl.select($ev, note)"\n                    style="display: flex;"\n                    flex="100"\n                    flex-gt-xs="50">\n                </notebook-item>\n            </div>\n          </div>\n        </md-tab>\n      </md-tabs>\n      </md-content>\n    </md-sidenav>\n    <div ng-if="$ctrl.mode === \'classroomMonitor\'" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>\n      <div ng-repeat="group in $ctrl.groups"\n          ng-disabled="group.disabled"\n          label="{{group.title}}">\n        <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">\n            <div class="notebook-items" ng-class="{\'notebook-items--insert\': $ctrl.insertMode}" layout="row" layout-wrap>\n              <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>\n              <notebook-item ng-repeat="note in group.items"\n                  config="$ctrl.config"\n                  group="{{group.name}}"\n                  item-id="note.localNotebookItemId"\n                  is-edit-allowed="group.isEditAllowed"\n                  is-choose-mode="$ctrl.insertMode"\n                  note="note"\n                  workgroup-id="note.workgroupId"\n                  on-select="$ctrl.select($ev, note)"\n                  style="display: flex;"\n                  flex="100"\n                  flex-gt-xs="50">\n              </notebook-item>\n          </div>\n        </div>\n      </div>\n    </div>\n    ',
   controller: NotebookNotesController
 };
 

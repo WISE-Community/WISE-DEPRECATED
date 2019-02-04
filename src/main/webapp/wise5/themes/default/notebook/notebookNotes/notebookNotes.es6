@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class NotebookNotesController {
   constructor($filter,
@@ -17,8 +17,8 @@ class NotebookNotesController {
     this.groupNameToGroup = {};
 
     const personalGroup = {
-      title: "Personal",
-      name: "private",
+      title: 'Personal',
+      name: 'private',
       isEditAllowed: true,
       items: []
     };
@@ -28,8 +28,7 @@ class NotebookNotesController {
       if (personalItemValue.last().type === 'note') {
         personalGroup.items.push(personalItemValue.last());
       }
-    };
-
+    }
     this.groups.push(personalGroup);
 
     const spaces = this.ProjectService.getSpaces();
@@ -48,22 +47,22 @@ class NotebookNotesController {
 
     this.$onInit = () => {
       this.color = this.config.itemTypes.note.label.color;
-    }
+    };
 
     this.$onChanges = (changes) => {
       if (changes.notebook) {
         this.notebook = angular.copy(changes.notebook.currentValue);
         this.hasNotes = Object.keys(this.notebook.items).length ? true : false;
       }
-    }
+    };
 
     this.$scope.$on('openNotebook', (event, args) => {
-      this.selectedTabIndex = args.visibleSpace === "public" ? 1 : 0;
+      this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
     });
 
     this.$rootScope.$on('publicNotebookItemsRetrieved', (event, args) => {
       for (let group of this.groups) {
-        if (group.name != 'private') {
+        if (group.name !== 'private') {
           group.items = this.publicNotebookItems[group.name];
         }
       }
@@ -71,9 +70,9 @@ class NotebookNotesController {
 
     this.$rootScope.$on('notebookUpdated', (event, args) => {
       let notebookItem = args.notebookItem;
-      if ((notebookItem.groups == null || notebookItem.groups.length == 0) &&
-          notebookItem.type === "note") {
-        this.updatePrivateNotebookNote(notebookItem)
+      if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
+          notebookItem.type === 'note') {
+        this.updatePrivateNotebookNote(notebookItem);
       }
       if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
         this.updatePublicNotebookNote(notebookItem);
@@ -146,7 +145,7 @@ class NotebookNotesController {
   }
 
   edit(itemId) {
-    alert("Edit the item: " + itemId);
+    alert(`Edit the item: ${itemId}`);
   }
 
   close($event) {

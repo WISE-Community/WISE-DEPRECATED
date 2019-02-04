@@ -25,6 +25,7 @@
     "maxcomplexity": 8,
     "maxlen": 120,
     "devel": true,
+    "esversion":6,
 
     "asi": false,
     "boss": false,

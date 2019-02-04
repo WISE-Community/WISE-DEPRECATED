@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -26,12 +26,10 @@ var NotebookItemController = function () {
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
-
     this.item = this.note;
-
     this.type = this.item ? this.item.type : null;
     this.label = this.config.itemTypes[this.type].label;
-    if (this.group == 'public') {
+    if (this.group === 'public') {
       this.color = 'orange';
     } else {
       this.color = this.label.color;
@@ -63,7 +61,7 @@ var NotebookItemController = function () {
     key: 'getItemNodeLink',
     value: function getItemNodeLink() {
       if (this.item == null) {
-        return "";
+        return '';
       } else {
         return this.ProjectService.getNodePositionAndTitleByNodeId(this.item.nodeId);
       }
@@ -72,7 +70,7 @@ var NotebookItemController = function () {
     key: 'getItemNodePosition',
     value: function getItemNodePosition() {
       if (this.item == null) {
-        return "";
+        return '';
       } else {
         return this.ProjectService.getNodePositionById(this.item.nodeId);
       }
@@ -118,12 +116,12 @@ var NotebookItemController = function () {
   }, {
     key: 'canShareNotebookItem',
     value: function canShareNotebookItem() {
-      return this.ProjectService.isSpaceExists("public") && this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && !this.isItemInGroup('public');
+      return this.ProjectService.isSpaceExists('public') && this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && !this.isItemInGroup('public');
     }
   }, {
     key: 'canUnshareNotebookItem',
     value: function canUnshareNotebookItem() {
-      return this.ProjectService.isSpaceExists("public") && this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && this.isItemInGroup('public');
+      return this.ProjectService.isSpaceExists('public') && this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && this.isItemInGroup('public');
     }
   }, {
     key: 'canDeleteNotebookItem',
@@ -145,7 +143,7 @@ var NotebookItemController = function () {
   return NotebookItemController;
 }();
 
-NotebookItemController.$inject = ["$injector", "$mdDialog", "$rootScope", "$scope", "$filter", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService", "UtilService"];
+NotebookItemController.$inject = ['$injector', '$mdDialog', '$rootScope', '$scope', '$filter', 'ConfigService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 var NotebookItem = {
   bindings: {

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -26,10 +26,10 @@ var NotebookService = function () {
     // TODO: allow wise instance to set default enabled/disabled for each type in wise config?
     this.config = {
       enabled: false,
-      label: "Notebook",
-      icon: "book",
+      label: 'Notebook',
+      icon: 'book',
       enableAddNew: true,
-      addIcon: "note_add",
+      addIcon: 'note_add',
       itemTypes: {
         note: {
           enabled: true,
@@ -37,13 +37,13 @@ var NotebookService = function () {
           enableLink: true,
           enableClipping: true,
           enableStudentUploads: true,
-          type: "note",
+          type: 'note',
           label: {
-            singular: "note",
-            plural: "notes",
-            link: "Manage Notes",
-            icon: "note",
-            color: "#1565C0"
+            singular: 'note',
+            plural: 'notes',
+            link: 'Manage Notes',
+            icon: 'note',
+            color: '#1565C0'
           }
         },
         question: {
@@ -51,25 +51,25 @@ var NotebookService = function () {
           enableLink: true,
           enableClipping: true,
           enableStudentUploads: true,
-          type: "question",
+          type: 'question',
           label: {
-            singular: "question",
-            plural: "questions",
-            link: "Manage Questions",
-            icon: "live_help",
-            color: "#F57C00"
+            singular: 'question',
+            plural: 'questions',
+            link: 'Manage Questions',
+            icon: 'live_help',
+            color: '#F57C00'
           }
         },
         report: {
           enabled: false,
           enableLink: true,
-          type: "report",
+          type: 'report',
           label: {
-            singular: "report",
-            plural: "reports",
-            link: "Report",
-            icon: "assignment",
-            color: "#AD1457"
+            singular: 'report',
+            plural: 'reports',
+            link: 'Report',
+            icon: 'assignment',
+            color: '#AD1457'
           },
           notes: []
         }
@@ -81,22 +81,22 @@ var NotebookService = function () {
   }
 
   _createClass(NotebookService, [{
-    key: "getStudentNotebookConfig",
+    key: 'getStudentNotebookConfig',
     value: function getStudentNotebookConfig() {
       return angular.merge(this.config, this.ProjectService.project.notebook);
     }
   }, {
-    key: "getTeacherNotebookConfig",
+    key: 'getTeacherNotebookConfig',
     value: function getTeacherNotebookConfig() {
       return angular.merge(this.config, this.ProjectService.project.teacherNotebook);
     }
   }, {
-    key: "editItem",
+    key: 'editItem',
     value: function editItem(ev, itemId) {
       this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
     }
   }, {
-    key: "addNote",
+    key: 'addNote',
     value: function addNote(ev, file) {
       var text = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
       var studentWorkIds = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
@@ -107,7 +107,7 @@ var NotebookService = function () {
         isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled });
     }
   }, {
-    key: "deleteNote",
+    key: 'deleteNote',
     value: function deleteNote(note) {
       var noteCopy = angular.copy(note);
       noteCopy.id = null; // set to null so we're creating a new notebook item
@@ -116,7 +116,7 @@ var NotebookService = function () {
       return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
     }
   }, {
-    key: "reviveNote",
+    key: 'reviveNote',
     value: function reviveNote(note) {
       var noteCopy = angular.copy(note);
       noteCopy.id = null; // set to null so we're creating a new notebook item
@@ -128,7 +128,7 @@ var NotebookService = function () {
     // looks up notebook item by local notebook item id, including deleted notes
 
   }, {
-    key: "getLatestNotebookItemByLocalNotebookItemId",
+    key: 'getLatestNotebookItemByLocalNotebookItemId',
     value: function getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId) {
       var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.ConfigService.getWorkgroupId();
 
@@ -168,17 +168,14 @@ var NotebookService = function () {
     // returns student's report item if they've done work, or the template if they haven't
 
   }, {
-    key: "getLatestNotebookReportItemByReportId",
+    key: 'getLatestNotebookReportItemByReportId',
     value: function getLatestNotebookReportItemByReportId(reportId) {
       var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.ConfigService.getWorkgroupId();
 
       return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
     }
-
-    // returns the authored report item
-
   }, {
-    key: "getTemplateReportItemByReportId",
+    key: 'getTemplateReportItemByReportId',
     value: function getTemplateReportItemByReportId(reportId) {
       var reportNotes = this.config.itemTypes.report.notes;
       var _iteratorNormalCompletion2 = true;
@@ -189,14 +186,13 @@ var NotebookService = function () {
         for (var _iterator2 = reportNotes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var reportNote = _step2.value;
 
-          if (reportNote.reportId == reportId) {
-            var templateReportItem = {
+          if (reportNote.reportId === reportId) {
+            return {
               id: null,
-              type: "report",
+              type: 'report',
               localNotebookItemId: reportId,
               content: reportNote
             };
-            return templateReportItem;
           }
         }
       } catch (err) {
@@ -217,25 +213,16 @@ var NotebookService = function () {
       return null;
     }
   }, {
-    key: "calculateTotalUsage",
-    value: function calculateTotalUsage() {
-      // get the total size
-      /*
-      let totalSizeSoFar = 0;
-      for (let i = 0; i < this.getNotebookByWorkgroup().items.length; i++) {
-          const notebookItem = this.getNotebookByWorkgroup().items[i];
-          if (notebookItem.studentAsset != null) {
-              const notebookItemSize = notebookItem.studentAsset.fileSize;
-              totalSizeSoFar += notebookItemSize;
-          }
+    key: 'getMaxScoreByReportId',
+    value: function getMaxScoreByReportId(reportId) {
+      var reportNoteContent = this.getReportNoteContentByReportId(reportId);
+      if (reportNoteContent != null && reportNoteContent.maxScore != null) {
+        return reportNoteContent.maxScore;
       }
-      this.getNotebookByWorkgroup().totalSize = totalSizeSoFar;
-      this.getNotebookByWorkgroup().totalSizeMax = this.ConfigService.getStudentMaxTotalAssetsSize();
-      this.getNotebookByWorkgroup().usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
-      */
+      return 0;
     }
   }, {
-    key: "getNotebookConfig",
+    key: 'getNotebookConfig',
     value: function getNotebookConfig() {
       return this.config;
     }
@@ -246,7 +233,7 @@ var NotebookService = function () {
      */
 
   }, {
-    key: "getReportNoteContentByReportId",
+    key: 'getReportNoteContentByReportId',
     value: function getReportNoteContentByReportId(reportId) {
       var reportNotes = this.config.itemTypes.report.notes;
       var _iteratorNormalCompletion3 = true;
@@ -279,12 +266,12 @@ var NotebookService = function () {
       return null;
     }
   }, {
-    key: "isNotebookEnabled",
+    key: 'isNotebookEnabled',
     value: function isNotebookEnabled() {
       return this.ProjectService.project.notebook != null && this.ProjectService.project.notebook.enabled;
     }
   }, {
-    key: "retrieveNotebookItems",
+    key: 'retrieveNotebookItems',
     value: function retrieveNotebookItems() {
       var _this = this;
 
@@ -300,7 +287,7 @@ var NotebookService = function () {
         this.notebooksByWorkgroup[_workgroupId].items = [];
         this.notebooksByWorkgroup[_workgroupId].deletedItems = [];
         this.groupNotebookItems();
-        // if we're in preview, don't make any request to the server but pretend we did
+        // pretend sending data to server
         var deferred = this.$q.defer();
         deferred.resolve(this.notebooksByWorkgroup[_workgroupId]);
         return deferred.promise;
@@ -329,25 +316,19 @@ var NotebookService = function () {
 
               try {
                 if (notebookItem.studentAssetId != null) {
-                  // if this notebook item is a StudentAsset item, add the association here
                   notebookItem.studentAsset = _this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
                 } else if (notebookItem.studentWorkId != null) {
-                  // if this notebook item is a StudentWork item, add the association here
                   notebookItem.studentWork = _this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
-                } else if (notebookItem.type === "note" || notebookItem.type === "report") {
+                } else if (notebookItem.type === 'note' || notebookItem.type === 'report') {
                   notebookItem.content = angular.fromJson(notebookItem.content);
                 }
                 var _workgroupId2 = notebookItem.workgroupId;
                 if (_this.notebooksByWorkgroup.hasOwnProperty(_workgroupId2)) {
-                  // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
                   _this.notebooksByWorkgroup[_workgroupId2].allItems.push(notebookItem);
                 } else {
-                  // otherwise, we'll create a new notebook field and add the item to the array
                   _this.notebooksByWorkgroup[_workgroupId2] = { allItems: [notebookItem] };
                 }
-              } catch (e) {
-                // keep going, ignore this error
-              }
+              } catch (e) {}
             }
           } catch (err) {
             _didIteratorError4 = true;
@@ -364,24 +345,22 @@ var NotebookService = function () {
             }
           }
 
-          _this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
-          _this.calculateTotalUsage();
-
+          _this.groupNotebookItems();
           return _this.notebooksByWorkgroup;
         });
       }
     }
-  }, {
-    key: "groupNotebookItems",
-
 
     /**
      * Groups the notebook items together in to a map-like structure inside this.notebook.items.
      * {
-     *    "abc123": [{localNotebookItemId:"abc123", "text":"first revision"}, {localNotebookItemId:"abc123", "text":"second revision"}],
-     *    "def456": [{localNotebookItemId:"def456", "text":"hello"}, {localNotebookItemId:"def456", "text":"hello my friend"}]
+     *    'abc123': [{localNotebookItemId:'abc123', 'text':'first revision'}, {localNotebookItemId:'abc123', 'text':'second revision'}],
+     *    'def456': [{localNotebookItemId:'def456', 'text':'hello'}, {localNotebookItemId:'def456', 'text':'hello my friend'}]
      * }
      */
+
+  }, {
+    key: 'groupNotebookItems',
     value: function groupNotebookItems() {
       for (var workgroupId in this.notebooksByWorkgroup) {
         if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
@@ -392,24 +371,23 @@ var NotebookService = function () {
             var notebookItem = notebookByWorkgroup.allItems[ni];
             var notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
             if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemId)) {
-              // if this was already added before, we'll append this notebook item to the array
               notebookByWorkgroup.items[notebookItemLocalNotebookItemId].push(notebookItem);
             } else {
-              // otherwise, we'll create a new field and add the item to the array
               notebookByWorkgroup.items[notebookItemLocalNotebookItemId] = [notebookItem];
             }
           }
-          // now go through the items and look at the last revision of each item. If it's deleted, then move the entire item array to deletedItems
+          // Go through the items and look at the last revision of each item.
+          // If it's deleted, then move the entire item array to deletedItems
           for (var notebookItemLocalNotebookItemIdKey in notebookByWorkgroup.items) {
             if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
-              // get the last note revision
               var allRevisionsForThisLocalNotebookItemId = notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
               if (allRevisionsForThisLocalNotebookItemId != null) {
                 var lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
                 if (lastRevision != null && lastRevision.serverDeleteTime != null) {
-                  // the last revision for this not deleted, so move the entire note (with all its revisions) to deletedItems
+                  // the last revision for this was deleted,
+                  // so move the entire note (with all its revisions) to deletedItems
                   notebookByWorkgroup.deletedItems[notebookItemLocalNotebookItemIdKey] = allRevisionsForThisLocalNotebookItemId;
-                  delete notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey]; // then remove it from the items array
+                  delete notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
                 }
               }
             }
@@ -423,7 +401,7 @@ var NotebookService = function () {
      */
 
   }, {
-    key: "getPrivateNotebookItemById",
+    key: 'getPrivateNotebookItemById',
     value: function getPrivateNotebookItemById(notebookItemId) {
       var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
@@ -459,7 +437,7 @@ var NotebookService = function () {
       }
     }
   }, {
-    key: "getPrivateNotebookItems",
+    key: 'getPrivateNotebookItems',
     value: function getPrivateNotebookItems() {
       var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.ConfigService.getWorkgroupId();
 
@@ -495,7 +473,7 @@ var NotebookService = function () {
       return privateNotebookItems;
     }
   }, {
-    key: "getNotebookItemById",
+    key: 'getNotebookItemById',
     value: function getNotebookItemById(notebookItemId) {
       var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
@@ -506,7 +484,7 @@ var NotebookService = function () {
       return notebookItem;
     }
   }, {
-    key: "getPublicNotebookItem",
+    key: 'getPublicNotebookItem',
     value: function getPublicNotebookItem(group, localNotebookItemId, workgroupId) {
       var publicNotebookItemsInGroup = this.publicNotebookItems[group];
       var _iteratorNormalCompletion7 = true;
@@ -539,7 +517,7 @@ var NotebookService = function () {
       return null;
     }
   }, {
-    key: "getPublicNotebookItemById",
+    key: 'getPublicNotebookItemById',
     value: function getPublicNotebookItemById(id) {
       for (var group in this.publicNotebookItems) {
         var itemsInGroup = this.publicNotebookItems[group];
@@ -551,7 +529,7 @@ var NotebookService = function () {
           for (var _iterator8 = itemsInGroup[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
             var itemInGroup = _step8.value;
 
-            if (id == itemInGroup.id) {
+            if (id === itemInGroup.id) {
               return itemInGroup;
             }
           }
@@ -573,7 +551,7 @@ var NotebookService = function () {
       return null;
     }
   }, {
-    key: "getNotebookByWorkgroup",
+    key: 'getNotebookByWorkgroup',
     value: function getNotebookByWorkgroup() {
       var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.ConfigService.getWorkgroupId();
 
@@ -588,7 +566,7 @@ var NotebookService = function () {
       return notebookByWorkgroup;
     }
   }, {
-    key: "retrievePublicNotebookItems",
+    key: 'retrievePublicNotebookItems',
     value: function retrievePublicNotebookItems() {
       var _this2 = this;
 
@@ -596,22 +574,14 @@ var NotebookService = function () {
       var periodId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
       if (this.ConfigService.isPreview()) {
-        // // we are previewing the project, initialize dummy student data
-        // const workgroupId = this.ConfigService.getWorkgroupId();
-        // this.notebooksByWorkgroup = {};
-        // this.notebooksByWorkgroup[workgroupId] = {};
-        // this.notebooksByWorkgroup[workgroupId].allItems = [];
-        // this.notebooksByWorkgroup[workgroupId].items = [];
-        // this.notebooksByWorkgroup[workgroupId].deletedItems = [];
-        // this.groupNotebookItems();
-        // // if we're in preview, don't make any request to the server but pretend we did
+        // pretend we made a request to server
         var deferred = this.$q.defer();
         deferred.resolve({});
         return deferred.promise;
       } else {
         var config = {
           method: 'GET',
-          url: this.ConfigService.getStudentNotebookURL() + ("/group/" + group),
+          url: this.ConfigService.getStudentNotebookURL() + ('/group/' + group),
           params: {}
         };
         if (periodId != null) {
@@ -645,13 +615,13 @@ var NotebookService = function () {
           }
 
           _this2.publicNotebookItems[group] = publicNotebookItemsForGroup;
-          _this2.$rootScope.$broadcast("publicNotebookItemsRetrieved", { publicNotebookItems: _this2.publicNotebookItems });
+          _this2.$rootScope.$broadcast('publicNotebookItemsRetrieved', { publicNotebookItems: _this2.publicNotebookItems });
           return _this2.publicNotebookItems;
         });
       }
     }
   }, {
-    key: "saveNotebookItem",
+    key: 'saveNotebookItem',
     value: function saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content) {
       var groups = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : [];
 
@@ -692,7 +662,7 @@ var NotebookService = function () {
         });
       } else {
         var config = {
-          method: "POST",
+          method: 'POST',
           url: this.ConfigService.getStudentNotebookURL(),
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         };
@@ -716,7 +686,7 @@ var NotebookService = function () {
         return this.$http(config).then(function (result) {
           var notebookItem = result.data;
           if (notebookItem != null) {
-            if (notebookItem.type === "note" || notebookItem.type === "report") {
+            if (notebookItem.type === 'note' || notebookItem.type === 'report') {
               notebookItem.content = angular.fromJson(notebookItem.content);
             }
             var workgroupId = notebookItem.workgroupId;
@@ -731,7 +701,7 @@ var NotebookService = function () {
       }
     }
   }, {
-    key: "updatePrivateNotebookItem",
+    key: 'updatePrivateNotebookItem',
     value: function updatePrivateNotebookItem(notebookItem, workgroupId) {
       if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
         this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
@@ -741,23 +711,23 @@ var NotebookService = function () {
       this.groupNotebookItems();
     }
   }, {
-    key: "isNotebookItemPublic",
+    key: 'isNotebookItemPublic',
     value: function isNotebookItemPublic(notebookItem) {
       return !this.isNotebookItemPrivate(notebookItem);
     }
   }, {
-    key: "isNotebookItemPrivate",
+    key: 'isNotebookItemPrivate',
     value: function isNotebookItemPrivate(notebookItem) {
       return notebookItem.groups == null;
     }
   }, {
-    key: "copyNotebookItem",
+    key: 'copyNotebookItem',
     value: function copyNotebookItem(notebookItemId) {
       var _this4 = this;
 
-      if (this.ConfigService.isPreview()) {} else {
+      if (!this.ConfigService.isPreview()) {
         var config = {
-          method: "POST",
+          method: 'POST',
           url: this.ConfigService.getStudentNotebookURL() + '/parent/' + notebookItemId,
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         };
@@ -773,13 +743,13 @@ var NotebookService = function () {
       }
     }
   }, {
-    key: "addNotebookItemToGroup",
+    key: 'addNotebookItemToGroup',
     value: function addNotebookItemToGroup(notebookItemId, group) {
       var _this5 = this;
 
-      if (this.ConfigService.isPreview()) {} else {
+      if (!this.ConfigService.isPreview()) {
         var config = {
-          method: "POST",
+          method: 'POST',
           url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         };
@@ -796,13 +766,13 @@ var NotebookService = function () {
       }
     }
   }, {
-    key: "removeNotebookItemFromGroup",
+    key: 'removeNotebookItemFromGroup',
     value: function removeNotebookItemFromGroup(notebookItemId, group) {
       var _this6 = this;
 
-      if (this.ConfigService.isPreview()) {} else {
+      if (!this.ConfigService.isPreview()) {
         var config = {
-          method: "DELETE",
+          method: 'DELETE',
           url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
           params: {
             workgroupId: this.ConfigService.getWorkgroupId(),
@@ -817,9 +787,9 @@ var NotebookService = function () {
       }
     }
   }, {
-    key: "handleNewNotebookItem",
+    key: 'handleNewNotebookItem',
     value: function handleNewNotebookItem(notebookItem) {
-      if (notebookItem.type === "note" || notebookItem.type === "report") {
+      if (notebookItem.type === 'note' || notebookItem.type === 'report') {
         notebookItem.content = angular.fromJson(notebookItem.content);
       }
       var workgroupId = notebookItem.workgroupId;
@@ -829,16 +799,16 @@ var NotebookService = function () {
       return notebookItem;
     }
   }, {
-    key: "saveNotebookToggleEvent",
+    key: 'saveNotebookToggleEvent',
     value: function saveNotebookToggleEvent(isOpen, currentNode) {
       var nodeId = null,
           componentId = null,
           componentType = null,
-          category = "Notebook";
+          category = 'Notebook';
       var eventData = {
         curentNodeId: currentNode == null ? null : currentNode.id
       };
-      var event = isOpen ? "notebookOpened" : "notebookClosed";
+      var event = isOpen ? 'notebookOpened' : 'notebookClosed';
       this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
     }
   }]);

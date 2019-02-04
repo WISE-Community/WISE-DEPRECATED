@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import EditNotebookItemController from '../editNotebookItemController';
 
@@ -144,10 +144,10 @@ class NotebookController {
   }
 
   getNotes() {
-    let notes = [];
-    let notebookItems = this.notebook.items;
+    const notes = [];
+    const notebookItems = this.notebook.items;
     for (let notebookItemKey in notebookItems) {
-      let notebookItem = notebookItems[notebookItemKey];
+      const notebookItem = notebookItems[notebookItemKey];
       if (notebookItem.last().type === 'note') {
         notes.push(notebookItem);
       }
@@ -162,7 +162,7 @@ class NotebookController {
       if (this.notesVisible) {
         this.closeNotes(event);
       } else {
-        this.NotebookService.retrievePublicNotebookItems("public").then(() => {
+        this.NotebookService.retrievePublicNotebookItems('public').then(() => {
           this.notesVisible = true;
         });
       }
@@ -179,7 +179,7 @@ class NotebookController {
   setInsertMode(value, requester) {
     this.insertMode = value;
     if (value) {
-      this.NotebookService.retrievePublicNotebookItems("public").then(() => {
+      this.NotebookService.retrievePublicNotebookItems('public').then(() => {
         this.notesVisible = true;
       });
     }
@@ -187,7 +187,7 @@ class NotebookController {
   }
 
   insert(notebookItem, $event) {
-    if (this.requester == 'report') {
+    if (this.requester === 'report') {
       this.insertContent = angular.copy(notebookItem);
     } else {
       this.$rootScope.$broadcast('notebookItemChosen', { requester: this.requester, notebookItem: notebookItem });
