@@ -24,6 +24,7 @@ export class LibraryProjectMenuComponent implements OnInit {
   previewLink: string = '';
   isCanEdit: boolean = false;
   isCanShare: boolean = false;
+  isChild: boolean = false;
 
   constructor(public dialog: MatDialog,
               public teacherService: TeacherService,
@@ -35,6 +36,7 @@ export class LibraryProjectMenuComponent implements OnInit {
     this.isCanEdit = this.isOwner() || this.isSharedOwnerWithEditPermission();
     this.isCanShare = this.isOwner();
     this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${ this.project.id }`;
+    this.isChild = this.project.isChild();
   }
 
   isOwner() {
