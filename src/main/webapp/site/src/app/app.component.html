@@ -23,7 +23,7 @@
                         (callback)="showAnnouncementDetails()"
                         (dismiss)="dismissAnnouncement()"></app-announcement>
       <app-header class="dark-theme sticky" 
-                  [ngClass]="{ 'invisible': scroll, 'active': !scroll }"></app-header>
+                  [ngClass]="{ 'invisible': scroll }"></app-header>
       <div fxFlex>
         <router-outlet></router-outlet>
       </div>
