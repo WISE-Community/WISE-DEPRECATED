@@ -1,26 +1,18 @@
-$height: 40px;
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/functions',
+  '~style/abstracts/mixins';
 
 .announcement {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  left: 0;
-  min-height: $height;
-  z-index: 3;
+  min-height: $announcement-height;
 }
 
 .announcement__content {
-  min-height: $height;
+  min-height: $announcement-height;
 }
 
 .announcement__dismiss.mat-icon-button {
   position: absolute;
   right: 16px;
   top: 0;
-}
-
-.has-announcement {
-  .header {
-    top: 40px !important;
-  }
 }

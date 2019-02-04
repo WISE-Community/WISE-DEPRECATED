@@ -3,22 +3,27 @@
 </ng-template>
 
 <ng-template #default>
-  <mat-sidenav-container fullscreen [class.has-announcement]="hasAnnouncement" class="app-background">
+  <mat-sidenav-container fullscreen [class.has-announcement]="hasAnnouncement" 
+                         class="app-background">
     <mat-sidenav #mobileMenu
                  class="primary-bg"
                  [(opened)]="showMobileMenu"
                  position="end">
       <app-mobile-menu></app-mobile-menu>
     </mat-sidenav>
-    <mat-sidenav-content fxLayout="column">
+    <mat-sidenav-content fxLayout="column" 
+                         track-scroll 
+                         (yPositionChange)="onYPositionChange($event)">
       <app-announcement *ngIf="showHeaderAndFooter() && hasAnnouncement"
+                        class="sticky"
                         i18n-message
                         message="Welcome to our new site!"
                         i18n-action
                         action="Learn More"
                         (callback)="showAnnouncementDetails()"
                         (dismiss)="dismissAnnouncement()"></app-announcement>
-      <app-header class="dark-theme"></app-header>
+      <app-header class="dark-theme sticky" 
+                  [ngClass]="{ 'invisible': scroll, 'active': !scroll }"></app-header>
       <div fxFlex>
         <router-outlet></router-outlet>
       </div>

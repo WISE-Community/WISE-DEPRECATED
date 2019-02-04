@@ -4,14 +4,14 @@
     <ng-template #defaultHeadline>{{ headline }}</ng-template>
     <h1 *ngIf="headline || headlineRef" class="hero__headline"
         ngClass="mat-display-2"
-        [ngClass]="{ 'hero__headline--withtagline': tagline, 'mat-display-2': false, 'mat-headline': true }">
+        [ngClass]="{ 'hero__headline--withtagline': tagline, 'mat-display-2': false, 'mat-title': true }">
       <ng-container *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></ng-container>
     </h1>
     <ng-template #defaultTagline>{{ tagline }}</ng-template>
     <h2 *ngIf="tagline || taglineRef"
         class="hero__tagline"
         ngClass="mat-display-1"
-        [ngClass.xs]="{ 'mat-display-1': false, 'mat-headline': true }">
+        [ngClass.xs]="{ 'mat-display-1': false, 'mat-title': true }">
       <ng-container *ngTemplateOutlet="taglineRef ? taglineRef: defaultTagline"></ng-container>
     </h2>
   </div>
