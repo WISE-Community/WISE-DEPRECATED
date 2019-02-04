@@ -91,4 +91,16 @@ export class RunMenuComponent implements OnInit {
       autoFocus: true
     });
   }
+
+  restartRun() {
+    this.teacherService.restartRun(this.run.id)
+        .subscribe((response: any) => {
+          if (response.status == 'success') {
+            this.run.endTime = null;
+          } else {
+            alert('Unable to Restart Run.');
+          }
+        });
+  }
+
 }

@@ -34,11 +34,11 @@
     <a mat-menu-item *ngIf="isScheduled()">
       <mat-icon color="warn">cancel</mat-icon>
       <span i18n>Cancel Unit</span>
-    </a>
-    <a mat-menu-item *ngIf="run.endTime">
+    </a-->
+    <a mat-menu-item *ngIf="run.endTime" (click)="restartRun()">
       <mat-icon color="success" class="success">play_arrow</mat-icon>
       <span i18n>Restart</span>
-    </a>-->
+    </a>
     <a mat-menu-item *ngIf="run.startTime && !run.endTime && !isScheduled()" (click)="showEndRunDialog()">
       <mat-icon color="warn">stop</mat-icon>
       <span i18n>End Unit</span>
