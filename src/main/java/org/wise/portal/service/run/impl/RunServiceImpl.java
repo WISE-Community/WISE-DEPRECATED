@@ -447,6 +447,12 @@ public class RunServiceImpl implements RunService {
   }
 
   @Transactional()
+  public void restartRun(Run run) {
+    run.setEndtime(null);
+    runDao.save(run);
+  }
+
+  @Transactional()
   public void startRun(Run run) {
     if (run.getEndtime() != null) {
       run.setEndtime(null);

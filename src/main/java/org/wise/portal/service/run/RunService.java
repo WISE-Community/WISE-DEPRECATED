@@ -67,6 +67,14 @@ public interface RunService {
   void endRun(Run run);
 
   /**
+   * Restarts this run. The side effect is that the run's endtime gets
+   * set to null. The run continues to be available for students to
+   * access.
+   * @param run the <code>Run</code> to restart
+   */
+  void restartRun(Run run);
+
+  /**
    * Starts this run. The side effect is that the run's endtime gets set to null.
    * A Run that has started becomes eligible for classroom run.
    * If the run is already started, nothing happens.
