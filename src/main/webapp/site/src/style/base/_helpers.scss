@@ -19,4 +19,9 @@
 .active {
   opacity: 1;
   visibility: visible;
+  transition: opacity 250ms;
+}
+
+.sticky {
+  position: sticky;
 }
