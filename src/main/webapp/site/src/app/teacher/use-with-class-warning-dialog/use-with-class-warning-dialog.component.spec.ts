@@ -19,19 +19,25 @@ describe('UseWithClassWarningDialogComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ UseWithClassWarningDialogComponent ],
       providers: [
-        { provide: MatDialog, useValue: {
-          closeAll: () => {}
-        }},
-        { provide: MatDialogRef, useValue: {
-          afterClosed: () => {
-            return Observable.create(observer => {
-              observer.next({});
-              observer.complete();
-            });
+        {
+          provide: MatDialog,
+          useValue: {
+            closeAll: () => {}
+          }
+        },
+        {
+          provide: MatDialogRef,
+          useValue: {
+            afterClosed: () => {
+              return Observable.create(observer => {
+                observer.next({});
+                observer.complete();
+              });
             },
             close: () => {}
-        }},
-        { provide: MAT_DIALOG_DATA, useValue: { project: project }}
+          }
+        },
+        { provide: MAT_DIALOG_DATA, useValue: { project: project } }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
