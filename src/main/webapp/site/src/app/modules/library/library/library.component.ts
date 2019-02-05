@@ -160,7 +160,6 @@ export abstract class LibraryComponent implements OnInit {
     this.setPagination();
   }
 
-  //emitNumberOfProjectsVisible(numProjectsVisible) {
   emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
     if (numProjectsVisible) {
       this.update.emit(numProjectsVisible);

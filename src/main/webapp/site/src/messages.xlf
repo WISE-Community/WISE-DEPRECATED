@@ -2558,6 +2558,12 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
+      </trans-unit><trans-unit id="cda4813957412f125af0b3c464de60460ca0fe2f" datatype="html">
+        <source>Each of the units in this collection has been designed and iteratively refined through a partnership of university-based education researchers and science teachers. They have all been implemeneted and tested in real classrooms and have shown proven learning gains.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
       </trans-unit><trans-unit id="e67065cfae11c998159fc6722e70e4ee76db2c8f" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Learn more<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> about our design process and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>check out our research and publications<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
@@ -2822,6 +2828,12 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
+      </trans-unit><trans-unit id="53c647ed0bda0187e7653c35e0856deea80c268b" datatype="html">
+        <source>(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
       </trans-unit><trans-unit id="e3ae8640f4d05cb4f78a31cfbf18d5701f41d57e" datatype="html">
         <source>Shared by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></source>
         <context-group purpose="location">
@@ -3028,8 +3040,8 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="979d154e04a3afd133942dfe67d99fb9d5875852" datatype="html">
-        <source>*Please note: While WISE staff have reviewed the units listed here, we cannot speficially vouch for their effectiveness or quality. Please examine the units carefully before using in your classrooms. Thanks!</source>
+      </trans-unit><trans-unit id="1f519374aa2d63b8d101da2f56f778edf9052131" datatype="html">
+        <source>*Please note: While WISE staff have reviewed the units listed here, we cannot specifically vouch for their effectiveness or quality. Please examine the units carefully before using in your classrooms. Thanks!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">5</context>
