@@ -5283,6 +5283,14 @@
         </context-group>
         <target xml:lang="zh-TW" state="needs-translation">Edit Content</target>
       </trans-unit>
+      <trans-unit id="b6d79c6ff771d7b86ce572306867a1705200f957" datatype="html">
+        <source>Restart</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <target xml:lang="zh-TW" state="needs-translation">Restart</target>
+      </trans-unit>
       <trans-unit id="e438ba78cbafdb5bcbce0820bfaad995a504f222" datatype="html">
         <source>Display Name</source>
         <context-group purpose="location">
