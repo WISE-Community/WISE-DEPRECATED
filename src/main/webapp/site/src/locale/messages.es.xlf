@@ -1008,7 +1008,7 @@
         <source>Welcome to our new site!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <target xml:lang="es-ES" state="needs-translation">Welcome to our new site!</target>
       </trans-unit>
@@ -1016,7 +1016,7 @@
         <source>Learn More</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <target xml:lang="es-ES" state="needs-translation">Learn More</target>
       </trans-unit>
