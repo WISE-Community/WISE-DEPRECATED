@@ -17,7 +17,6 @@ export class UseWithClassWarningDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.project);
   }
 
   proceedAnyway() {
