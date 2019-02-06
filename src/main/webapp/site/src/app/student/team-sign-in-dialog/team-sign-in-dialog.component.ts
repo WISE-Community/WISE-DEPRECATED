@@ -79,12 +79,15 @@ export class TeamSignInDialogComponent implements OnInit {
       if (response.isValid === true) {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
-          if (canBeAddedToWorkgroupResponse.status) {
+          if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher) {
             teamMember.id = response.userId;
             teamMember.userName = response.userName;
             teamMember.firstName = response.firstName;
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
+          } else if (canBeAddedToWorkgroupResponse.isTeacher) {
+            alert(this.i18n('A teacher cannot be added as a team member.'));
+            teamMember.userName = null;
           } else {
             alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
             teamMember.userName = null;
@@ -119,12 +122,14 @@ export class TeamSignInDialogComponent implements OnInit {
             if (response.status === 'success') {
               this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
                 .subscribe((canBeAddedToWorkgroupResponse) => {
-                  if (canBeAddedToWorkgroupResponse.status) {
+                  if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher) {
                     teamMember.id = response.userId;
                     teamMember.userName = response.userName;
                     teamMember.firstName = response.firstName;
                     teamMember.lastName = response.lastName;
                     this.markAsSignedIn(teamMember);
+                  } else if (canBeAddedToWorkgroupResponse.isTeacher) {
+                    alert(this.i18n('A teacher cannot be added as a team member.'));
                   } else {
                     alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
                   }

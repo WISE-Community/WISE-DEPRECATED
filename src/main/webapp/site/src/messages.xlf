@@ -2655,6 +2655,10 @@
           <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
@@ -2731,6 +2735,10 @@
           <context context-type="linenumber">45</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
@@ -2798,6 +2806,35 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
+      </trans-unit>
+      <trans-unit id="a158381be2135623f1b321725f34dadcfd0fcbd4" datatype="html">
+        <source>Wise4 Project Warning</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ab03ea73e6b9710336b5078264a3e3dcdf1345a8" datatype="html">
+        <source>Warning: this is a legacy unit in a version of WISE that is many years old.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8a1e81aea4d05d0169f20b796866f917fdb83c41" datatype="html">
+        <source>We recommend finding a newer version of this unit in the library, as support for classroom implementations of legacy units will be phased out over the coming year. If you cannot find a newer version, contact us if you&apos;re interested in upgrading the unit. Thanks!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c90c99f8160be2e6bb39fcba6ae4a0009e652474" datatype="html">
+        <source>Proceed Anyway</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
       </trans-unit><trans-unit id="07ab43ffb10e6bed417b203bfdc02cdda6aa1b61" datatype="html">
         <source>Grade level:</source>
         <context-group purpose="location">
