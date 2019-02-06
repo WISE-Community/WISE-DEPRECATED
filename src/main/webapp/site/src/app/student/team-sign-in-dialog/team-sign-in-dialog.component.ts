@@ -86,7 +86,7 @@ export class TeamSignInDialogComponent implements OnInit {
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
           } else if (canBeAddedToWorkgroupResponse.isTeacher) {
-            alert("A teacher cannot be added as a team member");
+            alert(this.i18n("A teacher cannot be added as a team member."));
             teamMember.userName = null;
           } else {
             alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
@@ -129,7 +129,7 @@ export class TeamSignInDialogComponent implements OnInit {
                     teamMember.lastName = response.lastName;
                     this.markAsSignedIn(teamMember);
                   } else if (canBeAddedToWorkgroupResponse.isTeacher) {
-                    alert("A teacher cannot be added as a team member");
+                    alert(this.i18n("A teacher cannot be added as a team member."));
                   } else {
                     alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
                   }
