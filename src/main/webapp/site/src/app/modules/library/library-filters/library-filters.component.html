@@ -1,12 +1,17 @@
 <div class="library-filter">
-  <div fxLayout="row" fxLayoutAlign="start start">
-    <app-search-bar [placeholderText]="'Keyword search'"
-                    [value]="searchValue"
-                    (update)="searchUpdated($event)">
-    </app-search-bar>
-    <button class="library-filters-toggle input-control--appearance-fill"
+  <div fxLayout="row"
+       fxLayout.gt-sm="{{ split ? 'column' : 'row' }}"
+       fxLayoutGap="8px">
+    <div fxFlex.gt-xs>
+      <app-search-bar [value]="searchValue"
+                      (update)="searchUpdated($event)"></app-search-bar>
+    </div>
+    <button class="input-control--appearance-fill"
             mat-icon-button
-            (click)="showFilters = !showFilters">
+            i18n-aria-label
+            aria-label="Toggle filters"
+            (click)="showFilters = !showFilters"
+            fxHide.gt-sm="{{ split ? true : false }}">
       <mat-icon matBadge="+"
                 matBadgeDescription="Filters applied"
                 matBadgeOverlap="true"
@@ -15,15 +20,20 @@
     </button>
   </div>
 </div>
-<div class="library-filters" [class.expand]="showFilters">
-  <div fxLayout="column" fxLayout.md="row wrap">
+<div class="library-filters" [class.expand]="showFilters" [class.split]="split">
+  <div class="notice">
+    <ng-container i18n>Filter by <a href="https://www.nextgenscience.org/" target="_blank">Next Generation Science Standards</a> (NGSS).</ng-container>&nbsp;<a *ngIf="hasFilters()" href="#" (click)="!!reset()" i18n>Reset</a>
+  </div>
+  <div fxLayout="column"
+       fxLayout.gt-sm="{{ split ? 'column' : 'row' }}"
+       fxLayoutGap.gt-sm="{{ split ? '0' : '8px' }}">
     <div *ngIf="disciplineOptions.length > 0"
          class="library-filter"
-         fxFlex
-         fxFlex.xs="100">
+         fxFlex.gt-sm="{{ split ? 100 : 33 }}">
       <app-select-menu id="disciplineSelectMenu"
                        [options]="disciplineOptions"
-                       [placeholderText]="'Discipline'"
+                       i18n-placeholderText
+                       placeholderText="Discipline"
                        [value]="disciplineValue"
                        (update)="filterUpdated($event, 'discipline')"
                        [valueProp]="'id'"
@@ -33,11 +43,11 @@
     </div>
     <div *ngIf="dciArrangementOptions.length > 0"
          class="library-filter"
-         fxFlex
-         fxFlex.xs="100">
+         fxFlex.gt-sm="{{ split ? 100 : 33 }}">
       <app-select-menu id="dciArrangementSelectMenu"
                        [options]="dciArrangementOptions"
-                       [placeholderText]="'DCI Arrangement'"
+                       i18n-placeholderText
+                       placeholderText="DCI Arrangement"
                        [value]="dciArrangementValue"
                        (update)="filterUpdated($event, 'dci')"
                        [valueProp]="'id'"
@@ -47,11 +57,11 @@
     </div>
     <div *ngIf="peOptions.length > 0"
          class="library-filter"
-         fxFlex
-         fxFlex.xs="100">
+         fxFlex.gt-sm="{{ split ? 100 : 33 }}">
       <app-select-menu id="performanceExpectationSelectMenu"
                        [options]="peOptions"
-                       [placeholderText]="'Performance Expectation'"
+                       i18n-placeholderText
+                       placeholderText="Performance Expectation"
                        [value]="peValue"
                        (update)="filterUpdated($event, 'pe')"
                        [valueProp]="'id'"
@@ -60,11 +70,4 @@
       </app-select-menu>
     </div>
   </div>
-</div>
-<div>
-  <button (click)="reset()"
-          mat-button
-          color="primary"
-          fxFlex="100"
-          [disabled]="!searchValue && !hasFilters()" i18n>Reset</button>
 </div>

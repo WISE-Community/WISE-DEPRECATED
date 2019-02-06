@@ -17,28 +17,31 @@
       margin-right: 8px;
     }
   }
-
-  app-search-bar {
-    width: 100%;
-  }
 }
 
 .library__header {
-  border-radius: 0;
-
   .info-block {
     background-color: transparent;
     padding: 0 0 16px;
     font-size: mat-font-size($config, subheading-2);
   }
 }
+
 .library__content {
   .content-block {
     background-color: transparent;
     min-height: 100px;
   }
+
+  .mat-paginator {
+    background: transparent;
+  }
+  
+  .mat-paginator-range-label {
+    margin: 0 8px;
+  }
 }
 
-.library__groups {
-  display: block;
+.library__list {
+  padding: 8px 0;
 }

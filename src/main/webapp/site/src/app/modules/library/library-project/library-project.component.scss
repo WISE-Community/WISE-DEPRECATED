@@ -7,18 +7,11 @@
 $config: mat-typography-config();
 
 .library-project {
-  margin: 4px;
-
-  @media (min-width: breakpoint('sm.min')) {
-    margin: 8px;
-  }
+  margin: 8px;
+  overflow: hidden;
 
   &.mat-card {
     padding: 0;
-  }
-
-  .mat-expansion-indicator {
-    margin-left: 8px;
   }
 }
 
@@ -36,7 +29,7 @@ $config: mat-typography-config();
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0,0,0,0.15);
     border-radius: $card-border-radius;
     transition: background-color 280ms cubic-bezier(.4,0,.2,1);
   }
@@ -46,41 +39,41 @@ $config: mat-typography-config();
   &:hover, &:focus {
     .library-project__cover {
       &:after {
-        background-color: rgba(0, 0, 0, 0.4);
+        background-color: transparent;
       }
     }
   }
 }
 
-.library-project__title {
+.library-project__details {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
+  padding: 10px;
+  background-color: #ffffff;
+  font-size: mat-font-size($config, body-1);
+
+  p {
+    margin-bottom: 6px;
+    line-height: 1.25;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.library-project__title {
   font-weight: 500;
-  padding: 6px 8px;
-  border-radius: 2px;
-  color: #ffffff;
-  overflow: hidden;
-  line-height: 1.25;
 
-  @media (min-width: breakpoint('sm.min')) {
-    font-size: mat-font-size($config, body-1);
-    padding: 10px 12px;
-  }
-
-  @media (min-width: breakpoint('lg.min')) {
-    font-size: mat-font-size($config, subheading-2);
+  span {
+    display: inline-block;
   }
 }
 
-.library-project__discipline {
+.library-project-disciplines {
   position: absolute;
-  top: 0;
-  right: 0;
-  padding: 12px 8px;
-}
-
-.library-project__shared-owner {
-  color: red;
+  top: 10px;
+  right: 10px;
 }

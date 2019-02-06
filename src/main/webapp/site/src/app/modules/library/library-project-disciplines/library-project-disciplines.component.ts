@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 
 @Component({
-  selector: 'app-library-project-discipline-icon',
-  templateUrl: './library-project-discipline-icon.component.html',
-  styleUrls: ['./library-project-discipline-icon.component.scss']
+  selector: 'app-library-project-disciplines',
+  templateUrl: './library-project-disciplines.component.html',
+  styleUrls: ['./library-project-disciplines.component.scss']
 })
-export class LibraryProjectDisciplineIconComponent implements OnInit {
+export class LibraryProjectDisciplinesComponent implements OnInit {
 
   @Input()
   project: LibraryProject = new LibraryProject();

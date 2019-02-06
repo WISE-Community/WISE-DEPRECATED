@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon.component';
+import { LibraryProjectDisciplinesComponent } from './library-project-disciplines.component';
 import { LibraryProject } from "../libraryProject";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 
-describe('LibraryProjectDisciplineIconComponent', () => {
-  let component: LibraryProjectDisciplineIconComponent;
-  let fixture: ComponentFixture<LibraryProjectDisciplineIconComponent>;
+describe('LibraryProjectDisciplinesComponent', () => {
+  let component: LibraryProjectDisciplinesComponent;
+  let fixture: ComponentFixture<LibraryProjectDisciplinesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LibraryProjectDisciplineIconComponent ],
+      declarations: [ LibraryProjectDisciplinesComponent ],
       imports: [],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -17,7 +17,7 @@ describe('LibraryProjectDisciplineIconComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LibraryProjectDisciplineIconComponent);
+    fixture = TestBed.createComponent(LibraryProjectDisciplinesComponent);
     component = fixture.componentInstance;
     const project: LibraryProject = new LibraryProject();
     project.id = 1;

@@ -10,6 +10,8 @@ import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 export class MockLibraryService {
   public officialLibraryProjectsSource$ = fakeAsyncResponse([]);
   public communityLibraryProjectsSource$ = fakeAsyncResponse([]);
+  public sharedLibraryProjectsSource$ = fakeAsyncResponse([]);
+  public personalLibraryProjectsSource$ = fakeAsyncResponse([]);
   filterOptions(projectFilterOptions: ProjectFilterOptions) {
 
   }

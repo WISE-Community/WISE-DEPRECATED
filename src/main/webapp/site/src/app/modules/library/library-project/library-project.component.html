@@ -1,11 +1,15 @@
-<mat-card *ngIf="project.visible" class="library-project button--card mat-elevation-z2" (click)="showDetails()" (keyup.enter)="showDetails()"
-  role="button" tabindex="0" aria-label="Show project details">
+<mat-card *ngIf="project.visible" 
+          class="library-project button--card mat-elevation-z2"
+          (click)="showDetails()"
+          (keyup.enter)="showDetails()"
+          role="button"
+          tabindex="0"
+          i18n-aria-label
+          aria-label="Show project details">
   <div class="library-project__cover" [style.background-image]="project.thumbStyle"></div>
-  <div class="library-project__discipline">
-    <app-library-project-discipline-icon [project]="project"></app-library-project-discipline-icon>
-  </div>
-  <div class="library-project__title">
-    <div>{{ project.metadata.title }}</div>
-    <div *ngIf="project.shared" class="library-project__shared-owner" i18n>Shared by {{ project.owner.displayName }}</div>
+  <app-library-project-disciplines [project]="project"></app-library-project-disciplines>
+  <div class="library-project__details">
+    <p class="library-project__title">{{ project.metadata.title }} <span class="mat-caption secondary-text" i18n>(ID: {{ project.id }})</span></p>
+    <p *ngIf="project.shared" class="info mat-caption" i18n>Shared by {{ project.owner.displayName }}</p>
   </div>
 </mat-card>
