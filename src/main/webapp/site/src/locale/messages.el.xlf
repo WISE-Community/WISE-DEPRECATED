@@ -54,7 +54,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
@@ -70,7 +70,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
@@ -90,7 +90,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Help + FAQs</target>
       </trans-unit>
@@ -110,15 +110,23 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Contact Us</target>
+      </trans-unit>
+      <trans-unit id="d97fd6757dbd8190c0e310c2be8432718b2a417b" datatype="html">
+        <source>Legacy</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Legacy</target>
       </trans-unit>
       <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
         <source>WISE on Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
@@ -130,7 +138,7 @@
         <source>WISE on Twitter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
@@ -138,11 +146,23 @@
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE on Twitter</target>
       </trans-unit>
+      <trans-unit id="540452d4091ec883af6967b28abf89f2ac0c853d" datatype="html">
+        <source>WISE on Github</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/home/home.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">WISE on Github</target>
+      </trans-unit>
       <trans-unit id="d8f2e89cc8dde7834ae2c3337aff293e23aec97f" datatype="html">
         <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
@@ -150,7 +170,7 @@
         <source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</target>
       </trans-unit>
@@ -158,7 +178,7 @@
         <source>National Science Foundation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">National Science Foundation</target>
       </trans-unit>
@@ -166,7 +186,7 @@
         <source>UC Berkeley</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">UC Berkeley</target>
       </trans-unit>
@@ -174,7 +194,7 @@
         <source>Concord Consortium</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Concord Consortium</target>
       </trans-unit>
@@ -182,7 +202,7 @@
         <source>SAIL (Scalable Architecture for Interactive Learning)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">SAIL (Scalable Architecture for Interactive Learning)</target>
       </trans-unit>
@@ -190,7 +210,7 @@
         <source>©1996-2018, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">©1996-2018, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</target>
       </trans-unit>
@@ -242,11 +262,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Elicit Ideas</target>
       </trans-unit>
@@ -258,7 +278,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Add Ideas</target>
       </trans-unit>
@@ -270,11 +290,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Distinguish Ideas</target>
       </trans-unit>
@@ -286,11 +306,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Connect Ideas</target>
       </trans-unit>
@@ -392,7 +412,7 @@
         <source>Learn what's new in the WISE community.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Learn what's new in the WISE community.</target>
       </trans-unit>
@@ -400,7 +420,7 @@
         <source>View tutorials and common questions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">View tutorials and common questions.</target>
       </trans-unit>
@@ -408,7 +428,7 @@
         <source>Want to get in touch? Send us a message.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Want to get in touch? Send us a message.</target>
       </trans-unit>
@@ -480,7 +500,7 @@
         <source>WISE Features</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE Features</target>
       </trans-unit>
@@ -488,7 +508,7 @@
         <source>A powerful online platform for designing, developing, and implementing science inquiry units</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">A powerful online platform for designing, developing, and implementing science inquiry units</target>
       </trans-unit>
@@ -496,7 +516,7 @@
         <source>Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</target>
       </trans-unit>
@@ -504,7 +524,7 @@
         <source>WISE students</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE students</target>
       </trans-unit>
@@ -512,7 +532,7 @@
         <source>WISE students collaborate to:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE students collaborate to:</target>
       </trans-unit>
@@ -520,7 +540,7 @@
         <source>Explore issues of social importance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Explore issues of social importance</target>
       </trans-unit>
@@ -528,7 +548,7 @@
         <source>Pose relevant questions and make predictions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Pose relevant questions and make predictions</target>
       </trans-unit>
@@ -536,7 +556,7 @@
         <source>Experiment with computational models</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Experiment with computational models</target>
       </trans-unit>
@@ -544,7 +564,7 @@
         <source>Evaluate and distinguish discrepant information</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Evaluate and distinguish discrepant information</target>
       </trans-unit>
@@ -552,7 +572,7 @@
         <source>Construct explanations through reflection and discussion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Construct explanations through reflection and discussion</target>
       </trans-unit>
@@ -560,7 +580,7 @@
         <source>Design and build evidence-based solutions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Design and build evidence-based solutions</target>
       </trans-unit>
@@ -568,7 +588,7 @@
         <source>Inquiry-Based Learning</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Inquiry-Based Learning</target>
       </trans-unit>
@@ -576,7 +596,7 @@
         <source>WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</target>
       </trans-unit>
@@ -584,7 +604,7 @@
         <source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</target>
       </trans-unit>
@@ -592,7 +612,7 @@
         <source>Standards-Aligned Curricula</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Standards-Aligned Curricula</target>
       </trans-unit>
@@ -600,7 +620,7 @@
         <source>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</target>
       </trans-unit>
@@ -608,7 +628,7 @@
         <source>WISE units support the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3-dimensional learning<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, and can be adapted to address local standards.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE units support the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3-dimensional learning<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, and can be adapted to address local standards.</target>
       </trans-unit>
@@ -616,7 +636,7 @@
         <source>Design Process &amp; Goals</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Design Process &amp; Goals</target>
       </trans-unit>
@@ -624,7 +644,7 @@
         <source>WISE solar ovens unit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE solar ovens unit</target>
       </trans-unit>
@@ -632,7 +652,7 @@
         <source>WISE students building solar oven</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">93</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE students building solar oven</target>
       </trans-unit>
@@ -640,7 +660,7 @@
         <source>MyModel diagram with guidance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">107</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">MyModel diagram with guidance</target>
       </trans-unit>
@@ -648,7 +668,7 @@
         <source>WISE cellular respiration model</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE cellular respiration model</target>
       </trans-unit>
@@ -656,7 +676,7 @@
         <source>WISE design report</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE design report</target>
       </trans-unit>
@@ -664,7 +684,7 @@
         <source>WISE thermodynamics insulator model</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE thermodynamics insulator model</target>
       </trans-unit>
@@ -672,7 +692,7 @@
         <source>Powerful Learning Technologies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Powerful Learning Technologies</target>
       </trans-unit>
@@ -680,7 +700,7 @@
         <source>WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</target>
       </trans-unit>
@@ -688,7 +708,7 @@
         <source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</target>
       </trans-unit>
@@ -696,7 +716,7 @@
         <source>Comprehensive Instructional Supports</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Comprehensive Instructional Supports</target>
       </trans-unit>
@@ -704,7 +724,7 @@
         <source>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</target>
       </trans-unit>
@@ -712,7 +732,7 @@
         <source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</target>
       </trans-unit>
@@ -720,7 +740,7 @@
         <source>WISE teacher progress</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">131</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE teacher progress</target>
       </trans-unit>
@@ -728,7 +748,7 @@
         <source>WISE teacher grading</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE teacher grading</target>
       </trans-unit>
@@ -736,7 +756,7 @@
         <source>Featured Teacher Tools:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Featured Teacher Tools:</target>
       </trans-unit>
@@ -744,7 +764,7 @@
         <source>Real-time progress monitor</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Real-time progress monitor</target>
       </trans-unit>
@@ -752,7 +772,7 @@
         <source>Grade and give feedback + sample scoring rubrics</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Grade and give feedback + sample scoring rubrics</target>
       </trans-unit>
@@ -760,7 +780,7 @@
         <source>Automatically scored assessment items</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Automatically scored assessment items</target>
       </trans-unit>
@@ -768,7 +788,7 @@
         <source>Pause student screens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Pause student screens</target>
       </trans-unit>
@@ -776,7 +796,7 @@
         <source>Share and collaborate with colleagues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">158</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Share and collaborate with colleagues</target>
       </trans-unit>
@@ -784,7 +804,7 @@
         <source>Authoring environment that supports customization and creation of new units</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Authoring environment that supports customization and creation of new units</target>
       </trans-unit>
@@ -792,7 +812,7 @@
         <source>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">In development: Automated insights into student NGSS understanding + suggested classroom interventions!</target>
       </trans-unit>
@@ -800,7 +820,7 @@
         <source>Explore what WISE has to offer!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Explore what WISE has to offer!</target>
       </trans-unit>
@@ -808,7 +828,7 @@
         <source>Join for free</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Join for free</target>
       </trans-unit>
@@ -816,7 +836,7 @@
         <source>WISE is the product of more than 25 years of research on teaching and learning with educational technologies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE is the product of more than 25 years of research on teaching and learning with educational technologies</target>
       </trans-unit>
@@ -824,7 +844,7 @@
         <source>WISE student and teacher</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE student and teacher</target>
       </trans-unit>
@@ -832,7 +852,7 @@
         <source>WISE teacher workshop design</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE teacher workshop design</target>
       </trans-unit>
@@ -840,7 +860,7 @@
         <source>Marcia at WISE workshop</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Marcia at WISE workshop</target>
       </trans-unit>
@@ -848,7 +868,7 @@
         <source>Based on Research, Refined Through Practice</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Based on Research, Refined Through Practice</target>
       </trans-unit>
@@ -856,7 +876,7 @@
         <source>Through our collaborations with teachers, administrators, technology designers, and education researchers, we have refined a set of principles which guide the design of all WISE curriculum materials and tools.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Through our collaborations with teachers, administrators, technology designers, and education researchers, we have refined a set of principles which guide the design of all WISE curriculum materials and tools.</target>
       </trans-unit>
@@ -864,7 +884,7 @@
         <source>This means that when implementing WISE units, you can be assured that what you're using is grown from a solid foundation, advised by real teachers' experiences, and tested in classrooms with real students.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">This means that when implementing WISE units, you can be assured that what you're using is grown from a solid foundation, advised by real teachers' experiences, and tested in classrooms with real students.</target>
       </trans-unit>
@@ -872,7 +892,7 @@
         <source>Our Research + Team</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Our Research + Team</target>
       </trans-unit>
@@ -880,7 +900,7 @@
         <source>Knowledge Integration</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Knowledge Integration</target>
       </trans-unit>
@@ -888,7 +908,7 @@
         <source>As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</target>
       </trans-unit>
@@ -896,7 +916,7 @@
         <source>The KI Processes:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">The KI Processes:</target>
       </trans-unit>
@@ -904,7 +924,7 @@
         <source>~ WISE Goals ~</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">~ WISE Goals ~</target>
       </trans-unit>
@@ -912,7 +932,7 @@
         <source>Make Science Meaningful</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Make Science Meaningful</target>
       </trans-unit>
@@ -920,7 +940,7 @@
         <source>WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</target>
       </trans-unit>
@@ -928,7 +948,7 @@
         <source>Support Diverse Learners</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Support Diverse Learners</target>
       </trans-unit>
@@ -936,7 +956,7 @@
         <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</target>
       </trans-unit>
@@ -944,7 +964,7 @@
         <source>Increase Participation in Science</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Increase Participation in Science</target>
       </trans-unit>
@@ -952,7 +972,7 @@
         <source>WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</target>
       </trans-unit>
@@ -960,7 +980,7 @@
         <source>Accessible to All</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Accessible to All</target>
       </trans-unit>
@@ -968,7 +988,7 @@
         <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</target>
       </trans-unit>
@@ -976,7 +996,7 @@
         <source>WISE on student computer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE on student computer</target>
       </trans-unit>
@@ -984,7 +1004,7 @@
         <source>WISE researcher</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE researcher</target>
       </trans-unit>
@@ -992,7 +1012,7 @@
         <source>WISE teachers and researcher</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE teachers and researcher</target>
       </trans-unit>
@@ -1000,7 +1020,7 @@
         <source>WISE developers and teacher</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">WISE developers and teacher</target>
       </trans-unit>
@@ -1597,7 +1617,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Student Home</target>
       </trans-unit>
@@ -1609,7 +1629,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">7</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Teacher Home</target>
       </trans-unit>
@@ -3231,37 +3251,109 @@
         </context-group>
         <target xml:lang="el" state="needs-translation">Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.</target>
       </trans-unit>
-      <trans-unit id="92a474eb532d00ae040a81de8705d2e0ea5c5b5d" datatype="html">
-        <source>Search &amp; Filter</source>
+      <trans-unit id="32994fe5ec4e53b681a661dd565256e91a9eb515" datatype="html">
+        <source>unit(s)</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
+          <context context-type="sourcefile">app/modules/library/official-library/official-library.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">unit(s)</target>
+      </trans-unit>
+      <trans-unit id="5080207bff284204adb9544ae12ef39917aa74ae" datatype="html">
+        <source>WISE Tested</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">WISE Tested</target>
+      </trans-unit>
+      <trans-unit id="babd041c8f47bf5bb8dcabfc02d9904a8e363c9c" datatype="html">
+        <source>The "WISE Tested" library contains curricula developed by the WISE team.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target xml:lang="el" state="needs-translation">Search &amp; Filter</target>
+        <target xml:lang="el" state="needs-translation">The "WISE Tested" library contains curricula developed by the WISE team.</target>
       </trans-unit>
-      <trans-unit id="eb9e0f47dfb5b4e42e970b62c6b2d3333b85cf05" datatype="html">
-        <source>Suggested unit sequences developed and tested by the WISE team</source>
+      <trans-unit id="cda4813957412f125af0b3c464de60460ca0fe2f" datatype="html">
+        <source>Each of the units in this collection has been designed and iteratively refined through a partnership of university-based education researchers and science teachers. They have all been implemeneted and tested in real classrooms and have shown proven learning gains.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Each of the units in this collection has been designed and iteratively refined through a partnership of university-based education researchers and science teachers. They have all been implemeneted and tested in real classrooms and have shown proven learning gains.</target>
+      </trans-unit>
+      <trans-unit id="e67065cfae11c998159fc6722e70e4ee76db2c8f" datatype="html">
+        <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Learn more<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> about our design process and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>check out our research and publications<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Learn more<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> about our design process and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>check out our research and publications<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+      </trans-unit>
+      <trans-unit id="f4e529ae5ffd73001d1ff4bbdeeb0a72e342e5c8" datatype="html">
+        <source>Close</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Close</target>
+      </trans-unit>
+      <trans-unit id="73da064756ecee7cf3d056dc8a0b99f0f39863b6" datatype="html">
+        <source>What is WISE Tested?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target xml:lang="el" state="needs-translation">Suggested unit sequences developed and tested by the WISE team</target>
+        <target xml:lang="el" state="needs-translation">What is WISE Tested?</target>
       </trans-unit>
-      <trans-unit id="cf9f9a7526aa8008b37be1ff78ced34ab3b32ef6" datatype="html">
-        <source>Units designed and shared by WISE community members</source>
+      <trans-unit id="01d380d7c105dbdc51d2659949a726359153e11b" datatype="html">
+        <source>WISE Tested (<x id="INTERPOLATION" equiv-text="{{numberOfOfficialProjectsVisible}}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">10</context>
         </context-group>
-        <target xml:lang="el" state="needs-translation">Units designed and shared by WISE community members</target>
+        <target xml:lang="el" state="needs-translation">WISE Tested (<x id="INTERPOLATION" equiv-text="{{numberOfOfficialProjectsVisible}}"/>)</target>
       </trans-unit>
-      <trans-unit id="2bcc4ef23238f6d51efe31531a8d04e2c7a87c49" datatype="html">
-        <source>Units owned by or shared with you</source>
+      <trans-unit id="9f25d6d4cac1adba2cfad085fa7657824d860a2e" datatype="html">
+        <source>Community Built (<x id="INTERPOLATION" equiv-text="{{numberOfCommunityProjectsVisible}}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">18</context>
         </context-group>
-        <target xml:lang="el" state="needs-translation">Units owned by or shared with you</target>
+        <target xml:lang="el" state="needs-translation">Community Built (<x id="INTERPOLATION" equiv-text="{{numberOfCommunityProjectsVisible}}"/>)</target>
+      </trans-unit>
+      <trans-unit id="6ffdd9679bd4e8739d579bde3c858b33c7ca7f66" datatype="html">
+        <source>My Units (<x id="INTERPOLATION" equiv-text="{{numberOfPersonalProjectsVisible}}"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">My Units (<x id="INTERPOLATION" equiv-text="{{numberOfPersonalProjectsVisible}}"/>)</target>
+      </trans-unit>
+      <trans-unit id="b845ed35ecca01a3b92ddf4c2a12905fac6776f1" datatype="html">
+        <source>Select unit library view</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Select unit library view</target>
       </trans-unit>
       <trans-unit id="053c99466a9288207400b49f2ca907192b5bd44d" datatype="html">
         <source>Use with Class</source>
@@ -3507,18 +3599,6 @@
         </context-group>
         <target xml:lang="el" state="needs-translation">NGSS Performance Expectations: </target>
       </trans-unit>
-      <trans-unit id="f4e529ae5ffd73001d1ff4bbdeeb0a72e342e5c8" datatype="html">
-        <source>Close</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <target xml:lang="el" state="needs-translation">Close</target>
-      </trans-unit>
       <trans-unit id="3e2a583f531f7dd9f089f68a6968e444c372c3e8" datatype="html">
         <source>Preview</source>
         <context-group purpose="location">
@@ -3531,13 +3611,29 @@
         </context-group>
         <target xml:lang="el" state="needs-translation">Preview</target>
       </trans-unit>
+      <trans-unit id="53c647ed0bda0187e7653c35e0856deea80c268b" datatype="html">
+        <source>(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
+      </trans-unit>
       <trans-unit id="e3ae8640f4d05cb4f78a31cfbf18d5701f41d57e" datatype="html">
         <source>Shared by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Shared by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></target>
+      </trans-unit>
+      <trans-unit id="4bad40355890bcbe1b4003d9fd0632beeffd6580" datatype="html">
+        <source>Show project details</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Show project details</target>
       </trans-unit>
       <trans-unit id="cf981dceeed8f731260f5eff3c51a5ea148cf8fe" datatype="html">
         <source>Share Unit</source>
@@ -3695,11 +3791,27 @@
         </context-group>
         <target xml:lang="el" state="needs-translation">Share</target>
       </trans-unit>
+      <trans-unit id="1ada756975a68f38f92477600b2ca2864ea89533" datatype="html">
+        <source>Toggle filters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Toggle filters</target>
+      </trans-unit>
+      <trans-unit id="b8d343aa7d7ecf599df1c34a0d4ba1bdb7de759f" datatype="html">
+        <source>Filter by <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (NGSS).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Filter by <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (NGSS).</target>
+      </trans-unit>
       <trans-unit id="06c663bf1474713f57551123a46b34318543b67d" datatype="html">
         <source>Reset</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
@@ -3711,13 +3823,109 @@
         </context-group>
         <target xml:lang="el" state="needs-translation">Reset</target>
       </trans-unit>
-      <trans-unit id="32994fe5ec4e53b681a661dd565256e91a9eb515" datatype="html">
-        <source>unit(s)</source>
+      <trans-unit id="e2f5ddbb1c62ee08bb0cc5a18ecba95e1e621760" datatype="html">
+        <source>Discipline</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/official-library/official-library.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
+          <context context-type="linenumber">36</context>
         </context-group>
-        <target xml:lang="el" state="needs-translation">unit(s)</target>
+        <target xml:lang="el" state="needs-translation">Discipline</target>
+      </trans-unit>
+      <trans-unit id="b26db160af51478944575eeb0137e167ab054cca" datatype="html">
+        <source>DCI Arrangement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">DCI Arrangement</target>
+      </trans-unit>
+      <trans-unit id="b17d72cdba2d53ad1c4952c8c3ba0d70ffc7ed1d" datatype="html">
+        <source>Performance Expectation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Performance Expectation</target>
+      </trans-unit>
+      <trans-unit id="5fb96f87d294d558a0de557ff5cd2049b9e3d635" datatype="html">
+        <source>What is Community Built?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/community-library/community-library.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">What is Community Built?</target>
+      </trans-unit>
+      <trans-unit id="4f6276982b612e3be0a1c89c456d29506016d863" datatype="html">
+        <source>No community designed units found.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/community-library/community-library.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">No community designed units found.</target>
+      </trans-unit>
+      <trans-unit id="481add1796f59f7dfdcfb8e69283dd39230d67e9" datatype="html">
+        <source>Community Built</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Community Built</target>
+      </trans-unit>
+      <trans-unit id="adc984d8f77dc423434e753052fcf8b519a4d69d" datatype="html">
+        <source>The "Community Built" library contains units that were designed and contributed by WISE community members. Want to publicly share your custom unit? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">The "Community Built" library contains units that were designed and contributed by WISE community members. Want to publicly share your custom unit? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</target>
+      </trans-unit>
+      <trans-unit id="1f519374aa2d63b8d101da2f56f778edf9052131" datatype="html">
+        <source>*Please note: While WISE staff have reviewed the units listed here, we cannot specifically vouch for their effectiveness or quality. Please examine the units carefully before using in your classrooms. Thanks!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">*Please note: While WISE staff have reviewed the units listed here, we cannot specifically vouch for their effectiveness or quality. Please examine the units carefully before using in your classrooms. Thanks!</target>
+      </trans-unit>
+      <trans-unit id="c7dd4f5065afe35f6940c8c4214cbf4c02cd32fc" datatype="html">
+        <source>What are My Units?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/personal-library/personal-library.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">What are My Units?</target>
+      </trans-unit>
+      <trans-unit id="329cfb58bde439dc1f1839ebf205991382a9a2de" datatype="html">
+        <source>No owned or shared units found.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/personal-library/personal-library.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">No owned or shared units found.</target>
+      </trans-unit>
+      <trans-unit id="c4058ff063f874b650aca76a5d972f11323bb6fb" datatype="html">
+        <source>My Units</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">My Units</target>
+      </trans-unit>
+      <trans-unit id="35f92c76101a5f5b5010e09dedea982832cf1e87" datatype="html">
+        <source>The "My Units" library contains curriculum units that you own or that have been shared with you by other WISE users.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">The "My Units" library contains curriculum units that you own or that have been shared with you by other WISE users.</target>
+      </trans-unit>
+      <trans-unit id="855dab22c74d8f9a4e55113cef0c528802dc7bec" datatype="html">
+        <source>Units that you create using the WISE Authoring Tool will appear here. Any units that you copy will also be listed here.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Units that you create using the WISE Authoring Tool will appear here. Any units that you copy will also be listed here.</target>
       </trans-unit>
       <trans-unit id="263e1717422fe3b5810e9a2e55b87e477b35d1ed" datatype="html">
         <source>Sign in to WISE</source>
@@ -4581,7 +4789,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Add Unit</target>
       </trans-unit>
@@ -4629,7 +4837,7 @@
         <source>Add unit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Add unit</target>
       </trans-unit>
@@ -4713,7 +4921,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/news/news.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Show More</target>
       </trans-unit>
@@ -4989,7 +5197,7 @@
         <source>Class Schedule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Class Schedule</target>
       </trans-unit>
@@ -4997,7 +5205,7 @@
         <source>Browse WISE Units</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Browse WISE Units</target>
       </trans-unit>
@@ -5005,7 +5213,7 @@
         <source>Authoring Tool</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Authoring Tool</target>
       </trans-unit>
@@ -5319,7 +5527,7 @@
         <source>What's New?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/news/news.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">What's New?</target>
       </trans-unit>
@@ -6142,6 +6350,46 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <target xml:lang="el" state="needs-translation">Project Details</target>
+      </trans-unit>
+      <trans-unit id="615b3b60d98013117fa5ced450b1345d5ba5262d" datatype="html">
+        <source>Show:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Show:</target>
+      </trans-unit>
+      <trans-unit id="ce3cefb1cd0099aa5003dda16ec9eb21fd8ba789" datatype="html">
+        <source>Next page</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Next page</target>
+      </trans-unit>
+      <trans-unit id="575e782fd27f2ee70a034a775efe9ad162472250" datatype="html">
+        <source>Previous page</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">Previous page</target>
+      </trans-unit>
+      <trans-unit id="dddb2fd891082b5905adb176fbb382e6ccf3e10f" datatype="html">
+        <source>0 of <x id="INTERPOLATION" equiv-text="{{total}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation">0 of <x id="INTERPOLATION" equiv-text="{{total}}"/></target>
+      </trans-unit>
+      <trans-unit id="1fa889a57be6df3fc55b83d402af3b2933b89acd" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{start}}"/> - <x id="INTERPOLATION_1" equiv-text="{{end}}"/> of <x id="INTERPOLATION_2" equiv-text="{{total}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="el" state="needs-translation"><x id="INTERPOLATION" equiv-text="{{start}}"/> - <x id="INTERPOLATION_1" equiv-text="{{end}}"/> of <x id="INTERPOLATION_2" equiv-text="{{total}}"/></target>
       </trans-unit>
       <trans-unit id="46e4ba42c378685244d606204ade725e243a5572" datatype="html">
         <source>Sharing permissions updated for <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
