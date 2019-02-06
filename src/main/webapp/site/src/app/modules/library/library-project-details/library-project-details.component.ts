@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { LibraryService } from "../../../services/library.service";
 import { UserService } from "../../../services/user.service";
 import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
+import { UseWithClassWarningDialogComponent } from "../../../teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component";
 import { NGSSStandards } from "../ngssStandards";
 import { ConfigService } from "../../../services/config.service";
 
@@ -64,10 +65,17 @@ export class LibraryProjectDetailsComponent implements OnInit {
   }
 
   runProject() {
-    this.dialog.open(CreateRunDialogComponent, {
-      data: this.data,
-      panelClass: 'mat-dialog--md',
-      disableClose: true
-    });
+    if (this.data.project.wiseVersion === 4) {
+      this.dialog.open(UseWithClassWarningDialogComponent, {
+        data: this.data,
+        panelClass: 'mat-dialog--md'
+      });
+    } else {
+      this.dialog.open(CreateRunDialogComponent, {
+        data: this.data,
+        panelClass: 'mat-dialog--md',
+        disableClose: true
+      });
+    }
   }
 }
