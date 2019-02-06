@@ -50,16 +50,24 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/facebook.svg')
     );
     iconRegistry.addSvgIcon(
-      'twitter',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter.svg')
-    );
-    iconRegistry.addSvgIcon(
       'facebook-ffffff',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/facebook-ffffff.svg')
     );
     iconRegistry.addSvgIcon(
+      'twitter',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter.svg')
+    );
+    iconRegistry.addSvgIcon(
       'twitter-ffffff',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter-ffffff.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'github',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/github.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'github-ffffff',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/github-ffffff.svg')
     );
     utilService.getMobileMenuState()
       .subscribe(state => {
