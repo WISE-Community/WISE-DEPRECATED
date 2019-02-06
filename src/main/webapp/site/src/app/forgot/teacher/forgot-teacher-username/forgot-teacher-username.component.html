@@ -14,7 +14,7 @@
                  formControlName="email"
                  autofocus
                  required />
-          <mat-error *ngIf="forgotTeacherUsernameFormGroup.controls['email'].hasError('required')" i18n>Email Required</mat-error>
+          <mat-error *ngIf="forgotTeacherUsernameFormGroup.controls['email'].hasError('required')" i18n>Email required</mat-error>
         </mat-form-field>
       </p>
       <button mat-flat-button
@@ -26,15 +26,15 @@
       </button>
     </form>
     <br/>
-    <div class="message-div">
-      <div class="error-message">{{message}}</div>
-      <br/>
-      <div *ngIf="isCreateNewAccountLinkVisible">
-        <a (click)="createNewAccount()"
-           class="cursor-link">
-          <ng-container i18n>Create New Account</ng-container>
-        </a>
-      </div>
-    </div>
+    <div *ngIf="message" class="warn">{{message}}</div>
   </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions class="center">
+    <p>
+      <a routerLink="/contact" i18n>Contact WISE</a>
+    </p>
+    <p>
+      <a routerLink="/join" i18n>Create New Account</a>
+    </p>
+  </mat-card-actions>
 </mat-card>

@@ -15,12 +15,13 @@
             matSuffix
             mat-icon-button
             [ngClass]="{'invisible': !teacherSearchControl.value}"
+            i18n-aria-label
             aria-label="Clear"
             (click)="teacherSearchControl.setValue('')">
       <mat-icon>close</mat-icon>
     </button>
     <mat-hint *ngIf="duplicate && allTeacherUsernames.includes(teacherSearchControl.value)"
-              class="info">Teacher is already on shared list.</mat-hint>
+              class="info" i18n>Teacher is already on shared list.</mat-hint>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="shareProject()">
       <mat-option *ngFor="let teacherUsername of filteredTeacherUsernames | async"
                   [value]="teacherUsername">
@@ -30,13 +31,13 @@
   </mat-form-field>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
     <ng-container matColumnDef="name" sticky>
-      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <th mat-header-cell *matHeaderCellDef i18n>Name</th>
       <td mat-cell *matCellDef="let sharedOwner">
         <ng-container *ngIf="sharedOwner.isOwner">
           {{ project.owner.firstName }} {{ project.owner.lastName }}
         </ng-container>
         <ng-container *ngIf="!sharedOwner.isOwner">
-          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a href="#" (click)="!!unshareProject(sharedOwner)" class="warn" i18n>Revoke</a>)
+          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a [routerLink]="" (click)="unshareProject(sharedOwner)" class="warn" i18n>Revoke</a>)
         </ng-container>
       </td>
     </ng-container>

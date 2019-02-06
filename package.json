@@ -16,6 +16,7 @@
     "@angular/platform-browser": "6.1.7",
     "@angular/platform-browser-dynamic": "6.1.7",
     "@angular/router": "6.1.7",
+    "@ngx-translate/i18n-polyfill": "^1.0.0",
     "ajv": "^6.5.3",
     "angularx-social-login": "^1.2.3",
     "core-js": "^2.4.1",
@@ -94,7 +95,8 @@
     "test-e2e-comment": "test-e2e assumes wise is already running.",
     "test-e2e": "node ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js",
     "test-e2e-all-comment": "test-e2e-all assumes wise is not running yet.",
-    "test-e2e-all": "./wise.sh run & sleep 20; ./node_modules/protractor/bin/webdriver-manager update; ./node_modules/protractor/bin/webdriver-manager start & ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js; for pid in $(ps -ef | awk '/tomcat7:run/ {print $2}'); do kill -9 $pid; done"
+    "test-e2e-all": "./wise.sh run & sleep 20; ./node_modules/protractor/bin/webdriver-manager update; ./node_modules/protractor/bin/webdriver-manager start & ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js; for pid in $(ps -ef | awk '/tomcat7:run/ {print $2}'); do kill -9 $pid; done",
+    "ngx-extractor": "./node_modules/.bin/ngx-extractor -i \"./src/main/webapp/site/**/*.ts\" -o src/main/webapp/site/src/messages.xlf"
   },
   "repository": {
     "type": "git",

@@ -357,7 +357,8 @@ public class RunServiceImpl implements RunService {
     if (run.getSharedowners().contains(user)) {
       run.getSharedowners().remove(user);
       runDao.save(run);
-      Project runProject = (Project) Hibernate.unproxy(run.getProject());
+      // call unProxy when we upgrade to hibernate 5.2
+      Project runProject = (Project) run.getProject();
       runProject.getSharedowners().remove(user);
       projectDao.save(runProject);
 
@@ -443,6 +444,12 @@ public class RunServiceImpl implements RunService {
       run.setEndtime(Calendar.getInstance().getTime());
       runDao.save(run);
     }
+  }
+
+  @Transactional()
+  public void restartRun(Run run) {
+    run.setEndtime(null);
+    runDao.save(run);
   }
 
   @Transactional()

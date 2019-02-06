@@ -7,6 +7,7 @@ export class User {
   role: string;
   language: string;
   permissions: number[];
+  isRecaptchaRequired: boolean;
 
   constructor(jsonObject: any = {}) {
     for (let key of Object.keys(jsonObject)) {

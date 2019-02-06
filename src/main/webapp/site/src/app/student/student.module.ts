@@ -18,7 +18,6 @@ import { SharedModule } from "../modules/shared/shared.module";
 import { StudentRoutingModule } from './student-routing.module';
 import { StudentComponent } from './student.component';
 import { StudentHomeComponent } from './student-home/student-home.component';
-import { StudentEditProfileComponent } from './student-edit-profile/student-edit-profile.component';
 import { StudentRunListComponent } from './student-run-list/student-run-list.component';
 import { StudentRunListItemComponent } from './student-run-list-item/student-run-list-item.component';
 import { AuthGuard } from "./auth.guard";
@@ -45,7 +44,6 @@ import { TeamSignInDialogComponent } from './team-sign-in-dialog/team-sign-in-di
     AddProjectDialogComponent,
     StudentComponent,
     StudentHomeComponent,
-    StudentEditProfileComponent,
     StudentRunListComponent,
     StudentRunListItemComponent,
     EditComponent,

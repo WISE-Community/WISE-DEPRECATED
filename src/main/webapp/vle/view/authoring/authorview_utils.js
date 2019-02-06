@@ -175,12 +175,10 @@ function createBreak(){
  */
 View.prototype.makeCRaterVerifyRequest = function(itemId,cRaterItemType) {
 	//get the url to our servlet that will make the request to the CRater server for us
-	var cRaterRequestURL = this.config.getConfigParam('cRaterRequestURL');
+	var cRaterRequestURL = this.config.getConfigParam('cRaterRequestURL') + '/verify';
 	
 	var requestArgs = {
-		cRaterRequestType:'verify',
-		itemId:itemId,
-		cRaterItemType:cRaterItemType
+		itemId:itemId
 	};
 	
 	var responseText = this.connectionManager.request('GET', 1, cRaterRequestURL, requestArgs, this.makeCRaterVerifyRequestCallback, {vle:this}, this.makeCRaterVerifyRequestCallbackFail, true);
@@ -215,32 +213,8 @@ View.prototype.makeCRaterVerifyRequestCallbackFail = function(responseText, args
  * @returns whether the crater item is valid or not
  */
 View.prototype.checkCRaterVerifyResponse = function(responseText) {
-	var isValid = false;
-	
-	/*
-	 * find the text that contains the avail field
-	 * e.g. 
-	 * <item id="Photo_Sun" avail="Y">
-	 */
-	var availMatch = responseText.match(/avail="(\w*)"/);
-	
-	
-	if(availMatch != null && availMatch.length > 1) {
-		/*
-		 * check the match
-		 * e.g.
-		 * availMatch[0] = avail="Y"
-		 * availMatch[1] = Y
-		 */
-		var availValue = availMatch[1];
-		
-		if(availValue != null && availValue == 'Y') {
-			//item id is valid
-			isValid = true;
-		}
-	}
-	
-	return isValid;
+  var responseJSON = JSON.parse(responseText);
+  return responseJSON.isAvailable;
 };
 
 /**

@@ -120,11 +120,6 @@ public class IndexController {
         String modulePath = p.getModulePath();
         int lastIndexOfSlash = modulePath.lastIndexOf("/");
         if (lastIndexOfSlash != -1) {
-          /*
-           * The project thumb url by default is the same (/assets/project_thumb.png)
-           * for all projects, but this could be overwritten in the future
-           * e.g. /253/assets/projectThumb.png
-           */
           projectThumbMap.put((Long) p.getId(),
               curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH);
         }

@@ -384,11 +384,11 @@ public class ContactWiseController {
       String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
       String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
-      boolean reCaptchaKeyValid = WISEAuthenticationProcessingFilter
-          .isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+      boolean reCaptchaKeyValid =
+          ControllerUtil.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
       if (reCaptchaKeyValid) {
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-        boolean isResponseValid = WISEAuthenticationProcessingFilter.checkReCaptchaResponse(reCaptchaPrivateKey, reCaptchaPublicKey, gRecaptchaResponse);
+        boolean isResponseValid = ControllerUtil.checkReCaptchaResponse(reCaptchaPrivateKey, reCaptchaPublicKey, gRecaptchaResponse);
         if (!isResponseValid) {
           String reCaptchaError = "";
           if (i18nProperties != null) {

@@ -14,7 +14,7 @@
                  formControlName="firstName"
                  autofocus
                  required />
-          <mat-error *ngIf="createStudentAccountFormGroup.controls['firstName'].hasError('required')" i18n>First Name Required</mat-error>
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['firstName'].hasError('required')" i18n>First Name required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -25,7 +25,7 @@
                  name="lastName"
                  formControlName="lastName"
                  required />
-          <mat-error *ngIf="createStudentAccountFormGroup.controls['lastName'].hasError('required')" i18n>Last Name Required</mat-error>
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['lastName'].hasError('required')" i18n>Last Name required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -36,18 +36,18 @@
               {{gender.label}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="createStudentAccountFormGroup.controls['gender'].hasError('required')" i18n>Gender Required</mat-error>
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['gender'].hasError('required')" i18n>Gender required</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>Birthday (Month)</mat-label>
           <mat-select formControlName="birthMonth" required>
-            <mat-option *ngFor="let month of months" [value]="month">
-              {{month}}
+            <mat-option *ngFor="let month of months" [value]="month.code">
+              {{month.label}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="createStudentAccountFormGroup.controls['birthMonth'].hasError('required')" i18n>Month Required</mat-error>
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['birthMonth'].hasError('required')" i18n>Month required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -58,7 +58,7 @@
               {{day}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="createStudentAccountFormGroup.controls['birthDay'].hasError('required')" i18n>Day Required</mat-error>
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['birthDay'].hasError('required')" i18n>Day required</mat-error>
         </mat-form-field>
       </p>
       <div *ngIf="studentUser.googleUserId == null">
@@ -70,14 +70,14 @@
                 {{securityQuestion.value}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestion'].hasError('required')" i18n>Security Question Required</mat-error>
+            <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestion'].hasError('required')" i18n>Security Question required</mat-error>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field appearance="fill" fxFlex>
             <mat-label i18n>Security Question Answer</mat-label>
             <input matInput formControlName="securityQuestionAnswer" required />
-            <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestionAnswer'].hasError('required')" i18n>Security Question Answer Required</mat-error>
+            <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestionAnswer'].hasError('required')" i18n>Security Question Answer required</mat-error>
           </mat-form-field>
         </p>
       </div>
@@ -91,7 +91,7 @@
                    name="password"
                    formControlName="password"
                    required />
-            <mat-error *ngIf="passwordsFormGroup.controls['password'].hasError('required')" i18n>Password Required</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.controls['password'].hasError('required')" i18n>Password required</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -103,7 +103,7 @@
                    name="confirmPassword"
                    formControlName="confirmPassword"
                    required />
-            <mat-error *ngIf="passwordsFormGroup.controls['confirmPassword'].hasError('required')" i18n>Confirm Password Required</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.controls['confirmPassword'].hasError('required')" i18n>Confirm Password required</mat-error>
             <mat-error *ngIf="passwordsFormGroup.hasError('passwordDoesNotMatch')" i18n>Password does not match</mat-error>
           </mat-form-field>
         </p>

@@ -93,7 +93,7 @@
   </issueManagement>
 
   <build>
-    <testResources testOutputDirectory="${project.build.outputDirectory}">
+    <testResources>
       <testResource>
         <filtering>true</filtering>
         <directory>src/test/resources</directory>
@@ -101,6 +101,17 @@
     </testResources>
     <finalName>wise</finalName>
     <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>3.0.0</version>
@@ -168,17 +179,13 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>org.wise.Application</mainClass>
+            </manifest>
+          </archive>
           <webResources>
-            <resource>
-              <directory>
-                src/main/webapp/WEB-INF
-              </directory>
-              <filtering>true</filtering>
-              <includes>
-                <include>web.xml</include>
-              </includes>
-              <targetPath>WEB-INF</targetPath>
-            </resource>
             <resource>
               <directory>.</directory>
               <includes>
@@ -190,12 +197,12 @@
           <packagingExcludes>
             WEB-INF/classes/sample/**,
             WEB-INF/classes/wise.properties,
-            WEB-INF/classes/wise_development.properties,
             curriculum/**,
             studentuploads/**
           </packagingExcludes>
         </configuration>
       </plugin>
+      <!--
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
@@ -210,6 +217,7 @@
           <useTestClasspath>false</useTestClasspath>
         </configuration>
       </plugin>
+      -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -270,103 +278,76 @@
     </pluginRepository>
   </pluginRepositories>
 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.5.17.RELEASE</version>
+  </parent>
+
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-mail</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-cache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+    </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>1.2</version>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.websocket</groupId>
-      <artifactId>javax.websocket-api</artifactId>
-      <version>1.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.25</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-websocket</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-messaging</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aspects</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aop</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-orm</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-      <version>${org.springframework.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-acl</artifactId>
-      <version>${org.springframework.security.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-core</artifactId>
-      <version>${org.springframework.security.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-config</artifactId>
-      <version>${org.springframework.security.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-taglibs</artifactId>
-      <version>${org.springframework.security.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.security.oauth</groupId>
@@ -394,18 +375,12 @@
       <version>5.1.39</version>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>${org.hibernate.version}</version>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-c3p0</artifactId>
-      <version>${org.hibernate.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-ehcache</artifactId>
       <version>${org.hibernate.version}</version>
     </dependency>
     <dependency>
@@ -427,16 +402,6 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.5</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
-      <version>4.1</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4.7</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.maven-play-plugin.net.tanesha.recaptcha4j</groupId>
@@ -471,25 +436,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.6.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <version>${org.springframework.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-websocket</artifactId>
-      <version>7.0.52</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
@@ -524,9 +470,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <org.springframework.version>4.3.9.RELEASE</org.springframework.version>
-    <org.springframework.security.version>4.2.3.RELEASE</org.springframework.security.version>
-    <org.hibernate.version>5.2.10.Final</org.hibernate.version>
+    <org.springframework.version>4.3.20.RELEASE</org.springframework.version>
+    <org.hibernate.version>5.1.16.Final</org.hibernate.version>
     <spring-security-oauth2.version>2.2.1.RELEASE</spring-security-oauth2.version>
     <spring-security-jwt.version>1.0.9.RELEASE</spring-security-jwt.version>
     <jwks-rsa.version>0.3.0</jwks-rsa.version>

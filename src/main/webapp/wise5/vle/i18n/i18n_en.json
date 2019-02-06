@@ -20,6 +20,7 @@
   "branchPathTakenFromTo": "Take the branch path from <b>{{fromNodeTitle}}</b> to <b>{{toNodeTitle}}</b>",
   "cancel": "Cancel",
   "chooseABranchPath": "Choose a Branch Path",
+  "chooseChoiceOnNodeTitle": "You must choose \"{{choiceText}}\" on \"{{nodeTitle}}\"",
   "chooseItemToSnipToNotebook": "Choose Item to Snip to Notebook",
   "chooseNotebookItemToAdd": "Choose an item to add",
   "collapse": "Collapse",
@@ -111,5 +112,7 @@
   "visitNodeTitle": "Visit <b>{{nodeTitle}}</b>",
   "writeXNumberOfWordsOnNodeTitle": "Write <b>{{requiredNumberOfWords}}</b> words on <b>{{nodeTitle}}</b>",
   "yes": "Yes",
+  "youMustFillInXRow": "You must fill in <b>{{requiredNumberOfFilledRows}}</b> row in the <b>Table</b> on <b>{{nodeTitle}}</b>",
+  "youMustFillInXRows": "You must fill in <b>{{requiredNumberOfFilledRows}}</b> rows in the <b>Table</b> on <b>{{nodeTitle}}</b>",
   "yourTeacherHasPausedAllTheScreensInTheClass": "Your teacher has paused all the screens in the class."
 }

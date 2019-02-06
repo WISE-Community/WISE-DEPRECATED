@@ -2,10 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RunSettingsDialogComponent } from './run-settings-dialog.component';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBarModule } from "@angular/material";
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
 import { Observable } from 'rxjs';
+import { translationsFactory } from '../../app.module';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 export class MockTeacherService {
   addPeriodToRun(runId, periodName) {
@@ -61,7 +63,14 @@ describe('RunSettingsDialogComponent', () => {
         { provide: MatDialog, useValue: {} },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: { run: run } },
-        { provide: TeacherService, useClass: MockTeacherService }
+        { provide: TeacherService, useClass: MockTeacherService },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

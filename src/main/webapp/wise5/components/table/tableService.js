@@ -284,6 +284,96 @@ var TableService = function (_ComponentService) {
       }
       return deferred.promise;
     }
+  }, {
+    key: 'hasRequiredNumberOfFilledRows',
+    value: function hasRequiredNumberOfFilledRows(componentState, requiredNumberOfFilledRows, tableHasHeaderRow, requireAllCellsInARowToBeFilled) {
+      var rows = componentState.studentData.tableData;
+      var firstStudentRow = 0;
+      if (tableHasHeaderRow) {
+        firstStudentRow = 1;
+      }
+      var filledRows = 0;
+      for (var r = firstStudentRow; r < rows.length; r++) {
+        var row = rows[r];
+        if (this.isRowFilled(row, requireAllCellsInARowToBeFilled)) {
+          filledRows++;
+        }
+      }
+      return filledRows >= requiredNumberOfFilledRows;
+    }
+  }, {
+    key: 'isRowFilled',
+    value: function isRowFilled(row, requireAllCellsInARowToBeFilled) {
+      if (requireAllCellsInARowToBeFilled) {
+        return this.isAllCellsFilledInRow(row);
+      } else {
+        return this.isAtLeastOneCellFilledInRow(row);
+      }
+    }
+  }, {
+    key: 'isAllCellsFilledInRow',
+    value: function isAllCellsFilledInRow(row) {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = row[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var c = _step.value;
+
+          if (c.text == null || c.text == '') {
+            return false;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return true;
+    }
+  }, {
+    key: 'isAtLeastOneCellFilledInRow',
+    value: function isAtLeastOneCellFilledInRow(row) {
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = row[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var c = _step2.value;
+
+          if (c.text != null && c.text != '') {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return false;
+    }
   }]);
 
   return TableService;

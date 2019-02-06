@@ -17,7 +17,7 @@ class MockTeacherService {
   }
 }
 
-describe('EndRunDialogComponent', () => {
+describe('RestartRunDialogComponent', () => {
   let component: EndRunDialogComponent;
   let fixture: ComponentFixture<EndRunDialogComponent>;
   const run: Run = new Run();

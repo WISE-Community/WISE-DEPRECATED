@@ -149,6 +149,7 @@ public class ProjectAPIController {
         projectLibraryGroup.put("owner", ControllerUtil.getOwnerJSON(project.getOwner()));
         projectLibraryGroup.put("sharedOwners", ControllerUtil.getProjectSharedOwnersJSON(project));
         projectLibraryGroup.put("dateCreated", project.getDateCreated());
+        projectLibraryGroup.put("wiseVersion", project.getWiseVersion());
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }

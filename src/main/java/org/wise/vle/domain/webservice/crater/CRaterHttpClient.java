@@ -23,14 +23,8 @@
  */
 package org.wise.vle.domain.webservice.crater;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -38,10 +32,22 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Controller for using the CRater scoring servlet via HTTP
@@ -57,12 +63,14 @@ public class CRaterHttpClient {
    * @param bodyData the xml body data to be sent to the CRater server
    * @return the response from the CRater server
    */
-  public static String post(String cRaterUrl, String bodyData) {
+  public static String post(String cRaterUrl, String cRaterPassword, String bodyData) {
     String responseString = null;
     if (cRaterUrl != null) {
       HttpClient client = HttpClientBuilder.create().build();
       HttpPost post = new HttpPost(cRaterUrl);
       try {
+        String authHeader = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(("extsyscrtr02dev:" + cRaterPassword).getBytes());
+        post.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
         post.setEntity(new StringEntity(bodyData, ContentType.TEXT_XML));
         HttpResponse response = client.execute(post);
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
@@ -82,41 +90,41 @@ public class CRaterHttpClient {
   /**
    * Sends student work to the CRater server and receives the score as the response
    * @param cRaterUrl the CRater scoring url
+   * @param cRaterPassword the CRater authorization password
    * @param cRaterClientId the client id e.g. WISETEST
    * @param itemId the item id e.g. Photo_Sun
    * @param responseId the node state timestamp
    * @param studentData the student work
    * @return responseBody as a String, or null if there was an error during the request to CRater.
    */
-  public static String getCRaterScoringResponse(String cRaterUrl, String cRaterClientId,
+  public static String getCRaterScoringResponse(String cRaterUrl, String cRaterPassword, String cRaterClientId,
       String itemId, String responseId, String studentData) {
     String responseString = null;
     String bodyData = "<crater-request includeRNS='N'><client id='" + cRaterClientId + "'/><items><item id='" + itemId + "'>"
       +"<responses><response id='" + responseId + "'><![CDATA["+studentData+"]]></response></responses></item></items></crater-request>";
 
-    responseString = post(cRaterUrl, bodyData);
+    responseString = post(cRaterUrl, cRaterPassword, bodyData);
     return responseString;
   }
 
   /**
    * Makes a request to the CRater server for the scoring rubric for a specific item id.
    * @param cRaterUrl the CRater verification url
+   * @param cRaterPassword the CRater authorization password
    * @param cRaterClientId the client id e.g. WISETEST
    * @param itemId the item id e.g. Photo_Sun
    * @return the scoring rubric for the item id
    */
-  public static String getCRaterVerificationResponse(String cRaterUrl, String cRaterClientId,
+  public static String getCRaterVerificationResponse(String cRaterUrl, String cRaterPassword, String cRaterClientId,
       String itemId) {
     String responseString = null;
     String bodyData = "<crater-verify><client id='" + cRaterClientId + "'/><items><item id='" + itemId + "'/></items></crater-verify>";
-    responseString = post(cRaterUrl, bodyData);
+    responseString = post(cRaterUrl, cRaterPassword, bodyData);
     return responseString;
   }
 
   /**
-   * Gets and Returns the Score from the CRater response XML string,
-   * or -1 if it does not exist.
-   * @param cRaterResponseXML response XML from the CRater. Looks like this:
+   * @param cRaterResponseXML Response XML from CRater with one score. Example:
    * <crater-results>
    *   <tracking id="1013701"/>
    *   <client id="WISETEST"/>
@@ -128,18 +136,77 @@ public class CRaterHttpClient {
    *   </item>
    * </items>
    *
-   * @return integer score returned from the CRater. In the case above, this method will return 4.
+   * @return An integer.
    */
   public static int getScore(String cRaterResponseXML) {
+    Node response = getResponseNode(cRaterResponseXML);
+    String score = response.getAttributes().getNamedItem("score").getNodeValue();
+    return Integer.valueOf(score);
+  }
+
+  public static Node getResponseNode(String cRaterResponseXML) {
+    Document doc = getXMLDocument(cRaterResponseXML);
+    NodeList responseList = doc.getElementsByTagName("response");
+    return responseList.item(0);
+  }
+
+  /**
+   * @param cRaterResponseXML Response XML from CRater with multiple scores. Example:
+   * <crater-results>
+   *    <tracking id="1367459" />
+   *    <client id="WISETEST" />
+   *    <items>
+   *       <item id="STRIDES_EX1">
+   *          <responses>
+   *             <response id="1547591618656" score="" realNumberScore="" confidenceMeasure="0.99">
+   *                <scores>
+   *                   <score id="science" score="0" realNumberScore="0.2919" />
+   *                   <score id="engineering" score="0" realNumberScore="0.2075" />
+   *                   <score id="ki" score="0" realNumberScore="0.2075" />
+   *                </scores>
+   *                <advisorylist>
+   *                   <advisorycode>0</advisorycode>
+   *                </advisorylist>
+   *             </response>
+   *          </responses>
+   *       </item>
+   *    </items>
+   * </crater-results>
+   * @return A JSONArray of objects.
+   */
+  public static JSONArray getScores(String cRaterResponseXML) throws JSONException {
+    JSONArray scoresJSON = new JSONArray();
+    NodeList scoreNodes = getScoreNodes(cRaterResponseXML);
+    for (int s = 0; s < scoreNodes.getLength(); s++) {
+      Node scoreNode = scoreNodes.item(s);
+      JSONObject scoreJSON = convertScoreNodeToJSON(scoreNode);
+      scoresJSON.put(scoreJSON);
+    }
+    return scoresJSON;
+  }
+
+  public static NodeList getScoreNodes(String cRaterResponseXML) {
+    Document doc = getXMLDocument(cRaterResponseXML);
+    return doc.getElementsByTagName("score");
+  }
+
+  public static JSONObject convertScoreNodeToJSON(Node scoreNode) throws JSONException {
+    NamedNodeMap attributes = scoreNode.getAttributes();
+    String id = attributes.getNamedItem("id").getNodeValue();
+    String score = attributes.getNamedItem("score").getNodeValue();
+    String realNumberScore = attributes.getNamedItem("realNumberScore").getNodeValue();
+    JSONObject scoreJSON = new JSONObject();
+    scoreJSON.put("id", id);
+    scoreJSON.put("score", Integer.parseInt(score));
+    scoreJSON.put("realNumberScore", Float.parseFloat(realNumberScore));
+    return scoreJSON;
+  }
+
+  public static Document getXMLDocument(String cRaterResponseXML) {
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-      DocumentBuilder db;
-      db = dbf.newDocumentBuilder();
-      Document doc = db.parse(new ByteArrayInputStream(cRaterResponseXML.getBytes()));
-      NodeList responseList = doc.getElementsByTagName("response");
-      Node response = responseList.item(0);
-      String score = response.getAttributes().getNamedItem("score").getNodeValue();
-      return Integer.valueOf(score);
+      DocumentBuilder db = dbf.newDocumentBuilder();
+      return db.parse(new ByteArrayInputStream(cRaterResponseXML.getBytes()));
     } catch (ParserConfigurationException e) {
       e.printStackTrace();
     } catch (SAXException e) {
@@ -147,7 +214,13 @@ public class CRaterHttpClient {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return -1;
+    return null;
+  }
+
+  public static boolean isSingleScore(String cRaterResponseXML) {
+    Node response = getResponseNode(cRaterResponseXML);
+    String score = response.getAttributes().getNamedItem("score").getNodeValue();
+    return !"".equals(score);
   }
 
   /**
