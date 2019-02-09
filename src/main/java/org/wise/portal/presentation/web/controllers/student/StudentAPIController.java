@@ -549,6 +549,7 @@ public class StudentAPIController {
     Run run = runService.retrieveById(runId);
     JSONObject response = new JSONObject();
     response.put("status", false);
+    response.put("isMember", false);
     response.put("isTeacher", user.isTeacher());
     Workgroup workgroup = null;
     if (workgroupId != null) {
@@ -557,6 +558,13 @@ public class StudentAPIController {
     if (!workgroupService.isUserInAnyWorkgroupForRun(user, run) ||
         (workgroup != null && workgroupService.isUserInWorkgroupForRun(user, run, workgroup))) {
       response.put("status", true);
+    }
+    if (workgroup != null) {
+      for (User member: workgroup.getMembers()) {
+        if (member.equals(user)) {
+          response.put("isMember", true);
+        }
+      }
     }
     return response.toString();
   }
