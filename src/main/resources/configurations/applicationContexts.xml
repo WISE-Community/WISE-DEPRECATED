@@ -54,7 +54,6 @@
     <sec:filter-chain-map request-matcher="ant">
       <sec:filter-chain pattern="/**" filters="
           openSessionInViewFilter,
-          charsetFilter,
           httpSessionContextIntegrationFilter,
           logoutFilter,
           oAuth2ClientContextFilter,
@@ -130,13 +129,6 @@
     <property name="switchUserUrl" value="/login/impersonate" />
     <property name="exitUserUrl" value="/logout/impersonate" />
     <property name="targetUrl" value="/index.html" />
-  </bean>
-
-  <!-- =================== Encoding ==================== -->
-
-  <bean id="charsetFilter" class="org.springframework.web.filter.CharacterEncodingFilter">
-    <property name="encoding" value="UTF-8" />
-    <property name="forceEncoding" value="true" />
   </bean>
 
   <!-- =================== SECURITY SYSTEM DEFINITIONS ================== -->
