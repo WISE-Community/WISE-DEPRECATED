@@ -58,7 +58,6 @@ public class ContactAPIController {
 
   private static final String userAgentParseURL = "http://api.whatismybrowser.com/api/v1/user_agent_parse";
 
-  @ResponseBody
   @RequestMapping(value = "", method = RequestMethod.POST)
   protected String sendContactMessage(
     @RequestParam(value = "name") String name,
@@ -72,7 +71,6 @@ public class ContactAPIController {
     @RequestParam(value = "userAgent", required = false) String userAgent,
     @RequestParam(value = "recaptchaResponse", required = false) String recaptchaResponse)
         throws JSONException {
-
     if (this.isAuthorized(recaptchaResponse)) {
       boolean isStudent = isStudent();
       String issueTypeValue = getIssueTypeValue(issueType);

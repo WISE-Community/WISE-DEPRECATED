@@ -21,7 +21,6 @@ public class TeacherProjectPermissionsAPIController {
   @Autowired
   private ProjectService projectService;
 
-  @ResponseBody
   @RequestMapping(value = "/{projectId}/{username}", method = RequestMethod.PUT)
   protected SharedOwner addSharedOwner(@PathVariable Long projectId,
                                        @PathVariable String username) {
@@ -34,7 +33,6 @@ public class TeacherProjectPermissionsAPIController {
     }
   }
 
-  @ResponseBody
   @RequestMapping(value = "/{projectId}/{username}", method = RequestMethod.DELETE)
   protected SimpleResponse removeSharedOwner(@PathVariable Long projectId,
                                              @PathVariable String username) {
@@ -46,7 +44,6 @@ public class TeacherProjectPermissionsAPIController {
     }
   }
 
-  @ResponseBody
   @RequestMapping(value = "/{projectId}/{userId}/{permissionId}", method = RequestMethod.PUT)
   protected SimpleResponse addPermission(@PathVariable Long projectId,
                                          @PathVariable Long userId,
@@ -59,7 +56,6 @@ public class TeacherProjectPermissionsAPIController {
     }
   }
 
-  @ResponseBody
   @RequestMapping(value = "/{projectId}/{userId}/{permissionId}", method = RequestMethod.DELETE)
   protected SimpleResponse deletePermission(@PathVariable Long projectId,
                                             @PathVariable Long userId,

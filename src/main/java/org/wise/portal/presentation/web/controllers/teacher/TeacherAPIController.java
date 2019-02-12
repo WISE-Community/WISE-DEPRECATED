@@ -137,7 +137,6 @@ public class TeacherAPIController {
     return ownerJSON;
   }
 
-  @ResponseBody
   @RequestMapping(value = "/run/{runId}", method = RequestMethod.GET)
   protected String getRun(@PathVariable Long runId)
       throws ObjectNotFoundException, JSONException {
@@ -148,13 +147,11 @@ public class TeacherAPIController {
     return runJSON.toString();
   }
 
-  @ResponseBody
   @RequestMapping(value = "/usernames", method = RequestMethod.GET)
   protected List<String> getAllTeacherUsernames() {
     return userDetailsService.retrieveAllUsernames("TeacherUserDetails");
   }
 
-  @ResponseBody
   @RequestMapping(value = "/register", method = RequestMethod.POST)
   protected String createTeacherAccount(
     @RequestBody Map<String, String> teacherFields, HttpServletRequest request

@@ -110,9 +110,8 @@ public class ProjectAPIController {
     return projectsJSON.toString();
   }
 
-  @ResponseBody
   @RequestMapping(value = "/info/{projectId}", method = RequestMethod.GET)
-  protected String getRun(@PathVariable Long projectId) throws ObjectNotFoundException,
+  protected String getProjectInfo(@PathVariable Long projectId) throws ObjectNotFoundException,
       JSONException {
     Project project = projectService.getById(projectId);
     JSONObject projectJSON = ControllerUtil.getProjectJSON(project);
