@@ -408,9 +408,13 @@ var DiscussionController = function (_ComponentController) {
             var workgroupId = componentState.workgroupId;
             var latestInappropriateFlagAnnotation = this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
             var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-            componentState.userNames = userNames.map(function (obj) {
-              return obj.name;
-            }).join(', ');
+            if (userNames == null || userNames.length == 0) {
+              componentState.userNames = this.getUserIdsDisplay(workgroupId);
+            } else {
+              componentState.userNames = userNames.map(function (obj) {
+                return obj.name;
+              }).join(', ');
+            }
             componentState.replies = [];
             if (this.isGradingMode() || this.isGradingRevisionMode()) {
               if (latestInappropriateFlagAnnotation != null) {
@@ -450,32 +454,64 @@ var DiscussionController = function (_ComponentController) {
       this.retrievedClassmateResponses = true;
     }
   }, {
+    key: 'getUserIdsDisplay',
+    value: function getUserIdsDisplay(workgroupId) {
+      var userIds = this.ConfigService.getUserIdsByWorkgroupId(workgroupId);
+      var userIdsDisplay = [];
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = userIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var userId = _step3.value;
+
+          userIdsDisplay.push('Student ' + userId);
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      return userIdsDisplay.join(', ');
+    }
+  }, {
     key: 'getLatestInappropriateFlagAnnotationByStudentWorkId',
     value: function getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
       if (annotations != null) {
-        var _iteratorNormalCompletion3 = true;
-        var _didIteratorError3 = false;
-        var _iteratorError3 = undefined;
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
 
         try {
-          for (var _iterator3 = annotations[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var annotation = _step3.value;
+          for (var _iterator4 = annotations[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var annotation = _step4.value;
 
             if (studentWorkId == annotation.studentWorkId && annotation.type == 'inappropriateFlag') {
               return annotation;
             }
           }
         } catch (err) {
-          _didIteratorError3 = true;
-          _iteratorError3 = err;
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-              _iterator3.return();
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
             }
           } finally {
-            if (_didIteratorError3) {
-              throw _iteratorError3;
+            if (_didIteratorError4) {
+              throw _iteratorError4;
             }
           }
         }
@@ -485,48 +521,15 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'processResponses',
     value: function processResponses(componentStates) {
-      var _iteratorNormalCompletion4 = true;
-      var _didIteratorError4 = false;
-      var _iteratorError4 = undefined;
-
-      try {
-        for (var _iterator4 = componentStates[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          var componentState = _step4.value;
-
-          this.responsesMap[componentState.id] = componentState;
-        }
-      } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion4 && _iterator4.return) {
-            _iterator4.return();
-          }
-        } finally {
-          if (_didIteratorError4) {
-            throw _iteratorError4;
-          }
-        }
-      }
-
       var _iteratorNormalCompletion5 = true;
       var _didIteratorError5 = false;
       var _iteratorError5 = undefined;
 
       try {
         for (var _iterator5 = componentStates[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var _componentState = _step5.value;
+          var componentState = _step5.value;
 
-          if (_componentState && _componentState.studentData) {
-            var studentData = _componentState.studentData;
-            var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-            if (componentStateIdReplyingTo) {
-              if (this.responsesMap[componentStateIdReplyingTo] && this.responsesMap[componentStateIdReplyingTo].replies) {
-                this.responsesMap[componentStateIdReplyingTo].replies.push(_componentState);
-              }
-            }
-          }
+          this.responsesMap[componentState.id] = componentState;
         }
       } catch (err) {
         _didIteratorError5 = true;
@@ -539,6 +542,39 @@ var DiscussionController = function (_ComponentController) {
         } finally {
           if (_didIteratorError5) {
             throw _iteratorError5;
+          }
+        }
+      }
+
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = componentStates[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var _componentState = _step6.value;
+
+          if (_componentState && _componentState.studentData) {
+            var studentData = _componentState.studentData;
+            var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+            if (componentStateIdReplyingTo) {
+              if (this.responsesMap[componentStateIdReplyingTo] && this.responsesMap[componentStateIdReplyingTo].replies) {
+                this.responsesMap[componentStateIdReplyingTo].replies.push(_componentState);
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }
@@ -590,13 +626,13 @@ var DiscussionController = function (_ComponentController) {
     value: function getLevel1Responses() {
       var level1Responses = [];
       var classResponses = this.classResponses;
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
       try {
-        for (var _iterator6 = classResponses[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var classResponse = _step6.value;
+        for (var _iterator7 = classResponses[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var classResponse = _step7.value;
 
           var componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
           if (componentStateIdReplyingTo == null) {
@@ -608,16 +644,16 @@ var DiscussionController = function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
           }
         } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
+          if (_didIteratorError7) {
+            throw _iteratorError7;
           }
         }
       }
@@ -705,13 +741,13 @@ var DiscussionController = function (_ComponentController) {
     value: function getInappropriateFlagAnnotationsByComponentStates(componentStates) {
       var annotations = [];
       if (componentStates != null) {
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
 
         try {
-          for (var _iterator7 = componentStates[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var componentState = _step7.value;
+          for (var _iterator8 = componentStates[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var componentState = _step8.value;
 
             var latestInappropriateFlagAnnotation = this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(componentState.id, 'inappropriateFlag');
             if (latestInappropriateFlagAnnotation != null) {
@@ -719,16 +755,16 @@ var DiscussionController = function (_ComponentController) {
             }
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-              _iterator7.return();
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
             }
           } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
+            if (_didIteratorError8) {
+              throw _iteratorError8;
             }
           }
         }

@@ -431,4 +431,10 @@ public interface RunService {
   void setMaxWorkgroupSize(Long runId, Integer maxStudentsPerTeam);
 
   void setStartTime(Long runId, String startTime);
+
+  boolean isAllowedToViewStudentWork(Run run, User user);
+
+  boolean isAllowedToGradeStudentWork(Run run, User user);
+
+  boolean isAllowedToViewStudentNames(Run run, User user);
 }
