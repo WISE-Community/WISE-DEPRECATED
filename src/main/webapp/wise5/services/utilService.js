@@ -1306,6 +1306,43 @@ var UtilService = function () {
     value: function setIsJSONValidMessage(isJSONValid) {
       this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
     }
+  }, {
+    key: 'moveObjectUp',
+    value: function moveObjectUp(objects, index) {
+      if (index !== 0) {
+        var object = objects[index];
+        objects.splice(index, 1);
+        objects.splice(index - 1, 0, object);
+      }
+    }
+  }, {
+    key: 'moveObjectDown',
+    value: function moveObjectDown(objects, index) {
+      if (index !== objects.length - 1) {
+        var object = objects[index];
+        objects.splice(index, 1);
+        objects.splice(index + 1, 0, object);
+      }
+    }
+  }, {
+    key: 'restoreSummernoteCursorPosition',
+    value: function restoreSummernoteCursorPosition(summernoteId) {
+      $('#' + summernoteId).summernote('editor.restoreRange');
+      $('#' + summernoteId).summernote('editor.focus');
+    }
+  }, {
+    key: 'insertImageIntoSummernote',
+    value: function insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
+      $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+    }
+  }, {
+    key: 'insertVideoIntoSummernote',
+    value: function insertVideoIntoSummernote(summernoteId, fullAssetPath) {
+      var videoElement = document.createElement('video');
+      videoElement.controls = 'true';
+      videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+      $('#' + summernoteId).summernote('insertNode', videoElement);
+    }
   }]);
 
   return UtilService;

@@ -71,6 +71,16 @@ public class HibernateUserDetailsDao extends
         " as user_details_child where user_details.id=user_details_child.id");
   }
 
+  @Override
+  public MutableUserDetails retrieveByGoogleUserId(String googleUserId) {
+    return (MutableUserDetails) DataAccessUtils
+      .uniqueResult(this
+        .getHibernateTemplate()
+        .findByNamedParam(
+          "from PersistentUserDetails as user_details where upper(user_details.googleUserId) = :googleUserId",
+          "googleUserId", googleUserId.toUpperCase()));
+  }
+
   /**
    * @see org.wise.portal.dao.authentication.UserDetailsDao#hasUsername(java.lang.String)
    */

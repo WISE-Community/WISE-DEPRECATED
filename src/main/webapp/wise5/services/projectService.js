@@ -1419,10 +1419,14 @@ var ProjectService = function () {
         var targetId = constraint.targetId;
         var action = constraint.action;
 
-        if (action === 'makeAllNodesAfterThisNotVisible' && this.isNodeIdAfter(targetId, node.id)) {
-          result = true;
-        } else if (action === 'makeAllNodesAfterThisNotVisitable' && this.isNodeIdAfter(targetId, node.id)) {
-          result = true;
+        if (action === 'makeAllNodesAfterThisNotVisible') {
+          if (this.isNodeIdAfter(targetId, node.id)) {
+            result = true;
+          }
+        } else if (action === 'makeAllNodesAfterThisNotVisitable') {
+          if (this.isNodeIdAfter(targetId, node.id)) {
+            result = true;
+          }
         } else {
           var targetNode = this.getNodeById(targetId);
           if (targetNode != null) {
@@ -1451,30 +1455,34 @@ var ProjectService = function () {
      */
     value: function isNodeIdAfter(nodeId1, nodeId2) {
       if (this.isApplicationNode(nodeId1)) {
-        var pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
-        var _iteratorNormalCompletion15 = true;
-        var _didIteratorError15 = false;
-        var _iteratorError15 = undefined;
+        if (nodeId1 == nodeId2) {
+          return false;
+        } else {
+          var pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
+          var _iteratorNormalCompletion15 = true;
+          var _didIteratorError15 = false;
+          var _iteratorError15 = undefined;
 
-        try {
-          for (var _iterator15 = pathsFromNodeId1ToEnd[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-            var pathToEnd = _step15.value;
-
-            if (pathToEnd.indexOf(nodeId2) != -1) {
-              return true;
-            }
-          }
-        } catch (err) {
-          _didIteratorError15 = true;
-          _iteratorError15 = err;
-        } finally {
           try {
-            if (!_iteratorNormalCompletion15 && _iterator15.return) {
-              _iterator15.return();
+            for (var _iterator15 = pathsFromNodeId1ToEnd[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+              var pathToEnd = _step15.value;
+
+              if (pathToEnd.indexOf(nodeId2) != -1) {
+                return true;
+              }
             }
+          } catch (err) {
+            _didIteratorError15 = true;
+            _iteratorError15 = err;
           } finally {
-            if (_didIteratorError15) {
-              throw _iteratorError15;
+            try {
+              if (!_iteratorNormalCompletion15 && _iterator15.return) {
+                _iterator15.return();
+              }
+            } finally {
+              if (_didIteratorError15) {
+                throw _iteratorError15;
+              }
             }
           }
         }
@@ -6250,6 +6258,24 @@ var ProjectService = function () {
             var _nodeTitle9 = this.getNodePositionAndTitleByNodeId(_nodeId9);
             message += this.$translate('nodeTitleIsVisitable', { nodeTitle: _nodeTitle9 });
           }
+        } else if (name === 'addXNumberOfNotesOnThisStep') {
+          var _nodeId10 = params.nodeId;
+          var requiredNumberOfNotes = params.requiredNumberOfNotes;
+          var _nodeTitle10 = this.getNodePositionAndTitleByNodeId(_nodeId10);
+          if (requiredNumberOfNotes == 1) {
+            message += this.$translate('addXNumberOfNotesOnThisStepSingular', { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: _nodeTitle10 });
+          } else {
+            message += this.$translate('addXNumberOfNotesOnThisStepPlural', { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: _nodeTitle10 });
+          }
+        } else if (name === 'fillXNumberOfRows') {
+          var requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
+          var _nodeId11 = params.nodeId;
+          var _nodeTitle11 = this.getNodePositionAndTitleByNodeId(_nodeId11);
+          if (requiredNumberOfFilledRows == 1) {
+            message += this.$translate('youMustFillInXRow', { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: _nodeTitle11 });
+          } else {
+            message += this.$translate('youMustFillInXRows', { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: _nodeTitle11 });
+          }
         }
       }
       return message;
@@ -9012,6 +9038,43 @@ var ProjectService = function () {
     value: function getAdditionalProcessingFunctions(nodeId, componentId) {
       var key = nodeId + "_" + componentId;
       return this.additionalProcessingFunctionsMap[key];
+    }
+  }, {
+    key: 'getFeaturedProjectIcons',
+    value: function getFeaturedProjectIcons() {
+      var featuredProjectIconsURL = this.ConfigService.getConfigParam('featuredProjectIcons');
+      return this.$http.get(featuredProjectIconsURL).then(function (result) {
+        return result.data;
+      });
+    }
+  }, {
+    key: 'setFeaturedProjectIcon',
+    value: function setFeaturedProjectIcon(projectIcon) {
+      var featuredProjectIconURL = this.ConfigService.getConfigParam('featuredProjectIcon');
+      return this.setProjectIcon(projectIcon, featuredProjectIconURL);
+    }
+  }, {
+    key: 'setCustomProjectIcon',
+    value: function setCustomProjectIcon(projectIcon) {
+      var customProjectIconURL = this.ConfigService.getConfigParam('customProjectIcon');
+      return this.setProjectIcon(projectIcon, customProjectIconURL);
+    }
+  }, {
+    key: 'setProjectIcon',
+    value: function setProjectIcon(projectIcon, projectIconURL) {
+      var projectId = this.ConfigService.getProjectId();
+      var httpParams = {
+        method: 'POST',
+        url: projectIconURL,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          projectId: projectId,
+          projectIcon: projectIcon
+        })
+      };
+      return this.$http(httpParams).then(function (result) {
+        return result.data;
+      });
     }
   }]);
 

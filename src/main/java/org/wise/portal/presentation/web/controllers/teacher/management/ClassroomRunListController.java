@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -66,16 +66,14 @@ public class ClassroomRunListController {
     }
   };
 
-  @RequestMapping("/teacher/management/classroomruns.html")
+  @RequestMapping("/legacy/teacher/management/classroomruns.html")
   protected String handleRequestInternal(
-    ModelMap modelMap,
-    @RequestParam(value = "gradingParam", defaultValue = "false") boolean gradingParam)
-    throws Exception {
-
+      ModelMap modelMap,
+      @RequestParam(value = "gradingParam", defaultValue = "false") boolean gradingParam)
+      throws Exception {
     User user = ControllerUtil.getSignedInUser();
-
-    List<Run> runList = this.runService.getRunListByOwner(user);
-    runList.addAll(this.runService.getRunListBySharedOwner(user));
+    List<Run> runList = runService.getRunListByOwner(user);
+    runList.addAll(runService.getRunListBySharedOwner(user));
 
     List<Run> current_run_list = new ArrayList<Run>();
     List<Run> ended_run_list = new ArrayList<Run>();
@@ -83,7 +81,6 @@ public class ClassroomRunListController {
     for (Run run : runList) {
       List<Workgroup> workgroupList = workgroupService
         .getWorkgroupListByRunAndUser(run, user);
-
       workgroupMap.put(run, workgroupList);
       if (run.isEnded()) {
         ended_run_list.add(run);
@@ -98,7 +95,7 @@ public class ClassroomRunListController {
     modelMap.put("user", user);
     modelMap.put("gradingParam", gradingParam);
 
-    String isRealTimeEnabledStr = this.wiseProperties.getProperty("isRealTimeEnabled");
+    String isRealTimeEnabledStr = wiseProperties.getProperty("isRealTimeEnabled");
     boolean isRealTimeEnabled = isRealTimeEnabledStr != null ? Boolean.valueOf(isRealTimeEnabledStr) : false;
     modelMap.put("isRealTimeEnabled", isRealTimeEnabled);
     modelMap.put("current_run_list", current_run_list);

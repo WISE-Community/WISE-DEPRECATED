@@ -23,9 +23,6 @@
  */
 package org.wise.portal.service.newsitem.impl;
 
-import java.util.Date;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -38,6 +35,9 @@ import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.newsitem.NewsItemService;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author Patrick Lawler
  */
@@ -47,12 +47,12 @@ public class NewsItemServiceImpl implements NewsItemService {
   @Autowired
   private NewsItemDao<NewsItem> newsItemDao;
 
-  @Cacheable(value = "news")
+  @Cacheable("news")
   public List<NewsItem> retrieveAllNewsItem() {
     return newsItemDao.getList();
   }
 
-  @Cacheable(value = "news")
+  @Cacheable("news")
   public List<NewsItem> retrieveByType(String type) {
     return newsItemDao.getListByType(type);
   }
@@ -74,7 +74,6 @@ public class NewsItemServiceImpl implements NewsItemService {
     newsItem.setTitle(title);
     newsItem.setNews(news);
     newsItem.setType(type);
-
     newsItemDao.save(newsItem);
     return newsItem;
   }

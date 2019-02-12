@@ -46,13 +46,18 @@
 
   <!-- ======================== FILTER CHAIN ======================= -->
 
+  <!-- ======================== AUTHENTICATION ======================= -->
+
+  <context:component-scan base-package="org.wise.portal.presentation.web.config" />
+
   <bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
     <sec:filter-chain-map request-matcher="ant">
       <sec:filter-chain pattern="/**" filters="
           openSessionInViewFilter,
-          charsetFilter,
           httpSessionContextIntegrationFilter,
           logoutFilter,
+          oAuth2ClientContextFilter,
+          googleOpenIdConnectFilter,
           authenticationProcessingFilter,
           anonymousProcessingFilter,
           exceptionTranslationFilter,
@@ -60,8 +65,6 @@
           switchUserProcessingFilter" />
     </sec:filter-chain-map>
   </bean>
-
-  <!-- ======================== AUTHENTICATION ======================= -->
 
   <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
     <constructor-arg>
@@ -77,6 +80,14 @@
     <property name="userDetailsService" ref="userDetailsService" />
     <property name="passwordEncoder" ref="passwordEncoder" />
     <property name="saltSource" ref="systemSaltSource" />
+  </bean>
+
+  <bean id="oAuth2ClientContextFilter" class="org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter" />
+
+  <bean id="googleOpenIdConnectFilter" class="org.wise.portal.presentation.web.filters.GoogleOpenIdConnectFilter">
+    <constructor-arg value="/google-login" />
+    <property name="authenticationSuccessHandler" ref="authSuccessHandler" />
+    <property name="authenticationFailureHandler" ref="authFailureHandler" />
   </bean>
 
   <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
@@ -118,13 +129,6 @@
     <property name="switchUserUrl" value="/login/impersonate" />
     <property name="exitUserUrl" value="/logout/impersonate" />
     <property name="targetUrl" value="/index.html" />
-  </bean>
-
-  <!-- =================== Encoding ==================== -->
-
-  <bean id="charsetFilter" class="org.springframework.web.filter.CharacterEncodingFilter">
-    <property name="encoding" value="UTF-8" />
-    <property name="forceEncoding" value="true" />
   </bean>
 
   <!-- =================== SECURITY SYSTEM DEFINITIONS ================== -->
@@ -815,7 +819,7 @@
   </bean>
 
   <bean id="authFailureHandler" class="org.wise.portal.presentation.web.filters.WISEAuthenticationFailureHandler">
-    <property name="authenticationFailureUrl" value="/login?failed=true" />
+    <property name="authenticationFailureUrl" value="/legacy/login?failed=true" />
   </bean>
 
   <bean id="authenticationProcessingFilter"
@@ -838,12 +842,11 @@
         <sec:intercept-url pattern="/translate*" access="ROLE_ADMINISTRATOR,ROLE_TRANSLATOR" />
         <sec:intercept-url pattern="/translate/**" access="ROLE_ADMINISTRATOR,ROLE_TRANSLATOR" />
         <sec:intercept-url pattern="/curriculum/**" access="ROLE_ANONYMOUS,ROLE_USER" />
-        <sec:intercept-url pattern="/student/join" access="ROLE_ANONYMOUS,ROLE_USER" />
-        <sec:intercept-url pattern="/student*" access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
-        <sec:intercept-url pattern="/student.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-        <sec:intercept-url pattern="/teacher/join" access="ROLE_ANONYMOUS,ROLE_USER" />
-        <sec:intercept-url pattern="/teacher*" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
-        <sec:intercept-url pattern="/teacher/**" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+        <sec:intercept-url pattern="/legacy/student/join" access="ROLE_ANONYMOUS,ROLE_USER" />
+        <sec:intercept-url pattern="/legacy/student*" access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+        <sec:intercept-url pattern="/legacy/teacher/join" access="ROLE_ANONYMOUS,ROLE_USER" />
+        <sec:intercept-url pattern="/legacy/teacher*" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+        <sec:intercept-url pattern="/legacy/teacher/**" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
         <sec:intercept-url pattern="/author/**" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
         <sec:intercept-url pattern="/notification/**" access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
         <sec:intercept-url pattern="/portal/javascript/**" access="ROLE_ANONYMOUS,ROLE_USER" />
@@ -853,6 +856,9 @@
         <sec:intercept-url pattern="/project/currentAuthors/**" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
         <sec:intercept-url pattern="/project/commit/**" access="ROLE_TEACHER" />
         <sec:intercept-url pattern="/project/**" access="ROLE_ANONYMOUS,ROLE_USER" />
+        <sec:intercept-url pattern="/api/student/run/register" access="ROLE_STUDENT" />
+        <sec:intercept-url pattern="/user" access="ROLE_USER" />
+        <sec:intercept-url pattern="/**" access="ROLE_ANONYMOUS,ROLE_USER" />
         <sec:intercept-url pattern="/vle/**" access="ROLE_ANONYMOUS,ROLE_USER" />
         <sec:intercept-url pattern="/wise5/**" access="ROLE_ANONYMOUS,ROLE_USER" />
         <sec:intercept-url pattern="/previewproject*.html" access="ROLE_ANONYMOUS,ROLE_USER" />

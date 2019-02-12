@@ -1,0 +1,23 @@
+<header fxLayout="row" class="content__header">
+  <h1 class="accent"
+      fxLayoutAlign="center center"
+      ngClass="mat-display-1"
+      [ngClass.xs]="{ 'mat-display-1': false }">
+    <mat-icon>edit</mat-icon><span i18n>Edit Profile</span>
+  </h1>
+</header>
+
+<section>
+  <mat-tab-group>
+    <mat-tab i18n-label label="Account Info">
+      <div class="section__tab">
+        <app-edit-profile></app-edit-profile>
+      </div>
+    </mat-tab>
+    <mat-tab i18n-label label="Password">
+      <div class="section__tab">
+        <app-edit-password></app-edit-password>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</section>

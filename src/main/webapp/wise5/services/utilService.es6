@@ -1010,6 +1010,38 @@ class UtilService {
   setIsJSONValidMessage(isJSONValid) {
     this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
   }
+
+  moveObjectUp(objects, index) {
+    if (index !== 0) {
+      const object = objects[index];
+      objects.splice(index, 1);
+      objects.splice(index - 1, 0, object);
+    }
+  }
+
+  moveObjectDown(objects, index) {
+    if (index !== objects.length - 1) {
+      const object = objects[index];
+      objects.splice(index, 1);
+      objects.splice(index + 1, 0, object);
+    }
+  }
+
+  restoreSummernoteCursorPosition(summernoteId) {
+    $('#' + summernoteId).summernote('editor.restoreRange');
+    $('#' + summernoteId).summernote('editor.focus');
+  }
+
+  insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
+    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+  }
+
+  insertVideoIntoSummernote(summernoteId, fullAssetPath) {
+    const videoElement = document.createElement('video');
+    videoElement.controls = 'true';
+    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+    $('#' + summernoteId).summernote('insertNode', videoElement);
+  }
 }
 
 // Get the last element of the array

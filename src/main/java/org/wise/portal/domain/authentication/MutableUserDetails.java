@@ -44,7 +44,7 @@ public interface MutableUserDetails extends UserDetails, Persistable {
    * and BankTeller roles.
    *
    * @param authorities
-   * @see org.acegisecurity.GrantedAuthority
+   * @see GrantedAuthority
    */
   void setAuthorities(GrantedAuthority[] authorities);
 
@@ -100,7 +100,6 @@ public interface MutableUserDetails extends UserDetails, Persistable {
 
   /**
    * Gets the id for this user details object in the persistent store
-   *
    * @return The id of this user details object
    */
   Long getId();
@@ -188,9 +187,7 @@ public interface MutableUserDetails extends UserDetails, Persistable {
   String getCoreUsername();
 
   /**
-   * In case username is not unique, append an item from the list of
-   * suffices.
-   *
+   * In case username is not unique, append an item from the list of suffices.
    * @return array of suffices to add to end of username to make it unique
    */
   String[] getUsernameSuffixes();
@@ -204,28 +201,24 @@ public interface MutableUserDetails extends UserDetails, Persistable {
 
   /**
    * Returns the number of times the user has logined into the system
-   *
    * @return Integer of times
    */
   Integer getNumberOfLogins();
 
   /**
    * Sets the number of times the user has logined into the system
-   *
    * @param numberOfLogins 1 more time
    */
   void setNumberOfLogins(Integer numberOfLogins);
 
   /**
    * Sets the date of the most recent login as lastLoginTime
-   *
    * @param lastLoginTime 1 more time
    */
   void setLastLoginTime(Date lastLoginTime);
 
   /**
    * Get the user's language.
-   *
    * @return user's language, "en", "es", "ja", null if not set explicitly.
    */
   String getLanguage();
@@ -233,14 +226,38 @@ public interface MutableUserDetails extends UserDetails, Persistable {
   /**
    * Sets the user's language
    *
-   * @param user's language, "en", "es", "ja", etc
+   * @param language of the user "en", "es", "ja", etc
    */
   void setLanguage(String language);
 
   /**
    * Increments the number of times the user has logined into the system
-   *
-   * @param numberOfLogins
    */
   void incrementNumberOfLogins();
+
+  Date getResetPasswordVerificationCodeRequestTime();
+
+  void setResetPasswordVerificationCodeRequestTime(Date date);
+
+  void clearResetPasswordVerificationCodeRequestTime();
+
+  String getResetPasswordVerificationCode();
+
+  void setResetPasswordVerificationCode(String verificationCode);
+
+  void clearResetPasswordVerificationCode();
+
+  Date getRecentFailedVerificationCodeAttemptTime();
+
+  void setRecentFailedVerificationCodeAttemptTime(Date date);
+
+  void clearRecentFailedVerificationCodeAttemptTime();
+
+  Integer getNumberOfRecentFailedVerificationCodeAttempts();
+
+  void incrementNumberOfRecentFailedVerificationCodeAttempts();
+
+  void clearNumberOfRecentFailedVerificationCodeAttempts();
+
+  boolean isGoogleUser();
 }

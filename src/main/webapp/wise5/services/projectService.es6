@@ -994,12 +994,14 @@ class ProjectService {
       const targetId = constraint.targetId;
       const action = constraint.action;
 
-      if (action === 'makeAllNodesAfterThisNotVisible' &&
-          this.isNodeIdAfter(targetId, node.id)) {
-        result = true;
-      } else if (action === 'makeAllNodesAfterThisNotVisitable' &&
-          this.isNodeIdAfter(targetId, node.id)) {
-        result = true;
+      if (action === 'makeAllNodesAfterThisNotVisible') {
+        if (this.isNodeIdAfter(targetId, node.id)) {
+          result = true;
+        }
+      } else if (action === 'makeAllNodesAfterThisNotVisitable') {
+        if (this.isNodeIdAfter(targetId, node.id)) {
+          result = true;
+        }
       } else {
         const targetNode = this.getNodeById(targetId);
         if (targetNode != null) {
@@ -1026,10 +1028,14 @@ class ProjectService {
    */
   isNodeIdAfter(nodeId1, nodeId2) {
     if (this.isApplicationNode(nodeId1)) {
-      const pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
-      for (let pathToEnd of pathsFromNodeId1ToEnd) {
-        if (pathToEnd.indexOf(nodeId2) != -1) {
-          return true;
+      if (nodeId1 == nodeId2) {
+        return false;
+      } else {
+        const pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
+        for (let pathToEnd of pathsFromNodeId1ToEnd) {
+          if (pathToEnd.indexOf(nodeId2) != -1) {
+            return true;
+          }
         }
       }
     } else {
@@ -3977,6 +3983,28 @@ class ProjectService {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
           message += this.$translate('nodeTitleIsVisitable', { nodeTitle: nodeTitle });
         }
+      } else if (name === 'addXNumberOfNotesOnThisStep') {
+        const nodeId = params.nodeId;
+        const requiredNumberOfNotes = params.requiredNumberOfNotes;
+        const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+        if (requiredNumberOfNotes == 1) {
+          message += this.$translate('addXNumberOfNotesOnThisStepSingular',
+            { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: nodeTitle });
+        } else {
+          message += this.$translate('addXNumberOfNotesOnThisStepPlural',
+            { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: nodeTitle });
+        }
+      } else if (name === 'fillXNumberOfRows') {
+        const requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
+        const nodeId = params.nodeId;
+        const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+        if (requiredNumberOfFilledRows == 1) {
+          message += this.$translate('youMustFillInXRow',
+            { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: nodeTitle });
+        } else {
+          message += this.$translate('youMustFillInXRows',
+            { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: nodeTitle });
+        }
       }
     }
     return message;
@@ -5695,6 +5723,39 @@ class ProjectService {
   getAdditionalProcessingFunctions(nodeId, componentId) {
     let key = nodeId + "_" + componentId;
     return this.additionalProcessingFunctionsMap[key];
+  }
+
+  getFeaturedProjectIcons() {
+    const featuredProjectIconsURL = this.ConfigService.getConfigParam('featuredProjectIcons');
+    return this.$http.get(featuredProjectIconsURL).then((result) => {
+      return result.data;
+    });
+  }
+
+  setFeaturedProjectIcon(projectIcon) {
+    const featuredProjectIconURL = this.ConfigService.getConfigParam('featuredProjectIcon');
+    return this.setProjectIcon(projectIcon, featuredProjectIconURL);
+  }
+
+  setCustomProjectIcon(projectIcon) {
+    const customProjectIconURL = this.ConfigService.getConfigParam('customProjectIcon');
+    return this.setProjectIcon(projectIcon, customProjectIconURL);
+  }
+
+  setProjectIcon(projectIcon, projectIconURL) {
+    let projectId = this.ConfigService.getProjectId();
+    const httpParams = {
+      method: 'POST',
+      url: projectIconURL,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        projectId: projectId,
+        projectIcon: projectIcon
+      })
+    };
+    return this.$http(httpParams).then((result) => {
+      return result.data;
+    });
   }
 }
 

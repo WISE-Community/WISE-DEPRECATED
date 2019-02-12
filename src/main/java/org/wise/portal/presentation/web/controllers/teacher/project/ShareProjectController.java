@@ -93,9 +93,9 @@ public class ShareProjectController {
   @Autowired
   private MessageSource messageSource;
 
-  protected String formView = "teacher/projects/customized/shareproject"; // the path to this form view
+  protected String formView = "teacher/projects/customized/shareproject";
 
-  protected String successView = "teacher/projects/customized/shareproject"; // the path to the success view
+  protected String successView = "teacher/projects/customized/shareproject";
 
   // change this to true if you are testing and do not want to send mail to the actual groups
   private static final Boolean DEBUG = false;
@@ -114,18 +114,10 @@ public class ShareProjectController {
    */
   @RequestMapping(method = RequestMethod.GET, value = "/teacher/projects/customized/shareproject.html")
   public String initializeForm(ModelMap modelMap, HttpServletRequest request) throws Exception {
-    // get the signed in user
     User user = ControllerUtil.getSignedInUser();
-
-    // get the project
     Project project = projectService.getById(Long.parseLong(request.getParameter("projectId")));
-
-    // get the message if any
     String message = request.getParameter("message");
-
-    // set the necessary objects into the model
     populateModel(modelMap, user, project, message);
-
     return formView;
   }
 
@@ -138,15 +130,14 @@ public class ShareProjectController {
    * @return the populated model map
    * @throws Exception
    */
-  private Map<String, Object> populateModel(Map<String, Object> modelMap, User user, Project project, String message) throws Exception {
+  private Map<String, Object> populateModel(Map<String, Object> modelMap, User user,
+      Project project, String message) throws Exception {
     if (user.isAdmin() || aclService.hasPermission(project, BasePermission.ADMINISTRATION, user)) {
       if (message != null) {
         modelMap.put("message", message);
       }
 
-      // get all the teacher user names in WISE in alphabetical order
       List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
-
       allTeacherUsernames.remove(project.getOwner().getUserDetails().getUsername());
       Set<User> sharedowners = project.getSharedowners();
 
@@ -185,44 +176,31 @@ public class ShareProjectController {
    * @return the path of the view to display
    */
   @RequestMapping(method = RequestMethod.POST, value = "/teacher/projects/customized/shareproject.html")
-  protected String onSubmit(@ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params,
-                            HttpServletRequest request,
-                            Model model) {
+  protected String onSubmit(
+      @ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params,
+      HttpServletRequest request,
+      Model model) {
     String view = formView;
-
-    //get the signed in user
     User signedInUser = ControllerUtil.getSignedInUser();
-
-    //get the project
     Project project = params.getProject();
-
-    //get the project id
     Serializable projectId = project.getId();
 
     try {
-      //get the project
       project = projectService.getById(projectId);
       params.setProject(project);
     } catch (ObjectNotFoundException e1) {
       e1.printStackTrace();
     }
 
-    //get the username that we are going to share the project with
     String sharedOwnerUsername = params.getSharedOwnerUsername();
-
-    //get the user object associated with the user name
     User retrievedUser = userService.retrieveUserByUsername(sharedOwnerUsername);
-
     if (retrievedUser == null) {
-      //we could not find the user so we will display an error message
       model.addAttribute("message", "Username not recognized. Make sure to use the exact spelling of the username.");
       view = formView;
     }  else if (!retrievedUser.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE)) {
-      //the user entered is not a teacher so we will display an error message
       model.addAttribute("message", "The user is not a teacher and thus cannot be added as a shared teacher.");
       view = formView;
     }  else {
-      //check if the signed in user is giving sharing permissions to the other user
       if (params.getPermission().equals(UserDetailsService.PROJECT_SHARE_ROLE)) {
 
         if (!project.getOwner().equals(signedInUser) && !signedInUser.isAdmin()) {
@@ -236,26 +214,18 @@ public class ShareProjectController {
         }
       }
       try {
-        // first check if we're removing a shared teacher
         String removeUserFromProject = request.getParameter("removeUserFromProject");
         if (removeUserFromProject != null && Boolean.valueOf(removeUserFromProject)) {
-          //remove the shared owner
           projectService.removeSharedTeacherFromProject(sharedOwnerUsername, project);
         } else {
-          // we're adding a new shared teacher or changing her permissions
           boolean newSharedOwner = false;
           if (!project.getSharedowners().contains(retrievedUser)) {
-            //the other teacher is a new shared owner
             newSharedOwner = true;
           }
 
-          // add the shared teacher to the project
           projectService.addSharedTeacherToProject(params);
-
           if (newSharedOwner) {
-            // only send email if this is a new shared owner
-            String contextPath = request.getContextPath(); // get the context path e.g. /wise
-
+            String contextPath = request.getContextPath();
             Locale locale = request.getLocale();
             ShareProjectEmailService emailService =
               new ShareProjectEmailService(signedInUser, retrievedUser, project, ControllerUtil.getBaseUrlString(request),locale, contextPath);
@@ -297,8 +267,8 @@ public class ShareProjectController {
    */
   @RequestMapping(method = RequestMethod.POST, value = "/teacher/projects/customized/unshareproject")
   protected void unshareSelfFromProject(
-    @RequestParam("projectId") String projectIdStr,
-    HttpServletResponse response) throws Exception {
+      @RequestParam("projectId") String projectIdStr,
+      HttpServletResponse response) throws Exception {
     Long projectId = new Long(projectIdStr);
     Project project = projectService.getById(projectId);
     String usernameToRemove = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
@@ -307,7 +277,6 @@ public class ShareProjectController {
   }
 
   class ShareProjectEmailService implements Runnable {
-
     private User sharer;
     private User sharee;
     private Project project;
@@ -316,7 +285,7 @@ public class ShareProjectController {
     private String contextPath;
 
     public ShareProjectEmailService(User sharer, User sharee,
-                                    Project project, String portalBaseUrlString, Locale locale, String contextPath) {
+        Project project, String portalBaseUrlString, Locale locale, String contextPath) {
       this.sharer = sharer;
       this.sharee = sharee;
       this.project = project;
@@ -326,7 +295,7 @@ public class ShareProjectController {
     }
 
     public void run() {
-      this.sendEmail();
+      sendEmail();
     }
 
     /*
@@ -336,8 +305,7 @@ public class ShareProjectController {
       Date date = new Date();
       SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMMMM d, yyyy");
 
-      TeacherUserDetails sharerUserDetails =
-        (TeacherUserDetails) sharer.getUserDetails();
+      TeacherUserDetails sharerUserDetails = (TeacherUserDetails) sharer.getUserDetails();
       String sharerName = sharerUserDetails.getFirstname() + " " +
         sharerUserDetails.getLastname();
       String sharerEmailAddress = sharerUserDetails.getEmailAddress();
@@ -376,7 +344,6 @@ public class ShareProjectController {
         recipients[0] = DEBUG_EMAIL;
       }
 
-      // sends the email to the recipients
       try {
         mailService.postMail(recipients, subject, message, fromEmail);
       } catch (MessagingException e) {
@@ -403,13 +370,11 @@ public class ShareProjectController {
     @Override
     public int compare(String string1, String string2) {
       int result = 0;
-
       if (string1 != null && string2 != null) {
         String string1LowerCase = string1.toLowerCase();
         String string2LowerCase = string2.toLowerCase();
         result = string1LowerCase.compareTo(string2LowerCase);
       }
-
       return result;
     }
   }

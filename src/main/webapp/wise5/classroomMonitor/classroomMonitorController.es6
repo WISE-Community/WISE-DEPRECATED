@@ -73,6 +73,12 @@ class ClassroomMonitorController {
                 type: 'primary',
                 active: true
             },
+            'root.manageStudents': {
+                name: this.$translate('manageStudents'),
+                icon: 'face',
+                type: 'primary',
+                active: true
+            },
             'root.notebooks': {
                 name: this.$translate('studentNotebooks'),
                 icon: 'chrome_reader_mode',

@@ -23,13 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher;
 
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
-import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,15 +36,14 @@ import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
-import javax.servlet.http.HttpServletRequest;
-
+import java.util.*;
 /**
  * Controller for WISE Teacher index page
  *
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/teacher")
+@RequestMapping("/legacy/teacher")
 public class TeacherIndexController {
 
   @Autowired
@@ -75,10 +68,8 @@ public class TeacherIndexController {
   @RequestMapping(method = RequestMethod.GET)
   protected String getTeacherHomepage(ModelMap modelMap) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-
-    // combine owned and shared runs
-    List<Run> runList = this.runService.getRunListByOwner(user);
-    runList.addAll(this.runService.getRunListBySharedOwner(user));
+    List<Run> runList = runService.getRunListByOwner(user);
+    runList.addAll(runService.getRunListBySharedOwner(user));
 
     List<Run> allCurrentRuns = new ArrayList<Run>();
     Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
@@ -104,14 +95,11 @@ public class TeacherIndexController {
     modelMap.put("workgroup_map", workgroupMap);
     modelMap.put("teacherOnlyNewsItems", newsItemService.retrieveByType("teacherOnly"));
 
-    // if discourse is enabled for this WISE instance, add the link to the model
-    // so the view can display it
     String discourseURL = wiseProperties.getProperty("discourse_url");
     if (discourseURL != null && !discourseURL.isEmpty()) {
       String discourseSSOLoginURL = discourseURL + "/session/sso";
       modelMap.put("discourseSSOLoginURL", discourseSSOLoginURL);
     }
-
     return "teacher/index";
   }
 }

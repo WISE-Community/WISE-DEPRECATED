@@ -47,7 +47,7 @@ import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;
  * marked with EJB3 annotations for persistence.
  *
  * @author Cynick Young
- * @see org.acegisecurity.acls.objectidentity.ObjectIdentity
+ * @see org.springframework.security.acls.model.ObjectIdentity
  */
 @Entity
 @Table(name = PersistentAclTargetObjectIdentity.DATA_STORE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = {

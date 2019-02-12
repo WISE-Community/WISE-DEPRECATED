@@ -1,0 +1,29 @@
+[
+  {
+    "type": "group",
+    "name": "6th Grade",
+    "children": [
+      {
+        "type": "project",
+        "notes": "Test",
+        "id": 24447
+      },
+      {
+        "type": "project",
+        "notes": "Nested branch",
+        "id": 24449
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "name": "7th Grade",
+    "children": [
+      {
+        "type": "project",
+        "notes": "How Can We Recycle Old Tires? 2018",
+        "id": 24358
+      }
+    ]
+  }
+]

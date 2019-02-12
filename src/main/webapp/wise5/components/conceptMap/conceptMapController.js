@@ -25,7 +25,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ConceptMapController = function (_ComponentController) {
   _inherits(ConceptMapController, _ComponentController);
 
-  function ConceptMapController($anchorScroll, $filter, $location, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+  function ConceptMapController($anchorScroll, $filter, $location, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, ConceptMapController);
 
     var _this = _possibleConstructorReturn(this, (ConceptMapController.__proto__ || Object.getPrototypeOf(ConceptMapController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
@@ -35,45 +35,20 @@ var ConceptMapController = function (_ComponentController) {
     _this.$q = $q;
     _this.$timeout = $timeout;
     _this.ConceptMapService = ConceptMapService;
-    _this.CRaterService = CRaterService;
 
-    // holds the text that the student has typed
-    _this.studentResponse = '';
-
-    // used to hold a message dialog if we need to use one
-    _this.messageDialog = null;
-
-    // default width and height for the svg
     _this.width = 800;
     _this.height = 600;
-
-    // the available nodes the students can choose
     _this.availableNodes = [];
-
-    // the available links the students can choose
     _this.availableLinks = [];
-
-    // the node instances the students create
     _this.nodes = [];
-
-    // the link instances the students create
     _this.links = [];
-
-    // flag to display the link type chooser
     _this.displayLinkTypeChooser = false;
-
-    // flag to display the modal overlay for the link type chooser
     _this.displayLinkTypeChooserModalOverlay = false;
-
-    // the selected link type
     _this.selectedLinkType = null;
-
-    // flag for whether we have initialized the link type modal overlay
     _this.initializedDisplayLinkTypeChooserModalOverlay = false;
-
-    // default values for the modal width and height
     _this.modalWidth = 800;
     _this.modalHeight = 600;
+    _this.autoFeedbackString = '';
 
     /*
      * used to remember the node the student has started dragging to create
@@ -90,105 +65,32 @@ var ConceptMapController = function (_ComponentController) {
     _this.tempOffsetX = 0;
     _this.tempOffsetY = 0;
 
-    var themePath = _this.ProjectService.getThemePath();
-
-    // the auto feedback string
-    _this.autoFeedbackString = '';
-
     _this.setBackgroundImage(_this.componentContent.background, _this.componentContent.stretchBackground);
+    _this.setIdsWithNodeIdComponentId();
 
-    // set the id of the svg and other display elements
-    _this.svgId = 'svg_' + _this.$scope.nodeId + '_' + _this.componentId;
-    _this.conceptMapContainerId = 'conceptMapContainer_' + _this.$scope.nodeId + '_' + _this.componentId;
-    _this.selectNodeBarId = 'selectNodeBar_' + _this.$scope.nodeId + '_' + _this.componentId;
-    _this.feedbackContainerId = 'feedbackContainer_' + _this.$scope.nodeId + '_' + _this.componentId;
+    _this.initialize();
 
-    if (_this.componentContent.width != null) {
-      _this.width = _this.componentContent.width;
-    }
-
-    if (_this.componentContent.height != null) {
-      _this.height = _this.componentContent.height;
-    }
-
-    if (_this.componentContent.showNodeLabels == null) {
-      _this.componentContent.showNodeLabels = true;
-    }
-
-    if (_this.mode === 'student') {
-      _this.isPromptVisible = true;
-      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+    if (_this.isStudentMode()) {
       _this.availableNodes = _this.componentContent.nodes;
       _this.availableLinks = _this.componentContent.links;
-    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
-      _this.isPromptVisible = true;
-      _this.isSaveButtonVisible = false;
-      _this.isSubmitButtonVisible = false;
-      _this.isDisabled = true;
-
-      var _componentState = _this.$scope.componentState;
-
-      if (_componentState) {
-        // set ids for the svg and other display elements using the componentStateId (so we have unique ids when showing revisions)
-        /*
-         * the student has work for this component so we will use
-         * the node id, component id, and workgroup id, and
-         * componentStateId for the svg id
-         */
-        var idInfo = _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId + '_' + _componentState.id;
+    } else if (_this.isGradingMode() || _this.isGradingRevisionMode()) {
+      var componentState = _this.$scope.componentState;
+      if (componentState) {
         if (_this.mode === 'gradingRevision') {
-          idInfo = '_gradingRevision_' + idInfo;
-          _this.svgId = 'svg_' + idInfo;
-          _this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
-          _this.selectNodeBarId = 'selectNodeBar_' + idInfo;
-          _this.feedbackContainerId = 'feedbackContainer_' + idInfo;
+          _this.setIdsWithNodeIdComponentIdWorkgroupIdComponentStateIdPrefix(componentState);
         } else {
-          _this.svgId = 'svg_' + idInfo;
-          _this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
-          _this.selectNodeBarId = 'selectNodeBar_' + idInfo;
-          _this.feedbackContainerId = 'feedbackContainer_' + idInfo;
+          _this.setIdsWithNodeIdComponentIdWorkgroupIdComponentStateId(componentState);
         }
       } else {
-        /*
-         * the student does not have any work for this component so
-         * we will use the node id, component id, and workgroup id
-         * for the svg id
-         */
-        var _idInfo = _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId;
-        _this.svgId = 'svg_' + _idInfo;
-        _this.conceptMapContainerId = 'conceptMapContainer_' + _idInfo;
-        _this.selectNodeBarId = 'selectNodeBar_' + _idInfo;
-        _this.feedbackContainerId = 'feedbackContainer_' + _idInfo;
+        _this.setIdsWithNodeIdComponentIdWorkgroupId();
       }
-    } else if (_this.mode === 'onlyShowWork') {
-      _this.isPromptVisible = false;
-      _this.isSaveButtonVisible = false;
-      _this.isSubmitButtonVisible = false;
-      _this.isDisabled = true;
-
-      var componentState = _this.$scope.componentState;
-
-      if (componentState == null) {
-        /*
-         * the student does not have any work for this component so
-         * we will use the node id, component id, and workgroup id
-         * for the svg id
-         */
-        _this.svgId = 'svgOnlyShowWork_' + _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId;
+    } else if (_this.isOnlyShowWorkMode()) {
+      var _componentState = _this.$scope.componentState;
+      if (_componentState == null) {
+        _this.setSVGId(_this.nodeId, _this.componentId, _this.workgroupId, 'onlyShowWork_');
       } else {
-        /*
-         * the student has work for this component so we will use
-         * the node id, component id, and component state id
-         * for the svg id
-         */
-        _this.svgId = 'svgOnlyShowWork_' + _this.nodeId + '_' + _this.componentId + '_' + componentState.id;
+        _this.setSVGId(_this.nodeId, _this.componentId, _this.workgroupId, _this.componentStateId, 'onlyShowWork_');
       }
-    } else if (_this.mode === 'showPreviousWork') {
-      _this.isPromptVisible = true;
-      _this.isSaveButtonVisible = false;
-      _this.isSubmitButtonVisible = false;
-      _this.isDisabled = true;
     }
 
     /*
@@ -199,393 +101,229 @@ var ConceptMapController = function (_ComponentController) {
      */
     _this.$timeout(angular.bind(_this, _this.initializeSVG));
 
-    /**
-     * Returns true iff there is student work that hasn't been saved yet
-     */
-    _this.$scope.isDirty = function () {
-      return this.$scope.conceptMapController.isDirty;
-    }.bind(_this);
-
-    /**
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @param isSubmit boolean whether the request is coming from a submit
-     * action (optional; default is false)
-     * @return a promise of a component state containing the student data
-     */
-    _this.$scope.getComponentState = function (isSubmit) {
-      var deferred = this.$q.defer();
-      var getState = false;
-      var action = 'change';
-
-      if (isSubmit) {
-        if (this.$scope.conceptMapController.isSubmitDirty) {
-          getState = true;
-          action = 'submit';
-        }
-      } else {
-        if (this.$scope.conceptMapController.isDirty) {
-          getState = true;
-          action = 'save';
-        }
-      }
-
-      if (getState) {
-        // create a component state populated with the student data
-        this.$scope.conceptMapController.createComponentState(action).then(function (componentState) {
-          deferred.resolve(componentState);
-        });
-      } else {
-        /*
-         * the student does not have any unsaved changes in this component
-         * so we don't need to save a component state for this component.
-         * we will immediately resolve the promise here.
-         */
-        deferred.resolve();
-      }
-
-      return deferred.promise;
-    }.bind(_this);
-
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    _this.$scope.$on('exitNode', function (event, args) {}.bind(_this));
+    _this.initializeScopeGetComponentState(_this.$scope, 'conceptMapController');
     return _this;
   }
 
   _createClass(ConceptMapController, [{
+    key: 'initialize',
+    value: function initialize() {
+      this.initializeWidth();
+      this.initializeHeight();
+      this.initializeShowNodeLabels();
+    }
+  }, {
+    key: 'initializeWidth',
+    value: function initializeWidth() {
+      if (this.componentContent.width != null) {
+        this.width = this.componentContent.width;
+      }
+    }
+  }, {
+    key: 'initializeHeight',
+    value: function initializeHeight() {
+      if (this.componentContent.height != null) {
+        this.height = this.componentContent.height;
+      }
+    }
+  }, {
+    key: 'initializeShowNodeLabels',
+    value: function initializeShowNodeLabels() {
+      if (this.componentContent.showNodeLabels == null) {
+        this.componentContent.showNodeLabels = true;
+      }
+    }
+  }, {
+    key: 'setIdsWithNodeIdComponentId',
+    value: function setIdsWithNodeIdComponentId() {
+      this.setSVGId(this.nodeId, this.componentId);
+      this.setConceptMapContainerId(this.nodeId, this.componentId);
+      this.setSelectNodeBarId(this.nodeId, this.componentId);
+      this.setFeedbackContainerId(this.nodeId, this.componentId);
+    }
+  }, {
+    key: 'setIdsWithNodeIdComponentIdWorkgroupId',
+    value: function setIdsWithNodeIdComponentIdWorkgroupId() {
+      this.setSVGId(this.nodeId, this.componentId, this.workgroupId);
+      this.setConceptMapContainerId(this.nodeId, this.componentId, this.workgroupId);
+      this.setSelectNodeBarId(this.nodeId, this.componentId, this.workgroupId);
+      this.setFeedbackContainerId(this.nodeId, this.componentId, this.workgroupId);
+    }
+  }, {
+    key: 'setIdsWithNodeIdComponentIdWorkgroupIdComponentStateId',
+    value: function setIdsWithNodeIdComponentIdWorkgroupIdComponentStateId(componentState) {
+      this.setSVGId(this.nodeId, this.componentId, this.workgroupId, componentState.id);
+      this.setConceptMapContainerId(this.nodeId, this.componentId, this.workgroupId, componentState.id);
+      this.setSelectNodeBarId(this.nodeId, this.componentId, this.workgroupId, componentState.id);
+      this.setFeedbackContainerId(this.nodeId, this.componentId, this.workgroupId, componentState.id);
+    }
+  }, {
+    key: 'setIdsWithNodeIdComponentIdWorkgroupIdComponentStateIdPrefix',
+    value: function setIdsWithNodeIdComponentIdWorkgroupIdComponentStateIdPrefix(componentState) {
+      this.setSVGId(this.nodeId, this.componentId, this.workgroupId, componentState.id, 'gradingRevision_');
+      this.setConceptMapContainerId(this.nodeId, this.componentId, this.workgroupId, componentState.id, 'gradingRevision_');
+      this.setSelectNodeBarId(this.nodeId, this.componentId, this.workgroupId, componentState.id, 'gradingRevision_');
+      this.setFeedbackContainerId(this.nodeId, this.componentId, this.workgroupId, componentState.id, 'gradingRevision_');
+    }
+  }, {
+    key: 'setSVGId',
+    value: function setSVGId(nodeId, componentId, workgroupId, componentStateId) {
+      var prefix = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '';
+
+      if (nodeId != null && componentId != null && workgroupId != null && componentStateId != null) {
+        this.svgId = 'svg_' + prefix + nodeId + '_' + componentId + '_' + workgroupId + '_' + componentStateId;
+      } else if (nodeId != null && componentId != null && workgroupId != null) {
+        this.svgId = 'svg_' + nodeId + '_' + componentId + '_' + workgroupId;
+      } else if (nodeId != null && componentId != null) {
+        this.svgId = 'svg_' + nodeId + '_' + componentId;
+      }
+    }
+  }, {
+    key: 'setConceptMapContainerId',
+    value: function setConceptMapContainerId(nodeId, componentId, workgroupId, componentStateId) {
+      var prefix = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '';
+
+      if (nodeId != null && componentId != null && workgroupId != null && componentStateId != null) {
+        this.conceptMapContainerId = 'conceptMapContainer_' + nodeId + '_' + componentId + '_' + workgroupId + '_' + componentStateId;
+      } else if (nodeId != null && componentId != null && workgroupId != null) {
+        this.conceptMapContainerId = 'conceptMapContainer_' + nodeId + '_' + componentId + '_' + workgroupId;
+      } else if (nodeId != null && componentId != null) {
+        this.conceptMapContainerId = 'conceptMapContainer_' + nodeId + '_' + componentId;
+      }
+    }
+  }, {
+    key: 'setSelectNodeBarId',
+    value: function setSelectNodeBarId(nodeId, componentId, workgroupId, componentStateId) {
+      var prefix = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '';
+
+      if (nodeId != null && componentId != null && workgroupId != null && componentStateId != null) {
+        this.selectNodeBarId = 'selectNodeBar_' + nodeId + '_' + componentId + '_' + workgroupId + '_' + componentStateId;
+      } else if (nodeId != null && componentId != null && workgroupId != null) {
+        this.selectNodeBarId = 'selectNodeBar_' + nodeId + '_' + componentId + '_' + workgroupId;
+      } else if (nodeId != null && componentId != null) {
+        this.selectNodeBarId = 'selectNodeBar_' + nodeId + '_' + componentId;
+      }
+    }
+  }, {
+    key: 'setFeedbackContainerId',
+    value: function setFeedbackContainerId(nodeId, componentId, workgroupId, componentStateId) {
+      var prefix = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '';
+
+      if (nodeId != null && componentId != null && workgroupId != null && componentStateId != null) {
+        this.feedbackContainerId = 'feedbackContainer_' + nodeId + '_' + componentId + '_' + workgroupId + '_' + componentStateId;
+      } else if (nodeId != null && componentId != null && workgroupId != null) {
+        this.feedbackContainerId = 'feedbackContainer_' + nodeId + '_' + componentId + '_' + workgroupId;
+      } else if (nodeId != null && componentId != null) {
+        this.feedbackContainerId = 'feedbackContainer_' + nodeId + '_' + componentId;
+      }
+    }
+  }, {
     key: 'handleNodeSubmit',
     value: function handleNodeSubmit() {
       this.submit('nodeSubmitButton');
     }
-
-    /**
-     * Initialize the SVG
-     */
-
   }, {
     key: 'initializeSVG',
     value: function initializeSVG() {
-
-      // setup the svg
       this.setupSVG();
+      var componentState = this.$scope.componentState;
 
-      var componentState = null;
-
-      // get the component state from the scope
-      componentState = this.$scope.componentState;
-
-      if (this.mode == 'student') {
+      if (this.isStudentMode()) {
         if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
           this.handleConnectedComponents();
         } else if (this.ConceptMapService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
-
-          /*
-           * inject the asset path so that the file name is changed to
-           * a relative path
-           * e.g.
-           * "Sun.png"
-           * will be changed to
-           * "/wise/curriculum/108/assets/Sun.png"
-           */
           componentState = this.ProjectService.injectAssetPaths(componentState);
-
           this.setStudentWork(componentState);
         } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // we will import work from another component
           this.handleConnectedComponents();
-        } else if (componentState == null) {
-          /*
-           * only import work if the student does not already have
-           * work for this component
-           */
-          if (this.componentContent.starterConceptMap != null) {
-            /*
-             * the student has not done any work and there is a starter
-             * concept map so we will populate the concept map with
-             * the starter
-             */
-
-            // get the starter concept map
-            var conceptMapData = this.componentContent.starterConceptMap;
-
-            // populate the concept map data into the component
-            this.populateConceptMapData(conceptMapData);
-          }
+        } else if (!this.ConceptMapService.componentStateHasStudentWork(componentState, this.componentContent) && this.componentContentHasStarterConceptMap()) {
+          var conceptMapData = this.componentContent.starterConceptMap;
+          this.populateConceptMapData(conceptMapData);
         }
       } else {
         if (componentState == null) {
           this.populateStarterConceptMap();
         } else {
-          /*
-           * inject the asset path so that the file name is changed to
-           * a relative path
-           * e.g.
-           * 'Sun.png'
-           * will be changed to
-           * '/wise/curriculum/108/assets/Sun.png'
-           */
           componentState = this.ProjectService.injectAssetPaths(componentState);
-
-          // populate the student work into this component
           this.setStudentWork(componentState);
         }
       }
 
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-        /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
-         */
-        this.isSubmitButtonDisabled = true;
+      if (this.hasMaxSubmitCount() && !this.hasSubmitsLeft()) {
+        this.disableSubmitButton();
       }
 
-      // populate the previous feedback
-      if (this.latestAnnotations != null) {
-
-        var autoFeedbackString = '';
-
-        // obtain the previous score annotation if any
-        if (this.latestAnnotations.score != null) {
-
-          // get the annotation data
-          var data = this.latestAnnotations.score.data;
-
-          if (data != null) {
-
-            // get the score and max auto score
-            var score = data.value;
-            var maxAutoScore = data.maxAutoScore;
-
-            autoFeedbackString += this.$translate('SCORE') + ': ' + score;
-
-            if (maxAutoScore != null && maxAutoScore != '') {
-              // show the max score as the denominator
-              autoFeedbackString += '/' + maxAutoScore;
-            }
-          }
-        }
-
-        // obtain the previous comment annotation if any
-        if (this.latestAnnotations.comment != null) {
-
-          // get the annotation data
-          var data = this.latestAnnotations.comment.data;
-
-          if (data != null) {
-            if (autoFeedbackString != '') {
-              // add a new line if the result string is not empty
-              autoFeedbackString += '<br/>';
-            }
-
-            // get the comment
-            var comment = data.value;
-            autoFeedbackString += this.$translate('FEEDBACK') + ': ' + comment;
-          }
-        }
-
-        /*
-         * set the previous auto feedback into the field that is used
-         * to display the auto feedback to the student when they click
-         * on the show feedback button
-         */
-        this.autoFeedbackString = autoFeedbackString;
-      }
-
-      // make the nodes draggable
       this.enableNodeDragging();
-
       this.disableComponentIfNecessary();
-
-      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+      this.broadcastDoneRenderingComponent();
     }
-
-    /**
-     * Populate the student work into the component
-     * @param componentState the component state to populate into the component
-     */
-
+  }, {
+    key: 'componentContentHasStarterConceptMap',
+    value: function componentContentHasStarterConceptMap() {
+      return this.componentContent.starterConceptMap != null;
+    }
   }, {
     key: 'setStudentWork',
     value: function setStudentWork(componentState) {
-
-      if (componentState != null) {
-        var studentData = componentState.studentData;
-
-        if (studentData != null) {
-          var conceptMapData = studentData.conceptMapData;
-
-          var submitCounter = studentData.submitCounter;
-
-          if (submitCounter != null) {
-            // populate the submit counter
-            this.submitCounter = submitCounter;
-          }
-
-          if (conceptMapData != null) {
-
-            // populate the concept map data into the component
-            this.populateConceptMapData(conceptMapData);
-          }
-
-          var attachments = studentData.attachments;
-
-          if (attachments != null) {
-            this.attachments = attachments;
-          }
-
-          this.processLatestStudentWork();
+      var studentData = componentState.studentData;
+      if (studentData != null) {
+        var conceptMapData = studentData.conceptMapData;
+        var submitCounter = studentData.submitCounter;
+        if (submitCounter != null) {
+          this.submitCounter = submitCounter;
         }
+        if (conceptMapData != null) {
+          this.populateConceptMapData(conceptMapData);
+        }
+        this.processLatestStudentWork();
       }
     }
   }, {
     key: 'populateConceptMapData',
-
-
-    /**
-     * Populate the concept map data into the component
-     * @param conceptMapData the concept map data which contains an array
-     * of nodes and an array of links
-     */
     value: function populateConceptMapData(conceptMapData) {
       var _this2 = this;
 
-      if (conceptMapData != null) {
+      this.populateNodes(conceptMapData);
+      this.populateLinks(conceptMapData);
 
-        // clear the existing nodes in the student view
-        this.nodes = [];
-
-        var nodes = conceptMapData.nodes;
-
-        if (nodes != null) {
-
-          // loop through all the nodes
-          for (var n = 0; n < nodes.length; n++) {
-            var node = nodes[n];
-
-            var instanceId = node.instanceId;
-            var originalId = node.originalId;
-            var filePath = node.fileName;
-            var label = node.label;
-            var x = node.x;
-            var y = node.y;
-            var width = node.width;
-            var height = node.height;
-
-            // create a ConceptMapNode
-            var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, filePath, label, x, y, width, height, this.componentContent.showNodeLabels);
-
-            // add the node to our array of nodes
-            this.addNode(conceptMapNode);
-
-            // set the mouse events on the node
-            this.setNodeMouseEvents(conceptMapNode);
-          }
-        }
-
-        // clear the existing links in the student view
-        this.links = [];
-
-        var links = conceptMapData.links;
-
-        if (links != null) {
-
-          // loop through all the links
-          for (var l = 0; l < links.length; l++) {
-            var link = links[l];
-
-            var instanceId = link.instanceId;
-            var originalId = link.originalId;
-            var sourceNodeId = link.sourceNodeInstanceId;
-            var destinationNodeId = link.destinationNodeInstanceId;
-            var label = link.label;
-            var color = link.color;
-            var curvature = link.curvature;
-            var startCurveUp = link.startCurveUp;
-            var endCurveUp = link.endCurveUp;
-            var sourceNode = null;
-            var destinationNode = null;
-
-            if (sourceNodeId != null) {
-              sourceNode = this.getNodeById(sourceNodeId);
-            }
-
-            if (destinationNodeId != null) {
-              destinationNode = this.getNodeById(destinationNodeId);
-            }
-
-            // create a ConceptMapLink
-            var conceptMapLink = this.ConceptMapService.newConceptMapLink(this.draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp);
-
-            // add the link to our array of links
-            this.addLink(conceptMapLink);
-
-            // set the mouse events on the link
-            this.setLinkMouseEvents(conceptMapLink);
-          }
-        }
-
-        if (conceptMapData.backgroundPath != null && conceptMapData.backgroundPath != '') {
-          this.setBackgroundImage(conceptMapData.backgroundPath, conceptMapData.stretchBackground);
-        }
-
-        /*
-         * move the link text group to the front so that they are on top
-         * of links
-         */
-        this.moveLinkTextToFront();
-
-        // move the nodes to the front so that they are on top of links
-        this.moveNodesToFront();
-
-        /*
-         * set a timeout to refresh the link labels so that the rectangles
-         * around the labels are properly resized
-         */
-        this.$timeout(function () {
-          _this2.refreshLinkLabels();
-        });
+      if (conceptMapData.backgroundPath != null && conceptMapData.backgroundPath != '') {
+        this.setBackgroundImage(conceptMapData.backgroundPath, conceptMapData.stretchBackground);
       }
+
+      this.moveLinkTextToFront();
+      this.moveNodesToFront();
+
+      /*
+       * set a timeout to refresh the link labels so that the rectangles
+       * around the labels are properly resized
+       */
+      this.$timeout(function () {
+        _this2.refreshLinkLabels();
+      });
     }
-
-    /**
-     * Refresh the link labels so that the rectangles around the text
-     * labels are resized to fit the text properly. This is required because
-     * the rectangles are not properly sized when the ConceptMapLinks are
-     * initialized. The rectangles need to be rendered first and then the
-     * labels need to be set in order for the rectangles to be resized properly.
-     * This is why this function is called in a $timeout.
-     */
-
   }, {
-    key: 'refreshLinkLabels',
-    value: function refreshLinkLabels() {
+    key: 'populateNodes',
+    value: function populateNodes(conceptMapData) {
+      this.nodes = [];
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = this.nodes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = conceptMapData.nodes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var node = _step.value;
 
-          if (node.showLabel) {
-            var label = node.getLabel();
-            /*
-             * set the label back into the node so that the rectangle
-             * around the text label is resized to the text
-             */
-            node.setLabel(label);
-          }
+          var instanceId = node.instanceId;
+          var originalId = node.originalId;
+          var filePath = node.fileName;
+          var label = node.label;
+          var x = node.x;
+          var y = node.y;
+          var width = node.width;
+          var height = node.height;
+          var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, filePath, label, x, y, width, height, this.componentContent.showNodeLabels);
+          this.addNode(conceptMapNode);
+          this.setNodeMouseEvents(conceptMapNode);
         }
       } catch (err) {
         _didIteratorError = true;
@@ -601,22 +339,130 @@ var ConceptMapController = function (_ComponentController) {
           }
         }
       }
+    }
+  }, {
+    key: 'populateLinks',
+    value: function populateLinks(conceptMapData) {
+      this.links = [];
 
-      if (this.links != null) {
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
-        // loop throgh all the links
-        for (var l = 0; l < this.links.length; l++) {
-          var link = this.links[l];
+      try {
+        for (var _iterator2 = conceptMapData.links[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var link = _step2.value;
 
-          if (link != null) {
-            // get the label from the link
-            var label = link.getLabel();
+          var instanceId = link.instanceId;
+          var originalId = link.originalId;
+          var sourceNodeId = link.sourceNodeInstanceId;
+          var destinationNodeId = link.destinationNodeInstanceId;
+          var label = link.label;
+          var color = link.color;
+          var curvature = link.curvature;
+          var startCurveUp = link.startCurveUp;
+          var endCurveUp = link.endCurveUp;
+          var sourceNode = null;
+          var destinationNode = null;
 
+          if (sourceNodeId != null) {
+            sourceNode = this.getNodeById(sourceNodeId);
+          }
+
+          if (destinationNodeId != null) {
+            destinationNode = this.getNodeById(destinationNodeId);
+          }
+
+          var conceptMapLink = this.ConceptMapService.newConceptMapLink(this.draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp);
+          this.addLink(conceptMapLink);
+          this.setLinkMouseEvents(conceptMapLink);
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+    }
+
+    /**
+     * Refresh the link labels so that the rectangles around the text
+     * labels are resized to fit the text properly. This is required because
+     * the rectangles are not properly sized when the ConceptMapLinks are
+     * initialized. The rectangles need to be rendered first and then the
+     * labels need to be set in order for the rectangles to be resized properly.
+     * This is why this function is called in a $timeout.
+     */
+
+  }, {
+    key: 'refreshLinkLabels',
+    value: function refreshLinkLabels() {
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = this.nodes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var node = _step3.value;
+
+          if (node.showLabel) {
+            var label = node.getLabel();
             /*
-             * set the label back into the link so that the rectangle
+             * set the label back into the node so that the rectangle
              * around the text label is resized to the text
              */
-            link.setLabel(label);
+            node.setLabel(label);
+          }
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = this.links[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var link = _step4.value;
+
+          var _label = link.getLabel();
+          /*
+           * set the label back into the link so that the rectangle
+           * around the text label is resized to the text
+           */
+          link.setLabel(_label);
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
           }
         }
       }
@@ -631,32 +477,18 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'submit',
     value: function submit(submitTriggeredBy) {
-
       if (this.isSubmitDirty) {
-
         var performSubmit = true;
-
-        if (this.componentContent.maxSubmitCount != null) {
-          // there is a max submit count
-
-          // calculate the number of submits this student has left
-          var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
+        if (this.hasMaxSubmitCount()) {
+          var numberOfSubmitsLeft = this.getNumberOfSubmitsLeft();
           var message = '';
-
           if (numberOfSubmitsLeft <= 0) {
-
-            // the student does not have any more chances to submit
             alert(this.$translate('conceptMap.youHaveNoMoreChances'));
             performSubmit = false;
-          } else if (numberOfSubmitsLeft == 1) {
-
-            // ask the student if they are sure they want to submit
+          } else if (numberOfSubmitsLeft === 1) {
             message = this.$translate('conceptMap.youHaveOneChance', { numberOfSubmitsLeft: numberOfSubmitsLeft });
             performSubmit = confirm(message);
           } else if (numberOfSubmitsLeft > 1) {
-
-            // ask the student if they are sure they want to submit
             message = this.$translate('conceptMap.youHaveMultipleChances', { numberOfSubmitsLeft: numberOfSubmitsLeft });
             performSubmit = confirm(message);
           }
@@ -664,131 +496,96 @@ var ConceptMapController = function (_ComponentController) {
 
         if (performSubmit) {
           this.incrementSubmitCounter();
-
-          // check if the student has used up all of their submits
-          if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-            /*
-             * the student has used up all of their submits so we will
-             * disable the submit button
-             */
-            //this.isDisabled = true;
+          if (this.hasMaxSubmitCount() && !this.hasSubmitsLeft()) {
             this.isSubmitButtonDisabled = true;
           }
-
-          // get the custom rule evaluator code that was authored
-          var customRuleEvaluator = this.componentContent.customRuleEvaluator;
-
-          // get the component content
-          var componentContent = this.componentContent;
-
-          // get the student concept map
-          var conceptMapData = this.getConceptMapData();
-
-          var thisConceptMapService = this.ConceptMapService;
-
-          // the result will be stored in this variable
-          var thisResult = {};
-
-          /*
-           * create the any function that can be called in the custom rule
-           * evaluator code. the arguments to the any function are rule names.
-           * for example if we are looking for any of the links below
-           * Sun (Infrared Radiation) Space
-           * Sun (Heat) Space
-           * Sun (Solar Radiation) Space
-           * we will call the any function like this
-           * any("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
-           * these dynamic arguments will be placed in the arguments variable
-           */
-          var any = function any() {
-            return thisConceptMapService.any(componentContent, conceptMapData, arguments);
-          };
-
-          /*
-           * create the all function that can be called in the custom rule
-           * evaluator code. the arguments to the all function are rule names.
-           * for example if we are looking for all of the links below
-           * Sun (Infrared Radiation) Space
-           * Sun (Heat) Space
-           * Sun (Solar Radiation) Space
-           * we will call the any function like this
-           * all("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
-           * these dynamic arguments will be placed in the arguments variable
-           */
-          var all = function all() {
-            return thisConceptMapService.all(componentContent, conceptMapData, arguments);
-          };
-
-          /*
-           * create the setResult function that can be called in the custom rule
-           * evaluator code
-           */
-          var setResult = function setResult(result) {
-            thisResult = result;
-          };
-
-          // run the custom rule evaluator
-          eval(customRuleEvaluator);
-
-          // remember the auto feedback result
-          this.autoFeedbackResult = thisResult;
-
-          var resultString = '';
-
-          if (this.componentContent.showAutoScore && thisResult.score != null) {
-            // display the score
-            resultString += this.$translate('SCORE') + ': ' + thisResult.score;
-
-            if (this.componentContent.maxScore != null && this.componentContent.maxScore != '') {
-              // show the max score as the denominator
-              resultString += '/' + this.componentContent.maxScore;
-            }
+          if (this.hasAutoGrading()) {
+            this.performAutoGrading();
           }
-
-          if (this.componentContent.showAutoFeedback && thisResult.feedback != null) {
-            if (resultString != '') {
-              // add a new line if the result string is not empty
-              resultString += '<br/>';
-            }
-
-            // display the feedback
-            resultString += this.$translate('FEEDBACK') + ': ' + thisResult.feedback;
-          }
-
-          if (resultString != '') {
-            // show the auto feedback in a modal dialog
-            this.$mdDialog.show(this.$mdDialog.alert().clickOutsideToClose(true).title(this.$translate('FEEDBACK')).htmlContent(resultString).ariaLabel(this.$translate('FEEDBACK')).ok(this.$translate('CLOSE')));
-          }
-
-          // remember the feedback string
-          this.autoFeedbackString = resultString;
-
           this.isSubmit = true;
-
-          // tell the parent node that this component wants to submit
-          this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+          this.emitComponentSubmitTriggered();
         } else {
-          /*
-           * the student has cancelled the submit so if a component state
-           * is created, it will just be a regular save and not submit
-           */
           this.isSubmit = false;
         }
       }
     }
   }, {
-    key: 'getStudentResponse',
-
-
-    /**
-     * Get the student response
-     */
-    value: function getStudentResponse() {
-      return this.studentResponse;
+    key: 'hasAutoGrading',
+    value: function hasAutoGrading() {
+      return this.componentContent.customRuleEvaluator != null && this.componentContent.customRuleEvaluator != '';
     }
   }, {
-    key: 'createComponentState',
+    key: 'performAutoGrading',
+    value: function performAutoGrading() {
+      var customRuleEvaluator = this.componentContent.customRuleEvaluator;
+      var componentContent = this.componentContent;
+      var conceptMapData = this.getConceptMapData();
+      var thisConceptMapService = this.ConceptMapService;
+      var thisResult = {};
 
+      /*
+       * create the any function that can be called in the custom rule
+       * evaluator code. the arguments to the any function are rule names.
+       * for example if we are looking for any of the links below
+       * Sun (Infrared Radiation) Space
+       * Sun (Heat) Space
+       * Sun (Solar Radiation) Space
+       * we will call the any function like this
+       * any("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+       * these dynamic arguments will be placed in the arguments variable
+       */
+      var any = function any() {
+        return thisConceptMapService.any(componentContent, conceptMapData, arguments);
+      };
+
+      /*
+       * create the all function that can be called in the custom rule
+       * evaluator code. the arguments to the all function are rule names.
+       * for example if we are looking for all of the links below
+       * Sun (Infrared Radiation) Space
+       * Sun (Heat) Space
+       * Sun (Solar Radiation) Space
+       * we will call the any function like this
+       * all("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+       * these dynamic arguments will be placed in the arguments variable
+       */
+      var all = function all() {
+        return thisConceptMapService.all(componentContent, conceptMapData, arguments);
+      };
+
+      /*
+       * create the setResult function that can be called in the custom rule
+       * evaluator code
+       */
+      var setResult = function setResult(result) {
+        thisResult = result;
+      };
+
+      eval(customRuleEvaluator);
+
+      this.autoFeedbackResult = thisResult;
+      var resultString = '';
+
+      if (this.componentContent.showAutoScore && thisResult.score != null) {
+        resultString += this.$translate('SCORE') + ': ' + thisResult.score;
+        if (this.hasMaxScore()) {
+          resultString += '/' + this.getMaxScore();
+        }
+      }
+
+      if (this.componentContent.showAutoFeedback && thisResult.feedback != null) {
+        if (resultString !== '') {
+          resultString += '<br/>';
+        }
+        resultString += this.$translate('FEEDBACK') + ': ' + thisResult.feedback;
+      }
+
+      if (resultString != '') {
+        this.$mdDialog.show(this.$mdDialog.alert().clickOutsideToClose(true).title(this.$translate('FEEDBACK')).htmlContent(resultString).ariaLabel(this.$translate('FEEDBACK')).ok(this.$translate('CLOSE')));
+      }
+
+      this.autoFeedbackString = resultString;
+    }
 
     /**
      * Create a new component state populated with the student data
@@ -796,189 +593,170 @@ var ConceptMapController = function (_ComponentController) {
      * e.g. 'submit', 'save', 'change'
      * @return a promise that will return a component state
      */
+
+  }, {
+    key: 'createComponentState',
     value: function createComponentState(action) {
-
       var deferred = this.$q.defer();
-
-      // create a new component state
       var componentState = this.NodeService.createNewComponentState();
-
-      // get the text the student typed
-      var response = this.getStudentResponse();
-
-      // set the response into the component state
       var studentData = {};
       var conceptMapData = this.getConceptMapData();
       studentData.conceptMapData = conceptMapData;
-
-      // the student submitted this work
       componentState.isSubmit = this.isSubmit;
 
       if (this.isSubmit) {
-
-        /*
-         * reset the isSubmit value so that the next component state
-         * doesn't maintain the same value
-         */
         this.isSubmit = false;
+        if (this.hasAutoFeedbackScore() || this.hasAutoFeedbackText()) {
+          var runId = this.ConfigService.getRunId();
+          var periodId = this.ConfigService.getPeriodId();
+          var nodeId = this.nodeId;
+          var componentId = this.componentId;
+          var toWorkgroupId = this.ConfigService.getWorkgroupId();
+          componentState.annotations = [];
 
-        if (this.autoFeedbackResult != null) {
-          // there is auto feedback
+          if (this.hasAutoFeedbackScore()) {
+            var data = {
+              value: parseFloat(this.autoFeedbackResult.score),
+              autoGrader: 'conceptMap'
+            };
 
-          if (this.autoFeedbackResult.score != null || this.autoFeedbackResult.feedback != null) {
-            // there is an auto score or auto feedback
-
-            // get the values used to create an annotation
-            var runId = this.ConfigService.getRunId();
-            var periodId = this.ConfigService.getPeriodId();
-            var nodeId = this.nodeId;
-            var componentId = this.componentId;
-            var toWorkgroupId = this.ConfigService.getWorkgroupId();
-
-            // create an array of annotations to be saved with the component state
-            componentState.annotations = [];
-
-            if (this.autoFeedbackResult.score != null) {
-              // there is an auto score
-
-              // create the data object for the annotation
-              var data = {};
-              data.value = parseFloat(this.autoFeedbackResult.score);
-              data.autoGrader = 'conceptMap';
-
-              if (this.componentContent.maxScore != null) {
-                data.maxAutoScore = parseFloat(this.componentContent.maxScore);
-              }
-
-              // create the auto score annotation
-              var scoreAnnotation = this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
-
-              // add the annotation to the component state
-              componentState.annotations.push(scoreAnnotation);
-
-              if (this.mode === 'authoring') {
-                if (this.latestAnnotations == null) {
-                  this.latestAnnotations = {};
-                }
-
-                /*
-                 * we are in the authoring view so we will set the
-                 * latest score annotation manually
-                 */
-                this.latestAnnotations.score = scoreAnnotation;
-              }
+            if (this.hasMaxScore()) {
+              data.maxAutoScore = parseFloat(this.getMaxScore());
             }
 
-            if (this.autoFeedbackResult.feedback != null) {
-              // there is auto feedback
+            var scoreAnnotation = this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+            componentState.annotations.push(scoreAnnotation);
 
-              // create the data object for the annotation
-              var data = {};
-              data.value = this.autoFeedbackResult.feedback;
-              data.autoGrader = 'conceptMap';
-
-              // create the auto score annotation
-              var commentAnnotation = this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
-
-              // add the annotation to the component state
-              componentState.annotations.push(commentAnnotation);
-
-              if (this.mode === 'authoring') {
-                if (this.latestAnnotations == null) {
-                  this.latestAnnotations = {};
-                }
-
-                /*
-                 * we are in the authoring view so we will set the
-                 * latest comment annotation manually
-                 */
-                this.latestAnnotations.comment = commentAnnotation;
+            if (this.isAuthoringMode()) {
+              if (this.latestAnnotations == null) {
+                this.latestAnnotations = {};
               }
+              this.latestAnnotations.score = scoreAnnotation;
+            }
+          }
+
+          if (this.hasAutoFeedbackText()) {
+            var _data = {
+              value: this.autoFeedbackResult.feedback,
+              autoGrader: 'conceptMap'
+            };
+            var commentAnnotation = this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, _data);
+            componentState.annotations.push(commentAnnotation);
+
+            if (this.isAuthoringMode()) {
+              if (this.latestAnnotations == null) {
+                this.latestAnnotations = {};
+              }
+              this.latestAnnotations.comment = commentAnnotation;
             }
           }
         }
       }
 
-      // set the submit counter
       studentData.submitCounter = this.submitCounter;
-
-      // set the student data into the component state
       componentState.studentData = studentData;
-
-      // set the component type
       componentState.componentType = 'ConceptMap';
-
-      // set the node id
       componentState.nodeId = this.nodeId;
-
-      // set the component id
       componentState.componentId = this.componentId;
-
-      /*
-       * perform any additional processing that is required before returning
-       * the component state
-       */
       this.createComponentStateAdditionalProcessing(deferred, componentState, action);
 
       return deferred.promise;
     }
   }, {
+    key: 'hasAutoFeedback',
+    value: function hasAutoFeedback() {
+      return this.autoFeedbackResult != null;
+    }
+  }, {
+    key: 'hasAutoFeedbackScore',
+    value: function hasAutoFeedbackScore() {
+      return this.autoFeedbackResult != null && this.autoFeedbackResult.score != null;
+    }
+  }, {
+    key: 'hasAutoFeedbackText',
+    value: function hasAutoFeedbackText() {
+      return this.autoFeedbackResult != null && this.autoFeedbackResult.feedback != null;
+    }
+  }, {
     key: 'getConceptMapData',
-
-
-    /**
-     * Get the concept map data
-     * @returns an object containing a array of nodes and an array of links
-     */
     value: function getConceptMapData() {
-      var studentData = {};
-      studentData.nodes = [];
-      studentData.links = [];
+      var studentData = {
+        nodes: [],
+        links: []
+      };
 
-      // loop through all the nodes
-      for (var n = 0; n < this.nodes.length; n++) {
-        var node = this.nodes[n];
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
-        // get the JSON representation of the node
-        var nodeJSON = node.toJSONObject();
+      try {
+        for (var _iterator5 = this.nodes[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var node = _step5.value;
 
-        studentData.nodes.push(nodeJSON);
+          var nodeJSON = node.toJSONObject();
+          studentData.nodes.push(nodeJSON);
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
       }
 
-      // loop through all the links
-      for (var l = 0; l < this.links.length; l++) {
-        var link = this.links[l];
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
-        // get the JSON representation of the link
-        var linkJSON = link.toJSONObject();
+      try {
+        for (var _iterator6 = this.links[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var link = _step6.value;
 
-        studentData.links.push(linkJSON);
+          var linkJSON = link.toJSONObject();
+          studentData.links.push(linkJSON);
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
       }
 
-      // set the background data into the student data
       if (this.background != null) {
         var background = this.background;
-
-        // this is the background file name e.g. background.png
-        studentData.background = background.substring(background.lastIndexOf('/') + 1);
+        studentData.background = this.getBackgroundFileName(background);
 
         // this is the background path e.g. /wise/curriculum/108/assets/background.png
         studentData.backgroundPath = background;
 
-        // whether to stretch the background to fill the svg element
         studentData.stretchBackground = this.stretchBackground;
       }
 
       return studentData;
     }
+  }, {
+    key: 'getBackgroundFileName',
+    value: function getBackgroundFileName(background) {
+      return background.substring(background.lastIndexOf('/') + 1);
+    }
 
     /**
      * Create an auto score annotation
-     * @param runId the run id
-     * @param periodId the period id
-     * @param nodeId the node id
-     * @param componentId the component id
-     * @param toWorkgroupId the student workgroup id
      * @param data the annotation data
      * @returns the auto score annotation
      */
@@ -986,26 +764,17 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'createAutoScoreAnnotation',
     value: function createAutoScoreAnnotation(data) {
-
       var runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
       var nodeId = this.nodeId;
       var componentId = this.componentId;
       var toWorkgroupId = this.ConfigService.getWorkgroupId();
-
-      // create the auto score annotation
       var annotation = this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
-
       return annotation;
     }
 
     /**
      * Create an auto comment annotation
-     * @param runId the run id
-     * @param periodId the period id
-     * @param nodeId the node id
-     * @param componentId the component id
-     * @param toWorkgroupId the student workgroup id
      * @param data the annotation data
      * @returns the auto comment annotation
      */
@@ -1013,226 +782,57 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'createAutoCommentAnnotation',
     value: function createAutoCommentAnnotation(data) {
-
       var runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
       var nodeId = this.nodeId;
       var componentId = this.componentId;
       var toWorkgroupId = this.ConfigService.getWorkgroupId();
-
-      // create the auto comment annotation
       var annotation = this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
-
       return annotation;
     }
-
-    /**
-     * Get the text the student typed
-     */
-
-  }, {
-    key: 'getResponse',
-    value: function getResponse() {
-      var response = null;
-
-      if (this.studentResponse != null) {
-        response = this.studentResponse;
-      }
-
-      return response;
-    }
-  }, {
-    key: 'isCRaterEnabled',
-
-
-    /**
-     * Check if CRater is enabled for this component
-     * @returns whether CRater is enabled for this component
-     */
-    value: function isCRaterEnabled() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterEnabled(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score on save
-     * @returns whether CRater is set to score on save
-     */
-
-  }, {
-    key: 'isCRaterScoreOnSave',
-    value: function isCRaterScoreOnSave() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnSave(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score on submit
-     * @returns whether CRater is set to score on submit
-     */
-
-  }, {
-    key: 'isCRaterScoreOnSubmit',
-    value: function isCRaterScoreOnSubmit() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnSubmit(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score on change
-     * @returns whether CRater is set to score on change
-     */
-
-  }, {
-    key: 'isCRaterScoreOnChange',
-    value: function isCRaterScoreOnChange() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnChange(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score when the student exits the step
-     * @returns whether CRater is set to score when the student exits the step
-     */
-
-  }, {
-    key: 'isCRaterScoreOnExit',
-    value: function isCRaterScoreOnExit() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnExit(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * A link type was selected in the link type chooser popup
-     * @param linkType the authored link object that was selected
-     */
-
   }, {
     key: 'linkTypeSelected',
     value: function linkTypeSelected(selectedLink) {
-
-      if (this.highlightedElement != null && this.highlightedElement.constructor.name == 'ConceptMapLink') {
-
-        /*
-         * get the ConceptMapLink object that we are setting the link type
-         * for
-         */
+      if (this.highlightedElement != null && this.highlightedElement.constructor.name === 'ConceptMapLink') {
         var link = this.highlightedElement;
-
-        // get the label, color, and original id
         var label = selectedLink.label;
         var color = selectedLink.color;
         var originalId = selectedLink.id;
-
-        // set the label, color, and original id into the link
         link.setLabel(label);
         link.setColor(color);
         link.setOriginalId(originalId);
       }
-
-      // make the link not highlighted
       this.clearHighlightedElement();
       this.studentDataChanged();
     }
-
-    /**
-     * Get the links title
-     * @returns the links title
-     */
-
   }, {
     key: 'getLinksTitle',
     value: function getLinksTitle() {
-      var linksTitle = '';
-
-      if (this.componentContent != null) {
-        linksTitle = this.componentContent.linksTitle;
-      }
-
-      return linksTitle;
+      return this.componentContent.linksTitle;
     }
-
-    /**
-     * Show the link type chooser popup
-     */
-
   }, {
     key: 'showLinkTypeChooser',
     value: function showLinkTypeChooser() {
-
-      // check if we have initialized the popup
       if (!this.initializedDisplayLinkTypeChooserModalOverlay) {
-        // we have not initialized the popup so we will do so now
         this.setLinkTypeChooserOverlayStyle();
         this.initializedDisplayLinkTypeChooserModalOverlay = true;
       }
-
-      /*
-       * initialize the top left of the link chooser popup to show up on
-       * the top right of the svg element
-       */
-      this.linkTypeChooserStyle['left'] = '600px';
       this.linkTypeChooserStyle['top'] = '20px';
-
+      this.linkTypeChooserStyle['left'] = '600px';
       this.displayLinkTypeChooser = true;
     }
-
-    /**
-     * Hide the link type chooser popup
-     */
-
   }, {
     key: 'hideLinkTypeChooser',
     value: function hideLinkTypeChooser() {
-
-      // hide the link type chooser
       this.displayLinkTypeChooser = false;
       this.displayLinkTypeChooserModalOverlay = false;
       this.newlyCreatedLink = null;
-
-      if (!this.$scope.$$phase) {
-        // TODO GK (from HT) this line was causing a lot of js errors ( $digest already in progress ), so I commented it out
-        // and it still seems to work. Do we need this line?
-        // see here: http://stackoverflow.com/questions/12729122/angularjs-prevent-error-digest-already-in-progress-when-calling-scope-apply
-        //this.$scope.$apply();
-      }
     }
-
-    /**
-     * Setup the svg
-     */
-
   }, {
     key: 'setupSVG',
     value: function setupSVG() {
       var _this3 = this;
 
-      // get the svg element in the svg.js world
       this.draw = SVG(this.svgId);
       this.draw.width(this.width);
       this.draw.height(this.height);
@@ -1243,24 +843,26 @@ var ConceptMapController = function (_ComponentController) {
       this.drawingLink = false;
       this.newlyCreatedLink = null;
 
-      // set the mouse down listener
       this.draw.mousedown(function (event) {
         _this3.svgMouseDown(event);
       });
 
-      // set the mouse up listener
       this.draw.mouseup(function (event) {
         _this3.svgMouseUp(event);
       });
 
-      // set the mouse move listener
       this.draw.mousemove(function (event) {
         _this3.svgMouseMove(event);
       });
 
-      // get the svg element in the angular world
+      this.addDragOverListenerIfNecessary();
+      this.addDropListenerIfNecessary();
+      this.setLinkTypeChooserStyle();
+    }
+  }, {
+    key: 'addDragOverListenerIfNecessary',
+    value: function addDragOverListenerIfNecessary() {
       var svg = angular.element('#' + this.svgId);
-
       /*
        * check if we have already added the dragover listener so we don't
        * add multiple listeners for the same event. adding multiple listeners
@@ -1282,7 +884,13 @@ var ConceptMapController = function (_ComponentController) {
 
         this.addedDragOverListener = true;
       }
+    }
+  }, {
+    key: 'addDropListenerIfNecessary',
+    value: function addDropListenerIfNecessary() {
+      var _this4 = this;
 
+      var svg = angular.element('#' + this.svgId);
       /*
        * check if we have already added the drop listener so we don't
        * add multiple listeners for the same event. adding multiple listeners
@@ -1299,28 +907,15 @@ var ConceptMapController = function (_ComponentController) {
            * the user has dropped a new node onto the svg to create a
            * new instance of a node
            */
-          _this3.newNodeDropped(event);
+          _this4.newNodeDropped(event);
         });
 
         this.addedDropListener = true;
       }
-
-      // set the link type chooser style
-      this.setLinkTypeChooserStyle();
     }
-
-    /**
-     * Set the link type chooser popup style
-     */
-
   }, {
     key: 'setLinkTypeChooserStyle',
     value: function setLinkTypeChooserStyle() {
-
-      /*
-       * set the link type chooser popup to show up in the upper right of
-       * the svg element
-       */
       this.linkTypeChooserStyle = {
         'width': '300px',
         'position': 'absolute',
@@ -1333,32 +928,13 @@ var ConceptMapController = function (_ComponentController) {
         'padding': '16px'
       };
     }
-
-    /**
-     * Set the link type chooser popup overlay style
-     */
-
   }, {
     key: 'setLinkTypeChooserOverlayStyle',
     value: function setLinkTypeChooserOverlayStyle() {
-
-      // calculate the modal overlay width and height
       this.modalWidth = this.getModalWidth();
-      this.modalHeight = this.getModalHeight();
-
-      //var overlayWidth = this.modalWidth + 'px';
       var overlayWidth = this.modalWidth;
-
       var conceptMapContainer = angular.element('#' + this.conceptMapContainerId);
-      var width = conceptMapContainer.width();
       var height = conceptMapContainer.height();
-      var offset = conceptMapContainer.offset();
-
-      var offsetLeft = offset.left;
-      var offsetTop = offset.top;
-      offsetLeft = 0;
-      offsetTop = 0;
-
       this.linkTypeChooserModalOverlayStyle = {
         'position': 'absolute',
         'z-index': 9999,
@@ -1368,83 +944,37 @@ var ConceptMapController = function (_ComponentController) {
         'opacity': 0.4
       };
     }
-
-    /**
-     * Get the width that the modal overlay should be
-     * @returns the width that the modal overlay should be
-     */
-
   }, {
     key: 'getModalWidth',
     value: function getModalWidth() {
-
-      var selectNodeBarWidth = null;
-      var svgWidth = null;
-
-      // get the width of the left select node bar
       var selectNodeBarWidthString = angular.element(document.getElementById('#' + this.selectNodeBarId)).css('width');
-
-      // get the width of the svg element
       var svgWidthString = angular.element(document.getElementById(this.svgId)).css('width');
-
       if (selectNodeBarWidthString != null && svgWidthString != null) {
-        // get the integer values
-        selectNodeBarWidth = parseInt(selectNodeBarWidthString.replace('px', ''));
-        svgWidth = parseInt(svgWidthString.replace('px', ''));
+        var selectNodeBarWidth = parseInt(selectNodeBarWidthString.replace('px', ''));
+        var svgWidth = parseInt(svgWidthString.replace('px', ''));
+        if (selectNodeBarWidth != null && svgWidth != null) {
+          return selectNodeBarWidth + svgWidth;
+        }
       }
-
-      var overlayWidth = null;
-
-      if (selectNodeBarWidth != null && svgWidth != null) {
-        // calculate the sum of the widths
-        overlayWidth = selectNodeBarWidth + svgWidth;
-      }
-
-      return overlayWidth;
+      return null;
     }
-
-    /**
-     * Get the height that the modal overlay should be
-     * @returns the height that the modal overlay should be
-     */
-
   }, {
     key: 'getModalHeight',
     value: function getModalHeight() {
-
-      var selectNodeBarHeight = null;
-      var svgHeight = null;
-
-      // get the height of the left select node bar
       var selectNodeBarHeightString = angular.element(document.getElementById('#' + this.selectNodeBarId)).css('height');
-
-      // get the height of the svg element
       var svgHeightString = angular.element(document.getElementById(this.svgId)).css('height');
-
       if (selectNodeBarHeightString != null && svgHeightString != null) {
-        // get the integer values
-        selectNodeBarHeight = parseInt(selectNodeBarHeightString.replace('px', ''));
-        svgHeight = parseInt(svgHeightString.replace('px', ''));
+        var selectNodeBarHeight = parseInt(selectNodeBarHeightString.replace('px', ''));
+        var svgHeight = parseInt(svgHeightString.replace('px', ''));
+        if (selectNodeBarHeight != null && svgHeight != null) {
+          return Math.max(selectNodeBarHeight, svgHeight);
+        }
       }
-
-      var overlayHeight = null;
-
-      if (selectNodeBarHeight != null && svgHeight != null) {
-        // get the larger of the two heights
-        overlayHeight = Math.max(selectNodeBarHeight, svgHeight);
-      }
-
-      return overlayHeight;
+      return null;
     }
-
-    /**
-     * The cancel button on the link type chooser was clicked
-     */
-
   }, {
     key: 'cancelLinkTypeChooser',
     value: function cancelLinkTypeChooser() {
-
       if (this.newlyCreatedLink != null) {
         /*
          * the student has just created this link and has not yet chosen
@@ -1454,36 +984,19 @@ var ConceptMapController = function (_ComponentController) {
         this.newlyCreatedLink = null;
       }
 
-      // hide the link chooser
       this.hideLinkTypeChooser();
-
-      // make the link not highlighted
       this.clearHighlightedElement();
     }
-
-    /**
-     * Called when the mouse iss clicked down on a blank spot in the svg element
-     * @param event the mouse down event
-     */
-
   }, {
     key: 'svgMouseDown',
     value: function svgMouseDown(event) {
-      if (event.target.tagName == 'svg') {
-        // remove highlighting from any item that was previously highlighted
+      if (event.target.tagName === 'svg') {
         this.clearHighlightedElement();
       }
     }
-
-    /**
-     * Called when the mouse is released
-     * @param event the mouse up event
-     */
-
   }, {
     key: 'svgMouseUp',
     value: function svgMouseUp(event) {
-
       if (this.activeLink != null && this.activeNode == null) {
         /*
          * the student was creating a link but did not connect the link
@@ -1492,28 +1005,15 @@ var ConceptMapController = function (_ComponentController) {
         this.activeLink.remove();
       }
 
-      // we are no longer drawing a link
       this.drawingLink = false;
-
-      // there is no longer an active link
       this.activeLink = null;
-
-      // enable node draggin
       this.enableNodeDragging();
       this.moveLinkTextToFront();
-      // move the nodes to the front so that they are on top of links
       this.moveNodesToFront();
     }
-
-    /**
-     * Called when the mouse is moved
-     * @param event the mouse move event
-     */
-
   }, {
     key: 'svgMouseMove',
     value: function svgMouseMove(event) {
-
       if (this.activeLink != null) {
         /*
          * there is an active link which means the student has created a
@@ -1554,7 +1054,6 @@ var ConceptMapController = function (_ComponentController) {
          * moving the mouse down, we will create a line that curves down.
          */
         if (!this.linkCurvatureSet && distance > 20) {
-
           /*
            * get the slope of the line from the start to the location
            * of the mouse
@@ -1563,40 +1062,14 @@ var ConceptMapController = function (_ComponentController) {
 
           if (y2 < startY) {
             // the user has moved the mouse above the connector
-
-            if (slope == null) {
-              /*
-               * the slope is infinite so we will default the
-               * curvature to 0.5
-               */
-              this.activeLink.curvature = 0.5;
-            } else if (slope < 1.0) {
-              // make the link straight
-              this.activeLink.curvature = 0.0;
-            } else {
-              // make the link curved
-              this.activeLink.curvature = 0.5;
-            }
+            this.setActiveLinkCurvature(slope);
 
             // make the link curve up
             this.activeLink.startCurveUp = true;
             this.activeLink.endCurveUp = true;
           } else if (y2 > startY) {
             // the user has moved the mouse below the connector
-
-            if (slope == null) {
-              /*
-               * the slope is infinite so we will default the
-               * curvature to 0.5
-               */
-              this.activeLink.curvature = 0.5;
-            } else if (slope < 1.0) {
-              // make the link straight
-              this.activeLink.curvature = 0.0;
-            } else {
-              // make the link curved
-              this.activeLink.curvature = 0.5;
-            }
+            this.setActiveLinkCurvature(slope);
 
             // make the link curve down
             this.activeLink.startCurveUp = false;
@@ -1608,9 +1081,24 @@ var ConceptMapController = function (_ComponentController) {
         }
 
         var isDragging = true;
-
-        // redraw the link with the new coordinates
         this.activeLink.updateCoordinates(x1, y1, x2, y2, isDragging);
+      }
+    }
+  }, {
+    key: 'setActiveLinkCurvature',
+    value: function setActiveLinkCurvature(slope) {
+      if (slope == null) {
+        /*
+         * the slope is infinite so we will default the
+         * curvature to 0.5
+         */
+        this.activeLink.curvature = 0.5;
+      } else if (slope < 1.0) {
+        // make the link straight
+        this.activeLink.curvature = 0.0;
+      } else {
+        // make the link curved
+        this.activeLink.curvature = 0.5;
       }
     }
 
@@ -1624,37 +1112,38 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setActiveNode',
     value: function setActiveNode(node) {
-      if (node != null) {
-        // show the delete button for the node
-        node.showDeleteButton();
-
-        // show the border for the node
-        node.showBorder();
-
-        // remember the active node
-        this.activeNode = node;
-      }
+      node.showDeleteButton();
+      node.showBorder();
+      this.activeNode = node;
     }
-
-    /**
-     * Clear the active node
-     */
-
   }, {
     key: 'clearActiveNode',
     value: function clearActiveNode() {
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
-      // loop through all the nodes
-      for (var n = 0; n < this.nodes.length; n++) {
-        var tempNode = this.nodes[n];
+      try {
+        for (var _iterator7 = this.nodes[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var node = _step7.value;
 
-        if (tempNode == this.activeNode && tempNode != this.highlightedElement) {
-          /*
-           * we have found the node and it is not highlighted so we will
-           * hide the delete button and hide the border
-           */
-          tempNode.hideDeleteButton();
-          tempNode.hideBorder();
+          if (node === this.activeNode && node !== this.highlightedElement) {
+            node.hideDeleteButton();
+            node.hideBorder();
+          }
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
+          }
         }
       }
 
@@ -1670,133 +1159,61 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'getRelativeCoordinatesByEvent',
     value: function getRelativeCoordinatesByEvent(event) {
-
-      // get the offset of the mouse from its parent
       var offsetX = event.offsetX;
       var offsetY = event.offsetY;
-
       var parentOffsetX = 0;
       var parentOffsetY = 0;
-
-      // get the user agent so we can determine which browser the user is using
       var userAgent = navigator.userAgent;
-
-      if (event.target.tagName == 'svg') {
-        // the target is the svg element
-
-        if (userAgent != null && userAgent.indexOf('Chrome') != -1) {
-          // the user is using Chrome
+      if (event.target.tagName === 'svg') {
+        if (this.isUserAgentChrome(userAgent)) {
           var matrix = event.target.getCTM();
           parentOffsetX = matrix.e;
           parentOffsetY = matrix.f;
-        } else if (userAgent != null && userAgent.indexOf('Firefox') != -1) {
-          // the user is using Firefox
-          matrix = event.target.createSVGMatrix();
-          parentOffsetX = matrix.e;
-          parentOffsetY = matrix.f;
+        } else if (this.isUserAgentFirefox(userAgent)) {
+          var _matrix = event.target.createSVGMatrix();
+          parentOffsetX = _matrix.e;
+          parentOffsetY = _matrix.f;
         } else {
-          // the user is using some other browser
-          matrix = event.target.getCTM();
-          parentOffsetX = matrix.e;
-          parentOffsetY = matrix.f;
+          var _matrix2 = event.target.getCTM();
+          parentOffsetX = _matrix2.e;
+          parentOffsetY = _matrix2.f;
         }
-      } else if (event.target.tagName == 'circle') {
-        // the target is a node connector circle or delete circle
-
-        if (userAgent != null && userAgent.indexOf('Chrome') != -1) {
-          // the user is using Chrome
-
-        } else if (userAgent != null && userAgent.indexOf('Firefox') != -1) {
-          // the user is using Firefox
-
-          // get the matrix of the group
-          var matrix = event.target.getCTM();
-
-          // get the bounding box of the circle
+      } else if (event.target.tagName === 'circle') {
+        if (this.isUserAgentChrome(userAgent)) {} else if (this.isUserAgentFirefox(userAgent)) {
+          var _matrix3 = event.target.getCTM();
           var bbox = event.target.getBBox();
-
-          /*
-           * get the bounding box of the circle so we can get the
-           * coordinates of the circle within the group
-           */
-          var x = bbox.x;
-          var y = bbox.y;
-
-          // get the absolute coordinates of the circle
-          parentOffsetX = matrix.e + bbox.x;
-          parentOffsetY = matrix.f + bbox.y;
+          parentOffsetX = _matrix3.e + bbox.x;
+          parentOffsetY = _matrix3.f + bbox.y;
         }
-      } else if (event.target.tagName == 'rect') {
-        // the target is the rectangle that outlines the image
-
-        if (userAgent != null && userAgent.indexOf('Chrome') != -1) {
-          // the user is using Chrome
-
-        } else if (userAgent != null && userAgent.indexOf('Firefox') != -1) {
-          // the user is using Firefox
-
-          // get the matrix of the group
-          var matrix = event.target.getCTM();
-
-          // get the bounding box of the rect
-          var bbox = event.target.getBBox();
-
-          /*
-           * get the bounding box of the rect so we can get the
-           * coordinates of the rect within the group
-           */
-          var x = bbox.x;
-          var y = bbox.y;
-
-          // get the absolute coordinates of the rect
-          parentOffsetX = matrix.e + x;
-          parentOffsetY = matrix.f + y;
+      } else if (event.target.tagName === 'rect') {
+        if (this.isUserAgentChrome(userAgent)) {} else if (this.isUserAgentFirefox(userAgent)) {
+          var _matrix4 = event.target.getCTM();
+          var _bbox = event.target.getBBox();
+          var _x5 = _bbox.x;
+          var _y = _bbox.y;
+          parentOffsetX = _matrix4.e + _x5;
+          parentOffsetY = _matrix4.f + _y;
         }
-      } else if (event.target.tagName == 'image') {
-        // the target is an image
-
-        if (userAgent.indexOf('Chrome') != -1) {} else if (userAgent.indexOf('Firefox') != -1) {
-
-          // get the matrix of the group
-          var matrix = event.target.parentElement.getCTM();
-
-          // get the coordinates of the upper left corner of the group
-          parentOffsetX = matrix.e;
-          parentOffsetY = matrix.f;
+      } else if (event.target.tagName === 'image') {
+        if (this.isUserAgentChrome(userAgent)) {} else if (this.isUserAgentFirefox(userAgent)) {
+          var _matrix5 = event.target.parentElement.getCTM();
+          parentOffsetX = _matrix5.e;
+          parentOffsetY = _matrix5.f;
         }
-      } else if (event.target.tagName == 'path') {
-        /*
-         * the target is the link line. sometimes the mouse can be over the
-         * link if the student is moving the mouse around quickly.
-         */
-
-        if (userAgent != null && userAgent.indexOf('Chrome') != -1) {
-          // the user is using Chrome
-
-        } else if (userAgent != null && userAgent.indexOf('Firefox') != -1) {
-          // the user is using Firefox
-
-          // get the coordinates of the head of the link
+      } else if (event.target.tagName === 'path') {
+        if (this.isUserAgentChrome(userAgent)) {} else if (this.isUserAgentFirefox(userAgent)) {
           var x2 = event.target.attributes['x2'];
           var y2 = event.target.attributes['y2'];
-
           if (x2 != null && y2 != null) {
             parentOffsetX = parseInt(x2.value);
             parentOffsetY = parseInt(y2.value);
           }
         }
       } else {
-        // the target is something else
-
-        if (userAgent != null && userAgent.indexOf('Chrome') != -1) {
-          // the user is using Chrome
-
-        } else if (userAgent != null && userAgent.indexOf('Firefox') != -1) {
-          // the user is using Firefox
-
-          var matrix = event.target.getCTM();
-          parentOffsetX = matrix.e;
-          parentOffsetY = matrix.f;
+        if (this.isUserAgentChrome(userAgent)) {} else if (this.isUserAgentFirefox(userAgent)) {
+          var _matrix6 = event.target.getCTM();
+          parentOffsetX = _matrix6.e;
+          parentOffsetY = _matrix6.f;
         }
       }
 
@@ -1807,11 +1224,22 @@ var ConceptMapController = function (_ComponentController) {
       var x = parentOffsetX + offsetX;
       var y = parentOffsetY + offsetY;
 
-      var returnObject = {};
-      returnObject.x = x;
-      returnObject.y = y;
+      var returnObject = {
+        x: x,
+        y: y
+      };
 
       return returnObject;
+    }
+  }, {
+    key: 'isUserAgentChrome',
+    value: function isUserAgentChrome(userAgent) {
+      return userAgent.indexOf('Chrome') !== -1;
+    }
+  }, {
+    key: 'isUserAgentFirefox',
+    value: function isUserAgentFirefox(userAgent) {
+      return userAgent.indexOf('Firefox') !== -1;
     }
 
     /**
@@ -1823,8 +1251,6 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'selectNode',
     value: function selectNode($event, node) {
-
-      // remember the selected node
       this.selectedNode = node;
 
       /*
@@ -1835,924 +1261,601 @@ var ConceptMapController = function (_ComponentController) {
       this.tempOffsetX = $event.offsetX;
       this.tempOffsetY = $event.offsetY;
     }
-
-    /**
-     * The student has dropped a new node on the svg
-     * @param event the drop event
-     */
-
   }, {
     key: 'newNodeDropped',
     value: function newNodeDropped(event) {
-
-      // get the selected node
       var selectedNode = this.selectedNode;
-
-      if (selectedNode != null) {
-        // get the file name
-        var filePath = selectedNode.fileName;
-
-        // get the node name
-        var label = selectedNode.label;
-
-        // get the width and height of the node
-        var width = selectedNode.width;
-        var height = selectedNode.height;
-
-        // get the original authored id
-        var originalId = selectedNode.id;
-
-        // get the coordinates relative to the svg element
-        var coordinates = this.getRelativeCoordinatesByEvent(event);
-
-        // get the position we should drop the node at
-        var x = coordinates.x - this.tempOffsetX;
-        var y = coordinates.y - this.tempOffsetY;
-
-        // get a new ConceptMapNodeId e.g. 'studentNode3'
-        var newConceptMapNodeId = this.getNewConceptMapNodeId();
-
-        // create a ConceptMapNode
-        var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, filePath, label, x, y, width, height, this.componentContent.showNodeLabels);
-
-        // add the node to our array of nodes
-        this.addNode(conceptMapNode);
-
-        // set the mouse events on the node
-        this.setNodeMouseEvents(conceptMapNode);
-
-        // make the node highlighted
-        this.setHighlightedElement(conceptMapNode);
-        this.studentDataChanged();
-      }
-
-      // enable node dragging
+      var filePath = selectedNode.fileName;
+      var label = selectedNode.label;
+      var width = selectedNode.width;
+      var height = selectedNode.height;
+      var originalId = selectedNode.id;
+      var coordinates = this.getRelativeCoordinatesByEvent(event);
+      var x = coordinates.x - this.tempOffsetX;
+      var y = coordinates.y - this.tempOffsetY;
+      var newConceptMapNodeId = this.getNewConceptMapNodeId();
+      var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, filePath, label, x, y, width, height, this.componentContent.showNodeLabels);
+      this.addNode(conceptMapNode);
+      this.setNodeMouseEvents(conceptMapNode);
+      this.setHighlightedElement(conceptMapNode);
+      this.studentDataChanged();
       this.enableNodeDragging();
     }
-
-    /**
-     * Get a new ConceptMapNode id that isn't being used
-     * @returns a new ConceptMapNode id e.g. 'studentNode3'
-     */
-
   }, {
     key: 'getNewConceptMapNodeId',
     value: function getNewConceptMapNodeId() {
-
-      var nextAvailableNodeIdNumber = 1;
-
-      // array to remember the numbers that have been used in node ids already
-      var usedNumbers = [];
-
-      // loop through all the nodes
-      for (var x = 0; x < this.nodes.length; x++) {
-        var node = this.nodes[x];
-
-        if (node != null) {
-
-          // get the node id
-          var nodeId = node.getId();
-
-          if (nodeId != null) {
-
-            // get the number from the node id
-            var nodeIdNumber = parseInt(nodeId.replace('studentNode', ''));
-
-            if (nodeIdNumber != null) {
-              // add the number to the array of used numbers
-              usedNumbers.push(nodeIdNumber);
-            }
-          }
-        }
-      }
-
-      if (usedNumbers.length > 0) {
-        // get the max number used
-        var maxNumberUsed = Math.max.apply(Math, usedNumbers);
-
-        if (!isNaN(maxNumberUsed)) {
-          // increment the number by 1 to get the next available number
-          nextAvailableNodeIdNumber = maxNumberUsed + 1;
-        }
-      }
-
-      var newId = 'studentNode' + nextAvailableNodeIdNumber;
-
-      return newId;
+      return this.ConceptMapService.getNextAvailableId(this.nodes, 'studentNode');
     }
-
-    /**
-     * Get a new ConceptMapLink id that isn't being used
-     * @returns a new ConceptMapLink id e.g. 'studentLink3'
-     */
-
   }, {
     key: 'getNewConceptMapLinkId',
     value: function getNewConceptMapLinkId() {
-
-      var nextAvailableLinkIdNumber = 1;
-
-      // array to remember the numbers that have been used in link ids already
-      var usedNumbers = [];
-
-      // loop through all the nodes
-      for (var x = 0; x < this.links.length; x++) {
-        var link = this.links[x];
-
-        if (link != null) {
-
-          // get the node id
-          var linkId = link.getId();
-
-          if (linkId != null) {
-
-            // get the number from the link id
-            var linkIdNumber = parseInt(linkId.replace('studentLink', ''));
-
-            if (linkIdNumber != null) {
-              // add the number to the array of used numbers
-              usedNumbers.push(linkIdNumber);
-            }
-          }
-        }
-      }
-
-      if (usedNumbers.length > 0) {
-        // get the max number used
-        var maxNumberUsed = Math.max.apply(Math, usedNumbers);
-
-        if (!isNaN(maxNumberUsed)) {
-          // increment the number by 1 to get the next available number
-          nextAvailableLinkIdNumber = maxNumberUsed + 1;
-        }
-      }
-
-      var newId = 'studentLink' + nextAvailableLinkIdNumber;
-
-      return newId;
+      return this.ConceptMapService.getNextAvailableId(this.links, 'studentLink');
     }
-
-    /**
-     * Set the mouse events on a newly created node
-     * @param conceptMapNode the node
-     */
-
   }, {
     key: 'setNodeMouseEvents',
     value: function setNodeMouseEvents(conceptMapNode) {
-      var _this4 = this;
+      var _this5 = this;
 
-      // set the node mouse over event
       conceptMapNode.setNodeMouseOver(function (event) {
-        _this4.nodeMouseOver(event);
+        _this5.nodeMouseOver(event);
       });
 
-      // set the node mouse out event
       conceptMapNode.setNodeMouseOut(function (event) {
-        _this4.nodeMouseOut(event);
+        _this5.nodeMouseOut(event);
       });
 
-      // set the connector mouse down event
       conceptMapNode.setConnectorMouseDown(function (event) {
-        _this4.disableNodeDragging();
-        _this4.connectorMouseDown(event);
+        _this5.disableNodeDragging();
+        _this5.connectorMouseDown(event);
       });
 
-      // set the node mouse down event
       conceptMapNode.setNodeMouseDown(function (event) {
-        _this4.nodeMouseDown(event);
+        _this5.nodeMouseDown(event);
       });
 
-      // set the node mouse up event
       conceptMapNode.setNodeMouseUp(function (event) {
-        _this4.nodeMouseUp(event);
+        _this5.nodeMouseUp(event);
       });
 
-      // set the delete button mouse down event
       conceptMapNode.setDeleteButtonMouseDown(function (event) {
-        _this4.nodeDeleteButtonMouseDown(event);
+        _this5.nodeDeleteButtonMouseDown(event);
       });
 
-      // set the delete button mouse over event
       conceptMapNode.setDeleteButtonMouseOver(function (event) {
-        _this4.nodeDeleteButtonMouseOver(event);
+        _this5.nodeDeleteButtonMouseOver(event);
       });
 
-      // set the delete button mouse out event
       conceptMapNode.setDeleteButtonMouseOut(function (event) {
-        _this4.nodeDeleteButtonMouseOut(event);
+        _this5.nodeDeleteButtonMouseOut(event);
       });
 
-      // set node drag move event
       conceptMapNode.setDragMove(function (event) {
-        _this4.nodeDragMove(event);
+        _this5.nodeDragMove(event);
       });
     }
-
-    /**
-     * Set an element to be highlighted. The element can be a node or a link.
-     * @param element a node or link
-     */
-
   }, {
     key: 'setHighlightedElement',
     value: function setHighlightedElement(element) {
-
-      // remove highlighting from any existing element
       this.clearHighlightedElement();
-
-      // hide the link type chooser
       this.hideLinkTypeChooser();
+      this.highlightedElement = element;
+      element.isHighlighted(true);
+      element.showDeleteButton();
 
-      if (element != null) {
-
-        // remember the highlighted element
-        this.highlightedElement = element;
-
-        // set the higlighted value to true for the element
-        element.isHighlighted(true);
-
-        // show the delete button for the element
-        element.showDeleteButton();
-
-        if (element.constructor.name == 'ConceptMapNode') {
-          // the element is a node
-
-          // show the border
-          element.showBorder();
-        } else if (element.constructor.name == 'ConceptMapLink') {
-          // the element is a link
-
-          // show the link type chooser
-          this.showLinkTypeChooser();
-
-          // select the link type that was previously chosen for the link
-          this.selectedLinkType = element.getOriginalId();
-        }
+      if (element.constructor.name === 'ConceptMapNode') {
+        element.showBorder();
+      } else if (element.constructor.name === 'ConceptMapLink') {
+        this.showLinkTypeChooser();
+        this.selectedLinkType = element.getOriginalId();
       }
     }
-
-    /**
-     * If an element is highlighted, make it no longer highlighted.
-     */
-
   }, {
     key: 'clearHighlightedElement',
     value: function clearHighlightedElement() {
-
       if (this.highlightedElement != null) {
-
-        if (this.highlightedElement.constructor.name == 'ConceptMapNode') {
-          // the highlighted element is a node
-
-          // hide the border
+        if (this.highlightedElement.constructor.name === 'ConceptMapNode') {
           this.highlightedElement.hideBorder();
-        } else if (this.highlightedElement.constructor.name == 'ConceptMapLink') {
-          // the element is a link
-
-          // hide the link type chooser
+        } else if (this.highlightedElement.constructor.name === 'ConceptMapLink') {
           this.hideLinkTypeChooser();
         }
-
-        // set the higlighted value to false for the element
         this.highlightedElement.isHighlighted(false);
-
-        // hide the delete button
         this.highlightedElement.hideDeleteButton();
-
-        // clear the highlighted element reference
         this.highlightedElement = null;
       }
     }
-
-    /**
-     * Enable node dragging
-     */
-
   }, {
     key: 'enableNodeDragging',
     value: function enableNodeDragging() {
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
-      // loop through all the nodes
-      for (var n = 0; n < this.nodes.length; n++) {
-        var node = this.nodes[n];
+      try {
+        for (var _iterator8 = this.nodes[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var node = _step8.value;
 
-        if (node != null) {
-
-          // get the node group
           var group = node.getGroup();
-
-          if (group != null) {
-
-            /*
-             * get the bounds that we will allow the node group to
-             * dragged in
-             */
-            var options = {
-              minX: 0,
-              minY: 0,
-              maxX: this.width,
-              maxY: this.height
-            };
-
-            // make the node group draggable
-            group.draggable(options);
+          // get the bounds that we will allow the node group to be dragged in dragged in
+          var options = {
+            minX: 0,
+            minY: 0,
+            maxX: this.width,
+            maxY: this.height
+          };
+          group.draggable(options);
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
     }
-
-    /**
-     * Disable node dragging. This will be called when the student creates a
-     * link so that they aren't dragging nodes around at the same time as
-     * creating a link.
-     */
-
   }, {
     key: 'disableNodeDragging',
     value: function disableNodeDragging() {
+      var _iteratorNormalCompletion9 = true;
+      var _didIteratorError9 = false;
+      var _iteratorError9 = undefined;
 
-      // loop through all the nodes
-      for (var n = 0; n < this.nodes.length; n++) {
-        var node = this.nodes[n];
+      try {
+        for (var _iterator9 = this.nodes[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var node = _step9.value;
 
-        if (node != null) {
-
-          // get a node group
           var group = node.getGroup();
-
-          if (group != null) {
-            // make the group not draggable
-            group.draggable(false);
+          group.draggable(false);
+        }
+      } catch (err) {
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion9 && _iterator9.return) {
+            _iterator9.return();
+          }
+        } finally {
+          if (_didIteratorError9) {
+            throw _iteratorError9;
           }
         }
       }
     }
-
-    /**
-     * Move the link text group to the front
-     */
-
   }, {
     key: 'moveLinkTextToFront',
     value: function moveLinkTextToFront() {
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
 
-      // loop through all the links
-      for (var l = 0; l < this.links.length; l++) {
-        var link = this.links[l];
+      try {
+        for (var _iterator10 = this.links[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var link = _step10.value;
 
-        if (link != null) {
-          // move the link text group to the front
           link.moveTextGroupToFront();
+        }
+      } catch (err) {
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
+          }
+        } finally {
+          if (_didIteratorError10) {
+            throw _iteratorError10;
+          }
         }
       }
     }
-
-    /**
-     * Move the nodes to the front so that they show up above links
-     */
-
   }, {
     key: 'moveNodesToFront',
     value: function moveNodesToFront() {
+      var _iteratorNormalCompletion11 = true;
+      var _didIteratorError11 = false;
+      var _iteratorError11 = undefined;
 
-      // loop through all the nodes
-      for (var n = 0; n < this.nodes.length; n++) {
-        var node = this.nodes[n];
+      try {
+        for (var _iterator11 = this.nodes[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+          var node = _step11.value;
 
-        if (node != null) {
-
-          // get a node group
           var group = node.getGroup();
-
-          if (group != null) {
-            // move the node group to the front
-            group.front();
+          group.front();
+        }
+      } catch (err) {
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion11 && _iterator11.return) {
+            _iterator11.return();
+          }
+        } finally {
+          if (_didIteratorError11) {
+            throw _iteratorError11;
           }
         }
       }
     }
-
-    /**
-     * Add a node to our array of nodes
-     * @param node the node to add
-     */
-
   }, {
     key: 'addNode',
     value: function addNode(node) {
-      if (node != null) {
-        this.nodes.push(node);
-      }
+      this.nodes.push(node);
     }
-
-    /**
-     * Remove a node from the svg and our array of nodes
-     * @param node the node to remove
-     */
-
   }, {
     key: 'removeNode',
     value: function removeNode(node) {
+      var outgoingLinks = node.getOutgoingLinks();
+      var numOutgoingLinks = outgoingLinks.length;
+      while (numOutgoingLinks > 0) {
+        var outgoingLink = outgoingLinks[0];
+        this.removeLink(outgoingLink);
+        numOutgoingLinks--;
+      }
 
-      if (node != null) {
+      var incomingLinks = node.getIncomingLinks();
+      var numIncomingLinks = incomingLinks.length;
+      while (numIncomingLinks > 0) {
+        var incomingLink = incomingLinks[0];
+        this.removeLink(incomingLink);
+        numIncomingLinks--;
+      }
 
-        // get the outgoing links from the node
-        var outgoingLinks = node.getOutgoingLinks();
+      node.remove();
 
-        if (outgoingLinks != null) {
-
-          // get the number of outgoing links
-          var numOutgoingLinks = outgoingLinks.length;
-
-          // loop until we have removed all the outgoing links
-          while (numOutgoingLinks > 0) {
-            // get an outgoing link
-            var outgoingLink = outgoingLinks[0];
-
-            // remove the link from the svg and from our array of links
-            this.removeLink(outgoingLink);
-
-            // decrement the number of outgoing links counter
-            numOutgoingLinks--;
-          }
-        }
-
-        // get the incoming links to the node
-        var incomingLinks = node.getIncomingLinks();
-
-        if (incomingLinks != null) {
-
-          // get the number of incoming links
-          var numIncomingLinks = incomingLinks.length;
-
-          // loop until we have removed all the incoming links
-          while (numIncomingLinks > 0) {
-            // get an incoming link
-            var incomingLink = incomingLinks[0];
-
-            // remove the link from the svg and from our array of links
-            this.removeLink(incomingLink);
-
-            // decrement the number of incoming links counter
-            numIncomingLinks--;
-          }
-        }
-
-        // remove the node from the svg
-        node.remove();
-
-        // loop through all the nodes
-        for (var n = 0; n < this.nodes.length; n++) {
-          var tempNode = this.nodes[n];
-
-          if (tempNode == node) {
-            // we have found the node we want to remove
-            this.nodes.splice(n, 1);
-            break;
-          }
+      for (var n = 0; n < this.nodes.length; n++) {
+        var tempNode = this.nodes[n];
+        if (tempNode == node) {
+          this.nodes.splice(n, 1);
+          break;
         }
       }
     }
-
-    /**
-     * Remove all nodes from the svg and our array of nodes
-     */
-
   }, {
     key: 'removeAllNodes',
     value: function removeAllNodes() {
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
 
-      // loop through all the nodes
-      for (var n = 0; n < this.nodes.length; n++) {
-        var tempNode = this.nodes[n];
+      try {
+        for (var _iterator12 = this.nodes[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var node = _step12.value;
 
-        // remove the node from the svg
-        tempNode.remove();
+          node.remove();
+        }
+      } catch (err) {
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
+          }
+        } finally {
+          if (_didIteratorError12) {
+            throw _iteratorError12;
+          }
+        }
       }
 
-      // clear the nodes array
       this.nodes = [];
     }
-
-    /**
-     * Get a node by id.
-     * @param id the node id
-     * @returns the node with the given id or null
-     */
-
   }, {
     key: 'getNodeById',
     value: function getNodeById(id) {
-      var node = null;
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
 
-      if (id != null) {
+      try {
+        for (var _iterator13 = this.nodes[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var node = _step13.value;
 
-        // loop through all the nodes
-        for (var n = 0; n < this.nodes.length; n++) {
-          var tempNode = this.nodes[n];
-          var tempNodeId = tempNode.getId();
-
-          if (id == tempNodeId) {
-            // we have found the node we want
-            node = tempNode;
-            break;
+          var nodeId = node.getId();
+          if (id === nodeId) {
+            return node;
+          }
+        }
+      } catch (err) {
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
+          }
+        } finally {
+          if (_didIteratorError13) {
+            throw _iteratorError13;
           }
         }
       }
 
-      return node;
+      return null;
     }
-
-    /**
-     * Get a node by id.
-     * @param groupId the svg group id
-     * @returns the node with the given id or null
-     */
-
   }, {
     key: 'getNodeByGroupId',
-    value: function getNodeByGroupId(groupId) {
-      var node = null;
+    value: function getNodeByGroupId(id) {
+      var _iteratorNormalCompletion14 = true;
+      var _didIteratorError14 = false;
+      var _iteratorError14 = undefined;
 
-      if (groupId != null) {
+      try {
+        for (var _iterator14 = this.nodes[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+          var node = _step14.value;
 
-        // loop through all the nodes
-        for (var n = 0; n < this.nodes.length; n++) {
-          var tempNode = this.nodes[n];
-          var tempNodeGroupId = tempNode.getGroupId();
-
-          if (groupId == tempNodeGroupId) {
-            // we have found the node we want
-            node = tempNode;
-            break;
+          var groupId = node.getGroupId();
+          if (id === groupId) {
+            return node;
+          }
+        }
+      } catch (err) {
+        _didIteratorError14 = true;
+        _iteratorError14 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion14 && _iterator14.return) {
+            _iterator14.return();
+          }
+        } finally {
+          if (_didIteratorError14) {
+            throw _iteratorError14;
           }
         }
       }
 
-      return node;
+      return null;
     }
-
-    /**
-     * Get a link by id.
-     * @param id the link id
-     * @returns the link with the given id or null
-     */
-
   }, {
     key: 'getLinkById',
     value: function getLinkById(id) {
-      var link = null;
+      var _iteratorNormalCompletion15 = true;
+      var _didIteratorError15 = false;
+      var _iteratorError15 = undefined;
 
-      if (id != null) {
+      try {
+        for (var _iterator15 = this.links[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+          var link = _step15.value;
 
-        // loop through all the links
-        for (var l = 0; l < this.links.length; l++) {
-          var tempLink = this.links[l];
-          var tempLinkId = tempLink.getId();
-
-          if (groupId == tempLinkId) {
-            // we have found the link we want
-            link = tempLink;
-            break;
+          var linkId = link.getId();
+          if (id === linkId) {
+            return link;
+          }
+        }
+      } catch (err) {
+        _didIteratorError15 = true;
+        _iteratorError15 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion15 && _iterator15.return) {
+            _iterator15.return();
+          }
+        } finally {
+          if (_didIteratorError15) {
+            throw _iteratorError15;
           }
         }
       }
 
-      return link;
+      return null;
     }
-
-    /**
-     * Get a link by group id.
-     * @param groupId the svg group id
-     * @returns the link with the given group id or null
-     */
-
   }, {
     key: 'getLinkByGroupId',
-    value: function getLinkByGroupId(groupId) {
-      var link = null;
+    value: function getLinkByGroupId(id) {
+      var _iteratorNormalCompletion16 = true;
+      var _didIteratorError16 = false;
+      var _iteratorError16 = undefined;
 
-      if (groupId != null) {
+      try {
+        for (var _iterator16 = this.links[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+          var link = _step16.value;
 
-        // loop through all the links
-        for (var l = 0; l < this.links.length; l++) {
-          var tempLink = this.links[l];
-          var tempLinkGroupId = tempLink.getGroupId();
-
-          if (groupId == tempLinkGroupId) {
-            // we have found the link we want
-            link = tempLink;
-            break;
+          var groupId = link.getGroupId();
+          if (id === groupId) {
+            return link;
+          }
+        }
+      } catch (err) {
+        _didIteratorError16 = true;
+        _iteratorError16 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion16 && _iterator16.return) {
+            _iterator16.return();
+          }
+        } finally {
+          if (_didIteratorError16) {
+            throw _iteratorError16;
           }
         }
       }
 
-      return link;
+      return null;
     }
-
-    /**
-     * Get a node by its connector id.
-     * @param connectorId the svg circle id of the connector
-     * @returns the node with the associated connector or null
-     */
-
   }, {
     key: 'getNodeByConnectorId',
-    value: function getNodeByConnectorId(connectorId) {
-      var node = null;
+    value: function getNodeByConnectorId(id) {
+      var _iteratorNormalCompletion17 = true;
+      var _didIteratorError17 = false;
+      var _iteratorError17 = undefined;
 
-      if (connectorId != null) {
+      try {
+        for (var _iterator17 = this.nodes[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+          var node = _step17.value;
 
-        // loop through all the nodes
-        for (var n = 0; n < this.nodes.length; n++) {
-          var tempNode = this.nodes[n];
-
-          // get the connector id
-          var tempConnectorId = tempNode.getConnectorId();
-
-          if (connectorId == tempConnectorId) {
-            // we have found the node we want
-            node = tempNode;
-            break;
+          var connectorId = node.getConnectorId();
+          if (id === connectorId) {
+            return node;
+          }
+        }
+      } catch (err) {
+        _didIteratorError17 = true;
+        _iteratorError17 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion17 && _iterator17.return) {
+            _iterator17.return();
+          }
+        } finally {
+          if (_didIteratorError17) {
+            throw _iteratorError17;
           }
         }
       }
 
-      return node;
+      return null;
     }
-
-    /**
-     * Remove a node by id. The id of a node is the same as its svg group id.
-     * @param groupId
-     */
-
   }, {
     key: 'removeNodeById',
     value: function removeNodeById(groupId) {
-      if (groupId != null) {
-
-        // loop through all the nodse
-        for (var n = 0; n < this.nodes.length; n++) {
-          var tempNode = this.nodes[n];
-          var tempNodeId = tempNode.getId();
-
-          if (groupId == tempNodeId) {
-            // we have found the node we want to remove
-            this.nodes.splice(n, 1);
-            break;
-          }
+      for (var n = 0; n < this.nodes.length; n++) {
+        var tempNode = this.nodes[n];
+        var tempNodeId = tempNode.getId();
+        if (groupId === tempNodeId) {
+          this.nodes.splice(n, 1);
+          break;
         }
       }
     }
-
-    /**
-     * Add a link to our array of links
-     * @param link the link to add
-     */
-
   }, {
     key: 'addLink',
     value: function addLink(link) {
-      if (link != null) {
-        this.links.push(link);
-      }
+      this.links.push(link);
     }
-
-    /**
-     * Remove a link from the svg and our array of links
-     * @param link the link to remove
-     */
-
   }, {
     key: 'removeLink',
     value: function removeLink(link) {
-
-      if (link != null) {
-
-        // remove the link from the svg
-        link.remove();
-
-        // loop through all the links
-        for (var l = 0; l < this.links.length; l++) {
-          var tempLink = this.links[l];
-
-          if (link == tempLink) {
-            // we have found the link we want to remove
-            this.links.splice(l, 1);
-            break;
-          }
+      link.remove();
+      for (var l = 0; l < this.links.length; l++) {
+        var tempLink = this.links[l];
+        if (link == tempLink) {
+          this.links.splice(l, 1);
+          break;
         }
       }
     }
-
-    /**
-     * Remove all the links from the svg and from our array of links
-     */
-
   }, {
     key: 'removeAllLinks',
     value: function removeAllLinks() {
+      var _iteratorNormalCompletion18 = true;
+      var _didIteratorError18 = false;
+      var _iteratorError18 = undefined;
 
-      // loop through all the links
-      for (var l = 0; l < this.links.length; l++) {
-        var tempLink = this.links[l];
+      try {
+        for (var _iterator18 = this.links[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+          var link = _step18.value;
 
-        // remove the link from the svg
-        tempLink.remove();
-      }
-
-      // clear the links array
-      this.links = [];
-    }
-
-    /**
-     * Called when the mouse moves over a node
-     * @param event the mouse over event
-     */
-
-  }, {
-    key: 'nodeMouseOver',
-    value: function nodeMouseOver(event) {
-
-      // get the node group id
-      var groupId = event.target.parentElement.id;
-
-      if (groupId != null) {
-
-        // get the node
-        var node = this.getNodeByGroupId(groupId);
-
-        if (node != null) {
-          /*
-           * make the node active so that the border and delete button
-           * shows
-           */
-          this.setActiveNode(node);
+          link.remove();
         }
-      }
-    }
-
-    /**
-     * Called when the mouse moves out of a node
-     * @param event the mouse out event
-     */
-
-  }, {
-    key: 'nodeMouseOut',
-    value: function nodeMouseOut(event) {
-
-      // get the group id of the node
-      var groupId = event.target.parentElement.id;
-
-      if (groupId != null) {
-
-        // get the node
-        var node = this.getNodeByGroupId(groupId);
-
-        if (node != null) {
-          // make the node inactive by clearing the active node
-          this.clearActiveNode();
-        }
-      }
-    }
-
-    /**
-     * Called when the mouse is clicked down on a node
-     * @param event the mouse down event
-     */
-
-  }, {
-    key: 'nodeMouseDown',
-    value: function nodeMouseDown(event) {
-
-      if (event.target.parentElement != null) {
-
-        // get the group id of the node
-        var groupId = event.target.parentElement.id;
-
-        if (groupId != null) {
-
-          // get the node
-          var node = this.getNodeByGroupId(groupId);
-
-          if (node != null) {
-            // make the node highlighted
-            this.setHighlightedElement(node);
+      } catch (err) {
+        _didIteratorError18 = true;
+        _iteratorError18 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion18 && _iterator18.return) {
+            _iterator18.return();
+          }
+        } finally {
+          if (_didIteratorError18) {
+            throw _iteratorError18;
           }
         }
       }
+
+      this.links = [];
     }
-
-    /**
-     * Called when the mouse is released on a node
-     * @param event the mouse up event
-     */
-
+  }, {
+    key: 'nodeMouseOver',
+    value: function nodeMouseOver(event) {
+      var groupId = event.target.parentElement.id;
+      var node = this.getNodeByGroupId(groupId);
+      if (node != null) {
+        this.setActiveNode(node);
+      }
+    }
+  }, {
+    key: 'nodeMouseOut',
+    value: function nodeMouseOut(event) {
+      var groupId = event.target.parentElement.id;
+      var node = this.getNodeByGroupId(groupId);
+      if (node != null) {
+        this.clearActiveNode();
+      }
+    }
+  }, {
+    key: 'nodeMouseDown',
+    value: function nodeMouseDown(event) {
+      if (event.target.parentElement != null) {
+        var groupId = event.target.parentElement.id;
+        var node = this.getNodeByGroupId(groupId);
+        if (node != null) {
+          this.setHighlightedElement(node);
+        }
+      }
+    }
   }, {
     key: 'nodeMouseUp',
     value: function nodeMouseUp(event) {
-
       if (this.drawingLink && this.activeLink != null) {
         /*
          * the student is creating a link and has just released the mouse
          * over a node to connect the destination node of the link
          */
 
-        // get the group id of the node
         var groupId = event.target.parentElement.id;
+        var node = this.getNodeByGroupId(groupId);
+        var sourceNode = this.activeLink.sourceNode;
+        var sourceNodeGroupId = sourceNode.getGroupId();
 
-        if (groupId != null) {
+        if (sourceNodeGroupId === groupId) {
+          /*
+           * if the source of the link is the same as the
+           * destination node, we will not connect the link
+           */
+          this.activeLink.remove();
+          this.activeLink = null;
+        } else {
+          /*
+           * the source node is different than the destination
+           * node so we will connect the link
+           */
+          this.activeLink.setDestination(node);
+          this.addLink(this.activeLink);
+          this.setHighlightedElement(this.activeLink);
 
-          // get the node
-          var node = this.getNodeByGroupId(groupId);
-
-          if (node != null) {
-
-            // get the source node of the link
-            var sourceNode = this.activeLink.sourceNode;
-            var sourceNodeGroupId = sourceNode.getGroupId();
-
-            if (sourceNodeGroupId == groupId) {
-              /*
-               * if the source of the link is the same as the
-               * destination node, we will not connect the link
-               */
-              this.activeLink.remove();
-              this.activeLink = null;
-            } else {
-              /*
-               * the source node is different than the destination
-               * node so we will connect the link
-               */
-
-              // set the destination node of the link
-              this.activeLink.setDestination(node);
-
-              // make the link the active link
-              this.addLink(this.activeLink);
-
-              // highlight the link
-              this.setHighlightedElement(this.activeLink);
-
-              /*
-               * set the link as a newly created link so that if the
-               * student clicks the cancel button, we will remove
-               * the link
-               */
-              this.newlyCreatedLink = this.activeLink;
-
-              // display the modal overlay
-              this.displayLinkTypeChooserModalOverlay = true;
-
-              // handle the student data changing
-              this.studentDataChanged();
-            }
-          }
+          /*
+           * set the link as a newly created link so that if the
+           * student clicks the cancel button, we will remove
+           * the link
+           */
+          this.newlyCreatedLink = this.activeLink;
+          this.displayLinkTypeChooserModalOverlay = true;
+          this.studentDataChanged();
         }
       }
 
-      // the link has been connected so we are no longer drawing the link
       this.drawingLink = false;
     }
-
-    /**
-     * Called when a link delete button is clicked
-     * @param event the mouse click event
-     * @param link the link to delete
-     */
-
   }, {
     key: 'linkDeleteButtonClicked',
     value: function linkDeleteButtonClicked(event, link) {
-
-      if (link != null) {
-
-        // remove the link from our array of links
-        this.removeLink(link);
-
-        // handle the student data changing
-        this.studentDataChanged();
-      }
-
-      // hide the link type chooser
+      this.removeLink(link);
+      this.studentDataChanged();
       this.hideLinkTypeChooser();
     }
-
-    /**
-     * Called when the mouse is clicked down on a connector. This will start
-     * creating a link.
-     * @param event the mouse down event
-     */
-
   }, {
     key: 'connectorMouseDown',
     value: function connectorMouseDown(event) {
-
-      // set the flag that we are drawing a link
       this.drawingLink = true;
-
-      // get the connector (the svg circle)
       var connector = event.target;
 
       /*
@@ -2760,15 +1863,7 @@ var ConceptMapController = function (_ComponentController) {
        * link head is being dragged
        */
       this.disableNodeDragging();
-
-      // get the node
       var node = this.getNodeByConnectorId(connector.id);
-
-      // get the center of the image
-      var x = node.cx();
-      var y = node.cy();
-
-      // get a new ConceptMapLinkId e.g. 'studentLink3'
       var newConceptMapLinkId = this.getNewConceptMapLinkId();
 
       /*
@@ -2776,99 +1871,51 @@ var ConceptMapController = function (_ComponentController) {
        * selected a link type
        */
       var originalId = null;
-
-      // create a link that comes out of the node
       var link = this.ConceptMapService.newConceptMapLink(this.draw, newConceptMapLinkId, originalId, node);
-
-      // set the link mouse events
       this.setLinkMouseEvents(link);
-
-      // remember the active link
       this.activeLink = link;
-
-      // flag for determining if we have set the link curvature
       this.linkCurvatureSet = false;
-
-      // remember the location of the center of the connector
       this.activeLinkStartX = node.connectorCX();
       this.activeLinkStartY = node.connectorCY();
-
-      // highlight the link
       this.setHighlightedElement(link);
-
-      // clear the active node
       this.clearActiveNode();
-
-      // make the source node the active node
       this.setActiveNode(node);
     }
-
-    /**
-     * Set the link mouse events for a link
-     * @param link the ConceptMapLink
-     */
-
   }, {
     key: 'setLinkMouseEvents',
     value: function setLinkMouseEvents(link) {
-      var _this5 = this;
+      var _this6 = this;
 
-      // set the link mouse down listener
       link.setLinkMouseDown(function (event) {
-        _this5.linkMouseDown(event);
+        _this6.linkMouseDown(event);
       });
 
-      // set the link text mouse down listener
       link.setLinkTextMouseDown(function (event) {
-        _this5.linkTextMouseDown(event);
+        _this6.linkTextMouseDown(event);
       });
 
-      // set the link mouse over listener
       link.setLinkMouseOver(function (event) {
-        _this5.linkMouseOver(event);
+        _this6.linkMouseOver(event);
       });
 
-      // set the link mouse out listener
       link.setLinkMouseOut(function (event) {
-        _this5.linkMouseOut(event);
+        _this6.linkMouseOut(event);
       });
 
-      // set the delete button clicked event for the link
       link.setDeleteButtonClicked(function (event) {
-        _this5.linkDeleteButtonClicked(event, link);
+        _this6.linkDeleteButtonClicked(event, link);
       });
     }
-
-    /**
-     * Called when the mouse is clicked down on a link
-     * @param event the mouse down event
-     */
-
   }, {
     key: 'linkMouseDown',
     value: function linkMouseDown(event) {
-
-      // get the group id
       var groupId = this.getGroupId(event.target);
-
-      // get the link
       var link = this.getLinkByGroupId(groupId);
-
-      if (link != null) {
-        // make the link highlighted
-        this.setHighlightedElement(link);
-      }
+      this.setHighlightedElement(link);
     }
-
-    /**
-     * Called when the mouse is clicked down on a link text
-     * @param event the mouse down event
-     */
-
   }, {
     key: 'linkTextMouseDown',
     value: function linkTextMouseDown(event) {
-
       var linkGroupId = null;
 
       /*
@@ -2877,165 +1924,67 @@ var ConceptMapController = function (_ComponentController) {
        * text group > text > tspan
        * text group > rect
        */
-      if (event.target.nodeName == 'tspan') {
+      if (event.target.nodeName === 'tspan') {
         linkGroupId = event.target.parentElement.parentElement.linkGroupId;
-      } else if (event.target.nodeName == 'text') {
+      } else if (event.target.nodeName === 'text') {
         linkGroupId = event.target.parentElement.linkGroupId;
-      } else if (event.target.nodeName == 'rect') {
+      } else if (event.target.nodeName === 'rect') {
         linkGroupId = event.target.parentElement.linkGroupId;
       }
 
       if (linkGroupId != null) {
-
-        // get the link
         var link = this.getLinkByGroupId(linkGroupId);
-
-        if (link != null) {
-          // make the link highlighted
-          this.setHighlightedElement(link);
-        }
+        this.setHighlightedElement(link);
       }
     }
-
-    /**
-     * Called when the mouse is over a link
-     * @param event the mouse over event
-     */
-
   }, {
     key: 'linkMouseOver',
     value: function linkMouseOver(event) {
-
-      // get the group id
       var groupId = this.getGroupId(event.target);
-
-      // get the link
       var link = this.getLinkByGroupId(groupId);
-
-      if (link != null) {
-        // show the delete button for the link
-        link.showDeleteButton();
-      }
+      link.showDeleteButton();
     }
-
-    /**
-     * Called when the mouse moves out of a link
-     * @param event the mouse out event
-     */
-
   }, {
     key: 'linkMouseOut',
     value: function linkMouseOut(event) {
-
-      // get the group id
       var groupId = this.getGroupId(event.target);
-
-      // get the link
       var link = this.getLinkByGroupId(groupId);
-
-      // hide the delete button if the link is not the highlighted link
       if (link != null && link != this.highlightedElement) {
         link.hideDeleteButton();
       }
     }
-
-    /**
-     * Called when the mouse is clicked down on the delete button of a node
-     * @param event the mouse down event
-     */
-
   }, {
     key: 'nodeDeleteButtonMouseDown',
     value: function nodeDeleteButtonMouseDown(event) {
-
       if (event.target.parentElement != null) {
-
-        // get the group id
         var groupId = event.target.parentElement.parentElement.id;
-
-        // get the node
         var node = this.getNodeByGroupId(groupId);
-
-        if (node != null) {
-
-          // remove the node from our array of nodes
-          this.removeNode(node);
-
-          // handle the student data changing
-          this.studentDataChanged();
-        }
+        this.removeNode(node);
+        this.studentDataChanged();
       }
     }
-
-    /**
-     * Called when the mouse is over a node delete button
-     * @param event the mouse over event
-     */
-
   }, {
     key: 'nodeDeleteButtonMouseOver',
     value: function nodeDeleteButtonMouseOver(event) {
-
-      // get the node group id
       var groupId = event.target.parentElement.parentElement.id;
-
-      if (groupId != null) {
-
-        // get the node
-        var node = this.getNodeByGroupId(groupId);
-
-        if (node != null) {
-          /*
-           * make the node active so that the border and delete button
-           * shows
-           */
-          this.setActiveNode(node);
-        }
-      }
+      var node = this.getNodeByGroupId(groupId);
+      this.setActiveNode(node);
     }
-
-    /**
-     * Called when the mouse moves out of a node delete button
-     * @param event the mouse over event
-     */
-
   }, {
     key: 'nodeDeleteButtonMouseOut',
     value: function nodeDeleteButtonMouseOut(event) {
-
-      // get the group id
       var groupId = event.target.parentElement.parentElement.id;
-
-      // get the node
       var node = this.getNodeByGroupId(groupId);
-
-      if (node != null) {
-        // make the node inactive by clearing the active node
-        this.clearActiveNode(node);
-      }
+      this.clearActiveNode(node);
     }
-
-    /**
-     * Called when the node is dragged
-     * @param event the drag event
-     */
-
   }, {
     key: 'nodeDragMove',
     value: function nodeDragMove(event) {
-
-      // get the group id
       var groupId = event.target.id;
-
-      // get the node
       var node = this.getNodeByGroupId(groupId);
-
       if (node != null) {
-        // handle the node being dragged
         node.dragMove(event);
       }
-
-      // handle the student data changing
       this.studentDataChanged();
     }
 
@@ -3055,15 +2004,13 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'getGroupId',
     value: function getGroupId(element) {
-
       var groupId = null;
       var currentElement = element;
       var previousId = null;
 
       // loop until we have reached the svg element
       while (currentElement != null) {
-
-        if (currentElement.tagName == 'svg') {
+        if (currentElement.tagName === 'svg') {
           // base case. we have found the svg element.
 
           // the group id will be the previous id we saw
@@ -3092,19 +2039,10 @@ var ConceptMapController = function (_ComponentController) {
         this.populateConceptMapData(this.componentContent.starterConceptMap);
       }
     }
-
-    /**
-     * Remove all the links and nodes
-     */
-
   }, {
     key: 'clearConceptMap',
     value: function clearConceptMap() {
-
-      // remove all the links from the svg and the array of links
       this.removeAllLinks();
-
-      // remove all the nodes from the svg and the array of nodes
       this.removeAllNodes();
     }
 
@@ -3116,26 +2054,13 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'resetConceptMap',
     value: function resetConceptMap() {
-
-      // ask the student if they are sure they want to reset their work
       var message = this.$translate('conceptMap.areYouSureYouWantToResetYourWork');
-      var answer = confirm(message);
-
-      if (answer) {
-        // the student answered yes to reset their work
-
-        // clear the concept map
+      if (confirm(message)) {
         this.clearConceptMap();
-
         if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // we will import work from another component
           this.handleConnectedComponents();
         } else if (this.componentContent.starterConceptMap != null) {
-
-          // get the starter concept map
           var conceptMapData = this.componentContent.starterConceptMap;
-
-          // populate the starter concept map data into the component
           this.populateConceptMapData(conceptMapData);
         }
       }
@@ -3149,8 +2074,6 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'showAutoFeedback',
     value: function showAutoFeedback() {
-
-      // show the auto feedback in a modal dialog
       this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#' + this.feedbackContainerId))).clickOutsideToClose(true).title(this.$translate('FEEDBACK')).htmlContent(this.autoFeedbackString).ariaLabel(this.$translate('FEEDBACK')).ok(this.$translate('CLOSE')));
     }
 
@@ -3162,13 +2085,11 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'snip',
     value: function snip($event) {
-      var _this6 = this;
+      var _this7 = this;
 
       // get the svg element. this will obtain an array.
       var svgElement = angular.element('#svg_' + this.nodeId + '_' + this.componentId);
-
       if (svgElement != null && svgElement.length > 0) {
-        // get the svg element
         svgElement = svgElement[0];
 
         // get the svg element as a string
@@ -3177,37 +2098,46 @@ var ConceptMapController = function (_ComponentController) {
 
         // find all the images in the svg and replace them with Base64 images
         this.ConceptMapService.getHrefToBase64ImageReplacements(svgString).then(function (images) {
-
           /*
            * Loop through all the image objects. Each object contains
            * an image href and a Base64 image.
            */
-          for (var i = 0; i < images.length; i++) {
+          var _iteratorNormalCompletion19 = true;
+          var _didIteratorError19 = false;
+          var _iteratorError19 = undefined;
 
-            // get an image object
-            var imagePair = images[i];
+          try {
+            for (var _iterator19 = images[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+              var imagePair = _step19.value;
 
-            // get the image href e.g. /wise/curriculum/25/assets/Sun.png
-            var imageHref = imagePair.imageHref;
+              // get the image href e.g. /wise/curriculum/25/assets/Sun.png
+              var imageHref = imagePair.imageHref;
+              var base64Image = imagePair.base64Image;
+              var imageRegEx = new RegExp(imageHref, 'g');
 
-            // get the Base64 image
-            var base64Image = imagePair.base64Image;
-
-            // create a regex to match the image href
-            var imageRegEx = new RegExp(imageHref, 'g');
-
-            /*
-             * replace all the instances of the image href with the
-             * Base64 image
-             */
-            svgString = svgString.replace(imageRegEx, base64Image);
+              /*
+               * replace all the instances of the image href with the
+               * Base64 image
+               */
+              svgString = svgString.replace(imageRegEx, base64Image);
+            }
+          } catch (err) {
+            _didIteratorError19 = true;
+            _iteratorError19 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion19 && _iterator19.return) {
+                _iterator19.return();
+              }
+            } finally {
+              if (_didIteratorError19) {
+                throw _iteratorError19;
+              }
+            }
           }
 
-          // create a canvas to draw the image on
           var myCanvas = document.createElement('canvas');
           var ctx = myCanvas.getContext('2d');
-
-          // create an svg blob
           var svg = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
           var domURL = self.URL || self.webkitURL || self;
           var url = domURL.createObjectURL(svg);
@@ -3217,27 +2147,19 @@ var ConceptMapController = function (_ComponentController) {
            * set the UtilService in a local variable so we can access it
            * in the onload callback function
            */
-          var thisUtilService = _this6.UtilService;
-
-          // the function that is called after the image is fully loaded
+          var thisUtilService = _this7.UtilService;
           image.onload = function (event) {
-
-            // get the image that was loaded
             var image = event.target;
 
             // set the dimensions of the canvas
             myCanvas.width = image.width;
             myCanvas.height = image.height;
             ctx.drawImage(image, 0, 0);
-
-            // get the canvas as a Base64 string
             var base64Image = myCanvas.toDataURL('image/png');
 
             // get the image object
             var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
-
-            // create a notebook item with the image populated into it
-            _this6.NotebookService.addNote($event, imageObject);
+            _this7.NotebookService.addNote($event, imageObject);
           };
 
           // set the src of the image so that the image gets loaded
@@ -3255,82 +2177,70 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
+      var mergedNodes = [];
+      var mergedLinks = [];
+      var backgroundPath = null;
+      var stretchBackground = null;
+      var _iteratorNormalCompletion20 = true;
+      var _didIteratorError20 = false;
+      var _iteratorError20 = undefined;
 
-      // create a new component state
-      var mergedComponentState = this.NodeService.createNewComponentState();
+      try {
+        for (var _iterator20 = componentStates[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+          var componentState = _step20.value;
 
-      if (componentStates != null) {
-
-        var mergedNodes = [];
-        var mergedLinks = [];
-        var backgroundPath = null;
-        var stretchBackground = null;
-
-        // loop through all the component state
-        for (var c = 0; c < componentStates.length; c++) {
-          var componentState = componentStates[c];
-
-          if (componentState.componentType == 'ConceptMap') {
+          if (componentState.componentType === 'ConceptMap') {
             var studentData = componentState.studentData;
-
-            if (studentData != null) {
-
-              var conceptMapData = studentData.conceptMapData;
-
-              if (conceptMapData != null) {
-                if (conceptMapData.nodes != null) {
-                  // add the nodes to our merged nodes
-                  mergedNodes = mergedNodes.concat(conceptMapData.nodes);
-                }
-
-                if (conceptMapData.links != null) {
-                  // add the links to our merged links
-                  mergedLinks = mergedLinks.concat(conceptMapData.links);
-                }
-
-                if (conceptMapData.backgroundPath != null && conceptMapData.backgroundPath != '') {
-                  backgroundPath = conceptMapData.backgroundPath;
-                  stretchBackground = conceptMapData.stretchBackground;
-                }
-              }
+            var conceptMapData = studentData.conceptMapData;
+            mergedNodes = mergedNodes.concat(conceptMapData.nodes);
+            mergedLinks = mergedLinks.concat(conceptMapData.links);
+            if (conceptMapData.backgroundPath != null && conceptMapData.backgroundPath !== '') {
+              backgroundPath = conceptMapData.backgroundPath;
+              stretchBackground = conceptMapData.stretchBackground;
             }
-          } else if (componentState.componentType == 'Draw' || componentState.componentType == 'Embedded' || componentState.componentType == 'Graph' || componentState.componentType == 'Label' || componentState.componentType == 'Table') {
+          } else if (componentState.componentType === 'Draw' || componentState.componentType === 'Embedded' || componentState.componentType === 'Graph' || componentState.componentType === 'Label' || componentState.componentType === 'Table') {
             var connectedComponent = this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
             if (connectedComponent.importWorkAsBackground === true) {
               this.setComponentStateAsBackgroundImage(componentState);
             }
           }
         }
-
-        if (this.componentContent.background != null && this.componentContent.background != '') {
-          // use the background from this component
-          backgroundPath = this.componentContent.background;
-          if (this.componentContent.stretchBackground) {
-            stretchBackground = this.componentContent.stretchBackground;
+      } catch (err) {
+        _didIteratorError20 = true;
+        _iteratorError20 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion20 && _iterator20.return) {
+            _iterator20.return();
           }
-        }
-
-        // set the merged nodes and links into the merged component state
-        mergedComponentState.studentData = {};
-        mergedComponentState.studentData.conceptMapData = {};
-        mergedComponentState.studentData.conceptMapData.nodes = mergedNodes;
-        mergedComponentState.studentData.conceptMapData.links = mergedLinks;
-        mergedComponentState.studentData.conceptMapData.backgroundPath = backgroundPath;
-        if (stretchBackground != null) {
-          mergedComponentState.studentData.conceptMapData.stretchBackground = stretchBackground;
+        } finally {
+          if (_didIteratorError20) {
+            throw _iteratorError20;
+          }
         }
       }
 
-      /*
-       * inject the asset path so that the file name is changed to
-       * a relative path
-       * e.g.
-       * "Sun.png"
-       * will be changed to
-       * "/wise/curriculum/108/assets/Sun.png"
-       */
-      mergedComponentState = this.ProjectService.injectAssetPaths(mergedComponentState);
+      if (this.componentContent.background != null && this.componentContent.background !== '') {
+        backgroundPath = this.componentContent.background;
+        if (this.componentContent.stretchBackground) {
+          stretchBackground = this.componentContent.stretchBackground;
+        }
+      }
 
+      var mergedComponentState = this.NodeService.createNewComponentState();
+      mergedComponentState.studentData = {
+        conceptMapData: {
+          nodes: mergedNodes,
+          links: mergedLinks,
+          backgroundPath: backgroundPath
+        }
+      };
+
+      if (stretchBackground != null) {
+        mergedComponentState.studentData.conceptMapData.stretchBackground = stretchBackground;
+      }
+
+      mergedComponentState = this.ProjectService.injectAssetPaths(mergedComponentState);
       return mergedComponentState;
     }
 
@@ -3342,10 +2252,10 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this7 = this;
+      var _this8 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this7.setBackgroundImage(image.url);
+        _this8.setBackgroundImage(image.url);
       });
     }
 
@@ -3361,7 +2271,6 @@ var ConceptMapController = function (_ComponentController) {
     value: function setBackgroundImage(backgroundPath, stretchBackground) {
       this.background = backgroundPath;
       this.stretchBackground = stretchBackground;
-
       if (stretchBackground) {
         // stretch the background to fit the whole svg element
         this.backgroundSize = '100% 100%';
@@ -3375,7 +2284,7 @@ var ConceptMapController = function (_ComponentController) {
   return ConceptMapController;
 }(_componentController2.default);
 
-ConceptMapController.$inject = ['$anchorScroll', '$filter', '$location', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+ConceptMapController.$inject = ['$anchorScroll', '$filter', '$location', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

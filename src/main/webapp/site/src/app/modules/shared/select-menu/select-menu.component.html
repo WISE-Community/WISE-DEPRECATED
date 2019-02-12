@@ -1,0 +1,17 @@
+<mat-form-field class="select-menu" appearance="fill">
+  <mat-label>{{ placeholderText }}</mat-label>
+  <mat-select [formControl]="selectField"
+              [placeholder]="placeholderText"
+              [(value)]="value"
+              [multiple]="multiple">
+    <mat-select-trigger *ngIf="multiple">
+     {{ selectField.value ? selectField.value[0] : '' }}
+      <span *ngIf="selectField.value?.length > 1">
+        (+{{ selectField.value.length - 1 }} <ng-container i18n>more</ng-container>)
+      </span>
+    </mat-select-trigger>
+    <mat-option *ngFor="let option of options" [value]="option[valueProp]">
+      {{ option[viewValueProp] }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

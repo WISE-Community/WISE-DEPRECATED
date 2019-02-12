@@ -1,0 +1,61 @@
+<div class="student-run-list">
+  <div class="notice" *ngIf="!runs.length && loaded">
+    <p i18n>Hey there! Looks like you don't have any WISE units yet.</p>
+    <p i18n>Ask your teacher for an <b>Access Code</b> and then tap the <b>Add Unit</b> button to get started.</p>
+  </div>
+  <div class="content-block" *ngIf="runs.length">
+    <div class="content-block__header controls dark-theme primary-bg"
+         fxLayout="row"
+         fxLayout.xs="column"
+         fxLayoutGap.sm="16px">
+      <app-search-bar fxFlex="0 0 100%"
+                      fxFlex.gt-sm="0 0 auto"
+                      [placeholderText]="'Search'"
+                      [value]="search"
+                      (update)="searchUpdated($event)"></app-search-bar>
+    </div>
+    <div id="unitCount" *ngIf="loaded" class="notice">
+      <p>
+        <ng-container *ngIf="search" i18n>Units found: {{ filteredRuns.length }}</ng-container>
+        <ng-container *ngIf="!search" i18n>My WISE units: {{ filteredRuns.length }}</ng-container>
+        <span class="mat-caption" *ngIf="filteredRuns.length"> (<span *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} <ng-container i18n>scheduled</ng-container>, </span>{{ filteredActiveTotal }} <ng-container i18n>active</ng-container>, {{ filteredCompletedTotal }} <ng-container i18n>completed</ng-container>)</span>.
+        <a *ngIf="search" [routerLink]="" (click)="reset()" i18n>Reset</a>
+      </p>
+    </div>
+    <app-timeline>
+      <ng-container *ngFor="let run of filteredRuns; let i=index">
+        <app-timeline-item [active]="runIsActive(run)" *ngIf="i < 10 || showAll">
+          <app-timeline-item-label>
+            <ng-container *ngIf="run.endTime">
+              <ng-container *ngIf="runSpansYears(run)">
+                <span><strong>{{ run.startTime | amDateFormat:'MMM D' }}</strong></span>
+                <span class="secondary-text"> {{ run.startTime | amDateFormat:'Y' }}</span> -
+                <span><strong> {{ run.endTime | amDateFormat:'MMM D' }}</strong></span>
+                <span class="secondary-text"> {{ run.endTime | amDateFormat:'Y' }}</span>
+              </ng-container>
+              <ng-container *ngIf="!runSpansYears(run)">
+                <span><strong>{{ run.startTime | amDateFormat:'MMM D' }}</strong></span>
+                <ng-container *ngIf="runSpansDays(run)"> -
+                  <strong *ngIf="runSpansMonths(run)">{{ run.endTime | amDateFormat:'MMM D' }}</strong>
+                  <strong *ngIf="!runSpansMonths(run)">{{ run.endTime | amDateFormat:'D' }}</strong>
+                </ng-container>
+                <span class="secondary-text"> {{ run.endTime | amDateFormat:'Y' }}</span>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!run.endTime">
+              <span><strong>{{ run.startTime | amDateFormat:'MMM D' }}</strong></span>
+              <span class="secondary-text"> {{ run.startTime | amDateFormat:'Y' }}</span>
+            </ng-container>
+          </app-timeline-item-label>
+          <app-timeline-item-content>
+            <app-student-run-list-item [run]="run"></app-student-run-list-item>
+          </app-timeline-item-content>
+        </app-timeline-item>
+      </ng-container>
+    </app-timeline>
+    <div class="content-block__actions"
+         *ngIf="filteredRuns.length > 10 && !showAll" >
+      <a mat-raised-button color="accent" (click)="showAll = true" i18n>Show More</a>
+    </div>
+  </div>
+</div>

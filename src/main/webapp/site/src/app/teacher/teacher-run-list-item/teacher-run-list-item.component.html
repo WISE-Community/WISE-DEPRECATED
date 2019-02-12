@@ -1,0 +1,73 @@
+<ng-template #runInfo>
+  <div>
+    <span class="more-info"
+          [matTooltip]="periodsString()"
+          matTooltipPosition="above">
+      {{run.periods.length}}
+      <ng-container [ngPlural]="run.periods.length">
+        <ng-template ngPluralCase="=0" i18n>periods</ng-template>
+        <ng-template ngPluralCase="=1" i18n>period</ng-template>
+        <ng-template ngPluralCase="other" i18n>periods</ng-template>
+      </ng-container>
+    </span> |
+    <a href="{{ manageStudentsLink }}">
+      {{run.numStudents}}
+      <ng-container [ngPlural]="run.numStudents">
+        <ng-template ngPluralCase="=0" i18n>students</ng-template>
+        <ng-template ngPluralCase="=1" i18n>student</ng-template>
+        <ng-template ngPluralCase="other" i18n>students</ng-template>
+      </ng-container>
+    </a>
+  </div>
+  <div i18n>Access Code: {{ run.runCode }}</div>
+  <div *ngIf="run.shared" class="info" i18n>
+    Shared by {{ run.owner.displayName }} |
+  </div>
+</ng-template>
+
+<mat-card [ngClass]="{ 'highlighted': run.isHighlighted }">
+  <mat-card-content fxLayout="row" fxLayoutGap="12px">
+    <div mat-card-avatar [style.background-image]="run.project.thumbStyle"></div>
+    <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
+      <div fxLayout="column">
+        <mat-card-title [class.secondary-text]="run.endTime" class="mat-body-2">
+          {{ run.project.name }}
+        </mat-card-title>
+        <mat-card-subtitle fxHide fxShow.gt-xs>
+          <ng-container *ngTemplateOutlet="runInfo"></ng-container>
+        </mat-card-subtitle>
+      </div>
+      <span fxFlex="1 1 auto"></span>
+      <app-run-menu [run]="run"></app-run-menu>
+    </div>
+  </mat-card-content>
+  <mat-card-content fxHide fxShow.xs>
+    <div class="info-block" [class.secondary-text]="run.endTime">
+      <ng-container *ngTemplateOutlet="runInfo"></ng-container>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <div fxLayout="row wrap"
+         fxLayout.xs="column"
+         fxLayoutAlign="center"
+         fxLayoutAlign.gt-xs="end center"
+         fxLayoutGap="8px">
+      <a *ngIf="!isScheduled() && !run.endTime"
+         mat-flat-button
+         href="{{ gradeAndManageLink }}"
+         color="primary"
+         fxFlex="0 0 auto"
+         fxFlex.xs="100">
+        <mat-icon>build</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>
+      </a>
+      <a *ngIf="!isScheduled() && run.endTime"
+         mat-button
+         href="{{ gradeAndManageLink }}"
+         color="primary"
+         fxFlex="0 0 auto"
+         fxFlex.xs="100">
+        <mat-icon>build</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>
+      </a>
+    </div>
+  </mat-card-actions>
+</mat-card>

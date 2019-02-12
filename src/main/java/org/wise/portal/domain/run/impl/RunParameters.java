@@ -30,6 +30,9 @@ import lombok.Setter;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 
+import java.io.Serializable;
+import java.util.*;
+
 /**
  * @author Laurel Williams
  */
@@ -60,6 +63,8 @@ public class RunParameters implements Serializable {
   private Locale locale;
 
   private Boolean enableRealTime = false;
+
+  private Date startTime = Calendar.getInstance().getTime();
 
   public String printAllPeriods() {
     String allPeriods = null;

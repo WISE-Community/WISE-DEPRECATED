@@ -1,0 +1,15 @@
+<h2 class="mat-dialog-title">Welcome to the new WISE!</h2>
+<mat-dialog-content>
+  <div class="info-block">
+    <p>Our redesigned website includes a new homepage as well as updated user portals for students and teachers. We have also revamped and simplified the WISE unit library and added better support for all devices and screen sizes.</p>
+    <p>Please note that there may still be some occasional bugs. The new site is also currently only available in English, but we will be adding additional languages soon. The old WISE will be available for a limited time as we transition over. You can access it via the "Visit Legacy Site" button below.</p>
+    <p><a [routerLink]="" (click)="contact()">Contact us</a> if you have any comments, questions, or concerns. Thanks so much!</p>
+    <p>-The WISE Team</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end">
+  <a mat-button (click)="visitLegacy()">
+    Visit Legacy Site
+  </a>
+  <button mat-button mat-dialog-close>close</button>
+</mat-dialog-actions>

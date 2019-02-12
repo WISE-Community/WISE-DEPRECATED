@@ -1,0 +1,6 @@
+<div class="library-group-thumbs">
+ <ng-container *ngFor="let child of children">
+   <span class="library-group-thumbs__thumb disabled-text-bg" *ngIf="child.type === 'project' && child.visible"
+     [style.background-image]="child.thumbStyle"></span>
+ </ng-container>
+</div>

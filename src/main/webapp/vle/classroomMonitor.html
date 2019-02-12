@@ -58,9 +58,9 @@
 						<label class="btn btn-default" id="viewStepProgress" data-i18n-title="classroomMonitor_stepProgress_title">
 							<input type="radio" name="monitorView" value="stepProgress"><span class="fa fa-sitemap"></span><span class="btn-text" data-i18n="classroomMonitor_progress">Progress</span>
 						</label>
-						<!--<label class="btn btn-default disabled" id="viewManageStudents" data-i18n-title="classroomMonitor_manage_title">
+						<label class="btn btn-default" id="viewManageStudents" data-i18n-title="classroomMonitor_manage_title">
 							<input type="radio" name="monitorView" value="manageStudents"><span class="fa fa-users"></span><span class="btn-text" data-i18n="classroomMonitor_manage">Manage</span>
-						</label>-->
+						</label>
 						<label class="btn btn-default" id="viewIdeaBasketList" data-i18n-title="classroomMonitor_idea_baskets_title">
 							<input type="radio" name="monitorView" value="ideaBasketList"><span class="fa fa-lightbulb-o"></span><span class="btn-text" data-i18n="classroomMonitor_idea_baskets">Idea Baskets</span>
 						</label>
@@ -196,7 +196,9 @@
 			        <tbody></tbody>
 				</table>
        		</section>
-       		<section id="manageStudents"></section>
+       		<section id="manageStudents">
+                <iframe id="manageStudentsIfrm" width="100%" height="1600px"></iframe>
+            </section>
        		<section id="exportWork"></section>
        		<section id="ideaBasketList">
        			<table id="ideaBasketListTable" class="table table-bordered" cellspacing="0" width="100%">

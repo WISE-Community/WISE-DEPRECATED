@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -26,7 +26,6 @@ package org.wise.portal.service.attendance;
 import java.util.Date;
 import java.util.List;
 
-import org.wise.portal.dao.attendance.StudentAttendanceDao;
 import org.wise.portal.domain.attendance.StudentAttendance;
 
 public interface StudentAttendanceService {
@@ -34,7 +33,8 @@ public interface StudentAttendanceService {
   /**
    * Create a new row in the student attendance table
    */
-  void addStudentAttendanceEntry(Long workgroupId, Long runId, Date loginTimestamp, String presentUserIds, String absentUserIds);
+  void addStudentAttendanceEntry(Long workgroupId, Long runId, Date loginTimestamp,
+      String presentUserIds, String absentUserIds);
 
   /**
    * Get the a list of StudentAttendance object that have the given runId
@@ -48,8 +48,4 @@ public interface StudentAttendanceService {
    * @param lookBackNumDays int how many days to look back
    */
   List<StudentAttendance> getStudentAttendanceByRunIdAndPeriod(Long runId, int lookBackNumDays);
-
-  StudentAttendanceDao<StudentAttendance> getStudentAttendanceDao();
-
-  void setStudentAttendanceDao(StudentAttendanceDao<StudentAttendance> studentAttendanceDao);
 }

@@ -1,0 +1,10 @@
+@import
+  '~@angular/material/theming',
+  '~style/abstracts/functions',
+  '~style/abstracts/variables';
+  
+.library-project-disciplines__icon {
+  padding: 2px 4px;
+  color: #ffffff;
+  font-size: mat-font-size($config, caption) + 1px;
+}

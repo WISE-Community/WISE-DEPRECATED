@@ -41,7 +41,7 @@ var MultipleChoiceController = function (_ComponentController) {
     _this.showFeedback = true;
 
     // whether this component has been authored with a correct answer
-    _this.hasCorrectAnswer = false;
+    _this.componentHasCorrectAnswer = false;
 
     // whether the latest component state was a submit
     _this.isLatestComponentStateSubmit = false;
@@ -67,7 +67,7 @@ var MultipleChoiceController = function (_ComponentController) {
     }
 
     // check if there is a correct answer
-    _this.hasCorrectAnswer = _this.hasCorrectChoices();
+    _this.componentHasCorrectAnswer = _this.hasCorrectChoices();
 
     _this.showFeedback = _this.componentContent.showFeedback;
 
@@ -253,7 +253,6 @@ var MultipleChoiceController = function (_ComponentController) {
 
       // get the choices the student chose
       var studentChoices = this.studentChoices;
-
       if (studentChoices != null) {
         if (this.isRadio()) {
           // this is a radio button step
@@ -552,69 +551,124 @@ var MultipleChoiceController = function (_ComponentController) {
     }
   }, {
     key: 'checkAnswer',
-
-
-    /**
-     * Check the answer the student has submitted and display feedback
-     * for the choices the student has checked
-     */
     value: function checkAnswer() {
+      if (this.getChoiceType() === 'radio') {
+        this.checkSingleAnswer();
+      } else if (this.getChoiceType() === 'checkbox') {
+        this.checkMultipleAnswer();
+      }
+    }
+  }, {
+    key: 'checkSingleAnswer',
+    value: function checkSingleAnswer() {
       var isCorrect = false;
+      var choices = this.getChoices();
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-      // check if any correct choices have been authored
-      if (this.hasFeedback() || this.hasCorrectAnswer) {
+      try {
+        for (var _iterator = choices[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var choice = _step.value;
 
-        var isCorrectSoFar = true;
-
-        // get all the authored choices
-        var choices = this.getChoices();
-
-        // loop through all the choices and check if each should be checked or not
-
-        for (var c = 0; c < choices.length; c++) {
-          var choice = choices[c];
-
-          if (choice != null) {
-            var choiceId = choice.id;
-
-            // whether the choice is correct
-            var isChoiceCorrect = choice.isCorrect;
-
-            if (isChoiceCorrect == null) {
-              isChoiceCorrect = false;
-            }
-
-            // whether the student checked the choice
-            var isChoiceChecked = this.isChecked(choiceId);
-
-            if (isChoiceCorrect != isChoiceChecked) {
-              // the student answered this choice incorrectly
-              isCorrectSoFar = false;
-            }
-
-            // show the feedback if it exists and the student checked it
-            if (this.showFeedback && isChoiceChecked && choice.feedback != null && choice.feedback !== '') {
-              choice.showFeedback = true;
-              choice.feedbackToShow = choice.feedback;
+          if (this.componentHasCorrectAnswer) {
+            if (choice.isCorrect && this.isChecked(choice.id)) {
+              isCorrect = true;
             }
           }
+          this.displayFeedbackOnChoiceIfNecessary(choice);
         }
-
-        isCorrect = isCorrectSoFar;
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
 
-      if (this.hasCorrectAnswer) {
+      if (this.componentHasCorrectAnswer) {
         this.isCorrect = isCorrect;
       }
     }
   }, {
-    key: 'getCorrectChoice',
+    key: 'checkMultipleAnswer',
+    value: function checkMultipleAnswer() {
+      var isCorrect = null;
+      var choices = this.getChoices();
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
+      try {
+        for (var _iterator2 = choices[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var choice = _step2.value;
+
+          if (this.componentHasCorrectAnswer) {
+            if (this.isStudentChoiceValueCorrect(choice)) {
+              if (isCorrect === null) {
+                isCorrect = true;
+              } else {
+                isCorrect = isCorrect && true;
+              }
+            } else {
+              isCorrect = false;
+            }
+          }
+          this.displayFeedbackOnChoiceIfNecessary(choice);
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      if (this.componentHasCorrectAnswer) {
+        this.isCorrect = isCorrect;
+      }
+    }
+  }, {
+    key: 'displayFeedbackOnChoiceIfNecessary',
+    value: function displayFeedbackOnChoiceIfNecessary(choice) {
+      if (this.showFeedback && this.isChecked(choice.id)) {
+        choice.showFeedback = true;
+        choice.feedbackToShow = choice.feedback;
+      }
+    }
+  }, {
+    key: 'isStudentChoiceValueCorrect',
+    value: function isStudentChoiceValueCorrect(choice) {
+      if (choice.isCorrect && this.isChecked(choice.id)) {
+        return true;
+      } else if (!choice.isCorrect && !this.isChecked(choice.id)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
 
     /**
      * Get the correct choice for a radio button component
      * @return a choice id string
      */
+
+  }, {
+    key: 'getCorrectChoice',
     value: function getCorrectChoice() {
       var correctChoice = null;
 
@@ -659,7 +713,6 @@ var MultipleChoiceController = function (_ComponentController) {
      * @return a promise that will return a component state
      */
     value: function createComponentState(action) {
-
       // create a new component state
       var componentState = this.NodeService.createNewComponentState();
 

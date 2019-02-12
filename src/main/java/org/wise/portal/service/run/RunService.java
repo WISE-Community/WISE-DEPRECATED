@@ -23,23 +23,26 @@
  */
 package org.wise.portal.service.run;
 
-import java.util.List;
-import java.util.Set;
-
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
+import org.wise.portal.presentation.web.response.SharedOwner;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * A service for working with <code>Run</code> objects
- *
  * @author Laurel Williams
  * @author Hiroki Terashima
  */
@@ -47,36 +50,40 @@ public interface RunService {
 
   /**
    * Creates a new <code>Run</code> object in the local data store.
-   *
-   * @param runParameters
-   *            The object that encapsulate parameters for creating a run
+   * @param runParameters The object that encapsulate parameters for creating a run
    * @return the run created.
    */
   Run createRun(RunParameters runParameters) throws ObjectNotFoundException;
 
+  Run createRun(Integer projectId, User user, Set<String> periodNames, Integer maxStudentsPerTeam,
+      Long startDate, Locale locale) throws Exception;
+
   /**
    * Ends this run. The side effect is that the run's endtime gets set.
    * A Run that has ended is no longer eligible for classroom run.
-   *
    * If the run is already ended, nothing happens.
-   *
    * @param run the <code>Run</code> to end
    */
   void endRun(Run run);
 
   /**
+   * Restarts this run. The side effect is that the run's endtime gets
+   * set to null. The run continues to be available for students to
+   * access.
+   * @param run the <code>Run</code> to restart
+   */
+  void restartRun(Run run);
+
+  /**
    * Starts this run. The side effect is that the run's endtime gets set to null.
    * A Run that has started becomes eligible for classroom run.
-   *
    * If the run is already started, nothing happens.
-   *
    * @param run the <code>Run</code> to start
    */
   void startRun(Run run);
 
   /**
    * Retrieves a list of <code>Run</code>
-   *
    * @return <code>List</code> of <code>Run</code>
    */
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
@@ -84,7 +91,6 @@ public interface RunService {
 
   /**
    * Retrieves a list of <code>Run</code> that the specified user owns
-   *
    * @return <code>List</code> of <code>Run</code>
    */
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
@@ -92,25 +98,20 @@ public interface RunService {
 
   /**
    * Retrieves a list of <code>Run</code> that the specified user is an shared-owner
-   *
    * @return <code>List</code> of <code>Run</code>
    */
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
   List<Run> getRunListBySharedOwner(User user);
 
   /**
-   * Retrieves a list of all <code>Runs</code>. Only
-   * adminstrators may invoke this method.
-   *
+   * Retrieves a list of all <code>Runs</code>. Only adminstrators may invoke this method.
    * @return <code>List</code> of <code>Run</code>
    */
   @Secured( { "ROLE_ADMINISTRATOR", "ROLE_RESEARCHER" })
   List<Run> getAllRunList();
 
   /**
-   * Retrieves a list of <code>Run</code> that the given user
-   * is associated with
-   *
+   * Retrieves a list of <code>Run</code> that the given user is associated with
    * @param user <code>User</code> that is associated with 0 or more runs
    * @return list of <code>Run</code> that the user is associated with
    */
@@ -127,12 +128,11 @@ public interface RunService {
    * The shared teacher will have the role specified in the parameters
    *
    * @param addSharedTeacherParameters
-   * @throws <code>RunNotFoundException</code> when runId cannot be used
-   *          to find an existing run
+   * @throws <code>RunNotFoundException</code> when runId cannot be used to find an existing run
    */
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  void addSharedTeacherToRun(AddSharedTeacherParameters addSharedTeacherParameters)
+  void addSharedTeacher(AddSharedTeacherParameters addSharedTeacherParameters)
       throws ObjectNotFoundException;
 
   /**
@@ -153,12 +153,26 @@ public interface RunService {
    *
    * @param addSharedTeacherParameters the parameters that specify how to
    * change the permissions for the teacher for the run
-   * @throws <code>RunNotFoundException</code> when runId cannot be used
-   *          to find an existing run
+   * @throws <code>RunNotFoundException</code> when runId cannot be used to find an existing run
    */
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
   void updateSharedTeacherForRun(AddSharedTeacherParameters addSharedTeacherParameters)
+      throws ObjectNotFoundException;
+
+  @Secured( {"ROLE_TEACHER"} )
+  @Transactional()
+  SharedOwner addSharedTeacher(Long runId, String teacherUsername)
+      throws ObjectNotFoundException, TeacherAlreadySharedWithRunException;
+
+  @Secured( {"ROLE_TEACHER"} )
+  @Transactional()
+  void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException;
+
+  @Secured( {"ROLE_TEACHER"} )
+  @Transactional()
+  void removeSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
       throws ObjectNotFoundException;
 
   /**
@@ -173,19 +187,27 @@ public interface RunService {
    */
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  void removeSharedTeacherFromRun(String username, Long runId) throws ObjectNotFoundException;
+  void removeSharedTeacher(String username, Long runId) throws ObjectNotFoundException;
 
   /**
    * Returns the permission that the specified user has on the specified run
    *
    * @param run The <code>Run</code> that is shared.
    * @param user The <code>User</code> that shares the <code>Run</code>
-   * @return A <code>String</code> containing the permission that
-   *     the user has on the run. If the user does not have permission on the run,
-   *     null is returned.
+   * @return A <code>String</code> containing the permission that the user has on the run.
+   * If the user does not have permission on the run, null is returned.
    */
   @Transactional(readOnly = true)
   String getSharedTeacherRole(Run run, User user);
+
+  /**
+   * Returns all the permission that the specified user has on the specified run
+   *
+   * @param run The <code>Run</code> that is shared.
+   * @param user The <code>sharedTeacher</code> that shares the <code>Run</code>
+   */
+  @Transactional(readOnly = true)
+  List<Permission> getSharedTeacherPermissions(Run run, User sharedTeacher);
 
   /**
    * Retrieves the Run domain object using the unique runcode
@@ -202,42 +224,33 @@ public interface RunService {
   /**
    * Retrieves the Run domain object using a unique runId
    *
-   * @param runId
-   *         <code>Long</code> runId to use for lookup
-   * @return <code>Run</code>
-   *          The Run object with the runId
-   * @throws <code>RunNotFoundException</code> when runId cannot be used
-   *          to find an existing run
+   * @param runId <code>Long</code> runId to use for lookup
+   * @return <code>Run</code> The Run object with the runId
+   * @throws <code>RunNotFoundException</code> when runId cannot be used to find an existing run
    */
   Run retrieveById(Long runId) throws ObjectNotFoundException;
 
   /**
    * Retrieves the Run domain object using a unique runId
    *
-   * @param runId
-   *         <code>Long</code> runId to use for lookup
-   * @param doEagerFetch
-   *        <code>boolean</code> fetch all fields of the run eagerly, same as EAGER-fetch
-   * @return <code>Run</code>
-   *          The Run object with the runId
-   * @throws <code>RunNotFoundException</code> when runId cannot be used
-   *          to find an existing run
+   * @param runId <code>Long</code> runId to use for lookup
+   * @param doEagerFetch <code>boolean</code> fetch all fields of the run eagerly, same as EAGER-fetch
+   * @return <code>Run</code> The Run object with the runId
+   * @throws <code>RunNotFoundException</code> when runId cannot be used to find an existing run
    */
   Run retrieveById(Long runId, boolean doEagerFetch) throws ObjectNotFoundException;
 
   /**
    * Gets all of the Workgroups that are associated with this run
    * @return set of Workgroups for that are in this run
-   * @throws ObjectNotFoundException when runId cannot be used
-   *     to find an existing run
+   * @throws ObjectNotFoundException when runId cannot be used to find an existing run
    */
   Set<Workgroup> getWorkgroups(Long runId) throws ObjectNotFoundException;
 
   /**
    * Gets all of the Workgroups that are associated with this run
    * @return set of Workgroups for that are in this run
-   * @throws ObjectNotFoundException when runId cannot be used
-   *     to find an existing run
+   * @throws ObjectNotFoundException when runId cannot be used to find an existing run
    * @param runId runId to use for lookup
    * @param periodId periodId to which all returned workgroups belong
    */
@@ -245,7 +258,6 @@ public interface RunService {
 
   /**
    * Adds an Announcement to this run
-   *
    * @param runId
    * @param announcement
    * @throws <code>Exception</code>
@@ -254,7 +266,6 @@ public interface RunService {
 
   /**
    * Removes an Announcement from this run
-   *
    * @param runId
    * @param announcement
    * @throws <code>Exception</code>
@@ -320,7 +331,6 @@ public interface RunService {
   /**
    * Given a <code>Long</code> runId, changes the archiveReminderTime to be 30 days
    * from today.
-   *
    * @param runId
    * @throws <code>ObjectNotFoundException</code>
    */
@@ -329,7 +339,6 @@ public interface RunService {
   /**
    * Given a <code>Long</code> projectId, returns the <code>Integer</code> number of
    * runs associated with that id.
-   *
    * @param id
    * @return <code>Integer</code>
    */
@@ -338,7 +347,6 @@ public interface RunService {
   /**
    * Given a <code>Long</code> projectId, returns a <code>List<Run></code> list of
    * runs associated with that id.
-   *
    * @param projectId
    * @return <code>Integer</code>
    */
@@ -356,7 +364,6 @@ public interface RunService {
    * Returns <code>boolean</code> true if the given <code>User</code> user has the
    * given <code>Permission</code> permission for the given <code>Run</code> run,
    * returns false otherwise.
-   *
    * @param run
    * @param user
    * @param permission
@@ -365,9 +372,17 @@ public interface RunService {
   boolean hasRunPermission(Run run, User user, Permission permission);
 
   /**
+   * Returns <code>boolean</code> true if the run with the given
+   * <code>runId</code> does not have any student workgroups that contain more
+   * than 1 user, returns false otherwise.
+   * @param runId
+   * @return boolean
+   */
+  boolean canDecreaseMaxStudentsPerTeam(Long runId);
+
+  /**
    * Returns a <code>List<Run></code> list of runs that were run within the
    * given <code>String</code> period. Valid periods are "today","week" and "month".
-   *
    * @param period
    * @return List<Run> - run list
    */
@@ -376,7 +391,6 @@ public interface RunService {
   /**
    * Returns a <code>List<Run></code> list of runs ordered descending by how
    * active they are.
-   *
    * @return List<Run> - list of runs descending by activity
    */
   List<Run> getRunsByActivity();
@@ -384,7 +398,6 @@ public interface RunService {
   /**
    * Returns a <code>List<Run></code> list of runs that have a run title similar to the
    * the specified run title.
-   *
    * @param runTitle
    * @return List<Run> - list of runs with the run title similar to the param
    */
@@ -393,7 +406,6 @@ public interface RunService {
   /**
    * Updates the given <code>Run</code> run's statistics which are currently
    * the last time run and the number of times run.
-   *
    * @param runId - the id of the run whose statistics should be updated.
    */
   void updateRunStatistics(Long runId);
@@ -401,7 +413,6 @@ public interface RunService {
   /**
    * Update the name of the run with the given <code>Long</code> to that of
    * the given <code>String</code> name.
-   *
    * @param runId id of the run
    * @param name new name of the run
    */
@@ -410,9 +421,14 @@ public interface RunService {
   /**
    * Creates and adds a period with the given <code>String</code> name to
    * the run with the given <code>Long</code> runId.
-   *
    * @param runId id of the run
    * @param name name of the new period to add to the run
    */
   void addPeriodToRun(Long runId, String name);
+
+  void deletePeriodFromRun(Long runId, String name);
+
+  void setMaxWorkgroupSize(Long runId, Integer maxStudentsPerTeam);
+
+  void setStartTime(Long runId, String startTime);
 }

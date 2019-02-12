@@ -1,0 +1,12 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/functions',
+  '~style/abstracts/mixins';
+
+form {
+  max-width: breakpoint('sm.min');
+
+  @media (max-width: breakpoint('sm.max')) {
+    margin: 0 auto;
+  }
+}

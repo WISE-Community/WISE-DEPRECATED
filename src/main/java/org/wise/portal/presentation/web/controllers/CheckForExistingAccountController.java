@@ -44,8 +44,8 @@ public class CheckForExistingAccountController {
   protected UserService userService;
 
   @RequestMapping(method = RequestMethod.GET)
-  protected String handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    //get the account type 'student' or 'teacher'
+  protected String handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
+      throws Exception {
     String accountType = request.getParameter("accountType");
 
     if (accountType != null) {
@@ -97,28 +97,15 @@ public class CheckForExistingAccountController {
         classVar = "teacherUserDetails";
       }
 
-      //find all the accounts with matching values
       List<User> accountsThatMatch = userService.retrieveByFields(fields, values, classVar);
-
-      //our array to store the user names we have found
       JSONArray existingUserNames = new JSONArray();
-
-      //loop through all the accounts that match
       for (int x = 0; x < accountsThatMatch.size(); x++) {
-        //get an account
         User user = accountsThatMatch.get(x);
-
-        //get the user name
         String userName = user.getUserDetails().getUsername();
-
-        //add the user name to our array
         existingUserNames.put(userName);
       }
-
-      //write the JSONArray to the response
       response.getWriter().write(existingUserNames.toString());
     }
-
     return null;
   }
 }

@@ -1,0 +1,19 @@
+<h2 class="mat-dialog-title" i18n>Copy Unit</h2>
+<mat-dialog-content>
+  <div class="info-block">
+    <p class="mat-subheading-2 accent-1">
+      {{ data.project.name }} <span class="mat-caption" i18n>(Unit ID: {{ data.project.id }})</span>
+    </p>
+    <p i18n>Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
+  <button mat-button mat-dialog-close [disabled]="isCopying" i18n>Cancel</button>
+  <button mat-flat-button
+          color="primary"
+          (click)="copy()"
+          [disabled]="isCopying">
+    <mat-progress-bar *ngIf="isCopying" mode="indeterminate"></mat-progress-bar>
+    <ng-container i18n>Copy</ng-container>
+  </button>
+</mat-dialog-actions>

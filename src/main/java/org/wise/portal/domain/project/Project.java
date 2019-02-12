@@ -23,13 +23,13 @@
  */
 package org.wise.portal.domain.project;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * A WISE Project domain object
@@ -258,4 +258,10 @@ public interface Project extends Persistable {
    * @param wiseVersion integer representing WISE version
    */
   void setWISEVersion(Integer wiseVersion);
+
+  boolean isOfficialProject();
+
+  boolean isCommunityProject();
+
+  boolean hasTag(String tag);
 }

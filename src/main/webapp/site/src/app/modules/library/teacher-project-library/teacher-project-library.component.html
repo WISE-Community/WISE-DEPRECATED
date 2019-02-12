@@ -1,0 +1,30 @@
+<div class="library library-teacher notice-bg-bg">
+  <div class="content-block controls dark-theme library__header library-teacher__header primary-bg">
+    <app-library-filters></app-library-filters>
+  </div>
+  <div class="library__content library-teacher__content">
+    <mat-tab-group [selectedIndex]="selectedTabIndex"
+                   i18n-aria-label
+                   aria-label="Select unit library view"
+                   mat-stretch-tabs>
+      <mat-tab i18n-label label="WISE Tested ({{numberOfOfficialProjectsVisible}})">
+        <div class="content-block library-teacher__official">
+          <p ngClass.xs="center">
+            <a class="info mat-caption" [routerLink]="" (click)="showInfo()" i18n>What is WISE Tested?</a>
+          </p>
+          <app-official-library (update)="updateNumberOfOfficialProjectsVisible($event)"></app-official-library>
+        </div>
+      </mat-tab>
+      <mat-tab i18n-label label="Community Built ({{numberOfCommunityProjectsVisible}})">
+        <div class="content-block library-teacher__paginate">
+          <app-community-library (update)="updateNumberOfCommunityProjectsVisible($event)"></app-community-library>
+        </div>
+      </mat-tab>
+      <mat-tab i18n-label label="My Units ({{numberOfPersonalProjectsVisible}})">
+        <div class="content-block library-teacher__paginate">
+          <app-personal-library (update)="updateNumberOfPersonalProjectsVisible($event)"></app-personal-library>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

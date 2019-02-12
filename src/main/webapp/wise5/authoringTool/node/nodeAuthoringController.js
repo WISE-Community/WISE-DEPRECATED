@@ -192,6 +192,38 @@ var NodeAuthoringController = function () {
         value: "requiredNumberOfWords",
         text: this.$translate('requiredNumberOfWords')
       }]
+    }, {
+      value: "addXNumberOfNotesOnThisStep",
+      text: this.$translate('addXNumberOfNotesOnThisStep'),
+      params: [{
+        value: "nodeId",
+        text: this.$translate('step')
+      }, {
+        value: "requiredNumberOfNotes",
+        text: this.$translate('requiredNumberOfNotes')
+      }]
+    }, {
+      value: "fillXNumberOfRows",
+      text: this.$translate('fillXNumberOfRows'),
+      params: [{
+        value: "nodeId",
+        text: this.$translate('step')
+      }, {
+        value: "componentId",
+        text: this.$translate('component')
+      }, {
+        value: "requiredNumberOfFilledRows",
+        defaultValue: null,
+        text: this.$translate('requiredNumberOfFilledRowsNotIncludingHeaderRow')
+      }, {
+        value: "tableHasHeaderRow",
+        defaultValue: true,
+        text: this.$translate('tableHasHeaderRow')
+      }, {
+        value: "requireAllCellsInARowToBeFilled",
+        defaultValue: true,
+        text: this.$translate('requireAllCellsInARowToBeFilled')
+      }]
     }];
 
     // available transitionCriterias
@@ -1428,8 +1460,11 @@ var NodeAuthoringController = function () {
               if (paramObject != null) {
                 var value = paramObject.value;
 
-                // initialize the param value
-                criteria.params[value] = '';
+                if (paramObject.hasOwnProperty('defaultValue')) {
+                  criteria.params[value] = paramObject.defaultValue;
+                } else {
+                  criteria.params[value] = '';
+                }
 
                 if (value == 'nodeId') {
                   // default the node id param to this node

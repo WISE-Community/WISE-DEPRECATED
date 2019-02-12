@@ -1,0 +1,116 @@
+@import
+  '~style/abstracts/functions',
+  '~style/abstracts/mixins',
+  '~style/abstracts/variables';
+
+@mixin feature-styles($radius: $feature-border-radius, $elevation: 6) {
+  border-radius: $radius;
+  @include mat-elevation($elevation);
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+}
+
+.section {
+  @media (min-width: breakpoint('sm.min')) {
+    padding-bottom: 72px;
+  }
+}
+
+.features__intro {
+  $intro-border-radius: 70% 40% 60% 40%;
+  @include feature-styles($intro-border-radius, 0);
+
+  @media (min-width: breakpoint('sm.min')) {
+    margin-top: -64px;
+  }
+}
+
+.features__standards {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.features__standard:nth-child(1) {
+  grid-column: 1 / span 8;
+  grid-row: 1 / span 5;
+}
+
+.features__standard:nth-child(2) {
+  grid-column: 6 / span 4;
+  grid-row: 4 / span 3;
+}
+
+.features__technologies {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.features__tech:nth-child(1) {
+  grid-column: 3 / span 4;
+  grid-row: 1 / span 3;
+  border: 2px solid #ffffff;
+}
+
+.features__tech:nth-child(2) {
+  grid-column: 4 / span 4;
+  grid-row: 3 / span 2;
+}
+
+.features__tech:nth-child(3) {
+  grid-column: 1 / span 3;
+  grid-row: 2 / span 4;
+}
+
+.features__tech:nth-child(4) {
+  grid-column: 2 / span 5;
+  grid-row: 4 / span 3;
+  border: 2px solid #ffffff;
+}
+
+.features__teachers {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  margin-top: 24px;
+}
+
+.features__teacher:nth-child(1) {
+  grid-column: 5 / span 8;
+  grid-row: 1 / span 3;
+}
+
+.features__teacher:nth-child(2) {
+  grid-column: 1 / span 6;
+  grid-row: 2 / span 2;
+}
+
+.features__standard, .features__tech, .features__teacher {
+  @include feature-styles();
+}
+
+.feature--r {
+  @media (min-width: breakpoint('lg.min')) {
+    margin-right: -8%;
+  }
+
+  @media (min-width: breakpoint('xl.min')) {
+    margin-right: -16%;
+  }
+}
+
+.feature--l {
+  @media (min-width: breakpoint('lg.min')) {
+    margin-left: -8%;
+  }
+
+  @media (min-width: breakpoint('xl.min')) {
+    margin-left: -16%;
+  }
+}
+
+.mat-divider {
+  margin: 16px 0;
+}

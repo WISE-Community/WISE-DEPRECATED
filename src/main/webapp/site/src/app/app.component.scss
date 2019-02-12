@@ -1,0 +1,31 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/functions',
+  '~style/abstracts/mixins';
+  
+app-header, app-announcement {
+  &.sticky {
+    top: 0;
+  }
+}
+
+app-announcement {
+  z-index: 3;
+}
+
+app-header {
+  z-index: 2;
+  transition: top 250ms;
+
+  &.invisible {
+    top: -1*$header-height;
+  }
+
+  .has-announcement & {
+    top: $announcement-height;
+
+    &.invisible {
+      top: -1*($header-height + $announcement-height);
+    }
+  }
+}

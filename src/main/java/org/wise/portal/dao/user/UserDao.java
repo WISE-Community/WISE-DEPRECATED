@@ -66,6 +66,13 @@ public interface UserDao<T extends User> extends SimpleDao<T> {
   List<T> retrieveByEmailAddress(String emailAddress);
 
   /**
+   * Given a google user id retrieve a corresponding user record from data store
+   * @param googleUserId
+   * @return
+   */
+  T retrieveByGoogleUserId(String googleUserId);
+
+  /**
    * Retrieves all usernames from the datastore.
    * @param selectClause ___ portion of the query in  "select ___ from"
    * @return
@@ -108,5 +115,4 @@ public interface UserDao<T extends User> extends SimpleDao<T> {
    * @return a User object
    */
   T retrieveByResetPasswordKey(String resetPasswordKey);
-
 }

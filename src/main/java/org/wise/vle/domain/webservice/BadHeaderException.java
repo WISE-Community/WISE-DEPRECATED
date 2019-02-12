@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -22,16 +22,12 @@ package org.wise.vle.domain.webservice;
 
 /**
  * Represents errors in headers for a request.
- *
  * @author Cynick Young
  */
 public class BadHeaderException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @param message a string that should give an explanation of the error.
-   */
   public BadHeaderException(String message) {
     super(message);
   }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -58,31 +58,31 @@ public class RunStatisticsController {
 
   private final static String PERIOD = "period";
 
-  /**
-   * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-   */
   @RequestMapping(method = RequestMethod.GET)
-  protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  protected ModelAndView handleRequestInternal(HttpServletRequest request,
+      HttpServletResponse response) throws Exception {
     String command = request.getParameter("command");
     ModelAndView mav = new ModelAndView(RUNS_WITHIN_VIEW);
 
-    if(command.equals("today") || command.equals("week") || command.equals("month")){
-      List<Run> runs = this.runService.getRunsRunWithinPeriod(command);
+    if (command.equals("today") || command.equals("week") || command.equals("month")) {
+      List<Run> runs = runService.getRunsRunWithinPeriod(command);
       int lookBackPeriod = 0;
-      if(command.equals("today")){
+      if (command.equals("today")) {
         lookBackPeriod = 0;
-      } else if(command.equals("week")){
+      } else if (command.equals("week")) {
         lookBackPeriod = 7;
-      } else if(command.equals("month")){
+      } else if (command.equals("month")) {
         lookBackPeriod = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
       }
       for (Run run: runs) {
-        List<StudentAttendance> studentAttendanceByRunIdAndPeriod = this.studentAttendanceService.getStudentAttendanceByRunIdAndPeriod(run.getId(), lookBackPeriod);
+        List<StudentAttendance> studentAttendanceByRunIdAndPeriod =
+            studentAttendanceService.getStudentAttendanceByRunIdAndPeriod(
+            run.getId(), lookBackPeriod);
         run.setStudentAttendance(studentAttendanceByRunIdAndPeriod);
       }
 
       String period = null;
-      if(command.equals("today")){
+      if (command.equals("today")) {
         period = command;
       } else {
         period = "this " + command;
@@ -91,7 +91,7 @@ public class RunStatisticsController {
       mav.addObject(RUNS, runs);
       mav.addObject(PERIOD, period);
     } else if(command.equals("activity")) {
-      List<Run> runs = this.runService.getRunsByActivity();
+      List<Run> runs = runService.getRunsByActivity();
       mav.addObject(RUNS, runs);
     } else {
       throw new Exception("I do not understand the command: " + command);

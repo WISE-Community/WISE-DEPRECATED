@@ -75,38 +75,13 @@ class AnimationController extends ComponentController {
       }
     }
 
-    if (this.hasStudentUsedAllSubmits()) {
+    if (this.hasMaxSubmitCount() && !this.hasSubmitsLeft()) {
       this.disableSubmitButton();
     }
 
     this.disableComponentIfNecessary();
 
     this.setupSVGAfterTimeout();
-
-    this.$scope.isDirty = () => {
-      return this.$scope.animationController.isDirty;
-    };
-
-    /*
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @param {boolean} isSubmit boolean whether the request is coming from a submit
-     * action (optional; default is false)
-     * @return {promise} a promise of a component state containing the student data
-     */
-    this.$scope.getComponentState = (isSubmit) => {
-      const deferred = this.$q.defer();
-      if (this.hasDirtyWorkToSendToParent(isSubmit)) {
-        const action = this.getDirtyWorkToSendToParentAction(isSubmit);
-        this.$scope.animationController.createComponentState(action).then((componentState) => {
-          deferred.resolve(componentState);
-        });
-      } else {
-        deferred.resolve();
-      }
-      return deferred.promise;
-    };
 
     /**
      * A connected component has changed its student data so we will
@@ -123,6 +98,7 @@ class AnimationController extends ComponentController {
       }
     };
 
+    this.initializeScopeGetComponentState(this.$scope, 'animationController');
     this.broadcastDoneRenderingComponent();
   }
 
@@ -157,25 +133,6 @@ class AnimationController extends ComponentController {
   hasStudentUsedAllSubmits() {
     return this.componentContent.maxSubmitCount != null &&
       this.submitCounter >= this.componentContent.maxSubmitCount;
-  }
-
-  disableSubmitButton() {
-    this.isSubmitButtonDisabled = true;
-  }
-
-  hasDirtyWorkToSendToParent(isSubmit) {
-    return (isSubmit && this.$scope.animationController.isSubmitDirty) ||
-        this.$scope.animationController.isDirty;
-  }
-
-  getDirtyWorkToSendToParentAction(isSubmit) {
-    let action = 'change';
-    if (isSubmit && this.$scope.animationController.isSubmitDirty) {
-      action = 'submit';
-    } else if (this.$scope.animationController.isDirty) {
-      action = 'save';
-    }
-    return action;
   }
 
   handleNodeSubmit() {

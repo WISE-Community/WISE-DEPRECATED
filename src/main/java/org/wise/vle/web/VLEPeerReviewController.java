@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -55,7 +55,6 @@ import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
-
 /**
  * Controller for handling the peer review step
  * @author Geoffrey Kwan
@@ -87,13 +86,11 @@ public class VLEPeerReviewController {
   public ModelAndView doGetJSON(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String action = request.getParameter("action");
-
-    if(action.equals("studentRequest")) {
+    if (action.equals("studentRequest")) {
       handleStudentRequest(request, response);
-    } else if(action.equals("teacherRequest")) {
+    } else if (action.equals("teacherRequest")) {
       handleTeacherRequest(request, response);
     }
-
     return null;
   }
 
@@ -108,12 +105,11 @@ public class VLEPeerReviewController {
    * @throws IOException
    */
   private void handleTeacherRequest(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+      throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     String runId = request.getParameter("runId");
-
     Long runIdLong = null;
-    if(runId != null) {
+    if (runId != null) {
       runIdLong = Long.parseLong(runId);
     }
 
@@ -122,87 +118,59 @@ public class VLEPeerReviewController {
     /*
      * a teacher can make a request if they are the owner of the run
      */
-    if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
-      //the teacher is an owner or shared owner of the run so we will allow the request
+    if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
       allowedAccess = true;
     }
 
-    if(!allowedAccess) {
-      //the user is not allowed to make this request
+    if (!allowedAccess) {
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
       return;
     }
 
-    //get all the peer review work for the run
     List<PeerReviewWork> peerReviewWorkList = vleService.getPeerReviewWorkByRun(runIdLong);
-
-    //the JSON array that holds all the peer review work entries
     JSONArray peerReviewWorkJSONArray = new JSONArray();
-
     Iterator<PeerReviewWork> peerReviewWorkListIterator = peerReviewWorkList.iterator();
 
-    //loop through each peer review work entry
-    while(peerReviewWorkListIterator.hasNext()) {
+    while (peerReviewWorkListIterator.hasNext()) {
       try {
-        //get a peer review work entry
         PeerReviewWork peerReviewWork = peerReviewWorkListIterator.next();
-
-        //create a JSON object to hold the data for this entry
         JSONObject peerReviewWorkJSONObject = new JSONObject();
-
-        //set the values
         peerReviewWorkJSONObject.put("runId", peerReviewWork.getRunId());
         peerReviewWorkJSONObject.put("periodId", peerReviewWork.getPeriodId());
         peerReviewWorkJSONObject.put("nodeId", peerReviewWork.getNode().getNodeId());
-
-        //get the user who wrote the work
         UserInfo userInfo = peerReviewWork.getUserInfo();
-
-        //get the user who reviewed the work
         UserInfo reviewerUserInfo = peerReviewWork.getReviewerUserInfo();
-
-        //get the work from the worker student
         StepWork stepWork = peerReviewWork.getStepWork();
-
-        //get the review from the reviewer student
         Annotation annotation = peerReviewWork.getAnnotation();
 
         Long workgroupId = null;
-        if(userInfo != null) {
-          //get the workgroup id of the worker
+        if (userInfo != null) {
           workgroupId = userInfo.getWorkgroupId();
         }
         peerReviewWorkJSONObject.put("workgroupId", workgroupId);
 
         Long reviewerWorkgroupId = null;
-        if(reviewerUserInfo != null) {
-          //get the workgroup id of the reviewer
+        if (reviewerUserInfo != null) {
           reviewerWorkgroupId = reviewerUserInfo.getWorkgroupId();
         }
         peerReviewWorkJSONObject.put("reviewerWorkgroupId", reviewerWorkgroupId);
 
         Object stepWorkData = JSONObject.NULL;
-        if(stepWork != null) {
-          //get the work the worker wrote
+        if (stepWork != null) {
           stepWorkData = new JSONObject(stepWork.getData());
         }
         peerReviewWorkJSONObject.put("stepWork", stepWorkData);
 
         Object annotationData = JSONObject.NULL;
-        if(annotation != null) {
-          //get the annotation the reviewer wrote
+        if (annotation != null) {
           annotationData = new JSONObject(annotation.getData());
         }
         peerReviewWorkJSONObject.put("annotation", annotationData);
-
-        //put the entry into the JSON array
         peerReviewWorkJSONArray.put(peerReviewWorkJSONObject);
       } catch (JSONException e) {
         e.printStackTrace();
       }
     }
-
-    //return the string version of the JSON array
     response.getWriter().print(peerReviewWorkJSONArray.toString());
   }
 
@@ -217,31 +185,26 @@ public class VLEPeerReviewController {
    * @throws IOException
    */
   private void handleStudentRequest(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+      throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
-
-    //parameters to specify which node instance we are working with for peer review
     String runId = request.getParameter("runId");
     String workgroupId = request.getParameter("workgroupId");
     String periodId = request.getParameter("periodId");
     String nodeId = request.getParameter("nodeId");
     String type = request.getParameter("type");
 
-    /*
-     * obtain Long and Integer values
-     */
     Long runIdLong = null;
-    if(runId != null) {
+    if (runId != null) {
       runIdLong = Long.parseLong(runId);
     }
 
     Long workgroupIdLong = null;
-    if(runId != null) {
+    if (runId != null) {
       workgroupIdLong = Long.parseLong(workgroupId);
     }
 
     Long periodIdLong = null;
-    if(periodId != null) {
+    if (periodId != null) {
       periodIdLong = Long.parseLong(periodId);
     }
 
@@ -250,21 +213,18 @@ public class VLEPeerReviewController {
     /*
      * the student can make a request if they are in the run
      */
-    if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
-      //the student is in the run so we will allow the request
+    if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
       allowedAccess = true;
     }
 
-    if(!allowedAccess) {
-      //user is not allowed to make this request
+    if (!allowedAccess) {
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
       return;
     }
 
-    //number of workgroups registered in the period
     Integer numWorkgroups = null;
 
-    if(type.equals("peerreview")) {
+    if (type.equals("peerreview")) {
       try {
         /*
          * set the number of students in the class period for when we need
@@ -277,23 +237,14 @@ public class VLEPeerReviewController {
       }
     }
 
-    //the percentage of workgroups that need to submit work before the peer review is open
     String openPercentageTrigger = request.getParameter("openPercentageTrigger");
-
-    //the number of workgroups that need to submit work before the peer review is open
     String openNumberTrigger = request.getParameter("openNumberTrigger");
-
-    //whether this request is for "annotate" or "revise"
     String peerReviewAction = request.getParameter("peerReviewAction");
-
-    //the workgroups in the class in a string delimited by ','
     String classmateWorkgroupIds = request.getParameter("classmateWorkgroupIds");
-
-    //the array of classmate workgroup ids
     String[] classmateWorkgroupIdsArray = classmateWorkgroupIds.split(",");
 
     Integer openPercentageTriggerInt = null;
-    if(openPercentageTrigger != null) {
+    if (openPercentageTrigger != null) {
       try {
         openPercentageTriggerInt = Integer.parseInt(openPercentageTrigger);
       } catch(NumberFormatException e) {
@@ -303,7 +254,7 @@ public class VLEPeerReviewController {
     }
 
     Integer openNumberTriggerInt = null;
-    if(openNumberTrigger != null) {
+    if (openNumberTrigger != null) {
       try {
         openNumberTriggerInt = Integer.parseInt(openNumberTrigger);
       } catch(NumberFormatException e) {
@@ -312,16 +263,10 @@ public class VLEPeerReviewController {
       }
     }
 
-    //get the node that is being used for peer review
     Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runId);
-
-    //we will store the response that we will return in this variable
     String responseString = "";
 
-    if(peerReviewAction != null && peerReviewAction.equals("annotate")) {
-      //the student is on the step where they view a classmate's work and annotate/review it
-
-      //get the user making the request to review
+    if (peerReviewAction != null && peerReviewAction.equals("annotate")) {
       UserInfo reviewerUserInfo = vleService.getUserInfoByWorkgroupId(workgroupIdLong);
 
       /*
@@ -330,28 +275,22 @@ public class VLEPeerReviewController {
        */
       PeerReviewWork reviewerWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, reviewerUserInfo);
 
-      if(reviewerWork == null) {
-        //the user has not submitted their own work for peer review
+      if (reviewerWork == null) {
         responseString = "{\"error\":\"peerReviewUserHasNotSubmittedOwnWork\"}";
       } else {
-        //see if the peer review is open
         boolean peerReviewGateOpen = vleService.calculatePeerReviewOpen(runIdLong, periodIdLong, node, numWorkgroups, openPercentageTriggerInt, openNumberTriggerInt);
 
-        if(!peerReviewGateOpen) {
+        if (!peerReviewGateOpen) {
           /*
            * the peer review is not open yet so we will return an error message to the client.
            * more students need to submit in order to open the peer review
            */
           responseString = "{\"error\":\"peerReviewNotOpen\"}";
         } else {
-          //the peer review is open
-
-          //obtain the work that we have matched with this workgroup
           String workToReview = getWorkToReviewByReviewer(runIdLong, periodIdLong, node, reviewerUserInfo);
 
-          if(workToReview == null) {
-            //check if the author has been assigned to review the user's work
-            if(vleService.isUserReviewingAuthor(runIdLong, periodIdLong, node, reviewerUserInfo)) {
+          if (workToReview == null) {
+            if (vleService.isUserReviewingAuthor(runIdLong, periodIdLong, node, reviewerUserInfo)) {
               /*
                * the author is set to review the user's work which means the user
                * will see the author's review in return. this basically means the
@@ -361,15 +300,12 @@ public class VLEPeerReviewController {
                */
               responseString = "{\"error\":\"peerReviewShowAuthoredWork\"}";
             } else {
-              //if we have not performed the match yet, we will create a match
               responseString = assignReviewerToWork(runIdLong, periodIdLong, node, reviewerUserInfo);
             }
 
-            if(responseString == null) {
-              //we were unable to assign work to the user
-
+            if (responseString == null) {
               //check if we should just show authored work for student to review
-              if(showAuthoredContentToStudent("work", runIdLong, periodIdLong, node, classmateWorkgroupIdsArray)) {
+              if (showAuthoredContentToStudent("work", runIdLong, periodIdLong, node, classmateWorkgroupIdsArray)) {
                 /*
                  * for this student's work we will set the author as the reviewer
                  * so that when this student gets to the step where they revise
@@ -390,43 +326,35 @@ public class VLEPeerReviewController {
               }
             }
           } else {
-            //return the work that we have matched the user to
             responseString = workToReview;
           }
         }
       }
-    } else if(peerReviewAction != null && peerReviewAction.equals("revise")) {
+    } else if (peerReviewAction != null && peerReviewAction.equals("revise")) {
       /*
        * the student is on the step where they see their original work and their classmate's review
        * of their work. they will then revise their original work.
        */
 
-      //get the user
       UserInfo workerUserInfo = vleService.getUserInfoByWorkgroupId(workgroupIdLong);
-
-      //check if the user has submitted work to be peer reviewed
       PeerReviewWork myWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, workerUserInfo);
 
-      if(myWork == null) {
-        //the user has not submitted their own work for peer review
+      if (myWork == null) {
         responseString = "{\"error\":\"peerReviewUserHasNotSubmittedOwnWork\"}";
       } else {
-        //check if the user has been assigned to work to perform a review
         PeerReviewWork workAssignedTo = vleService.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(runIdLong, periodIdLong, node, workerUserInfo);
 
-        if(workAssignedTo == null) {
+        if (workAssignedTo == null) {
           /*
            * user has not been assigned to a classmate work so they must go back to the review step
            * to try to get assigned to classmate work or just get assigned to the author work
            */
           responseString = "{\"error\":\"peerReviewUserHasNotBeenAssignedToClassmateWork\"}";
         } else {
-          //check if this user has submitted an annotation for their classmate
           Annotation annotationForWorkAssignedTo = workAssignedTo.getAnnotation();
 
-          if(annotationForWorkAssignedTo == null) {
-            //check if the user has been assigned to the author
-            if(vleService.isUserReviewingAuthor(runIdLong, periodIdLong, node, workerUserInfo)) {
+          if (annotationForWorkAssignedTo == null) {
+            if (vleService.isUserReviewingAuthor(runIdLong, periodIdLong, node, workerUserInfo)) {
               /*
                * user was assigned to review the author which means they will
                * also receive the author review for their own work. the local
@@ -441,47 +369,27 @@ public class VLEPeerReviewController {
               responseString = "{\"error\":\"peerReviewUserHasNotAnnotatedClassmateWork\"}";
             }
           } else {
-            //check if the user's work has been assigned to anyone
             UserInfo reviewerUserInfo = myWork.getReviewerUserInfo();
 
-            if(reviewerUserInfo == null) {
-              //no one has been assigned to review my work
-
-              //check if there are any classmates that haven't been matched and are working today
-              if(showAuthoredContentToStudent("review", runIdLong, periodIdLong, node, classmateWorkgroupIdsArray)) {
-                //show the authored review since there is no one left to review my work
+            if (reviewerUserInfo == null) {
+              if (showAuthoredContentToStudent("review", runIdLong, periodIdLong, node, classmateWorkgroupIdsArray)) {
                 responseString = createWorkAndAnnotationJSONResponse(myWork, null, "peerReviewShowAuthoredReview");
               } else {
-                //wait for classmate to get assigned to my work
                 responseString = "{\"error\":\"peerReviewUserWorkHasNotBeenAssignedToClassmate\"}";
               }
             } else {
-              //there is a reviewer
-
-              if(vleService.isAuthorSetAsReviewer(myWork)) {
-                //reviewer is set to author
-
-                //we will show the author's review to the student
+              if (vleService.isAuthorSetAsReviewer(myWork)) {
                 responseString = createWorkAndAnnotationJSONResponse(myWork, null, "peerReviewShowAuthoredReview");
               } else {
-                //check if this user's work has been reviewed/annotated
                 Annotation annotation = myWork.getAnnotation();
 
-                if(annotation == null) {
-                  //this student's work has not been reviewed
-
-                  //check if our reviewer has done any work today
-                  if(hasReviewerDoneWorkToday(reviewerUserInfo)) {
-                    //reviewer has done work today, we will wait
+                if (annotation == null) {
+                  if (hasReviewerDoneWorkToday(reviewerUserInfo)) {
                     responseString = "{\"error\":\"peerReviewUserWorkHasNotBeenAnnotatedByClassmate\"}";
                   } else {
-                    //reviewer has not done any work today, we will show the authored review
                     responseString = createWorkAndAnnotationJSONResponse(myWork, null, "peerReviewShowAuthoredReview");
                   }
                 } else {
-                  //this student's work has been reviewed
-
-                  //get the JSON object that contains the annotation and work
                   responseString = createWorkAndAnnotationJSONResponse(myWork, annotation, null);
                 }
               }
@@ -490,7 +398,6 @@ public class VLEPeerReviewController {
         }
       }
     }
-
     response.getWriter().print(responseString);
   }
 
@@ -503,33 +410,26 @@ public class VLEPeerReviewController {
    * @return a JSON string containing a nodevisit, annotation, and/or error
    */
   private String createWorkAndAnnotationJSONResponse(PeerReviewWork myWork, Annotation annotation, String error) {
-    //we will wrap the annotation and original work in a JSON object
     JSONObject workAndAnnotation = new JSONObject();
     try {
       String annotationData = null;
-      if(annotation != null) {
+      if (annotation != null) {
         annotationData = annotation.getData();
-
-        //set the annotation
         workAndAnnotation.put("annotation", new JSONObject(annotationData));
       }
 
       String myNodeVisitData = null;
-      if(myWork != null) {
+      if (myWork != null) {
         myNodeVisitData = myWork.getStepWork().getData();
-
-        //set the node visit
         workAndAnnotation.put("nodeVisit", new JSONObject(myNodeVisitData));
       }
 
-      if(error != null && !error.equals("")) {
-        //set the error string
+      if (error != null && !error.equals("")) {
         workAndAnnotation.put("error", error);
       }
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return workAndAnnotation.toString();
   }
 
@@ -541,9 +441,8 @@ public class VLEPeerReviewController {
    * @param response
    * @throws IOException
    */
-  @RequestMapping(method=RequestMethod.POST)
-  private ModelAndView doPostJSON(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
+  @RequestMapping(method = RequestMethod.POST)
+  private ModelAndView doPostJSON(HttpServletRequest request, HttpServletResponse response) {
     //not used, VLEPostData handles the submit of the original work
     return null;
   }
@@ -568,11 +467,9 @@ public class VLEPeerReviewController {
      */
     List<UserInfo> userInfosThatHaveWorkedToday = vleService.getUserInfosThatHaveWorkedToday(userInfos);
 
-    if(userInfosThatHaveWorkedToday.size() == 1) {
-      //the user has done work today
+    if (userInfosThatHaveWorkedToday.size() == 1) {
       return true;
     } else {
-      //the user has not done work today
       return false;
     }
   }
@@ -587,28 +484,25 @@ public class VLEPeerReviewController {
    * @return true if we should show the authored content, false if not
    */
   private boolean showAuthoredContentToStudent(String authorContentType, Long runId, Long periodId, Node node, String[] workgroupsToSearch) {
-    if(authorContentType == null || authorContentType.equals("")) {
+    if (authorContentType == null || authorContentType.equals("")) {
       return false;
     } else {
       List<String> workgroupsThatHaveNotSatisfiedCondition = null;
-      if(authorContentType.equals("work")) {
-        //get all the users in the class who have not submitted peer review work
+      if (authorContentType.equals("work")) {
         workgroupsThatHaveNotSatisfiedCondition = getWorkgroupsThatHaveNot("SubmittedPeerReviewWork", runId, periodId, node, workgroupsToSearch);
 
-      } else if(authorContentType.equals("review")) {
-        //get all the users in the class who have not been assigned to review yet
+      } else if (authorContentType.equals("review")) {
         workgroupsThatHaveNotSatisfiedCondition = getWorkgroupsThatHaveNot("BeenAssignedToReview", runId, periodId, node, workgroupsToSearch);
       }
 
-      if(workgroupsThatHaveNotSatisfiedCondition != null) {
+      if (workgroupsThatHaveNotSatisfiedCondition != null) {
         /*
          * get all the users who have not satisifed the specified
          * condition and have also not done any work today
          */
         List<UserInfo> workgroupsThatHaveDoneWorkToday = getWorkgroupsThatHaveDoneWorkToday(workgroupsThatHaveNotSatisfiedCondition);
 
-        if(workgroupsThatHaveDoneWorkToday.size() == 0) {
-          //there is no one left so we will just show the authored content
+        if (workgroupsThatHaveDoneWorkToday.size() == 0) {
           return true;
         }
       }
@@ -631,13 +525,10 @@ public class VLEPeerReviewController {
    * @return a list of workgroups that have not satisified the given condition
    */
   private List<String> getWorkgroupsThatHaveNot(String condition, Long runId, Long periodId, Node node, String[] workgroupsToSearch) {
-    if(condition == null || condition.equals("")) {
+    if (condition == null || condition.equals("")) {
       return null;
     } else {
-      //get a List object of the workgroups to search through
       List<String> workgroupList = new Vector<String>(Arrays.asList(workgroupsToSearch));
-
-      //get all the peer review work for this run, period, node
       List<PeerReviewWork> peerReviewWorkList = vleService.getPeerReviewWorkByRunPeriodNode(runId, periodId, node);
 
       /*
@@ -646,44 +537,23 @@ public class VLEPeerReviewController {
        */
       List<String> workgroupsThatHaveSatisfiedCondition = new Vector<String>();
 
-      //loop through all the peer review work for the specified run, period, node
-      for(int x=0; x<peerReviewWorkList.size(); x++) {
-        //get the PeerReviewWork
+      for (int x = 0; x < peerReviewWorkList.size(); x++) {
         PeerReviewWork peerReviewWork = peerReviewWorkList.get(x);
 
-        if(condition.equals("SubmittedPeerReviewWork")) {
-          //get the UserInfo who did the work
+        if (condition.equals("SubmittedPeerReviewWork")) {
           UserInfo userInfo = peerReviewWork.getUserInfo();
-
-          //get the workgroupId
           Long workgroupId = userInfo.getWorkgroupId();
-
-          //add the workgroupId to the List of people who have satisfied the condition
           workgroupsThatHaveSatisfiedCondition.add(workgroupId.toString());
-        } else if(condition.equals("BeenAssignedToReview")) {
-          //get the UserInfo who is assigned to review
+        } else if (condition.equals("BeenAssignedToReview")) {
           UserInfo reviewerUserInfo = peerReviewWork.getReviewerUserInfo();
 
-          //check if there has been a user assigned to review
-          if(reviewerUserInfo != null) {
-            //get the workgroupId
+          if (reviewerUserInfo != null) {
             Long workgroupId = reviewerUserInfo.getWorkgroupId();
-
-            //add the workgroupId to the List of people who have satisfied the condition
             workgroupsThatHaveSatisfiedCondition.add(workgroupId.toString());
           }
         }
       }
-
-      /*
-       * remove the workgroups that have satisfied the condition so that we are left with
-       * the workgroups that have not
-       */
       workgroupList.removeAll(workgroupsThatHaveSatisfiedCondition);
-
-      /*
-       * return the list of workgroups that have not satisfied the condition
-       */
       return workgroupList;
     }
   }
@@ -696,13 +566,8 @@ public class VLEPeerReviewController {
    * (this will be a subset of the users that are passed in)
    */
   private List<UserInfo> getWorkgroupsThatHaveDoneWorkToday(List<String> workgroupList) {
-    //get a List of UserInfos
     List<UserInfo> userInfos = vleService.getUserInfoByWorkgroupIds(workgroupList);
-
-    //get all the users who have submitted any today
     List<UserInfo> userInfosThatHaveWorkedToday = vleService.getUserInfosThatHaveWorkedToday(userInfos);
-
-    //return the List of users who have done any work today
     return userInfosThatHaveWorkedToday;
   }
 
@@ -721,17 +586,9 @@ public class VLEPeerReviewController {
     JSONObject workToReview = null;
     String workToReviewString = null;
 
-    //obtain the work assigned to the reviewer
     PeerReviewWork peerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(runId, periodId, node, reviewerUserInfo);
-
-    //check if there was any work assigned
-    if(peerReviewWork != null && peerReviewWork.getStepWork() != null) {
-      //there was work assigned
-
-      //get the node visit data
+    if (peerReviewWork != null && peerReviewWork.getStepWork() != null) {
       dataString =  peerReviewWork.getStepWork().getData();
-
-      //create the JSON object that will wrap all the values we need to return
       workToReview = new JSONObject();
       try {
         workToReview.put("workgroupId", peerReviewWork.getUserInfo().getWorkgroupId());
@@ -758,22 +615,11 @@ public class VLEPeerReviewController {
    */
   private String assignReviewerToWork(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo) {
     String workAssignedTo = null;
-
-    //get all the unassigned work
     List<PeerReviewWork> unassignedPeerReviewWorkList = vleService.getUnassignedPeerReviewWorkList(runId, periodId, node);
-
-    //check that there was unassigned work
-    if(unassignedPeerReviewWorkList != null && unassignedPeerReviewWorkList.size() != 0) {
-
-      //remove my work from the list so I don't get assigned to myself
+    if (unassignedPeerReviewWorkList != null && unassignedPeerReviewWorkList.size() != 0) {
       removePeerReviewWorkByWorkgroupId(unassignedPeerReviewWorkList, reviewerUserInfo.getWorkgroupId());
-
-      //get my peer review work
       PeerReviewWork myPeerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runId, periodId, node, reviewerUserInfo);
-
-      //check that I submitted work
-      if(myPeerReviewWork != null) {
-        //get the user that has been assigned to review my work, if any
+      if (myPeerReviewWork != null) {
         UserInfo userReviewingMyWork = myPeerReviewWork.getReviewerUserInfo();
 
         /*
@@ -784,8 +630,7 @@ public class VLEPeerReviewController {
          * therefore if student 1 gets assigned to student 2, we must prevent
          * student 2 from getting assigned to student 1.
          */
-        //check if anyone is reviewing my work and if there is more than 1 work in the list
-        if(userReviewingMyWork != null && unassignedPeerReviewWorkList.size() > 1) {
+        if (userReviewingMyWork != null && unassignedPeerReviewWorkList.size() > 1) {
           /*
            * remove my reviewer from the list as well as reviewer's reviewer,
            * reviewer's reviewer's reviewer, etc.
@@ -794,24 +639,18 @@ public class VLEPeerReviewController {
         }
       }
 
-      //choose a PeerReviewWork from the list randomly
       PeerReviewWork randomPeerReviewWork = chooseRandomPeerReviewWork(unassignedPeerReviewWorkList);
-
-      if(randomPeerReviewWork == null) {
+      if (randomPeerReviewWork == null) {
         /*
          * no work to review at this point in time, must check back later
          * after more students have submitted work
          */
       } else {
-        //assign me to review this work
         randomPeerReviewWork.setReviewerUserInfo(reviewerUserInfo);
         vleService.savePeerReviewWork(randomPeerReviewWork);
-
-        //obtain a JSON object with the values of the work that we need to send back
         workAssignedTo = getWorkToReviewByReviewer(runId, periodId, node, reviewerUserInfo);
       }
     }
-
     return workAssignedTo;
   }
 
@@ -830,20 +669,14 @@ public class VLEPeerReviewController {
    * @param node
    * @param reviewerUserInfo
    */
-  private void removePeerReviewsChain(List<PeerReviewWork> peerReviewWorkList, Long runId, Long periodId, Node node, UserInfo reviewerUserInfo) {
-    if(reviewerUserInfo != null) {
-      //remove my reviewer from the list
+  private void removePeerReviewsChain(List<PeerReviewWork> peerReviewWorkList, Long runId,
+      Long periodId, Node node, UserInfo reviewerUserInfo) {
+    if (reviewerUserInfo != null) {
       removePeerReviewWorkByWorkgroupId(peerReviewWorkList, reviewerUserInfo.getWorkgroupId());
-
-      //get the PeerReviewWork of my reviewer
-      PeerReviewWork reviewerPeerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runId, periodId, node, reviewerUserInfo);
-
-      //check if my reviewer has submitted any work
-      if(reviewerPeerReviewWork != null) {
-        //get the reviewer of my reviewer
+      PeerReviewWork reviewerPeerReviewWork =
+          vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runId, periodId, node, reviewerUserInfo);
+      if (reviewerPeerReviewWork != null) {
         UserInfo reviewerOfReviewer = reviewerPeerReviewWork.getReviewerUserInfo();
-
-        //remove the reviewer's reviewer from the list
         removePeerReviewsChain(peerReviewWorkList, runId, periodId, node, reviewerOfReviewer);
       }
     }
@@ -854,15 +687,11 @@ public class VLEPeerReviewController {
    * @param peerReviewWorkList
    * @param workgroupId
    */
-  private void removePeerReviewWorkByWorkgroupId(List<PeerReviewWork> peerReviewWorkList, Long workgroupId) {
-    //loop through the list of PeerReviewWork
-    for(int x=0; x<peerReviewWorkList.size(); x++) {
-      //get a PeerReviewWork
+  private void removePeerReviewWorkByWorkgroupId(List<PeerReviewWork> peerReviewWorkList,
+      Long workgroupId) {
+    for (int x = 0; x < peerReviewWorkList.size(); x++) {
       PeerReviewWork peerReviewWork = peerReviewWorkList.get(x);
-
-      //check if the workgroupId matches
-      if(peerReviewWork.getUserInfo().getWorkgroupId().equals(workgroupId)) {
-        //remove the PeerReviewWork from the list
+      if (peerReviewWork.getUserInfo().getWorkgroupId().equals(workgroupId)) {
         peerReviewWorkList.remove(peerReviewWork);
       }
     }
@@ -874,7 +703,7 @@ public class VLEPeerReviewController {
    * @return
    */
   private PeerReviewWork chooseRandomPeerReviewWork(List<PeerReviewWork> peerReviewWorkList) {
-    if(peerReviewWorkList.size() == 0) {
+    if (peerReviewWorkList.size() == 0) {
       return null;
     } else {
       Random random = new Random();

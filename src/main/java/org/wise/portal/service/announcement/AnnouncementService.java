@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -37,34 +37,35 @@ public interface AnnouncementService {
   /**
    * creates a new Announcement in the data store
    *
-   * @param <code>AnnouncementParameters</code>
-   * @return <code>Announcement</code>
+   * @param params parameters required to create an announcement
+   * @return announcement that was created
    */
   Announcement createAnnouncement(AnnouncementParameters params);
 
   /**
    * deletes an Announcement from the data store
    *
-   * @param <code>long</code> id
+   * @param id of the announcement to delete
    */
   void deleteAnnouncement(Integer id);
 
   /**
    * updates an Announcement in the data store
    *
-   * @param <code>long</code> id
-   * @param <code>AnnouncementParameters</code> params
+   * @param id of the announcement to update
+   * @param params containing announcement details
    * @return <code>Announcement</code>
-   * @throws <code>ObjectNotFoundException</code>
+   * @throws <code>ObjectNotFoundException</code> when specified announcement does not exist
    */
-  Announcement updateAnnouncement(Integer id, AnnouncementParameters params) throws ObjectNotFoundException;
+  Announcement updateAnnouncement(Integer id, AnnouncementParameters params)
+      throws ObjectNotFoundException;
 
   /**
    * retrieves the Announcement with the given Id from the data store
    *
-   * @param <code>long</code> id
-   * @return <code>Announcement</code>
-   * @throws <code>ObjectNotFoundException</code>
+   * @param id of the announcement to retrieve
+   * @return <code>Announcement</code> the retrieved announcement
+   * @throws <code>ObjectNotFoundException</code> when specified announcement does not exist
    */
   Announcement retrieveById(Integer id) throws ObjectNotFoundException;
 }

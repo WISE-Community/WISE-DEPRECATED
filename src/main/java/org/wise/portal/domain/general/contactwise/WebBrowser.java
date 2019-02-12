@@ -33,7 +33,6 @@ public enum WebBrowser {
 
   FIREFOX, IE, SAFARI, OPERA, NETSCAPE, OTHER;
 
-  //the properties file that contains the user friendly values
   private static Properties i18nProperties;
 
   /**

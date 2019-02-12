@@ -59,7 +59,7 @@ import ocLazyLoad from 'oclazyload';
 import moment from 'moment';
 import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.min';
 
-let vleModule = angular.module('vle', [
+const vleModule = angular.module('vle', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',

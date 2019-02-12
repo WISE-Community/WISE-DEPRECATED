@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -48,26 +48,30 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   private GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao;
 
   /**
-   * @see org.acegisecurity.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
+   * @see UserDetailsService#loadUserByUsername(String)
    */
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username)
       throws UsernameNotFoundException, DataAccessException {
-    UserDetails userDetails = this.userDetailsDao.retrieveByName(username);
+    UserDetails userDetails = userDetailsDao.retrieveByName(username);
     if (userDetails == null) {
       throw new UsernameNotFoundException("Username: " + username + " not found.");
     }
     return userDetails;
   }
 
+  public UserDetails loadUserByGoogleUserId(String googleUserId) {
+    return this.userDetailsDao.retrieveByGoogleUserId(googleUserId);
+  }
+
   /**
-   * @see net.sf.sail.webapp.service.authentication.UserDetailsService#createGrantedAuthority(net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority)
+   * @see UserDetailsService#createGrantedAuthority(MutableGrantedAuthority)
    */
   @Transactional(rollbackFor = { DuplicateAuthorityException.class })
   public MutableGrantedAuthority createGrantedAuthority(
       MutableGrantedAuthority mutableGrantedAuthority) throws DuplicateAuthorityException {
-    this.checkNoAuthorityCreationErrors(mutableGrantedAuthority.getAuthority());
-    this.grantedAuthorityDao.save(mutableGrantedAuthority);
+    checkNoAuthorityCreationErrors(mutableGrantedAuthority.getAuthority());
+    grantedAuthorityDao.save(mutableGrantedAuthority);
     return mutableGrantedAuthority;
   }
 
@@ -75,24 +79,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
    * Validates user input checks that the data store does not already contain
    * an authority with the same name
    *
-   * @param authority
-   *            The authority to be checked for in the data store.
-   * @throws DuplicateAuthorityException
-   *             If the authority is the same as an authority already in data
-   *             store.
+   * @param authority The authority to be checked for in the data store.
+   * @throws DuplicateAuthorityException if the authority is the same as an authority
+   * already in data store.
    */
   private void checkNoAuthorityCreationErrors(String authority) throws DuplicateAuthorityException {
-    if (this.grantedAuthorityDao.hasRole(authority)) {
+    if (grantedAuthorityDao.hasRole(authority)) {
       throw new DuplicateAuthorityException(authority);
     }
   }
 
   /**
-   * @see net.sf.sail.webapp.service.authentication.UserDetailsService#loadAuthorityByName(java.lang.String)
+   * @see UserDetailsService#loadAuthorityByName(String)
    */
   @Transactional(readOnly = true)
   public GrantedAuthority loadAuthorityByName(String authority) throws AuthorityNotFoundException {
-    GrantedAuthority grantedAuthority = this.grantedAuthorityDao.retrieveByName(authority);
+    GrantedAuthority grantedAuthority = grantedAuthorityDao.retrieveByName(authority);
     if (grantedAuthority == null) {
       throw new AuthorityNotFoundException(authority);
     }
@@ -101,22 +103,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Transactional(readOnly = true)
   public List<MutableGrantedAuthority> retrieveAllAuthorities() {
-    return  this.grantedAuthorityDao.getList();
+    return  grantedAuthorityDao.getList();
   }
 
-  /**
-   * @override @see net.sf.sail.webapp.service.authentication.UserDetailsService#updateUserDetails(net.sf.sail.webapp.domain.authentication.MutableUserDetails)
-   */
   @Transactional
   public void updateUserDetails(MutableUserDetails userDetails) {
-    this.userDetailsDao.save(userDetails);
+    userDetailsDao.save(userDetails);
   }
 
   public List<MutableUserDetails> retrieveAllUserDetails(String userDetailsClassname) {
-    return this.userDetailsDao.retrieveAll(userDetailsClassname);
+    return userDetailsDao.retrieveAll(userDetailsClassname);
   }
 
   public List<String> retrieveAllUsernames(String userDetailsClassName) {
-    return this.userDetailsDao.retrieveAll(userDetailsClassName, "username");
+    return userDetailsDao.retrieveAll(userDetailsClassName, "username");
   }
 }

@@ -1,0 +1,18 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/functions',
+  '~style/abstracts/mixins';
+
+.announcement {
+  min-height: $announcement-height;
+}
+
+.announcement__content {
+  min-height: $announcement-height;
+}
+
+.announcement__dismiss.mat-icon-button {
+  position: absolute;
+  right: 16px;
+  top: 0;
+}

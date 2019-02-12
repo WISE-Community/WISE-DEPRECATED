@@ -23,24 +23,17 @@
  */
 package org.wise.portal.service.run.impl;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
-
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
-import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.user.UserDao;
+import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.group.Group;
@@ -51,30 +44,36 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.run.impl.RunParameters;
+import org.wise.portal.domain.run.impl.RunPermission;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
+import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.DuplicateRunCodeException;
 import org.wise.portal.service.run.RunService;
-import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.service.workgroup.WorkgroupService;
+
+import java.util.*;
 
 /**
  * Services for WISE Run
- *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  */
 public class RunServiceImpl implements RunService {
 
   private String DEFAULT_RUNCODE_PREFIXES = "Tiger,Lion,Fox,Owl,Panda,Hawk,Mole,"+
-    "Falcon,Orca,Eagle,Manta,Otter,Cat,Zebra,Flea,Wolf,Dragon,Seal,Cobra,"+
-    "Bug,Gecko,Fish,Koala,Mouse,Wombat,Shark,Whale,Sloth,Slug,Ant,Mantis,"+
-    "Bat,Rhino,Gator,Monkey,Swan,Ray,Crow,Goat,Marmot,Dog,Finch,Puffin,Fly,"
-    +"Camel,Kiwi,Spider,Lizard,Robin,Bear,Boa,Cow,Crab,Mule,Moth,Lynx,Moose,"+
-    "Skunk,Mako,Liger,Llama,Shrimp,Parrot,Pig,Clam,Urchin,Toucan,Frog,Toad,"+
-    "Turtle,Viper,Trout,Hare,Bee,Krill,Dodo,Tuna,Loon,Leech,Python,Wasp,Yak,"+
-    "Snake,Duck,Worm,Yeti";
+      "Falcon,Orca,Eagle,Manta,Otter,Cat,Zebra,Flea,Wolf,Dragon,Seal,Cobra,"+
+      "Bug,Gecko,Fish,Koala,Mouse,Wombat,Shark,Whale,Sloth,Slug,Ant,Mantis,"+
+      "Bat,Rhino,Gator,Monkey,Swan,Ray,Crow,Goat,Marmot,Dog,Finch,Puffin,Fly,"+
+      "Camel,Kiwi,Spider,Lizard,Robin,Bear,Boa,Cow,Crab,Mule,Moth,Lynx,Moose,"+
+      "Skunk,Mako,Liger,Llama,Shrimp,Parrot,Pig,Clam,Urchin,Toucan,Frog,Toad,"+
+      "Turtle,Viper,Trout,Hare,Bee,Krill,Dodo,Tuna,Loon,Leech,Python,Wasp,Yak,"+
+      "Snake,Duck,Worm,Yeti";
 
   private static final int MAX_RUNCODE_DIGIT = 1000;
 
@@ -99,9 +98,12 @@ public class RunServiceImpl implements RunService {
   @Autowired
   protected AclService<Persistable> aclService;
 
-  /**
-   * @see RunService#getRunList()
-   */
+  @Autowired
+  private WorkgroupService workgroupService;
+
+  @Autowired
+  private ProjectService projectService;
+
   @Transactional()
   public List<Run> getRunList() {
     // for some reason, runDao.getList returns all runs, when it should
@@ -109,9 +111,6 @@ public class RunServiceImpl implements RunService {
     return runDao.getList();
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#getRunListByOwner(User)
-   */
   @Transactional()
   public List<Run> getRunListByOwner(User owner) {
     // for some reason, runDao.getList returns all runs, when it should
@@ -119,9 +118,6 @@ public class RunServiceImpl implements RunService {
     return runDao.getRunListByOwner(owner);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#getRunListBySharedOwner(User)
-   */
   @Transactional()
   public List<Run> getRunListBySharedOwner(User owner) {
     // for some reason, runDao.getList returns all runs, when it should
@@ -129,27 +125,19 @@ public class RunServiceImpl implements RunService {
     return runDao.getRunListBySharedOwner(owner);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#getAllRunList()
-   */
   @Transactional()
   public List<Run> getAllRunList() {
     return runDao.getList();
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#getRunList(User)
-   */
   public List<Run> getRunList(User user) {
-    return this.runDao.getRunListByUserInPeriod(user);
+    return runDao.getRunListByUserInPeriod(user);
   }
 
   /**
    * Generate a random runcode
    * @param locale
-   *
    * @return the randomly generated runcode.
-   *
    */
   String generateRunCode(Locale locale) {
     Random rand = new Random();
@@ -162,10 +150,10 @@ public class RunServiceImpl implements RunService {
       sb.insert(0, "0");
     }
     String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
-    // read in runcode prefixes from wise.properties.
-    String runcodePrefixesStr = wiseProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
+    String runcodePrefixesStr =
+        wiseProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
     if (wiseProperties.containsKey("runcode_prefixes_"+language)) {
-      runcodePrefixesStr = wiseProperties.getProperty("runcode_prefixes_"+language);
+      runcodePrefixesStr = wiseProperties.getProperty("runcode_prefixes_" + language);
     }
     String[] runcodePrefixes = runcodePrefixesStr.split(",");
     String word = runcodePrefixes[rand.nextInt(runcodePrefixes.length)];
@@ -175,24 +163,20 @@ public class RunServiceImpl implements RunService {
 
   /**
    * Creates a run based on input parameters provided.
-   *
    * @param runParameters
    * @return The run created.
    * @throws ObjectNotFoundException
    */
   @Transactional()
-  public Run createRun(RunParameters runParameters)
-    throws ObjectNotFoundException {
+  public Run createRun(RunParameters runParameters) {
     Project project = runParameters.getProject();
     Run run = new RunImpl();
     run.setEndtime(null);
-    run.setStarttime(Calendar.getInstance().getTime());
+    run.setStarttime(runParameters.getStartTime());
     run.setRuncode(generateUniqueRunCode(runParameters.getLocale()));
     run.setOwner(runParameters.getOwner());
     run.setMaxWorkgroupSize(runParameters.getMaxWorkgroupSize());
     run.setProject(project);
-
-    //use the project name for the run name
     run.setName("" + runParameters.getProject().getName());
 
     Calendar reminderCal = Calendar.getInstance();
@@ -204,7 +188,7 @@ public class RunServiceImpl implements RunService {
       for (String periodName : runParameters.getPeriodNames()) {
         Group group = new PersistentGroup();
         group.setName(periodName);
-        this.groupDao.save(group);
+        groupDao.save(group);
         periods.add(group);
       }
       run.setPeriods(periods);
@@ -225,45 +209,67 @@ public class RunServiceImpl implements RunService {
       // it's ok if the code block above fails
     }
 
-    this.runDao.save(run);
-    this.aclService.addPermission(run, BasePermission.ADMINISTRATION);
+    runDao.save(run);
+    aclService.addPermission(run, BasePermission.ADMINISTRATION);
     return run;
   }
 
-  /**
-   * @see RunService#addSharedTeacherToRun(AddSharedTeacherParameters)
-   */
-  public void addSharedTeacherToRun(
-    AddSharedTeacherParameters addSharedTeacherParameters) {
+  public Run createRun(Integer projectId, User user, Set<String> periodNames,
+        Integer maxStudentsPerTeam, Long startDate, Locale locale) throws Exception {
+    Project project = projectService.copyProject(projectId, user);
+    RunParameters runParameters = createRunParameters(project, user, periodNames,
+        maxStudentsPerTeam, startDate, locale);
+    Run run = createRun(runParameters);
+    createTeacherWorkgroup(run, user);
+    return run;
+  }
+
+  public RunParameters createRunParameters(Project project, User user, Set<String> periodNames,
+        Integer maxStudentsPerTeam, Long startDate, Locale locale) {
+    RunParameters runParameters = new RunParameters();
+    runParameters.setOwner(user);
+    runParameters.setName(project.getName());
+    runParameters.setProject(project);
+    runParameters.setLocale(locale);
+    runParameters.setPostLevel(5);
+    runParameters.setPeriodNames(periodNames);
+    runParameters.setMaxWorkgroupSize(maxStudentsPerTeam);
+    runParameters.setStartTime(new Date(startDate));
+    return runParameters;
+  }
+
+  private void createTeacherWorkgroup(Run run, User user) throws Exception {
+    HashSet<User> members = new HashSet<>();
+    members.add(user);
+    workgroupService.createWorkgroup("teacher", members, run, null);
+  }
+
+  public void addSharedTeacher(AddSharedTeacherParameters addSharedTeacherParameters) {
     Run run = addSharedTeacherParameters.getRun();
     String sharedOwnerUsername = addSharedTeacherParameters.getSharedOwnerUsername();
     User user = userDao.retrieveByUsername(sharedOwnerUsername);
     run.getSharedowners().add(user);
-    this.runDao.save(run);
+    runDao.save(run);
 
     Project project = run.getProject();
     project.getSharedowners().add(user);
-    this.projectDao.save(project);
+    projectDao.save(project);
 
     String permission = addSharedTeacherParameters.getPermission();
     if (permission.equals(UserDetailsService.RUN_GRADE_ROLE)) {
-      this.aclService.removePermission(run, BasePermission.READ, user);
-      this.aclService.removePermission(project, BasePermission.READ, user);
-      this.aclService.addPermission(run, BasePermission.WRITE, user);
-      this.aclService.addPermission(project, BasePermission.WRITE, user);
+      aclService.removePermission(run, BasePermission.READ, user);
+      aclService.removePermission(project, BasePermission.READ, user);
+      aclService.addPermission(run, BasePermission.WRITE, user);
+      aclService.addPermission(project, BasePermission.WRITE, user);
     } else if (permission.equals(UserDetailsService.RUN_READ_ROLE)) {
-      this.aclService.removePermission(run, BasePermission.WRITE, user);
-      this.aclService.removePermission(project, BasePermission.WRITE, user);
-      this.aclService.addPermission(run, BasePermission.READ, user);
-      this.aclService.addPermission(project, BasePermission.READ, user);
+      aclService.removePermission(run, BasePermission.WRITE, user);
+      aclService.removePermission(project, BasePermission.WRITE, user);
+      aclService.addPermission(run, BasePermission.READ, user);
+      aclService.addPermission(project, BasePermission.READ, user);
     }
   }
 
-  /**
-   * @see RunService#updateSharedTeacherForRun(AddSharedTeacherParameters)
-   */
-  public void updateSharedTeacherForRun(
-    AddSharedTeacherParameters updateSharedTeacherParameters) {
+  public void updateSharedTeacherForRun(AddSharedTeacherParameters updateSharedTeacherParameters) {
     Run run = updateSharedTeacherParameters.getRun();
     String sharedOwnerUsername = updateSharedTeacherParameters.getSharedOwnerUsername();
     User user = userDao.retrieveByUsername(sharedOwnerUsername);
@@ -271,25 +277,78 @@ public class RunServiceImpl implements RunService {
       Project project = run.getProject();
       String permission = updateSharedTeacherParameters.getPermission();
       if (permission.equals(UserDetailsService.RUN_GRADE_ROLE)) {
-        this.aclService.removePermission(run, BasePermission.READ, user);
-        this.aclService.removePermission(project, BasePermission.READ, user);
-        this.aclService.addPermission(run, BasePermission.WRITE, user);
-        this.aclService.addPermission(project, BasePermission.WRITE, user);
+        aclService.removePermission(run, BasePermission.READ, user);
+        aclService.removePermission(project, BasePermission.READ, user);
+        aclService.addPermission(run, BasePermission.WRITE, user);
+        aclService.addPermission(project, BasePermission.WRITE, user);
       } else if (permission.equals(UserDetailsService.RUN_READ_ROLE)) {
-        this.aclService.removePermission(run, BasePermission.WRITE, user);
-        this.aclService.removePermission(project, BasePermission.WRITE, user);
-        this.aclService.addPermission(run, BasePermission.READ, user);
-        this.aclService.addPermission(project, BasePermission.READ, user);
+        aclService.removePermission(run, BasePermission.WRITE, user);
+        aclService.removePermission(project, BasePermission.WRITE, user);
+        aclService.addPermission(run, BasePermission.READ, user);
+        aclService.addPermission(project, BasePermission.READ, user);
       }
     }
   }
 
-  /**
-   * @see RunService#removeSharedTeacherFromRun(String, Long)
-   */
-  public void removeSharedTeacherFromRun(String username, Long runId)
-    throws ObjectNotFoundException {
+  public SharedOwner addSharedTeacher(Long runId, String teacherUsername)
+      throws ObjectNotFoundException, TeacherAlreadySharedWithRunException {
+    User user = userDao.retrieveByUsername(teacherUsername);
     Run run = this.retrieveById(runId);
+    if (!run.getSharedowners().contains(user)) {
+      run.getSharedowners().add(user);
+      this.runDao.save(run);
+
+      Project project = run.getProject();
+      project.getSharedowners().add(user);
+      this.projectDao.save(project);
+
+      this.aclService.addPermission(run, RunPermission.VIEW_STUDENT_WORK, user);
+      List<Integer> newPermissions = new ArrayList<>();
+      newPermissions.add(RunPermission.VIEW_STUDENT_WORK.getMask());
+      createSharedTeacherWorkgroupIfNecessary(run, user);
+      return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
+        user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
+    } else {
+      throw new TeacherAlreadySharedWithRunException(teacherUsername + " is already shared with this run");
+    }
+  }
+
+  private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user) throws ObjectNotFoundException {
+    if (workgroupService.getWorkgroupListByRunAndUser(run, user).size() == 0) {
+      return createSharedTeacherWorkgroup(run, user);
+    }
+    return null;
+  }
+
+  private Workgroup createSharedTeacherWorkgroup(Run run, User user) throws ObjectNotFoundException {
+    if (user.isTeacher()) {
+      Set<User> sharedOwners = new HashSet<User>();
+      sharedOwners.add(user);
+      return workgroupService.createWorkgroup("teacher", sharedOwners, run, null);
+    }
+    return null;
+  }
+
+  public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
+    User user = userDao.getById(userId);
+    Run run = this.retrieveById(runId);
+    if (run.getSharedowners().contains(user)) {
+      this.aclService.addPermission(run, new RunPermission(permissionId), user);
+    }
+  }
+
+  public void removeSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException {
+    User user = userDao.getById(userId);
+    Run run = this.retrieveById(runId);
+    if (run.getSharedowners().contains(user)) {
+      this.aclService.removePermission(run, new RunPermission(permissionId), user);
+    }
+  }
+
+  public void removeSharedTeacher(String username, Long runId)
+    throws ObjectNotFoundException {
+    Run run = retrieveById(runId);
     User user = userDao.retrieveByUsername(username);
     if (run == null || user == null) {
       return;
@@ -297,18 +356,19 @@ public class RunServiceImpl implements RunService {
 
     if (run.getSharedowners().contains(user)) {
       run.getSharedowners().remove(user);
-      this.runDao.save(run);
-      Project runProject = run.getProject();
+      runDao.save(run);
+      // call unProxy when we upgrade to hibernate 5.2
+      Project runProject = (Project) run.getProject();
       runProject.getSharedowners().remove(user);
-      this.projectDao.save(runProject);
+      projectDao.save(runProject);
 
       try {
         List<Permission> runPermissions =
-          this.aclService.getPermissions(run, user);
+          aclService.getPermissions(run, user);
         for (Permission runPermission : runPermissions) {
-          this.aclService.removePermission(run, runPermission, user);
+          aclService.removePermission(run, runPermission, user);
         }
-        List<Permission> projectPermissions = this.aclService.getPermissions(runProject, user);
+        List<Permission> projectPermissions = aclService.getPermissions(runProject, user);
         for (Permission projectPermission : projectPermissions) {
           this.aclService.removePermission(run, projectPermission, user);
         }
@@ -319,11 +379,8 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#getSharedTeacherRole(Run, User)
-   */
   public String getSharedTeacherRole(Run run, User user) {
-    List<Permission> permissions = this.aclService.getPermissions(run, user);
+    List<Permission> permissions = aclService.getPermissions(run, user);
     // for runs, a user can have at most one permission per run
     if (!permissions.isEmpty()) {
       Permission permission = permissions.get(0);
@@ -334,6 +391,10 @@ public class RunServiceImpl implements RunService {
       }
     }
     return null;
+  }
+
+  public List<Permission> getSharedTeacherPermissions(Run run, User sharedTeacher) {
+    return this.aclService.getPermissions(run, sharedTeacher);
   }
 
   private String generateUniqueRunCode(Locale locale) {
@@ -352,59 +413,45 @@ public class RunServiceImpl implements RunService {
 
   /**
    * Checks if the given runcode is unique.
-   *
    * @param runCode A unique string.
-   *
    * @throws DuplicateRunCodeException if the run's runcde
    * already exists in the data store
    */
-  private void checkForRunCodeDuplicate(String runCode)
-    throws DuplicateRunCodeException {
+  private void checkForRunCodeDuplicate(String runCode) throws DuplicateRunCodeException {
     try {
-      this.runDao.retrieveByRunCode(runCode);
+      runDao.retrieveByRunCode(runCode);
     } catch (ObjectNotFoundException e) {
       return;
     }
-    throw new DuplicateRunCodeException("Runcode " + runCode
-      + " already exists.");
+    throw new DuplicateRunCodeException("Runcode " + runCode + " already exists.");
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#retrieveRunByRuncode(java.lang.String)
-   */
-  public Run retrieveRunByRuncode(String runcode)
-    throws ObjectNotFoundException {
+  public Run retrieveRunByRuncode(String runcode) throws ObjectNotFoundException {
     return runDao.retrieveByRunCode(runcode);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#retrieveById(java.lang.Long)
-   */
   public Run retrieveById(Long runId) throws ObjectNotFoundException {
     return runDao.getById(runId);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#retrieveById(java.lang.Long)
-   */
-  public Run retrieveById(Long runId, boolean doEagerFetch) throws ObjectNotFoundException {
+  public Run retrieveById(Long runId, boolean doEagerFetch) {
     return runDao.getById(runId, doEagerFetch);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#endRun(Run)
-   */
   @Transactional()
   public void endRun(Run run) {
     if (run.getEndtime() == null) {
       run.setEndtime(Calendar.getInstance().getTime());
-      this.runDao.save(run);
+      runDao.save(run);
     }
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#startRun(Run)
-   */
+  @Transactional()
+  public void restartRun(Run run) {
+    run.setEndtime(null);
+    runDao.save(run);
+  }
+
   @Transactional()
   public void startRun(Run run) {
     if (run.getEndtime() != null) {
@@ -412,51 +459,35 @@ public class RunServiceImpl implements RunService {
       Calendar reminderCal = Calendar.getInstance();
       reminderCal.add(Calendar.DATE, 30);
       run.setArchiveReminderTime(reminderCal.getTime());
-      this.runDao.save(run);
+      runDao.save(run);
     }
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#getWorkgroups(Long)
-   */
-  public Set<Workgroup> getWorkgroups(Long runId)
-    throws ObjectNotFoundException {
-    return this.runDao.getWorkgroupsForRun(runId);
+  public Set<Workgroup> getWorkgroups(Long runId) {
+    return runDao.getWorkgroupsForRun(runId);
   }
 
-  /**
-   * @override @see org.wise.portal.service.run.RunService#getWorkgroups(java.lang.Long, net.sf.sail.webapp.domain.group.Group)
-   */
-  public Set<Workgroup> getWorkgroups(Long runId, Long periodId)
-    throws ObjectNotFoundException {
-    return this.runDao.getWorkgroupsForRunAndPeriod(runId, periodId);
+  public Set<Workgroup> getWorkgroups(Long runId, Long periodId) {
+    return runDao.getWorkgroupsForRunAndPeriod(runId, periodId);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#addAnnouncementToRun(java.lang.Long, org.wise.portal.domain.announcement.Announcement)
-   */
   @Transactional()
-  public void addAnnouncementToRun(Long runId, Announcement announcement) throws Exception{
-    Run run = this.retrieveById(runId);
+  public void addAnnouncementToRun(Long runId, Announcement announcement) throws Exception {
+    Run run = retrieveById(runId);
     run.getAnnouncements().add(announcement);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
-
-  /**
-   * @see org.wise.portal.service.run.RunService#removeAnnouncementFromRun(java.lang.Long, org.wise.portal.domain.announcement.Announcement)
-   */
   @Transactional()
-  public void removeAnnouncementFromRun(Long runId, Announcement announcement) throws Exception{
-    Run run = this.retrieveById(runId);
+  public void removeAnnouncementFromRun(Long runId, Announcement announcement) throws Exception {
+    Run run = retrieveById(runId);
     run.getAnnouncements().remove(announcement);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
   @Transactional()
   public void setInfo(Long runId, String isPaused, String showNodeId) throws Exception {
-    Run run = this.retrieveById(runId);
-
+    Run run = retrieveById(runId);
     String runInfoString = "<isPaused>" + isPaused + "</isPaused>";
     if (showNodeId != null) {
       runInfoString += "<showNodeId>" + showNodeId + "</showNodeId>";
@@ -468,26 +499,21 @@ public class RunServiceImpl implements RunService {
      * the info field
      */
     run.setInfo(runInfoString);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#extendArchiveReminderTime(java.lang.Long)
-   */
   @Transactional()
-  public void extendArchiveReminderTime(Long runId) throws ObjectNotFoundException{
-    Run run = this.retrieveById(runId);
-
+  public void extendArchiveReminderTime(Long runId) throws ObjectNotFoundException {
+    Run run = retrieveById(runId);
     Calendar moreTime = Calendar.getInstance();
     moreTime.add(Calendar.DATE, 30);
-
     run.setArchiveReminderTime(moreTime.getTime());
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
   @Transactional()
   public Integer getProjectUsage(Long id) {
-    List<Run> runList = this.runDao.getRunsOfProject(id);
+    List<Run> runList = runDao.getRunsOfProject(id);
     if (runList == null) {
       return 0;
     } else {
@@ -497,76 +523,65 @@ public class RunServiceImpl implements RunService {
 
   @Transactional()
   public List<Run> getProjectRuns(Long projectId) {
-    return this.runDao.getRunsOfProject(projectId);
+    return runDao.getRunsOfProject(projectId);
   }
 
   @Transactional()
   public void setExtras(Run run, String extras) throws Exception {
     run.setExtras(extras);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#hasRunPermission(Run, User, Permission)
-   */
   public boolean hasRunPermission(Run run, User user, Permission permission) {
-    return this.aclService.hasPermission(run, permission, user);
+    return aclService.hasPermission(run, permission, user);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#getRunsRunWithinPeriod(java.lang.String)
-   */
+  public boolean canDecreaseMaxStudentsPerTeam(Long runId) {
+    Set<Workgroup> workgroups = this.getWorkgroups(runId);
+    if (workgroups != null) {
+      for (Workgroup workgroup : workgroups) {
+        if (workgroup.isStudentWorkgroup() && workgroup.getMembers().size() > 1) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   public List<Run> getRunsRunWithinPeriod(String period) {
-    return this.runDao.getRunsRunWithinPeriod(period);
+    return runDao.getRunsRunWithinPeriod(period);
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#getRunsByActivity()
-   */
   public List<Run> getRunsByActivity() {
-    return this.runDao.getRunsByActivity();
+    return runDao.getRunsByActivity();
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#getRunsByTitle(java.lang.String)
-   */
   public List<Run> getRunsByTitle(String runTitle) {
-    return this.runDao.retrieveByField("name", "like", "%" + runTitle + "%");
+    return runDao.retrieveByField("name", "like", "%" + runTitle + "%");
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#updateRunStatistics(Long)
-   */
   @Transactional()
   public void updateRunStatistics(Long runId) {
-
     try {
       Run run = retrieveById(runId);
       run.setLastRun(Calendar.getInstance().getTime());
-
-      /* increment the number of times this run has been run, if
-       * the run has not yet been run, the times run will be null */
-      if (run.getTimesRun()==null) {
+      if (run.getTimesRun() == null) {
         run.setTimesRun(1);
       } else {
         run.setTimesRun(run.getTimesRun() + 1);
       }
-
-      this.runDao.save(run);
+      runDao.save(run);
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
   }
 
-  /**
-   * @see org.wise.portal.service.run.RunService#updateRunName(java.lang.Long, java.lang.String)
-   */
   @Transactional()
   public void updateRunName(Long runId, String name) {
     try {
-      Run run = this.retrieveById(runId);
+      Run run = retrieveById(runId);
       run.setName(name);
-      this.runDao.save(run);
+      runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }
@@ -575,81 +590,95 @@ public class RunServiceImpl implements RunService {
   @Transactional()
   public void addPeriodToRun(Long runId, String name) {
     try {
-      Run run = this.retrieveById(runId);
+      Run run = retrieveById(runId);
       Set<Group> periods = run.getPeriods();
       Group group = new PersistentGroup();
       group.setName(name);
-      this.groupDao.save(group);
+      groupDao.save(group);
       periods.add(group);
+      runDao.save(run);
+    } catch(ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Transactional()
+  public void deletePeriodFromRun(Long runId, String name) {
+    try {
+      Run run = this.retrieveById(runId);
+      Group period = run.getPeriodByName(name);
+      Set<Group> periods = run.getPeriods();
+      periods.remove(period);
+      this.runDao.save(run);
+    } catch(ObjectNotFoundException e) {
+      e.printStackTrace();
+    } catch(PeriodNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Transactional()
+  public void setMaxWorkgroupSize(Long runId, Integer maxStudentsPerTeam) {
+    try {
+      Run run = this.retrieveById(runId);
+      run.setMaxWorkgroupSize(maxStudentsPerTeam);
       this.runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }
   }
 
-  /**
-   * @throws ObjectNotFoundException
-   * @see org.wise.portal.service.run.RunService#setIdeaManagerEnabled(java.lang.Long, boolean)
-   */
+  @Transactional()
+  public void setStartTime(Long runId, String startTime) {
+    try {
+      Run run = this.retrieveById(runId);
+      run.setStarttime(new Date(startTime));
+      this.runDao.save(run);
+    } catch(ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
   @Transactional
   public void setIdeaManagerEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
-    Run run = this.retrieveById(runId);
+    Run run = retrieveById(runId);
     run.setIdeaManagerEnabled(isEnabled);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
-  /**
-   * @throws ObjectNotFoundException
-   * @see org.wise.portal.service.run.RunService#setPortfolioEnabled(java.lang.Long, boolean)
-   */
   @Transactional
   public void setPortfolioEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
-    Run run = this.retrieveById(runId);
+    Run run = retrieveById(runId);
     run.setPortfolioEnabled(isEnabled);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
-  /**
-   * @throws ObjectNotFoundException
-   * @see org.wise.portal.service.run.RunService#setStudentAssetUploaderEnabled(java.lang.Long, boolean)
-   */
   @Transactional
-  public void setStudentAssetUploaderEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
-    Run run = this.retrieveById(runId);
+  public void setStudentAssetUploaderEnabled(Long runId, boolean isEnabled)
+      throws ObjectNotFoundException {
+    Run run = retrieveById(runId);
     run.setStudentAssetUploaderEnabled(isEnabled);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
-  /**
-   * @throws ObjectNotFoundException
-   * @see org.wise.portal.service.run.RunService#setRealTimeEnabled(java.lang.Long, boolean)
-   */
   @Transactional
   public void setRealTimeEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
-    Run run = this.retrieveById(runId);
+    Run run = retrieveById(runId);
     run.setRealTimeEnabled(isEnabled);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
-  /**
-   * @throws ObjectNotFoundException
-   * @see org.wise.portal.service.run.RunService#updateNotes(Long, String)
-   */
   @Transactional
   public void updateNotes(Long runId, String privateNotes) throws ObjectNotFoundException {
-    Run run = this.retrieveById(runId);
+    Run run = retrieveById(runId);
     run.setPrivateNotes(privateNotes);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 
-  /**
-   * @throws ObjectNotFoundException
-   * @see org.wise.portal.service.run.RunService#updateSurvey(Long, String)
-   */
   @Transactional
   public void updateSurvey(Long runId, String survey) throws ObjectNotFoundException {
-    Run run = this.retrieveById(runId);
+    Run run = retrieveById(runId);
     run.setSurvey(survey);
-    this.runDao.save(run);
+    runDao.save(run);
   }
 }

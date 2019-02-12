@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -30,7 +30,6 @@ import java.util.Vector;
 import org.apache.commons.io.FileUtils;
 
 public class MySystemExporter {
-
 
   private String basedir;
   private File zipFolder;
@@ -93,7 +92,7 @@ public class MySystemExporter {
   }
 
   public void copyFiles() {
-    for(int fileIndex=0; fileIndex<filesToCopy.size(); fileIndex++) {
+    for(int fileIndex = 0; fileIndex < filesToCopy.size(); fileIndex++) {
       copyFileToZipDir(filesToCopy.get(fileIndex));
     }
     for(int dirIndex=0; dirIndex < directoriesToCopy.size(); dirIndex++) {

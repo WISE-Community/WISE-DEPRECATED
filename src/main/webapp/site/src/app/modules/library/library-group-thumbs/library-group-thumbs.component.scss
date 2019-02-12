@@ -1,0 +1,15 @@
+.library-group-thumbs {
+  margin: 0 8px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.library-group-thumbs__thumb {
+  background-size: cover;
+  height: 40px;
+  width: 40px;
+  border-radius: 2px;
+  margin-left: 2px;
+  display: inline-block;
+  vertical-align: middle;
+}

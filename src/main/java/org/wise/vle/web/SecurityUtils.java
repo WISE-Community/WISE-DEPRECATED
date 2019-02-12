@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-201 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -48,7 +48,6 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Utility class mostly for checking permissions (authorization) to access certain resources
- *
  * @author Patrick Lawler
  */
 @Component
@@ -72,11 +71,9 @@ public final class SecurityUtils {
     SecurityUtils.workgroupService = workgroupService;
   }
 
-
   /**
    * Checks the list of allowed referrers and returns <code>boolean</code> true if
    * the referer from the request matches any from the list, returns false otherwise.
-   *
    * @param request
    * @return boolean
    */
@@ -85,26 +82,24 @@ public final class SecurityUtils {
     String domain = ControllerUtil.getBaseUrlString(request);
     String domainWithPort = domain + ":" + request.getLocalPort();
 
-    //get the context path e.g. /wise
     String contextPath = request.getContextPath();
-
-    for(int x=0;x<ALLOWED_REFERRERS.size();x++){
-      if(referer != null && (referer.contains(domain + contextPath + ALLOWED_REFERRERS.get(x)) || referer.contains(domainWithPort + contextPath + ALLOWED_REFERRERS.get(x)))){
+    for (int x = 0; x < ALLOWED_REFERRERS.size(); x++){
+      if (referer != null &&
+          (referer.contains(domain + contextPath + ALLOWED_REFERRERS.get(x)) ||
+          referer.contains(domainWithPort + contextPath + ALLOWED_REFERRERS.get(x)))){
         return true;
       }
     }
-
     return false;
   }
 
   /**
    * Returns <code>boolean</code> true if the given <code>HttpServletRequest</code> request
    * successfully authenticates with the portal, returns false otherwise.
-   *
    * @param request
    * @return boolean
    */
-  public static boolean isAuthenticated(HttpServletRequest request){
+  public static boolean isAuthenticated(HttpServletRequest request) {
     boolean result = true;
     /*
     String fullUrl = request.getRequestURL().toString();
@@ -136,12 +131,11 @@ public final class SecurityUtils {
    * Given a <code>HttpServletRequest</code> request and a <code>String</code> path,
    * returns <code>boolen</code> true if the servlet is allowed access to that path,
    * returns false otherwise.
-   *
    * @param request
    * @param path
    * @return booelan
    */
-  public static boolean isAllowedAccess(HttpServletRequest request, String path){
+  public static boolean isAllowedAccess(HttpServletRequest request, String path) {
     return isAllowedAccess(request, new File(path));
   }
 
@@ -149,16 +143,12 @@ public final class SecurityUtils {
    * Given a <code>HttpServletRequest</code> request and a <code>File</code> file,
    * returns <code>boolean</code> true if the servlet is allowed access to that file,
    * returns false otherwise.
-   *
    * @param request
-   * @param path
    * @return boolean
    */
-  public static boolean isAllowedAccess(HttpServletRequest request, File file){
+  public static boolean isAllowedAccess(HttpServletRequest request, File file) {
     String accessPath = (String) request.getAttribute("accessPath");
-
     boolean allowedAccess = isAllowedAccess(accessPath, file);
-
     return allowedAccess;
   }
 
@@ -169,46 +159,39 @@ public final class SecurityUtils {
    * @return whether the user should have access to the file
    */
   public static boolean isAllowedAccess(String accessPath, File file) {
-
-    if(accessPath != null && !accessPath.equals("")) {
+    if (accessPath != null && !accessPath.equals("")) {
       File accessFile = new File(accessPath);
-      if(accessFile.exists()) {
-        try{
+      if (accessFile.exists()) {
+        try {
           return file.getCanonicalPath().contains(accessFile.getCanonicalPath());
-        } catch (IOException e){
+        } catch (IOException e) {
           e.printStackTrace();
         }
       }
     }
-
     return false;
   }
 
-  public static boolean isAllowedAccess(String fileAllowedToAccessPath, String fileTryingToAccessPath) {
+  public static boolean isAllowedAccess(String fileAllowedToAccessPath,
+      String fileTryingToAccessPath) {
     boolean result = false;
-
     File fileAllowedToAccess = new File(fileAllowedToAccessPath);
     File fileTryingToAccess = new File(fileTryingToAccessPath);
-
     result = isAllowedAccess(fileAllowedToAccess, fileTryingToAccess);
-
     return result;
   }
 
   public static boolean isAllowedAccess(File fileAllowedToAccess, File fileTryingToAccess) {
     boolean result = false;
-
-    if(fileAllowedToAccess != null && fileAllowedToAccess.exists()) {
+    if (fileAllowedToAccess != null && fileAllowedToAccess.exists()) {
       try {
         String fileAllowedToAccessPath = fileAllowedToAccess.getCanonicalPath();
         String fileTryingToAccessPath = fileTryingToAccess.getCanonicalPath();
-
         result = fileTryingToAccessPath.contains(fileAllowedToAccessPath);
       } catch (IOException e) {
         e.printStackTrace();
       }
     }
-
     return result;
   }
 
@@ -219,18 +202,13 @@ public final class SecurityUtils {
    */
   public static boolean isStudent(User user) {
     boolean isStudent = false;
-
-    //get the authorities for the signed in user
     MutableUserDetails signedInUserDetails = user.getUserDetails();
     Collection<? extends GrantedAuthority> authorities = signedInUserDetails.getAuthorities();
-
     for (GrantedAuthority authority : authorities) {
-      if(authority.getAuthority().equals(UserDetailsService.STUDENT_ROLE)) {
-        //the user is a student
+      if (authority.getAuthority().equals(UserDetailsService.STUDENT_ROLE)) {
         isStudent = true;
       }
     }
-
     return isStudent;
   }
 
@@ -241,18 +219,13 @@ public final class SecurityUtils {
    */
   public static boolean isTeacher(User user) {
     boolean isTeacher = false;
-
-    //get the authorities for the signed in user
     MutableUserDetails signedInUserDetails = user.getUserDetails();
     Collection<? extends GrantedAuthority> authorities = signedInUserDetails.getAuthorities();
-
     for (GrantedAuthority authority : authorities) {
-      if(authority.getAuthority().equals(UserDetailsService.TEACHER_ROLE)) {
-        //the user is a teacher
+      if (authority.getAuthority().equals(UserDetailsService.TEACHER_ROLE)) {
         isTeacher = true;
       }
     }
-
     return isTeacher;
   }
 
@@ -263,18 +236,13 @@ public final class SecurityUtils {
    */
   public static boolean isAdmin(User user) {
     boolean isAdmin = false;
-
-    //get the authorities for the signed in user
     MutableUserDetails signedInUserDetails = user.getUserDetails();
     Collection<? extends GrantedAuthority> authorities = signedInUserDetails.getAuthorities();
-
     for (GrantedAuthority authority : authorities) {
       if (authority.getAuthority().equals(UserDetailsService.ADMIN_ROLE)) {
-        //the user is an admin
         isAdmin = true;
       }
     }
-
     return isAdmin;
   }
 
@@ -286,19 +254,13 @@ public final class SecurityUtils {
    */
   public static boolean isUserOwnerOfRun(User user, Long runId) {
     boolean result = false;
-
     if (user != null && runId != null) {
       try {
-        //get the run
-        Run run = SecurityUtils.runService.retrieveById(runId);
-
+        Run run = runService.retrieveById(runId);
         if (run != null) {
-          //get the owners and shared owners
           User owner = run.getOwner();
           Set<User> sharedowners = run.getSharedowners();
-
           if (owner.equals(user) || sharedowners.contains(user)) {
-            //the user is the owner or a shared owner
             result = true;
           }
         }
@@ -306,7 +268,6 @@ public final class SecurityUtils {
         e.printStackTrace();
       }
     }
-
     return result;
   }
 
@@ -318,32 +279,20 @@ public final class SecurityUtils {
    */
   public static boolean isUserInRun(User user, Long runId) {
     boolean result = false;
-
-    if(user != null && runId != null) {
-      //get the list of runs this user is in
-      List<Run> runList =  SecurityUtils.runService.getRunList(user);
-
+    if (user != null && runId != null) {
+      List<Run> runList =  runService.getRunList(user);
       Iterator<Run> runListIterator = runList.iterator();
-
-      //loop through all the runs this user is in
-      while(runListIterator.hasNext()) {
-        //get a run
+      while (runListIterator.hasNext()) {
         Run tempRun = runListIterator.next();
-
-        if(tempRun != null) {
-          //get the run id
+        if (tempRun != null) {
           Long tempRunId = tempRun.getId();
-
-          //check if the run id matches the one we are searching for
-          if(runId.equals(tempRunId)) {
-            //the run id matches so the user is in the run
+          if (runId.equals(tempRunId)) {
             result = true;
             break;
           }
         }
       }
     }
-
     return result;
   }
 
@@ -356,29 +305,19 @@ public final class SecurityUtils {
    */
   public static boolean isUserInPeriod(User user, Long runId, Long periodId) {
     boolean result = false;
-
-    if(user != null && runId != null && periodId != null) {
+    if (user != null && runId != null && periodId != null) {
       try {
-        //get the run
-        Run run =  SecurityUtils.runService.retrieveById(runId);
-
-        //get the period the student is in for the run
+        Run run =  runService.retrieveById(runId);
         Group periodOfStudent = run.getPeriodOfStudent(user);
-
-        if(periodOfStudent != null) {
-          //get the period id
+        if (periodOfStudent != null) {
           Long tempPeriodId = periodOfStudent.getId();
-
-          //check if the period id matches the one we are searching for
           if(periodId.equals(tempPeriodId)) {
-            //the period id matches so the user is in the period
             result = true;
           }
         }
       } catch (ObjectNotFoundException e) {
       }
     }
-
     return result;
   }
 
@@ -390,32 +329,20 @@ public final class SecurityUtils {
    */
   public static boolean isUserInWorkgroup(User user, Long workgroupId) {
     boolean result = false;
-
-    if(user != null && workgroupId != null) {
-      //get all the workgroups this user is in
-      List<Workgroup> workgroupsForUser = SecurityUtils.workgroupService.getWorkgroupsForUser(user);
-
+    if (user != null && workgroupId != null) {
+      List<Workgroup> workgroupsForUser = workgroupService.getWorkgroupsForUser(user);
       Iterator<Workgroup> workgroupsForUserIterator = workgroupsForUser.iterator();
-
-      //loop through all the workgroups this user is in
-      while(workgroupsForUserIterator.hasNext()) {
-        //get a workgroup
+      while (workgroupsForUserIterator.hasNext()) {
         Workgroup tempWorkgroup = workgroupsForUserIterator.next();
-
-        if(tempWorkgroup != null) {
-          //get the workgroup id
+        if (tempWorkgroup != null) {
           Long tempWorkgroupId = tempWorkgroup.getId();
-
-          //check if the workgroup id matches the one we are searching for
-          if(workgroupId.equals(tempWorkgroupId)) {
-            //the workgroup id matches so the user is in the workgroup
+          if (workgroupId.equals(tempWorkgroupId)) {
             result = true;
             break;
           }
         }
       }
     }
-
     return result;
   }
 
@@ -427,25 +354,14 @@ public final class SecurityUtils {
    */
   public static boolean isWorkgroupInRun(Long workgroupId, Long runId) {
     boolean result = false;
-
-    if(workgroupId != null && runId != null) {
+    if (workgroupId != null && runId != null) {
       try {
-        //get all the workgroups in the run
         Set<Workgroup> workgroupsInRun = runService.getWorkgroups(runId);
-
         Iterator<Workgroup> workgroupsInRunIterator = workgroupsInRun.iterator();
-
-        //loop through all the workgroups in the run
-        while(workgroupsInRunIterator.hasNext()) {
-          //get a workgroup
+        while (workgroupsInRunIterator.hasNext()) {
           Workgroup tempWorkgroup = workgroupsInRunIterator.next();
-
-          //get the workgroup id
           Long tempWorkgroupId = tempWorkgroup.getId();
-
-          //check if the workgroup id is the one we are looking for
-          if(workgroupId.equals(tempWorkgroupId)) {
-            //we have found the workgroup id that we want
+          if (workgroupId.equals(tempWorkgroupId)) {
             result = true;
             break;
           }
@@ -454,7 +370,6 @@ public final class SecurityUtils {
         e.printStackTrace();
       }
     }
-
     return result;
   }
 
@@ -462,7 +377,6 @@ public final class SecurityUtils {
    * Given a <code>HttpServletRequest</code> request, makes a request to the mode master
    * to determine if the calling servlet should run in portal mode or stand-alone. Returns
    * true if the settings.xml specifies that it is in portal mode, false otherwise.
-   *
    * @param request
    * @return
    */

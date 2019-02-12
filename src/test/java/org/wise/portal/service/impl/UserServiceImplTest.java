@@ -99,7 +99,6 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
    * Create 2 users and attempt to save to DB.
    * The second user should create a new user with similar username but with an added "a" at the end
    */
-  @Test
   public void testDuplicateUserErrors() throws Exception {
     StudentUserDetails userDetails = (StudentUserDetails) this.applicationContext
         .getBean("studentUserDetails");

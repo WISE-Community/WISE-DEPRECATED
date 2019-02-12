@@ -13,6 +13,8 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * WISE implementation of SwitchUserFilter
  * @author Hiroki Terashima

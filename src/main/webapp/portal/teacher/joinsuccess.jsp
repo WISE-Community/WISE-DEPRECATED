@@ -16,7 +16,7 @@
 	<div id="page">
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/legacy" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise" /></a>
 			</div>
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="teacher.registerTeacherConfirm.teacherRegistration"/></div>
@@ -32,7 +32,7 @@
 						<div><span class="usernameDisplay">${displayname}</span> <a href="account"><spring:message code="teacher.registerTeacherConfirm.edit"/></a></div>
 
 					</div>
-	  				<br /><div><a href="${contextPath}/login" class="wisebutton"><spring:message code="teacher.registerTeacherConfirm.signInToWise"/></a></div>
+	  				<br /><div><a href="${contextPath}/legacy/login" class="wisebutton"><spring:message code="teacher.registerTeacherConfirm.signInToWise"/></a></div>
 				</div>
 			</div>
 		</div>

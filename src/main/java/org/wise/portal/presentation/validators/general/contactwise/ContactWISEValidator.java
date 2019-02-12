@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -41,54 +41,37 @@ import org.wise.portal.domain.general.contactwise.impl.ContactWISEForm;
 public class ContactWISEValidator implements Validator {
 
   private static final String EMAIL_REGEXP =
-    "^[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*@" +
+      "^[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*@" +
       "([a-zA-Z0-9]+([\\.-][a-zA-Z0-9]+)*)+\\.[a-zA-Z]{2,}$";
 
-  /**
-   * @see org.springframework.validation.Validator#supports(java.lang.Class)
-   */
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {
     return ContactWISEForm.class.isAssignableFrom(clazz);
   }
 
-  /**
-   * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-   */
   public void validate(Object contactWISEIn, Errors errors) {
     ContactWISEForm contactWISE = (ContactWISEForm) contactWISEIn;
 
-    /* NOTE: this check may be removed later if we never allow students to
-       submit feedback */
+    // NOTE: this check may be removed later if we never allow students to submit feedback
     Boolean isStudent = contactWISE.getIsStudent();
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.contactwise-name");
 
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name",
-      "error.contactwise-name");
-
-    //email is not required for students
     if (!isStudent) {
-      ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email",
-        "error.contactwise-email-empty");
+      ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email",  "error.contactwise-email-empty");
     }
 
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "summary",
-      "error.contactwise-summary");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "summary",  "error.contactwise-summary");
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description",
-      "error.contactwise-description");
+        "error.contactwise-description");
 
     String email = contactWISE.getEmail();
 
-    /* validate email if user is not a student and email is not null and
-       not empty */
     if (!isStudent && email != null && !email.trim().equals("")) {
       validateEmail(email, errors);
     }
   }
 
-  /*
-   * Validates the email against the email regular expression
-   */
   private void validateEmail(String email, Errors errors) {
     if (email != null && !Pattern.matches(EMAIL_REGEXP, email)) {
       errors.rejectValue("email", "error.email-invalid");

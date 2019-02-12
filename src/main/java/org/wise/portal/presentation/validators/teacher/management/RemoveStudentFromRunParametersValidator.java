@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -37,41 +37,30 @@ import org.wise.portal.domain.teacher.management.RemoveStudentFromRunParameters;
 @Component
 public class RemoveStudentFromRunParametersValidator implements Validator {
 
-  /**
-   * @see org.springframework.validation.Validator#supports(java.lang.Class)
-   */
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {
     return RemoveStudentFromRunParameters.class.isAssignableFrom(clazz);
   }
 
-  /**
-   * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-   */
   public void validate(Object paramsIn, Errors errors) {
     RemoveStudentFromRunParameters params = (RemoveStudentFromRunParameters) paramsIn;
-
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "runId", "error.no-runId");
-
     if (errors.getErrorCount() != 0) {
       return;
     }
 
     Long runId = params.getRunId();
-
     if (runId < 1) {
       errors.rejectValue("runId", "error.illegal-runId");
       return;
     }
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userId", "error.userId-not-specified");
-
     if (errors.getErrorCount() != 0) {
       return;
     }
 
     Long userId = params.getUserId();
-
     if (userId < 1) {
       errors.rejectValue("userId", "error.illegal-userId");
       return;

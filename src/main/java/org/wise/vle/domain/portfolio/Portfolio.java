@@ -40,7 +40,8 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Eddie Pan
  */
 @Entity
-@Table(name = "portfolio", indexes = { @Index(columnList = "runId,workgroupId", name = "portfolioRunIdAndWorkgroupIdIndex") } )
+@Table(name = "portfolio", indexes = {
+    @Index(columnList = "runId,workgroupId", name = "portfolioRunIdAndWorkgroupIdIndex") } )
 @Getter
 @Setter
 public class Portfolio extends PersistableDomain implements Serializable {
@@ -81,9 +82,6 @@ public class Portfolio extends PersistableDomain implements Serializable {
   public Portfolio() {
   }
 
-  /**
-   * Constructor that does not populate the data field
-   */
   public Portfolio(JSONObject portfolioJSONObject) {
     try {
       this.runId = portfolioJSONObject.getLong("runId");
@@ -115,10 +113,6 @@ public class Portfolio extends PersistableDomain implements Serializable {
     return Portfolio.class;
   }
 
-  /**
-   * Get the JSON string representation of the Portfolio
-   * @return
-   */
   public String toJSONString() {
     String jsonString = null;
     JSONObject jsonObject = new JSONObject(this);

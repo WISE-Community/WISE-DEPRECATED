@@ -34,7 +34,8 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name = "userinfo", indexes = { @Index(columnList = "workgroupId", name = "userinfoWorkgroupIdIndex") } )
+@Table(name = "userinfo", indexes = {
+    @Index(columnList = "workgroupId", name = "userinfoWorkgroupIdIndex") } )
 @Getter
 @Setter
 public class UserInfo extends PersistableDomain {

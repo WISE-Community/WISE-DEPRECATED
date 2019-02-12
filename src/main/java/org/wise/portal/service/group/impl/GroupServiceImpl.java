@@ -61,18 +61,12 @@ public class GroupServiceImpl implements GroupService {
   @Autowired
   private AclService<Group> aclService;
 
-  /**
-   * @see GroupService#changeGroupName(Group, String)
-   */
   @Transactional()
   public void changeGroupName(Group group, String newName) {
     group.setName(newName);
-    this.groupDao.save(group);
+    groupDao.save(group);
   }
 
-  /**
-   * @see GroupService#createGroup(GroupParameters)
-   */
   @Transactional(rollbackFor = { AlreadyExistsException.class,
     NotFoundException.class, DataIntegrityViolationException.class })
   public Group createGroup(GroupParameters groupParameters) {
@@ -84,7 +78,7 @@ public class GroupServiceImpl implements GroupService {
     Long parentId = groupParameters.getParentId();
     if (parentId != 0) {
       try {
-        Group parentGroup = this.groupDao.getById(parentId);
+        Group parentGroup = groupDao.getById(parentId);
         group.setParent(parentGroup);
       } catch (ObjectNotFoundException e) {
         parentId = new Long(0);
@@ -93,7 +87,7 @@ public class GroupServiceImpl implements GroupService {
 
     for (Long memberId : groupParameters.getMemberIds()) {
       try {
-        User user = this.userDao.getById(memberId);
+        User user = userDao.getById(memberId);
         group.addMember(user);
       }
       catch (ObjectNotFoundException e) {
@@ -101,20 +95,17 @@ public class GroupServiceImpl implements GroupService {
       }
     }
 
-    this.groupDao.save(group);
-    this.aclService.addPermission(group, BasePermission.ADMINISTRATION);
+    groupDao.save(group);
+    aclService.addPermission(group, BasePermission.ADMINISTRATION);
     return group;
   }
 
-  /**
-   * @see GroupService#updateGroup(GroupParameters)
-   */
   @Transactional()
   public void updateGroup(GroupParameters groupParameters) throws ObjectNotFoundException {
-    Group group = this.retrieveById(groupParameters.getGroupId());
+    Group group = retrieveById(groupParameters.getGroupId());
     group.setName(groupParameters.getName());
     try {
-      group.setParent(this.retrieveById(groupParameters.getParentId()));
+      group.setParent(retrieveById(groupParameters.getParentId()));
     } catch (ObjectNotFoundException e) {
       group.setParent(null);
     }
@@ -124,16 +115,13 @@ public class GroupServiceImpl implements GroupService {
       members.add(user);
     }
     group.setMembers(members);
-    this.groupDao.save(group);
+    groupDao.save(group);
   }
 
 
   // TODO LAW - if we put in delete group remember to put in deletes for ACL
   // entries
 
-  /**
-   * @see GroupService#moveGroup(Group, Group)
-   */
   @Transactional()
   public void moveGroup(Group newParent, Group groupToBeMoved) throws CyclicalGroupException {
     Group previousParent = groupToBeMoved.getParent();
@@ -144,60 +132,48 @@ public class GroupServiceImpl implements GroupService {
       throw new CyclicalGroupException("Cycle will be created"
         + " when this group is moved.");
     }
-    this.groupDao.save(groupToBeMoved);
+    groupDao.save(groupToBeMoved);
   }
 
-  /**
-   * @see GroupService#addMembers(Group, Set)
-   */
   @Transactional()
   public void addMembers(Group group, Set<User> membersToAdd) {
     for (User member : membersToAdd) {
       group.addMember(member);
     }
-    this.groupDao.save(group);
+    groupDao.save(group);
   }
 
-  /**
-   * @see GroupService#addMember(Long, User)
-   */
   @Transactional()
   public void addMember(Long groupId, User user) throws ObjectNotFoundException {
-    Group group = this.retrieveById(groupId);
+    Group group = retrieveById(groupId);
     group.addMember(user);
-    this.groupDao.save(group);
+    groupDao.save(group);
   }
 
-  /**
-   * @see GroupService#removeMembers(Group, Set)
-   */
   @Transactional()
   public void removeMembers(Group group, Set<User> membersToRemove) {
     for (User member : membersToRemove) {
       group.removeMember(member);
     }
-    this.groupDao.save(group);
+    groupDao.save(group);
   }
 
-  /**
-   * @see GroupService#removeMember(Group, User)
-   */
   @Transactional()
   public void removeMember(Group group, User memberToRemove) {
     group.removeMember(memberToRemove);
-    this.groupDao.save(group);
+    groupDao.save(group);
   }
 
   /**
    * Checks to see if the given group contains a cycle
    *
-   * @param group
-   *            <code>Group</code> group to be checked for cycles
+   * @param group <code>Group</code> group to be checked for cycles
    * @return boolean true iff the given group contains a cycle
    */
   private boolean cycleExists(Group group) {
-    if (group.getParent().equals(group))
+    if (group.getParent().equals(group)) {
       return true;
+    }
 
     // traverse up the parent until null (no cycle) or
     // until group is reached again (cycle)
@@ -216,17 +192,11 @@ public class GroupServiceImpl implements GroupService {
     return false;
   }
 
-  /**
-   * @see GroupService#getGroups()
-   */
   @Transactional(readOnly = true)
   public List<Group> getGroups() {
-    return this.groupDao.getList();
+    return groupDao.getList();
   }
 
-  /**
-   * @see GroupService#retrieveById(Long)
-   */
   @Transactional(readOnly = true)
   public Group retrieveById(Long groupId) throws ObjectNotFoundException {
     return groupDao.getById(groupId);

@@ -1,0 +1,47 @@
+<button mat-icon-button [matMenuTriggerFor]="runMenu">
+  <mat-icon i18n-aria-label aria-label="Run Menu">more_vert</mat-icon>
+</button>
+<mat-menu #runMenu="matMenu" xPosition="before">
+  <div>
+    <div class="run-info mat-body-2" i18n>Run ID: {{ run.id }}</div>
+    <mat-divider></mat-divider>
+    <a mat-menu-item (click)="showEditRunDetails()">
+      <mat-icon>settings</mat-icon>
+      <span>Edit Settings</span>
+    </a>
+    <a mat-menu-item href="{{ previewLink }}" target="_blank">
+      <mat-icon>tv</mat-icon>
+      <span i18n>Preview</span>
+    </a>
+    <a mat-menu-item (click)="showUnitDetails()">
+      <mat-icon>info</mat-icon>
+      <span i18n>Unit Info</span>
+    </a>
+    <a mat-menu-item href="{{ editLink }}" *ngIf="canEdit()">
+      <mat-icon>edit</mat-icon>
+      <span i18n>Edit Content</span>
+    </a>
+    <a mat-menu-item (click)="shareRun()" *ngIf="canShare()">
+      <mat-icon>share</mat-icon>
+      <span i18n>Share</span>
+    </a>
+    <a mat-menu-item href="{{ reportProblemLink }}">
+      <mat-icon>report_problem</mat-icon>
+      <span i18n>Report Problem</span>
+    </a>
+    <!-- TODO: put back once restart, and cancel run are implemented
+    <mat-divider></mat-divider>
+    <a mat-menu-item *ngIf="isScheduled()">
+      <mat-icon color="warn">cancel</mat-icon>
+      <span i18n>Cancel Unit</span>
+    </a-->
+    <a mat-menu-item *ngIf="run.endTime" (click)="restartRun()">
+      <mat-icon color="success" class="success">play_arrow</mat-icon>
+      <span i18n>Restart</span>
+    </a>
+    <a mat-menu-item *ngIf="run.startTime && !run.endTime && !isScheduled()" (click)="showEndRunDialog()">
+      <mat-icon color="warn">stop</mat-icon>
+      <span i18n>End Unit</span>
+    </a>
+  </div>
+</mat-menu>

@@ -55,7 +55,7 @@ public class LoginController {
   @Autowired
   PortalService portalService;
 
-  @RequestMapping(value = "/login", method = RequestMethod.GET)
+  @RequestMapping(value = "/legacy/login", method = RequestMethod.GET)
   public String handleLogIn(HttpServletRequest request, ModelMap modelMap) throws Exception {
     String failed = request.getParameter("failed");
     String redirectUrl = request.getParameter("redirect");
@@ -110,10 +110,9 @@ public class LoginController {
    * @throws IOException
    */
   @RequestMapping(value = "/session/renew", method = RequestMethod.GET)
-  public void handleLogIn(HttpServletResponse response) throws IOException {
+  public void renewSession(HttpServletResponse response) throws IOException {
     User loggedInUser = ControllerUtil.getSignedInUser();
     if (loggedInUser != null) {
-      // user is logged in.
       // if login is disallowed (by admin), ask the user (student, teacher, author) to log out soon
       try {
         Portal portal = portalService.getById(new Integer(1));
@@ -127,7 +126,6 @@ public class LoginController {
         // do nothing
       }
     } else {
-      // user is not logged in.
       response.getWriter().print("false");
     }
   }

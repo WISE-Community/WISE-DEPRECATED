@@ -418,4 +418,22 @@ public class ProjectImpl implements Project {
       return result;
     }
   }
+
+  public boolean isOfficialProject() {
+    return hasTag("library");
+  }
+
+  public boolean isCommunityProject() {
+    return hasTag("teachershared");
+  }
+
+  public boolean hasTag(String tag) {
+    Set<Tag> projectTags = this.getTags();
+    for (Tag projectTag: projectTags) {
+      if (projectTag.getName().equals(tag)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

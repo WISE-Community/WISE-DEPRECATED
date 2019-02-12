@@ -217,6 +217,7 @@
  							<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 								| <a href="${contextPath}/admin/run/replacebase64withpng.html"><spring:message code='admin.index.replaceBase64WithPNG' /></a>
 								| <a onclick="mergeProjectMetadata()"><spring:message code='admin.index.mergeProjectMetadata' /></a>
+                                | <a href="${contextPath}/admin/project/updatesharedprojects"><spring:message code='admin.index.updateSharedProjectsPermissions' /></a>
 							</sec:authorize>
 						</h5>
 					</div>
@@ -228,7 +229,7 @@
 						</div>
 						<div class="sectionContent">
 							<h5>
-								<a href="${contextPath}/admin/news/managenewsitems.html"><spring:message
+								<a href="${contextPath}/admin/news/manage"><spring:message
 										code='admin.index.workWithNewsItems' /></a>
 							</h5>
 						</div>

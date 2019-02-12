@@ -1,0 +1,33 @@
+.content {
+  max-width: breakpoint('lg.min');
+  margin: 0 auto;
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  min-width: auto;
+  position: relative;
+  padding: 0 8px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding: 0 16px;
+  }
+
+  @media (min-width: breakpoint('md.min')) {
+    padding: 0 32px;
+  }
+}
+
+.content__header {
+  margin-bottom: 8px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    margin-bottom: 0;
+
+    h1 .mat-icon {
+      @include mat-icon-size(32px);
+    }
+  }
+
+  @media (min-width: breakpoint('md.min')) {
+    margin-top: 16px;
+  }
+}

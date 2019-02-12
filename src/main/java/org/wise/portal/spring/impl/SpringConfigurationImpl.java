@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -22,26 +22,19 @@ package org.wise.portal.spring.impl;
 import org.wise.portal.spring.SpringConfiguration;
 
 /**
- * Implementation of <code>SpringConfiguration</code> specifically for the
- * WISE portal.
+ * Implementation of <code>SpringConfiguration</code> for the WISE portal.
  *
  * @author Cynick Young
  * @author Hiroki Terashima
  */
 public final class SpringConfigurationImpl implements SpringConfiguration {
 
-  /**
-   * @see org.wise.portal.spring.SpringConfiguration#getDispatcherServletContextConfigLocations()
-   */
   public String[] getDispatcherServletContextConfigLocations() {
     return new String[] {
       "classpath:configurations/dispatcherServletContexts.xml"
     };
   }
 
-  /**
-   * @see org.wise.portal.spring.SpringConfiguration#getRootApplicationContextConfigLocations()
-   */
   public String[] getRootApplicationContextConfigLocations() {
     return new String[] {
       "classpath:configurations/applicationContexts.xml"

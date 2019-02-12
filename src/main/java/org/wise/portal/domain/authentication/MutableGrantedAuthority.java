@@ -30,7 +30,7 @@ import org.wise.portal.domain.Persistable;
  * could be Admin, User, Manager, and Bank Teller roles.
  *
  * @author Cynick Young
- * @see org.acegisecurity.GrantedAuthority
+ * @see GrantedAuthority
  */
 public interface MutableGrantedAuthority extends GrantedAuthority, Persistable {
 

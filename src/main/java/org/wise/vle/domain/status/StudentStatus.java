@@ -37,7 +37,8 @@ import org.wise.vle.domain.PersistableDomain;
  */
 @Entity
 @Table(name = "studentstatus",
-  indexes = { @Index(columnList = "runId", name = "studentstatusRunIdIndex"), @Index(columnList = "workgroupId", name = "studentstatusWorkgroupIdIndex")} )
+  indexes = { @Index(columnList = "runId", name = "studentstatusRunIdIndex"),
+    @Index(columnList = "workgroupId", name = "studentstatusWorkgroupIdIndex")} )
 @Getter
 @Setter
 public class StudentStatus extends PersistableDomain {

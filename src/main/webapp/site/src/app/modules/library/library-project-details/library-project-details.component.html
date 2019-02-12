@@ -1,0 +1,65 @@
+<div class="library-project-details" mat-dialog-content>
+  <div fxLayout="row">
+    <div fxLayout="row">
+      <div class="mat-card-avatar" [style.background-image]="data.project.thumbStyle"></div>
+      <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
+        <div fxLayout="column">
+          <div class="mat-card-title mat-body-2">{{ data.project.metadata.title }}</div>
+          <div class="mat-card-subtitle">
+            <div>
+              <ng-container *ngIf="data.project.metadata.grades.length" i18n>Grade level:</ng-container>
+              <span *ngFor="let g of data.project.metadata.grades; let isLast=last"> {{ g }}{{ isLast ? '' : ', ' }}</span>
+              <ng-container *ngIf="data.project.metadata.grades.length && data.project.metadata.totalTime">&nbsp;|&nbsp;</ng-container>
+              <ng-container *ngIf="data.project.metadata.totalTime" i18n>Duration: {{ data.project.metadata.totalTime }}</ng-container><br />
+              <ng-container i18n>Unit ID: {{ data.project.id }}</ng-container>
+            </div>
+          </div>
+        </div>
+        <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
+      </div>
+    </div>
+    <span fxFlex></span>
+    <app-library-project-menu *ngIf="isTeacher && !isRunProject"
+                              [project]="data.project"></app-library-project-menu>
+  </div>
+  <div class="library-project-details__info info-block">
+    <div class="library-project-details__summary" [innerHTML]="data.project.metadata.summary"></div>
+    <p *ngIf="ngss.disciplines.length">
+      <strong i18n>Discipline:</strong>
+      <ng-container *ngFor="let discipline of ngss.disciplines; let isLast=last">
+        {{ discipline.name }}{{ isLast ? '' : ' / ' }}
+      </ng-container>
+    </p>
+    <p *ngIf="data.project.metadata.features"><strong i18n>Features:</strong> {{ data.project.metadata.features }}</p>
+    <p *ngIf="ngss.dciArrangements.length">
+      <strong i18n>NGSS Performance Expectations: </strong>
+      <ng-container *ngFor="let dcia of ngss.dciArrangements; let isLast=last">
+        <a href="{{ ngssWebUrl }}{{ dcia.id }}" target="_blank">{{ dcia.id }} {{ dcia.name }}</a>
+        <ng-container *ngIf="dcia.children.length">
+          (<ng-container *ngFor="let pe of dcia.children; let isLastChild=last"><a class="library-project-details__pe" href="{{ ngssWebUrl }}{{ pe.id }}"
+                                                                                   target="_blank" matTooltip="{{ pe.name }}"
+                                                                                   [matTooltipPosition]="'above'">{{ pe.id }}</a>{{ isLastChild ? '' : ', ' }}</ng-container>)
+        </ng-container>{{ isLast ? '' : ' / ' }}
+      </ng-container>
+    </p>
+  </div>
+</div>
+<div mat-dialog-actions
+     fxLayout="row"
+     fxLayout.xs="column"
+     fxLayoutAlign="end"
+     fxLayoutGap="8px">
+  <button mat-button cdkFocusRegionstart (click)="onClose()" i18n>Close</button>
+  <button *ngIf="isTeacher && !isRunProject"
+          mat-flat-button 
+          color="accent" 
+          (click)="runProject()">
+    <mat-icon>supervised_user_circle</mat-icon>&nbsp;<ng-container i18n>Use with Class</ng-container>
+  </button>
+  <a mat-flat-button
+     color="primary"
+     href="{{previewLink}}"
+     target="_blank">
+    <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Preview</ng-container>
+  </a>
+</div>

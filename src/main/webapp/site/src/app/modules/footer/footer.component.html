@@ -1,0 +1,80 @@
+<footer class="footer primary-bg dark-theme mat-caption">
+  <div class="content secondary-text">
+    <div fxLayout="column" fxLayout.gt-sm="row wrap" fxLayoutAlign="center center">
+      <div fxLayout="column" fxLayout.gt-xs="row wrap" fxLayoutAlign="center center">
+        <div class="footer__section center">
+          <a routerLink="/join" i18n>Create Account</a> |
+          <a routerLink="/features" i18n>Features</a> |
+          <a routerLink="/about" i18n>About Us</a> |
+          <a routerLink="/news" i18n>News</a>
+        </div>
+        <span fxHide fxShow.gt-xs>/</span>
+        <div class="footer__section center">
+          <a routerLink="/help" i18n>Help + FAQs</a> |
+          <a routerLink="/privacy" i18n>Privacy + Use</a> |
+          <a routerLink="/contact" i18n>Contact Us</a> |
+          <a href="/legacy" i18n>Legacy</a>
+        </div>
+      </div>
+      <span fxFlex fxHide fxShow.gt-sm></span>
+      <div>
+        <a href="https://www.facebook.com/wisetels/"
+           target="_blank"
+           mat-icon-button>
+          <mat-icon svgIcon="facebook-ffffff"
+                    i18n-aria-label
+                    aria-label="WISE on Facebook"></mat-icon>
+        </a>
+        <a href="https://twitter.com/WISETELS"
+           target="_blank"
+           mat-icon-button>
+          <mat-icon svgIcon="twitter-ffffff"
+                    i18n-aria-label
+                    aria-label="WISE on Twitter"></mat-icon>
+        </a>
+        <a href="https://github.com/WISE-Community"
+           target="_blank"
+           mat-icon-button>
+          <mat-icon svgIcon="github-ffffff"
+                    i18n-aria-label
+                    aria-label="WISE on Github"></mat-icon>
+        </a>
+      </div>
+    </div>
+    <div fxLayout="column"
+         fxLayout.gt-xs="row wrap"
+         fxLayoutAlign="center center"
+         fxLayoutAlign.gt-sm="center start">
+      <div class="footer__section"
+           fxFlex="100%"
+           fxFlex.gt-sm="1 1 0"
+           ngClass="center"
+           [ngClass.gt-sm]="{'center': false}">
+        <p i18n>Powered by the <a href="https://wise-research.berkeley.edu" target="_blank">TELS Research Community</a> and <a href="https://github.com/WISE-Community/WISE" target="_blank">WISE Open Source Technology</a>.</p>
+        <p i18n>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</p>
+      </div>
+      <div fxFlex="0 0 auto">
+        <div class="footer__section"
+             fxLayout="row wrap"
+             fxLayoutAlign="center center"
+             fxLayoutAlign.gt-sm="end center">
+          <a href="https://www.nsf.gov/" target="_blank">
+            <img src="assets/img/footer/nsf-logo.png" i18n-alt alt="National Science Foundation" />
+          </a>
+          <a href="http://berkeley.edu" target="_blank">
+            <img src="assets/img/footer/uc-berkeley-logo.png" i18n-alt alt="UC Berkeley" />
+          </a>
+          <a href="https://concord.org" target="_blank">
+            <img src="assets/img/footer/cc-logo.png" i18n-alt alt="Concord Consortium" />
+          </a>
+          <img src="assets/img/footer/sail-logo.png" i18n-alt alt="SAIL (Scalable Architecture for Interactive Learning)" />
+        </div>
+        <div class="footer__section"
+             fxLayoutAlign="center center"
+             fxLayoutAlign.gt-sm="end center">
+          <span class="center" i18n>©1996-2018, <a href="https://www.berkeley.edu" target="_blank">UC Berkeley</a> | Web-based Inquiry Science Environment</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

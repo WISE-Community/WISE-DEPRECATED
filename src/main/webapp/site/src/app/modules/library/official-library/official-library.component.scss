@@ -1,0 +1,21 @@
+.library-group {
+  .mat-content {
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .mat-expansion-panel-body {
+    padding: 0 16px 20px;
+  }
+
+  &:not(.mat-expanded) {
+    .mat-expansion-indicator {
+      padding-left: 16px;
+    }
+  }
+}
+
+.library-group__title {
+  white-space: nowrap;
+  margin-right: 8px;
+}
