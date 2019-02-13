@@ -408,7 +408,7 @@ var DiscussionController = function (_ComponentController) {
             var workgroupId = componentState.workgroupId;
             var latestInappropriateFlagAnnotation = this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
             var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-            if (userNames == null || userNames.length == 0) {
+            if (userNames.length == 0) {
               componentState.userNames = this.getUserIdsDisplay(workgroupId);
             } else {
               componentState.userNames = userNames.map(function (obj) {

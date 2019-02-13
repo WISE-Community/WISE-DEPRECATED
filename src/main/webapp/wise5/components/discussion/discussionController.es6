@@ -343,7 +343,7 @@ class DiscussionController extends ComponentController {
         const latestInappropriateFlagAnnotation =
             this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
         const userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-        if (userNames == null || userNames.length == 0) {
+        if (userNames.length == 0) {
           componentState.userNames = this.getUserIdsDisplay(workgroupId);
         } else {
           componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
@@ -378,7 +378,7 @@ class DiscussionController extends ComponentController {
     const userIds = this.ConfigService.getUserIdsByWorkgroupId(workgroupId);
     const userIdsDisplay = [];
     for (let userId of userIds) {
-      userIdsDisplay.push('Student ' + userId);
+      userIdsDisplay.push(`Student ${userId}`);
     }
     return userIdsDisplay.join(', ');
   }
