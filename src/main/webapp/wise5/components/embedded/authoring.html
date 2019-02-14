@@ -216,7 +216,7 @@
                  ng-change='embeddedController.authoringViewComponentChanged()'
                  ng-model-options='{ debounce: 1000 }'/>
         </md-input-container>
-        <md-button class='topButton md-raised md-primary' ng-click='embeddedController.chooseModelFile()'>
+        <md-button class='topButton md-raised md-primary' ng-click="embeddedController.showModelFileChooserPopup()">
           <md-icon>insert_photo</md-icon>
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'embedded.chooseTheModelFile' | translate }}</md-tooltip>
         </md-button>
