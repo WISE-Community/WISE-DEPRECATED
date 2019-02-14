@@ -88,10 +88,15 @@ export class UserService {
     const logInURL = `${this.configService.getContextPath()}/j_acegi_security_check`;
     this.http.post(logInURL,
         formData,
-        { headers: headers, responseType: "text" })
-        .subscribe(response => {
+        { headers: headers, responseType: 'text' })
+        .subscribe((response) => {
+          try {
+            response = JSON.parse(response);
+          } catch(e) {
+
+          }
           this.retrieveUser(credentials.username).subscribe((user) => {
-            return callback && callback();
+            return callback && callback(response);
           });
         });
   }

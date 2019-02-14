@@ -89,16 +89,8 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
       try {
         responseJSON.put("status", "failure");
         boolean isReCaptchaRequired = ControllerUtil.isReCaptchaRequired(request);
-        if (isReCaptchaRequired) {
-          responseJSON.put("requireRecaptcha", true);
-          String contextPath = request.getContextPath();
-          response.sendRedirect(contextPath + "/login/recaptcha");
-        } else {
-          String contextPath = request.getContextPath();
-          response.sendRedirect(contextPath + "/login");
-        }
+        responseJSON.put("isRecaptchaRequired", isReCaptchaRequired);
         response.getWriter().write(responseJSON.toString());
-        return;
       } catch (JSONException e) {
       }
     } else {
