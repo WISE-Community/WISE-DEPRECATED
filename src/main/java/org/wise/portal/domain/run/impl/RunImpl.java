@@ -279,6 +279,11 @@ public class RunImpl implements Run {
     return null;
   }
 
+  public boolean isOwner(User user) {
+    User owner = getOwner();
+    return user.getId() == owner.getId();
+  }
+
   /**
    * @param teacherUser A User object.
    * @return Whether the user is an owner or shared owner of the run.

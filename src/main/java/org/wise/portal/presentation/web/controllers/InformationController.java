@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.acls.model.Permission;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,6 +52,7 @@ import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.vle.web.SecurityUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -854,8 +856,10 @@ public class InformationController {
     JSONObject classmateUserInfo = new JSONObject();
     try {
       classmateUserInfo.put("workgroupId", classmateWorkgroup.getId());
-      String userNames = getUserNamesFromWorkgroup(classmateWorkgroup);
-      classmateUserInfo.put("userName", userNames);
+      if (isAllowedToViewStudentNames(run, loggedInUser)) {
+        String userNames = getUserNamesFromWorkgroup(classmateWorkgroup);
+        classmateUserInfo.put("userName", userNames);
+      }
       if (classmateWorkgroup.getPeriod() != null) {
         classmateUserInfo.put("periodId", classmateWorkgroup.getPeriod().getId());
         classmateUserInfo.put("periodName", classmateWorkgroup.getPeriod().getName());
@@ -868,6 +872,26 @@ public class InformationController {
     return classmateUserInfo;
   }
 
+  private boolean isAllowedToViewStudentNames(Run run, User user) {
+    return isStudentInRun(run, user) ||
+        isTeacherOwnerOfRun(run, user) ||
+        isTeacherSharedOwnerOfRunWithViewStudentNamesPermission(run, user);
+  }
+
+  private boolean isStudentInRun(Run run, User user) {
+    return SecurityUtils.isStudent(user) && run.isStudentAssociatedToThisRun(user);
+  }
+
+  private boolean isTeacherOwnerOfRun(Run run, User user) {
+    return run.isOwner(user);
+  }
+
+  private boolean isTeacherSharedOwnerOfRunWithViewStudentNamesPermission(Run run, User user) {
+    return SecurityUtils.isTeacher(user) &&
+        run.isTeacherAssociatedToThisRun(user) &&
+        runService.isAllowedToViewStudentNames(run, user);
+  }
+
   /**
    * Get an array of user objects. Each user object contains the user id,
    * name, first name, and last name.
@@ -876,8 +900,7 @@ public class InformationController {
    */
   private JSONArray getWorkgroupUsers(Workgroup workgroup, Run run, User loggedInUser) {
     JSONArray users = new JSONArray();
-    boolean canViewStudentNames = isUserOwnerOfRun(run, loggedInUser) ||
-        isSharedOwnerWithGradePermissionOfRun(run, loggedInUser);
+    boolean canViewStudentNames = isAllowedToViewStudentNames(run, loggedInUser);
     for (User user : workgroup.getMembers()) {
       JSONObject userJSONObject = new JSONObject();
       try {
