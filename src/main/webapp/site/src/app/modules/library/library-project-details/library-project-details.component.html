@@ -23,6 +23,17 @@
                               [project]="data.project"></app-library-project-menu>
   </div>
   <div class="library-project-details__info info-block">
+    <p *ngIf="data.project.wiseVersion === 4"
+       class="warn" 
+       fxLayout="row" 
+       fxLayoutAlign="start center">
+      <mat-icon color="warn">warning</mat-icon>&nbsp;
+      <strong class="more-info"
+              i18n-matTooltip
+              matTooltip="This unit is from an old version of WISE and will eventually be phased out."
+              [matTooltipPosition]="'after'"
+              i18n>Legacy Unit</strong>
+    </p>
     <div class="library-project-details__summary" [innerHTML]="data.project.metadata.summary"></div>
     <p *ngIf="ngss.disciplines.length">
       <strong i18n>Discipline:</strong>
