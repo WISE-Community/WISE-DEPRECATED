@@ -1,6 +1,8 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, Inject } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
+import { MatDialog } from '@angular/material';
+import { OfficialLibraryDetailsComponent } from '../official-library/official-library.component';
 
 @Component({
   selector: 'app-teacher-project-library',
@@ -19,7 +21,7 @@ export class TeacherProjectLibraryComponent {
   numberOfCommunityProjectsVisible;
   numberOfPersonalProjectsVisible;
 
-  constructor(private libraryService: LibraryService) {
+  constructor(private libraryService: LibraryService, public dialog: MatDialog) {
     libraryService.tabIndexSource$.subscribe((tabIndex) => {
       this.selectedTabIndex = tabIndex;
     })
@@ -37,4 +39,9 @@ export class TeacherProjectLibraryComponent {
     this.numberOfPersonalProjectsVisible = count;
   }
 
+  showInfo() {
+    this.dialog.open(OfficialLibraryDetailsComponent, {
+      panelClass: 'mat-dialog--sm'
+    });
+  }
 }

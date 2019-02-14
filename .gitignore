@@ -2,6 +2,7 @@
 *.class
 *.DS_Store
 build
+.classpath
 .jspm
 .m2
 .npm

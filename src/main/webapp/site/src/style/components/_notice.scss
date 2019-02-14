@@ -4,6 +4,7 @@
   margin: 24px auto;
   border-radius: 3px;
   font-size: mat-font-size($config, body-1);
+  font-weight: 500;
 
   @media (min-width: breakpoint('sm.min')) {
     max-width: 80%;

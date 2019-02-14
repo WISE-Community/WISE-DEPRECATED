@@ -109,7 +109,7 @@ public class ContactAPIController {
   private boolean isRecaptchaResponseValid(String recaptchaResponse) {
     String recaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
     String recaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-    return WISEAuthenticationProcessingFilter.checkReCaptchaResponse(
+    return ControllerUtil.checkReCaptchaResponse(
         recaptchaPrivateKey, recaptchaPublicKey, recaptchaResponse);
   }
 

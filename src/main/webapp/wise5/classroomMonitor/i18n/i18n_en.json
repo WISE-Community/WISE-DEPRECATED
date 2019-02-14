@@ -33,6 +33,7 @@
     "dismissNotificationInvalidDismissCode": "Invalid dismiss code. Please try again.",
     "downloadEvents": "Download Events",
     "downloadExport": "Download Export",
+    "downloadingExport": "Downloading Export",
     "downloadLatestStudentWork": "Download Latest Work",
     "downloadNotebook": "Download Notebook",
     "downloadStudentAssets": "Download Student Assets",

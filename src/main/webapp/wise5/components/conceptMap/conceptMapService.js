@@ -1612,6 +1612,20 @@ var ConceptMapService = function (_ComponentService) {
 
       return prefix + nextAvailableNumber;
     }
+  }, {
+    key: 'displayAnnotation',
+    value: function displayAnnotation(componentContent, annotation) {
+      if (annotation.displayToStudent === false) {
+        return false;
+      } else {
+        if (annotation.type == 'score') {} else if (annotation.type == 'comment') {} else if (annotation.type == 'autoScore') {
+          return componentContent.showAutoScore;
+        } else if (annotation.type == 'autoComment') {
+          return componentContent.showAutoFeedback;
+        }
+      }
+      return true;
+    }
 
     // end of ConceptMapService class
 

@@ -67,6 +67,14 @@ public interface RunService {
   void endRun(Run run);
 
   /**
+   * Restarts this run. The side effect is that the run's endtime gets
+   * set to null. The run continues to be available for students to
+   * access.
+   * @param run the <code>Run</code> to restart
+   */
+  void restartRun(Run run);
+
+  /**
    * Starts this run. The side effect is that the run's endtime gets set to null.
    * A Run that has started becomes eligible for classroom run.
    * If the run is already started, nothing happens.
@@ -362,6 +370,15 @@ public interface RunService {
    * @return boolean
    */
   boolean hasRunPermission(Run run, User user, Permission permission);
+
+  /**
+   * Returns <code>boolean</code> true if the run with the given
+   * <code>runId</code> does not have any student workgroups that contain more
+   * than 1 user, returns false otherwise.
+   * @param runId
+   * @return boolean
+   */
+  boolean canDecreaseMaxStudentsPerTeam(Long runId);
 
   /**
    * Returns a <code>List<Run></code> list of runs that were run within the

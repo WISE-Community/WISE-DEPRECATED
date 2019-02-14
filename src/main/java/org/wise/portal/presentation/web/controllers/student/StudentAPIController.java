@@ -549,6 +549,7 @@ public class StudentAPIController {
     Run run = runService.retrieveById(runId);
     JSONObject response = new JSONObject();
     response.put("status", false);
+    response.put("isTeacher", user.isTeacher());
     Workgroup workgroup = null;
     if (workgroupId != null) {
       workgroup = workgroupService.retrieveById(workgroupId);

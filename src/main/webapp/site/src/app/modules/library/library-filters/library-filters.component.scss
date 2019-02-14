@@ -12,23 +12,27 @@
     max-height: 1000px;
   }
 
-  @media (min-width: breakpoint('md.min')) {
-    max-height: 1000px;
+  &.split {
+    @media (min-width: breakpoint('md.min')) {
+      max-height: 1000px;
+    }
   }
-}
 
-.library-filters-toggle {
-  margin-left: 4px;
-
-  @media (min-width: breakpoint('md.min')) {
-    display: none;
+  .notice {
+    margin-top: 0;
+    margin-bottom: 16px;
+    max-width: none;
+    background-color: transparent;
+    padding: 0;
   }
 }
 
 .library-filter {
   margin: 0;
-}
 
-app-search-bar {
-  width: 100%;
+  @media (max-width: breakpoint('xs.max')) {
+    .mat-form-field-infix {
+      width: auto;
+    }
+  }
 }

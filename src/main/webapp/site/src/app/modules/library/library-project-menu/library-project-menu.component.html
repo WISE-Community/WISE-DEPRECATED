@@ -2,7 +2,10 @@
   <mat-icon aria-label="Project Menu">more_vert</mat-icon>
 </button>
 <mat-menu #projectMenu="matMenu" xPosition="before">
-  <div>
+  <div class="header-account-menu">
+    <a mat-menu-item disabled *ngIf="isChild">
+      <ng-container i18n>Parent ID:</ng-container> {{ project.parentId }}
+    </a>
     <a mat-menu-item (click)="copyProject()">
       <mat-icon>content_copy</mat-icon> <ng-container i18n>Copy</ng-container>
     </a>

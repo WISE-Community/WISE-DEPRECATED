@@ -5,6 +5,7 @@ import { TeacherService } from "../../../teacher/teacher.service";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
 import { map, debounceTime } from 'rxjs/operators';
 import { Project } from "../../../domain/project";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 export abstract class ShareItemDialogComponent implements OnInit {
 
@@ -20,7 +21,8 @@ export abstract class ShareItemDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public teacherService: TeacherService,
-              public snackBar: MatSnackBar) {
+              public snackBar: MatSnackBar,
+              public i18n: I18n) {
     this.teacherService.retrieveAllTeacherUsernames().subscribe((teacherUsernames) => {
       this.allTeacherUsernames = teacherUsernames;
     })
@@ -106,13 +108,13 @@ export abstract class ShareItemDialogComponent implements OnInit {
   addProjectPermissionToSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.projectPermissions[permissionId] = true;
-    this.snackBar.open(`Sharing permissions updated for ${ sharedOwner.username }.`);
+    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
   }
 
   removeProjectPermissionFromSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.projectPermissions[permissionId] = false;
-    this.snackBar.open(`Sharing permissions updated for ${ sharedOwner.username }.`);
+    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
   }
 
   isSharedOwner(username) {
@@ -127,7 +129,7 @@ export abstract class ShareItemDialogComponent implements OnInit {
   addSharedOwner(sharedOwner) {
     this.sharedOwners.push(sharedOwner);
     this.sharedOwners$.next(this.sharedOwners);
-    this.snackBar.open(`Added shared teacher: ${ sharedOwner.username }.`);
+    this.snackBar.open(this.i18n('Added shared teacher: {{username}}.', {username: sharedOwner.username}));
   }
 
   removeSharedOwner(sharedOwner) {
@@ -135,7 +137,7 @@ export abstract class ShareItemDialogComponent implements OnInit {
       if (this.sharedOwners[i].id == sharedOwner.id) {
         this.sharedOwners.splice(i, 1);
         this.sharedOwners$.next(this.sharedOwners);
-        this.snackBar.open(`Removed shared teacher: ${ sharedOwner.username }.`);
+        this.snackBar.open(this.i18n('Removed shared teacher: {{username}}.', {username: sharedOwner.username}));
         return;
       }
     }

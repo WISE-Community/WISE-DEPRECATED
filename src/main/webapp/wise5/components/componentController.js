@@ -288,7 +288,22 @@ var ComponentController = function () {
     }
   }, {
     key: 'assetSelected',
-    value: function assetSelected(event, args) {}
+    value: function assetSelected(event, args) {
+      if (this.isEventTargetThisComponent(args)) {
+        if (args.target === 'rubric') {
+          var fileName = args.assetItem.fileName;
+          var summernoteId = this.getSummernoteId(args);
+          this.restoreSummernoteCursorPosition(summernoteId);
+          var fullAssetPath = this.getFullAssetPath(fileName);
+          if (this.UtilService.isImage(fileName)) {
+            this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+          } else if (this.UtilService.isVideo(fileName)) {
+            this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+          }
+        }
+      }
+      this.$mdDialog.hide();
+    }
   }, {
     key: 'registerComponentWithParentNode',
     value: function registerComponentWithParentNode() {
@@ -307,25 +322,36 @@ var ComponentController = function () {
   }, {
     key: 'registerStudentWorkSavedToServerListener',
     value: function registerStudentWorkSavedToServerListener() {
-      this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
-        var componentState = args.studentWork;
-        if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
-          this.setIsDirty(false);
-          this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: this.getIsDirty() });
-          var clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
-          if (componentState.isSubmit) {
-            this.setSubmittedMessage(clientSaveTime);
-            this.lockIfNecessary();
-            this.setIsSubmitDirty(false);
-            this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: this.isSubmitDirty });
-          } else if (componentState.isAutoSave) {
-            this.setAutoSavedMessage(clientSaveTime);
-          } else {
-            this.setSavedMessage(clientSaveTime);
-          }
-        }
-      }));
+      var _this4 = this;
+
+      this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+        _this4.handleStudentWorkSavedToServer(event, args);
+      });
     }
+  }, {
+    key: 'handleStudentWorkSavedToServer',
+    value: function handleStudentWorkSavedToServer(event, args) {
+      var componentState = args.studentWork;
+      if (this.isForThisComponent(componentState)) {
+        this.setIsDirty(false);
+        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: this.getIsDirty() });
+        var clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
+        if (componentState.isSubmit) {
+          this.setSubmittedMessage(clientSaveTime);
+          this.lockIfNecessary();
+          this.setIsSubmitDirty(false);
+          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: this.isSubmitDirty });
+        } else if (componentState.isAutoSave) {
+          this.setAutoSavedMessage(clientSaveTime);
+        } else {
+          this.setSavedMessage(clientSaveTime);
+        }
+      }
+      this.handleStudentWorkSavedToServerAdditionalProcessing(event, args);
+    }
+  }, {
+    key: 'handleStudentWorkSavedToServerAdditionalProcessing',
+    value: function handleStudentWorkSavedToServerAdditionalProcessing(event, args) {}
   }, {
     key: 'handleNodeSubmit',
     value: function handleNodeSubmit() {
@@ -392,7 +418,7 @@ var ComponentController = function () {
       this.setIsSubmit(true);
       this.incrementSubmitCounter();
 
-      if (!this.hasSubmitsLeft()) {
+      if (!this.canSubmit()) {
         this.disableSubmitButton();
       }
 
@@ -451,7 +477,7 @@ var ComponentController = function () {
   }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.setIsDirty(true);
       this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
@@ -470,7 +496,7 @@ var ComponentController = function () {
 
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
-        _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: _this4.componentId, componentState: componentState });
+        _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
       });
     }
   }, {
@@ -689,13 +715,13 @@ var ComponentController = function () {
   }, {
     key: 'importWorkByStudentWorkId',
     value: function importWorkByStudentWorkId(studentWorkId) {
-      var _this5 = this;
+      var _this6 = this;
 
       this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
         if (componentState != null) {
-          _this5.setStudentWork(componentState);
-          _this5.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-          _this5.$rootScope.$broadcast('closeNotebook');
+          _this6.setStudentWork(componentState);
+          _this6.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this6.$rootScope.$broadcast('closeNotebook');
         }
       });
     }
@@ -1114,7 +1140,6 @@ var ComponentController = function () {
      * the component and save the project.
      */
     value: function advancedAuthoringViewComponentChanged() {
-
       try {
         /*
          * create a new component by converting the JSON string in the advanced
@@ -1139,42 +1164,100 @@ var ComponentController = function () {
     }
   }, {
     key: 'showJSONButtonClicked',
-
-
-    /**
-     * The show JSON button was clicked to show or hide the JSON authoring
-     */
     value: function showJSONButtonClicked() {
-      // toggle the JSON authoring textarea
-      this.showJSONAuthoring = !this.showJSONAuthoring;
-
-      if (this.jsonStringChanged && !this.showJSONAuthoring) {
-        /*
-         * the author has changed the JSON and has just closed the JSON
-         * authoring view so we will save the component
-         */
-        this.advancedAuthoringViewComponentChanged();
-
-        // scroll to the top of the component
-        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-        this.jsonStringChanged = false;
+      if (this.showJSONAuthoring) {
+        // we were showing the JSON authoring view and now we want to hide it
+        if (this.isJSONValid()) {
+          this.saveJSONAuthoringViewChanges();
+          this.toggleJSONAuthoringView();
+          this.UtilService.hideJSONValidMessage();
+        } else {
+          var isRollback = confirm(this.$translate('jsonInvalidErrorMessage'));
+          if (isRollback) {
+            // the author wants to revert back to the last valid JSON
+            this.toggleJSONAuthoringView();
+            this.UtilService.hideJSONValidMessage();
+            this.isJSONStringChanged = false;
+            this.rollbackToRecentValidJSON();
+            this.saveJSONAuthoringViewChanges();
+          }
+        }
+      } else {
+        // we were not showing the JSON authoring view and now we want to show it
+        this.toggleJSONAuthoringView();
+        this.rememberRecentValidJSON();
       }
     }
-
-    /**
-     * The author has changed the JSON manually in the advanced view
-     */
-
+  }, {
+    key: 'toggleJSONAuthoringView',
+    value: function toggleJSONAuthoringView() {
+      this.showJSONAuthoring = !this.showJSONAuthoring;
+    }
   }, {
     key: 'authoringJSONChanged',
     value: function authoringJSONChanged() {
-      this.jsonStringChanged = true;
+      this.isJSONStringChanged = true;
+      if (this.isJSONValid()) {
+        this.UtilService.showJSONValidMessage();
+        this.rememberRecentValidJSON();
+      } else {
+        this.UtilService.showJSONInvalidMessage();
+      }
+    }
+  }, {
+    key: 'isJSONValid',
+    value: function isJSONValid() {
+      try {
+        angular.fromJson(this.authoringComponentContentJSONString);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  }, {
+    key: 'rememberRecentValidJSON',
+    value: function rememberRecentValidJSON() {
+      this.authoringValidComponentContentJSONString = this.authoringComponentContentJSONString;
+    }
+  }, {
+    key: 'rollbackToRecentValidJSON',
+    value: function rollbackToRecentValidJSON() {
+      this.authoringComponentContentJSONString = this.authoringValidComponentContentJSONString;
+    }
+
+    /**
+     * The component has changed in the advanced authoring view so we will update
+     * the component and save the project.
+     */
+
+  }, {
+    key: 'saveJSONAuthoringViewChanges',
+    value: function saveJSONAuthoringViewChanges() {
+      try {
+        var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
+        this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+        this.componentContent = editedComponentContent;
+        this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
+        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
+        this.isJSONStringChanged = false;
+      } catch (e) {
+        this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
+      }
     }
   }, {
     key: 'isEventTargetThisComponent',
     value: function isEventTargetThisComponent(args) {
-      return this.nodeId == args.nodeId && this.componentId == args.componentId;
+      return this.isForThisComponent(args);
+    }
+  }, {
+    key: 'isForThisComponent',
+    value: function isForThisComponent(object) {
+      return this.nodeId == object.nodeId && this.componentId == object.componentId;
+    }
+  }, {
+    key: 'canSubmit',
+    value: function canSubmit() {
+      return !this.hasMaxSubmitCount() || this.hasSubmitsLeft();
     }
   }, {
     key: 'hasMaxSubmitCount',
@@ -1227,7 +1310,7 @@ var ComponentController = function () {
   }, {
     key: 'attachStudentAsset',
     value: function attachStudentAsset(studentAsset) {
-      var _this6 = this;
+      var _this7 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1237,8 +1320,8 @@ var ComponentController = function () {
               iconURL: copiedAsset.iconURL
             };
 
-            _this6.attachments.push(attachment);
-            _this6.studentDataChanged();
+            _this7.attachments.push(attachment);
+            _this7.studentDataChanged();
           }
         });
       }
@@ -1253,12 +1336,45 @@ var ComponentController = function () {
     value: function getMaxScore() {
       return this.componentContent.maxScore;
     }
+  }, {
+    key: 'createAutoScoreAnnotation',
+    value: function createAutoScoreAnnotation(data) {
+      return this.createAutoAnnotation('autoScore', data);
+    }
+  }, {
+    key: 'createAutoCommentAnnotation',
+    value: function createAutoCommentAnnotation(data) {
+      return this.createAutoAnnotation('autoComment', data);
+    }
+  }, {
+    key: 'createAutoAnnotation',
+    value: function createAutoAnnotation(type, data) {
+      var runId = this.ConfigService.getRunId();
+      var periodId = this.ConfigService.getPeriodId();
+      var nodeId = this.nodeId;
+      var componentId = this.componentId;
+      var toWorkgroupId = this.ConfigService.getWorkgroupId();
+      if (type === 'autoScore') {
+        return this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      } else if (type === 'autoComment') {
+        return this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      }
+    }
+  }, {
+    key: 'updateLatestScoreAnnotation',
+    value: function updateLatestScoreAnnotation(annotation) {
+      this.latestAnnotations.score = annotation;
+    }
+  }, {
+    key: 'updateLatestCommentAnnotation',
+    value: function updateLatestCommentAnnotation(annotation) {
+      this.latestAnnotations.comment = annotation;
+    }
   }]);
 
   return ComponentController;
 }();
 
 ComponentController.$inject = [];
-
 exports.default = ComponentController;
 //# sourceMappingURL=componentController.js.map

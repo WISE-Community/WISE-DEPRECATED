@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA } from "@angular/material";
 import { AuthService, GoogleLoginProvider } from "angularx-social-login";
 import { ConfigService } from "../../services/config.service";
 import { StudentService } from "../student.service";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-team-sign-in-dialog',
@@ -26,7 +27,8 @@ export class TeamSignInDialogComponent implements OnInit {
               private socialAuthService: AuthService,
               private userService: UserService,
               private studentService: StudentService,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private i18n: I18n) {
     this.run = this.data.run;
     this.user = <Student>this.getUser().getValue();
     if (this.run.workgroupMembers != null) {
@@ -77,19 +79,22 @@ export class TeamSignInDialogComponent implements OnInit {
       if (response.isValid === true) {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
-          if (canBeAddedToWorkgroupResponse.status) {
+          if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher) {
             teamMember.id = response.userId;
             teamMember.userName = response.userName;
             teamMember.firstName = response.firstName;
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
+          } else if (canBeAddedToWorkgroupResponse.isTeacher) {
+            alert(this.i18n('A teacher cannot be added as a team member.'));
+            teamMember.userName = null;
           } else {
-            alert(response.firstName + ' ' + response.lastName + ' is already on another team.');
+            alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
             teamMember.userName = null;
           }
         });
       } else {
-        alert("Invalid username or password. Please try again.");
+        alert(this.i18n('Invalid username or password. Please try again.'));
       }
       teamMember.password = null;
     });
@@ -109,7 +114,7 @@ export class TeamSignInDialogComponent implements OnInit {
             if (isCorrect) {
               this.markAsSignedIn(teamMember);
             } else {
-              alert("Incorrect Google user. Please try again.");
+              alert(this.i18n('Incorrect Google user. Please try again.'));
             }
           });
         } else {
@@ -117,14 +122,16 @@ export class TeamSignInDialogComponent implements OnInit {
             if (response.status === 'success') {
               this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
                 .subscribe((canBeAddedToWorkgroupResponse) => {
-                  if (canBeAddedToWorkgroupResponse.status) {
+                  if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher) {
                     teamMember.id = response.userId;
                     teamMember.userName = response.userName;
                     teamMember.firstName = response.firstName;
                     teamMember.lastName = response.lastName;
                     this.markAsSignedIn(teamMember);
+                  } else if (canBeAddedToWorkgroupResponse.isTeacher) {
+                    alert(this.i18n('A teacher cannot be added as a team member.'));
                   } else {
-                    alert(response.firstName + ' ' + response.lastName + ' is already on another team.');
+                    alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
                   }
                 });
             }

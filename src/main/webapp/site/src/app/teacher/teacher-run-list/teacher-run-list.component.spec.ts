@@ -26,7 +26,7 @@ export class MockTeacherService {
     run1.name = "Photosynthesis";
     run1.numStudents = 30;
     run1.periods = ["1","2"];
-    run1.startTime = '01-01-2018';
+    run1.startTime = '2018-01-01 00:00:00.0';
     const project1 = new Project();
     project1.id = 1;
     project1.name = "Photosynthesis";
@@ -37,7 +37,7 @@ export class MockTeacherService {
     run2.name = "Plate Tectonics";
     run2.numStudents = 15;
     run2.periods = ["3","4"];
-    run2.startTime = '03-03-2018';
+    run2.startTime = '2018-03-03 00:00:00.0';
     const project2 = new Project();
     project2.id = 1;
     project2.name = "Plate Tectonics";
@@ -110,7 +110,7 @@ describe('TeacherRunListComponent', () => {
     run3.name = "Planet Earth";
     run3.numStudents = 10;
     run3.periods = ["6", "7"];
-    run3.startTime = "02-02-2018";
+    run3.startTime = "2018-02-02 00:00:00.0";
     const project3 = new Project();
     project3.id = 1;
     project3.name = "Planet Earth";

@@ -4,12 +4,12 @@
     <p i18n>Ask your teacher for an <b>Access Code</b> and then tap the <b>Add Unit</b> button to get started.</p>
   </div>
   <div class="content-block" *ngIf="runs.length">
-    <div class="content-block__header dark-theme primary-bg"
+    <div class="content-block__header controls dark-theme primary-bg"
          fxLayout="row"
          fxLayout.xs="column"
          fxLayoutGap.sm="16px">
-      <app-search-bar fxFlex="0 0 auto"
-                      fxFlex.xs="0 0 100%"
+      <app-search-bar fxFlex="0 0 100%"
+                      fxFlex.gt-sm="0 0 auto"
                       [placeholderText]="'Search'"
                       [value]="search"
                       (update)="searchUpdated($event)"></app-search-bar>
@@ -19,7 +19,7 @@
         <ng-container *ngIf="search" i18n>Units found: {{ filteredRuns.length }}</ng-container>
         <ng-container *ngIf="!search" i18n>My WISE units: {{ filteredRuns.length }}</ng-container>
         <span class="mat-caption" *ngIf="filteredRuns.length"> (<span *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} <ng-container i18n>scheduled</ng-container>, </span>{{ filteredActiveTotal }} <ng-container i18n>active</ng-container>, {{ filteredCompletedTotal }} <ng-container i18n>completed</ng-container>)</span>.
-        <a *ngIf="search" href="#" (click)="!!reset()" i18n>Reset</a>
+        <a *ngIf="search" [routerLink]="" (click)="reset()" i18n>Reset</a>
       </p>
     </div>
     <app-timeline>

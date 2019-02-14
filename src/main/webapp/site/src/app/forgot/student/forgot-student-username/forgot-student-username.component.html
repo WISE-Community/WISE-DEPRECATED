@@ -14,7 +14,7 @@
                  formControlName="firstName"
                  autofocus
                  required />
-          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['firstName'].hasError('required')" i18n>First Name Required</mat-error>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['firstName'].hasError('required')" i18n>First Name required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -25,7 +25,7 @@
                  name="lastName"
                  formControlName="lastName"
                  required />
-          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['lastName'].hasError('required')" i18n>Last Name Required</mat-error>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['lastName'].hasError('required')" i18n>Last Name required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -36,7 +36,7 @@
               {{month.text}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthMonth'].hasError('required')" i18n>Month Required</mat-error>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthMonth'].hasError('required')" i18n>Month required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -47,7 +47,7 @@
               {{day}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthDay'].hasError('required')" i18n>Day Required</mat-error>
+          <mat-error *ngIf="forgotStudentUsernameFormGroup.controls['birthDay'].hasError('required')" i18n>Day required</mat-error>
         </mat-form-field>
       </p>
       <button mat-flat-button
@@ -58,20 +58,21 @@
         <span i18n>Search</span>
       </button>
     </form>
-    <br/>
-    <div>
-      <div [ngClass]="{'error-message': isErrorMessage}">{{message}}</div>
-      <br/>
+    <div *ngIf="showSearchResults">
+      <br>
+      <p [ngClass]="{'warn': isErrorMessage, 'info': !isErrorMessage}">{{message}}</p>
       <div *ngFor="let username of foundUsernames">
-        <a (click)="loginWithUsername(username)" class="cursor-link">{{username}}</a>
-      </div>
-      <div *ngIf="showCreateNewAccountLink">
-        <br/>
-        <a (click)="createNewAccount()"
-           class="cursor-link">
-          <ng-container i18n>Create New Account</ng-container>
-        </a>
+        <a [routerLink]="" (click)="loginWithUsername(username)" class="mat-body-2">{{username}}</a>
       </div>
     </div>
   </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions class="center">
+    <p>
+      <a routerLink="/contact" i18n>Contact WISE</a>
+    </p>
+    <p>
+      <a routerLink="/join" i18n>Create New Account</a>
+    </p>
+  </mat-card-actions>
 </mat-card>

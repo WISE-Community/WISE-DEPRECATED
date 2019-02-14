@@ -71,40 +71,41 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
         this.setupSVG();
       }
     }.bind(_this), true);
-
-    _this.$scope.$on('assetSelected', function (event, args) {
-      if (_this.isEventTargetThisComponent(args)) {
-        var fileName = args.assetItem.fileName;
-        if (args.target === 'rubric') {
-          var summernoteId = _this.getSummernoteId(args);
-          _this.restoreSummernoteCursorPosition(summernoteId);
-          var fullAssetPath = _this.getFullAssetPath(fileName);
-          if (_this.UtilService.isImage(fileName)) {
-            _this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-          } else if (_this.UtilService.isVideo(fileName)) {
-            _this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-          }
-        } else if (args.target === 'background') {
-          _this.authoringComponentContent.background = fileName;
-          _this.authoringViewComponentChanged();
-        } else if (args.target != null && args.target.indexOf('node') == 0) {
-          var node = _this.authoringViewGetNodeById(args.target);
-          node.fileName = fileName;
-          _this.authoringViewComponentChanged();
-        }
-      }
-      _this.$mdDialog.hide();
-    });
     return _this;
   }
 
-  /**
-   * A move node up button was clicked in the authoring tool
-   * @param index the index of the node that we will move
-   */
-
-
   _createClass(ConceptMapAuthoringController, [{
+    key: 'assetSelected',
+    value: function assetSelected(event, args) {
+      if (this.isEventTargetThisComponent(args)) {
+        var fileName = args.assetItem.fileName;
+        if (args.target === 'rubric') {
+          var summernoteId = this.getSummernoteId(args);
+          this.restoreSummernoteCursorPosition(summernoteId);
+          var fullAssetPath = this.getFullAssetPath(fileName);
+          if (this.UtilService.isImage(fileName)) {
+            this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+          } else if (this.UtilService.isVideo(fileName)) {
+            this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+          }
+        } else if (args.target === 'background') {
+          this.authoringComponentContent.background = fileName;
+          this.authoringViewComponentChanged();
+        } else if (args.target != null && args.target.indexOf('node') == 0) {
+          var node = this.authoringViewGetNodeById(args.target);
+          node.fileName = fileName;
+          this.authoringViewComponentChanged();
+        }
+      }
+      this.$mdDialog.hide();
+    }
+
+    /**
+     * A move node up button was clicked in the authoring tool
+     * @param index the index of the node that we will move
+     */
+
+  }, {
     key: 'authoringViewMoveNodeUpButtonClicked',
     value: function authoringViewMoveNodeUpButtonClicked(index) {
       this.UtilService.moveObjectUp(this.authoringComponentContent.nodes, index);

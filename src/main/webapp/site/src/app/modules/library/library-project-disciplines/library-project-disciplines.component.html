@@ -1,0 +1,8 @@
+<div *ngIf="disciplines && disciplines.length" class="library-project-disciplines" fxLayoutGap="4px">
+  <ng-container *ngFor="let discipline of disciplines">
+    <span class="library-project-disciplines__icon" [ngStyle]="{'background-color': discipline.color}"
+          matTooltip="{{ discipline.name }}" [matTooltipPosition]="'above'">
+      {{ discipline.id }}
+    </span>
+  </ng-container>
+</div>

@@ -4,15 +4,11 @@
   '~style/abstracts/mixins';
 
 .header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 2;
   padding: 0;
 }
 
 .header__content {
-  min-height: 80px;
+  min-height: $header-height;
   font-size: 14px;
 }
 

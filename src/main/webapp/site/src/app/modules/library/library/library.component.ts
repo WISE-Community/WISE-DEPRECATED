@@ -1,14 +1,16 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ValueProvider, QueryList, ViewChildren, Injectable } from '@angular/core';
 import { LibraryGroup } from "../libraryGroup";
 import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 import { NGSSStandards } from "../ngssStandards";
 import { LibraryService } from "../../../services/library.service";
 import { Standard } from "../standard";
 import { LibraryProject } from "../libraryProject";
+import { PageEvent, MatPaginator, MatPaginatorIntl } from '@angular/material';
 
 export abstract class LibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];
+  filteredProjects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];
   expandedGroups: object = {};
   implementationModelValue: string = '';
@@ -20,32 +22,54 @@ export abstract class LibraryComponent implements OnInit {
   disciplineValue = [];
   peOptions: Standard[] = [];
   peValue = [];
+  filterOptions: ProjectFilterOptions = new ProjectFilterOptions();
   showFilters: boolean = false;
+  pageSizeOptions: number[] = [12, 24, 48, 96];
+  pageIndex: number = 0;
+  pageSize: number = 12;
+  lowIndex: number = 0;
+  highIndex: number = 0;
 
   @Output('update')
   update: EventEmitter<number> = new EventEmitter<number>();
 
+  @ViewChildren(MatPaginator) paginators !: QueryList<MatPaginator>;
+
   constructor(protected libraryService: LibraryService) {
+    libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
+      this.filterUpdated(projectFilterOptions);
+    });
   }
 
   ngOnInit() {
   }
 
-  /**
-   * Add given project or all child projects from a given group to the list of projects
-   * @param item
-   * @param {LibraryProject[]} projects
-   */
-  populateProjects(item: any, projects: LibraryProject[]): void {
-    if (item.type === 'project') {
-      item.visible = true;
-      projects.push(item);
-    } else if (item.type === 'group') {
-      let children = item.children;
-      for (let child of children) {
-        this.populateProjects(child, projects);
-      }
+  pageChange(event?:PageEvent, scroll?:boolean): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.setPagination();
+    if (scroll) {
+      const listEl = document.querySelector('.library__content');
+      listEl.scrollIntoView();
     }
+  }
+
+  setPageBounds(): void {
+    this.lowIndex = this.pageIndex * this.pageSize;
+    this.highIndex = this.lowIndex + this.pageSize;
+  }
+
+  setPagination(): void {
+    if (this.paginators) {
+      this.paginators.toArray().forEach((paginator) => {
+        paginator.pageIndex = this.pageIndex;
+      });
+      this.setPageBounds();
+    }
+  }
+
+  isOnPage(index: number): boolean {
+    return (index >= this.lowIndex && index < this.highIndex);
   }
 
   /**
@@ -111,30 +135,37 @@ export abstract class LibraryComponent implements OnInit {
    * Filter options or search string have changed, so update visible projects
    * @param {ProjectFilterOptions} filterOptions
    */
-  filterUpdated(filterOptions: ProjectFilterOptions): void {
-    this.searchValue = filterOptions.searchValue;
-    this.disciplineValue = filterOptions.disciplineValue;
-    this.dciArrangementValue = filterOptions.dciArrangementValue;
-    this.peValue = filterOptions.peValue;
-    for (let project of this.projects) {
-      let searchMatch = false;
-      let filterMatch = false;
-      if (this.searchValue) {
-        searchMatch = this.isSearchMatch(project, this.searchValue);
-      }
-      if (!searchMatch && this.hasFilters()) {
-        filterMatch = this.isFilterMatch(project);
-      } else if (!this.searchValue) {
-        filterMatch = true;
-      }
-      project.visible = searchMatch || filterMatch;
+  filterUpdated(filterOptions: ProjectFilterOptions = null): void {
+    if (filterOptions) {
+      this.filterOptions = filterOptions;
     }
-    let numProjectsVisible = this.countVisibleProjects(this.projects);
-    this.emitNumberOfProjectsVisible(numProjectsVisible);
+    this.filteredProjects = [];
+    this.searchValue = this.filterOptions.searchValue;
+    this.disciplineValue = this.filterOptions.disciplineValue;
+    this.dciArrangementValue = this.filterOptions.dciArrangementValue;
+    this.peValue = this.filterOptions.peValue;
+    for (let project of this.projects) {
+      let filterMatch = false;
+      let searchMatch = this.isSearchMatch(project, this.searchValue);
+      if (searchMatch) {
+        filterMatch = this.isFilterMatch(project);
+      }
+      project.visible = searchMatch && filterMatch;
+      if (searchMatch && filterMatch) {
+        this.filteredProjects.push(project);
+      }
+    }
+    this.emitNumberOfProjectsVisible();
+    this.pageIndex = 0;
+    this.setPagination();
   }
 
-  emitNumberOfProjectsVisible(numProjectsVisible) {
-    this.update.emit(numProjectsVisible);
+  emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
+    if (numProjectsVisible) {
+      this.update.emit(numProjectsVisible);
+    } else {
+      this.update.emit(this.filteredProjects.length);
+    }
   }
 
   /**
@@ -185,25 +216,29 @@ export abstract class LibraryComponent implements OnInit {
    * @return {boolean}
    */
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
-    let data: any = project.metadata;
-    data.id = project.id;
-    return Object.keys(data).some(prop => {
-      // only check for match in specific metadata fields
-      if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
-        prop != 'features' &&  prop != 'standardsAddressed' && prop != 'id') {
-        return false;
-      } else {
-        let value = data[prop];
-        if (prop === 'standardsAddressed') {
-          value = JSON.stringify(value);
-        }
-        if (typeof value === 'undefined' || value === null) {
+    if (searchValue) {
+      let data: any = project.metadata;
+      data.id = project.id;
+      return Object.keys(data).some(prop => {
+        // only check for match in specific metadata fields
+        if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
+          prop != 'features' &&  prop != 'standardsAddressed' && prop != 'id') {
           return false;
         } else {
-          return value.toString().toLocaleLowerCase().indexOf(searchValue) !== -1;
+          let value = data[prop];
+          if (prop === 'standardsAddressed') {
+            value = JSON.stringify(value);
+          }
+          if (typeof value === 'undefined' || value === null) {
+            return false;
+          } else {
+            return value.toString().toLocaleLowerCase().indexOf(searchValue) !== -1;
+          }
         }
-      }
-    });
+      });
+    } else {
+      return true;
+    }
   }
 
   /**
@@ -212,24 +247,36 @@ export abstract class LibraryComponent implements OnInit {
    * @return {boolean}
    */
   isFilterMatch(project: LibraryProject): boolean {
-    const standardsAddressed = project.metadata.standardsAddressed;
-    if (standardsAddressed.ngss) {
-      const ngss = standardsAddressed.ngss;
-      if (this.dciArrangementValue.length) {
-        const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
-        for (let val of dciArrangements) {
-          for (let filter of this.dciArrangementValue) {
-            if (val.id === filter) {
-              return true;
+     if (this.hasFilters()) {
+      const standardsAddressed = project.metadata.standardsAddressed;
+      if (standardsAddressed.ngss) {
+        const ngss = standardsAddressed.ngss;
+        if (this.dciArrangementValue.length) {
+          const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
+          for (let val of dciArrangements) {
+            for (let filter of this.dciArrangementValue) {
+              if (val.id === filter) {
+                return true;
+              }
             }
           }
         }
-      }
-      if (this.peValue.length) {
-        const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
-        for (let arrangement of dciArrangements) {
-          for (let val of arrangement.children) {
-            for (let filter of this.peValue) {
+        if (this.peValue.length) {
+          const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
+          for (let arrangement of dciArrangements) {
+            for (let val of arrangement.children) {
+              for (let filter of this.peValue) {
+                if (val.id === filter) {
+                  return true;
+                }
+              }
+            }
+          }
+        }
+        if (this.disciplineValue.length) {
+          const disciplines: Standard[] = ngss.disciplines ? ngss.disciplines : [];
+          for (let val of disciplines) {
+            for (let filter of this.disciplineValue) {
               if (val.id === filter) {
                 return true;
               }
@@ -237,18 +284,10 @@ export abstract class LibraryComponent implements OnInit {
           }
         }
       }
-      if (this.disciplineValue.length) {
-        const disciplines: Standard[] = ngss.disciplines ? ngss.disciplines : [];
-        for (let val of disciplines) {
-          for (let filter of this.disciplineValue) {
-            if (val.id === filter) {
-              return true;
-            }
-          }
-        }
-      }
+      return false;
+    } else {
+      return true;
     }
-    return false;
   }
 
   countVisibleProjects(set: LibraryProject[]): number {

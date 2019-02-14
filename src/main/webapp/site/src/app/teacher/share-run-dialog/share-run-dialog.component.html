@@ -15,6 +15,7 @@
             matSuffix
             mat-icon-button
             [ngClass]="{'invisible': !teacherSearchControl.value}"
+            i18n-aria-label
             aria-label="Clear"
             (click)="teacherSearchControl.setValue('')">
       <mat-icon>close</mat-icon>
@@ -38,7 +39,7 @@
           {{ run.owner.firstName }} {{ run.owner.lastName }}
         </ng-container>
         <ng-container *ngIf="!sharedOwner.isOwner">
-          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a href="#" (click)="!!unshareRun(sharedOwner)" class="warn" i18n>Revoke</a>)
+          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a [routerLink]="" (click)="unshareRun(sharedOwner)" class="warn" i18n>Revoke</a>)
         </ng-container>
       </td>
     </ng-container>

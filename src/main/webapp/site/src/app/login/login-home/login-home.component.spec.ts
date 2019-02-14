@@ -7,6 +7,7 @@ import { ConfigService } from '../../services/config.service';
 import { Config } from "../../domain/config";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RecaptchaModule } from "ng-recaptcha";
 
 export class MockUserService {
 
@@ -34,7 +35,8 @@ describe('LoginHomeComponent', () => {
       declarations: [ LoginHomeComponent ],
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule
+        RouterTestingModule,
+        RecaptchaModule
       ],
       providers: [
         { provide: UserService, useClass: MockUserService },

@@ -3994,6 +3994,17 @@ class ProjectService {
           message += this.$translate('addXNumberOfNotesOnThisStepPlural',
             { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: nodeTitle });
         }
+      } else if (name === 'fillXNumberOfRows') {
+        const requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
+        const nodeId = params.nodeId;
+        const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+        if (requiredNumberOfFilledRows == 1) {
+          message += this.$translate('youMustFillInXRow',
+            { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: nodeTitle });
+        } else {
+          message += this.$translate('youMustFillInXRows',
+            { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: nodeTitle });
+        }
       }
     }
     return message;

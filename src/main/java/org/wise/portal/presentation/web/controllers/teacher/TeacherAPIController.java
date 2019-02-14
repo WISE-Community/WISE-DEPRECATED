@@ -17,6 +17,7 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
@@ -93,7 +94,7 @@ public class TeacherAPIController {
     JSONArray runsJSONArray = new JSONArray();
     for (Run run : runs) {
       JSONObject runJSON = getRunJSON(run);
-      JSONObject projectJSON = getProjectJSON(run.getProject());
+      JSONObject projectJSON = ControllerUtil.getProjectJSON(run.getProject());
       runJSON.put("project", projectJSON);
       runsJSONArray.put(runJSON);
     }
@@ -117,21 +118,8 @@ public class TeacherAPIController {
     runJSON.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
     runJSON.put("owner", getOwnerJSON(run.getOwner()));
     runJSON.put("sharedOwners", getRunSharedOwners(run));
-    runJSON.put("project", getProjectJSON(run.getProject()));
+    runJSON.put("project", ControllerUtil.getProjectJSON(run.getProject()));
     return runJSON;
-  }
-
-  private JSONObject getProjectJSON(Project project) throws JSONException {
-    JSONObject projectJSON = new JSONObject();
-    projectJSON.put("id", project.getId());
-    projectJSON.put("name", project.getName());
-    projectJSON.put("dateCreated", project.getDateCreated());
-    projectJSON.put("dateArchived", project.getDateDeleted());
-    projectJSON.put("projectThumb", getProjectThumbIconPath(project));
-    projectJSON.put("owner", getOwnerJSON(project.getOwner()));
-    projectJSON.put("sharedOwners", getProjectSharedOwnersJSON(project));
-    projectJSON.put("metadata", project.getMetadata().toJSONObject());
-    return projectJSON;
   }
 
   private JSONObject getOwnerJSON(User owner) throws JSONException {
@@ -155,7 +143,7 @@ public class TeacherAPIController {
       throws ObjectNotFoundException, JSONException {
     Run run = runService.retrieveById(runId);
     JSONObject runJSON = getRunJSON(run);
-    JSONObject projectJSON = getProjectJSON(run.getProject());
+    JSONObject projectJSON = ControllerUtil.getProjectJSON(run.getProject());
     runJSON.put("project", projectJSON);
     return runJSON.toString();
   }
@@ -406,6 +394,22 @@ public class TeacherAPIController {
     return response.toString();
   }
 
+  @RequestMapping(value = "/run/restart/{runId}", method = RequestMethod.PUT)
+  protected String restartRun(HttpServletRequest request,
+                          @PathVariable Long runId) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response = null;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      runService.restartRun(run);
+      response = createSuccessResponse();
+    } else {
+      response = createFailureResponse("noPermissionToRestartRun");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
   @RequestMapping(value = "/run/delete/period", method = RequestMethod.POST)
   protected String deletePeriodFromRun(HttpServletRequest request,
                                   @RequestParam("runId") Long runId,
@@ -436,8 +440,16 @@ public class TeacherAPIController {
     Run run = runService.retrieveById(runId);
     JSONObject response;
     if (run.isTeacherAssociatedToThisRun(user)) {
-      runService.setMaxWorkgroupSize(runId, maxStudentsPerTeam);
-      response = createSuccessResponse();
+      boolean canChange = true;
+      if (maxStudentsPerTeam == 1) {
+        canChange = runService.canDecreaseMaxStudentsPerTeam(run.getId());
+      }
+      if (canChange) {
+        runService.setMaxWorkgroupSize(runId, maxStudentsPerTeam);
+        response = createSuccessResponse();
+      } else {
+        response = createFailureResponse("notAllowedToDecreaseMaxStudentsPerTeam");
+      }
     } else {
       response = createFailureResponse("noPermissionToChangeMaxStudentsPerTeam");
     }

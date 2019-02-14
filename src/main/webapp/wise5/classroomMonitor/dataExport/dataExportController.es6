@@ -2,7 +2,9 @@
 
 class DataExportController {
 
-    constructor($injector,
+    constructor($filter,
+                $injector,
+                $mdDialog,
                 $rootScope,
                 $scope,
                 $state,
@@ -16,7 +18,9 @@ class DataExportController {
                 TeacherWebSocketService,
                 UtilService) {
 
+        this.$filter = $filter
         this.$injector = $injector;
+        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -33,8 +37,9 @@ class DataExportController {
         this.exportType = null;  // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
         this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
-
+        this.$translate = this.$filter('translate');
         this.availableComponentDataExports = [
+            'Discussion',
             'Match'
         ];
 
@@ -79,9 +84,7 @@ class DataExportController {
             this.exportStudentAssets();
         } else if (exportType === "oneWorkgroupPerRow") {
             this.exportOneWorkgroupPerRow();
-        } else if (exportType === "componentData") {
-            this.showExportComponentDataPage();
-        } else if (exportType === "rawData") {
+        }  else if (exportType === "rawData") {
             this.exportRawData();
         }
     }
@@ -105,7 +108,7 @@ class DataExportController {
      * @param exportType the export type e.g. "allStudentWork" or "latestStudentWork"
      */
     exportStudentWork(exportType) {
-
+        this.showDownloadingExportMessage();
         var selectedNodes = null;
         var selectedNodesMap = null;
 
@@ -305,6 +308,7 @@ class DataExportController {
 
             // generate the csv file and have the client download it
             this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -889,7 +893,7 @@ class DataExportController {
      * Export the events
      */
     exportEvents() {
-
+        this.showDownloadingExportMessage();
         var selectedNodes = null;
         var selectedNodesMap = null;
 
@@ -1081,6 +1085,7 @@ class DataExportController {
 
             // generate the csv file and have the client download it
             this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -1286,7 +1291,7 @@ class DataExportController {
     }
 
     exportNotebookItems(exportType) {
-
+        this.showDownloadingExportMessage();
         this.TeacherDataService.getExport(exportType).then((result) => {
             let runId = this.ConfigService.getRunId();
             let exportFilename = "";
@@ -1394,12 +1399,13 @@ class DataExportController {
             // timeout is required for FF.
             window.setTimeout(() => {
                 URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
+                this.hideDownloadingExportMessage();
             }, 3000);
         });
     }
 
     exportNotifications() {
-
+        this.showDownloadingExportMessage();
         this.TeacherDataService.getExport("notifications").then((result) => {
             let runId = this.ConfigService.getRunId();
             let exportFilename = "";
@@ -1465,12 +1471,16 @@ class DataExportController {
             // timeout is required for FF.
             window.setTimeout(() => {
                 URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
+                this.hideDownloadingExportMessage();
             }, 3000);
         });
     }
 
     exportStudentAssets() {
-        this.TeacherDataService.getExport("studentAssets");
+        this.showDownloadingExportMessage();
+        this.TeacherDataService.getExport("studentAssets").then(() => {
+            this.hideDownloadingExportMessage();
+        });
     }
 
     /**
@@ -1725,6 +1735,7 @@ class DataExportController {
      * Create a csv export file with one workgroup per row
      */
     exportOneWorkgroupPerRow() {
+        this.showDownloadingExportMessage();
         var selectedNodes = null;
 
         /*
@@ -2055,6 +2066,7 @@ class DataExportController {
 
             // generate the csv file and have the client download it
             this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -2698,6 +2710,7 @@ class DataExportController {
      * Export the raw data
      */
     exportRawData() {
+        this.showDownloadingExportMessage();
         var selectedNodes = null;
 
         /*
@@ -2860,6 +2873,7 @@ class DataExportController {
 
             // generate a file and download it to the user's computer
             this.FileSaver.saveAs(blob, runId + "_raw_data.json");
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -2929,7 +2943,192 @@ class DataExportController {
     exportComponentClicked(nodeId, component) {
         if (component.type == 'Match') {
             this.exportMatchComponent(nodeId, component);
+        } else if (component.type === 'Discussion') {
+            this.exportDiscussionComponent(nodeId, component);
         }
+    }
+
+    /**
+     * Generate an export for a specific Discussion component.
+     * TODO: Move these Discussion export functions to the DiscussionService.
+     * @param nodeId The node id.
+     * @param component The component content object.
+     */
+    exportDiscussionComponent(nodeId, component) {
+      this.showDownloadingExportMessage();
+        this.TeacherDataService.getExport("allStudentWork").then((result) => {
+            const columnNames = [];
+            const columnNameToNumber = {};
+            let rows = [this.generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber)];
+            rows = rows.concat(this.generateDiscussionComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
+            const fileName = this.generateDiscussionExportFileName(nodeId, component.id);
+            this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
+        });
+    }
+
+    generateDiscussionComponentHeaderRow(component, columnNames, columnNameToNumber) {
+        this.populateDiscussionColumnNames(component, columnNames, columnNameToNumber);
+        const headerRow = [];
+        for (let columnName of columnNames) {
+            headerRow.push(columnName);
+        }
+        return headerRow;
+    }
+
+    populateDiscussionColumnNames(component, columnNames, columnNameToNumber) {
+        const defaultDiscussionColumnNames = [
+            "#",
+            "Workgroup ID",
+            "WISE ID 1",
+            "Student Name 1",
+            "WISE ID 2",
+            "Student Name 2",
+            "WISE ID 3",
+            "Student Name 3",
+            "Class Period",
+            "Project ID",
+            "Project Name",
+            "Run ID",
+            "Start Date",
+            "End Date",
+            "Server Timestamp",
+            "Client Timestamp",
+            "Node ID",
+            "Component ID",
+            "Component Part Number",
+            "Step Title",
+            "Component Type",
+            "Component Prompt",
+            "Student Data",
+            "Thread ID",
+            "Student Work ID",
+            "Post Level",
+            "Post Text"
+        ];
+        for (let c = 0; c < defaultDiscussionColumnNames.length; c++) {
+            const defaultDiscussionColumnName = defaultDiscussionColumnNames[c];
+            columnNameToNumber[defaultDiscussionColumnName] = c;
+            columnNames.push(defaultDiscussionColumnName);
+        }
+    }
+
+    generateDiscussionComponentWorkRows(component, columnNames, columnNameToNumber, nodeId) {
+        const rows = [];
+        const componentStates = this.TeacherDataService.getComponentStatesByComponentId(component.id);
+        const structuredPosts = this.getStructuredPosts(componentStates);
+        let rowCounter = 1;
+        for (let threadId of Object.keys(structuredPosts)) {
+            let topLevelPost = structuredPosts[threadId];
+            rows.push(this.generateDiscussionComponentWorkRow(component, topLevelPost.workgroupId, columnNames,
+                    columnNameToNumber, nodeId, component.id, rowCounter, topLevelPost, threadId));
+            rowCounter++;
+            if (topLevelPost.replies != null) {
+                for (let replyPost of topLevelPost.replies) {
+                    rows.push(this.generateDiscussionComponentWorkRow(component, replyPost.workgroupId, columnNames,
+                        columnNameToNumber, nodeId, component.id, rowCounter, replyPost, threadId));
+                    rowCounter++;
+                }
+            }
+        }
+        return rows;
+    }
+
+    generateDiscussionComponentWorkRow(component, workgroupId, columnNames, columnNameToNumber,
+                                       nodeId, componentId, rowCounter, componentState, threadId) {
+        const row = new Array(columnNames.length);
+        row.fill("");
+        const userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+        if (userInfo != null) {
+          if (userInfo.users[0] != null) {
+            row[columnNameToNumber["WISE ID 1"]] = userInfo.users[0].id;
+          }
+          if (userInfo.users[1] != null) {
+            row[columnNameToNumber["WISE ID 2"]] = userInfo.users[1].id;
+          }
+          if (userInfo.users[2] != null) {
+            row[columnNameToNumber["WISE ID 3"]] = userInfo.users[2].id;
+          }
+          row[columnNameToNumber["Class Period"]] = userInfo.periodName;
+        }
+
+        row[columnNameToNumber["#"]] = rowCounter;
+        row[columnNameToNumber["Project ID"]] = this.ConfigService.getProjectId();
+        row[columnNameToNumber["Project Name"]] = this.ProjectService.getProjectTitle();
+        row[columnNameToNumber["Run ID"]] = this.ConfigService.getRunId();
+
+        if (componentState.serverSaveTime != null) {
+            row[columnNameToNumber["Server Timestamp"]] =
+                    this.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
+        }
+
+        if (componentState.clientSaveTime != null) {
+            const clientSaveTime = new Date(componentState.clientSaveTime);
+            row[columnNameToNumber["Client Timestamp"]] =
+                    clientSaveTime.toDateString() + " " + clientSaveTime.toLocaleTimeString();
+        }
+
+        row[columnNameToNumber["Node ID"]] = nodeId;
+        row[columnNameToNumber["Step Title"]] =
+                this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+        row[columnNameToNumber["Component Part Number"]] =
+                this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1;
+        row[columnNameToNumber["Component ID"]] = component.id;
+        row[columnNameToNumber["Component Type"]] = component.type;
+        row[columnNameToNumber["Component Prompt"]] = this.UtilService.removeHTMLTags(component.prompt);
+        row[columnNameToNumber["Student Data"]] = componentState.studentData;
+        row[columnNameToNumber["Student Work ID"]] = componentState.id;
+        row[columnNameToNumber["Thread ID"]] = threadId;
+        row[columnNameToNumber["Workgroup ID"]] = workgroupId;
+        row[columnNameToNumber["Post Level"]] = this.getPostLevel(componentState);
+        row[columnNameToNumber["Post Text"]] = this.UtilService.removeHTMLTags(componentState.studentData.response);
+
+        return row;
+    }
+
+    getStructuredPosts(componentStates) {
+        const structuredPosts = {};
+        for (let componentState of componentStates) {
+            if (this.isTopLevelPost(componentState)) {
+                structuredPosts[componentState.id] = componentState;
+            } else if (this.isReply(componentState)) {
+                this.addReplyToTopLevelPost(structuredPosts, componentState);
+            }
+        }
+        return structuredPosts;
+    }
+
+    isTopLevelPost(componentState) {
+        return componentState.studentData.componentStateIdReplyingTo == null;
+    }
+
+    isReply(componentState) {
+        return componentState.studentData.componentStateIdReplyingTo != null;
+    }
+
+    addReplyToTopLevelPost(structuredPosts, replyComponentState) {
+        const parentComponentStateId = replyComponentState.studentData.componentStateIdReplyingTo;
+        const parentPost = structuredPosts[parentComponentStateId];
+        if (parentPost.replies == null) {
+            parentPost.replies = [];
+        }
+        parentPost.replies.push(replyComponentState);
+    }
+
+    getPostLevel(componentState) {
+        if (this.isTopLevelPost(componentState)) {
+            return 1;
+        } else if (this.isReply(componentState)) {
+            return 2;
+        }
+    }
+
+    generateDiscussionExportFileName(nodeId, componentId) {
+        const runId = this.ConfigService.getRunId();
+        const stepNumber = this.ProjectService.getNodePositionById(nodeId);
+        const componentNumber =
+                this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1;
+        return runId + '_step_' + stepNumber + '_component_' + componentNumber + '_discussion_work.csv';
     }
 
     /**
@@ -2939,6 +3138,7 @@ class DataExportController {
      * @param component The component content object.
      */
     exportMatchComponent(nodeId, component) {
+        this.showDownloadingExportMessage();
         // request the student data from the server and then generate the export
         this.TeacherDataService.getExport("allStudentWork").then((result) => {
             // the column names in the header row
@@ -2969,6 +3169,7 @@ class DataExportController {
 
             // generate the csv file and have the client download it
             this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
     }
 
@@ -3232,10 +3433,32 @@ class DataExportController {
             }
         }
     }
+
+    showDownloadingExportMessage() {
+        this.$mdDialog.show({
+            template: `
+                <div align="center">
+                    <div style="width: 200px; height: 100px; margin: 20px;">
+                      <span>{{ 'downloadingExport' | translate }}</span>
+                      <br/>
+                      <br/>
+                      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                    </div>
+                </div>
+            `,
+            clickOutsideToClose: false
+        });
+    }
+
+    hideDownloadingExportMessage() {
+        this.$mdDialog.hide();
+    }
 }
 
 DataExportController.$inject = [
+    '$filter',
     '$injector',
+    '$mdDialog',
     '$rootScope',
     '$scope',
     '$state',

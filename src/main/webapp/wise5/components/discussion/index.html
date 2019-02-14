@@ -71,20 +71,11 @@
                   ng-class='{"discussion-new--focused md-whiteframe-z3": discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}'>
                 <md-input-container class='input--placeholder-only discussion-new__input-container input-container'
                     md-no-float>
-                  <textarea ng-if='discussionController.isRichTextEnabled && !discussionController.isDisabled'
-                      ui-tinymce='discussionController.tinymceOptions'
-                      ng-model='discussionController.newResponse'
-                      ng-model-options='{ debounce: 100 }'
-                      ng-change='discussionController.studentDataChanged()'
-                      ng-init='discussionController.focus = false'
-                      ng-focus='discussionController.focus = true'
-                      ng-blur='discussionController.focus = false'>
-                  </textarea>
                   <div ng-if='discussionController.isDisabled'
                       class='discussion-new__input--textarea input--textarea--disabled'
                       ng-model='discussionController.newResponse'>
                   </div>
-                  <textarea ng-if='!discussionController.isRichTextEnabled && !discussionController.isDisabled'
+                  <textarea ng-if='!discussionController.isDisabled'
                       class='discussion-new__input--textarea'
                       placeholder='{{ "discussion.shareDiscussionPostWithClass" | translate }}'
                       ng-model='discussionController.newResponse'

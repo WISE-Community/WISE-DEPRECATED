@@ -86,79 +86,56 @@ var MultipleChoiceService = function (_ComponentService) {
   }, {
     key: 'choiceChosen',
     value: function choiceChosen(criteria) {
+      var nodeId = criteria.params.nodeId;
+      var componentId = criteria.params.componentId;
+      var constraintChoiceIds = criteria.params.choiceIds;
+      var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+      if (latestComponentState != null) {
+        var studentChoices = latestComponentState.studentData.studentChoices;
+        var studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
+        return this.isChoicesSelected(studentChoiceIds, constraintChoiceIds);
+      }
+      return false;
+    }
+  }, {
+    key: 'isChoicesSelected',
+    value: function isChoicesSelected(studentChoiceIds, constraintChoiceIds) {
+      if (typeof constraintChoiceIds === 'string') {
+        return studentChoiceIds.length === 1 && studentChoiceIds[0] === constraintChoiceIds;
+      } else if (Array.isArray(constraintChoiceIds)) {
+        if (studentChoiceIds.length === constraintChoiceIds.length) {
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
 
-      var result = false;
+          try {
+            for (var _iterator = constraintChoiceIds[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var constraintChoiceId = _step.value;
 
-      if (criteria != null && criteria.params != null) {
-        var nodeId = criteria.params.nodeId;
-        var componentId = criteria.params.componentId;
-        var choiceIds = criteria.params.choiceIds; // the choice ids that we expect the student to have chosen
-
-        if (nodeId != null && componentId != null) {
-
-          // get the component states
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
-
-          if (componentStates != null && componentStates.length > 0) {
-
-            if (choiceIds != null) {
-              // get the latest component state
-              var componentState = componentStates[componentStates.length - 1];
-
-              // get the student data
-              var studentData = componentState.studentData;
-
-              if (studentData != null) {
-
-                // get the choice(s) the student chose
-                var studentChoices = studentData.studentChoices;
-
-                if (studentChoices != null) {
-
-                  if (studentChoices.length === choiceIds.length) {
-                    /*
-                     * the number of choices the student chose do match so the student may
-                     * have matched the choices. we will now need to compare each of the
-                     * choice ids to make sure the student chose the ones that are required
-                     */
-
-                    var studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
-
-                    for (var c = 0; c < choiceIds.length; c++) {
-                      var choiceId = choiceIds[c];
-
-                      if (studentChoiceIds.indexOf(choiceId) === -1) {
-                        /*
-                         * the required choice id is not in the student choices so the student
-                         * did not match all the choices
-                         */
-                        result = false;
-                        break;
-                      } else {
-                        // the required choice id is in the student choices
-                        result = true;
-                      }
-                    }
-                  } else {
-                    /*
-                     * the number of choices the student chose do not match so the student did
-                     * not match the choices
-                     */
-
-                    result = false;
-                  }
-                }
+              if (studentChoiceIds.indexOf(constraintChoiceId) === -1) {
+                return false;
+              }
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
               }
             }
           }
+
+          return true;
         }
       }
-
-      return result;
+      return false;
     }
-  }, {
-    key: 'getStudentChoiceIdsFromStudentChoiceObjects',
-
 
     /**
      * Get the student choice ids from the student choice objects
@@ -166,6 +143,9 @@ var MultipleChoiceService = function (_ComponentService) {
      * an id and text fields
      * @returns an array of choice id strings
      */
+
+  }, {
+    key: 'getStudentChoiceIdsFromStudentChoiceObjects',
     value: function getStudentChoiceIdsFromStudentChoiceObjects(studentChoices) {
       var choiceIds = [];
 

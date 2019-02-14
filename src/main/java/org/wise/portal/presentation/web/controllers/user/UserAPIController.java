@@ -59,6 +59,8 @@ public class UserAPIController {
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   protected String getUserInfo(ModelMap modelMap,
+      HttpServletRequest request,
+      @RequestParam(value = "username", required = false) String username,
       @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (user != null) {
@@ -114,10 +116,13 @@ public class UserAPIController {
       }
       userJSON.put("language", language);
       userJSON.put("isGoogleUser", userDetails.isGoogleUser());
+      userJSON.put("isRecaptchaRequired", false);
 
       return userJSON.toString();
     } else {
       JSONObject userJSON = new JSONObject();
+      userJSON.put("userName", username);
+      userJSON.put("isRecaptchaRequired", ControllerUtil.isReCaptchaRequired(request));
       return userJSON.toString();
     }
   }

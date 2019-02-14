@@ -7,10 +7,9 @@
     <p i18n>Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</p>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions fxLayoutAlign="end">
+<mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
   <button mat-button mat-dialog-close [disabled]="isCopying" i18n>Cancel</button>
-  <button mat-button
-          mat-flat-button
+  <button mat-flat-button
           color="primary"
           (click)="copy()"
           [disabled]="isCopying">

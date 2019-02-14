@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { LibraryComponent } from "../library/library.component";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-personal-library',
@@ -11,31 +12,26 @@ import { LibraryComponent } from "../library/library.component";
 export class PersonalLibraryComponent extends LibraryComponent {
 
   projects: LibraryProject[] = [];
+  filteredProjects: LibraryProject[] = [];
   personalProjects: LibraryProject[] = [];
   sharedProjects: LibraryProject[] = [];
 
-  constructor(libraryService: LibraryService) {
+  constructor(libraryService: LibraryService, public dialog: MatDialog) {
     super(libraryService);
 
     libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
       this.personalProjects = personalProjects;
-      this.combinePersonalAndSharedProjects();
-      this.emitNumberOfProjectsVisible(this.personalProjects.length + this.sharedProjects.length);
+      this.updateProjects();
     });
 
     libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
       this.sharedProjects = sharedProjects;
-      this.combinePersonalAndSharedProjects();
-      this.emitNumberOfProjectsVisible(this.personalProjects.length + this.sharedProjects.length);
-    });
-
-    libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
-      this.filterUpdated(projectFilterOptions);
+      this.updateProjects();
     });
 
     libraryService.newProjectSource$.subscribe(project => {
       this.projects.unshift(project);
-      this.emitNumberOfProjectsVisible(this.projects.length);
+      this.filterUpdated();
       this.libraryService.setTabIndex(2);
     });
 
@@ -52,6 +48,11 @@ export class PersonalLibraryComponent extends LibraryComponent {
     this.projects = projects;
   }
 
+  updateProjects() {
+    this.combinePersonalAndSharedProjects();
+    this.filterUpdated();
+  }
+
   sortByProjectIdDesc(a, b) {
     if (a.id < b.id) {
       return 1;
@@ -60,5 +61,25 @@ export class PersonalLibraryComponent extends LibraryComponent {
     } else {
       return 0;
     }
+  }
+
+  showInfo() {
+    this.dialog.open(PersonalLibraryDetailsComponent, {
+      panelClass: 'mat-dialog--sm'
+    });
+  }
+}
+
+@Component({
+  selector: 'personal-library-details',
+  templateUrl: 'personal-library-details.html',
+})
+export class PersonalLibraryDetailsComponent {
+  constructor(
+    public dialogRef: MatDialogRef<PersonalLibraryDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  close(): void {
+    this.dialogRef.close();
   }
 }

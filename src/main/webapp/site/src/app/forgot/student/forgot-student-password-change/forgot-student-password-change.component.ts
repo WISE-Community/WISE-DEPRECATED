@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { I18n } from "@ngx-translate/i18n-polyfill";
 import { StudentService } from '../../../student/student.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-student-password-change',
@@ -23,7 +25,8 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private studentService: StudentService) { }
+              private studentService: StudentService,
+              private i18n: I18n) { }
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -38,22 +41,26 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
     if (this.isPasswordsMatch(password, confirmPassword)) {
       this.processing = true;
       this.studentService.changePassword(this.username, this.answer, password, confirmPassword)
-          .subscribe((response) => {
-        if (response.status === 'success') {
-          this.goToSuccessPage();
-        } else {
-          if (response.messageCode === 'passwordIsBlank') {
-            this.setPasswordIsBlankMessage();
-          } else if (response.messageCode === 'passwordsDoNotMatch') {
-            this.setPasswordsDoNotMatchMessage();
-          } else if (response.messageCode === 'invalidPassword') {
-            this.setInvalidPasswordMessage();
+        .pipe(
+          finalize(() => {
+            this.processing = false;
+          })
+        )
+        .subscribe((response) => {
+          if (response.status === 'success') {
+            this.goToSuccessPage();
           } else {
-            this.setErrorOccurredMessage();
+            if (response.messageCode === 'passwordIsBlank') {
+              this.setPasswordIsBlankMessage();
+            } else if (response.messageCode === 'passwordsDoNotMatch') {
+              this.setPasswordsDoNotMatchMessage();
+            } else if (response.messageCode === 'invalidPassword') {
+              this.setInvalidPasswordMessage();
+            } else {
+              this.setErrorOccurredMessage();
+            }
           }
-        }
-        this.processing = false;
-      });
+        });
     } else {
       this.setPasswordsDoNotMatchMessage();
     }
@@ -80,19 +87,19 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
   }
 
   setPasswordIsBlankMessage() {
-    this.setMessage('Password cannot be blank, please enter a password.');
+    this.setMessage(this.i18n('Password cannot be blank. Please try again.'));
   }
 
   setPasswordsDoNotMatchMessage() {
-    this.setMessage('Passwords do not match, please try again.');
+    this.setMessage(this.i18n('Passwords do not match. Please try again.'));
   }
 
   setInvalidPasswordMessage() {
-    this.setMessage('Password is invalid, please try another password.');
+    this.setMessage(this.i18n('Password is invalid. Please try a different password.'));
   }
 
   setErrorOccurredMessage() {
-    this.setMessage('An error occurred, please try again.');
+    this.setMessage(this.i18n('An error occurred. Please try again.'));
   }
 
   setMessage(message) {

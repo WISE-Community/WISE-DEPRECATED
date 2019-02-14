@@ -66,162 +66,119 @@ var DrawService = function (_ComponentService) {
   }, {
     key: 'getStudentWorkJPEG',
     value: function getStudentWorkJPEG(componentState) {
-      if (componentState != null) {
-        var studentData = componentState.studentData;
-
-        if (studentData != null && studentData.drawData != null) {
-          var drawData = JSON.parse(studentData.drawData);
-          if (drawData != null && drawData.jpeg != null && drawData.jpeg != '') {
-            return drawData.jpeg;
-          }
-        }
+      var studentData = componentState.studentData;
+      var drawData = JSON.parse(studentData.drawData);
+      if (drawData != null && drawData.jpeg != null && drawData.jpeg != '') {
+        return drawData.jpeg;
       }
       return null;
     }
   }, {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-      var result = false;
-
       if (componentStates && componentStates.length) {
         var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
-
         if (submitRequired) {
-          // completion requires a submission, so check for isSubmit in any component states
-          for (var i = 0, l = componentStates.length; i < l; i++) {
-            var state = componentStates[i];
-            if (state.isSubmit && state.studentData) {
-              // component state is a submission
-              if (state.studentData.drawData) {
-                // there is draw data so the component is completed
-                // TODO: check for empty drawing or drawing same as initial state
-                result = true;
-                break;
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var componentState = _step.value;
+
+              if (componentState.isSubmit) {
+                return true;
+              }
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
               }
             }
           }
         } else {
-          // get the last component state
-          var _l = componentStates.length - 1;
-          var componentState = componentStates[_l];
-
-          var studentData = componentState.studentData;
-
-          if (studentData) {
-            if (studentData.drawData) {
-              // there is draw data so the component is completed
-              // TODO: check for empty drawing or drawing same as initial state
-              result = true;
-            }
+          var _componentState = componentStates[componentStates.length - 1];
+          if (_componentState.studentData.drawData) {
+            // there is draw data so the component is completed
+            // TODO: check for empty drawing or drawing same as initial state
+            return true;
           }
         }
       }
-
-      return result;
+      return false;
     }
-  }, {
-    key: 'removeBackgroundFromComponentState',
-
 
     /**
      * Remove the background object from the draw data in the component state
      * @param componentState the component state
      * @returns the componentState
      */
+
+  }, {
+    key: 'removeBackgroundFromComponentState',
     value: function removeBackgroundFromComponentState(componentState) {
-
-      if (componentState != null) {
-        var studentData = componentState.studentData;
-
-        if (studentData != null) {
-
-          // get the draw data string
-          var drawData = studentData.drawData;
-
-          if (drawData != null) {
-
-            // convert the draw data string to an object
-            var drawDataObject = angular.fromJson(drawData);
-
-            if (drawDataObject != null) {
-
-              // get the canvas value
-              var canvas = drawDataObject.canvas;
-
-              if (canvas != null) {
-
-                // remove the background image from the canvas
-                delete canvas.backgroundImage;
-
-                // convert the object back to a JSON string
-                var drawDataJSONString = angular.toJson(drawDataObject);
-
-                if (drawDataJSONString != null) {
-                  // set the draw data JSON string back into the student data
-                  studentData.drawData = drawDataJSONString;
-                }
-              }
-            }
-          }
-        }
-      };
-
+      var drawData = componentState.studentData.drawData;
+      var drawDataObject = angular.fromJson(drawData);
+      var canvas = drawDataObject.canvas;
+      delete canvas.backgroundImage;
+      var drawDataJSONString = angular.toJson(drawDataObject);
+      componentState.studentData.drawData = drawDataJSONString;
       return componentState;
     }
+
+    /**
+     * @param componentState
+     * @param componentContent (optional)
+     */
+
   }, {
     key: 'componentStateHasStudentWork',
     value: function componentStateHasStudentWork(componentState, componentContent) {
-
       if (componentState != null) {
-
-        var studentData = componentState.studentData;
-
-        if (studentData != null) {
-
-          // get the student draw data
-          var drawData = studentData.drawData;
-
-          // get the draw data as a JSON object
-          var drawDataJSON = angular.fromJson(drawData);
-
-          if (componentContent == null) {
-            // the component content was not provided
-
-            if (drawDataJSON != null && drawDataJSON.canvas != null && drawDataJSON.canvas.objects != null && drawDataJSON.canvas.objects.length > 0) {
-
+        var drawDataString = componentState.studentData.drawData;
+        var drawData = angular.fromJson(drawDataString);
+        if (componentContent == null) {
+          if (this.isDrawDataContainsObjects(drawData)) {
+            return true;
+          }
+        } else {
+          if (this.isStarterDrawDataExists(componentContent)) {
+            var starterDrawData = componentContent.starterDrawData;
+            if (this.isStudentDrawDataDifferentFromStarterData(drawDataString, starterDrawData)) {
               return true;
             }
           } else {
-            // the component content was provided
-
-            var starterDrawData = componentContent.starterDrawData;
-
-            if (starterDrawData == null || starterDrawData == '') {
-              // there is no starter draw data
-
-              if (drawDataJSON != null && drawDataJSON.canvas != null && drawDataJSON.canvas.objects != null && drawDataJSON.canvas.objects.length > 0) {
-
-                return true;
-              }
-            } else {
-              /*
-               * there is starter draw data so we will compare it with
-               * the student draw data
-               */
-
-              if (drawData != null && drawData != '' && drawData !== starterDrawData) {
-                /*
-                 * the student draw data is different than the
-                 * starter draw data
-                 */
-                return true;
-              }
+            if (this.isDrawDataContainsObjects(drawData)) {
+              return true;
             }
           }
         }
       }
-
       return false;
+    }
+  }, {
+    key: 'isDrawDataContainsObjects',
+    value: function isDrawDataContainsObjects(drawData) {
+      return drawData.canvas != null && drawData.canvas.objects != null && drawData.canvas.objects.length > 0;
+    }
+  }, {
+    key: 'isStarterDrawDataExists',
+    value: function isStarterDrawDataExists(componentContent) {
+      return componentContent.starterDrawData != null && componentContent.starterDrawData !== '';
+    }
+  }, {
+    key: 'isStudentDrawDataDifferentFromStarterData',
+    value: function isStudentDrawDataDifferentFromStarterData(drawDataString, starterDrawData) {
+      return drawDataString != null && drawDataString !== '' && drawDataString !== starterDrawData;
     }
 
     /**
@@ -237,16 +194,9 @@ var DrawService = function (_ComponentService) {
       var deferred = this.$q.defer();
       var canvas = angular.element('#drawingtool_' + componentState.nodeId + '_' + componentState.componentId + ' canvas');
       if (canvas != null && canvas.length > 0) {
-        // get the top canvas
         canvas = canvas[0];
-
-        // get the canvas as a base64 string
-        var img_b64 = canvas.toDataURL('image/png');
-
-        // get the image object
-        var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-
-        // add the image to the student assets
+        var canvasBase64String = canvas.toDataURL('image/png');
+        var imageObject = this.UtilService.getImageObjectFromBase64String(canvasBase64String);
         this.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
           deferred.resolve(asset);
         });

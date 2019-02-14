@@ -1,15 +1,19 @@
 <button mat-icon-button [matMenuTriggerFor]="accountMenu">
-  <mat-icon aria-label="Account Menu" *ngIf="role === 'student' else teacher">account_circle</mat-icon>
+  <mat-icon *ngIf="role === 'student' else teacher"
+            i18n-aria-label
+            aria-label="Account Menu">account_circle</mat-icon>
   <ng-template #teacher>
-    <mat-icon aria-label="Account Menu">account_box</mat-icon>
+    <mat-icon i18n-aria-label aria-label="Account Menu">account_box</mat-icon>
   </ng-template>
 </button>
 <mat-menu #accountMenu="matMenu" xPosition="before">
   <div class="header-account-menu">
     <div class="user-info" fxLayout="row" fxLayoutAlign="left center">
-      <mat-icon aria-label="Account avatar" *ngIf="role === 'student' else teacherAvatar">account_circle</mat-icon>
+      <mat-icon *ngIf="role === 'student' else teacherAvatar"
+                i18n-aria-label
+                aria-label="Account avatar">account_circle</mat-icon>
       <ng-template #teacherAvatar>
-        <mat-icon aria-label="Account avatar">account_box</mat-icon>
+        <mat-icon i18n-aria-label aria-label="Account avatar">account_box</mat-icon>
       </ng-template>
       <span>{{ firstName }} {{ lastName }}</span>
     </div>
@@ -51,33 +55,12 @@
       <mat-icon>settings</mat-icon>
       <span i18n>Researcher Tools</span>
     </a>
-    <!--
-    <a *ngIf="role === 'researcher'"
-       mat-menu-item
-       routerLink="/researcher"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact: true}">
-      <mat-icon>settings</mat-icon>
-      <span>Researcher Tools</span>
-    </a>
-    -->
     <a *ngIf="role === 'admin'"
        mat-menu-item
        href="admin">
       <mat-icon>settings</mat-icon>
       <span i18n>Admin Tools</span>
     </a>
-
-    <!--
-    <a *ngIf="role === 'admin'"
-       mat-menu-item
-       routerLink="/admin"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact: true}">
-      <mat-icon>settings</mat-icon>
-      <span>Admin Tools</span>
-    </a>
-    -->
     <a *ngIf="role === 'student'"
        mat-menu-item
        routerLink="/help"

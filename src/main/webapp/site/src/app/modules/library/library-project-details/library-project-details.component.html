@@ -32,7 +32,7 @@
     </p>
     <p *ngIf="data.project.metadata.features"><strong i18n>Features:</strong> {{ data.project.metadata.features }}</p>
     <p *ngIf="ngss.dciArrangements.length">
-      <strong i18n>Performance Expectations: </strong>
+      <strong i18n>NGSS Performance Expectations: </strong>
       <ng-container *ngFor="let dcia of ngss.dciArrangements; let isLast=last">
         <a href="{{ ngssWebUrl }}{{ dcia.id }}" target="_blank">{{ dcia.id }} {{ dcia.name }}</a>
         <ng-container *ngIf="dcia.children.length">
@@ -51,14 +51,15 @@
      fxLayoutGap="8px">
   <button mat-button cdkFocusRegionstart (click)="onClose()" i18n>Close</button>
   <button *ngIf="isTeacher && !isRunProject"
-          mat-flat-button color="accent" (click)="runProject()">
-    <mat-icon>supervised_user_circle</mat-icon> <ng-container i18n>Use with Class</ng-container>
+          mat-flat-button 
+          color="accent" 
+          (click)="runProject()">
+    <mat-icon>supervised_user_circle</mat-icon>&nbsp;<ng-container i18n>Use with Class</ng-container>
   </button>
-  <!-- TODO: get preview url using config -->
   <a mat-flat-button
      color="primary"
      href="{{previewLink}}"
      target="_blank">
-    <mat-icon>visibility</mat-icon> <ng-container i18n>Preview</ng-container>
+    <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Preview</ng-container>
   </a>
 </div>
