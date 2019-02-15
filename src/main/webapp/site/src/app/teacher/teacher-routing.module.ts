@@ -26,6 +26,7 @@ const teacherRoutes: Routes = [
         component: TeacherHomeComponent,
         data: { selectedTabIndex: 1 },
         children: [
+          { path: '', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 0 } },
           { path: 'tested', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 0 } },
           { path: 'community', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 1 } },
           { path: 'personal', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 2 } }
