@@ -216,7 +216,8 @@ const Notebook = {
   template:
     `<div ng-if="$ctrl.config.enabled" ng-class="{'notes-visible': $ctrl.notesVisible}">
       <div class="notebook-overlay"></div>
-      <notebook-launcher config="$ctrl.config"
+      <notebook-launcher ng-if="$ctrl.itemTypes.note.enabled"
+                 config="$ctrl.config"
                  note-count="$ctrl.notebook.items.length"
                  notes-visible="$ctrl.notesVisible"
                  on-open="$ctrl.open(value, event)"></notebook-launcher>

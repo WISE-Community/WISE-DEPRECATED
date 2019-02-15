@@ -56,18 +56,9 @@ var NotebookReportController = function () {
     this.startAutoSaveInterval();
 
     this.summernoteOptions = {
-      toolbar: [['edit', ['undo', 'redo']], ['style', ['bold', 'italic', 'underline']], ['para', ['ul', 'ol', 'paragraph']], ['customButton', ['customButton']], ['print', ['print']]],
+      toolbar: [['edit', ['undo', 'redo']], ['style', ['bold', 'italic', 'underline']], ['para', ['ul', 'ol', 'paragraph']], ['print', ['print']]],
       popover: {
         image: [['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']], ['remove', ['removeMedia']]]
-      },
-      customButton: {
-        // TODO: i18n
-        buttonText: 'Insert ' + this.config.itemTypes.note.label.singular + ' +',
-        tooltip: 'Insert from ' + this.config.label,
-        buttonClass: 'accent-1 notebook-item--report__add-note',
-        action: function action($event) {
-          _this.addNotebookItemContent($event);
-        }
       },
       disableDragAndDrop: true,
       toolbarContainer: '#' + this.reportId + '-toolbar',
@@ -77,6 +68,10 @@ var NotebookReportController = function () {
         }
       }
     };
+
+    if (this.isNoteEnabled()) {
+      this.initializeInsertNoteButton();
+    }
 
     this.$onChanges = function (changes) {
       if (changes.insertContent && !changes.insertContent.isFirstChange() && changes.insertContent.currentValue) {
@@ -237,6 +232,27 @@ var NotebookReportController = function () {
     value: function setSaveText(message, time) {
       this.saveMessage.text = message;
       this.saveMessage.time = time;
+    }
+  }, {
+    key: 'isNoteEnabled',
+    value: function isNoteEnabled() {
+      return this.config.itemTypes.note.enabled;
+    }
+  }, {
+    key: 'initializeInsertNoteButton',
+    value: function initializeInsertNoteButton() {
+      var _this4 = this;
+
+      this.summernoteOptions.toolbar.splice(this.summernoteOptions.toolbar.length - 1, 0, ['customButton', ['customButton']]);
+      this.summernoteOptions.customButton = {
+        // TODO: i18n
+        buttonText: 'Insert ' + this.config.itemTypes.note.label.singular + ' +',
+        tooltip: 'Insert from ' + this.config.label,
+        buttonClass: 'accent-1 notebook-item--report__add-note',
+        action: function action($event) {
+          _this4.addNotebookItemContent($event);
+        }
+      };
     }
   }]);
 
