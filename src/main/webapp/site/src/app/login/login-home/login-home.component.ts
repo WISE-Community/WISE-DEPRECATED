@@ -52,12 +52,12 @@ export class LoginHomeComponent implements OnInit {
   login(): boolean {
     this.processing = true;
     this.passwordError = false;
-    this.userService.authenticate(this.credentials, () => {
+    this.userService.authenticate(this.credentials, (response) => {
       if (this.userService.isAuthenticated) {
         this.router.navigateByUrl(this.userService.getRedirectUrl());
       } else {
         this.processing = false;
-        this.isRecaptchaRequired = this.userService.isRecaptchaRequired;
+        this.isRecaptchaRequired = response.isRecaptchaRequired;
         this.credentials.password = null;
         if (this.isRecaptchaRequired) {
           this.passwordError = false;

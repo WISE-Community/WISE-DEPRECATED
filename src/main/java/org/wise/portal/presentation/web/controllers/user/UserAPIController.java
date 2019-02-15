@@ -116,13 +116,11 @@ public class UserAPIController {
       }
       userJSON.put("language", language);
       userJSON.put("isGoogleUser", userDetails.isGoogleUser());
-      userJSON.put("isRecaptchaRequired", false);
 
       return userJSON.toString();
     } else {
       JSONObject userJSON = new JSONObject();
       userJSON.put("userName", username);
-      userJSON.put("isRecaptchaRequired", ControllerUtil.isReCaptchaRequired(request));
       return userJSON.toString();
     }
   }
