@@ -370,10 +370,8 @@ public class ControllerUtil {
   }
 
   /**
-   * Check if the response is valid
-   * @param reCaptchaPrivateKey the ReCaptcha private key
-   * @param reCaptchaPublicKey the ReCaptcha public key
-   * @param gRecaptchaResponse the response
+   * Check if the ReCaptcha response is valid
+   * @param gRecaptchaResponse the ReCaptcha response
    * @return whether the user answered the ReCaptcha successfully
    */
   public static boolean isReCaptchaResponseValid(String gRecaptchaResponse) {
