@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { defer, Observable } from "rxjs";
 import { UserService } from "../../services/user.service";
 import { TeacherService } from "../../teacher/teacher.service";
@@ -95,7 +96,8 @@ describe('TeacherHomeComponent', () => {
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
-        { provide: ConfigService, useClass: MockConfigService}
+        { provide: ConfigService, useClass: MockConfigService },
+        { provide: ActivatedRoute }
       ],
       imports: [],
       schemas: [ NO_ERRORS_SCHEMA ]

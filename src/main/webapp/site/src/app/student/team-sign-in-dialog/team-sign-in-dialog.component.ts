@@ -189,7 +189,7 @@ export class TeamSignInDialogComponent implements OnInit {
 
   isTeamMember(teamMember: any) {
     for (let member of this.teamMembers) {
-      if (this.isExistingStudent(member) && teamMember.userName === member.userName) {
+      if (teamMember.userName === member.userName) {
         return true;
       }
     }
