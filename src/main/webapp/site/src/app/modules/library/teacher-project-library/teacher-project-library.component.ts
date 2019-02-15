@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation, Inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { MatDialog } from '@angular/material';
@@ -21,10 +22,13 @@ export class TeacherProjectLibraryComponent {
   numberOfCommunityProjectsVisible;
   numberOfPersonalProjectsVisible;
 
-  constructor(private libraryService: LibraryService, public dialog: MatDialog) {
+  constructor(private libraryService: LibraryService,
+              public dialog: MatDialog,
+              private route: ActivatedRoute) {
     libraryService.tabIndexSource$.subscribe((tabIndex) => {
       this.selectedTabIndex = tabIndex;
-    })
+    });
+    this.selectedTabIndex = this.route.snapshot.data['selectedTabIndex'];
   }
 
   updateNumberOfOfficialProjectsVisible(count) {

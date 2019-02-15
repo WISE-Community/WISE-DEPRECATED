@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
 import { TeacherService } from "../teacher.service";
@@ -19,7 +20,8 @@ export class TeacherHomeComponent implements OnInit {
 
   constructor(private userService: UserService,
               private teacherService: TeacherService,
-              private configService: ConfigService) {
+              private configService: ConfigService,
+              private route: ActivatedRoute) {
     teacherService.tabIndexSource$.subscribe((tabIndex) => {
       this.selectedTabIndex = tabIndex;
     });
@@ -27,6 +29,7 @@ export class TeacherHomeComponent implements OnInit {
 
   ngOnInit() {
     this.getUser();
+    this.selectedTabIndex = this.route.snapshot.data['selectedTabIndex'];
     this.configService.getConfig().subscribe((config) => {
       if (config != null) {
         this.authoringToolLink = `${this.configService.getContextPath()}/author`;

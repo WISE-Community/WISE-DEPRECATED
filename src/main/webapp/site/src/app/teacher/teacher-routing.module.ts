@@ -20,11 +20,17 @@ const teacherRoutes: Routes = [
       { path: '', component: TeacherHomeComponent },
       { path: 'profile', redirectTo: '', pathMatch: 'full' },
       { path: 'profile/edit', component: EditComponent },
-      { path: 'schedule', component: TeacherRunListComponent },
-      { path: 'library', component: TeacherProjectLibraryComponent },
-      { path: 'library/tested', component: OfficialLibraryComponent },
-      { path: 'library/community', component: CommunityLibraryComponent },
-      { path: 'library/personal', component: PersonalLibraryComponent }
+      { path: 'schedule', component: TeacherHomeComponent, data: { selectedTabIndex: 0 } },
+      {
+        path: 'library',
+        component: TeacherHomeComponent,
+        data: { selectedTabIndex: 1 },
+        children: [
+          { path: 'tested', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 0 } },
+          { path: 'community', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 1 } },
+          { path: 'personal', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 2 } }
+        ]
+      },
     ]
   }
 ];
