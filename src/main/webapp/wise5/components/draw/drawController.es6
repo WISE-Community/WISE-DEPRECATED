@@ -97,7 +97,6 @@ class DrawController extends ComponentController {
       }
     });
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
     this.broadcastDoneRenderingComponent();
   }
 
