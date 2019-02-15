@@ -63,7 +63,6 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator;
-import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.portal.PortalService;
@@ -380,15 +379,9 @@ public class ContactWiseController {
        * the user is not signed in so we will display a reCaptcha if the server
        * has been set up with reCaptcha
        */
-
-      String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-      String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-
-      boolean reCaptchaKeyValid =
-          ControllerUtil.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
-      if (reCaptchaKeyValid) {
+      if (ControllerUtil.isReCaptchaEnabled()) {
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-        boolean isResponseValid = ControllerUtil.checkReCaptchaResponse(reCaptchaPrivateKey, reCaptchaPublicKey, gRecaptchaResponse);
+        boolean isResponseValid = ControllerUtil.isReCaptchaResponseValid(gRecaptchaResponse);
         if (!isResponseValid) {
           String reCaptchaError = "";
           if (i18nProperties != null) {
