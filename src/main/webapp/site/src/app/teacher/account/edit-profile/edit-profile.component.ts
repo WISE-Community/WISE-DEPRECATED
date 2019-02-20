@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material';
 import { UserService } from "../../../services/user.service";
 import { Teacher } from "../../../domain/teacher";
 import { TeacherService } from "../../teacher.service";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-edit-profile',
@@ -15,11 +16,11 @@ export class EditProfileComponent implements OnInit {
 
   user: Teacher;
   schoolLevels: any[] = [
-    { id: 'ELEMENTARY_SCHOOL', label: 'Elementary School' },
-    { id: 'MIDDLE_SCHOOL', label: 'Middle School' },
-    { id: 'HIGH_SCHOOL', label: 'High School' },
-    { id: 'COLLEGE', label: 'College' },
-    { id: 'OTHER', label: 'Other' }
+    { id: 'ELEMENTARY_SCHOOL', label: this.i18n('Elementary School') },
+    { id: 'MIDDLE_SCHOOL', label: this.i18n('Middle School') },
+    { id: 'HIGH_SCHOOL', label: this.i18n('High School') },
+    { id: 'COLLEGE', label: this.i18n('College') },
+    { id: 'OTHER', label: this.i18n('Other') }
   ];
   languages: object[];
   changed: boolean = false;
@@ -41,7 +42,8 @@ export class EditProfileComponent implements OnInit {
   constructor(private fb: FormBuilder,
         private teacherService: TeacherService,
         private userService: UserService,
-        public snackBar: MatSnackBar) {
+        public snackBar: MatSnackBar,
+        private i18n: I18n) {
     this.user = <Teacher>this.getUser().getValue();
     this.setControlFieldValue('firstName', this.user.firstName);
     this.setControlFieldValue('lastName', this.user.lastName);
@@ -103,9 +105,9 @@ export class EditProfileComponent implements OnInit {
   handleUpdateProfileResponse(response) {
     if (response.message == 'success') {
       this.changed = false;
-      this.snackBar.open(`Profile updated.`);
+      this.snackBar.open(this.i18n(`Profile updated.`));
     } else {
-      this.snackBar.open(`An error occurred. Please try again.`);
+      this.snackBar.open(this.i18n(`An error occurred. Please try again.`));
     }
   }
 }

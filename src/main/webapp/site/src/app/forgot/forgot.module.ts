@@ -6,7 +6,7 @@ import { ForgotHomeComponent } from './forgot-home/forgot-home.component';
 import { ForgotComponent } from './forgot.component';
 import { SharedModule } from '../modules/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatProgressBarModule } from '@angular/material';
+import { MatProgressBarModule, MatDividerModule } from '@angular/material';
 import { ForgotStudentComponent } from './student/forgot-student/forgot-student.component';
 import { ForgotTeacherComponent } from './teacher/forgot-teacher/forgot-teacher.component';
 import { ForgotStudentPasswordComponent } from './student/forgot-student-password/forgot-student-password.component';
@@ -26,6 +26,7 @@ import { ForgotTeacherPasswordVerifyComponent } from './teacher/forgot-teacher-p
     CommonModule,
     ForgotRoutingModule,
     FormsModule,
+    MatDividerModule,
     MatProgressBarModule,
     ReactiveFormsModule,
     SharedModule

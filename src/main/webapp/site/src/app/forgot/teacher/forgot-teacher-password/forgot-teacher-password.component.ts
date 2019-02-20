@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {TeacherService} from '../../../teacher/teacher.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { I18n } from "@ngx-translate/i18n-polyfill";
+import { TeacherService } from '../../../teacher/teacher.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-teacher-password',
@@ -19,7 +21,8 @@ export class ForgotTeacherPasswordComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private router: Router,
-              private teacherService: TeacherService) { }
+              private teacherService: TeacherService,
+              private i18n: I18n) { }
 
   ngOnInit() {
   }
@@ -37,40 +40,40 @@ export class ForgotTeacherPasswordComponent implements OnInit {
     this.clearMessage();
     this.showForgotUsernameLink = false;
     const username = this.getControlFieldValue('username');
-    this.teacherService.getVerificationCodeEmail(username).subscribe((response) => {
-      if (response.status === 'success') {
-        this.goToVerificationCodePage();
-      } else {
-        if (response.messageCode === 'usernameNotFound') {
-          this.setUsernameNotFoundMessage();
-          this.showForgotUsernameLink = true;
-        } else if (response.messageCode === 'tooManyVerificationCodeAttempts') {
-          this.setTooManyVerificationCodeAttemptsMessage();
-        } else if (response.messageCode === 'failedToSendEmail') {
-          this.setFailedToSendEmailMessage();
+    this.teacherService.getVerificationCodeEmail(username)
+      .pipe(
+        finalize(() => {
+          this.processing = false;
+        })
+      )
+      .subscribe((response) => {
+        if (response.status === 'success') {
+          this.goToVerificationCodePage();
+        } else {
+          if (response.messageCode === 'usernameNotFound') {
+            this.setUsernameNotFoundMessage();
+            this.showForgotUsernameLink = true;
+          } else if (response.messageCode === 'tooManyVerificationCodeAttempts') {
+            this.setTooManyVerificationCodeAttemptsMessage();
+          } else if (response.messageCode === 'failedToSendEmail') {
+            this.setFailedToSendEmailMessage();
+          }
         }
-      }
-      this.processing = false;
-    });
+      });
   }
 
   setUsernameNotFoundMessage() {
-    const message = `We could not find that username.
-        Please make sure you are typing your username correctly and try again.
-        If you have forgotten your username, please use the forgot username page below.`;
+    const message = this.i18n(`We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.`);
     this.setMessage(message);
   }
 
   setTooManyVerificationCodeAttemptsMessage() {
-    const message = `You have submitted an incorrect verification code too many times recently.
-        For security reasons, we will lock the ability to change your password for 10 minutes.
-        After 10 minutes, you can try again.`;
+    const message = this.i18n(`You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.`);
     this.setMessage(message);
   }
 
   setFailedToSendEmailMessage() {
-    const message = `The server has encountered an error and was unable to send the email to you.
-        Please try again. If the error continues to occur, please contact us.`;
+    const message = this.i18n(`The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.`);
     this.setMessage(message);
   }
 
@@ -80,10 +83,6 @@ export class ForgotTeacherPasswordComponent implements OnInit {
 
   clearMessage() {
     this.setMessage('');
-  }
-
-  goToForgotTeacherUsernamePage() {
-    this.router.navigate(['/forgot/teacher/username']);
   }
 
   goToVerificationCodePage() {

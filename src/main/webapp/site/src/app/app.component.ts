@@ -19,6 +19,9 @@ export class AppComponent {
   mediaWatcher: Subscription;
   hasAnnouncement: boolean = true;
   popstate: boolean = false;
+  pageY: number = 0;
+  prevPageY: number = 0;
+  scroll: boolean = false;
 
   constructor(private router: Router,
               iconRegistry: MatIconRegistry,
@@ -47,16 +50,24 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/facebook.svg')
     );
     iconRegistry.addSvgIcon(
-      'twitter',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter.svg')
-    );
-    iconRegistry.addSvgIcon(
       'facebook-ffffff',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/facebook-ffffff.svg')
     );
     iconRegistry.addSvgIcon(
+      'twitter',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter.svg')
+    );
+    iconRegistry.addSvgIcon(
       'twitter-ffffff',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter-ffffff.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'github',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/github.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'github-ffffff',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/github-ffffff.svg')
     );
     utilService.getMobileMenuState()
       .subscribe(state => {
@@ -100,7 +111,8 @@ export class AppComponent {
   showHeaderAndFooter(): boolean {
     return !this.router.url.includes('/login') &&
       !this.router.url.includes('/join') &&
-      !this.router.url.includes('/contact');
+      !this.router.url.includes('/contact') &&
+      !this.router.url.includes('/forgot');
   }
 
   showAnnouncementDetails() {
@@ -111,6 +123,12 @@ export class AppComponent {
 
   dismissAnnouncement() {
     this.hasAnnouncement = false;
+  }
+
+  onYPositionChange(pageY:number) {
+    this.pageY = pageY;
+    this.scroll = this.pageY > 120 && this.pageY > this.prevPageY;
+    this.prevPageY = pageY;
   }
 }
 

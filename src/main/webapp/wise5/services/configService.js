@@ -664,7 +664,7 @@ var ConfigService = function () {
       var userNamesObjects = [];
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-        if (userInfo != null) {
+        if (userInfo != null && userInfo.userName != null) {
           var userNames = userInfo.userName.split(':');
           var _iteratorNormalCompletion6 = true;
           var _didIteratorError6 = false;

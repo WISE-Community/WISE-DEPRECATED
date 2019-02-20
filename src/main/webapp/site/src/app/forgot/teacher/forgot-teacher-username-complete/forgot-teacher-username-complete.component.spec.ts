@@ -31,12 +31,4 @@ describe('ForgotTeacherUsernameCompleteComponent', () => {
   it('should show the confirmation message', () => {
     expect(fixture.debugElement.nativeElement.textContent).toContain('Your username has been sent to your email');
   });
-
-  it('should navigate to the sign in page when the sign in button is clicked', () => {
-    const router = TestBed.get(Router);
-    const navigateSpy = spyOn(router, 'navigate');
-    const signInButton = fixture.debugElement.nativeElement.querySelector('a');
-    signInButton.click();
-    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
-  });
 });

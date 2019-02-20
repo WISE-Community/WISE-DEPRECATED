@@ -19,10 +19,6 @@
 .content__header {
   margin-bottom: 8px;
 
-  h1 span {
-    padding: 0 8px;
-  }
-
   @media (min-width: breakpoint('sm.min')) {
     margin-bottom: 0;
 

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {TeacherService} from '../../../teacher/teacher.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TeacherService } from '../../../teacher/teacher.service';
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-teacher-password-verify',
@@ -23,7 +25,8 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private teacherService: TeacherService) { }
+              private teacherService: TeacherService,
+              private i18n: I18n) { }
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -47,43 +50,44 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
     this.showForgotPasswordLink = false;
     const verificationCode = this.getControlFieldValue('verificationCode');
     this.teacherService.checkVerificationCode(this.username, verificationCode)
-        .subscribe((response) => {
-      if (response.status === 'success') {
-        this.goToChangePasswordPage();
-      } else {
-        if (response.messageCode === 'verificationCodeExpired') {
-          this.setVerificationCodeExpiredMessage();
-          this.disableVerificationCodeInput();
-          this.disableSubmitButton();
-          this.showForgotPasswordLink = true;
-        } else if (response.messageCode === 'verificationCodeIncorrect') {
-          this.setVerificationCodeIncorrectMessage();
-        } else if (response.messageCode === 'tooManyVerificationCodeAttempts') {
-          this.setTooManyVerificationCodeAttemptsMessage();
-          this.disableVerificationCodeInput();
-          this.disableSubmitButton();
-          this.showForgotPasswordLink = true;
+      .pipe(
+        finalize(() => {
+          this.processing = false;
+        })
+      )
+      .subscribe((response) => {
+        if (response.status === 'success') {
+          this.goToChangePasswordPage();
+        } else {
+          if (response.messageCode === 'verificationCodeExpired') {
+            this.setVerificationCodeExpiredMessage();
+            this.disableVerificationCodeInput();
+            this.disableSubmitButton();
+            this.showForgotPasswordLink = true;
+          } else if (response.messageCode === 'verificationCodeIncorrect') {
+            this.setVerificationCodeIncorrectMessage();
+          } else if (response.messageCode === 'tooManyVerificationCodeAttempts') {
+            this.setTooManyVerificationCodeAttemptsMessage();
+            this.disableVerificationCodeInput();
+            this.disableSubmitButton();
+            this.showForgotPasswordLink = true;
+          }
         }
-      }
-      this.processing = false;
-    });
+      });
   }
 
   setVerificationCodeExpiredMessage() {
-    const message = `The verification code has expired. Verification codes are valid for 10 minutes.
-        Please go back to the Teacher Forgot Password page to generate a new one.`;
+    const message = this.i18n(`The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.`);
     this.setMessage(message);
   }
 
   setVerificationCodeIncorrectMessage() {
-    const message = 'The verification code is incorrect. Please try again.';
+    const message = this.i18n('The verification code is invalid. Please try again.');
     this.setMessage(message);
   }
 
   setTooManyVerificationCodeAttemptsMessage() {
-    const message = `You have submitted an incorrect verification code too many times recently.
-        For security reasons, we will lock the ability to change your password for 10 minutes.
-        After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.`;
+    const message = this.i18n(`You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.`);
     this.setMessage(message);
   }
 
@@ -101,10 +105,6 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
 
   disableSubmitButton() {
     this.isSubmitButtonEnabled = false;
-  }
-
-  goToForgotPasswordPage() {
-    this.router.navigate(['/forgot/teacher/password']);
   }
 
   goToChangePasswordPage() {

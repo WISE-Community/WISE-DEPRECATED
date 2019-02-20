@@ -137,7 +137,6 @@ public class TeacherAPIController {
     return ownerJSON;
   }
 
-  @ResponseBody
   @RequestMapping(value = "/run/{runId}", method = RequestMethod.GET)
   protected String getRun(@PathVariable Long runId)
       throws ObjectNotFoundException, JSONException {
@@ -148,13 +147,11 @@ public class TeacherAPIController {
     return runJSON.toString();
   }
 
-  @ResponseBody
   @RequestMapping(value = "/usernames", method = RequestMethod.GET)
   protected List<String> getAllTeacherUsernames() {
     return userDetailsService.retrieveAllUsernames("TeacherUserDetails");
   }
 
-  @ResponseBody
   @RequestMapping(value = "/register", method = RequestMethod.POST)
   protected String createTeacherAccount(
     @RequestBody Map<String, String> teacherFields, HttpServletRequest request
@@ -389,6 +386,22 @@ public class TeacherAPIController {
       response = createSuccessResponse();
     } else {
       response = createFailureResponse("noPermissionToEndRun");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
+  @RequestMapping(value = "/run/restart/{runId}", method = RequestMethod.PUT)
+  protected String restartRun(HttpServletRequest request,
+                          @PathVariable Long runId) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response = null;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      runService.restartRun(run);
+      response = createSuccessResponse();
+    } else {
+      response = createFailureResponse("noPermissionToRestartRun");
     }
     addRunToResponse(response, run);
     return response.toString();

@@ -1,17 +1,1 @@
 #!/bin/bash
-echo "*** WISE pre-commit hook: Begin ***"
-
-# Generate and add updated messages.xmb file to git
-echo "*** WISE pre-commit hook: Generating messages.xmb ***"
-ng xi18n
-git add src/main/webapp/site/src/messages.xmb
-
-# Run npm test. Abort commit if tests fail
-echo "*** WISE pre-commit hook: Running \"npm test\" ***"
-npm test
-if [[ $? != 0 ]] ; then
-  echo "*** WISE pre-commit hook: npm test failed. Aborting commit ***"
-  exit 1
-fi
-
-echo "*** WISE pre-commit hook: End ***"

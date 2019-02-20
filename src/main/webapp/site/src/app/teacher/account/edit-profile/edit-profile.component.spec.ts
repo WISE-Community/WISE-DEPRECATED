@@ -9,9 +9,11 @@ import {
   MatInputModule, MatSelectModule,
   MatSnackBarModule } from '@angular/material';
 import { TeacherService } from "../../teacher.service";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
 import { By } from '@angular/platform-browser';
 import { User } from "../../../domain/user";
+import { translationsFactory } from '../../../app.module';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 export class MockUserService {
 
@@ -95,7 +97,14 @@ describe('EditProfileComponent', () => {
       ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: UserService, useClass: MockUserService }
+        { provide: UserService, useClass: MockUserService },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

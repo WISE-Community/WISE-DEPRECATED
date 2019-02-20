@@ -143,6 +143,8 @@ public interface Run extends Persistable {
    */
   boolean isStudentAssociatedToThisRun(User studentUser);
 
+  boolean isOwner(User user);
+
   /**
    * @param teacherUser A user object.
    * @return Whether the user is the owner or shared owner of the run.

@@ -26,7 +26,6 @@ public class UpdateProjectSharedPermissionsAPIController {
    * Project Owner
    * The Shared Owners and their permission numbers
    */
-  @ResponseBody
   @RequestMapping(value = "/view", method = RequestMethod.GET)
   protected String viewProjectPermissions(@RequestParam(value = "min", required = false) Long min,
                                           @RequestParam(value = "max", required = false) Long max) {
@@ -70,7 +69,6 @@ public class UpdateProjectSharedPermissionsAPIController {
    * permission 16. For those shared owners with permission 16, add the permission 1 (view), and the
    * permission 2 (edit) if they do not already have them.
    */
-  @ResponseBody
   @RequestMapping(value = "/update", method = RequestMethod.GET)
   protected String updateProjectPermissions(@RequestParam(value = "min", required = false) Long min,
                                             @RequestParam(value = "max", required = false) Long max) {

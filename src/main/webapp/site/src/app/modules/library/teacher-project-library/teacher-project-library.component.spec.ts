@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeacherProjectLibraryComponent } from './teacher-project-library.component';
-import { MatMenuModule } from "@angular/material";
+import { MatMenuModule, MatDialog } from "@angular/material";
 import { LibraryService } from "../../../services/library.service";
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 
@@ -19,7 +19,8 @@ describe('TeacherProjectLibraryComponent', () => {
       imports: [ MatMenuModule ],
       declarations: [ TeacherProjectLibraryComponent ],
       providers: [
-        { provide: LibraryService, useClass: MockLibraryService }
+        { provide: LibraryService, useClass: MockLibraryService },
+        { provide: MatDialog }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

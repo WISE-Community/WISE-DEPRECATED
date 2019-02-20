@@ -1,8 +1,6 @@
 'use strict';
 
 import EmbeddedController from "./embeddedController";
-import html2canvas from 'html2canvas';
-import iframeResizer from 'iframe-resizer';
 
 class EmbeddedAuthoringController extends EmbeddedController {
   constructor($filter,
@@ -65,92 +63,35 @@ class EmbeddedAuthoringController extends EmbeddedController {
       this.height = this.componentContent.height ? this.componentContent.height : '100%';
       this.setURL(this.componentContent.url);
     }.bind(this), true);
-
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    this.$scope.$on('assetSelected', (event, args) => {
-      if (args != null) {
-        if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
-          var assetItem = args.assetItem;
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-            if (fileName != null) {
-              // get the assets directory path, e.g. /wise/curriculum/3/
-              var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-              var summernoteId = '';
-
-              if (args.target == 'prompt') {
-                summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
-              } else if (args.target == 'rubric') {
-                summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-              }
-
-              if (summernoteId != '') {
-                if (this.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
-        }
-      }
-
-      this.$mdDialog.hide();
-    });
-
-    /* TODO geoffreykwan we're listening to assetSelected twice?
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    this.$scope.$on('assetSelected', (event, args) => {
-      if (args != null) {
-        if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
-          var assetItem = args.assetItem;
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-            if (fileName != null) {
-              if (args.target == 'modelFile') {
-                this.authoringComponentContent.url = fileName;
-                this.authoringViewComponentChanged();
-              }
-            }
-          }
-        }
-      }
-      this.$mdDialog.hide();
-    });
   }
 
-  /**
-   * Show the asset popup to allow the author to choose the model file
-   */
-  chooseModelFile() {
-    var params = {};
-    params.isPopup = true;
-    params.nodeId = this.nodeId;
-    params.componentId = this.componentId;
-    params.target = 'modelFile';
+  assetSelected(event, args) {
+    if (this.isEventTargetThisComponent(args)) {
+      const fileName = args.assetItem.fileName;
+      if (args.target === 'rubric') {
+        const summernoteId = this.getSummernoteId(args);
+        this.restoreSummernoteCursorPosition(summernoteId);
+        const fullAssetPath = this.getFullAssetPath(fileName);
+        if (this.UtilService.isImage(fileName)) {
+          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+        } else if (this.UtilService.isVideo(fileName)) {
+          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+        }
+      } else if (args.target === 'modelFile') {
+        this.authoringComponentContent.url = fileName;
+        this.authoringViewComponentChanged();
+      }
+    }
+    this.$mdDialog.hide();
+  }
+
+  showModelFileChooserPopup() {
+    const params = {
+      isPopup: true,
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      target: 'modelFile'
+    };
     this.$rootScope.$broadcast('openAssetChooser', params);
   }
 }

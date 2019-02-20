@@ -110,9 +110,8 @@ public class ProjectAPIController {
     return projectsJSON.toString();
   }
 
-  @ResponseBody
   @RequestMapping(value = "/info/{projectId}", method = RequestMethod.GET)
-  protected String getRun(@PathVariable Long projectId) throws ObjectNotFoundException,
+  protected String getProjectInfo(@PathVariable Long projectId) throws ObjectNotFoundException,
       JSONException {
     Project project = projectService.getById(projectId);
     JSONObject projectJSON = ControllerUtil.getProjectJSON(project);
@@ -149,6 +148,7 @@ public class ProjectAPIController {
         projectLibraryGroup.put("owner", ControllerUtil.getOwnerJSON(project.getOwner()));
         projectLibraryGroup.put("sharedOwners", ControllerUtil.getProjectSharedOwnersJSON(project));
         projectLibraryGroup.put("dateCreated", project.getDateCreated());
+        projectLibraryGroup.put("wiseVersion", project.getWiseVersion());
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }

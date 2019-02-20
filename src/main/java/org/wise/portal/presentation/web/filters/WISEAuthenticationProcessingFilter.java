@@ -23,20 +23,10 @@
  */
 package org.wise.portal.presentation.web.filters;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -45,21 +35,15 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.user.UserService;
-
-import net.tanesha.recaptcha.ReCaptcha;
-import net.tanesha.recaptcha.ReCaptchaFactory;
 
 /**
  * Custom AuthenticationProcessingFilter that subclasses Acegi Security. This
@@ -96,7 +80,8 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
   public Authentication attemptAuthentication(HttpServletRequest request,
       HttpServletResponse response) throws AuthenticationException {
     if (ControllerUtil.isReCaptchaRequired(request)) {
-      if (!isReCaptchaResponseValid(request)) {
+      String gReCaptchaResponse = request.getParameter("g-recaptcha-response");
+      if (!ControllerUtil.isReCaptchaResponseValid(gReCaptchaResponse)) {
         String errorMessage = "Please verify that you are not a robot.";
         try {
           unsuccessfulAuthentication(request, response, new AuthenticationException(errorMessage) {});
@@ -109,21 +94,6 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
       }
     }
     return super.attemptAuthentication(request, response);
-  }
-
-  /**
-   * Check if the user has entered the correct text for ReCaptcha
-   * @return whether the user has entered the correct text for ReCaptcha
-   */
-  protected boolean isReCaptchaResponseValid(HttpServletRequest request) {
-    Boolean result = false;
-    String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-    String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-    if (ControllerUtil.checkReCaptchaResponse(reCaptchaPrivateKey, reCaptchaPublicKey, gRecaptchaResponse)) {
-      result = true;
-    }
-    return result;
   }
 
   @Override

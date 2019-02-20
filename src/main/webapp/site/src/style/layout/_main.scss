@@ -1,7 +1,6 @@
-$padding-top: 112px;
-$padding-top-gt-xs: 128px;
-$padding-top-gt-md: 144px;
-$padding-top-fullwidth: 80px;
+$padding-top: 48px;
+$padding-top-gt-xs: 64px;
+$padding-top-gt-md: 72px;
 $announcement-height: 40px;
 
 .main {
@@ -22,23 +21,5 @@ $announcement-height: 40px;
 }
 
 .main--fullwidth {
-  padding: $padding-top-fullwidth 0 0;
-}
-
-.has-announcement {
-  .main {
-    padding-top: $padding-top + $announcement-height;
-
-    @media (min-width: breakpoint('sm.min')) {
-      padding-top: $padding-top-gt-xs + $announcement-height;
-    }
-
-    @media (min-width: breakpoint('lg.min')) {
-      padding-top: $padding-top-gt-md + $announcement-height;
-    }
-  }
-
-  .main--fullwidth {
-    padding-top: $padding-top-fullwidth + $announcement-height;
-  }
+  padding: 0;
 }

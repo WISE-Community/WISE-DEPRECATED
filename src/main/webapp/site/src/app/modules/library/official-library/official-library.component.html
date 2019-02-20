@@ -1,5 +1,4 @@
-<mat-accordion class="library__groups"
-               multi="true">
+<mat-accordion multi="true">
   <ng-container *ngFor="let group of libraryGroups; let i = index">
     <mat-expansion-panel *ngIf="group.type === 'group'"
                          class="library-group"
@@ -18,11 +17,12 @@
                                   [ngClass]="{ 'hide': expandedGroups[group.id] }">
         </app-library-group-thumbs>
       </mat-expansion-panel-header>
-      <div fxLayout="row wrap">
+      <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="start">
         <ng-container *ngFor="let project of group.children">
           <div *ngIf="project.visible"
-               fxFlex="50"
-               fxFlex.gt-xs="33">
+               fxFlex.sm="50"
+               fxFlex.md="{{ split ? 50 : 33 }}"
+               fxFlex.gt-md="{{ split ? 33 : 25 }}">
             <app-library-project [project]="project" ></app-library-project>
           </div>
         </ng-container>

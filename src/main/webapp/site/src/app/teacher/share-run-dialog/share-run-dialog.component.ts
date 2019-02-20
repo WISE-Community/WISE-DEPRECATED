@@ -4,6 +4,7 @@ import { TeacherService } from "../teacher.service";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar,
   MatTableDataSource } from "@angular/material";
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-share-run-dialog',
@@ -20,8 +21,9 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public teacherService: TeacherService,
-              public snackBar: MatSnackBar) {
-    super(dialogRef, data, teacherService, snackBar);
+              public snackBar: MatSnackBar,
+              i18n: I18n) {
+    super(dialogRef, data, teacherService, snackBar, i18n);
     this.runId = data.run.id;
     this.teacherService.getRun(this.runId).subscribe((run: Run) => {
       this.run = run;
@@ -96,13 +98,13 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   addRunPermissionToSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = true;
-    this.snackBar.open(`Sharing permissions updated for ${ sharedOwner.username }.`);
+    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
   }
 
   removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = false;
-    this.snackBar.open(`Sharing permissions updated for ${ sharedOwner.username }.`);
+    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
   }
 
   shareRun() {

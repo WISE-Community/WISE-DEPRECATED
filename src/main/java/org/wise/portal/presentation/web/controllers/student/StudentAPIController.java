@@ -430,7 +430,6 @@ public class StudentAPIController {
     return lastLoginTime;
   }
 
-  @ResponseBody
   @RequestMapping(value = "/register", method = RequestMethod.POST)
   protected String createStudentAccount(
       @RequestBody Map<String, String> studentFields, HttpServletRequest request)
@@ -474,7 +473,6 @@ public class StudentAPIController {
     return birthday.getTime();
   }
 
-  @ResponseBody
   @RequestMapping(value = "/register/questions", method = RequestMethod.GET)
   protected String getSecurityQuestions() throws JSONException {
     JSONArray questions = new JSONArray();
@@ -549,6 +547,7 @@ public class StudentAPIController {
     Run run = runService.retrieveById(runId);
     JSONObject response = new JSONObject();
     response.put("status", false);
+    response.put("isTeacher", user.isTeacher());
     Workgroup workgroup = null;
     if (workgroupId != null) {
       workgroup = workgroupService.retrieveById(workgroupId);

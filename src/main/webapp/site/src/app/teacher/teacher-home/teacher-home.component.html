@@ -1,6 +1,7 @@
 <header fxLayout="row" class="content__header">
   <h1 class="accent"
       fxLayoutAlign="center center"
+      fxLayoutGap="8px"
       ngClass="mat-display-1"
       [ngClass.xs]="{ 'mat-display-1': false }">
     <mat-icon>home</mat-icon><span i18n>Teacher Home</span>
@@ -8,10 +9,10 @@
 </header>
 <section>
   <mat-tab-group [(selectedIndex)]="selectedTabIndex" #tabs>
-    <mat-tab label="Class Schedule">
+    <mat-tab i18n-label label="Class Schedule">
       <app-teacher-run-list></app-teacher-run-list>
     </mat-tab>
-    <mat-tab label="Browse WISE Units">
+    <mat-tab i18n-label label="Browse WISE Units">
         <app-teacher-project-library></app-teacher-project-library>
     </mat-tab>
     <mat-tab>

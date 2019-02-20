@@ -27,7 +27,7 @@
                    id="name"
                    name="name"
                    formControlName="name" />
-            <mat-error *ngIf="contactFormGroup.controls['name'].hasError('required')" i18n>Name Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['name'].hasError('required')" i18n>Name required</mat-error>
           </mat-form-field>
         </p>
         <p *ngIf="!isStudent">
@@ -37,7 +37,7 @@
                    id="email"
                    name="email"
                    formControlName="email" />
-            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('required')" i18n>Email Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('required')" i18n>Email required</mat-error>
             <mat-error *ngIf="contactFormGroup.controls['email'].hasError('email')" i18n>Invalid Email</mat-error>
           </mat-form-field>
         </p>
@@ -49,7 +49,7 @@
                 {{teacher.displayName}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="contactFormGroup.controls['teacher'].hasError('required')" i18n>Teacher Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['teacher'].hasError('required')" i18n>Teacher required</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -60,7 +60,7 @@
                 {{issueType.value}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="contactFormGroup.controls['issueType'].hasError('required')" i18n>Issue Type Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['issueType'].hasError('required')" i18n>Issue Type required</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -70,7 +70,7 @@
                    id="summary"
                    name="summary"
                    formControlName="summary" />
-            <mat-error *ngIf="contactFormGroup.controls['summary'].hasError('required')" i18n>City Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['summary'].hasError('required')" i18n>City required</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -83,7 +83,7 @@
                       rows="10"
                       cols="10">
             </textarea>
-            <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')" i18n>State Required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')" i18n>State required</mat-error>
           </mat-form-field>
         </p>
         <p *ngIf="isRecaptchaEnabled"

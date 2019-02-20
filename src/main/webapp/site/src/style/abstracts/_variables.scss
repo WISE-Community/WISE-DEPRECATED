@@ -7,51 +7,19 @@ $config: mat-typography-config();
 $breakpoints: (
   xs: (
     min: 0px,
-    max: 599px
-  ),
-  gt-xs: (
-    min: 600px,
-    max: none
-  ),
-  lt-sm: (
-    min: none,
-    max: 599px
+    max: 599.99px
   ),
   sm: (
     min: 600px,
-    max: 959px
-  ),
-  gt-sm: (
-    min: 960px,
-    max: none
-  ),
-  lt-md: (
-    min: none,
-    max: 959px
+    max: 959.99px
   ),
   md: (
     min: 960px,
-    max: 1279px
-  ),
-  gt-md: (
-    min: 1280px,
-    max: none
-  ),
-  lt-lg: (
-    min: none,
-    max: 1279px
+    max: 1279.99px
   ),
   lg: (
     min: 1280px,
-    max: 1599px
-  ),
-  gt-lg: (
-    min: 1600px,
-    max: none
-  ),
-  lt-xl: (
-    min: none,
-    max: 1599px
+    max: 1599.99px
   ),
   xl: (
     min: 1600px,
@@ -61,3 +29,5 @@ $breakpoints: (
 
 $card-border-radius: 4px;
 $feature-border-radius: 6px;
+$header-height: 80px;
+$announcement-height: 40px;

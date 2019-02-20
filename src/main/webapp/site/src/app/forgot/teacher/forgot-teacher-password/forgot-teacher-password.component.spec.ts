@@ -1,12 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ForgotTeacherPasswordComponent } from './forgot-teacher-password.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {ReactiveFormsModule} from '@angular/forms';
-import {TeacherService} from '../../../teacher/teacher.service';
-import {Observable} from 'rxjs/index';
-import {Router} from '@angular/router';
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TeacherService } from '../../../teacher/teacher.service';
+import { Observable } from 'rxjs/index';
+import { Router } from '@angular/router';
+import { translationsFactory } from '../../../app.module';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 export class MockTeacherService {
   getVerificationCodeEmail(username: string): Observable<any> {
@@ -45,8 +46,8 @@ describe('ForgotTeacherPasswordComponent', () => {
   };
 
   const getErrorMessage = () => {
-    const errorMessageDiv = fixture.debugElement.nativeElement.querySelector('.error-message');
-    return errorMessageDiv.textContent;
+    const errorMessage = fixture.debugElement.nativeElement.querySelector('.warn');
+    return errorMessage.textContent;
   };
 
   beforeEach(async(() => {
@@ -57,7 +58,14 @@ describe('ForgotTeacherPasswordComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        { provide: TeacherService, useClass: MockTeacherService }
+        { provide: TeacherService, useClass: MockTeacherService },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -81,19 +89,12 @@ describe('ForgotTeacherPasswordComponent', () => {
 
   it('should show the too many verification code attempts message', () => {
     submitAndReceiveResponse('getVerificationCodeEmail', 'failure', 'tooManyVerificationCodeAttempts');
-    expect(getErrorMessage()).toContain('You have submitted an incorrect verification code too many times recently');
+    expect(getErrorMessage()).toContain('You have submitted an invalid verification code too many times');
   });
 
   it('should show the failed to send email message', () => {
     submitAndReceiveResponse('getVerificationCodeEmail', 'failure', 'failedToSendEmail');
-    expect(getErrorMessage()).toContain('The server has encountered an error and was unable to send the email to you');
-  });
-
-  it('should navigate to the forgot teacher username page', () => {
-    const router = TestBed.get(Router);
-    const navigateSpy = spyOn(router, 'navigate');
-    component.goToForgotTeacherUsernamePage();
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/username']);
+    expect(getErrorMessage()).toContain('The server has encountered an error and was unable to send you an email');
   });
 
   it('should navigate to the verify code page', () => {

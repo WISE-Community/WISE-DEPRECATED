@@ -481,7 +481,7 @@ class ConfigService {
     let userNamesObjects = [];
     if (workgroupId != null) {
       let userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-      if (userInfo != null) {
+      if (userInfo != null && userInfo.userName != null) {
         let userNames = userInfo.userName.split(':');
         for (let name of userNames) {
           let id = "";
