@@ -86,11 +86,16 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
       if (user != null) {
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
       } else {
+        invalidateAccesToken();
         throw new BadCredentialsException("google user not found");
       }
     } catch (final Exception e) {
       throw new BadCredentialsException("Could not obtain user details from token", e);
     }
+  }
+
+  private void invalidateAccesToken() {
+    googleOpenIdRestTemplate.getOAuth2ClientContext().setAccessToken((OAuth2AccessToken)null);
   }
 
   public void verifyClaims(Map claims) {
