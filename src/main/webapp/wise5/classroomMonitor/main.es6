@@ -45,8 +45,9 @@ import MultipleChoiceComponentModule from '../components/multipleChoice/multiple
 import NodeGradingController from './nodeGrading/nodeGradingController';
 import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeService from '../services/nodeService';
-import Notebook from '../directives/notebook/notebook';
+import NotebookComponents from '../themes/default/notebook/notebookComponents';
 import NotebookGradingController from './notebook/notebookGradingController';
+import NotebookItemGrading from './notebook/notebookItemGrading/notebookItemGrading';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
@@ -65,6 +66,7 @@ import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 
+import 'lib/angular-summernote/dist/angular-summernote.min';
 import moment from 'moment';
 
 const classroomMonitorModule = angular.module('classroomMonitor', [
@@ -93,10 +95,11 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
         'ngMaterial',
         'ngSanitize',
         'ngWebSocket',
-        'notebook',
+        'theme.notebook',
         'openResponseComponentModule',
         'outsideURLComponentModule',
         'pascalprecht.translate',
+        'summernote',
         'tableComponentModule',
         'ui.router'
     ])
@@ -128,6 +131,7 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
     .controller(NotebookGradingController.name, NotebookGradingController)
     .controller(StudentGradingController.name, StudentGradingController)
     .controller(StudentProgressController.name, StudentProgressController)
+    .component('notebookItemGrading', NotebookItemGrading)
     .config([
         '$urlRouterProvider',
         '$stateProvider',
@@ -252,7 +256,7 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                 })
                 .state('root.notebooks', {
                     url: '/notebook',
-                    templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
+                    templateUrl: 'wise5/classroomMonitor/notebook/notebookGrading.html',
                     controller: 'NotebookGradingController',
                     controllerAs: 'notebookGradingController'
                 });

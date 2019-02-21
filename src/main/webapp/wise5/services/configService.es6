@@ -562,7 +562,7 @@ class ConfigService {
    * @param workgroupId the workgroup id
    * @returns whether the workgroup is the owner of the run
    */
-  isRunOwner(workgroupId) {
+  isRunOwner(workgroupId = this.getWorkgroupId()) {
     if (workgroupId != null) {
       const teacherUserInfo = this.getTeacherUserInfo();
       if (teacherUserInfo != null) {
@@ -579,7 +579,7 @@ class ConfigService {
    * @param workgroupId the workgroup id
    * @returns whether the workgroup is a shared teacher of the run
    */
-  isRunSharedTeacher(workgroupId) {
+  isRunSharedTeacher(workgroupId = this.getWorkgroupId()) {
     if (workgroupId != null) {
       const sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
       if (sharedTeacherUserInfos != null) {

@@ -777,7 +777,9 @@ var ConfigService = function () {
 
   }, {
     key: 'isRunOwner',
-    value: function isRunOwner(workgroupId) {
+    value: function isRunOwner() {
+      var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getWorkgroupId();
+
       if (workgroupId != null) {
         var teacherUserInfo = this.getTeacherUserInfo();
         if (teacherUserInfo != null) {
@@ -797,7 +799,9 @@ var ConfigService = function () {
 
   }, {
     key: 'isRunSharedTeacher',
-    value: function isRunSharedTeacher(workgroupId) {
+    value: function isRunSharedTeacher() {
+      var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getWorkgroupId();
+
       if (workgroupId != null) {
         var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
         if (sharedTeacherUserInfos != null) {

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import EditNotebookItemController from '../editNotebookItemController';
 
@@ -25,13 +25,20 @@ class NotebookController {
     this.themePath = this.ProjectService.getThemePath();
     this.itemId = null;
     this.item = null;
-    this.config = this.NotebookService.config;
+    if (this.workgroupId == null) {
+      this.workgroupId = this.ConfigService.getWorkgroupId();
+    }
+
+    if (this.isStudentNotebook()) {
+      this.config = this.NotebookService.getStudentNotebookConfig();
+    } else {
+      this.config = this.NotebookService.getTeacherNotebookConfig();
+    }
 
     if (!this.config.enabled) {
       return;
     }
 
-    this.workgroupId = this.ConfigService.getWorkgroupId();
     this.reportVisible = this.config.itemTypes.report.enabled;
     this.notesVisible = false;
     this.insertMode = false;
@@ -93,6 +100,13 @@ class NotebookController {
     this.reportId = this.config.itemTypes.report.notes[0].reportId;
   }
 
+  isStudentNotebook() {
+    return this.ConfigService.getMode() === 'studentRun' ||
+        this.ConfigService.getMode() === 'preview' ||
+        ((this.ConfigService.isRunOwner() || this.ConfigService.isRunSharedTeacher()) &&
+          this.ConfigService.getWorkgroupId() !== this.workgroupId);
+  }
+
   deleteStudentAsset(studentAsset) {
     alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
   }
@@ -130,10 +144,10 @@ class NotebookController {
   }
 
   getNotes() {
-    let notes = [];
-    let notebookItems = this.notebook.items;
+    const notes = [];
+    const notebookItems = this.notebook.items;
     for (let notebookItemKey in notebookItems) {
-      let notebookItem = notebookItems[notebookItemKey];
+      const notebookItem = notebookItems[notebookItemKey];
       if (notebookItem.last().type === 'note') {
         notes.push(notebookItem);
       }
@@ -148,7 +162,7 @@ class NotebookController {
       if (this.notesVisible) {
         this.closeNotes(event);
       } else {
-        this.NotebookService.retrievePublicNotebookItems("public").then(() => {
+        this.NotebookService.retrievePublicNotebookItems('public').then(() => {
           this.notesVisible = true;
         });
       }
@@ -165,7 +179,7 @@ class NotebookController {
   setInsertMode(value, requester) {
     this.insertMode = value;
     if (value) {
-      this.NotebookService.retrievePublicNotebookItems("public").then(() => {
+      this.NotebookService.retrievePublicNotebookItems('public').then(() => {
         this.notesVisible = true;
       });
     }
@@ -173,7 +187,7 @@ class NotebookController {
   }
 
   insert(notebookItem, $event) {
-    if (this.requester == 'report') {
+    if (this.requester === 'report') {
       this.insertContent = angular.copy(notebookItem);
     } else {
       this.$rootScope.$broadcast('notebookItemChosen', { requester: this.requester, notebookItem: notebookItem });
@@ -195,15 +209,20 @@ NotebookController.$inject = [
 
 const Notebook = {
   bindings: {
+    filter: '@',
+    mode: '@',
+    workgroupId: '='
   },
   template:
     `<div ng-if="$ctrl.config.enabled" ng-class="{'notes-visible': $ctrl.notesVisible}">
       <div class="notebook-overlay"></div>
-      <notebook-launcher config="$ctrl.config"
+      <notebook-launcher ng-if="$ctrl.itemTypes.note.enabled"
+                 config="$ctrl.config"
                  note-count="$ctrl.notebook.items.length"
                  notes-visible="$ctrl.notesVisible"
                  on-open="$ctrl.open(value, event)"></notebook-launcher>
       <notebook-report ng-if="$ctrl.config.itemTypes.report.enabled"
+               mode="{{$ctrl.mode}}"
                insert-content="$ctrl.insertContent"
                insert-mode="$ctrl.insertMode"
                config="$ctrl.config"
@@ -211,7 +230,7 @@ const Notebook = {
                visible="$ctrl.reportVisible"
                workgroup-id="$ctrl.workgroupId"
                on-collapse="$ctrl.insertMode=false"
-               on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-report>
+               on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-report>               
     </div>
     <notebook-notes ng-if="$ctrl.config.enabled"
             notebook="$ctrl.notebook"
@@ -221,7 +240,8 @@ const Notebook = {
             workgroup-id="$ctrl.workgroupId"
             on-close="$ctrl.closeNotes()"
             on-insert="$ctrl.insert(note, event)"
-            on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-notes>`,
+            on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-notes>
+    `,
   controller: NotebookController
 };
 

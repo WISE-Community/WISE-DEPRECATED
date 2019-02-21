@@ -88,20 +88,6 @@ var AuthoringToolProjectService = function (_ProjectService) {
                 "color": "#1565C0"
               }
             },
-            "question": {
-              "type": "question",
-              "enabled": false,
-              "enableLink": true,
-              "enableClipping": true,
-              "enableStudentUploads": true,
-              "label": {
-                "singular": this.$translate('QUESTION_LOWER_CASE'),
-                "plural": this.$translate('QUESTIONS_LOWER_CASE'),
-                "link": this.$translate('QUESTIONS'),
-                "icon": "live_help",
-                "color": "#F57C00"
-              }
-            },
             "report": {
               "enabled": false,
               "label": {
@@ -117,6 +103,46 @@ var AuthoringToolProjectService = function (_ProjectService) {
                 "description": this.$translate('REPORT_DESCRIPTION'),
                 "prompt": this.$translate('REPORT_PROMPT'),
                 "content": this.$translate('REPORT_CONTENT')
+              }]
+            }
+          }
+        },
+        "teacherNotebook": {
+          "enabled": true,
+          "label": this.$translate('TEACHER_NOTEBOOK'),
+          "enableAddNew": true,
+          "itemTypes": {
+            "note": {
+              "type": "note",
+              "enabled": false,
+              "enableLink": true,
+              "enableAddNote": true,
+              "enableClipping": true,
+              "enableStudentUploads": true,
+              "requireTextOnEveryNote": false,
+              "label": {
+                "singular": this.$translate('NOTE_LOWERCASE'),
+                "plural": this.$translate('NOTES_LOWERCASE'),
+                "link": this.$translate('NOTES'),
+                "icon": "note",
+                "color": "#1565C0"
+              }
+            },
+            "report": {
+              "enabled": true,
+              "label": {
+                "singular": this.$translate('TEACHER_REPORT_LOWERCASE'),
+                "plural": this.$translate('TEACHER_REPORTS_LOWERCASE'),
+                "link": this.$translate('TEACHER_REPORT'),
+                "icon": "assignment",
+                "color": "#AD1457"
+              },
+              "notes": [{
+                "reportId": "teacherReport",
+                "title": this.$translate('TEACHER_REPORT'),
+                "description": this.$translate('TEACHER_REPORT_DESCRIPTION'),
+                "prompt": this.$translate('TEACHER_REPORT_PROMPT'),
+                "content": this.$translate('TEACHER_REPORT_CONTENT')
               }]
             }
           }
