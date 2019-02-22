@@ -462,10 +462,42 @@ public class TeacherAPIController {
     Run run = runService.retrieveById(runId);
     JSONObject response;
     if (run.isTeacherAssociatedToThisRun(user)) {
-      runService.setStartTime(runId, startTime);
-      response = createSuccessResponse();
+      Date endDate = run.getEndtime();
+      Date startDate = new Date(startTime);
+      if (endDate == null) {
+        runService.setStartTime(runId, startTime);
+        response = createSuccessResponse();
+      } else if (startDate.before(endDate)) {
+        runService.setStartTime(runId, startTime);
+        response = createSuccessResponse();
+      } else {
+        response = createFailureResponse("startDateAfterEndDate");
+      }
     } else {
-      response = createFailureResponse("noPermissionToChangeStartDate");
+      response = createFailureResponse("noPermissionToChangeDate");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
+  @RequestMapping(value = "/run/update/endtime", method = RequestMethod.POST)
+  protected String editRunEndTime(HttpServletRequest request,
+        @RequestParam("runId") Long runId,
+        @RequestParam("endTime") String endTime) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      Date startDate = run.getStarttime();
+      Date endDate = new Date(endTime);
+      if (endDate.after(startDate)) {
+        runService.setEndTime(runId, endTime);
+        response = createSuccessResponse();
+      } else {
+        response = createFailureResponse("endDateBeforeStartDate");
+      }
+    } else {
+      response = createFailureResponse("noPermissionToChangeDate");
     }
     addRunToResponse(response, run);
     return response.toString();

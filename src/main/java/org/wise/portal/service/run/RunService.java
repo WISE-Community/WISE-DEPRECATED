@@ -432,6 +432,8 @@ public interface RunService {
 
   void setStartTime(Long runId, String startTime);
 
+  void setEndTime(Long runId, String endTime);
+
   boolean isAllowedToViewStudentWork(Run run, User user);
 
   boolean isAllowedToGradeStudentWork(Run run, User user);

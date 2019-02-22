@@ -69,4 +69,17 @@ export class Run {
   userHasPermission(user: User, permission: number) {
     return user.permissions.includes(permission);
   }
+
+  isActive() {
+    const now = new Date().getTime();
+    const endTime = this.endTime ? new Date(this.endTime).getTime() : null;
+    if ( endTime && endTime <= now) {
+      return false;
+    }
+    const startTime = new Date(this.startTime).getTime();
+    if (startTime <= now) {
+      return true;
+    }
+    return false;
+  }
 }

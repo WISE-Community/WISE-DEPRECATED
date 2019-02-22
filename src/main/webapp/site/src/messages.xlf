@@ -172,8 +172,8 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-      </trans-unit><trans-unit id="6d21387dacc5dac5c5d1dbee7cc49de1fc78c229" datatype="html">
-        <source>©1996-2018, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</source>
+      </trans-unit><trans-unit id="d48d3962eb5a534830a0c401c74417966024bf7c" datatype="html">
+        <source>©1996-2019, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">75</context>
@@ -2720,7 +2720,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="6becdc6f27b75d5697cfd21fa1c80856ee184e64" datatype="html">
         <source>Start date is required</source>
@@ -2804,7 +2804,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit><trans-unit id="d9b2ffb3e1ce1ca42a3db04d00ea072777898eb3" datatype="html">
         <source>Legacy Unit Warning</source>
@@ -4278,10 +4278,8 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-      </trans-unit><trans-unit id="6278c64baffd2cf910afb237ca4095118eceab61" datatype="html">
-        <source>
-    Shared by <x id="INTERPOLATION" equiv-text="{{ run.owner.displayName }}"/> |
-  </source>
+      </trans-unit><trans-unit id="a37d84732401bd97b4e5749632056efe1b95eefc" datatype="html">
+        <source>Shared by <x id="INTERPOLATION" equiv-text="{{ run.owner.displayName }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">23</context>
@@ -4290,11 +4288,11 @@
         <source>Teacher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit><trans-unit id="c5e61b5953035dffac28fac9f454b7d8ce21dd36" datatype="html">
         <source>Share Classroom Run</source>
@@ -4362,8 +4360,8 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-      </trans-unit><trans-unit id="3e6acd589d8b82cafd8546409da0a36469d297a0" datatype="html">
-        <source>Start Date</source>
+      </trans-unit><trans-unit id="4a4f46a2dcec36bd5c8c371ceee55c2226dec27f" datatype="html">
+        <source>Schedule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">35</context>
@@ -4372,7 +4370,13 @@
         <source>Start date is required.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit><trans-unit id="f60960faa2cd3e0db11e48688774d05dfa9d715b" datatype="html">
+        <source>End date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit><trans-unit id="bc38cb37c2ca90b3825bdb79d8c116eddba23a53" datatype="html">
         <source>End Unit</source>
@@ -5427,8 +5431,22 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="eac0e49076f93313b76480a38fee8ff4a3cf215c" datatype="html">
-        <source>You do not have permission to change the start date for this unit.</source>
+      <trans-unit id="fd540958a00446d8a204a5a9a0db472b73d7aaab" datatype="html">
+        <source>You do not have permission to change the dates for this unit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c39dc7dcb6dece34e9d5718449337e76cf892c91" datatype="html">
+        <source>End date can&apos;t be before start date.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f4e8826e636952f345f23611e61a77fec72cbc8b" datatype="html">
+        <source>Start date can&apos;t be after end date.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5457,6 +5475,13 @@
       </trans-unit>
       <trans-unit id="e9949fc7530006d3b20bfe00b30bfddbb60aac13" datatype="html">
         <source>Are you sure you want to change the start date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1032b57a589b56e4122e7ca8b565a057f13f524b" datatype="html">
+        <source>Are you sure you want to change the end date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>

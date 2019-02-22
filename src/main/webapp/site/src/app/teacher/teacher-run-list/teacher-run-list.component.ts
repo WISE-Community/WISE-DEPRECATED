@@ -27,7 +27,7 @@ export class TeacherRunListComponent implements OnInit {
 
   constructor(private teacherService: TeacherService) {
     teacherService.newRunSource$.subscribe(run => {
-      let teacherRun: TeacherRun = run as TeacherRun;
+      let teacherRun: TeacherRun = new TeacherRun(run);
       teacherRun.isHighlighted = true;
       this.runs.unshift(teacherRun);
       this.runs.sort(this.sortByStartTimeDesc);
@@ -165,15 +165,7 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   runIsActive(run: TeacherRun) {
-    if (run.endTime) {
-      return false;
-    }
-    const startTime = new Date(run.startTime).getTime();
-    const now = new Date().getTime();
-    if (startTime <= now) {
-      return true;
-    }
-    return false;
+    return run.isActive();
   }
 
   performSearchAndFilter(): void {

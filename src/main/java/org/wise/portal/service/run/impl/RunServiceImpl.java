@@ -639,6 +639,17 @@ public class RunServiceImpl implements RunService {
     }
   }
 
+  @Transactional()
+  public void setEndTime(Long runId, String endTime) {
+    try {
+      Run run = this.retrieveById(runId);
+      run.setEndtime(new Date(endTime));
+      this.runDao.save(run);
+    } catch(ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
   @Transactional
   public void setIdeaManagerEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
     Run run = retrieveById(runId);

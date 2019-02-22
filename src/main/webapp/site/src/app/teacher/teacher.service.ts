@@ -22,6 +22,7 @@ export class TeacherService {
   private deletePeriodFromRunUrl = 'api/teacher/run/delete/period';
   private updateRunStudentsPerTeamUrl = 'api/teacher/run/update/studentsperteam';
   private updateRunStartTimeUrl = 'api/teacher/run/update/starttime';
+  private updateRunEndTimeUrl = 'api/teacher/run/update/endtime';
   private forgotUsernameUrl = 'api/teacher/forgot/username';
   private forgotPasswordUrl = 'api/teacher/forgot/password';
   private getVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
@@ -195,6 +196,15 @@ export class TeacherService {
     let body = new HttpParams();
     body = body.set('runId', runId + '');
     body = body.set('startTime', startTime);
+    return this.http.post<Object>(url, body, {headers: headers});
+  }
+
+  updateRunEndTime(runId: number, endTime: string) {
+    const url = `${this.updateRunEndTimeUrl}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('runId', runId + '');
+    body = body.set('endTime', endTime);
     return this.http.post<Object>(url, body, {headers: headers});
   }
 

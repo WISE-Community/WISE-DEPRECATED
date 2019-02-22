@@ -42,15 +42,7 @@ export class StudentRunListComponent implements OnInit {
   }
 
   runIsActive(run: StudentRun) {
-    if (run.endTime) {
-      return false;
-    }
-    const startTime = new Date(run.startTime).getTime();
-    const now = new Date().getTime();
-    if (startTime <= now) {
-      return true;
-    }
-    return false;
+    return run.isActive();
   }
 
   runSpansYears(run: StudentRun) {

@@ -38,6 +38,13 @@ export class MockTeacherService {
       observer.complete();
     });
   }
+  updateEndTime(runId, maxStudentsPerTeam) {
+    return Observable.create(observer => {
+      const response: any = {};
+      observer.next(response);
+      observer.complete();
+    });
+  }
 }
 
 describe('RunSettingsDialogComponent', () => {
@@ -48,13 +55,18 @@ describe('RunSettingsDialogComponent', () => {
     return fixture.debugElement.nativeElement.querySelectorAll('input')[1];
   };
 
+  const getEndDateInput = () => {
+    return fixture.debugElement.nativeElement.querySelectorAll('input')[2];
+  };
+
   beforeEach(async(() => {
     let run = new Run({
       id: 1,
       name: 'Test Project',
       periods: ['1', '2', '3'],
       maxStudentsPerTeam: 1,
-      startTime: '2018-10-17 00:00:00.0'
+      startTime: '2018-10-17 00:00:00.0',
+      endTime: '2018-10-19 23:59:00.0'
     });
     TestBed.configureTestingModule({
       declarations: [ RunSettingsDialogComponent ],
@@ -104,6 +116,13 @@ describe('RunSettingsDialogComponent', () => {
     expect(startDateInput.ngModel.getUTCFullYear()).toBe(2018);
   });
 
+  it('should populate the correct end date', () => {
+    const endDateInput = getEndDateInput();
+    expect(endDateInput.ngModel.getDate()).toBe(19);
+    expect(endDateInput.ngModel.getMonth()).toBe(9);
+    expect(endDateInput.ngModel.getUTCFullYear()).toBe(2018);
+  });
+
   it('should add a period', () => {
     component.run.periods.push("4");
     fixture.detectChanges();
@@ -132,5 +151,14 @@ describe('RunSettingsDialogComponent', () => {
     expect(startDateInput.ngModel.getDate()).toBe(18);
     expect(startDateInput.ngModel.getMonth()).toBe(10);
     expect(startDateInput.ngModel.getUTCFullYear()).toBe(2019);
+  });
+
+  it('should change the end date', () => {
+    component.endDate = new Date('2019-11-20 23:59:00.0');
+    fixture.detectChanges();
+    const endDateInput = getEndDateInput();
+    expect(endDateInput.ngModel.getDate()).toBe(20);
+    expect(endDateInput.ngModel.getMonth()).toBe(10);
+    expect(endDateInput.ngModel.getUTCFullYear()).toBe(2019);
   });
 });
