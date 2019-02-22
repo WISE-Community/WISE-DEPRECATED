@@ -5,6 +5,8 @@ import { LibraryService } from "../../../services/library.service";
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs/internal/Observable';
 
 export class MockLibraryService {
   tabIndexSource$ = fakeAsyncResponse(1);
@@ -20,7 +22,8 @@ describe('TeacherProjectLibraryComponent', () => {
       declarations: [ TeacherProjectLibraryComponent ],
       providers: [
         { provide: LibraryService, useClass: MockLibraryService },
-        { provide: MatDialog }
+        { provide: MatDialog },
+        { provide: ActivatedRoute, useValue: { data: Observable.create({ selectedTabIndex: 0 })} }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

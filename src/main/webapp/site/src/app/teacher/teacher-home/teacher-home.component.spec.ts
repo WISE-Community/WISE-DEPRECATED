@@ -9,6 +9,7 @@ import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ConfigService } from "../../services/config.service";
 import { Config } from "../../domain/config";
+import { ActivatedRoute } from '@angular/router';
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -95,7 +96,8 @@ describe('TeacherHomeComponent', () => {
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
-        { provide: ConfigService, useClass: MockConfigService}
+        { provide: ConfigService, useClass: MockConfigService },
+        { provide: ActivatedRoute, useValue: { data: Observable.create({ selectedTabIndex: 0 })} }
       ],
       imports: [],
       schemas: [ NO_ERRORS_SCHEMA ]

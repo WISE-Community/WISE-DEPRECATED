@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Inject } from '@angular/core';
+import {Component, ViewEncapsulation, Inject, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
@@ -14,7 +14,7 @@ import { OfficialLibraryDetailsComponent } from '../official-library/official-li
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class TeacherProjectLibraryComponent {
+export class TeacherProjectLibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];
   selectedTabIndex: number = 0;
@@ -24,11 +24,17 @@ export class TeacherProjectLibraryComponent {
 
   constructor(private libraryService: LibraryService,
               public dialog: MatDialog,
-              private route: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute) {
     libraryService.tabIndexSource$.subscribe((tabIndex) => {
       this.selectedTabIndex = tabIndex;
     });
-    this.selectedTabIndex = this.route.snapshot.data['selectedTabIndex'];
+  }
+
+  ngOnInit(): void {
+    this.activatedRoute.data.subscribe(({ selectedTabIndex }) => {
+      this.selectedTabIndex = selectedTabIndex;
+      // this.libraryService.setTabIndex(selectedTabIndex);
+    });
   }
 
   updateNumberOfOfficialProjectsVisible(count) {

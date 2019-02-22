@@ -21,7 +21,7 @@ export class TeacherHomeComponent implements OnInit {
   constructor(private userService: UserService,
               private teacherService: TeacherService,
               private configService: ConfigService,
-              private route: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute) {
     teacherService.tabIndexSource$.subscribe((tabIndex) => {
       this.selectedTabIndex = tabIndex;
     });
@@ -29,11 +29,14 @@ export class TeacherHomeComponent implements OnInit {
 
   ngOnInit() {
     this.getUser();
-    this.selectedTabIndex = this.route.snapshot.data['selectedTabIndex'];
     this.configService.getConfig().subscribe((config) => {
       if (config != null) {
         this.authoringToolLink = `${this.configService.getContextPath()}/author`;
       }
+    });
+    this.activatedRoute.data.subscribe(({ selectedTabIndex }) => {
+      this.selectedTabIndex = selectedTabIndex;
+      // this.teacherService.setTabIndex(selectedTabIndex);
     });
     // Workaround for intercepting mat-tab change events
     // https://stackoverflow.com/questions/51354135/how-to-conditionally-prevent-user-from-navigating-to-other-tab-in-mat-tab-group/51354403#51354403
