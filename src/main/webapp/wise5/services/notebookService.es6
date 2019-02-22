@@ -169,6 +169,10 @@ class NotebookService {
     return this.ProjectService.project.notebook != null && this.ProjectService.project.notebook.enabled;
   }
 
+  isTeacherNotebookEnabled() {
+    return this.ProjectService.project.teacherNotebook != null && this.ProjectService.project.teacherNotebook.enabled;
+  }
+
   retrieveNotebookItems(workgroupId = null, periodId = null) {
     if (this.ConfigService.isPreview()) {
       // we are previewing the project, initialize dummy student data
