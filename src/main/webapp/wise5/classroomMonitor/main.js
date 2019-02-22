@@ -316,7 +316,7 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
                 return TeacherDataService.retrieveAnnotations();
             },
             notebook: function notebook(NotebookService, ConfigService, config, project) {
-                if (NotebookService.isNotebookEnabled()) {
+                if (NotebookService.isNotebookEnabled() || NotebookService.isTeacherNotebookEnabled()) {
                     return NotebookService.retrieveNotebookItems().then(function (notebook) {
                         return notebook;
                     });

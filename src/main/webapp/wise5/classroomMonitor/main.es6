@@ -193,7 +193,7 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                             return TeacherDataService.retrieveAnnotations();
                         },
                         notebook: function (NotebookService, ConfigService, config, project) {
-                          if (NotebookService.isNotebookEnabled()) {
+                          if (NotebookService.isNotebookEnabled() || NotebookService.isTeacherNotebookEnabled()) {
                             return NotebookService.retrieveNotebookItems().then((notebook) => {
                               return notebook;
                             });
