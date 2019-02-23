@@ -134,6 +134,8 @@ export class TeamSignInDialogComponent implements OnInit {
                     alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
                   }
                 });
+            } else {
+              alert(this.i18n('No WISE user with this Google ID found'));
             }
           });
         }
