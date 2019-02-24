@@ -22,6 +22,7 @@ export class TeamSignInDialogComponent implements OnInit {
   showSignInForm: any = {};
   isGoogleAuthenticationEnabled: boolean = false;
   canLaunch: boolean = false;
+  signedInMembers: string[] = []
 
   constructor(private configService: ConfigService,
               private socialAuthService: AuthService,
@@ -47,6 +48,8 @@ export class TeamSignInDialogComponent implements OnInit {
       this.hiddenMembers.push(true);
       this.teamMembers.push(student);
     }
+
+    this.signedInMembers.push(this.user.userName);
   }
 
   ngOnInit() {
@@ -79,7 +82,7 @@ export class TeamSignInDialogComponent implements OnInit {
       if (response.isValid === true) {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
-          if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher && this.isNotSignedIn(teamMember)) {
+          if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher && !this.isTeamMember(teamMember)) {
             teamMember.id = response.userId;
             teamMember.userName = response.userName;
             teamMember.firstName = response.firstName;
@@ -88,7 +91,7 @@ export class TeamSignInDialogComponent implements OnInit {
           } else if (canBeAddedToWorkgroupResponse.isTeacher) {
             alert(this.i18n('A teacher cannot be added as a team member.'));
             teamMember.userName = null;
-          } else if (this.isSignedIn(teamMember)) {
+          } else if (this.isTeamMember(teamMember)) {
             alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
             teamMember.userName = null;
           } else {
@@ -125,7 +128,7 @@ export class TeamSignInDialogComponent implements OnInit {
             if (response.status === 'success') {
               this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
                 .subscribe((canBeAddedToWorkgroupResponse) => {
-                  if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher && !canBeAddedToWorkgroupResponse.isMember && !this.isTeamMember(response)) {
+                  if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher && !this.isTeamMember(teamMember)) {
                     teamMember.id = response.userId;
                     teamMember.userName = response.userName;
                     teamMember.firstName = response.firstName;
@@ -133,7 +136,7 @@ export class TeamSignInDialogComponent implements OnInit {
                     this.markAsSignedIn(teamMember);
                   } else if (canBeAddedToWorkgroupResponse.isTeacher) {
                     alert(this.i18n('A teacher cannot be added as a team member.'));
-                  } else if (canBeAddedToWorkgroupResponse.isMember || this.isTeamMember(response)) {
+                  } else if (this.isTeamMember(teamMember)) {
                     alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
                   } else {
                     alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
@@ -148,6 +151,7 @@ export class TeamSignInDialogComponent implements OnInit {
 
   markAsSignedIn(teamMember: any) {
     teamMember.status = 'signedIn';
+    this.signedInMembers.push(teamMember.userName);
   }
 
   markAsNotSignedIn(teamMember: any) {
@@ -188,8 +192,8 @@ export class TeamSignInDialogComponent implements OnInit {
   }
 
   isTeamMember(teamMember: any) {
-    for (let member of this.teamMembers) {
-      if (this.isNotSignedIn(teamMember) && teamMember.userName === member.userName) {
+    for (let userName of this.signedInMembers) {
+      if (teamMember.userName === userName) {
         return true;
       }
     }
