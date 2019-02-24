@@ -6,7 +6,7 @@ import { fakeAsyncResponse } from "../../../student/student-run-list/student-run
 
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs/internal/Observable';
 
 export class MockLibraryService {
   tabIndexSource$ = fakeAsyncResponse(1);

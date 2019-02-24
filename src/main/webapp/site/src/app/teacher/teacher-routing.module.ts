@@ -13,7 +13,7 @@ const teacherRoutes: Routes = [
     component: TeacherComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: TeacherHomeComponent },
+      { path: '', redirectTo: 'schedule', pathMatch: 'full' },
       { path: 'profile', redirectTo: '', pathMatch: 'full' },
       { path: 'profile/edit', component: EditComponent },
       { path: 'schedule', component: TeacherHomeComponent, data: { selectedTabIndex: 0 } },
@@ -22,9 +22,11 @@ const teacherRoutes: Routes = [
         component: TeacherHomeComponent,
         data: { selectedTabIndex: 1 },
         children: [
+          { path: '', redirectTo: 'tested', pathMatch: 'full' },
           { path: 'tested', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 0 } },
           { path: 'community', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 1 } },
-          { path: 'personal', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 2 } }
+          { path: 'personal', component: TeacherProjectLibraryComponent, data: { selectedTabIndex: 2 } },
+          { path: '**', component: TeacherHomeComponent }
         ]
       },
     ],
