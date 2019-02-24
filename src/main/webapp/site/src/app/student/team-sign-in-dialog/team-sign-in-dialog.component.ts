@@ -135,7 +135,7 @@ export class TeamSignInDialogComponent implements OnInit {
                   }
                 });
             } else {
-              alert(this.i18n('No WISE user with this Google ID found'));
+              alert(this.i18n('No WISE user with this Google ID found.'));
             }
           });
         }
