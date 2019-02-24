@@ -79,7 +79,7 @@ export class TeamSignInDialogComponent implements OnInit {
       if (response.isValid === true) {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
-          if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher && !canBeAddedToWorkgroupResponse.isMember && !this.isTeamMember(response)) {
+          if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher && this.isNotSignedIn(teamMember)) {
             teamMember.id = response.userId;
             teamMember.userName = response.userName;
             teamMember.firstName = response.firstName;
@@ -88,7 +88,7 @@ export class TeamSignInDialogComponent implements OnInit {
           } else if (canBeAddedToWorkgroupResponse.isTeacher) {
             alert(this.i18n('A teacher cannot be added as a team member.'));
             teamMember.userName = null;
-          } else if (canBeAddedToWorkgroupResponse.isMember || this.isTeamMember(response)) {
+          } else if (this.isSignedIn(teamMember)) {
             alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
             teamMember.userName = null;
           } else {
@@ -189,7 +189,7 @@ export class TeamSignInDialogComponent implements OnInit {
 
   isTeamMember(teamMember: any) {
     for (let member of this.teamMembers) {
-      if (teamMember.userName === member.userName) {
+      if (this.isNotSignedIn(teamMember) && teamMember.userName === member.userName) {
         return true;
       }
     }
