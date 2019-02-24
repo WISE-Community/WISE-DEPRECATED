@@ -17,13 +17,17 @@ describe('TeacherProjectLibraryComponent', () => {
   let fixture: ComponentFixture<TeacherProjectLibraryComponent>;
 
   beforeEach(async(() => {
+    const data = Observable.create(observer => {
+      observer.next({ selectedTabIndex: 0 });
+      observer.complete();
+    });
     TestBed.configureTestingModule({
       imports: [ MatMenuModule ],
       declarations: [ TeacherProjectLibraryComponent ],
       providers: [
         { provide: LibraryService, useClass: MockLibraryService },
         { provide: MatDialog },
-        { provide: ActivatedRoute, useValue: { data: Observable.create({ selectedTabIndex: 0 })} }
+        { provide: ActivatedRoute, useValue: { snapshot: { firstChild: { data } }} }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

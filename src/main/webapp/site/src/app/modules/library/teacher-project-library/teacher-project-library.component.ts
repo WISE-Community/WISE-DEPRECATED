@@ -31,9 +31,8 @@ export class TeacherProjectLibraryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ selectedTabIndex }) => {
-      this.selectedTabIndex = selectedTabIndex;
-      // this.libraryService.setTabIndex(selectedTabIndex);
+    this.activatedRoute.snapshot.firstChild.data.subscribe(({ selectedTabIndex }) => {
+      this.libraryService.setTabIndex(selectedTabIndex);
     });
   }
 

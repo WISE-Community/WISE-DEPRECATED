@@ -35,8 +35,7 @@ export class TeacherHomeComponent implements OnInit {
       }
     });
     this.activatedRoute.data.subscribe(({ selectedTabIndex }) => {
-      this.selectedTabIndex = selectedTabIndex;
-      // this.teacherService.setTabIndex(selectedTabIndex);
+      this.teacherService.setTabIndex(selectedTabIndex);
     });
     // Workaround for intercepting mat-tab change events
     // https://stackoverflow.com/questions/51354135/how-to-conditionally-prevent-user-from-navigating-to-other-tab-in-mat-tab-group/51354403#51354403
