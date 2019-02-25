@@ -227,11 +227,11 @@ public class DailyAdminJob {
 
   public void gatherVLEStatistics() {
     try {
-      String userName = this.wiseProperties.getProperty("hibernate.connection.username");
+      String username = this.wiseProperties.getProperty("hibernate.connection.username");
       String password = this.wiseProperties.getProperty("hibernate.connection.password");
       String url = this.wiseProperties.getProperty("hibernate.connection.url");
       Class.forName("com.mysql.jdbc.Driver").newInstance();
-      Connection conn = DriverManager.getConnection(url, userName, password);
+      Connection conn = DriverManager.getConnection(url, username, password);
       Statement statement = conn.createStatement();
       JSONObject vleStatistics = new JSONObject();
       gatherStepWorkStatistics(statement, vleStatistics);

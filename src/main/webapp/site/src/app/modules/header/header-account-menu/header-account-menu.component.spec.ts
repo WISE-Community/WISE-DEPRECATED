@@ -49,7 +49,7 @@ describe('HeaderAccountMenuComponent', () => {
     user.firstName = "Amanda";
     user.lastName = "Panda";
     user.role = "student";
-    user.userName = "AmandaP0101";
+    user.username = "AmandaP0101";
     component.user = user;
     fixture.detectChanges();
   });

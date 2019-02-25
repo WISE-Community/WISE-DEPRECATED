@@ -328,13 +328,13 @@ var StudentProgressController = function () {
 
                 if (workgroup != null) {
                     var workgroupId = workgroup.workgroupId;
-                    var userName = workgroup.userName;
+                    var username = workgroup.username;
                     var displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId);
                     var team = {
                         periodId: workgroup.periodId,
                         periodName: workgroup.periodName,
                         workgroupId: workgroupId,
-                        userName: displayNames
+                        username: displayNames
                     };
                     this.teams.push(team);
                     this.updateTeam(workgroupId);
@@ -396,46 +396,46 @@ var StudentProgressController = function () {
 
             switch (this.sort) {
                 case 'team':
-                    orderBy = ['workgroupId', 'userName'];
+                    orderBy = ['workgroupId', 'username'];
                     break;
                 case '-team':
-                    orderBy = ['-workgroupId', 'userName'];
+                    orderBy = ['-workgroupId', 'username'];
                     break;
                 case 'student':
-                    orderBy = ['userName', 'workgroupId'];
+                    orderBy = ['username', 'workgroupId'];
                     break;
                 case '-student':
-                    orderBy = ['-userName', 'workgroupId'];
+                    orderBy = ['-username', 'workgroupId'];
                     break;
                 case 'score':
-                    orderBy = ['scorePct', 'userName'];
+                    orderBy = ['scorePct', 'username'];
                     break;
                 case '-score':
-                    orderBy = ['-scorePct', 'userName'];
+                    orderBy = ['-scorePct', 'username'];
                     break;
                 case 'completion':
-                    orderBy = ['completion.completionPct', 'userName'];
+                    orderBy = ['completion.completionPct', 'username'];
                     break;
                 case '-completion':
-                    orderBy = ['-completion.completionPct', 'userName'];
+                    orderBy = ['-completion.completionPct', 'username'];
                     break;
                 case 'location':
-                    orderBy = ['location', 'userName'];
+                    orderBy = ['location', 'username'];
                     break;
                 case '-location':
-                    orderBy = ['-location', 'userName'];
+                    orderBy = ['-location', 'username'];
                     break;
                 case 'time':
-                    orderBy = ['-online', '-timeSpent', 'userName'];
+                    orderBy = ['-online', '-timeSpent', 'username'];
                     break;
                 case '-time':
-                    orderBy = ['-online', 'timeSpent', 'userName'];
+                    orderBy = ['-online', 'timeSpent', 'username'];
                     break;
                 case 'online':
-                    orderBy = ['online', 'userName'];
+                    orderBy = ['online', 'username'];
                     break;
                 case '-online':
-                    orderBy = ['-online', 'userName'];
+                    orderBy = ['-online', 'username'];
                     break;
             }
 

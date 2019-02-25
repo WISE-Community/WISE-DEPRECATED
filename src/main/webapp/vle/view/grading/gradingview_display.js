@@ -738,7 +738,7 @@ View.prototype.displayGradeByTeamSelectPage = function() {
 		var workgroupId = student.workgroupId;
 
 		// get the user names for the workgroup
-		var userNames = student.userName.replace(/:/g, "<br>");
+		var userNames = student.username.replace(/:/g, "<br>");
 
 		if (!this.isSignedInUserRunOwner()) {
 			/*
@@ -3755,13 +3755,13 @@ View.prototype.getVleStatesSortedByUserName = function(vleStates) {
 	 * @param a some vleState
 	 * @param b some vleState
 	 * @return
-	 * true if the userName for a comes after b
-	 * false if the userName for b comes after a
+	 * true if the username for a comes after b
+	 * false if the username for b comes after a
 	 */
 	var sortByUserName = function(a, b) {
 		//get the user names from the vleStates
-		var userNameA = thisView.getUserAndClassInfo().getClassmateByWorkgroupId(a.dataId).userName.toLowerCase();
-		var userNameB = thisView.getUserAndClassInfo().getClassmateByWorkgroupId(b.dataId).userName.toLowerCase();
+		var userNameA = thisView.getUserAndClassInfo().getClassmateByWorkgroupId(a.dataId).username.toLowerCase();
+		var userNameB = thisView.getUserAndClassInfo().getClassmateByWorkgroupId(b.dataId).username.toLowerCase();
 
 		//compare them
 		return userNameA > userNameB;
@@ -3795,7 +3795,7 @@ View.prototype.getUserNamesByWorkgroupId = function(workgroupId, numberOfLineBre
 
 		if(classmate != null) {
 			//retrieve the : delimited names of the users in the workgroup
-			var userNames = classmate.userName;
+			var userNames = classmate.username;
 
 			//split the string by :
 			var userNamesArray = userNames.split(":");
@@ -5720,7 +5720,7 @@ View.prototype.isSignedInUserRunOwner = function() {
 
             if (teacherUserInfo != null) {
                 // get the user name for the run owner
-                var runOwnerUserName = userAndClassInfo.getTeacherUserInfo().userName;
+                var runOwnerUserName = userAndClassInfo.getTeacherUserInfo().username;
 
                 // check if the logged in user name is the same as the run owner user name
                 if (userLoginName == runOwnerUserName) {

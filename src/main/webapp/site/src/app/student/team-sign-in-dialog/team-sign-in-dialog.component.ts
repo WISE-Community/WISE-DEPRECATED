@@ -75,22 +75,22 @@ export class TeamSignInDialogComponent implements OnInit {
   }
 
   signIn(teamMember: any) {
-    this.userService.checkAuthentication(teamMember.userName, teamMember.password).subscribe((response) => {
+    this.userService.checkAuthentication(teamMember.username, teamMember.password).subscribe((response) => {
       if (response.isValid === true) {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
           if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher) {
             teamMember.id = response.userId;
-            teamMember.userName = response.userName;
+            teamMember.username = response.username;
             teamMember.firstName = response.firstName;
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
           } else if (canBeAddedToWorkgroupResponse.isTeacher) {
             alert(this.i18n('A teacher cannot be added as a team member.'));
-            teamMember.userName = null;
+            teamMember.username = null;
           } else {
             alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
-            teamMember.userName = null;
+            teamMember.username = null;
           }
         });
       } else {
@@ -124,7 +124,7 @@ export class TeamSignInDialogComponent implements OnInit {
                 .subscribe((canBeAddedToWorkgroupResponse) => {
                   if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher) {
                     teamMember.id = response.userId;
-                    teamMember.userName = response.userName;
+                    teamMember.username = response.username;
                     teamMember.firstName = response.firstName;
                     teamMember.lastName = response.lastName;
                     this.markAsSignedIn(teamMember);

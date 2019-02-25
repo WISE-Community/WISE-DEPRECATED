@@ -2878,7 +2878,7 @@ class DataExportController {
     }
 
     removeNamesFromWorkgroup(workgroup) {
-      delete workgroup.userName;
+      delete workgroup.username;
       delete workgroup.displayNames;
       for (let user of workgroup.users) {
         delete user.name;

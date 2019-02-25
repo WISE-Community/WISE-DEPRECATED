@@ -26,12 +26,12 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 
 		var getUserName = function() {
 			if (myUserInfo != null) {
-				return myUserInfo.userName;
+				return myUserInfo.username;
 			}
 		};
 
 		/**
-		 * Get the user login by extracting it from the userName
+		 * Get the user login by extracting it from the username
 		 * field.
 		 */
 		var getUserLoginName = function() {
@@ -40,8 +40,8 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			//use a regular expression to capture the text between the parens
 			var captureLoginRegEx = /.*\((.*)\)/;
 
-			//userName will be like "Geoffrey Kwan (GeoffreyKwan)"
-			var regExMatch = captureLoginRegEx.exec(myUserInfo.userName);
+			//username will be like "Geoffrey Kwan (GeoffreyKwan)"
+			var regExMatch = captureLoginRegEx.exec(myUserInfo.username);
 
 			//check if there was a match
 			if(regExMatch != null && regExMatch.length > 1) {
@@ -203,7 +203,7 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			//check the class mates
 			for(var x=0; x<classmateUserInfos.length; x++) {
 				if(userId == classmateUserInfos[x].workgroupId) {
-					return classmateUserInfos[x].userName;
+					return classmateUserInfos[x].username;
 				}
 			}
 
@@ -387,8 +387,8 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 				var result = 0;
 
 				//get the user names from the vleStates
-				var userNameA = a.userName.toLowerCase();
-				var userNameB = b.userName.toLowerCase();
+				var userNameA = a.username.toLowerCase();
+				var userNameB = b.username.toLowerCase();
 
 				if(userNameA > userNameB) {
 					//a comes after b
@@ -576,13 +576,13 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 					//loop through each user name
 					for(var x=0; x<userNamesSplit.length; x++) {
 						//get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
-						var userName = userNamesSplit[x];
+						var username = userNamesSplit[x];
 
 						//get the index of the open parenthesis
-						var indexOfOpenParen = userName.indexOf('(');
+						var indexOfOpenParen = username.indexOf('(');
 
 						//get the student name e.g. "Spongebob Squarepants"
-						var studentName = userName.substring(0, indexOfOpenParen - 1);
+						var studentName = username.substring(0, indexOfOpenParen - 1);
 
 						//add the student name to the array
 						studentNames.push(studentName);
@@ -612,13 +612,13 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 					//loop through each user name
 					for(var x=0; x<userNamesSplit.length; x++) {
 						//get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
-						var userName = userNamesSplit[x];
+						var username = userNamesSplit[x];
 
 						//get the index of the first empty space
-						var indexOfSpace = userName.indexOf(' ');
+						var indexOfSpace = username.indexOf(' ');
 
 						//get the student first name e.g. "Spongebob"
-						var studentFirstName = userName.substring(0, indexOfSpace);
+						var studentFirstName = username.substring(0, indexOfSpace);
 
 						//add the student name to the array
 						studentNames.push(studentFirstName);
@@ -659,13 +659,13 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 
 					if (n != null && n > 0) {
 						//get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
-						var userName = userNamesSplit[n - 1];
+						var username = userNamesSplit[n - 1];
 
 						//get the index of the first empty space
-						var indexOfSpace = userName.indexOf(' ');
+						var indexOfSpace = username.indexOf(' ');
 
 						//get the student first name e.g. "Spongebob"
-						firstName = userName.substring(0, indexOfSpace);
+						firstName = username.substring(0, indexOfSpace);
 					}
 				}
 			}
@@ -851,7 +851,7 @@ View.prototype.parseUserAndClassInfo = function(contentObject) {
 		contentObjectJSON.myUserInfo = {};
 
 		// set the preview user name
-		contentObjectJSON.myUserInfo.userName = "PreviewUser One (PreviewUserO0101)";
+		contentObjectJSON.myUserInfo.username = "PreviewUser One (PreviewUserO0101)";
 
 		// try to get the workgroup id that may have been passed in as a url param
 		var workgroupId = this.config.getConfigParam('workgroupId');

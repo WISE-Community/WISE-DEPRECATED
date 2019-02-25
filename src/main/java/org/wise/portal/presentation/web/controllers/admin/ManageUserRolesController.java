@@ -58,7 +58,7 @@ public class ManageUserRolesController {
   protected String handleGET(HttpServletRequest request, ModelMap modelMap) {
     List<MutableGrantedAuthority> allAuthorities = userDetailsService.retrieveAllAuthorities();
     modelMap.put("allAuthorities", allAuthorities);
-    String username = request.getParameter("userName");
+    String username = request.getParameter("username");
     User user = userService.retrieveUserByUsername(username);
     modelMap.put("user", user);
     return "admin/account/manageuserroles";
@@ -68,7 +68,7 @@ public class ManageUserRolesController {
   protected String handlePOST(HttpServletRequest request, ModelMap modelMap) throws Exception {
     List<MutableGrantedAuthority> allAuthorities = userDetailsService.retrieveAllAuthorities();
     modelMap.put("allAuthorities", allAuthorities);
-    String username = request.getParameter("userName");
+    String username = request.getParameter("username");
     User user = userService.retrieveUserByUsername(username);
     modelMap.put("user", user);
     if (request.getParameter("action") != null) {

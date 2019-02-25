@@ -83,7 +83,7 @@ $(document).ready(function(){
 	$('.studentInfo').on('click',function(){
 		var title = $(this).attr('title');
 		var username = $(this).attr('id').replace('studentInfo_','');
-		var path = "${contextPath}/student/account/info?userName=" + username;
+		var path = "${contextPath}/student/account/info?username=" + username;
 		var dialog = $('<div id="studentInfoDialog" style="overflow-y:hidden;"></div>');
 		var div = dialog.html('<iframe id="studentInfoIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
@@ -104,7 +104,7 @@ $(document).ready(function(){
 	$('.changePassword').on('click',function(){
 		var title = $(this).attr('title');
 		var username = $(this).attr('id').replace('changePassword_','');
-		var path = "changestudentpassword.html?userName=" + username;
+		var path = "changestudentpassword.html?username=" + username;
 		var dialog = $('<div id="studentPasswordDialog" style="overflow-y:hidden;"></div>');
 		var div = dialog.html('<iframe id="studentPasswordIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({

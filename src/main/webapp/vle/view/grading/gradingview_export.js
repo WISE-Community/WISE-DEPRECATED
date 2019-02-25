@@ -364,7 +364,7 @@ View.prototype.showScores = function() {
 	for (var i=0; i < classmates.length; i++) {
 		var classmate = classmates[i];
 		var classmateScore = annotations.getTotalScoreByToWorkgroup(classmate.workgroupId);
-		htmlSoFar += classmateScore + "\t" + classmate.userName +"\n";
+		htmlSoFar += classmateScore + "\t" + classmate.username +"\n";
 	}
 	alert(htmlSoFar);
 };

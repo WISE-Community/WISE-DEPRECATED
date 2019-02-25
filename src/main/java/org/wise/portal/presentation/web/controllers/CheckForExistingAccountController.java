@@ -101,8 +101,8 @@ public class CheckForExistingAccountController {
       JSONArray existingUserNames = new JSONArray();
       for (int x = 0; x < accountsThatMatch.size(); x++) {
         User user = accountsThatMatch.get(x);
-        String userName = user.getUserDetails().getUsername();
-        existingUserNames.put(userName);
+        String username = user.getUserDetails().getUsername();
+        existingUserNames.put(username);
       }
       response.getWriter().write(existingUserNames.toString());
     }

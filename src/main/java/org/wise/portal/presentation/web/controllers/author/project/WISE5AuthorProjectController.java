@@ -514,15 +514,15 @@ public class WISE5AuthorProjectController {
       config.put("projectMetadataSettings", new JSONObject(projectMetadataSettings));
 
       MutableUserDetails userDetails = user.getUserDetails();
-      String userName = userDetails.getUsername();
+      String username = userDetails.getUsername();
       String firstName = userDetails.getFirstname();
       String lastName = userDetails.getLastname();
       String fullName = firstName + " " + lastName;
-      userName = fullName + " (" + userName + ")";
+      username = fullName + " (" + username + ")";
 
       JSONObject myUserInfo = new JSONObject();
       myUserInfo.put("id", user.getId());
-      myUserInfo.put("userName", userName);
+      myUserInfo.put("username", username);
       myUserInfo.put("firstName", firstName);
       myUserInfo.put("lastName", lastName);
       myUserInfo.put("fullName", fullName);

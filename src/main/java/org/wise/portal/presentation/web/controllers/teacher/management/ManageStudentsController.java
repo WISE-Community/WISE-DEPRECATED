@@ -283,13 +283,13 @@ public class ManageStudentsController {
         Long wiseId = user.getId();
         MutableUserDetails userDetails = (MutableUserDetails) user.getUserDetails();
 
-        String userName = "";
+        String username = "";
         String firstName = "";
         String lastName = "";
         String fullName = "";
 
         if (userDetails != null) {
-          userName = userDetails.getUsername();
+          username = userDetails.getUsername();
           firstName = userDetails.getFirstname();
           lastName = userDetails.getLastname();
           fullName = firstName + " " + lastName;
@@ -313,7 +313,7 @@ public class ManageStudentsController {
           studentDataRow.createCell(columnCounter++).setCellValue(workgroupId);
         }
         studentDataRow.createCell(columnCounter++).setCellValue(wiseId);
-        studentDataRow.createCell(columnCounter++).setCellValue(userName);
+        studentDataRow.createCell(columnCounter++).setCellValue(username);
         studentDataRow.createCell(columnCounter++).setCellValue(fullName);
 
         if (columnCounter > maxColumn) {

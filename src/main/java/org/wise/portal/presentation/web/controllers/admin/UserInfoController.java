@@ -62,10 +62,10 @@ public class UserInfoController {
 
   @RequestMapping(value = {"/student/account/info", "/teacher/account/info"})
   protected String getUserAccountInfo(
-      @RequestParam("userName") String userName,
+      @RequestParam("username") String username,
       ModelMap modelMap) throws Exception {
     User signedInUser = ControllerUtil.getSignedInUser();
-    User user = this.userService.retrieveUserByUsername(userName);
+    User user = this.userService.retrieveUserByUsername(username);
 
     if (signedInUser.isAdmin() ||
         this.studentService.isStudentAssociatedWithTeacher(user, signedInUser)) {

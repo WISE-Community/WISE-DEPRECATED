@@ -62,7 +62,7 @@ public class RunUtil {
       Long workgroupId = workgroup.getId();
       String userNamesFromWorkgroup = getUserNamesFromWorkgroup(workgroup);
       try {
-        myUserInfoJSONObject.put("userName", userNamesFromWorkgroup);
+        myUserInfoJSONObject.put("username", userNamesFromWorkgroup);
         myUserInfoJSONObject.put("workgroupId", workgroupId);
       } catch (JSONException e) {
         e.printStackTrace();
@@ -160,7 +160,7 @@ public class RunUtil {
 
       try {
         teacherUserInfo.put("workgroupId", teacherWorkgroup.getId());
-        teacherUserInfo.put("userName", teacherWorkgroup.generateWorkgroupName());
+        teacherUserInfo.put("username", teacherWorkgroup.generateWorkgroupName());
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -189,7 +189,7 @@ public class RunUtil {
 
           try {
             sharedTeacherUserInfo.put("workgroupId", sharedTeacherWorkgroup.getId());
-            sharedTeacherUserInfo.put("userName", sharedTeacherWorkgroup.generateWorkgroupName());
+            sharedTeacherUserInfo.put("username", sharedTeacherWorkgroup.generateWorkgroupName());
           } catch (JSONException e) {
             e.printStackTrace();
           }
@@ -248,14 +248,14 @@ public class RunUtil {
   public static String getFirstNameLastNameLogin(User user) {
     String firstName = "";
     String lastName = "";
-    String userName = "";
+    String username = "";
     MutableUserDetails userDetails = user.getUserDetails();
     if (userDetails != null) {
-      userName = userDetails.getUsername();
+      username = userDetails.getUsername();
       firstName = userDetails.getFirstname();
       lastName = userDetails.getLastname();
     }
-    return firstName + " " + lastName + " (" + userName + ")";
+    return firstName + " " + lastName + " (" + username + ")";
   }
 
   /**

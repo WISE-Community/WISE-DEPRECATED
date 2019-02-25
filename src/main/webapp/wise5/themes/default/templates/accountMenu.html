@@ -6,7 +6,7 @@
                 <md-icon class="md-48" style="color: {{themeCtrl.getAvatarColorForWorkgroupId(themeCtrl.workgroupId)}};"> account_circle </md-icon>
             </div>
             <div class="md-list-item-text">
-                <span ng-repeat="userName in themeCtrl.workgroupUserNames">{{userName.name}}<span ng-if="!$last">,&nbsp;</span></span>&nbsp;
+                <span ng-repeat="username in themeCtrl.workgroupUserNames">{{username.name}}<span ng-if="!$last">,&nbsp;</span></span>&nbsp;
                 <span class="account-menu__info__team" translate="accountMenuTeam" translate-value-id="{{themeCtrl.workgroupId}}"></span>
             </div>
         </md-list-item>

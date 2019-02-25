@@ -263,7 +263,7 @@ var ConfigService = function () {
     value: function getMyUserName() {
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
-        return myUserInfo.userName;
+        return myUserInfo.username;
       }
       return null;
     }
@@ -466,9 +466,9 @@ var ConfigService = function () {
   }, {
     key: 'sortClassmateUserInfosAlphabeticallyByNameHelper',
     value: function sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-      if (a != null && a.userName != null && b != null && b.userName != null) {
-        var aUserName = a.userName.toLowerCase();
-        var bUserName = b.userName.toLowerCase();
+      if (a != null && a.username != null && b != null && b.username != null) {
+        var aUserName = a.username.toLowerCase();
+        var bUserName = b.username.toLowerCase();
         if (aUserName < bUserName) {
           return -1;
         } else if (aUserName > bUserName) {
@@ -601,10 +601,10 @@ var ConfigService = function () {
 
           try {
             for (var _iterator5 = userNamesSplit[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-              var userName = _step5.value;
+              var username = _step5.value;
 
-              var indexOfSpace = userName.indexOf(' ');
-              var studentFirstName = userName.substring(0, indexOfSpace);
+              var indexOfSpace = username.indexOf(' ');
+              var studentFirstName = username.substring(0, indexOfSpace);
               studentNames.push(studentFirstName);
             }
           } catch (err) {
@@ -642,7 +642,7 @@ var ConfigService = function () {
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
         if (userInfo != null) {
-          return userInfo.userName;
+          return userInfo.username;
         }
       }
       return null;
@@ -664,8 +664,8 @@ var ConfigService = function () {
       var userNamesObjects = [];
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-        if (userInfo != null && userInfo.userName != null) {
-          var userNames = userInfo.userName.split(':');
+        if (userInfo != null && userInfo.username != null) {
+          var userNames = userInfo.username.split(':');
           var _iteratorNormalCompletion6 = true;
           var _didIteratorError6 = false;
           var _iteratorError6 = undefined;

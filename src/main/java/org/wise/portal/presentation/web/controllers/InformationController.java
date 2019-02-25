@@ -331,7 +331,7 @@ public class InformationController {
         JSONObject sharedTeacherUserInfo = new JSONObject();
         try {
           sharedTeacherUserInfo.put("workgroupId", sharedTeacherWorkgroup.getId());
-          sharedTeacherUserInfo.put("userName", sharedTeacherWorkgroup.generateWorkgroupName());
+          sharedTeacherUserInfo.put("username", sharedTeacherWorkgroup.generateWorkgroupName());
 
           String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
           if (sharedTeacherRole == null) {
@@ -361,7 +361,7 @@ public class InformationController {
       Workgroup runOwnerWorkgroup = workgroupsForRunOwner.get(0);
 
       teacherUserInfo.put("workgroupId", runOwnerWorkgroup.getId());
-      teacherUserInfo.put("userName", runOwner.getUserDetails().getUsername());
+      teacherUserInfo.put("username", runOwner.getUserDetails().getUsername());
     } catch (JSONException e1) {
       e1.printStackTrace();
     }
@@ -403,7 +403,7 @@ public class InformationController {
     JSONObject myUserInfo = new JSONObject();
     try {
       myUserInfo.put("workgroupId", workgroupId);
-      myUserInfo.put("userName", userNames);
+      myUserInfo.put("username", userNames);
       myUserInfo.put("isSwitchedUser", ControllerUtil.isUserPreviousAdministrator());
 
       try {
@@ -756,12 +756,12 @@ public class InformationController {
           "}],"+
           "\"teacherUserInfo\": {"+
           "\"workgroupId\": 1,"+
-          "\"userName\": \"Preview Teacher\""+
+          "\"username\": \"Preview Teacher\""+
           "}"+
           "},"+
           "\"userIds\": [1],"+
           "\"periodName\": \"1\","+
-          "\"userName\": \"Preview Team\""+
+          "\"username\": \"Preview Team\""+
           "}"+
           "}";
       JSONObject userInfoJSONObject = new JSONObject(dummyUserInfoJSONString);
@@ -826,10 +826,10 @@ public class InformationController {
   private String getFirstNameLastNameLogin(User user) {
     MutableUserDetails userDetails = user.getUserDetails();
     if (userDetails != null) {
-      String userName = userDetails.getUsername();
+      String username = userDetails.getUsername();
       String firstName = userDetails.getFirstname();
       String lastName = userDetails.getLastname();
-      return firstName + " " + lastName + " (" + userName + ")";
+      return firstName + " " + lastName + " (" + username + ")";
     }
     return "";
   }
@@ -858,7 +858,7 @@ public class InformationController {
       classmateUserInfo.put("workgroupId", classmateWorkgroup.getId());
       if (isAllowedToViewStudentNames(run, loggedInUser)) {
         String userNames = getUserNamesFromWorkgroup(classmateWorkgroup);
-        classmateUserInfo.put("userName", userNames);
+        classmateUserInfo.put("username", userNames);
       }
       if (classmateWorkgroup.getPeriod() != null) {
         classmateUserInfo.put("periodId", classmateWorkgroup.getPeriod().getId());

@@ -63,9 +63,9 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
   @Transactional
   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
       AuthenticationException exception) throws IOException, ServletException {
-    String userName = request.getParameter("username");
-    if (userName != null) {
-      User user = userService.retrieveUserByUsername(userName);
+    String username = request.getParameter("username");
+    if (username != null) {
+      User user = userService.retrieveUserByUsername(username);
       if (user != null) {
         MutableUserDetails userDetails = user.getUserDetails();
         Integer numberOfRecentFailedLoginAttempts = 1;

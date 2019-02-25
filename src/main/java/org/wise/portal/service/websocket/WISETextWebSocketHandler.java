@@ -188,10 +188,10 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
         messageJSON.put("workgroupId", workgroupId);
       }
 
-      String userName = wiseWebSocketSession.getUserName();
+      String username = wiseWebSocketSession.getUserName();
       Long runId = wiseWebSocketSession.getRunId();
       WebSocketSession session = wiseWebSocketSession.getSession();
-      messageJSON.put("userName", userName);
+      messageJSON.put("username", username);
       messageJSON.put("runId", runId);
       String message = messageJSON.toString();
       if (runId != null) {
@@ -246,10 +246,10 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
         messageJSON.put("workgroupId", workgroupId);
       }
 
-      String userName = wiseWebSocketSession.getUserName();
+      String username = wiseWebSocketSession.getUserName();
       Long runId = wiseWebSocketSession.getRunId();
       if (runId != null) {
-        messageJSON.put("userName", userName);
+        messageJSON.put("username", username);
         messageJSON.put("runId", runId);
         String message = messageJSON.toString();
         Set<WISEWebSocketSession> teacherConnectionsForRun = getTeacherConnectionsForRun(runId);
@@ -624,7 +624,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @param message the web socket message string
    */
   private void outputSessionInformation(WebSocketSession session, String message) {
-    String userName = null;
+    String username = null;
     String firstName = null;
     String lastName = null;
     Integer textMessageSizeLimit = null;
@@ -636,7 +636,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
         if (signedInUserObject != null && signedInUserObject instanceof UserImpl) {
           MutableUserDetails userDetails = ((UserImpl) signedInUserObject).getUserDetails();
           if (userDetails != null) {
-            userName = userDetails.getUsername();
+            username = userDetails.getUsername();
             firstName = userDetails.getFirstname();
             lastName = userDetails.getLastname();
           }
@@ -647,7 +647,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     }
     System.out.println("Error: a web socket error occurred");
     System.out.println("message=" + message);
-    System.out.println("userName=" + userName);
+    System.out.println("username=" + username);
     System.out.println("firstName=" + firstName);
     System.out.println("lastName=" + lastName);
     System.out.println("textMessageSizeLimit=" + textMessageSizeLimit);
@@ -661,7 +661,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
   private final class WISEWebSocketSession {
     WebSocketSession session;
     private User user = null;
-    private String userName = null;
+    private String username = null;
     private String firstName = null;
     private String lastName = null;
     private Long runId = null;
@@ -680,7 +680,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       Long runId = getValueFromSession(session, "runId");
       Long projectId = getValueFromSession(session, "projectId");
       setUser(signedInUser);
-      String userName = null;
+      String username = null;
       setRunId(runId);
       setProjectId(projectId);
       setWorkgroupId(workgroupId);
@@ -689,15 +689,15 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       setFirstName(firstName);
       setLastName(lastName);
       if (signedInUser.isTeacher()) {
-        userName = getUserName(user);
+        username = getUserName(user);
         setTeacher(true);
       } else if (signedInUser.isStudent()) {
-        userName = getWorkgroupUserNames(workgroupId);
+        username = getWorkgroupUserNames(workgroupId);
         setTeacher(false);
         Long periodId = getValueFromSession(session, "periodId");
         setPeriodId(periodId);
       }
-      setUserName(userName);
+      setUserName(username);
       setSession(session);
     }
 
@@ -731,7 +731,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
         for (User user : workgroup.getMembers()) {
           String firstName = getFirstName(user);
           String lastName = getLastName(user);
-          String userName = getUserName(user);
+          String username = getUserName(user);
           //separate members in the workgroup with a ,
           if (workgroupUserNames.length() != 0) {
             workgroupUserNames.append(", ");
@@ -740,7 +740,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
           workgroupUserNames.append(" ");
           workgroupUserNames.append(lastName);
           workgroupUserNames.append("(");
-          workgroupUserNames.append(userName);
+          workgroupUserNames.append(username);
           workgroupUserNames.append(")");
         }
       } catch (ObjectNotFoundException e) {
@@ -766,11 +766,11 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     }
 
     public String getUserName() {
-      return userName;
+      return username;
     }
 
-    public void setUserName(String userName) {
-      this.userName = userName;
+    public void setUserName(String username) {
+      this.username = username;
     }
 
     private String getFirstName() {

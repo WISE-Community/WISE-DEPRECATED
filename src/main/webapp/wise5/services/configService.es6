@@ -214,7 +214,7 @@ class ConfigService {
   getMyUserName() {
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      return myUserInfo.userName;
+      return myUserInfo.username;
     }
     return null;
   }
@@ -338,9 +338,9 @@ class ConfigService {
   };
 
   sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-    if (a != null && a.userName != null && b != null && b.userName != null) {
-      const aUserName = a.userName.toLowerCase();
-      const bUserName = b.userName.toLowerCase();
+    if (a != null && a.username != null && b != null && b.username != null) {
+      const aUserName = a.username.toLowerCase();
+      const bUserName = b.username.toLowerCase();
       if (aUserName < bUserName) {
         return -1;
       } else if (aUserName > bUserName) {
@@ -437,9 +437,9 @@ class ConfigService {
       const userNamesSplit = userNames.split(':');
 
       if (userNamesSplit != null) {
-        for (let userName of userNamesSplit) {
-          const indexOfSpace = userName.indexOf(' ');
-          const studentFirstName = userName.substring(0, indexOfSpace);
+        for (let username of userNamesSplit) {
+          const indexOfSpace = username.indexOf(' ');
+          const studentFirstName = username.substring(0, indexOfSpace);
           studentNames.push(studentFirstName);
         }
       }
@@ -461,7 +461,7 @@ class ConfigService {
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null) {
-        return userInfo.userName;
+        return userInfo.username;
       }
     }
     return null;
@@ -481,8 +481,8 @@ class ConfigService {
     let userNamesObjects = [];
     if (workgroupId != null) {
       let userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-      if (userInfo != null && userInfo.userName != null) {
-        let userNames = userInfo.userName.split(':');
+      if (userInfo != null && userInfo.username != null) {
+        let userNames = userInfo.username.split(':');
         for (let name of userNames) {
           let id = "";
           let regex = /(.+) \((.+)\)/g;
