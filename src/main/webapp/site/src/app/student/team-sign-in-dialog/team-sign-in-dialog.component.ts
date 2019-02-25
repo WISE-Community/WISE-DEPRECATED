@@ -76,7 +76,7 @@ export class TeamSignInDialogComponent implements OnInit {
 
   signIn(teamMember: any) {
     this.userService.checkAuthentication(teamMember.userName, teamMember.password).subscribe((response) => {
-      if (response.isValid === true) {
+      if (response.isUsernameValid === true && response.isPasswordValid === true) {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
           if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher) {
@@ -93,8 +93,11 @@ export class TeamSignInDialogComponent implements OnInit {
             teamMember.userName = null;
           }
         });
-      } else {
+      } else if (response.isUsernameValid !== true) {
+        teamMember.userName = null;
         alert(this.i18n('Invalid username or password. Please try again.'));
+      } else {
+        alert(this.i18n('Invalid password. Please try again.'))
       }
       teamMember.password = null;
     });
