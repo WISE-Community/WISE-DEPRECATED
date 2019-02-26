@@ -51,8 +51,11 @@
          fxLayout.xs="column"
          fxLayoutAlign="center"
          fxLayoutAlign.gt-xs="end center"
-         fxLayoutGap="8px">
-      <a *ngIf="!isScheduled() && !run.endTime"
+         fxLayoutGap="16px">
+      <span *ngIf="run.lastRun"
+            class="mat-caption secondary-text center"
+            i18n>Last active: {{ run.lastRun | amCalendar }}</span>
+      <a *ngIf="run.isActive()"
          mat-flat-button
          href="{{ gradeAndManageLink }}"
          color="primary"
@@ -60,10 +63,10 @@
          fxFlex.xs="100">
         <mat-icon>build</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>
       </a>
-      <a *ngIf="!isScheduled() && run.endTime"
+      <a *ngIf="run.isCompleted()"
          mat-button
          href="{{ gradeAndManageLink }}"
-         color="primary"
+         class="secondary-text"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
         <mat-icon>build</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>

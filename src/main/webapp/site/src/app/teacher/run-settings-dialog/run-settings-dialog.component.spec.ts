@@ -8,6 +8,7 @@ import { TeacherService } from "../teacher.service";
 import { Observable } from 'rxjs';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { MomentModule } from 'ngx-moment';
 
 export class MockTeacherService {
   addPeriodToRun(runId, periodName) {
@@ -70,7 +71,7 @@ describe('RunSettingsDialogComponent', () => {
     });
     TestBed.configureTestingModule({
       declarations: [ RunSettingsDialogComponent ],
-      imports: [ MatSnackBarModule ],
+      imports: [ MatSnackBarModule, MomentModule ],
       providers: [
         { provide: MatDialog, useValue: {} },
         { provide: MatDialogRef, useValue: {} },

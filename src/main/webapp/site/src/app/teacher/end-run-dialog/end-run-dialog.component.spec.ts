@@ -22,7 +22,7 @@ describe('RestartRunDialogComponent', () => {
   let fixture: ComponentFixture<EndRunDialogComponent>;
   const run: Run = new Run();
   run.id = 1;
-  run.name = "Photosynthesis"
+  run.name = "Photosynthesis";
   run.startTime = '2018-11-10 00:00:00.0';
 
   const submitAndReceiveResponse = (teacherServiceFunctionName, status, messageCode, run: Run) => {
@@ -105,8 +105,8 @@ describe('RestartRunDialogComponent', () => {
   it('should successfully end the run', () => {
     const run: Run = new Run();
     run.id = 1;
-    run.name = "Photosynthesis"
-    run.endTime = new Date('2018-11-19 00:00:00.0').getMilliseconds();
+    run.name = "Photosynthesis";
+    run.endTime = '2018-11-19 00:00:00.0';
     submitAndReceiveResponse('endRun', 'success', null, run);
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('The unit has been successfully ended.');

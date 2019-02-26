@@ -17,17 +17,18 @@ export class RunSettingsDialogComponent implements OnInit {
   run: Run;
   newPeriodName: string;
   maxStudentsPerTeam: string;
-  startDate: any;
-  previousStartDate: any;
-  endDate: any;
-  previousEndDate: any;
+  startDate: Date;
+  previousStartDate: Date;
+  endDate: Date;
+  previousEndDate: Date;
   deletePeriodMessage: string = '';
   addPeriodMessage: string = '';
   maxStudentsPerTeamMessage: string = '';
   startDateMessage: string = '';
   endDateMessage: string = '';
-  maxStartDate: any;
-  minEndDate: any;
+  maxStartDate: Date;
+  minEndDate: Date;
+  targetEndDate: Date;
 
   periodNameAlreadyExists = this.i18n('There is already a period with that name.');
   noPermissionToAddPeriod = this.i18n('You do not have permission to add periods to this unit.');
@@ -55,7 +56,7 @@ export class RunSettingsDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
   }
 
   newPeriodNameKeyUp(event) {
@@ -138,7 +139,7 @@ export class RunSettingsDialogComponent implements OnInit {
       const startDate = this.startDate;
       const formattedStartDate = moment(startDate).format('ddd MMM DD YYYY');
       if (confirm(this.i18n('Are you sure you want to change the start date to {{date}}?', {date: formattedStartDate}))) {
-        this.teacherService.updateRunStartTime(this.run.id, startDate).subscribe((response: any) => {
+        this.teacherService.updateRunStartTime(this.run.id, startDate.toString()).subscribe((response: any) => {
           if (response.status == 'success') {
             this.run = response.run;
             this.updateDataRun(this.run);
@@ -165,7 +166,7 @@ export class RunSettingsDialogComponent implements OnInit {
       endDate.setHours(23, 59, 59);
       const formattedEndDate = moment(endDate).format('ddd MMM DD YYYY');
       if (confirm(this.i18n('Are you sure you want to change the end date to {{date}}?', {date: formattedEndDate}))) {
-        this.teacherService.updateRunEndTime(this.run.id, endDate).subscribe((response: any) => {
+        this.teacherService.updateRunEndTime(this.run.id, endDate.toString()).subscribe((response: any) => {
           if (response.status == 'success') {
             this.run = response.run;
             this.updateDataRun(this.run);
@@ -186,14 +187,18 @@ export class RunSettingsDialogComponent implements OnInit {
   }
 
   setDateRange() {
-    this.minEndDate = new Date(this.startDate);
-    this.maxStartDate = new Date(this.endDate);
+    this.minEndDate = this.startDate;
+    this.maxStartDate = this.endDate;
+    this.targetEndDate = null;
+    if (this.run.lastRun && !this.run.endTime) {
+      this.targetEndDate = new Date(this.run.lastRun);
+    }
   }
 
   rollbackMaxStudentsPerTeam() {
     this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
   }
-  
+
   rollbackStartDate() {
     this.startDate = this.previousStartDate;
   }
@@ -252,5 +257,6 @@ export class RunSettingsDialogComponent implements OnInit {
     this.data.run.maxStudentsPerTeam = run.maxStudentsPerTeam;
     this.data.run.startTime = run.startTime;
     this.data.run.endTime = run.endTime;
+    this.data.run.lastRun = run.lastRun;
   }
 }

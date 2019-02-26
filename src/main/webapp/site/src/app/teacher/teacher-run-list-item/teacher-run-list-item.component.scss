@@ -27,6 +27,15 @@
   margin-bottom: 2px;
 }
 
+.mat-card-actions {
+  .mat-button {
+    &:first-of-type, &:last-of-type {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+}
+
 app-run-menu {
   margin: -8px -8px 0 0;
 }

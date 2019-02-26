@@ -5,6 +5,7 @@ import { TeacherService } from "../teacher.service";
 import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { MomentModule } from 'ngx-moment';
 
 export class MockTeacherService {
 
@@ -23,7 +24,7 @@ describe('TeacherRunListItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListItemComponent ],
-      imports: [],
+      imports: [ MomentModule ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: ConfigService, useClass: MockConfigService }
@@ -40,7 +41,7 @@ describe('TeacherRunListItemComponent', () => {
     run.id = 1;
     run.name = "Photosynthesis";
     run.startTime = '2018-10-17 00:00:00.0';
-    run.endTime = 150;
+    run.endTime = '2018-10-18 23:59:59.0';
     run.numStudents = 30;
     run.periods = ['1', '2'];
     const project = new Project();

@@ -6,7 +6,8 @@ export class Run {
   name: string;
   runCode: string;
   startTime: string;
-  endTime: number;
+  endTime: string;
+  lastRun: string;
   projectThumb: string;
   numStudents: number;
   maxStudentsPerTeam: number;
@@ -72,14 +73,23 @@ export class Run {
 
   isActive() {
     const now = new Date().getTime();
-    const endTime = this.endTime ? new Date(this.endTime).getTime() : null;
-    if ( endTime && endTime <= now) {
+    const endTime = new Date(this.endTime).getTime();
+    if (endTime && endTime <= now) {
       return false;
     }
     const startTime = new Date(this.startTime).getTime();
-    if (startTime <= now) {
-      return true;
-    }
-    return false;
+    return startTime <= now;
+  }
+
+  isCompleted() {
+    const now = new Date().getTime();
+    const endTime = new Date(this.endTime).getTime();
+    return endTime <= now;
+  }
+
+  isScheduled() {
+    const now = new Date().getTime();
+    const startTime = new Date(this.startTime).getTime();
+    return startTime > now;
   }
 }
