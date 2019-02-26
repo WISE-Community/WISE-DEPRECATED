@@ -6,6 +6,7 @@ import { ShareProjectDialogComponent } from "../share-project-dialog/share-proje
 import { UserService } from "../../../services/user.service";
 import { CopyProjectDialogComponent } from "../copy-project-dialog/copy-project-dialog.component";
 import { ConfigService } from "../../../services/config.service";
+import {EditRunWarningDialogComponent} from '../../../teacher/edit-run-warning-dialog/edit-run-warning-dialog.component';
 
 @Component({
   selector: 'app-library-project-menu',
@@ -25,6 +26,7 @@ export class LibraryProjectMenuComponent implements OnInit {
   isCanEdit: boolean = false;
   isCanShare: boolean = false;
   isChild: boolean = false;
+  isAssociatedRun: boolean = false;
 
   constructor(public dialog: MatDialog,
               public teacherService: TeacherService,
@@ -37,6 +39,7 @@ export class LibraryProjectMenuComponent implements OnInit {
     this.isCanShare = this.isOwner();
     this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${ this.project.id }`;
     this.isChild = this.project.isChild();
+    this.isAssociatedRun = true;
   }
 
   isOwner() {
@@ -62,6 +65,13 @@ export class LibraryProjectMenuComponent implements OnInit {
       data: { project: this.project },
       panelClass: 'mat-dialog--sm'
     });
+  }
+
+  editProject() {
+    this.dialog.open(EditRunWarningDialogComponent, {
+      data: { project: this.project },
+      panelClass: 'mat-dialog-md'
+    })
   }
 
   shareProject() {
