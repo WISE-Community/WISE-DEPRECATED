@@ -27,6 +27,7 @@ import { EditPasswordComponent } from './account/edit-password/edit-password.com
 import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-dialog.component';
 import { EndRunDialogComponent } from './end-run-dialog/end-run-dialog.component';
 import { UseWithClassWarningDialogComponent } from './use-with-class-warning-dialog/use-with-class-warning-dialog.component';
+import { EditRunWarningDialogComponent } from './edit-run-warning-dialog/edit-run-warning-dialog.component';
 
 const materialModules = [
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
@@ -59,7 +60,8 @@ const materialModules = [
     EditProfileComponent,
     EditPasswordComponent,
     EndRunDialogComponent,
-    UseWithClassWarningDialogComponent
+    UseWithClassWarningDialogComponent,
+    EditRunWarningDialogComponent
   ],
   entryComponents: [
     CreateRunDialogComponent,
