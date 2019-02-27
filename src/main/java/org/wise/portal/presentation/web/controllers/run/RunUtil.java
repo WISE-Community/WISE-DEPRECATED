@@ -266,18 +266,18 @@ public class RunUtil {
    * "Jennifer Chiu (JenniferC829):helen zhang (helenz1115a)"
    */
   public static String getUserNamesFromWorkgroup(Workgroup workgroup) {
-    StringBuffer userNames = new StringBuffer();
+    StringBuffer usernames = new StringBuffer();
     Set<User> members = workgroup.getMembers();
     Iterator<User> iterator = members.iterator();
     while (iterator.hasNext()) {
       User user = iterator.next();
       String firstNameLastNameLogin = getFirstNameLastNameLogin(user);
-      if (userNames.length() != 0) {
-        userNames.append(":");
+      if (usernames.length() != 0) {
+        usernames.append(":");
       }
-      userNames.append(firstNameLastNameLogin);
+      usernames.append(firstNameLastNameLogin);
     }
-    return userNames.toString();
+    return usernames.toString();
   }
 
   /**

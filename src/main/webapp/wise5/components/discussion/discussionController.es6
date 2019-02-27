@@ -163,10 +163,10 @@ class DiscussionController extends ComponentController {
         const nodeId = componentState.nodeId;
         const componentId = componentState.componentId;
         const userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
-        const userNames = userNamesArray.map((obj) => {
+        const usernames = userNamesArray.map((obj) => {
           return obj.name;
         }).join(', ');
-        const notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
+        const notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { usernames: usernames });
         const workgroupsNotifiedSoFar = [];
         if (this.responsesMap[componentStateIdReplyingTo] != null) {
           this.sendPostToThreadCreator(componentStateIdReplyingTo, notificationType, nodeId,
@@ -342,11 +342,11 @@ class DiscussionController extends ComponentController {
         const workgroupId = componentState.workgroupId;
         const latestInappropriateFlagAnnotation =
             this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
-        const userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-        if (userNames.length == 0) {
-          componentState.userNames = this.getUserIdsDisplay(workgroupId);
+        const usernames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
+        if (usernames.length == 0) {
+          componentState.usernames = this.getUserIdsDisplay(workgroupId);
         } else {
-          componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
+          componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
         }
         componentState.replies = [];
         if (this.isGradingMode() || this.isGradingRevisionMode()) {
@@ -416,11 +416,11 @@ class DiscussionController extends ComponentController {
   addClassResponse(componentState) {
     if (componentState.studentData.isSubmit) {
       const workgroupId = componentState.workgroupId;
-      const userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-      if (userNames.length > 0) {
-        componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
+      const usernames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
+      if (usernames.length > 0) {
+        componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
       } else if (componentState.userNamesArray != null) {
-        componentState.userNames = componentState.userNamesArray
+        componentState.usernames = componentState.userNamesArray
             .map(function(obj) { return obj.name; }).join(', ');
       }
       componentState.replies = [];

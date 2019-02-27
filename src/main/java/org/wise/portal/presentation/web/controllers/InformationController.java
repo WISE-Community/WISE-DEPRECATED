@@ -286,16 +286,16 @@ public class InformationController {
     }
 
     try {
-      String userNames = "";
+      String usernames = "";
       JSONArray userIds = new JSONArray();
       if (loggedInUser.isAdmin()) {
-        userNames = loggedInUser.getUserDetails().getCoreUsername();
+        usernames = loggedInUser.getUserDetails().getCoreUsername();
         userIds.put(loggedInUser.getId());
       } else {
-        userNames = getUserNamesFromWorkgroup(workgroup);
+        usernames = getUserNamesFromWorkgroup(workgroup);
         userIds = getStudentIdsFromWorkgroup(workgroup);
       }
-      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, userNames);
+      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, usernames);
       myUserInfo.put("myClassInfo", getMyClassInfoJSONObject(run, workgroup, loggedInUser));
       JSONObject userInfo = new JSONObject();
       userInfo.put("myUserInfo", myUserInfo);
@@ -399,11 +399,11 @@ public class InformationController {
   }
 
   private JSONObject getMyUserInfoJSONObject(String periodId, String periodName,
-      JSONArray userIds, Long workgroupId, String userNames) {
+      JSONArray userIds, Long workgroupId, String usernames) {
     JSONObject myUserInfo = new JSONObject();
     try {
       myUserInfo.put("workgroupId", workgroupId);
-      myUserInfo.put("username", userNames);
+      myUserInfo.put("username", usernames);
       myUserInfo.put("isSwitchedUser", ControllerUtil.isUserPreviousAdministrator());
 
       try {
@@ -806,15 +806,15 @@ public class InformationController {
    * "Jennifer Chiu (JenniferC829):helen zhang (helenz1115a)"
    */
   private String getUserNamesFromWorkgroup(Workgroup workgroup) {
-    StringBuffer userNames = new StringBuffer();
+    StringBuffer usernames = new StringBuffer();
     for (User user : workgroup.getMembers()) {
       String firstNameLastNameLogin = getFirstNameLastNameLogin(user);
-      if (userNames.length() != 0) {
-        userNames.append(":");
+      if (usernames.length() != 0) {
+        usernames.append(":");
       }
-      userNames.append(firstNameLastNameLogin);
+      usernames.append(firstNameLastNameLogin);
     }
-    return userNames.toString();
+    return usernames.toString();
   }
 
   /**
@@ -857,8 +857,8 @@ public class InformationController {
     try {
       classmateUserInfo.put("workgroupId", classmateWorkgroup.getId());
       if (isAllowedToViewStudentNames(run, loggedInUser)) {
-        String userNames = getUserNamesFromWorkgroup(classmateWorkgroup);
-        classmateUserInfo.put("username", userNames);
+        String usernames = getUserNamesFromWorkgroup(classmateWorkgroup);
+        classmateUserInfo.put("username", usernames);
       }
       if (classmateWorkgroup.getPeriod() != null) {
         classmateUserInfo.put("periodId", classmateWorkgroup.getPeriod().getId());
