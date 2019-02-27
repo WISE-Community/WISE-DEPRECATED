@@ -8764,16 +8764,13 @@ var ProjectService = function () {
   }, {
     key: 'getAchievements',
     value: function getAchievements() {
-      if (this.project != null) {
-        if (this.project.achievements == null) {
-          this.project.achievements = {
-            isEnabled: true,
-            items: []
-          };
-        }
-        return this.project.achievements;
+      if (this.project.achievements == null) {
+        this.project.achievements = {
+          isEnabled: true,
+          items: []
+        };
       }
-      return null;
+      return this.project.achievements;
     }
 
     /**
@@ -8785,13 +8782,10 @@ var ProjectService = function () {
     key: 'getAchievementItems',
     value: function getAchievementItems() {
       var achievements = this.getAchievements();
-      if (achievements != null) {
-        if (achievements.items == null) {
-          achievements.items = [];
-        }
-        return achievements.items;
+      if (achievements.items == null) {
+        achievements.items = [];
       }
-      return null;
+      return achievements.items;
     }
 
     /**

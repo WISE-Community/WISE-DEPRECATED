@@ -95,7 +95,7 @@ class ClassroomMonitorController {
                 name: this.$translate('milestones'),
                 icon: 'flag',
                 type: 'primary',
-                active: false
+                active: true
             }
         };
 

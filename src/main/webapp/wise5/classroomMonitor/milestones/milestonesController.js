@@ -98,49 +98,65 @@ var MilestonesController = function () {
     _createClass(MilestonesController, [{
         key: 'loadAchievements',
         value: function loadAchievements() {
-
-            // get the project achievements object
             var achievementsObject = this.ProjectService.getAchievements();
+            if (achievementsObject.isEnabled && achievementsObject.items) {
+                this.achievements = achievementsObject.items;
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
 
-            if (achievementsObject != null) {
+                try {
+                    for (var _iterator = this.achievements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var projectAchievement = _step.value;
 
-                if (achievementsObject.isEnabled) {
+                        this.updateMilestoneCompletion(projectAchievement.id);
 
-                    if (achievementsObject.items) {
+                        // get all the activities and steps in the project
+                        projectAchievement.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
+                        if (projectAchievement.params != null && projectAchievement.params.nodeIds != null) {
+                            /*
+                             * loop through all the node ids that are required
+                             * to be completed for this achievement
+                             */
+                            var _iteratorNormalCompletion2 = true;
+                            var _didIteratorError2 = false;
+                            var _iteratorError2 = undefined;
 
-                        // get the project achievements
-                        this.achievements = achievementsObject.items;
+                            try {
+                                for (var _iterator2 = projectAchievement.params.nodeIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                    var nodeId = _step2.value;
 
-                        // loop through all the project achievements
-                        for (var a = 0; a < this.achievements.length; a++) {
-
-                            // get a project achievement
-                            var projectAchievement = this.achievements[a];
-
-                            if (projectAchievement != null) {
-
-                                // update the student completion information for this milestone
-                                this.updateMilestoneCompletion(projectAchievement.id);
-
-                                // get all the activities and steps in the project
-                                projectAchievement.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
-
-                                if (projectAchievement.params != null && projectAchievement.params.nodeIds != null) {
-
-                                    /*
-                                     * loop through all the node ids that are required
-                                     * to be completed for this achievement
-                                     */
-                                    for (var n = 0; n < projectAchievement.params.nodeIds.length; n++) {
-                                        var nodeId = projectAchievement.params.nodeIds[n];
-
-                                        if (projectAchievement.items[nodeId] != null) {
-                                            // check the checkbox corresponding to the node id
-                                            projectAchievement.items[nodeId].checked = true;
-                                        }
+                                    if (projectAchievement.items[nodeId] != null) {
+                                        projectAchievement.items[nodeId].checked = true;
+                                    }
+                                }
+                            } catch (err) {
+                                _didIteratorError2 = true;
+                                _iteratorError2 = err;
+                            } finally {
+                                try {
+                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                        _iterator2.return();
+                                    }
+                                } finally {
+                                    if (_didIteratorError2) {
+                                        throw _iteratorError2;
                                     }
                                 }
                             }
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
                         }
                     }
                 }
@@ -273,9 +289,7 @@ var MilestonesController = function () {
             var index = -1;
 
             for (var i = 0; i < this.achievements.length; i++) {
-                var achievementId = this.achievements[i].id;
-
-                if (milestone.id === achievementId) {
+                if (this.achievements[i].id === milestone.id) {
                     index = i;
                     this.achievements[i] = milestone;
                     break;
@@ -427,88 +441,90 @@ var MilestonesController = function () {
     }, {
         key: 'updateMilestoneCompletion',
         value: function updateMilestoneCompletion(achievementId) {
-            if (achievementId != null) {
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
-                // loop through all the project achievements
-                for (var a = 0; a < this.achievements.length; a++) {
-                    var projectAchievement = this.achievements[a];
+            try {
+                for (var _iterator3 = this.achievements[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var projectAchievement = _step3.value;
 
-                    if (achievementId == projectAchievement.id) {
-                        // we have found the milestone we want to update
-
-                        // get the student achievements
+                    if (projectAchievement.id === achievementId) {
                         var achievementIdToAchievements = this.AchievementService.getAchievementIdToAchievementsMappings();
-
-                        // get the student achievements for this achievement id
                         var studentAchievementsForAchievementId = achievementIdToAchievements[projectAchievement.id];
 
                         var workgroupIdsCompleted = [];
                         var achievementTimes = [];
                         var workgroupIdsNotCompleted = [];
 
-                        /*
-                         * loop through all the student achievements for
-                         * this achievement id
-                         */
-                        for (var s = 0; s < studentAchievementsForAchievementId.length; s++) {
-                            var studentAchievement = studentAchievementsForAchievementId[s];
+                        var _iteratorNormalCompletion4 = true;
+                        var _didIteratorError4 = false;
+                        var _iteratorError4 = undefined;
 
-                            if (studentAchievement != null) {
+                        try {
+                            for (var _iterator4 = studentAchievementsForAchievementId[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                                var studentAchievement = _step4.value;
+
                                 var currentWorkgroupId = studentAchievement.workgroupId;
-
                                 // check if workgroup is in current period
                                 if (this.workgroupIds.indexOf(currentWorkgroupId) > -1) {
-                                    /*
-                                     * add the workgroup id to the array of workgroup ids that
-                                     * have completed the achievement
-                                     */
                                     workgroupIdsCompleted.push(currentWorkgroupId);
-
-                                    // add the achievement time to the achievement times array
                                     achievementTimes.push(studentAchievement.achievementTime);
+                                }
+                            }
+                        } catch (err) {
+                            _didIteratorError4 = true;
+                            _iteratorError4 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                                    _iterator4.return();
+                                }
+                            } finally {
+                                if (_didIteratorError4) {
+                                    throw _iteratorError4;
                                 }
                             }
                         }
 
-                        /*
-                         * loop through all the workgroup ids to find the
-                         * workgroup ids that have not completed the
-                         * achievement
-                         */
-                        for (var w = 0; w < this.workgroupIds.length; w++) {
-                            var workgroupId = this.workgroupIds[w];
-                            if (workgroupIdsCompleted.indexOf(workgroupId) == -1) {
-                                // this workgroup has not completed the achievement
+                        var _iteratorNormalCompletion5 = true;
+                        var _didIteratorError5 = false;
+                        var _iteratorError5 = undefined;
 
-                                /*
-                                 * add the workgroup id to the array of workgroup ids that
-                                 * have not completed the achievement
-                                 */
-                                workgroupIdsNotCompleted.push(workgroupId);
+                        try {
+                            for (var _iterator5 = this.workgroupIds[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                                var _workgroupId = _step5.value;
+
+                                if (workgroupIdsCompleted.indexOf(_workgroupId) === -1) {
+                                    workgroupIdsNotCompleted.push(_workgroupId);
+                                }
+                            }
+                        } catch (err) {
+                            _didIteratorError5 = true;
+                            _iteratorError5 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                                    _iterator5.return();
+                                }
+                            } finally {
+                                if (_didIteratorError5) {
+                                    throw _iteratorError5;
+                                }
                             }
                         }
 
                         projectAchievement.workgroups = [];
 
-                        /*
-                         * loop through all the workgroups that have
-                         * completed the achievement
-                         */
                         for (var c = 0; c < workgroupIdsCompleted.length; c++) {
                             var workgroupId = workgroupIdsCompleted[c];
                             var achievementTime = achievementTimes[c];
-
-                            /*
-                             * create an object used for displaying
-                             * information about the workgroup
-                             */
                             var workgroupObject = {
                                 workgroupId: workgroupId,
                                 displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
                                 achievementTime: achievementTime,
                                 completed: true
                             };
-
                             projectAchievement.workgroups.push(workgroupObject);
                         }
 
@@ -516,34 +532,53 @@ var MilestonesController = function () {
                          * loop through all the workgroups that have not
                          * completed the achievement
                          */
-                        for (var n = 0; n < workgroupIdsNotCompleted.length; n++) {
-                            var workgroupId = workgroupIdsNotCompleted[n];
+                        var _iteratorNormalCompletion6 = true;
+                        var _didIteratorError6 = false;
+                        var _iteratorError6 = undefined;
 
-                            /*
-                             * create an object used for displaying
-                             * information about the workgroup
-                             */
-                            var workgroupObject = {
-                                workgroupId: workgroupId,
-                                displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
-                                achievementTime: null,
-                                completed: false
-                            };
+                        try {
+                            for (var _iterator6 = workgroupIdsNotCompleted[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                                var _workgroupId2 = _step6.value;
 
-                            projectAchievement.workgroups.push(workgroupObject);
+                                var _workgroupObject = {
+                                    workgroupId: _workgroupId2,
+                                    displayNames: this.getDisplayUserNamesByWorkgroupId(_workgroupId2),
+                                    achievementTime: null,
+                                    completed: false
+                                };
+
+                                projectAchievement.workgroups.push(_workgroupObject);
+                            }
+                        } catch (err) {
+                            _didIteratorError6 = true;
+                            _iteratorError6 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                                    _iterator6.return();
+                                }
+                            } finally {
+                                if (_didIteratorError6) {
+                                    throw _iteratorError6;
+                                }
+                            }
                         }
 
-                        /*
-                         * calculate the number of workgroups that completed
-                         * the achievement
-                         */
                         projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
-
-                        /*
-                         * calculate the percentage of workgroups that have
-                         * completed the achievement
-                         */
                         projectAchievement.percentageCompleted = parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
+                    }
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
                     }
                 }
             }

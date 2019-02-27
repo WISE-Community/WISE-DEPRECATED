@@ -91,7 +91,7 @@ var ClassroomMonitorController = function () {
                 name: this.$translate('milestones'),
                 icon: 'flag',
                 type: 'primary',
-                active: false
+                active: true
             }
         };
 
