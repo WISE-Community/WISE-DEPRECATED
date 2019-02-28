@@ -109,7 +109,6 @@ var DrawController = function (_ComponentController) {
       }
     });
 
-    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
     _this.broadcastDoneRenderingComponent();
     return _this;
   }

@@ -27,7 +27,7 @@
                 <div id="node" ng-cloak ui-view="nodeView" ng-if="themeCtrl.layoutState === 'node'"></div>
             </md-content>
             <global-annotations></global-annotations>
-            <notebook></notebook>
+            <notebook workgroup-id="vleController.workgroupId"></notebook>
         </div>
     </listen-for-delete-keypress>
 </disable-delete-keypress>

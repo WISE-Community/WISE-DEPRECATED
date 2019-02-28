@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class NotebookNotesController {
   constructor($filter,
@@ -17,8 +17,8 @@ class NotebookNotesController {
     this.groupNameToGroup = {};
 
     const personalGroup = {
-      title: "Personal",
-      name: "private",
+      title: 'Personal',
+      name: 'private',
       isEditAllowed: true,
       items: []
     };
@@ -28,8 +28,7 @@ class NotebookNotesController {
       if (personalItemValue.last().type === 'note') {
         personalGroup.items.push(personalItemValue.last());
       }
-    };
-
+    }
     this.groups.push(personalGroup);
 
     const spaces = this.ProjectService.getSpaces();
@@ -48,22 +47,22 @@ class NotebookNotesController {
 
     this.$onInit = () => {
       this.color = this.config.itemTypes.note.label.color;
-    }
+    };
 
     this.$onChanges = (changes) => {
       if (changes.notebook) {
         this.notebook = angular.copy(changes.notebook.currentValue);
         this.hasNotes = Object.keys(this.notebook.items).length ? true : false;
       }
-    }
+    };
 
     this.$scope.$on('openNotebook', (event, args) => {
-      this.selectedTabIndex = args.visibleSpace === "public" ? 1 : 0;
+      this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
     });
 
     this.$rootScope.$on('publicNotebookItemsRetrieved', (event, args) => {
       for (let group of this.groups) {
-        if (group.name != 'private') {
+        if (group.name !== 'private') {
           group.items = this.publicNotebookItems[group.name];
         }
       }
@@ -71,9 +70,9 @@ class NotebookNotesController {
 
     this.$rootScope.$on('notebookUpdated', (event, args) => {
       let notebookItem = args.notebookItem;
-      if ((notebookItem.groups == null || notebookItem.groups.length == 0) &&
-          notebookItem.type === "note") {
-        this.updatePrivateNotebookNote(notebookItem)
+      if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
+          notebookItem.type === 'note') {
+        this.updatePrivateNotebookNote(notebookItem);
       }
       if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
         this.updatePublicNotebookNote(notebookItem);
@@ -146,7 +145,7 @@ class NotebookNotesController {
   }
 
   edit(itemId) {
-    alert("Edit the item: " + itemId);
+    alert(`Edit the item: ${itemId}`);
   }
 
   close($event) {
@@ -176,10 +175,11 @@ const NotebookNotes = {
     workgroupId: '<',
     onClose: '&',
     onInsert: '&',
-    onSetInsertMode: '&'
+    onSetInsertMode: '&',
+    mode: '@'
   },
   template:
-    `<md-sidenav md-component-id="notes"
+    `<md-sidenav ng-if="$ctrl.mode !== 'classroomMonitor'" md-component-id="notes"
         md-is-open="$ctrl.notesVisible"
         md-whiteframe="4"
         md-disable-backdrop
@@ -224,7 +224,32 @@ const NotebookNotes = {
         </md-tab>
       </md-tabs>
       </md-content>
-    </md-sidenav>`,
+    </md-sidenav>
+    <div ng-if="$ctrl.mode === 'classroomMonitor'" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
+      <div ng-repeat="group in $ctrl.groups"
+          ng-disabled="group.disabled"
+          label="{{group.title}}">
+        <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
+            <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
+              <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>
+              <notebook-item ng-repeat="note in group.items"
+                  config="$ctrl.config"
+                  group="{{group.name}}"
+                  item-id="note.localNotebookItemId"
+                  is-edit-allowed="group.isEditAllowed"
+                  is-choose-mode="$ctrl.insertMode"
+                  note="note"
+                  workgroup-id="note.workgroupId"
+                  on-select="$ctrl.select($ev, note)"
+                  style="display: flex;"
+                  flex="100"
+                  flex-gt-xs="50">
+              </notebook-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    `,
   controller: NotebookNotesController
 };
 

@@ -22,9 +22,7 @@ var NotebookItemGradingController = function () {
         this.NotebookService = NotebookService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
-
         this.$translate = this.$filter('translate');
-
         this.notebookItemId = this.notebookItem.id;
         this.localNotebookItemId = this.notebookItem.localNotebookItemId;
         this.toWorkgroupId = this.notebookItem.workgroupId;
@@ -189,19 +187,11 @@ var NotebookItemGradingController = function () {
         value: function postAnnotation(type) {
 
             if (this.runId != null && this.periodId != null && this.notebookItemId != null && this.toWorkgroupId != null && type) {
-
-                // get the current time
                 var clientSaveTime = new Date().getTime();
-
-                // get the logged in teacher's id
                 var fromWorkgroupId = this.ConfigService.getWorkgroupId();
-
-                // get the value
                 var value = null;
                 if (type === 'score') {
-                    value = this.score;
-                    // convert the value to a number if possible
-                    value = this.UtilService.convertStringToNumber(value);
+                    value = this.UtilService.convertStringToNumber(this.score);
                 } else if (type === 'comment') {
                     value = this.comment;
                 }
@@ -210,22 +200,10 @@ var NotebookItemGradingController = function () {
                     var data = {
                         value: value
                     };
-                    var componentStateId = null; // we're not grading studentWork in this view, only notebook items
-
-                    // create the annotation object
+                    var componentStateId = null;
                     var annotation = this.AnnotationService.createAnnotation(this.annotationId, this.runId, this.periodId, fromWorkgroupId, this.toWorkgroupId, this.nodeId, this.componentId, componentStateId, this.localNotebookItemId, this.notebookItemId, type, data, clientSaveTime);
 
-                    // save the annotation to the server
-                    this.AnnotationService.saveAnnotation(annotation).then(function (result) {
-                        /*let localAnnotation = result;
-                          if (localAnnotation != null) {
-                         if (this.annotationId == null) {
-                         // set the annotation id if there was no annotation id
-                         this.annotationId = localAnnotation.id;
-                         }
-                          this.processAnnotations();
-                         }*/
-                    });
+                    this.AnnotationService.saveAnnotation(annotation);
                 }
             }
         }
@@ -241,7 +219,7 @@ var NotebookItemGrading = {
         maxScore: '<',
         notebookItem: '<'
     },
-    templateUrl: 'wise5/directives/notebookItemGrading/notebookItemGrading.html',
+    templateUrl: 'wise5/classroomMonitor/notebook/notebookItemGrading/notebookItemGrading.html',
     controller: NotebookItemGradingController
 };
 

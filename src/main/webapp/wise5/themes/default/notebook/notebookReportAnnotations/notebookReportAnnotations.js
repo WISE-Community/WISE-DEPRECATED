@@ -45,51 +45,49 @@ var NotebookReportAnnotationsController = function () {
   _createClass(NotebookReportAnnotationsController, [{
     key: 'getLatestAnnotation',
     value: function getLatestAnnotation() {
-      var latest = null;
+      var latestAnnotation = null;
       if (this.annotations.comment || this.annotations.score) {
         var commentSaveTime = this.annotations.comment ? this.annotations.comment.serverSaveTime : 0;
         var scoreSaveTime = this.annotations.score ? this.annotations.score.serverSaveTime : 0;
         if (commentSaveTime >= scoreSaveTime) {
-          latest = this.annotations.comment;
+          latestAnnotation = this.annotations.comment;
         } else if (scoreSaveTime > commentSaveTime) {
-          latest = this.annotations.score;
+          latestAnnotation = this.annotations.score;
         }
       }
-      return latest;
+      return latestAnnotation;
     }
-  }, {
-    key: 'getLatestAnnotationTime',
-
 
     /**
      * Calculate the save time of the latest annotation
      * @return Number (latest annotation post time)
      */
-    value: function getLatestAnnotationTime() {
-      var latest = this.getLatestAnnotation();
-      var time = null;
-      if (latest) {
-        var serverSaveTime = latest.serverSaveTime;
-        time = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      }
-      return time;
-    }
-  }, {
-    key: 'setLabelAndIcon',
 
+  }, {
+    key: 'getLatestAnnotationTime',
+    value: function getLatestAnnotationTime() {
+      var latestAnnotation = this.getLatestAnnotation();
+      if (latestAnnotation) {
+        return this.ConfigService.convertToClientTimestamp(latestAnnotation.serverSaveTime);
+      }
+      return null;
+    }
 
     /**
      * Set the label based on whether this is an automated or teacher annotation
      **/
+
+  }, {
+    key: 'setLabelAndIcon',
     value: function setLabelAndIcon() {
-      var latest = this.getLatestAnnotation();
-      if (latest) {
-        if (latest.type === 'autoComment' || latest.type === 'autoScore') {
+      var latestAnnotation = this.getLatestAnnotation();
+      if (latestAnnotation) {
+        if (latestAnnotation.type === 'autoComment' || latestAnnotation.type === 'autoScore') {
           this.label = this.$translate('automatedFeedbackLabel');
           this.icon = 'keyboard';
         } else {
           this.label = this.$translate('teacherFeedbackLabel');
-          this.icon = "person";
+          this.icon = 'person';
         }
       }
     }

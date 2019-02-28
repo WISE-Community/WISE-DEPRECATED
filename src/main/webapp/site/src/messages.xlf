@@ -2594,7 +2594,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
@@ -2646,7 +2646,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit><trans-unit id="a40392824621859bfd694580f1bb21debbc50eb0" datatype="html">
         <source>(Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
@@ -2806,20 +2806,20 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-      </trans-unit><trans-unit id="a158381be2135623f1b321725f34dadcfd0fcbd4" datatype="html">
-        <source>Wise4 Project Warning</source>
+      </trans-unit><trans-unit id="d9b2ffb3e1ce1ca42a3db04d00ea072777898eb3" datatype="html">
+        <source>Legacy Unit Warning</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="ab03ea73e6b9710336b5078264a3e3dcdf1345a8" datatype="html">
-        <source>Warning: this is a legacy unit in a version of WISE that is many years old.</source>
+      </trans-unit><trans-unit id="6f526813fe643e11e1e0c4632ab8d782aa2eb1f0" datatype="html">
+        <source>WARNING: this is a legacy unit from a version of WISE that is many years old.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-      </trans-unit><trans-unit id="8a1e81aea4d05d0169f20b796866f917fdb83c41" datatype="html">
-        <source>We recommend finding a newer version of this unit in the library, as support for classroom implementations of legacy units will be phased out over the coming year. If you cannot find a newer version, contact us if you&apos;re interested in upgrading the unit. Thanks!</source>
+      </trans-unit><trans-unit id="7673ea16907fbb64650af880042cb4e045382160" datatype="html">
+        <source>We recommend finding a newer version in the library, as support for classroom implementations of legacy units will be phased out over the coming year. If you cannot find a newer version, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> if you&apos;re interested in upgrading the unit. Thanks!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">6</context>
@@ -2848,29 +2848,45 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
+      </trans-unit><trans-unit id="59a08e65c39e2cecb841fc7123a77756f52c8db3" datatype="html">
+        <source>Legacy Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="3c2ac8a727b69d981f7f6559cc2fd8d0688ebd76" datatype="html">
+        <source>This unit is from an old version of WISE and will eventually be phased out.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
       </trans-unit><trans-unit id="c38ef07814e33a674bada9fe331ffd114cec319d" datatype="html">
         <source>Discipline:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="4cdcf77b0a246131946d080de95cf21fbd5516a9" datatype="html">
         <source>Features:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit><trans-unit id="4a074ee53886e04659f3cec8ec30b94ce5ce717c" datatype="html">
         <source>NGSS Performance Expectations: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit><trans-unit id="3e2a583f531f7dd9f089f68a6968e444c372c3e8" datatype="html">
         <source>Preview</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
@@ -2880,13 +2896,13 @@
         <source>(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="e3ae8640f4d05cb4f78a31cfbf18d5701f41d57e" datatype="html">
         <source>Shared by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="4bad40355890bcbe1b4003d9fd0632beeffd6580" datatype="html">
         <source>Show project details</source>
@@ -3002,10 +3018,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
-      </trans-unit><trans-unit id="8dce5a1b53185785ceb8eaece03a45f95a1058ae" datatype="html">
-        <source>Parent ID:</source>
+      </trans-unit><trans-unit id="77bd1ad738d92e35036a6caa0afba8152299876b" datatype="html">
+        <source>Parent ID: <x id="INTERPOLATION" equiv-text="{{ project.parentId }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">7</context>
@@ -3014,13 +3030,13 @@
         <source>Edit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="0bd8b27f60a1f098a53e06328426d818e3508ff9" datatype="html">
         <source>Share</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
@@ -4795,8 +4811,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="0c5af86112898145b98bcee05fcaca125528a92e" datatype="html">
-        <source>Problems with a Project</source>
+      <trans-unit id="6a6f97816b45d44504a072d73938c951bbd01810" datatype="html">
+        <source>Problems with a WISE Unit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4817,14 +4833,22 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="41a1ff0b6dc21c6e5eaff3ce070117f18211f1a9" datatype="html">
-        <source>Other Problem</source>
+      <trans-unit id="c2a9de3714f5767b174d0424bc8abe2dc37acc41" datatype="html">
+        <source>Other</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5280,17 +5304,6 @@
       </trans-unit>
       <trans-unit id="687134b5f01a5de70837d9773ae0aaf9f005a205" datatype="html">
         <source>College</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c2a9de3714f5767b174d0424bc8abe2dc37acc41" datatype="html">
-        <source>Other</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
           <context context-type="linenumber">1</context>

@@ -102,7 +102,10 @@ class StudentDataService {
     });
 
     this.$rootScope.$on('notebookUpdated', (event, args) => {
-      this.updateNodeStatuses();
+      const mode = this.ConfigService.getMode();
+      if (mode === 'student' || mode === 'preview') {
+        this.updateNodeStatuses();
+      }
     });
   }
 

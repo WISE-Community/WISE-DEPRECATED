@@ -21,17 +21,10 @@ var NotebookGradingController = function () {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-
         this.themePath = this.ProjectService.getThemePath();
-
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-
-        // get the workgroups sorted alphabetically
         this.workgroups = this.ConfigService.getClassmateUserInfos();
-
-        this.noteFilter = "note";
-        this.reportFilter = "report";
-
+        this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
         this.showAllNotes = false;
         this.showAllReports = false;
         this.showNoteForWorkgroup = {};
@@ -74,17 +67,17 @@ var NotebookGradingController = function () {
     }
 
     _createClass(NotebookGradingController, [{
-        key: "toggleDisplayNoteForWorkgroup",
+        key: 'toggleDisplayNoteForWorkgroup',
         value: function toggleDisplayNoteForWorkgroup(workgroupId) {
             this.showNoteForWorkgroup[workgroupId] = !this.showNoteForWorkgroup[workgroupId];
         }
     }, {
-        key: "toggleDisplayReportForWorkgroup",
+        key: 'toggleDisplayReportForWorkgroup',
         value: function toggleDisplayReportForWorkgroup(workgroupId) {
             this.showReportForWorkgroup[workgroupId] = !this.showReportForWorkgroup[workgroupId];
         }
     }, {
-        key: "toggleDisplayAllNotes",
+        key: 'toggleDisplayAllNotes',
         value: function toggleDisplayAllNotes() {
             this.showAllNotes = !this.showAllNotes;
 
@@ -93,45 +86,41 @@ var NotebookGradingController = function () {
             }
         }
     }, {
-        key: "toggleDisplayAllReports",
+        key: 'toggleDisplayAllReports',
         value: function toggleDisplayAllReports() {
             this.showAllReports = !this.showAllReports;
-
             for (var workgroupId in this.showReportForWorkgroup) {
                 this.showReportForWorkgroup[workgroupId] = this.showAllReports;
             }
         }
-
-        /**
-         * Handle request to view notes for the specified workgroup
-         * @param workgroupId
-         */
-
     }, {
-        key: "viewNotes",
+        key: 'viewNotes',
         value: function viewNotes(workgroupId) {
             alert(workgroupId);
         }
-
-        /**
-         * Handle request to view report for the specified workgroup
-         * @param workgroupId
-         */
-
     }, {
-        key: "viewReport",
+        key: 'viewReport',
         value: function viewReport(workgroupId) {
             alert(workgroupId);
         }
-
-        /**
-         * Get the current period
-         */
-
     }, {
-        key: "getCurrentPeriod",
+        key: 'getCurrentPeriod',
         value: function getCurrentPeriod() {
             return this.TeacherDataService.getCurrentPeriod();
+        }
+    }, {
+        key: 'getNotebookForWorkgroup',
+        value: function getNotebookForWorkgroup(workgroupId) {
+            return this.NotebookService.getNotebookByWorkgroup(workgroupId);
+        }
+    }, {
+        key: 'getNotebookConfigForWorkgroup',
+        value: function getNotebookConfigForWorkgroup(workgroupId) {
+            if (this.ConfigService.isRunOwner(workgroupId) || this.ConfigService.isRunSharedTeacher(workgroupId)) {
+                return this.NotebookService.getTeacherNotebookConfig();
+            } else {
+                return this.NotebookService.getStudentNotebookConfig();
+            }
         }
     }]);
 

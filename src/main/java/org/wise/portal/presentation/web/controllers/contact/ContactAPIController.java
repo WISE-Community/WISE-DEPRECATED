@@ -18,7 +18,6 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
@@ -58,7 +57,6 @@ public class ContactAPIController {
 
   private static final String userAgentParseURL = "http://api.whatismybrowser.com/api/v1/user_agent_parse";
 
-  @ResponseBody
   @RequestMapping(value = "", method = RequestMethod.POST)
   protected String sendContactMessage(
     @RequestParam(value = "name") String name,
@@ -72,7 +70,6 @@ public class ContactAPIController {
     @RequestParam(value = "userAgent", required = false) String userAgent,
     @RequestParam(value = "recaptchaResponse", required = false) String recaptchaResponse)
         throws JSONException {
-
     if (this.isAuthorized(recaptchaResponse)) {
       boolean isStudent = isStudent();
       String issueTypeValue = getIssueTypeValue(issueType);
@@ -92,7 +89,7 @@ public class ContactAPIController {
   }
 
   private boolean isAuthorized(String recaptchaResponse) {
-    return isSignedIn() || !isRecaptchaEnabled() || isRecaptchaResponseValid(recaptchaResponse);
+    return isSignedIn() || !isRecaptchaEnabled() || ControllerUtil.isReCaptchaResponseValid(recaptchaResponse);
   }
 
   private boolean isSignedIn() {
@@ -104,13 +101,6 @@ public class ContactAPIController {
     String recaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
     return recaptchaPublicKey != null && !recaptchaPublicKey.equals("") &&
       recaptchaPrivateKey != null && !recaptchaPrivateKey.equals("");
-  }
-
-  private boolean isRecaptchaResponseValid(String recaptchaResponse) {
-    String recaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-    String recaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-    return ControllerUtil.checkReCaptchaResponse(
-        recaptchaPrivateKey, recaptchaPublicKey, recaptchaResponse);
   }
 
   private boolean isStudent() {

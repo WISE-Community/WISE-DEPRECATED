@@ -343,7 +343,11 @@ class DiscussionController extends ComponentController {
         const latestInappropriateFlagAnnotation =
             this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
         const userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-        componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
+        if (userNames.length == 0) {
+          componentState.userNames = this.getUserIdsDisplay(workgroupId);
+        } else {
+          componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
+        }
         componentState.replies = [];
         if (this.isGradingMode() || this.isGradingRevisionMode()) {
           if (latestInappropriateFlagAnnotation != null) {
@@ -368,6 +372,15 @@ class DiscussionController extends ComponentController {
     }
     this.processResponses(this.classResponses);
     this.retrievedClassmateResponses = true;
+  }
+
+  getUserIdsDisplay(workgroupId) {
+    const userIds = this.ConfigService.getUserIdsByWorkgroupId(workgroupId);
+    const userIdsDisplay = [];
+    for (let userId of userIds) {
+      userIdsDisplay.push(`Student ${userId}`);
+    }
+    return userIdsDisplay.join(', ');
   }
 
   getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {

@@ -150,7 +150,10 @@ var StudentDataService = function () {
     });
 
     this.$rootScope.$on('notebookUpdated', function (event, args) {
-      _this.updateNodeStatuses();
+      var mode = _this.ConfigService.getMode();
+      if (mode === 'student' || mode === 'preview') {
+        _this.updateNodeStatuses();
+      }
     });
   }
 

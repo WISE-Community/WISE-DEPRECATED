@@ -664,7 +664,7 @@ var ConfigService = function () {
       var userNamesObjects = [];
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-        if (userInfo != null) {
+        if (userInfo != null && userInfo.userName != null) {
           var userNames = userInfo.userName.split(':');
           var _iteratorNormalCompletion6 = true;
           var _didIteratorError6 = false;
@@ -777,7 +777,9 @@ var ConfigService = function () {
 
   }, {
     key: 'isRunOwner',
-    value: function isRunOwner(workgroupId) {
+    value: function isRunOwner() {
+      var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getWorkgroupId();
+
       if (workgroupId != null) {
         var teacherUserInfo = this.getTeacherUserInfo();
         if (teacherUserInfo != null) {
@@ -797,7 +799,9 @@ var ConfigService = function () {
 
   }, {
     key: 'isRunSharedTeacher',
-    value: function isRunSharedTeacher(workgroupId) {
+    value: function isRunSharedTeacher() {
+      var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getWorkgroupId();
+
       if (workgroupId != null) {
         var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
         if (sharedTeacherUserInfos != null) {

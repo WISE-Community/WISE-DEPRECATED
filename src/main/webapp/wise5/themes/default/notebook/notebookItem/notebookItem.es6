@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class NotebookItemController {
   constructor($injector,
@@ -24,19 +24,17 @@ class NotebookItemController {
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
-
     this.item = this.note;
-
     this.type = this.item ? this.item.type : null;
     this.label = this.config.itemTypes[this.type].label;
-    if (this.group == 'public') {
+    if (this.group === 'public') {
       this.color = 'orange';
     } else {
       this.color = this.label.color;
     }
 
     this.$rootScope.$on('notebookUpdated', (event, args) => {
-      let notebook = args.notebook;
+      const notebook = args.notebook;
       if (notebook.items[this.itemId]) {
         this.item = notebook.items[this.itemId].last();
       }
@@ -57,7 +55,7 @@ class NotebookItemController {
 
   getItemNodeLink() {
     if (this.item == null) {
-      return "";
+      return '';
     } else {
       return this.ProjectService.getNodePositionAndTitleByNodeId(this.item.nodeId);
     }
@@ -65,7 +63,7 @@ class NotebookItemController {
 
   getItemNodePosition() {
     if (this.item == null) {
-      return "";
+      return '';
     } else {
       return this.ProjectService.getNodePositionById(this.item.nodeId);
     }
@@ -112,7 +110,7 @@ class NotebookItemController {
   }
 
   canShareNotebookItem() {
-    return this.ProjectService.isSpaceExists("public") &&
+    return this.ProjectService.isSpaceExists('public') &&
         this.isMyNotebookItem() &&
         this.item.serverDeleteTime == null &&
         !this.isChooseMode &&
@@ -120,7 +118,7 @@ class NotebookItemController {
   }
 
   canUnshareNotebookItem() {
-    return this.ProjectService.isSpaceExists("public") &&
+    return this.ProjectService.isSpaceExists('public') &&
         this.isMyNotebookItem() &&
         this.item.serverDeleteTime == null &&
         !this.isChooseMode &&
@@ -143,17 +141,17 @@ class NotebookItemController {
 }
 
 NotebookItemController.$inject = [
-  "$injector",
-  "$mdDialog",
-  "$rootScope",
-  "$scope",
-  "$filter",
-  "ConfigService",
-  "NotebookService",
-  "ProjectService",
-  "StudentAssetService",
-  "StudentDataService",
-  "UtilService"
+  '$injector',
+  '$mdDialog',
+  '$rootScope',
+  '$scope',
+  '$filter',
+  'ConfigService',
+  'NotebookService',
+  'ProjectService',
+  'StudentAssetService',
+  'StudentDataService',
+  'UtilService'
 ];
 
 const NotebookItem = {
