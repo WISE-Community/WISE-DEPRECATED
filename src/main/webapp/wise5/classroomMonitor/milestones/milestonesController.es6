@@ -54,32 +54,18 @@ class MilestonesController {
         this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
         this.setWorkgroupsInCurrentPeriod();
 
-        // load the achievements and perform additional calculations
         this.loadAchievements();
 
-        // listen for the newStudentAchievement event
         this.$rootScope.$on('newStudentAchievement', (event, args) => {
-
-            if (args) {
-                // get the student achievement that was saved to the server
-                let studentAchievement = args.studentAchievement;
-
-                if (studentAchievement != null) {
-
-                    // add the student achievement to our local copy of the student achievements
-                    this.AchievementService.addOrUpdateAchievement(studentAchievement);
-
-                    if (studentAchievement.data != null && studentAchievement.data.id != null) {
-                        // update the milestone in the UI with the new student achievement information
-                        this.updateMilestoneCompletion(studentAchievement.data.id);
-                    }
-                }
+          if (args) {
+            const studentAchievement = args.studentAchievement;
+            this.AchievementService.addOrUpdateAchievement(studentAchievement);
+            if (studentAchievement.data != null && studentAchievement.data.id != null) {
+              this.updateMilestoneCompletion(studentAchievement.data.id);
             }
+          }
         });
 
-        /**
-         * Listen for current period changed event
-         */
         this.$scope.$on('currentPeriodChanged', (event, args) => {
             this.periodId = args.currentPeriod.periodId;
 
@@ -350,21 +336,18 @@ class MilestonesController {
     }
 
     setWorkgroupsInCurrentPeriod() {
-        // get the workgroup ids
-        let workgroupIdsInRun = this.ConfigService.getClassmateWorkgroupIds();
+        const workgroupIdsInRun = this.ConfigService.getClassmateWorkgroupIds();
         this.workgroupIds = [];
 
         // filter out workgroups not in the current period
         for (let i = 0; i < workgroupIdsInRun.length; i++) {
-            let currentId = workgroupIdsInRun[i];
-            let currentPeriodId = this.ConfigService.getPeriodIdByWorkgroupId(currentId);
+            const currentId = workgroupIdsInRun[i];
+            const currentPeriodId = this.ConfigService.getPeriodIdByWorkgroupId(currentId);
 
             if (this.periodId === -1 || currentPeriodId === this.periodId) {
                 this.workgroupIds.push(currentId);
             }
         }
-
-        // the number of students in the run
         this.numberOfStudentsInRun = this.workgroupIds.length;
     }
 
@@ -373,63 +356,69 @@ class MilestonesController {
      * @param achievementId the achievement id to update
      */
     updateMilestoneCompletion(achievementId) {
-      for (let projectAchievement of this.achievements) {
-        if (projectAchievement.id === achievementId) {
-          const achievementIdToAchievements = this.AchievementService.getAchievementIdToAchievementsMappings();
-          const studentAchievementsForAchievementId = achievementIdToAchievements[projectAchievement.id];
+      const projectAchievement = this.getProjectAchievementById(achievementId);
+      const achievementIdToAchievements = this.AchievementService.getAchievementIdToAchievementsMappings();
+      const studentAchievementsForAchievementId = achievementIdToAchievements[projectAchievement.id];
 
-          const workgroupIdsCompleted = [];
-          const achievementTimes = [];
-          const workgroupIdsNotCompleted = [];
+      const workgroupIdsCompleted = [];
+      const achievementTimes = [];
+      const workgroupIdsNotCompleted = [];
 
-          for (let studentAchievement of studentAchievementsForAchievementId) {
-            const currentWorkgroupId = studentAchievement.workgroupId;
-            // check if workgroup is in current period
-            if (this.workgroupIds.indexOf(currentWorkgroupId) > -1) {
-              workgroupIdsCompleted.push(currentWorkgroupId);
-              achievementTimes.push(studentAchievement.achievementTime);
-            }
-          }
-
-          for (let workgroupId of this.workgroupIds) {
-            if (workgroupIdsCompleted.indexOf(workgroupId) === -1) {
-              workgroupIdsNotCompleted.push(workgroupId);
-            }
-          }
-
-          projectAchievement.workgroups = [];
-
-          for (let c = 0; c < workgroupIdsCompleted.length; c++) {
-            const workgroupId = workgroupIdsCompleted[c];
-            const achievementTime = achievementTimes[c];
-            const workgroupObject = {
-              workgroupId: workgroupId,
-              displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
-              achievementTime: achievementTime,
-              completed: true
-            };
-            projectAchievement.workgroups.push(workgroupObject);
-          }
-
-          /*
-           * loop through all the workgroups that have not
-           * completed the achievement
-           */
-          for (let workgroupId of workgroupIdsNotCompleted) {
-            const workgroupObject = {
-              workgroupId: workgroupId,
-              displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
-              achievementTime: null,
-              completed: false
-            };
-
-            projectAchievement.workgroups.push(workgroupObject);
-          }
-          projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
-          projectAchievement.percentageCompleted =
-              parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
+      for (let studentAchievement of studentAchievementsForAchievementId) {
+        const currentWorkgroupId = studentAchievement.workgroupId;
+        // check if workgroup is in current period
+        if (this.workgroupIds.indexOf(currentWorkgroupId) > -1) {
+          workgroupIdsCompleted.push(currentWorkgroupId);
+          achievementTimes.push(studentAchievement.achievementTime);
         }
       }
+
+      for (let workgroupId of this.workgroupIds) {
+        if (workgroupIdsCompleted.indexOf(workgroupId) === -1) {
+          workgroupIdsNotCompleted.push(workgroupId);
+        }
+      }
+
+      projectAchievement.workgroups = [];
+
+      for (let c = 0; c < workgroupIdsCompleted.length; c++) {
+        const workgroupId = workgroupIdsCompleted[c];
+        const achievementTime = achievementTimes[c];
+        const workgroupObject = {
+          workgroupId: workgroupId,
+          displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
+          achievementTime: achievementTime,
+          completed: true
+        };
+        projectAchievement.workgroups.push(workgroupObject);
+      }
+
+      /*
+       * loop through all the workgroups that have not
+       * completed the achievement
+       */
+      for (let workgroupId of workgroupIdsNotCompleted) {
+        const workgroupObject = {
+          workgroupId: workgroupId,
+          displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
+          achievementTime: null,
+          completed: false
+        };
+
+        projectAchievement.workgroups.push(workgroupObject);
+      }
+      projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
+      projectAchievement.percentageCompleted =
+        parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
+    }
+
+    getProjectAchievementById(achievementId) {
+      for (let projectAchievement of this.achievements) {
+        if (projectAchievement.id === achievementId) {
+          return projectAchievement;
+        }
+      }
+      return {};
     }
 
     /**
