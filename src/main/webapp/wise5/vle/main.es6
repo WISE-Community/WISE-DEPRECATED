@@ -166,7 +166,7 @@ const vleModule = angular.module('vle', [
               });
             },
             achievements: (AchievementService, studentData, config, project) => {
-              return AchievementService.retrieveAchievements();
+              return AchievementService.retrieveStudentAchievements();
             },
             notifications: (NotificationService, studentData, config, project) => {
               return NotificationService.retrieveNotifications();

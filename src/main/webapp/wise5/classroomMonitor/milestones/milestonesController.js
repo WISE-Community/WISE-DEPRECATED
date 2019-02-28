@@ -30,7 +30,6 @@ var MilestonesController = function () {
         this.TeacherWebSocketService = TeacherWebSocketService;
         this.UtilService = UtilService;
         this.moment = moment;
-
         this.$translate = this.$filter('translate');
 
         /*
@@ -41,24 +40,18 @@ var MilestonesController = function () {
          * server. After we save the milestones, we add the fields back into
          * the milestones.
          */
-        this.calendarIsOpenTemporaryStorage = [];
         this.itemsTemporaryStorage = [];
         this.workgroupsStorage = [];
-        this.editStorage = [];
         this.numberOfStudentsCompletedStorage = [];
         this.percentageCompletedStorage = [];
-        this.showStudentsStorage = [];
-        this.timeDiffStorage = [];
-
         this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
         this.setWorkgroupsInCurrentPeriod();
-
-        this.loadAchievements();
+        this.loadProjectAchievements();
 
         this.$rootScope.$on('newStudentAchievement', function (event, args) {
             if (args) {
                 var studentAchievement = args.studentAchievement;
-                _this.AchievementService.addOrUpdateAchievement(studentAchievement);
+                _this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
                 if (studentAchievement.data != null && studentAchievement.data.id != null) {
                     _this.updateMilestoneCompletion(studentAchievement.data.id);
                 }
@@ -68,32 +61,53 @@ var MilestonesController = function () {
         this.$scope.$on('currentPeriodChanged', function (event, args) {
             _this.periodId = args.currentPeriod.periodId;
 
-            // update the completion status for all the project achievements
-            for (var i = 0; i < _this.achievements.length; i++) {
-                _this.setWorkgroupsInCurrentPeriod();
-                _this.updateMilestoneCompletion(_this.achievements[i].id);
+            // update the completion status for all the project projectAchievements
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = _this.projectAchievements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var projectAchievement = _step.value;
+
+                    _this.setWorkgroupsInCurrentPeriod();
+                    _this.updateMilestoneCompletion(projectAchievement.id);
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
             }
         });
     }
 
     /**
-     * Load the achievements and perform additional calculations
+     * Load the projectAchievements and perform additional calculations
      */
 
 
     _createClass(MilestonesController, [{
-        key: 'loadAchievements',
-        value: function loadAchievements() {
-            var achievementsObject = this.ProjectService.getAchievements();
-            if (achievementsObject.isEnabled && achievementsObject.items) {
-                this.achievements = achievementsObject.items;
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
+        key: 'loadProjectAchievements',
+        value: function loadProjectAchievements() {
+            var projectAchievements = this.ProjectService.getAchievements();
+            if (projectAchievements.isEnabled) {
+                this.projectAchievements = projectAchievements.items;
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
 
                 try {
-                    for (var _iterator = this.achievements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var projectAchievement = _step.value;
+                    for (var _iterator2 = this.projectAchievements[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var projectAchievement = _step2.value;
 
                         this.updateMilestoneCompletion(projectAchievement.id);
 
@@ -102,47 +116,47 @@ var MilestonesController = function () {
                         if (projectAchievement.params != null && projectAchievement.params.nodeIds != null) {
                             /*
                              * loop through all the node ids that are required
-                             * to be completed for this achievement
+                             * to be completed for this project achievement
                              */
-                            var _iteratorNormalCompletion2 = true;
-                            var _didIteratorError2 = false;
-                            var _iteratorError2 = undefined;
+                            var _iteratorNormalCompletion3 = true;
+                            var _didIteratorError3 = false;
+                            var _iteratorError3 = undefined;
 
                             try {
-                                for (var _iterator2 = projectAchievement.params.nodeIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                                    var nodeId = _step2.value;
+                                for (var _iterator3 = projectAchievement.params.nodeIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                                    var nodeId = _step3.value;
 
                                     if (projectAchievement.items[nodeId] != null) {
                                         projectAchievement.items[nodeId].checked = true;
                                     }
                                 }
                             } catch (err) {
-                                _didIteratorError2 = true;
-                                _iteratorError2 = err;
+                                _didIteratorError3 = true;
+                                _iteratorError3 = err;
                             } finally {
                                 try {
-                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                        _iterator2.return();
+                                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                                        _iterator3.return();
                                     }
                                 } finally {
-                                    if (_didIteratorError2) {
-                                        throw _iteratorError2;
+                                    if (_didIteratorError3) {
+                                        throw _iteratorError3;
                                     }
                                 }
                             }
                         }
                     }
                 } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
                         }
                     } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
                         }
                     }
                 }
@@ -161,11 +175,9 @@ var MilestonesController = function () {
         key: 'isBeforeDay',
         value: function isBeforeDay(date, percentageCompleted) {
             var result = false;
-
             if (date && percentageCompleted < 100) {
                 result = this.moment(date).isBefore(this.moment(), 'day');
             }
-
             return result;
         }
 
@@ -181,11 +193,9 @@ var MilestonesController = function () {
         key: 'isSameDay',
         value: function isSameDay(date, percentageCompleted) {
             var result = false;
-
             if (date && percentageCompleted < 100) {
                 result = this.moment(date).isSame(this.moment(), 'day');
             }
-
             return result;
         }
 
@@ -197,18 +207,11 @@ var MilestonesController = function () {
     }, {
         key: 'createMilestone',
         value: function createMilestone() {
-            var milestone = null;
-
-            // get the project achievements
             var projectAchievements = this.ProjectService.getAchievementItems();
-
             if (projectAchievements != null) {
-
                 // get the time of tomorrow at 3pm
                 var tomorrow = this.moment().add('days', 1).hours(23).minutes(11).seconds(59);
-
-                // create a new milestone object
-                milestone = {
+                return {
                     id: this.AchievementService.getAvailableAchievementId(),
                     name: '',
                     description: '',
@@ -224,8 +227,7 @@ var MilestonesController = function () {
                     isVisible: true
                 };
             }
-
-            return milestone;
+            return null;
         }
 
         /**
@@ -248,22 +250,17 @@ var MilestonesController = function () {
                 var confirm = this.$mdDialog.confirm().title(title).textContent(msg).ariaLabel(label).targetEvent($event).ok(yes).cancel(cancel);
 
                 this.$mdDialog.show(confirm).then(function () {
-                    var achievements = _this2.achievements;
+                    var projectAchievements = _this2.projectAchievements;
                     var index = -1;
-
-                    // find the matching achievement index
-                    for (var i = 0; i < achievements.length; i++) {
-                        if (achievements[i].id === milestone.id) {
+                    for (var i = 0; i < projectAchievements.length; i++) {
+                        if (projectAchievements[i].id === milestone.id) {
                             index = i;
                             break;
                         }
                     }
 
                     if (index > -1) {
-                        // remove the milestone
-                        _this2.achievements.splice(index, 1);
-
-                        // save the project to the server
+                        _this2.projectAchievements.splice(index, 1);
                         _this2.saveProject();
                     }
                 }, function () {});
@@ -273,31 +270,21 @@ var MilestonesController = function () {
         key: 'saveMilestone',
         value: function saveMilestone(milestone) {
             var index = -1;
-
-            for (var i = 0; i < this.achievements.length; i++) {
-                if (this.achievements[i].id === milestone.id) {
+            for (var i = 0; i < this.projectAchievements.length; i++) {
+                if (this.projectAchievements[i].id === milestone.id) {
                     index = i;
-                    this.achievements[i] = milestone;
+                    this.projectAchievements[i] = milestone;
                     break;
                 }
             }
-
             if (index < 0) {
-                // get the project achievements
                 var projectAchievements = this.ProjectService.getAchievementItems();
-
                 if (projectAchievements && milestone) {
-
-                    // add the milestone object to the array of achievements
                     projectAchievements.push(milestone);
                 }
             }
-
-            // save the project
             this.saveProject();
-
-            // reload the achievements
-            this.loadAchievements();
+            this.loadProjectAchievements();
         }
 
         /**
@@ -309,35 +296,50 @@ var MilestonesController = function () {
     }, {
         key: 'clearTempFields',
         value: function clearTempFields() {
-
             /*
-             * these array will store the temporary fields. the index of the arrays
-             * corresponds to the index of the achievement. for example the percentageCompletedStorage
-             * value for the first achievement will be stored in
+             * these array will store the temporary fields. the index of the arrays corresponds to the
+             * index of the project achievement. for example the percentageCompletedStorage value for
+             * the first project project achievement will be stored in
              * this.percentageCompletedStorage[0]. the percentageCompletedStorage value for the second
-             * achievement will be stored in this.percentageCompletedStorage[1].
+             * project project achievement will be stored in this.percentageCompletedStorage[1].
              */
             this.itemsTemporaryStorage = [];
             this.workgroupsStorage = [];
             this.numberOfStudentsCompletedStorage = [];
             this.percentageCompletedStorage = [];
 
-            // loop through all the achievements
-            for (var a = 0; a < this.achievements.length; a++) {
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
 
-                // get an achievement
-                var achievement = this.achievements[a];
+            try {
+                for (var _iterator4 = this.projectAchievements[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var projectAchievement = _step4.value;
 
-                // save the field values in the temprary storage arrays
-                this.workgroupsStorage.push(achievement.workgroups);
-                this.numberOfStudentsCompletedStorage.push(achievement.numberOfStudentsCompleted);
-                this.percentageCompletedStorage.push(achievement.percentageCompleted);
+                    // save the field values in the temporary storage arrays
+                    this.workgroupsStorage.push(projectAchievement.workgroups);
+                    this.numberOfStudentsCompletedStorage.push(projectAchievement.numberOfStudentsCompleted);
+                    this.percentageCompletedStorage.push(projectAchievement.percentageCompleted);
 
-                // delete the field from the achievement
-                delete achievement.items;
-                delete achievement.workgroups;
-                delete achievement.numberOfStudentsCompleted;
-                delete achievement.percentageCompleted;
+                    // delete the field from the projectAchievement
+                    delete projectAchievement.items;
+                    delete projectAchievement.workgroups;
+                    delete projectAchievement.numberOfStudentsCompleted;
+                    delete projectAchievement.percentageCompleted;
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
             }
         }
 
@@ -348,21 +350,35 @@ var MilestonesController = function () {
     }, {
         key: 'restoreTempFields',
         value: function restoreTempFields() {
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
 
-            // loop through all the achievements
-            for (var a = 0; a < this.achievements.length; a++) {
+            try {
+                for (var _iterator5 = this.projectAchievements[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var projectAchievement = _step5.value;
 
-                // get an achievement
-                var achievement = this.achievements[a];
-
-                // set the fields back into the achievement object
-                achievement.items = this.itemsTemporaryStorage[a];
-                achievement.workgroups = this.workgroupsStorage[a];
-                achievement.numberOfStudentsCompleted = this.numberOfStudentsCompletedStorage[a];
-                achievement.percentageCompleted = this.percentageCompletedStorage[a];
+                    // set the fields back into the achievement object
+                    projectAchievement.items = this.itemsTemporaryStorage[a];
+                    projectAchievement.workgroups = this.workgroupsStorage[a];
+                    projectAchievement.numberOfStudentsCompleted = this.numberOfStudentsCompletedStorage[a];
+                    projectAchievement.percentageCompleted = this.percentageCompletedStorage[a];
+                }
+            } catch (err) {
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
+                    }
+                } finally {
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
+                    }
+                }
             }
 
-            // clear the temporary storage arrays
             this.itemsTemporaryStorage = [];
             this.workgroupsStorage = [];
             this.numberOfStudentsCompletedStorage = [];
@@ -376,14 +392,8 @@ var MilestonesController = function () {
     }, {
         key: 'saveProject',
         value: function saveProject() {
-
-            // clear the temp fields and remember them
             this.clearTempFields();
-
-            // save the project to the server
             this.ProjectService.saveProject();
-
-            // restore the temp fields
             this.restoreTempFields();
         }
 
@@ -425,20 +435,19 @@ var MilestonesController = function () {
         key: 'updateMilestoneCompletion',
         value: function updateMilestoneCompletion(achievementId) {
             var projectAchievement = this.getProjectAchievementById(achievementId);
-            var achievementIdToAchievements = this.AchievementService.getAchievementIdToAchievementsMappings();
-            var studentAchievementsForAchievementId = achievementIdToAchievements[projectAchievement.id];
-
+            var achievementIdToStudentAchievements = this.AchievementService.getAchievementIdToStudentAchievementsMappings();
+            var studentAchievements = achievementIdToStudentAchievements[projectAchievement.id];
             var workgroupIdsCompleted = [];
             var achievementTimes = [];
             var workgroupIdsNotCompleted = [];
 
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
 
             try {
-                for (var _iterator3 = studentAchievementsForAchievementId[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var studentAchievement = _step3.value;
+                for (var _iterator6 = studentAchievements[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var studentAchievement = _step6.value;
 
                     var currentWorkgroupId = studentAchievement.workgroupId;
                     // check if workgroup is in current period
@@ -448,43 +457,43 @@ var MilestonesController = function () {
                     }
                 }
             } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                        _iterator3.return();
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
                     }
                 } finally {
-                    if (_didIteratorError3) {
-                        throw _iteratorError3;
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
                     }
                 }
             }
 
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
 
             try {
-                for (var _iterator4 = this.workgroupIds[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var _workgroupId = _step4.value;
+                for (var _iterator7 = this.workgroupIds[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var _workgroupId = _step7.value;
 
                     if (workgroupIdsCompleted.indexOf(_workgroupId) === -1) {
                         workgroupIdsNotCompleted.push(_workgroupId);
                     }
                 }
             } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
+                _didIteratorError7 = true;
+                _iteratorError7 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                        _iterator4.return();
+                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                        _iterator7.return();
                     }
                 } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
+                    if (_didIteratorError7) {
+                        throw _iteratorError7;
                     }
                 }
             }
@@ -507,13 +516,13 @@ var MilestonesController = function () {
              * loop through all the workgroups that have not
              * completed the achievement
              */
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+            var _iteratorNormalCompletion8 = true;
+            var _didIteratorError8 = false;
+            var _iteratorError8 = undefined;
 
             try {
-                for (var _iterator5 = workgroupIdsNotCompleted[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var _workgroupId2 = _step5.value;
+                for (var _iterator8 = workgroupIdsNotCompleted[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                    var _workgroupId2 = _step8.value;
 
                     var _workgroupObject = {
                         workgroupId: _workgroupId2,
@@ -521,20 +530,19 @@ var MilestonesController = function () {
                         achievementTime: null,
                         completed: false
                     };
-
                     projectAchievement.workgroups.push(_workgroupObject);
                 }
             } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
+                _didIteratorError8 = true;
+                _iteratorError8 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
+                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                        _iterator8.return();
                     }
                 } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
+                    if (_didIteratorError8) {
+                        throw _iteratorError8;
                     }
                 }
             }
@@ -545,29 +553,29 @@ var MilestonesController = function () {
     }, {
         key: 'getProjectAchievementById',
         value: function getProjectAchievementById(achievementId) {
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
+            var _iteratorNormalCompletion9 = true;
+            var _didIteratorError9 = false;
+            var _iteratorError9 = undefined;
 
             try {
-                for (var _iterator6 = this.achievements[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var projectAchievement = _step6.value;
+                for (var _iterator9 = this.projectAchievements[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                    var projectAchievement = _step9.value;
 
                     if (projectAchievement.id === achievementId) {
                         return projectAchievement;
                     }
                 }
             } catch (err) {
-                _didIteratorError6 = true;
-                _iteratorError6 = err;
+                _didIteratorError9 = true;
+                _iteratorError9 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                        _iterator6.return();
+                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                        _iterator9.return();
                     }
                 } finally {
-                    if (_didIteratorError6) {
-                        throw _iteratorError6;
+                    if (_didIteratorError9) {
+                        throw _iteratorError9;
                     }
                 }
             }
@@ -606,17 +614,14 @@ var MilestonesController = function () {
                     $scope.milestone = milestone;
                     $scope.event = $event;
 
-                    // close the popup
                     $scope.close = function () {
                         $mdDialog.hide();
                     };
 
-                    // edit the milestone
                     $scope.edit = function () {
                         $mdDialog.hide({ milestone: $scope.milestone, action: 'edit', $event: $event });
                     };
 
-                    // delete the milestone
                     $scope.delete = function () {
                         $mdDialog.hide({ milestone: $scope.milestone, action: 'delete' });
                     };
@@ -680,12 +685,10 @@ var MilestonesController = function () {
 
                     $scope.$translate = $filter('translate');
 
-                    // close the popup
                     $scope.close = function () {
                         $mdDialog.hide({ milestone: $scope.milestone, $event: $scope.$event });
                     };
 
-                    // save the milestone
                     $scope.save = function () {
                         if ($scope.valid) {
                             $mdDialog.hide({ milestone: $scope.milestone, save: true, $event: $scope.$event });

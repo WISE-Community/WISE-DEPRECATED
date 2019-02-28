@@ -5,7 +5,7 @@
         </div>
         <div layout="row" layout-align="center center" layout-align-gt-xs="start center" layout-wrap>
             <!-- TODO: make into MilestoneItem component -->
-            <md-card ng-repeat="milestone in milestonesController.achievements | orderBy:'params.targetDateTemp'"
+            <md-card ng-repeat="milestone in milestonesController.projectAchievements | orderBy:'params.targetDateTemp'"
                      class="milestone md-button" md-ink-ripple
                      ng-click="milestonesController.showMilestoneDetails(milestone, $event)"
                      aria-label="{{ 'VIEW_MILESTONE_DETAILS' | translate:{ name: milestone.name } }}">

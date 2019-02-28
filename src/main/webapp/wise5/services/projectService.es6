@@ -328,8 +328,8 @@ class ProjectService {
        */
       this.calculateNodeNumbers();
 
-      if (this.project.achievements != null) {
-        this.achievements = this.project.achievements;
+      if (this.project.projectAchievements != null) {
+        this.achievements = this.project.projectAchievements;
       }
     }
 
@@ -5539,18 +5539,18 @@ class ProjectService {
   }
 
   /**
-   * Get all the achievements object in the project. The achievements object
+   * Get all the projectAchievements object in the project. The projectAchievements object
    * contains the isEnabled field and an array of items.
    * @return the achievement object
    */
   getAchievements() {
-    if (this.project.achievements == null) {
-      this.project.achievements = {
+    if (this.project.projectAchievements == null) {
+      this.project.projectAchievements = {
         isEnabled: true,
         items: []
       };
     }
-    return this.project.achievements;
+    return this.project.projectAchievements;
   }
 
   /**

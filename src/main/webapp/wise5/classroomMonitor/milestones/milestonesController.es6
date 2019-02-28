@@ -31,7 +31,6 @@ class MilestonesController {
         this.TeacherWebSocketService = TeacherWebSocketService;
         this.UtilService = UtilService;
         this.moment = moment;
-
         this.$translate = this.$filter('translate');
 
         /*
@@ -42,24 +41,18 @@ class MilestonesController {
          * server. After we save the milestones, we add the fields back into
          * the milestones.
          */
-        this.calendarIsOpenTemporaryStorage = [];
         this.itemsTemporaryStorage = [];
         this.workgroupsStorage = [];
-        this.editStorage = [];
         this.numberOfStudentsCompletedStorage = [];
         this.percentageCompletedStorage = [];
-        this.showStudentsStorage = [];
-        this.timeDiffStorage = [];
-
         this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
         this.setWorkgroupsInCurrentPeriod();
-
-        this.loadAchievements();
+        this.loadProjectAchievements();
 
         this.$rootScope.$on('newStudentAchievement', (event, args) => {
           if (args) {
             const studentAchievement = args.studentAchievement;
-            this.AchievementService.addOrUpdateAchievement(studentAchievement);
+            this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
             if (studentAchievement.data != null && studentAchievement.data.id != null) {
               this.updateMilestoneCompletion(studentAchievement.data.id);
             }
@@ -69,22 +62,22 @@ class MilestonesController {
         this.$scope.$on('currentPeriodChanged', (event, args) => {
             this.periodId = args.currentPeriod.periodId;
 
-            // update the completion status for all the project achievements
-            for (let i = 0; i < this.achievements.length; i++) {
-                this.setWorkgroupsInCurrentPeriod();
-                this.updateMilestoneCompletion(this.achievements[i].id);
+            // update the completion status for all the project projectAchievements
+            for (let projectAchievement of this.projectAchievements) {
+              this.setWorkgroupsInCurrentPeriod();
+              this.updateMilestoneCompletion(projectAchievement.id);
             }
         });
     }
 
     /**
-     * Load the achievements and perform additional calculations
+     * Load the projectAchievements and perform additional calculations
      */
-    loadAchievements() {
-      const achievementsObject = this.ProjectService.getAchievements();
-      if (achievementsObject.isEnabled && achievementsObject.items) {
-        this.achievements = achievementsObject.items;
-        for (let projectAchievement of this.achievements) {
+    loadProjectAchievements() {
+      const projectAchievements = this.ProjectService.getAchievements();
+      if (projectAchievements.isEnabled) {
+        this.projectAchievements = projectAchievements.items;
+        for (let projectAchievement of this.projectAchievements) {
           this.updateMilestoneCompletion(projectAchievement.id);
 
           // get all the activities and steps in the project
@@ -92,7 +85,7 @@ class MilestonesController {
           if (projectAchievement.params != null && projectAchievement.params.nodeIds != null) {
             /*
              * loop through all the node ids that are required
-             * to be completed for this achievement
+             * to be completed for this project achievement
              */
             for (let nodeId of projectAchievement.params.nodeIds) {
               if (projectAchievement.items[nodeId] != null) {
@@ -113,11 +106,9 @@ class MilestonesController {
      */
     isBeforeDay(date, percentageCompleted) {
         let result = false;
-
         if (date && percentageCompleted < 100) {
             result = this.moment(date).isBefore(this.moment(), 'day');
         }
-
         return result;
     }
 
@@ -130,11 +121,9 @@ class MilestonesController {
      */
     isSameDay(date, percentageCompleted) {
         let result = false;
-
         if (date && percentageCompleted < 100) {
             result = this.moment(date).isSame(this.moment(), 'day');
         }
-
         return result;
     }
 
@@ -143,18 +132,11 @@ class MilestonesController {
      * @return a milestone object
      */
     createMilestone() {
-        let milestone = null;
-
-        // get the project achievements
         let projectAchievements = this.ProjectService.getAchievementItems();
-
         if (projectAchievements != null) {
-
             // get the time of tomorrow at 3pm
-            let tomorrow = this.moment().add('days', 1).hours(23).minutes(11).seconds(59);
-
-            // create a new milestone object
-            milestone = {
+            const tomorrow = this.moment().add('days', 1).hours(23).minutes(11).seconds(59);
+            return {
                 id: this.AchievementService.getAvailableAchievementId(),
                 name: '',
                 description: '',
@@ -170,8 +152,7 @@ class MilestonesController {
                 isVisible: true
             };
         }
-
-        return milestone;
+        return null;
     }
 
     /**
@@ -179,15 +160,14 @@ class MilestonesController {
      * @param milestone the milestone to delete
      */
     deleteMilestone(milestone, $event) {
-
         if (milestone) {
-            let title = milestone.name;
-            let label = this.$translate('DELETE_MILESTONE');
-            let msg = this.$translate('DELETE_MILESTONE_CONFIRM', { name: milestone.name });
-            let yes = this.$translate('YES');
-            let cancel = this.$translate('CANCEL')
+            const title = milestone.name;
+            const label = this.$translate('DELETE_MILESTONE');
+            const msg = this.$translate('DELETE_MILESTONE_CONFIRM', { name: milestone.name });
+            const yes = this.$translate('YES');
+            const cancel = this.$translate('CANCEL')
 
-            let confirm = this.$mdDialog.confirm()
+            const confirm = this.$mdDialog.confirm()
                 .title(title)
                 .textContent(msg)
                 .ariaLabel(label)
@@ -196,56 +176,42 @@ class MilestonesController {
                 .cancel(cancel);
 
             this.$mdDialog.show(confirm).then(() => {
-                let achievements = this.achievements;
+                let projectAchievements = this.projectAchievements;
                 let index = -1;
-
-                // find the matching achievement index
-                for (let i = 0; i < achievements.length; i++) {
-                    if (achievements[i].id === milestone.id) {
+                for (let i = 0; i < projectAchievements.length; i++) {
+                    if (projectAchievements[i].id === milestone.id) {
                         index = i;
                         break;
                     }
                 }
 
                 if (index > -1) {
-                    // remove the milestone
-                    this.achievements.splice(index, 1);
-
-                    // save the project to the server
+                    this.projectAchievements.splice(index, 1);
                     this.saveProject();
                 }
             }, () => {
+
             });
         }
     }
 
     saveMilestone(milestone) {
         let index = -1;
-
-        for (let i = 0; i < this.achievements.length; i++) {
-            if (this.achievements[i].id === milestone.id) {
+        for (let i = 0; i < this.projectAchievements.length; i++) {
+            if (this.projectAchievements[i].id === milestone.id) {
                 index = i;
-                this.achievements[i] = milestone;
+                this.projectAchievements[i] = milestone;
                 break;
             }
         }
-
         if (index < 0) {
-            // get the project achievements
             let projectAchievements = this.ProjectService.getAchievementItems();
-
             if (projectAchievements && milestone) {
-
-                // add the milestone object to the array of achievements
                 projectAchievements.push(milestone);
             }
         }
-
-        // save the project
         this.saveProject();
-
-        // reload the achievements
-        this.loadAchievements();
+        this.loadProjectAchievements();
     }
 
     /**
@@ -254,35 +220,29 @@ class MilestonesController {
      * in later
      */
     clearTempFields() {
-
         /*
-         * these array will store the temporary fields. the index of the arrays
-         * corresponds to the index of the achievement. for example the percentageCompletedStorage
-         * value for the first achievement will be stored in
+         * these array will store the temporary fields. the index of the arrays corresponds to the
+         * index of the project achievement. for example the percentageCompletedStorage value for
+         * the first project project achievement will be stored in
          * this.percentageCompletedStorage[0]. the percentageCompletedStorage value for the second
-         * achievement will be stored in this.percentageCompletedStorage[1].
+         * project project achievement will be stored in this.percentageCompletedStorage[1].
          */
         this.itemsTemporaryStorage = [];
         this.workgroupsStorage = [];
         this.numberOfStudentsCompletedStorage = [];
         this.percentageCompletedStorage = [];
 
-        // loop through all the achievements
-        for (var a = 0; a < this.achievements.length; a++) {
+        for (let projectAchievement of this.projectAchievements) {
+          // save the field values in the temporary storage arrays
+          this.workgroupsStorage.push(projectAchievement.workgroups);
+          this.numberOfStudentsCompletedStorage.push(projectAchievement.numberOfStudentsCompleted);
+          this.percentageCompletedStorage.push(projectAchievement.percentageCompleted);
 
-            // get an achievement
-            var achievement = this.achievements[a];
-
-            // save the field values in the temprary storage arrays
-            this.workgroupsStorage.push(achievement.workgroups);
-            this.numberOfStudentsCompletedStorage.push(achievement.numberOfStudentsCompleted);
-            this.percentageCompletedStorage.push(achievement.percentageCompleted);
-
-            // delete the field from the achievement
-            delete achievement.items;
-            delete achievement.workgroups;
-            delete achievement.numberOfStudentsCompleted;
-            delete achievement.percentageCompleted;
+          // delete the field from the projectAchievement
+          delete projectAchievement.items;
+          delete projectAchievement.workgroups;
+          delete projectAchievement.numberOfStudentsCompleted;
+          delete projectAchievement.percentageCompleted;
         }
     }
 
@@ -290,39 +250,25 @@ class MilestonesController {
      * Restore the temporary fields into the achievement objects
      */
     restoreTempFields() {
-
-        // loop through all the achievements
-        for (var a = 0; a < this.achievements.length; a++) {
-
-            // get an achievement
-            var achievement = this.achievements[a];
-
-            // set the fields back into the achievement object
-            achievement.items = this.itemsTemporaryStorage[a];
-            achievement.workgroups = this.workgroupsStorage[a];
-            achievement.numberOfStudentsCompleted = this.numberOfStudentsCompletedStorage[a];
-            achievement.percentageCompleted = this.percentageCompletedStorage[a];
-        }
-
-        // clear the temporary storage arrays
-        this.itemsTemporaryStorage = [];
-        this.workgroupsStorage = [];
-        this.numberOfStudentsCompletedStorage = [];
-        this.percentageCompletedStorage = [];
+      for (let projectAchievement of this.projectAchievements) {
+        // set the fields back into the achievement object
+        projectAchievement.items = this.itemsTemporaryStorage[a];
+        projectAchievement.workgroups = this.workgroupsStorage[a];
+        projectAchievement.numberOfStudentsCompleted = this.numberOfStudentsCompletedStorage[a];
+        projectAchievement.percentageCompleted = this.percentageCompletedStorage[a];
+      }
+      this.itemsTemporaryStorage = [];
+      this.workgroupsStorage = [];
+      this.numberOfStudentsCompletedStorage = [];
+      this.percentageCompletedStorage = [];
     }
 
     /**
      * Save the project to the server
      */
     saveProject() {
-
-        // clear the temp fields and remember them
         this.clearTempFields();
-
-        // save the project to the server
         this.ProjectService.saveProject();
-
-        // restore the temp fields
         this.restoreTempFields();
     }
 
@@ -357,14 +303,13 @@ class MilestonesController {
      */
     updateMilestoneCompletion(achievementId) {
       const projectAchievement = this.getProjectAchievementById(achievementId);
-      const achievementIdToAchievements = this.AchievementService.getAchievementIdToAchievementsMappings();
-      const studentAchievementsForAchievementId = achievementIdToAchievements[projectAchievement.id];
-
+      const achievementIdToStudentAchievements = this.AchievementService.getAchievementIdToStudentAchievementsMappings();
+      const studentAchievements = achievementIdToStudentAchievements[projectAchievement.id];
       const workgroupIdsCompleted = [];
       const achievementTimes = [];
       const workgroupIdsNotCompleted = [];
 
-      for (let studentAchievement of studentAchievementsForAchievementId) {
+      for (let studentAchievement of studentAchievements) {
         const currentWorkgroupId = studentAchievement.workgroupId;
         // check if workgroup is in current period
         if (this.workgroupIds.indexOf(currentWorkgroupId) > -1) {
@@ -404,16 +349,16 @@ class MilestonesController {
           achievementTime: null,
           completed: false
         };
-
         projectAchievement.workgroups.push(workgroupObject);
       }
+
       projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
       projectAchievement.percentageCompleted =
         parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
     }
 
     getProjectAchievementById(achievementId) {
-      for (let projectAchievement of this.achievements) {
+      for (let projectAchievement of this.projectAchievements) {
         if (projectAchievement.id === achievementId) {
           return projectAchievement;
         }
@@ -477,26 +422,23 @@ class MilestonesController {
                     $scope.milestone = milestone;
                     $scope.event = $event;
 
-                    // close the popup
                     $scope.close = function() {
                         $mdDialog.hide();
-                    }
+                    };
 
-                    // edit the milestone
                     $scope.edit = function() {
                         $mdDialog.hide({ milestone: $scope.milestone, action: 'edit', $event: $event });
-                    }
+                    };
 
-                    // delete the milestone
                     $scope.delete = function() {
                         $mdDialog.hide({ milestone: $scope.milestone, action: 'delete' });
-                    }
+                    };
 
                     $scope.onShowWorkgroup = function(workgroup) {
                         $mdDialog.hide();
                         TeacherDataService.setCurrentWorkgroup(workgroup);
                         $state.go('root.nodeProgress');
-                    }
+                    };
                 }
             ]
         }).then((data) => {
@@ -570,24 +512,22 @@ class MilestonesController {
 
                     $scope.$translate = $filter('translate');
 
-                    // close the popup
                     $scope.close = function() {
                         $mdDialog.hide({ milestone: $scope.milestone, $event: $scope.$event });
-                    }
+                    };
 
-                    // save the milestone
                     $scope.save = function() {
                         if ($scope.valid) {
                             $mdDialog.hide({ milestone: $scope.milestone, save: true, $event: $scope.$event });
                         } else {
                             alert($scope.$translate('MILESTONE_EDIT_INVALID_ALERT'));
                         }
-                    }
+                    };
 
                     $scope.onChange = function(milestone, valid) {
                         $scope.milestone = milestone;
                         $scope.valid = valid;
-                    }
+                    };
                 }
             ]
         }).then((data) => {

@@ -296,7 +296,7 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
                 return StudentStatusService.retrieveStudentStatuses();
             },
             achievements: function achievements(AchievementService, studentStatuses, config, project) {
-                return AchievementService.retrieveAchievements();
+                return AchievementService.retrieveStudentAchievements();
             },
             notifications: function notifications(NotificationService, ConfigService, studentStatuses, config, project) {
                 //return NotificationService.retrieveNotifications(ConfigService.getWorkgroupId());
