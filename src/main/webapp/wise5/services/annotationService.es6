@@ -900,6 +900,36 @@ class AnnotationService {
     }
     return annotations;
   }
+
+  getAverageAutoScore(nodeId, componentId, periodId = -1, type = null) {
+    let totalScoreSoFar = 0;
+    let annotationsCounted = 0;
+    for (let annotation of this.annotations) {
+      if (annotation.nodeId === nodeId &&
+          annotation.componentId === componentId &&
+          (periodId === -1 || annotation.periodId === periodId)) {
+        if (type != null) {
+          totalScoreSoFar += this.getSubScore(annotation, type);
+        } else {
+          totalScoreSoFar += this.getScore(annotation);
+        }
+        annotationsCounted++;
+      }
+    }
+    return totalScoreSoFar / annotationsCounted;
+  }
+
+  getScore(annotation) {
+    return annotation.data.value;
+  }
+
+  getSubScore(annotation, type) {
+    for (let score of annotation.data.scores) {
+      if (score.id === type) {
+        return score.score;
+      }
+    }
+  }
 }
 
 AnnotationService.$inject = [

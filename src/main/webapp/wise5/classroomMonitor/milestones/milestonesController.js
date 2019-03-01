@@ -11,7 +11,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MilestonesController = function () {
-    function MilestonesController($injector, $filter, $mdDialog, $rootScope, $scope, $state, AchievementService, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService, moment) {
+    function MilestonesController($injector, $filter, $mdDialog, $rootScope, $scope, $state, AchievementService, AnnotationService, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService, moment) {
         var _this = this;
 
         _classCallCheck(this, MilestonesController);
@@ -23,6 +23,7 @@ var MilestonesController = function () {
         this.$scope = $scope;
         this.$state = $state;
         this.AchievementService = AchievementService;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
@@ -350,35 +351,14 @@ var MilestonesController = function () {
     }, {
         key: 'restoreTempFields',
         value: function restoreTempFields() {
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
-
-            try {
-                for (var _iterator5 = this.projectAchievements[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var projectAchievement = _step5.value;
-
-                    // set the fields back into the achievement object
-                    projectAchievement.items = this.itemsTemporaryStorage[a];
-                    projectAchievement.workgroups = this.workgroupsStorage[a];
-                    projectAchievement.numberOfStudentsCompleted = this.numberOfStudentsCompletedStorage[a];
-                    projectAchievement.percentageCompleted = this.percentageCompletedStorage[a];
-                }
-            } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
-                    }
-                } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
-                    }
-                }
+            for (var a = 0; a < this.projectAchievements.length; a++) {
+                var projectAchievement = this.projectAchievements[a];
+                // set the fields back into the achievement object
+                projectAchievement.items = this.itemsTemporaryStorage[a];
+                projectAchievement.workgroups = this.workgroupsStorage[a];
+                projectAchievement.numberOfStudentsCompleted = this.numberOfStudentsCompletedStorage[a];
+                projectAchievement.percentageCompleted = this.percentageCompletedStorage[a];
             }
-
             this.itemsTemporaryStorage = [];
             this.workgroupsStorage = [];
             this.numberOfStudentsCompletedStorage = [];
@@ -441,19 +421,46 @@ var MilestonesController = function () {
             var achievementTimes = [];
             var workgroupIdsNotCompleted = [];
 
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
 
             try {
-                for (var _iterator6 = studentAchievements[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var studentAchievement = _step6.value;
+                for (var _iterator5 = studentAchievements[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var studentAchievement = _step5.value;
 
                     var currentWorkgroupId = studentAchievement.workgroupId;
                     // check if workgroup is in current period
                     if (this.workgroupIds.indexOf(currentWorkgroupId) > -1) {
                         workgroupIdsCompleted.push(currentWorkgroupId);
                         achievementTimes.push(studentAchievement.achievementTime);
+                    }
+                }
+            } catch (err) {
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
+                    }
+                } finally {
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
+                    }
+                }
+            }
+
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = this.workgroupIds[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var _workgroupId = _step6.value;
+
+                    if (workgroupIdsCompleted.indexOf(_workgroupId) === -1) {
+                        workgroupIdsNotCompleted.push(_workgroupId);
                     }
                 }
             } catch (err) {
@@ -467,33 +474,6 @@ var MilestonesController = function () {
                 } finally {
                     if (_didIteratorError6) {
                         throw _iteratorError6;
-                    }
-                }
-            }
-
-            var _iteratorNormalCompletion7 = true;
-            var _didIteratorError7 = false;
-            var _iteratorError7 = undefined;
-
-            try {
-                for (var _iterator7 = this.workgroupIds[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                    var _workgroupId = _step7.value;
-
-                    if (workgroupIdsCompleted.indexOf(_workgroupId) === -1) {
-                        workgroupIdsNotCompleted.push(_workgroupId);
-                    }
-                }
-            } catch (err) {
-                _didIteratorError7 = true;
-                _iteratorError7 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                        _iterator7.return();
-                    }
-                } finally {
-                    if (_didIteratorError7) {
-                        throw _iteratorError7;
                     }
                 }
             }
@@ -516,13 +496,13 @@ var MilestonesController = function () {
              * loop through all the workgroups that have not
              * completed the achievement
              */
-            var _iteratorNormalCompletion8 = true;
-            var _didIteratorError8 = false;
-            var _iteratorError8 = undefined;
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
 
             try {
-                for (var _iterator8 = workgroupIdsNotCompleted[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                    var _workgroupId2 = _step8.value;
+                for (var _iterator7 = workgroupIdsNotCompleted[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var _workgroupId2 = _step7.value;
 
                     var _workgroupObject = {
                         workgroupId: _workgroupId2,
@@ -531,6 +511,57 @@ var MilestonesController = function () {
                         completed: false
                     };
                     projectAchievement.workgroups.push(_workgroupObject);
+                }
+            } catch (err) {
+                _didIteratorError7 = true;
+                _iteratorError7 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                        _iterator7.return();
+                    }
+                } finally {
+                    if (_didIteratorError7) {
+                        throw _iteratorError7;
+                    }
+                }
+            }
+
+            projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
+            projectAchievement.percentageCompleted = parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
+            if (projectAchievement.type === 'milestoneReport') {
+                this.setReportAvailable(projectAchievement);
+                if (projectAchievement.isReportAvailable) {
+                    projectAchievement.generatedReport = this.generateReport(projectAchievement);
+                } else {
+                    delete projectAchievement.generatedReport;
+                }
+            }
+        }
+    }, {
+        key: 'setReportAvailable',
+        value: function setReportAvailable(projectAchievement) {
+            projectAchievement.isReportAvailable = projectAchievement.percentageCompleted > projectAchievement.satisfyMinPercentage;
+        }
+    }, {
+        key: 'generateReport',
+        value: function generateReport(projectAchievement) {
+            var reportVariables = projectAchievement.report.variables;
+            var reportVariableValues = {};
+            var _iteratorNormalCompletion8 = true;
+            var _didIteratorError8 = false;
+            var _iteratorError8 = undefined;
+
+            try {
+                for (var _iterator8 = reportVariables[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                    var reportVariable = _step8.value;
+
+                    var varValue = reportVariable.value;
+                    if (varValue === 'annotation.score') {} else if (varValue === 'annotation.autoScore') {} else if (varValue === 'annotation.autoScore.ki' && reportVariable.function === 'average') {
+                        reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(reportVariable.nodeId, reportVariable.componentId, 'ki', this.periodId);
+                    } else if (varValue === 'annotation.autoScore.science' && reportVariable.function === 'average') {
+                        reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(reportVariable.nodeId, reportVariable.componentId, 'science', this.periodId);
+                    } else if (varValue === 'annotation.autoScore.engineering') {}
                 }
             } catch (err) {
                 _didIteratorError8 = true;
@@ -547,22 +578,22 @@ var MilestonesController = function () {
                 }
             }
 
-            projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
-            projectAchievement.percentageCompleted = parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
+            var template = this.chooseTemplate(projectAchievement.report.templates, reportVariableValues);
+            return template.content;
         }
     }, {
-        key: 'getProjectAchievementById',
-        value: function getProjectAchievementById(achievementId) {
+        key: 'chooseTemplate',
+        value: function chooseTemplate(templates, reportVariableValues) {
             var _iteratorNormalCompletion9 = true;
             var _didIteratorError9 = false;
             var _iteratorError9 = undefined;
 
             try {
-                for (var _iterator9 = this.projectAchievements[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                    var projectAchievement = _step9.value;
+                for (var _iterator9 = templates[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                    var template = _step9.value;
 
-                    if (projectAchievement.id === achievementId) {
-                        return projectAchievement;
+                    if (this.isTemplateMatch(template, reportVariableValues)) {
+                        return template;
                     }
                 }
             } catch (err) {
@@ -576,6 +607,87 @@ var MilestonesController = function () {
                 } finally {
                     if (_didIteratorError9) {
                         throw _iteratorError9;
+                    }
+                }
+            }
+
+            return {
+                content: 'no template matched!'
+            };
+        }
+    }, {
+        key: 'isTemplateMatch',
+        value: function isTemplateMatch(template, reportVariableValues) {
+            var matchedCriteria = [];
+            var _iteratorNormalCompletion10 = true;
+            var _didIteratorError10 = false;
+            var _iteratorError10 = undefined;
+
+            try {
+                for (var _iterator10 = template.satisfyCriteria[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                    var satisfyCriterion = _step10.value;
+
+                    if (this.isTemplateCriterionSatisfied(satisfyCriterion, reportVariableValues)) {
+                        matchedCriteria.push(satisfyCriterion);
+                    }
+                }
+            } catch (err) {
+                _didIteratorError10 = true;
+                _iteratorError10 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                        _iterator10.return();
+                    }
+                } finally {
+                    if (_didIteratorError10) {
+                        throw _iteratorError10;
+                    }
+                }
+            }
+
+            if (template.satisfyConditional === 'all') {
+                return matchedCriteria.length === template.satisfyCriteria.length;
+            } else if (template.satisfyConditional === 'any') {
+                return matchedCriteria.length > 0;
+            }
+        }
+    }, {
+        key: 'isTemplateCriterionSatisfied',
+        value: function isTemplateCriterionSatisfied(satisfyCriterion, reportVariableValues) {
+            var targetValue = reportVariableValues[satisfyCriterion.targetVariable];
+            if (satisfyCriterion.function === 'greaterThanOrEqualTo') {
+                return targetValue >= satisfyCriterion.value;
+            } else if (satisfyCriterion.function === 'lessThanOrEqualTo') {
+                return targetValue <= satisfyCriterion.value;
+            }
+        }
+    }, {
+        key: 'getProjectAchievementById',
+        value: function getProjectAchievementById(achievementId) {
+            var _iteratorNormalCompletion11 = true;
+            var _didIteratorError11 = false;
+            var _iteratorError11 = undefined;
+
+            try {
+                for (var _iterator11 = this.projectAchievements[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                    var projectAchievement = _step11.value;
+
+                    if (projectAchievement.id === achievementId) {
+                        return projectAchievement;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError11 = true;
+                _iteratorError11 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                        _iterator11.return();
+                    }
+                } finally {
+                    if (_didIteratorError11) {
+                        throw _iteratorError11;
                     }
                 }
             }
@@ -715,7 +827,7 @@ var MilestonesController = function () {
     return MilestonesController;
 }();
 
-MilestonesController.$inject = ['$injector', '$filter', '$mdDialog', '$rootScope', '$scope', '$state', 'AchievementService', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService', 'moment'];
+MilestonesController.$inject = ['$injector', '$filter', '$mdDialog', '$rootScope', '$scope', '$state', 'AchievementService', 'AnnotationService', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService', 'moment'];
 
 exports.default = MilestonesController;
 //# sourceMappingURL=milestonesController.js.map

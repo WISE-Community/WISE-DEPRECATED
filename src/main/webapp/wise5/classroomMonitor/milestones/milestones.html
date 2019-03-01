@@ -23,6 +23,7 @@
                         </div>
                     </div>
                     <p class="md-body-1 accent-2">{{ milestone.numberOfStudentsCompleted }}/{{ milestonesController.numberOfStudentsInRun }} teams completed</p>
+                    <p ng-if="milestone.isReportAvailable" class="md-body-1 accent-2">{{ 'reportAvailable' | translate }}</p>
                     <div class="md-body-2"
                          ng-class="{ 'warn': milestonesController.isBeforeDay(milestone.params.targetDate, milestone.percentageCompleted),
                             'info': milestonesController.isSameDay(milestone.params.targetDate, milestone.percentageCompleted) }">

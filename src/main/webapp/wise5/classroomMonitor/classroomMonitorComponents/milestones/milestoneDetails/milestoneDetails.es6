@@ -89,6 +89,9 @@ const MilestoneDetails = {
             <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy accent-2">{{ 'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
             <p><span class="heavy accent-2">{{ 'REQUIREMENTS' | translate }}: </span> {{ $ctrl.requirements }}</p>
         </div>
+        <div ng-if="$ctrl.milestone.isReportAvailable" class="milestone-details md-whiteframe-1dp" layout-padding>
+        {{ $ctrl.milestone.generatedReport }}
+        </div>
         <md-list class="user-list">
             <md-list-item class="thead md-whiteframe-1dp md-with-secondary">
                 <p>{{ 'team' | translate }}</p>

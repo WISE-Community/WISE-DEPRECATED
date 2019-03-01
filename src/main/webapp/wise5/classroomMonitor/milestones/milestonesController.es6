@@ -9,6 +9,7 @@ class MilestonesController {
                 $scope,
                 $state,
                 AchievementService,
+                AnnotationService,
                 ConfigService,
                 ProjectService,
                 StudentStatusService,
@@ -24,6 +25,7 @@ class MilestonesController {
         this.$scope = $scope;
         this.$state = $state;
         this.AchievementService = AchievementService;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
@@ -250,7 +252,8 @@ class MilestonesController {
      * Restore the temporary fields into the achievement objects
      */
     restoreTempFields() {
-      for (let projectAchievement of this.projectAchievements) {
+      for (let a = 0; a < this.projectAchievements.length; a++) {
+        const projectAchievement = this.projectAchievements[a];
         // set the fields back into the achievement object
         projectAchievement.items = this.itemsTemporaryStorage[a];
         projectAchievement.workgroups = this.workgroupsStorage[a];
@@ -355,6 +358,76 @@ class MilestonesController {
       projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
       projectAchievement.percentageCompleted =
         parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
+      if (projectAchievement.type === 'milestoneReport') {
+        this.setReportAvailable(projectAchievement);
+        if (projectAchievement.isReportAvailable) {
+          projectAchievement.generatedReport = this.generateReport(projectAchievement);
+        } else {
+          delete projectAchievement.generatedReport;
+        }
+      }
+    }
+
+    setReportAvailable(projectAchievement) {
+      projectAchievement.isReportAvailable =
+          projectAchievement.percentageCompleted > projectAchievement.satisfyMinPercentage;
+    }
+
+    generateReport(projectAchievement) {
+      const reportVariables = projectAchievement.report.variables;
+      const reportVariableValues = {};
+      for (let reportVariable of reportVariables) {
+        const varValue = reportVariable.value;
+        if (varValue === 'annotation.score') {
+
+        } else if (varValue === 'annotation.autoScore') {
+
+        } else if (varValue === 'annotation.autoScore.ki' && reportVariable.function === 'average') {
+          reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(
+              reportVariable.nodeId, reportVariable.componentId, 'ki', this.periodId);
+        } else if (varValue === 'annotation.autoScore.science' && reportVariable.function === 'average') {
+          reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(
+              reportVariable.nodeId, reportVariable.componentId, 'science', this.periodId);
+        } else if (varValue === 'annotation.autoScore.engineering') {
+
+        }
+      }
+      const template = this.chooseTemplate(projectAchievement.report.templates, reportVariableValues);
+      return template.content;
+    }
+
+    chooseTemplate(templates, reportVariableValues) {
+      for (let template of templates) {
+        if (this.isTemplateMatch(template, reportVariableValues)) {
+          return template;
+        }
+      }
+      return {
+        content: 'no template matched!'
+      };
+    }
+
+    isTemplateMatch(template, reportVariableValues) {
+      const matchedCriteria = [];
+      for (let satisfyCriterion of template.satisfyCriteria) {
+        if (this.isTemplateCriterionSatisfied(satisfyCriterion, reportVariableValues)) {
+          matchedCriteria.push(satisfyCriterion);
+        }
+      }
+      if (template.satisfyConditional === 'all') {
+        return matchedCriteria.length === template.satisfyCriteria.length;
+      } else if (template.satisfyConditional === 'any') {
+        return matchedCriteria.length > 0;
+      }
+    }
+
+    isTemplateCriterionSatisfied(satisfyCriterion, reportVariableValues) {
+      const targetValue = reportVariableValues[satisfyCriterion.targetVariable];
+      if (satisfyCriterion.function === 'greaterThanOrEqualTo') {
+        return targetValue >= satisfyCriterion.value;
+      } else if (satisfyCriterion.function === 'lessThanOrEqualTo') {
+        return targetValue <= satisfyCriterion.value;
+      }
     }
 
     getProjectAchievementById(achievementId) {
@@ -548,6 +621,7 @@ MilestonesController.$inject = [
     '$scope',
     '$state',
     'AchievementService',
+    'AnnotationService',
     'ConfigService',
     'ProjectService',
     'StudentStatusService',
