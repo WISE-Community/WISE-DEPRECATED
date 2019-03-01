@@ -19,8 +19,6 @@ class AchievementService {
 
     // whether to print debug output to the console
     this.debug = false;
-
-    this.loadProjectAchievements();
   }
 
   /**
@@ -102,6 +100,7 @@ class AchievementService {
             }
           }
         }
+        this.registerAchievementListeners();
         return this.studentAchievementsByWorkgroupId;
       });
     }
@@ -208,32 +207,32 @@ class AchievementService {
     };
   }
 
-  /**
-   * Load the project achievements by creating listeners for the appropriate events
-   */
-  loadProjectAchievements() {
+  registerAchievementListeners() {
     const projectAchievements = this.ProjectService.getAchievements();
-    if (projectAchievements != null && projectAchievements.isEnabled) {
-      const projectAchievementItems = projectAchievements.items;
-      if (projectAchievementItems != null) {
-        for (let projectAchievement of projectAchievementItems) {
-          let deregisterFunction = null;
-          if (projectAchievement.type === 'milestone' || projectAchievement.type === 'milestoneReport' ||
-              projectAchievement.type === 'completion') {
-            deregisterFunction = this.createComponentCompletedListener(projectAchievement);
-          } else if (projectAchievement.type === 'aggregate') {
-            deregisterFunction = this.createAggregateAchievementListener(projectAchievement);
-          }
-          /*
-           * set the deregisterFunction into the project
-           * achievement so that we can deregister the
-           * listener after the student has completed the
-           * achievement
-           */
-          projectAchievement.deregisterFunction = deregisterFunction;
+    if (projectAchievements.isEnabled) {
+      for (let projectAchievement of projectAchievements.items) {
+        if (!this.isStudentAchievementExists(projectAchievement.id)) {
+          this.createListenerFunction(projectAchievement);
         }
       }
     }
+  }
+
+  createListenerFunction(projectAchievement) {
+    let deregisterListenerFunction = null;
+    if (projectAchievement.type === 'milestone' || projectAchievement.type === 'milestoneReport' ||
+      projectAchievement.type === 'completion') {
+      deregisterListenerFunction = this.createStudentWorkSavedListener(projectAchievement);
+    } else if (projectAchievement.type === 'aggregate') {
+      deregisterListenerFunction = this.createAggregateAchievementListener(projectAchievement);
+    }
+    /*
+     * set the deregisterListenerFunction into the project
+     * achievement so that we can deregister the
+     * listener after the student has completed the
+     * achievement
+     */
+    projectAchievement.deregisterListenerFunction = deregisterListenerFunction;
   }
 
   /**
@@ -244,11 +243,9 @@ class AchievementService {
   isStudentAchievementExists(achievementId) {
     const workgroupId = this.ConfigService.getWorkgroupId();
     const achievements = this.getStudentAchievementsByWorkgroupId(workgroupId);
-    if (achievements != null) {
-      for (let achievement of achievements) {
-        if (achievement.achievementId === achievementId) {
-          return true;
-        }
+    for (let achievement of achievements) {
+      if (achievement.achievementId === achievementId) {
+        return true;
       }
     }
     return false;
@@ -265,12 +262,12 @@ class AchievementService {
     }
 
     const projectAchievement = this.ProjectService.getAchievementByAchievementId(achievement.id);
-    if (projectAchievement != null && projectAchievement.deregisterFunction != null) {
+    if (projectAchievement != null && projectAchievement.deregisterListenerFunction != null) {
       /*
        * deregister the achievement listener now that the student has
        * completed the achievement
        */
-      projectAchievement.deregisterFunction();
+      projectAchievement.deregisterListenerFunction();
       this.debugOutput('deregistering ' + projectAchievement.id);
     }
 
@@ -295,25 +292,17 @@ class AchievementService {
    * @param projectAchievement the achievement to listen for
    * @return the deregister function for the listener
    */
-  createComponentCompletedListener(projectAchievement) {
-    // save this to a variable so that we can access it in the callback
-    //const thisAchievementService = this;
-
-    // save the achievement to a variable so that we can access it in the callback
-    //const thisAchievement = projectAchievement;
-
+  createStudentWorkSavedListener(projectAchievement) {
     this.debugOutput('registering ' + projectAchievement.id);
-
-    const deregisterFunction = this.$rootScope.$on('componentCompleted', (event, args) => {
-      //const achievement = thisAchievement;
-      this.debugOutput('createComponentCompletedListener checking ' + projectAchievement.id + ' completed ' + args.nodeId);
+    const deregisterListenerFunction = this.$rootScope.$on('studentWorkSavedToServer', (event, args) => {
+      this.debugOutput('createStudentWorkSavedListener checking ' + projectAchievement.id + ' completed ' + args.nodeId);
       if (!this.isStudentAchievementExists(projectAchievement.id)) {
         if (this.isAchievementCompletedByStudent(projectAchievement)) {
           this.createStudentAchievement(projectAchievement);
         }
       }
     });
-    return deregisterFunction;
+    return deregisterListenerFunction;
   }
 
   /**
@@ -353,23 +342,6 @@ class AchievementService {
     return false;
   }
 
-  /*
-    if (params != null) {
-      const nodeIds = params.nodeIds;
-      for (let n = 0; n < nodeIds.length; n++) {
-        const nodeId = nodeIds[n];
-        if (n === 0) {
-          // this is the first node id
-          completed = this.StudentDataService.isCompleted(nodeId);
-        } else {
-          completed = completed && this.StudentDataService.isCompleted(nodeId);
-        }
-      }
-    }
-    return completed;
-  }
-  */
-
   /**
    * Create a listener for an aggregate achievement
    * @param projectAchievement the project achievement
@@ -379,7 +351,7 @@ class AchievementService {
     const thisAchievementService = this;
     const thisAchievement = projectAchievement;
     this.debugOutput('registering ' + projectAchievement.id);
-    const deregisterFunction = this.$rootScope.$on('achievementCompleted', (event, args) => {
+    const deregisterListenerFunction = this.$rootScope.$on('achievementCompleted', (event, args) => {
       /*
        * the achievementCompleted event was fired so we will check if this
        * achievement has been completed
@@ -404,7 +376,7 @@ class AchievementService {
         }
       }
     });
-    return deregisterFunction;
+    return deregisterListenerFunction;
   }
 
   /**

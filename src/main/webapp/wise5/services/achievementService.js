@@ -24,8 +24,6 @@ var AchievementService = function () {
 
     // whether to print debug output to the console
     this.debug = false;
-
-    this.loadProjectAchievements();
   }
 
   /**
@@ -157,6 +155,7 @@ var AchievementService = function () {
               }
             }
           }
+          _this.registerAchievementListeners();
           return _this.studentAchievementsByWorkgroupId;
         });
       }
@@ -273,56 +272,55 @@ var AchievementService = function () {
         data: data
       };
     }
-
-    /**
-     * Load the project achievements by creating listeners for the appropriate events
-     */
-
   }, {
-    key: 'loadProjectAchievements',
-    value: function loadProjectAchievements() {
+    key: 'registerAchievementListeners',
+    value: function registerAchievementListeners() {
       var projectAchievements = this.ProjectService.getAchievements();
-      if (projectAchievements != null && projectAchievements.isEnabled) {
-        var projectAchievementItems = projectAchievements.items;
-        if (projectAchievementItems != null) {
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+      if (projectAchievements.isEnabled) {
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
-          try {
-            for (var _iterator3 = projectAchievementItems[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var projectAchievement = _step3.value;
+        try {
+          for (var _iterator3 = projectAchievements.items[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var projectAchievement = _step3.value;
 
-              var deregisterFunction = null;
-              if (projectAchievement.type === 'milestone' || projectAchievement.type === 'milestoneReport' || projectAchievement.type === 'completion') {
-                deregisterFunction = this.createComponentCompletedListener(projectAchievement);
-              } else if (projectAchievement.type === 'aggregate') {
-                deregisterFunction = this.createAggregateAchievementListener(projectAchievement);
-              }
-              /*
-               * set the deregisterFunction into the project
-               * achievement so that we can deregister the
-               * listener after the student has completed the
-               * achievement
-               */
-              projectAchievement.deregisterFunction = deregisterFunction;
+            if (!this.isStudentAchievementExists(projectAchievement.id)) {
+              this.createListenerFunction(projectAchievement);
             }
-          } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
           } finally {
-            try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
-              }
-            } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
-              }
+            if (_didIteratorError3) {
+              throw _iteratorError3;
             }
           }
         }
       }
+    }
+  }, {
+    key: 'createListenerFunction',
+    value: function createListenerFunction(projectAchievement) {
+      var deregisterListenerFunction = null;
+      if (projectAchievement.type === 'milestone' || projectAchievement.type === 'milestoneReport' || projectAchievement.type === 'completion') {
+        deregisterListenerFunction = this.createStudentWorkSavedListener(projectAchievement);
+      } else if (projectAchievement.type === 'aggregate') {
+        deregisterListenerFunction = this.createAggregateAchievementListener(projectAchievement);
+      }
+      /*
+       * set the deregisterListenerFunction into the project
+       * achievement so that we can deregister the
+       * listener after the student has completed the
+       * achievement
+       */
+      projectAchievement.deregisterListenerFunction = deregisterListenerFunction;
     }
 
     /**
@@ -336,34 +334,33 @@ var AchievementService = function () {
     value: function isStudentAchievementExists(achievementId) {
       var workgroupId = this.ConfigService.getWorkgroupId();
       var achievements = this.getStudentAchievementsByWorkgroupId(workgroupId);
-      if (achievements != null) {
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
 
-        try {
-          for (var _iterator4 = achievements[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var achievement = _step4.value;
+      try {
+        for (var _iterator4 = achievements[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var achievement = _step4.value;
 
-            if (achievement.achievementId === achievementId) {
-              return true;
-            }
+          if (achievement.achievementId === achievementId) {
+            return true;
           }
-        } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
         } finally {
-          try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
-            }
-          } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
-            }
+          if (_didIteratorError4) {
+            throw _iteratorError4;
           }
         }
       }
+
       return false;
     }
 
@@ -381,12 +378,12 @@ var AchievementService = function () {
       }
 
       var projectAchievement = this.ProjectService.getAchievementByAchievementId(achievement.id);
-      if (projectAchievement != null && projectAchievement.deregisterFunction != null) {
+      if (projectAchievement != null && projectAchievement.deregisterListenerFunction != null) {
         /*
          * deregister the achievement listener now that the student has
          * completed the achievement
          */
-        projectAchievement.deregisterFunction();
+        projectAchievement.deregisterListenerFunction();
         this.debugOutput('deregistering ' + projectAchievement.id);
       }
 
@@ -413,28 +410,20 @@ var AchievementService = function () {
      */
 
   }, {
-    key: 'createComponentCompletedListener',
-    value: function createComponentCompletedListener(projectAchievement) {
+    key: 'createStudentWorkSavedListener',
+    value: function createStudentWorkSavedListener(projectAchievement) {
       var _this3 = this;
 
-      // save this to a variable so that we can access it in the callback
-      //const thisAchievementService = this;
-
-      // save the achievement to a variable so that we can access it in the callback
-      //const thisAchievement = projectAchievement;
-
       this.debugOutput('registering ' + projectAchievement.id);
-
-      var deregisterFunction = this.$rootScope.$on('componentCompleted', function (event, args) {
-        //const achievement = thisAchievement;
-        _this3.debugOutput('createComponentCompletedListener checking ' + projectAchievement.id + ' completed ' + args.nodeId);
+      var deregisterListenerFunction = this.$rootScope.$on('studentWorkSavedToServer', function (event, args) {
+        _this3.debugOutput('createStudentWorkSavedListener checking ' + projectAchievement.id + ' completed ' + args.nodeId);
         if (!_this3.isStudentAchievementExists(projectAchievement.id)) {
           if (_this3.isAchievementCompletedByStudent(projectAchievement)) {
             _this3.createStudentAchievement(projectAchievement);
           }
         }
       });
-      return deregisterFunction;
+      return deregisterListenerFunction;
     }
 
     /**
@@ -503,23 +492,6 @@ var AchievementService = function () {
       return false;
     }
 
-    /*
-      if (params != null) {
-        const nodeIds = params.nodeIds;
-        for (let n = 0; n < nodeIds.length; n++) {
-          const nodeId = nodeIds[n];
-          if (n === 0) {
-            // this is the first node id
-            completed = this.StudentDataService.isCompleted(nodeId);
-          } else {
-            completed = completed && this.StudentDataService.isCompleted(nodeId);
-          }
-        }
-      }
-      return completed;
-    }
-    */
-
     /**
      * Create a listener for an aggregate achievement
      * @param projectAchievement the project achievement
@@ -534,7 +506,7 @@ var AchievementService = function () {
       var thisAchievementService = this;
       var thisAchievement = projectAchievement;
       this.debugOutput('registering ' + projectAchievement.id);
-      var deregisterFunction = this.$rootScope.$on('achievementCompleted', function (event, args) {
+      var deregisterListenerFunction = this.$rootScope.$on('achievementCompleted', function (event, args) {
         /*
          * the achievementCompleted event was fired so we will check if this
          * achievement has been completed
@@ -559,7 +531,7 @@ var AchievementService = function () {
           }
         }
       });
-      return deregisterFunction;
+      return deregisterListenerFunction;
     }
 
     /**

@@ -5546,7 +5546,7 @@ class ProjectService {
   getAchievements() {
     if (this.project.achievements == null) {
       this.project.achievements = {
-        isEnabled: true,
+        isEnabled: false,
         items: []
       };
     }

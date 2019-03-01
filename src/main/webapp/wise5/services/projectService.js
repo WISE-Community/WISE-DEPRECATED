@@ -8766,7 +8766,7 @@ var ProjectService = function () {
     value: function getAchievements() {
       if (this.project.achievements == null) {
         this.project.achievements = {
-          isEnabled: true,
+          isEnabled: false,
           items: []
         };
       }
