@@ -450,7 +450,7 @@ class ComponentController {
     return this.componentContent.lockAfterSubmit;
   }
 
-  studentDataChanged() {
+  studentDataChanged(isCompleted = false) {
     this.setIsDirty(true);
     this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
 
@@ -469,6 +469,10 @@ class ComponentController {
     // create a component state populated with the student data
     this.createComponentState(action).then((componentState) => {
       this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+
+      if (componentState.isCompleted) {
+        this.$scope.$emit('componentCompleted', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+      }
     });
   }
 

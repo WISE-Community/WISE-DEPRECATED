@@ -5544,13 +5544,13 @@ class ProjectService {
    * @return the achievement object
    */
   getAchievements() {
-    if (this.project.projectAchievements == null) {
-      this.project.projectAchievements = {
+    if (this.project.achievements == null) {
+      this.project.achievements = {
         isEnabled: true,
         items: []
       };
     }
-    return this.project.projectAchievements;
+    return this.project.achievements;
   }
 
   /**
