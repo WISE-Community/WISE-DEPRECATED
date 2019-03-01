@@ -1215,16 +1215,20 @@ var AnnotationService = function () {
       var _iteratorError12 = undefined;
 
       try {
-        for (var _iterator12 = this.annotations[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+        for (var _iterator12 = this.getAllLatestScoreAnnotations(nodeId, componentId, periodId)[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
           var annotation = _step12.value;
 
           if (annotation.nodeId === nodeId && annotation.componentId === componentId && (periodId === -1 || annotation.periodId === periodId)) {
+            var score = null;
             if (type != null) {
-              totalScoreSoFar += this.getSubScore(annotation, type);
+              score = this.getSubScore(annotation, type);
             } else {
-              totalScoreSoFar += this.getScore(annotation);
+              score = this.getScoreFromAnnotation(annotation);
             }
-            annotationsCounted++;
+            if (score != null) {
+              totalScoreSoFar += score;
+              annotationsCounted++;
+            }
           }
         }
       } catch (err) {
@@ -1245,8 +1249,23 @@ var AnnotationService = function () {
       return totalScoreSoFar / annotationsCounted;
     }
   }, {
-    key: 'getScore',
-    value: function getScore(annotation) {
+    key: 'getAllLatestScoreAnnotations',
+    value: function getAllLatestScoreAnnotations(nodeId, componentId, periodId) {
+      var workgroupIdsFound = {};
+      var latestScoreAnnotations = [];
+      for (var a = this.annotations.length - 1; a >= 0; a--) {
+        var annotation = this.annotations[a];
+        var workgroupId = annotation.toWorkgroupId;
+        if (workgroupIdsFound[workgroupId] == null && nodeId === annotation.nodeId && componentId === annotation.componentId && (periodId === -1 || periodId === annotation.periodId) && ('score' === annotation.type || 'autoScore' === annotation.type)) {
+          workgroupIdsFound[workgroupId] = annotation;
+          latestScoreAnnotations.push(annotation);
+        }
+      }
+      return latestScoreAnnotations;
+    }
+  }, {
+    key: 'getScoreFromAnnotation',
+    value: function getScoreFromAnnotation(annotation) {
       return annotation.data.value;
     }
   }, {
@@ -1278,6 +1297,8 @@ var AnnotationService = function () {
           }
         }
       }
+
+      return null;
     }
   }]);
 

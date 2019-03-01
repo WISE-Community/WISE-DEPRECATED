@@ -541,7 +541,7 @@ var MilestonesController = function () {
     }, {
         key: 'setReportAvailable',
         value: function setReportAvailable(projectAchievement) {
-            projectAchievement.isReportAvailable = projectAchievement.percentageCompleted > projectAchievement.satisfyMinPercentage;
+            projectAchievement.isReportAvailable = projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage;
         }
     }, {
         key: 'generateReport',
@@ -558,9 +558,9 @@ var MilestonesController = function () {
 
                     var varValue = reportVariable.value;
                     if (varValue === 'annotation.score') {} else if (varValue === 'annotation.autoScore') {} else if (varValue === 'annotation.autoScore.ki' && reportVariable.function === 'average') {
-                        reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(reportVariable.nodeId, reportVariable.componentId, 'ki', this.periodId);
+                        reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(reportVariable.nodeId, reportVariable.componentId, this.periodId, 'ki');
                     } else if (varValue === 'annotation.autoScore.science' && reportVariable.function === 'average') {
-                        reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(reportVariable.nodeId, reportVariable.componentId, 'science', this.periodId);
+                        reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(reportVariable.nodeId, reportVariable.componentId, this.periodId, 'science');
                     } else if (varValue === 'annotation.autoScore.engineering') {}
                 }
             } catch (err) {

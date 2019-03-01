@@ -904,22 +904,44 @@ class AnnotationService {
   getAverageAutoScore(nodeId, componentId, periodId = -1, type = null) {
     let totalScoreSoFar = 0;
     let annotationsCounted = 0;
-    for (let annotation of this.annotations) {
+    for (let annotation of this.getAllLatestScoreAnnotations(nodeId, componentId, periodId)) {
       if (annotation.nodeId === nodeId &&
           annotation.componentId === componentId &&
           (periodId === -1 || annotation.periodId === periodId)) {
+        let score = null;
         if (type != null) {
-          totalScoreSoFar += this.getSubScore(annotation, type);
+          score = this.getSubScore(annotation, type);
         } else {
-          totalScoreSoFar += this.getScore(annotation);
+          score = this.getScoreFromAnnotation(annotation);
         }
-        annotationsCounted++;
+        if (score != null) {
+          totalScoreSoFar += score;
+          annotationsCounted++;
+        }
       }
     }
     return totalScoreSoFar / annotationsCounted;
   }
 
-  getScore(annotation) {
+  getAllLatestScoreAnnotations(nodeId, componentId, periodId) {
+    const workgroupIdsFound = {};
+    const latestScoreAnnotations = [];
+    for (let a = this.annotations.length - 1; a >= 0; a--) {
+      const annotation = this.annotations[a];
+      const workgroupId = annotation.toWorkgroupId;
+      if (workgroupIdsFound[workgroupId] == null &&
+          nodeId === annotation.nodeId &&
+          componentId === annotation.componentId &&
+          (periodId === -1 || periodId === annotation.periodId) &&
+          ('score' === annotation.type || 'autoScore' === annotation.type)) {
+        workgroupIdsFound[workgroupId] = annotation;
+        latestScoreAnnotations.push(annotation);
+      }
+    }
+    return latestScoreAnnotations;
+  }
+
+  getScoreFromAnnotation(annotation) {
     return annotation.data.value;
   }
 
@@ -929,6 +951,7 @@ class AnnotationService {
         return score.score;
       }
     }
+    return null;
   }
 }
 

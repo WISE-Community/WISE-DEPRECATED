@@ -370,7 +370,7 @@ class MilestonesController {
 
     setReportAvailable(projectAchievement) {
       projectAchievement.isReportAvailable =
-          projectAchievement.percentageCompleted > projectAchievement.satisfyMinPercentage;
+          projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage;
     }
 
     generateReport(projectAchievement) {
@@ -384,10 +384,10 @@ class MilestonesController {
 
         } else if (varValue === 'annotation.autoScore.ki' && reportVariable.function === 'average') {
           reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(
-              reportVariable.nodeId, reportVariable.componentId, 'ki', this.periodId);
+              reportVariable.nodeId, reportVariable.componentId, this.periodId, 'ki');
         } else if (varValue === 'annotation.autoScore.science' && reportVariable.function === 'average') {
           reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(
-              reportVariable.nodeId, reportVariable.componentId, 'science', this.periodId);
+              reportVariable.nodeId, reportVariable.componentId, this.periodId, 'science');
         } else if (varValue === 'annotation.autoScore.engineering') {
 
         }
