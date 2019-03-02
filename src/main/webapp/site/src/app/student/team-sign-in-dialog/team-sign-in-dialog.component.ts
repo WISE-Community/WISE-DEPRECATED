@@ -89,20 +89,25 @@ export class TeamSignInDialogComponent implements OnInit {
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
           } else if (!this.allowSignIn(teamMember, 1)) {
+            alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
             if (!this.isExistingStudent(teamMember)) {
               teamMember.userName = null;
             }
-            alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
           } else {
             alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
             teamMember.userName = null;
           }
         });
       } else if (response.isUsernameValid !== true) {
+        alert(this.i18n('Invalid username. Please try again.'));
         teamMember.userName = null;
-        alert(this.i18n('Invalid username or password. Please try again.'));
+      } else if (response.isPasswordValid !== true) {
+        alert(this.i18n('Invalid password. Please try again.'));
+        if (!this.isExistingStudent(teamMember)) {
+          teamMember.userName = null;
+        }
       } else {
-        alert(this.i18n('Invalid password. Please try again.'))
+        alert(this.i18n('Invalid username and password. Please try again.'));
         if (!this.isExistingStudent(teamMember)) {
           teamMember.userName = null;
         }
