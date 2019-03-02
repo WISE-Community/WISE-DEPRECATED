@@ -60,9 +60,9 @@ public class RunUtil {
     } else {
       Workgroup workgroup = workgroupListByRunAndUser.get(0);
       Long workgroupId = workgroup.getId();
-      String userNamesFromWorkgroup = getUserNamesFromWorkgroup(workgroup);
+      String usernamesFromWorkgroup = getUsernamesFromWorkgroup(workgroup);
       try {
-        myUserInfoJSONObject.put("username", userNamesFromWorkgroup);
+        myUserInfoJSONObject.put("username", usernamesFromWorkgroup);
         myUserInfoJSONObject.put("workgroupId", workgroupId);
       } catch (JSONException e) {
         e.printStackTrace();
@@ -265,7 +265,7 @@ public class RunUtil {
    * e.g.
    * "Jennifer Chiu (JenniferC829):helen zhang (helenz1115a)"
    */
-  public static String getUserNamesFromWorkgroup(Workgroup workgroup) {
+  public static String getUsernamesFromWorkgroup(Workgroup workgroup) {
     StringBuffer usernames = new StringBuffer();
     Set<User> members = workgroup.getMembers();
     Iterator<User> iterator = members.iterator();

@@ -292,7 +292,7 @@ public class InformationController {
         usernames = loggedInUser.getUserDetails().getCoreUsername();
         userIds.put(loggedInUser.getId());
       } else {
-        usernames = getUserNamesFromWorkgroup(workgroup);
+        usernames = getUsernamesFromWorkgroup(workgroup);
         userIds = getStudentIdsFromWorkgroup(workgroup);
       }
       JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, usernames);
@@ -805,7 +805,7 @@ public class InformationController {
    * e.g.
    * "Jennifer Chiu (JenniferC829):helen zhang (helenz1115a)"
    */
-  private String getUserNamesFromWorkgroup(Workgroup workgroup) {
+  private String getUsernamesFromWorkgroup(Workgroup workgroup) {
     StringBuffer usernames = new StringBuffer();
     for (User user : workgroup.getMembers()) {
       String firstNameLastNameLogin = getFirstNameLastNameLogin(user);
@@ -857,7 +857,7 @@ public class InformationController {
     try {
       classmateUserInfo.put("workgroupId", classmateWorkgroup.getId());
       if (isAllowedToViewStudentNames(run, loggedInUser)) {
-        String usernames = getUserNamesFromWorkgroup(classmateWorkgroup);
+        String usernames = getUsernamesFromWorkgroup(classmateWorkgroup);
         classmateUserInfo.put("username", usernames);
       }
       if (classmateWorkgroup.getPeriod() != null) {

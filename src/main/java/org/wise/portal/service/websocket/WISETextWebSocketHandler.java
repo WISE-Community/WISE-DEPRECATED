@@ -188,7 +188,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
         messageJSON.put("workgroupId", workgroupId);
       }
 
-      String username = wiseWebSocketSession.getUserName();
+      String username = wiseWebSocketSession.getUsername();
       Long runId = wiseWebSocketSession.getRunId();
       WebSocketSession session = wiseWebSocketSession.getSession();
       messageJSON.put("username", username);
@@ -246,7 +246,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
         messageJSON.put("workgroupId", workgroupId);
       }
 
-      String username = wiseWebSocketSession.getUserName();
+      String username = wiseWebSocketSession.getUsername();
       Long runId = wiseWebSocketSession.getRunId();
       if (runId != null) {
         messageJSON.put("username", username);
@@ -689,15 +689,15 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       setFirstName(firstName);
       setLastName(lastName);
       if (signedInUser.isTeacher()) {
-        username = getUserName(user);
+        username = getUsername(user);
         setTeacher(true);
       } else if (signedInUser.isStudent()) {
-        username = getWorkgroupUserNames(workgroupId);
+        username = getWorkgroupUsernames(workgroupId);
         setTeacher(false);
         Long periodId = getValueFromSession(session, "periodId");
         setPeriodId(periodId);
       }
-      setUserName(username);
+      setUsername(username);
       setSession(session);
     }
 
@@ -711,7 +711,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       return userDetails.getLastname();
     }
 
-    public String getUserName(User user) {
+    public String getUsername(User user) {
       MutableUserDetails userDetails = user.getUserDetails();
       return userDetails.getUsername();
     }
@@ -724,29 +724,29 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
      * @param workgroupId the workgroup id
      * @return the workgroup user names
      */
-    public String getWorkgroupUserNames(Long workgroupId) {
-      StringBuffer workgroupUserNames = new StringBuffer();
+    public String getWorkgroupUsernames(Long workgroupId) {
+      StringBuffer workgroupUsernames = new StringBuffer();
       try {
         Workgroup workgroup = workgroupService.retrieveById(workgroupId);
         for (User user : workgroup.getMembers()) {
           String firstName = getFirstName(user);
           String lastName = getLastName(user);
-          String username = getUserName(user);
+          String username = getUsername(user);
           //separate members in the workgroup with a ,
-          if (workgroupUserNames.length() != 0) {
-            workgroupUserNames.append(", ");
+          if (workgroupUsernames.length() != 0) {
+            workgroupUsernames.append(", ");
           }
-          workgroupUserNames.append(firstName);
-          workgroupUserNames.append(" ");
-          workgroupUserNames.append(lastName);
-          workgroupUserNames.append("(");
-          workgroupUserNames.append(username);
-          workgroupUserNames.append(")");
+          workgroupUsernames.append(firstName);
+          workgroupUsernames.append(" ");
+          workgroupUsernames.append(lastName);
+          workgroupUsernames.append("(");
+          workgroupUsernames.append(username);
+          workgroupUsernames.append(")");
         }
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
-      return workgroupUserNames.toString();
+      return workgroupUsernames.toString();
     }
 
     public WebSocketSession getSession() {
@@ -765,11 +765,11 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       this.user = user;
     }
 
-    public String getUserName() {
+    public String getUsername() {
       return username;
     }
 
-    public void setUserName(String username) {
+    public void setUsername(String username) {
       this.username = username;
     }
 

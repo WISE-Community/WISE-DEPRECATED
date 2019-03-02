@@ -203,7 +203,7 @@ public class ManageStudentsController {
     List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByRunAndUser(run, owner);
     // there should only be one workgroup for the owner
     Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
-    String teacherUserName = teacherWorkgroup.generateWorkgroupName();
+    String teacherUsername = teacherWorkgroup.generateWorkgroupName();
 
     // get the meta data for the project
     Long projectId = (Long) project.getId();
@@ -241,7 +241,7 @@ public class ManageStudentsController {
 
     columnCounter = 0;
     HSSFRow metaDataRow = mainSheet.createRow(rowCounter++);
-    metaDataRow.createCell(columnCounter++).setCellValue(teacherUserName);
+    metaDataRow.createCell(columnCounter++).setCellValue(teacherUsername);
     metaDataRow.createCell(columnCounter++).setCellValue(projectId);
     metaDataRow.createCell(columnCounter++).setCellValue(parentProjectIdStr);
     metaDataRow.createCell(columnCounter++).setCellValue(projectName);

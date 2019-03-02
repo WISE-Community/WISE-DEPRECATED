@@ -149,7 +149,7 @@ class DiscussionController extends ComponentController {
 
   sendPostToClassmatesInPeriod(componentState) {
     const messageType = 'studentData';
-    componentState.userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
+    componentState.usernamesArray = this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
     this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
   }
 
@@ -162,8 +162,8 @@ class DiscussionController extends ComponentController {
         const notificationType = 'DiscussionReply';
         const nodeId = componentState.nodeId;
         const componentId = componentState.componentId;
-        const userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
-        const usernames = userNamesArray.map((obj) => {
+        const usernamesArray = this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
+        const usernames = usernamesArray.map((obj) => {
           return obj.name;
         }).join(', ');
         const notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { usernames: usernames });
@@ -419,8 +419,8 @@ class DiscussionController extends ComponentController {
       const usernames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
       if (usernames.length > 0) {
         componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
-      } else if (componentState.userNamesArray != null) {
-        componentState.usernames = componentState.userNamesArray
+      } else if (componentState.usernamesArray != null) {
+        componentState.usernames = componentState.usernamesArray
             .map(function(obj) { return obj.name; }).join(', ');
       }
       componentState.replies = [];

@@ -430,14 +430,14 @@ class ConfigService {
    */
   getStudentFirstNamesByWorkgroupId(workgroupId) {
     const studentNames = [];
-    const userNames = this.getUserNameByWorkgroupId(workgroupId);
+    const usernames = this.getUserNameByWorkgroupId(workgroupId);
 
-    if (userNames != null) {
+    if (usernames != null) {
       // split the user names string by ':'
-      const userNamesSplit = userNames.split(':');
+      const usernamesSplit = usernames.split(':');
 
-      if (userNamesSplit != null) {
-        for (let username of userNamesSplit) {
+      if (usernamesSplit != null) {
+        for (let username of usernamesSplit) {
           const indexOfSpace = username.indexOf(' ');
           const studentFirstName = username.substring(0, indexOfSpace);
           studentNames.push(studentFirstName);
@@ -478,12 +478,12 @@ class ConfigService {
   };
 
   getUserNamesByWorkgroupId(workgroupId) {
-    let userNamesObjects = [];
+    let usernamesObjects = [];
     if (workgroupId != null) {
       let userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null && userInfo.username != null) {
-        let userNames = userInfo.username.split(':');
-        for (let name of userNames) {
+        let usernames = userInfo.username.split(':');
+        for (let name of usernames) {
           let id = "";
           let regex = /(.+) \((.+)\)/g;
           let matches = regex.exec(name);
@@ -491,14 +491,14 @@ class ConfigService {
             name = matches[1];
             id = matches[2];
           }
-          userNamesObjects.push({
+          usernamesObjects.push({
             name: name,
             id: id
           });
         }
       }
     }
-    return userNamesObjects;
+    return usernamesObjects;
   };
 
   getDisplayUserNamesByWorkgroupId(workgroupId) {

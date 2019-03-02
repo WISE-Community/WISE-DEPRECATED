@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.validators.SearchForStudentUserNameValidator;
+import org.wise.portal.presentation.validators.SearchForStudentUsernameValidator;
 import org.wise.portal.service.user.UserService;
 
 /**
@@ -45,13 +45,13 @@ import org.wise.portal.service.user.UserService;
  */
 @Controller
 @RequestMapping("/legacy/forgotaccount/student/searchforstudentusername")
-public class SearchForStudentUserNameController {
+public class SearchForStudentUsernameController {
 
   @Autowired
   protected UserService userService;
 
   @Autowired
-  protected SearchForStudentUserNameValidator searchForStudentUserNameValidator;
+  protected SearchForStudentUsernameValidator searchForStudentUsernameValidator;
 
   protected String formView = "/forgotaccount/student/searchforstudentusername";
   protected String successView = "/forgotaccount/student/searchforstudentusernameresult";
@@ -83,7 +83,7 @@ public class SearchForStudentUserNameController {
     String[] values = null;
     String classVar = "";
 
-    searchForStudentUserNameValidator.validate(params, bindingResult);
+    searchForStudentUsernameValidator.validate(params, bindingResult);
     if (bindingResult.hasErrors()) {
       return formView;
     }

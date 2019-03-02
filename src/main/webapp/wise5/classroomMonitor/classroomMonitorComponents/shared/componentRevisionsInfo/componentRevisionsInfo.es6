@@ -24,8 +24,8 @@ class ComponentRevisionsInfoController {
             }
 
             // get the workgroup user names
-            let userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(this.toWorkgroupId);
-            this.usernames = userNamesArray.map( (obj) => {
+            let usernamesArray = this.ConfigService.getUserNamesByWorkgroupId(this.toWorkgroupId);
+            this.usernames = usernamesArray.map( (obj) => {
                 return obj.name;
             }).join(', ');
         };
