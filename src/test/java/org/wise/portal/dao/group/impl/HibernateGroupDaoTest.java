@@ -262,9 +262,9 @@ public class HibernateGroupDaoTest extends AbstractTransactionalDbTests {
         // confirm that the group that we retrieved is the group expected.
         Map<?, ?> actualGroupMembersMap = (Map<?, ?>) actualGroupMembersList
                 .get(0);
-        String actualUserName = (String) actualGroupMembersMap
+        String actualUsername = (String) actualGroupMembersMap
                 .get(PersistentUserDetails.COLUMN_NAME_USERNAME.toUpperCase());
-        assertEquals(actualUserName, user1.getUserDetails().getUsername());
+        assertEquals(actualUsername, user1.getUserDetails().getUsername());
     }
 
     /**

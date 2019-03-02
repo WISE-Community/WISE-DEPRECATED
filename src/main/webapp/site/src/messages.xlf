@@ -5346,6 +5346,17 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="b2916d36518d35a721ac095d4c10b3e42cc45b76" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/> is already in the team.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="85cc0a779b7da91dba954ffc0a2409811cfe8acd" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/> is already on another team.</source>
         <context-group purpose="location">
