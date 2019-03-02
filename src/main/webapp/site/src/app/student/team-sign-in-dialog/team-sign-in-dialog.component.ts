@@ -79,15 +79,20 @@ export class TeamSignInDialogComponent implements OnInit {
       if (response.isUsernameValid === true && response.isPasswordValid === true) {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
-          if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher) {
+          if (canBeAddedToWorkgroupResponse.isTeacher) {
+            alert(this.i18n('A teacher cannot be added as a team member.'));
+            teamMember.userName = null;
+          } else if (canBeAddedToWorkgroupResponse.status && this.allowSignIn(teamMember, 1)) {
             teamMember.id = response.userId;
             teamMember.userName = response.userName;
             teamMember.firstName = response.firstName;
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
-          } else if (canBeAddedToWorkgroupResponse.isTeacher) {
-            alert(this.i18n('A teacher cannot be added as a team member.'));
-            teamMember.userName = null;
+          } else if (!this.allowSignIn(teamMember, 1)) {
+            if (!this.isExistingStudent(teamMember)) {
+              teamMember.userName = null;
+            }
+            alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
           } else {
             alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
             teamMember.userName = null;
@@ -98,6 +103,9 @@ export class TeamSignInDialogComponent implements OnInit {
         alert(this.i18n('Invalid username or password. Please try again.'));
       } else {
         alert(this.i18n('Invalid password. Please try again.'))
+        if (!this.isExistingStudent(teamMember)) {
+          teamMember.userName = null;
+        }
       }
       teamMember.password = null;
     });
@@ -125,14 +133,16 @@ export class TeamSignInDialogComponent implements OnInit {
             if (response.status === 'success') {
               this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
                 .subscribe((canBeAddedToWorkgroupResponse) => {
-                  if (canBeAddedToWorkgroupResponse.status && !canBeAddedToWorkgroupResponse.isTeacher) {
+                  if (canBeAddedToWorkgroupResponse.isTeacher) {
+                    alert(this.i18n('A teacher cannot be added as a team member.'));
+                  } else if (canBeAddedToWorkgroupResponse.status && this.allowSignIn(response, 0)) {
                     teamMember.id = response.userId;
                     teamMember.userName = response.userName;
                     teamMember.firstName = response.firstName;
                     teamMember.lastName = response.lastName;
                     this.markAsSignedIn(teamMember);
-                  } else if (canBeAddedToWorkgroupResponse.isTeacher) {
-                    alert(this.i18n('A teacher cannot be added as a team member.'));
+                  } else if (!this.allowSignIn(response, 0)) {
+                    alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
                   } else {
                     alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
                   }
@@ -183,6 +193,17 @@ export class TeamSignInDialogComponent implements OnInit {
       }
     }
     return true;
+  }
+
+
+  allowSignIn(teamMember: any, numMembersExpected: number) {
+    if (teamMember.userName === this.user.userName) {
+      return false;
+    }
+    const membersWithSameUsername = this.teamMembers.filter(({ userName }) => {
+      return userName !== undefined && userName === teamMember.userName;
+    });
+    return membersWithSameUsername.length === numMembersExpected;
   }
 
   launchRun() {

@@ -27,8 +27,5 @@
         <module name="WISE" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="WISE" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
