@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
 import { TeacherService } from "../teacher.service";
@@ -21,6 +21,7 @@ export class TeacherHomeComponent implements OnInit {
   constructor(private userService: UserService,
               private teacherService: TeacherService,
               private configService: ConfigService,
+              private router: Router,
               private activatedRoute: ActivatedRoute) {
     teacherService.tabIndexSource$.subscribe((tabIndex) => {
       this.selectedTabIndex = tabIndex;
@@ -55,5 +56,14 @@ export class TeacherHomeComponent implements OnInit {
       return false;
     }
     MatTabGroup.prototype._handleClick.apply(this.tabs, arguments);
+  }
+
+  tabClicked(event) {
+    const tabIndex = event.index;
+    if (tabIndex === 0) {
+      this.router.navigate(['../schedule'], { relativeTo: this.activatedRoute });
+    } else if (tabIndex === 1) {
+      this.router.navigate(['../library'], { relativeTo: this.activatedRoute });
+    }
   }
 }

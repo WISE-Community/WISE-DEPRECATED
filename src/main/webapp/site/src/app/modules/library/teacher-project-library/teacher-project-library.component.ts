@@ -1,5 +1,5 @@
-import {Component, ViewEncapsulation, Inject, OnInit} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { MatDialog } from '@angular/material';
@@ -24,6 +24,7 @@ export class TeacherProjectLibraryComponent implements OnInit {
 
   constructor(private libraryService: LibraryService,
               public dialog: MatDialog,
+              private router: Router,
               private activatedRoute: ActivatedRoute) {
     libraryService.tabIndexSource$.subscribe((tabIndex) => {
       this.selectedTabIndex = tabIndex;
@@ -31,9 +32,10 @@ export class TeacherProjectLibraryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.snapshot.firstChild.data.subscribe(({ selectedTabIndex }) => {
+    if (this.activatedRoute.snapshot.firstChild !== null) {
+      const selectedTabIndex = this.activatedRoute.snapshot.firstChild.data.selectedTabIndex;
       this.libraryService.setTabIndex(selectedTabIndex);
-    });
+    }
   }
 
   updateNumberOfOfficialProjectsVisible(count) {
@@ -52,5 +54,16 @@ export class TeacherProjectLibraryComponent implements OnInit {
     this.dialog.open(OfficialLibraryDetailsComponent, {
       panelClass: 'mat-dialog--sm'
     });
+  }
+
+  tabClicked(event) {
+    const tabIndex = event.index;
+    if (tabIndex === 0) {
+      this.router.navigate(['tested'], { relativeTo: this.activatedRoute });
+    } else if (tabIndex === 1) {
+      this.router.navigate(['community'], { relativeTo: this.activatedRoute });
+    } else if (tabIndex === 2) {
+      this.router.navigate(['personal'], { relativeTo: this.activatedRoute });
+    }
   }
 }

@@ -62,6 +62,10 @@ $config: mat-typography-config();
       margin-bottom: 0;
     }
   }
+
+  .mat-icon {
+    vertical-align: bottom;
+  }
 }
 
 .library-project__title {

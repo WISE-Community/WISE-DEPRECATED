@@ -22,18 +22,22 @@
                 <span ng-if="!notebookGradingController.canViewStudentNames">{{workgroup.workgroupId}}</span>
                 <a ng-click="notebookGradingController.toggleDisplayNoteForWorkgroup(workgroup.workgroupId)" translate="NOTES"></a>
                 <a ng-click="notebookGradingController.toggleDisplayReportForWorkgroup(workgroup.workgroupId)" translate="REPORT"></a>
-                <notebook mode="grading"
+                <notebook-notes mode="classroomMonitor"
                           ng-if="notebookGradingController.showNoteForWorkgroup[workgroup.workgroupId]"
+                          notebook="notebookGradingController.getNotebookForWorkgroup(workgroup.workgroupId)"
+                          config="notebookGradingController.getNotebookConfigForWorkgroup(workgroup.workgroupId)"
+                          notesVisible="true"
                           workgroup-id="workgroup.workgroupId"
                           theme-path="notebookGradingController.themePath"
                           template-url="notebookGradingController.themePath + '/notebook/notebook.html'"
-                          filter="notebookGradingController.noteFilter"></notebook>
-                <notebook mode="grading"
+                          filter="note"></notebook-notes>
+                <notebook-report mode="classroomMonitor"
                           ng-if="notebookGradingController.showReportForWorkgroup[workgroup.workgroupId]"
+                          config="notebookGradingController.notebookConfig"
                           workgroup-id="workgroup.workgroupId"
                           theme-path="notebookGradingController.themePath"
                           template-url="notebookGradingController.themePath + '/notebook/notebook.html'"
-                          filter="notebookGradingController.reportFilter"></notebook>
+                          filter="report"></notebook-report>
             </div>
 
         </div>

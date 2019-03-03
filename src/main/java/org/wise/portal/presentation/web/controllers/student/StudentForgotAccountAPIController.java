@@ -24,7 +24,6 @@ public class StudentForgotAccountAPIController {
   @Autowired
   private Properties i18nProperties;
 
-  @ResponseBody
   @RequestMapping(value = "/username/search", method = RequestMethod.GET)
   protected String getStudentUsernames(@RequestParam("firstName") String firstName,
                                        @RequestParam("lastName") String lastName,
@@ -56,7 +55,6 @@ public class StudentForgotAccountAPIController {
     return usernamesJSON;
   }
 
-  @ResponseBody
   @RequestMapping(value = "/password/security-question", method = RequestMethod.GET)
   protected String getSecurityQuestion(@RequestParam("username") String username) throws JSONException {
     User user = userService.retrieveUserByUsername(username);
@@ -75,7 +73,6 @@ public class StudentForgotAccountAPIController {
     return response.toString();
   }
 
-  @ResponseBody
   @RequestMapping(value = "/password/security-question", method = RequestMethod.POST)
   protected String checkSecurityAnswer(@RequestParam("username") String username,
                                        @RequestParam("answer") String answer) throws JSONException {
@@ -96,7 +93,6 @@ public class StudentForgotAccountAPIController {
     return response.toString();
   }
 
-  @ResponseBody
   @RequestMapping(value = "/password/change", method = RequestMethod.POST)
   protected String checkSecurityAnswer(@RequestParam("username") String username,
                                        @RequestParam("answer") String answer,

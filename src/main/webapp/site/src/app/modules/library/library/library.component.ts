@@ -49,7 +49,7 @@ export abstract class LibraryComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.setPagination();
     if (scroll) {
-      const listEl = document.querySelector('.library__content');
+      const listEl = document.querySelector('.library');
       listEl.scrollIntoView();
     }
   }

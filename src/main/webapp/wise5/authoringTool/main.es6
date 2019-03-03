@@ -41,7 +41,6 @@ import '../components/match/matchAuthoringComponentModule';
 import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
 import NodeAuthoringController from './node/nodeAuthoringController';
 import NodeService from '../services/nodeService';
-import '../directives/notebook/notebook';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseAuthoringComponentModule';
@@ -93,7 +92,6 @@ const authoringModule = angular.module('authoring', [
     'ngMaterial',
     'ngSanitize',
     'ngWebSocket',
-    'notebook',
     'openResponseAuthoringComponentModule',
     'outsideURLAuthoringComponentModule',
     'pascalprecht.translate',
@@ -261,7 +259,7 @@ const authoringModule = angular.module('authoring', [
           })
           .state('root.project.notebook', {
             url: '/notebook',
-            templateUrl: 'wise5/authoringTool/notebook/notebook.html',
+            templateUrl: 'wise5/authoringTool/notebook/notebookAuthoring.html',
             controller: 'AuthorNotebookController',
             controllerAs: 'authorNotebookController',
             resolve: {}

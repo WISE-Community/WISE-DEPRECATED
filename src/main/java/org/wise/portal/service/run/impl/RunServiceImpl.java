@@ -681,4 +681,16 @@ public class RunServiceImpl implements RunService {
     run.setSurvey(survey);
     runDao.save(run);
   }
+
+  public boolean isAllowedToViewStudentWork(Run run, User user) {
+    return this.hasRunPermission(run, user, RunPermission.VIEW_STUDENT_WORK);
+  }
+
+  public boolean isAllowedToGradeStudentWork(Run run, User user) {
+    return this.hasRunPermission(run, user, RunPermission.GRADE_AND_MANAGE);
+  }
+
+  public boolean isAllowedToViewStudentNames(Run run, User user) {
+    return this.hasRunPermission(run, user, RunPermission.VIEW_STUDENT_NAMES);
+  }
 }

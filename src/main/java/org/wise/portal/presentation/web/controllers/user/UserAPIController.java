@@ -116,13 +116,11 @@ public class UserAPIController {
       }
       userJSON.put("language", language);
       userJSON.put("isGoogleUser", userDetails.isGoogleUser());
-      userJSON.put("isRecaptchaRequired", false);
 
       return userJSON.toString();
     } else {
       JSONObject userJSON = new JSONObject();
       userJSON.put("userName", username);
-      userJSON.put("isRecaptchaRequired", ControllerUtil.isReCaptchaRequired(request));
       return userJSON.toString();
     }
   }
@@ -151,7 +149,6 @@ public class UserAPIController {
     return response.toString();
   }
 
-  @ResponseBody
   @RequestMapping(value = "/password", method = RequestMethod.POST)
   protected SimpleResponse changePassword(@RequestParam("username") String username,
       @RequestParam("oldPassword") String oldPassword,
@@ -169,7 +166,6 @@ public class UserAPIController {
     }
   }
 
-  @ResponseBody
   @RequestMapping(value = "/languages", method = RequestMethod.GET)
   protected String getSupportedLanguages() throws JSONException {
     String supportedLocales = wiseProperties.getProperty("supportedLocales");
