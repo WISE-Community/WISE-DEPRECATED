@@ -90,7 +90,7 @@ const MilestoneDetails = {
             <p><span class="heavy accent-2">{{ 'REQUIREMENTS' | translate }}: </span> {{ $ctrl.requirements }}</p>
         </div>
         <div ng-if="$ctrl.milestone.isReportAvailable" class="milestone-details md-whiteframe-1dp" layout-padding>
-        {{ $ctrl.milestone.generatedReport }}
+        <compile data="$ctrl.milestone.generatedReport"></compile>
         </div>
         <md-list class="user-list">
             <md-list-item class="thead md-whiteframe-1dp md-with-secondary">

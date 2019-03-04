@@ -40,6 +40,10 @@ var _listenForDeleteKeypress = require('./listenForDeleteKeypress/listenForDelet
 
 var _listenForDeleteKeypress2 = _interopRequireDefault(_listenForDeleteKeypress);
 
+var _milestoneReportGraph = require('./milestoneReportGraph/milestoneReportGraph');
+
+var _milestoneReportGraph2 = _interopRequireDefault(_milestoneReportGraph);
+
 var _possibleScore = require('./possibleScore/possibleScore');
 
 var _possibleScore2 = _interopRequireDefault(_possibleScore);
@@ -54,7 +58,7 @@ var _sticky2 = _interopRequireDefault(_sticky);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Components = angular.module('components', [/*'notebook'*/]);
+var Components = angular.module('components', []);
 
 Components.component('annotation', _annotation2.default);
 Components.component('compile', _compile2.default);
@@ -65,6 +69,7 @@ Components.component('draggable', _draggable2.default);
 Components.component('globalAnnotations', _globalAnnotations2.default);
 Components.component('globalAnnotationsList', _globalAnnotationsList2.default);
 Components.component('listenForDeleteKeypress', _listenForDeleteKeypress2.default);
+Components.component('milestoneReportGraph', _milestoneReportGraph2.default);
 Components.component('possibleScore', _possibleScore2.default);
 Components.component('wiselink', _wiselink2.default);
 Components.directive('sticky', _sticky2.default);
