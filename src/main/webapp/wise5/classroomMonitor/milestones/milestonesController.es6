@@ -359,7 +359,7 @@ class MilestonesController {
       projectAchievement.percentageCompleted =
         parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
       if (projectAchievement.type === 'milestoneReport') {
-        if (this.completionReached(projectAchievement)) {
+        if (this.isCompletionReached(projectAchievement)) {
           const report = this.generateReport(projectAchievement);
           if (report != null) {
             projectAchievement.generatedReport = this.generateReport(projectAchievement);
@@ -372,8 +372,9 @@ class MilestonesController {
       }
     }
 
-    completionReached(projectAchievement) {
-      return projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage;
+    isCompletionReached(projectAchievement) {
+      return projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage &&
+          projectAchievement.numberOfStudentsCompleted >= projectAchievement.satisfyMinNumWorkgroups;
     }
 
     setReportAvailable(projectAchievement, reportAvailable) {
