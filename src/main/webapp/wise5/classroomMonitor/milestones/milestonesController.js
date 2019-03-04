@@ -703,6 +703,37 @@ var MilestonesController = function () {
 
             return {};
         }
+    }, {
+        key: 'generateName',
+        value: function generateName(scoreName) {
+            if (scoreName === 'ki') {
+                return 'name="KI Score"';
+            } else if (scoreName === 'science') {
+                return 'name="Science Score"';
+            } else if (scoreName === 'engineering') {
+                return 'name="Engineering Score"';
+            }
+        }
+    }, {
+        key: 'generateCategories',
+        value: function generateCategories(scoreName) {
+            if (scoreName === 'ki') {
+                return 'categories="[\'1\', \'2\', \'3\', \'4\', \'5\']"';
+            } else {
+                return 'categories="[\'1\', \'2\', \'3\']"';
+            }
+        }
+    }, {
+        key: 'generateData',
+        value: function generateData(scoreName) {
+            if (scoreName === 'ki') {
+                return 'name="KI Score"';
+            } else if (scoreName === 'science') {
+                return 'name="Science Score"';
+            } else if (scoreName === 'engineering') {
+                return 'name="Engineering Score"';
+            }
+        }
 
         /**
          * Open a dialog with the milestone details (list with workgroups statuses
