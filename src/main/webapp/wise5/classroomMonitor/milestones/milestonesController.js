@@ -530,18 +530,27 @@ var MilestonesController = function () {
             projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
             projectAchievement.percentageCompleted = parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
             if (projectAchievement.type === 'milestoneReport') {
-                this.setReportAvailable(projectAchievement);
-                if (projectAchievement.isReportAvailable) {
-                    projectAchievement.generatedReport = this.generateReport(projectAchievement);
-                } else {
-                    delete projectAchievement.generatedReport;
+                if (this.completionReached(projectAchievement)) {
+                    var report = this.generateReport(projectAchievement);
+                    if (report != null) {
+                        projectAchievement.generatedReport = this.generateReport(projectAchievement);
+                        this.setReportAvailable(projectAchievement, true);
+                    } else {
+                        delete projectAchievement.generatedReport;
+                        this.setReportAvailable(projectAchievement, false);
+                    }
                 }
             }
         }
     }, {
+        key: 'completionReached',
+        value: function completionReached(projectAchievement) {
+            return projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage;
+        }
+    }, {
         key: 'setReportAvailable',
-        value: function setReportAvailable(projectAchievement) {
-            projectAchievement.isReportAvailable = projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage;
+        value: function setReportAvailable(projectAchievement, reportAvailable) {
+            projectAchievement.isReportAvailable = reportAvailable;
         }
     }, {
         key: 'generateReport',
@@ -612,7 +621,7 @@ var MilestonesController = function () {
             }
 
             return {
-                content: 'no template matched!'
+                content: null
             };
         }
     }, {

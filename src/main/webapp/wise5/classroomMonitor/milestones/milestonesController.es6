@@ -359,18 +359,25 @@ class MilestonesController {
       projectAchievement.percentageCompleted =
         parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
       if (projectAchievement.type === 'milestoneReport') {
-        this.setReportAvailable(projectAchievement);
-        if (projectAchievement.isReportAvailable) {
-          projectAchievement.generatedReport = this.generateReport(projectAchievement);
-        } else {
-          delete projectAchievement.generatedReport;
+        if (this.completionReached(projectAchievement)) {
+          const report = this.generateReport(projectAchievement);
+          if (report != null) {
+            projectAchievement.generatedReport = this.generateReport(projectAchievement);
+            this.setReportAvailable(projectAchievement, true);
+          } else {
+            delete projectAchievement.generatedReport;
+            this.setReportAvailable(projectAchievement, false);
+          }
         }
       }
     }
 
-    setReportAvailable(projectAchievement) {
-      projectAchievement.isReportAvailable =
-          projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage;
+    completionReached(projectAchievement) {
+      return projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage;
+    }
+
+    setReportAvailable(projectAchievement, reportAvailable) {
+      projectAchievement.isReportAvailable = reportAvailable;
     }
 
     generateReport(projectAchievement) {
@@ -379,9 +386,7 @@ class MilestonesController {
       for (let reportVariable of reportVariables) {
         const varValue = reportVariable.value;
         if (varValue === 'annotation.score') {
-
         } else if (varValue === 'annotation.autoScore') {
-
         } else if (varValue === 'annotation.autoScore.ki' && reportVariable.function === 'average') {
           reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(
               reportVariable.nodeId, reportVariable.componentId, this.periodId, 'ki');
@@ -403,7 +408,7 @@ class MilestonesController {
         }
       }
       return {
-        content: 'no template matched!'
+        content: null
       };
     }
 
