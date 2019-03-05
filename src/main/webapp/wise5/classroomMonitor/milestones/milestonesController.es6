@@ -384,6 +384,12 @@ class MilestonesController {
     generateReport(projectAchievement) {
       const reportVariables = projectAchievement.report.variables;
       const reportVariableValues = {};
+      const aggregateAutoScores = {};
+      for (let satisfyCriterion of projectAchievement.satisfyCriteria) {
+        aggregateAutoScores[satisfyCriterion.componentId] = this.calculateAggregateAutoScores(satisfyCriterion.nodeId,
+            satisfyCriterion.componentId, this.periodId);
+      }
+
       for (let reportVariable of reportVariables) {
         const varValue = reportVariable.value;
         if (varValue === 'annotation.score') {
@@ -399,7 +405,97 @@ class MilestonesController {
         }
       }
       const template = this.chooseTemplate(projectAchievement.report.templates, reportVariableValues);
-      return template.content;
+      let templateContent = template.content;
+      if (templateContent != null) {
+        for (let componentId of Object.keys(aggregateAutoScores)) {
+          const componentAggregate = aggregateAutoScores[componentId];
+          for (let subScoreId of Object.keys(componentAggregate)) {
+            const regex = new RegExp(`milestone-report-graph.*id="(${subScoreId})"`, 'g');
+            const milestoneData = this.calculateMilestoneData(componentAggregate[subScoreId], subScoreId);
+            const milestoneCategories = this.calculateMilestoneCategories(subScoreId);
+            templateContent = templateContent.replace(regex,
+                `$& categories=\"${JSON.stringify(milestoneCategories).replace(/\"/g, '\'')}\" data=\"${JSON.stringify(milestoneData).replace(/\"/g, '\'')}\"`);
+          }
+        }
+        //categories=\"['1','2','3','4','5']\" data=\"[{y:30,color:'red'},{y:20,color:'orange'},{y:10,color:'yellow'},{y:25,color:'darkseagreen'},{y:15,color:'green'}]\"
+      }
+      console.log(templateContent);
+      return templateContent;
+    }
+
+    calculateMilestoneCategories(subScoreId) {
+      if (subScoreId === 'ki') {
+        return ['0','1','2','3','4','5'];
+      } else {
+        return ['0','1','2','3'];
+      }
+    }
+
+    calculateMilestoneData(subScoreAggregate, subScoreId) {
+      const colors5Scores = ['black', 'red', 'orange', 'yellow', 'darkseagreen', 'green'];
+      const colors3Scores = ['black', 'red', 'yellow', 'green'];
+      const scoreKeys = Object.keys(subScoreAggregate.counts);
+      const scoreKeysSorted = scoreKeys.sort((a, b) => { return parseInt(a) - parseInt(b);});
+      const data = [];
+      for (let scoreKey of scoreKeysSorted) {
+        const scoreKeyCount = subScoreAggregate.counts[scoreKey];
+        const scoreKeyPercentage = Math.floor(100 * scoreKeyCount / subScoreAggregate.scoreCount);
+        const scoreKeyColor = subScoreId === 'ki' ? colors5Scores[scoreKey] : colors3Scores[scoreKey];
+        const scoreData = {'y': scoreKeyPercentage, 'color': scoreKeyColor };
+        data.push(scoreData);
+      }
+      return data;
+    }
+
+    calculateAggregateAutoScores(nodeId, componentId, periodId) {
+      const aggregate = {};
+      const scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(nodeId, componentId, periodId);
+      for (let scoreAnnotation of scoreAnnotations) {
+        if (scoreAnnotation.type === 'autoScore') {
+          this.addDataToAggregate(aggregate, scoreAnnotation);
+        }
+      }
+      return aggregate;
+    }
+
+    addDataToAggregate(aggregate, annotation) {
+      for (let subScore of annotation.data.scores) {
+        if (aggregate[subScore.id] == null) {
+          if (subScore.id === 'ki') {
+            aggregate[subScore.id] = {
+              scoreSum: 0,
+              scoreCount: 0,
+              counts: {
+                0: 0,
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0,
+                5: 0
+              },
+              average: 0
+            };
+          } else {
+            aggregate[subScore.id] = {
+              scoreSum: 0,
+              scoreCount: 0,
+              counts: {
+                0: 0,
+                1: 0,
+                2: 0,
+                3: 0
+              },
+              average: 0
+            };
+          }
+        }
+        const subScoreVal = subScore.score;
+        aggregate[subScore.id].counts[subScoreVal]++;
+        aggregate[subScore.id].scoreSum += subScoreVal;
+        aggregate[subScore.id].scoreCount++;
+        aggregate[subScore.id].average = aggregate[subScore.id].scoreSum / aggregate[subScore.id].scoreCount;
+      }
+      return aggregate;
     }
 
     chooseTemplate(templates, reportVariableValues) {

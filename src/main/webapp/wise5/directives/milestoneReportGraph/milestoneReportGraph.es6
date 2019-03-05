@@ -23,7 +23,7 @@ class MilestoneReportGraphController {
                 legend: { symbolHeight: '0px' }
             },
             xAxis: {
-                categories: ['1', '2', '3', '4', '5']
+                categories: this.categories
             },
             yAxis: {
                 title: {
@@ -35,18 +35,14 @@ class MilestoneReportGraphController {
             },
             series: [
                 {
-                    name: 'KI Score',
-                    data: [
-                        { y: 10, color: 'red'},
-                        { y: 20, color: 'orange'},
-                        { y: 30, color: 'yellow'},
-                        { y: 25, color: 'DarkSeaGreen'},
-                        { y: 15, color: 'green'}
-                    ]
+                    name: this.name,
+                    data: this.data
                 }
             ]
         };
-        console.log(this.graph1);
+        console.log(this.name);
+        console.log(this.categories);
+        console.log(this.data);
     }
 }
 
