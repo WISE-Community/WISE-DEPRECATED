@@ -2,6 +2,9 @@
 
 class MilestoneReportGraphController {
     constructor() {
+        if (this.name == null) {
+            this.name = this.id;
+        }
         this.config = {
             options: {
                 chart: {
@@ -10,7 +13,7 @@ class MilestoneReportGraphController {
                     height: 200
                 },
                 title: {
-                    text: ''
+                    text: this.name
                 },
                 plotOptions: {
                     series: {
@@ -35,7 +38,7 @@ class MilestoneReportGraphController {
             },
             series: [
                 {
-                    name: this.name,
+                    showInLegend: false,
                     data: this.data
                 }
             ]
@@ -50,6 +53,7 @@ MilestoneReportGraphController.$inject = [];
 
 const MilestoneReportGraph = {
     bindings: {
+        id: '@',
         name: '@',
         categories: '<',
         data: '<'

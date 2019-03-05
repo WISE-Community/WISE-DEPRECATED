@@ -636,7 +636,9 @@ var MilestonesController = function () {
                 var regex = new RegExp('milestone-report-graph.*id="(' + subScoreId + ')"', 'g');
                 var milestoneData = this.calculateMilestoneData(componentAggregate[subScoreId], subScoreId);
                 var milestoneCategories = this.calculateMilestoneCategories(subScoreId);
-                templateContent = templateContent.replace(regex, '$& categories="' + JSON.stringify(milestoneCategories).replace(/\"/g, '\'') + '" data="' + JSON.stringify(milestoneData).replace(/\"/g, '\'') + '"');
+                var categories = JSON.stringify(milestoneCategories).replace(/\"/g, '\'');
+                var data = JSON.stringify(milestoneData).replace(/\"/g, '\'');
+                templateContent = templateContent.replace(regex, '$& categories="' + categories + '" data="' + data + '"');
               }
             } catch (err) {
               _didIteratorError11 = true;
@@ -653,7 +655,6 @@ var MilestonesController = function () {
               }
             }
           }
-          //categories=\"['1','2','3','4','5']\" data=\"[{y:30,color:'red'},{y:20,color:'orange'},{y:10,color:'yellow'},{y:25,color:'darkseagreen'},{y:15,color:'green'}]\"
         } catch (err) {
           _didIteratorError10 = true;
           _iteratorError10 = err;

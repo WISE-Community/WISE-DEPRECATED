@@ -174,24 +174,24 @@ var AchievementService = function () {
         if (this.studentAchievementsByWorkgroupId[achievementWorkgroupId] == null) {
           this.studentAchievementsByWorkgroupId[achievementWorkgroupId] = new Array();
         }
-        var studentAchievements = this.studentAchievementsByWorkgroupId[achievementWorkgroupId];
+        var achievements = this.studentAchievementsByWorkgroupId[achievementWorkgroupId];
         var found = false;
-        for (var studentAchievementIndex = 0; studentAchievementIndex < studentAchievements.length; studentAchievementIndex++) {
-          var _studentAchievement = studentAchievements[studentAchievementIndex];
+        for (var achievementIndex = 0; achievementIndex < achievements.length; achievementIndex++) {
+          var achievement = achievements[achievementIndex];
 
-          if (_studentAchievement.achievementId != null && _studentAchievement.achievementId === _studentAchievement.achievementId && _studentAchievement.workgroupId != null && _studentAchievement.workgroupId === _studentAchievement.workgroupId) {
+          if (achievement.achievementId != null && achievement.achievementId === studentAchievement.achievementId && achievement.workgroupId != null && achievement.workgroupId === studentAchievement.workgroupId) {
             /*
              * the achievement 10 character alphanumeric id matches and
              * the workgroup id matches so we will update it
              */
-            studentAchievements[studentAchievementIndex] = _studentAchievement;
+            achievements[achievementIndex] = studentAchievement;
             found = true; // remember this so we don't insert later.
             break;
           }
         }
         if (!found) {
           // we did not find the achievement so we will add it to the array
-          studentAchievements.push(studentAchievement);
+          achievements.push(studentAchievement);
         }
       }
     }
@@ -437,7 +437,7 @@ var AchievementService = function () {
     value: function isProjectAchievementSatisfied(projectAchievement) {
       var completed = false;
       if (projectAchievement != null) {
-        if (projectAchievement.type === 'milestone' || projectAchievement.type === 'completion') {
+        if (projectAchievement.type === 'milestone' || projectAchievement.type === 'milestoneReport' || projectAchievement.type === 'completion') {
           completed = this.isAchievementCompletedByStudent(projectAchievement);
         } else if (projectAchievement.type === 'aggregate') {
           completed = this.checkAggregateAchievement(projectAchievement);

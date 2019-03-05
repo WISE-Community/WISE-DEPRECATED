@@ -9,6 +9,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var MilestoneReportGraphController = function MilestoneReportGraphController() {
     _classCallCheck(this, MilestoneReportGraphController);
 
+    if (this.name == null) {
+        this.name = this.id;
+    }
     this.config = {
         options: {
             chart: {
@@ -17,7 +20,7 @@ var MilestoneReportGraphController = function MilestoneReportGraphController() {
                 height: 200
             },
             title: {
-                text: ''
+                text: this.name
             },
             plotOptions: {
                 series: {
@@ -41,7 +44,7 @@ var MilestoneReportGraphController = function MilestoneReportGraphController() {
             }
         },
         series: [{
-            name: this.name,
+            showInLegend: false,
             data: this.data
         }]
     };
@@ -54,6 +57,7 @@ MilestoneReportGraphController.$inject = [];
 
 var MilestoneReportGraph = {
     bindings: {
+        id: '@',
         name: '@',
         categories: '<',
         data: '<'

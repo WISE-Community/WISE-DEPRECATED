@@ -116,27 +116,27 @@ class AchievementService {
       if (this.studentAchievementsByWorkgroupId[achievementWorkgroupId] == null) {
         this.studentAchievementsByWorkgroupId[achievementWorkgroupId] = new Array();
       }
-      const studentAchievements = this.studentAchievementsByWorkgroupId[achievementWorkgroupId];
+      const achievements = this.studentAchievementsByWorkgroupId[achievementWorkgroupId];
       let found = false;
-      for (let studentAchievementIndex = 0; studentAchievementIndex < studentAchievements.length; studentAchievementIndex++) {
-        let studentAchievement = studentAchievements[studentAchievementIndex];
+      for (let achievementIndex = 0; achievementIndex < achievements.length; achievementIndex++) {
+        let achievement = achievements[achievementIndex];
 
-        if (studentAchievement.achievementId != null &&
-            studentAchievement.achievementId === studentAchievement.achievementId &&
-            studentAchievement.workgroupId != null &&
-            studentAchievement.workgroupId === studentAchievement.workgroupId) {
+        if (achievement.achievementId != null &&
+            achievement.achievementId === studentAchievement.achievementId &&
+            achievement.workgroupId != null &&
+            achievement.workgroupId === studentAchievement.workgroupId) {
           /*
            * the achievement 10 character alphanumeric id matches and
            * the workgroup id matches so we will update it
            */
-          studentAchievements[studentAchievementIndex] = studentAchievement;
+          achievements[achievementIndex] = studentAchievement;
           found = true;  // remember this so we don't insert later.
           break;
         }
       }
       if (!found) {
         // we did not find the achievement so we will add it to the array
-        studentAchievements.push(studentAchievement);
+        achievements.push(studentAchievement);
       }
     }
   }
@@ -313,7 +313,9 @@ class AchievementService {
   isProjectAchievementSatisfied(projectAchievement) {
     let completed = false;
     if (projectAchievement != null) {
-      if (projectAchievement.type === 'milestone' || projectAchievement.type === 'completion') {
+      if (projectAchievement.type === 'milestone' ||
+          projectAchievement.type === 'milestoneReport' ||
+          projectAchievement.type === 'completion') {
         completed = this.isAchievementCompletedByStudent(projectAchievement);
       } else if (projectAchievement.type === 'aggregate') {
         completed = this.checkAggregateAchievement(projectAchievement);

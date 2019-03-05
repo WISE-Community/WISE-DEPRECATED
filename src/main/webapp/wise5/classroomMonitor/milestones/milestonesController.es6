@@ -413,11 +413,12 @@ class MilestonesController {
             const regex = new RegExp(`milestone-report-graph.*id="(${subScoreId})"`, 'g');
             const milestoneData = this.calculateMilestoneData(componentAggregate[subScoreId], subScoreId);
             const milestoneCategories = this.calculateMilestoneCategories(subScoreId);
+            const categories = JSON.stringify(milestoneCategories).replace(/\"/g, '\'');
+            const data = JSON.stringify(milestoneData).replace(/\"/g, '\'');
             templateContent = templateContent.replace(regex,
-                `$& categories=\"${JSON.stringify(milestoneCategories).replace(/\"/g, '\'')}\" data=\"${JSON.stringify(milestoneData).replace(/\"/g, '\'')}\"`);
+                `$& categories=\"${categories}\" data=\"${data}\"`);
           }
         }
-        //categories=\"['1','2','3','4','5']\" data=\"[{y:30,color:'red'},{y:20,color:'orange'},{y:10,color:'yellow'},{y:25,color:'darkseagreen'},{y:15,color:'green'}]\"
       }
       console.log(templateContent);
       return templateContent;
