@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DateFormatPipe } from 'ngx-moment';
-
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 
@@ -13,17 +12,23 @@ export class StudentRunListComponent implements OnInit {
 
   runs: StudentRun[] = [];
   filteredRuns: StudentRun[] = [];
-  filteredActiveTotal: number = 0;
-  filteredCompletedTotal: number = 0;
-  filteredScheduledTotal: number = 0;
   search: string = '';
   loaded: boolean = false;
+  showAll: boolean = false;
 
   constructor(private studentService: StudentService) {
     studentService.newRunSource$.subscribe(run => {
       run.isHighlighted = true;
-      this.runs.unshift(run);
-      scrollTo(0, 0);
+      this.runs.unshift(new StudentRun(run));
+      if (!this.showAll) {
+        let index = this.getRunIndex(run);
+        if (index > 9) {
+          this.showAll = true;
+        }
+      }
+      setTimeout(() => {
+        document.getElementById(`run${run.id}`).scrollIntoView({behavior: "smooth"})
+      }, 1500);
     });
   }
 
@@ -34,15 +39,34 @@ export class StudentRunListComponent implements OnInit {
   getRuns() {
     this.studentService.getRuns()
       .subscribe(runs => {
-        this.runs = runs;
+        for (let run of runs) {
+          this.runs.push(new StudentRun(run));
+        }
         this.filteredRuns = runs;
         this.searchUpdated(this.search);
         this.loaded = true;
       });
   }
 
-  runIsActive(run: StudentRun) {
-    return run.isActive();
+  sortByStartTimeDesc(a, b) {
+    let aStartDate = new Date(a.startTime);
+    let bStartDate = new Date(b.startTime);
+    if (aStartDate < bStartDate) {
+      return 1;
+    } else if (aStartDate > bStartDate) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
+  getRunIndex(run: StudentRun) {
+    for (let i = 0; i < this.runs.length; i++) {
+      if (this.runs[i].id === run.id) {
+        return i;
+      }
+    }
+    return null;
   }
 
   runSpansYears(run: StudentRun) {
@@ -52,32 +76,56 @@ export class StudentRunListComponent implements OnInit {
   }
 
   runSpansMonths(run: StudentRun) {
+    if (this.runSpansYears(run)) {
+      return true;
+    }
     const startMonth = (new DateFormatPipe()).transform(run.startTime, 'M');
     const endMonth = (new DateFormatPipe()).transform(run.endTime, 'M');
     return startMonth != endMonth;
   }
 
   runSpansDays(run: StudentRun) {
+    if (this.runSpansMonths(run)) {
+      return true;
+    }
     const startDay = (new DateFormatPipe()).transform(run.startTime, 'D');
     const endDay = (new DateFormatPipe()).transform(run.endTime, 'D');
     return startDay != endDay;
   }
 
+  activeTotal(): number {
+    let total = 0;
+    for (let run of this.filteredRuns) {
+      if (run.isActive()) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  completedTotal(): number {
+    let total = 0;
+    for (let run of this.filteredRuns) {
+      if (run.isCompleted()) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  scheduledTotal(): number {
+    let total = 0;
+    for (let run of this.filteredRuns) {
+      if (run.isScheduled()) {
+        total++;
+      }
+    }
+    return total;
+  }
+
   searchUpdated(value: string) {
     this.search = value;
     this.filteredRuns = this.search ? this.performFilter(this.search) : this.runs;
-    this.filteredActiveTotal = 0;
-    this.filteredCompletedTotal = 0;
-    this.filteredScheduledTotal = 0;
-    for (let run of this.filteredRuns) {
-      if (run.endTime) {
-        this.filteredCompletedTotal++;
-      } else if (this.runIsActive(run)) {
-        this.filteredActiveTotal++;
-      } else {
-        this.filteredScheduledTotal++;
-      }
-    }
   }
 
   performFilter(filterValue: string) {

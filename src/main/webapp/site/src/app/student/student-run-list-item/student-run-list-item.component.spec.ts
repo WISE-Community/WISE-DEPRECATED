@@ -71,13 +71,13 @@ describe('StudentRunListItemComponent', () => {
     }
   });
 
-  it('should say a run is available', () => {
-    expect(component.isAvailable).toBeTruthy();
+  it('should say a run is active', () => {
+    expect(component.run.isActive()).toBeTruthy();
   });
 
-  it('should say a run is not available yet', () => {
+  it('should say a run is not active yet', () => {
     component.run.startTime = '2100-10-17 00:00:00.0';
     component.ngOnInit();
-    expect(component.isAvailable).toBeFalsy();
+    expect(component.run.isScheduled()).toBeTruthy();
   });
 });
