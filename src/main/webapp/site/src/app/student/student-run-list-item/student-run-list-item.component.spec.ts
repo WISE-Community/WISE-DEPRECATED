@@ -25,6 +25,9 @@ export class MockConfigService {
   getContextPath(): string {
     return '/wise';
   }
+  getCurrentServerTime(): number {
+    return Date.now();
+  }
 }
 
 describe('StudentRunListItemComponent', () => {

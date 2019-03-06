@@ -3,7 +3,7 @@ import { StudentRun } from '../student-run';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser';
 import { ConfigService } from "../../services/config.service";
-import { MatDialog } from "../../../../../../../../node_modules/@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
 import { TeamSignInDialogComponent } from "../team-sign-in-dialog/team-sign-in-dialog.component";
 
 @Component({
@@ -38,7 +38,7 @@ export class StudentRunListItemComponent implements OnInit {
     this.problemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
     this.configService.getConfig().subscribe(config => {
       if (config != null) {
-        if (new Date(this.run.startTime) > new Date(config.currentTime)) {
+        if (new Date(this.run.startTime) > new Date(this.configService.getCurrentServerTime())) {
           this.isAvailable = false;
         }
       }
