@@ -47,23 +47,23 @@
       <span fxFlex="1 1 auto" fxShow fxHide.xs></span>
       <a mat-button *ngIf="run.isActive()"
          href="{{ problemLink }}"
+         class="secondary-text"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
         <ng-container i18n>Report Problem</ng-container>
       </a>
       <button mat-flat-button
-             *ngIf="!run.isCompleted()"
+             *ngIf="run.isActive()"
              (click)="launchRun()"
              color="primary"
-             [disabled]="run.isScheduled()"
              fxFlex="0 0 auto"
              fxFlex.xs="100">
         <mat-icon>play_circle_filled</mat-icon>&nbsp;<ng-container i18n>Launch</ng-container>
       </button>
-      <button mat-button
+      <button mat-flat-button
              *ngIf="run.isCompleted()"
              (click)="launchRun()"
-             class="secondary-text"
+             color="secondary-text"
              fxFlex="0 0 auto"
              fxFlex.xs="100">
         <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Review</ng-container>

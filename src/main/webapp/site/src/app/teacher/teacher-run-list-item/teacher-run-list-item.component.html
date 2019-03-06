@@ -55,19 +55,18 @@
       <span *ngIf="run.lastRun"
             class="mat-caption secondary-text center"
             i18n>Last student login: {{ run.lastRun | amCalendar }}</span>
-      <a *ngIf="!run.isCompleted()"
+      <a *ngIf="run.isActive()"
          mat-flat-button
          href="{{ gradeAndManageLink }}"
          color="primary"
-         [disabled]="run.isScheduled()"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
         <mat-icon>build</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>
       </a>
       <a *ngIf="run.isCompleted()"
-         mat-button
+         mat-flat-button
          href="{{ gradeAndManageLink }}"
-         class="secondary-text"
+         color="secondary-text"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
         <mat-icon>build</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>
