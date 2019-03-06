@@ -66,6 +66,8 @@ public class RunParameters implements Serializable {
 
   private Date startTime = Calendar.getInstance().getTime();
 
+  private Date endTime = null;
+
   public String printAllPeriods() {
     String allPeriods = null;
 

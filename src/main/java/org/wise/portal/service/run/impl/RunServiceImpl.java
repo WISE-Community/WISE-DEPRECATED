@@ -171,7 +171,7 @@ public class RunServiceImpl implements RunService {
   public Run createRun(RunParameters runParameters) {
     Project project = runParameters.getProject();
     Run run = new RunImpl();
-    run.setEndtime(null);
+    run.setEndtime(runParameters.getEndTime());
     run.setStarttime(runParameters.getStartTime());
     run.setRuncode(generateUniqueRunCode(runParameters.getLocale()));
     run.setOwner(runParameters.getOwner());
@@ -215,17 +215,17 @@ public class RunServiceImpl implements RunService {
   }
 
   public Run createRun(Integer projectId, User user, Set<String> periodNames,
-        Integer maxStudentsPerTeam, Long startDate, Locale locale) throws Exception {
+        Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) throws Exception {
     Project project = projectService.copyProject(projectId, user);
     RunParameters runParameters = createRunParameters(project, user, periodNames,
-        maxStudentsPerTeam, startDate, locale);
+        maxStudentsPerTeam, startDate, endDate, locale);
     Run run = createRun(runParameters);
     createTeacherWorkgroup(run, user);
     return run;
   }
 
   public RunParameters createRunParameters(Project project, User user, Set<String> periodNames,
-        Integer maxStudentsPerTeam, Long startDate, Locale locale) {
+        Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) {
     RunParameters runParameters = new RunParameters();
     runParameters.setOwner(user);
     runParameters.setName(project.getName());
@@ -235,6 +235,11 @@ public class RunServiceImpl implements RunService {
     runParameters.setPeriodNames(periodNames);
     runParameters.setMaxWorkgroupSize(maxStudentsPerTeam);
     runParameters.setStartTime(new Date(startDate));
+    if (endDate == null || endDate <= startDate) {
+      runParameters.setEndTime(null);
+    } else {
+      runParameters.setEndTime(new Date(endDate));
+    }
     return runParameters;
   }
 

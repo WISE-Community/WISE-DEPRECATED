@@ -65,13 +65,14 @@ export class TeacherService {
       });
   }
 
-  createRun(projectId: number, periods: string, maxStudentsPerTeam: number, startDate: number): Observable<Run> {
+  createRun(projectId: number, periods: string, maxStudentsPerTeam: number, startDate: number, endDate: number): Observable<Run> {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('projectId', projectId + "");
     body = body.set('periods', periods);
     body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + "");
     body = body.set('startDate', startDate + "");
+    body = body.set('endDate', endDate + "");
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
   }
 

@@ -35,9 +35,10 @@
   </mat-radio-group>
   <mat-divider></mat-divider>
   <h3>
-    <ng-container i18n>Schedule</ng-container>&nbsp;<span *ngIf="run.lastRun"
-                                                     class="mat-caption"
-                                                     i18n>(Last student login: {{ run.lastRun | amCalendar }})</span>
+    <ng-container i18n>Schedule</ng-container>&nbsp;
+    <span *ngIf="run.lastRun"
+          class="mat-caption"
+          i18n>(Last student login: {{ run.lastRun | amCalendar }})</span>
   </h3>
   <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap.gt-xs="16px">
     <div>

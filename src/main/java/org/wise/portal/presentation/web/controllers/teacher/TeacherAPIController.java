@@ -297,12 +297,17 @@ public class TeacherAPIController {
                              @RequestParam("projectId") String projectId,
                              @RequestParam("periods") String periods,
                              @RequestParam("maxStudentsPerTeam") String maxStudentsPerTeam,
-                             @RequestParam("startDate") String startDate) throws Exception {
+                             @RequestParam("startDate") String startDate,
+                             @RequestParam("endDate") String endDate) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Locale locale = request.getLocale();
     Set<String> periodNames = createPeriodNamesSet(periods);
+    Long endDateValue = null;
+    if (!endDate.isEmpty()) {
+      endDateValue = Long.parseLong(endDate);
+    }
     Run run = runService.createRun(Integer.parseInt(projectId), user, periodNames, Integer.parseInt(maxStudentsPerTeam),
-        Long.parseLong(startDate), locale);
+        Long.parseLong(startDate), endDateValue, locale);
     JSONObject runJSON = getRunJSON(run);
     return runJSON.toString();
   }
