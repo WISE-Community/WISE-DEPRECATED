@@ -78,10 +78,12 @@
     "protractor": "^5.4.1",
     "ts-node": "~3.2.0",
     "tslint": "~5.7.0",
-    "typescript": "2.9.2"
+    "typescript": "2.9.2",
+    "webpack-bundle-analyzer": "^3.0.4"
   },
   "scripts": {
     "browser-sync": "./node_modules/browser-sync/bin/browser-sync.js start --config bs-config.js",
+    "bundle-report": "node ./node_modules/webpack-bundle-analyzer/lib/bin/analyzer.js src/main/webapp/site/dist/stats.json",
     "postinstall": "node ./node_modules/jspm/jspm.js install -y",
     "watch-all-wise5": "node node_modules/concurrently/src/main.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-watch\"",
     "watch-all-site": "node node_modules/concurrently/src/main.js \"ng build --watch --extract-css=true\" \"ng test --karma-config src/main/webapp/site/karma.conf.js --browsers Chrome\" \"node ./node_modules/gulp/bin/gulp.js site-i18n\"",
