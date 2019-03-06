@@ -9,7 +9,7 @@ function VLE_STATE() {
 	this.dataId = null;
 }
 
-VLE_STATE.prototype.setUserName = function(username) {
+VLE_STATE.prototype.setUsername = function(username) {
 	this.username = username;
 };
 

@@ -24,7 +24,7 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			}
 		};
 
-		var getUserName = function() {
+		var getUsername = function() {
 			if (myUserInfo != null) {
 				return myUserInfo.username;
 			}
@@ -194,10 +194,10 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			return workgroupIdsInClass;
 		};
 
-		var getUserNameByUserId = function(userId) {
+		var getUsernameByUserId = function(userId) {
 			//check the current logged in user
 			if(userId == getWorkgroupId()) {
-				return getUserName();
+				return getUsername();
 			}
 
 			//check the class mates
@@ -383,17 +383,17 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 
 		var getClassmatesInAlphabeticalOrder = function() {
 
-			var sortByUserName = function(a, b) {
+			var sortByUsername = function(a, b) {
 				var result = 0;
 
 				//get the user names from the vleStates
-				var userNameA = a.username.toLowerCase();
-				var userNameB = b.username.toLowerCase();
+				var usernameA = a.username.toLowerCase();
+				var usernameB = b.username.toLowerCase();
 
-				if(userNameA > userNameB) {
+				if(usernameA > usernameB) {
 					//a comes after b
 					result = 1;
-				} else if(userNameA < userNameB) {
+				} else if(usernameA < usernameB) {
 					//a comes before b
 					result = -1;
 				}
@@ -401,7 +401,7 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 				return result;
 			};
 
-			return classmateUserInfos.sort(sortByUserName);
+			return classmateUserInfos.sort(sortByUsername);
 		};
 
 		/**
@@ -566,17 +566,17 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			var studentNames = [];
 
 			//get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
-			var userNames = getUserNameByUserId(workgroupId);
+			var usernames = getUsernameByUserId(workgroupId);
 
-			if(userNames != null) {
+			if(usernames != null) {
 				//split the user names string by ':'
-				var userNamesSplit = userNames.split(':');
+				var usernamesSplit = usernames.split(':');
 
-				if(userNamesSplit != null) {
+				if(usernamesSplit != null) {
 					//loop through each user name
-					for(var x=0; x<userNamesSplit.length; x++) {
+					for(var x=0; x<usernamesSplit.length; x++) {
 						//get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
-						var username = userNamesSplit[x];
+						var username = usernamesSplit[x];
 
 						//get the index of the open parenthesis
 						var indexOfOpenParen = username.indexOf('(');
@@ -602,17 +602,17 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			var studentNames = [];
 
 			//get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
-			var userNames = getUserNameByUserId(workgroupId);
+			var usernames = getUsernameByUserId(workgroupId);
 
-			if(userNames != null) {
+			if(usernames != null) {
 				//split the user names string by ':'
-				var userNamesSplit = userNames.split(':');
+				var usernamesSplit = usernames.split(':');
 
-				if(userNamesSplit != null) {
+				if(usernamesSplit != null) {
 					//loop through each user name
-					for(var x=0; x<userNamesSplit.length; x++) {
+					for(var x=0; x<usernamesSplit.length; x++) {
 						//get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
-						var username = userNamesSplit[x];
+						var username = usernamesSplit[x];
 
 						//get the index of the first empty space
 						var indexOfSpace = username.indexOf(' ');
@@ -641,25 +641,25 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			var firstName = "First Name";
 
 			//get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
-			var userNames = getUserNameByUserId(workgroupId);
+			var usernames = getUsernameByUserId(workgroupId);
 
-			if(userNames != null) {
+			if(usernames != null) {
 				//split the user names string by ':'
-				var userNamesSplit = userNames.split(':');
+				var usernamesSplit = usernames.split(':');
 
-				if(userNamesSplit != null) {
+				if(usernamesSplit != null) {
 
-					if (n > userNamesSplit.length) {
+					if (n > usernamesSplit.length) {
 						/*
 						 * if n is greater than the number of students in the
 						 * workgroup, we will just use the last student
 						 */
-						n = userNamesSplit.length;
+						n = usernamesSplit.length;
 					}
 
 					if (n != null && n > 0) {
 						//get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
-						var username = userNamesSplit[n - 1];
+						var username = usernamesSplit[n - 1];
 
 						//get the index of the first empty space
 						var indexOfSpace = username.indexOf(' ');
@@ -736,8 +736,8 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			getWorkgroupId:function() {
 				return getWorkgroupId();
 			},
-			getUserName:function() {
-				return getUserName();
+			getUsername:function() {
+				return getUsername();
 			},
 			getPeriodId:function() {
 				return getPeriodId();
@@ -748,8 +748,8 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			getUsersInClass:function() {
 				return getUsersInClass();
 			},
-			getUserNameByUserId:function(userId) {
-				return getUserNameByUserId(userId);
+			getUsernameByUserId:function(userId) {
+				return getUsernameByUserId(userId);
 			},
 			getClassmateByWorkgroupId:function(workgroupId) {
 				return getClassmateByWorkgroupId(workgroupId);

@@ -34,16 +34,16 @@ var teacherUsernamesString = "${teacher_usernames}";
 var teacherUsernames = teacherUsernamesString.split(":");
 
 //order the teacher user names alphabetically
-teacherUsernames = teacherUsernames.sort(function(userName1, userName2) {
+teacherUsernames = teacherUsernames.sort(function(username1, username2) {
 	var result = 0;
 
-	if(userName1 != null && userName2 != null) {
-		var userName1LowerCase = userName1.toLowerCase();
-		var userName2LowerCase = userName2.toLowerCase();
+	if(username1 != null && username2 != null) {
+		var username1LowerCase = username1.toLowerCase();
+		var username2LowerCase = username2.toLowerCase();
 
-		if(userName1LowerCase < userName2LowerCase) {
+		if(username1LowerCase < username2LowerCase) {
 			result = -1;
-		} else if(userName1LowerCase > userName2LowerCase) {
+		} else if(username1LowerCase > username2LowerCase) {
 			result = 1;
 		}
 	}

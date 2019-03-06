@@ -166,9 +166,9 @@ View.prototype.displayGlobalTools = function() {
 	$("#signOut").html(signOutLink);
 	$("#exit").html(exitLink);
 	
-	// Insert default text for userNames
-	if($('#userNames').html() == ''){
-		$('#userNames').html(this.getI18NString("welcome_users_default"));
+	// Insert default text for usernames
+	if($('#usernames').html() == ''){
+		$('#usernames').html(this.getI18NString("welcome_users_default"));
 	}
 
 	var metadata = null;
@@ -335,7 +335,7 @@ View.prototype.loadLearnerData = function(userUrl){
 		this.loadUserAndClassInfo(createContent(userUrl));
 		
 		//set the user names in the vle html
-		document.getElementById('userNames').innerHTML = this.getI18NString("welcome") + ' ' + this.getUserAndClassInfo().getUserName() + '!';
+		document.getElementById('usernames').innerHTML = this.getI18NString("welcome") + ' ' + this.getUserAndClassInfo().getUsername() + '!';
 				
 		this.loadVLEState();
 	}

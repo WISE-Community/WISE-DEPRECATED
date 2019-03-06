@@ -502,7 +502,7 @@ var displayNotification = function(message) {
 						                <c:forEach var="mem" items="${viewmystudentsperiod.grouplessStudents}">
 									      <li class="grouplesslist" id="li_${mem.id}_groupless">
 									      
-									         <span class="userNameWithinView">${mem.userDetails.firstname} ${mem.userDetails.lastname} <span dir=ltr>(${mem.userDetails.username})</span></span>
+									         <span class="usernameWithinView">${mem.userDetails.firstname} ${mem.userDetails.lastname} <span dir=ltr>(${mem.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
 							    			     <a class="userLinks changePassword" id="changePassword_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>
@@ -529,7 +529,7 @@ var displayNotification = function(message) {
 									      <c:forEach var="workgroupMember" items="${workgroupInPeriod.members}">
 									      
 									        <li class="workgrouplist" id="li_${workgroupMember.id}_${workgroupInPeriod.id}">
-									         <span class="userNameWithinView">${workgroupMember.userDetails.firstname} ${workgroupMember.userDetails.lastname} <span dir=ltr>(${workgroupMember.userDetails.username})</span></span>
+									         <span class="usernameWithinView">${workgroupMember.userDetails.firstname} ${workgroupMember.userDetails.lastname} <span dir=ltr>(${workgroupMember.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
 							    			     <a class="userLinks changePassword" id="changePassword_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>

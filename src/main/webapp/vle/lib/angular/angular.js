@@ -19969,25 +19969,25 @@ function checkboxInputType(scope, element, attr, ctrl, $sniffer, $browser, $filt
       </file>
       <file name="protractor.js" type="protractor">
         var user = element(by.exactBinding('user'));
-        var userNameValid = element(by.binding('myForm.username.$valid'));
+        var usernameValid = element(by.binding('myForm.username.$valid'));
         var lastNameValid = element(by.binding('myForm.lastName.$valid'));
         var lastNameError = element(by.binding('myForm.lastName.$error'));
         var formValid = element(by.binding('myForm.$valid'));
-        var userNameInput = element(by.model('user.name'));
+        var usernameInput = element(by.model('user.name'));
         var userLastInput = element(by.model('user.last'));
 
         it('should initialize to model', function() {
           expect(user.getText()).toContain('{"name":"guest","last":"visitor"}');
-          expect(userNameValid.getText()).toContain('true');
+          expect(usernameValid.getText()).toContain('true');
           expect(formValid.getText()).toContain('true');
         });
 
         it('should be invalid if empty when required', function() {
-          userNameInput.clear();
-          userNameInput.sendKeys('');
+          usernameInput.clear();
+          usernameInput.sendKeys('');
 
           expect(user.getText()).toContain('{"last":"visitor"}');
-          expect(userNameValid.getText()).toContain('false');
+          expect(usernameValid.getText()).toContain('false');
           expect(formValid.getText()).toContain('false');
         });
 
