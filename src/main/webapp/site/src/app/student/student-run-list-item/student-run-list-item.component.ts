@@ -38,7 +38,7 @@ export class StudentRunListItemComponent implements OnInit {
     this.problemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
     this.configService.getConfig().subscribe(config => {
       if (config != null) {
-        if (new Date(this.run.startTime) > new Date(Date.now())) {
+        if (new Date(this.run.startTime) > new Date(this.configService.getCurrentServerTime())) {
           this.isAvailable = false;
         }
       }
