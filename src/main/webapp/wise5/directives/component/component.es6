@@ -68,7 +68,7 @@ class ComponentController {
         // replace any student names in the component content
         componentContent = this.ConfigService.replaceStudentNames(componentContent);
 
-        if (this.NotebookService.isNotebookEnabled()) {
+        if (this.NotebookService.isNotebookEnabled() && this.NotebookService.isStudentNoteClippingEnabled()) {
             // inject the click attribute that will snip the image when the image is clicked
             componentContent = this.ProjectService.injectClickToSnipImage(componentContent);
         }
