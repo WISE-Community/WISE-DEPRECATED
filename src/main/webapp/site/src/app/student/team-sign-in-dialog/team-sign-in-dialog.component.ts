@@ -75,8 +75,8 @@ export class TeamSignInDialogComponent implements OnInit {
   }
 
   signIn(teamMember: any) {
-    this.userService.checkAuthentication(teamMember.username, teamMember.password).subscribe((response) => {
-      if (response.isValid === true) {
+    this.userService.checkAuthentication(teamMember.userName, teamMember.password).subscribe((response) => {
+      if (response.isUsernameValid === true && response.isPasswordValid === true) {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
           if (canBeAddedToWorkgroupResponse.isTeacher) {
@@ -89,20 +89,20 @@ export class TeamSignInDialogComponent implements OnInit {
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
           } else if (!this.allowSignIn(teamMember, 1)) {
+            alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
             if (!this.isExistingStudent(teamMember)) {
               teamMember.username = null;
             }
-            alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
           } else {
             alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
             teamMember.username = null;
           }
         });
-      } else {
-        alert(this.i18n('Invalid username or password. Please try again.'));
-        if (!this.isExistingStudent(teamMember)) {
-          teamMember.username = null;
-        }
+      } else if (response.isUsernameValid !== true) {
+        alert(this.i18n('Invalid username. Please try again.'));
+        teamMember.userName = null;
+      } else if (response.isPasswordValid !== true) {
+        alert(this.i18n('Invalid password. Please try again.'));
       }
       teamMember.password = null;
     });

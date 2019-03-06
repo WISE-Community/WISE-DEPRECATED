@@ -1,4 +1,5 @@
-import { Component, ViewEncapsulation, Inject } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { MatDialog } from '@angular/material';
@@ -13,7 +14,7 @@ import { OfficialLibraryDetailsComponent } from '../official-library/official-li
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class TeacherProjectLibraryComponent {
+export class TeacherProjectLibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];
   selectedTabIndex: number = 0;
@@ -21,10 +22,20 @@ export class TeacherProjectLibraryComponent {
   numberOfCommunityProjectsVisible;
   numberOfPersonalProjectsVisible;
 
-  constructor(private libraryService: LibraryService, public dialog: MatDialog) {
+  constructor(private libraryService: LibraryService,
+              public dialog: MatDialog,
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
     libraryService.tabIndexSource$.subscribe((tabIndex) => {
       this.selectedTabIndex = tabIndex;
-    })
+    });
+  }
+
+  ngOnInit(): void {
+    if (this.activatedRoute.snapshot.firstChild !== null) {
+      const selectedTabIndex = this.activatedRoute.snapshot.firstChild.data.selectedTabIndex;
+      this.libraryService.setTabIndex(selectedTabIndex);
+    }
   }
 
   updateNumberOfOfficialProjectsVisible(count) {
@@ -43,5 +54,16 @@ export class TeacherProjectLibraryComponent {
     this.dialog.open(OfficialLibraryDetailsComponent, {
       panelClass: 'mat-dialog--sm'
     });
+  }
+
+  tabClicked(event) {
+    const tabIndex = event.index;
+    if (tabIndex === 0) {
+      this.router.navigate(['tested'], { relativeTo: this.activatedRoute });
+    } else if (tabIndex === 1) {
+      this.router.navigate(['community'], { relativeTo: this.activatedRoute });
+    } else if (tabIndex === 2) {
+      this.router.navigate(['personal'], { relativeTo: this.activatedRoute });
+    }
   }
 }
