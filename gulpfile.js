@@ -8,6 +8,7 @@
 
 const gulp = require('gulp');
 const babel = require('gulp-babel');
+const exec = require('child_process').exec;
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
@@ -27,6 +28,9 @@ const sass = require('gulp-sass');
 const sassOptions = { style: 'compact' };
 const paths = ['./src/main/webapp/wise5/style/**/*.scss',
   './src/main/webapp/wise5/themes/*/style/**/*.scss'];
+const sitePaths = ['./src/main/webapp/site/src/**/*.ts',
+  './src/main/webapp/site/src/**/*.html'
+];
 const autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions',
     'Firefox ESR', 'not ie <= 10'] };
 
@@ -71,6 +75,26 @@ gulp.task('watch-sass', gulp.series('set-watch', function(done) {
       console.log('File ' + path + ' was changed');
     });
 }));
+
+gulp.task('site-i18n', (cb) => {
+  return gulp
+    .watch(sitePaths)
+    .on('change', function(path, stat) {
+      console.log('File ' + path + ' was changed...generating messages.');
+      exec('ng xi18n', (err, stdout, stderr) => {
+        console.log('Generating messages part 1/2 [ng xi18n] complete.');
+        console.log(stdout);
+        console.log(stderr);
+        exec('npm run ngx-extractor', (err, stdout, stderr) => {
+          console.log('Generating messages part 2/2 [npm run ngx-extractor] complete.');
+          console.log(stdout);
+          console.log(stderr);
+          cb(err);
+        });
+        cb(err);
+      });
+    });
+});
 
 gulp.task('transpile', gulp.series(() => {
   return gulp.watch(['./src/main/webapp/wise5/**/*.es6'])
