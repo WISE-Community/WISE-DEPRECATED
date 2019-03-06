@@ -103,14 +103,6 @@ export class TeamSignInDialogComponent implements OnInit {
         teamMember.userName = null;
       } else if (response.isPasswordValid !== true) {
         alert(this.i18n('Invalid password. Please try again.'));
-        if (!this.isExistingStudent(teamMember)) {
-          teamMember.userName = null;
-        }
-      } else {
-        alert(this.i18n('Invalid username and password. Please try again.'));
-        if (!this.isExistingStudent(teamMember)) {
-          teamMember.userName = null;
-        }
       }
       teamMember.password = null;
     });
