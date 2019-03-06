@@ -3,7 +3,7 @@
     <app-library-filters></app-library-filters>
   </div>
   <div class="library__content library-teacher__content">
-    <mat-tab-group [selectedIndex]="selectedTabIndex"
+    <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedTabChange)="tabClicked($event)"
                    i18n-aria-label
                    aria-label="Select unit library view"
                    mat-stretch-tabs>
