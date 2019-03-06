@@ -3,7 +3,7 @@ import { StudentRun } from '../student-run';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser';
 import { ConfigService } from "../../services/config.service";
-import { MatDialog } from "../../../../../../../../node_modules/@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
 import { TeamSignInDialogComponent } from "../team-sign-in-dialog/team-sign-in-dialog.component";
 
 @Component({
