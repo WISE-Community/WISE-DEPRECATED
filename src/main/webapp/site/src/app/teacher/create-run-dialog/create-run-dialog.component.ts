@@ -80,7 +80,7 @@ export class CreateRunDialogComponent {
     const combinedPeriods = this.getPeriodsString();
     const startDate = this.form.controls['startDate'].value.getTime();
     let endDateValue = this.form.controls['endDate'].value;
-    let endDate = '';
+    let endDate = null;
     if (endDateValue) {
       endDateValue.setHours(23, 59, 59);
       endDate = endDateValue.getTime();
