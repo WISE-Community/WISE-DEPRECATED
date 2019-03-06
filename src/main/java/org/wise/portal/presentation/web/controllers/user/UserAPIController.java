@@ -131,7 +131,7 @@ public class UserAPIController {
       response.put("isUsernameValid", true);
       response.put("isPasswordValid", userService.isPasswordCorrect(user, password));
       response.put("userId", user.getId());
-      response.put("userName", user.getUserDetails().getUsername());
+      response.put("username", user.getUserDetails().getUsername());
       response.put("firstName", user.getUserDetails().getFirstname());
       response.put("lastName", user.getUserDetails().getLastname());
     }
