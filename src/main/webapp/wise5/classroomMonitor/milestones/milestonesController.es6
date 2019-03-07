@@ -382,29 +382,14 @@ class MilestonesController {
     }
 
     generateReport(projectAchievement) {
-      const reportVariables = projectAchievement.report.variables;
-      const reportVariableValues = {};
+      const referencedComponents = this.getSatisfyCriteriaReferencedComponents(projectAchievement);
       const aggregateAutoScores = {};
-      for (let satisfyCriterion of projectAchievement.satisfyCriteria) {
-        aggregateAutoScores[satisfyCriterion.componentId] = this.calculateAggregateAutoScores(satisfyCriterion.nodeId,
-            satisfyCriterion.componentId, this.periodId);
+      for (const referencedComponent of Object.values(referencedComponents)) {
+        const nodeId = referencedComponent.nodeId;
+        const componentId = referencedComponent.componentId;
+        aggregateAutoScores[componentId] = this.calculateAggregateAutoScores(nodeId, componentId, this.periodId);
       }
-
-      for (let reportVariable of reportVariables) {
-        const varValue = reportVariable.value;
-        if (varValue === 'annotation.score') {
-        } else if (varValue === 'annotation.autoScore') {
-        } else if (varValue === 'annotation.autoScore.ki' && reportVariable.function === 'average') {
-          reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(
-              reportVariable.nodeId, reportVariable.componentId, this.periodId, 'ki');
-        } else if (varValue === 'annotation.autoScore.science' && reportVariable.function === 'average') {
-          reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(
-              reportVariable.nodeId, reportVariable.componentId, this.periodId, 'science');
-        } else if (varValue === 'annotation.autoScore.engineering') {
-
-        }
-      }
-      const template = this.chooseTemplate(projectAchievement.report.templates, reportVariableValues);
+      const template = this.chooseTemplate(projectAchievement.report.templates, aggregateAutoScores);
       let templateContent = template.content;
       if (templateContent != null) {
         for (let componentId of Object.keys(aggregateAutoScores)) {
@@ -420,8 +405,24 @@ class MilestonesController {
           }
         }
       }
-      console.log(templateContent);
       return templateContent;
+    }
+
+    getSatisfyCriteriaReferencedComponents(projectAchievement) {
+      const components = {};
+      const templates = projectAchievement.report.templates;
+      for (const template of templates) {
+        for (const satisfyCriterion of template.satisfyCriteria) {
+          const nodeId = satisfyCriterion.nodeId;
+          const componentId = satisfyCriterion.componentId;
+          const component = {
+            nodeId: nodeId,
+            componentId: componentId
+          };
+          components[nodeId + '_' + componentId] = component;
+        }
+      }
+      return components;
     }
 
     calculateMilestoneCategories(subScoreId) {
@@ -499,9 +500,9 @@ class MilestonesController {
       return aggregate;
     }
 
-    chooseTemplate(templates, reportVariableValues) {
+    chooseTemplate(templates, aggregateAutoScores) {
       for (let template of templates) {
-        if (this.isTemplateMatch(template, reportVariableValues)) {
+        if (this.isTemplateMatch(template, aggregateAutoScores)) {
           return template;
         }
       }
@@ -510,10 +511,10 @@ class MilestonesController {
       };
     }
 
-    isTemplateMatch(template, reportVariableValues) {
+    isTemplateMatch(template, aggregateAutoScores) {
       const matchedCriteria = [];
       for (let satisfyCriterion of template.satisfyCriteria) {
-        if (this.isTemplateCriterionSatisfied(satisfyCriterion, reportVariableValues)) {
+        if (this.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)) {
           matchedCriteria.push(satisfyCriterion);
         }
       }
@@ -524,13 +525,136 @@ class MilestonesController {
       }
     }
 
-    isTemplateCriterionSatisfied(satisfyCriterion, reportVariableValues) {
-      const targetValue = reportVariableValues[satisfyCriterion.targetVariable];
-      if (satisfyCriterion.function === 'greaterThanOrEqualTo') {
-        return targetValue >= satisfyCriterion.value;
-      } else if (satisfyCriterion.function === 'lessThanOrEqualTo') {
-        return targetValue <= satisfyCriterion.value;
+    isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores) {
+      if (satisfyCriterion.function === 'percentOfScoresGreaterThan') {
+        return this.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresGreaterThanOrEqualTo') {
+        return this.isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresLessThan') {
+        return this.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresLessThanOrEqualTo') {
+        return this.isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresEqualTo') {
+        return this.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresNotEqualTo') {
+        return this.isPercentOfScoresNotEqualTo(satisfyCriterion, aggregateAutoScores);
       }
+    }
+
+    isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores) {
+      const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      const possibleScores = this.getPossibleScores(aggregateData);
+      const sum = this.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+
+    getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores) {
+      let sum = 0;
+      for (const possibleScore of possibleScores) {
+        if (possibleScore > satisfyCriterion.value) {
+          sum += aggregateData.counts[possibleScore];
+        }
+      }
+      return sum;
+    }
+
+    isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion, aggregateAutoScores) {
+      const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      const possibleScores = this.getPossibleScores(aggregateData);
+      const sum = this.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+
+    getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores) {
+      let sum = 0;
+      for (const possibleScore of possibleScores) {
+        if (possibleScore >= satisfyCriterion.value) {
+          sum += aggregateData.counts[possibleScore];
+        }
+      }
+      return sum;
+    }
+
+    isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores) {
+      const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      const possibleScores = this.getPossibleScores(aggregateData);
+      const sum = this.getLessThanSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+
+    getLessThanSum(satisfyCriterion, aggregateData, possibleScores) {
+      let sum = 0;
+      for (const possibleScore of possibleScores) {
+        if (possibleScore < satisfyCriterion.value) {
+          sum += aggregateData.counts[possibleScore];
+        }
+      }
+      return sum;
+    }
+
+    isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores) {
+      const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      const possibleScores = this.getPossibleScores(aggregateData);
+      const sum = this.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+
+    getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores) {
+      let sum = 0;
+      for (const possibleScore of possibleScores) {
+        if (possibleScore <= satisfyCriterion.value) {
+          sum += aggregateData.counts[possibleScore];
+        }
+      }
+      return sum;
+    }
+
+    isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores) {
+      const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      const possibleScores = this.getPossibleScores(aggregateData);
+      const sum = this.getEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+
+    getEqualToSum(satisfyCriterion, aggregateData, possibleScores) {
+      let sum = 0;
+      for (const possibleScore of possibleScores) {
+        if (possibleScore === satisfyCriterion.value) {
+          sum += aggregateData.counts[possibleScore];
+        }
+      }
+      return sum;
+    }
+
+    isPercentOfScoresNotEqualTo(satisfyCriterion, aggregateAutoScores) {
+      const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      const possibleScores = this.getPossibleScores(aggregateData);
+      const sum = this.getNotEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+
+    getNotEqualToSum(satisfyCriterion, aggregateData, possibleScores) {
+      let sum = 0;
+      for (const possibleScore of possibleScores) {
+        if (possibleScore !== satisfyCriterion.value) {
+          sum += aggregateData.counts[possibleScore];
+        }
+      }
+      return sum;
+    }
+
+    getAggregateData(satisfyCriterion, aggregateAutoScores) {
+      const component = aggregateAutoScores[satisfyCriterion.componentId];
+      return component[satisfyCriterion.targetVariable];
+    }
+
+    getPossibleScores(aggregateData) {
+      return Object.keys(aggregateData.counts).sort();
+    }
+
+    isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum) {
+      const percentOfScores = 100 * sum / aggregateData.scoreCount;
+      return percentOfScores > satisfyCriterion.percentThreshold;
     }
 
     getProjectAchievementById(achievementId) {

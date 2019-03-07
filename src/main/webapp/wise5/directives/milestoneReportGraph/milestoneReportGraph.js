@@ -48,9 +48,6 @@ var MilestoneReportGraphController = function MilestoneReportGraphController() {
             data: this.data
         }]
     };
-    console.log(this.name);
-    console.log(this.categories);
-    console.log(this.data);
 };
 
 MilestoneReportGraphController.$inject = [];

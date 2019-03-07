@@ -555,18 +555,19 @@ var MilestonesController = function () {
   }, {
     key: 'generateReport',
     value: function generateReport(projectAchievement) {
-      var reportVariables = projectAchievement.report.variables;
-      var reportVariableValues = {};
+      var referencedComponents = this.getSatisfyCriteriaReferencedComponents(projectAchievement);
       var aggregateAutoScores = {};
       var _iteratorNormalCompletion8 = true;
       var _didIteratorError8 = false;
       var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator8 = projectAchievement.satisfyCriteria[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-          var satisfyCriterion = _step8.value;
+        for (var _iterator8 = Object.values(referencedComponents)[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var referencedComponent = _step8.value;
 
-          aggregateAutoScores[satisfyCriterion.componentId] = this.calculateAggregateAutoScores(satisfyCriterion.nodeId, satisfyCriterion.componentId, this.periodId);
+          var nodeId = referencedComponent.nodeId;
+          var _componentId = referencedComponent.componentId;
+          aggregateAutoScores[_componentId] = this.calculateAggregateAutoScores(nodeId, _componentId, this.periodId);
         }
       } catch (err) {
         _didIteratorError8 = true;
@@ -583,55 +584,25 @@ var MilestonesController = function () {
         }
       }
 
-      var _iteratorNormalCompletion9 = true;
-      var _didIteratorError9 = false;
-      var _iteratorError9 = undefined;
-
-      try {
-        for (var _iterator9 = reportVariables[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-          var reportVariable = _step9.value;
-
-          var varValue = reportVariable.value;
-          if (varValue === 'annotation.score') {} else if (varValue === 'annotation.autoScore') {} else if (varValue === 'annotation.autoScore.ki' && reportVariable.function === 'average') {
-            reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(reportVariable.nodeId, reportVariable.componentId, this.periodId, 'ki');
-          } else if (varValue === 'annotation.autoScore.science' && reportVariable.function === 'average') {
-            reportVariableValues[reportVariable.name] = this.AnnotationService.getAverageAutoScore(reportVariable.nodeId, reportVariable.componentId, this.periodId, 'science');
-          } else if (varValue === 'annotation.autoScore.engineering') {}
-        }
-      } catch (err) {
-        _didIteratorError9 = true;
-        _iteratorError9 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion9 && _iterator9.return) {
-            _iterator9.return();
-          }
-        } finally {
-          if (_didIteratorError9) {
-            throw _iteratorError9;
-          }
-        }
-      }
-
-      var template = this.chooseTemplate(projectAchievement.report.templates, reportVariableValues);
+      var template = this.chooseTemplate(projectAchievement.report.templates, aggregateAutoScores);
       var templateContent = template.content;
       if (templateContent != null) {
-        var _iteratorNormalCompletion10 = true;
-        var _didIteratorError10 = false;
-        var _iteratorError10 = undefined;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
 
         try {
-          for (var _iterator10 = Object.keys(aggregateAutoScores)[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-            var componentId = _step10.value;
+          for (var _iterator9 = Object.keys(aggregateAutoScores)[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            var componentId = _step9.value;
 
             var componentAggregate = aggregateAutoScores[componentId];
-            var _iteratorNormalCompletion11 = true;
-            var _didIteratorError11 = false;
-            var _iteratorError11 = undefined;
+            var _iteratorNormalCompletion10 = true;
+            var _didIteratorError10 = false;
+            var _iteratorError10 = undefined;
 
             try {
-              for (var _iterator11 = Object.keys(componentAggregate)[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-                var subScoreId = _step11.value;
+              for (var _iterator10 = Object.keys(componentAggregate)[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                var subScoreId = _step10.value;
 
                 var regex = new RegExp('milestone-report-graph.*id="(' + subScoreId + ')"', 'g');
                 var milestoneData = this.calculateMilestoneData(componentAggregate[subScoreId], subScoreId);
@@ -641,37 +612,96 @@ var MilestonesController = function () {
                 templateContent = templateContent.replace(regex, '$& categories="' + categories + '" data="' + data + '"');
               }
             } catch (err) {
-              _didIteratorError11 = true;
-              _iteratorError11 = err;
+              _didIteratorError10 = true;
+              _iteratorError10 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                  _iterator11.return();
+                if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                  _iterator10.return();
                 }
               } finally {
-                if (_didIteratorError11) {
-                  throw _iteratorError11;
+                if (_didIteratorError10) {
+                  throw _iteratorError10;
                 }
               }
             }
           }
         } catch (err) {
-          _didIteratorError10 = true;
-          _iteratorError10 = err;
+          _didIteratorError9 = true;
+          _iteratorError9 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion10 && _iterator10.return) {
-              _iterator10.return();
+            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+              _iterator9.return();
             }
           } finally {
-            if (_didIteratorError10) {
-              throw _iteratorError10;
+            if (_didIteratorError9) {
+              throw _iteratorError9;
             }
           }
         }
       }
-      console.log(templateContent);
       return templateContent;
+    }
+  }, {
+    key: 'getSatisfyCriteriaReferencedComponents',
+    value: function getSatisfyCriteriaReferencedComponents(projectAchievement) {
+      var components = {};
+      var templates = projectAchievement.report.templates;
+      var _iteratorNormalCompletion11 = true;
+      var _didIteratorError11 = false;
+      var _iteratorError11 = undefined;
+
+      try {
+        for (var _iterator11 = templates[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+          var template = _step11.value;
+          var _iteratorNormalCompletion12 = true;
+          var _didIteratorError12 = false;
+          var _iteratorError12 = undefined;
+
+          try {
+            for (var _iterator12 = template.satisfyCriteria[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+              var satisfyCriterion = _step12.value;
+
+              var nodeId = satisfyCriterion.nodeId;
+              var componentId = satisfyCriterion.componentId;
+              var component = {
+                nodeId: nodeId,
+                componentId: componentId
+              };
+              components[nodeId + '_' + componentId] = component;
+            }
+          } catch (err) {
+            _didIteratorError12 = true;
+            _iteratorError12 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                _iterator12.return();
+              }
+            } finally {
+              if (_didIteratorError12) {
+                throw _iteratorError12;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion11 && _iterator11.return) {
+            _iterator11.return();
+          }
+        } finally {
+          if (_didIteratorError11) {
+            throw _iteratorError11;
+          }
+        }
+      }
+
+      return components;
     }
   }, {
     key: 'calculateMilestoneCategories',
@@ -692,53 +722,19 @@ var MilestonesController = function () {
         return parseInt(a) - parseInt(b);
       });
       var data = [];
-      var _iteratorNormalCompletion12 = true;
-      var _didIteratorError12 = false;
-      var _iteratorError12 = undefined;
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
 
       try {
-        for (var _iterator12 = scoreKeysSorted[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-          var scoreKey = _step12.value;
+        for (var _iterator13 = scoreKeysSorted[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var scoreKey = _step13.value;
 
           var scoreKeyCount = subScoreAggregate.counts[scoreKey];
           var scoreKeyPercentage = Math.floor(100 * scoreKeyCount / subScoreAggregate.scoreCount);
           var scoreKeyColor = subScoreId === 'ki' ? colors5Scores[scoreKey] : colors3Scores[scoreKey];
           var scoreData = { 'y': scoreKeyPercentage, 'color': scoreKeyColor };
           data.push(scoreData);
-        }
-      } catch (err) {
-        _didIteratorError12 = true;
-        _iteratorError12 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion12 && _iterator12.return) {
-            _iterator12.return();
-          }
-        } finally {
-          if (_didIteratorError12) {
-            throw _iteratorError12;
-          }
-        }
-      }
-
-      return data;
-    }
-  }, {
-    key: 'calculateAggregateAutoScores',
-    value: function calculateAggregateAutoScores(nodeId, componentId, periodId) {
-      var aggregate = {};
-      var scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(nodeId, componentId, periodId);
-      var _iteratorNormalCompletion13 = true;
-      var _didIteratorError13 = false;
-      var _iteratorError13 = undefined;
-
-      try {
-        for (var _iterator13 = scoreAnnotations[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-          var scoreAnnotation = _step13.value;
-
-          if (scoreAnnotation.type === 'autoScore') {
-            this.addDataToAggregate(aggregate, scoreAnnotation);
-          }
         }
       } catch (err) {
         _didIteratorError13 = true;
@@ -755,18 +751,52 @@ var MilestonesController = function () {
         }
       }
 
-      return aggregate;
+      return data;
     }
   }, {
-    key: 'addDataToAggregate',
-    value: function addDataToAggregate(aggregate, annotation) {
+    key: 'calculateAggregateAutoScores',
+    value: function calculateAggregateAutoScores(nodeId, componentId, periodId) {
+      var aggregate = {};
+      var scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(nodeId, componentId, periodId);
       var _iteratorNormalCompletion14 = true;
       var _didIteratorError14 = false;
       var _iteratorError14 = undefined;
 
       try {
-        for (var _iterator14 = annotation.data.scores[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-          var subScore = _step14.value;
+        for (var _iterator14 = scoreAnnotations[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+          var scoreAnnotation = _step14.value;
+
+          if (scoreAnnotation.type === 'autoScore') {
+            this.addDataToAggregate(aggregate, scoreAnnotation);
+          }
+        }
+      } catch (err) {
+        _didIteratorError14 = true;
+        _iteratorError14 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion14 && _iterator14.return) {
+            _iterator14.return();
+          }
+        } finally {
+          if (_didIteratorError14) {
+            throw _iteratorError14;
+          }
+        }
+      }
+
+      return aggregate;
+    }
+  }, {
+    key: 'addDataToAggregate',
+    value: function addDataToAggregate(aggregate, annotation) {
+      var _iteratorNormalCompletion15 = true;
+      var _didIteratorError15 = false;
+      var _iteratorError15 = undefined;
+
+      try {
+        for (var _iterator15 = annotation.data.scores[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+          var subScore = _step15.value;
 
           if (aggregate[subScore.id] == null) {
             if (subScore.id === 'ki') {
@@ -804,38 +834,6 @@ var MilestonesController = function () {
           aggregate[subScore.id].average = aggregate[subScore.id].scoreSum / aggregate[subScore.id].scoreCount;
         }
       } catch (err) {
-        _didIteratorError14 = true;
-        _iteratorError14 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion14 && _iterator14.return) {
-            _iterator14.return();
-          }
-        } finally {
-          if (_didIteratorError14) {
-            throw _iteratorError14;
-          }
-        }
-      }
-
-      return aggregate;
-    }
-  }, {
-    key: 'chooseTemplate',
-    value: function chooseTemplate(templates, reportVariableValues) {
-      var _iteratorNormalCompletion15 = true;
-      var _didIteratorError15 = false;
-      var _iteratorError15 = undefined;
-
-      try {
-        for (var _iterator15 = templates[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-          var template = _step15.value;
-
-          if (this.isTemplateMatch(template, reportVariableValues)) {
-            return template;
-          }
-        }
-      } catch (err) {
         _didIteratorError15 = true;
         _iteratorError15 = err;
       } finally {
@@ -850,24 +848,21 @@ var MilestonesController = function () {
         }
       }
 
-      return {
-        content: null
-      };
+      return aggregate;
     }
   }, {
-    key: 'isTemplateMatch',
-    value: function isTemplateMatch(template, reportVariableValues) {
-      var matchedCriteria = [];
+    key: 'chooseTemplate',
+    value: function chooseTemplate(templates, aggregateAutoScores) {
       var _iteratorNormalCompletion16 = true;
       var _didIteratorError16 = false;
       var _iteratorError16 = undefined;
 
       try {
-        for (var _iterator16 = template.satisfyCriteria[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-          var satisfyCriterion = _step16.value;
+        for (var _iterator16 = templates[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+          var template = _step16.value;
 
-          if (this.isTemplateCriterionSatisfied(satisfyCriterion, reportVariableValues)) {
-            matchedCriteria.push(satisfyCriterion);
+          if (this.isTemplateMatch(template, aggregateAutoScores)) {
+            return template;
           }
         }
       } catch (err) {
@@ -885,35 +880,24 @@ var MilestonesController = function () {
         }
       }
 
-      if (template.satisfyConditional === 'all') {
-        return matchedCriteria.length === template.satisfyCriteria.length;
-      } else if (template.satisfyConditional === 'any') {
-        return matchedCriteria.length > 0;
-      }
+      return {
+        content: null
+      };
     }
   }, {
-    key: 'isTemplateCriterionSatisfied',
-    value: function isTemplateCriterionSatisfied(satisfyCriterion, reportVariableValues) {
-      var targetValue = reportVariableValues[satisfyCriterion.targetVariable];
-      if (satisfyCriterion.function === 'greaterThanOrEqualTo') {
-        return targetValue >= satisfyCriterion.value;
-      } else if (satisfyCriterion.function === 'lessThanOrEqualTo') {
-        return targetValue <= satisfyCriterion.value;
-      }
-    }
-  }, {
-    key: 'getProjectAchievementById',
-    value: function getProjectAchievementById(achievementId) {
+    key: 'isTemplateMatch',
+    value: function isTemplateMatch(template, aggregateAutoScores) {
+      var matchedCriteria = [];
       var _iteratorNormalCompletion17 = true;
       var _didIteratorError17 = false;
       var _iteratorError17 = undefined;
 
       try {
-        for (var _iterator17 = this.projectAchievements[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-          var projectAchievement = _step17.value;
+        for (var _iterator17 = template.satisfyCriteria[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+          var satisfyCriterion = _step17.value;
 
-          if (projectAchievement.id === achievementId) {
-            return projectAchievement;
+          if (this.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)) {
+            matchedCriteria.push(satisfyCriterion);
           }
         }
       } catch (err) {
@@ -927,6 +911,322 @@ var MilestonesController = function () {
         } finally {
           if (_didIteratorError17) {
             throw _iteratorError17;
+          }
+        }
+      }
+
+      if (template.satisfyConditional === 'all') {
+        return matchedCriteria.length === template.satisfyCriteria.length;
+      } else if (template.satisfyConditional === 'any') {
+        return matchedCriteria.length > 0;
+      }
+    }
+  }, {
+    key: 'isTemplateCriterionSatisfied',
+    value: function isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores) {
+      if (satisfyCriterion.function === 'percentOfScoresGreaterThan') {
+        return this.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresGreaterThanOrEqualTo') {
+        return this.isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresLessThan') {
+        return this.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresLessThanOrEqualTo') {
+        return this.isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresEqualTo') {
+        return this.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores);
+      } else if (satisfyCriterion.function === 'percentOfScoresNotEqualTo') {
+        return this.isPercentOfScoresNotEqualTo(satisfyCriterion, aggregateAutoScores);
+      }
+    }
+  }, {
+    key: 'isPercentOfScoresGreaterThan',
+    value: function isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores) {
+      var aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      var possibleScores = this.getPossibleScores(aggregateData);
+      var sum = this.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+  }, {
+    key: 'getGreaterThanSum',
+    value: function getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores) {
+      var sum = 0;
+      var _iteratorNormalCompletion18 = true;
+      var _didIteratorError18 = false;
+      var _iteratorError18 = undefined;
+
+      try {
+        for (var _iterator18 = possibleScores[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+          var possibleScore = _step18.value;
+
+          if (possibleScore > satisfyCriterion.value) {
+            sum += aggregateData.counts[possibleScore];
+          }
+        }
+      } catch (err) {
+        _didIteratorError18 = true;
+        _iteratorError18 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion18 && _iterator18.return) {
+            _iterator18.return();
+          }
+        } finally {
+          if (_didIteratorError18) {
+            throw _iteratorError18;
+          }
+        }
+      }
+
+      return sum;
+    }
+  }, {
+    key: 'isPercentOfScoresGreaterThanOrEqualTo',
+    value: function isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion, aggregateAutoScores) {
+      var aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      var possibleScores = this.getPossibleScores(aggregateData);
+      var sum = this.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+  }, {
+    key: 'getGreaterThanOrEqualToSum',
+    value: function getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores) {
+      var sum = 0;
+      var _iteratorNormalCompletion19 = true;
+      var _didIteratorError19 = false;
+      var _iteratorError19 = undefined;
+
+      try {
+        for (var _iterator19 = possibleScores[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+          var possibleScore = _step19.value;
+
+          if (possibleScore >= satisfyCriterion.value) {
+            sum += aggregateData.counts[possibleScore];
+          }
+        }
+      } catch (err) {
+        _didIteratorError19 = true;
+        _iteratorError19 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion19 && _iterator19.return) {
+            _iterator19.return();
+          }
+        } finally {
+          if (_didIteratorError19) {
+            throw _iteratorError19;
+          }
+        }
+      }
+
+      return sum;
+    }
+  }, {
+    key: 'isPercentOfScoresLessThan',
+    value: function isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores) {
+      var aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      var possibleScores = this.getPossibleScores(aggregateData);
+      var sum = this.getLessThanSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+  }, {
+    key: 'getLessThanSum',
+    value: function getLessThanSum(satisfyCriterion, aggregateData, possibleScores) {
+      var sum = 0;
+      var _iteratorNormalCompletion20 = true;
+      var _didIteratorError20 = false;
+      var _iteratorError20 = undefined;
+
+      try {
+        for (var _iterator20 = possibleScores[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+          var possibleScore = _step20.value;
+
+          if (possibleScore < satisfyCriterion.value) {
+            sum += aggregateData.counts[possibleScore];
+          }
+        }
+      } catch (err) {
+        _didIteratorError20 = true;
+        _iteratorError20 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion20 && _iterator20.return) {
+            _iterator20.return();
+          }
+        } finally {
+          if (_didIteratorError20) {
+            throw _iteratorError20;
+          }
+        }
+      }
+
+      return sum;
+    }
+  }, {
+    key: 'isPercentOfScoresLessThanOrEqualTo',
+    value: function isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores) {
+      var aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      var possibleScores = this.getPossibleScores(aggregateData);
+      var sum = this.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+  }, {
+    key: 'getLessThanOrEqualToSum',
+    value: function getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores) {
+      var sum = 0;
+      var _iteratorNormalCompletion21 = true;
+      var _didIteratorError21 = false;
+      var _iteratorError21 = undefined;
+
+      try {
+        for (var _iterator21 = possibleScores[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+          var possibleScore = _step21.value;
+
+          if (possibleScore <= satisfyCriterion.value) {
+            sum += aggregateData.counts[possibleScore];
+          }
+        }
+      } catch (err) {
+        _didIteratorError21 = true;
+        _iteratorError21 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion21 && _iterator21.return) {
+            _iterator21.return();
+          }
+        } finally {
+          if (_didIteratorError21) {
+            throw _iteratorError21;
+          }
+        }
+      }
+
+      return sum;
+    }
+  }, {
+    key: 'isPercentOfScoresEqualTo',
+    value: function isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores) {
+      var aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      var possibleScores = this.getPossibleScores(aggregateData);
+      var sum = this.getEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+  }, {
+    key: 'getEqualToSum',
+    value: function getEqualToSum(satisfyCriterion, aggregateData, possibleScores) {
+      var sum = 0;
+      var _iteratorNormalCompletion22 = true;
+      var _didIteratorError22 = false;
+      var _iteratorError22 = undefined;
+
+      try {
+        for (var _iterator22 = possibleScores[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+          var possibleScore = _step22.value;
+
+          if (possibleScore === satisfyCriterion.value) {
+            sum += aggregateData.counts[possibleScore];
+          }
+        }
+      } catch (err) {
+        _didIteratorError22 = true;
+        _iteratorError22 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion22 && _iterator22.return) {
+            _iterator22.return();
+          }
+        } finally {
+          if (_didIteratorError22) {
+            throw _iteratorError22;
+          }
+        }
+      }
+
+      return sum;
+    }
+  }, {
+    key: 'isPercentOfScoresNotEqualTo',
+    value: function isPercentOfScoresNotEqualTo(satisfyCriterion, aggregateAutoScores) {
+      var aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
+      var possibleScores = this.getPossibleScores(aggregateData);
+      var sum = this.getNotEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+      return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
+    }
+  }, {
+    key: 'getNotEqualToSum',
+    value: function getNotEqualToSum(satisfyCriterion, aggregateData, possibleScores) {
+      var sum = 0;
+      var _iteratorNormalCompletion23 = true;
+      var _didIteratorError23 = false;
+      var _iteratorError23 = undefined;
+
+      try {
+        for (var _iterator23 = possibleScores[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+          var possibleScore = _step23.value;
+
+          if (possibleScore !== satisfyCriterion.value) {
+            sum += aggregateData.counts[possibleScore];
+          }
+        }
+      } catch (err) {
+        _didIteratorError23 = true;
+        _iteratorError23 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion23 && _iterator23.return) {
+            _iterator23.return();
+          }
+        } finally {
+          if (_didIteratorError23) {
+            throw _iteratorError23;
+          }
+        }
+      }
+
+      return sum;
+    }
+  }, {
+    key: 'getAggregateData',
+    value: function getAggregateData(satisfyCriterion, aggregateAutoScores) {
+      var component = aggregateAutoScores[satisfyCriterion.componentId];
+      return component[satisfyCriterion.targetVariable];
+    }
+  }, {
+    key: 'getPossibleScores',
+    value: function getPossibleScores(aggregateData) {
+      return Object.keys(aggregateData.counts).sort();
+    }
+  }, {
+    key: 'isPercentThresholdSatisfied',
+    value: function isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum) {
+      var percentOfScores = 100 * sum / aggregateData.scoreCount;
+      return percentOfScores > satisfyCriterion.percentThreshold;
+    }
+  }, {
+    key: 'getProjectAchievementById',
+    value: function getProjectAchievementById(achievementId) {
+      var _iteratorNormalCompletion24 = true;
+      var _didIteratorError24 = false;
+      var _iteratorError24 = undefined;
+
+      try {
+        for (var _iterator24 = this.projectAchievements[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+          var projectAchievement = _step24.value;
+
+          if (projectAchievement.id === achievementId) {
+            return projectAchievement;
+          }
+        }
+      } catch (err) {
+        _didIteratorError24 = true;
+        _iteratorError24 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion24 && _iterator24.return) {
+            _iterator24.return();
+          }
+        } finally {
+          if (_didIteratorError24) {
+            throw _iteratorError24;
           }
         }
       }

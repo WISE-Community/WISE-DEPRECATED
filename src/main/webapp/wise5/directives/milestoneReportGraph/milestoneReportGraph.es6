@@ -43,9 +43,6 @@ class MilestoneReportGraphController {
                 }
             ]
         };
-        console.log(this.name);
-        console.log(this.categories);
-        console.log(this.data);
     }
 }
 
