@@ -65,10 +65,10 @@
              ng-change="authorNotebookController.authoringViewComponentChanged()"/>
     </md-input-container>
     <br/>
-    <md-checkbox ng-model="authorNotebookController.project.notebook.enableAddNew"
+    <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.enableAddNote"
                  class="md-primary"
                  ng-change="authorNotebookController.authoringViewComponentChanged()">
-      Enable Global Add Note Button
+      {{ 'enableAddNoteButton' | translate }}
     </md-checkbox>
     <br/>
     <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.requireTextOnEveryNote"
