@@ -3252,7 +3252,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
@@ -3378,7 +3378,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
@@ -3758,17 +3758,11 @@
           <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-      </trans-unit><trans-unit id="e6f86114b056df884960f0fc672462f5c043795c" datatype="html">
-        <source>You should also receive an email with your account details.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
       </trans-unit><trans-unit id="573963e1285d0c1e6208d5bb8cab9eb6a8b6bb46" datatype="html">
         <source>Sign In to Get Started</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
@@ -5377,6 +5371,13 @@
       </trans-unit>
       <trans-unit id="66c9d5817cd540aa177f656419784731d3bfae26" datatype="html">
         <source>Incorrect Google user. Please try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="39ab535140dcc8123b6f3dc6a502ad4ab30924a1" datatype="html">
+        <source>No WISE user with this Google ID found.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
