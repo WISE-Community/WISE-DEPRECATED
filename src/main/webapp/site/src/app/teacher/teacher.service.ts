@@ -70,7 +70,7 @@ export class TeacherService {
     body = body.set('periods', periods);
     body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + "");
     body = body.set('startDate', startDate + "");
-    body = body.set('endDate', endDate + "");
+    body = body.set('endDate', endDate ? endDate + "" : "");
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
   }
 
