@@ -649,7 +649,7 @@ class MilestonesController {
     }
 
     getPossibleScores(aggregateData) {
-      return Object.keys(aggregateData.counts).sort();
+      return Object.keys(aggregateData.counts).map(Number).sort();
     }
 
     isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum) {

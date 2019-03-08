@@ -1193,7 +1193,7 @@ var MilestonesController = function () {
   }, {
     key: 'getPossibleScores',
     value: function getPossibleScores(aggregateData) {
-      return Object.keys(aggregateData.counts).sort();
+      return Object.keys(aggregateData.counts).map(Number).sort();
     }
   }, {
     key: 'isPercentThresholdSatisfied',
