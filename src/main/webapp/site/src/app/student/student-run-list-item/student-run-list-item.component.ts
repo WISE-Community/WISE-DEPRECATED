@@ -42,14 +42,22 @@ export class StudentRunListItemComponent implements OnInit {
     }
   }
 
-launchRun() {
-    if (this.run.maxStudentsPerTeam === 1 || this.run.endTime) {
-      window.location.href = `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
+  launchRun() {
+    if (this.run.maxStudentsPerTeam === 1) {
+      this.skipTeamSign();
     } else {
       this.dialog.open(TeamSignInDialogComponent, {
         data: { run: this.run },
         panelClass: 'mat-dialog--sm'
       });
     }
+  }
+
+  reviewRun() {
+    this.skipTeamSign();
+  }
+
+  skipTeamSign() {
+    window.location.href = `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
   }
 }
