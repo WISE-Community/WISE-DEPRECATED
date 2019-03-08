@@ -55,9 +55,7 @@ class MilestonesController {
           if (args) {
             const studentAchievement = args.studentAchievement;
             this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
-            if (studentAchievement.data != null && studentAchievement.data.id != null) {
-              this.updateMilestoneCompletion(studentAchievement.data.id);
-            }
+            this.updateMilestoneCompletion(studentAchievement.achievementId);
           }
         });
 
@@ -443,7 +441,7 @@ class MilestonesController {
         const scoreKeyCount = subScoreAggregate.counts[scoreKey];
         const scoreKeyPercentage = Math.floor(100 * scoreKeyCount / subScoreAggregate.scoreCount);
         const scoreKeyColor = subScoreId === 'ki' ? colors5Scores[scoreKey] : colors3Scores[scoreKey];
-        const scoreData = {'y': scoreKeyPercentage, 'color': scoreKeyColor };
+        const scoreData = {'y': scoreKeyPercentage, 'color': scoreKeyColor, 'count': scoreKeyCount };
         data.push(scoreData);
       }
       return data;

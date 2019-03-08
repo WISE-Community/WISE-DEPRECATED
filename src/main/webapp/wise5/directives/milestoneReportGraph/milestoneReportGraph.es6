@@ -23,7 +23,16 @@ class MilestoneReportGraphController {
                         }
                     }
                 },
-                legend: { symbolHeight: '0px' }
+                legend: { symbolHeight: '0px' },
+                tooltip: {
+                    formatter: function() {
+                        if (this.point.count === 1) {
+                            return `<b>${this.point.count} workgroup</b>`;
+                        } else {
+                            return `<b>${this.point.count} workgroups</b>`;
+                        }
+                    }
+                }
             },
             xAxis: {
                 categories: this.categories

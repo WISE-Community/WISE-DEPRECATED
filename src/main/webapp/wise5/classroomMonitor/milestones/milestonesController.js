@@ -53,9 +53,7 @@ var MilestonesController = function () {
       if (args) {
         var studentAchievement = args.studentAchievement;
         _this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
-        if (studentAchievement.data != null && studentAchievement.data.id != null) {
-          _this.updateMilestoneCompletion(studentAchievement.data.id);
-        }
+        _this.updateMilestoneCompletion(studentAchievement.achievementId);
       }
     });
 
@@ -733,7 +731,7 @@ var MilestonesController = function () {
           var scoreKeyCount = subScoreAggregate.counts[scoreKey];
           var scoreKeyPercentage = Math.floor(100 * scoreKeyCount / subScoreAggregate.scoreCount);
           var scoreKeyColor = subScoreId === 'ki' ? colors5Scores[scoreKey] : colors3Scores[scoreKey];
-          var scoreData = { 'y': scoreKeyPercentage, 'color': scoreKeyColor };
+          var scoreData = { 'y': scoreKeyPercentage, 'color': scoreKeyColor, 'count': scoreKeyCount };
           data.push(scoreData);
         }
       } catch (err) {

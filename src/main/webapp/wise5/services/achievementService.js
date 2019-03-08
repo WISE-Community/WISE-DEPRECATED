@@ -372,6 +372,8 @@ var AchievementService = function () {
   }, {
     key: 'createStudentAchievement',
     value: function createStudentAchievement(achievement) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       if (achievement.isVisible) {
         alert('Congratulations you completed: ' + achievement.name);
         console.log('Congratulations you completed: ' + achievement.name);
@@ -387,20 +389,12 @@ var AchievementService = function () {
         this.debugOutput('deregistering ' + projectAchievement.id);
       }
 
-      /*
-       * create a copy of the achievement to make sure we don't cause
-       * any referencing problems in the future
-       */
-      var achievementCopy = this.UtilService.makeCopyOfJSONObject(achievement);
       var workgroupId = this.ConfigService.getWorkgroupId();
-      var type = achievementCopy.type;
-      var id = achievementCopy.id;
-      var data = achievementCopy;
-      var newAchievement = this.createNewStudentAchievement(type, id, data, workgroupId);
+      var newAchievement = this.createNewStudentAchievement(achievement.type, achievement.id, data, workgroupId);
       var achievements = this.getStudentAchievementsByWorkgroupId(workgroupId);
       achievements.push(newAchievement);
       this.saveAchievementToServer(newAchievement);
-      this.$rootScope.$broadcast('achievementCompleted', { achievementId: achievementCopy.id });
+      this.$rootScope.$broadcast('achievementCompleted', { achievementId: achievement.id });
     }
 
     /**
@@ -612,7 +606,7 @@ var AchievementService = function () {
             for (var a = achievementsForWorkgroup.length - 1; a >= 0; a--) {
               var studentAchievement = achievementsForWorkgroup[a];
               if (studentAchievement != null && studentAchievement.data != null) {
-                if (studentAchievement.data.id === achievementId) {
+                if (studentAchievement.achievementId === achievementId) {
                   achievementsByAchievementId.push(studentAchievement);
                 }
               }

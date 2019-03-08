@@ -255,7 +255,7 @@ class AchievementService {
    * Create achievement and save to server
    * @param achievement the achievement the student completed
    */
-  createStudentAchievement(achievement) {
+  createStudentAchievement(achievement, data = {}) {
     if (achievement.isVisible) {
       alert(`Congratulations you completed: ${achievement.name}`);
       console.log(`Congratulations you completed: ${achievement.name}`);
@@ -271,20 +271,12 @@ class AchievementService {
       this.debugOutput('deregistering ' + projectAchievement.id);
     }
 
-    /*
-     * create a copy of the achievement to make sure we don't cause
-     * any referencing problems in the future
-     */
-    const achievementCopy = this.UtilService.makeCopyOfJSONObject(achievement);
     const workgroupId = this.ConfigService.getWorkgroupId();
-    const type = achievementCopy.type;
-    const id = achievementCopy.id;
-    const data = achievementCopy;
-    const newAchievement = this.createNewStudentAchievement(type, id, data, workgroupId);
+    const newAchievement = this.createNewStudentAchievement(achievement.type, achievement.id, data, workgroupId);
     const achievements = this.getStudentAchievementsByWorkgroupId(workgroupId);
     achievements.push(newAchievement);
     this.saveAchievementToServer(newAchievement);
-    this.$rootScope.$broadcast('achievementCompleted', { achievementId: achievementCopy.id });
+    this.$rootScope.$broadcast('achievementCompleted', { achievementId: achievement.id });
   }
 
   /**
@@ -441,7 +433,7 @@ class AchievementService {
         for (let a = achievementsForWorkgroup.length - 1; a >= 0; a--) {
           const studentAchievement = achievementsForWorkgroup[a];
           if (studentAchievement != null && studentAchievement.data != null) {
-            if (studentAchievement.data.id === achievementId) {
+            if (studentAchievement.achievementId === achievementId) {
               achievementsByAchievementId.push(studentAchievement);
             }
           }
