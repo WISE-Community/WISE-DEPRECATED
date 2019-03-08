@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEnca
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-search-bar',
@@ -12,7 +13,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 export class SearchBarComponent implements OnInit {
 
   @Input()
-  placeholderText: string = 'Search'; // placeholder text
+  placeholderText: string = this.i18n('Search'); // placeholder text
 
   @Input()
   disable: boolean = false; // whether input is disabled
@@ -28,7 +29,7 @@ export class SearchBarComponent implements OnInit {
 
   searchField = new FormControl(""); // form control for the search input
 
-  constructor() {
+  constructor(private i18n: I18n) {
   }
 
   ngOnInit() {

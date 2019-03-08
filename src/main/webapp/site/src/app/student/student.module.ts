@@ -6,12 +6,12 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
   MatDividerModule, MatIconModule, MatProgressBarModule, 
-  MatTabsModule } from '@angular/material';
+  MatTabsModule, MatTooltipModule } from '@angular/material';
 
 const materialModules = [
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
   MatDividerModule, MatIconModule, MatProgressBarModule, 
-  MatTabsModule
+  MatTabsModule, MatTooltipModule
 ];
 
 import { SharedModule } from "../modules/shared/shared.module";
