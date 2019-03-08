@@ -3303,10 +3303,6 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
         <target xml:lang="it" state="needs-translation">Close</target>
       </trans-unit>
       <trans-unit id="73da064756ecee7cf3d056dc8a0b99f0f39863b6" datatype="html">
@@ -3417,7 +3413,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Only 1 student</target>
       </trans-unit>
@@ -3429,27 +3425,27 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">1-3 students</target>
       </trans-unit>
-      <trans-unit id="59b5e0b6d51cb195690bd20893a61f39525e4cc6" datatype="html">
-        <source>3. Choose Start Date</source>
+      <trans-unit id="9320702bc56b0ad2af586f2527c9b3a847ab144e" datatype="html">
+        <source>3. Set Schedule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target xml:lang="it" state="needs-translation">3. Choose Start Date</target>
+        <target xml:lang="it" state="needs-translation">3. Set Schedule</target>
       </trans-unit>
       <trans-unit id="77bbe324b08f6636fb50f673cea05313b86fb692" datatype="html">
         <source>Start date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Start date</target>
       </trans-unit>
@@ -3457,15 +3453,35 @@
         <source>Start date is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Start date is required</target>
+      </trans-unit>
+      <trans-unit id="f60960faa2cd3e0db11e48688774d05dfa9d715b" datatype="html">
+        <source>End date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">End date</target>
+      </trans-unit>
+      <trans-unit id="dfe5fb2242551f7f7aae712b5449e38ec0ca79a8" datatype="html">
+        <source>Note: These dates can be changed at any time from your Class Schedule. Just select "Edit Settings" from the unit's dropdown menu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">Note: These dates can be changed at any time from your Class Schedule. Just select "Edit Settings" from the unit's dropdown menu.</target>
       </trans-unit>
       <trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
         <source>Cancel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
@@ -3483,17 +3499,13 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
         <target xml:lang="it" state="needs-translation">Cancel</target>
       </trans-unit>
       <trans-unit id="b515510495245a2c50f9001287f9e6d4e6250944" datatype="html">
         <source>Create Run</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Create Run</target>
       </trans-unit>
@@ -3501,7 +3513,7 @@
         <source>Success! This unit has been added to your Class Schedule.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Success! This unit has been added to your Class Schedule.</target>
       </trans-unit>
@@ -3509,7 +3521,7 @@
         <source>Access Code: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
@@ -3521,7 +3533,7 @@
         <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</target>
       </trans-unit>
@@ -3529,7 +3541,7 @@
         <source>You can always find the Access Code for each classroom unit in your Class Schedule.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">You can always find the Access Code for each classroom unit in your Class Schedule.</target>
       </trans-unit>
@@ -3537,7 +3549,7 @@
         <source>Done</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
@@ -3549,7 +3561,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Done</target>
       </trans-unit>
@@ -3877,11 +3889,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Reset</target>
       </trans-unit>
@@ -4915,6 +4927,10 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
         <target xml:lang="it" state="needs-translation">Units found: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit id="cba86a51e8ee210e24b4d9b47ceffed1e70b61d1" datatype="html">
@@ -4925,51 +4941,51 @@
         </context-group>
         <target xml:lang="it" state="needs-translation">My WISE units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
-      <trans-unit id="543935afc44141d45216131ada149945aa784b27" datatype="html">
-        <source>scheduled</source>
+      <trans-unit id="c6a2c19b6bd10c35aca82f19ffebdc75a2fc164c" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ scheduledTotal() }}"/> scheduled</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">32</context>
         </context-group>
-        <target xml:lang="it" state="needs-translation">scheduled</target>
+        <target xml:lang="it" state="needs-translation"><x id="INTERPOLATION" equiv-text="{{ scheduledTotal() }}"/> scheduled</target>
       </trans-unit>
-      <trans-unit id="b1c4387ffab06f3fa9fdb4411aea955595538d44" datatype="html">
-        <source>active</source>
+      <trans-unit id="db39827bab98f8af5e0a97d4614a0d667e98fcb6" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ activeTotal() }}"/> active</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">33</context>
         </context-group>
-        <target xml:lang="it" state="needs-translation">active</target>
+        <target xml:lang="it" state="needs-translation"><x id="INTERPOLATION" equiv-text="{{ activeTotal() }}"/> active</target>
       </trans-unit>
-      <trans-unit id="694e61fa9003c4f5ad07478c8a0fe6e1cbc22282" datatype="html">
-        <source>completed</source>
+      <trans-unit id="c3840ff3430f7c6130e4d7a2f0aec5a7cb3ebb3a" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ completedTotal() }}"/> completed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">34</context>
         </context-group>
-        <target xml:lang="it" state="needs-translation">completed</target>
+        <target xml:lang="it" state="needs-translation"><x id="INTERPOLATION" equiv-text="{{ completedTotal() }}"/> completed</target>
       </trans-unit>
       <trans-unit id="ca98710638193518e4fe1302f8977d2db4f2b842" datatype="html">
         <source>Show More</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/news/news.component.html</context>
@@ -5057,11 +5073,19 @@
         </context-group>
         <target xml:lang="it" state="needs-translation">Team:</target>
       </trans-unit>
+      <trans-unit id="8b41458d5cc58ec3df56d2e882893790347ec21e" datatype="html">
+        <source>Run ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">Run ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></target>
+      </trans-unit>
       <trans-unit id="5bbe77fbbc93c3a34cea3b4b7c99aac62e670e08" datatype="html">
         <source>Report Problem</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
@@ -5073,7 +5097,7 @@
         <source>Launch</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Launch</target>
       </trans-unit>
@@ -5081,7 +5105,7 @@
         <source>Review</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Review</target>
       </trans-unit>
@@ -5285,21 +5309,13 @@
         </context-group>
         <target xml:lang="it" state="needs-translation">Select "Browse Units" to find titles to use with your students.</target>
       </trans-unit>
-      <trans-unit id="b395c884716585cac530cff95bfc5b9af11604d5" datatype="html">
-        <source>Units found: </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-        <target xml:lang="it" state="needs-translation">Units found: </target>
-      </trans-unit>
-      <trans-unit id="bb69003923083cbc54cbf707ff9b1f461f10a840" datatype="html">
-        <source>Total classroom units: </source>
+      <trans-unit id="54d96f2f53d37cf8c3260171012afedef7ba7f95" datatype="html">
+        <source>Total classroom units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target xml:lang="it" state="needs-translation">Total classroom units: </target>
+        <target xml:lang="it" state="needs-translation">Total classroom units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit id="9a208893f13987ce5a706b3b5e4fed09e486cb5d" datatype="html">
         <source>periods</source>
@@ -5353,30 +5369,42 @@
     Shared by <x id="INTERPOLATION" equiv-text="{{ run.owner.displayName }}"/> |
   </target>
       </trans-unit>
+      <trans-unit id="4af64447b2fbd70a957846ad4ca1573eccb4b5db" datatype="html">
+        <source>Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/></target>
+      </trans-unit>
       <trans-unit id="f31a4ac5cfc26f2d23677bd24f59219dc5f1c491" datatype="html">
         <source>Teacher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Teacher Tools</target>
       </trans-unit>
-      <trans-unit id="c5e61b5953035dffac28fac9f454b7d8ce21dd36" datatype="html">
-        <source>Share Classroom Run</source>
+      <trans-unit id="a164f074813172df85048d4ce91c4e922abfcdf9" datatype="html">
+        <source>Share Classroom Unit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target xml:lang="it" state="needs-translation">Share Classroom Run</target>
+        <target xml:lang="it" state="needs-translation">Share Classroom Unit</target>
       </trans-unit>
       <trans-unit id="b2e61582bbd238946269a615512bdf8a69880cfd" datatype="html">
         <source>(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
@@ -5413,19 +5441,19 @@
         </context-group>
         <target xml:lang="it" state="needs-translation">Edit Settings</target>
       </trans-unit>
-      <trans-unit id="9bf1aa6f7fb3bbd582901cb91902e94a0a64fc90" datatype="html">
-        <source>Periods</source>
+      <trans-unit id="9cce5b778a46771992b9753e43f7f3dbcc8c322a" datatype="html">
+        <source>Class Periods</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">6</context>
         </context-group>
-        <target xml:lang="it" state="needs-translation">Periods</target>
+        <target xml:lang="it" state="needs-translation">Class Periods</target>
       </trans-unit>
       <trans-unit id="200beac9fb92373dc2bb97201d34e1346d1c08a0" datatype="html">
         <source>Delete period</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Delete period</target>
       </trans-unit>
@@ -5433,7 +5461,7 @@
         <source>Add new period</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">18</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Add new period</target>
       </trans-unit>
@@ -5441,7 +5469,7 @@
         <source>Add period</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Add period</target>
       </trans-unit>
@@ -5449,65 +5477,33 @@
         <source>Students Per Team</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Students Per Team</target>
       </trans-unit>
-      <trans-unit id="3e6acd589d8b82cafd8546409da0a36469d297a0" datatype="html">
-        <source>Start Date</source>
+      <trans-unit id="4a4f46a2dcec36bd5c8c371ceee55c2226dec27f" datatype="html">
+        <source>Schedule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">38</context>
         </context-group>
-        <target xml:lang="it" state="needs-translation">Start Date</target>
+        <target xml:lang="it" state="needs-translation">Schedule</target>
+      </trans-unit>
+      <trans-unit id="966a68a11a339aa294e2d035b6982039b2448ef4" datatype="html">
+        <source>(Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">(Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</target>
       </trans-unit>
       <trans-unit id="a1c89f5496e99086127a54d08cecba1d0920397e" datatype="html">
         <source>Start date is required.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Start date is required.</target>
-      </trans-unit>
-      <trans-unit id="bc38cb37c2ca90b3825bdb79d8c116eddba23a53" datatype="html">
-        <source>End Unit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-        <target xml:lang="it" state="needs-translation">End Unit</target>
-      </trans-unit>
-      <trans-unit id="2e9bdcab399cafcfce0f01eac36f7da4d4353fae" datatype="html">
-        <source>Are you sure you want to end the unit? This will prevent your students from adding to or changing their work. You can continue to review and grade.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-        <target xml:lang="it" state="needs-translation">Are you sure you want to end the unit? This will prevent your students from adding to or changing their work. You can continue to review and grade.</target>
-      </trans-unit>
-      <trans-unit id="021abd2aec1f8cee8e158178a367d16a88e94a39" datatype="html">
-        <source>The unit has been successfully ended.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-        <target xml:lang="it" state="needs-translation">The unit has been successfully ended.</target>
-      </trans-unit>
-      <trans-unit id="88b5bb0e9c88f05f2769eac7fc76bfe170adca6a" datatype="html">
-        <source>There was an error ending this unit. Please try again later.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/end-run-dialog/end-run-dialog.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <target xml:lang="it" state="needs-translation">There was an error ending this unit. Please try again later.</target>
       </trans-unit>
       <trans-unit id="9c83559c416a8e596b51a342566efdb2868f2404" datatype="html">
         <source>Run Menu</source>
@@ -5540,14 +5536,6 @@
           <context context-type="linenumber">22</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Edit Content</target>
-      </trans-unit>
-      <trans-unit id="b6d79c6ff771d7b86ce572306867a1705200f957" datatype="html">
-        <source>Restart</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-        <target xml:lang="it" state="needs-translation">Restart</target>
       </trans-unit>
       <trans-unit id="e438ba78cbafdb5bcbce0820bfaad995a504f222" datatype="html">
         <source>Display Name</source>
@@ -6397,17 +6385,13 @@
         </context-group>
         <target xml:lang="it" state="needs-translation">An error occurred. Please check your connection and try again.</target>
       </trans-unit>
-      <trans-unit id="d6d7f1d8cdd020aaad5471989d8abd9ad96bbd12" datatype="html">
-        <source>Project Details</source>
+      <trans-unit id="dbe9ffa58b07d48dc33f34c86b15c3ce33bbd2c2" datatype="html">
+        <source>Unit Details</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/library-project/library-project.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target xml:lang="it" state="needs-translation">Project Details</target>
+        <target xml:lang="it" state="needs-translation">Unit Details</target>
       </trans-unit>
       <trans-unit id="615b3b60d98013117fa5ced450b1345d5ba5262d" datatype="html">
         <source>Show:</source>
@@ -6484,6 +6468,14 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</target>
+      </trans-unit>
+      <trans-unit id="c8f0dbda0d557e58e54598c7d29d719d6c764413" datatype="html">
+        <source>Select an option</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/select-menu/select-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">Select an option</target>
       </trans-unit>
       <trans-unit id="18f3bafdc69b800737e303bc1cb0753bd9dd3f32" datatype="html">
         <source>Female</source>
@@ -6641,6 +6633,22 @@
         </context-group>
         <target xml:lang="it" state="needs-translation">Incorrect Google user. Please try again.</target>
       </trans-unit>
+      <trans-unit id="39ab535140dcc8123b6f3dc6a502ad4ab30924a1" datatype="html">
+        <source>No WISE user with this Google ID found.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">No WISE user with this Google ID found.</target>
+      </trans-unit>
+      <trans-unit id="d6d7f1d8cdd020aaad5471989d8abd9ad96bbd12" datatype="html">
+        <source>Project Details</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">Project Details</target>
+      </trans-unit>
       <trans-unit id="7a73a1a02bcf341a627892f0d02e113981f96ee3" datatype="html">
         <source>Run Settings</source>
         <context-group purpose="location">
@@ -6648,14 +6656,6 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Run Settings</target>
-      </trans-unit>
-      <trans-unit id="987b6c541988c536e691735d6ab2c87c99a48e15" datatype="html">
-        <source>End Run</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target xml:lang="it" state="needs-translation">End Run</target>
       </trans-unit>
       <trans-unit id="e7d36246d5a33f55e55b2eb62510276f8f0aa387" datatype="html">
         <source>There is already a period with that name.</source>
@@ -6705,13 +6705,29 @@
         </context-group>
         <target xml:lang="it" state="needs-translation">You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.</target>
       </trans-unit>
-      <trans-unit id="eac0e49076f93313b76480a38fee8ff4a3cf215c" datatype="html">
-        <source>You do not have permission to change the start date for this unit.</source>
+      <trans-unit id="fd540958a00446d8a204a5a9a0db472b73d7aaab" datatype="html">
+        <source>You do not have permission to change the dates for this unit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target xml:lang="it" state="needs-translation">You do not have permission to change the start date for this unit.</target>
+        <target xml:lang="it" state="needs-translation">You do not have permission to change the dates for this unit.</target>
+      </trans-unit>
+      <trans-unit id="c39dc7dcb6dece34e9d5718449337e76cf892c91" datatype="html">
+        <source>End date can't be before start date.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">End date can't be before start date.</target>
+      </trans-unit>
+      <trans-unit id="f4e8826e636952f345f23611e61a77fec72cbc8b" datatype="html">
+        <source>Start date can't be after end date.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">Start date can't be after end date.</target>
       </trans-unit>
       <trans-unit id="b09df4f849aed6b523f0a26d8e99c4cd13880df3" datatype="html">
         <source>Please enter a new period name.</source>
@@ -6745,6 +6761,14 @@
         </context-group>
         <target xml:lang="it" state="needs-translation">Are you sure you want to change the start date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</target>
       </trans-unit>
+      <trans-unit id="1032b57a589b56e4122e7ca8b565a057f13f524b" datatype="html">
+        <source>Are you sure you want to change the end date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">Are you sure you want to change the end date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</target>
+      </trans-unit>
       <trans-unit id="552cff32fa324f691b5ac17facdde8b9a963659f" datatype="html">
         <source>Unit settings updated.</source>
         <context-group purpose="location">
@@ -6752,6 +6776,14 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <target xml:lang="it" state="needs-translation">Unit settings updated.</target>
+      </trans-unit>
+      <trans-unit id="db4ff4b19bb2e0fe93c88a3dc04372503caa1135" datatype="html">
+        <source>Class Periods:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-run-list-item/teacher-run-list-item.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target xml:lang="it" state="needs-translation">Class Periods:</target>
       </trans-unit>
     </body>
   </file>
