@@ -736,9 +736,14 @@ var ComponentController = function () {
       return this.NotebookService.isNotebookEnabled();
     }
   }, {
+    key: 'isStudentNoteClippingEnabled',
+    value: function isStudentNoteClippingEnabled() {
+      return this.NotebookService.isStudentNoteClippingEnabled();
+    }
+  }, {
     key: 'isAddToNotebookEnabled',
     value: function isAddToNotebookEnabled() {
-      return this.isNotebookEnabled() && this.showAddToNotebookButton;
+      return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled();
     }
 
     /**
