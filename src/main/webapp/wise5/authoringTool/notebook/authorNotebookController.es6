@@ -31,7 +31,14 @@ class AuthorNotebookController {
       this.project.notebook = projectTemplate.notebook;
     }
 
-    this.initializeNotesAuthoring();
+    if (this.project.teacherNotebook == null) {
+      const projectTemplate = this.ProjectService.getNewProjectTemplate();
+      projectTemplate.teacherNotebook.enabled = false;
+      this.project.teacherNotebook = projectTemplate.teacherNotebook;
+    }
+
+    this.initializeStudentNotesAuthoring();
+    this.initializeTeacherNotesAuthoring();
 
     this.$scope.$on('assetSelected', (event, args) => {
       if (args.projectId == this.projectId && args.assetItem != null &&
@@ -55,12 +62,17 @@ class AuthorNotebookController {
     this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists('public');
   }
 
-  initializeNotesAuthoring() {
-    const notes = this.project.notebook.itemTypes.report.notes;
-    if (notes != null) {
-      for (const note of notes) {
-        this.initializeNoteAuthoring(note);
-      }
+  initializeStudentNotesAuthoring() {
+    this.initializeNotesAuthoring(this.project.notebook.itemTypes.report.notes);
+  }
+
+  initializeTeacherNotesAuthoring() {
+    this.initializeNotesAuthoring(this.project.teacherNotebook.itemTypes.report.notes);
+  }
+
+  initializeNotesAuthoring(notes) {
+    for (const note of notes) {
+      this.initializeNoteAuthoring(note);
     }
   }
 
@@ -110,8 +122,14 @@ class AuthorNotebookController {
   }
 
   getReportNote(id) {
-    const notes = this.project.notebook.itemTypes.report.notes;
-    for (let note of notes) {
+    const studentNotes = this.project.notebook.itemTypes.report.notes;
+    for (let note of studentNotes) {
+      if (note.reportId === id) {
+        return note;
+      }
+    }
+    const teacherNotes = this.project.teacherNotebook.itemTypes.report.notes;
+    for (let note of teacherNotes) {
       if (note.reportId === id) {
         return note;
       }
@@ -134,11 +152,7 @@ class AuthorNotebookController {
     }
   }
 
-  /**
-   * A note was changed
-   * @param note the note that was changed
-   */
-  summernoteHTMLChanged(reportId) {
+  reportStarterTextChanged(reportId) {
     const note = this.getReportNote(reportId);
     const authoringNote = this.getAuthoringReportNote(reportId);
     let summernoteHTML = authoringNote.summernoteHTML;
