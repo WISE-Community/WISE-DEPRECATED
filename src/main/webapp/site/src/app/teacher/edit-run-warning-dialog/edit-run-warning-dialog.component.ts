@@ -20,6 +20,6 @@ export class EditRunWarningDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${this.project.id}`;
+    this.editLink = `${ this.configService.getContextPath() }/author/authorproject.html?projectId=${ this.project.id }`;
   }
 }

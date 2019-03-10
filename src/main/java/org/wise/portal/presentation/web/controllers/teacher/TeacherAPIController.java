@@ -147,6 +147,11 @@ public class TeacherAPIController {
     return runJSON.toString();
   }
 
+  @RequestMapping(value = "/projectusage/{projectId}", method = RequestMethod.GET)
+  protected int getProjectUsage(@PathVariable Long projectId) {
+    return runService.getProjectUsage(projectId);
+  }
+
   @RequestMapping(value = "/usernames", method = RequestMethod.GET)
   protected List<String> getAllTeacherUsernames() {
     return userDetailsService.retrieveAllUsernames("TeacherUserDetails");

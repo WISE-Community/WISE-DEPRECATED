@@ -16,8 +16,9 @@ export class TeacherService {
   private usernamesUrl = 'api/teacher/usernames';
   private createRunUrl = 'api/teacher/run/create';
   private endRunUrl = 'api/teacher/run/end';
-  private restartRunUrl = 'api/teacher/run/restart'
+  private restartRunUrl = 'api/teacher/run/restart';
   private runUrl = 'api/teacher/run';
+  private projectUsageUrl = 'api/teacher/projectusage';
   private addPeriodToRunUrl = 'api/teacher/run/add/period';
   private deletePeriodFromRunUrl = 'api/teacher/run/delete/period';
   private updateRunStudentsPerTeamUrl = 'api/teacher/run/update/studentsperteam';
@@ -49,6 +50,10 @@ export class TeacherService {
 
   getRun(runId: number): Observable<Run> {
     return this.http.get<Run>(`${this.runUrl}/${runId}`);
+  }
+
+  getProjectUsage(projectId: number): Observable<number> {
+    return this.http.get<number>(`${ this.projectUsageUrl }/${ projectId }`);
   }
 
   registerTeacherAccount(teacherUser: Teacher, callback: any) {

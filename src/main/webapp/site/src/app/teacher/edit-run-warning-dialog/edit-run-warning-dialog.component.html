@@ -1,15 +1,15 @@
-<h2 class="mat-dialog-title" i18n>Edit Unit</h2>
-<div mat-dialog-content>
+<h2 mat-dialog-title i18n>Edit Unit</h2>
+<mat-dialog-content>
   <div class="info-block">
     <p class="mat-subheading-2 accent-1">{{ project.metadata.title }}</p>
     <p i18n>Warning! You will be editing the project that is used for this run. If students have already started work on this run, this may result in undesirable effects and lost data. Are you sure you wish to proceed?</p>
   </div>
-</div>
-<div mat-dialog-actions
+</mat-dialog-content>
+<mat-dialog-actions
      fxLayout="row"
      fxLayout.xs="column"
      fxLayoutAlign="end"
      fxLayoutGap="8px">
   <button mat-flat-button color="primary" mat-dialog-close i18n>Cancel</button>
   <a mat-button href="{{ editLink }}" target="_blank" i18n>Proceed</a>
-</div>
+</mat-dialog-actions>

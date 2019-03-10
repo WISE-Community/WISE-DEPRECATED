@@ -68,7 +68,8 @@ const materialModules = [
     EndRunDialogComponent,
     RunSettingsDialogComponent,
     ShareRunDialogComponent,
-    UseWithClassWarningDialogComponent
+    UseWithClassWarningDialogComponent,
+    EditRunWarningDialogComponent
   ],
   providers: [
     AuthGuard
