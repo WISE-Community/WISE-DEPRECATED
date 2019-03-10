@@ -26,16 +26,20 @@
   </div>
   <div *ngIf="loaded" class="notice">
     <p>
-      <ng-container *ngIf="searchValue || filterValue" i18n>Units found: </ng-container>
-      <ng-container *ngIf="!searchValue && !filterValue" i18n>Total classroom units: </ng-container>
-      {{ filteredRuns.length }}<span class="mat-caption" *ngIf="filteredRuns.length"> (<span *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} <ng-container i18n>scheduled</ng-container>, </span>{{ filteredActiveTotal }} <ng-container i18n>active</ng-container>, {{ filteredCompletedTotal }} <ng-container i18n>completed</ng-container>)</span>.
+      <ng-container *ngIf="searchValue || filterValue" i18n>Units found: {{ filteredRuns.length }}</ng-container>
+      <ng-container *ngIf="!searchValue && !filterValue" i18n>Total classroom units: {{ filteredRuns.length }}</ng-container>
+      <span class="mat-caption" *ngIf="filteredRuns.length">
+        (<ng-container *ngIf="scheduledTotal()"><span i18n>{{ scheduledTotal() }} scheduled</span>, </ng-container>
+        <ng-container><span i18n>{{ activeTotal() }} active</span>, </ng-container>
+        <ng-container><span i18n>{{ completedTotal() }} completed</span></ng-container>.)
+      </span>
       <a *ngIf="searchValue || filterValue" [routerLink]="" (click)="reset()" i18n>Reset</a>
     </p>
   </div>
 
   <app-timeline>
-    <ng-container *ngFor="let run of filteredRuns; let i=index">
-      <app-timeline-item [active]="runIsActive(run)" *ngIf="i < 10 || showAll" id="run{{run.id}}">
+    <ng-container *ngFor="let run of filteredRuns.sort(sortByStartTimeDesc); let i=index">
+      <app-timeline-item [active]="run.isActive()" *ngIf="i < 10 || showAll" id="run{{run.id}}">
         <app-timeline-item-label>
           <ng-container *ngIf="run.endTime">
             <ng-container *ngIf="runSpansYears(run)">

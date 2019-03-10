@@ -19,7 +19,8 @@ export class CreateRunDialogComponent {
   periodsGroup: FormArray;
   customPeriods: FormControl;
   maxStudentsPerTeam: number;
-  startDate: any;
+  maxStartDate: Date;
+  minEndDate: Date;
   periodOptions: string[] = [];
   isCreating: boolean = false;
   isCreated: boolean = false;
@@ -32,7 +33,6 @@ export class CreateRunDialogComponent {
               private fb: FormBuilder) {
     this.project = data.project;
     this.maxStudentsPerTeam = 3;
-    this.startDate = new Date();
   }
 
   ngOnInit() {
@@ -54,8 +54,10 @@ export class CreateRunDialogComponent {
       customPeriods: this.customPeriods,
       periods: hiddenControl,
       maxStudentsPerTeam: new FormControl('3', Validators.required),
-      startDate: new FormControl(new Date(), Validators.required)
+      startDate: new FormControl(new Date(), Validators.required),
+      endDate: new FormControl()
     });
+    this.setDateRange();
   }
 
   setPeriodOptions() {
@@ -77,9 +79,15 @@ export class CreateRunDialogComponent {
     this.isCreating = true;
     const combinedPeriods = this.getPeriodsString();
     const startDate = this.form.controls['startDate'].value.getTime();
+    let endDateValue = this.form.controls['endDate'].value;
+    let endDate = null;
+    if (endDateValue) {
+      endDateValue.setHours(23, 59, 59);
+      endDate = endDateValue.getTime();
+    }
     const maxStudentsPerTeam = this.form.controls['maxStudentsPerTeam'].value;
     this.teacherService.createRun(
-        this.project.id, combinedPeriods, maxStudentsPerTeam, startDate)
+        this.project.id, combinedPeriods, maxStudentsPerTeam, startDate, endDate)
         .pipe(
           finalize(() => {
             this.isCreating = false;
@@ -106,6 +114,11 @@ export class CreateRunDialogComponent {
     } else {
       return customPeriods.toString();
     }
+  }
+
+  setDateRange() {
+    this.minEndDate = this.form.controls['startDate'].value;
+    this.maxStartDate = this.form.controls['endDate'].value;
   }
 
   closeAll() {

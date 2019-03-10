@@ -652,8 +652,12 @@ class ComponentController {
     return this.NotebookService.isNotebookEnabled();
   }
 
+  isStudentNoteClippingEnabled() {
+    return this.NotebookService.isStudentNoteClippingEnabled();
+  }
+
   isAddToNotebookEnabled() {
-    return this.isNotebookEnabled() && this.showAddToNotebookButton;
+    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled();
   }
 
   /**

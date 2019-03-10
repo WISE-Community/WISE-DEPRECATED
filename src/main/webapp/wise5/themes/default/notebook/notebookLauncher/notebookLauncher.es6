@@ -32,6 +32,10 @@ class NotebookLauncherController {
       return this.config.label;
     }
   }
+
+  isShowButton() {
+    return !this.notesVisible || this.config.itemTypes.note.enableAddNote;
+  }
 }
 
 NotebookLauncherController.$inject = [
@@ -47,7 +51,8 @@ const NotebookLauncher = {
     onOpen: '&'
   },
   template:
-    `<md-button class="md-scale md-fab md-fab-bottom-right notebook-launcher"
+    `<md-button ng-if="$ctrl.isShowButton()"
+                    class="md-scale md-fab md-fab-bottom-right notebook-launcher"
                     aria-label="{{ $ctrl.fabLabel() }}"
                     ng-click="$ctrl.fabAction($event)">
             <md-icon ng-if="!$ctrl.notesVisible">{{ $ctrl.config.icon }}</md-icon>

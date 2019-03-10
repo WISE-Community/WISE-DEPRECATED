@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ActivatedRoute, Router} from '@angular/router';
 import { defer, Observable } from "rxjs";
 import { UserService } from "../../services/user.service";
-import { TeacherService } from "../../teacher/teacher.service";
+import { TeacherService } from "../teacher.service";
 import { User } from "../../domain/user";
 import { Project} from "../../domain/project";
 import { TeacherHomeComponent } from "./teacher-home.component";
@@ -41,6 +42,9 @@ export class MockTeacherService {
       observer.next(runs);
       observer.complete();
     });
+  }
+  setTabIndex(index: number) {
+    fakeAsyncResponse(index);
   }
   newRunSource$ = fakeAsyncResponse([
     {
@@ -95,7 +99,9 @@ describe('TeacherHomeComponent', () => {
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
-        { provide: ConfigService, useClass: MockConfigService}
+        { provide: ConfigService, useClass: MockConfigService },
+        { provide: Router },
+        { provide: ActivatedRoute, useValue: { data: Observable.create({ selectedTabIndex: 0 })} }
       ],
       imports: [],
       schemas: [ NO_ERRORS_SCHEMA ]

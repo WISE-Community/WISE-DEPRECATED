@@ -8,7 +8,7 @@
   </h1>
 </header>
 <section>
-  <mat-tab-group [(selectedIndex)]="selectedTabIndex" #tabs>
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="tabClicked($event)" #tabs>
     <mat-tab i18n-label label="Class Schedule">
       <app-teacher-run-list></app-teacher-run-list>
     </mat-tab>

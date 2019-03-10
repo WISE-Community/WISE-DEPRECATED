@@ -56,7 +56,7 @@ public interface RunService {
   Run createRun(RunParameters runParameters) throws ObjectNotFoundException;
 
   Run createRun(Integer projectId, User user, Set<String> periodNames, Integer maxStudentsPerTeam,
-      Long startDate, Locale locale) throws Exception;
+      Long startDate, Long endDate, Locale locale) throws Exception;
 
   /**
    * Ends this run. The side effect is that the run's endtime gets set.
@@ -431,6 +431,8 @@ public interface RunService {
   void setMaxWorkgroupSize(Long runId, Integer maxStudentsPerTeam);
 
   void setStartTime(Long runId, String startTime);
+
+  void setEndTime(Long runId, String endTime);
 
   boolean isAllowedToViewStudentWork(Run run, User user);
 
