@@ -290,7 +290,7 @@ class StudentProgressController {
             if (workgroup != null) {
                 let workgroupId = workgroup.workgroupId;
                 let username = workgroup.username;
-                let displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId);
+                let displayNames = this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
                 let team = {
                     periodId: workgroup.periodId,
                     periodName: workgroup.periodName,

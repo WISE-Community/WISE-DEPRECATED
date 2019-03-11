@@ -373,8 +373,8 @@ class MilestonesController {
      * @param workgroupId the workgroup id
      * @return the user names in the workgroup
      */
-    getDisplayUserNamesByWorkgroupId(workgroupId) {
-        return this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId);
+    getDisplayUsernamesByWorkgroupId(workgroupId) {
+        return this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
     }
 
     setWorkgroupsInCurrentPeriod() {
@@ -478,7 +478,7 @@ class MilestonesController {
                          */
                         var workgroupObject = {
                             workgroupId: workgroupId,
-                            displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
+                            displayNames: this.getDisplayUsernamesByWorkgroupId(workgroupId),
                             achievementTime: achievementTime,
                             completed: true
                         };
@@ -499,7 +499,7 @@ class MilestonesController {
                          */
                         var workgroupObject = {
                             workgroupId: workgroupId,
-                            displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
+                            displayNames: this.getDisplayUsernamesByWorkgroupId(workgroupId),
                             achievementTime: null,
                             completed: false
                         };

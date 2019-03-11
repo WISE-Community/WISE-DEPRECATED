@@ -112,9 +112,9 @@ class ProjectController {
 
     this.$scope.$on('currentAuthorsReceived', (event, args) => {
       let currentAuthorsUsernames = args.currentAuthorsUsernames;
-      let myUserName = this.ConfigService.getMyUserName();
+      let myUsername = this.ConfigService.getMyUsername();
       currentAuthorsUsernames
-          .splice(currentAuthorsUsernames.indexOf(myUserName), 1);
+          .splice(currentAuthorsUsernames.indexOf(myUsername), 1);
       if (currentAuthorsUsernames.length > 0) {
         this.currentAuthorsMessage = this.$translate('concurrentAuthorsWarning',
             { currentAuthors: currentAuthorsUsernames.join(', ') });

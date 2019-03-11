@@ -149,7 +149,7 @@ class DiscussionController extends ComponentController {
 
   sendPostToClassmatesInPeriod(componentState) {
     const messageType = 'studentData';
-    componentState.usernamesArray = this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
+    componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
     this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
   }
 
@@ -162,7 +162,7 @@ class DiscussionController extends ComponentController {
         const notificationType = 'DiscussionReply';
         const nodeId = componentState.nodeId;
         const componentId = componentState.componentId;
-        const usernamesArray = this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
+        const usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(fromWorkgroupId);
         const usernames = usernamesArray.map((obj) => {
           return obj.name;
         }).join(', ');
@@ -342,7 +342,7 @@ class DiscussionController extends ComponentController {
         const workgroupId = componentState.workgroupId;
         const latestInappropriateFlagAnnotation =
             this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
-        const usernames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
+        const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
         if (usernames.length == 0) {
           componentState.usernames = this.getUserIdsDisplay(workgroupId);
         } else {
@@ -416,7 +416,7 @@ class DiscussionController extends ComponentController {
   addClassResponse(componentState) {
     if (componentState.studentData.isSubmit) {
       const workgroupId = componentState.workgroupId;
-      const usernames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
+      const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
       if (usernames.length > 0) {
         componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
       } else if (componentState.usernamesArray != null) {

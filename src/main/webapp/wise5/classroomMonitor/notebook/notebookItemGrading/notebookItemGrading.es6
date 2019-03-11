@@ -39,7 +39,7 @@ class NotebookItemGradingController {
             }
 
             // get the workgroup user names
-            let usernamesArray = this.ConfigService.getUserNamesByWorkgroupId(this.toWorkgroupId);
+            let usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(this.toWorkgroupId);
             this.usernames = usernamesArray.map( (obj) => {
                 return obj.name;
             }).join(', ');

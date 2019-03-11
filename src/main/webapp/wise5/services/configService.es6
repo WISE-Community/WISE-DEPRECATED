@@ -211,7 +211,7 @@ class ConfigService {
    * Get the user name of the signed in user
    * @return the user name of the signed in user
    */
-  getMyUserName() {
+  getMyUsername() {
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
       return myUserInfo.username;
@@ -234,7 +234,7 @@ class ConfigService {
     let classmateUserInfos = this.getClassmateUserInfos();
     if (classmateUserInfos) {
       for (let workgroup of classmateUserInfos) {
-        workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+        workgroup.displayNames = this.getDisplayUsernamesByWorkgroupId(workgroup.workgroupId);
       }
     }
   }
@@ -339,11 +339,11 @@ class ConfigService {
 
   sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
     if (a != null && a.username != null && b != null && b.username != null) {
-      const aUserName = a.username.toLowerCase();
-      const bUserName = b.username.toLowerCase();
-      if (aUserName < bUserName) {
+      const aUsername = a.username.toLowerCase();
+      const bUsername = b.username.toLowerCase();
+      if (aUsername < bUsername) {
         return -1;
-      } else if (aUserName > bUserName) {
+      } else if (aUsername > bUsername) {
         return 1;
       }
     }
@@ -430,7 +430,7 @@ class ConfigService {
    */
   getStudentFirstNamesByWorkgroupId(workgroupId) {
     const studentNames = [];
-    const usernames = this.getUserNameByWorkgroupId(workgroupId);
+    const usernames = this.getUsernameByWorkgroupId(workgroupId);
 
     if (usernames != null) {
       // split the user names string by ':'
@@ -457,7 +457,7 @@ class ConfigService {
     return [];
   };
 
-  getUserNameByWorkgroupId(workgroupId) {
+  getUsernameByWorkgroupId(workgroupId) {
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null) {
@@ -477,7 +477,7 @@ class ConfigService {
     return null;
   };
 
-  getUserNamesByWorkgroupId(workgroupId) {
+  getUsernamesByWorkgroupId(workgroupId) {
     let usernamesObjects = [];
     if (workgroupId != null) {
       let userInfo = this.getUserInfoByWorkgroupId(workgroupId);
@@ -501,11 +501,11 @@ class ConfigService {
     return usernamesObjects;
   };
 
-  getDisplayUserNamesByWorkgroupId(workgroupId) {
+  getDisplayUsernamesByWorkgroupId(workgroupId) {
     let usernames = '';
     if (workgroupId != null) {
       if (this.getPermissions().canViewStudentNames) {
-        let names = this.getUserNamesByWorkgroupId(workgroupId);
+        let names = this.getUsernamesByWorkgroupId(workgroupId);
         let l = names.length;
         for (let i = 0; i < l; i++) {
           let name = names[i].name;
