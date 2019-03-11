@@ -123,13 +123,13 @@ class AuthorNotebookController {
 
   getReportNote(id) {
     const studentNotes = this.project.notebook.itemTypes.report.notes;
-    for (let note of studentNotes) {
+    for (const note of studentNotes) {
       if (note.reportId === id) {
         return note;
       }
     }
     const teacherNotes = this.project.teacherNotebook.itemTypes.report.notes;
-    for (let note of teacherNotes) {
+    for (const note of teacherNotes) {
       if (note.reportId === id) {
         return note;
       }
