@@ -26,7 +26,7 @@
     border-radius: 50%;
     background-color: #ffffff;
     color: color('primary');
-    font-size: rem(3.4);
+    font-size: rem(2.8);
     font-weight: 500;
 }
 
@@ -38,7 +38,23 @@
 
 .milestone-details {
     background-color: #ffffff;
-    margin-bottom: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+
+    p {
+        margin-top: 16px;
+        margin-bottom: 0;
+    }
+}
+
+.milestone-details__header {
+    padding: 8px 12px;
+    margin: -16px -16px 16px;
+}
+
+.milestone-details__progress {
+    width: 48px;
+    margin-right: 8px;
 }
 
 .milestone--add {

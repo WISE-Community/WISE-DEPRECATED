@@ -2,51 +2,49 @@
 
 class MilestoneDetailsController {
     constructor($filter,
+                $scope,
+                $state,
                 ConfigService,
-                ProjectService) {
+                ProjectService,
+                TeacherDataService) {
         this.$filter = $filter;
+        this.$scope = $scope;
+        this.$state = $state;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
 
         this.$translate = this.$filter('translate');
+        this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
 
         this.$onInit = () => {
-            this.requirements = this.getRequirementsText();
+            this.requirements = this.getRequirements();
         }
+
+        this.$scope.$on('currentPeriodChanged', (event, args) => {
+            this.periodId = args.currentPeriod.periodId;
+        });
     };
 
-    /**
-     * Loop through all the requirements for this milestone and return a
-     * string that lists each one by number in the project
-     * @return string List of requirements
-     */
-    getRequirementsText() {
-        let requiredText = '';
-        let requiredActivities = [];
-        let requiredSteps = [];
+    getRequirements() {
+        let requirements = [];
         let items = this.milestone.items;
 
         angular.forEach(items, (value, key) => {
             if (value.checked) {
-                let isGroupNode = this.ProjectService.isGroupNode(key);
-                let itemNumber = this.ProjectService.nodeIdToNumber[key];
-                let itemText = '';
-
-                if (isGroupNode) {
-                    itemText = this.$translate('activityLabelShort') + ' ' + itemNumber;
-                } else {
-                    itemText = itemNumber;
-                }
-
-                if (requiredText === '') {
-                    requiredText += itemText;
-                } else {
-                    requiredText += ', ' + itemText;
-                }
+                requirements.push(key);
             }
         });
 
-        return requiredText;
+        return requirements;
+    }
+
+    getNodeNumberByNodeId(nodeId) {
+        return this.ProjectService.nodeIdToNumber[nodeId];
+    }
+
+    getNodeTitleByNodeId(nodeId) {
+        return this.ProjectService.getNodeTitleByNodeId(nodeId);
     }
 
     /**
@@ -70,30 +68,67 @@ class MilestoneDetailsController {
     showWorkgroup(workgroup) {
         this.onShowWorkgroup({ value: workgroup });
     }
+
+    visitNodeGrading() {
+        this.onVisitNodeGrading();
+    }
 }
 
 MilestoneDetailsController.$inject = [
     '$filter',
+    '$scope',
+    '$state',
     'ConfigService',
-    'ProjectService'
+    'ProjectService',
+    'TeacherDataService'
 ];
 
 const MilestoneDetails = {
     bindings: {
         milestone: '<',
-        onShowWorkgroup: '&'
+        onShowWorkgroup: '&',
+        onVisitNodeGrading: '&'
     },
     template:
-        `<div class="milestone-details md-whiteframe-1dp" layout-padding>
+        `<div class="milestone-details md-whiteframe-1dp">
+            <span layout="row" layout-align="start center">
+                <period-select custom-class="'md-no-underline md-button toolbar__select'"></period-select>
+                <span flex></span>
+                <span layout="row" layout-align="start center">
+                    <md-progress-linear class="milestone-details__progress" md-mode="determinate" value="{{ $ctrl.milestone.percentageCompleted }}"></md-progress-linear>
+                    <span class="md-body-2 text-secondary ng-binding">
+                        {{ $ctrl.milestone.percentageCompleted }}%
+                    </span>
+                </span>
+            </span>
             <p ng-if="$ctrl.milestone.description"><span class="heavy accent-2">{{ 'description' | translate }}: </span> {{ $ctrl.milestone.description }}</p>
             <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy accent-2">{{ 'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
-            <p><span class="heavy accent-2">{{ 'REQUIREMENTS' | translate }}: </span> {{ $ctrl.requirements }}</p>
+            <p ng-if="$ctrl.requirements.length">
+                <span class="heavy accent-2">{{ 'REQUIREMENTS' | translate }}: </span>
+                <a ng-repeat="requirement in $ctrl.requirements" ui-sref="root.project({nodeId: \'{{ requirement }}\'})" ng-click="$ctrl.visitNodeGrading(event)">
+                    {{ $ctrl.getNodeNumberByNodeId(requirement) }}: {{ $ctrl.getNodeTitleByNodeId(requirement) }}<span ng-if="!$last">, </span>
+                </a>
+            </p>
         </div>
-        <div ng-if="$ctrl.milestone.isReportAvailable" class="milestone-details md-whiteframe-1dp" layout-padding>
-        <compile data="$ctrl.milestone.generatedReport"></compile>
+        <div ng-if="$ctrl.milestone.type === 'milestoneReport'"
+             class="milestone-details md-whiteframe-1dp">
+            <div class="milestone-details__header accent-2 md-body-2 gray-lightest-bg">{{ 'classReport' | translate }}</div>
+            <div ng-if="!$ctrl.milestone.isReportAvailable || $ctrl.periodId === -1"
+                class="center md-body-1">
+                {{ 'milestoneReportExplanation' | translate }} {{ 'milestoneReportAvailability' | translate }}<br />
+                <span class="md-body-2" ng-if="$ctrl.milestone.satisfyConditional === 'any'">
+                    {{ 'milestoneReportAvailabilityRequirementsAny' | translate: { num: $ctrl.milestone.satisfyMinNumWorkgroups, percent: $ctrl.milestone.satisfyMinPercentage } }}
+                </span>
+                <span class="md-body-2" ng-if="$ctrl.milestone.satisfyConditional === 'all'">
+                    {{ 'milestoneReportAvailabilityRequirementsAll' | translate: { num: $ctrl.milestone.satisfyMinNumWorkgroups, percent: $ctrl.milestone.satisfyMinPercentage } }}
+                </span>
+            </div>
+            <div ng-if="$ctrl.milestone.isReportAvailable && $ctrl.periodId > -1">
+                <compile data="$ctrl.milestone.generatedReport"></compile>
+            </div>
         </div>
         <md-list class="user-list">
-            <md-list-item class="thead md-whiteframe-1dp md-with-secondary">
+            <md-list-item class="thead md-whiteframe-1dp md-with-secondary gray-lightest-bg">
                 <p>{{ 'team' | translate }}</p>
                 <div class="md-secondary-container">{{ 'completed' | translate }}</div>
             </md-list-item>

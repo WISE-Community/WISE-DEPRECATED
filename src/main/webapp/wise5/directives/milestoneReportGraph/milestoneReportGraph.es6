@@ -9,11 +9,17 @@ class MilestoneReportGraphController {
             options: {
                 chart: {
                     type: 'column',
-                    width: 400,
-                    height: 200
+                    height: 200,
+                    style: {
+                        fontFamily: 'Roboto,Helvetica Neue,sans-serif'
+                    }
                 },
                 title: {
-                    text: this.name
+                    text: this.name,
+                    style: {
+                        fontSize: '16px',
+                        fontWeight: '500'
+                    }
                 },
                 plotOptions: {
                     series: {

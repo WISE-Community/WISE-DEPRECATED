@@ -1,8 +1,5 @@
 <div class="view-content view-content--with-sidemenu">
     <div class="l-constrained">
-        <div class="md-padding" layout="row" layout-align="center center" layout-align-xs="start center" layout-align-gt-xs="start center">
-            <period-select></period-select>
-        </div>
         <div layout="row" layout-align="center center" layout-align-gt-xs="start center" layout-wrap>
             <!-- TODO: make into MilestoneItem component -->
             <md-card ng-repeat="milestone in milestonesController.projectAchievements | orderBy:'params.targetDateTemp'"
@@ -18,13 +15,13 @@
                                               ng-class="{ 'success': milestone.percentageCompleted === 100 }"></md-progress-circular>
                         <div class="milestone__progress__percent"
                              layout="row" layout-align="center center">
-                            <span ng-if="milestone.percentageCompleted < 100">{{ milestone.percentageCompleted }}</span>
+                            <span ng-if="milestone.percentageCompleted < 100">{{ milestone.percentageCompleted }}%</span>
                             <md-icon ng-if="milestone.percentageCompleted === 100" class="success md-48"> check </md-icon>
                         </div>
                     </div>
-                    <p class="md-body-1 accent-2">{{ milestone.numberOfStudentsCompleted }}/{{ milestonesController.numberOfStudentsInRun }} teams completed</p>
-                    <p ng-if="milestone.isReportAvailable" class="md-body-1 accent-2">{{ 'reportAvailable' | translate }}</p>
-                    <div class="md-body-2"
+                    <p class="md-body-1 text-secondary">{{ milestone.numberOfStudentsCompleted }}/{{ milestonesController.numberOfStudentsInRun }} teams completed</p>
+                    <p ng-if="milestone.isReportAvailable && milestonesController.periodId > -1" class="md-body-2 info">~ {{ 'reportAvailable' | translate }} ~</p>
+                    <div class="md-body-2" ng-if="!milestone.isReportAvailable"
                          ng-class="{ 'warn': milestonesController.isBeforeDay(milestone.params.targetDate, milestone.percentageCompleted),
                             'info': milestonesController.isSameDay(milestone.params.targetDate, milestone.percentageCompleted) }">
                         {{ milestone.params.targetDate | amCalendar }}

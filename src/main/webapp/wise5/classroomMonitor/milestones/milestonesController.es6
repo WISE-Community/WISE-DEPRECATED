@@ -366,6 +366,8 @@ class MilestonesController {
             delete projectAchievement.generatedReport;
             this.setReportAvailable(projectAchievement, false);
           }
+        } else {
+          this.setReportAvailable(projectAchievement, false);
         }
       }
     }
@@ -425,15 +427,15 @@ class MilestonesController {
 
     calculateMilestoneCategories(subScoreId) {
       if (subScoreId === 'ki') {
-        return ['0','1','2','3','4','5'];
+        return ['1','2','3','4','5'];
       } else {
-        return ['0','1','2','3'];
+        return ['0','1','2'];
       }
     }
 
     calculateMilestoneData(subScoreAggregate, subScoreId) {
-      const colors5Scores = ['black', 'red', 'orange', 'yellow', 'darkseagreen', 'green'];
-      const colors3Scores = ['black', 'red', 'yellow', 'green'];
+      const colors5Scores = ['red', 'orange', 'yellow', 'darkseagreen', 'green'];
+      const colors3Scores = ['red', 'yellow', 'green'];
       const scoreKeys = Object.keys(subScoreAggregate.counts);
       const scoreKeysSorted = scoreKeys.sort((a, b) => { return parseInt(a) - parseInt(b);});
       const data = [];
@@ -466,7 +468,6 @@ class MilestonesController {
               scoreSum: 0,
               scoreCount: 0,
               counts: {
-                0: 0,
                 1: 0,
                 2: 0,
                 3: 0,
@@ -482,8 +483,7 @@ class MilestonesController {
               counts: {
                 0: 0,
                 1: 0,
-                2: 0,
-                3: 0
+                2: 0
               },
               average: 0
             };
@@ -701,14 +701,14 @@ class MilestonesController {
     showMilestoneDetails(milestone, $event) {
         let title = this.$translate('MILESTONE_DETAILS_TITLE', { name: milestone.name });
         let template =
-            `<md-dialog class="dialog--wide">
+            `<md-dialog class="dialog--wider">
                 <md-toolbar>
                     <div class="md-toolbar-tools">
                         <h2>${ title }</h2>
                     </div>
                 </md-toolbar>
                 <md-dialog-content class="gray-lighter-bg md-dialog-content">
-                    <milestone-details milestone="milestone" on-show-workgroup="onShowWorkgroup(value)"></milestone-details>
+                    <milestone-details milestone="milestone" on-show-workgroup="onShowWorkgroup(value)" on-visit-node-grading="onVisitNodeGrading()"></milestone-details>
                 </md-dialog-content>
                 <md-dialog-actions layout="row" layout-align="start center">
                     <md-button class="warn"
@@ -765,6 +765,10 @@ class MilestonesController {
                         TeacherDataService.setCurrentWorkgroup(workgroup);
                         $state.go('root.nodeProgress');
                     };
+
+                    $scope.onVisitNodeGrading = function() {
+                      $mdDialog.hide();
+                    }
                 }
             ]
         }).then((data) => {
