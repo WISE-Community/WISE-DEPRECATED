@@ -101,10 +101,10 @@ const MilestoneDetails = {
                     </span>
                 </span>
             </span>
-            <p ng-if="$ctrl.milestone.description"><span class="heavy accent-2">{{ 'description' | translate }}: </span> {{ $ctrl.milestone.description }}</p>
-            <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy accent-2">{{ 'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
+            <p ng-if="$ctrl.milestone.description"><span class="heavy">{{ 'description' | translate }}: </span> {{ $ctrl.milestone.description }}</p>
+            <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy">{{ 'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
             <p ng-if="$ctrl.requirements.length">
-                <span class="heavy accent-2">{{ 'REQUIREMENTS' | translate }}: </span>
+                <span class="heavy">{{ 'REQUIREMENTS' | translate }}: </span>
                 <a ng-repeat="requirement in $ctrl.requirements" ui-sref="root.project({nodeId: \'{{ requirement }}\'})" ng-click="$ctrl.visitNodeGrading(event)">
                     {{ $ctrl.getNodeNumberByNodeId(requirement) }}: {{ $ctrl.getNodeTitleByNodeId(requirement) }}<span ng-if="!$last">, </span>
                 </a>
@@ -127,29 +127,32 @@ const MilestoneDetails = {
                 <compile data="$ctrl.milestone.generatedReport"></compile>
             </div>
         </div>
-        <md-list class="user-list">
-            <md-list-item class="thead md-whiteframe-1dp md-with-secondary gray-lightest-bg">
-                <p>{{ 'team' | translate }}</p>
-                <div class="md-secondary-container">{{ 'completed' | translate }}</div>
-            </md-list-item>
-            <md-list-item class="list-item md-whiteframe-1dp md-with-secondary"
-                          ng-repeat="workgroup in $ctrl.milestone.workgroups | orderBy:'-achievementTime'"
-                          ng-click="$ctrl.showWorkgroup(workgroup)"
-                          aria-label="{{ 'viewTeam' | translate }}">
-                <div class="md-avatar" hide-xs>
-                    <md-icon class="md-36" style="color: {{ $ctrl.getAvatarColorForWorkgroupId(workgroup.workgroupId) }};"> account_circle </md-icon>
-                </div>
-                <p class="heavy">{{ $ctrl.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId) }}</p>
-                <div class="md-secondary-container heavy">
-                    <span ng-if="workgroup.achievementTime !== null" class="success">
-                        {{ workgroup.achievementTime | amTimeAgo }}
-                    </span>
-                    <span ng-if="workgroup.achievementTime === null" class="warn">
-                        {{ 'notCompleted' | translate }}
-                    </span>
-                </div>
-            </md-list-item>
-        </md-list>`,
+        <div class="milestone-details md-whiteframe-1dp">
+            <div class="milestone-details__header accent-2 md-body-2 gray-lightest-bg">{{ 'studentCompletion' | translate }}</div>
+            <md-list class="user-list md-whiteframe-1dp">
+                <md-list-item class="thead md-with-secondary gray-lightest-bg md-body-1">
+                    <p>{{ 'team' | translate }}</p>
+                    <div class="md-secondary-container">{{ 'completed' | translate }}</div>
+                </md-list-item>
+                <md-list-item class="list-item md-with-secondary"
+                            ng-repeat="workgroup in $ctrl.milestone.workgroups | orderBy:'-achievementTime'"
+                            ng-click="$ctrl.showWorkgroup(workgroup)"
+                            aria-label="{{ 'viewTeam' | translate }}">
+                    <div class="md-avatar" hide-xs>
+                        <md-icon class="md-36" style="color: {{ $ctrl.getAvatarColorForWorkgroupId(workgroup.workgroupId) }};"> account_circle </md-icon>
+                    </div>
+                    <p class="heavy">{{ $ctrl.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId) }}</p>
+                    <div class="md-secondary-container heavy">
+                        <span ng-if="workgroup.achievementTime !== null" class="success">
+                            {{ workgroup.achievementTime | amTimeAgo }}
+                        </span>
+                        <span ng-if="workgroup.achievementTime === null" class="warn">
+                            {{ 'notCompleted' | translate }}
+                        </span>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </div>`,
     controller: MilestoneDetailsController
 };
 
