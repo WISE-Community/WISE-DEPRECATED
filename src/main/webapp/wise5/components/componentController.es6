@@ -41,10 +41,8 @@ class ComponentController {
     this.parentStudentWorkIds = null;
     this.attachments = [];
 
-    // whether the student work has changed since last submit
     this.isSubmitDirty = false;
 
-    // whether the student work is for a submit
     this.isSubmit = false;
 
     this.saveMessage = {
@@ -656,8 +654,12 @@ class ComponentController {
     return this.NotebookService.isNotebookEnabled();
   }
 
+  isStudentNoteClippingEnabled() {
+    return this.NotebookService.isStudentNoteClippingEnabled();
+  }
+
   isAddToNotebookEnabled() {
-    return this.isNotebookEnabled() && this.showAddToNotebookButton;
+    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled();
   }
 
   /**

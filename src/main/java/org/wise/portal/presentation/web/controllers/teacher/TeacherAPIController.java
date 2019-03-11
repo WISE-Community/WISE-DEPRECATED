@@ -108,6 +108,7 @@ public class TeacherAPIController {
     runJSON.put("runCode", run.getRuncode());
     runJSON.put("startTime", run.getStarttime());
     runJSON.put("endTime", run.getEndtime());
+    runJSON.put("lastRun", run.getLastRun());
     Set<Group> periods = run.getPeriods();
     JSONArray periodsArray = new JSONArray();
     for (Group period : periods) {
@@ -296,12 +297,17 @@ public class TeacherAPIController {
                              @RequestParam("projectId") String projectId,
                              @RequestParam("periods") String periods,
                              @RequestParam("maxStudentsPerTeam") String maxStudentsPerTeam,
-                             @RequestParam("startDate") String startDate) throws Exception {
+                             @RequestParam("startDate") String startDate,
+                             @RequestParam("endDate") String endDate) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Locale locale = request.getLocale();
     Set<String> periodNames = createPeriodNamesSet(periods);
+    Long endDateValue = null;
+    if (!endDate.isEmpty()) {
+      endDateValue = Long.parseLong(endDate);
+    }
     Run run = runService.createRun(Integer.parseInt(projectId), user, periodNames, Integer.parseInt(maxStudentsPerTeam),
-        Long.parseLong(startDate), locale);
+        Long.parseLong(startDate), endDateValue, locale);
     JSONObject runJSON = getRunJSON(run);
     return runJSON.toString();
   }
@@ -375,38 +381,6 @@ public class TeacherAPIController {
     return response.toString();
   }
 
-  @RequestMapping(value = "/run/end/{runId}", method = RequestMethod.PUT)
-  protected String endRun(HttpServletRequest request,
-                                  @PathVariable Long runId) throws Exception {
-    User user = ControllerUtil.getSignedInUser();
-    Run run = runService.retrieveById(runId);
-    JSONObject response = null;
-    if (run.isTeacherAssociatedToThisRun(user)) {
-      runService.endRun(run);
-      response = createSuccessResponse();
-    } else {
-      response = createFailureResponse("noPermissionToEndRun");
-    }
-    addRunToResponse(response, run);
-    return response.toString();
-  }
-
-  @RequestMapping(value = "/run/restart/{runId}", method = RequestMethod.PUT)
-  protected String restartRun(HttpServletRequest request,
-                          @PathVariable Long runId) throws Exception {
-    User user = ControllerUtil.getSignedInUser();
-    Run run = runService.retrieveById(runId);
-    JSONObject response = null;
-    if (run.isTeacherAssociatedToThisRun(user)) {
-      runService.restartRun(run);
-      response = createSuccessResponse();
-    } else {
-      response = createFailureResponse("noPermissionToRestartRun");
-    }
-    addRunToResponse(response, run);
-    return response.toString();
-  }
-
   @RequestMapping(value = "/run/delete/period", method = RequestMethod.POST)
   protected String deletePeriodFromRun(HttpServletRequest request,
                                   @RequestParam("runId") Long runId,
@@ -462,10 +436,42 @@ public class TeacherAPIController {
     Run run = runService.retrieveById(runId);
     JSONObject response;
     if (run.isTeacherAssociatedToThisRun(user)) {
-      runService.setStartTime(runId, startTime);
-      response = createSuccessResponse();
+      Date endDate = run.getEndtime();
+      Date startDate = new Date(startTime);
+      if (endDate == null) {
+        runService.setStartTime(runId, startTime);
+        response = createSuccessResponse();
+      } else if (startDate.before(endDate)) {
+        runService.setStartTime(runId, startTime);
+        response = createSuccessResponse();
+      } else {
+        response = createFailureResponse("startDateAfterEndDate");
+      }
     } else {
-      response = createFailureResponse("noPermissionToChangeStartDate");
+      response = createFailureResponse("noPermissionToChangeDate");
+    }
+    addRunToResponse(response, run);
+    return response.toString();
+  }
+
+  @RequestMapping(value = "/run/update/endtime", method = RequestMethod.POST)
+  protected String editRunEndTime(HttpServletRequest request,
+        @RequestParam("runId") Long runId,
+        @RequestParam("endTime") String endTime) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Run run = runService.retrieveById(runId);
+    JSONObject response;
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      Date startDate = run.getStarttime();
+      Date endDate = new Date(endTime);
+      if (endDate.after(startDate)) {
+        runService.setEndTime(runId, endTime);
+        response = createSuccessResponse();
+      } else {
+        response = createFailureResponse("endDateBeforeStartDate");
+      }
+    } else {
+      response = createFailureResponse("noPermissionToChangeDate");
     }
     addRunToResponse(response, run);
     return response.toString();

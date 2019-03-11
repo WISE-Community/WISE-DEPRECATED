@@ -15,13 +15,12 @@ export class TeacherService {
   private projectPermissionUrl = 'api/teacher/project/permission';
   private usernamesUrl = 'api/teacher/usernames';
   private createRunUrl = 'api/teacher/run/create';
-  private endRunUrl = 'api/teacher/run/end';
-  private restartRunUrl = 'api/teacher/run/restart'
   private runUrl = 'api/teacher/run';
   private addPeriodToRunUrl = 'api/teacher/run/add/period';
   private deletePeriodFromRunUrl = 'api/teacher/run/delete/period';
   private updateRunStudentsPerTeamUrl = 'api/teacher/run/update/studentsperteam';
   private updateRunStartTimeUrl = 'api/teacher/run/update/starttime';
+  private updateRunEndTimeUrl = 'api/teacher/run/update/endtime';
   private forgotUsernameUrl = 'api/teacher/forgot/username';
   private forgotPasswordUrl = 'api/teacher/forgot/password';
   private getVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
@@ -64,26 +63,15 @@ export class TeacherService {
       });
   }
 
-  createRun(projectId: number, periods: string, maxStudentsPerTeam: number, startDate: number): Observable<Run> {
+  createRun(projectId: number, periods: string, maxStudentsPerTeam: number, startDate: number, endDate: number): Observable<Run> {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('projectId', projectId + "");
     body = body.set('periods', periods);
     body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + "");
     body = body.set('startDate', startDate + "");
+    body = body.set('endDate', endDate ? endDate + "" : "");
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
-  }
-
-  endRun(runId: number) {
-    const url = `${this.endRunUrl}/${runId}`;
-    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.put<Object>(url, null, {headers: headers});
-  }
-
-  restartRun(runId: number) {
-    const url = `${this.restartRunUrl}/${runId}`;
-    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.put<Object>(url, null, {headers: headers});
   }
 
   retrieveAllTeacherUsernames(): Observable<string[]> {
@@ -195,6 +183,15 @@ export class TeacherService {
     let body = new HttpParams();
     body = body.set('runId', runId + '');
     body = body.set('startTime', startTime);
+    return this.http.post<Object>(url, body, {headers: headers});
+  }
+
+  updateRunEndTime(runId: number, endTime: string) {
+    const url = `${this.updateRunEndTimeUrl}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('runId', runId + '');
+    body = body.set('endTime', endTime);
     return this.http.post<Object>(url, body, {headers: headers});
   }
 

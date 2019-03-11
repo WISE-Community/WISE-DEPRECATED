@@ -41,10 +41,8 @@ var ComponentController = function () {
     this.parentStudentWorkIds = null;
     this.attachments = [];
 
-    // whether the student work has changed since last submit
     this.isSubmitDirty = false;
 
-    // whether the student work is for a submit
     this.isSubmit = false;
 
     this.saveMessage = {
@@ -742,9 +740,14 @@ var ComponentController = function () {
       return this.NotebookService.isNotebookEnabled();
     }
   }, {
+    key: 'isStudentNoteClippingEnabled',
+    value: function isStudentNoteClippingEnabled() {
+      return this.NotebookService.isStudentNoteClippingEnabled();
+    }
+  }, {
     key: 'isAddToNotebookEnabled',
     value: function isAddToNotebookEnabled() {
-      return this.isNotebookEnabled() && this.showAddToNotebookButton;
+      return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled();
     }
 
     /**

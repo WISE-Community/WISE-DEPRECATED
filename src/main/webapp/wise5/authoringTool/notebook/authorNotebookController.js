@@ -33,7 +33,14 @@ var AuthorNotebookController = function () {
       this.project.notebook = projectTemplate.notebook;
     }
 
-    this.initializeNotesAuthoring();
+    if (this.project.teacherNotebook == null) {
+      var _projectTemplate = this.ProjectService.getNewProjectTemplate();
+      _projectTemplate.teacherNotebook.enabled = false;
+      this.project.teacherNotebook = _projectTemplate.teacherNotebook;
+    }
+
+    this.initializeStudentNotesAuthoring();
+    this.initializeTeacherNotesAuthoring();
 
     this.$scope.$on('assetSelected', function (event, args) {
       if (args.projectId == _this.projectId && args.assetItem != null && args.assetItem.fileName != null && args.target != null) {
@@ -57,32 +64,39 @@ var AuthorNotebookController = function () {
   }
 
   _createClass(AuthorNotebookController, [{
+    key: 'initializeStudentNotesAuthoring',
+    value: function initializeStudentNotesAuthoring() {
+      this.initializeNotesAuthoring(this.project.notebook.itemTypes.report.notes);
+    }
+  }, {
+    key: 'initializeTeacherNotesAuthoring',
+    value: function initializeTeacherNotesAuthoring() {
+      this.initializeNotesAuthoring(this.project.teacherNotebook.itemTypes.report.notes);
+    }
+  }, {
     key: 'initializeNotesAuthoring',
-    value: function initializeNotesAuthoring() {
-      var notes = this.project.notebook.itemTypes.report.notes;
-      if (notes != null) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+    value: function initializeNotesAuthoring(notes) {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
+      try {
+        for (var _iterator = notes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var note = _step.value;
+
+          this.initializeNoteAuthoring(note);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
         try {
-          for (var _iterator = notes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var note = _step.value;
-
-            this.initializeNoteAuthoring(note);
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
           }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
         } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
@@ -125,13 +139,13 @@ var AuthorNotebookController = function () {
   }, {
     key: 'getReportNote',
     value: function getReportNote(id) {
-      var notes = this.project.notebook.itemTypes.report.notes;
+      var studentNotes = this.project.notebook.itemTypes.report.notes;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator2 = notes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (var _iterator2 = studentNotes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var note = _step2.value;
 
           if (note.reportId === id) {
@@ -149,6 +163,34 @@ var AuthorNotebookController = function () {
         } finally {
           if (_didIteratorError2) {
             throw _iteratorError2;
+          }
+        }
+      }
+
+      var teacherNotes = this.project.teacherNotebook.itemTypes.report.notes;
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = teacherNotes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var _note = _step3.value;
+
+          if (_note.reportId === id) {
+            return _note;
+          }
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }
@@ -172,15 +214,9 @@ var AuthorNotebookController = function () {
         this.project.notebook.itemTypes.report.notes.push(projectTemplate.notebook.itemTypes.report.notes[0]);
       }
     }
-
-    /**
-     * A note was changed
-     * @param note the note that was changed
-     */
-
   }, {
-    key: 'summernoteHTMLChanged',
-    value: function summernoteHTMLChanged(reportId) {
+    key: 'reportStarterTextChanged',
+    value: function reportStarterTextChanged(reportId) {
       var note = this.getReportNote(reportId);
       var authoringNote = this.getAuthoringReportNote(reportId);
       var summernoteHTML = authoringNote.summernoteHTML;

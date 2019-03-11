@@ -27,7 +27,7 @@ if [ $1 = "reset" ]; then
 fi
 
 if [ $1 = "package" ]; then
-  ng build --configuration=production
+  ng build --configuration=production --stats-json
   ./mvnw clean -Dmaven.test.skip=true package
   exit 0
 fi
@@ -59,7 +59,7 @@ else
 fi
 
 if [ $1 = "dev" ]; then
-  # starts npm watch-all in background, which transpiles es6 to js and watches changes to sass files
+  npm run watch-all-wise5&
   npm run watch-all-site&
 fi
 

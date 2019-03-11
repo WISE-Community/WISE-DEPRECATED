@@ -130,6 +130,23 @@
     }
   }
 
+  .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
+    &.mat-secondary-text {
+      background-color: map-get($colors, secondary-text);
+      color: white;
+    }
+
+    &.mat-success {
+      background-color: map-get($colors, success);
+      color: map-get($colors, success-contrast);
+    }
+
+    &.mat-info {
+      background-color: map-get($colors, info);
+      color: map-get($colors, info-contrast);
+    }
+  }
+
   .mat-card-actions {
     margin-left: 0;
     margin-right: 0;
