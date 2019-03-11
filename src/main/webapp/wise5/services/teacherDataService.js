@@ -859,7 +859,7 @@ var TeacherDataService = function () {
         };
 
         periods.unshift(allPeriodsOption);
-        currentPeriod = periods[0];
+        currentPeriod = periods[1];
       } else if (periods.length == 1) {
         currentPeriod = periods[0];
       }
