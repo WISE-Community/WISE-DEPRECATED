@@ -5,6 +5,7 @@ import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import { StudentRunListComponent } from "./student-run-list.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { Run } from '../../domain/run';
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -23,23 +24,23 @@ export class MockStudentService {
     projectThumb: "/wise/curriculum/360/assets/project_thumb.png"
   });
   getRuns(): Observable<StudentRun[]> {
-    const runs : any[] = [
-      {
+    const runs : Run[] = [
+      new Run({
         id:1,
         name:"Photosynthesis",
         startTime: "2018-08-22 00:00:00.0"
-      },
-      {
+      }),
+      new Run({
         id:2,
         name:"Plate Tectonics",
         startTime: "2018-08-23 00:00:00.0"
-      },
-      {
+      }),
+      new Run({
         id:3,
         name:"Chemical Reactions",
         startTime: "2018-08-20 00:00:00.0",
         endTime: "2018-08-22 00:00:00.0"
-      }
+      })
       ];
     return Observable.create( observer => {
       observer.next(runs);

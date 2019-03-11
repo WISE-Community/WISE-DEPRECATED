@@ -131,12 +131,14 @@ $dark-colors: (
   'control-bg-active': rgba(white, 0.24),
   'disabled-text': mat-color($foreground, disabled-text),
   'info': #ef6c00,
+  'info-contrast': white,
   'notice-bg': rgba(white, 0.04),
   'primary': mat-color($primary),
   'score': #FFC107,
   'secondary-text': mat-color($foreground, secondary-text),
   'selected-bg': map-get($dark-theme-primary, 50),
   'success': #00C853,
+  'success-contrast': black,
   'text': mat-color($foreground, text),
   'warn': mat-color($warn)
 );

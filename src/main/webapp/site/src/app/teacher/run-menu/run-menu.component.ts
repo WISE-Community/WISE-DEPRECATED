@@ -7,7 +7,6 @@ import { UserService } from "../../services/user.service";
 import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
-import { EndRunDialogComponent } from '../end-run-dialog/end-run-dialog.component';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
@@ -81,26 +80,4 @@ export class RunMenuComponent implements OnInit {
       autoFocus: true
     });
   }
-
-  showEndRunDialog() {
-    const run = this.run;
-    this.dialog.open(EndRunDialogComponent, {
-      ariaLabel: this.i18n('End Run'),
-      data: { run: run },
-      panelClass: 'mat-dialog--sm',
-      autoFocus: true
-    });
-  }
-
-  restartRun() {
-    this.teacherService.restartRun(this.run.id)
-        .subscribe((response: any) => {
-          if (response.status == 'success') {
-            this.run.endTime = null;
-          } else {
-            alert('Unable to Restart Run.');
-          }
-        });
-  }
-
 }

@@ -267,6 +267,7 @@ public class StudentAPIController {
       StudentUserAlreadyAssociatedWithRunException, JSONException {
     addStudentsToRunIfNecessary(run, presentMembers, workgroup);
     saveStudentAttendance(runId, workgroupId, presentUserIds, absentUserIds);
+    updateRunStatistics(run);
     StartProjectController.notifyServletSession(request, run);
     return generateStartProjectUrlResponse(request, workgroup);
   }
@@ -290,6 +291,10 @@ public class StudentAPIController {
     Date loginTimestamp = new Date();
     studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp,
         presentUserIds, absentUserIds);
+  }
+
+  private void updateRunStatistics(Run run) {
+    this.runService.updateRunStatistics(run.getId());
   }
 
   private JSONObject generateStartProjectUrlResponse(HttpServletRequest request, Workgroup workgroup) throws JSONException {

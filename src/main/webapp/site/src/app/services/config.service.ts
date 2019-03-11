@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Config } from "../domain/config";
 import { User } from "../domain/user";
+import {Timestamp} from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class ConfigService {
@@ -11,6 +12,7 @@ export class ConfigService {
   private studentConfigUrl = 'api/student/config';
   private teacherConfigUrl = 'api/teacher/config';
   private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(null);
+  private timeDiff: number = 0;
 
   constructor(private http: HttpClient) {
   }
@@ -30,6 +32,7 @@ export class ConfigService {
     this.http.get<Config>(configUrl, { headers: headers })
       .subscribe(config => {
         this.config$.next(config);
+        this.timeDiff = new Date(Date.now()).getTime() - new Date(config.currentTime).getTime();
       });
   }
 
@@ -43,5 +46,9 @@ export class ConfigService {
 
   getRecaptchaPublicKey() {
     return this.config$.getValue().recaptchaPublicKey;
+  }
+
+  getCurrentServerTime() {
+    return new Date(Date.now()).getTime() - this.timeDiff;
   }
 }

@@ -173,6 +173,16 @@ class NotebookService {
     return this.ProjectService.project.teacherNotebook != null && this.ProjectService.project.teacherNotebook.enabled;
   }
 
+  isStudentNoteEnabled() {
+    return this.ProjectService.project.notebook != null &&
+        this.ProjectService.project.notebook.itemTypes.note.enabled;
+  }
+
+  isStudentNoteClippingEnabled() {
+    return this.isStudentNoteEnabled() &&
+      this.ProjectService.project.notebook.itemTypes.note.enableClipping;
+  }
+
   retrieveNotebookItems(workgroupId = null, periodId = null) {
     if (this.ConfigService.isPreview()) {
       // we are previewing the project, initialize dummy student data
