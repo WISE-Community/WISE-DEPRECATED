@@ -21,7 +21,7 @@
 <md-switch ng-model="authorNotebookController.project.notebook.enabled"
            class="md-primary"
            ng-change="authorNotebookController.authoringViewComponentChanged()">
-  Notebook
+  Student Notebook
 </md-switch>
 <div ng-if="authorNotebookController.project.notebook.enabled"
      style="margin-left: 40px;">
@@ -161,7 +161,95 @@
       </label>
       <summernote id="{{reportNote.summernoteId}}"
                   ng-model="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteHTML"
-                  ng-change="authorNotebookController.summernoteHTMLChanged(reportNote.reportId)"
+                  ng-change="authorNotebookController.reportStarterTextChanged(reportNote.reportId)"
+                  config="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteOptions"
+                  ng-model-options="{ debounce: 1000 }"
+                  rows="10"
+                  cols="100">
+      </summernote>
+    </div>
+  </div>
+</div>
+<md-switch ng-model="authorNotebookController.project.teacherNotebook.enabled"
+           class="md-primary"
+           ng-change="authorNotebookController.authoringViewComponentChanged()">
+  Teacher Notebook
+</md-switch>
+<div ng-if="authorNotebookController.project.teacherNotebook.enabled"
+     style="margin-left: 40px;">
+  <md-input-container>
+    <label>
+      {{ 'notebookLabel' | translate }}
+    </label>
+    <input ng-model="authorNotebookController.project.teacherNotebook.label"
+           ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+  </md-input-container>
+  <md-switch ng-model="authorNotebookController.project.teacherNotebook.itemTypes.report.enabled"
+             class="md-primary"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"
+             style="margin-left: 0px;">
+    Enable Report
+  </md-switch>
+  <div ng-if="authorNotebookController.project.teacherNotebook.itemTypes.report.enabled"
+       style="border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;">
+    <md-input-container>
+      <label>
+        {{ 'labelSingular' | translate }}
+      </label>
+      <input ng-model="authorNotebookController.project.teacherNotebook.itemTypes.report.label.singular"
+             ng-model-options="{ debounce: 1000 }"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+    </md-input-container>
+    <md-input-container>
+      <label>
+        {{ 'labelPlural' | translate }}
+      </label>
+      <input ng-model="authorNotebookController.project.teacherNotebook.itemTypes.report.label.plural"
+             ng-model-options="{ debounce: 1000 }"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+    </md-input-container>
+    <md-input-container>
+      <label>
+        {{ 'labelLink' | translate }}
+      </label>
+      <input ng-model="authorNotebookController.project.teacherNotebook.itemTypes.report.label.link"
+             ng-model-options="{ debounce: 1000 }"
+             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+    </md-input-container>
+    <div ng-repeat="reportNote in authorNotebookController.project.teacherNotebook.itemTypes.report.notes">
+      <md-input-container>
+        <label>
+          {{ 'title' | translate }}
+        </label>
+        <input ng-model="reportNote.title"
+               ng-model-options="{ debounce: 1000 }"
+               ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+      </md-input-container>
+      <br/>
+      <md-input-container>
+        <label>
+          {{ 'description' | translate }}
+        </label>
+        <textarea rows="5" cols="100" ng-model="reportNote.description"
+                  ng-model-options="{ debounce: 1000 }"
+                  ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+      </md-input-container>
+      <br/>
+      <md-input-container>
+        <label>
+          {{ 'prompt' | translate }}
+        </label>
+        <textarea rows="5" cols="100" ng-model="reportNote.prompt"
+                  ng-model-options="{ debounce: 1000 }"
+                  ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+      </md-input-container>
+      <br/>
+      <label>
+        {{ 'starterText' | translate }}
+      </label>
+      <summernote id="{{reportNote.summernoteId}}"
+                  ng-model="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteHTML"
+                  ng-change="authorNotebookController.reportStarterTextChanged(reportNote.reportId)"
                   config="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteOptions"
                   ng-model-options="{ debounce: 1000 }"
                   rows="10"
