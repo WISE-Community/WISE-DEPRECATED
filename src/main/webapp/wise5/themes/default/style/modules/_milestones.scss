@@ -41,9 +41,13 @@
     padding: 16px;
     margin-bottom: 16px;
 
-    p {
+    > p {
         margin-top: 16px;
         margin-bottom: 0;
+    }
+
+    md-list {
+        padding: 0;
     }
 }
 
