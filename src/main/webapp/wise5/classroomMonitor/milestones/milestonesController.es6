@@ -429,7 +429,7 @@ class MilestonesController {
       if (subScoreId === 'ki') {
         return ['1','2','3','4','5'];
       } else {
-        return ['0','1','2'];
+        return ['0','1','2','3'];
       }
     }
 
@@ -483,7 +483,8 @@ class MilestonesController {
               counts: {
                 0: 0,
                 1: 0,
-                2: 0
+                2: 0,
+                3: 0
               },
               average: 0
             };
@@ -652,7 +653,7 @@ class MilestonesController {
 
     isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum) {
       const percentOfScores = 100 * sum / aggregateData.scoreCount;
-      return percentOfScores > satisfyCriterion.percentThreshold;
+      return percentOfScores >= satisfyCriterion.percentThreshold;
     }
 
     getProjectAchievementById(achievementId) {
@@ -678,7 +679,7 @@ class MilestonesController {
       if (scoreName === 'ki') {
         return `categories="['1', '2', '3', '4', '5']"`;
       } else {
-        return `categories="['1', '2', '3']"`;
+        return `categories="['0', '1', '2', '3']"`;
       }
     }
 
