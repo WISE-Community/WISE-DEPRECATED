@@ -32,8 +32,8 @@ var ComponentRevisionsInfoController = function () {
             }
 
             // get the workgroup user names
-            var userNamesArray = _this.ConfigService.getUserNamesByWorkgroupId(_this.toWorkgroupId);
-            _this.userNames = userNamesArray.map(function (obj) {
+            var usernamesArray = _this.ConfigService.getUsernamesByWorkgroupId(_this.toWorkgroupId);
+            _this.usernames = usernamesArray.map(function (obj) {
                 return obj.name;
             }).join(', ');
         };
@@ -73,34 +73,34 @@ var ComponentRevisionsInfoController = function () {
             var workgroupId = this.toWorkgroupId;
             var componentId = this.componentId;
             var nodeId = this.nodeId;
-            var userNames = this.userNames;
+            var usernames = this.usernames;
             var componentStates = this.componentStates;
 
             this.$mdDialog.show({
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 fullscreen: true,
-                template: '<md-dialog aria-label="{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}" class="dialog--wider">\n                    <md-toolbar>\n                        <div class="md-toolbar-tools">\n                            <h2 class="overflow--ellipsis">{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}</h2>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content>\n                        <div class="md-dialog-content gray-lighter-bg">\n                            <workgroup-component-revisions component-states="componentStates"\n                                                           node-id="{{ nodeId }}"\n                                                           workgroup-id="{{ workgroupId }}"></workgroup-component-revisions>\n                        </div>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row" layout-align="end center">\n                        <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
+                template: '<md-dialog aria-label="{{ \'revisionsForTeam\' | translate:{teamNames: usernames} }}" class="dialog--wider">\n                    <md-toolbar>\n                        <div class="md-toolbar-tools">\n                            <h2 class="overflow--ellipsis">{{ \'revisionsForTeam\' | translate:{teamNames: usernames} }}</h2>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content>\n                        <div class="md-dialog-content gray-lighter-bg">\n                            <workgroup-component-revisions component-states="componentStates"\n                                                           node-id="{{ nodeId }}"\n                                                           workgroup-id="{{ workgroupId }}"></workgroup-component-revisions>\n                        </div>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row" layout-align="end center">\n                        <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
                 locals: {
                     workgroupId: workgroupId,
                     componentId: componentId,
                     nodeId: nodeId,
-                    userNames: userNames,
+                    usernames: usernames,
                     componentStates: componentStates
                 },
                 controller: RevisionsController
             });
-            function RevisionsController($scope, $mdDialog, workgroupId, componentId, nodeId, userNames, componentStates) {
+            function RevisionsController($scope, $mdDialog, workgroupId, componentId, nodeId, usernames, componentStates) {
                 $scope.workgroupId = workgroupId;
                 $scope.componentId = componentId;
                 $scope.nodeId = nodeId;
-                $scope.userNames = userNames;
+                $scope.usernames = usernames;
                 $scope.componentStates = componentStates;
                 $scope.close = function () {
                     $mdDialog.hide();
                 };
             }
-            RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "nodeId", "userNames", "componentStates"];
+            RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "nodeId", "usernames", "componentStates"];
         }
     }]);
 

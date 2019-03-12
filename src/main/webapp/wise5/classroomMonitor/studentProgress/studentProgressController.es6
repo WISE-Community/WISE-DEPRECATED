@@ -124,9 +124,9 @@ class StudentProgressController {
     isWorkgroupShown(workgroup) {
         let show = false;
 
-        let currentPeriod = this.TeacherDataService.getCurrentPeriod();.periodId;
+        let currentPeriod = this.TeacherDataService.getCurrentPeriod().periodId;
 
-        if (currentPeriod === -1 || workgroup.periodId === this.getCurrentPeriod().periodId) {
+        if (currentPeriod === -1 || workgroup.periodId === currentPeriod) {
             if (this.currentWorkgroup) {
                 if (workgroup.workgroupId === this.currentWorkgroup.workgroupId) {
                     show = true;

@@ -140,9 +140,9 @@ var StudentProgressController = function () {
         value: function isWorkgroupShown(workgroup) {
             var show = false;
 
-            var currentPeriod = this.getCurrentPeriod().periodId;
+            var currentPeriod = this.TeacherDataService.getCurrentPeriod().periodId;
 
-            if (currentPeriod === -1 || workgroup.periodId === this.getCurrentPeriod().periodId) {
+            if (currentPeriod === -1 || workgroup.periodId === currentPeriod) {
                 if (this.currentWorkgroup) {
                     if (workgroup.workgroupId === this.currentWorkgroup.workgroupId) {
                         show = true;
@@ -153,16 +153,6 @@ var StudentProgressController = function () {
             }
 
             return show;
-        }
-
-        /**
-         * Get the current period
-         */
-
-    }, {
-        key: 'getCurrentPeriod',
-        value: function getCurrentPeriod() {
-            return this.TeacherDataService.getCurrentPeriod();
         }
     }, {
         key: 'getStudentTotalScore',
@@ -329,7 +319,7 @@ var StudentProgressController = function () {
                 if (workgroup != null) {
                     var workgroupId = workgroup.workgroupId;
                     var username = workgroup.username;
-                    var displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId);
+                    var displayNames = this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
                     var team = {
                         periodId: workgroup.periodId,
                         periodName: workgroup.periodName,
