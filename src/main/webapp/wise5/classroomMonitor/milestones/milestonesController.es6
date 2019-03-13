@@ -394,9 +394,15 @@ class MilestonesController {
       if (templateContent != null) {
         for (let componentId of Object.keys(aggregateAutoScores)) {
           const componentAggregate = aggregateAutoScores[componentId];
+          let subScoreIndex = 0;
           for (let subScoreId of Object.keys(componentAggregate)) {
             const regex = new RegExp(`milestone-report-graph.*id="(${subScoreId})"`, 'g');
-            const milestoneData = this.calculateMilestoneData(componentAggregate[subScoreId], subScoreId);
+            let index = 0;
+            if (subScoreId !== 'ki') {
+              subScoreIndex++;
+              index = subScoreIndex;
+            }
+            const milestoneData = this.calculateMilestoneData(componentAggregate[subScoreId], index);
             const milestoneCategories = this.calculateMilestoneCategories(subScoreId);
             const categories = JSON.stringify(milestoneCategories).replace(/\"/g, '\'');
             const data = JSON.stringify(milestoneData).replace(/\"/g, '\'');
@@ -433,16 +439,24 @@ class MilestonesController {
       }
     }
 
-    calculateMilestoneData(subScoreAggregate, subScoreId) {
-      const colors5Scores = ['red', 'orange', 'yellow', 'darkseagreen', 'green'];
-      const colors3Scores = ['red', 'yellow', 'green'];
+    calculateMilestoneData(subScoreAggregate, subScoreIndex) {
+      const mainColor = 'rgb(255,143,0)';
+      const subColor1 = 'rgb(0,105,92)';
+      const subColor2 = 'rgb(106,27,154)';
       const scoreKeys = Object.keys(subScoreAggregate.counts);
       const scoreKeysSorted = scoreKeys.sort((a, b) => { return parseInt(a) - parseInt(b);});
       const data = [];
+      let color = mainColor;
+      if (subScoreIndex > 0) {
+        color = subScoreIndex % 2 === 0 ? subColor1 : subColor2;
+      }
+      let step = (100/scoreKeysSorted.length)/100;
+      let opacity = 0;
       for (let scoreKey of scoreKeysSorted) {
+        opacity = opacity + step;
         const scoreKeyCount = subScoreAggregate.counts[scoreKey];
         const scoreKeyPercentage = Math.floor(100 * scoreKeyCount / subScoreAggregate.scoreCount);
-        const scoreKeyColor = subScoreId === 'ki' ? colors5Scores[scoreKey] : colors3Scores[scoreKey];
+        const scoreKeyColor = this.UtilService.rgbToHex(color, opacity);
         const scoreData = {'y': scoreKeyPercentage, 'color': scoreKeyColor, 'count': scoreKeyCount };
         data.push(scoreData);
       }

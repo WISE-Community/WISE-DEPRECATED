@@ -596,6 +596,7 @@ var MilestonesController = function () {
             var componentId = _step9.value;
 
             var componentAggregate = aggregateAutoScores[componentId];
+            var subScoreIndex = 0;
             var _iteratorNormalCompletion10 = true;
             var _didIteratorError10 = false;
             var _iteratorError10 = undefined;
@@ -605,7 +606,12 @@ var MilestonesController = function () {
                 var subScoreId = _step10.value;
 
                 var regex = new RegExp('milestone-report-graph.*id="(' + subScoreId + ')"', 'g');
-                var milestoneData = this.calculateMilestoneData(componentAggregate[subScoreId], subScoreId);
+                var index = 0;
+                if (subScoreId !== 'ki') {
+                  subScoreIndex++;
+                  index = subScoreIndex;
+                }
+                var milestoneData = this.calculateMilestoneData(componentAggregate[subScoreId], index);
                 var milestoneCategories = this.calculateMilestoneCategories(subScoreId);
                 var categories = JSON.stringify(milestoneCategories).replace(/\"/g, '\'');
                 var data = JSON.stringify(milestoneData).replace(/\"/g, '\'');
@@ -714,14 +720,21 @@ var MilestonesController = function () {
     }
   }, {
     key: 'calculateMilestoneData',
-    value: function calculateMilestoneData(subScoreAggregate, subScoreId) {
-      var colors5Scores = ['red', 'orange', 'yellow', 'darkseagreen', 'green'];
-      var colors3Scores = ['red', 'yellow', 'green'];
+    value: function calculateMilestoneData(subScoreAggregate, subScoreIndex) {
+      var mainColor = 'rgb(255,143,0)';
+      var subColor1 = 'rgb(0,105,92)';
+      var subColor2 = 'rgb(106,27,154)';
       var scoreKeys = Object.keys(subScoreAggregate.counts);
       var scoreKeysSorted = scoreKeys.sort(function (a, b) {
         return parseInt(a) - parseInt(b);
       });
       var data = [];
+      var color = mainColor;
+      if (subScoreIndex > 0) {
+        color = subScoreIndex % 2 === 0 ? subColor1 : subColor2;
+      }
+      var step = 100 / scoreKeysSorted.length / 100;
+      var opacity = 0;
       var _iteratorNormalCompletion13 = true;
       var _didIteratorError13 = false;
       var _iteratorError13 = undefined;
@@ -730,9 +743,10 @@ var MilestonesController = function () {
         for (var _iterator13 = scoreKeysSorted[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
           var scoreKey = _step13.value;
 
+          opacity = opacity + step;
           var scoreKeyCount = subScoreAggregate.counts[scoreKey];
           var scoreKeyPercentage = Math.floor(100 * scoreKeyCount / subScoreAggregate.scoreCount);
-          var scoreKeyColor = subScoreId === 'ki' ? colors5Scores[scoreKey] : colors3Scores[scoreKey];
+          var scoreKeyColor = this.UtilService.rgbToHex(color, opacity);
           var scoreData = { 'y': scoreKeyPercentage, 'color': scoreKeyColor, 'count': scoreKeyCount };
           data.push(scoreData);
         }
