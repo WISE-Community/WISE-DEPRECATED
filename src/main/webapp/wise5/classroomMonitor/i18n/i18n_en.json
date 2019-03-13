@@ -178,6 +178,7 @@
     "studentViewLabel": "View Student Summary",
     "teacherComment": "Teacher Comment",
     "team": "Team",
+    "teams": "Teams",
     "teamId": "Team {{id}}",
     "teamIdTitle": "Team ID",
     "teamsOnItem": "Teams currently on this {{type}}: {{total}} ({{online}} online)",

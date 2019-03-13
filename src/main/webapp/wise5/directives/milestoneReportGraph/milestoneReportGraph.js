@@ -6,8 +6,11 @@ Object.defineProperty(exports, "__esModule", {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var MilestoneReportGraphController = function MilestoneReportGraphController() {
+var MilestoneReportGraphController = function MilestoneReportGraphController($filter) {
     _classCallCheck(this, MilestoneReportGraphController);
+
+    this.$translate = $filter('translate');
+    var teamLabel = this.$translate('teams');
 
     if (this.name == null) {
         this.name = this.id;
@@ -39,11 +42,7 @@ var MilestoneReportGraphController = function MilestoneReportGraphController() {
             legend: { symbolHeight: '0px' },
             tooltip: {
                 formatter: function formatter() {
-                    if (this.point.count === 1) {
-                        return '<b>' + this.point.count + ' workgroup</b>';
-                    } else {
-                        return '<b>' + this.point.count + ' workgroups</b>';
-                    }
+                    return '<b>' + teamLabel + ': ' + this.point.count + '</b>';
                 }
             }
         },
@@ -61,11 +60,17 @@ var MilestoneReportGraphController = function MilestoneReportGraphController() {
         series: [{
             showInLegend: false,
             data: this.data
-        }]
+        }],
+        func: function func(chart) {
+            // temporary fix to ensure graphs are correctly resized to fit their container width
+            setTimeout(function () {
+                chart.reflow();
+            }, 250);
+        }
     };
 };
 
-MilestoneReportGraphController.$inject = [];
+MilestoneReportGraphController.$inject = ['$filter'];
 
 var MilestoneReportGraph = {
     bindings: {

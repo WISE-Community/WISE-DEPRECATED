@@ -1,7 +1,10 @@
 'use strict';
 
 class MilestoneReportGraphController {
-    constructor() {
+    constructor($filter) {
+        this.$translate = $filter('translate');
+        let teamLabel = this.$translate('teams');
+
         if (this.name == null) {
             this.name = this.id;
         }
@@ -32,11 +35,7 @@ class MilestoneReportGraphController {
                 legend: { symbolHeight: '0px' },
                 tooltip: {
                     formatter: function() {
-                        if (this.point.count === 1) {
-                            return `<b>${this.point.count} workgroup</b>`;
-                        } else {
-                            return `<b>${this.point.count} workgroups</b>`;
-                        }
+                        return `<b>${teamLabel}: ${this.point.count}</b>`;
                     }
                 }
             },
@@ -56,12 +55,18 @@ class MilestoneReportGraphController {
                     showInLegend: false,
                     data: this.data
                 }
-            ]
+            ],
+            func: function(chart) {
+                // temporary fix to ensure graphs are correctly resized to fit their container width
+                setTimeout(function() {
+                    chart.reflow();
+                }, 250);
+            }
         };
     }
 }
 
-MilestoneReportGraphController.$inject = [];
+MilestoneReportGraphController.$inject = ['$filter'];
 
 const MilestoneReportGraph = {
     bindings: {
