@@ -186,9 +186,6 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                             let locale = ConfigService.getLocale();  // defaults to "en"
                             $translate.use(locale);
                         },
-                        sessionTimers: (SessionService, config) => {
-                            return SessionService.initializeSession();
-                        },
                         annotations: function(TeacherDataService, config) {
                             return TeacherDataService.retrieveAnnotations();
                         },

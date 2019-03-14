@@ -174,9 +174,6 @@ const vleModule = angular.module('vle', [
             runStatus: (StudentDataService, config) => {
               return StudentDataService.retrieveRunStatus();
             },
-            sessionTimers: (SessionService, config, project, studentData) => {
-              return SessionService.initializeSession();
-            },
             webSocket: (StudentWebSocketService, config, project) => {
               return StudentWebSocketService.initialize();
             },
