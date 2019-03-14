@@ -138,9 +138,7 @@ const MilestoneDetails = {
                     <div class="md-secondary-container">{{ 'completed' | translate }}</div>
                 </md-list-item>
                 <md-list-item class="list-item md-with-secondary"
-                            ng-repeat="workgroup in $ctrl.milestone.workgroups | orderBy:'-achievementTime'"
-                            ng-click="$ctrl.showWorkgroup(workgroup)"
-                            aria-label="{{ 'viewTeam' | translate }}">
+                            ng-repeat="workgroup in $ctrl.milestone.workgroups | orderBy:'-achievementTime'">
                     <div class="md-avatar" hide-xs>
                         <md-icon class="md-36" style="color: {{ $ctrl.getAvatarColorForWorkgroupId(workgroup.workgroupId) }};"> account_circle </md-icon>
                     </div>
