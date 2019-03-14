@@ -435,7 +435,7 @@ class MilestonesController {
       if (subScoreId === 'ki') {
         return ['1','2','3','4','5'];
       } else {
-        return ['0','1','2','3'];
+        return ['1','2','3'];
       }
     }
 
@@ -495,7 +495,6 @@ class MilestonesController {
               scoreSum: 0,
               scoreCount: 0,
               counts: {
-                0: 0,
                 1: 0,
                 2: 0,
                 3: 0
