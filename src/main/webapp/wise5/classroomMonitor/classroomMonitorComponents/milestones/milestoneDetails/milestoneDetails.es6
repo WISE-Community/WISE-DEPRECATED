@@ -101,7 +101,10 @@ const MilestoneDetails = {
                     </span>
                 </span>
             </span>
-            <p ng-if="$ctrl.milestone.description"><span class="heavy">{{ 'description' | translate }}: </span> {{ $ctrl.milestone.description }}</p>
+            <p ng-if="$ctrl.milestone.description">
+              <span class="heavy">{{ 'description' | translate }}: </span>&nbsp;
+              <compile data="$ctrl.milestone.description"></compile>
+            </p>
             <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy">{{ 'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
             <p ng-if="$ctrl.requirements.length">
                 <span class="heavy">{{ 'REQUIREMENTS' | translate }}: </span>
@@ -113,17 +116,17 @@ const MilestoneDetails = {
         <div ng-if="$ctrl.milestone.type === 'milestoneReport'"
              class="milestone-details md-whiteframe-1dp">
             <div class="milestone-details__header accent-2 md-body-2 gray-lightest-bg">{{ 'classReport' | translate }}</div>
-            <div ng-if="!$ctrl.milestone.isReportAvailable || $ctrl.periodId === -1"
-                class="center md-body-1">
-                {{ 'milestoneReportExplanation' | translate }} {{ 'milestoneReportAvailability' | translate }}<br />
-                <span class="md-body-2" ng-if="$ctrl.milestone.satisfyConditional === 'any'">
+            <div ng-if="!$ctrl.milestone.isReportAvailable"
+                class="center">
+                <p>{{ 'milestoneReportExplanation' | translate }} {{ 'milestoneReportAvailability' | translate }}</p>
+                <p class="bold" ng-if="$ctrl.milestone.satisfyConditional === 'any'">
                     {{ 'milestoneReportAvailabilityRequirementsAny' | translate: { num: $ctrl.milestone.satisfyMinNumWorkgroups, percent: $ctrl.milestone.satisfyMinPercentage } }}
-                </span>
-                <span class="md-body-2" ng-if="$ctrl.milestone.satisfyConditional === 'all'">
+                </p>
+                <p class="bold" ng-if="$ctrl.milestone.satisfyConditional === 'all'">
                     {{ 'milestoneReportAvailabilityRequirementsAll' | translate: { num: $ctrl.milestone.satisfyMinNumWorkgroups, percent: $ctrl.milestone.satisfyMinPercentage } }}
-                </span>
+                </p>
             </div>
-            <div ng-if="$ctrl.milestone.isReportAvailable && $ctrl.periodId > -1">
+            <div ng-if="$ctrl.milestone.isReportAvailable">
                 <compile data="$ctrl.milestone.generatedReport"></compile>
             </div>
         </div>

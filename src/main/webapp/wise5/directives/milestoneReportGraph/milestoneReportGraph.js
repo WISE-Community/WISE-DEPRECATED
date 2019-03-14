@@ -27,7 +27,7 @@ var MilestoneReportGraphController = function MilestoneReportGraphController($fi
             title: {
                 text: this.name,
                 style: {
-                    fontSize: '16px',
+                    fontSize: '14px',
                     fontWeight: '500'
                 }
             },
