@@ -16,6 +16,7 @@
             "main": "src/main/webapp/site/src/main.ts",
             "tsConfig": "src/main/webapp/site/src/tsconfig.app.json",
             "polyfills": "src/main/webapp/site/src/polyfills.ts",
+            "extractCss": true,
             "assets": [
               "src/main/webapp/site/src/assets",
               "src/main/webapp/site/src/favicon.ico"
