@@ -46,8 +46,8 @@ class SessionService {
   }
 
   startCheckMouseEvent() {
-    setInterval(angular.bind(this, this.checkMouseEvent),
-      this.convertMinutesToMilliseconds(this.checkMouseEventInMinutesInterval));
+    setInterval(() => { this.checkMouseEvent(); },
+        this.convertMinutesToMilliseconds(this.checkMouseEventInMinutesInterval));
   }
 
   convertMinutesToMilliseconds(minutes) {
@@ -71,7 +71,7 @@ class SessionService {
 
   isInactiveLongEnoughToForceLogout() {
     return this.getInactiveTimeInMinutes() >=
-      (this.showWarningInMinutesInterval + this.forceLogoutAfterWarningInMinutesInterval);
+        (this.showWarningInMinutesInterval + this.forceLogoutAfterWarningInMinutesInterval);
   }
 
   isInactiveLongEnoughToWarn() {

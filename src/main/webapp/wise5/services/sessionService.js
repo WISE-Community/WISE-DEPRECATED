@@ -66,7 +66,11 @@ var SessionService = function () {
   }, {
     key: 'startCheckMouseEvent',
     value: function startCheckMouseEvent() {
-      setInterval(angular.bind(this, this.checkMouseEvent), this.convertMinutesToMilliseconds(this.checkMouseEventInMinutesInterval));
+      var _this2 = this;
+
+      setInterval(function () {
+        _this2.checkMouseEvent();
+      }, this.convertMinutesToMilliseconds(this.checkMouseEventInMinutesInterval));
     }
   }, {
     key: 'convertMinutesToMilliseconds',
