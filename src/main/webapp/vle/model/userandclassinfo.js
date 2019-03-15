@@ -383,23 +383,23 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 
 		var getClassmatesInAlphabeticalOrder = function() {
 
-			var sortByUserName = function(a, b) {
-				var result = 0;
+      var sortByUserName = function(a, b) {
+        var result = 0;
+        if (a.userName != null && b.userName != null) {
+          //get the user names from the vleStates
+          var userNameA = a.userName.toLowerCase();
+          var userNameB = b.userName.toLowerCase();
 
-				//get the user names from the vleStates
-				var userNameA = a.userName.toLowerCase();
-				var userNameB = b.userName.toLowerCase();
-
-				if(userNameA > userNameB) {
-					//a comes after b
-					result = 1;
-				} else if(userNameA < userNameB) {
-					//a comes before b
-					result = -1;
-				}
-
-				return result;
-			};
+          if(userNameA > userNameB) {
+            //a comes after b
+            result = 1;
+          } else if(userNameA < userNameB) {
+            //a comes before b
+            result = -1;
+          }
+        }
+        return result;
+      };
 
 			return classmateUserInfos.sort(sortByUserName);
 		};
