@@ -281,9 +281,6 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
       runStatus: function runStatus(StudentDataService, config) {
         return StudentDataService.retrieveRunStatus();
       },
-      sessionTimers: function sessionTimers(SessionService, config, project, studentData) {
-        return SessionService.initializeSession();
-      },
       webSocket: function webSocket(StudentWebSocketService, config, project) {
         return StudentWebSocketService.initialize();
       },
