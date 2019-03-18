@@ -41,6 +41,7 @@ var ClassroomMonitorController = function () {
         this.showToolbar = true; // boolean to indicate whether to show the monitor toolbar
         this.showGradeByStepTools = false; // boolean to indicate whether to show the step toolbar
         this.showPeriodSelect = false; // boolean to indicate whether to show the period select
+        this.enableProjectAchievements = this.ProjectService.getAchievements().isEnabled;
 
         // ui-views and their corresponding names and icons
         this.views = {
@@ -49,6 +50,12 @@ var ClassroomMonitorController = function () {
                 icon: 'dashboard',
                 type: 'primary',
                 active: false
+            },
+            'root.milestones': {
+                name: this.$translate('milestones'),
+                icon: 'flag',
+                type: 'primary',
+                active: this.enableProjectAchievements
             },
             'root.project': {
                 name: this.$translate('gradeByStep'),
@@ -86,12 +93,6 @@ var ClassroomMonitorController = function () {
                 icon: 'file_download',
                 type: 'secondary',
                 active: true
-            },
-            'root.milestones': {
-                name: this.$translate('milestones'),
-                icon: 'flag',
-                type: 'primary',
-                active: false
             }
         };
 

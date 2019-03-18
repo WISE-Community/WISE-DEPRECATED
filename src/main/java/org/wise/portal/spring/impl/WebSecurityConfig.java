@@ -20,6 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http
       .csrf().disable()
       .authorizeRequests()
+      .antMatchers("/admin/**").hasAnyRole("ADMINISTRATOR,RESEARCHER")
       .antMatchers("/").permitAll();
 
     http.headers().frameOptions().sameOrigin();

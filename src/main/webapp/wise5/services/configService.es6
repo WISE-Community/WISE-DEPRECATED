@@ -327,7 +327,7 @@ class ConfigService {
       }
     }
     return workgroupIds;
-  };
+  }
 
   sortClassmateUserInfosAlphabeticallyByName() {
     const classmateUserInfos = this.getClassmateUserInfos();

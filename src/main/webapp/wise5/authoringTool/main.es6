@@ -165,9 +165,6 @@ const authoringModule = angular.module('authoring', [
               },
               language: ($translate, ConfigService, config) => {
                 $translate.use(ConfigService.getLocale());
-              },
-              sessionTimers: (SessionService, config) => {
-                return SessionService.initializeSession();
               }
             }
           })
@@ -182,9 +179,6 @@ const authoringModule = angular.module('authoring', [
               },
               language: ($translate, ConfigService, config) => {
                 $translate.use(ConfigService.getLocale());
-              },
-              sessionTimers: (SessionService, config) => {
-                return SessionService.initializeSession();
               }
             }
           })
@@ -206,9 +200,6 @@ const authoringModule = angular.module('authoring', [
               },
               language: ($translate, ConfigService, projectConfig) => {
                 $translate.use(ConfigService.getLocale());
-              },
-              sessionTimers: (SessionService, projectConfig) => {
-                return SessionService.initializeSession();
               },
               webSocket: (AuthorWebSocketService, projectConfig) => {
                 return AuthorWebSocketService.initialize();

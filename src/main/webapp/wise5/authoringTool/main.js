@@ -226,9 +226,6 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
       },
       language: function language($translate, ConfigService, config) {
         $translate.use(ConfigService.getLocale());
-      },
-      sessionTimers: function sessionTimers(SessionService, config) {
-        return SessionService.initializeSession();
       }
     }
   }).state('root.new', {
@@ -242,9 +239,6 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
       },
       language: function language($translate, ConfigService, config) {
         $translate.use(ConfigService.getLocale());
-      },
-      sessionTimers: function sessionTimers(SessionService, config) {
-        return SessionService.initializeSession();
       }
     }
   }).state('root.project', {
@@ -265,9 +259,6 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
       },
       language: function language($translate, ConfigService, projectConfig) {
         $translate.use(ConfigService.getLocale());
-      },
-      sessionTimers: function sessionTimers(SessionService, projectConfig) {
-        return SessionService.initializeSession();
       },
       webSocket: function webSocket(AuthorWebSocketService, projectConfig) {
         return AuthorWebSocketService.initialize();
