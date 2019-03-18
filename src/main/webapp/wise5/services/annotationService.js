@@ -1202,6 +1202,104 @@ var AnnotationService = function () {
 
       return annotations;
     }
+  }, {
+    key: 'getAverageAutoScore',
+    value: function getAverageAutoScore(nodeId, componentId) {
+      var periodId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
+      var type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
+      var totalScoreSoFar = 0;
+      var annotationsCounted = 0;
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
+
+      try {
+        for (var _iterator12 = this.getAllLatestScoreAnnotations(nodeId, componentId, periodId)[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var annotation = _step12.value;
+
+          if (annotation.nodeId === nodeId && annotation.componentId === componentId && (periodId === -1 || annotation.periodId === periodId)) {
+            var score = null;
+            if (type != null) {
+              score = this.getSubScore(annotation, type);
+            } else {
+              score = this.getScoreFromAnnotation(annotation);
+            }
+            if (score != null) {
+              totalScoreSoFar += score;
+              annotationsCounted++;
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
+          }
+        } finally {
+          if (_didIteratorError12) {
+            throw _iteratorError12;
+          }
+        }
+      }
+
+      return totalScoreSoFar / annotationsCounted;
+    }
+  }, {
+    key: 'getAllLatestScoreAnnotations',
+    value: function getAllLatestScoreAnnotations(nodeId, componentId, periodId) {
+      var workgroupIdsFound = {};
+      var latestScoreAnnotations = [];
+      for (var a = this.annotations.length - 1; a >= 0; a--) {
+        var annotation = this.annotations[a];
+        var workgroupId = annotation.toWorkgroupId;
+        if (workgroupIdsFound[workgroupId] == null && nodeId === annotation.nodeId && componentId === annotation.componentId && (periodId === -1 || periodId === annotation.periodId) && ('score' === annotation.type || 'autoScore' === annotation.type)) {
+          workgroupIdsFound[workgroupId] = annotation;
+          latestScoreAnnotations.push(annotation);
+        }
+      }
+      return latestScoreAnnotations;
+    }
+  }, {
+    key: 'getScoreFromAnnotation',
+    value: function getScoreFromAnnotation(annotation) {
+      return annotation.data.value;
+    }
+  }, {
+    key: 'getSubScore',
+    value: function getSubScore(annotation, type) {
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
+
+      try {
+        for (var _iterator13 = annotation.data.scores[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var score = _step13.value;
+
+          if (score.id === type) {
+            return score.score;
+          }
+        }
+      } catch (err) {
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
+          }
+        } finally {
+          if (_didIteratorError13) {
+            throw _iteratorError13;
+          }
+        }
+      }
+
+      return null;
+    }
   }]);
 
   return AnnotationService;

@@ -18,7 +18,6 @@ export class StudentRunListItemComponent implements OnInit {
 
   problemLink: string = '';
   thumbStyle: SafeStyle;
-  isAvailable: boolean = true;
 
   constructor(private sanitizer: DomSanitizer,
               private configService: ConfigService,
@@ -36,13 +35,6 @@ export class StudentRunListItemComponent implements OnInit {
   ngOnInit() {
     this.thumbStyle = this.getThumbStyle();
     this.problemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
-    this.configService.getConfig().subscribe(config => {
-      if (config != null) {
-        if (new Date(this.run.startTime) > new Date(this.configService.getCurrentServerTime())) {
-          this.isAvailable = false;
-        }
-      }
-    });
     if (this.run.isHighlighted) {
       setTimeout(() => {
         this.run.isHighlighted = false;
@@ -50,14 +42,22 @@ export class StudentRunListItemComponent implements OnInit {
     }
   }
 
-launchRun() {
-    if (this.run.maxStudentsPerTeam === 1 || this.run.endTime) {
-      window.location.href = `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
+  launchRun() {
+    if (this.run.maxStudentsPerTeam === 1) {
+      this.skipTeamSign();
     } else {
       this.dialog.open(TeamSignInDialogComponent, {
         data: { run: this.run },
         panelClass: 'mat-dialog--sm'
       });
     }
+  }
+
+  reviewRun() {
+    this.skipTeamSign();
+  }
+
+  skipTeamSign() {
+    window.location.href = `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
   }
 }

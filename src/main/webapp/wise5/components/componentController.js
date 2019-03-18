@@ -41,10 +41,8 @@ var ComponentController = function () {
     this.parentStudentWorkIds = null;
     this.attachments = [];
 
-    // whether the student work has changed since last submit
     this.isSubmitDirty = false;
 
-    // whether the student work is for a submit
     this.isSubmit = false;
 
     this.saveMessage = {
@@ -479,6 +477,8 @@ var ComponentController = function () {
     value: function studentDataChanged() {
       var _this5 = this;
 
+      var isCompleted = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
       this.setIsDirty(true);
       this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
 
@@ -497,6 +497,10 @@ var ComponentController = function () {
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
         _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
+
+        if (componentState.isCompleted) {
+          _this5.$scope.$emit('componentCompleted', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
+        }
       });
     }
   }, {
@@ -736,9 +740,14 @@ var ComponentController = function () {
       return this.NotebookService.isNotebookEnabled();
     }
   }, {
+    key: 'isStudentNoteClippingEnabled',
+    value: function isStudentNoteClippingEnabled() {
+      return this.NotebookService.isStudentNoteClippingEnabled();
+    }
+  }, {
     key: 'isAddToNotebookEnabled',
     value: function isAddToNotebookEnabled() {
-      return this.isNotebookEnabled() && this.showAddToNotebookButton;
+      return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled();
     }
 
     /**

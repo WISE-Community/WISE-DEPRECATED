@@ -6,7 +6,8 @@ export class Run {
   name: string;
   runCode: string;
   startTime: string;
-  endTime: number;
+  endTime: string;
+  lastRun: string;
   projectThumb: string;
   numStudents: number;
   maxStudentsPerTeam: number;
@@ -68,5 +69,27 @@ export class Run {
 
   userHasPermission(user: User, permission: number) {
     return user.permissions.includes(permission);
+  }
+
+  isActive() {
+    const now = new Date().getTime();
+    const endTime = new Date(this.endTime).getTime();
+    if (endTime && endTime <= now) {
+      return false;
+    }
+    const startTime = new Date(this.startTime).getTime();
+    return startTime <= now;
+  }
+
+  isCompleted() {
+    const now = new Date().getTime();
+    const endTime = new Date(this.endTime).getTime();
+    return endTime <= now;
+  }
+
+  isScheduled() {
+    const now = new Date().getTime();
+    const startTime = new Date(this.startTime).getTime();
+    return startTime > now;
   }
 }
