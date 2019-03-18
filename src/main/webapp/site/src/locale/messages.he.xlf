@@ -2173,13 +2173,13 @@
         </context-group>
         <target xml:lang="he" state="needs-translation">Should I register my students for WISE or have them do it themselves?</target>
       </trans-unit>
-      <trans-unit id="4fc7a3203e7fcb5c568b844e5196c6ba9b84e343" datatype="html">
-        <source>WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the "Register" link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their Username/Password on their first day in the project run.</source>
+      <trans-unit id="2c8b400fdc35436d28c9cccdaeb20ce10a03c8d7" datatype="html">
+        <source>WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the "Register" link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their username/password on their first day in the project run.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target xml:lang="he" state="needs-translation">WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the "Register" link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their Username/Password on their first day in the project run.</target>
+        <target xml:lang="he" state="needs-translation">WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the "Register" link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their username/password on their first day in the project run.</target>
       </trans-unit>
       <trans-unit id="90a07f702eb512ee62bff7940263f760a401a538" datatype="html">
         <source>Once a student has created a WISE account they should never need to create another one.</source>
@@ -2197,29 +2197,29 @@
         </context-group>
         <target xml:lang="he" state="needs-translation">Some teachers that pre-register prefer to give all students the same initial password, to decrease problems with students signing in. This is ok, but for security purposes, we advise that you have the students change their passwords once they log in.</target>
       </trans-unit>
-      <trans-unit id="6c46b9e20962aef993b133099cf4aabc8fa868dc" datatype="html">
-        <source>A student has forgotten his/her Username or Password. What should I do?</source>
+      <trans-unit id="75241afb27cf8555c0fbea2f6607b233b880ad12" datatype="html">
+        <source>A student has forgotten his/her username or password. What should I do?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target xml:lang="he" state="needs-translation">A student has forgotten his/her Username or Password. What should I do?</target>
+        <target xml:lang="he" state="needs-translation">A student has forgotten his/her username or password. What should I do?</target>
       </trans-unit>
-      <trans-unit id="e819f48c10c2dbcb9db7181bb2792ad88aeb535b" datatype="html">
-        <source>First, we recommend always having students WRITE DOWN their Username/Password when they first register.</source>
+      <trans-unit id="bf651aa2d8a6a5afc3a142cc29e5186620753bd3" datatype="html">
+        <source>First, we recommend always having students WRITE DOWN their username/password when they first register.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target xml:lang="he" state="needs-translation">First, we recommend always having students WRITE DOWN their Username/Password when they first register.</target>
+        <target xml:lang="he" state="needs-translation">First, we recommend always having students WRITE DOWN their username/password when they first register.</target>
       </trans-unit>
-      <trans-unit id="a89bac915a66c78bc44602ab2f2dab9ba8036fb1" datatype="html">
-        <source>Second, encourage the students to solve the problem themselves. Tell them to go to the WISE home page, click the Lost Username/Password link, and click the Student button. If the student can answer their security question (created at registration) they can change their password.</source>
+      <trans-unit id="427421b70d77408e21b0462e665b63cb5765f06a" datatype="html">
+        <source>Second, encourage the students to solve the problem themselves. Tell them to go to the WISE home page, click the Lost username/password link, and click the Student button. If the student can answer their security question (created at registration) they can change their password.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <target xml:lang="he" state="needs-translation">Second, encourage the students to solve the problem themselves. Tell them to go to the WISE home page, click the Lost Username/Password link, and click the Student button. If the student can answer their security question (created at registration) they can change their password.</target>
+        <target xml:lang="he" state="needs-translation">Second, encourage the students to solve the problem themselves. Tell them to go to the WISE home page, click the Lost username/password link, and click the Student button. If the student can answer their security question (created at registration) they can change their password.</target>
       </trans-unit>
       <trans-unit id="467c00b97052f8105444837a01e9d2fa9b2bc6cc" datatype="html">
         <source>Third, if the student can't solve the problem directly, you can change their password for them using the instructions below.</source>
@@ -2945,8 +2945,8 @@
         </context-group>
         <target xml:lang="he" state="needs-translation">What if I have trouble logging in?</target>
       </trans-unit>
-      <trans-unit id="81f61da5812345fd9419112e7abdecc2e19918f5" datatype="html">
-        <source>If you do not remember your Username or password click the Lost Username or Password link and follow the instructions. </source>
+      <trans-unit id="ef91b6733f15c82512f30d911641bc4b2076879c" datatype="html">
+        <source>If you do not remember your username or password click the Lost Username or Password link and follow the instructions. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">201</context>
@@ -2955,7 +2955,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target xml:lang="he" state="needs-translation">If you do not remember your Username or password click the Lost Username or Password link and follow the instructions. </target>
+        <target xml:lang="he" state="needs-translation">If you do not remember your username or password click the Lost Username or Password link and follow the instructions. </target>
       </trans-unit>
       <trans-unit id="df6ec49a683a1c798d509516f3b73dd1befb6a62" datatype="html">
         <source>Can I use WISE in another language?</source>
