@@ -1,1 +1,16 @@
 #!/bin/bash
+echo "*****************************"
+echo "* BEGIN WISE PRECOMMIT HOOK *"
+echo "*****************************"
+gulp site-i18n
+if [ "`git diff --name-status | awk '$1 == "M"' | grep xlf | wc -l`" -gt 0 ]; then
+  echo "Your code generated changes to the following file(s):"
+  git diff --name-status | awk '$1 == "M"' | grep xlf
+  echo "Please test and stage them before committing again."
+  echo "You can commit with -n to bypass this pre-commit hook."
+  echo "Aborting commit."
+  exit 1
+fi
+echo "***************************"
+echo "* END WISE PRECOMMIT HOOK *"
+echo "***************************"
