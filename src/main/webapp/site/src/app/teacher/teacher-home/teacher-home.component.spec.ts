@@ -62,7 +62,7 @@ export class MockUserService {
     user.firstName = 'Demo';
     user.lastName = 'Teacher';
     user.role = 'teacher';
-    user.userName = 'DemoTeacher';
+    user.username = 'DemoTeacher';
     user.id = 123456;
     return Observable.create( observer => {
       observer.next(user);

@@ -85,7 +85,7 @@ export class EditProfileComponent implements OnInit {
     const schoolName: string = this.getControlFieldValue('schoolName');
     const schoolLevel: string = this.getControlFieldValue('schoolLevel');
     const language: string = this.getControlFieldValue('language');
-    const username = this.user.userName;
+    const username = this.user.username;
     this.teacherService.updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language)
         .pipe(
           finalize(() => {

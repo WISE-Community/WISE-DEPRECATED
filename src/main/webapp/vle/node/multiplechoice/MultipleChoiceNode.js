@@ -90,7 +90,7 @@ MultipleChoiceNode.prototype.getLatestWork = function(vle) {
 	}
 	
 	//create and return a query entry object
-	return new MultipleChoiceQueryEntry(vle.getWorkgroupId(), vle.getUserName(), this.id, this.mc.promptText, latestState.getIdentifier(), this.mc.getCHOICEByIdentifier(latestState.getIdentifier()).text);
+	return new MultipleChoiceQueryEntry(vle.getWorkgroupId(), vle.getUsername(), this.id, this.mc.promptText, latestState.getIdentifier(), this.mc.getCHOICEByIdentifier(latestState.getIdentifier()).text);
 };
 
 /**

@@ -63,7 +63,7 @@ public class ChangeUserPasswordController {
   @Autowired
   protected ChangePasswordParametersValidator changePasswordParametersValidator;
 
-  private final static String USER_NAME = "userName";
+  private final static String USER_NAME = "username";
 
   /**
    * Called before the page is loaded to initialize values
@@ -74,12 +74,12 @@ public class ChangeUserPasswordController {
   @RequestMapping(method = RequestMethod.GET)
   public String initializeForm(ModelMap model, HttpServletRequest request) {
     User signedInUser = ControllerUtil.getSignedInUser();
-    String userName = request.getParameter(USER_NAME);
+    String username = request.getParameter(USER_NAME);
     User userToChange;
     User teacherUser = null;
-    if (userName != null) {
+    if (username != null) {
       // the username is provided which means a teacher is changing the password for a student
-      userToChange = userService.retrieveUserByUsername(userName);
+      userToChange = userService.retrieveUserByUsername(username);
       teacherUser = ControllerUtil.getSignedInUser();
     } else {
       // if username is not specified, assume that logged-in user wants to change his/her own password.

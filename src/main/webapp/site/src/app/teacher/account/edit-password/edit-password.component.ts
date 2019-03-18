@@ -70,7 +70,7 @@ export class EditPasswordComponent implements OnInit {
   }
 
   getUsername() {
-    return this.userService.getUser().getValue().userName;
+    return this.userService.getUser().getValue().username;
   }
 
   handleChangePasswordResponse(response) {

@@ -29,7 +29,7 @@ class TopBarController {
         this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
 
     // get the teacher name and user name
-    this.userName = this.ConfigService.getMyUserName();
+    this.username = this.ConfigService.getMyUsername();
 
     this.themePath = this.ProjectService.getThemePath();
     this.contextPath = this.ConfigService.getContextPath();

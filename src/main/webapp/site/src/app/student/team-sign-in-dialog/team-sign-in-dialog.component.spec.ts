@@ -19,7 +19,7 @@ export class MockUserService {
     const user: User = new User();
     user.firstName = 'Demo';
     user.lastName = 'User';
-    user.userName = 'DemoUser';
+    user.username = 'DemoUser';
     const userBehaviorSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     userBehaviorSubject.next(user);
     return userBehaviorSubject;
@@ -70,13 +70,13 @@ describe('TeamSignInDialogComponent', () => {
         "id": 123,
         "firstName": "Spongebob",
         "lastName": "Squarepants",
-        "userName": "SpongebobS0123"
+        "username": "SpongebobS0123"
       },
       {
         "id": 154,
         "firstName": "Patrick",
         "lastName": "Starr",
-        "userName": "PatrickS0619"
+        "username": "PatrickS0619"
       }
     ]
   };

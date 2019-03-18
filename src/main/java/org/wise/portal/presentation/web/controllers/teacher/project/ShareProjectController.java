@@ -143,13 +143,13 @@ public class ShareProjectController {
 
       for (User sharedowner : sharedowners) {
         String sharedTeacherRole = projectService.getSharedTeacherRole(project, sharedowner);
-        String userName = sharedowner.getUserDetails().getUsername();
-        allTeacherUsernames.remove(userName);
+        String username = sharedowner.getUserDetails().getUsername();
+        allTeacherUsernames.remove(username);
         AddSharedTeacherParameters addSharedTeacherParameters = new AddSharedTeacherParameters();
         addSharedTeacherParameters.setPermission(sharedTeacherRole);
         addSharedTeacherParameters.setProject(project);
-        addSharedTeacherParameters.setSharedOwnerUsername(userName);
-        modelMap.put(userName, addSharedTeacherParameters);
+        addSharedTeacherParameters.setSharedOwnerUsername(username);
+        modelMap.put(username, addSharedTeacherParameters);
       }
 
       modelMap.put("project", project);

@@ -24,7 +24,7 @@ export class MockUserService {
     user.firstName = 'Demo';
     user.lastName = 'Teacher';
     user.role = 'teacher';
-    user.userName = 'DemoTeacher';
+    user.username = 'DemoTeacher';
     user.id = 123456;
     user.displayName = 'Demo Teacher';
     user.email = 'test@test.com';

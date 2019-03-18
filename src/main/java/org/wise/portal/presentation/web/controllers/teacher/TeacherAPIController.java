@@ -129,7 +129,7 @@ public class TeacherAPIController {
       ownerJSON.put("id", owner.getId());
       TeacherUserDetails ownerUserDetails = (TeacherUserDetails) owner.getUserDetails();
       ownerJSON.put("displayName", ownerUserDetails.getDisplayname());
-      ownerJSON.put("userName", ownerUserDetails.getUsername());
+      ownerJSON.put("username", ownerUserDetails.getUsername());
       ownerJSON.put("firstName", ownerUserDetails.getFirstname());
       ownerJSON.put("lastName", ownerUserDetails.getLastname());
     } catch(org.hibernate.ObjectNotFoundException e) {

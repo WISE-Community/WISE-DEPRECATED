@@ -161,7 +161,7 @@ var DiscussionController = function (_ComponentController) {
     key: 'sendPostToClassmatesInPeriod',
     value: function sendPostToClassmatesInPeriod(componentState) {
       var messageType = 'studentData';
-      componentState.userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
+      componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
       this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
     }
   }, {
@@ -175,11 +175,11 @@ var DiscussionController = function (_ComponentController) {
           var notificationType = 'DiscussionReply';
           var nodeId = componentState.nodeId;
           var componentId = componentState.componentId;
-          var userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
-          var userNames = userNamesArray.map(function (obj) {
+          var usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(fromWorkgroupId);
+          var usernames = usernamesArray.map(function (obj) {
             return obj.name;
           }).join(', ');
-          var notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
+          var notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { usernames: usernames });
           var workgroupsNotifiedSoFar = [];
           if (this.responsesMap[componentStateIdReplyingTo] != null) {
             this.sendPostToThreadCreator(componentStateIdReplyingTo, notificationType, nodeId, componentId, fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar);
@@ -407,11 +407,11 @@ var DiscussionController = function (_ComponentController) {
           if (componentState.studentData.isSubmit) {
             var workgroupId = componentState.workgroupId;
             var latestInappropriateFlagAnnotation = this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
-            var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-            if (userNames.length == 0) {
-              componentState.userNames = this.getUserIdsDisplay(workgroupId);
+            var usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
+            if (usernames.length == 0) {
+              componentState.usernames = this.getUserIdsDisplay(workgroupId);
             } else {
-              componentState.userNames = userNames.map(function (obj) {
+              componentState.usernames = usernames.map(function (obj) {
                 return obj.name;
               }).join(', ');
             }
@@ -586,13 +586,13 @@ var DiscussionController = function (_ComponentController) {
     value: function addClassResponse(componentState) {
       if (componentState.studentData.isSubmit) {
         var workgroupId = componentState.workgroupId;
-        var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-        if (userNames.length > 0) {
-          componentState.userNames = userNames.map(function (obj) {
+        var usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
+        if (usernames.length > 0) {
+          componentState.usernames = usernames.map(function (obj) {
             return obj.name;
           }).join(', ');
-        } else if (componentState.userNamesArray != null) {
-          componentState.userNames = componentState.userNamesArray.map(function (obj) {
+        } else if (componentState.usernamesArray != null) {
+          componentState.usernames = componentState.usernamesArray.map(function (obj) {
             return obj.name;
           }).join(', ');
         }
@@ -615,7 +615,7 @@ var DiscussionController = function (_ComponentController) {
     }
 
     /**
-     * Get the level 1 responses which are posts that are not a
+     * Get the level 1 responses which are posts that are not a2
      * reply to another response.
      * @return an array of responses that are not a reply to another
      * response

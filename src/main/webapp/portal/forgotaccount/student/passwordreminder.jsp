@@ -33,10 +33,10 @@
 					<div>
 						<form:form id="username" name="retrievepassword" method="post" commandName="passwordReminderParameters" autocomplete='off'>
 							<label style="font-weight:bold;" for="username"><spring:message code="forgotaccount.student.passwordreminder.username" />:</label>
-				  			<input class="dataBoxStyle" type="text" name="username" id="userName" size="20" tabindex="1" />
+				  			<input class="dataBoxStyle" type="text" name="username" id="username" size="20" tabindex="1" />
 
 							<!-- 			Special script pulls focus onto immediately preceding Input field-->
-				 			<script type="text/javascript">document.getElementById('userName').focus();
+				 			<script type="text/javascript">document.getElementById('username').focus();
 							</script>
 							<input type="hidden" name="_page" value="1" />
 							<input style="margin-left:20px; text-align:center;width:55px;" type="submit" id="next" name="_target1" value="<spring:message code="forgotaccount.student.passwordreminder.next" />" />

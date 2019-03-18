@@ -169,7 +169,7 @@ var StudentDataService = function () {
         this.studentData.nodeStates = [];
         this.studentData.events = [];
         this.studentData.annotations = [];
-        this.studentData.userName = this.$translate('PREVIEW_STUDENT');
+        this.studentData.username = this.$translate('PREVIEW_STUDENT');
         this.studentData.userId = '0';
 
         // set the annotations into the annotation service

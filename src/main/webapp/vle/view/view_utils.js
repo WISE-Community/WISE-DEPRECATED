@@ -1200,7 +1200,7 @@ View.prototype.renderSummaryViewForNode = function(node, dom) {
 	if(node.hasSummaryView()) {
 
 		//get all the vleStates
-		var vleStates = this.getVleStatesSortedByUserName();
+		var vleStates = this.getVleStatesSortedByUsername();
 
 		//get the node id
 		var nodeId = node.id;

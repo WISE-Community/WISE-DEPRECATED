@@ -1712,8 +1712,8 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-      </trans-unit><trans-unit id="4fc7a3203e7fcb5c568b844e5196c6ba9b84e343" datatype="html">
-        <source>WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the &quot;Register&quot; link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their Username/Password on their first day in the project run.</source>
+      </trans-unit><trans-unit id="2c8b400fdc35436d28c9cccdaeb20ce10a03c8d7" datatype="html">
+        <source>WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the &quot;Register&quot; link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their username/password on their first day in the project run.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">40</context>
@@ -1730,20 +1730,20 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
-      </trans-unit><trans-unit id="6c46b9e20962aef993b133099cf4aabc8fa868dc" datatype="html">
-        <source>A student has forgotten his/her Username or Password. What should I do?</source>
+      </trans-unit><trans-unit id="75241afb27cf8555c0fbea2f6607b233b880ad12" datatype="html">
+        <source>A student has forgotten his/her username or password. What should I do?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-      </trans-unit><trans-unit id="e819f48c10c2dbcb9db7181bb2792ad88aeb535b" datatype="html">
-        <source>First, we recommend always having students WRITE DOWN their Username/Password when they first register.</source>
+      </trans-unit><trans-unit id="bf651aa2d8a6a5afc3a142cc29e5186620753bd3" datatype="html">
+        <source>First, we recommend always having students WRITE DOWN their username/password when they first register.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-      </trans-unit><trans-unit id="a89bac915a66c78bc44602ab2f2dab9ba8036fb1" datatype="html">
-        <source>Second, encourage the students to solve the problem themselves. Tell them to go to the WISE home page, click the Lost Username/Password link, and click the Student button. If the student can answer their security question (created at registration) they can change their password.</source>
+      </trans-unit><trans-unit id="427421b70d77408e21b0462e665b63cb5765f06a" datatype="html">
+        <source>Second, encourage the students to solve the problem themselves. Tell them to go to the WISE home page, click the Lost username/password link, and click the Student button. If the student can answer their security question (created at registration) they can change their password.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">48</context>
@@ -2318,8 +2318,8 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-      </trans-unit><trans-unit id="81f61da5812345fd9419112e7abdecc2e19918f5" datatype="html">
-        <source>If you do not remember your Username or password click the Lost Username or Password link and follow the instructions. </source>
+      </trans-unit><trans-unit id="ef91b6733f15c82512f30d911641bc4b2076879c" datatype="html">
+        <source>If you do not remember your username or password click the Lost Username or Password link and follow the instructions. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">201</context>
@@ -4772,8 +4772,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="de4fdef260a86fc9c409a2d4562e8910d93e2b6d" datatype="html">
+      </trans-unit><trans-unit id="de4fdef260a86fc9c409a2d4562e8910d93e2b6d" datatype="html">
         <source>Trouble Signing In</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
@@ -4783,8 +4782,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="84ca5513dca4fe431338da8c2b1f43d8c0d075cb" datatype="html">
+      </trans-unit><trans-unit id="84ca5513dca4fe431338da8c2b1f43d8c0d075cb" datatype="html">
         <source>Need Help Using WISE</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
@@ -4794,8 +4792,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="6a6f97816b45d44504a072d73938c951bbd01810" datatype="html">
+      </trans-unit><trans-unit id="6a6f97816b45d44504a072d73938c951bbd01810" datatype="html">
         <source>Problems with a WISE Unit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
@@ -4805,8 +4802,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="f1807ecd6fbc3fe83f80ac9aa16bc7070b8b8710" datatype="html">
+      </trans-unit><trans-unit id="f1807ecd6fbc3fe83f80ac9aa16bc7070b8b8710" datatype="html">
         <source>Feedback to WISE</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
@@ -4816,8 +4812,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="c2a9de3714f5767b174d0424bc8abe2dc37acc41" datatype="html">
+      </trans-unit><trans-unit id="c2a9de3714f5767b174d0424bc8abe2dc37acc41" datatype="html">
         <source>Other</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
@@ -4835,36 +4830,31 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="f00f3d70974c43864db310ec95f4f39f7db4889d" datatype="html">
+      </trans-unit><trans-unit id="f00f3d70974c43864db310ec95f4f39f7db4889d" datatype="html">
         <source>Need Help with Authoring</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="5b010f83da62819ebc8fe9ef4617d06655d9956d" datatype="html">
+      </trans-unit><trans-unit id="5b010f83da62819ebc8fe9ef4617d06655d9956d" datatype="html">
         <source>Password cannot be blank. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="dd3e7d304d9699b552e74b3df8ba4db15bd73d45" datatype="html">
+      </trans-unit><trans-unit id="dd3e7d304d9699b552e74b3df8ba4db15bd73d45" datatype="html">
         <source>Passwords do not match. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="a9c69d183e4c242ae401b97eb42e604e7d68b28b" datatype="html">
+      </trans-unit><trans-unit id="a9c69d183e4c242ae401b97eb42e604e7d68b28b" datatype="html">
         <source>Password is invalid. Please try a different password.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="b56dfebca6de6359c493b37573a9899570a588bc" datatype="html">
+      </trans-unit><trans-unit id="b56dfebca6de6359c493b37573a9899570a588bc" datatype="html">
         <source>An error occurred. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.ts</context>
@@ -4878,15 +4868,13 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="2b56c831427defc64625d11924305ed7799352a9" datatype="html">
+      </trans-unit><trans-unit id="2b56c831427defc64625d11924305ed7799352a9" datatype="html">
         <source>Incorrect answer, please try again. If you can&apos;t remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="0f14490b15e52e7783bc7797b74835bfb4d12ffd" datatype="html">
+      </trans-unit><trans-unit id="0f14490b15e52e7783bc7797b74835bfb4d12ffd" datatype="html">
         <source>We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password/forgot-student-password.component.ts</context>
@@ -4896,8 +4884,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="0034d12a18c80ed8071f50dd902cc8bfc5694397" datatype="html">
+      </trans-unit><trans-unit id="0034d12a18c80ed8071f50dd902cc8bfc5694397" datatype="html">
         <source>01 (Jan)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -4907,8 +4894,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="0931fb286156dee1394c7e61710a4f1ee029bec1" datatype="html">
+      </trans-unit><trans-unit id="0931fb286156dee1394c7e61710a4f1ee029bec1" datatype="html">
         <source>02 (Feb)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -4918,8 +4904,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="fb954f4c2bd25a40575cbbfd7dabf8c21413ff09" datatype="html">
+      </trans-unit><trans-unit id="fb954f4c2bd25a40575cbbfd7dabf8c21413ff09" datatype="html">
         <source>03 (Mar)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -4929,8 +4914,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="059ffe65f2882d4fa6aec1f22cd8bff61c648016" datatype="html">
+      </trans-unit><trans-unit id="059ffe65f2882d4fa6aec1f22cd8bff61c648016" datatype="html">
         <source>04 (Apr)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -4940,8 +4924,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="788337d5af8315eb94f8eeb875152947d81ed970" datatype="html">
+      </trans-unit><trans-unit id="788337d5af8315eb94f8eeb875152947d81ed970" datatype="html">
         <source>05 (May)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -4951,8 +4934,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="e78cea38fcaa585fd19d98676e1812b5d5837d34" datatype="html">
+      </trans-unit><trans-unit id="e78cea38fcaa585fd19d98676e1812b5d5837d34" datatype="html">
         <source>06 (Jun)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -4962,8 +4944,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="ab1bb567d433c94269b4f2875fdd898d7276d5a6" datatype="html">
+      </trans-unit><trans-unit id="ab1bb567d433c94269b4f2875fdd898d7276d5a6" datatype="html">
         <source>07 (Jul)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -4973,8 +4954,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="490b1aa4b4768e1596c6c19e8dca77c401247588" datatype="html">
+      </trans-unit><trans-unit id="490b1aa4b4768e1596c6c19e8dca77c401247588" datatype="html">
         <source>08 (Aug)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -4984,8 +4964,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="06c5170eda5041ce09d9381ca2e5f739c7b6df6e" datatype="html">
+      </trans-unit><trans-unit id="06c5170eda5041ce09d9381ca2e5f739c7b6df6e" datatype="html">
         <source>09 (Sep)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -4995,8 +4974,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="3245dcf86cb2ee2fba808cce33907d7f67b57f70" datatype="html">
+      </trans-unit><trans-unit id="3245dcf86cb2ee2fba808cce33907d7f67b57f70" datatype="html">
         <source>10 (Oct)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -5006,8 +4984,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="bc64ec063b9c3a1adfa2f4134e0b1cbcb0c6e02e" datatype="html">
+      </trans-unit><trans-unit id="bc64ec063b9c3a1adfa2f4134e0b1cbcb0c6e02e" datatype="html">
         <source>11 (Nov)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -5017,8 +4994,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="fac808901a559404cc61fb3322fd0c351f1aa923" datatype="html">
+      </trans-unit><trans-unit id="fac808901a559404cc61fb3322fd0c351f1aa923" datatype="html">
         <source>12 (Dec)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
@@ -5028,29 +5004,25 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="7d2b424cec500d06336a5c74c64b0c93e126cbff" datatype="html">
+      </trans-unit><trans-unit id="7d2b424cec500d06336a5c74c64b0c93e126cbff" datatype="html">
         <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can&apos;t find your account, ask a teacher for help or contact us for assistance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="93256df87c3e35873c0b60f3c2478c9651291881" datatype="html">
+      </trans-unit><trans-unit id="93256df87c3e35873c0b60f3c2478c9651291881" datatype="html">
         <source>We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="6b6d7c8be10b5e98805335844750cd1035e23f8d" datatype="html">
+      </trans-unit><trans-unit id="6b6d7c8be10b5e98805335844750cd1035e23f8d" datatype="html">
         <source>We found multiple usernames that match. If one of these is yours, select it to log in. If you can&apos;t find your account, ask a teacher for help or contact us for assistance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="bc97abab83efdcc1facad857f5ca74f8e420000d" datatype="html">
+      </trans-unit><trans-unit id="bc97abab83efdcc1facad857f5ca74f8e420000d" datatype="html">
         <source>The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
@@ -5060,8 +5032,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="4a0bbc0b76303940c748153ce1b20a3911abad6b" datatype="html">
+      </trans-unit><trans-unit id="4a0bbc0b76303940c748153ce1b20a3911abad6b" datatype="html">
         <source>The verification code is invalid. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
@@ -5071,8 +5042,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="a36838ad01418074c9380499aeb8250c051c5067" datatype="html">
+      </trans-unit><trans-unit id="a36838ad01418074c9380499aeb8250c051c5067" datatype="html">
         <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
@@ -5082,120 +5052,103 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="55cf53e519557dc8c87c01afd630ab40c7546172" datatype="html">
+      </trans-unit><trans-unit id="55cf53e519557dc8c87c01afd630ab40c7546172" datatype="html">
         <source>Password cannot be blank, please enter a password.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="9ea89a76186e703222a3c0a8c261ef6f81c62791" datatype="html">
+      </trans-unit><trans-unit id="9ea89a76186e703222a3c0a8c261ef6f81c62791" datatype="html">
         <source>Passwords do not match, please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="7ff2c787c56ea04e33595ef32a0f23104e3214ae" datatype="html">
+      </trans-unit><trans-unit id="7ff2c787c56ea04e33595ef32a0f23104e3214ae" datatype="html">
         <source>An error occurred, please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="108de953d59b965b4454434ac2f8664651c396d5" datatype="html">
+      </trans-unit><trans-unit id="108de953d59b965b4454434ac2f8664651c396d5" datatype="html">
         <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="5e14de974094b2e38989db1da25c34badbcb0888" datatype="html">
+      </trans-unit><trans-unit id="5e14de974094b2e38989db1da25c34badbcb0888" datatype="html">
         <source>The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="4b2d0bc81118fc043b3b4474eb9924070cc22777" datatype="html">
+      </trans-unit><trans-unit id="4b2d0bc81118fc043b3b4474eb9924070cc22777" datatype="html">
         <source>We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="0acdb2c552977a58eb0966e2f4a82f443ad2916e" datatype="html">
+      </trans-unit><trans-unit id="0acdb2c552977a58eb0966e2f4a82f443ad2916e" datatype="html">
         <source>The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="5d6fe85e070e0a0291dcb60f4a95ac1cb9a4a991" datatype="html">
+      </trans-unit><trans-unit id="5d6fe85e070e0a0291dcb60f4a95ac1cb9a4a991" datatype="html">
         <source>An error occurred: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="5093f1c7a1a2d4ef9a87d65d94c536a3d6b1e175" datatype="html">
+      </trans-unit><trans-unit id="5093f1c7a1a2d4ef9a87d65d94c536a3d6b1e175" datatype="html">
         <source>Backend returned code <x id="INTERPOLATION" equiv-text="{{status}}"/>, body was: <x id="INTERPOLATION_1" equiv-text="{{error}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="050662d81fa6f59adbcc1190eee2435910b9e927" datatype="html">
+      </trans-unit><trans-unit id="050662d81fa6f59adbcc1190eee2435910b9e927" datatype="html">
         <source>An error occurred. Please check your connection and try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="dbe9ffa58b07d48dc33f34c86b15c3ce33bbd2c2" datatype="html">
+      </trans-unit><trans-unit id="dbe9ffa58b07d48dc33f34c86b15c3ce33bbd2c2" datatype="html">
         <source>Unit Details</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/library-project/library-project.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="615b3b60d98013117fa5ced450b1345d5ba5262d" datatype="html">
+      </trans-unit><trans-unit id="615b3b60d98013117fa5ced450b1345d5ba5262d" datatype="html">
         <source>Show:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="ce3cefb1cd0099aa5003dda16ec9eb21fd8ba789" datatype="html">
+      </trans-unit><trans-unit id="ce3cefb1cd0099aa5003dda16ec9eb21fd8ba789" datatype="html">
         <source>Next page</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="575e782fd27f2ee70a034a775efe9ad162472250" datatype="html">
+      </trans-unit><trans-unit id="575e782fd27f2ee70a034a775efe9ad162472250" datatype="html">
         <source>Previous page</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="dddb2fd891082b5905adb176fbb382e6ccf3e10f" datatype="html">
+      </trans-unit><trans-unit id="dddb2fd891082b5905adb176fbb382e6ccf3e10f" datatype="html">
         <source>0 of <x id="INTERPOLATION" equiv-text="{{total}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="1fa889a57be6df3fc55b83d402af3b2933b89acd" datatype="html">
+      </trans-unit><trans-unit id="1fa889a57be6df3fc55b83d402af3b2933b89acd" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{start}}"/> - <x id="INTERPOLATION_1" equiv-text="{{end}}"/> of <x id="INTERPOLATION_2" equiv-text="{{total}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="46e4ba42c378685244d606204ade725e243a5572" datatype="html">
+      </trans-unit><trans-unit id="46e4ba42c378685244d606204ade725e243a5572" datatype="html">
         <source>Sharing permissions updated for <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
@@ -5213,50 +5166,43 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/share-run-dialog/share-run-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="33b9dd7d7bbb965d7208dcf0e33cc0545a3030a2" datatype="html">
+      </trans-unit><trans-unit id="33b9dd7d7bbb965d7208dcf0e33cc0545a3030a2" datatype="html">
         <source>Added shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="a468fe0f9732107893d00498816aaf811c0e4190" datatype="html">
+      </trans-unit><trans-unit id="a468fe0f9732107893d00498816aaf811c0e4190" datatype="html">
         <source>Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="c8f0dbda0d557e58e54598c7d29d719d6c764413" datatype="html">
+      </trans-unit><trans-unit id="c8f0dbda0d557e58e54598c7d29d719d6c764413" datatype="html">
         <source>Select an option</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/select-menu/select-menu.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="18f3bafdc69b800737e303bc1cb0753bd9dd3f32" datatype="html">
+      </trans-unit><trans-unit id="18f3bafdc69b800737e303bc1cb0753bd9dd3f32" datatype="html">
         <source>Female</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="097b5dfee5665aa0f7daba8b696acecde6445474" datatype="html">
+      </trans-unit><trans-unit id="097b5dfee5665aa0f7daba8b696acecde6445474" datatype="html">
         <source>Male</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="f60d7936217a148dd26aae9c64f8d676369be901" datatype="html">
+      </trans-unit><trans-unit id="f60d7936217a148dd26aae9c64f8d676369be901" datatype="html">
         <source>No Answer/Other</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="a318c6afca84af8f01f017d075ff1c3f6257e4f3" datatype="html">
+      </trans-unit><trans-unit id="a318c6afca84af8f01f017d075ff1c3f6257e4f3" datatype="html">
         <source>Elementary School</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
@@ -5266,8 +5212,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="09637ca64b2d5d3a393bd1ab2713c0bd4edbcc95" datatype="html">
+      </trans-unit><trans-unit id="09637ca64b2d5d3a393bd1ab2713c0bd4edbcc95" datatype="html">
         <source>Middle School</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
@@ -5277,8 +5222,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="883888e9073880687bd969a402dff0b136f09023" datatype="html">
+      </trans-unit><trans-unit id="883888e9073880687bd969a402dff0b136f09023" datatype="html">
         <source>High School</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
@@ -5288,8 +5232,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="687134b5f01a5de70837d9773ae0aaf9f005a205" datatype="html">
+      </trans-unit><trans-unit id="687134b5f01a5de70837d9773ae0aaf9f005a205" datatype="html">
         <source>College</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
@@ -5299,8 +5242,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
+      </trans-unit><trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
         <source>Password changed.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/account/edit-password/edit-password.component.ts</context>
@@ -5310,8 +5252,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-password/edit-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="db4ff52375f6a25ad0472e92754c8c265ae47c6b" datatype="html">
+      </trans-unit><trans-unit id="db4ff52375f6a25ad0472e92754c8c265ae47c6b" datatype="html">
         <source>Profile updated.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/account/edit-profile/edit-profile.component.ts</context>
@@ -5321,8 +5262,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="96e3d7cc1051fa738cbb4f3ee6038c1751d85df6" datatype="html">
+      </trans-unit><trans-unit id="96e3d7cc1051fa738cbb4f3ee6038c1751d85df6" datatype="html">
         <source>A teacher cannot be added as a team member.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
@@ -5332,8 +5272,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="b2916d36518d35a721ac095d4c10b3e42cc45b76" datatype="html">
+      </trans-unit><trans-unit id="b2916d36518d35a721ac095d4c10b3e42cc45b76" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/> is already in the team.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
@@ -5343,8 +5282,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="85cc0a779b7da91dba954ffc0a2409811cfe8acd" datatype="html">
+      </trans-unit><trans-unit id="85cc0a779b7da91dba954ffc0a2409811cfe8acd" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/> is already on another team.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
@@ -5354,155 +5292,133 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="1a0ca479e7388aea7b2d26e84673bc88081cee7f" datatype="html">
+      </trans-unit><trans-unit id="1a0ca479e7388aea7b2d26e84673bc88081cee7f" datatype="html">
         <source>Invalid username. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="b02351365c2a5c4456bd54c342cfe09b3c065a95" datatype="html">
+      </trans-unit><trans-unit id="b02351365c2a5c4456bd54c342cfe09b3c065a95" datatype="html">
         <source>Invalid password. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="66c9d5817cd540aa177f656419784731d3bfae26" datatype="html">
+      </trans-unit><trans-unit id="66c9d5817cd540aa177f656419784731d3bfae26" datatype="html">
         <source>Incorrect Google user. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="39ab535140dcc8123b6f3dc6a502ad4ab30924a1" datatype="html">
+      </trans-unit><trans-unit id="39ab535140dcc8123b6f3dc6a502ad4ab30924a1" datatype="html">
         <source>No WISE user with this Google ID found.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="d6d7f1d8cdd020aaad5471989d8abd9ad96bbd12" datatype="html">
+      </trans-unit><trans-unit id="d6d7f1d8cdd020aaad5471989d8abd9ad96bbd12" datatype="html">
         <source>Project Details</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="7a73a1a02bcf341a627892f0d02e113981f96ee3" datatype="html">
+      </trans-unit><trans-unit id="7a73a1a02bcf341a627892f0d02e113981f96ee3" datatype="html">
         <source>Run Settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="e7d36246d5a33f55e55b2eb62510276f8f0aa387" datatype="html">
+      </trans-unit><trans-unit id="e7d36246d5a33f55e55b2eb62510276f8f0aa387" datatype="html">
         <source>There is already a period with that name.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="e80540a5d520797610af6a2b765156063cadb46f" datatype="html">
+      </trans-unit><trans-unit id="e80540a5d520797610af6a2b765156063cadb46f" datatype="html">
         <source>You do not have permission to add periods to this unit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="c4b14ec0b005bee96593685d8346973e8651ea82" datatype="html">
+      </trans-unit><trans-unit id="c4b14ec0b005bee96593685d8346973e8651ea82" datatype="html">
         <source>You are not allowed to delete a period that contains students.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="f8f08ff0913736a1048d0f70a2b2390d5ec590ca" datatype="html">
+      </trans-unit><trans-unit id="f8f08ff0913736a1048d0f70a2b2390d5ec590ca" datatype="html">
         <source>You do not have permission to delete periods from this unit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="fa0351289ae6073e666ece8b95c8d14958d50d98" datatype="html">
+      </trans-unit><trans-unit id="fa0351289ae6073e666ece8b95c8d14958d50d98" datatype="html">
         <source>You do not have permission to change the number of students per team for this unit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="35a78a3d889db709b79f95e046051f10077c54de" datatype="html">
+      </trans-unit><trans-unit id="35a78a3d889db709b79f95e046051f10077c54de" datatype="html">
         <source>You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="fd540958a00446d8a204a5a9a0db472b73d7aaab" datatype="html">
+      </trans-unit><trans-unit id="fd540958a00446d8a204a5a9a0db472b73d7aaab" datatype="html">
         <source>You do not have permission to change the dates for this unit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="c39dc7dcb6dece34e9d5718449337e76cf892c91" datatype="html">
+      </trans-unit><trans-unit id="c39dc7dcb6dece34e9d5718449337e76cf892c91" datatype="html">
         <source>End date can&apos;t be before start date.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="f4e8826e636952f345f23611e61a77fec72cbc8b" datatype="html">
+      </trans-unit><trans-unit id="f4e8826e636952f345f23611e61a77fec72cbc8b" datatype="html">
         <source>Start date can&apos;t be after end date.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="b09df4f849aed6b523f0a26d8e99c4cd13880df3" datatype="html">
+      </trans-unit><trans-unit id="b09df4f849aed6b523f0a26d8e99c4cd13880df3" datatype="html">
         <source>Please enter a new period name.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="6d329babddc8b922dadb62f6034c992073e073e4" datatype="html">
+      </trans-unit><trans-unit id="6d329babddc8b922dadb62f6034c992073e073e4" datatype="html">
         <source>1-3</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="333c363b9afc8c58567fc7686c3d2184d99f47a6" datatype="html">
+      </trans-unit><trans-unit id="333c363b9afc8c58567fc7686c3d2184d99f47a6" datatype="html">
         <source>Are you sure you want to change the students per team to <x id="INTERPOLATION" equiv-text="{{value}}"/>?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="e9949fc7530006d3b20bfe00b30bfddbb60aac13" datatype="html">
+      </trans-unit><trans-unit id="e9949fc7530006d3b20bfe00b30bfddbb60aac13" datatype="html">
         <source>Are you sure you want to change the start date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="1032b57a589b56e4122e7ca8b565a057f13f524b" datatype="html">
+      </trans-unit><trans-unit id="1032b57a589b56e4122e7ca8b565a057f13f524b" datatype="html">
         <source>Are you sure you want to change the end date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="552cff32fa324f691b5ac17facdde8b9a963659f" datatype="html">
+      </trans-unit><trans-unit id="552cff32fa324f691b5ac17facdde8b9a963659f" datatype="html">
         <source>Unit settings updated.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="db4ff4b19bb2e0fe93c88a3dc04372503caa1135" datatype="html">
+      </trans-unit><trans-unit id="db4ff4b19bb2e0fe93c88a3dc04372503caa1135" datatype="html">
         <source>Class Periods:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-run-list-item/teacher-run-list-item.component.ts</context>

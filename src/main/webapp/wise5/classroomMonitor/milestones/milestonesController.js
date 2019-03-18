@@ -382,9 +382,9 @@ var MilestonesController = function () {
      */
 
   }, {
-    key: 'getDisplayUserNamesByWorkgroupId',
-    value: function getDisplayUserNamesByWorkgroupId(workgroupId) {
-      return this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId);
+    key: 'getDisplayUsernamesByWorkgroupId',
+    value: function getDisplayUsernamesByWorkgroupId(workgroupId) {
+      return this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
     }
   }, {
     key: 'setWorkgroupsInCurrentPeriod',
@@ -483,7 +483,7 @@ var MilestonesController = function () {
         var achievementTime = achievementTimes[c];
         var workgroupObject = {
           workgroupId: workgroupId,
-          displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
+          displayNames: this.getDisplayUsernamesByWorkgroupId(workgroupId),
           achievementTime: achievementTime,
           completed: true
         };
@@ -504,7 +504,7 @@ var MilestonesController = function () {
 
           var _workgroupObject = {
             workgroupId: _workgroupId2,
-            displayNames: this.getDisplayUserNamesByWorkgroupId(_workgroupId2),
+            displayNames: this.getDisplayUsernamesByWorkgroupId(_workgroupId2),
             achievementTime: null,
             completed: false
           };

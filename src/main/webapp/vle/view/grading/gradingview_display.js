@@ -738,7 +738,7 @@ View.prototype.displayGradeByTeamSelectPage = function() {
 		var workgroupId = student.workgroupId;
 
 		// get the user names for the workgroup
-		var userNames = student.userName.replace(/:/g, "<br>");
+		var usernames = student.username.replace(/:/g, "<br>");
 
 		if (!this.isSignedInUserRunOwner()) {
 			/*
@@ -747,7 +747,7 @@ View.prototype.displayGradeByTeamSelectPage = function() {
 			 * will not show the user names to them. instead we
 			 * will display the student ids.
 			 */
-			userNames = this.getStudentIdsByWorkgroupId(workgroupId, 0);
+			usernames = this.getStudentIdsByWorkgroupId(workgroupId, 0);
 		}
 
 		//display the group assignments if any
@@ -770,7 +770,7 @@ View.prototype.displayGradeByTeamSelectPage = function() {
 		}
 
 		//add the html row for this workgroup
-		displayGradeByTeamSelectPageHtml += "<tr class='" + studentTRClass + "' onClick=\"view.displayGradeByTeamGradingPage('" + workgroupId + "')\"><td class='showScorePeriodColumn'>" + periodName + "</td><td id='gradeByTeamStudentTeamTd_" + workgroupId + "' class='showScoreWorkgroupIdColumn'><a>" + userNames + "</a></td><td>" + workgroupId + "</td><td class='showScoreScoreColumn'>" + totalScoreForWorkgroup + " / " + maxScoresSum + teacherScorePercentage + "</td><td id='teamNumItemsNeedGrading_" + workgroupId + "'></td><td style='padding-left: 0pt;padding-right: 0pt' id='teamPercentProjectCompleted_" + workgroupId + "'></td></tr>";
+		displayGradeByTeamSelectPageHtml += "<tr class='" + studentTRClass + "' onClick=\"view.displayGradeByTeamGradingPage('" + workgroupId + "')\"><td class='showScorePeriodColumn'>" + periodName + "</td><td id='gradeByTeamStudentTeamTd_" + workgroupId + "' class='showScoreWorkgroupIdColumn'><a>" + usernames + "</a></td><td>" + workgroupId + "</td><td class='showScoreScoreColumn'>" + totalScoreForWorkgroup + " / " + maxScoresSum + teacherScorePercentage + "</td><td id='teamNumItemsNeedGrading_" + workgroupId + "'></td><td style='padding-left: 0pt;padding-right: 0pt' id='teamPercentProjectCompleted_" + workgroupId + "'></td></tr>";
 	}
 
 	displayGradeByTeamSelectPageHtml += "</tbody></table></div>";
@@ -828,7 +828,7 @@ View.prototype.displayStudentUploadedFiles = function() {
 			var workgroupAssetList = workgroupAssetLists[i];
 			var workgroupAssetsArr = workgroupAssetList.assets;
 			var currWorkgroupId = workgroupAssetList.workgroupId;
-			var htmlForWorkgroup = "<div><h3>" + view.userAndClassInfo.getUserNameByUserId(currWorkgroupId) + "</h3>"
+			var htmlForWorkgroup = "<div><h3>" + view.userAndClassInfo.getUsernameByUserId(currWorkgroupId) + "</h3>"
 					+ "<ul>";
 			for (var k = 0; k < workgroupAssetsArr.length; k++) {
 				var assetName = workgroupAssetsArr[k].fileName;
@@ -1550,7 +1550,7 @@ View.prototype.displayGradeByStepGradingPageGenerator = function(stepNumber, nod
 	var vleStates = this.model.getWorkByNodeId(nodeId);
 
 	//sort the vle states alphabetically by user name
-	vleStates = this.getVleStatesSortedByUserName(vleStates);
+	vleStates = this.getVleStatesSortedByUsername(vleStates);
 
 	var runId = this.getConfig().getConfigParam('runId');
 
@@ -1571,7 +1571,7 @@ View.prototype.displayGradeByStepGradingPageGenerator = function(stepNumber, nod
 		var workgroupId = vleState.dataId;
 
 		//get the user names in the workgroup
-		var userNamesHtml = this.getUserNamesByWorkgroupId(workgroupId, 0);
+		var usernamesHtml = this.getUsernamesByWorkgroupId(workgroupId, 0);
 
 		if(!this.isSignedInUserRunOwner()) {
 			/*
@@ -1580,7 +1580,7 @@ View.prototype.displayGradeByStepGradingPageGenerator = function(stepNumber, nod
 			 * will not show the user names to them. instead we
 			 * will display the student ids.
 			 */
-			userNamesHtml = this.getStudentIdsByWorkgroupId(workgroupId, 0);
+			usernamesHtml = this.getStudentIdsByWorkgroupId(workgroupId, 0);
 		}
 
 		var stepWorkId = null;
@@ -1678,7 +1678,7 @@ View.prototype.displayGradeByStepGradingPageGenerator = function(stepNumber, nod
 		}
 
 		//display the student workgroup id
-		gradeByStepGradingPageHtml += "<td class='gradeColumn workgroupIdColumn'><div><a onClick=\"view.displayGradeByTeamGradingPage('" + workgroupId + "')\">" + userNamesHtml + "</a></div>";
+		gradeByStepGradingPageHtml += "<td class='gradeColumn workgroupIdColumn'><div><a onClick=\"view.displayGradeByTeamGradingPage('" + workgroupId + "')\">" + usernamesHtml + "</a></div>";
 		gradeByStepGradingPageHtml += "<div>"+this.getI18NString("workgroupId")+": " + workgroupId + "</div>";
 		gradeByStepGradingPageHtml += "<div>"+this.getI18NString("period")+" " + periodName + "</div>";
 		gradeByStepGradingPageHtml += "<div>" + toggleRevisionsLink + "</div>";
@@ -1764,7 +1764,7 @@ View.prototype.displayGradeByStepGradingPageGenerator = function(stepNumber, nod
 
 				//display the data for the revision
 				gradeByStepGradingPageHtml += "<tr id='" + studentWorkRowRevisionId + "' class='studentWorkRow period" + periodName + " studentWorkRevisionRow studentWorkRevisionRow_" + workgroupId + "_" + nodeId + "' style='display:none' isFlagged='" + isFlagged + "'>";
-				gradeByStepGradingPageHtml += "<td class='gradeColumn workgroupIdColumn'><div>" + userNamesHtml + "</div><div>Revision " + (revisionCount + 1) + "</div></td>";
+				gradeByStepGradingPageHtml += "<td class='gradeColumn workgroupIdColumn'><div>" + usernamesHtml + "</div><div>Revision " + (revisionCount + 1) + "</div></td>";
 				gradeByStepGradingPageHtml += this.getStudentWorkTdHtml(revisionWork, node, revisionStepWorkId, studentWorkTdClass, revisionEndTime);
 				gradeByStepGradingPageHtml += this.getScoringAndCommentingTdHtml(workgroupId, nodeId, teacherId, runId, revisionStepWorkId, annotationScoreValue, annotationCommentValue, latestAnnotationPostTime, isGradingDisabled, scoringAndCommentingTdClass, revisionWork, null, autoGradedFields);
 				gradeByStepGradingPageHtml += this.getToolsTdHtml(workgroupId, nodeId, teacherId, runId, revisionStepWorkId, isGradingDisabled, flagChecked, flaggingTdClass);
@@ -2829,10 +2829,10 @@ View.prototype.getPeerOrTeacherReviewData = function(studentWork, node, workgrou
 						otherStudentNames = "Canned Response";
 					} else {
 						//get the names of the users who submitted the work
-						var workerUserNames = this.getUserNamesByWorkgroupId(workerWorkgroupId, 1);
+						var workerUsernames = this.getUsernamesByWorkgroupId(workerWorkgroupId, 1);
 
 						//create a link with the names of the classmates that will open to the gradebyteam page
-						otherStudentNames = "<a onClick=\"view.displayGradeByTeamGradingPage('" + workerWorkgroupId + "')\">" + workerUserNames + "</a>";
+						otherStudentNames = "<a onClick=\"view.displayGradeByTeamGradingPage('" + workerWorkgroupId + "')\">" + workerUsernames + "</a>";
 					}
 				}
 
@@ -2892,10 +2892,10 @@ View.prototype.getPeerOrTeacherReviewData = function(studentWork, node, workgrou
 								otherStudentNames = "Canned Response";
 							} else {
 								//get the names of the users who submitted the work
-								var workerUserNames = this.getUserNamesByWorkgroupId(reviewerWorkgroupId, 1);
+								var workerUsernames = this.getUsernamesByWorkgroupId(reviewerWorkgroupId, 1);
 
 								//create a link with the names of the classmates that will open to the gradebyteam page
-								otherStudentNames = "<a onClick=\"view.displayGradeByTeamGradingPage('" + reviewerWorkgroupId + "')\">" + workerUserNames + "</a>";
+								otherStudentNames = "<a onClick=\"view.displayGradeByTeamGradingPage('" + reviewerWorkgroupId + "')\">" + workerUsernames + "</a>";
 							}
 						}
 
@@ -3064,7 +3064,7 @@ View.prototype.getScoringAndCommentingTdHtml = function(workgroupId, nodeId, tea
 		}
 
 		//get the user names in the workgroup
-		var username = this.getUserNamesByWorkgroupId(workgroupId, 0);
+		var username = this.getUsernamesByWorkgroupId(workgroupId, 0);
 
 		/*
 		 * create the object with the row id, teacher graded score, and auto graded score.
@@ -3356,7 +3356,7 @@ View.prototype.displayGradeByTeamGradingPageGenerator = function(workgroupId) {
 	//show the header with all the grading buttons
 	gradeByTeamGradingPageHtml += this.getGradingHeaderTableHtml();
 
-	var userNames = this.getUserNamesByWorkgroupId(workgroupId, 0);
+	var usernames = this.getUsernamesByWorkgroupId(workgroupId, 0);
 
 	if(!this.isSignedInUserRunOwner()) {
 		/*
@@ -3365,14 +3365,14 @@ View.prototype.displayGradeByTeamGradingPageGenerator = function(workgroupId) {
 		 * will not show the user names to them. instead we
 		 * will display the student ids.
 		 */
-		userNames = this.getStudentIdsByWorkgroupId(workgroupId, 0);
+		usernames = this.getStudentIdsByWorkgroupId(workgroupId, 0);
 	}
 
-	gradeByTeamGradingPageHtml += "<div class='gradingHeader'><span class='instructions'>Current Team: " + userNames + " [" + this.getI18NString("workgroupId") + ": " + workgroupId + "]</span>";
+	gradeByTeamGradingPageHtml += "<div class='gradingHeader'><span class='instructions'>Current Team: " + usernames + " [" + this.getI18NString("workgroupId") + ": " + workgroupId + "]</span>";
 	gradeByTeamGradingPageHtml += "<div style='float:right;'>";
 
 	//show the step title and prompt
-	//gradeByTeamGradingPageHtml += "<table class='objectToGradeHeaderTable'><tr><td class='objectToGradeTd'>" + userNames + "</td>";
+	//gradeByTeamGradingPageHtml += "<table class='objectToGradeHeaderTable'><tr><td class='objectToGradeTd'>" + usernames + "</td>";
 
 	gradeByTeamGradingPageHtml += "<a class='selectStep' onClick='eventManager.fire(\"gradeByTeamViewSelected\")'>"+this.getI18NString("grading_change_team")+"</a>";
 
@@ -3738,14 +3738,14 @@ View.prototype.displayGradeByTeamGradingPageHelper = function(node, vleState) {
  * @param vleStates (optional) the vle states to sort
  * @return the vle states sorted by user name
  */
-View.prototype.getVleStatesSortedByUserName = function(vleStates) {
+View.prototype.getVleStatesSortedByUsername = function(vleStates) {
 	if(vleStates == null) {
 		vleStates = this.getStates();
 	}
 
 	/*
 	 * set this view to a local variable so it can be referenced
-	 * inside the sortByUserName() function below
+	 * inside the sortByUsername() function below
 	 */
 	var thisView = this;
 
@@ -3755,20 +3755,20 @@ View.prototype.getVleStatesSortedByUserName = function(vleStates) {
 	 * @param a some vleState
 	 * @param b some vleState
 	 * @return
-	 * true if the userName for a comes after b
-	 * false if the userName for b comes after a
+	 * true if the username for a comes after b
+	 * false if the username for b comes after a
 	 */
-	var sortByUserName = function(a, b) {
+	var sortByUsername = function(a, b) {
 		//get the user names from the vleStates
-		var userNameA = thisView.getUserAndClassInfo().getClassmateByWorkgroupId(a.dataId).userName.toLowerCase();
-		var userNameB = thisView.getUserAndClassInfo().getClassmateByWorkgroupId(b.dataId).userName.toLowerCase();
+		var usernameA = thisView.getUserAndClassInfo().getClassmateByWorkgroupId(a.dataId).username.toLowerCase();
+		var usernameB = thisView.getUserAndClassInfo().getClassmateByWorkgroupId(b.dataId).username.toLowerCase();
 
 		//compare them
-		return userNameA > userNameB;
+		return usernameA > usernameB;
 	};
 
 	//sort the vle states by user name
-	vleStates = vleStates.sort(sortByUserName);
+	vleStates = vleStates.sort(sortByUsername);
 
 	return vleStates;
 };
@@ -3780,14 +3780,14 @@ View.prototype.getVleStatesSortedByUserName = function(vleStates) {
  * @return a string containing user names that are in the workgroup separated by
  * new line <br>'s
  */
-View.prototype.getUserNamesByWorkgroupId = function(workgroupId, numberOfLineBreaks) {
+View.prototype.getUsernamesByWorkgroupId = function(workgroupId, numberOfLineBreaks) {
 	//if number of line breaks is unspecified, just use 1
 	if(numberOfLineBreaks == null) {
 		numberOfLineBreaks = 1;
 	}
 
 	//the html that we will use to display the student login names
-	var userNamesHtml = "";
+	var usernamesHtml = "";
 
 	if(workgroupId != null) {
 		//get the user in the class
@@ -3795,30 +3795,30 @@ View.prototype.getUserNamesByWorkgroupId = function(workgroupId, numberOfLineBre
 
 		if(classmate != null) {
 			//retrieve the : delimited names of the users in the workgroup
-			var userNames = classmate.userName;
+			var usernames = classmate.username;
 
 			//split the string by :
-			var userNamesArray = userNames.split(":");
+			var usernamesArray = usernames.split(":");
 
 			//loop through each name in the workgroup
-			for(var y=0; y<userNamesArray.length; y++) {
+			for(var y=0; y<usernamesArray.length; y++) {
 				//add an empty line or comma between each name
-				if(userNamesHtml != "") {
+				if(usernamesHtml != "") {
 					if(numberOfLineBreaks == 0){
-						userNamesHtml += ", ";
+						usernamesHtml += ", ";
 					}
 					for(var x=0; x<numberOfLineBreaks; x++) {
-						userNamesHtml += "<br />";
+						usernamesHtml += "<br />";
 					}
 				}
 
 				//add the user name which consists of "[first name] [last name] ([login])"
-				userNamesHtml += userNamesArray[y];
+				usernamesHtml += usernamesArray[y];
 			}
 		}
 	}
 
-	return userNamesHtml;
+	return usernamesHtml;
 };
 
 /**
@@ -4901,13 +4901,13 @@ View.prototype.renderAllStudentWorkForNode = function(node) {
 	 */
 	if(node.hasGradingView()) {
 		//get all the vleStates
-		//var vleStates = this.getVleStatesSortedByUserName();
+		//var vleStates = this.getVleStatesSortedByUsername();
 
 		//get the node id
 		var nodeId = node.id;
 
 		var vleStates = this.model.getWorkByNodeId(nodeId);
-		vleStates = this.getVleStatesSortedByUserName(vleStates);
+		vleStates = this.getVleStatesSortedByUsername(vleStates);
 
 		//loop through all the vleStates, each vleState is for a workgroup
 		for(var x=0; x<vleStates.length; x++) {
@@ -5049,7 +5049,7 @@ View.prototype.renderStudentWork = function(stepWorkId, workgroupId, nodeId) {
 View.prototype.getStudentWorkByStudentWorkId = function(studentWorkId, workgroupId, nodeId) {
 	//get all the vle states, each vle state represents the work for a workgroup
 	var vleStates = this.model.getWorkByNodeId(nodeId);
-	vleStates = this.getVleStatesSortedByUserName(vleStates); //geoff fix this
+	vleStates = this.getVleStatesSortedByUsername(vleStates); //geoff fix this
 
 	//loop through all the vle states
 	for(var x=0; x<vleStates.length; x++) {
@@ -5720,10 +5720,10 @@ View.prototype.isSignedInUserRunOwner = function() {
 
             if (teacherUserInfo != null) {
                 // get the user name for the run owner
-                var runOwnerUserName = userAndClassInfo.getTeacherUserInfo().userName;
+                var runOwnerUsername = userAndClassInfo.getTeacherUserInfo().username;
 
                 // check if the logged in user name is the same as the run owner user name
-                if (userLoginName == runOwnerUserName) {
+                if (userLoginName == runOwnerUsername) {
                     result = true;
                 }
             }
