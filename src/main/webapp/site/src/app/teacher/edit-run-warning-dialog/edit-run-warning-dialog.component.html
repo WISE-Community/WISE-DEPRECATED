@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <div class="info-block">
     <p class="mat-subheading-2 accent-1">{{ project.metadata.title }}</p>
-    <p i18n>Warning! You will be editing the project that is used for this run. If students have already started work on this run, this may result in undesirable effects and lost data. Are you sure you wish to proceed?</p>
+    <p i18n>Warning! You will be editing the content of this classroom unit. If students have already started working, this may result in undesirable effects and lost data. Are you sure you wish to proceed?</p>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions
@@ -11,5 +11,5 @@
      fxLayoutAlign="end"
      fxLayoutGap="8px">
   <button mat-flat-button color="primary" mat-dialog-close i18n>Cancel</button>
-  <a mat-button href="{{ editLink }}" target="_blank" i18n>Proceed</a>
+  <a mat-button href="{{ editLink }}" i18n>Proceed</a>
 </mat-dialog-actions>

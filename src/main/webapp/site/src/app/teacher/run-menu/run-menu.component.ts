@@ -8,6 +8,7 @@ import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import {EditRunWarningDialogComponent} from '../edit-run-warning-dialog/edit-run-warning-dialog.component';
 
 @Component({
   selector: 'app-run-menu',
@@ -79,5 +80,16 @@ export class RunMenuComponent implements OnInit {
       panelClass: 'mat-dialog--md',
       autoFocus: true
     });
+  }
+
+  editContent() {
+    if (this.run.lastRun) {
+      this.dialog.open(EditRunWarningDialogComponent, {
+        data: { project: this.run.project },
+        panelClass: 'mat-dialog--md'
+      });
+    } else {
+      window.location.href = this.editLink;
+    }
   }
 }

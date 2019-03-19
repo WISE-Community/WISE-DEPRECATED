@@ -26,7 +26,6 @@ export class LibraryProjectMenuComponent implements OnInit {
   isCanEdit: boolean = false;
   isCanShare: boolean = false;
   isChild: boolean = false;
-  isAssociatedWithARun: boolean = false;
 
   constructor(public dialog: MatDialog,
               public teacherService: TeacherService,
@@ -39,9 +38,6 @@ export class LibraryProjectMenuComponent implements OnInit {
     this.isCanShare = this.isOwner();
     this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${ this.project.id }`;
     this.isChild = this.project.isChild();
-    this.teacherService.getProjectUsage(this.project.id).subscribe(numRuns => {
-      this.isAssociatedWithARun = numRuns > 0;
-    });
   }
 
   isOwner() {
@@ -70,10 +66,16 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   editProject() {
-    this.dialog.open(EditRunWarningDialogComponent, {
-      data: { project: this.project },
-      panelClass: 'mat-dialog--md'
-    })
+    this.teacherService.getProjectUsage(this.project.id).subscribe(numRuns => {
+      if (numRuns > 0) {
+        this.dialog.open(EditRunWarningDialogComponent, {
+          data: { project: this.project },
+          panelClass: 'mat-dialog--md'
+        });
+      } else {
+        window.location.href = this.editLink;
+      }
+    });
   }
 
   shareProject() {

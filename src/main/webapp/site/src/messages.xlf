@@ -2755,6 +2755,10 @@
           <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
@@ -3027,6 +3031,24 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="ccbf9a5ca550978f12e5f6d0265e2bca0406aeb2" datatype="html">
+        <source>Edit Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="168766f4deb4aa2d9aad21dc0e24932e451bbd19" datatype="html">
+        <source>Warning! You will be editing the content of this classroom unit. If students have already started working, this may result in undesirable effects and lost data. Are you sure you wish to proceed?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="41bcea7b08bbd7328312f727ae01b7f074da6233" datatype="html">
+        <source>Proceed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="8dce5a1b53185785ceb8eaece03a45f95a1058ae" datatype="html">
         <source>Parent ID:</source>
