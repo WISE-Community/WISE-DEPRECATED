@@ -804,62 +804,63 @@ var MilestonesController = function () {
   }, {
     key: 'addDataToAggregate',
     value: function addDataToAggregate(aggregate, annotation) {
-      var _iteratorNormalCompletion15 = true;
-      var _didIteratorError15 = false;
-      var _iteratorError15 = undefined;
+      if (annotation.data.scores != null) {
+        var _iteratorNormalCompletion15 = true;
+        var _didIteratorError15 = false;
+        var _iteratorError15 = undefined;
 
-      try {
-        for (var _iterator15 = annotation.data.scores[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-          var subScore = _step15.value;
-
-          if (aggregate[subScore.id] == null) {
-            if (subScore.id === 'ki') {
-              aggregate[subScore.id] = {
-                scoreSum: 0,
-                scoreCount: 0,
-                counts: {
-                  1: 0,
-                  2: 0,
-                  3: 0,
-                  4: 0,
-                  5: 0
-                },
-                average: 0
-              };
-            } else {
-              aggregate[subScore.id] = {
-                scoreSum: 0,
-                scoreCount: 0,
-                counts: {
-                  1: 0,
-                  2: 0,
-                  3: 0
-                },
-                average: 0
-              };
-            }
-          }
-          var subScoreVal = subScore.score;
-          aggregate[subScore.id].counts[subScoreVal]++;
-          aggregate[subScore.id].scoreSum += subScoreVal;
-          aggregate[subScore.id].scoreCount++;
-          aggregate[subScore.id].average = aggregate[subScore.id].scoreSum / aggregate[subScore.id].scoreCount;
-        }
-      } catch (err) {
-        _didIteratorError15 = true;
-        _iteratorError15 = err;
-      } finally {
         try {
-          if (!_iteratorNormalCompletion15 && _iterator15.return) {
-            _iterator15.return();
+          for (var _iterator15 = annotation.data.scores[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+            var subScore = _step15.value;
+
+            if (aggregate[subScore.id] == null) {
+              if (subScore.id === 'ki') {
+                aggregate[subScore.id] = {
+                  scoreSum: 0,
+                  scoreCount: 0,
+                  counts: {
+                    1: 0,
+                    2: 0,
+                    3: 0,
+                    4: 0,
+                    5: 0
+                  },
+                  average: 0
+                };
+              } else {
+                aggregate[subScore.id] = {
+                  scoreSum: 0,
+                  scoreCount: 0,
+                  counts: {
+                    1: 0,
+                    2: 0,
+                    3: 0
+                  },
+                  average: 0
+                };
+              }
+            }
+            var subScoreVal = subScore.score;
+            aggregate[subScore.id].counts[subScoreVal]++;
+            aggregate[subScore.id].scoreSum += subScoreVal;
+            aggregate[subScore.id].scoreCount++;
+            aggregate[subScore.id].average = aggregate[subScore.id].scoreSum / aggregate[subScore.id].scoreCount;
           }
+        } catch (err) {
+          _didIteratorError15 = true;
+          _iteratorError15 = err;
         } finally {
-          if (_didIteratorError15) {
-            throw _iteratorError15;
+          try {
+            if (!_iteratorNormalCompletion15 && _iterator15.return) {
+              _iterator15.return();
+            }
+          } finally {
+            if (_didIteratorError15) {
+              throw _iteratorError15;
+            }
           }
         }
       }
-
       return aggregate;
     }
   }, {

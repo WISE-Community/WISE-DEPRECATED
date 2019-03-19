@@ -475,39 +475,41 @@ class MilestonesController {
   }
 
   addDataToAggregate(aggregate, annotation) {
-    for (let subScore of annotation.data.scores) {
-      if (aggregate[subScore.id] == null) {
-        if (subScore.id === 'ki') {
-          aggregate[subScore.id] = {
-            scoreSum: 0,
-            scoreCount: 0,
-            counts: {
-              1: 0,
-              2: 0,
-              3: 0,
-              4: 0,
-              5: 0
-            },
-            average: 0
-          };
-        } else {
-          aggregate[subScore.id] = {
-            scoreSum: 0,
-            scoreCount: 0,
-            counts: {
-              1: 0,
-              2: 0,
-              3: 0
-            },
-            average: 0
-          };
+    if (annotation.data.scores != null) {
+      for (let subScore of annotation.data.scores) {
+        if (aggregate[subScore.id] == null) {
+          if (subScore.id === 'ki') {
+            aggregate[subScore.id] = {
+              scoreSum: 0,
+              scoreCount: 0,
+              counts: {
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0,
+                5: 0
+              },
+              average: 0
+            };
+          } else {
+            aggregate[subScore.id] = {
+              scoreSum: 0,
+              scoreCount: 0,
+              counts: {
+                1: 0,
+                2: 0,
+                3: 0
+              },
+              average: 0
+            };
+          }
         }
+        const subScoreVal = subScore.score;
+        aggregate[subScore.id].counts[subScoreVal]++;
+        aggregate[subScore.id].scoreSum += subScoreVal;
+        aggregate[subScore.id].scoreCount++;
+        aggregate[subScore.id].average = aggregate[subScore.id].scoreSum / aggregate[subScore.id].scoreCount;
       }
-      const subScoreVal = subScore.score;
-      aggregate[subScore.id].counts[subScoreVal]++;
-      aggregate[subScore.id].scoreSum += subScoreVal;
-      aggregate[subScore.id].scoreCount++;
-      aggregate[subScore.id].average = aggregate[subScore.id].scoreSum / aggregate[subScore.id].scoreCount;
     }
     return aggregate;
   }
