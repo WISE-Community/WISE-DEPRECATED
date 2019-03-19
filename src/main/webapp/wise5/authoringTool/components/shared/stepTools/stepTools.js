@@ -22,7 +22,8 @@ var StepToolsController = function () {
     this.TeacherDataService = TeacherDataService;
     this.projectId = this.ConfigService.getProjectId();
 
-    this.is_rtl = ($('html').attr('dir') == 'rtl');
+    this.is_rtl = $('html').attr('dir') == 'rtl';
+
     this.icons = { prev: 'chevron_left', next: 'chevron_right' };
     if (this.is_rtl) {
       this.icons = { prev: 'chevron_right', next: 'chevron_left' };
