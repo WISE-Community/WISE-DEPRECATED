@@ -16,13 +16,13 @@ export class MockUserService {
     const user: User = new User();
     user.firstName = 'Demo';
     user.lastName = 'User';
-    user.userName = 'DemoUser';
+    user.username = 'DemoUser';
     const userBehaviorSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     userBehaviorSubject.next(user);
     return userBehaviorSubject;
   }
 
-  changePassword(userName, oldPassword, newPassword) {
+  changePassword(username, oldPassword, newPassword) {
     if (oldPassword === 'a') {
       return Observable.create(observer => {
         observer.next({ message: 'success' });

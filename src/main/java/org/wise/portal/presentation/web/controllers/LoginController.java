@@ -63,7 +63,7 @@ public class LoginController {
     String reCaptchaFailed = request.getParameter("reCaptchaFailed");
 
     // get the user name that we will use to pre-populate the Username field
-    String userName = request.getParameter("userName");
+    String username = request.getParameter("username");
 
     // get the public and private keys from the wise.properties
     String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
@@ -77,9 +77,9 @@ public class LoginController {
       modelMap.put("redirect",redirectUrl);
     }
 
-    if (userName != null) {
-      // make the userName available to the jsp page
-      modelMap.put("userName", userName);
+    if (username != null) {
+      // make the username available to the jsp page
+      modelMap.put("username", username);
     }
 
     /*

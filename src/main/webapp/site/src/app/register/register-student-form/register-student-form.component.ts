@@ -89,9 +89,9 @@ export class RegisterStudentFormComponent implements OnInit {
     if (this.createStudentAccountFormGroup.valid) {
       this.processing = true;
       this.populateStudentUser();
-      this.studentService.registerStudentAccount(this.studentUser, (userName) => {
+      this.studentService.registerStudentAccount(this.studentUser, (username) => {
         this.router.navigate(['join/student/complete',
-          { username: userName, isUsingGoogleId: this.isUsingGoogleId() }
+          { username: username, isUsingGoogleId: this.isUsingGoogleId() }
         ]);
         this.processing = false;
       });

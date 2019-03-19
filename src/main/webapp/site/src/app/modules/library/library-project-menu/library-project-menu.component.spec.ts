@@ -15,7 +15,7 @@ export class MockUserService {
     user.firstName = 'Demo';
     user.lastName = 'Teacher';
     user.role = 'teacher';
-    user.userName = 'DemoTeacher';
+    user.username = 'DemoTeacher';
     user.id = 123456;
     return Observable.create( observer => {
       observer.next(user);
@@ -70,7 +70,7 @@ describe('LibraryProjectMenuComponent', () => {
     project.name = "Photosynthesis";
     const user = new User();
     user.id = 123456;
-    user.userName = "Spongebob Squarepants";
+    user.username = "Spongebob Squarepants";
     user.displayName = "Spongebob Squarepants";
     project.owner = user;
     component.project = project;

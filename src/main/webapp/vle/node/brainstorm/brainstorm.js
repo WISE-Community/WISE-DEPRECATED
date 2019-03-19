@@ -738,7 +738,7 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 	}
 
 	//create the response title and textarea elements
-	var responseTitle = $('<div>').addClass('responseTitle').html("<span class='postedBy'>" + view.getI18NString('postedByLabel','BrainstormNode') + vle.getUserAndClassInfo().getUserNameByUserId(postedByUserId) + "<span>");
+	var responseTitle = $('<div>').addClass('responseTitle').html("<span class='postedBy'>" + view.getI18NString('postedByLabel','BrainstormNode') + vle.getUserAndClassInfo().getUsernameByUserId(postedByUserId) + "<span>");
 	var responseTextArea = $('<div>').attr("rows","7").attr("cols","80").attr("disabled", true)
 	.attr('class', 'responseTextArea').html(state.response);
 

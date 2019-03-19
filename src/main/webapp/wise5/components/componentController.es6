@@ -41,10 +41,8 @@ class ComponentController {
     this.parentStudentWorkIds = null;
     this.attachments = [];
 
-    // whether the student work has changed since last submit
     this.isSubmitDirty = false;
 
-    // whether the student work is for a submit
     this.isSubmit = false;
 
     this.saveMessage = {
@@ -450,7 +448,7 @@ class ComponentController {
     return this.componentContent.lockAfterSubmit;
   }
 
-  studentDataChanged() {
+  studentDataChanged(isCompleted = false) {
     this.setIsDirty(true);
     this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
 
@@ -469,6 +467,10 @@ class ComponentController {
     // create a component state populated with the student data
     this.createComponentState(action).then((componentState) => {
       this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+
+      if (componentState.isCompleted) {
+        this.$scope.$emit('componentCompleted', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+      }
     });
   }
 

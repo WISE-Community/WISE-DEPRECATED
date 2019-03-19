@@ -101,7 +101,7 @@ public class ForgotAccountTeacherIndexController {
       HttpServletRequest request) {
     String username = null;
     String emailAddress = null;
-    boolean userNameProvided = false;
+    boolean usernameProvided = false;
     boolean emailProvided = false;
 
     try {
@@ -109,7 +109,7 @@ public class ForgotAccountTeacherIndexController {
       emailAddress = StringUtils.trimToNull(userDetails.getEmailAddress());
       User user = null;
       if (username != null) {
-        userNameProvided = true;
+        usernameProvided = true;
 
         if (!StringUtils.isAlphanumeric(username)) {
           return errorView;
@@ -168,7 +168,7 @@ public class ForgotAccountTeacherIndexController {
       String defaultBody = "";
       String body = "";
 
-      if (userNameProvided) {
+      if (usernameProvided) {
         //the user entered their user name so we will send them a password reset link by email
         // subject looks like this: "Notification from WISE4@Berkeley: Password Changed"
         defaultSubject = messageSource.getMessage("forgotaccount.teacher.index.passwordChangeRequestEmailSubject", new Object[]{portalName}, Locale.US);

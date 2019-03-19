@@ -166,16 +166,13 @@ const vleModule = angular.module('vle', [
               });
             },
             achievements: (AchievementService, studentData, config, project) => {
-              return AchievementService.retrieveAchievements();
+              return AchievementService.retrieveStudentAchievements();
             },
             notifications: (NotificationService, studentData, config, project) => {
               return NotificationService.retrieveNotifications();
             },
             runStatus: (StudentDataService, config) => {
               return StudentDataService.retrieveRunStatus();
-            },
-            sessionTimers: (SessionService, config, project, studentData) => {
-              return SessionService.initializeSession();
             },
             webSocket: (StudentWebSocketService, config, project) => {
               return StudentWebSocketService.initialize();

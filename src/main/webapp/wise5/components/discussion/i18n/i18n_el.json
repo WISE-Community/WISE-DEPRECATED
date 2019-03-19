@@ -5,6 +5,6 @@
   "discussion.comments": "Σχόλια",
   "discussion.componentTypeLabel": "Συζήτηση",
   "discussion.post": "Ανάρτηση",
-  "discussion.repliedToADiscussionYouWereIn": "{{userNames}} απάντησαν σε μια συνομιλία στην οποία συμμετείχατε!",
+  "discussion.repliedToADiscussionYouWereIn": "{{usernames}} απάντησαν σε μια συνομιλία στην οποία συμμετείχατε!",
   "discussion.reply": "Απάντηση"
 }

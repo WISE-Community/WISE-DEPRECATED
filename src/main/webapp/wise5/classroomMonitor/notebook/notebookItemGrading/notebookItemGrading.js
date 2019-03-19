@@ -44,8 +44,8 @@ var NotebookItemGradingController = function () {
             }
 
             // get the workgroup user names
-            var userNamesArray = _this.ConfigService.getUserNamesByWorkgroupId(_this.toWorkgroupId);
-            _this.userNames = userNamesArray.map(function (obj) {
+            var usernamesArray = _this.ConfigService.getUsernamesByWorkgroupId(_this.toWorkgroupId);
+            _this.usernames = usernamesArray.map(function (obj) {
                 return obj.name;
             }).join(', ');
         };

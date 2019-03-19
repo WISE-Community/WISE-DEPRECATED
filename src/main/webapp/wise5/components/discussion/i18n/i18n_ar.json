@@ -5,7 +5,7 @@
   "discussion.comments": "التعليقات",
   "discussion.componentTypeLabel": "المناقشة",
   "discussion.post": "منشور ",
-  "discussion.repliedToADiscussionYouWereIn": " قام {{userNames}} بالرد على مناقشة تشترك بها!",
+  "discussion.repliedToADiscussionYouWereIn": " قام {{usernames}} بالرد على مناقشة تشترك بها!",
   "discussion.reply": "الرد",
   "discussion.shareDiscussionPostWithClass": "شارك مع الفصل"
 }

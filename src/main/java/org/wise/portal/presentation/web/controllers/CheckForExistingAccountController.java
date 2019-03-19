@@ -98,13 +98,13 @@ public class CheckForExistingAccountController {
       }
 
       List<User> accountsThatMatch = userService.retrieveByFields(fields, values, classVar);
-      JSONArray existingUserNames = new JSONArray();
+      JSONArray existingUsernames = new JSONArray();
       for (int x = 0; x < accountsThatMatch.size(); x++) {
         User user = accountsThatMatch.get(x);
-        String userName = user.getUserDetails().getUsername();
-        existingUserNames.put(userName);
+        String username = user.getUserDetails().getUsername();
+        existingUsernames.put(username);
       }
-      response.getWriter().write(existingUserNames.toString());
+      response.getWriter().write(existingUsernames.toString());
     }
     return null;
   }

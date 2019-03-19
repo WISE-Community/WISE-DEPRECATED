@@ -1042,6 +1042,22 @@ class UtilService {
     videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
     $('#' + summernoteId).summernote('insertNode', videoElement);
   }
+
+  rgbToHex(color, opacity) {
+    let values = color
+      .replace(/rgb?\(/, '')
+      .replace(/\)/, '')
+      .replace(/[\s+]/g, '')
+      .split(',');
+    let a = parseFloat(opacity || 1),
+      r = Math.floor(a * parseInt(values[0]) + (1 - a) * 255),
+      g = Math.floor(a * parseInt(values[1]) + (1 - a) * 255),
+      b = Math.floor(a * parseInt(values[2]) + (1 - a) * 255);
+    return "#" +
+      ("0" + r.toString(16)).slice(-2) +
+      ("0" + g.toString(16)).slice(-2) +
+      ("0" + b.toString(16)).slice(-2);
+  }
 }
 
 // Get the last element of the array

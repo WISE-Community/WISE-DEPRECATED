@@ -44,10 +44,7 @@ var MilestoneDetailsController = function () {
          * Create a new milestone
          */
         value: function createMilestone() {
-
-            // get the project achievements
             var projectAchievements = this.ProjectService.getAchievementItems();
-
             if (projectAchievements != null) {
 
                 // get the time of tomorrow at 3pm

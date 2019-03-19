@@ -36,7 +36,7 @@ import org.wise.portal.domain.impl.PasswordReminderParameters;
  * @author Anthony Perritano
  */
 @Component
-public class SearchForStudentUserNameValidator implements Validator {
+public class SearchForStudentUsernameValidator implements Validator {
 
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {

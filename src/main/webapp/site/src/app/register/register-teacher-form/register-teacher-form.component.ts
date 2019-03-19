@@ -74,9 +74,9 @@ export class RegisterTeacherFormComponent implements OnInit {
     if (this.createTeacherAccountFormGroup.valid) {
       this.processing = true;
       this.populateTeacherUser();
-      this.teacherService.registerTeacherAccount(this.teacherUser, (userName) => {
+      this.teacherService.registerTeacherAccount(this.teacherUser, (username) => {
         this.router.navigate(['join/teacher/complete',
-          { username: userName, isUsingGoogleId: this.isUsingGoogleId() }
+          { username: username, isUsingGoogleId: this.isUsingGoogleId() }
         ]);
         this.processing = false;
       });

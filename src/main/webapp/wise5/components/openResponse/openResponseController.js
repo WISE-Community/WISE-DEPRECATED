@@ -357,6 +357,8 @@ var OpenResponseController = function (_ComponentController) {
       // set the component id
       componentState.componentId = this.componentId;
 
+      componentState.isCompleted = this.OpenResponseService.isCompleted(this.componentContent, [componentState], null, null, this.ProjectService.getNodeById(this.nodeId));
+
       /*
        * reset the isSubmit value so that the next component state
        * doesn't maintain the same value

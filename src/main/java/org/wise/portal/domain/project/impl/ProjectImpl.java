@@ -405,13 +405,13 @@ public class ProjectImpl implements Project {
         MutableUserDetails userDetails2 = user2.getUserDetails();
 
         if (userDetails1 != null && userDetails2 != null) {
-          String userName1 = userDetails1.getUsername();
-          String userName2 = userDetails2.getUsername();
+          String username1 = userDetails1.getUsername();
+          String username2 = userDetails2.getUsername();
 
-          if (userName1 != null && userName2 != null) {
-            String userName1LowerCase = userName1.toLowerCase();
-            String userName2LowerCase = userName2.toLowerCase();
-            result = userName1LowerCase.compareTo(userName2LowerCase);
+          if (username1 != null && username2 != null) {
+            String username1LowerCase = username1.toLowerCase();
+            String username2LowerCase = username2.toLowerCase();
+            result = username1LowerCase.compareTo(username2LowerCase);
           }
         }
       }

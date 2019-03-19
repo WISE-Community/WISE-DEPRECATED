@@ -44,7 +44,7 @@ class ThemeController {
     this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
 
     this.workgroupId = this.ConfigService.getWorkgroupId();
-    this.workgroupUserNames = this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
+    this.workgroupUsernames = this.ConfigService.getUsernamesByWorkgroupId(this.workgroupId);
 
     this.notebookOpen = false;
     this.notebookConfig = this.NotebookService.getNotebookConfig();

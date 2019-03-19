@@ -4,7 +4,7 @@
   <mat-divider></mat-divider>
   <p class="mat-body-2" fxLayoutAlign="start center" fxLayoutGap="2px">
     <mat-icon class="success" i18n-aria-label aria-label="Signed In">check</mat-icon>
-    <span>{{user.firstName}} {{user.lastName}} <span class="mat-caption">({{ user.userName }})</span></span>
+    <span>{{user.firstName}} {{user.lastName}} <span class="mat-caption">({{ user.username }})</span></span>
   </p>
   <ng-container *ngFor="let teamMember of teamMembers; let i = index;">
     <mat-divider></mat-divider>
@@ -17,7 +17,7 @@
                     aria-label="Signed In">
             check
           </mat-icon>
-          <span class="mat-body-2">{{ teamMember.firstName }} {{ teamMember.lastName }} <span class="mat-caption">({{ teamMember.userName }})</span></span>
+          <span class="mat-body-2">{{ teamMember.firstName }} {{ teamMember.lastName }} <span class="mat-caption">({{ teamMember.username }})</span></span>
         </span>
         <span fxFlex fxShow fxHide.xs></span>
         <span *ngIf="isExistingStudent(teamMember) && !isSignedIn(teamMember)">
@@ -33,7 +33,7 @@
       <ng-container *ngIf="!hiddenMembers[i]">
         <mat-form-field *ngIf="isShowUsernameField(teamMember)" appearance="fill" fxFlex>
           <mat-label i18n>Username</mat-label>
-          <input matInput [(ngModel)]="teamMember.userName"/>
+          <input matInput [(ngModel)]="teamMember.username"/>
         </mat-form-field>
         <div *ngIf="isShowPasswordField(teamMember)" 
              fxLayoutAlign="start start" 

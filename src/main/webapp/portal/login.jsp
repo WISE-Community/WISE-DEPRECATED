@@ -48,7 +48,7 @@ function validateLoginForm() {
                                 </c:choose>
 							</div>
 							<div>
-								<label for="username"><spring:message code="usernameLabel"/></label><input class="dataBoxStyle" type="text" name="username" id="username" size="18" maxlength="60" <c:if test="${userName != ''}">value="${userName}"</c:if> />
+								<label for="username"><spring:message code="usernameLabel"/></label><input class="dataBoxStyle" type="text" name="username" id="username" size="18" maxlength="60" <c:if test="${username != ''}">value="${username}"</c:if> />
 							</div>
 							<div>
 								<label for="password"><spring:message code="passwordLabel"/></label><input class="dataBoxStyle" type="password" name="password" id="password" size="18" maxlength="30" />

@@ -245,7 +245,7 @@ public class ControllerUtil {
       ownerJSON.put("id", owner.getId());
       TeacherUserDetails ownerUserDetails = (TeacherUserDetails) owner.getUserDetails();
       ownerJSON.put("displayName", ownerUserDetails.getDisplayname());
-      ownerJSON.put("userName", ownerUserDetails.getUsername());
+      ownerJSON.put("username", ownerUserDetails.getUsername());
       ownerJSON.put("firstName", ownerUserDetails.getFirstname());
       ownerJSON.put("lastName", ownerUserDetails.getLastname());
     } catch(org.hibernate.ObjectNotFoundException e) {
@@ -317,8 +317,8 @@ public class ControllerUtil {
    */
   public static boolean isReCaptchaRequired(HttpServletRequest request) {
     if (isReCaptchaEnabled()) {
-      String userName = request.getParameter("username");
-      User user = userService.retrieveUserByUsername(userName);
+      String username = request.getParameter("username");
+      User user = userService.retrieveUserByUsername(username);
       if (user != null && isRecentFailedLoginWithinTimeLimit(user) &&
           isRecentNumberOfFailedLoginAttemptsOverLimit(user)) {
         return true;

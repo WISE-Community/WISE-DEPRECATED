@@ -5,7 +5,7 @@
   "discussion.comments": "Comments",
   "discussion.componentTypeLabel": "Discussion",
   "discussion.post": "Post",
-  "discussion.repliedToADiscussionYouWereIn": "{{userNames}} replied to a discussion you were in!",
+  "discussion.repliedToADiscussionYouWereIn": "{{usernames}} replied to a discussion you were in!",
   "discussion.reply": "Reply",
   "discussion.shareDiscussionPostWithClass": "Share with class..."
 }

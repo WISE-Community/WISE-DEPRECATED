@@ -194,11 +194,11 @@ ul.draglist_alt li {
     margin: 1px;
 }
 
-.userNameWithinView {
+.usernameWithinView {
 	margin-right:.25em;
 	color: #585F0C;
 }
-[dir=rtl] .userNameWithinView {
+[dir=rtl] .usernameWithinView {
 	margin-right:auto;
 	margin-left:.25em;
 }
@@ -276,7 +276,7 @@ li.grouplesslist {
 	border: 1px solid #f7a391;
 }
 
-li.grouplesslist .userNameWithinView {
+li.grouplesslist .usernameWithinView {
 	color:#E81B00;
 }
 
@@ -286,7 +286,7 @@ li.changed {
 	border-color:#87bcb3;
 }
 
-li.changed .userNameWithinView {
+li.changed .usernameWithinView {
 	color:#007391;
 }
 
@@ -295,7 +295,7 @@ li.clone {
 	border-color: #CCC;
 }
 
-li.clone .userNameWithinView {
+li.clone .usernameWithinView {
 	color: #999;
 }
 
@@ -394,4 +394,3 @@ li.workgroupHeader a:hover {
 	font-size:.85em;
 	color:#333333;
 }
-	

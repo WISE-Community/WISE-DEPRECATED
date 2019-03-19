@@ -253,17 +253,17 @@ var ConfigService = function () {
       return null;
     }
   }, {
-    key: 'getMyUserName',
+    key: 'getMyUsername',
 
 
     /**
      * Get the user name of the signed in user
      * @return the user name of the signed in user
      */
-    value: function getMyUserName() {
+    value: function getMyUsername() {
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
-        return myUserInfo.userName;
+        return myUserInfo.username;
       }
       return null;
     }
@@ -292,7 +292,7 @@ var ConfigService = function () {
           for (var _iterator = classmateUserInfos[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var workgroup = _step.value;
 
-            workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+            workgroup.displayNames = this.getDisplayUsernamesByWorkgroupId(workgroup.workgroupId);
           }
         } catch (err) {
           _didIteratorError = true;
@@ -466,12 +466,12 @@ var ConfigService = function () {
   }, {
     key: 'sortClassmateUserInfosAlphabeticallyByNameHelper',
     value: function sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-      if (a != null && a.userName != null && b != null && b.userName != null) {
-        var aUserName = a.userName.toLowerCase();
-        var bUserName = b.userName.toLowerCase();
-        if (aUserName < bUserName) {
+      if (a != null && a.username != null && b != null && b.username != null) {
+        var aUsername = a.username.toLowerCase();
+        var bUsername = b.username.toLowerCase();
+        if (aUsername < bUsername) {
           return -1;
-        } else if (aUserName > bUserName) {
+        } else if (aUsername > bUsername) {
           return 1;
         }
       }
@@ -588,23 +588,23 @@ var ConfigService = function () {
      */
     value: function getStudentFirstNamesByWorkgroupId(workgroupId) {
       var studentNames = [];
-      var userNames = this.getUserNameByWorkgroupId(workgroupId);
+      var usernames = this.getUsernameByWorkgroupId(workgroupId);
 
-      if (userNames != null) {
+      if (usernames != null) {
         // split the user names string by ':'
-        var userNamesSplit = userNames.split(':');
+        var usernamesSplit = usernames.split(':');
 
-        if (userNamesSplit != null) {
+        if (usernamesSplit != null) {
           var _iteratorNormalCompletion5 = true;
           var _didIteratorError5 = false;
           var _iteratorError5 = undefined;
 
           try {
-            for (var _iterator5 = userNamesSplit[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-              var userName = _step5.value;
+            for (var _iterator5 = usernamesSplit[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+              var username = _step5.value;
 
-              var indexOfSpace = userName.indexOf(' ');
-              var studentFirstName = userName.substring(0, indexOfSpace);
+              var indexOfSpace = username.indexOf(' ');
+              var studentFirstName = username.substring(0, indexOfSpace);
               studentNames.push(studentFirstName);
             }
           } catch (err) {
@@ -637,12 +637,12 @@ var ConfigService = function () {
       return [];
     }
   }, {
-    key: 'getUserNameByWorkgroupId',
-    value: function getUserNameByWorkgroupId(workgroupId) {
+    key: 'getUsernameByWorkgroupId',
+    value: function getUsernameByWorkgroupId(workgroupId) {
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
         if (userInfo != null) {
-          return userInfo.userName;
+          return userInfo.username;
         }
       }
       return null;
@@ -659,19 +659,19 @@ var ConfigService = function () {
       return null;
     }
   }, {
-    key: 'getUserNamesByWorkgroupId',
-    value: function getUserNamesByWorkgroupId(workgroupId) {
-      var userNamesObjects = [];
+    key: 'getUsernamesByWorkgroupId',
+    value: function getUsernamesByWorkgroupId(workgroupId) {
+      var usernamesObjects = [];
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-        if (userInfo != null && userInfo.userName != null) {
-          var userNames = userInfo.userName.split(':');
+        if (userInfo != null && userInfo.username != null) {
+          var usernames = userInfo.username.split(':');
           var _iteratorNormalCompletion6 = true;
           var _didIteratorError6 = false;
           var _iteratorError6 = undefined;
 
           try {
-            for (var _iterator6 = userNames[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            for (var _iterator6 = usernames[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
               var name = _step6.value;
 
               var id = "";
@@ -681,7 +681,7 @@ var ConfigService = function () {
                 name = matches[1];
                 id = matches[2];
               }
-              userNamesObjects.push({
+              usernamesObjects.push({
                 name: name,
                 id: id
               });
@@ -702,15 +702,15 @@ var ConfigService = function () {
           }
         }
       }
-      return userNamesObjects;
+      return usernamesObjects;
     }
   }, {
-    key: 'getDisplayUserNamesByWorkgroupId',
-    value: function getDisplayUserNamesByWorkgroupId(workgroupId) {
+    key: 'getDisplayUsernamesByWorkgroupId',
+    value: function getDisplayUsernamesByWorkgroupId(workgroupId) {
       var usernames = '';
       if (workgroupId != null) {
         if (this.getPermissions().canViewStudentNames) {
-          var names = this.getUserNamesByWorkgroupId(workgroupId);
+          var names = this.getUsernamesByWorkgroupId(workgroupId);
           var l = names.length;
           for (var i = 0; i < l; i++) {
             var name = names[i].name;

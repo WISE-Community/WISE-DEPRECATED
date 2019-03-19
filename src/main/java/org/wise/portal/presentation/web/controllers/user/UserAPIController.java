@@ -71,7 +71,7 @@ public class UserAPIController {
       userJSON.put("id", user.getId());
       userJSON.put("firstName", userDetails.getFirstname());
       userJSON.put("lastName", userDetails.getLastname());
-      userJSON.put("userName", userDetails.getUsername());
+      userJSON.put("username", userDetails.getUsername());
 
       if (isStudent) {
         userJSON.put("role", "student");
@@ -103,7 +103,7 @@ public class UserAPIController {
       return userJSON.toString();
     } else {
       JSONObject userJSON = new JSONObject();
-      userJSON.put("userName", username);
+      userJSON.put("username", username);
       return userJSON.toString();
     }
   }
@@ -131,7 +131,7 @@ public class UserAPIController {
       response.put("isUsernameValid", true);
       response.put("isPasswordValid", userService.isPasswordCorrect(user, password));
       response.put("userId", user.getId());
-      response.put("userName", user.getUserDetails().getUsername());
+      response.put("username", user.getUserDetails().getUsername());
       response.put("firstName", user.getUserDetails().getFirstname());
       response.put("lastName", user.getUserDetails().getLastname());
     }
@@ -191,7 +191,7 @@ public class UserAPIController {
     } else {
       response.put("status", "success");
       response.put("userId", user.getId());
-      response.put("userName", user.getUserDetails().getUsername());
+      response.put("username", user.getUserDetails().getUsername());
       response.put("firstName", user.getUserDetails().getFirstname());
       response.put("lastName", user.getUserDetails().getLastname());
     }

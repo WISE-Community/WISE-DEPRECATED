@@ -484,16 +484,16 @@ public class RunImpl implements Run {
 
         if(userDetails1 != null && userDetails2 != null) {
           //get the user names
-          String userName1 = userDetails1.getUsername();
-          String userName2 = userDetails2.getUsername();
+          String username1 = userDetails1.getUsername();
+          String username2 = userDetails2.getUsername();
 
-          if(userName1 != null && userName2 != null) {
+          if(username1 != null && username2 != null) {
             //get the user names in lower case
-            String userName1LowerCase = userName1.toLowerCase();
-            String userName2LowerCase = userName2.toLowerCase();
+            String username1LowerCase = username1.toLowerCase();
+            String username2LowerCase = username2.toLowerCase();
 
             //compare the user names
-            result = userName1LowerCase.compareTo(userName2LowerCase);
+            result = username1LowerCase.compareTo(username2LowerCase);
           }
         }
       }

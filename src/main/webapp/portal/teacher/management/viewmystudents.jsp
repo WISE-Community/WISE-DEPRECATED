@@ -83,7 +83,7 @@ $(document).ready(function(){
 	$('.studentInfo').on('click',function(){
 		var title = $(this).attr('title');
 		var username = $(this).attr('id').replace('studentInfo_','');
-		var path = "${contextPath}/student/account/info?userName=" + username;
+		var path = "${contextPath}/student/account/info?username=" + username;
 		var dialog = $('<div id="studentInfoDialog" style="overflow-y:hidden;"></div>');
 		var div = dialog.html('<iframe id="studentInfoIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
@@ -104,7 +104,7 @@ $(document).ready(function(){
 	$('.changePassword').on('click',function(){
 		var title = $(this).attr('title');
 		var username = $(this).attr('id').replace('changePassword_','');
-		var path = "changestudentpassword.html?userName=" + username;
+		var path = "changestudentpassword.html?username=" + username;
 		var dialog = $('<div id="studentPasswordDialog" style="overflow-y:hidden;"></div>');
 		var div = dialog.html('<iframe id="studentPasswordIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
@@ -502,7 +502,7 @@ var displayNotification = function(message) {
 						                <c:forEach var="mem" items="${viewmystudentsperiod.grouplessStudents}">
 									      <li class="grouplesslist" id="li_${mem.id}_groupless">
 									      
-									         <span class="userNameWithinView">${mem.userDetails.firstname} ${mem.userDetails.lastname} <span dir=ltr>(${mem.userDetails.username})</span></span>
+									         <span class="usernameWithinView">${mem.userDetails.firstname} ${mem.userDetails.lastname} <span dir=ltr>(${mem.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
 							    			     <a class="userLinks changePassword" id="changePassword_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>
@@ -529,7 +529,7 @@ var displayNotification = function(message) {
 									      <c:forEach var="workgroupMember" items="${workgroupInPeriod.members}">
 									      
 									        <li class="workgrouplist" id="li_${workgroupMember.id}_${workgroupInPeriod.id}">
-									         <span class="userNameWithinView">${workgroupMember.userDetails.firstname} ${workgroupMember.userDetails.lastname} <span dir=ltr>(${workgroupMember.userDetails.username})</span></span>
+									         <span class="usernameWithinView">${workgroupMember.userDetails.firstname} ${workgroupMember.userDetails.lastname} <span dir=ltr>(${workgroupMember.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
 							    			     <a class="userLinks changePassword" id="changePassword_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>

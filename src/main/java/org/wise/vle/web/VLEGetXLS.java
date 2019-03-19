@@ -5117,7 +5117,7 @@ public class VLEGetXLS {
     if (includeMetaDataCells) {
       String teacherLogin = "";
       try {
-        teacherLogin = teacherUserInfoJSONObject.getString("userName");
+        teacherLogin = teacherUserInfoJSONObject.getString("username");
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -5695,7 +5695,7 @@ public class VLEGetXLS {
     String teacherLogin = "";
 
     try {
-      teacherLogin = teacherUserInfoJSONObject.getString("userName");
+      teacherLogin = teacherUserInfoJSONObject.getString("username");
     } catch (JSONException e1) {
       e1.printStackTrace();
     }

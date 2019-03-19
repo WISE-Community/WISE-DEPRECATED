@@ -340,10 +340,10 @@ public class StudentDataController {
               nodeVisitsJSON = getNodeVisitsForStudent(nodeList, nodeTypesList, userInfo, run, getAllWork, getRevisions);
             } else {
               /*
-               * the user does not have any work so we will just set the userName and
+               * the user does not have any work so we will just set the username and
                * userId and an empty visitedNodes array in the JSON for the user
                */
-              nodeVisitsJSON.put("userName", new Long(userId));
+              nodeVisitsJSON.put("username", new Long(userId));
               nodeVisitsJSON.put("userId", new Long(userId));
               String nodeVisitKeyName = "visitedNodes";  // used in WISE4
               if (run != null) {
@@ -388,7 +388,7 @@ public class StudentDataController {
   private JSONObject getNodeVisitsForStudent(List<Node> nodeList, List<String> nodeTypesList,
       UserInfo userInfo, Run run, boolean getAllWork, boolean getRevisions) throws JSONException {
     JSONObject nodeVisitsJSON = new JSONObject();
-    nodeVisitsJSON.put("userName", userInfo.getWorkgroupId());
+    nodeVisitsJSON.put("username", userInfo.getWorkgroupId());
     nodeVisitsJSON.put("userId", userInfo.getWorkgroupId());
     List<StepWork> stepWorkList = null;
     if (nodeList != null && nodeList.size() > 0) {

@@ -63,8 +63,8 @@ export class TeacherService {
       teacherUser,
       { headers: headers, responseType: "text" })
       .subscribe(response => {
-        const userName = response;
-        callback(userName);
+        const username = response;
+        callback(username);
       });
   }
 

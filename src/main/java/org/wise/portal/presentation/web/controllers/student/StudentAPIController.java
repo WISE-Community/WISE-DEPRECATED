@@ -123,7 +123,7 @@ public class StudentAPIController {
       ownerJSON.put("id", owner.getId());
       TeacherUserDetails ownerUserDetails = (TeacherUserDetails) owner.getUserDetails();
       ownerJSON.put("displayName", ownerUserDetails.getDisplayname());
-      ownerJSON.put("userName", ownerUserDetails.getUsername());
+      ownerJSON.put("username", ownerUserDetails.getUsername());
       ownerJSON.put("firstName", ownerUserDetails.getFirstname());
       ownerJSON.put("lastName", ownerUserDetails.getLastname());
     } catch(org.hibernate.ObjectNotFoundException e) {
@@ -183,7 +183,7 @@ public class StudentAPIController {
         memberJSON.put("firstName", firstName);
         String lastName = userDetails.getLastname();
         memberJSON.put("lastName", lastName);
-        memberJSON.put("userName", userDetails.getUsername());
+        memberJSON.put("username", userDetails.getUsername());
         memberJSON.put("isGoogleUser", userDetails.isGoogleUser());
         workgroupMembers.put(memberJSON);
         if (workgroupNames.length() > 0) {

@@ -211,10 +211,10 @@ class ConfigService {
    * Get the user name of the signed in user
    * @return the user name of the signed in user
    */
-  getMyUserName() {
+  getMyUsername() {
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      return myUserInfo.userName;
+      return myUserInfo.username;
     }
     return null;
   }
@@ -234,7 +234,7 @@ class ConfigService {
     let classmateUserInfos = this.getClassmateUserInfos();
     if (classmateUserInfos) {
       for (let workgroup of classmateUserInfos) {
-        workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+        workgroup.displayNames = this.getDisplayUsernamesByWorkgroupId(workgroup.workgroupId);
       }
     }
   }
@@ -327,7 +327,7 @@ class ConfigService {
       }
     }
     return workgroupIds;
-  };
+  }
 
   sortClassmateUserInfosAlphabeticallyByName() {
     const classmateUserInfos = this.getClassmateUserInfos();
@@ -338,12 +338,12 @@ class ConfigService {
   };
 
   sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-    if (a != null && a.userName != null && b != null && b.userName != null) {
-      const aUserName = a.userName.toLowerCase();
-      const bUserName = b.userName.toLowerCase();
-      if (aUserName < bUserName) {
+    if (a != null && a.username != null && b != null && b.username != null) {
+      const aUsername = a.username.toLowerCase();
+      const bUsername = b.username.toLowerCase();
+      if (aUsername < bUsername) {
         return -1;
-      } else if (aUserName > bUserName) {
+      } else if (aUsername > bUsername) {
         return 1;
       }
     }
@@ -430,16 +430,16 @@ class ConfigService {
    */
   getStudentFirstNamesByWorkgroupId(workgroupId) {
     const studentNames = [];
-    const userNames = this.getUserNameByWorkgroupId(workgroupId);
+    const usernames = this.getUsernameByWorkgroupId(workgroupId);
 
-    if (userNames != null) {
+    if (usernames != null) {
       // split the user names string by ':'
-      const userNamesSplit = userNames.split(':');
+      const usernamesSplit = usernames.split(':');
 
-      if (userNamesSplit != null) {
-        for (let userName of userNamesSplit) {
-          const indexOfSpace = userName.indexOf(' ');
-          const studentFirstName = userName.substring(0, indexOfSpace);
+      if (usernamesSplit != null) {
+        for (let username of usernamesSplit) {
+          const indexOfSpace = username.indexOf(' ');
+          const studentFirstName = username.substring(0, indexOfSpace);
           studentNames.push(studentFirstName);
         }
       }
@@ -457,11 +457,11 @@ class ConfigService {
     return [];
   };
 
-  getUserNameByWorkgroupId(workgroupId) {
+  getUsernameByWorkgroupId(workgroupId) {
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null) {
-        return userInfo.userName;
+        return userInfo.username;
       }
     }
     return null;
@@ -477,13 +477,13 @@ class ConfigService {
     return null;
   };
 
-  getUserNamesByWorkgroupId(workgroupId) {
-    let userNamesObjects = [];
+  getUsernamesByWorkgroupId(workgroupId) {
+    let usernamesObjects = [];
     if (workgroupId != null) {
       let userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-      if (userInfo != null && userInfo.userName != null) {
-        let userNames = userInfo.userName.split(':');
-        for (let name of userNames) {
+      if (userInfo != null && userInfo.username != null) {
+        let usernames = userInfo.username.split(':');
+        for (let name of usernames) {
           let id = "";
           let regex = /(.+) \((.+)\)/g;
           let matches = regex.exec(name);
@@ -491,21 +491,21 @@ class ConfigService {
             name = matches[1];
             id = matches[2];
           }
-          userNamesObjects.push({
+          usernamesObjects.push({
             name: name,
             id: id
           });
         }
       }
     }
-    return userNamesObjects;
+    return usernamesObjects;
   };
 
-  getDisplayUserNamesByWorkgroupId(workgroupId) {
+  getDisplayUsernamesByWorkgroupId(workgroupId) {
     let usernames = '';
     if (workgroupId != null) {
       if (this.getPermissions().canViewStudentNames) {
-        let names = this.getUserNamesByWorkgroupId(workgroupId);
+        let names = this.getUsernamesByWorkgroupId(workgroupId);
         let l = names.length;
         for (let i = 0; i < l; i++) {
           let name = names[i].name;

@@ -32,7 +32,7 @@
 			data:{
 				action:grantOrRevoke,
 				authorityName:authorityName,
-				userName:"${user.userDetails.username}"
+				username:"${user.userDetails.username}"
 				},
 			success:function(data,textStatus,jqHXR) {
 			}

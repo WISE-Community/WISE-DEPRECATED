@@ -46,7 +46,6 @@ export class RunMenuComponent implements OnInit {
   showUnitDetails() {
     const project = this.run.project;
     this.dialog.open(LibraryProjectDetailsComponent, {
-      ariaLabel: this.i18n('Project Details'),
       data: { project: project, isRunProject: true },
       panelClass: 'mat-dialog--md'
     });
@@ -85,6 +84,7 @@ export class RunMenuComponent implements OnInit {
   editContent() {
     if (this.run.lastRun) {
       this.dialog.open(EditRunWarningDialogComponent, {
+        ariaLabel: this.i18n('Edit Run Warning'),
         data: { project: this.run.project },
         panelClass: 'mat-dialog--md'
       });

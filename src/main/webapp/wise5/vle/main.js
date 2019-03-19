@@ -273,16 +273,13 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
         });
       },
       achievements: function achievements(AchievementService, studentData, config, project) {
-        return AchievementService.retrieveAchievements();
+        return AchievementService.retrieveStudentAchievements();
       },
       notifications: function notifications(NotificationService, studentData, config, project) {
         return NotificationService.retrieveNotifications();
       },
       runStatus: function runStatus(StudentDataService, config) {
         return StudentDataService.retrieveRunStatus();
-      },
-      sessionTimers: function sessionTimers(SessionService, config, project, studentData) {
-        return SessionService.initializeSession();
       },
       webSocket: function webSocket(StudentWebSocketService, config, project) {
         return StudentWebSocketService.initialize();

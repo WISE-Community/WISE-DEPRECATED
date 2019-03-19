@@ -309,7 +309,7 @@ body#w4_vle {
 	margin:0;
 }
 
-#vle_body header #userNames {
+#vle_body header #usernames {
 	/*color: #DDEFE1;
 	font-size: 0.9em;
 	padding: 0 0.5em;
@@ -505,7 +505,7 @@ body#w4_vle {
 	padding-bottom:.25em;
 }
 
-#vle_body #userNames {
+#vle_body #usernames {
 	font-size:.85em;
 	padding-top:.5em !important;
 	display: none;

@@ -186,7 +186,7 @@ var NotificationService = function () {
           var toWorkgroupId = this.ConfigService.getWorkgroupId();
           var notificationMessageToStudent = notificationForScore.notificationMessageToStudent;
           // replace variables like {{score}} and {{dismissCode}} with actual values
-          notificationMessageToStudent = notificationMessageToStudent.replace("{{username}}", this.ConfigService.getUserNameByWorkgroupId(fromWorkgroupId));
+          notificationMessageToStudent = notificationMessageToStudent.replace("{{username}}", this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
           notificationMessageToStudent = notificationMessageToStudent.replace("{{score}}", notificationForScore.score);
           notificationMessageToStudent = notificationMessageToStudent.replace("{{dismissCode}}", notificationForScore.dismissCode);
 
@@ -202,7 +202,7 @@ var NotificationService = function () {
           var _toWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
           var notificationMessageToTeacher = notificationForScore.notificationMessageToTeacher;
           // replace variables like {{score}} and {{dismissCode}} with actual values
-          notificationMessageToTeacher = notificationMessageToTeacher.replace("{{username}}", this.ConfigService.getUserNameByWorkgroupId(fromWorkgroupId));
+          notificationMessageToTeacher = notificationMessageToTeacher.replace("{{username}}", this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
           notificationMessageToTeacher = notificationMessageToTeacher.replace("{{score}}", notificationForScore.score);
           notificationMessageToTeacher = notificationMessageToTeacher.replace("{{dismissCode}}", notificationForScore.dismissCode);
 
