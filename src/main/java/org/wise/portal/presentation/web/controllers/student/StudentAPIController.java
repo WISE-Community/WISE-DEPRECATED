@@ -249,11 +249,11 @@ public class StudentAPIController {
       }
     } else {
       workgroup = workgroupService.retrieveById(workgroupId);
-      boolean isAnyMemberInWorkGroupForRun = false;
+      boolean isAnyMemberInWorkgroupForRun = false;
       for (User member: presentMembers) {
-        isAnyMemberInWorkGroupForRun |= workgroupService.isUserInWorkgroupForRun(member, run, workgroup);
+        isAnyMemberInWorkgroupForRun |= workgroupService.isUserInWorkgroupForRun(member, run, workgroup);
       }
-      if (isAnyMemberInWorkGroupForRun) {
+      if (isAnyMemberInWorkgroupForRun) {
         workgroupService.addMembers(workgroup, presentMembers);
         JSONObject response = performLaunchRun(runId, workgroupId, presentUserIds, absentUserIds,
             request, run, presentMembers, workgroup);
