@@ -88,6 +88,10 @@ export class TeamSignInDialogComponent implements OnInit {
             teamMember.firstName = response.firstName;
             teamMember.lastName = response.lastName;
             this.markAsSignedIn(teamMember);
+
+            if (canBeAddedToWorkgroupResponse.addUserToWorkgroup) {
+              this.run.workgroupId = canBeAddedToWorkgroupResponse.workgroupId;
+            }
           } else if (!this.allowSignIn(teamMember, 1)) {
             alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
             if (!this.isExistingStudent(teamMember)) {
