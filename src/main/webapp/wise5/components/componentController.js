@@ -475,26 +475,39 @@ var ComponentController = function () {
   }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
-      var _this5 = this;
-
       var isCompleted = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
+      this.setIsDirtyAndBroadcast();
+      this.setIsSubmitDirtyAndBroadcast();
+      this.clearSaveText();
+      var action = 'change';
+      this.createComponentStateAndBroadcast(action);
+    }
+  }, {
+    key: 'setIsDirtyAndBroadcast',
+    value: function setIsDirtyAndBroadcast() {
       this.setIsDirty(true);
       this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
+    }
+  }, {
+    key: 'setIsSubmitDirtyAndBroadcast',
+    value: function setIsSubmitDirtyAndBroadcast() {
       this.setIsSubmitDirty(true);
       this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-      this.clearSaveText();
+    }
 
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
+    /*
+     * the student work in this component has changed so we will tell
+     * the parent node that the student data will need to be saved.
+     * this will also notify connected parts that this component's student
+     * data has changed.
+     */
 
-      // create a component state populated with the student data
+  }, {
+    key: 'createComponentStateAndBroadcast',
+    value: function createComponentStateAndBroadcast(action) {
+      var _this5 = this;
+
       this.createComponentState(action).then(function (componentState) {
         _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
 
