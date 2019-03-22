@@ -351,8 +351,7 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public void removeSharedTeacher(String username, Long runId)
-    throws ObjectNotFoundException {
+  public void removeSharedTeacher(String username, Long runId) throws ObjectNotFoundException {
     Run run = retrieveById(runId);
     User user = userDao.retrieveByUsername(username);
     if (run == null || user == null) {
@@ -362,7 +361,6 @@ public class RunServiceImpl implements RunService {
     if (run.getSharedowners().contains(user)) {
       run.getSharedowners().remove(user);
       runDao.save(run);
-      // call unProxy when we upgrade to hibernate 5.2
       Project runProject = (Project) run.getProject();
       runProject.getSharedowners().remove(user);
       projectDao.save(runProject);
@@ -375,7 +373,7 @@ public class RunServiceImpl implements RunService {
         }
         List<Permission> projectPermissions = aclService.getPermissions(runProject, user);
         for (Permission projectPermission : projectPermissions) {
-          this.aclService.removePermission(run, projectPermission, user);
+          this.aclService.removePermission(runProject, projectPermission, user);
         }
       } catch (Exception e) {
         // do nothing. permissions might get be deleted if
