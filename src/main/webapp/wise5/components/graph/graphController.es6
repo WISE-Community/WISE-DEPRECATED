@@ -4293,14 +4293,13 @@ class GraphController extends ComponentController {
                   promises.push(this.setComponentStateAsBackgroundImage(componentState));
                 }
               } else {
-                // get the trials from the component state
-                promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
-
                 if (type == 'showWork') {
-                  // we are showing work so we will not allow the student to edit it
                   this.isDisabled = true;
+                  componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+                  const canEdit = false;
+                  this.setCanEditForAllSeries(componentState, canEdit);
                 }
-
+                promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
                 if (componentState != null &&
                   componentState.studentData != null &&
                   componentState.studentData.backgroundImage != null) {
@@ -4392,7 +4391,8 @@ class GraphController extends ComponentController {
   handleConnectedComponentsHelper(newComponentState, isReset) {
     let mergedComponentState = this.$scope.componentState;
     let firstTime = true;
-    if (mergedComponentState == null || isReset) {
+    if (mergedComponentState == null || isReset ||
+        !this.GraphService.componentStateHasStudentWork(mergedComponentState)) {
       mergedComponentState = newComponentState;
     } else {
       /*
@@ -4403,7 +4403,6 @@ class GraphController extends ComponentController {
     }
     var connectedComponents = this.componentContent.connectedComponents;
     if (connectedComponents != null) {
-      var componentStates = [];
       for (var connectedComponent of connectedComponents) {
         if (connectedComponent != null) {
           var nodeId = connectedComponent.nodeId;
@@ -4411,11 +4410,6 @@ class GraphController extends ComponentController {
           var type = connectedComponent.type;
           var mergeFields = connectedComponent.mergeFields;
           if (type == 'showWork') {
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-            // we are showing work so we will not allow the student to edit it
             this.isDisabled = true;
           } else if (type == 'showClassmateWork') {
             mergedComponentState = newComponentState;
@@ -4439,11 +4433,8 @@ class GraphController extends ComponentController {
       if (newComponentState.studentData.backgroundImage != null) {
         mergedComponentState.studentData.backgroundImage = newComponentState.studentData.backgroundImage;
       }
-
-      if (mergedComponentState != null) {
-        this.setStudentWork(mergedComponentState);
-        this.studentDataChanged();
-      }
+      this.setStudentWork(mergedComponentState);
+      this.studentDataChanged();
     }
     return mergedComponentState;
   }
@@ -4573,6 +4564,14 @@ class GraphController extends ComponentController {
       }
     } else if (field == 'trial') {
       // TODO
+    }
+  }
+
+  setCanEditForAllSeries(componentState, canEdit) {
+    for (const trial of componentState.studentData.trials) {
+      for (const singleSeries of trial.series) {
+        singleSeries.canEdit = canEdit;
+      }
     }
   }
 
