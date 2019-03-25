@@ -49,6 +49,6 @@ export class ConfigService {
   }
 
   getCurrentServerTime() {
-    return new Date(Date.now()).getTime() - this.timeDiff;
+    return Date.now() - this.timeDiff;
   }
 }

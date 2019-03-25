@@ -7,6 +7,7 @@ import { TeacherService } from "../teacher.service";
 import { Project } from "../../domain/project";
 import { TeacherRun } from "../teacher-run";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import {ConfigService} from "../../services/config.service";
 
 @Component({selector: 'app-teacher-run-list-item', template: ''})
 class TeacherRunListItemStubComponent {
@@ -65,7 +66,12 @@ export class MockTeacherService {
       periods: ["1", "2"]
     }
   );
+}
 
+export class MockConfigService {
+  getCurrentServerTime(): number {
+    return new Date('2018-08-24 00:00:00.0').getTime();
+  }
 }
 
 describe('TeacherRunListComponent', () => {
@@ -76,7 +82,10 @@ describe('TeacherRunListComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListComponent ],
       imports: [ MomentModule ],
-      providers: [ { provide: TeacherService, useClass: MockTeacherService }],
+      providers: [
+        { provide: TeacherService, useClass: MockTeacherService },
+        { provide: ConfigService, useClass: MockConfigService }
+      ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

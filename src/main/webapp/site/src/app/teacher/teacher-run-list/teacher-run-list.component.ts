@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DateFormatPipe } from 'ngx-moment';
 import { TeacherService } from '../teacher.service';
 import { TeacherRun } from '../teacher-run';
+import {ConfigService} from "../../services/config.service";
 
 @Component({
   selector: 'app-teacher-run-list',
@@ -22,7 +23,8 @@ export class TeacherRunListComponent implements OnInit {
   isSharedRunsRetrieved: boolean = false;
   showAll: boolean = false;
 
-  constructor(private teacherService: TeacherService) {
+  constructor(private teacherService: TeacherService,
+              private configService: ConfigService) {
     teacherService.newRunSource$.subscribe(run => {
       let teacherRun: TeacherRun = new TeacherRun(run);
       teacherRun.isHighlighted = true;
@@ -169,8 +171,9 @@ export class TeacherRunListComponent implements OnInit {
 
   activeTotal(): number {
     let total = 0;
+    const now = this.configService.getCurrentServerTime();
     for (let run of this.filteredRuns) {
-      if (run.isActive()) {
+      if (run.isActive(now)) {
         total++;
       }
     }
@@ -179,8 +182,9 @@ export class TeacherRunListComponent implements OnInit {
 
   completedTotal(): number {
     let total = 0;
+    const now = this.configService.getCurrentServerTime();
     for (let run of this.filteredRuns) {
-      if (run.isCompleted()) {
+      if (run.isCompleted(now)) {
         total++;
       }
     }
@@ -189,8 +193,9 @@ export class TeacherRunListComponent implements OnInit {
 
   scheduledTotal(): number {
     let total = 0;
+    const now = this.configService.getCurrentServerTime();
     for (let run of this.filteredRuns) {
-      if (run.isScheduled()) {
+      if (run.isScheduled(now)) {
         total++;
       }
     }
@@ -254,5 +259,9 @@ export class TeacherRunListComponent implements OnInit {
     this.searchValue = '';
     this.filterValue = '';
     this.performSearchAndFilter();
+  }
+
+  isRunActive(run) {
+    return run.isActive(this.configService.getCurrentServerTime());
   }
 }

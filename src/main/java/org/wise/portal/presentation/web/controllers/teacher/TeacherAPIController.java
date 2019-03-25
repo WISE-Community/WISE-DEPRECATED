@@ -30,6 +30,7 @@ import org.wise.portal.service.user.UserService;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -70,6 +71,7 @@ public class TeacherAPIController {
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
+    configJSON.put("currentTime", new Timestamp(System.currentTimeMillis()));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
   }

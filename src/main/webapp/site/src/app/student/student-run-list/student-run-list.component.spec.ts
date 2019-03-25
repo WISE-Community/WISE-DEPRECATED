@@ -6,6 +6,7 @@ import { StudentService } from '../student.service';
 import { StudentRunListComponent } from "./student-run-list.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { Run } from '../../domain/run';
+import {ConfigService} from "../../services/config.service";
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -49,6 +50,12 @@ export class MockStudentService {
   }
 }
 
+export class MockConfigService {
+  getCurrentServerTime(): number {
+    return new Date('2018-08-24 00:00:00.0').getTime();
+  }
+}
+
 describe('StudentRunListComponent', () => {
   let component: StudentRunListComponent;
   let fixture: ComponentFixture<StudentRunListComponent>;
@@ -58,7 +65,8 @@ describe('StudentRunListComponent', () => {
       declarations: [ StudentRunListComponent ],
       imports: [ MomentModule ],
       providers: [
-        { provide: StudentService, useClass: MockStudentService }
+        { provide: StudentService, useClass: MockStudentService },
+        { provide: ConfigService, useClass: MockConfigService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

@@ -87,6 +87,10 @@ export class MockConfigService {
   getContextPath(): string {
     return "/wise";
   }
+
+  getCurrentServerTime(): number {
+    return new Date('2018-10-17 00:00:00.0').getTime();
+  }
 }
 
 describe('TeacherHomeComponent', () => {

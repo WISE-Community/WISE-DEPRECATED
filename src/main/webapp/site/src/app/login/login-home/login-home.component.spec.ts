@@ -25,6 +25,9 @@ export class MockConfigService {
       observer.complete();
     });
   }
+  getRecaptchaPublicKey(): string {
+    return '';
+  }
 }
 
 describe('LoginHomeComponent', () => {

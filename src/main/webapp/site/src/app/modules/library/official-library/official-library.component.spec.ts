@@ -8,7 +8,12 @@ import { LibraryGroup } from "../libraryGroup";
 export class MockLibraryService {
   libraryGroupsSource$ = fakeAsyncResponse({});
   officialLibraryProjectsSource$ = fakeAsyncResponse([]);
-  projectFilterOptionsSource$ = fakeAsyncResponse([]);
+  projectFilterOptionsSource$ = fakeAsyncResponse({
+    searchValue: "",
+    disciplineValue: [],
+    dciArrangementValue: [],
+    peValue: []
+  });
   implementationModelOptions: LibraryGroup[] = [];
   getOfficialLibraryProjects() {
 
