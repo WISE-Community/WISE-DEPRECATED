@@ -900,6 +900,19 @@ var OpenResponseController = function (_ComponentController) {
 
       return mergedComponentState;
     }
+  }, {
+    key: 'studentDataChanged',
+    value: function studentDataChanged() {
+      this.setIsDirtyAndBroadcast();
+      if (this.studentResponse === '') {
+        this.setIsSubmitDirty(false);
+      } else {
+        this.setIsSubmitDirtyAndBroadcast();
+      }
+      this.clearSaveText();
+      var action = 'change';
+      this.createComponentStateAndBroadcast(action);
+    }
   }]);
 
   return OpenResponseController;
