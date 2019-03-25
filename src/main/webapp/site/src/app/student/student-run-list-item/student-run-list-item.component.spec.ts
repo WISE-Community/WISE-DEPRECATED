@@ -26,7 +26,7 @@ export class MockConfigService {
     return '/wise';
   }
   getCurrentServerTime(): number {
-    return Date.now();
+    return new Date('2018-10-17 00:00:00.0').getTime();
   }
 }
 
@@ -75,12 +75,12 @@ describe('StudentRunListItemComponent', () => {
   });
 
   it('should say a run is active', () => {
-    expect(component.run.isActive()).toBeTruthy();
+    expect(component.isRunActive(component.run)).toBeTruthy();
   });
 
   it('should say a run is not active yet', () => {
     component.run.startTime = '2100-10-17 00:00:00.0';
     component.ngOnInit();
-    expect(component.run.isScheduled()).toBeTruthy();
+    expect(component.isRunActive(component.run)).toBeFalsy();
   });
 });

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DateFormatPipe } from 'ngx-moment';
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
+import {ConfigService} from "../../services/config.service";
 
 @Component({
   selector: 'app-student-run-list',
@@ -16,7 +17,8 @@ export class StudentRunListComponent implements OnInit {
   loaded: boolean = false;
   showAll: boolean = false;
 
-  constructor(private studentService: StudentService) {
+  constructor(private studentService: StudentService,
+              private configService: ConfigService) {
     studentService.newRunSource$.subscribe(run => {
       run.isHighlighted = true;
       this.runs.unshift(new StudentRun(run));
@@ -95,8 +97,9 @@ export class StudentRunListComponent implements OnInit {
 
   activeTotal(): number {
     let total = 0;
+    const now = this.configService.getCurrentServerTime();
     for (let run of this.filteredRuns) {
-      if (run.isActive()) {
+      if (run.isActive(now)) {
         total++;
       }
     }
@@ -105,8 +108,9 @@ export class StudentRunListComponent implements OnInit {
 
   completedTotal(): number {
     let total = 0;
+    const now = this.configService.getCurrentServerTime();
     for (let run of this.filteredRuns) {
-      if (run.isCompleted()) {
+      if (run.isCompleted(now)) {
         total++;
       }
     }
@@ -115,8 +119,9 @@ export class StudentRunListComponent implements OnInit {
 
   scheduledTotal(): number {
     let total = 0;
+    const now = this.configService.getCurrentServerTime();
     for (let run of this.filteredRuns) {
-      if (run.isScheduled()) {
+      if (run.isScheduled(now)) {
         total++;
       }
     }
@@ -150,5 +155,9 @@ export class StudentRunListComponent implements OnInit {
 
   reset(): void {
     this.searchUpdated('');
+  }
+
+  isRunActive(run) {
+    return run.isActive(this.configService.getCurrentServerTime());
   }
 }

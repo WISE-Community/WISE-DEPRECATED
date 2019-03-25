@@ -61,4 +61,12 @@ export class TeacherRunListItemComponent implements OnInit {
     }
     return string;
   }
+
+  isRunActive(run) {
+    return run.isActive(this.configService.getCurrentServerTime());
+  }
+
+  isRunCompleted(run) {
+    return run.isCompleted(this.configService.getCurrentServerTime());
+  }
 }
