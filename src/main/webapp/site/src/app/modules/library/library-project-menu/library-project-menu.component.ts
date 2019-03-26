@@ -66,8 +66,8 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   editProject() {
-    this.teacherService.getProjectUsage(this.project.id).subscribe(numRuns => {
-      if (numRuns > 0) {
+    this.teacherService.isProjectLastRun(this.project.id).subscribe(lastRun => {
+      if (lastRun) {
         this.dialog.open(EditRunWarningDialogComponent, {
           data: { project: this.project },
           panelClass: 'mat-dialog--md'

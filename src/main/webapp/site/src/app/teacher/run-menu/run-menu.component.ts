@@ -8,7 +8,7 @@ import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
-import {EditRunWarningDialogComponent} from '../edit-run-warning-dialog/edit-run-warning-dialog.component';
+import { EditRunWarningDialogComponent } from '../edit-run-warning-dialog/edit-run-warning-dialog.component';
 
 @Component({
   selector: 'app-run-menu',

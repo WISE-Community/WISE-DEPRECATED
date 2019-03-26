@@ -148,9 +148,15 @@ public class TeacherAPIController {
     return runJSON.toString();
   }
 
-  @RequestMapping(value = "/projectusage/{projectId}", method = RequestMethod.GET)
-  protected int getProjectUsage(@PathVariable Long projectId) {
-    return runService.getProjectUsage(projectId);
+  @RequestMapping(value = "/projectlastrun/{projectId}", method = RequestMethod.GET)
+  protected boolean isProjectLastRun(@PathVariable Long projectId) {
+    List<Run> runsOfProject = runService.getProjectRuns(projectId);
+    for (Run run: runsOfProject) {
+      if (run.getLastRun() != null) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @RequestMapping(value = "/usernames", method = RequestMethod.GET)
