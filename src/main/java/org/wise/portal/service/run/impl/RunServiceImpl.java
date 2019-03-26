@@ -632,7 +632,7 @@ public class RunServiceImpl implements RunService {
   }
 
   @Transactional()
-  public void setStartTime(Long runId, String startTime) {
+  public void setStartTime(Long runId, Long startTime) {
     try {
       Run run = this.retrieveById(runId);
       run.setStarttime(new Date(startTime));
@@ -643,7 +643,7 @@ public class RunServiceImpl implements RunService {
   }
 
   @Transactional()
-  public void setEndTime(Long runId, String endTime) {
+  public void setEndTime(Long runId, Long endTime) {
     try {
       Run run = this.retrieveById(runId);
       run.setEndtime(new Date(endTime));
