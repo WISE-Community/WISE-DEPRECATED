@@ -102,4 +102,6 @@ public interface UserDetailsService extends
   List<String> retrieveAllUsernames(String userDetailsClassName);
 
   UserDetails loadUserByGoogleUserId(String googleUserId);
+
+  void updateStatsOnSuccessfulLogin(MutableUserDetails userDetails);
 }
