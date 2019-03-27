@@ -149,14 +149,15 @@ public class TeacherAPIController {
   }
 
   @RequestMapping(value = "/projectlastrun/{projectId}", method = RequestMethod.GET)
-  protected boolean isProjectLastRun(@PathVariable Long projectId) {
+  protected Date getProjectLastRun(@PathVariable Long projectId) {
     List<Run> runsOfProject = runService.getProjectRuns(projectId);
     for (Run run: runsOfProject) {
-      if (run.getLastRun() != null) {
-        return true;
+      Date lastRun = run.getLastRun();
+      if (lastRun != null) {
+        return lastRun;
       }
     }
-    return false;
+    return null;
   }
 
   @RequestMapping(value = "/usernames", method = RequestMethod.GET)
