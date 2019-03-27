@@ -25,9 +25,12 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.config.GoogleOpenIdConnectConfig;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.user.UserService;
 
@@ -38,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
@@ -123,6 +127,17 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
       throw new UnsupportedOperationException("No authentication should be done with this AuthenticationManager");
     }
+  }
+
+  @Override
+  protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+      FilterChain chain, Authentication authentication) throws IOException, ServletException {
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    User user = userService.retrieveUser(userDetails);
+    ControllerUtil.addNewSessionToAllLoggedInUsers(request, user);
+
+    userDetailsService.updateStatsOnSuccessfulLogin((MutableUserDetails) userDetails);
+    super.successfulAuthentication(request, response, chain, authentication);
   }
 
 }
