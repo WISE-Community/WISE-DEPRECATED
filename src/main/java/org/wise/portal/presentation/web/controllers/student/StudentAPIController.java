@@ -165,8 +165,8 @@ public class StudentAPIController {
     runJSON.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
     runJSON.put("projectThumb", projectThumb);
     runJSON.put("runCode", run.getRuncode());
-    runJSON.put("startTime", run.getStarttime());
-    runJSON.put("endTime", run.getEndtime());
+    runJSON.put("startTime", run.getStartTimeMilliseconds());
+    runJSON.put("endTime", run.getEndTimeMilliseconds());
     runJSON.put("project", ControllerUtil.getProjectJSON(project));
     runJSON.put("owner", getOwnerJSON(run.getOwner()));
 
@@ -215,8 +215,8 @@ public class StudentAPIController {
       User owner = run.getOwner();
       runRegisterInfo.put("teacherFirstName", owner.getUserDetails().getFirstname());
       runRegisterInfo.put("teacherLastName", owner.getUserDetails().getLastname());
-      runRegisterInfo.put("startTime", run.getStarttime());
-      runRegisterInfo.put("endTime", run.getEndtime());
+      runRegisterInfo.put("startTime", run.getStartTimeMilliseconds());
+      runRegisterInfo.put("endTime", run.getEndTimeMilliseconds());
       runRegisterInfo.put("periods", this.getPeriods(run));
     } catch (ObjectNotFoundException e) {
       runRegisterInfo.put("error", "runNotFound");
@@ -421,7 +421,7 @@ public class StudentAPIController {
     configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
     configJSON.put("logOutURL", contextPath + "/logout");
-    configJSON.put("currentTime", new Timestamp(System.currentTimeMillis()));
+    configJSON.put("currentTime", System.currentTimeMillis());
     return configJSON.toString();
   }
 

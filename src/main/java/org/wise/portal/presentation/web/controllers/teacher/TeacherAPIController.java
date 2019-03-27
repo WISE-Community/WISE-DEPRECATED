@@ -71,7 +71,7 @@ public class TeacherAPIController {
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
-    configJSON.put("currentTime", new Timestamp(System.currentTimeMillis()));
+    configJSON.put("currentTime", System.currentTimeMillis());
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
   }
@@ -108,8 +108,8 @@ public class TeacherAPIController {
     runJSON.put("id", run.getId());
     runJSON.put("name", run.getName());
     runJSON.put("runCode", run.getRuncode());
-    runJSON.put("startTime", run.getStarttime());
-    runJSON.put("endTime", run.getEndtime());
+    runJSON.put("startTime", run.getStartTimeMilliseconds());
+    runJSON.put("endTime", run.getEndTimeMilliseconds());
     runJSON.put("lastRun", run.getLastRun());
     Set<Group> periods = run.getPeriods();
     JSONArray periodsArray = new JSONArray();
@@ -433,17 +433,16 @@ public class TeacherAPIController {
   @RequestMapping(value = "/run/update/starttime", method = RequestMethod.POST)
   protected String editRunStartTime(HttpServletRequest request,
         @RequestParam("runId") Long runId,
-        @RequestParam("startTime") String startTime) throws Exception {
+        @RequestParam("startTime") Long startTime) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(runId);
     JSONObject response;
     if (run.isTeacherAssociatedToThisRun(user)) {
-      Date endDate = run.getEndtime();
-      Date startDate = new Date(startTime);
-      if (endDate == null) {
+      Long endTime = run.getEndTimeMilliseconds();
+      if (endTime == null) {
         runService.setStartTime(runId, startTime);
         response = createSuccessResponse();
-      } else if (startDate.before(endDate)) {
+      } else if (startTime < endTime) {
         runService.setStartTime(runId, startTime);
         response = createSuccessResponse();
       } else {
@@ -459,14 +458,12 @@ public class TeacherAPIController {
   @RequestMapping(value = "/run/update/endtime", method = RequestMethod.POST)
   protected String editRunEndTime(HttpServletRequest request,
         @RequestParam("runId") Long runId,
-        @RequestParam("endTime") String endTime) throws Exception {
+        @RequestParam("endTime") Long endTime) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(runId);
     JSONObject response;
     if (run.isTeacherAssociatedToThisRun(user)) {
-      Date startDate = run.getStarttime();
-      Date endDate = new Date(endTime);
-      if (endDate.after(startDate)) {
+      if (run.getStartTimeMilliseconds() < endTime) {
         runService.setEndTime(runId, endTime);
         response = createSuccessResponse();
       } else {
