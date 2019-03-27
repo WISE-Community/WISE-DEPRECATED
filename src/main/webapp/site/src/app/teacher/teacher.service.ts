@@ -182,21 +182,21 @@ export class TeacherService {
     return this.http.post<Object>(url, body, {headers: headers});
   }
 
-  updateRunStartTime(runId: number, startTime: string) {
+  updateRunStartTime(runId: number, startTime: number) {
     const url = `${this.updateRunStartTimeUrl}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', runId + '');
-    body = body.set('startTime', startTime);
+    body = body.set('startTime', startTime + '');
     return this.http.post<Object>(url, body, {headers: headers});
   }
 
-  updateRunEndTime(runId: number, endTime: string) {
+  updateRunEndTime(runId: number, endTime: number) {
     const url = `${this.updateRunEndTimeUrl}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', runId + '');
-    body = body.set('endTime', endTime);
+    body = body.set('endTime', endTime + '');
     return this.http.post<Object>(url, body, {headers: headers});
   }
 

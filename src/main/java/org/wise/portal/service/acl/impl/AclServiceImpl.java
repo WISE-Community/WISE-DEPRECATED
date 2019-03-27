@@ -100,7 +100,8 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
   public void removePermission(T object, Permission permission, User user) {
     if (object != null) {
       MutableAcl acl = null;
-      ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object.getId());
+      ObjectIdentity objectIdentity = new ObjectIdentityImpl(
+          HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
       List<Sid> sid = new ArrayList<Sid>();
       sid.add(new PrincipalSid(user.getUserDetails().getUsername()));
 

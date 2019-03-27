@@ -139,7 +139,7 @@ export class RunSettingsDialogComponent implements OnInit {
       const startDate = this.startDate;
       const formattedStartDate = moment(startDate).format('ddd MMM DD YYYY');
       if (confirm(this.i18n('Are you sure you want to change the start date to {{date}}?', {date: formattedStartDate}))) {
-        this.teacherService.updateRunStartTime(this.run.id, startDate.toString()).subscribe((response: any) => {
+        this.teacherService.updateRunStartTime(this.run.id, startDate.getTime()).subscribe((response: any) => {
           if (response.status == 'success') {
             this.run = response.run;
             this.updateDataRun(this.run);
@@ -166,7 +166,7 @@ export class RunSettingsDialogComponent implements OnInit {
       endDate.setHours(23, 59, 59);
       const formattedEndDate = moment(endDate).format('ddd MMM DD YYYY');
       if (confirm(this.i18n('Are you sure you want to change the end date to {{date}}?', {date: formattedEndDate}))) {
-        this.teacherService.updateRunEndTime(this.run.id, endDate.toString()).subscribe((response: any) => {
+        this.teacherService.updateRunEndTime(this.run.id, endDate.getTime()).subscribe((response: any) => {
           if (response.status == 'success') {
             this.run = response.run;
             this.updateDataRun(this.run);

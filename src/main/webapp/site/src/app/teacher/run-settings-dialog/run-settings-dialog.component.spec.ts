@@ -66,8 +66,8 @@ describe('RunSettingsDialogComponent', () => {
       name: 'Test Project',
       periods: ['1', '2', '3'],
       maxStudentsPerTeam: 1,
-      startTime: '2018-10-17 00:00:00.0',
-      endTime: '2018-10-19 23:59:00.0'
+      startTime: new Date('2018-10-17T00:00:00.0').getTime(),
+      endTime: new Date('2018-10-19T23:59:00.0').getTime()
     });
     TestBed.configureTestingModule({
       declarations: [ RunSettingsDialogComponent ],
@@ -146,7 +146,7 @@ describe('RunSettingsDialogComponent', () => {
   });
 
   it('should change the start date', () => {
-    component.startDate = new Date('2019-11-18 00:00:00.0');
+    component.startDate = new Date('2019-11-18T00:00:00.0');
     fixture.detectChanges();
     const startDateInput = getStartDateInput();
     expect(startDateInput.ngModel.getDate()).toBe(18);
@@ -155,7 +155,7 @@ describe('RunSettingsDialogComponent', () => {
   });
 
   it('should change the end date', () => {
-    component.endDate = new Date('2019-11-20 23:59:00.0');
+    component.endDate = new Date('2019-11-20T23:59:00.0');
     fixture.detectChanges();
     const endDateInput = getEndDateInput();
     expect(endDateInput.ngModel.getDate()).toBe(20);

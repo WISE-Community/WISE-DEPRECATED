@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Config } from "../domain/config";
 import { User } from "../domain/user";
-import {Timestamp} from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class ConfigService {
@@ -32,7 +31,7 @@ export class ConfigService {
     this.http.get<Config>(configUrl, { headers: headers })
       .subscribe(config => {
         this.config$.next(config);
-        this.timeDiff = new Date(Date.now()).getTime() - new Date(config.currentTime).getTime();
+        this.timeDiff = Date.now() - config.currentTime;
       });
   }
 
@@ -49,6 +48,6 @@ export class ConfigService {
   }
 
   getCurrentServerTime() {
-    return new Date(Date.now()).getTime() - this.timeDiff;
+    return Date.now() - this.timeDiff;
   }
 }

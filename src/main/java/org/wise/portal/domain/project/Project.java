@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -43,39 +43,18 @@ import java.util.Set;
  */
 public interface Project extends Persistable {
 
-  /**
-   * @return The id of the project in the persistent data store
-   */
   Serializable getId();
 
-  /**
-   * @return the familyTag
-   */
   FamilyTag getFamilytag();
 
-  /**
-   * @param familytag the familyTag to set
-   */
   void setFamilytag(FamilyTag familytag);
 
-  /**
-   * @return the projectInfo
-   */
   ProjectInfo getProjectInfo();
 
-  /**
-   * @param projectInfo the projectInfo to set
-   */
   void setProjectInfo(ProjectInfo projectInfo);
 
-  /**
-   * Indicates if the project is available to use in classrooms
-   */
   boolean isCurrent();
 
-  /**
-   * @param isCurrent
-   */
   void setCurrent(boolean isCurrent);
 
   Set<User> getSharedowners();
@@ -90,100 +69,45 @@ public interface Project extends Persistable {
 
   void setBookmarkers(Set<User> bookmarkers);
 
-  /**
-   * @return the projectType
-   */
   ProjectType getProjectType();
 
-  /**
-   * @param projectType the projectType to set
-   */
   void setProjectType(ProjectType projectType);
 
-  /**
-   * @return the name of the project
-   */
   String getName();
 
-  /**
-   * @param name the name to set
-   */
   void setName(String name);
 
-  /**
-   * @return the modulePath of this project
-   */
   String getModulePath();
 
-  /**
-   * @param modulePath the modulePath to set
-   */
   void setModulePath(String modulePath);
 
-  /**
-   * Populates the projectInfo for this project.
-   */
   void populateProjectInfo();
 
-  /**
-   * Visitor pattern, accepts ProjectVisitors
-   * @param visitor
-   */
   Object accept(ProjectVisitor visitor);
 
   ProjectMetadata getMetadataObj();
 
-  /**
-   * @return <code>ProjectMetadata</code>
-   */
   ProjectMetadata getMetadata();
 
-  /**
-   * @param metadata
-   */
   void setMetadata(ProjectMetadata metadata);
 
-  /**
-   * @param metadataJSONString
-   */
   void setMetadata(String metadataJSONString);
 
-  /**
-   * @return <code>boolean</code> is public
-   */
   boolean isPublic();
 
-  /**
-   * @param isPublic
-   */
   void setPublic(boolean isPublic);
 
-  /**
-   * @return <code>Date</code> date created
-   */
   Date getDateCreated();
 
-  /**
-   * @param datecreated
-   */
   void setDateCreated(Date datecreated);
 
-  /**
-   * @return the tags
-   */
   Set<Tag> getTags();
 
-  /**
-   * @param tags the tags to set
-   */
   void setTags(Set<Tag> tags);
 
   /**
-   * Returns true iff this project has at least all of the tags
-   * specified.
-   *
-   * @param tagnames
-   * @return
+   * @param tagnames all the tags to check
+   * @return true iff this project has at least all of the tags specified
    */
   boolean hasTags(Set<String> tagnames);
 
@@ -191,72 +115,30 @@ public interface Project extends Persistable {
    * Sets this project's parent project id where the project was copied from
    * if this is the original project, this value is null.
    *
-   * @param parentProjectId
+   * @param parentProjectId id of this project's parent
    */
   void setParentProjectId(Long parentProjectId);
 
-  /**
-   *
-   * @return
-   */
   Long getParentProjectId();
 
-  /**
-   * @param rootProjectId
-   */
   void setRootProjectId(Long rootProjectId);
 
-  /**
-   * @return
-   */
   Long getRootProjectId();
 
-  /**
-   * Whether this project is deleted
-   * @return
-   */
   boolean isDeleted();
 
-  /**
-   * Set whether this project is deleted
-   * @param isDeleted
-   */
   void setDeleted(boolean isDeleted);
 
-  /**
-   * Get the date the project was deleted
-   * @return
-   */
   Date getDateDeleted();
 
-  /**
-   * Set the date the project was deleted
-   * @param dateDeleted
-   */
   void setDateDeleted(Date dateDeleted);
 
-  /**
-   * Gets the maximum total asset size
-   * @return
-   */
   Long getMaxTotalAssetsSize();
 
-  /**
-   * Sets the maximum total asset size
-   * @return
-   */
   void setMaxTotalAssetsSize(Long maxTotalAssetsSize);
 
-  /**
-   * Returns the WISE version of this project [4, 5, etc]
-   * @return integer representing WISE version
-   */
   Integer getWiseVersion();
 
-  /**
-   * Sets the WISE version of this project [4, 5, etc]
-   * @param wiseVersion integer representing WISE version
-   */
   void setWISEVersion(Integer wiseVersion);
 
   boolean isOfficialProject();

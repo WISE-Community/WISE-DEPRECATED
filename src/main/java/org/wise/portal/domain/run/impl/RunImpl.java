@@ -459,6 +459,18 @@ public class RunImpl implements Run {
     }
   }
 
+  public Long getStartTimeMilliseconds() {
+    return this.starttime.getTime();
+  }
+
+  public Long getEndTimeMilliseconds() {
+    if (this.endtime == null) {
+      return null;
+    } else {
+      return this.endtime.getTime();
+    }
+  }
+
   /**
    * Comparator used to order user names alphabetically
    */

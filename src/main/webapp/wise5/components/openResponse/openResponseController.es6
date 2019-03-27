@@ -849,6 +849,18 @@ class OpenResponseController extends ComponentController {
 
     return mergedComponentState;
   }
+
+  studentDataChanged() {
+    this.setIsDirtyAndBroadcast();
+    if (this.studentResponse === '') {
+      this.setIsSubmitDirty(false);
+    } else {
+      this.setIsSubmitDirtyAndBroadcast();
+    }
+    this.clearSaveText();
+    const action = 'change';
+    this.createComponentStateAndBroadcast(action);
+  }
 };
 
 OpenResponseController.$inject = [

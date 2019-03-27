@@ -190,8 +190,8 @@ public class ControllerUtil {
     runJSON.put("id", run.getId());
     runJSON.put("name", run.getName());
     runJSON.put("runCode", run.getRuncode());
-    runJSON.put("startTime", run.getStarttime());
-    runJSON.put("endTime", run.getEndtime());
+    runJSON.put("startTime", run.getStartTimeMilliseconds());
+    runJSON.put("endTime", run.getEndTimeMilliseconds());
     Set<Group> periods = run.getPeriods();
     JSONArray periodsArray = new JSONArray();
     for (Group period : periods) {

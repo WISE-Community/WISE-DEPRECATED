@@ -5,8 +5,8 @@ export class Run {
   id: number;
   name: string;
   runCode: string;
-  startTime: string;
-  endTime: string;
+  startTime: number;
+  endTime: number;
   lastRun: string;
   projectThumb: string;
   numStudents: number;
@@ -59,7 +59,7 @@ export class Run {
   }
 
   isSharedOwnerWithPermission(userId, permissionId) {
-    for (let sharedOwner of this.sharedOwners) {
+    for (const sharedOwner of this.sharedOwners) {
       if (sharedOwner.id == userId) {
         return this.userHasPermission(sharedOwner, permissionId);
       }
@@ -71,25 +71,22 @@ export class Run {
     return user.permissions.includes(permission);
   }
 
-  isActive() {
-    const now = new Date().getTime();
-    const endTime = new Date(this.endTime).getTime();
-    if (endTime && endTime <= now) {
-      return false;
+  isScheduled(now) {
+    return now < this.startTime;
+  }
+
+  isActive(now) {
+    return !this.isScheduled(now) && !this.isCompleted(now);
+  }
+
+  isCompleted(now) {
+    if (this.hasEndTime()) {
+      return this.endTime <= now;
     }
-    const startTime = new Date(this.startTime).getTime();
-    return startTime <= now;
+    return false;
   }
 
-  isCompleted() {
-    const now = new Date().getTime();
-    const endTime = new Date(this.endTime).getTime();
-    return endTime <= now;
-  }
-
-  isScheduled() {
-    const now = new Date().getTime();
-    const startTime = new Date(this.startTime).getTime();
-    return startTime > now;
+  hasEndTime() {
+    return this.endTime != null;
   }
 }

@@ -30,7 +30,7 @@
     <div mat-card-avatar [style.background-image]="run.project.thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
       <div fxLayout="column">
-        <mat-card-title [class.secondary-text]="run.isCompleted()" class="mat-body-2">
+        <mat-card-title [class.secondary-text]="isRunCompleted(run)" class="mat-body-2">
           {{ run.project.name }}
         </mat-card-title>
         <mat-card-subtitle fxHide fxShow.gt-xs>
@@ -42,7 +42,7 @@
     </div>
   </mat-card-content>
   <mat-card-content fxHide fxShow.xs>
-    <div class="info-block" [class.secondary-text]="run.isCompleted()">
+    <div class="info-block" [class.secondary-text]="isRunCompleted(run)">
       <ng-container *ngTemplateOutlet="runInfo"></ng-container>
     </div>
   </mat-card-content>
@@ -55,7 +55,7 @@
       <span *ngIf="run.lastRun"
             class="mat-caption secondary-text center"
             i18n>Last student login: {{ run.lastRun | amCalendar }}</span>
-      <a *ngIf="run.isActive()"
+      <a *ngIf="isRunActive(run)"
          mat-flat-button
          href="{{ gradeAndManageLink }}"
          color="primary"
@@ -63,7 +63,7 @@
          fxFlex.xs="100">
         <mat-icon>build</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>
       </a>
-      <a *ngIf="run.isCompleted()"
+      <a *ngIf="isRunCompleted(run)"
          mat-flat-button
          href="{{ gradeAndManageLink }}"
          color="secondary-text"
