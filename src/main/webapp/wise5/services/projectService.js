@@ -1869,10 +1869,12 @@ var ProjectService = function () {
       var _iteratorError23 = undefined;
 
       try {
-        for (var _iterator23 = authors[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-          var author = _step23.value;
+        for (var _iterator23 = authors.entries()[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+          var _step23$value = _slicedToArray(_step23.value, 1),
+              i = _step23$value[0];
 
-          if (author.id === userInfo.id) {
+          if (authors[i].id === userInfo.id) {
+            authors[i] = userInfo;
             exists = true;
             break;
           }
