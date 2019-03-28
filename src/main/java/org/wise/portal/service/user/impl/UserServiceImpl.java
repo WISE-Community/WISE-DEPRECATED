@@ -21,11 +21,12 @@
 package org.wise.portal.service.user.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.authentication.dao.SaltSource;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -42,6 +43,7 @@ import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.spring.impl.DefaultPasswordEncoderFactories;
 
 import java.util.Calendar;
 import java.util.List;
@@ -65,10 +67,7 @@ public class UserServiceImpl implements UserService {
   private UserDao<User> userDao;
 
   @Autowired
-  protected Md5PasswordEncoder passwordEncoder;
-
-  @Autowired
-  private SaltSource saltSource;
+  protected PasswordEncoder passwordEncoder;
 
   @Transactional(readOnly = true)
   public User retrieveUser(UserDetails userDetails) {
@@ -137,8 +136,7 @@ public class UserServiceImpl implements UserService {
   }
 
   void encodePassword(MutableUserDetails userDetails) {
-    userDetails.setPassword(passwordEncoder.encodePassword(userDetails.getPassword(),
-        saltSource.getSalt(userDetails)));
+    userDetails.setPassword(passwordEncoder.encode(userDetails.getPassword()));
   }
 
   public void assignRole(MutableUserDetails userDetails, final String role) {
@@ -172,6 +170,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User updateUserPassword(User user, String oldPassword, String newPassword) throws IncorrectPasswordException {
+    /*
     Md5PasswordEncoder encoder = new Md5PasswordEncoder();
     String encodedOldPassword =
         this.passwordEncoder.encodePassword(oldPassword, this.saltSource.getSalt(user.getUserDetails()));
@@ -181,6 +180,8 @@ public class UserServiceImpl implements UserService {
     } else {
       throw new IncorrectPasswordException();
     }
+    */
+    return null;
   }
 
   public List<User> retrieveAllUsers() {
@@ -249,8 +250,12 @@ public class UserServiceImpl implements UserService {
   }
 
   public boolean isPasswordCorrect(User user, String password) {
+    /*
     String hashedPassword = passwordEncoder.encodePassword(
         password, saltSource.getSalt(user.getUserDetails()));
     return hashedPassword.equals(user.getUserDetails().getPassword());
+    */
+    return false;
   }
+
 }
