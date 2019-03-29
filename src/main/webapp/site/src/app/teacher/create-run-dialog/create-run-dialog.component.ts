@@ -5,7 +5,8 @@ import { finalize } from 'rxjs/operators';
 import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
-import {ListClassroomCoursesDialogComponent} from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
+import { UserService } from '../../services/user.service';
+import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 @Component({
   selector: 'create-run-dialog',
@@ -31,6 +32,7 @@ export class CreateRunDialogComponent {
               public dialogRef: MatDialogRef<CreateRunDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
+              private userService: UserService,
               private fb: FormBuilder) {
     this.project = data.project;
     this.maxStudentsPerTeam = 3;
@@ -127,7 +129,7 @@ export class CreateRunDialogComponent {
   }
 
   addToClassroom() {
-    this.teacherService.getClassroomCourses().subscribe(({ courses }) => {
+    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(({ courses }) => {
       this.dialog.open(ListClassroomCoursesDialogComponent, {
         data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
         panelClass: 'mat-dialog-md'

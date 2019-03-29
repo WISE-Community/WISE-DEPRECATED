@@ -10,7 +10,10 @@ import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import {Course} from '../../domain/course';
+import { Course } from '../../domain/course';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { User } from '../../domain/user';
+import { UserService } from '../../services/user.service';
 
 export class MockTeacherService {
   createRun() {
@@ -33,6 +36,17 @@ export class MockTeacherService {
     courses.push(course);
     return Observable.create(observer => {
       observer.next(courses);
+      observer.complete();
+    });
+  }
+}
+
+export class MockUserService {
+  getUser(): BehaviorSubject<User> {
+    const user: User = new User();
+    user.username = 'test';
+    return Observable.create(observer => {
+      observer.next(user);
       observer.complete();
     });
   }
@@ -66,6 +80,7 @@ describe('CreateRunDialogComponent', () => {
       declarations: [ CreateRunDialogComponent ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
+        { provide: UserService, useClass: MockUserService },
         { provide: MatDialog, useValue: {
             closeAll: () => {}
           }},

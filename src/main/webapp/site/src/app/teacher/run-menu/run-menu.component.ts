@@ -44,7 +44,7 @@ export class RunMenuComponent implements OnInit {
   }
 
   addToClassroom() {
-    this.teacherService.getClassroomCourses().subscribe(({ courses }) => {
+    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(({ courses }) => {
       this.dialog.open(ListClassroomCoursesDialogComponent, {
         data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
         panelClass: 'mat-dialog-md'

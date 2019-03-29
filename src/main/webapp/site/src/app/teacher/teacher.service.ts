@@ -233,16 +233,19 @@ export class TeacherService {
     return this.http.post<any>(this.changePasswordUrl, params, { headers: headers });
   }
 
-  getClassroomCourses(): Observable<any> {
+  getClassroomCourses(username: string): Observable<any> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    return this.http.get<any>(this.listCoursesUrl, { headers });
+    let params = new HttpParams();
+    params = params.set('username', username);
+    return this.http.post<any>(this.listCoursesUrl, params, { headers });
   }
 
-  addToClassroom(accessCode: string, unitTitle: string, courseId: string) {
+  addToClassroom(accessCode: string, unitTitle: string, courseId: string, username: string) {
     let params = new HttpParams();
     params = params.set('accessCode', accessCode);
     params = params.set('unitTitle', unitTitle);
     params = params.set('courseId', courseId);
+    params = params.set('username', username);
     this.http.post(this.addAssignmentUrl, params);
   }
 }

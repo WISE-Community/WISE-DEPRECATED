@@ -46,7 +46,7 @@ public class GoogleClassroomAPIController {
     SCOPES.add(ClassroomScopes.CLASSROOM_COURSES);
   }
 
-  private Classroom connectToClassroomAPI() throws Exception {
+  private Classroom connectToClassroomAPI(String username) throws Exception {
     final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     GoogleClientSecrets.Details credentials = new GoogleClientSecrets.Details();
     credentials.setClientId(clientId);
@@ -61,28 +61,29 @@ public class GoogleClassroomAPIController {
       .setAccessType("offline")
       .build();
     LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-    Credential authorization = new AuthorizationCodeInstalledApp(flow, receiver).authorize("user6");
+    Credential authorization = new AuthorizationCodeInstalledApp(flow, receiver).authorize(username + 'a');
 
     return new Classroom.Builder(HTTP_TRANSPORT, JSON_FACTORY, authorization).setApplicationName(applicationName).build();
   }
 
-  @RequestMapping(value = "/list-courses", method = RequestMethod.GET)
-  protected ListCoursesResponse listCourses() throws Exception {
-    Classroom service = connectToClassroomAPI();
+  @RequestMapping(value = "/list-courses", method = RequestMethod.POST)
+  protected ListCoursesResponse listCourses(HttpServletRequest request, @RequestParam("username") String username) throws Exception {
+    Classroom service = connectToClassroomAPI(username);
     return service.courses().list().execute();
   }
 
   @RequestMapping(value = "/create-assignment", method = RequestMethod.POST)
   protected void createAssignment(HttpServletRequest request,
-                             @RequestParam("accessCode") String accessCode,
-                             @RequestParam("unitTitle") String unitTitle,
-                             @RequestParam("courseId") String courseId) throws Exception {
+                                  @RequestParam("accessCode") String accessCode,
+                                  @RequestParam("unitTitle") String unitTitle,
+                                  @RequestParam("courseId") String courseId,
+                                  @RequestParam("username") String username) throws Exception {
     String description = "Hi class! Please complete the \"" + unitTitle + "\" WISE unit. (Access Code: " + accessCode + ")";
-    Classroom service = connectToClassroomAPI();
+    Classroom service = connectToClassroomAPI(username);
     List<Material> materials = new ArrayList<>();
     Material material = new Material();
     Link link = new Link();
-    link.setUrl(ControllerUtil.getBaseUrlString(request));
+    link.setUrl(ControllerUtil.getBaseUrlString(request) + "?accessCode=" + accessCode);
     link.setTitle("WISE");
     material.setLink(link);
     materials.add(material);
