@@ -25,6 +25,10 @@
       <mat-icon>share</mat-icon>
       <span i18n>Share</span>
     </a>
+    <a mat-menu-item (click)="addToClassroom()" *ngIf="isGoogleUser()">
+      <mat-icon>share</mat-icon>
+      <span i18n>Add to Classroom</span>
+    </a>
     <a mat-menu-item href="{{ reportProblemLink }}">
       <mat-icon>report_problem</mat-icon>
       <span i18n>Report Problem</span>

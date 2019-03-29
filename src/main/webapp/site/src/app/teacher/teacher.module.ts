@@ -26,6 +26,7 @@ import { EditProfileComponent } from './account/edit-profile/edit-profile.compon
 import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-dialog.component';
 import { UseWithClassWarningDialogComponent } from './use-with-class-warning-dialog/use-with-class-warning-dialog.component';
+import { ListClassroomCoursesDialogComponent } from './list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 const materialModules = [
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
@@ -57,13 +58,15 @@ const materialModules = [
     EditComponent,
     EditProfileComponent,
     EditPasswordComponent,
-    UseWithClassWarningDialogComponent
+    UseWithClassWarningDialogComponent,
+    ListClassroomCoursesDialogComponent
   ],
   entryComponents: [
     CreateRunDialogComponent,
     RunSettingsDialogComponent,
     ShareRunDialogComponent,
-    UseWithClassWarningDialogComponent
+    UseWithClassWarningDialogComponent,
+    ListClassroomCoursesDialogComponent
   ],
   providers: [
     AuthGuard

@@ -10,6 +10,7 @@ import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import {Course} from '../../domain/course';
 
 export class MockTeacherService {
   createRun() {
@@ -25,6 +26,16 @@ export class MockTeacherService {
   addNewRun() {}
 
   setTabIndex() {}
+
+  getClassroomCourses(): Observable<Course[]> {
+    const courses: Course[] = [];
+    const course = new Course({ id: '1', name: 'Test' });
+    courses.push(course);
+    return Observable.create(observer => {
+      observer.next(courses);
+      observer.complete();
+    });
+  }
 }
 
 describe('CreateRunDialogComponent', () => {

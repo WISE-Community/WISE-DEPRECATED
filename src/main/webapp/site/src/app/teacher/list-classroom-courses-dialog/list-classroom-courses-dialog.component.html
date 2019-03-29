@@ -1,0 +1,27 @@
+<div class="notice" *ngIf="!courses.length">
+  <p i18n>Hey there! Looks like you don't have any classroom courses yet.</p>
+</div>
+<ng-container *ngIf="courses.length && !isAdded">
+  <h2 class="mat-dialog-title">Classroom courses</h2>
+  <div mat-dialog-content>
+    <div class="info-block">
+      <p class="mat-subheading-2 accent-1">Select which course you'd like to create an assigment for.</p>
+      <ng-container *ngFor="let course of courses">
+        <div (click)="addToClassroom(course.id)">
+          <h5>{{ course.name }}</h5>
+          <p>{{ course.descriptionHeading }}</p>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="isAdded">
+  <div mat-dialog-content>
+    <div class="info-block">
+      <p class="mat-body-2" i18n>Success! This unit has been added to your Classroom.</p>
+    </div>
+  </div>
+  <div mat-dialog-actions fxLayoutAlign="end">
+    <button mat-button (click)="closeAll()" i18n>Done</button>
+  </div>
+</ng-container>

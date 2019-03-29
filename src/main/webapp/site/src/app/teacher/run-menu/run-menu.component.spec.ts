@@ -11,9 +11,18 @@ import { TeacherRun } from "../teacher-run";
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import {Course} from '../../domain/course';
 
 export class MockTeacherService {
-
+  getClassroomCourses(): Observable<Course[]> {
+    const courses: Course[] = [];
+    const course = new Course({ id: '1', name: 'Test' });
+    courses.push(course);
+    return Observable.create(observer => {
+      observer.next(courses);
+      observer.complete();
+    });
+  }
 }
 
 export class MockUserService {
@@ -24,6 +33,7 @@ export class MockUserService {
     user.role = 'teacher';
     user.username = 'DemoTeacher';
     user.id = 123456;
+    user.isGoogleUser = false;
     return Observable.create(observer => {
       observer.next(user);
       observer.complete();
@@ -31,6 +41,9 @@ export class MockUserService {
   }
   getUserId() {
     return 123456;
+  }
+  isGoogleUser() {
+    return false;
   }
 }
 

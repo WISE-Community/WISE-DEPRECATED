@@ -72,6 +72,7 @@ public class UserAPIController {
       userJSON.put("firstName", userDetails.getFirstname());
       userJSON.put("lastName", userDetails.getLastname());
       userJSON.put("username", userDetails.getUsername());
+      userJSON.put("isGoogleUser", userDetails.isGoogleUser());
 
       if (isStudent) {
         userJSON.put("role", "student");

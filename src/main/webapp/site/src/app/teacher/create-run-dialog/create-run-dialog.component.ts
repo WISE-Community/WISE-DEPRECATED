@@ -5,6 +5,7 @@ import { finalize } from 'rxjs/operators';
 import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
+import {ListClassroomCoursesDialogComponent} from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 @Component({
   selector: 'create-run-dialog',
@@ -123,5 +124,14 @@ export class CreateRunDialogComponent {
 
   closeAll() {
     this.dialog.closeAll();
+  }
+
+  addToClassroom() {
+    this.teacherService.getClassroomCourses().subscribe(({ courses }) => {
+      this.dialog.open(ListClassroomCoursesDialogComponent, {
+        data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
+        panelClass: 'mat-dialog-md'
+      });
+    });
   }
 }

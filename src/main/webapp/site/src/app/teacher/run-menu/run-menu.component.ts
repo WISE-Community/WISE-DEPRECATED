@@ -8,6 +8,7 @@ import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import {ListClassroomCoursesDialogComponent} from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 @Component({
   selector: 'app-run-menu',
@@ -42,6 +43,15 @@ export class RunMenuComponent implements OnInit {
     });
   }
 
+  addToClassroom() {
+    this.teacherService.getClassroomCourses().subscribe(({ courses }) => {
+      this.dialog.open(ListClassroomCoursesDialogComponent, {
+        data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
+        panelClass: 'mat-dialog-md'
+      });
+    });
+  }
+
   showUnitDetails() {
     const project = this.run.project;
     this.dialog.open(LibraryProjectDetailsComponent, {
@@ -57,6 +67,10 @@ export class RunMenuComponent implements OnInit {
 
   canShare() {
     return this.run.canGradeAndManage(this.userService.getUserId());
+  }
+
+  isGoogleUser() {
+    return this.userService.isGoogleUser();
   }
 
   showEditRunDetails() {

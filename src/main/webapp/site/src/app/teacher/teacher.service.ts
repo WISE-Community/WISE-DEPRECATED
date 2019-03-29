@@ -26,6 +26,8 @@ export class TeacherService {
   private getVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
   private checkVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
   private changePasswordUrl = 'api/teacher/forgot/password/change';
+  private listCoursesUrl = 'api/google-classroom/list-courses';
+  private addAssignmentUrl = 'api/google-classroom/create-assignment';
   private newProjectSource = new Subject<Project>();
   public newProjectSource$ = this.newProjectSource.asObservable();
   private newRunSource = new Subject<Run>();
@@ -229,5 +231,18 @@ export class TeacherService {
     params = params.set('password', password);
     params = params.set('confirmPassword', confirmPassword);
     return this.http.post<any>(this.changePasswordUrl, params, { headers: headers });
+  }
+
+  getClassroomCourses(): Observable<any> {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get<any>(this.listCoursesUrl, { headers });
+  }
+
+  addToClassroom(accessCode: string, unitTitle: string, courseId: string) {
+    let params = new HttpParams();
+    params = params.set('accessCode', accessCode);
+    params = params.set('unitTitle', unitTitle);
+    params = params.set('courseId', courseId);
+    this.http.post(this.addAssignmentUrl, params);
   }
 }

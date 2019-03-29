@@ -50,6 +50,10 @@ export class UserService {
       (role === 'teacher' || role === 'admin' || role === 'researcher');
   }
 
+  isGoogleUser(): boolean {
+    return this.getUser().getValue().isGoogleUser;
+  }
+
   retrieveUserPromise(): Promise<User> {
     return this.retrieveUser().toPromise();
   }
