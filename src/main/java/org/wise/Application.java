@@ -8,12 +8,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.servlet.view.JstlView;
-import org.springframework.web.servlet.view.UrlBasedViewResolver;
-import org.wise.portal.spring.impl.DefaultPasswordEncoderFactories;
-
-import java.util.Arrays;
 
 @SpringBootApplication
 @ImportResource({"classpath:configurations/applicationContexts.xml", "classpath:configurations/dispatcherServletContexts.xml"})

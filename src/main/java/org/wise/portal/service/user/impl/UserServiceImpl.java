@@ -21,11 +21,9 @@
 package org.wise.portal.service.user.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +41,6 @@ import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.spring.impl.DefaultPasswordEncoderFactories;
 
 import java.util.Calendar;
 import java.util.List;
@@ -169,19 +166,16 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User updateUserPassword(User user, String oldPassword, String newPassword) throws IncorrectPasswordException {
-    /*
-    Md5PasswordEncoder encoder = new Md5PasswordEncoder();
-    String encodedOldPassword =
-        this.passwordEncoder.encodePassword(oldPassword, this.saltSource.getSalt(user.getUserDetails()));
-
-    if (user.getUserDetails().getPassword().equals(encodedOldPassword)) {
+  public User updateUserPassword(User user, String currentPassword, String newPassword) throws IncorrectPasswordException {
+    if (this.isPasswordCorrect(user, currentPassword)) {
       return this.updateUserPassword(user, newPassword);
     } else {
       throw new IncorrectPasswordException();
     }
-    */
-    return null;
+  }
+
+  public boolean isPasswordCorrect(User user, String password) {
+    return this.passwordEncoder.matches(password, user.getUserDetails().getPassword());
   }
 
   public List<User> retrieveAllUsers() {
@@ -248,14 +242,4 @@ public class UserServiceImpl implements UserService {
   public User retrieveByResetPasswordKey(String resetPasswordKey) {
     return userDao.retrieveByResetPasswordKey(resetPasswordKey);
   }
-
-  public boolean isPasswordCorrect(User user, String password) {
-    /*
-    String hashedPassword = passwordEncoder.encodePassword(
-        password, saltSource.getSalt(user.getUserDetails()));
-    return hashedPassword.equals(user.getUserDetails().getPassword());
-    */
-    return false;
-  }
-
 }

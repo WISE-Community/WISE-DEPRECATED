@@ -1,12 +1,7 @@
 package org.wise.portal.spring.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Properties;
 
 public class CustomPasswordEncoder implements PasswordEncoder {
 
@@ -22,9 +17,9 @@ public class CustomPasswordEncoder implements PasswordEncoder {
   }
 
   @Override
-  public boolean matches(CharSequence charSequence, String encodedPassword) {
-    String salted = charSequence.toString().concat("{" + salt + "}");
+  public boolean matches(CharSequence plainTextPassword, String encodedPassword) {
+    String plainTextPasswordWithSalt = plainTextPassword.toString().concat("{" + salt + "}");
     MessageDigestPasswordEncoder md5Encoder = new MessageDigestPasswordEncoder("MD5");
-    return md5Encoder.matches(salted, encodedPassword);
+    return md5Encoder.matches(plainTextPasswordWithSalt, encodedPassword);
   }
 }
