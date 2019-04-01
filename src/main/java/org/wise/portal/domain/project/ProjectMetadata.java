@@ -58,6 +58,26 @@ public interface ProjectMetadata{
   void setAuthor(String author);
 
   /**
+   * @return <code>String</code> the authors to get
+   */
+  String getAuthors();
+
+  /**
+   * @param <code>String</code> the authors to set
+   */
+  void setAuthors(String authors);
+
+  /**
+   * @return <code>String</code> the parentProject to get
+   */
+  String getParentProject();
+
+  /**
+   * @param <code>String</code> the parentProject to set
+   */
+  void setParentProject(String parentProject);
+
+  /**
    * @return <code>String</code> the subject to get
    */
   String getSubject();

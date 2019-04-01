@@ -67,6 +67,14 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
   @Setter
   private String author;
 
+  @Getter
+  @Setter
+  private String authors;
+
+  @Getter
+  @Setter
+  private String parentProject;
+
   @Column(name = "subject")
   @Getter
   @Setter
@@ -215,6 +223,30 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
           author = "";
         }
         setAuthor(author);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if (metadataJSON.has("authors") && !metadataJSON.isNull("authors")) {
+      try {
+        JSONArray authors = metadataJSON.getJSONArray("authors");
+        if (authors.equals("null")) {
+          authors = new JSONArray();
+        }
+        setAuthors(authors.toString());
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if (metadataJSON.has("parentProject") && !metadataJSON.isNull("parentProject")) {
+      try {
+        JSONObject parentProject = metadataJSON.getJSONObject("parentProject");
+        if (parentProject.equals("null")) {
+          parentProject = new JSONObject();
+        }
+        setParentProject(parentProject.toString());
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -509,6 +541,24 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
     JSONObject metadata = new JSONObject(this);
     try {
       /*
+       * we will retrieve the authors JSON string and replace it with a JSON array
+       * so that the client does not need to parse the JSON string
+       */
+      String authorsString = metadata.getString("authors");
+
+      // check if the field is null or "null"
+      if (authorsString != null && authorsString != "null") {
+        // create the JSON object
+        JSONArray authorsJSON = new JSONArray(authorsString);
+
+        // override the existing authors string with this JSON array
+        metadata.put("authors", authorsJSON);
+      } else {
+        // override the existing authors string with this empty JSON array
+        metadata.put("authors", new JSONArray());
+      }
+
+      /*
        * we will retrieve the grades JSON string and replace it with a JSON array
        * so that the client does not need to parse the JSON string
        */
@@ -578,6 +628,24 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       } else {
         // override the existing standardsAddressed string with this empty JSON object
         metadata.put("standardsAddressed", new JSONObject());
+      }
+
+      /*
+       * we will retrieve the parentProject JSON string and replace it with a JSON Object
+       * so that the client does not need to parse the JSON string
+       */
+      String parentProjectString = metadata.getString("parentProject");
+
+      // check if the field is null or "null"
+      if (parentProjectString != null && parentProjectString != "null") {
+        // create the JSON object
+        JSONObject parentProjectJSON = new JSONObject(parentProjectString);
+
+        // override the existing standardsAddressed string with this JSON object
+        metadata.put("parentProject", parentProjectJSON);
+      } else {
+        // override the existing standardsAddressed string with this empty JSON object
+        metadata.put("parentProject", new JSONObject());
       }
 
     } catch (JSONException e) {
