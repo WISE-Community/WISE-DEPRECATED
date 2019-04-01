@@ -517,15 +517,12 @@ public class WISE5AuthorProjectController {
       String username = userDetails.getUsername();
       String firstName = userDetails.getFirstname();
       String lastName = userDetails.getLastname();
-      String fullName = firstName + " " + lastName;
-      username = fullName + " (" + username + ")";
 
       JSONObject myUserInfo = new JSONObject();
       myUserInfo.put("id", user.getId());
       myUserInfo.put("username", username);
       myUserInfo.put("firstName", firstName);
       myUserInfo.put("lastName", lastName);
-      myUserInfo.put("fullName", fullName);
       JSONObject userInfo = new JSONObject();
       userInfo.put("myUserInfo", myUserInfo);
       config.put("userInfo", userInfo);
