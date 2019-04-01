@@ -29,11 +29,6 @@ public class Application extends SpringBootServletInitializer {
   }
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
-    return DefaultPasswordEncoderFactories.createDelegatingPasswordEncoder();
-  }
-
-  @Bean
   public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
     return args -> {
       /*

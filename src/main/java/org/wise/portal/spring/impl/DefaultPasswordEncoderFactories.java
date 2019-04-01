@@ -1,20 +1,27 @@
 package org.wise.portal.spring.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+@Component
 public class DefaultPasswordEncoderFactories {
 
+  @Value("${system-wide-salt:secret}")
+  private String salt;
+
   @SuppressWarnings("deprecation")
-  public static PasswordEncoder createDelegatingPasswordEncoder() {
+  public static PasswordEncoder createDelegatingPasswordEncoder(String salt) {
     String encodingId = "bcrypt";
     Map<String, PasswordEncoder> encoders = new HashMap<>();
     encoders.put(encodingId, new BCryptPasswordEncoder());
@@ -28,8 +35,12 @@ public class DefaultPasswordEncoderFactories {
     encoders.put("SHA-256", new org.springframework.security.crypto.password.MessageDigestPasswordEncoder("SHA-256"));
 
     DelegatingPasswordEncoder delegatingPasswordEncoder = new DelegatingPasswordEncoder(encodingId, encoders);
-    delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(new CustomPasswordEncoder());
+    delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(new CustomPasswordEncoder(salt));
     return delegatingPasswordEncoder;
   }
 
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return DefaultPasswordEncoderFactories.createDelegatingPasswordEncoder(salt);
+  }
 }
