@@ -1,26 +1,25 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
 
----
+##Description
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+[A clear and concise description of what the bug is.]
 
-**To Reproduce**
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Operating System:** [your OS]
+
+**Browser:** [your browser information]
+
+##Steps to Reproduce
+1. [First Step]
+2. [Second Step]
+3. [and so on...]
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+[A clear and concise description of what you expected to happen.]
 
-**Additional context**
-Add any other context about the problem here.
+**Actual behavior**
+
+[A clear and concise description of what you see.]
+
+##Additional Information
+
+[Add any other context, data, screenshots about the problem here.]
