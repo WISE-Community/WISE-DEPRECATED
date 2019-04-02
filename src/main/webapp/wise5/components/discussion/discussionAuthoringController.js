@@ -34,26 +34,22 @@ var DiscussionAuthoringController = function (_DiscussionController) {
     key: 'authoringConnectedComponentTypeChanged',
     value: function authoringConnectedComponentTypeChanged(connectedComponent) {
       var component = this.ProjectService.getComponentByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
-      if (component.type === 'Discussion') {
-        this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent);
-      }
+      this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent.type);
       this.authoringViewComponentChanged();
     }
   }, {
     key: 'changeAllDiscussionConnectedComponentTypesToMatch',
-    value: function changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent) {
+    value: function changeAllDiscussionConnectedComponentTypesToMatch(connectedComponentType) {
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
 
       try {
         for (var _iterator = this.authoringComponentContent.connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var tempConnectedComponent = _step.value;
+          var connectedComponent = _step.value;
 
-          var tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempConnectedComponent.nodeId, tempConnectedComponent.componentId);
-          if (tempComponent.type === 'Discussion') {
-            tempConnectedComponent.type = connectedComponent.type;
-          }
+          var component = this.ProjectService.getComponentByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+          connectedComponent.type = connectedComponentType;
         }
       } catch (err) {
         _didIteratorError = true;
@@ -68,6 +64,14 @@ var DiscussionAuthoringController = function (_DiscussionController) {
             throw _iteratorError;
           }
         }
+      }
+    }
+  }, {
+    key: 'authoringAutomaticallySetConnectedComponentTypeIfPossible',
+    value: function authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
+      if (connectedComponent.componentId != null) {
+        var firstConnectedComponent = this.authoringComponentContent.connectedComponents[0];
+        connectedComponent.type = firstConnectedComponent.type;
       }
     }
   }]);

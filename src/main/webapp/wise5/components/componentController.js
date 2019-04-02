@@ -807,35 +807,30 @@ var ComponentController = function () {
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
-
-    /**
-     * Add a connected component
-     */
-
   }, {
     key: 'authoringAddConnectedComponent',
     value: function authoringAddConnectedComponent() {
-
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
-      var newConnectedComponent = {};
-      newConnectedComponent.nodeId = this.nodeId;
-      newConnectedComponent.componentId = null;
-      newConnectedComponent.type = null;
-      this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
-
-      // initialize the array of connected components if it does not exist yet
+      var connectedComponent = this.createConnectedComponent();
+      this.addConnectedComponent(connectedComponent);
+      this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+      this.authoringViewComponentChanged();
+    }
+  }, {
+    key: 'addConnectedComponent',
+    value: function addConnectedComponent(connectedComponent) {
       if (this.authoringComponentContent.connectedComponents == null) {
         this.authoringComponentContent.connectedComponents = [];
       }
-
-      // add the connected component
-      this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
+      this.authoringComponentContent.connectedComponents.push(connectedComponent);
+    }
+  }, {
+    key: 'createConnectedComponent',
+    value: function createConnectedComponent() {
+      return {
+        nodeId: this.nodeId,
+        componentId: null,
+        type: null
+      };
     }
 
     /**
@@ -892,6 +887,14 @@ var ComponentController = function () {
             connectedComponent.type = 'importWork';
           }
         }
+      }
+      this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    }
+  }, {
+    key: 'authoringAutomaticallySetConnectedComponentTypeIfPossible',
+    value: function authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
+      if (connectedComponent.componentId != null) {
+        connectedComponent.type = 'importWork';
       }
     }
 
@@ -966,24 +969,11 @@ var ComponentController = function () {
         this.authoringViewComponentChanged();
       }
     }
-
-    /**
-     * The connected component component id has changed
-     * @param connectedComponent the connected component that has changed
-     */
-
   }, {
     key: 'authoringConnectedComponentComponentIdChanged',
     value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
-
-      if (connectedComponent != null) {
-
-        // default the type to import work
-        connectedComponent.type = 'importWork';
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
+      this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+      this.authoringViewComponentChanged();
     }
 
     /**

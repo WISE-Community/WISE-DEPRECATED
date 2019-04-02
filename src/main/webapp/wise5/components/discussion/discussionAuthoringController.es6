@@ -44,20 +44,23 @@ class DiscussionAuthoringController extends DiscussionController {
 
   authoringConnectedComponentTypeChanged(connectedComponent) {
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(
-      connectedComponent.nodeId, connectedComponent.componentId);
-    if (component.type === 'Discussion') {
-      this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent);
-    }
+        connectedComponent.nodeId, connectedComponent.componentId);
+    this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent.type);
     this.authoringViewComponentChanged();
   }
 
-  changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent) {
-    for (const tempConnectedComponent of this.authoringComponentContent.connectedComponents) {
-      const tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(
-        tempConnectedComponent.nodeId, tempConnectedComponent.componentId);
-      if (tempComponent.type === 'Discussion') {
-        tempConnectedComponent.type = connectedComponent.type;
-      }
+  changeAllDiscussionConnectedComponentTypesToMatch(connectedComponentType) {
+    for (const connectedComponent of this.authoringComponentContent.connectedComponents) {
+      const component = this.ProjectService.getComponentByNodeIdAndComponentId(
+          connectedComponent.nodeId, connectedComponent.componentId);
+      connectedComponent.type = connectedComponentType;
+    }
+  }
+
+  authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
+    if (connectedComponent.componentId != null) {
+      const firstConnectedComponent = this.authoringComponentContent.connectedComponents[0];
+      connectedComponent.type = firstConnectedComponent.type;
     }
   }
 }
