@@ -46,6 +46,10 @@ public class GoogleClassroomAPIController {
     SCOPES.add(ClassroomScopes.CLASSROOM_COURSES);
   }
 
+  private String generateLinkAuth() {
+    return "";
+  }
+
   private Classroom connectToClassroomAPI(String username) throws Exception {
     final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     GoogleClientSecrets.Details credentials = new GoogleClientSecrets.Details();
@@ -58,10 +62,10 @@ public class GoogleClassroomAPIController {
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
       HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
       .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-      .setAccessType("offline")
+      .setAccessType("online")
       .build();
     LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-    Credential authorization = new AuthorizationCodeInstalledApp(flow, receiver).authorize(username + 'a');
+    Credential authorization = new AuthorizationCodeInstalledApp(flow, receiver).authorize(username);
 
     return new Classroom.Builder(HTTP_TRANSPORT, JSON_FACTORY, authorization).setApplicationName(applicationName).build();
   }
