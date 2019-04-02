@@ -37,12 +37,16 @@ class DiscussionController extends ComponentController {
     this.retrievedClassmateResponses = false;
     if (this.isStudentMode()) {
       if (this.ConfigService.isPreview()) {
-        let componentStates = null;
+        let componentStates = [];
         if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // assume there can only be one connected component
-          const connectedComponent = this.componentContent.connectedComponents[0];
-          componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-              connectedComponent.nodeId, connectedComponent.componentId);
+          for (const connectedComponent of this.componentContent.connectedComponents) {
+            componentStates = componentStates.concat(this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                connectedComponent.nodeId, connectedComponent.componentId));
+          }
+          if (this.isConnectedComponentImportWorkMode()) {
+            componentStates = componentStates.concat(this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                this.nodeId, this.componentId));
+          }
         } else {
           componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
               this.nodeId, this.componentId);
@@ -50,14 +54,22 @@ class DiscussionController extends ComponentController {
         this.setClassResponses(componentStates);
       } else {
         if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // assume there can only be one connected component
-          const connectedComponent = this.componentContent.connectedComponents[0];
-          this.getClassmateResponses(connectedComponent.nodeId, connectedComponent.componentId);
+          const retrieveWorkFromTheseComponents = [];
+          for (const connectedComponent of this.componentContent.connectedComponents) {
+            retrieveWorkFromTheseComponents.push(
+                {nodeId: connectedComponent.nodeId, componentId: connectedComponent.componentId});
+          }
+          if (this.isConnectedComponentImportWorkMode()) {
+            retrieveWorkFromTheseComponents.push({nodeId: this.nodeId, componentId: this.componentId});
+          }
+          this.getClassmateResponses(retrieveWorkFromTheseComponents);
         } else {
           if (this.isClassmateResponsesGated()) {
             const componentState = this.$scope.componentState;
-            if (this.DiscussionService.componentStateHasStudentWork(componentState, this.componentContent)) {
-              this.getClassmateResponses();
+            if (componentState != null) {
+              if (this.DiscussionService.componentStateHasStudentWork(componentState, this.componentContent)) {
+                this.getClassmateResponses();
+              }
             }
           } else {
             this.getClassmateResponses();
@@ -77,6 +89,28 @@ class DiscussionController extends ComponentController {
     this.registerWebSocketMessageReceivedListener();
     this.initializeWatchMdMedia();
     this.broadcastDoneRenderingComponent();
+  }
+
+  isConnectedComponentShowWorkMode() {
+    if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      let isShowWorkMode = true;
+      for (const connectedComponent of this.componentContent.connectedComponents) {
+        isShowWorkMode = isShowWorkMode && connectedComponent.type === 'showWork';
+      }
+      return isShowWorkMode;
+    }
+    return false;
+  }
+
+  isConnectedComponentImportWorkMode() {
+    if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      let isImportWorkMode = true;
+      for (const connectedComponent of this.componentContent.connectedComponents) {
+        isImportWorkMode = isImportWorkMode && connectedComponent.type === 'importWork';
+      }
+      return isImportWorkMode;
+    }
+    return false;
   }
 
   initializeScopeSubmitButtonClicked() {
@@ -216,12 +250,11 @@ class DiscussionController extends ComponentController {
 
   registerWebSocketMessageReceivedListener() {
     this.$rootScope.$on('webSocketMessageReceived', (event, args) => {
-      const data = args.data;
-      const componentState = data.data;
-      if (componentState.nodeId === this.nodeId && componentState.componentId === this.componentId) {
+      const componentState = args.data.data;
+      if (this.isWorkFromThisComponent(componentState) || this.isWorkFromConnectedComponent(componentState)) {
         const componentStateWorkgroupId = componentState.workgroupId;
         const workgroupId = this.ConfigService.getWorkgroupId();
-        if (workgroupId !== componentStateWorkgroupId) {
+        if (componentStateWorkgroupId !== workgroupId) {
           if (this.retrievedClassmateResponses) {
             this.addClassResponse(componentState);
           }
@@ -230,21 +263,31 @@ class DiscussionController extends ComponentController {
     });
   }
 
+  isWorkFromThisComponent(componentState) {
+    return this.isForThisComponent(componentState);
+  }
+
+  isWorkFromConnectedComponent(componentState) {
+    for (const connectedComponent of this.componentContent.connectedComponents) {
+      if (connectedComponent.nodeId === componentState.nodeId &&
+          connectedComponent.componentId === componentState.componentId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   initializeWatchMdMedia() {
     this.$scope.$watch(() => { return this.$mdMedia('gt-sm'); }, (md) => {
       this.$scope.mdScreen = md;
     });
   }
 
-  getClassmateResponses(nodeId = this.nodeId, componentId = this.componentId) {
+  getClassmateResponses(components = [{nodeId: this.nodeId, componentId: this.componentId}]) {
     const runId = this.ConfigService.getRunId();
     const periodId = this.ConfigService.getPeriodId();
-    this.DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then((result) => {
-      if (result != null) {
-        const componentStates = result.studentWorkList;
-        const annotations = result.annotations;
-        this.setClassResponses(componentStates, annotations);
-      }
+    this.DiscussionService.getClassmateResponses(runId, periodId, components).then((result) => {
+      this.setClassResponses(result.studentWorkList, result.annotations);
     });
   }
 

@@ -60,15 +60,14 @@ var DiscussionService = function (_ComponentService) {
     }
   }, {
     key: 'getClassmateResponses',
-    value: function getClassmateResponses(runId, periodId, nodeId, componentId) {
+    value: function getClassmateResponses(runId, periodId, components) {
       var _this2 = this;
 
       return this.$q(function (resolve, reject) {
         var params = {
           runId: runId,
           periodId: periodId,
-          nodeId: nodeId,
-          componentId: componentId,
+          components: components,
           getStudentWork: true,
           getAnnotations: true
         };
@@ -312,27 +311,39 @@ var DiscussionService = function (_ComponentService) {
   }, {
     key: 'componentStateHasStudentWork',
     value: function componentStateHasStudentWork(componentState, componentContent) {
-      if (componentState != null) {
-        var response = componentState.studentData.response;
-        if (componentContent == null) {
-          if (response != null && response !== '') {
-            return true;
-          }
-        } else {
-          var starterSentence = componentContent.starterSentence;
-          if (starterSentence == null || starterSentence === '') {
-            if (response != null && response !== '') {
-              return true;
-            }
-          } else {
-            if (response != null && response !== '' && response !== starterSentence) {
-              return true;
-            }
-          }
-        }
+      if (this.isStudentWorkHasAttachment(componentState)) {
+        return true;
       }
-
-      return false;
+      if (this.isComponentHasStarterSentence(componentContent)) {
+        return this.isStudentWorkHasText(componentState) && this.isStudentResponseDifferentFromStarterSentence(componentState, componentContent);
+      } else {
+        return this.isStudentWorkHasText(componentState);
+      }
+    }
+  }, {
+    key: 'isComponentHasStarterSentence',
+    value: function isComponentHasStarterSentence(componentContent) {
+      var starterSentence = componentContent.starterSentence;
+      return starterSentence != null && starterSentence !== '';
+    }
+  }, {
+    key: 'isStudentResponseDifferentFromStarterSentence',
+    value: function isStudentResponseDifferentFromStarterSentence(componentState, componentContent) {
+      var response = componentState.studentData.response;
+      var starterSentence = componentContent.starterSentence;
+      return response !== starterSentence;
+    }
+  }, {
+    key: 'isStudentWorkHasText',
+    value: function isStudentWorkHasText(componentState) {
+      var response = componentState.studentData.response;
+      return response != null && response !== '';
+    }
+  }, {
+    key: 'isStudentWorkHasAttachment',
+    value: function isStudentWorkHasAttachment(componentState) {
+      var attachments = componentState.studentData.attachments;
+      return attachments != null && attachments.length > 0;
     }
   }]);
 
