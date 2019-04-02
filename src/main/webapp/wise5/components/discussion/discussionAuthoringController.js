@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _discussionController = require('./discussionController');
 
 var _discussionController2 = _interopRequireDefault(_discussionController);
@@ -27,6 +29,48 @@ var DiscussionAuthoringController = function (_DiscussionController) {
     _this.allowedConnectedComponentTypes = [{ type: 'Discussion' }];
     return _this;
   }
+
+  _createClass(DiscussionAuthoringController, [{
+    key: 'authoringConnectedComponentTypeChanged',
+    value: function authoringConnectedComponentTypeChanged(connectedComponent) {
+      var component = this.ProjectService.getComponentByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+      if (component.type === 'Discussion') {
+        this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent);
+      }
+      this.authoringViewComponentChanged();
+    }
+  }, {
+    key: 'changeAllDiscussionConnectedComponentTypesToMatch',
+    value: function changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent) {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.authoringComponentContent.connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var tempConnectedComponent = _step.value;
+
+          var tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempConnectedComponent.nodeId, tempConnectedComponent.componentId);
+          if (tempComponent.type === 'Discussion') {
+            tempConnectedComponent.type = connectedComponent.type;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    }
+  }]);
 
   return DiscussionAuthoringController;
 }(_discussionController2.default);
