@@ -23,6 +23,7 @@
  */
 package org.wise.portal.service.project.impl;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,67 +166,47 @@ public class ProjectServiceImpl implements ProjectService {
   })
   public Project createProject(ProjectParameters projectParameters) throws ObjectNotFoundException {
     Project project = projectDao.createEmptyProject();
+    User owner = projectParameters.getOwner();
     project.setModulePath(projectParameters.getModulePath());
     project.setName(projectParameters.getProjectname());
-    project.setOwner(projectParameters.getOwner());
+    project.setOwner(owner);
     project.setProjectType(projectParameters.getProjectType());
     project.setWISEVersion(projectParameters.getWiseVersion());
     ProjectMetadata metadata = projectParameters.getMetadata();
     Long parentProjectId = projectParameters.getParentProjectId();
     Project parentProject = null;
-
+    JSONArray authors = new JSONArray();
     if (parentProjectId != null) {
       parentProject = getById(parentProjectId);
       project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
-    }
-
-    JSONObject metaJSON = new JSONObject(metadata);
-    if (metaJSON.has("author")) {
-      try {
-        String author = metaJSON.getString("author");
-        if (author == null || author.equals("null") || author.equals("")) {
-          JSONObject authorJSON = new JSONObject();
-          Long rootId = project.getRootProjectId();
-          if (rootId == null) {
-            try {
-              rootId = identifyRootProjectId(parentProject);
-              project.setRootProjectId(rootId);
-            } catch (ObjectNotFoundException e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-          }
-          try {
-            if (rootId != null) {
-              Project rootP = getById(rootId);
-              User owner = rootP.getOwner();
-              MutableUserDetails ownerDetails = owner.getUserDetails();
-              try {
-                authorJSON.put("username", ownerDetails.getUsername());
-                authorJSON.put("fullname",
-                    ownerDetails.getFirstname() + " " + ownerDetails.getLastname());
-              } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-              }
-              metadata.setAuthor(authorJSON.toString());
-            }
-          } catch (ObjectNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
+      ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
+      if (parentProjectMetadata != null) {
+        JSONObject parentProjectJSON = null;
+        try {
+          parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId);
+          metadata.setParentProject(parentProjectJSON.toString());
+        } catch (JSONException e) {
+          e.printStackTrace();
         }
+      }
+    } else {
+      JSONObject authorJSON = new JSONObject();
+      try {
+        authorJSON.put("firstName", owner.getUserDetails().getFirstname());
+        authorJSON.put("lastName", owner.getUserDetails().getLastname());
+        authorJSON.put("id", owner.getUserDetails().getId());
+        authorJSON.put("username", owner.getUserDetails().getUsername());
+        authors.put(authorJSON);
       } catch (JSONException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
-
     }
+    metadata.setAuthors(authors.toString());
     project.setMetadata(metadata);
     //TODO -- isCurrent being set here may need to be removed
     project.setFamilytag(FamilyTag.TELS);
     project.setCurrent(true);
-    project.setParentProjectId(projectParameters.getParentProjectId());
+    project.setParentProjectId(parentProjectId);
     project.setDateCreated(new Date());
     projectDao.save(project);
     aclService.addPermission(project, BasePermission.ADMINISTRATION);
@@ -535,6 +516,9 @@ public class ProjectServiceImpl implements ProjectService {
     ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
     if (parentProjectMetadata != null) {
       ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+      newProjectMetadata.setAuthors(new JSONArray().toString());
+      JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId);
+      newProjectMetadata.setParentProject(parentProjectJSON.toString());
       pParams.setMetadata(newProjectMetadata);
     }
     return createProject(pParams);
@@ -584,5 +568,27 @@ public class ProjectServiceImpl implements ProjectService {
 
   public List<Project> getAllSharedProjects() {
     return projectDao.getAllSharedProjects();
+  }
+
+  private JSONObject getParentInfo(ProjectMetadata parentProjectMetadata, Long parentProjectId)
+      throws ObjectNotFoundException, JSONException {
+    String parentAuthorsString = parentProjectMetadata.getAuthors();
+    String parentProjectTitle = parentProjectMetadata.getTitle();
+    Project parentProject = getById(parentProjectId);
+    String previewPath = "/project/";
+    if (parentProject.getWiseVersion().equals(4)) {
+      previewPath = "/previewproject.html?projectId=";
+    }
+    String parentProjectUri = wiseProperties.getProperty("wise.hostname") + previewPath + parentProjectId;
+    JSONArray parentAuthors = new JSONArray();
+    if (parentAuthorsString != null) {
+      parentAuthors = new JSONArray(parentAuthorsString);
+    }
+    JSONObject parentProjectJSON = new JSONObject();
+    parentProjectJSON.put("id", parentProjectId);
+    parentProjectJSON.put("title", parentProjectTitle);
+    parentProjectJSON.put("authors", parentAuthors);
+    parentProjectJSON.put("uri", parentProjectUri);
+    return parentProjectJSON;
   }
 }
