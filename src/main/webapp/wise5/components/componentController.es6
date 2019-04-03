@@ -826,8 +826,8 @@ class ComponentController {
    */
   authoringConnectedComponentNodeIdChanged(connectedComponent) {
     if (connectedComponent != null) {
-        connectedComponent.componentId = null;
-        connectedComponent.type = null;
+      connectedComponent.componentId = null;
+      connectedComponent.type = null;
       this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
       // the authoring component content has changed so we will save the project
