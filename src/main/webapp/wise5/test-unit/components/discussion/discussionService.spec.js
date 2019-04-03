@@ -59,14 +59,37 @@ describe('DiscussionService', function () {
     TeacherDataService = new MockTeacherDataService();
   }));
 
+  it('should check that a component state has student work when student only attached a file', function () {
+    var componentState = {
+      studentData: {
+        attachments: ['somefile.png']
+      }
+    };
+    var componentContent = {
+      starterSentence: 'starter sentence'
+    };
+    var hasStudentWork = DiscussionService.componentStateHasStudentWork(componentState, componentContent);
+    expect(hasStudentWork).toEqual(true);
+  });
+
   it('should check that a component state does not have student work', function () {
     var componentState = {
       studentData: {
         response: ''
       }
     };
-    var hasStudentWork = DiscussionService.componentStateHasStudentWork(componentState);
+    var componentContent = {
+      starterSentence: 'starter sentence'
+    };
+    var hasStudentWork = DiscussionService.componentStateHasStudentWork(componentState, componentContent);
     expect(hasStudentWork).toEqual(false);
+    var componentState2 = {
+      studentData: {
+        response: 'starter sentence'
+      }
+    };
+    var hasStudentWork2 = DiscussionService.componentStateHasStudentWork(componentState2, componentContent);
+    expect(hasStudentWork2).toEqual(false);
   });
 
   it('should check that a component state has student work', function () {
@@ -75,7 +98,10 @@ describe('DiscussionService', function () {
         response: 'The sun generates heat.'
       }
     };
-    var hasStudentWork = DiscussionService.componentStateHasStudentWork(componentState);
+    var componentContent = {
+      starterSentence: 'starter sentence'
+    };
+    var hasStudentWork = DiscussionService.componentStateHasStudentWork(componentState, componentContent);
     expect(hasStudentWork).toEqual(true);
   });
 
