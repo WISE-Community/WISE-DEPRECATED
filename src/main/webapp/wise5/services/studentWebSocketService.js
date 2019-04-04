@@ -9,14 +9,16 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentWebSocketService = function () {
-  function StudentWebSocketService($rootScope, $websocket, ConfigService, StudentDataService) {
+  function StudentWebSocketService($rootScope, $stomp, $websocket, ConfigService, StudentDataService) {
     _classCallCheck(this, StudentWebSocketService);
 
     this.$rootScope = $rootScope;
+    this.$stomp = $stomp;
     this.$websocket = $websocket;
     this.ConfigService = ConfigService;
     this.StudentDataService = StudentDataService;
     this.dataStream = null;
+    this.payload = null;
   }
 
   /**
@@ -25,7 +27,7 @@ var StudentWebSocketService = function () {
 
 
   _createClass(StudentWebSocketService, [{
-    key: "initialize",
+    key: 'initialize',
     value: function initialize() {
       var _this = this;
 
@@ -35,20 +37,29 @@ var StudentWebSocketService = function () {
         var runId = this.ConfigService.getRunId();
         var periodId = this.ConfigService.getPeriodId();
         var workgroupId = this.ConfigService.getWorkgroupId();
-        var webSocketURL = this.ConfigService.getWebSocketURL() + "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+        var webSocketURL = this.ConfigService.getWebSocketURL() + '/hello';
+        //"?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+
 
         try {
-          this.dataStream = this.$websocket(webSocketURL);
-          this.dataStream.onMessage(function (message) {
-            _this.handleMessage(message);
+          this.$stomp.connect(webSocketURL).then(function (frame) {
+            var subscription = _this.$stomp.subscribe('/dest', function (payload, headers, res) {
+              this.payload = payload;
+            }, {
+              'headers': 'are awesome'
+            });
           });
+          //this.dataStream = this.$websocket(webSocketURL);
+          //this.dataStream.onMessage((message) => {
+          //  this.handleMessage(message);
+          //});
         } catch (e) {
           console.log(e);
         }
       }
     }
   }, {
-    key: "handleWebSocketMessageReceived",
+    key: 'handleWebSocketMessageReceived',
 
 
     /**
@@ -59,7 +70,7 @@ var StudentWebSocketService = function () {
       this.$rootScope.$broadcast('webSocketMessageReceived', { data: data });
     }
   }, {
-    key: "handleMessage",
+    key: 'handleMessage',
 
 
     /**
@@ -97,7 +108,7 @@ var StudentWebSocketService = function () {
      */
 
   }, {
-    key: "sendStudentToTeacherMessage",
+    key: 'sendStudentToTeacherMessage',
     value: function sendStudentToTeacherMessage(messageType, data) {
       if (!this.ConfigService.isPreview()) {
         var currentNodeId = this.StudentDataService.getCurrentNodeId();
@@ -110,7 +121,7 @@ var StudentWebSocketService = function () {
       }
     }
   }, {
-    key: "sendStudentToClassmatesInPeriodMessage",
+    key: 'sendStudentToClassmatesInPeriodMessage',
 
 
     /**
@@ -133,7 +144,7 @@ var StudentWebSocketService = function () {
   return StudentWebSocketService;
 }();
 
-StudentWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService', 'StudentDataService'];
+StudentWebSocketService.$inject = ['$rootScope', '$stomp', '$websocket', 'ConfigService', 'StudentDataService'];
 
 exports.default = StudentWebSocketService;
 //# sourceMappingURL=studentWebSocketService.js.map

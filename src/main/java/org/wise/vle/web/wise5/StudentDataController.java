@@ -27,12 +27,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 //import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.util.HtmlUtils;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -41,6 +44,8 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.vle.domain.Greeting;
+import org.wise.vle.domain.HelloMessage;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.StudentWork;
@@ -70,6 +75,14 @@ public class StudentDataController {
 
 //  @Autowired
 //  private WebSocketHandler webSocketHandler;
+
+  @MessageMapping("/hello")
+  @SendTo("/topic/greetings")
+  public Greeting greeting(HelloMessage message) throws Exception {
+    Thread.sleep(1000); // simulated delay
+    return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+  }
+
 
   @RequestMapping(method = RequestMethod.GET, value = "/student/data")
   public void getWISE5StudentData(

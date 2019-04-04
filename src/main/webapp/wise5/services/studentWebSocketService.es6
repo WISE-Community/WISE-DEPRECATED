@@ -3,14 +3,17 @@
 class StudentWebSocketService {
   constructor(
       $rootScope,
+      $stomp,
       $websocket,
       ConfigService,
       StudentDataService) {
     this.$rootScope = $rootScope;
+    this.$stomp = $stomp;
     this.$websocket = $websocket;
     this.ConfigService = ConfigService;
     this.StudentDataService = StudentDataService;
     this.dataStream = null;
+    this.payload = null;
   }
 
   /**
@@ -23,14 +26,22 @@ class StudentWebSocketService {
       const runId = this.ConfigService.getRunId();
       const periodId = this.ConfigService.getPeriodId();
       const workgroupId = this.ConfigService.getWorkgroupId();
-      const webSocketURL = this.ConfigService.getWebSocketURL() +
-          "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+      const webSocketURL = this.ConfigService.getWebSocketURL() + '/hello';
+          //"?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+
 
       try {
-        this.dataStream = this.$websocket(webSocketURL);
-        this.dataStream.onMessage((message) => {
-          this.handleMessage(message);
+        this.$stomp.connect(webSocketURL).then((frame) => {
+          const subscription = this.$stomp.subscribe('/dest', function (payload, headers, res) {
+            this.payload = payload;
+          }, {
+            'headers': 'are awesome'
+          });
         });
+        //this.dataStream = this.$websocket(webSocketURL);
+        //this.dataStream.onMessage((message) => {
+        //  this.handleMessage(message);
+        //});
       } catch(e) {
         console.log(e);
       }
@@ -109,6 +120,7 @@ class StudentWebSocketService {
 
 StudentWebSocketService.$inject = [
   '$rootScope',
+  '$stomp',
   '$websocket',
   'ConfigService',
   'StudentDataService'
