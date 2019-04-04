@@ -66,7 +66,6 @@ class GraphService extends ComponentService {
         canEdit: true
       }
     ];
-
     return component;
   }
 
@@ -138,7 +137,7 @@ class GraphService extends ComponentService {
     }
 
     return regressionSeries;
-  };
+  }
 
   /**
    * Code extracted from https://github.com/Tom-Alexander/regression-js/
@@ -662,52 +661,37 @@ class GraphService extends ComponentService {
   }
 
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-    let result = false;
-
-    if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
-      /*
-       * the student can't perform any work on this component and has visited
-       * this step so we will mark it as completed
-       */
-      return true;
-    }
-    if (componentStates && componentStates.length) {
-      let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
-
-      if (submitRequired) {
-        // completion requires a submission, so check for isSubmit in any component states
-        for (let i = 0, l = componentStates.length; i < l; i++) {
-          let componentState = componentStates[i];
-          if (componentState.isSubmit && componentState.studentData) {
-
-            let studentData = componentState.studentData;
-
-            // component state is a submission
-            if (this.hasSeriesData(studentData) || this.hasTrialData(studentData)) {
-              // there is series data so the component is completed
-              result = true;
-              break;
-            }
-          }
-        }
-      } else {
-        // get the last component state
-        let l = componentStates.length - 1;
-        let componentState = componentStates[l];
-
-        let studentData = componentState.studentData;
-
-        if (studentData) {
-          if (this.hasSeriesData(studentData) || this.hasTrialData(studentData)) {
-            // there is series data so the component is completed
-            result = true;
-          }
+    if (this.canEdit(component)) {
+      if (this.hasComponentStates(componentStates)) {
+        if (this.isSubmitRequired(node, component)) {
+          return this.hasSubmitComponentState(componentStates);
+        } else {
+          const componentState = componentStates[componentStates.length - 1];
+          return this.componentStateHasStudentWork(componentState);
         }
       }
+    } else {
+      return this.UtilService.hasNodeEnteredEvent(nodeEvents);
     }
+    return false;
+  }
 
-    return result;
-  };
+  hasComponentStates(componentStates) {
+    return componentStates != null && componentStates.length > 0;
+  }
+
+  isSubmitRequired(node, component) {
+    return node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
+  }
+
+  hasSubmitComponentState(componentStates) {
+    for (const componentState of componentStates) {
+      if (componentState.isSubmit && this.componentStateHasStudentWork(componentState)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   /**
    * Determine if the student can perform any work on this component.
@@ -715,8 +699,8 @@ class GraphService extends ComponentService {
    * @return Whether the student can perform any work on this component.
    */
   canEdit(component) {
-    let series = component.series;
-    for (let singleSeries of series) {
+    const series = component.series;
+    for (const singleSeries of series) {
       if (singleSeries.canEdit) {
         return true;
       }
@@ -727,38 +711,25 @@ class GraphService extends ComponentService {
     return false;
   }
 
-  /**
-   * Check if student data contains any series data
-   * @param studentData student data from a component state
-   * @returns whether the student data has series data
-   */
   hasSeriesData(studentData) {
-    let result = false;
-
-    let series = studentData.series;
-    if (series && series.length) {
-      // check for any data in any series
-      for (let i = 0, l = series.length; i < l; i++) {
-        let data = series[i].data;
-
-        if (data && data.length) {
-          // there is series data so the component is completed
-          result = true;
-          break;
+    const series = studentData.series;
+    if (series != null) {
+      for (const singleSeries of series) {
+        if (singleSeries.data != null && singleSeries.data.length > 0) {
+          return true;
         }
       }
     }
-
-    return result;
-  };
+    return false;
+  }
 
   hasTrialData(studentData) {
     const trials = studentData.trials;
     if (trials != null) {
-      for (let trial of trials) {
-        for (let singleSeries of trial.series) {
+      for (const trial of trials) {
+        for (const singleSeries of trial.series) {
           const seriesData = singleSeries.data;
-          if (seriesData != null && seriesData.length > 0) {
+          if (seriesData.length > 0) {
             return true;
           }
         }
@@ -768,24 +739,16 @@ class GraphService extends ComponentService {
   }
 
   componentStateHasStudentWork(componentState, componentContent) {
-    let hasStudentWork = false;
-
     if (componentState != null) {
-      let studentData = componentState.studentData;
-
+      const studentData = componentState.studentData;
       if (studentData != null) {
-
         if (studentData.version == 1) {
           /*
            * this is the old graph student data format where the
            * student data can contain multiple series.
            */
-
-           // check if any of the series has a data point
            if (this.anySeriesHasDataPoint(studentData.series)) {
-
-             // at least one of the series has a data point
-             hasStudentWork = true;
+             return true;
            }
         } else {
           /*
@@ -793,26 +756,16 @@ class GraphService extends ComponentService {
            * student data can contain multiple trials and each trial
            * can contain multiple series.
            */
-
-          // check if any of the trials has a data point
           if (this.anyTrialHasDataPoint(studentData.trials)) {
-
-            /*
-             * at least one of the trials has a series that has a
-             * data point
-             */
-            hasStudentWork = true;
+            return true;
           }
         }
       }
-
-      // check if the student has changed any of the axis limits
-      if (this.anyAxisLimitChanged(componentState, componentContent)) {
-        hasStudentWork = true;
+      if (this.isStudentChangedAxisLimit(componentState, componentContent)) {
+        return true;
       }
     }
-
-    return hasStudentWork;
+    return false;
   }
 
   /**
@@ -821,33 +774,23 @@ class GraphService extends ComponentService {
    * @param componentContent the component content
    * @return whether the student has changed any of the axis limits
    */
-  anyAxisLimitChanged(componentState, componentContent) {
-
+  isStudentChangedAxisLimit(componentState, componentContent) {
     if (componentState != null && componentState.studentData != null && componentContent != null) {
-
       if (componentState.studentData.xAxis != null && componentContent.xAxis != null) {
-
         if (componentState.studentData.xAxis.min != componentContent.xAxis.min) {
-          // the student has changed the x min
           return true;
         } else if (componentState.studentData.xAxis.max != componentContent.xAxis.max) {
-          // the student has changed the x max
           return true;
         }
       }
-
       if (componentState.studentData.yAxis != null && componentContent.yAxis != null) {
-
         if (componentState.studentData.yAxis.min != componentContent.yAxis.min) {
-          // the student has changed the y min
           return true;
         } else if (componentState.studentData.yAxis.max != componentContent.yAxis.max) {
-          // the student has changed the y max
           return true;
         }
       }
     }
-
     return false;
   }
 
@@ -857,25 +800,12 @@ class GraphService extends ComponentService {
    * @return whether any of the trials contains a data point
    */
   anyTrialHasDataPoint(trials) {
-    let hasDataPoint = false;
-
-    if (trials != null) {
-
-      // loop through all the trials
-      for (let t = 0; t < trials.length; t++) {
-        let trial = trials[t];
-
-        // check if the trial contains a data point
-        hasDataPoint = this.trialHasDataPoint(trial);
-
-        if (hasDataPoint) {
-          // the trial has a data point so we are done looking
-          break;
-        }
+    for (const trial of trials) {
+      if (this.trialHasDataPoint(trial)) {
+        return true;
       }
     }
-
-    return hasDataPoint;
+    return false;
   }
 
   /**
@@ -884,33 +814,12 @@ class GraphService extends ComponentService {
    * @return whether the trial contains a data point
    */
   trialHasDataPoint(trial) {
-    let hasDataPoint = false;
-
-    if (trial != null) {
-      let series = trial.series;
-
-      if (series != null) {
-
-        // loop through all the series
-        for (let s = 0; s < series.length; s++) {
-
-          let singleSeries = series[s];
-
-          if (singleSeries != null) {
-
-            // check if the series contains a data point
-            hasDataPoint = this.seriesHasDataPoint(singleSeries);
-
-            if (hasDataPoint) {
-              // the series has a data point so we are done looking
-              break;
-            }
-          }
-        }
+    for (let singleSeries of trial.series) {
+      if (this.seriesHasDataPoint(singleSeries)) {
+        return true;
       }
     }
-
-    return hasDataPoint;
+    return false;
   }
 
   /**
@@ -919,29 +828,14 @@ class GraphService extends ComponentService {
    * @return whether any of the series has a data point
    */
   anySeriesHasDataPoint(multipleSeries) {
-
-    let hasDataPoint = false;
-
     if (multipleSeries != null) {
-
-      // loop through all the series
-      for (let s = 0; s < multipleSeries.length; s++) {
-        let singleSeries = multipleSeries[s];
-
-        if (singleSeries != null) {
-
-          // check if the series has a data point
-          hasDataPoint = this.seriesHasDataPoint(singleSeries);
-
-          if (hasDataPoint) {
-            // the series has a data point so we are done looking
-            break;
-          }
+      for (let singleSeries of multipleSeries) {
+        if (this.seriesHasDataPoint(singleSeries)) {
+          return true;
         }
       }
     }
-
-    return hasDataPoint;
+    return false;
   }
 
   /**
@@ -950,20 +844,7 @@ class GraphService extends ComponentService {
    * @return whether the series object has any data points
    */
   seriesHasDataPoint(singleSeries) {
-    let hasDataPoint = false;
-
-    if (singleSeries != null) {
-
-      // get the data from the series
-      let data = singleSeries.data;
-
-      if (data.length > 0) {
-        // the series has a data point
-        hasDataPoint = true;
-      }
-    }
-
-    return hasDataPoint;
+    return singleSeries.data.length > 0;
   }
 
   /**
@@ -973,22 +854,14 @@ class GraphService extends ComponentService {
    * @return A promise that will return an image object.
    */
   generateImageFromRenderedComponentState(componentState) {
-    let deferred = this.$q.defer();
-    let componentId = componentState.componentId;
+    const deferred = this.$q.defer();
+    const componentId = componentState.componentId;
     let highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
     if (highchartsDiv != null && highchartsDiv.length > 0) {
       highchartsDiv = highchartsDiv[0];
-
-      // convert the div element to a canvas element
       html2canvas(highchartsDiv).then((canvas) => {
-
-        // get the canvas as a base64 string
-        let img_b64 = canvas.toDataURL('image/png');
-
-        // get the image object
-        let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-
-        // add the image to the student assets
+        const base64Image = canvas.toDataURL('image/png');
+        const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
         this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
           deferred.resolve(asset);
         });

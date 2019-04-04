@@ -332,7 +332,7 @@ var ComponentController = function () {
       var componentState = args.studentWork;
       if (this.isForThisComponent(componentState)) {
         this.setIsDirty(false);
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: this.getIsDirty() });
+        this.emitComponentDirty(this.getIsDirty());
         var clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
         if (componentState.isSubmit) {
           this.setSubmittedMessage(clientSaveTime);
@@ -480,10 +480,9 @@ var ComponentController = function () {
       var isCompleted = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
       this.setIsDirty(true);
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
+      this.emitComponentDirty(true);
       this.setIsSubmitDirty(true);
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+      this.emitComponentSubmitDirty(true);
       this.clearSaveText();
 
       /*
@@ -496,12 +495,21 @@ var ComponentController = function () {
 
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
-        _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
-
+        _this5.emitComponentStudentDataChanged(componentState);
         if (componentState.isCompleted) {
-          _this5.$scope.$emit('componentCompleted', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
+          _this5.emitComponentCompleted(componentState);
         }
       });
+    }
+  }, {
+    key: 'emitComponentStudentDataChanged',
+    value: function emitComponentStudentDataChanged(componentState) {
+      this.$scope.$emit('componentStudentDataChanged', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
+    }
+  }, {
+    key: 'emitComponentCompleted',
+    value: function emitComponentCompleted(componentState) {
+      this.$scope.$emit('componentCompleted', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
     }
   }, {
     key: 'processLatestStudentWork',

@@ -94,7 +94,6 @@ var GraphService = function (_ComponentService) {
         regressionSettings: {},
         canEdit: true
       }];
-
       return component;
     }
 
@@ -169,13 +168,13 @@ var GraphService = function (_ComponentService) {
 
       return regressionSeries;
     }
-  }, {
-    key: '_exponential',
-
 
     /**
      * Code extracted from https://github.com/Tom-Alexander/regression-js/
      */
+
+  }, {
+    key: '_exponential',
     value: function _exponential(data, regressionSettings) {
       var sum = [0, 0, 0, 0, 0, 0],
           n = 0,
@@ -747,72 +746,42 @@ var GraphService = function (_ComponentService) {
   }, {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-      var result = false;
-
-      if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
-        /*
-         * the student can't perform any work on this component and has visited
-         * this step so we will mark it as completed
-         */
-        return true;
-      }
-      if (componentStates && componentStates.length) {
-        var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
-
-        if (submitRequired) {
-          // completion requires a submission, so check for isSubmit in any component states
-          for (var i = 0, l = componentStates.length; i < l; i++) {
-            var componentState = componentStates[i];
-            if (componentState.isSubmit && componentState.studentData) {
-
-              var studentData = componentState.studentData;
-
-              // component state is a submission
-              if (this.hasSeriesData(studentData) || this.hasTrialData(studentData)) {
-                // there is series data so the component is completed
-                result = true;
-                break;
-              }
-            }
-          }
-        } else {
-          // get the last component state
-          var _l = componentStates.length - 1;
-          var _componentState = componentStates[_l];
-
-          var _studentData = _componentState.studentData;
-
-          if (_studentData) {
-            if (this.hasSeriesData(_studentData) || this.hasTrialData(_studentData)) {
-              // there is series data so the component is completed
-              result = true;
-            }
+      if (this.canEdit(component)) {
+        if (this.hasComponentStates(componentStates)) {
+          if (this.isSubmitRequired(node, component)) {
+            return this.hasSubmitComponentState(componentStates);
+          } else {
+            var componentState = componentStates[componentStates.length - 1];
+            return this.componentStateHasStudentWork(componentState);
           }
         }
+      } else {
+        return this.UtilService.hasNodeEnteredEvent(nodeEvents);
       }
-
-      return result;
+      return false;
     }
   }, {
-    key: 'canEdit',
-
-
-    /**
-     * Determine if the student can perform any work on this component.
-     * @param component The component content.
-     * @return Whether the student can perform any work on this component.
-     */
-    value: function canEdit(component) {
-      var series = component.series;
+    key: 'hasComponentStates',
+    value: function hasComponentStates(componentStates) {
+      return componentStates != null && componentStates.length > 0;
+    }
+  }, {
+    key: 'isSubmitRequired',
+    value: function isSubmitRequired(node, component) {
+      return node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
+    }
+  }, {
+    key: 'hasSubmitComponentState',
+    value: function hasSubmitComponentState(componentStates) {
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = series[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var singleSeries = _step.value;
+        for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var componentState = _step.value;
 
-          if (singleSeries.canEdit) {
+          if (componentState.isSubmit && this.componentStateHasStudentWork(componentState)) {
             return true;
           }
         }
@@ -831,90 +800,136 @@ var GraphService = function (_ComponentService) {
         }
       }
 
+      return false;
+    }
+
+    /**
+     * Determine if the student can perform any work on this component.
+     * @param component The component content.
+     * @return Whether the student can perform any work on this component.
+     */
+
+  }, {
+    key: 'canEdit',
+    value: function canEdit(component) {
+      var series = component.series;
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = series[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var singleSeries = _step2.value;
+
+          if (singleSeries.canEdit) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
       if (this.UtilService.hasImportWorkConnectedComponent(component)) {
         return true;
       }
       return false;
     }
-
-    /**
-     * Check if student data contains any series data
-     * @param studentData student data from a component state
-     * @returns whether the student data has series data
-     */
-
   }, {
     key: 'hasSeriesData',
     value: function hasSeriesData(studentData) {
-      var result = false;
-
       var series = studentData.series;
-      if (series && series.length) {
-        // check for any data in any series
-        for (var i = 0, l = series.length; i < l; i++) {
-          var data = series[i].data;
+      if (series != null) {
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
-          if (data && data.length) {
-            // there is series data so the component is completed
-            result = true;
-            break;
+        try {
+          for (var _iterator3 = series[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var singleSeries = _step3.value;
+
+            if (singleSeries.data != null && singleSeries.data.length > 0) {
+              return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
           }
         }
       }
-
-      return result;
+      return false;
     }
   }, {
     key: 'hasTrialData',
     value: function hasTrialData(studentData) {
       var trials = studentData.trials;
       if (trials != null) {
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
 
         try {
-          for (var _iterator2 = trials[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var trial = _step2.value;
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
+          for (var _iterator4 = trials[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var trial = _step4.value;
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
 
             try {
-              for (var _iterator3 = trial.series[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                var singleSeries = _step3.value;
+              for (var _iterator5 = trial.series[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                var singleSeries = _step5.value;
 
                 var seriesData = singleSeries.data;
-                if (seriesData != null && seriesData.length > 0) {
+                if (seriesData.length > 0) {
                   return true;
                 }
               }
             } catch (err) {
-              _didIteratorError3 = true;
-              _iteratorError3 = err;
+              _didIteratorError5 = true;
+              _iteratorError5 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                  _iterator3.return();
+                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                  _iterator5.return();
                 }
               } finally {
-                if (_didIteratorError3) {
-                  throw _iteratorError3;
+                if (_didIteratorError5) {
+                  throw _iteratorError5;
                 }
               }
             }
           }
         } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
             }
           } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
+            if (_didIteratorError4) {
+              throw _iteratorError4;
             }
           }
         }
@@ -924,24 +939,16 @@ var GraphService = function (_ComponentService) {
   }, {
     key: 'componentStateHasStudentWork',
     value: function componentStateHasStudentWork(componentState, componentContent) {
-      var hasStudentWork = false;
-
       if (componentState != null) {
         var studentData = componentState.studentData;
-
         if (studentData != null) {
-
           if (studentData.version == 1) {
             /*
              * this is the old graph student data format where the
              * student data can contain multiple series.
              */
-
-            // check if any of the series has a data point
             if (this.anySeriesHasDataPoint(studentData.series)) {
-
-              // at least one of the series has a data point
-              hasStudentWork = true;
+              return true;
             }
           } else {
             /*
@@ -949,26 +956,16 @@ var GraphService = function (_ComponentService) {
              * student data can contain multiple trials and each trial
              * can contain multiple series.
              */
-
-            // check if any of the trials has a data point
             if (this.anyTrialHasDataPoint(studentData.trials)) {
-
-              /*
-               * at least one of the trials has a series that has a
-               * data point
-               */
-              hasStudentWork = true;
+              return true;
             }
           }
         }
-
-        // check if the student has changed any of the axis limits
-        if (this.anyAxisLimitChanged(componentState, componentContent)) {
-          hasStudentWork = true;
+        if (this.isStudentChangedAxisLimit(componentState, componentContent)) {
+          return true;
         }
       }
-
-      return hasStudentWork;
+      return false;
     }
 
     /**
@@ -979,34 +976,24 @@ var GraphService = function (_ComponentService) {
      */
 
   }, {
-    key: 'anyAxisLimitChanged',
-    value: function anyAxisLimitChanged(componentState, componentContent) {
-
+    key: 'isStudentChangedAxisLimit',
+    value: function isStudentChangedAxisLimit(componentState, componentContent) {
       if (componentState != null && componentState.studentData != null && componentContent != null) {
-
         if (componentState.studentData.xAxis != null && componentContent.xAxis != null) {
-
           if (componentState.studentData.xAxis.min != componentContent.xAxis.min) {
-            // the student has changed the x min
             return true;
           } else if (componentState.studentData.xAxis.max != componentContent.xAxis.max) {
-            // the student has changed the x max
             return true;
           }
         }
-
         if (componentState.studentData.yAxis != null && componentContent.yAxis != null) {
-
           if (componentState.studentData.yAxis.min != componentContent.yAxis.min) {
-            // the student has changed the y min
             return true;
           } else if (componentState.studentData.yAxis.max != componentContent.yAxis.max) {
-            // the student has changed the y max
             return true;
           }
         }
       }
-
       return false;
     }
 
@@ -1019,25 +1006,34 @@ var GraphService = function (_ComponentService) {
   }, {
     key: 'anyTrialHasDataPoint',
     value: function anyTrialHasDataPoint(trials) {
-      var hasDataPoint = false;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
-      if (trials != null) {
+      try {
+        for (var _iterator6 = trials[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var trial = _step6.value;
 
-        // loop through all the trials
-        for (var t = 0; t < trials.length; t++) {
-          var trial = trials[t];
-
-          // check if the trial contains a data point
-          hasDataPoint = this.trialHasDataPoint(trial);
-
-          if (hasDataPoint) {
-            // the trial has a data point so we are done looking
-            break;
+          if (this.trialHasDataPoint(trial)) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }
 
-      return hasDataPoint;
+      return false;
     }
 
     /**
@@ -1049,33 +1045,34 @@ var GraphService = function (_ComponentService) {
   }, {
     key: 'trialHasDataPoint',
     value: function trialHasDataPoint(trial) {
-      var hasDataPoint = false;
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
-      if (trial != null) {
-        var series = trial.series;
+      try {
+        for (var _iterator7 = trial.series[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var singleSeries = _step7.value;
 
-        if (series != null) {
-
-          // loop through all the series
-          for (var s = 0; s < series.length; s++) {
-
-            var singleSeries = series[s];
-
-            if (singleSeries != null) {
-
-              // check if the series contains a data point
-              hasDataPoint = this.seriesHasDataPoint(singleSeries);
-
-              if (hasDataPoint) {
-                // the series has a data point so we are done looking
-                break;
-              }
-            }
+          if (this.seriesHasDataPoint(singleSeries)) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
           }
         }
       }
 
-      return hasDataPoint;
+      return false;
     }
 
     /**
@@ -1087,29 +1084,35 @@ var GraphService = function (_ComponentService) {
   }, {
     key: 'anySeriesHasDataPoint',
     value: function anySeriesHasDataPoint(multipleSeries) {
-
-      var hasDataPoint = false;
-
       if (multipleSeries != null) {
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
 
-        // loop through all the series
-        for (var s = 0; s < multipleSeries.length; s++) {
-          var singleSeries = multipleSeries[s];
+        try {
+          for (var _iterator8 = multipleSeries[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var singleSeries = _step8.value;
 
-          if (singleSeries != null) {
-
-            // check if the series has a data point
-            hasDataPoint = this.seriesHasDataPoint(singleSeries);
-
-            if (hasDataPoint) {
-              // the series has a data point so we are done looking
-              break;
+            if (this.seriesHasDataPoint(singleSeries)) {
+              return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
+            }
+          } finally {
+            if (_didIteratorError8) {
+              throw _iteratorError8;
             }
           }
         }
       }
-
-      return hasDataPoint;
+      return false;
     }
 
     /**
@@ -1121,20 +1124,7 @@ var GraphService = function (_ComponentService) {
   }, {
     key: 'seriesHasDataPoint',
     value: function seriesHasDataPoint(singleSeries) {
-      var hasDataPoint = false;
-
-      if (singleSeries != null) {
-
-        // get the data from the series
-        var data = singleSeries.data;
-
-        if (data.length > 0) {
-          // the series has a data point
-          hasDataPoint = true;
-        }
-      }
-
-      return hasDataPoint;
+      return singleSeries.data.length > 0;
     }
 
     /**
@@ -1154,17 +1144,9 @@ var GraphService = function (_ComponentService) {
       var highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
       if (highchartsDiv != null && highchartsDiv.length > 0) {
         highchartsDiv = highchartsDiv[0];
-
-        // convert the div element to a canvas element
         (0, _html2canvas2.default)(highchartsDiv).then(function (canvas) {
-
-          // get the canvas as a base64 string
-          var img_b64 = canvas.toDataURL('image/png');
-
-          // get the image object
-          var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
-
-          // add the image to the student assets
+          var base64Image = canvas.toDataURL('image/png');
+          var imageObject = _this2.UtilService.getImageObjectFromBase64String(base64Image);
           _this2.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
             deferred.resolve(asset);
           });
