@@ -5,6 +5,7 @@ import { User } from "../../domain/user";
 import { UserService } from "../../services/user.service";
 import { StudentHomeComponent } from "./student-home.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import {ActivatedRoute} from '@angular/router';
 
 export class MockUserService {
   getUser(): Observable<User[]> {
@@ -30,7 +31,8 @@ describe('StudentHomeComponent', () => {
       declarations: [ StudentHomeComponent ],
       providers: [
         { provide: UserService, useClass: MockUserService },
-        { provide: MatDialog, useValue: {} }
+        { provide: MatDialog, useValue: {} },
+        { provide: ActivatedRoute, useValue: { queryParams: Observable.create() } }
       ],
       imports: [],
       schemas: [ NO_ERRORS_SCHEMA ]

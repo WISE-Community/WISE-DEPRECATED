@@ -129,7 +129,21 @@ export class CreateRunDialogComponent {
   }
 
   addToClassroom() {
-    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(({ courses }) => {
+    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username, 'false').subscribe(({ authorizationUrl, courses }) => {
+      if (authorizationUrl !== null) {
+        window.open(authorizationUrl, "authorization", "width=500,height=600")
+          .addEventListener("onunload", () => this.addToClassroomAfterAuthorize());
+      } else {
+        this.dialog.open(ListClassroomCoursesDialogComponent, {
+          data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
+          panelClass: 'mat-dialog-md'
+        });
+      }
+    });
+  }
+
+  addToClassroomAfterAuthorize() {
+    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username, 'true').subscribe(({ courses }) => {
       this.dialog.open(ListClassroomCoursesDialogComponent, {
         data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
         panelClass: 'mat-dialog-md'

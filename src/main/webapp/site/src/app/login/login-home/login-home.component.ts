@@ -19,6 +19,7 @@ export class LoginHomeComponent implements OnInit {
   isShowGoogleLogin: boolean = true;
   recaptchaPublicKey: string = "";
   isRecaptchaRequired: boolean = false;
+  accessCode: string = "";
   @ViewChild('recaptchaRef') recaptchaRef: any;
 
   constructor(private userService: UserService, private http: HttpClient,
@@ -45,6 +46,9 @@ export class LoginHomeComponent implements OnInit {
       }
       if (params['is-recaptcha-required'] != null) {
         this.isRecaptchaRequired = JSON.parse(params['is-recaptcha-required']);
+      }
+      if (params['accessCode'] != null) {
+        this.accessCode = params['accessCode'];
       }
     });
   }
@@ -89,7 +93,7 @@ export class LoginHomeComponent implements OnInit {
   }
 
   public socialSignIn(socialPlatform : string) {
-    window.location.href = `${this.configService.getContextPath()}/google-login`;
+    window.location.href = `${this.configService.getContextPath()}/google-login?accessCode=${this.accessCode}`;
   }
 
   recaptchaResolved(recaptchaResponse) {

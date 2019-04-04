@@ -8,6 +8,8 @@ import {
   MatSelectModule
 } from "@angular/material";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ActivatedRoute } from '@angular/router';
+import {Observable} from 'rxjs/internal/Observable';
 
 export class MockStudentService {
 
@@ -32,7 +34,8 @@ describe('AddProjectDialogComponent', () => {
 
             }
           }
-        }
+        },
+        { provide: ActivatedRoute, useValue: { queryParams: Observable.create() } }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -52,7 +55,7 @@ describe('AddProjectDialogComponent', () => {
   it ('should detect valid project code', () => {
     const projectCode = 'Cat123';
     expect(component.isValidRunCodeSyntax(projectCode)).toEqual(true);
-  })
+  });
 
   it ('should detect invalid project code', () => {
     const projectCode = 'Cat12';

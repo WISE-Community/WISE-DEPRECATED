@@ -1,7 +1,8 @@
 package org.wise.portal.presentation.web.controllers.teacher;
 
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -14,10 +15,12 @@ import com.google.api.services.classroom.Classroom;
 import com.google.api.services.classroom.ClassroomScopes;
 import com.google.api.services.classroom.model.CourseWork;
 import com.google.api.services.classroom.model.Link;
-import com.google.api.services.classroom.model.ListCoursesResponse;
 import com.google.api.services.classroom.model.Material;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.util.Pair;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,54 +43,85 @@ public class GoogleClassroomAPIController {
   private static final List<String> SCOPES = new ArrayList<>();
   private static final String TOKENS_DIRECTORY_PATH = "tokens";
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+  private LocalServerReceiver receiver;
+  private GoogleAuthorizationCodeFlow flow;
 
   static {
     SCOPES.add(ClassroomScopes.CLASSROOM_COURSEWORK_STUDENTS);
     SCOPES.add(ClassroomScopes.CLASSROOM_COURSES);
   }
 
-  private String generateLinkAuth() {
-    return "";
-  }
-
-  private Classroom connectToClassroomAPI(String username) throws Exception {
-    final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+  private ImmutablePair<String, Credential> authorize(String username) throws Exception {
+    NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     GoogleClientSecrets.Details credentials = new GoogleClientSecrets.Details();
     credentials.setClientId(clientId);
     credentials.setClientSecret(clientSecret);
-
     GoogleClientSecrets clientSecrets = new GoogleClientSecrets();
     clientSecrets.setInstalled(credentials);
-
-    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-      HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+    flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
       .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
       .setAccessType("online")
+      .setApprovalPrompt("force")
       .build();
-    LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-    Credential authorization = new AuthorizationCodeInstalledApp(flow, receiver).authorize(username);
+    Credential credential = flow.loadCredential(username);
+    if (credential != null && (credential.getRefreshToken() != null || credential.getExpiresInSeconds() == null || credential.getExpiresInSeconds() > 60)) {
+      return new ImmutablePair<>(null, credential);
+    }
+    receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+    String redirectUri = receiver.getRedirectUri();
+    AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(redirectUri);
+    onAuthorize(username);
+    System.out.println(authorizationUrl.build());
+    return new ImmutablePair<>(authorizationUrl.build(), null);
+  }
 
-    return new Classroom.Builder(HTTP_TRANSPORT, JSON_FACTORY, authorization).setApplicationName(applicationName).build();
+  private void onAuthorize(String username) throws Exception {
+    String code = receiver.waitForCode();
+    TokenResponse response = flow.newTokenRequest(code).setRedirectUri(receiver.getRedirectUri()).execute();
+    receiver.stop();
+    flow.createAndStoreCredential(response, username);
+  }
+
+  private Classroom connectToClassroomAPI(Credential credential) throws Exception {
+    final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    return new Classroom.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(applicationName).build();
   }
 
   @RequestMapping(value = "/list-courses", method = RequestMethod.POST)
-  protected ListCoursesResponse listCourses(HttpServletRequest request, @RequestParam("username") String username) throws Exception {
-    Classroom service = connectToClassroomAPI(username);
-    return service.courses().list().execute();
+  protected String listCourses(HttpServletRequest request,
+                               @RequestParam("username") String username,
+                               @RequestParam("authPending") String authPending) throws Exception {
+    JSONObject response = new JSONObject();
+    ImmutablePair<String, Credential> pair = authorize(username);
+    String authorizationUrl = pair.getLeft();
+    Credential credential = pair.getRight();
+    if (authorizationUrl != null) {
+      response.put("authorizationUrl", authorizationUrl);
+      return response.toString();
+    }
+    Classroom classroom = connectToClassroomAPI(credential);
+    response.put("courses", classroom.courses().list().execute().toString());
+    return response.toString();
   }
 
   @RequestMapping(value = "/create-assignment", method = RequestMethod.POST)
-  protected void createAssignment(HttpServletRequest request,
+  protected String createAssignment(HttpServletRequest request,
                                   @RequestParam("accessCode") String accessCode,
                                   @RequestParam("unitTitle") String unitTitle,
                                   @RequestParam("courseId") String courseId,
                                   @RequestParam("username") String username) throws Exception {
     String description = "Hi class! Please complete the \"" + unitTitle + "\" WISE unit. (Access Code: " + accessCode + ")";
-    Classroom service = connectToClassroomAPI(username);
+    ImmutablePair<String, Credential> pair = authorize(username);
+    String authorizationUrl = pair.getLeft();
+    Credential credential = pair.getRight();
+    if (authorizationUrl != null) {
+      return "error!";
+    }
+    Classroom classroom = connectToClassroomAPI(credential);
     List<Material> materials = new ArrayList<>();
     Material material = new Material();
     Link link = new Link();
-    link.setUrl(ControllerUtil.getBaseUrlString(request) + "?accessCode=" + accessCode);
+    link.setUrl(ControllerUtil.getBaseUrlString(request) + "/login?accessCode=" + accessCode);
     link.setTitle("WISE");
     material.setLink(link);
     materials.add(material);
@@ -97,6 +131,7 @@ public class GoogleClassroomAPIController {
     coursework.set("materials", materials);
     coursework.set("workType", "ASSIGNMENT");
     coursework.set("state", "PUBLISHED");
-    service.courses().courseWork().create(courseId, coursework).execute();
+    classroom.courses().courseWork().create(courseId, coursework).execute();
+    return "success!";
   }
 }

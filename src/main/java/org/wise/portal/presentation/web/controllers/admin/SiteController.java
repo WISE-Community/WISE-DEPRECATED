@@ -45,7 +45,11 @@ public class SiteController {
 
   @RequestMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news", "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"},
       method = RequestMethod.GET)
-  protected String showSite() {
+  protected String showSite(HttpServletRequest request) {
+    String accessCode = request.getParameter("accessCode");
+    if (accessCode != null) {
+      return "forward:/index.html?accessCode=" + accessCode;
+    }
     return "forward:/index.html";
   }
 

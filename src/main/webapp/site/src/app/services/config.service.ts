@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Config } from "../domain/config";
 import { User } from "../domain/user";
-import {Timestamp} from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class ConfigService {

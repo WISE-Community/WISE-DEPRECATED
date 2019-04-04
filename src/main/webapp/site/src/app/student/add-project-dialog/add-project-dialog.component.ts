@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from "@angular/material";
 import { StudentService } from "../student.service";
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-project-dialog',
@@ -14,6 +15,7 @@ export class AddProjectDialogComponent implements OnInit {
   registerRunRunCode: string = '';
   registerRunPeriods: string[] = [];
   selectedPeriod: string = '';
+  accessCode: string = '';
   runCodeFormControl = new FormControl('', [runCodeValidator(this.validRunCodeSyntaxRegEx)]);
   addProjectForm: FormGroup = new FormGroup({
     runCode: this.runCodeFormControl,
@@ -22,10 +24,16 @@ export class AddProjectDialogComponent implements OnInit {
   isAdding = false;
 
   constructor(public dialog: MatDialog,
-              private studentService: StudentService) {
+              private studentService: StudentService,
+              private route: ActivatedRoute ) {
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['accessCode'] != null) {
+        this.accessCode = params['accessCode'];
+      }
+    });
   }
 
   submit() {
