@@ -35,7 +35,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,7 +46,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.socket.WebSocketHandler;
+//import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -55,7 +54,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.VLEService;
-import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
@@ -82,8 +80,8 @@ public class StudentDataController {
   @Autowired
   private Properties wiseProperties;
 
-  @Autowired
-  private WebSocketHandler webSocketHandler;
+//  @Autowired
+//  private WebSocketHandler webSocketHandler;
 
   private static boolean DEBUG = false;
 
@@ -728,12 +726,12 @@ public class StudentDataController {
         response.getWriter().print(jsonResponse.toString());
         if (isSendToWebSockets(nodeVisitJSON)) {
           nodeVisitJSON.put("id", newStepWorkId);
-          if (webSocketHandler != null) {
-            WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-            if (wiseWebSocketHandler != null) {
-              wiseWebSocketHandler.handleMessage(signedInUser, nodeVisitJSON.toString());
-            }
-          }
+//          if (webSocketHandler != null) {
+//            WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+//            if (wiseWebSocketHandler != null) {
+//              wiseWebSocketHandler.handleMessage(signedInUser, nodeVisitJSON.toString());
+//            }
+//          }
         }
       } else {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error saving: " + nodeVisitJSON.toString());
