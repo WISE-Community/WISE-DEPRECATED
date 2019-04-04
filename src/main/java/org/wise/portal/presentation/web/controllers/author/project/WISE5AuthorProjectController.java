@@ -40,7 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-//import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.portal.Portal;
@@ -57,6 +57,7 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.utils.FileManager;
 
 import javax.servlet.ServletContext;
@@ -96,8 +97,8 @@ public class WISE5AuthorProjectController {
   @Autowired
   ServletContext servletContext;
 
-//  @Autowired
-//  private WebSocketHandler webSocketHandler;
+  @Autowired
+  private WebSocketHandler webSocketHandler;
 
   private String featuredProjectIconsFolderRelativePath = "wise5/authoringTool/projectIcons";
 
@@ -979,14 +980,14 @@ public class WISE5AuthorProjectController {
   private void notifyCurrentAuthors(String projectId) {
     try {
       User user = ControllerUtil.getSignedInUser();
-//      if (webSocketHandler != null) {
-//        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//        JSONObject webSocketMessageJSON = new JSONObject();
-//        webSocketMessageJSON.put("messageType", "currentAuthors");
-//        webSocketMessageJSON.put("projectId", projectId);
-//        webSocketMessageJSON.put("messageParticipants", "authorToAuthors");
-//        wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
-//      }
+      if (webSocketHandler != null) {
+        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+        JSONObject webSocketMessageJSON = new JSONObject();
+        webSocketMessageJSON.put("messageType", "currentAuthors");
+        webSocketMessageJSON.put("projectId", projectId);
+        webSocketMessageJSON.put("messageParticipants", "authorToAuthors");
+        wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
+      }
     } catch (Exception e) {
       // if something fails while sending to websocket, allow the rest to continue
       e.printStackTrace();

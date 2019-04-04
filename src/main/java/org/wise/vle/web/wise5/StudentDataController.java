@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -40,6 +40,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
+import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
@@ -68,8 +69,8 @@ public class StudentDataController {
   @Autowired
   private WorkgroupService workgroupService;
 
-//  @Autowired
-//  private WebSocketHandler webSocketHandler;
+  @Autowired
+  private WebSocketHandler webSocketHandler;
 
   @RequestMapping(method = RequestMethod.GET, value = "/student/data")
   public void getWISE5StudentData(
@@ -265,16 +266,16 @@ public class StudentDataController {
       e.printStackTrace();
     }
     try {
-//      if (webSocketHandler != null && achievement != null) {
-//        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//        if (wiseWebSocketHandler != null) {
-//          JSONObject webSocketMessageJSON = new JSONObject();
-//          webSocketMessageJSON.put("messageType", "newStudentAchievement");
-//          webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-//          webSocketMessageJSON.put("studentAchievement", achievement.toJSON());
-//          wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
-//        }
-//      }
+      if (webSocketHandler != null && achievement != null) {
+        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+        if (wiseWebSocketHandler != null) {
+          JSONObject webSocketMessageJSON = new JSONObject();
+          webSocketMessageJSON.put("messageType", "newStudentAchievement");
+          webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
+          webSocketMessageJSON.put("studentAchievement", achievement.toJSON());
+          wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
+        }
+      }
     } catch (Exception e) {
       // if something fails during creating annotation and sending to websocket,
       // allow the rest to continue
@@ -340,17 +341,17 @@ public class StudentDataController {
 
               // send this studentWork immediately to the teacher so the Classroom Monitor can be updated
               try {
-//                if (webSocketHandler != null && studentWork != null) {
-//                  WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//
-//                  if (wiseWebSocketHandler != null) {
-//                    JSONObject webSocketMessageJSON = new JSONObject();
-//                    webSocketMessageJSON.put("messageType", "newStudentWork");
-//                    webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-//                    webSocketMessageJSON.put("studentWork", studentWork.toJSON());
-//                    wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-//                  }
-//                }
+                if (webSocketHandler != null && studentWork != null) {
+                  WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+
+                  if (wiseWebSocketHandler != null) {
+                    JSONObject webSocketMessageJSON = new JSONObject();
+                    webSocketMessageJSON.put("messageType", "newStudentWork");
+                    webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
+                    webSocketMessageJSON.put("studentWork", studentWork.toJSON());
+                    wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
+                  }
+                }
               } catch (Exception e) {
                 // if something fails during creating annotation and sending to websocket,
                 // allow the rest to continue
@@ -434,17 +435,17 @@ public class StudentDataController {
 
                 // send this annotation immediately to the teacher so the Classroom Monitor can be updated
                 try {
-//                  if (webSocketHandler != null && annotation != null) {
-//                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//
-//                    if (wiseWebSocketHandler != null) {
-//                      JSONObject webSocketMessageJSON = new JSONObject();
-//                      webSocketMessageJSON.put("messageType", "newAnnotation");
-//                      webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-//                      webSocketMessageJSON.put("annotation", annotation.toJSON());
-//                      wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-//                    }
-//                  }
+                  if (webSocketHandler != null && annotation != null) {
+                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+
+                    if (wiseWebSocketHandler != null) {
+                      JSONObject webSocketMessageJSON = new JSONObject();
+                      webSocketMessageJSON.put("messageType", "newAnnotation");
+                      webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
+                      webSocketMessageJSON.put("annotation", annotation.toJSON());
+                      wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
+                    }
+                  }
                 } catch (Exception e) {
                   // if something fails during creating annotation and sending to websocket,
                   // allow the rest to continue

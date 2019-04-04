@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.run.Run;
@@ -18,6 +18,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
+import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.notification.Notification;
 
@@ -38,8 +39,8 @@ public class NotificationController {
   @Autowired
   private RunService runService;
 
-//  @Autowired
-//  private WebSocketHandler webSocketHandler;
+  @Autowired
+  private WebSocketHandler webSocketHandler;
 
   @Autowired
   private WorkgroupService workgroupService;
@@ -182,24 +183,24 @@ public class NotificationController {
           }
           vleService.dismissNotification(notificationInGroup, timeDismissed);
           try {
-//            if (webSocketHandler != null) {
-//              WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//              if (wiseWebSocketHandler != null) {
-//                String messageParticipants = "";
-//                if (notificationInGroup.getToWorkgroup().isTeacherWorkgroup()) {
-//                  messageParticipants = "studentToTeachers";
-//                } else {
-//                  messageParticipants = "teacherToStudentsInRun";
-//                }
-//                JSONObject notificationJSON = notificationInGroup.toJSON();
-//                JSONObject webSocketMessageJSON = new JSONObject();
-//                webSocketMessageJSON.put("messageType", "notification");
-//                webSocketMessageJSON.put("messageParticipants", messageParticipants);
-//                webSocketMessageJSON.put("toWorkgroupId", notificationInGroup.getToWorkgroup().getId());
-//                webSocketMessageJSON.put("data", notificationJSON);
-//                wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-//              }
-//            }
+            if (webSocketHandler != null) {
+              WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+              if (wiseWebSocketHandler != null) {
+                String messageParticipants = "";
+                if (notificationInGroup.getToWorkgroup().isTeacherWorkgroup()) {
+                  messageParticipants = "studentToTeachers";
+                } else {
+                  messageParticipants = "teacherToStudentsInRun";
+                }
+                JSONObject notificationJSON = notificationInGroup.toJSON();
+                JSONObject webSocketMessageJSON = new JSONObject();
+                webSocketMessageJSON.put("messageType", "notification");
+                webSocketMessageJSON.put("messageParticipants", messageParticipants);
+                webSocketMessageJSON.put("toWorkgroupId", notificationInGroup.getToWorkgroup().getId());
+                webSocketMessageJSON.put("data", notificationJSON);
+                wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
+              }
+            }
           } catch (Exception e) {
           }
         }

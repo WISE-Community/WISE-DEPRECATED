@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
@@ -17,6 +17,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
+import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
@@ -49,8 +50,8 @@ public class TeacherDataController {
   @Autowired
   private RunService runService;
 
-//  @Autowired
-//  private WebSocketHandler webSocketHandler;
+  @Autowired
+  private WebSocketHandler webSocketHandler;
 
   @Autowired
   private Properties wiseProperties;
@@ -314,20 +315,20 @@ public class TeacherDataController {
                 // and send it in real-time over the websocket
                 try {
                   Notification notification = this.createNotificationForAnnotation(annotation);
-//                  if (webSocketHandler != null) {
-//                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//
-//                    if (wiseWebSocketHandler != null) {
-//                      JSONObject notificationJSON = notification.toJSON();
-//                      JSONObject webSocketMessageJSON = new JSONObject();
-//                      webSocketMessageJSON.put("messageType", "annotationNotification");
-//                      webSocketMessageJSON.put("messageParticipants", "teacherToStudent");
-//                      webSocketMessageJSON.put("toWorkgroupId", notification.getToWorkgroup().getId());
-//                      webSocketMessageJSON.put("notificationData", notificationJSON);
-//                      webSocketMessageJSON.put("annotationData", annotation.toJSON());
-//                      wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-//                    }
-//                  }
+                  if (webSocketHandler != null) {
+                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+
+                    if (wiseWebSocketHandler != null) {
+                      JSONObject notificationJSON = notification.toJSON();
+                      JSONObject webSocketMessageJSON = new JSONObject();
+                      webSocketMessageJSON.put("messageType", "annotationNotification");
+                      webSocketMessageJSON.put("messageParticipants", "teacherToStudent");
+                      webSocketMessageJSON.put("toWorkgroupId", notification.getToWorkgroup().getId());
+                      webSocketMessageJSON.put("notificationData", notificationJSON);
+                      webSocketMessageJSON.put("annotationData", annotation.toJSON());
+                      wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
+                    }
+                  }
                 } catch (Exception e) {
                   // if something fails during creating annotation and sending to websocket,
                   // allow the rest to continue
