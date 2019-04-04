@@ -10,6 +10,7 @@ import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularOnload from 'ng-onload';
 import angularSanitize from 'angular-sanitize';
+import angularSock from 'angular-sockjs';
 import angularStomp from 'ng-stomp';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
@@ -83,6 +84,7 @@ const vleModule = angular.module('vle', [
     'ngMaterial',
     'ngOnload',
     'ngSanitize',
+    'bd.sockjs',
     'ngStomp',
     'ngWebSocket',
     'oc.lazyLoad',

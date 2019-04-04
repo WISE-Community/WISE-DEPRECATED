@@ -18,6 +18,7 @@ System.config({
     "angular-mocks": "github:angular/bower-angular-mocks@1.5.11",
     "angular-moment": "npm:angular-moment@1.0.1",
     "angular-sanitize": "github:angular/bower-angular-sanitize@1.5.11",
+    "angular-sockjs": "npm:angular-sockjs@0.1.0",
     "angular-translate": "github:angular-translate/bower-angular-translate@2.15.2",
     "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@2.15.2",
     "angular-ui-router": "npm:angular-ui-router@0.3.2",
