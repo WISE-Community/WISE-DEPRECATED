@@ -41,13 +41,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.socket.WebSocketHandler;
+//import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.VLEService;
-import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.status.StudentStatus;
 
 @Controller
@@ -60,8 +59,8 @@ public class StudentStatusController {
   @Autowired
   private RunService runService;
 
-  @Autowired
-  private WebSocketHandler webSocketHandler;
+//  @Autowired
+//  private WebSocketHandler webSocketHandler;
 
   /**
    * Handles GET requests from the teacher when a teacher requests for all the student
@@ -205,25 +204,25 @@ public class StudentStatusController {
       Run run = runService.retrieveById(runId);
       Integer wiseVersion = run.getProject().getWiseVersion();
       if (wiseVersion.equals(5)) {
-        if (webSocketHandler != null) {
-          WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-          if (wiseWebSocketHandler != null) {
-            JSONObject webSocketMessageJSON = new JSONObject();
-            JSONObject studentStatusJSON = new JSONObject(status);
-            webSocketMessageJSON.put("messageType", "studentStatus");
-            webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-            if (studentStatusJSON.has("currentNodeId")) {
-              webSocketMessageJSON.put("currentNodeId", studentStatusJSON.get("currentNodeId"));
-            }
-            if (studentStatusJSON.has("nodeStatuses")) {
-              webSocketMessageJSON.put("nodeStatuses", studentStatusJSON.get("nodeStatuses"));
-            }
-            if (studentStatusJSON.has("projectCompletion")) {
-              webSocketMessageJSON.put("projectCompletion", studentStatusJSON.get("projectCompletion"));
-            }
-            wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-          }
-        }
+//        if (webSocketHandler != null) {
+//          WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+//          if (wiseWebSocketHandler != null) {
+//            JSONObject webSocketMessageJSON = new JSONObject();
+//            JSONObject studentStatusJSON = new JSONObject(status);
+//            webSocketMessageJSON.put("messageType", "studentStatus");
+//            webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
+//            if (studentStatusJSON.has("currentNodeId")) {
+//              webSocketMessageJSON.put("currentNodeId", studentStatusJSON.get("currentNodeId"));
+//            }
+//            if (studentStatusJSON.has("nodeStatuses")) {
+//              webSocketMessageJSON.put("nodeStatuses", studentStatusJSON.get("nodeStatuses"));
+//            }
+//            if (studentStatusJSON.has("projectCompletion")) {
+//              webSocketMessageJSON.put("projectCompletion", studentStatusJSON.get("projectCompletion"));
+//            }
+//            wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
+//          }
+//        }
       }
     } catch (Exception e) {
       e.printStackTrace();
