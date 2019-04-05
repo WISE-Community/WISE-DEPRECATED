@@ -15,7 +15,7 @@ export class AddProjectDialogComponent implements OnInit {
   registerRunRunCode: string = '';
   registerRunPeriods: string[] = [];
   selectedPeriod: string = '';
-  accessCode: string = '';
+  accessCode: string = null;
   runCodeFormControl = new FormControl('', [runCodeValidator(this.validRunCodeSyntaxRegEx)]);
   addProjectForm: FormGroup = new FormGroup({
     runCode: this.runCodeFormControl,
