@@ -30,6 +30,10 @@ export class MockTeacherService {
 
   setTabIndex() {}
 
+  checkClassroomAuthorization(): Observable<string> {
+    return Observable.create("");
+  }
+
   getClassroomCourses(): Observable<Course[]> {
     const courses: Course[] = [];
     const course = new Course({ id: '1', name: 'Test' });

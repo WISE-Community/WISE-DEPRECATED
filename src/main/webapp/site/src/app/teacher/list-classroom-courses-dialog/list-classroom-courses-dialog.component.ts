@@ -30,8 +30,13 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   addToClassroom(courseId: string) {
-    this.teacherService.addToClassroom(this.accessCode, this.unitTitle, courseId, this.userService.getUser().getValue().username).subscribe(response => {
-      this.isAdded = true;
+    this.teacherService.addToClassroom(this.accessCode, this.unitTitle, courseId, this.userService.getUser().getValue().username)
+      .subscribe(({ error }) => {
+        if (!error) {
+          this.isAdded = true;
+        } else {
+          alert("an error occurred!");
+        }
     });
   }
 

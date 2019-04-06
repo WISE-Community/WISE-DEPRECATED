@@ -128,22 +128,19 @@ export class CreateRunDialogComponent {
     this.dialog.closeAll();
   }
 
-  addToClassroom() {
-    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username, 'false').subscribe(({ authorizationUrl, courses }) => {
-      if (authorizationUrl !== null) {
-        window.open(authorizationUrl, "authorization", "width=500,height=600")
-          .addEventListener("onunload", () => this.addToClassroomAfterAuthorize());
+  checkClassroomAuthorization() {
+    this.teacherService.getClassroomAuthorizationUrl(this.userService.getUser().getValue().username).subscribe(authorizationUrl => {
+      if (!authorizationUrl) {
+        this.getClassroomCourses();
       } else {
-        this.dialog.open(ListClassroomCoursesDialogComponent, {
-          data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
-          panelClass: 'mat-dialog-md'
-        });
+        window.open(authorizationUrl, "", "width=600,height=800")
+          .addEventListener("onunload", () => this.getClassroomCourses());
       }
     });
   }
 
-  addToClassroomAfterAuthorize() {
-    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username, 'true').subscribe(({ courses }) => {
+  getClassroomCourses() {
+    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(courses => {
       this.dialog.open(ListClassroomCoursesDialogComponent, {
         data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
         panelClass: 'mat-dialog-md'

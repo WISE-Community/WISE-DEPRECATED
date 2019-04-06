@@ -14,6 +14,9 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 import {Course} from '../../domain/course';
 
 export class MockTeacherService {
+  checkClassroomAuthorization(): Observable<string> {
+    return Observable.create("");
+  }
   getClassroomCourses(): Observable<Course[]> {
     const courses: Course[] = [];
     const course = new Course({ id: '1', name: 'Test' });

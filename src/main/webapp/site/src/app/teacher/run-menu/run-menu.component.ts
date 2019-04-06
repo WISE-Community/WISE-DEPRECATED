@@ -9,6 +9,7 @@ import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import {ListClassroomCoursesDialogComponent} from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
+import {timer} from 'rxjs/internal/observable/timer';
 
 @Component({
   selector: 'app-run-menu',
@@ -43,22 +44,24 @@ export class RunMenuComponent implements OnInit {
     });
   }
 
-  addToClassroom() {
-    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username, 'false').subscribe(({ authorizationUrl, courses }) => {
-      if (authorizationUrl !== null) {
-        window.open(authorizationUrl, "authorization", "width=500,height=600")
-          .addEventListener("onunload", () => this.addToClassroomAfterAuthorize());
+  checkClassroomAuthorization() {
+    this.teacherService.getClassroomAuthorizationUrl(this.userService.getUser().getValue().username).subscribe(({ authorizationUrl }) => {
+      if (authorizationUrl == null) {
+        this.getClassroomCourses();
       } else {
-        this.dialog.open(ListClassroomCoursesDialogComponent, {
-          data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
-          panelClass: 'mat-dialog-md'
-        });
+        const authWindow = window.open(authorizationUrl, "authorize", "width=600,height=800");
+        const timer = setInterval(() => {
+          if (authWindow.closed) {
+            clearInterval(timer);
+            this.getClassroomCourses();
+          }
+        }, 1000);
       }
     });
   }
 
-  addToClassroomAfterAuthorize() {
-    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username, 'true').subscribe(({ courses }) => {
+  getClassroomCourses() {
+    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(courses => {
       this.dialog.open(ListClassroomCoursesDialogComponent, {
         data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
         panelClass: 'mat-dialog-md'

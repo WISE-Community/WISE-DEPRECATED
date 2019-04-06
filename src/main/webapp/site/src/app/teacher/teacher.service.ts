@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Project } from "../domain/project";
 import { Teacher } from "../domain/teacher";
 import { Run } from "../domain/run";
+import {Course} from '../domain/course';
 
 @Injectable()
 export class TeacherService {
@@ -26,6 +27,7 @@ export class TeacherService {
   private getVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
   private checkVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
   private changePasswordUrl = 'api/teacher/forgot/password/change';
+  private classroomAuthorizationUrl = 'api/google-classroom/get-authorization-url';
   private listCoursesUrl = 'api/google-classroom/list-courses';
   private addAssignmentUrl = 'api/google-classroom/create-assignment';
   private newProjectSource = new Subject<Project>();
@@ -233,12 +235,18 @@ export class TeacherService {
     return this.http.post<any>(this.changePasswordUrl, params, { headers: headers });
   }
 
-  getClassroomCourses(username: string, authPending: string): Observable<any> {
+  getClassroomAuthorizationUrl(username: string): Observable<any> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     let params = new HttpParams();
     params = params.set('username', username);
-    params = params.set('authPending', authPending);
-    return this.http.post<any>(this.listCoursesUrl, params, { headers });
+    return this.http.get<any>(this.classroomAuthorizationUrl, { headers, params });
+  }
+
+  getClassroomCourses(username: string): Observable<Course []> {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    let params = new HttpParams();
+    params = params.set('username', username);
+    return this.http.get<Course []>(this.listCoursesUrl, { headers, params });
   }
 
   addToClassroom(accessCode: string, unitTitle: string, courseId: string, username: string): Observable<any> {
