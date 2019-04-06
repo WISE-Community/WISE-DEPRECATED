@@ -8,8 +8,7 @@ import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
-import {ListClassroomCoursesDialogComponent} from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
-import {timer} from 'rxjs/internal/observable/timer';
+import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 @Component({
   selector: 'app-run-menu',

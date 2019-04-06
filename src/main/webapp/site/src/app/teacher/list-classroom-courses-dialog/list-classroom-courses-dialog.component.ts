@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { TeacherService } from '../teacher.service';
 import { Course } from '../../domain/course';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
-import {UserService} from '../../services/user.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-list-classroom-courses-dialog',

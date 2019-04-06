@@ -129,12 +129,17 @@ export class CreateRunDialogComponent {
   }
 
   checkClassroomAuthorization() {
-    this.teacherService.getClassroomAuthorizationUrl(this.userService.getUser().getValue().username).subscribe(authorizationUrl => {
-      if (!authorizationUrl) {
+    this.teacherService.getClassroomAuthorizationUrl(this.userService.getUser().getValue().username).subscribe(({ authorizationUrl }) => {
+      if (authorizationUrl == null) {
         this.getClassroomCourses();
       } else {
-        window.open(authorizationUrl, "", "width=600,height=800")
-          .addEventListener("onunload", () => this.getClassroomCourses());
+        const authWindow = window.open(authorizationUrl, "authorize", "width=600,height=800");
+        const timer = setInterval(() => {
+          if (authWindow.closed) {
+            clearInterval(timer);
+            this.getClassroomCourses();
+          }
+        }, 1000);
       }
     });
   }

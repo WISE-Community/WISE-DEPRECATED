@@ -11,7 +11,7 @@ import { TeacherRun } from "../teacher-run";
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
-import {Course} from '../../domain/course';
+import { Course } from '../../domain/course';
 
 export class MockTeacherService {
   checkClassroomAuthorization(): Observable<string> {
