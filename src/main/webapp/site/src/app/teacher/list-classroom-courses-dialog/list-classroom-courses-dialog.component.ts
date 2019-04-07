@@ -13,6 +13,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   courses: Course[] = [];
   accessCode: string = '';
   unitTitle: string = '';
+  endTime: string = '';
   isAdded: boolean = false;
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<ListClassroomCoursesDialogComponent>,
@@ -21,6 +22,9 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
               private userService: UserService) {
     this.accessCode = data.accessCode;
     this.unitTitle = data.unitTitle;
+    if (data.endTime != null) {
+      this.endTime = data.endTime;
+    }
     for (let course of data.courses) {
       this.courses.push(new Course(course));
     }
@@ -30,7 +34,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   addToClassroom(courseId: string) {
-    this.teacherService.addToClassroom(this.accessCode, this.unitTitle, courseId, this.userService.getUser().getValue().username)
+    this.teacherService.addToClassroom(this.accessCode, this.unitTitle, courseId, this.userService.getUser().getValue().username, this.endTime)
       .subscribe(({ error }) => {
         if (!error) {
           this.isAdded = true;

@@ -18,48 +18,21 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.util.Pair;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/google-classroom", produces = "application/json;charset=UTF-8")
 public class GoogleClassroomAPIController {
-  
-  private class AuthorizationCodeRequestUrlCallbackRunnable implements Runnable {
-    private LocalServerReceiver receiver;
-    private GoogleAuthorizationCodeFlow flow;
-    private String redirectUri, username;
-    AuthorizationCodeRequestUrlCallbackRunnable(LocalServerReceiver receiver,
-                                                GoogleAuthorizationCodeFlow flow,
-                                                String redirectUri, String username) {
-      this.receiver = receiver;
-      this.flow = flow;
-      this.redirectUri = redirectUri;
-      this.username = username;
-    }
-    @Override
-    public void run() {
-      try {
-        String code = receiver.waitForCode();
-        TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
-        flow.createAndStoreCredential(response, username);
-        receiver.stop();
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-      }
-    }
-  }
-
-  @Value("${classroomClientId:}")
+  @Value("${classroom.ClientId:}")
   private String clientId;
 
-  @Value("${classroomClientSecret:}")
+  @Value("${classroom.ClientSecret:}")
   private String clientSecret;
 
   @Value("${wise.name:}")
@@ -68,10 +41,39 @@ public class GoogleClassroomAPIController {
   private static final List<String> SCOPES = new ArrayList<>();
   private static final String TOKENS_DIRECTORY_PATH = "tokens";
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+  private Map<String, String> pendingAuthCodeRequestPermissions = new HashMap<>();
 
   static {
     SCOPES.add(ClassroomScopes.CLASSROOM_COURSEWORK_STUDENTS);
     SCOPES.add(ClassroomScopes.CLASSROOM_COURSES);
+  }
+
+  private class AuthorizationCodeRequestUrlCallbackRunnable implements Runnable {
+    private LocalServerReceiver receiver;
+    private GoogleAuthorizationCodeFlow flow;
+    private String redirectUri, username;
+    Map<String, String> pendingAuthCodeRequestPermissions;
+    AuthorizationCodeRequestUrlCallbackRunnable(LocalServerReceiver receiver, GoogleAuthorizationCodeFlow flow,
+                                                String redirectUri, String username,
+                                                Map<String, String> pendingAuthCodeRequestPermissions) {
+      this.receiver = receiver;
+      this.flow = flow;
+      this.redirectUri = redirectUri;
+      this.username = username;
+      this.pendingAuthCodeRequestPermissions = pendingAuthCodeRequestPermissions;
+    }
+    @Override
+    public void run() {
+      try {
+        String code = receiver.waitForCode();
+        TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
+        flow.createAndStoreCredential(response, username);
+        this.pendingAuthCodeRequestPermissions.remove(username);
+        receiver.stop();
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
+    }
   }
 
   private ImmutablePair<String, Credential> authorize(String username) throws Exception {
@@ -81,24 +83,29 @@ public class GoogleClassroomAPIController {
     credentials.setClientSecret(clientSecret);
     GoogleClientSecrets clientSecrets = new GoogleClientSecrets();
     clientSecrets.setInstalled(credentials);
-    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-      .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-      .setAccessType("online")
-      .setApprovalPrompt("force")
+    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
+      clientSecrets, SCOPES).setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
       .build();
     Credential credential = flow.loadCredential(username);
-    if (credential != null && (credential.getRefreshToken() != null || credential.getExpiresInSeconds() == null || credential.getExpiresInSeconds() > 60)) {
+    if (credential != null && (credential.getRefreshToken() != null || credential.getExpiresInSeconds() == null ||
+      credential.getExpiresInSeconds() > 60)) {
       return new ImmutablePair<>(null, credential);
     }
 
+    if (pendingAuthCodeRequestPermissions.containsKey(username)) {
+      return new ImmutablePair<>(pendingAuthCodeRequestPermissions.get(username), null);
+    }
+
     // start code receiver server
-    LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+    LocalServerReceiver receiver = new LocalServerReceiver.Builder().build();
     String redirectUri = receiver.getRedirectUri();
     AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(redirectUri);
 
     // start a new thread to wait for code once the user allows for classroom permissions
-    new Thread(new AuthorizationCodeRequestUrlCallbackRunnable(receiver, flow, redirectUri, username)).start();
-    return new ImmutablePair<>(authorizationUrl.build(), null);
+    new Thread(new AuthorizationCodeRequestUrlCallbackRunnable(receiver, flow, redirectUri, username, pendingAuthCodeRequestPermissions)).start();
+    String authorizationUri = authorizationUrl.build();
+    pendingAuthCodeRequestPermissions.put(username, authorizationUri);
+    return new ImmutablePair<>(authorizationUri, null);
   }
 
   private Classroom connectToClassroomAPI(Credential credential) throws Exception {
@@ -127,7 +134,8 @@ public class GoogleClassroomAPIController {
                                   @RequestParam("accessCode") String accessCode,
                                   @RequestParam("unitTitle") String unitTitle,
                                   @RequestParam("courseId") String courseId,
-                                  @RequestParam("username") String username) throws Exception {
+                                  @RequestParam("username") String username,
+                                  @RequestParam("endTime") String endTime) throws Exception {
     JSONObject response = new JSONObject();
     String description = "Hi class! Please complete the \"" + unitTitle + "\" WISE unit. (Access Code: " + accessCode + ")";
     ImmutablePair<String, Credential> pair = authorize(username);
@@ -151,6 +159,19 @@ public class GoogleClassroomAPIController {
     coursework.set("materials", materials);
     coursework.set("workType", "ASSIGNMENT");
     coursework.set("state", "PUBLISHED");
+    if (!endTime.equals("")) {
+      Date dueDate = new Date();
+      dueDate.setYear(Integer.parseInt(endTime.substring(0, 4)));
+      dueDate.setMonth(Integer.parseInt(endTime.substring(5, 7)));
+      dueDate.setDay(Integer.parseInt(endTime.substring(8, 10)));
+      TimeOfDay dueTime = new TimeOfDay();
+      dueTime.setHours(Integer.parseInt(endTime.substring(11, 13)));
+      dueTime.setMinutes(Integer.parseInt(endTime.substring(14, 16)));
+      dueTime.setSeconds(Integer.parseInt(endTime.substring(17, 19)));
+      dueTime.setNanos(0);
+      coursework.put("dueDate", dueDate);
+      coursework.put("dueTime", dueTime);
+    }
     classroom.courses().courseWork().create(courseId, coursework).execute();
     return response.toString();
   }

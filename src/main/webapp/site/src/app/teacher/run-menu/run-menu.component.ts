@@ -52,7 +52,7 @@ export class RunMenuComponent implements OnInit {
         const timer = setInterval(() => {
           if (authWindow.closed) {
             clearInterval(timer);
-            this.getClassroomCourses();
+            this.checkClassroomAuthorization();
           }
         }, 1000);
       }
@@ -62,7 +62,7 @@ export class RunMenuComponent implements OnInit {
   getClassroomCourses() {
     this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(courses => {
       this.dialog.open(ListClassroomCoursesDialogComponent, {
-        data: { accessCode: this.run.runCode, unitTitle: this.run.name, courses },
+        data: { accessCode: this.run.runCode, unitTitle: this.run.name, endTime: this.run.endTime, courses },
         panelClass: 'mat-dialog-md'
       });
     });

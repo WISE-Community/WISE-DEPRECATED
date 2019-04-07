@@ -14,15 +14,10 @@ export class StudentHomeComponent implements OnInit {
 
   user: User = new User();
 
-  constructor(private userService: UserService, public dialog: MatDialog, private route: ActivatedRoute) { }
+  constructor(private userService: UserService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.getUser();
-    this.route.queryParams.subscribe(params => {
-      if (params['accessCode'] != null) {
-        this.showAddRun();
-      }
-    });
   }
 
   getUser() {
@@ -33,6 +28,6 @@ export class StudentHomeComponent implements OnInit {
   }
 
   showAddRun() {
-    const dialogRef = this.dialog.open(AddProjectDialogComponent);
+    this.dialog.open(AddProjectDialogComponent);
   }
 }
