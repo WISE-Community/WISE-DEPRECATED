@@ -39,7 +39,7 @@ public class GoogleClassroomAPIController {
   private static final List<String> SCOPES = new ArrayList<>();
   private static final String TOKENS_DIRECTORY_PATH = "tokens";
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-  private Map<String, String> pendingAuthCodeRequestPermissions = new HashMap<>();
+  private Map<String, String> pendingPermissionRequests = new HashMap<>();
 
   static {
     SCOPES.add(ClassroomScopes.CLASSROOM_COURSEWORK_STUDENTS);
@@ -50,15 +50,15 @@ public class GoogleClassroomAPIController {
     private LocalServerReceiver receiver;
     private GoogleAuthorizationCodeFlow flow;
     private String redirectUri, username;
-    Map<String, String> pendingAuthCodeRequestPermissions;
+    Map<String, String> pendingPermissionRequests;
     AuthorizationCodeRequestUrlCallbackRunnable(LocalServerReceiver receiver, GoogleAuthorizationCodeFlow flow,
                                                 String redirectUri, String username,
-                                                Map<String, String> pendingAuthCodeRequestPermissions) {
+                                                Map<String, String> pendingPermissionRequests) {
       this.receiver = receiver;
       this.flow = flow;
       this.redirectUri = redirectUri;
       this.username = username;
-      this.pendingAuthCodeRequestPermissions = pendingAuthCodeRequestPermissions;
+      this.pendingPermissionRequests = pendingPermissionRequests;
     }
     @Override
     public void run() {
@@ -66,7 +66,7 @@ public class GoogleClassroomAPIController {
         String code = receiver.waitForCode();
         TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
         flow.createAndStoreCredential(response, username);
-        this.pendingAuthCodeRequestPermissions.remove(username);
+        this.pendingPermissionRequests.remove(username);
         receiver.stop();
       } catch (Exception e) {
         System.out.println(e.getMessage());
@@ -90,8 +90,8 @@ public class GoogleClassroomAPIController {
       return new ImmutablePair<>(null, credential);
     }
 
-    if (pendingAuthCodeRequestPermissions.containsKey(username)) {
-      return new ImmutablePair<>(pendingAuthCodeRequestPermissions.get(username), null);
+    if (pendingPermissionRequests.containsKey(username)) {
+      return new ImmutablePair<>(pendingPermissionRequests.get(username), null);
     }
 
     // start code receiver server
@@ -100,9 +100,9 @@ public class GoogleClassroomAPIController {
     AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(redirectUri);
 
     // start a new thread to wait for code once the user allows for classroom permissions
-    new Thread(new AuthorizationCodeRequestUrlCallbackRunnable(receiver, flow, redirectUri, username, pendingAuthCodeRequestPermissions)).start();
+    new Thread(new AuthorizationCodeRequestUrlCallbackRunnable(receiver, flow, redirectUri, username, pendingPermissionRequests)).start();
     String authorizationUri = authorizationUrl.build();
-    pendingAuthCodeRequestPermissions.put(username, authorizationUri);
+    pendingPermissionRequests.put(username, authorizationUri);
     return new ImmutablePair<>(authorizationUri, null);
   }
 
@@ -134,7 +134,6 @@ public class GoogleClassroomAPIController {
                                   @RequestParam("courseId") String courseId,
                                   @RequestParam("username") String username,
                                   @RequestParam("endTime") String endTimeString) throws Exception {
-    long endTime = Long.parseLong(endTimeString);
     JSONObject response = new JSONObject();
     String description = "Hi class! Please complete the \"" + unitTitle + "\" WISE unit. (Access Code: " + accessCode + ")";
     ImmutablePair<String, Credential> pair = authorize(username);
@@ -158,6 +157,7 @@ public class GoogleClassroomAPIController {
     coursework.set("materials", materials);
     coursework.set("workType", "ASSIGNMENT");
     coursework.set("state", "PUBLISHED");
+    long endTime = Long.parseLong(endTimeString);
     if (endTime != -1) {
       Date dueDate = new Date();
       Calendar cal = Calendar.getInstance();
