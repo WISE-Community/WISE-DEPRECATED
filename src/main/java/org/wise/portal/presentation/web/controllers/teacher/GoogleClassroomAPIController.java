@@ -14,6 +14,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.classroom.Classroom;
 import com.google.api.services.classroom.ClassroomScopes;
 import com.google.api.services.classroom.model.*;
+import com.google.api.services.classroom.model.Date;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,10 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/google-classroom", produces = "application/json;charset=UTF-8")
@@ -135,7 +133,8 @@ public class GoogleClassroomAPIController {
                                   @RequestParam("unitTitle") String unitTitle,
                                   @RequestParam("courseId") String courseId,
                                   @RequestParam("username") String username,
-                                  @RequestParam("endTime") String endTime) throws Exception {
+                                  @RequestParam("endTime") String endTimeString) throws Exception {
+    long endTime = Long.parseLong(endTimeString);
     JSONObject response = new JSONObject();
     String description = "Hi class! Please complete the \"" + unitTitle + "\" WISE unit. (Access Code: " + accessCode + ")";
     ImmutablePair<String, Credential> pair = authorize(username);
@@ -159,15 +158,18 @@ public class GoogleClassroomAPIController {
     coursework.set("materials", materials);
     coursework.set("workType", "ASSIGNMENT");
     coursework.set("state", "PUBLISHED");
-    if (!endTime.equals("")) {
+    if (endTime != -1) {
       Date dueDate = new Date();
-      dueDate.setYear(Integer.parseInt(endTime.substring(0, 4)));
-      dueDate.setMonth(Integer.parseInt(endTime.substring(5, 7)));
-      dueDate.setDay(Integer.parseInt(endTime.substring(8, 10)));
+      Calendar cal = Calendar.getInstance();
+      cal.setTimeInMillis(endTime);
+      cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+      dueDate.setYear(cal.get(Calendar.YEAR));
+      dueDate.setMonth(cal.get(Calendar.MONTH) + 1);
+      dueDate.setDay(cal.get(Calendar.DAY_OF_MONTH));
       TimeOfDay dueTime = new TimeOfDay();
-      dueTime.setHours(Integer.parseInt(endTime.substring(11, 13)));
-      dueTime.setMinutes(Integer.parseInt(endTime.substring(14, 16)));
-      dueTime.setSeconds(Integer.parseInt(endTime.substring(17, 19)));
+      dueTime.setHours(cal.get(Calendar.HOUR_OF_DAY));
+      dueTime.setMinutes(cal.get(Calendar.MINUTE));
+      dueTime.setSeconds(cal.get(Calendar.SECOND));
       dueTime.setNanos(0);
       coursework.put("dueDate", dueDate);
       coursework.put("dueTime", dueTime);

@@ -4,7 +4,7 @@
     <p>
       <mat-form-field appearance="fill">
         <mat-label i18n>Access Code</mat-label>
-        <input formControlName="runCode" matInput value="{{ accessCode }}" (keyup)="checkRunCode($event)">
+        <input formControlName="runCode" matInput value="{{ accessCode }}" (keyup)="checkRunCode()">
         <mat-error *ngIf="runCodeFormControl.hasError('invalidRunCodeSyntax') || runCodeFormControl.hasError('invalidRunCode')" i18n>Invalid Access Code</mat-error>
         <mat-error *ngIf="runCodeFormControl.hasError('alreadyAddedRun')" i18n>You have already added this unit.</mat-error>
       </mat-form-field>

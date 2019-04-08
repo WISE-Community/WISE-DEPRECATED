@@ -32,6 +32,8 @@ export class AddProjectDialogComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params['accessCode'] != null) {
         this.accessCode = params['accessCode'];
+        this.addProjectForm.controls['runCode'].setValue(params['accessCode']);
+        this.checkRunCode();
       }
     });
   }
@@ -56,8 +58,8 @@ export class AddProjectDialogComponent implements OnInit {
     this.addProjectForm.controls['period'].disable();
   }
 
-  checkRunCode(event: KeyboardEvent) {
-    const runCode = (<HTMLInputElement>event.target).value;
+  checkRunCode() {
+    const runCode = this.addProjectForm.controls['runCode'].value;
     this.registerRunRunCode = runCode;
     if (this.isValidRunCodeSyntax(runCode)) {
       this.studentService.getRunInfo(runCode).subscribe(runInfo => {
