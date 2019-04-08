@@ -133,7 +133,7 @@ public class GoogleClassroomAPIController {
                                   @RequestParam("unitTitle") String unitTitle,
                                   @RequestParam("courseId") String courseId,
                                   @RequestParam("username") String username,
-                                  @RequestParam("endTime") String endTimeString) throws Exception {
+                                  @RequestParam("endTime") String endTime) throws Exception {
     JSONObject response = new JSONObject();
     String description = "Hi class! Please complete the \"" + unitTitle + "\" WISE unit. (Access Code: " + accessCode + ")";
     ImmutablePair<String, Credential> pair = authorize(username);
@@ -157,11 +157,10 @@ public class GoogleClassroomAPIController {
     coursework.set("materials", materials);
     coursework.set("workType", "ASSIGNMENT");
     coursework.set("state", "PUBLISHED");
-    long endTime = Long.parseLong(endTimeString);
-    if (endTime != -1) {
+    if (!endTime.equals("")) {
       Date dueDate = new Date();
       Calendar cal = Calendar.getInstance();
-      cal.setTimeInMillis(endTime);
+      cal.setTimeInMillis(Long.parseLong(endTime));
       cal.setTimeZone(TimeZone.getTimeZone("UTC"));
       dueDate.setYear(cal.get(Calendar.YEAR));
       dueDate.setMonth(cal.get(Calendar.MONTH) + 1);

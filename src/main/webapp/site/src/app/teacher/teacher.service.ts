@@ -249,14 +249,14 @@ export class TeacherService {
     return this.http.get<Course []>(this.listCoursesUrl, { headers, params });
   }
 
-  addToClassroom(accessCode: string, unitTitle: string, courseId: string, username: string, endTime: number): Observable<any> {
+  addToClassroom(accessCode: string, unitTitle: string, courseId: string, username: string, endTime: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     let params = new HttpParams();
     params = params.set('accessCode', accessCode);
     params = params.set('unitTitle', unitTitle);
     params = params.set('courseId', courseId);
     params = params.set('username', username);
-    params = params.set('endTime', `${endTime}`);
+    params = params.set('endTime', endTime);
     return this.http.post<any>(this.addAssignmentUrl, params, { headers });
   }
 }

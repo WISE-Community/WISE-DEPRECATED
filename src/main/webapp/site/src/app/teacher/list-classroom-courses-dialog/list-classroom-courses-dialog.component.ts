@@ -34,9 +34,9 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   addToClassroom(courseId: string) {
-    let endTime = -1;
+    let endTime = '';
     if (this.endTime) {
-      endTime = new Date(this.endTime).getTime();
+      endTime = new Date(this.endTime).getTime().toString();
     }
     this.teacherService.addToClassroom(this.accessCode, this.unitTitle, courseId, this.userService.getUser().getValue().username, endTime)
       .subscribe(({ error }) => {
