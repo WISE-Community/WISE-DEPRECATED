@@ -150,7 +150,7 @@ class DiscussionController extends ComponentController {
   sendPostToClassmatesInPeriod(componentState) {
     const messageType = 'studentData';
     componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
-    this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
+    this.StudentWebSocketService.sendStudentWorkToClassmatesInPeriodMessage(componentState);
   }
 
   sendPostToStudentsInThread(componentState) {
@@ -215,9 +215,7 @@ class DiscussionController extends ComponentController {
   }
 
   registerWebSocketMessageReceivedListener() {
-    this.$rootScope.$on('webSocketMessageReceived', (event, args) => {
-      const data = args.data;
-      const componentState = data.data;
+    this.$rootScope.$on('StudentWorkReceived', (event, componentState) => {
       if (componentState.nodeId === this.nodeId && componentState.componentId === this.componentId) {
         const componentStateWorkgroupId = componentState.workgroupId;
         const workgroupId = this.ConfigService.getWorkgroupId();

@@ -162,7 +162,7 @@ var DiscussionController = function (_ComponentController) {
     value: function sendPostToClassmatesInPeriod(componentState) {
       var messageType = 'studentData';
       componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
-      this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
+      this.StudentWebSocketService.sendStudentWorkToClassmatesInPeriodMessage(componentState);
     }
   }, {
     key: 'sendPostToStudentsInThread',
@@ -230,9 +230,7 @@ var DiscussionController = function (_ComponentController) {
     value: function registerWebSocketMessageReceivedListener() {
       var _this8 = this;
 
-      this.$rootScope.$on('webSocketMessageReceived', function (event, args) {
-        var data = args.data;
-        var componentState = data.data;
+      this.$rootScope.$on('StudentWorkReceived', function (event, componentState) {
         if (componentState.nodeId === _this8.nodeId && componentState.componentId === _this8.componentId) {
           var componentStateWorkgroupId = componentState.workgroupId;
           var workgroupId = _this8.ConfigService.getWorkgroupId();
@@ -615,7 +613,7 @@ var DiscussionController = function (_ComponentController) {
     }
 
     /**
-     * Get the level 1 responses which are posts that are not a2
+     * Get the level 1 responses which are posts that are not a
      * reply to another response.
      * @return an array of responses that are not a reply to another
      * response

@@ -91,6 +91,15 @@ public class StudentWork extends PersistableDomain {
   @Column(name = "studentData", length = 5120000, columnDefinition = "mediumtext", nullable = false)
   private String studentData;
 
+  @Transient
+  private long runId;
+
+  @Transient
+  private long periodId;
+
+  @Transient
+  private long workgroupId;
+
   @Override
   protected Class<?> getObjectClass() {
     return StudentWork.class;

@@ -26,28 +26,33 @@ var StudentWebSocketService = function () {
       var _this = this;
 
       if (!this.ConfigService.isPreview()) {
-        var runId = this.ConfigService.getRunId();
-        var periodId = this.ConfigService.getPeriodId();
+        this.runId = this.ConfigService.getRunId();
+        this.periodId = this.ConfigService.getPeriodId();
         var workgroupId = this.ConfigService.getWorkgroupId();
         var webSocketURL = this.ConfigService.getWebSocketURL();
         try {
           this.$stomp.connect(webSocketURL).then(function (frame) {
-            console.log('connected! runId: ' + runId);
-            var greetingSubscription = _this.$stomp.subscribe('/topic/greetings/' + runId, function (payload, headers, res) {
+            console.log('connected! runId: ' + _this.runId);
+            var greetingSubscription = _this.$stomp.subscribe('/topic/greetings/' + _this.runId, function (payload, headers, res) {
               console.log('Greeting: ' + payload);
             }, {});
 
-            var pauseSubscription = _this.$stomp.subscribe('/topic/pause/' + runId + '/' + periodId, function (payload, headers, res) {
+            var pauseSubscription = _this.$stomp.subscribe('/topic/pause/' + _this.runId + '/' + _this.periodId, function (payload, headers, res) {
               console.log('Pause: ' + payload);
               _this.$rootScope.$broadcast('pauseScreen', { data: payload });
             }, {});
 
-            var unPauseSubscription = _this.$stomp.subscribe('/topic/unpause/' + runId + '/' + periodId, function (payload, headers, res) {
+            var unPauseSubscription = _this.$stomp.subscribe('/topic/unpause/' + _this.runId + '/' + _this.periodId, function (payload, headers, res) {
               console.log('UnPause: ' + payload);
               _this.$rootScope.$broadcast('unPauseScreen', { data: payload });
             }, {});
 
-            _this.$stomp.send('/app/hello/' + runId, JSON.stringify({ 'name': 'workgroup ' + workgroupId }), { priority: 9, custom: 42 });
+            var studentWorkSubscription = _this.$stomp.subscribe('/topic/student-work/' + _this.runId + '/' + _this.periodId, function (studentWork, headers, res) {
+              studentWork.studentData = JSON.parse(studentWork.studentData);
+              _this.$rootScope.$broadcast('StudentWorkReceived', studentWork);
+            }, {});
+
+            _this.$stomp.send('/app/hello/' + _this.runId, JSON.stringify({ 'name': 'workgroup ' + workgroupId }), {});
           });
           //this.dataStream = this.$websocket(webSocketURL);
           //this.dataStream.onMessage((message) => {
@@ -119,6 +124,14 @@ var StudentWebSocketService = function () {
         this.dataStream.send(messageJSON);
       }
     }
+  }, {
+    key: 'sendStudentWorkToClassmatesInPeriodMessage',
+    value: function sendStudentWorkToClassmatesInPeriodMessage(studentWork) {
+      if (!this.ConfigService.isPreview()) {
+        studentWork.studentData = JSON.stringify(studentWork.studentData);
+        this.$stomp.send('/app/student-work/' + this.runId + '/' + this.periodId, studentWork, {});
+      }
+    }
 
     /**
      * Send a message to classmates in the period
@@ -126,8 +139,8 @@ var StudentWebSocketService = function () {
      */
 
   }, {
-    key: 'sendStudentToClassmatesInPeriodMessage',
-    value: function sendStudentToClassmatesInPeriodMessage(messageType, data) {
+    key: 'deleteMe_sendStudentToClassmatesInPeriodMessage',
+    value: function deleteMe_sendStudentToClassmatesInPeriodMessage(messageType, data) {
       if (!this.ConfigService.isPreview()) {
         var currentNodeId = this.StudentDataService.getCurrentNodeId();
         var messageJSON = {};
