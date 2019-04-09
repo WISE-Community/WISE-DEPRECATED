@@ -978,25 +978,23 @@ class TeacherDataService {
    * @param isPaused Boolean whether the period should be paused or not
    */
   pauseScreensChanged(periodId, isPaused) {
-    if (periodId) {
-      this.updatePausedRunStatusValue(periodId, isPaused);
+    this.updatePausedRunStatusValue(periodId, isPaused);
 
-      if (isPaused) {
-        this.TeacherWebSocketService.pauseScreens(periodId);
-      } else {
-        this.TeacherWebSocketService.unPauseScreens(periodId);
-      }
-
-      this.sendRunStatus();
-      let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
-        category = "TeacherAction", data = { periodId: periodId };
-      let event = "pauseScreen";
-      if (!isPaused) {
-        event = "unPauseScreen";
-      }
-      this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-      this.$rootScope.$broadcast('pauseScreensChanged', {periods: this.runStatus.periods});
+    if (isPaused) {
+      this.TeacherWebSocketService.pauseScreens(periodId);
+    } else {
+      this.TeacherWebSocketService.unPauseScreens(periodId);
     }
+
+    this.sendRunStatus();
+    const context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
+      category = "TeacherAction", data = { periodId: periodId };
+    let event = "pauseScreen";
+    if (!isPaused) {
+      event = "unPauseScreen";
+    }
+    this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    this.$rootScope.$broadcast('pauseScreensChanged', {periods: this.runStatus.periods});
   }
 
   /**

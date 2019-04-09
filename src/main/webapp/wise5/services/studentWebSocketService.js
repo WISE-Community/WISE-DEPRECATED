@@ -18,36 +18,36 @@ var StudentWebSocketService = function () {
     this.ConfigService = ConfigService;
     this.StudentDataService = StudentDataService;
     this.dataStream = null;
-    this.payload = null;
   }
-
-  /**
-   * Initialize the websocket connection and listen for messages
-   */
-
 
   _createClass(StudentWebSocketService, [{
     key: 'initialize',
     value: function initialize() {
       var _this = this;
 
-      if (this.ConfigService.isPreview()) {
-        // We are previewing the project. Don't initialize websocket.
-      } else {
+      if (!this.ConfigService.isPreview()) {
         var runId = this.ConfigService.getRunId();
         var periodId = this.ConfigService.getPeriodId();
         var workgroupId = this.ConfigService.getWorkgroupId();
-        var webSocketURL = this.ConfigService.getWebSocketURL() + '/hello';
-        //"?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
-
-
+        var webSocketURL = this.ConfigService.getWebSocketURL();
         try {
           this.$stomp.connect(webSocketURL).then(function (frame) {
-            var subscription = _this.$stomp.subscribe('/dest', function (payload, headers, res) {
-              this.payload = payload;
-            }, {
-              'headers': 'are awesome'
-            });
+            console.log('connected! runId: ' + runId);
+            var greetingSubscription = _this.$stomp.subscribe('/topic/greetings/' + runId, function (payload, headers, res) {
+              console.log('Greeting: ' + payload);
+            }, {});
+
+            var pauseSubscription = _this.$stomp.subscribe('/topic/pause/' + runId + '/' + periodId, function (payload, headers, res) {
+              console.log('Pause: ' + payload);
+              _this.$rootScope.$broadcast('pauseScreen', { data: payload });
+            }, {});
+
+            var unPauseSubscription = _this.$stomp.subscribe('/topic/unpause/' + runId + '/' + periodId, function (payload, headers, res) {
+              console.log('UnPause: ' + payload);
+              _this.$rootScope.$broadcast('unPauseScreen', { data: payload });
+            }, {});
+
+            _this.$stomp.send('/app/hello/' + runId, JSON.stringify({ 'name': 'workgroup ' + workgroupId }), { priority: 9, custom: 42 });
           });
           //this.dataStream = this.$websocket(webSocketURL);
           //this.dataStream.onMessage((message) => {
@@ -58,29 +58,28 @@ var StudentWebSocketService = function () {
         }
       }
     }
-  }, {
-    key: 'handleWebSocketMessageReceived',
-
 
     /**
      * Handle the message we have received
      * @param data the data from the message
      */
+
+  }, {
+    key: 'handleWebSocketMessageReceived',
     value: function handleWebSocketMessageReceived(data) {
       this.$rootScope.$broadcast('webSocketMessageReceived', { data: data });
     }
-  }, {
-    key: 'handleMessage',
-
 
     /**
      * Handle receiving a websocket message
      * @param message the websocket message
      */
+
+  }, {
+    key: 'handleMessage',
     value: function handleMessage(message) {
       var data = JSON.parse(message.data);
       var messageType = data.messageType;
-
       if (messageType === 'pauseScreen') {
         this.$rootScope.$broadcast('pauseScreen', { data: data });
       } else if (messageType === 'unPauseScreen') {
@@ -120,14 +119,14 @@ var StudentWebSocketService = function () {
         this.dataStream.send(messageJSON);
       }
     }
-  }, {
-    key: 'sendStudentToClassmatesInPeriodMessage',
-
 
     /**
      * Send a message to classmates in the period
      * @param data the data to send to the classmates
      */
+
+  }, {
+    key: 'sendStudentToClassmatesInPeriodMessage',
     value: function sendStudentToClassmatesInPeriodMessage(messageType, data) {
       if (!this.ConfigService.isPreview()) {
         var currentNodeId = this.StudentDataService.getCurrentNodeId();

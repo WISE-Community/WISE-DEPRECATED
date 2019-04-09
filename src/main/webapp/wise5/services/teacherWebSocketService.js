@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9,10 +9,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TeacherWebSocketService = function () {
-  function TeacherWebSocketService($rootScope, $websocket, ConfigService, StudentStatusService) {
+  function TeacherWebSocketService($rootScope, $stomp, $websocket, ConfigService, StudentStatusService) {
     _classCallCheck(this, TeacherWebSocketService);
 
     this.$rootScope = $rootScope;
+    this.$stomp = $stomp;
     this.$websocket = $websocket;
     this.ConfigService = ConfigService;
     this.StudentStatusService = StudentStatusService;
@@ -21,25 +22,42 @@ var TeacherWebSocketService = function () {
   }
 
   _createClass(TeacherWebSocketService, [{
-    key: "initialize",
+    key: 'initialize',
     value: function initialize() {
       var _this = this;
 
-      var runId = this.ConfigService.getRunId();
+      this.runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
       var workgroupId = this.ConfigService.getWorkgroupId();
-      var webSocketURL = this.ConfigService.getWebSocketURL() + "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
-      this.dataStream = this.$websocket(webSocketURL);
-      this.dataStream.onMessage(function (message) {
-        _this.handleMessage(message);
-      });
+      var webSocketURL = this.ConfigService.getWebSocketURL();
+      try {
+        this.$stomp.connect(webSocketURL).then(function (frame) {
+          console.log('connected!');
+          var subscription = _this.$stomp.subscribe('/topic/greetings', function (payload, headers, res) {
+            _this.payload = payload;
+            console.log(payload);
+          }, {
+            'headers': 'are awesome'
+          });
+
+          _this.$stomp.send('/app/hello', JSON.stringify({ 'name': 'teacher' }), {
+            priority: 9,
+            custom: 42
+          });
+        });
+        // this.dataStream = this.$websocket(webSocketURL);
+        // this.dataStream.onMessage((message) => {
+        //   this.handleMessage(message);
+        // });
+      } catch (e) {
+        console.log(e);
+      }
     }
   }, {
-    key: "handleMessage",
+    key: 'handleMessage',
     value: function handleMessage(message) {
       var data = JSON.parse(message.data);
       var messageType = data.messageType;
-
       if (messageType === 'studentStatus') {
         this.handleStudentStatusReceived(data);
       } else if (messageType === 'studentsOnlineList') {
@@ -57,104 +75,123 @@ var TeacherWebSocketService = function () {
       }
     }
   }, {
-    key: "sendMessage",
+    key: 'sendMessage',
     value: function sendMessage(messageJSON) {
       this.dataStream.send(messageJSON);
     }
   }, {
-    key: "handleStudentsOnlineReceived",
+    key: 'handleStudentsOnlineReceived',
     value: function handleStudentsOnlineReceived(studentsOnlineMessage) {
       this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
       this.$rootScope.$broadcast('studentsOnlineReceived', { studentsOnline: this.studentsOnlineArray });
     }
   }, {
-    key: "getStudentsOnline",
+    key: 'getStudentsOnline',
     value: function getStudentsOnline() {
       return this.studentsOnlineArray;
     }
-  }, {
-    key: "isStudentOnline",
-
 
     /**
      * Check to see if a given workgroup is currently online
      * @param workgroupId the workgroup id
      * @returns boolean whether a workgroup is online
      */
+
+  }, {
+    key: 'isStudentOnline',
     value: function isStudentOnline(workgroupId) {
       return this.studentsOnlineArray.indexOf(workgroupId) > -1;
     }
-  }, {
-    key: "handleStudentStatusReceived",
-
 
     /**
      * This function is called when the teacher receives a websocket message
      * with messageType 'studentStatus'.
      */
+
+  }, {
+    key: 'handleStudentStatusReceived',
     value: function handleStudentStatusReceived(studentStatus) {
       var workgroupId = studentStatus.workgroupId;
       this.StudentStatusService.setStudentStatusForWorkgroupId(workgroupId, studentStatus);
       this.$rootScope.$emit('studentStatusReceived', { studentStatus: studentStatus });
     }
-  }, {
-    key: "handleStudentDisconnected",
-
 
     /**
      * Handle the student disconnected message
      */
+
+  }, {
+    key: 'handleStudentDisconnected',
     value: function handleStudentDisconnected(studentDisconnectedMessage) {
       this.$rootScope.$broadcast('studentDisconnected', { data: studentDisconnectedMessage });
     }
-
-    /**
-     * Pause the screens in the period
-     * @param periodId the period id. if null or -1 is passed in we will pause
-     * all the periods
-     */
-
   }, {
-    key: "pauseScreens",
+    key: 'pauseScreens',
     value: function pauseScreens(periodId) {
-      var messageJSON = {};
+      this.$stomp.send('/app/pause/' + this.runId + '/' + periodId, JSON.stringify({ 'name': 'teacher' }), {
+        priority: 9,
+        custom: 42
+      });
+
+      /*
+      if (periodId === -1) {
+        this.$stomp.send(`/app/pause/${this.runId}`, JSON.stringify({'name': 'teacher'}), {
+          priority: 9,
+          custom: 42
+        });
+      } else {
+        this.$stomp.send(`/app/pause/${this.runId}/${periodId}`, JSON.stringify({'name': 'teacher'}), {
+          priority: 9,
+          custom: 42
+        });
+      }
+      const messageJSON = {};
       messageJSON.messageType = 'pauseScreen';
-
-      if (periodId == null || periodId == -1) {
+       if (periodId == null || periodId == -1) {
         messageJSON.messageParticipants = 'teacherToStudentsInRun';
-      } else if (periodId != null) {
+      } else if(periodId != null) {
         messageJSON.periodId = periodId;
         messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
       }
       this.sendMessage(messageJSON);
+      */
     }
-
-    /**
-     * Unpause the screens in the period
-     * @param periodId the period id. if null or -1 is passed in we will unpause
-     * all the periods
-     */
-
   }, {
-    key: "unPauseScreens",
+    key: 'unPauseScreens',
     value: function unPauseScreens(periodId) {
-      var messageJSON = {};
-      messageJSON.messageType = 'unPauseScreen';
-
-      if (periodId == null || periodId == -1) {
-        messageJSON.messageParticipants = 'teacherToStudentsInRun';
-      } else if (periodId != null) {
-        messageJSON.periodId = periodId;
-        messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
+      this.$stomp.send('/app/unpause/' + this.runId + '/' + periodId, JSON.stringify({ 'name': 'teacher' }), {
+        priority: 9,
+        custom: 42
+      });
+      /*
+      if (periodId === -1) {
+        this.$stomp.send(`/app/unpause/${this.runId}`, JSON.stringify({'name': 'teacher'}), {
+          priority: 9,
+          custom: 42
+        });
+      } else {
+        this.$stomp.send(`/app/unpause/${this.runId}/${periodId}`, JSON.stringify({'name': 'teacher'}), {
+          priority: 9,
+          custom: 42
+        });
+         const messageJSON = {};
+        messageJSON.messageType = 'unPauseScreen';
+         if(periodId == null || periodId == -1) {
+          messageJSON.messageParticipants = 'teacherToStudentsInRun';
+        } else if(periodId != null) {
+          messageJSON.periodId = periodId;
+          messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
+        }
+        this.sendMessage(messageJSON);
       }
-      this.sendMessage(messageJSON);
+        */
     }
   }]);
 
   return TeacherWebSocketService;
 }();
 
-TeacherWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService', 'StudentStatusService'];
+TeacherWebSocketService.$inject = ['$rootScope', '$stomp', '$websocket', 'ConfigService', 'StudentStatusService'];
 
 exports.default = TeacherWebSocketService;
 //# sourceMappingURL=teacherWebSocketService.js.map

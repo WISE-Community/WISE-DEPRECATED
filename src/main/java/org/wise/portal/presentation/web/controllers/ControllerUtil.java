@@ -178,10 +178,10 @@ public class ControllerUtil {
    */
   public static String getWebSocketURL(HttpServletRequest request, String contextPath) {
     if (contextPath.contains("http")) {
-      return contextPath.replace("http", "ws") + "/websocket";
+      return contextPath + "/websocket";
     } else {
       String portalContextPath = ControllerUtil.getPortalUrlString(request);
-      return portalContextPath.replace("http", "ws") + "/websocket";
+      return portalContextPath + "/websocket";
     }
   }
 

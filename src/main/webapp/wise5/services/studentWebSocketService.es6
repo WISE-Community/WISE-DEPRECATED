@@ -13,30 +13,36 @@ class StudentWebSocketService {
     this.ConfigService = ConfigService;
     this.StudentDataService = StudentDataService;
     this.dataStream = null;
-    this.payload = null;
   }
 
-  /**
-   * Initialize the websocket connection and listen for messages
-   */
   initialize() {
-    if (this.ConfigService.isPreview()) {
-      // We are previewing the project. Don't initialize websocket.
-    } else {
+    if (!this.ConfigService.isPreview()) {
       const runId = this.ConfigService.getRunId();
       const periodId = this.ConfigService.getPeriodId();
       const workgroupId = this.ConfigService.getWorkgroupId();
-      const webSocketURL = this.ConfigService.getWebSocketURL() + '/hello';
-          //"?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
-
-
+      const webSocketURL = this.ConfigService.getWebSocketURL();
       try {
         this.$stomp.connect(webSocketURL).then((frame) => {
-          const subscription = this.$stomp.subscribe('/dest', function (payload, headers, res) {
-            this.payload = payload;
+          console.log(`connected! runId: ${runId}`);
+          const greetingSubscription = this.$stomp.subscribe(`/topic/greetings/${runId}`, (payload, headers, res) => {
+            console.log(`Greeting: ${payload}`);
           }, {
-            'headers': 'are awesome'
           });
+
+          const pauseSubscription = this.$stomp.subscribe(`/topic/pause/${runId}/${periodId}`, (payload, headers, res) => {
+            console.log(`Pause: ${payload}`);
+            this.$rootScope.$broadcast('pauseScreen', {data: payload});
+          }, {
+          });
+
+          const unPauseSubscription = this.$stomp.subscribe(`/topic/unpause/${runId}/${periodId}`, (payload, headers, res) => {
+            console.log(`UnPause: ${payload}`);
+            this.$rootScope.$broadcast('unPauseScreen', {data: payload});
+          }, {
+          });
+
+          this.$stomp.send(`/app/hello/${runId}`, JSON.stringify({'name': `workgroup ${workgroupId}`}), { priority: 9, custom: 42 });
+
         });
         //this.dataStream = this.$websocket(webSocketURL);
         //this.dataStream.onMessage((message) => {
@@ -46,7 +52,7 @@ class StudentWebSocketService {
         console.log(e);
       }
     }
-  };
+  }
 
   /**
    * Handle the message we have received
@@ -54,7 +60,7 @@ class StudentWebSocketService {
    */
   handleWebSocketMessageReceived(data) {
     this.$rootScope.$broadcast('webSocketMessageReceived', {data: data});
-  };
+  }
 
   /**
    * Handle receiving a websocket message
@@ -63,7 +69,6 @@ class StudentWebSocketService {
   handleMessage(message) {
     const data = JSON.parse(message.data);
     const messageType = data.messageType;
-
     if (messageType === 'pauseScreen') {
       this.$rootScope.$broadcast('pauseScreen', {data: data});
     } else if (messageType === 'unPauseScreen') {
@@ -99,7 +104,7 @@ class StudentWebSocketService {
       messageJSON.data = data;
       this.dataStream.send(messageJSON);
     }
-  };
+  }
 
   /**
    * Send a message to classmates in the period
@@ -115,7 +120,7 @@ class StudentWebSocketService {
       messageJSON.data = data;
       this.dataStream.send(messageJSON);
     }
-  };
+  }
 }
 
 StudentWebSocketService.$inject = [

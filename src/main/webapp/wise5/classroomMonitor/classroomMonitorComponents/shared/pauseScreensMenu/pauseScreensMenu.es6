@@ -8,15 +8,7 @@ class PauseScreensMenuController {
 
         this.periods = this.TeacherDataService.getPeriods();
         this.allPeriodsPaused = this.getAllPeriodsPaused();
-
-        /**
-         * Listen for pause screens changed event
-         */
-        this.$scope.$on('pauseScreensChanged', (event, args) => {
-            this.periods = args.periods;
-            this.allPeriodsPaused = this.getAllPeriodsPaused();
-        });
-    };
+    }
 
     /**
      * Toggle the paused status for the given period
@@ -24,17 +16,16 @@ class PauseScreensMenuController {
      * @param period the period object to toggle paused status
      */
     togglePeriod(period) {
-        if (period.periodId === -1) {
-            let n = this.periods.length;
-            for (let i = 0; i < n; i++) {
-                let thisPeriod = this.periods[i];
-                if (thisPeriod.periodId !== -1) {
-                    this.TeacherDataService.pauseScreensChanged(period.periodId, this.allPeriodsPaused);
-                }
-            }
-        } else {
-            this.TeacherDataService.pauseScreensChanged(period.periodId, period.paused);
+      this.TeacherDataService.pauseScreensChanged(period.periodId, period.paused);
+    }
+
+    toggleAllPeriods() {
+      for (let i = 0; i < this.periods.length; i++) {
+        let thisPeriod = this.periods[i];
+        if (thisPeriod.periodId !== -1) {
+          this.TeacherDataService.pauseScreensChanged(thisPeriod.periodId, this.allPeriodsPaused);
         }
+      }
     }
 
     /**
@@ -43,9 +34,7 @@ class PauseScreensMenuController {
      */
     getAllPeriodsPaused() {
         let isPaused = true;
-        let n = this.periods.length, i = 0;
-
-        for (; i < n; i++) {
+        for (let i = 0; i < this.periods.length; i++) {
             let period = this.periods[i];
             if (period.periodId !== -1 && !period.paused) {
                 isPaused = false;
@@ -72,13 +61,11 @@ const PauseScreensMenu = {
                 </div>
             </md-toolbar>
             <md-content flex>
-                <md-switch ng-repeat="period in $ctrl.periods"
-                           ng-if="period.periodId === -1"
-                           class="md-primary account-menu__control"
+                <md-switch class="md-primary account-menu__control"
                            aria-label="{{ 'lockPeriodLabel' | translate: { periodName: ('allPeriods' | translate) } }}"
                            ng-model="$ctrl.allPeriodsPaused"
-                           ng-change="$ctrl.togglePeriod(period)">
-                    {{ period.periodName }}
+                           ng-change="$ctrl.toggleAllPeriods()">
+                    {{ 'allPeriods' | translate }}
                 </md-switch>
                 <md-divider></md-divider>
                 <md-switch ng-repeat="period in $ctrl.periods"

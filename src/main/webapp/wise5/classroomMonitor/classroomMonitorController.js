@@ -164,20 +164,11 @@ var ClassroomMonitorController = function () {
 
         // perform cleanup before the clasroom monitor tab closes
         this.$window.onbeforeunload = function () {
-
-            // unpause all the periods that are currently paused
-
-            // get all the periods
             var periods = _this.TeacherDataService.getRunStatus().periods;
-
             if (periods != null) {
-
-                // loop through all the periods
                 for (var p = 0; p < periods.length; p++) {
                     var period = periods[p];
-
-                    if (period != null && period.paused) {
-                        // the period is paused so we will unpause it
+                    if (period != null && period.periodId !== -1 && period.paused) {
                         _this.TeacherDataService.pauseScreensChanged(period.periodId, false);
                     }
                 }

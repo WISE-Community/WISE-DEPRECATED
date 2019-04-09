@@ -401,25 +401,25 @@ var VLEController = function () {
     value: function loadRoot() {
       this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.ProjectService.rootNode.id);
     }
-  }, {
-    key: 'mouseMoved',
-
 
     /**
      * The user moved the mouse on the page
      */
+
+  }, {
+    key: 'mouseMoved',
     value: function mouseMoved() {
       // tell the session service a mouse event occurred
       // so it can reset the session timeout timers
       this.SessionService.mouseEventOccurred();
     }
-  }, {
-    key: 'hasNewNotifications',
-
 
     /**
      * Returns true iff there are new notifications
      */
+
+  }, {
+    key: 'hasNewNotifications',
     value: function hasNewNotifications() {
       return this.newNotifications.length > 0;
     }
@@ -641,14 +641,14 @@ var VLEController = function () {
         }
       }
     }
-  }, {
-    key: 'dismissNotificationAggregateAndVisitNode',
-
 
     /**
      * Dismiss the specified notification aggregate object and visit the node
      * @param notificationAggregate, which contains nodeId, type, and notifications of that nodeId and type
      */
+
+  }, {
+    key: 'dismissNotificationAggregateAndVisitNode',
     value: function dismissNotificationAggregateAndVisitNode(event, notificationAggregate) {
       if (notificationAggregate != null && notificationAggregate.notifications != null) {
         var _iteratorNormalCompletion8 = true;
@@ -703,8 +703,8 @@ var VLEController = function () {
   }, {
     key: 'unPauseScreen',
     value: function unPauseScreen() {
-      this.$mdDialog.hide(this.pauseDialog, "finished");
-      this.pauseDialog = undefined;
+      this.$mdDialog.hide();
+      this.pauseDialog = null;
     }
   }, {
     key: 'isPreview',
