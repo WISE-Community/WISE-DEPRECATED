@@ -9,12 +9,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentWebSocketService = function () {
-  function StudentWebSocketService($rootScope, $stomp, $websocket, ConfigService, StudentDataService) {
+  function StudentWebSocketService($rootScope, $stomp, ConfigService, StudentDataService) {
     _classCallCheck(this, StudentWebSocketService);
 
     this.$rootScope = $rootScope;
     this.$stomp = $stomp;
-    this.$websocket = $websocket;
     this.ConfigService = ConfigService;
     this.StudentDataService = StudentDataService;
     this.dataStream = null;
@@ -54,32 +53,16 @@ var StudentWebSocketService = function () {
 
             _this.$stomp.send('/app/hello/' + _this.runId, JSON.stringify({ 'name': 'workgroup ' + workgroupId }), {});
           });
-          //this.dataStream = this.$websocket(webSocketURL);
-          //this.dataStream.onMessage((message) => {
-          //  this.handleMessage(message);
-          //});
         } catch (e) {
           console.log(e);
         }
       }
     }
-
-    /**
-     * Handle the message we have received
-     * @param data the data from the message
-     */
-
   }, {
     key: 'handleWebSocketMessageReceived',
     value: function handleWebSocketMessageReceived(data) {
       this.$rootScope.$broadcast('webSocketMessageReceived', { data: data });
     }
-
-    /**
-     * Handle receiving a websocket message
-     * @param message the websocket message
-     */
-
   }, {
     key: 'handleMessage',
     value: function handleMessage(message) {
@@ -105,12 +88,6 @@ var StudentWebSocketService = function () {
       }
       this.handleWebSocketMessageReceived(data);
     }
-
-    /**
-     * Send a message to teacher
-     * @param data the data to send to the teacher
-     */
-
   }, {
     key: 'sendStudentToTeacherMessage',
     value: function sendStudentToTeacherMessage(messageType, data) {
@@ -125,8 +102,8 @@ var StudentWebSocketService = function () {
       }
     }
   }, {
-    key: 'sendStudentWorkToClassmatesInPeriodMessage',
-    value: function sendStudentWorkToClassmatesInPeriodMessage(studentWork) {
+    key: 'sendStudentWorkToClassmatesInPeriod',
+    value: function sendStudentWorkToClassmatesInPeriod(studentWork) {
       if (!this.ConfigService.isPreview()) {
         studentWork.studentData = JSON.stringify(studentWork.studentData);
         this.$stomp.send('/app/student-work/' + this.runId + '/' + this.periodId, studentWork, {});
@@ -156,7 +133,7 @@ var StudentWebSocketService = function () {
   return StudentWebSocketService;
 }();
 
-StudentWebSocketService.$inject = ['$rootScope', '$stomp', '$websocket', 'ConfigService', 'StudentDataService'];
+StudentWebSocketService.$inject = ['$rootScope', '$stomp', 'ConfigService', 'StudentDataService'];
 
 exports.default = StudentWebSocketService;
 //# sourceMappingURL=studentWebSocketService.js.map

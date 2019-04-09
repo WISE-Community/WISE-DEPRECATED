@@ -1,6 +1,6 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
 
 class DiscussionController extends ComponentController {
   constructor($filter,
@@ -21,9 +21,9 @@ class DiscussionController extends ComponentController {
       UtilService,
       $mdMedia) {
     super($filter, $mdDialog, $rootScope, $scope,
-      AnnotationService, ConfigService, NodeService,
-      NotebookService, ProjectService, StudentAssetService,
-      StudentDataService, UtilService);
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
     this.DiscussionService = DiscussionService;
     this.NotificationService = NotificationService;
@@ -74,7 +74,7 @@ class DiscussionController extends ComponentController {
     this.initializeScopeSubmitButtonClicked();
     this.initializeScopeGetComponentState();
     this.initializeScopeStudentDataChanged();
-    this.registerWebSocketMessageReceivedListener();
+    this.registerStudentWorkReceivedListener();
     this.initializeWatchMdMedia();
     this.broadcastDoneRenderingComponent();
   }
@@ -132,8 +132,8 @@ class DiscussionController extends ComponentController {
     this.$scope.$on('studentWorkSavedToServer', (event, args) => {
       const componentState = args.studentWork;
       if (componentState &&
-          this.nodeId === componentState.nodeId &&
-          this.componentId === componentState.componentId) {
+          componentState.nodeId === this.nodeId &&
+          componentState.componentId === this.componentId) {
         if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
           this.getClassmateResponses();
         } else {
@@ -148,9 +148,8 @@ class DiscussionController extends ComponentController {
   }
 
   sendPostToClassmatesInPeriod(componentState) {
-    const messageType = 'studentData';
     componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
-    this.StudentWebSocketService.sendStudentWorkToClassmatesInPeriodMessage(componentState);
+    this.StudentWebSocketService.sendStudentWorkToClassmatesInPeriod(componentState);
   }
 
   sendPostToStudentsInThread(componentState) {
@@ -179,10 +178,10 @@ class DiscussionController extends ComponentController {
   }
 
   sendPostToThreadCreator(componentStateIdReplyingTo, notificationType, nodeId, componentId,
-                          fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
+      fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
     const originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
     const toWorkgroupId = originalPostComponentState.workgroupId;
-    if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
+    if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
       const notification = this.NotificationService.createNewNotification(
           notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
       this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
@@ -194,14 +193,14 @@ class DiscussionController extends ComponentController {
   }
 
   sendPostToThreadRepliers(componentStateIdReplyingTo, notificationType, nodeId, componentId,
-                           fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
+      fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
     if (this.responsesMap[componentStateIdReplyingTo].replies != null) {
       const replies = this.responsesMap[componentStateIdReplyingTo].replies;
       for (let r = 0; r < replies.length; r++) {
         const reply = replies[r];
         const toWorkgroupId = reply.workgroupId;
-        if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId &&
-            workgroupsNotifiedSoFar.indexOf(toWorkgroupId) == -1) {
+        if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId &&
+            workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1) {
           const notification = this.NotificationService.createNewNotification(
               notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
           this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
@@ -214,16 +213,13 @@ class DiscussionController extends ComponentController {
     }
   }
 
-  registerWebSocketMessageReceivedListener() {
+  registerStudentWorkReceivedListener() {
     this.$rootScope.$on('StudentWorkReceived', (event, componentState) => {
-      if (componentState.nodeId === this.nodeId && componentState.componentId === this.componentId) {
-        const componentStateWorkgroupId = componentState.workgroupId;
-        const workgroupId = this.ConfigService.getWorkgroupId();
-        if (workgroupId !== componentStateWorkgroupId) {
-          if (this.retrievedClassmateResponses) {
-            this.addClassResponse(componentState);
-          }
-        }
+      if (componentState.nodeId === this.nodeId &&
+          componentState.componentId === this.componentId &&
+          componentState.workgroupId !== this.ConfigService.getWorkgroupId() &&
+          this.retrievedClassmateResponses) {
+        this.addClassResponse(componentState);
       }
     });
   }
@@ -383,8 +379,8 @@ class DiscussionController extends ComponentController {
 
   getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
     if (annotations != null) {
-      for (let annotation of annotations) {
-        if (studentWorkId == annotation.studentWorkId && annotation.type == 'inappropriateFlag') {
+      for (const annotation of annotations) {
+        if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
           return annotation;
         }
       }
@@ -393,10 +389,10 @@ class DiscussionController extends ComponentController {
   }
 
   processResponses(componentStates) {
-    for (let componentState of componentStates) {
+    for (const componentState of componentStates) {
       this.responsesMap[componentState.id] = componentState;
     }
-    for (let componentState of componentStates) {
+    for (const componentState of componentStates) {
       if (componentState && componentState.studentData) {
         const studentData = componentState.studentData;
         const componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;

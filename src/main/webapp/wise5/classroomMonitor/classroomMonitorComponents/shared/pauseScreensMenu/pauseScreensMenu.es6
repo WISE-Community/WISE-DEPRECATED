@@ -1,59 +1,39 @@
-"use strict";
+'use strict';
 
 class PauseScreensMenuController {
-    constructor($scope,
-                TeacherDataService) {
-        this.$scope = $scope;
-        this.TeacherDataService = TeacherDataService;
+  constructor($scope, TeacherDataService) {
+    this.$scope = $scope;
+    this.TeacherDataService = TeacherDataService;
+    this.periods = this.TeacherDataService.getPeriods();
+    this.allPeriodsPaused = false;
+  }
 
-        this.periods = this.TeacherDataService.getPeriods();
-        this.allPeriodsPaused = this.getAllPeriodsPaused();
-    }
+  /**
+   * Toggle the paused status for the given period
+   * TODO: sync with actual pause statuses in TeacherDataService
+   * @param period the period object to toggle paused status
+   */
+  togglePeriod(period) {
+    this.TeacherDataService.pauseScreensChanged(period.periodId, period.paused);
+  }
 
-    /**
-     * Toggle the paused status for the given period
-     * TODO: sync with actual pause statuses in TeacherDataService
-     * @param period the period object to toggle paused status
-     */
-    togglePeriod(period) {
-      this.TeacherDataService.pauseScreensChanged(period.periodId, period.paused);
-    }
-
-    toggleAllPeriods() {
-      for (let i = 0; i < this.periods.length; i++) {
-        let thisPeriod = this.periods[i];
-        if (thisPeriod.periodId !== -1) {
-          this.TeacherDataService.pauseScreensChanged(thisPeriod.periodId, this.allPeriodsPaused);
-        }
+  toggleAllPeriods() {
+    for (const period of this.periods) {
+      if (period.periodId !== -1) {
+        this.TeacherDataService.pauseScreensChanged(period.periodId, this.allPeriodsPaused);
       }
     }
-
-    /**
-     * Check whether all the periods in the run are paused
-     * @return boolean whether all periods are paused
-     */
-    getAllPeriodsPaused() {
-        let isPaused = true;
-        for (let i = 0; i < this.periods.length; i++) {
-            let period = this.periods[i];
-            if (period.periodId !== -1 && !period.paused) {
-                isPaused = false;
-                break;
-            }
-        }
-
-        return isPaused;
-    }
+  }
 }
 
 PauseScreensMenuController.$inject = [
-    '$scope',
-    'TeacherDataService'
+  '$scope',
+  'TeacherDataService'
 ];
 
 const PauseScreensMenu = {
-    template:
-        `<div class="account-menu__caret account-menu__caret--pause" tabindex="0"></div>
+  template:
+    `<div class="account-menu__caret account-menu__caret--pause" tabindex="0"></div>
         <div layout="column" class="account-menu--fixed-height">
             <md-toolbar md-theme="light" class="account-menu__info md-subhead md-whiteframe-1dp" layout="row" layout-align="start center">
                 <div class="accent-1 account-menu__info__title" layout="row" layout-align="start center"><md-icon class="accent-1"> lock </md-icon>&nbsp;
@@ -78,7 +58,7 @@ const PauseScreensMenu = {
                 </md-switch>
             </md-content>
         </div>`,
-    controller: PauseScreensMenuController
+  controller: PauseScreensMenuController
 };
 
 export default PauseScreensMenu;

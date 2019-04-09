@@ -4,12 +4,10 @@ class StudentWebSocketService {
   constructor(
       $rootScope,
       $stomp,
-      $websocket,
       ConfigService,
       StudentDataService) {
     this.$rootScope = $rootScope;
     this.$stomp = $stomp;
-    this.$websocket = $websocket;
     this.ConfigService = ConfigService;
     this.StudentDataService = StudentDataService;
     this.dataStream = null;
@@ -44,30 +42,17 @@ class StudentWebSocketService {
           }, {});
 
           this.$stomp.send(`/app/hello/${this.runId}`, JSON.stringify({'name': `workgroup ${workgroupId}`}), {});
-
         });
-        //this.dataStream = this.$websocket(webSocketURL);
-        //this.dataStream.onMessage((message) => {
-        //  this.handleMessage(message);
-        //});
       } catch(e) {
         console.log(e);
       }
     }
   }
 
-  /**
-   * Handle the message we have received
-   * @param data the data from the message
-   */
   handleWebSocketMessageReceived(data) {
     this.$rootScope.$broadcast('webSocketMessageReceived', {data: data});
   }
 
-  /**
-   * Handle receiving a websocket message
-   * @param message the websocket message
-   */
   handleMessage(message) {
     const data = JSON.parse(message.data);
     const messageType = data.messageType;
@@ -92,10 +77,6 @@ class StudentWebSocketService {
     this.handleWebSocketMessageReceived(data);
   }
 
-  /**
-   * Send a message to teacher
-   * @param data the data to send to the teacher
-   */
   sendStudentToTeacherMessage(messageType, data) {
     if (!this.ConfigService.isPreview()) {
       const currentNodeId = this.StudentDataService.getCurrentNodeId();
@@ -108,7 +89,7 @@ class StudentWebSocketService {
     }
   }
 
-  sendStudentWorkToClassmatesInPeriodMessage(studentWork) {
+  sendStudentWorkToClassmatesInPeriod(studentWork) {
     if (!this.ConfigService.isPreview()) {
       studentWork.studentData = JSON.stringify(studentWork.studentData);
       this.$stomp.send(`/app/student-work/${this.runId}/${this.periodId}`,
@@ -137,7 +118,6 @@ class StudentWebSocketService {
 StudentWebSocketService.$inject = [
   '$rootScope',
   '$stomp',
-  '$websocket',
   'ConfigService',
   'StudentDataService'
 ];

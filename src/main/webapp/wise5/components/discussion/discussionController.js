@@ -75,7 +75,7 @@ var DiscussionController = function (_ComponentController) {
     _this.initializeScopeSubmitButtonClicked();
     _this.initializeScopeGetComponentState();
     _this.initializeScopeStudentDataChanged();
-    _this.registerWebSocketMessageReceivedListener();
+    _this.registerStudentWorkReceivedListener();
     _this.initializeWatchMdMedia();
     _this.broadcastDoneRenderingComponent();
     return _this;
@@ -144,7 +144,7 @@ var DiscussionController = function (_ComponentController) {
 
       this.$scope.$on('studentWorkSavedToServer', function (event, args) {
         var componentState = args.studentWork;
-        if (componentState && _this5.nodeId === componentState.nodeId && _this5.componentId === componentState.componentId) {
+        if (componentState && componentState.nodeId === _this5.nodeId && componentState.componentId === _this5.componentId) {
           if (_this5.isClassmateResponsesGated() && !_this5.retrievedClassmateResponses) {
             _this5.getClassmateResponses();
           } else {
@@ -160,9 +160,8 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'sendPostToClassmatesInPeriod',
     value: function sendPostToClassmatesInPeriod(componentState) {
-      var messageType = 'studentData';
       componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
-      this.StudentWebSocketService.sendStudentWorkToClassmatesInPeriodMessage(componentState);
+      this.StudentWebSocketService.sendStudentWorkToClassmatesInPeriod(componentState);
     }
   }, {
     key: 'sendPostToStudentsInThread',
@@ -195,7 +194,7 @@ var DiscussionController = function (_ComponentController) {
 
       var originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
       var toWorkgroupId = originalPostComponentState.workgroupId;
-      if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
+      if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
         var notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
         this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
           var messageType = 'notification';
@@ -214,7 +213,7 @@ var DiscussionController = function (_ComponentController) {
         for (var r = 0; r < replies.length; r++) {
           var reply = replies[r];
           var toWorkgroupId = reply.workgroupId;
-          if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) == -1) {
+          if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1) {
             var notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
             this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
               var messageType = 'notification';
@@ -226,19 +225,13 @@ var DiscussionController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'registerWebSocketMessageReceivedListener',
-    value: function registerWebSocketMessageReceivedListener() {
+    key: 'registerStudentWorkReceivedListener',
+    value: function registerStudentWorkReceivedListener() {
       var _this8 = this;
 
       this.$rootScope.$on('StudentWorkReceived', function (event, componentState) {
-        if (componentState.nodeId === _this8.nodeId && componentState.componentId === _this8.componentId) {
-          var componentStateWorkgroupId = componentState.workgroupId;
-          var workgroupId = _this8.ConfigService.getWorkgroupId();
-          if (workgroupId !== componentStateWorkgroupId) {
-            if (_this8.retrievedClassmateResponses) {
-              _this8.addClassResponse(componentState);
-            }
-          }
+        if (componentState.nodeId === _this8.nodeId && componentState.componentId === _this8.componentId && componentState.workgroupId !== _this8.ConfigService.getWorkgroupId() && _this8.retrievedClassmateResponses) {
+          _this8.addClassResponse(componentState);
         }
       });
     }
@@ -495,7 +488,7 @@ var DiscussionController = function (_ComponentController) {
           for (var _iterator4 = annotations[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
             var annotation = _step4.value;
 
-            if (studentWorkId == annotation.studentWorkId && annotation.type == 'inappropriateFlag') {
+            if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
               return annotation;
             }
           }
