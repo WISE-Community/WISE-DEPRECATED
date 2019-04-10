@@ -140,16 +140,10 @@ class DiscussionController extends ComponentController {
           this.addClassResponse(componentState);
         }
         this.disableComponentIfNecessary();
-        this.sendPostToClassmatesInPeriod(componentState);
         this.sendPostToStudentsInThread(componentState);
       }
       this.isSubmit = null;
     });
-  }
-
-  sendPostToClassmatesInPeriod(componentState) {
-    componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
-    this.StudentWebSocketService.sendStudentWorkToClassmatesInPeriod(componentState);
   }
 
   sendPostToStudentsInThread(componentState) {

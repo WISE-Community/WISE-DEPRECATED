@@ -89,15 +89,6 @@ class StudentWebSocketService {
     }
   }
 
-  sendStudentWorkToClassmatesInPeriod(studentWork) {
-    if (!this.ConfigService.isPreview()) {
-      studentWork.studentData = JSON.stringify(studentWork.studentData);
-      this.$stomp.send(`/app/student-work/${this.runId}/${this.periodId}`,
-          studentWork,
-          {});
-    }
-  }
-
   /**
    * Send a message to classmates in the period
    * @param data the data to send to the classmates

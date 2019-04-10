@@ -151,17 +151,10 @@ var DiscussionController = function (_ComponentController) {
             _this5.addClassResponse(componentState);
           }
           _this5.disableComponentIfNecessary();
-          _this5.sendPostToClassmatesInPeriod(componentState);
           _this5.sendPostToStudentsInThread(componentState);
         }
         _this5.isSubmit = null;
       });
-    }
-  }, {
-    key: 'sendPostToClassmatesInPeriod',
-    value: function sendPostToClassmatesInPeriod(componentState) {
-      componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
-      this.StudentWebSocketService.sendStudentWorkToClassmatesInPeriod(componentState);
     }
   }, {
     key: 'sendPostToStudentsInThread',

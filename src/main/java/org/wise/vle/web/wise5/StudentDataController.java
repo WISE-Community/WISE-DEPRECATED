@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,6 +77,9 @@ public class StudentDataController {
 
 //  @Autowired
 //  private WebSocketHandler webSocketHandler;
+
+  @Autowired
+  private SimpMessagingTemplate simpMessagingTemplate;
 
   @MessageMapping("/hello/{runId}")
   @SendTo("/topic/greetings/{runId}")
@@ -296,6 +300,24 @@ public class StudentDataController {
     }
   }
 
+  public void broadcastStudentWork(StudentWork studentWork) throws Exception {
+    convertToComponentState(studentWork);
+    simpMessagingTemplate.convertAndSend(
+        String.format("/topic/student-work/%s/%s", studentWork.getRunId(), studentWork.getPeriodId()),
+        studentWork);
+  }
+
+  // we need to (un)set these fields because client's student work (componentstate) and
+  // server's student work do not match right now
+  protected void convertToComponentState(StudentWork studentWork) {
+    studentWork.setRunId(studentWork.getRun().getId());
+    studentWork.setPeriodId(studentWork.getPeriod().getId());
+    studentWork.setWorkgroupId(studentWork.getWorkgroup().getId());
+    studentWork.setRun(null);
+    studentWork.setPeriod(null);
+    studentWork.setWorkgroup(null);
+  }
+
   /**
    * Handles batch POSTing student data (StudentWork, Action, Annotation)
    * @param runId Run that the POSTer (student) is in
@@ -351,6 +373,10 @@ public class StudentDataController {
               savedStudentWorkJSONObject.put("requestToken", requestToken);
               savedStudentWorkJSONObject.put("serverSaveTime", studentWork.getServerSaveTime().getTime());
               studentWorkResultJSONArray.put(savedStudentWorkJSONObject);
+
+              if (studentWork.getComponentType().equals("Discussion")) {
+                broadcastStudentWork(studentWork);
+              }
 
               // send this studentWork immediately to the teacher so the Classroom Monitor can be updated
               try {
