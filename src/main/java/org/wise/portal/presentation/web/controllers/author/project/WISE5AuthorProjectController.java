@@ -303,7 +303,7 @@ public class WISE5AuthorProjectController {
   protected void saveProject(
       @PathVariable Long projectId,
       @RequestParam("commitMessage") String commitMessage,
-      @RequestParam("projectJSONString") String projectJSONString) {
+      @RequestParam("projectJSONString") String projectJSONString) throws JSONException {
     Project project;
     try {
       project = projectService.getById(projectId);
@@ -334,16 +334,21 @@ public class WISE5AuthorProjectController {
         JSONObject projectJSONObject = new JSONObject(projectJSONString);
         JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
         if (projectMetadataJSON != null) {
+          ProjectMetadata oldProjectMetadata = project.getMetadata();
+          ProjectMetadata projectMetadata = new ProjectMetadataImpl(projectMetadataJSON);
           project.setMetadata(projectMetadataJSON.toString());
+          if (!oldProjectMetadata.getTitle().equals(projectMetadata.getTitle()) ||
+            !oldProjectMetadata.getAuthors().equals(projectMetadata.getAuthors())) {
+            String projectFolderPath = FileManager.getProjectFolderPath(project);
+            projectService.writeProjectLicenseFile(projectFolderPath, project);
+          }
           String projectTitle = projectMetadataJSON.getString("title");
           if (projectTitle != null && !projectTitle.equals(project.getName())) {
             project.setName(projectTitle);
           }
           projectService.updateProject(project, user);
         }
-      } catch(JSONException e) {
-        e.printStackTrace();
-      } catch (NotAuthorizedException e) {
+      } catch(JSONException | NotAuthorizedException e) {
         e.printStackTrace();
       }
       // commented below until "W5 AT: new commit message convention #1016" is completed

@@ -23,6 +23,9 @@
  */
 package org.wise.portal.service.project.impl;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,7 +67,7 @@ import org.wise.portal.service.tag.TagService;
 import org.wise.portal.service.user.UserService;
 import org.wise.vle.utils.FileManager;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -174,16 +177,14 @@ public class ProjectServiceImpl implements ProjectService {
     project.setWISEVersion(projectParameters.getWiseVersion());
     ProjectMetadata metadata = projectParameters.getMetadata();
     Long parentProjectId = projectParameters.getParentProjectId();
-    Project parentProject = null;
     JSONArray authors = new JSONArray();
     if (parentProjectId != null) {
-      parentProject = getById(parentProjectId);
+      Project parentProject = getById(parentProjectId);
       project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
       ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
       if (parentProjectMetadata != null) {
-        JSONObject parentProjectJSON = null;
         try {
-          parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId);
+          JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId);
           metadata.setParentProject(parentProjectJSON.toString());
         } catch (JSONException e) {
           e.printStackTrace();
@@ -210,6 +211,12 @@ public class ProjectServiceImpl implements ProjectService {
     project.setDateCreated(new Date());
     projectDao.save(project);
     aclService.addPermission(project, BasePermission.ADMINISTRATION);
+    try {
+      String projectFolderPath = FileManager.getProjectFolderPath(project);
+      writeProjectLicenseFile(projectFolderPath, project);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
 
     if (parentProjectId != null) {
       Long newProjectId = (Long) project.getId();
@@ -520,6 +527,7 @@ public class ProjectServiceImpl implements ProjectService {
       JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId);
       newProjectMetadata.setParentProject(parentProjectJSON.toString());
       pParams.setMetadata(newProjectMetadata);
+      replaceMetadataInProjectJSONFile(curriculumBaseDir + newProjectPath, newProjectMetadata);
     }
     return createProject(pParams);
   }
@@ -570,16 +578,11 @@ public class ProjectServiceImpl implements ProjectService {
     return projectDao.getAllSharedProjects();
   }
 
-  private JSONObject getParentInfo(ProjectMetadata parentProjectMetadata, Long parentProjectId)
+  public JSONObject getParentInfo(ProjectMetadata parentProjectMetadata, Long parentProjectId)
       throws ObjectNotFoundException, JSONException {
     String parentAuthorsString = parentProjectMetadata.getAuthors();
     String parentProjectTitle = parentProjectMetadata.getTitle();
     Project parentProject = getById(parentProjectId);
-    String previewPath = "/project/";
-    if (parentProject.getWiseVersion().equals(4)) {
-      previewPath = "/previewproject.html?projectId=";
-    }
-    String parentProjectUri = wiseProperties.getProperty("wise.hostname") + previewPath + parentProjectId;
     JSONArray parentAuthors = new JSONArray();
     if (parentAuthorsString != null) {
       parentAuthors = new JSONArray(parentAuthorsString);
@@ -588,7 +591,102 @@ public class ProjectServiceImpl implements ProjectService {
     parentProjectJSON.put("id", parentProjectId);
     parentProjectJSON.put("title", parentProjectTitle);
     parentProjectJSON.put("authors", parentAuthors);
-    parentProjectJSON.put("uri", parentProjectUri);
+    parentProjectJSON.put("uri", getProjectURI(parentProject));
     return parentProjectJSON;
+  }
+
+  private String getProjectURI(Project project) {
+    String previewPath = "/project/";
+    if (project.getWiseVersion().equals(4)) {
+      previewPath = "/previewproject.html?projectId=";
+    }
+    return wiseProperties.getProperty("wise.hostname") + previewPath + project.getId();
+  }
+
+  private String getAuthorsString(JSONArray authors) {
+    StringBuilder authorsString = new StringBuilder();
+    int totalAuthors = authors.length();
+    for (int i = 0; i < totalAuthors; i++) {
+      JSONObject author;
+      try {
+        author = authors.getJSONObject(i);
+        String firstName = author.getString("firstName");
+        String lastName = author.getString("lastName");
+        authorsString.append(firstName + " " + lastName);
+        if (i < totalAuthors - 1) {
+          authorsString.append(", ");
+        }
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+    return authorsString.toString();
+  }
+
+  public void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException {
+    ProjectMetadata metadata = project.getMetadata();
+    String title = metadata.getTitle();
+    JSONArray authorsArray = new JSONArray(metadata.getAuthors());
+    String authors = getAuthorsString(authorsArray);
+    String license = "\"" + title + "\" (" + getProjectURI(project) + ") " +
+      "is licensed under CC BY-SA";
+    if (!authors.isEmpty()) {
+      license += " by " + authors + ".";
+    } else {
+      license += ".";
+    }
+    String parentProject = metadata.getParentProject();
+    String parentLicense = "";
+    if (parentProject != null && !parentProject.equals("{}")) {
+      JSONObject parentProjectJSON = new JSONObject(parentProject);
+      String parentTitle = parentProjectJSON.getString("title");
+      String parentAuthors =
+        getAuthorsString(parentProjectJSON.getJSONArray("authors"));
+      String parentURI = parentProjectJSON.getString("uri");
+      if (authors.isEmpty()) {
+        parentLicense += " This work is a copy of ";
+      } else {
+        parentLicense += " This work is a derivative of ";
+      }
+      parentLicense += "\"" + parentTitle + "\" (" + parentURI + ")";
+      if (!parentAuthors.isEmpty()) {
+        parentLicense += " by " + parentAuthors;
+      }
+      parentLicense += " [used under CC BY-SA].";
+      parentLicense = "\n\n" + WordUtils.wrap(parentLicense, 72);
+    }
+    license = WordUtils.wrap(license, 72) + parentLicense + "\n\n" +
+      WordUtils.wrap("License pertains to original content created by " +
+      "the author(s). Authors are responsible for the usage and attribution " +
+      "of any third-party content linked to or included in this work.", 72);
+    String ccLicenseText = "";
+    InputStream ccLicense =
+      FileManager.class.getClassLoader().getResourceAsStream("cc-by-sa.txt");
+    if (ccLicense != null) {
+      try {
+        ccLicenseText = IOUtils.toString(ccLicense, "UTF-8");
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    license += "\n\n" + ccLicenseText;
+    File licenseFile = new File(projectFolderPath, "license.txt");
+    try {
+      Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile), "UTF-8"));
+      writer.write(license);
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata) throws IOException, JSONException {
+    String projectStr = FileUtils.readFileToString(new File(projectFilePath));
+    JSONObject projectJSONObj = new JSONObject(projectStr);
+    projectJSONObj.put("metadata", metadata.toJSONObject());
+    File newProjectJSONFile = new File(projectFilePath);
+    Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
+    writer.write(projectJSONObj.toString());
+    writer.close();
   }
 }

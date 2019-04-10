@@ -73,6 +73,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 
   @Getter
   @Setter
+  private String uri;
+
+  @Getter
+  @Setter
   private String parentProject;
 
   @Column(name = "subject")
