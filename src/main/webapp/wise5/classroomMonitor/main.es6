@@ -14,7 +14,7 @@ import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularSanitize from 'angular-sanitize';
 import angularSock from 'angular-sockjs';
-import angularStomp from 'ng-stomp';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import ngWebSocket from 'angular-websocket';

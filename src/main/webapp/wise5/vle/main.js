@@ -48,9 +48,9 @@ var _angularSockjs = require('angular-sockjs');
 
 var _angularSockjs2 = _interopRequireDefault(_angularSockjs);
 
-var _ngStomp = require('ng-stomp');
+var _ngStompStandalone = require('../lib/stomp/ng-stomp.standalone.min');
 
-var _ngStomp2 = _interopRequireDefault(_ngStomp);
+var _ngStompStandalone2 = _interopRequireDefault(_ngStompStandalone);
 
 var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
 

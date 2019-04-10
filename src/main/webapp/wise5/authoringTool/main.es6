@@ -10,6 +10,8 @@ import 'angular-ui-router';
 import 'angular-material';
 import 'angular-moment';
 import 'angular-sanitize';
+import angularSock from 'angular-sockjs';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
 import 'lib/angular-toArrayFilter/toArrayFilter';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
@@ -91,6 +93,8 @@ const authoringModule = angular.module('authoring', [
     'ngFileUpload',
     'ngMaterial',
     'ngSanitize',
+    'bd.sockjs',
+    'ngStomp',
     'ngWebSocket',
     'openResponseAuthoringComponentModule',
     'outsideURLAuthoringComponentModule',

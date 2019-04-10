@@ -11,7 +11,7 @@ import angularMoment from 'angular-moment';
 import angularOnload from 'ng-onload';
 import angularSanitize from 'angular-sanitize';
 import angularSock from 'angular-sockjs';
-import angularStomp from 'ng-stomp';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';

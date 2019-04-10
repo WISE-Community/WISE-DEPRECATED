@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9,10 +9,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthorWebSocketService = function () {
-  function AuthorWebSocketService($rootScope, $websocket, ConfigService) {
+  function AuthorWebSocketService($rootScope, $stomp, $websocket, ConfigService) {
     _classCallCheck(this, AuthorWebSocketService);
 
     this.$rootScope = $rootScope;
+    this.$stomp = $stomp;
     this.$websocket = $websocket;
     this.ConfigService = ConfigService;
     this.dataStream = null;
@@ -24,18 +25,30 @@ var AuthorWebSocketService = function () {
 
 
   _createClass(AuthorWebSocketService, [{
-    key: "initialize",
+    key: 'initialize',
     value: function initialize() {
-      var _this = this;
-
-      var webSocketURL = this.ConfigService.getWebSocketURL() + "?projectId=" + this.ConfigService.getProjectId();
-      this.dataStream = this.$websocket(webSocketURL);
-      this.dataStream.onMessage(function (message) {
-        _this.handleMessage(message);
-      });
+      var webSocketURL = this.ConfigService.getWebSocketURL();
+      try {
+        this.$stomp.connect(webSocketURL, function (payload, headers, res) {
+          console.log('Current Authors: ' + payload);
+        }, {});
+      } catch (e) {
+        console.log(e);
+      }
     }
   }, {
-    key: "handleMessage",
+    key: 'subscribeToCurrentAuthors',
+    value: function subscribeToCurrentAuthors(projectId) {
+      try {
+        var currentAuthorsSubscription = this.$stomp.subscribe('/topic/current-authors/' + projectId, function (payload, headers, res) {
+          console.log('Greeting: ' + payload);
+        }, {});
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }, {
+    key: 'handleMessage',
     value: function handleMessage(message) {
       var data = JSON.parse(message.data);
       var messageType = data.messageType;
@@ -44,7 +57,7 @@ var AuthorWebSocketService = function () {
       }
     }
   }, {
-    key: "sendMessage",
+    key: 'sendMessage',
     value: function sendMessage(messageJSON) {
       this.dataStream.send(messageJSON);
     }
@@ -53,7 +66,7 @@ var AuthorWebSocketService = function () {
   return AuthorWebSocketService;
 }();
 
-AuthorWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService'];
+AuthorWebSocketService.$inject = ['$rootScope', '$stomp', '$websocket', 'ConfigService'];
 
 exports.default = AuthorWebSocketService;
 //# sourceMappingURL=authorWebSocketService.js.map
