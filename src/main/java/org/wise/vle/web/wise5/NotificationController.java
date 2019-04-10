@@ -3,6 +3,7 @@ package org.wise.vle.web.wise5;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.notification.Notification;
+import org.wise.vle.domain.work.StudentWork;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -43,6 +45,29 @@ public class NotificationController {
 
   @Autowired
   private WorkgroupService workgroupService;
+
+  @Autowired
+  private SimpMessagingTemplate simpMessagingTemplate;
+
+  public void broadcastNotification(Notification notification) throws Exception {
+    Notification clientNotification = convertToClientNotification(notification);
+    simpMessagingTemplate.convertAndSend(
+      String.format("/topic/notification/%s/%s/%s",
+        clientNotification.getRunId(), clientNotification.getPeriodId(), clientNotification.getToWorkgroupId()),
+      clientNotification);
+  }
+
+  private Notification convertToClientNotification(Notification notification) {
+    notification.setRunId(notification.getRun().getId());
+    notification.setPeriodId(notification.getPeriod().getId());
+    notification.setToWorkgroupId(notification.getToWorkgroup().getId());
+    notification.setFromWorkgroupId(notification.getFromWorkgroup().getId());
+    notification.setRun(null);
+    notification.setPeriod(null);
+    notification.setToWorkgroup(null);
+    notification.setFromWorkgroup(null);
+    return notification;
+  }
 
   @RequestMapping(method = RequestMethod.GET, value = "/notification/{runId}")
   protected void getNotifications(
@@ -97,7 +122,7 @@ public class NotificationController {
       @RequestParam(value = "data", required = false) String data,
       @RequestParam(value = "timeGenerated", required = true) String timeGenerated,
       @RequestParam(value = "timeDismissed", required = false) String timeDismissed,
-      HttpServletResponse response) throws IOException {
+      HttpServletResponse response) throws Exception {
     User signedInUser = ControllerUtil.getSignedInUser();
     try {
       Run run = runService.retrieveById(new Long(runId));
@@ -152,6 +177,7 @@ public class NotificationController {
         timeGenerated,
         timeDismissed);
     response.getWriter().write(notification.toJSON().toString());
+    broadcastNotification(notification);
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/notification/{runId}/dismiss")

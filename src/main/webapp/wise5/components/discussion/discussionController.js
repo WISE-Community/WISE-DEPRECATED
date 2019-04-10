@@ -183,24 +183,17 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'sendPostToThreadCreator',
     value: function sendPostToThreadCreator(componentStateIdReplyingTo, notificationType, nodeId, componentId, fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
-      var _this6 = this;
-
       var originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
       var toWorkgroupId = originalPostComponentState.workgroupId;
       if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
         var notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-        this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
-          var messageType = 'notification';
-          _this6.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-        });
+        this.NotificationService.saveNotificationToServer(notification);
         workgroupsNotifiedSoFar.push(toWorkgroupId);
       }
     }
   }, {
     key: 'sendPostToThreadRepliers',
     value: function sendPostToThreadRepliers(componentStateIdReplyingTo, notificationType, nodeId, componentId, fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
-      var _this7 = this;
-
       if (this.responsesMap[componentStateIdReplyingTo].replies != null) {
         var replies = this.responsesMap[componentStateIdReplyingTo].replies;
         for (var r = 0; r < replies.length; r++) {
@@ -208,10 +201,7 @@ var DiscussionController = function (_ComponentController) {
           var toWorkgroupId = reply.workgroupId;
           if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1) {
             var notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-            this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
-              var messageType = 'notification';
-              _this7.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-            });
+            this.NotificationService.saveNotificationToServer(notification);
             workgroupsNotifiedSoFar.push(toWorkgroupId);
           }
         }
@@ -220,29 +210,29 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'registerStudentWorkReceivedListener',
     value: function registerStudentWorkReceivedListener() {
-      var _this8 = this;
+      var _this6 = this;
 
-      this.$rootScope.$on('StudentWorkReceived', function (event, componentState) {
-        if (componentState.nodeId === _this8.nodeId && componentState.componentId === _this8.componentId && componentState.workgroupId !== _this8.ConfigService.getWorkgroupId() && _this8.retrievedClassmateResponses) {
-          _this8.addClassResponse(componentState);
+      this.$rootScope.$on('studentWorkReceived', function (event, componentState) {
+        if (componentState.nodeId === _this6.nodeId && componentState.componentId === _this6.componentId && componentState.workgroupId !== _this6.ConfigService.getWorkgroupId() && _this6.retrievedClassmateResponses) {
+          _this6.addClassResponse(componentState);
         }
       });
     }
   }, {
     key: 'initializeWatchMdMedia',
     value: function initializeWatchMdMedia() {
-      var _this9 = this;
+      var _this7 = this;
 
       this.$scope.$watch(function () {
-        return _this9.$mdMedia('gt-sm');
+        return _this7.$mdMedia('gt-sm');
       }, function (md) {
-        _this9.$scope.mdScreen = md;
+        _this7.$scope.mdScreen = md;
       });
     }
   }, {
     key: 'getClassmateResponses',
     value: function getClassmateResponses() {
-      var _this10 = this;
+      var _this8 = this;
 
       var nodeId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.nodeId;
       var componentId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.componentId;
@@ -253,7 +243,7 @@ var DiscussionController = function (_ComponentController) {
         if (result != null) {
           var componentStates = result.studentWorkList;
           var annotations = result.annotations;
-          _this10.setClassResponses(componentStates, annotations);
+          _this8.setClassResponses(componentStates, annotations);
         }
       });
     }
@@ -267,12 +257,12 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
-      var _this11 = this;
+      var _this9 = this;
 
       this.isDirty = true;
       var action = 'change';
       this.createComponentState(action).then(function (componentState) {
-        _this11.$scope.$emit('componentStudentDataChanged', { nodeId: _this11.nodeId, componentId: _this11.componentId, componentState: componentState });
+        _this9.$scope.$emit('componentStudentDataChanged', { nodeId: _this9.nodeId, componentId: _this9.componentId, componentState: componentState });
       });
     }
 
@@ -657,7 +647,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'deletebuttonclicked',
     value: function deletebuttonclicked(componentState) {
-      var _this12 = this;
+      var _this10 = this;
 
       var toWorkgroupId = componentState.workgroupId;
       var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
@@ -673,9 +663,9 @@ var DiscussionController = function (_ComponentController) {
       };
       var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
       this.AnnotationService.saveAnnotation(annotation).then(function () {
-        var componentStates = _this12.DiscussionService.getPostsAssociatedWithWorkgroupId(_this12.componentId, _this12.workgroupId);
-        var annotations = _this12.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-        _this12.setClassResponses(componentStates, annotations);
+        var componentStates = _this10.DiscussionService.getPostsAssociatedWithWorkgroupId(_this10.componentId, _this10.workgroupId);
+        var annotations = _this10.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+        _this10.setClassResponses(componentStates, annotations);
       });
     }
 
@@ -691,7 +681,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'undodeletebuttonclicked',
     value: function undodeletebuttonclicked(componentState) {
-      var _this13 = this;
+      var _this11 = this;
 
       var toWorkgroupId = componentState.workgroupId;
       var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
@@ -707,9 +697,9 @@ var DiscussionController = function (_ComponentController) {
       };
       var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
       this.AnnotationService.saveAnnotation(annotation).then(function () {
-        var componentStates = _this13.DiscussionService.getPostsAssociatedWithWorkgroupId(_this13.componentId, _this13.workgroupId);
-        var annotations = _this13.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-        _this13.setClassResponses(componentStates, annotations);
+        var componentStates = _this11.DiscussionService.getPostsAssociatedWithWorkgroupId(_this11.componentId, _this11.workgroupId);
+        var annotations = _this11.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+        _this11.setClassResponses(componentStates, annotations);
       });
     }
 

@@ -102,6 +102,18 @@ public class Notification extends PersistableDomain {
   @Column(name = "serverSaveTime", nullable = false)
   private Timestamp serverSaveTime;
 
+  @Transient
+  private long runId;
+
+  @Transient
+  private long periodId;
+
+  @Transient
+  private long toWorkgroupId;
+
+  @Transient
+  private long fromWorkgroupId;
+
   @Override
   protected Class<?> getObjectClass() {
     return Notification.class;

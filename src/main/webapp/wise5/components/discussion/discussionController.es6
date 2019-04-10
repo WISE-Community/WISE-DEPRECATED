@@ -178,10 +178,7 @@ class DiscussionController extends ComponentController {
     if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
       const notification = this.NotificationService.createNewNotification(
           notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-      this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
-        const messageType = 'notification';
-        this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-      });
+      this.NotificationService.saveNotificationToServer(notification);
       workgroupsNotifiedSoFar.push(toWorkgroupId);
     }
   }
@@ -197,10 +194,7 @@ class DiscussionController extends ComponentController {
             workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1) {
           const notification = this.NotificationService.createNewNotification(
               notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-          this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
-            const messageType = 'notification';
-            this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-          });
+          this.NotificationService.saveNotificationToServer(notification);
           workgroupsNotifiedSoFar.push(toWorkgroupId);
         }
       }
@@ -208,7 +202,7 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkReceivedListener() {
-    this.$rootScope.$on('StudentWorkReceived', (event, componentState) => {
+    this.$rootScope.$on('studentWorkReceived', (event, componentState) => {
       if (componentState.nodeId === this.nodeId &&
           componentState.componentId === this.componentId &&
           componentState.workgroupId !== this.ConfigService.getWorkgroupId() &&

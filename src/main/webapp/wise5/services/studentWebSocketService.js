@@ -27,7 +27,7 @@ var StudentWebSocketService = function () {
       if (!this.ConfigService.isPreview()) {
         this.runId = this.ConfigService.getRunId();
         this.periodId = this.ConfigService.getPeriodId();
-        var workgroupId = this.ConfigService.getWorkgroupId();
+        this.workgroupId = this.ConfigService.getWorkgroupId();
         var webSocketURL = this.ConfigService.getWebSocketURL();
         try {
           this.$stomp.connect(webSocketURL).then(function (frame) {
@@ -48,10 +48,14 @@ var StudentWebSocketService = function () {
 
             var studentWorkSubscription = _this.$stomp.subscribe('/topic/student-work/' + _this.runId + '/' + _this.periodId, function (studentWork, headers, res) {
               studentWork.studentData = JSON.parse(studentWork.studentData);
-              _this.$rootScope.$broadcast('StudentWorkReceived', studentWork);
+              _this.$rootScope.$broadcast('studentWorkReceived', studentWork);
             }, {});
 
-            _this.$stomp.send('/app/hello/' + _this.runId, JSON.stringify({ 'name': 'workgroup ' + workgroupId }), {});
+            var notificationSubscription = _this.$stomp.subscribe('/topic/notification/' + _this.runId + '/' + _this.periodId + '/' + _this.workgroupId, function (notification, headers, res) {
+              _this.$rootScope.$broadcast('newNotification', notification);
+            }, {});
+
+            _this.$stomp.send('/app/hello/' + _this.runId, JSON.stringify({ 'name': 'workgroup ' + _this.workgroupId }), {});
           });
         } catch (e) {
           console.log(e);
@@ -96,25 +100,6 @@ var StudentWebSocketService = function () {
         var messageJSON = {};
         messageJSON.messageType = messageType;
         messageJSON.messageParticipants = 'studentToTeachers';
-        messageJSON.currentNodeId = currentNodeId;
-        messageJSON.data = data;
-        this.dataStream.send(messageJSON);
-      }
-    }
-
-    /**
-     * Send a message to classmates in the period
-     * @param data the data to send to the classmates
-     */
-
-  }, {
-    key: 'deleteMe_sendStudentToClassmatesInPeriodMessage',
-    value: function deleteMe_sendStudentToClassmatesInPeriodMessage(messageType, data) {
-      if (!this.ConfigService.isPreview()) {
-        var currentNodeId = this.StudentDataService.getCurrentNodeId();
-        var messageJSON = {};
-        messageJSON.messageType = messageType;
-        messageJSON.messageParticipants = 'studentToClassmatesInPeriod';
         messageJSON.currentNodeId = currentNodeId;
         messageJSON.data = data;
         this.dataStream.send(messageJSON);

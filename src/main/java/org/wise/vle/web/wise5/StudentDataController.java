@@ -301,21 +301,22 @@ public class StudentDataController {
   }
 
   public void broadcastStudentWork(StudentWork studentWork) throws Exception {
-    convertToComponentState(studentWork);
+    StudentWork componentState = convertToComponentState(studentWork);
     simpMessagingTemplate.convertAndSend(
-        String.format("/topic/student-work/%s/%s", studentWork.getRunId(), studentWork.getPeriodId()),
-        studentWork);
+        String.format("/topic/student-work/%s/%s", componentState.getRunId(), componentState.getPeriodId()),
+        componentState);
   }
 
   // we need to (un)set these fields because client's student work (componentstate) and
   // server's student work do not match right now
-  protected void convertToComponentState(StudentWork studentWork) {
+  protected StudentWork convertToComponentState(StudentWork studentWork) {
     studentWork.setRunId(studentWork.getRun().getId());
     studentWork.setPeriodId(studentWork.getPeriod().getId());
     studentWork.setWorkgroupId(studentWork.getWorkgroup().getId());
     studentWork.setRun(null);
     studentWork.setPeriod(null);
     studentWork.setWorkgroup(null);
+    return studentWork;
   }
 
   /**

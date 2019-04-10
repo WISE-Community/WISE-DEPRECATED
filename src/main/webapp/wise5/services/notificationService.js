@@ -34,7 +34,7 @@ var NotificationService = function () {
           var isNotificationNew = true;
           for (var n = 0; n < _this.notifications.length; n++) {
             var currentNotification = _this.notifications[n];
-            if (currentNotification.id == notification.id) {
+            if (currentNotification.id === notification.id) {
               // existing notification (with same id) found, so it's an update
               _this.notifications[n] = notification;
               isNotificationNew = false;
@@ -95,11 +95,6 @@ var NotificationService = function () {
         timeDismissed: null
       };
     }
-
-    /**
-     * Retrieves notifications from the server
-     */
-
   }, {
     key: 'retrieveNotifications',
     value: function retrieveNotifications() {
@@ -114,7 +109,7 @@ var NotificationService = function () {
       } else {
         // the notification url is not null so we will retrieve the notifications
         var config = {
-          method: "GET",
+          method: 'GET',
           url: this.ConfigService.getNotificationURL(),
           params: {}
         };
@@ -135,35 +130,21 @@ var NotificationService = function () {
                 notification.nodePositionAndTitle = _this2.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
               }
               if (notification.data != null) {
-                // parse the data string into a JSON object
                 notification.data = angular.fromJson(notification.data);
               }
             });
           } else {
             _this2.notifications = [];
           }
-
           return _this2.notifications;
         });
       }
     }
-
-    /**
-     * Dismisses the specified notification
-     * @param notification
-     */
-
   }, {
     key: 'dismissNotification',
     value: function dismissNotification(notification) {
       this.dismissNotificationToServer(notification);
     }
-
-    /**
-     * Handle creating notification for score
-     * @param notificationForScore
-     */
-
   }, {
     key: 'sendNotificationForScore',
     value: function sendNotificationForScore(notificationForScore) {
@@ -192,7 +173,6 @@ var NotificationService = function () {
 
           var notificationToStudent = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId, fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
           this.saveNotificationToServer(notificationToStudent).then(function (savedNotification) {
-            // show local notification
             _this3.$rootScope.$broadcast('newNotification', savedNotification);
           });
         }
@@ -209,18 +189,12 @@ var NotificationService = function () {
           var notificationToTeacher = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId, fromWorkgroupId, _toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
           this.saveNotificationToServer(notificationToTeacher).then(function (savedNotification) {
             // send notification in real-time so teacher sees this right away
-            var messageType = "CRaterResultNotification";
+            var messageType = 'CRaterResultNotification';
             _this3.StudentWebSocketService.sendStudentToTeacherMessage(messageType, savedNotification);
           });
         }
       }
     }
-
-    /**
-     * Saves the notification for the logged-in user
-     * @param notification
-     */
-
   }, {
     key: 'saveNotificationToServer',
     value: function saveNotificationToServer(notification) {
@@ -231,25 +205,26 @@ var NotificationService = function () {
         return deferred.promise;
       } else {
         var config = {
-          method: "POST",
+          method: 'POST',
           url: this.ConfigService.getNotificationURL(),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         };
 
-        var params = {};
+        var params = {
+          periodId: this.ConfigService.getPeriodId(),
+          fromWorkgroupId: notification.fromWorkgroupId,
+          toWorkgroupId: notification.toWorkgroupId,
+          nodeId: notification.nodeId,
+          componentId: notification.componentId,
+          componentType: notification.componentType,
+          type: notification.type,
+          message: notification.message
+        };
         if (notification.id != null) {
           params.notificationId = notification.id;
         }
-        params.periodId = this.ConfigService.getPeriodId();
-        params.fromWorkgroupId = notification.fromWorkgroupId;
-        params.toWorkgroupId = notification.toWorkgroupId;
-        params.nodeId = notification.nodeId;
-        params.componentId = notification.componentId;
-        params.componentType = notification.componentType;
-        params.type = notification.type;
-        params.message = notification.message;
         if (notification.data != null) {
           params.data = angular.toJson(notification.data);
         }
@@ -261,7 +236,6 @@ var NotificationService = function () {
           params.timeDismissed = notification.timeDismissed;
         }
         config.data = $.param(params);
-
         return this.$http(config).then(function (result) {
           var notification = result.data;
           if (notification.data != null) {
@@ -271,18 +245,12 @@ var NotificationService = function () {
         });
       }
     }
-
-    /**
-     * Saves the notification for the logged-in user
-     * @param notification
-     */
-
   }, {
     key: 'dismissNotificationToServer',
     value: function dismissNotificationToServer(notification) {
       var _this4 = this;
 
-      notification.timeDismissed = Date.parse(new Date()); // set dismissed time to now.
+      notification.timeDismissed = Date.parse(new Date());
 
       if (this.ConfigService.isPreview()) {
         // if we're in preview, don't make any request to the server but pretend we did
@@ -296,28 +264,27 @@ var NotificationService = function () {
         }
 
         var config = {
-          method: "POST",
-          url: this.ConfigService.getNotificationURL() + "/dismiss",
+          method: 'POST',
+          url: this.ConfigService.getNotificationURL() + '/dismiss',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         };
 
-        var params = {};
-        params.notificationId = notification.id;
-        params.fromWorkgroupId = notification.fromWorkgroupId;
-        params.toWorkgroupId = notification.toWorkgroupId;
-        params.type = notification.type;
+        var params = {
+          notificationId: notification.id,
+          fromWorkgroupId: notification.fromWorkgroupId,
+          toWorkgroupId: notification.toWorkgroupId,
+          type: notification.type,
+          timeDismissed: notification.timeDismissed
+        };
         if (notification.groupId != null) {
           params.groupId = notification.groupId;
         }
-        params.timeDismissed = notification.timeDismissed;
         config.data = $.param(params);
-
         return this.$http(config).then(function (result) {
           var notification = result.data;
           if (notification.data != null) {
-            // parse the data string into a JSON object
             notification.data = angular.fromJson(notification.data);
           }
           _this4.$rootScope.$broadcast('notificationChanged', notification);
