@@ -156,7 +156,7 @@ public class ImportProjectController {
       int i = 0;
       while (entries.hasMoreElements()) {
         ZipEntry entry = (ZipEntry) entries.nextElement();
-        if (entry.getName().startsWith("__MACOSX")) {
+        if (entry.getName().startsWith("__MACOSX") || entry.getName().contains("license")) {
           continue;
         }
 
@@ -226,6 +226,7 @@ public class ImportProjectController {
     pParams.setProjectname(name);
     pParams.setProjectType(ProjectType.LD);
     pParams.setWiseVersion(projectVersion);
+    pParams.setParentProjectId((long) -1);
 
     ProjectMetadata metadata = null;
     try {

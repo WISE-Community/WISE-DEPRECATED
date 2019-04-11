@@ -103,6 +103,7 @@ public class ExportProjectController {
       metaOut.println(metadataJSONString);
       metaOut.close();
     } else if (project.getWiseVersion().equals(5)) {
+      metadata.setUri(projectService.getProjectURI(project));
       String projectFilePath = projectJSONDir + sep + "project.json";
       projectService.replaceMetadataInProjectJSONFile(projectFilePath, metadata);
     }

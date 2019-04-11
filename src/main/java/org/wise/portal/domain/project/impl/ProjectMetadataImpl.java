@@ -220,6 +220,18 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
+    if (metadataJSON.has("uri") && !metadataJSON.isNull("uri")) {
+      try {
+        String uri = metadataJSON.getString("uri");
+        if (uri.equals("null")) {
+          uri = "";
+        }
+        setUri(uri);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
     if (metadataJSON.has("author") && !metadataJSON.isNull("author")) {
       try {
         String author = metadataJSON.getString("author");

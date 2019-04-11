@@ -170,27 +170,35 @@ public class ProjectServiceImpl implements ProjectService {
   public Project createProject(ProjectParameters projectParameters) throws ObjectNotFoundException {
     Project project = projectDao.createEmptyProject();
     User owner = projectParameters.getOwner();
-    project.setModulePath(projectParameters.getModulePath());
+    String modulePath = projectParameters.getModulePath();
+    project.setModulePath(modulePath);
     project.setName(projectParameters.getProjectname());
     project.setOwner(owner);
     project.setProjectType(projectParameters.getProjectType());
     project.setWISEVersion(projectParameters.getWiseVersion());
     ProjectMetadata metadata = projectParameters.getMetadata();
+    String originalAuthorsString = metadata.getAuthors();
     Long parentProjectId = projectParameters.getParentProjectId();
+    Boolean isImport = false;
+    if (parentProjectId == -1) {
+      isImport = true;
+      parentProjectId = null;
+    }
     JSONArray authors = new JSONArray();
-    if (parentProjectId != null) {
+    if (parentProjectId != null && !isImport) {
       Project parentProject = getById(parentProjectId);
       project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
       ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
       if (parentProjectMetadata != null) {
         try {
-          JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId);
+          JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
           metadata.setParentProject(parentProjectJSON.toString());
         } catch (JSONException e) {
           e.printStackTrace();
         }
       }
-    } else {
+      project.setParentProjectId(parentProjectId);
+    } else if (!isImport){
       JSONObject authorJSON = new JSONObject();
       try {
         authorJSON.put("firstName", owner.getUserDetails().getFirstname());
@@ -207,19 +215,39 @@ public class ProjectServiceImpl implements ProjectService {
     //TODO -- isCurrent being set here may need to be removed
     project.setFamilytag(FamilyTag.TELS);
     project.setCurrent(true);
-    project.setParentProjectId(parentProjectId);
     project.setDateCreated(new Date());
     projectDao.save(project);
     aclService.addPermission(project, BasePermission.ADMINISTRATION);
+    Long newProjectId = (Long) project.getId();
+    if (isImport) {
+      try {
+        JSONObject parentProjectJSON = getParentInfo(metadata, null, metadata.getUri());
+        JSONArray parentAuthors = new JSONArray(originalAuthorsString);
+        for (int i = 0; i < parentAuthors.length(); i++) {
+          JSONObject parentAuthor = parentAuthors.getJSONObject(i);
+          parentAuthor.remove("id");
+          parentAuthors.put(i, parentAuthor);
+        }
+        parentProjectJSON.put("authors", parentAuthors);
+        metadata.setParentProject(parentProjectJSON.toString());
+        metadata.setUri(getProjectURI(project));
+        project.setMetadata(metadata);
+        projectDao.save(project);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
     try {
-      String projectFolderPath = FileManager.getProjectFolderPath(project);
-      writeProjectLicenseFile(projectFolderPath, project);
+      replaceMetadataInProjectJSONFile(FileManager.getProjectFilePath(project), metadata);
+    } catch (IOException | JSONException e) {
+      e.printStackTrace();
+    }
+    try {
+      writeProjectLicenseFile(FileManager.getProjectFolderPath(project), project);
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
-    if (parentProjectId != null) {
-      Long newProjectId = (Long) project.getId();
+    if (parentProjectId != null && isImport == null) {
       User signedInUser = ControllerUtil.getSignedInUser();
       premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
     }
@@ -524,10 +552,9 @@ public class ProjectServiceImpl implements ProjectService {
     if (parentProjectMetadata != null) {
       ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
       newProjectMetadata.setAuthors(new JSONArray().toString());
-      JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId);
+      JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
       newProjectMetadata.setParentProject(parentProjectJSON.toString());
       pParams.setMetadata(newProjectMetadata);
-      replaceMetadataInProjectJSONFile(curriculumBaseDir + newProjectPath, newProjectMetadata);
     }
     return createProject(pParams);
   }
@@ -578,24 +605,25 @@ public class ProjectServiceImpl implements ProjectService {
     return projectDao.getAllSharedProjects();
   }
 
-  public JSONObject getParentInfo(ProjectMetadata parentProjectMetadata, Long parentProjectId)
-      throws ObjectNotFoundException, JSONException {
+  public JSONObject getParentInfo(ProjectMetadata parentProjectMetadata,
+      Long parentProjectId, String uri) throws JSONException {
     String parentAuthorsString = parentProjectMetadata.getAuthors();
     String parentProjectTitle = parentProjectMetadata.getTitle();
-    Project parentProject = getById(parentProjectId);
     JSONArray parentAuthors = new JSONArray();
     if (parentAuthorsString != null) {
       parentAuthors = new JSONArray(parentAuthorsString);
     }
     JSONObject parentProjectJSON = new JSONObject();
-    parentProjectJSON.put("id", parentProjectId);
+    if (parentProjectId != null) {
+      parentProjectJSON.put("id", parentProjectId);
+    }
     parentProjectJSON.put("title", parentProjectTitle);
     parentProjectJSON.put("authors", parentAuthors);
-    parentProjectJSON.put("uri", getProjectURI(parentProject));
+    parentProjectJSON.put("uri", uri);
     return parentProjectJSON;
   }
 
-  private String getProjectURI(Project project) {
+  public String getProjectURI(Project project) {
     String previewPath = "/project/";
     if (project.getWiseVersion().equals(4)) {
       previewPath = "/previewproject.html?projectId=";

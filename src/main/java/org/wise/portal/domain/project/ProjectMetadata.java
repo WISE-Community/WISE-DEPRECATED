@@ -45,6 +45,16 @@ public interface ProjectMetadata{
   /**
    * @param <code>String</code> the title to set
    */
+  void setUri(String uri);
+
+  /**
+   * @return <code>String</code> the title to get
+   */
+  String getUri();
+
+  /**
+   * @param <code>String</code> the title to set
+   */
   void setTitle(String title);
 
   /**
