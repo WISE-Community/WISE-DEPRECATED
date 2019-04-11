@@ -49,7 +49,7 @@ import org.wise.portal.service.user.UserService;
  */
 @Controller
 @SessionAttributes("changePeriodParameters")
-@RequestMapping("/teacher/management/changestudentperiod.html")
+@RequestMapping("/teacher/management/changestudentperiod")
 public class ChangeStudentPeriodController {
 
   @Autowired
@@ -70,7 +70,7 @@ public class ChangeStudentPeriodController {
 
   protected final static String USER_ID = "userId";
 
-  protected String formView = "/teacher/management/changestudentperiod";
+  protected String formView = "teacher/management/changestudentperiod";
 
   protected String successView = "teacher/management/changestudentperiodsuccess";
 
