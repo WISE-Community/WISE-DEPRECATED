@@ -72,7 +72,9 @@ var ProjectController = function () {
     this.TeacherDataService.setCurrentNode(null);
 
     this.metadata = this.ProjectService.getProjectMetadata();
-    this.ProjectService.notifyAuthorProjectBegin(this.projectId);
+    this.AuthorWebSocketService.subscribeToCurrentAuthors(this.projectId).then(function () {
+      _this.ProjectService.notifyAuthorProjectBegin(_this.projectId);
+    });
     this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
     this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
 
@@ -92,18 +94,13 @@ var ProjectController = function () {
     this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
 
     this.$scope.$on('currentAuthorsReceived', function (event, args) {
-      var currentAuthorsUsernames = args.currentAuthorsUsernames;
-      var myUsername = _this.ConfigService.getMyUsername();
-      currentAuthorsUsernames.splice(currentAuthorsUsernames.indexOf(myUsername), 1);
-      if (currentAuthorsUsernames.length > 0) {
-        _this.currentAuthorsMessage = _this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthorsUsernames.join(', ') });
-      } else {
-        _this.currentAuthorsMessage = '';
-      }
+      _this.showOtherConcurrentAuthors(args.authors);
     });
 
     this.$scope.$on('$destroy', function () {
-      _this.ProjectService.notifyAuthorProjectEnd(_this.projectId);
+      _this.AuthorWebSocketService.unSubscribeFromCurrentAuthors(_this.projectId).then(function () {
+        _this.ProjectService.notifyAuthorProjectEnd(_this.projectId);
+      });
     });
 
     /*
@@ -186,25 +183,25 @@ var ProjectController = function () {
     this.$mdDialog.hide();
   }
 
+  /**
+   * Launch the project in preview mode in a new tab
+   */
+
+
   _createClass(ProjectController, [{
     key: 'previewProject',
-
-
-    /**
-     * Launch the project in preview mode in a new tab
-     */
     value: function previewProject() {
       var previewProjectEventData = { constraints: true };
       this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
       window.open(this.ConfigService.getConfigParam('previewProjectURL'));
     }
-  }, {
-    key: 'previewProjectWithoutConstraints',
-
 
     /**
      * Launch the project in preview mode without constraints in a new tab
      */
+
+  }, {
+    key: 'previewProjectWithoutConstraints',
     value: function previewProjectWithoutConstraints() {
       var previewProjectEventData = { constraints: false };
       this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
@@ -226,6 +223,17 @@ var ProjectController = function () {
       this.$state.go('root.project.notebook', { projectId: this.projectId });
     }
   }, {
+    key: 'showOtherConcurrentAuthors',
+    value: function showOtherConcurrentAuthors(authors) {
+      var myUsername = this.ConfigService.getMyUsername();
+      authors.splice(authors.indexOf(myUsername), 1);
+      if (authors.length > 0) {
+        this.currentAuthorsMessage = this.$translate('concurrentAuthorsWarning', { currentAuthors: authors.join(', ') });
+      } else {
+        this.currentAuthorsMessage = '';
+      }
+    }
+  }, {
     key: 'saveProject',
     value: function saveProject() {
       var _this2 = this;
@@ -244,13 +252,13 @@ var ProjectController = function () {
         return;
       }
     }
-  }, {
-    key: 'downloadProject',
-
 
     /**
      * Make a request to download this project as a zip file
      */
+
+  }, {
+    key: 'downloadProject',
     value: function downloadProject() {
       window.location.href = this.ConfigService.getWISEBaseURL() + '/project/export/' + this.projectId;
     }
@@ -264,27 +272,27 @@ var ProjectController = function () {
     value: function closeProject() {
       this.$state.go('root.main');
     }
-  }, {
-    key: 'getNodePositionById',
-
 
     /**
      * Get the node position
      * @param nodeId the node id
      * @returns the node position
      */
+
+  }, {
+    key: 'getNodePositionById',
     value: function getNodePositionById(nodeId) {
       return this.ProjectService.getNodePositionById(nodeId);
     }
-  }, {
-    key: 'getComponentsByNodeId',
-
 
     /**
      * Get the components that are in the specified node id.
      * @param nodeId the node id
      * @returns components in the node
      */
+
+  }, {
+    key: 'getComponentsByNodeId',
     value: function getComponentsByNodeId(nodeId) {
       return this.ProjectService.getComponentsByNodeId(nodeId);
     }
@@ -312,40 +320,40 @@ var ProjectController = function () {
     value: function getNodeTitleByNodeId(nodeId) {
       return this.ProjectService.getNodeTitleByNodeId(nodeId);
     }
-  }, {
-    key: 'isGroupNode',
-
 
     /**
      * Check if a node id is for a group
      * @param nodeId
      * @returns whether the node is a group node
      */
+
+  }, {
+    key: 'isGroupNode',
     value: function isGroupNode(nodeId) {
       return this.ProjectService.isGroupNode(nodeId);
     }
-  }, {
-    key: 'nodeClicked',
-
 
     /**
      * A node was clicked so we will go to the node authoring view
      * @param nodeId
      */
+
+  }, {
+    key: 'nodeClicked',
     value: function nodeClicked(nodeId) {
       this.unselectAllItems();
       this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
       this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
     }
-  }, {
-    key: 'constraintIconClicked',
-
 
     /**
      * The constraint icon on a step in the project view was clicked.
      * We will open the constraint view for the step.
      * @param nodeId The node id of the step.
      */
+
+  }, {
+    key: 'constraintIconClicked',
     value: function constraintIconClicked(nodeId) {
       this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
       this.$state.go('root.project.nodeConstraints', { projectId: this.projectId, nodeId: nodeId });

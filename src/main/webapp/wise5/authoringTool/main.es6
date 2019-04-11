@@ -204,9 +204,6 @@ const authoringModule = angular.module('authoring', [
               },
               language: ($translate, ConfigService, projectConfig) => {
                 $translate.use(ConfigService.getLocale());
-              },
-              webSocket: (AuthorWebSocketService, projectConfig) => {
-                return AuthorWebSocketService.initialize();
               }
             }
           })

@@ -522,7 +522,6 @@ public class WISE5AuthorProjectController {
       String firstName = userDetails.getFirstname();
       String lastName = userDetails.getLastname();
       String fullName = firstName + " " + lastName;
-      username = fullName + " (" + username + ")";
 
       JSONObject myUserInfo = new JSONObject();
       myUserInfo.put("id", user.getId());
@@ -974,27 +973,6 @@ public class WISE5AuthorProjectController {
       }
     } else {
       return new ModelAndView(new RedirectView("accessdenied.html"));
-    }
-  }
-
-  /**
-   * Notify other authors authoring the same project id in real-time
-   * @param projectId
-   */
-  private void notifyCurrentAuthors0(String projectId) {
-    try {
-      User user = ControllerUtil.getSignedInUser();
-//      if (webSocketHandler != null) {
-//        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//        JSONObject webSocketMessageJSON = new JSONObject();
-//        webSocketMessageJSON.put("messageType", "currentAuthors");
-//        webSocketMessageJSON.put("projectId", projectId);
-//        webSocketMessageJSON.put("messageParticipants", "authorToAuthors");
-//        wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
-//      }
-    } catch (Exception e) {
-      // if something fails while sending to websocket, allow the rest to continue
-      e.printStackTrace();
     }
   }
 

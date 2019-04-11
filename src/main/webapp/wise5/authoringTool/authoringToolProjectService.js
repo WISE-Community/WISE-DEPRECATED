@@ -150,30 +150,13 @@ var AuthoringToolProjectService = function (_ProjectService) {
         "inactiveNodes": []
       };
     }
-
-    /**
-     * Notifies others that the specified project is being authored
-     * @param projectId id of the project
-     */
-
   }, {
     key: 'notifyAuthorProjectBegin',
-    value: function notifyAuthorProjectBegin() {
-      var projectId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-      if (projectId == null) {
-        if (this.project != null) {
-          projectId = this.project.id;
-        } else {
-          return;
-        }
-      }
-
+    value: function notifyAuthorProjectBegin(projectId) {
       var httpParams = {
-        method: "POST",
+        method: 'POST',
         url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
       };
-
       return this.$http(httpParams).then(function (result) {
         var otherAuthors = result.data;
         return otherAuthors;

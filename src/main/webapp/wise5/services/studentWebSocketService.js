@@ -28,9 +28,8 @@ var StudentWebSocketService = function () {
         this.runId = this.ConfigService.getRunId();
         this.periodId = this.ConfigService.getPeriodId();
         this.workgroupId = this.ConfigService.getWorkgroupId();
-        var webSocketURL = this.ConfigService.getWebSocketURL();
         try {
-          this.$stomp.connect(webSocketURL).then(function (frame) {
+          this.$stomp.connect(this.ConfigService.getWebSocketURL()).then(function (frame) {
             console.log('connected! runId: ' + _this.runId);
             var greetingSubscription = _this.$stomp.subscribe('/topic/greetings/' + _this.runId, function (payload, headers, res) {
               console.log('Greeting: ' + payload);

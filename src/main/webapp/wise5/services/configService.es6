@@ -207,10 +207,6 @@ class ConfigService {
     return null;
   }
 
-  /**
-   * Get the user name of the signed in user
-   * @return the user name of the signed in user
-   */
   getMyUsername() {
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {

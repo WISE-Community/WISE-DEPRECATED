@@ -252,12 +252,6 @@ var ConfigService = function () {
       }
       return null;
     }
-
-    /**
-     * Get the user name of the signed in user
-     * @return the user name of the signed in user
-     */
-
   }, {
     key: 'getMyUsername',
     value: function getMyUsername() {

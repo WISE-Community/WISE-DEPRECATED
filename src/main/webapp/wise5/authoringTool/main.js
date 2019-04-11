@@ -267,9 +267,6 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
       },
       language: function language($translate, ConfigService, projectConfig) {
         $translate.use(ConfigService.getLocale());
-      },
-      webSocket: function webSocket(AuthorWebSocketService, projectConfig) {
-        return AuthorWebSocketService.initialize();
       }
     }
   }).state('root.project.node', {
