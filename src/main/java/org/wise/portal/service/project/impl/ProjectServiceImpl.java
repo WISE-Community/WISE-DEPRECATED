@@ -179,26 +179,27 @@ public class ProjectServiceImpl implements ProjectService {
     ProjectMetadata metadata = projectParameters.getMetadata();
     String originalAuthorsString = metadata.getAuthors();
     Long parentProjectId = projectParameters.getParentProjectId();
-    Boolean isImport = false;
-    if (parentProjectId == -1) {
-      isImport = true;
-      parentProjectId = null;
-    }
     JSONArray authors = new JSONArray();
-    if (parentProjectId != null && !isImport) {
-      Project parentProject = getById(parentProjectId);
-      project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
-      ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
-      if (parentProjectMetadata != null) {
-        try {
-          JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
-          metadata.setParentProject(parentProjectJSON.toString());
-        } catch (JSONException e) {
-          e.printStackTrace();
+    Boolean isImport = false;
+    if (parentProjectId != null) {
+      if (parentProjectId == -1) {
+        isImport = true;
+        parentProjectId = null;
+      } else {
+        Project parentProject = getById(parentProjectId);
+        project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
+        ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
+        if (parentProjectMetadata != null) {
+          try {
+            JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
+            metadata.setParentProject(parentProjectJSON.toString());
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
         }
+        project.setParentProjectId(parentProjectId);
       }
-      project.setParentProjectId(parentProjectId);
-    } else if (!isImport){
+    } else {
       JSONObject authorJSON = new JSONObject();
       try {
         authorJSON.put("firstName", owner.getUserDetails().getFirstname());
@@ -212,7 +213,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
     metadata.setAuthors(authors.toString());
     project.setMetadata(metadata);
-    //TODO -- isCurrent being set here may need to be removed
+    //TODO -- setFamilyTag and isCurrent being set here may need to be removed
     project.setFamilytag(FamilyTag.TELS);
     project.setCurrent(true);
     project.setDateCreated(new Date());
@@ -247,7 +248,7 @@ public class ProjectServiceImpl implements ProjectService {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    if (parentProjectId != null && isImport == null) {
+    if (parentProjectId != null) {
       User signedInUser = ControllerUtil.getSignedInUser();
       premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
     }
