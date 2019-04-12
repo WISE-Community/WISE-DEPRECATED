@@ -25,7 +25,6 @@ import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
 import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
-import AuthorWebSocketService from '../services/authorWebSocketService';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
@@ -104,7 +103,6 @@ const authoringModule = angular.module('authoring', [
     'ui.router'
     ])
     .service(AnnotationService.name, AnnotationService)
-    .service(AuthorWebSocketService.name, AuthorWebSocketService)
     .service(ComponentService.name, ComponentService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)

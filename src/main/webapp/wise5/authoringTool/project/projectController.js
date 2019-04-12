@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
-  function ProjectController($anchorScroll, $filter, $interval, $mdDialog, $q, $rootScope, $scope, $state, $stateParams, $timeout, AuthorWebSocketService, ConfigService, ProjectAssetService, ProjectService, TeacherDataService, UtilService) {
+  function ProjectController($anchorScroll, $filter, $interval, $mdDialog, $q, $rootScope, $scope, $state, $stateParams, $stomp, $timeout, $window, ConfigService, ProjectAssetService, ProjectService, TeacherDataService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, ProjectController);
@@ -23,9 +23,10 @@ var ProjectController = function () {
     this.$scope = $scope;
     this.$state = $state;
     this.$stateParams = $stateParams;
+    this.$stomp = $stomp;
     this.$timeout = $timeout;
     this.$translate = this.$filter('translate');
-    this.AuthorWebSocketService = AuthorWebSocketService;
+    this.$window = $window;
     this.ConfigService = ConfigService;
     this.ProjectAssetService = ProjectAssetService;
     this.ProjectService = ProjectService;
@@ -72,7 +73,7 @@ var ProjectController = function () {
     this.TeacherDataService.setCurrentNode(null);
 
     this.metadata = this.ProjectService.getProjectMetadata();
-    this.AuthorWebSocketService.subscribeToCurrentAuthors(this.projectId).then(function () {
+    this.subscribeToCurrentAuthors(this.projectId).then(function () {
       _this.ProjectService.notifyAuthorProjectBegin(_this.projectId);
     });
     this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
@@ -92,16 +93,6 @@ var ProjectController = function () {
     };
 
     this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
-
-    this.$scope.$on('currentAuthorsReceived', function (event, args) {
-      _this.showOtherConcurrentAuthors(args.authors);
-    });
-
-    this.$scope.$on('$destroy', function () {
-      _this.AuthorWebSocketService.unSubscribeFromCurrentAuthors(_this.projectId).then(function () {
-        _this.ProjectService.notifyAuthorProjectEnd(_this.projectId);
-      });
-    });
 
     /*
      * Listen for the assetSelected event which occurs when the author
@@ -181,14 +172,31 @@ var ProjectController = function () {
      * has loaded, we will hide the message.
      */
     this.$mdDialog.hide();
+
+    this.$scope.$on('$destroy', function () {
+      _this.endProjectAuthoringSession();
+    });
+
+    this.$window.onbeforeunload = function (event) {
+      _this.endProjectAuthoringSession();
+    };
   }
 
-  /**
-   * Launch the project in preview mode in a new tab
-   */
-
-
   _createClass(ProjectController, [{
+    key: 'endProjectAuthoringSession',
+    value: function endProjectAuthoringSession() {
+      var _this2 = this;
+
+      this.unSubscribeFromCurrentAuthors(this.projectId).then(function () {
+        _this2.ProjectService.notifyAuthorProjectEnd(_this2.projectId);
+      });
+    }
+
+    /**
+     * Launch the project in preview mode in a new tab
+     */
+
+  }, {
     key: 'previewProject',
     value: function previewProject() {
       var previewProjectEventData = { constraints: true };
@@ -236,14 +244,14 @@ var ProjectController = function () {
   }, {
     key: 'saveProject',
     value: function saveProject() {
-      var _this2 = this;
+      var _this3 = this;
 
       var commitMessage = 'Made changes to the project.';
       try {
         // if projectJSONString is bad json,
         // an exception will be thrown and it will not save.
         this.ProjectService.saveProject(commitMessage).then(function (commitHistoryArray) {
-          _this2.commitHistory = commitHistoryArray;
+          _this3.commitHistory = commitHistoryArray;
           $('#commitMessageInput').val('');
         });
       } catch (error) {
@@ -458,7 +466,7 @@ var ProjectController = function () {
   }, {
     key: 'handleCreateModeInsert',
     value: function handleCreateModeInsert(nodeId, moveTo) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (moveTo === 'inside') {
         this.ProjectService.createNodeInside(this.nodeToAdd, nodeId);
@@ -488,13 +496,13 @@ var ProjectController = function () {
         if (newNode != null) {
           var nodeCreatedEventData = {
             'nodeId': newNode.id,
-            'title': _this3.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
+            'title': _this4.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
           };
 
-          if (_this3.ProjectService.isGroupNode(newNode.id)) {
-            _this3.saveEvent('activityCreated', 'Authoring', nodeCreatedEventData);
+          if (_this4.ProjectService.isGroupNode(newNode.id)) {
+            _this4.saveEvent('activityCreated', 'Authoring', nodeCreatedEventData);
           } else {
-            _this3.saveEvent('stepCreated', 'Authoring', nodeCreatedEventData);
+            _this4.saveEvent('stepCreated', 'Authoring', nodeCreatedEventData);
           }
         }
       });
@@ -509,7 +517,7 @@ var ProjectController = function () {
   }, {
     key: 'handleMoveModeInsert',
     value: function handleMoveModeInsert(nodeId, moveTo) {
-      var _this4 = this;
+      var _this5 = this;
 
       var selectedNodeIds = this.getSelectedNodeIds();
       if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
@@ -575,16 +583,16 @@ var ProjectController = function () {
                 var node = movedNodes[n];
                 var newNode = newNodes[n];
                 if (node != null && newNode != null) {
-                  node.toTitle = _this4.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+                  node.toTitle = _this5.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
                 }
               }
 
-              if (_this4.ProjectService.isGroupNode(firstNewNode.id)) {
+              if (_this5.ProjectService.isGroupNode(firstNewNode.id)) {
                 var nodeMovedEventData = { activitiesMoved: movedNodes };
-                _this4.saveEvent('activityMoved', 'Authoring', nodeMovedEventData);
+                _this5.saveEvent('activityMoved', 'Authoring', nodeMovedEventData);
               } else {
                 var _nodeMovedEventData = { stepsMoved: movedNodes };
-                _this4.saveEvent('stepMoved', 'Authoring', _nodeMovedEventData);
+                _this5.saveEvent('stepMoved', 'Authoring', _nodeMovedEventData);
               }
             }
           }
@@ -601,7 +609,7 @@ var ProjectController = function () {
   }, {
     key: 'handleCopyModeInsert',
     value: function handleCopyModeInsert(nodeId, moveTo) {
-      var _this5 = this;
+      var _this6 = this;
 
       var copiedNodes = [];
       var selectedNodeIds = this.getSelectedNodeIds();
@@ -657,16 +665,16 @@ var ProjectController = function () {
               var newNode = newNodes[n];
               if (node != null && newNode != null) {
                 node.toNodeId = newNode.id;
-                node.toTitle = _this5.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+                node.toTitle = _this6.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
               }
             }
 
-            if (_this5.ProjectService.isGroupNode(firstNewNode.id)) {
+            if (_this6.ProjectService.isGroupNode(firstNewNode.id)) {
               var nodeCopiedEventData = { activitiesCopied: copiedNodes };
-              _this5.saveEvent('activityCopied', 'Authoring', nodeCopiedEventData);
+              _this6.saveEvent('activityCopied', 'Authoring', nodeCopiedEventData);
             } else {
               var _nodeCopiedEventData = { stepsCopied: copiedNodes };
-              _this5.saveEvent('stepCopied', 'Authoring', _nodeCopiedEventData);
+              _this6.saveEvent('stepCopied', 'Authoring', _nodeCopiedEventData);
             }
           }
         }
@@ -684,7 +692,7 @@ var ProjectController = function () {
   }, {
     key: 'importSelectedNodes',
     value: function importSelectedNodes(nodeIdToInsertInsideOrAfter) {
-      var _this6 = this;
+      var _this7 = this;
 
       var selectedNodes = this.getSelectedNodesToImport();
       var selectedNodeTitles = this.getSelectedNodeTitlesToImport();
@@ -692,9 +700,9 @@ var ProjectController = function () {
       var fromProjectId = this.importProjectId;
 
       this.performImport(nodeIdToInsertInsideOrAfter).then(function (newNodes) {
-        _this6.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
+        _this7.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
           var doScrollToNewNodes = true;
-          _this6.temporarilyHighlightNewNodes(newNodes, doScrollToNewNodes);
+          _this7.temporarilyHighlightNewNodes(newNodes, doScrollToNewNodes);
 
           var stepsImported = [];
           for (var n = 0; n < selectedNodes.length; n++) {
@@ -707,13 +715,13 @@ var ProjectController = function () {
               fromNodeId: selectedNode.id,
               fromTitle: selectedNodeTitle,
               toNodeId: newNode.id,
-              toTitle: _this6.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
+              toTitle: _this7.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
             };
             stepsImported.push(stepImported);
           }
 
           var stepsImportedEventData = { 'stepsImported': stepsImported };
-          _this6.saveEvent('stepImported', 'Authoring', stepsImportedEventData);
+          _this7.saveEvent('stepImported', 'Authoring', stepsImportedEventData);
         });
       });
     }
@@ -728,31 +736,31 @@ var ProjectController = function () {
   }, {
     key: 'performImport',
     value: function performImport(nodeIdToInsertInsideOrAfter) {
-      var _this7 = this;
+      var _this8 = this;
 
       var selectedNodes = this.getSelectedNodesToImport();
       var toProjectId = this.ConfigService.getConfigParam('projectId');
       var fromProjectId = this.importProjectId;
 
       return this.ProjectService.copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter).then(function (newNodes) {
-        _this7.refreshProject();
-        _this7.insertNodeMode = false;
-        _this7.toggleView('project');
+        _this8.refreshProject();
+        _this8.insertNodeMode = false;
+        _this8.toggleView('project');
 
-        _this7.importProjectIdToOrder = {};
-        _this7.importProjectItems = [];
-        _this7.importMyProjectId = null;
-        _this7.importLibraryProjectId = null;
-        _this7.importProjectId = null;
-        _this7.importProject = null;
+        _this8.importProjectIdToOrder = {};
+        _this8.importProjectItems = [];
+        _this8.importMyProjectId = null;
+        _this8.importLibraryProjectId = null;
+        _this8.importProjectId = null;
+        _this8.importProject = null;
 
         /*
          * go back to the project view and
          * refresh the project assets in case any of the imported
          * steps also imported assets
          */
-        _this7.showProjectHome();
-        _this7.ProjectAssetService.retrieveProjectAssets();
+        _this8.showProjectHome();
+        _this8.ProjectAssetService.retrieveProjectAssets();
         return newNodes;
       });
     }
@@ -1140,21 +1148,21 @@ var ProjectController = function () {
   }, {
     key: 'checkPotentialStartNodeIdChange',
     value: function checkPotentialStartNodeIdChange() {
-      var _this8 = this;
+      var _this9 = this;
 
       return this.$q(function (resolve, reject) {
-        var firstLeafNodeId = _this8.ProjectService.getFirstLeafNodeId();
+        var firstLeafNodeId = _this9.ProjectService.getFirstLeafNodeId();
         if (firstLeafNodeId == null) {
           // there are no steps in the project
           // set the start node id to empty string
-          _this8.ProjectService.setStartNodeId('');
+          _this9.ProjectService.setStartNodeId('');
           resolve();
         } else {
           // we have found a leaf node
-          var currentStartNodeId = _this8.ProjectService.getStartNodeId();
+          var currentStartNodeId = _this9.ProjectService.getStartNodeId();
           if (currentStartNodeId != firstLeafNodeId) {
             // update the start node id
-            _this8.ProjectService.setStartNodeId(firstLeafNodeId);
+            _this9.ProjectService.setStartNodeId(firstLeafNodeId);
             resolve();
           } else {
             resolve();
@@ -1170,11 +1178,11 @@ var ProjectController = function () {
   }, {
     key: 'checkPotentialStartNodeIdChangeThenSaveProject',
     value: function checkPotentialStartNodeIdChangeThenSaveProject() {
-      var _this9 = this;
+      var _this10 = this;
 
       return this.checkPotentialStartNodeIdChange().then(function () {
-        _this9.ProjectService.saveProject();
-        _this9.refreshProject();
+        _this10.ProjectService.saveProject();
+        _this10.refreshProject();
       });
     }
 
@@ -1185,7 +1193,7 @@ var ProjectController = function () {
   }, {
     key: 'refreshProject',
     value: function refreshProject() {
-      var _this10 = this;
+      var _this11 = this;
 
       /*
        * Use a timeout before we refresh the project in order to allow the
@@ -1193,13 +1201,13 @@ var ProjectController = function () {
        * blocking/freezing.
        */
       this.$timeout(function () {
-        _this10.ProjectService.parseProject();
-        _this10.items = _this10.ProjectService.idToOrder;
-        _this10.inactiveGroupNodes = _this10.ProjectService.getInactiveGroupNodes();
-        _this10.inactiveStepNodes = _this10.ProjectService.getInactiveStepNodes();
-        _this10.inactiveNodes = _this10.ProjectService.getInactiveNodes();
-        _this10.idToNode = _this10.ProjectService.getIdToNode();
-        _this10.unselectAllItems();
+        _this11.ProjectService.parseProject();
+        _this11.items = _this11.ProjectService.idToOrder;
+        _this11.inactiveGroupNodes = _this11.ProjectService.getInactiveGroupNodes();
+        _this11.inactiveStepNodes = _this11.ProjectService.getInactiveStepNodes();
+        _this11.inactiveNodes = _this11.ProjectService.getInactiveNodes();
+        _this11.idToNode = _this11.ProjectService.getIdToNode();
+        _this11.unselectAllItems();
       });
     }
 
@@ -1222,7 +1230,7 @@ var ProjectController = function () {
   }, {
     key: 'importStepClicked',
     value: function importStepClicked() {
-      var _this11 = this;
+      var _this12 = this;
 
       this.toggleView('importStep');
 
@@ -1233,7 +1241,7 @@ var ProjectController = function () {
 
         if (this.libraryProjectsList == null) {
           this.ConfigService.getLibraryProjects().then(function (libraryProjectsList) {
-            _this11.libraryProjectsList = libraryProjectsList;
+            _this12.libraryProjectsList = libraryProjectsList;
           });
         }
       }
@@ -1271,7 +1279,7 @@ var ProjectController = function () {
   }, {
     key: 'showImportProject',
     value: function showImportProject(importProjectId) {
-      var _this12 = this;
+      var _this13 = this;
 
       this.importProjectId = importProjectId;
       if (this.importProjectId == null) {
@@ -1284,10 +1292,10 @@ var ProjectController = function () {
         this.importProject = null;
       } else {
         this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
-          _this12.importProject = projectJSON;
-          var nodeOrderOfProject = _this12.ProjectService.getNodeOrderOfProject(_this12.importProject);
-          _this12.importProjectIdToOrder = nodeOrderOfProject.idToOrder;
-          _this12.importProjectItems = nodeOrderOfProject.nodes;
+          _this13.importProject = projectJSON;
+          var nodeOrderOfProject = _this13.ProjectService.getNodeOrderOfProject(_this13.importProject);
+          _this13.importProjectIdToOrder = nodeOrderOfProject.idToOrder;
+          _this13.importProjectItems = nodeOrderOfProject.nodes;
         });
       }
     }
@@ -1730,7 +1738,7 @@ var ProjectController = function () {
   }, {
     key: 'temporarilyHighlightNewNodes',
     value: function temporarilyHighlightNewNodes(newNodes) {
-      var _this13 = this;
+      var _this14 = this;
 
       var doScrollToNewNodes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
@@ -1745,7 +1753,7 @@ var ProjectController = function () {
               var newNode = _step8.value;
 
               if (newNode != null) {
-                _this13.UtilService.temporarilyHighlightElement(newNode.id);
+                _this14.UtilService.temporarilyHighlightElement(newNode.id);
               }
             }
           } catch (err) {
@@ -2068,12 +2076,28 @@ var ProjectController = function () {
     value: function nodeHasRubric(nodeId) {
       return this.ProjectService.nodeHasRubric(nodeId);
     }
+  }, {
+    key: 'subscribeToCurrentAuthors',
+    value: function subscribeToCurrentAuthors(projectId) {
+      var _this15 = this;
+
+      return this.$stomp.connect(this.ConfigService.getWebSocketURL()).then(function (frame) {
+        _this15.$stomp.subscribe('/topic/current-authors/' + projectId, function (authors, headers, res) {
+          _this15.showOtherConcurrentAuthors(authors);
+        }, {});
+      });
+    }
+  }, {
+    key: 'unSubscribeFromCurrentAuthors',
+    value: function unSubscribeFromCurrentAuthors(projectId) {
+      return this.$stomp.disconnect();
+    }
   }]);
 
   return ProjectController;
 }();
 
-ProjectController.$inject = ['$anchorScroll', '$filter', '$interval', '$mdDialog', '$q', '$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'AuthorWebSocketService', 'ConfigService', 'ProjectAssetService', 'ProjectService', 'TeacherDataService', 'UtilService'];
+ProjectController.$inject = ['$anchorScroll', '$filter', '$interval', '$mdDialog', '$q', '$rootScope', '$scope', '$state', '$stateParams', '$stomp', '$timeout', '$window', 'ConfigService', 'ProjectAssetService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 exports.default = ProjectController;
 //# sourceMappingURL=projectController.js.map

@@ -12,8 +12,9 @@ class ProjectController {
       $scope,
       $state,
       $stateParams,
+      $stomp,
       $timeout,
-      AuthorWebSocketService,
+      $window,
       ConfigService,
       ProjectAssetService,
       ProjectService,
@@ -28,9 +29,10 @@ class ProjectController {
     this.$scope = $scope;
     this.$state = $state;
     this.$stateParams = $stateParams;
+    this.$stomp = $stomp;
     this.$timeout = $timeout;
     this.$translate = this.$filter('translate');
-    this.AuthorWebSocketService = AuthorWebSocketService;
+    this.$window = $window;
     this.ConfigService = ConfigService;
     this.ProjectAssetService = ProjectAssetService;
     this.ProjectService = ProjectService;
@@ -78,7 +80,7 @@ class ProjectController {
     this.TeacherDataService.setCurrentNode(null);
 
     this.metadata = this.ProjectService.getProjectMetadata();
-    this.AuthorWebSocketService.subscribeToCurrentAuthors(this.projectId).then(() => {
+    this.subscribeToCurrentAuthors(this.projectId).then(() => {
       this.ProjectService.notifyAuthorProjectBegin(this.projectId);
     });
     this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
@@ -111,16 +113,6 @@ class ProjectController {
     };
 
     this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
-
-    this.$scope.$on('currentAuthorsReceived', (event, args) => {
-      this.showOtherConcurrentAuthors(args.authors);
-    });
-
-    this.$scope.$on('$destroy', () => {
-      this.AuthorWebSocketService.unSubscribeFromCurrentAuthors(this.projectId).then(() => {
-        this.ProjectService.notifyAuthorProjectEnd(this.projectId);
-      });
-    });
 
     /*
      * Listen for the assetSelected event which occurs when the author
@@ -207,6 +199,20 @@ class ProjectController {
      * has loaded, we will hide the message.
      */
     this.$mdDialog.hide();
+
+    this.$scope.$on('$destroy', () => {
+      this.endProjectAuthoringSession();
+    });
+
+    this.$window.onbeforeunload = (event) => {
+      this.endProjectAuthoringSession();
+    };
+  }
+
+  endProjectAuthoringSession() {
+    this.unSubscribeFromCurrentAuthors(this.projectId).then(() => {
+      this.ProjectService.notifyAuthorProjectEnd(this.projectId);
+    });
   }
 
   /**
@@ -1692,6 +1698,18 @@ class ProjectController {
   nodeHasRubric(nodeId) {
     return this.ProjectService.nodeHasRubric(nodeId);
   }
+
+  subscribeToCurrentAuthors(projectId) {
+    return this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
+      this.$stomp.subscribe(`/topic/current-authors/${projectId}`, (authors, headers, res) => {
+        this.showOtherConcurrentAuthors(authors);
+      }, {});
+    });
+  }
+
+  unSubscribeFromCurrentAuthors(projectId) {
+    return this.$stomp.disconnect();
+  }
 }
 
 ProjectController.$inject = [
@@ -1704,8 +1722,9 @@ ProjectController.$inject = [
     '$scope',
     '$state',
     '$stateParams',
+    '$stomp',
     '$timeout',
-    'AuthorWebSocketService',
+    '$window',
     'ConfigService',
     'ProjectAssetService',
     'ProjectService',
