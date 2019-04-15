@@ -530,7 +530,9 @@ class GraphController extends ComponentController {
     } else {
       series = this.getSeries();
     }
-    this.setDefaultActiveSeries();
+    if (this.activeSeries == null) {
+      this.setDefaultActiveSeries();
+    }
     this.showUndoButton = false;
     this.setAllSeriesFields(series);
     this.refreshSeriesIds(series);
@@ -1698,17 +1700,8 @@ class GraphController extends ComponentController {
     this.activeTrial = trial;
     this.series = series;
     if (this.activeSeries == null) {
-      /*
-       * there was no previous active series so we will set the active
-       * series to the first editable series or if there are no editable
-       * series, set the active series to the first series
-       */
       this.setDefaultActiveSeries();
     } else {
-      /*
-       * set the active series to the same series at the index that was
-       * previously active
-       */
       this.setActiveSeriesByIndex(activeSeriesIndex);
     }
     this.setTrialIdsToShow();
@@ -1918,12 +1911,14 @@ class GraphController extends ComponentController {
     if (name === 'selectedCells') {
       // only show the trials that are specified in the selectedCells array
       let selectedCells = studentData[name];
-      let selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
-      for (let trial of this.trials) {
-        if (selectedTrialIds.includes(trial.id)) {
-          trial.show = true;
-        } else {
-          trial.show = false;
+      if (selectedCells != null) {
+        let selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
+        for (let trial of this.trials) {
+          if (selectedTrialIds.includes(trial.id)) {
+            trial.show = true;
+          } else {
+            trial.show = false;
+          }
         }
       }
     } else if (name === 'trial') {
@@ -1970,6 +1965,7 @@ class GraphController extends ComponentController {
     const latestStudentDataTrialId = latestStudentDataTrial.id;
     this.removeDefaultTrialIfNecessary(latestStudentDataTrialId);
     const latestTrial = this.createNewTrialIfNecessary(latestStudentDataTrialId);
+    this.copySeriesintoTrial(latestStudentDataTrial, latestTrial, studentData, params);
     this.copyTrialNameIntoTrial(latestStudentDataTrial, latestTrial);
     this.copyPlotBandsIntoTrial(latestStudentDataTrial, latestTrial);
     this.setLastTrialToActive();
@@ -1999,7 +1995,10 @@ class GraphController extends ComponentController {
 
   createNewTrial(id) {
     return {
-      id: id
+      id: id,
+      name: '',
+      series: [],
+      show: true
     };
   }
 
@@ -2052,8 +2051,8 @@ class GraphController extends ComponentController {
     return series.length === 1 && series[0].data.length === 0;
   }
 
-  deleteFirstTrial(trial) {
-    trial.shift();
+  deleteFirstTrial(trials) {
+    trials.shift();
   }
 
   createNewTrialIfNecessary(trialId) {
@@ -2181,28 +2180,30 @@ class GraphController extends ComponentController {
     for (const singleSeries of series) {
       const data = singleSeries.data;
       for (const dataPoint of data) {
-        let tempX = null;
-        let tempY = null;
-        if (dataPoint.constructor.name === 'Object') {
-          tempX = dataPoint.x;
-          tempY = dataPoint.y;
-        } else if (dataPoint.constructor.name === 'Array') {
-          tempX = dataPoint[0];
-          tempY = dataPoint[1];
-        } else if(dataPoint.constructor.name === 'Number') {
-          tempY = dataPoint;
-        }
-        if (tempX > xMax) {
-          xMax = tempX;
-        }
-        if (tempX < xMin) {
-          xMin = tempX;
-        }
-        if (tempY > yMax) {
-          yMax = tempY;
-        }
-        if (tempY < yMin) {
-          yMin = tempY;
+        if (dataPoint != null) {
+          let tempX = null;
+          let tempY = null;
+          if (dataPoint.constructor.name === 'Object') {
+            tempX = dataPoint.x;
+            tempY = dataPoint.y;
+          } else if (dataPoint.constructor.name === 'Array') {
+            tempX = dataPoint[0];
+            tempY = dataPoint[1];
+          } else if(dataPoint.constructor.name === 'Number') {
+            tempY = dataPoint;
+          }
+          if (tempX > xMax) {
+            xMax = tempX;
+          }
+          if (tempX < xMin) {
+            xMin = tempX;
+          }
+          if (tempY > yMax) {
+            yMax = tempY;
+          }
+          if (tempY < yMin) {
+            yMin = tempY;
+          }
         }
       }
     }
@@ -2840,7 +2841,7 @@ class GraphController extends ComponentController {
 
   convertSelectedCellsToTrialIds(selectedCells) {
     const selectedTrialIds = [];
-    for (let selectedCell of selectedCells) {
+    for (const selectedCell of selectedCells) {
       const material = selectedCell.material;
       const bevTemp = selectedCell.bevTemp;
       const airTemp = selectedCell.airTemp;

@@ -592,7 +592,9 @@ var GraphController = function (_ComponentController) {
       } else {
         series = this.getSeries();
       }
-      this.setDefaultActiveSeries();
+      if (this.activeSeries == null) {
+        this.setDefaultActiveSeries();
+      }
       this.showUndoButton = false;
       this.setAllSeriesFields(series);
       this.refreshSeriesIds(series);
@@ -2256,17 +2258,8 @@ var GraphController = function (_ComponentController) {
       this.activeTrial = trial;
       this.series = series;
       if (this.activeSeries == null) {
-        /*
-         * there was no previous active series so we will set the active
-         * series to the first editable series or if there are no editable
-         * series, set the active series to the first series
-         */
         this.setDefaultActiveSeries();
       } else {
-        /*
-         * set the active series to the same series at the index that was
-         * previously active
-         */
         this.setActiveSeriesByIndex(activeSeriesIndex);
       }
       this.setTrialIdsToShow();
@@ -2599,32 +2592,34 @@ var GraphController = function (_ComponentController) {
       if (name === 'selectedCells') {
         // only show the trials that are specified in the selectedCells array
         var selectedCells = studentData[name];
-        var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
-        var _iteratorNormalCompletion24 = true;
-        var _didIteratorError24 = false;
-        var _iteratorError24 = undefined;
+        if (selectedCells != null) {
+          var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
+          var _iteratorNormalCompletion24 = true;
+          var _didIteratorError24 = false;
+          var _iteratorError24 = undefined;
 
-        try {
-          for (var _iterator24 = this.trials[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-            var trial = _step24.value;
-
-            if (selectedTrialIds.includes(trial.id)) {
-              trial.show = true;
-            } else {
-              trial.show = false;
-            }
-          }
-        } catch (err) {
-          _didIteratorError24 = true;
-          _iteratorError24 = err;
-        } finally {
           try {
-            if (!_iteratorNormalCompletion24 && _iterator24.return) {
-              _iterator24.return();
+            for (var _iterator24 = this.trials[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+              var trial = _step24.value;
+
+              if (selectedTrialIds.includes(trial.id)) {
+                trial.show = true;
+              } else {
+                trial.show = false;
+              }
             }
+          } catch (err) {
+            _didIteratorError24 = true;
+            _iteratorError24 = err;
           } finally {
-            if (_didIteratorError24) {
-              throw _iteratorError24;
+            try {
+              if (!_iteratorNormalCompletion24 && _iterator24.return) {
+                _iterator24.return();
+              }
+            } finally {
+              if (_didIteratorError24) {
+                throw _iteratorError24;
+              }
             }
           }
         }
@@ -2702,6 +2697,7 @@ var GraphController = function (_ComponentController) {
       var latestStudentDataTrialId = latestStudentDataTrial.id;
       this.removeDefaultTrialIfNecessary(latestStudentDataTrialId);
       var latestTrial = this.createNewTrialIfNecessary(latestStudentDataTrialId);
+      this.copySeriesintoTrial(latestStudentDataTrial, latestTrial, studentData, params);
       this.copyTrialNameIntoTrial(latestStudentDataTrial, latestTrial);
       this.copyPlotBandsIntoTrial(latestStudentDataTrial, latestTrial);
       this.setLastTrialToActive();
@@ -2755,7 +2751,10 @@ var GraphController = function (_ComponentController) {
     key: 'createNewTrial',
     value: function createNewTrial(id) {
       return {
-        id: id
+        id: id,
+        name: '',
+        series: [],
+        show: true
       };
     }
   }, {
@@ -2813,8 +2812,8 @@ var GraphController = function (_ComponentController) {
     }
   }, {
     key: 'deleteFirstTrial',
-    value: function deleteFirstTrial(trial) {
-      trial.shift();
+    value: function deleteFirstTrial(trials) {
+      trials.shift();
     }
   }, {
     key: 'createNewTrialIfNecessary',
@@ -3016,28 +3015,30 @@ var GraphController = function (_ComponentController) {
             for (var _iterator30 = data[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
               var dataPoint = _step30.value;
 
-              var tempX = null;
-              var tempY = null;
-              if (dataPoint.constructor.name === 'Object') {
-                tempX = dataPoint.x;
-                tempY = dataPoint.y;
-              } else if (dataPoint.constructor.name === 'Array') {
-                tempX = dataPoint[0];
-                tempY = dataPoint[1];
-              } else if (dataPoint.constructor.name === 'Number') {
-                tempY = dataPoint;
-              }
-              if (tempX > xMax) {
-                xMax = tempX;
-              }
-              if (tempX < xMin) {
-                xMin = tempX;
-              }
-              if (tempY > yMax) {
-                yMax = tempY;
-              }
-              if (tempY < yMin) {
-                yMin = tempY;
+              if (dataPoint != null) {
+                var tempX = null;
+                var tempY = null;
+                if (dataPoint.constructor.name === 'Object') {
+                  tempX = dataPoint.x;
+                  tempY = dataPoint.y;
+                } else if (dataPoint.constructor.name === 'Array') {
+                  tempX = dataPoint[0];
+                  tempY = dataPoint[1];
+                } else if (dataPoint.constructor.name === 'Number') {
+                  tempY = dataPoint;
+                }
+                if (tempX > xMax) {
+                  xMax = tempX;
+                }
+                if (tempX < xMin) {
+                  xMin = tempX;
+                }
+                if (tempY > yMax) {
+                  yMax = tempY;
+                }
+                if (tempY < yMin) {
+                  yMin = tempY;
+                }
               }
             }
           } catch (err) {
