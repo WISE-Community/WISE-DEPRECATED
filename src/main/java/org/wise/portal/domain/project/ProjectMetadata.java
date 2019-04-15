@@ -42,14 +42,8 @@ public interface ProjectMetadata{
    */
   String getTitle();
 
-  /**
-   * @param <code>String</code> the title to set
-   */
   void setUri(String uri);
 
-  /**
-   * @return <code>String</code> the title to get
-   */
   String getUri();
 
   /**
@@ -67,24 +61,12 @@ public interface ProjectMetadata{
    */
   void setAuthor(String author);
 
-  /**
-   * @return <code>String</code> the authors to get
-   */
   String getAuthors();
 
-  /**
-   * @param <code>String</code> the authors to set
-   */
   void setAuthors(String authors);
 
-  /**
-   * @return <code>String</code> the parentProject to get
-   */
   String getParentProject();
 
-  /**
-   * @param <code>String</code> the parentProject to set
-   */
   void setParentProject(String parentProject);
 
   /**

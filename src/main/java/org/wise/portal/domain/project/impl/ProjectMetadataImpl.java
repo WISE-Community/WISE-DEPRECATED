@@ -556,21 +556,12 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
   public String toJSONString() {
     JSONObject metadata = new JSONObject(this);
     try {
-      /*
-       * we will retrieve the authors JSON string and replace it with a JSON array
-       * so that the client does not need to parse the JSON string
-       */
       String authorsString = metadata.getString("authors");
-
-      // check if the field is null or "null"
       if (authorsString != null && authorsString != "null") {
-        // create the JSON object
         JSONArray authorsJSON = new JSONArray(authorsString);
 
-        // override the existing authors string with this JSON array
         metadata.put("authors", authorsJSON);
       } else {
-        // override the existing authors string with this empty JSON array
         metadata.put("authors", new JSONArray());
       }
 
@@ -628,39 +619,21 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
         metadata.put("tools", new JSONObject());
       }
 
-      /*
-       * we will retrieve the standardsAddressed JSON string and replace it with a JSON Object
-       * so that the client does not need to parse the JSON string
-       */
       String standardsAddressedString = metadata.getString("standardsAddressed");
 
-      // check if the field is null or "null"
       if (standardsAddressedString != null && standardsAddressedString != "null") {
-        // create the JSON object
         JSONObject standardsAddressedJSON = new JSONObject(standardsAddressedString);
-
-        // override the existing standardsAddressed string with this JSON object
         metadata.put("standardsAddressed", standardsAddressedJSON);
       } else {
-        // override the existing standardsAddressed string with this empty JSON object
         metadata.put("standardsAddressed", new JSONObject());
       }
 
-      /*
-       * we will retrieve the parentProject JSON string and replace it with a JSON Object
-       * so that the client does not need to parse the JSON string
-       */
       String parentProjectString = metadata.getString("parentProject");
 
-      // check if the field is null or "null"
       if (parentProjectString != null && parentProjectString != "null") {
-        // create the JSON object
         JSONObject parentProjectJSON = new JSONObject(parentProjectString);
-
-        // override the existing standardsAddressed string with this JSON object
         metadata.put("parentProject", parentProjectJSON);
       } else {
-        // override the existing standardsAddressed string with this empty JSON object
         metadata.put("parentProject", new JSONObject());
       }
 

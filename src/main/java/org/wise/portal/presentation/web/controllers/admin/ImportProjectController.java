@@ -156,7 +156,7 @@ public class ImportProjectController {
       int i = 0;
       while (entries.hasMoreElements()) {
         ZipEntry entry = (ZipEntry) entries.nextElement();
-        if (entry.getName().startsWith("__MACOSX") || entry.getName().contains("license")) {
+        if (entry.getName().startsWith("__MACOSX") || entry.getName().contains("license.txt")) {
           continue;
         }
 

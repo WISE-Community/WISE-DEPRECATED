@@ -1228,12 +1228,12 @@ class ProjectService {
       return null;
     }
 
-    let authors = this.project.metadata.authors ? this.project.metadata.authors : [];
+    const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
     const userInfo = this.ConfigService.getMyUserInfo();
     let exists = false;
-    for (const [i] of authors.entries()) {
-      if (authors[i].id === userInfo.id) {
-        authors[i] = userInfo;
+    for (let [index, author] of authors.entries()) {
+      if (author.id === userInfo.id) {
+        author = userInfo;
         exists = true;
         break;
       }

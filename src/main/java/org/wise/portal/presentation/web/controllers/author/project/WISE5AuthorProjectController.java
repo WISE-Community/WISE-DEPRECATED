@@ -338,7 +338,7 @@ public class WISE5AuthorProjectController {
           ProjectMetadata projectMetadata = new ProjectMetadataImpl(projectMetadataJSON);
           project.setMetadata(projectMetadataJSON.toString());
           if (!oldProjectMetadata.getTitle().equals(projectMetadata.getTitle()) ||
-            !oldProjectMetadata.getAuthors().equals(projectMetadata.getAuthors())) {
+              !oldProjectMetadata.getAuthors().equals(projectMetadata.getAuthors())) {
             String projectFolderPath = FileManager.getProjectFolderPath(project);
             projectService.writeProjectLicenseFile(projectFolderPath, project);
           }
@@ -348,7 +348,7 @@ public class WISE5AuthorProjectController {
           }
           projectService.updateProject(project, user);
         }
-      } catch(JSONException | NotAuthorizedException e) {
+      } catch (JSONException | NotAuthorizedException e) {
         e.printStackTrace();
       }
       // commented below until "W5 AT: new commit message convention #1016" is completed
