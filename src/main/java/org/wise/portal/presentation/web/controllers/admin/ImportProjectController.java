@@ -226,7 +226,7 @@ public class ImportProjectController {
     pParams.setProjectname(name);
     pParams.setProjectType(ProjectType.LD);
     pParams.setWiseVersion(projectVersion);
-    pParams.setParentProjectId((long) -1);
+    pParams.setIsImport(true);
 
     ProjectMetadata metadata = null;
     try {

@@ -179,37 +179,48 @@ public class ProjectServiceImpl implements ProjectService {
     ProjectMetadata metadata = projectParameters.getMetadata();
     String originalAuthorsString = metadata.getAuthors();
     Long parentProjectId = projectParameters.getParentProjectId();
-    JSONArray authors = new JSONArray();
-    Boolean isImport = false;
-    if (parentProjectId != null) {
-      if (parentProjectId == -1) {
-        isImport = true;
-        parentProjectId = null;
-      } else {
-        Project parentProject = getById(parentProjectId);
-        project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
-        ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
-        if (parentProjectMetadata != null) {
-          try {
-            JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
-            metadata.setParentProject(parentProjectJSON.toString());
-          } catch (JSONException e) {
-            e.printStackTrace();
-          }
-        }
-        project.setParentProjectId(parentProjectId);
+    Boolean isImport = projectParameters.getIsImport();
+    try {
+      project = setupNewProject(project, metadata, parentProjectId, owner);
+      if (isImport != null && isImport) {
+        project = setupImportedProject(project, originalAuthorsString);
       }
+      replaceMetadataInProjectJSONFile(FileManager.getProjectFilePath(project), project.getMetadata());
+      writeProjectLicenseFile(FileManager.getProjectFolderPath(project), project);
+    } catch (JSONException | IOException e) {
+      e.printStackTrace();
+    }
+    Long newProjectId = (Long) project.getId();
+    if (parentProjectId != null) {
+      User signedInUser = ControllerUtil.getSignedInUser();
+      premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
+    }
+    return project;
+  }
+
+  private Project setupNewProject(Project project, ProjectMetadata metadata, Long parentProjectId, User owner)
+      throws ObjectNotFoundException, JSONException {
+    JSONArray authors = new JSONArray();
+    if (parentProjectId != null) {
+      Project parentProject = getById(parentProjectId);
+      project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
+      ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
+      if (parentProjectMetadata != null) {
+        try {
+          JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
+          metadata.setParentProject(parentProjectJSON.toString());
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+      }
+      project.setParentProjectId(parentProjectId);
     } else {
       JSONObject authorJSON = new JSONObject();
-      try {
-        authorJSON.put("firstName", owner.getUserDetails().getFirstname());
-        authorJSON.put("lastName", owner.getUserDetails().getLastname());
-        authorJSON.put("id", owner.getUserDetails().getId());
-        authorJSON.put("username", owner.getUserDetails().getUsername());
-        authors.put(authorJSON);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+      authorJSON.put("firstName", owner.getUserDetails().getFirstname());
+      authorJSON.put("lastName", owner.getUserDetails().getLastname());
+      authorJSON.put("id", owner.getUserDetails().getId());
+      authorJSON.put("username", owner.getUserDetails().getUsername());
+      authors.put(authorJSON);
     }
     metadata.setAuthors(authors.toString());
     project.setMetadata(metadata);
@@ -219,39 +230,24 @@ public class ProjectServiceImpl implements ProjectService {
     project.setDateCreated(new Date());
     projectDao.save(project);
     aclService.addPermission(project, BasePermission.ADMINISTRATION);
-    Long newProjectId = (Long) project.getId();
-    if (isImport) {
-      try {
-        JSONObject parentProjectJSON = getParentInfo(metadata, null, metadata.getUri());
-        JSONArray parentAuthors = new JSONArray(originalAuthorsString);
-        for (int i = 0; i < parentAuthors.length(); i++) {
-          JSONObject parentAuthor = parentAuthors.getJSONObject(i);
-          parentAuthor.remove("id");
-          parentAuthors.put(i, parentAuthor);
-        }
-        parentProjectJSON.put("authors", parentAuthors);
-        metadata.setParentProject(parentProjectJSON.toString());
-        metadata.setUri(getProjectURI(project));
-        project.setMetadata(metadata);
-        projectDao.save(project);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    return project;
+  }
+
+  private Project setupImportedProject(Project project, String originalAuthorsString) throws JSONException {
+    ProjectMetadata metadata = project.getMetadata();
+    JSONObject parentProjectJSON = getParentInfo(metadata, null, metadata.getUri());
+    JSONArray parentAuthors = new JSONArray(originalAuthorsString);
+    for (int i = 0; i < parentAuthors.length(); i++) {
+      JSONObject parentAuthor = parentAuthors.getJSONObject(i);
+      parentAuthor.remove("id");
+      parentAuthors.put(i, parentAuthor);
     }
-    try {
-      replaceMetadataInProjectJSONFile(FileManager.getProjectFilePath(project), metadata);
-    } catch (IOException | JSONException e) {
-      e.printStackTrace();
-    }
-    try {
-      writeProjectLicenseFile(FileManager.getProjectFolderPath(project), project);
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    if (parentProjectId != null) {
-      User signedInUser = ControllerUtil.getSignedInUser();
-      premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
-    }
+    parentProjectJSON.put("authors", parentAuthors);
+    metadata.setParentProject(parentProjectJSON.toString());
+    metadata.setUri(getProjectURI(project));
+    metadata.setAuthors(new JSONArray().toString());
+    project.setMetadata(metadata);
+    projectDao.save(project);
     return project;
   }
 
