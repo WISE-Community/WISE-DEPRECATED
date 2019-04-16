@@ -2186,7 +2186,7 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'isActiveSeriesIndex',
     value: function isActiveSeriesIndex(seriesIndex) {
-      if (this.series != null && this.series.indexOf(this.activeSeries) === seriesIndex) {
+      if (this.series.indexOf(this.activeSeries) === seriesIndex) {
         return true;
       }
       return false;
@@ -2333,7 +2333,7 @@ var GraphController = function (_ComponentController) {
     value: function makeHighestTrialActive() {
       this.activeTrial = null;
       this.activeSeries = null;
-      this.series = null;
+      this.series = [];
       var highestTrial = this.getHighestTrial();
       if (highestTrial != null) {
         var seriesIndex = this.getSeriesIndex(this.activeSeries);
@@ -2408,10 +2408,10 @@ var GraphController = function (_ComponentController) {
             trial.show = true;
           } else {
             trial.show = false;
-            if (this.activeTrial.id === id) {
+            if (this.activeTrial != null && this.activeTrial.id === id) {
               this.activeTrial = null;
               this.activeSeries = null;
-              this.series = null;
+              this.series = [];
             }
           }
         }
