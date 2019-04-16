@@ -1,0 +1,22 @@
+<h2 mat-dialog-title fxLayoutAlign="start center" class="warn">
+  <span i18n>Edit Classroom Unit</span>
+  <span fxFlex></span>
+  <mat-icon color="warn">warning</mat-icon>
+</h2>
+<mat-dialog-content>
+  <div class="info-block">
+    <p class="mat-subheading-2 accent-1">
+      {{ run.project.metadata.title }} <span *ngIf="run" class="mat-caption" i18n>(Run ID: {{ run.id }})</span>
+    </p>
+    <p i18n>Warning! You will be editing the content of a classroom unit. If students have already started working, this may result lost data or other problems.</p>
+    <p i18n>Are you sure you wish to proceed?</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions
+     fxLayout="row"
+     fxLayout.xs="column"
+     fxLayoutAlign="end"
+     fxLayoutGap="8px">
+  <button mat-flat-button color="primary" mat-dialog-close i18n>Cancel</button>
+  <a mat-button href="{{ editLink }}" color="warn" i18n>Proceed</a>
+</mat-dialog-actions>

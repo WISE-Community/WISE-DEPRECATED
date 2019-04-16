@@ -6,6 +6,7 @@ import { ShareProjectDialogComponent } from "../share-project-dialog/share-proje
 import { UserService } from "../../../services/user.service";
 import { CopyProjectDialogComponent } from "../copy-project-dialog/copy-project-dialog.component";
 import { ConfigService } from "../../../services/config.service";
+import { EditRunWarningDialogComponent } from '../../../teacher/edit-run-warning-dialog/edit-run-warning-dialog.component';
 
 @Component({
   selector: 'app-library-project-menu',
@@ -29,7 +30,7 @@ export class LibraryProjectMenuComponent implements OnInit {
   constructor(public dialog: MatDialog,
               public teacherService: TeacherService,
               public userService: UserService,
-              private configService: ConfigService) {
+              public configService: ConfigService) {
   }
 
   ngOnInit() {
@@ -61,6 +62,20 @@ export class LibraryProjectMenuComponent implements OnInit {
     this.dialog.open(CopyProjectDialogComponent, {
       data: { project: this.project },
       panelClass: 'mat-dialog--sm'
+    });
+  }
+
+  editProject() {
+    this.teacherService.getProjectLastRun(this.project.id).subscribe(lastRun => {
+      if (lastRun !== null) {
+        lastRun.project = this.project;
+        this.dialog.open(EditRunWarningDialogComponent, {
+          data: { run: lastRun },
+          panelClass: 'mat-dialog--sm'
+        });
+      } else {
+        window.location.href = this.editLink;
+      }
     });
   }
 
