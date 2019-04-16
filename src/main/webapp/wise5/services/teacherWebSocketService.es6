@@ -36,6 +36,8 @@ class TeacherWebSocketService {
         const studentStatus = message.content;
         const status = JSON.parse(studentStatus.status);
         this.handleStudentStatusReceived(status);
+      } else if (message.type === 'notification') {
+        this.$rootScope.$broadcast('newNotification', message.content);
       }
     });
   }

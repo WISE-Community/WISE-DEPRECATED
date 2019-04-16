@@ -92,7 +92,7 @@ public class NotificationController {
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/notification/{runId}")
-  protected void postNotification(
+  protected void saveNotification(
       @PathVariable Integer runId,
       @RequestParam(value = "notificationId", required = false) Integer notificationId,
       @RequestParam(value = "periodId", required = true) Integer periodId,

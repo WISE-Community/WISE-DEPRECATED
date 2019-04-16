@@ -138,15 +138,16 @@ class NotificationService {
         const toWorkgroupId = this.ConfigService.getWorkgroupId();
         let notificationMessageToStudent = notificationForScore.notificationMessageToStudent;
         // replace variables like {{score}} and {{dismissCode}} with actual values
-        notificationMessageToStudent = notificationMessageToStudent.replace("{{username}}", this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
-        notificationMessageToStudent = notificationMessageToStudent.replace("{{score}}", notificationForScore.score);
-        notificationMessageToStudent = notificationMessageToStudent.replace("{{dismissCode}}", notificationForScore.dismissCode);
+        notificationMessageToStudent = notificationMessageToStudent.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
+        notificationMessageToStudent = notificationMessageToStudent.replace('{{score}}', notificationForScore.score);
+        notificationMessageToStudent = notificationMessageToStudent.replace('{{dismissCode}}', notificationForScore.dismissCode);
 
         const notificationToStudent = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId,
           fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
-        this.saveNotificationToServer(notificationToStudent).then((savedNotification) => {
-          this.$rootScope.$broadcast('newNotification', savedNotification);
-        });
+        this.saveNotificationToServer(notificationToStudent);
+        // this.saveNotificationToServer(notificationToStudent).then((savedNotification) => {
+        //   this.$rootScope.$broadcast('newNotification', savedNotification);
+        // });
       }
 
       if (notificationForScore.isNotifyTeacher) {
@@ -154,17 +155,18 @@ class NotificationService {
         const toWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
         let notificationMessageToTeacher = notificationForScore.notificationMessageToTeacher;
         // replace variables like {{score}} and {{dismissCode}} with actual values
-        notificationMessageToTeacher = notificationMessageToTeacher.replace("{{username}}", this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
-        notificationMessageToTeacher = notificationMessageToTeacher.replace("{{score}}", notificationForScore.score);
-        notificationMessageToTeacher = notificationMessageToTeacher.replace("{{dismissCode}}", notificationForScore.dismissCode);
+        notificationMessageToTeacher = notificationMessageToTeacher.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
+        notificationMessageToTeacher = notificationMessageToTeacher.replace('{{score}}', notificationForScore.score);
+        notificationMessageToTeacher = notificationMessageToTeacher.replace('{{dismissCode}}', notificationForScore.dismissCode);
 
         const notificationToTeacher = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId,
-          fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
-        this.saveNotificationToServer(notificationToTeacher).then((savedNotification) => {
-          // send notification in real-time so teacher sees this right away
-          const messageType = 'CRaterResultNotification';
-          this.StudentWebSocketService.sendStudentToTeacherMessage(messageType, savedNotification);
-        });
+            fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
+        this.saveNotificationToServer(notificationToTeacher);
+        // this.saveNotificationToServer(notificationToTeacher).then((savedNotification) => {
+        //   // send notification in real-time so teacher sees this right away
+        //   const messageType = 'CRaterResultNotification';
+        //   this.StudentWebSocketService.sendStudentToTeacherMessage(messageType, savedNotification);
+        // });
       }
     }
   }

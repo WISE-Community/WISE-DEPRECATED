@@ -50,6 +50,8 @@ var TeacherWebSocketService = function () {
           var studentStatus = message.content;
           var status = JSON.parse(studentStatus.status);
           _this2.handleStudentStatusReceived(status);
+        } else if (message.type === 'notification') {
+          _this2.$rootScope.$broadcast('newNotification', message.content);
         }
       });
     }

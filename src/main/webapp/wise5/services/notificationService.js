@@ -148,8 +148,6 @@ var NotificationService = function () {
   }, {
     key: 'sendNotificationForScore',
     value: function sendNotificationForScore(notificationForScore) {
-      var _this3 = this;
-
       var notificationType = notificationForScore.notificationType;
       if (notificationForScore.isNotifyTeacher || notificationForScore.isNotifyStudent) {
         // notify both teacher and student at the same time
@@ -167,14 +165,15 @@ var NotificationService = function () {
           var toWorkgroupId = this.ConfigService.getWorkgroupId();
           var notificationMessageToStudent = notificationForScore.notificationMessageToStudent;
           // replace variables like {{score}} and {{dismissCode}} with actual values
-          notificationMessageToStudent = notificationMessageToStudent.replace("{{username}}", this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
-          notificationMessageToStudent = notificationMessageToStudent.replace("{{score}}", notificationForScore.score);
-          notificationMessageToStudent = notificationMessageToStudent.replace("{{dismissCode}}", notificationForScore.dismissCode);
+          notificationMessageToStudent = notificationMessageToStudent.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
+          notificationMessageToStudent = notificationMessageToStudent.replace('{{score}}', notificationForScore.score);
+          notificationMessageToStudent = notificationMessageToStudent.replace('{{dismissCode}}', notificationForScore.dismissCode);
 
           var notificationToStudent = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId, fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
-          this.saveNotificationToServer(notificationToStudent).then(function (savedNotification) {
-            _this3.$rootScope.$broadcast('newNotification', savedNotification);
-          });
+          this.saveNotificationToServer(notificationToStudent);
+          // this.saveNotificationToServer(notificationToStudent).then((savedNotification) => {
+          //   this.$rootScope.$broadcast('newNotification', savedNotification);
+          // });
         }
 
         if (notificationForScore.isNotifyTeacher) {
@@ -182,16 +181,17 @@ var NotificationService = function () {
           var _toWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
           var notificationMessageToTeacher = notificationForScore.notificationMessageToTeacher;
           // replace variables like {{score}} and {{dismissCode}} with actual values
-          notificationMessageToTeacher = notificationMessageToTeacher.replace("{{username}}", this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
-          notificationMessageToTeacher = notificationMessageToTeacher.replace("{{score}}", notificationForScore.score);
-          notificationMessageToTeacher = notificationMessageToTeacher.replace("{{dismissCode}}", notificationForScore.dismissCode);
+          notificationMessageToTeacher = notificationMessageToTeacher.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
+          notificationMessageToTeacher = notificationMessageToTeacher.replace('{{score}}', notificationForScore.score);
+          notificationMessageToTeacher = notificationMessageToTeacher.replace('{{dismissCode}}', notificationForScore.dismissCode);
 
           var notificationToTeacher = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId, fromWorkgroupId, _toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
-          this.saveNotificationToServer(notificationToTeacher).then(function (savedNotification) {
-            // send notification in real-time so teacher sees this right away
-            var messageType = 'CRaterResultNotification';
-            _this3.StudentWebSocketService.sendStudentToTeacherMessage(messageType, savedNotification);
-          });
+          this.saveNotificationToServer(notificationToTeacher);
+          // this.saveNotificationToServer(notificationToTeacher).then((savedNotification) => {
+          //   // send notification in real-time so teacher sees this right away
+          //   const messageType = 'CRaterResultNotification';
+          //   this.StudentWebSocketService.sendStudentToTeacherMessage(messageType, savedNotification);
+          // });
         }
       }
     }
@@ -248,7 +248,7 @@ var NotificationService = function () {
   }, {
     key: 'dismissNotificationToServer',
     value: function dismissNotificationToServer(notification) {
-      var _this4 = this;
+      var _this3 = this;
 
       notification.timeDismissed = Date.parse(new Date());
 
@@ -287,7 +287,7 @@ var NotificationService = function () {
           if (notification.data != null) {
             notification.data = angular.fromJson(notification.data);
           }
-          _this4.$rootScope.$broadcast('notificationChanged', notification);
+          _this3.$rootScope.$broadcast('notificationChanged', notification);
           return notification;
         });
       }
