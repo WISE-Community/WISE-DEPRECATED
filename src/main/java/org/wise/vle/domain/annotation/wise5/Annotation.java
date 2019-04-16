@@ -114,9 +114,25 @@ public class Annotation extends PersistableDomain {
   @Transient
   private long fromWorkgroupId;
 
+  @Transient
+  private long studentWorkId;
+
   @Override
   protected Class<?> getObjectClass() {
     return Annotation.class;
+  }
+
+  public void convertToClientAnnotation() {
+    this.setRunId(this.getRun().getId());
+    this.setPeriodId(this.getPeriod().getId());
+    this.setToWorkgroupId(this.getToWorkgroup().getId());
+    this.setFromWorkgroupId(this.getFromWorkgroup().getId());
+    this.setStudentWorkId(this.getStudentWork().getId());
+    this.setRun(null);
+    this.setPeriod(null);
+    this.setToWorkgroup(null);
+    this.setFromWorkgroup(null);
+    this.setStudentWork(null);
   }
 
   public JSONObject toJSON() {

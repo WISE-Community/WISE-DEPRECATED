@@ -41,33 +41,17 @@ public class NotificationController {
   @Autowired
   private RunService runService;
 
-//  @Autowired
-//  private WebSocketHandler webSocketHandler;
-
   @Autowired
   private WorkgroupService workgroupService;
 
   @Autowired
   private SimpMessagingTemplate simpMessagingTemplate;
 
-  public void broadcastNotification(Notification notification) throws Exception {
-    Notification clientNotification = convertToClientNotification(notification);
-    WebSocketMessage message = new WebSocketMessage("notification", clientNotification);
-    simpMessagingTemplate.convertAndSend(
-        String.format("/topic/workgroup/%s", clientNotification.getToWorkgroupId()),
-        message);
-  }
-
-  private Notification convertToClientNotification(Notification notification) {
-    notification.setRunId(notification.getRun().getId());
-    notification.setPeriodId(notification.getPeriod().getId());
-    notification.setToWorkgroupId(notification.getToWorkgroup().getId());
-    notification.setFromWorkgroupId(notification.getFromWorkgroup().getId());
-    notification.setRun(null);
-    notification.setPeriod(null);
-    notification.setToWorkgroup(null);
-    notification.setFromWorkgroup(null);
-    return notification;
+  public void broadcastNotification(Notification notification) {
+    notification.convertToClientNotification();
+    WebSocketMessage message = new WebSocketMessage("notification", notification);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/workgroup/%s",
+        notification.getToWorkgroupId()), message);
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/notification/{runId}")

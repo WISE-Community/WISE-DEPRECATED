@@ -27,18 +27,4 @@ public class TeacherRunAPIController {
     return new WebSocketMessage("unpause", HtmlUtils.htmlEscape(message.getName()) + "! runId: " + runId + " periodId: " + periodId);
   }
 
-
-  /*
-  @MessageMapping("/messages/{runId}/{periodId}")
-  @SendTo("/topic/student/{runId}/{periodId}")
-  public void studentLoggedIn(StudentLoggedIn studentLoggedIn) {
-
-  }
-
-  @MessageMapping("/run/{runId}")
-  public void studentWork(StudentWork studentWork) {
-
-  }
-  */
-
 }

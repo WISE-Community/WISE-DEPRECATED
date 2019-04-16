@@ -6,9 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WebSocketMessage {
-
   private String type;
-
   private Object content;
 
   public WebSocketMessage() {
@@ -18,5 +16,4 @@ public class WebSocketMessage {
     this.type = type;
     this.content = content;
   }
-
 }

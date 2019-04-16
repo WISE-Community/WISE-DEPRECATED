@@ -105,6 +105,15 @@ public class StudentWork extends PersistableDomain {
     return StudentWork.class;
   }
 
+  public void convertToComponentState() {
+    this.setRunId(this.getRun().getId());
+    this.setPeriodId(this.getPeriod().getId());
+    this.setWorkgroupId(this.getWorkgroup().getId());
+    this.setRun(null);
+    this.setPeriod(null);
+    this.setWorkgroup(null);
+  }
+
   public JSONObject toJSON() {
     JSONObject studentWorkJSONObject = new JSONObject();
     try {

@@ -27,32 +27,31 @@ var TeacherWebSocketService = function () {
       var _this = this;
 
       this.runId = this.ConfigService.getRunId();
-      var periodId = this.ConfigService.getPeriodId();
-      var workgroupId = this.ConfigService.getWorkgroupId();
       var webSocketURL = this.ConfigService.getWebSocketURL();
       try {
         this.$stomp.connect(webSocketURL).then(function (frame) {
-          console.log('connected!');
-          var subscription = _this.$stomp.subscribe('/topic/greetings', function (payload, headers, res) {
-            _this.payload = payload;
-            console.log(payload);
-          }, {});
-          var teacherSubscription = _this.$stomp.subscribe('/topic/teacher/' + _this.runId, function (message, headers, res) {
-            if (message.type === 'studentWork') {
-              var studentWork = message.content;
-              studentWork.studentData = JSON.parse(studentWork.studentData);
-              _this.$rootScope.$broadcast('newStudentWorkReceived', { studentWork: studentWork });
-            } else if (message.type === 'studentStatus') {
-              var studentStatus = message.content;
-              var status = JSON.parse(studentStatus.status);
-              _this.handleStudentStatusReceived(status);
-            }
-          }, {});
-          _this.$stomp.send('/app/hello', JSON.stringify({ 'name': 'teacher' }), {});
+          _this.subscribeToTeacherTopic();
         });
       } catch (e) {
         console.log(e);
       }
+    }
+  }, {
+    key: 'subscribeToTeacherTopic',
+    value: function subscribeToTeacherTopic() {
+      var _this2 = this;
+
+      this.$stomp.subscribe('/topic/teacher/' + this.runId, function (message, headers, res) {
+        if (message.type === 'studentWork') {
+          var studentWork = message.content;
+          studentWork.studentData = JSON.parse(studentWork.studentData);
+          _this2.$rootScope.$broadcast('newStudentWorkReceived', { studentWork: studentWork });
+        } else if (message.type === 'studentStatus') {
+          var studentStatus = message.content;
+          var status = JSON.parse(studentStatus.status);
+          _this2.handleStudentStatusReceived(status);
+        }
+      });
     }
 
     /*

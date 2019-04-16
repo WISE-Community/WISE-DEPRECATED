@@ -315,39 +315,7 @@ public class TeacherDataController {
                 savedAnnotationJSONObject.put("requestToken", requestToken);
                 savedAnnotationJSONObject.put("serverSaveTime", annotation.getServerSaveTime().getTime());
                 annotationsResultJSONArray.put(savedAnnotationJSONObject);
-
-                // create notification for each annotation so the students will be notified
-                // and send it in real-time over the websocket
-                try {
-                  Notification notification = this.createNotificationForAnnotation(annotation);
-                  //JSONObject notificationJSON = notification.toJSON();
-                  Long toWorkgroupId = notification.getToWorkgroup().getId();
-//                  JSONObject annotationNotificationJSON = new JSONObject();
-//                  annotationNotificationJSON.put("toWorkgroupId", toWorkgroupId);
-//                  annotationNotificationJSON.put("notificationData", notificationJSON);
-//                  annotationNotificationJSON.put("annotationData", annotation.toJSON());
-                  broadcastAnnotationToStudent(toWorkgroupId, annotation);
-                  broadcastNotificationToStudent(toWorkgroupId, notification);
-
-//                  if (webSocketHandler != null) {
-//                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//
-//                    if (wiseWebSocketHandler != null) {
-//                      JSONObject notificationJSON = notification.toJSON();
-//                      JSONObject webSocketMessageJSON = new JSONObject();
-//                      webSocketMessageJSON.put("messageType", "annotationNotification");
-//                      webSocketMessageJSON.put("messageParticipants", "teacherToStudent");
-//                      webSocketMessageJSON.put("toWorkgroupId", notification.getToWorkgroup().getId());
-//                      webSocketMessageJSON.put("notificationData", notificationJSON);
-//                      webSocketMessageJSON.put("annotationData", annotation.toJSON());
-//                      wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-//                    }
-//                  }
-                } catch (Exception e) {
-                  // if something fails during creating annotation and sending to websocket,
-                  // allow the rest to continue
-                  e.printStackTrace();
-                }
+                this.sendAnnotationNotificationToStudent(annotation);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -402,6 +370,17 @@ public class TeacherDataController {
       writer.write(result.toString());
       writer.close();
     } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void sendAnnotationNotificationToStudent(Annotation annotation) {
+    try {
+      Notification notification = this.createNotificationForAnnotation(annotation);
+      Long toWorkgroupId = notification.getToWorkgroup().getId();
+      broadcastAnnotationToStudent(toWorkgroupId, annotation);
+      broadcastNotificationToStudent(toWorkgroupId, notification);
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -470,47 +449,17 @@ public class TeacherDataController {
     return notification;
   }
 
-  public void broadcastAnnotationToStudent(Long toWorkgroupId, Annotation annotation)
-      throws Exception {
-    Annotation clientAnnotation = convertToClientAnnotation(annotation);
-    WebSocketMessage message = new WebSocketMessage("annotation", clientAnnotation);
-    simpMessagingTemplate.convertAndSend(
-        String.format("/topic/workgroup/%s", toWorkgroupId),
+  public void broadcastAnnotationToStudent(Long toWorkgroupId, Annotation annotation) {
+    annotation.convertToClientAnnotation();
+    WebSocketMessage message = new WebSocketMessage("annotation", annotation);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/workgroup/%s", toWorkgroupId),
         message);
   }
 
-  public void broadcastNotificationToStudent(Long toWorkgroupId, Notification notification)
-      throws Exception {
-    Notification clientNotification = convertToClientNotification(notification);
+  public void broadcastNotificationToStudent(Long toWorkgroupId, Notification notification) {
+    notification.convertToClientNotification();
     WebSocketMessage message = new WebSocketMessage("notification", notification);
-    simpMessagingTemplate.convertAndSend(
-        String.format("/topic/workgroup/%s", toWorkgroupId),
+    simpMessagingTemplate.convertAndSend(String.format("/topic/workgroup/%s", toWorkgroupId),
         message);
   }
-
-  private Notification convertToClientNotification(Notification notification) {
-    notification.setRunId(notification.getRun().getId());
-    notification.setPeriodId(notification.getPeriod().getId());
-    notification.setToWorkgroupId(notification.getToWorkgroup().getId());
-    notification.setFromWorkgroupId(notification.getFromWorkgroup().getId());
-    notification.setRun(null);
-    notification.setPeriod(null);
-    notification.setToWorkgroup(null);
-    notification.setFromWorkgroup(null);
-    return notification;
-  }
-
-  private Annotation convertToClientAnnotation(Annotation annotation) {
-    annotation.setRunId(annotation.getRun().getId());
-    annotation.setPeriodId(annotation.getPeriod().getId());
-    annotation.setToWorkgroupId(annotation.getToWorkgroup().getId());
-    annotation.setFromWorkgroupId(annotation.getFromWorkgroup().getId());
-    annotation.setRun(null);
-    annotation.setPeriod(null);
-    annotation.setToWorkgroup(null);
-    annotation.setFromWorkgroup(null);
-    annotation.setStudentWork(null);
-    return annotation;
-  }
-
 }

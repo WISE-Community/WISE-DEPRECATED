@@ -119,6 +119,17 @@ public class Notification extends PersistableDomain {
     return Notification.class;
   }
 
+  public void convertToClientNotification() {
+    this.setRunId(this.getRun().getId());
+    this.setPeriodId(this.getPeriod().getId());
+    this.setToWorkgroupId(this.getToWorkgroup().getId());
+    this.setFromWorkgroupId(this.getFromWorkgroup().getId());
+    this.setRun(null);
+    this.setPeriod(null);
+    this.setToWorkgroup(null);
+    this.setFromWorkgroup(null);
+  }
+
   public JSONObject toJSON() {
     JSONObject notificationJSONObject = new JSONObject();
     try {

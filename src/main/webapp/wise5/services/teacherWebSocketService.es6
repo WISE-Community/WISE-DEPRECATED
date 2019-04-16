@@ -16,32 +16,28 @@ class TeacherWebSocketService {
 
   initialize() {
     this.runId = this.ConfigService.getRunId();
-    const periodId = this.ConfigService.getPeriodId();
-    const workgroupId = this.ConfigService.getWorkgroupId();
     const webSocketURL = this.ConfigService.getWebSocketURL();
     try {
       this.$stomp.connect(webSocketURL).then((frame) => {
-        console.log('connected!');
-        const subscription = this.$stomp.subscribe('/topic/greetings', (payload, headers, res) => {
-          this.payload = payload;
-          console.log(payload);
-        }, {});
-        const teacherSubscription = this.$stomp.subscribe(`/topic/teacher/${this.runId}`, (message, headers, res) => {
-          if (message.type === 'studentWork') {
-            const studentWork = message.content;
-            studentWork.studentData = JSON.parse(studentWork.studentData);
-            this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: studentWork});
-          } else if (message.type === 'studentStatus') {
-            const studentStatus = message.content;
-            const status = JSON.parse(studentStatus.status);
-            this.handleStudentStatusReceived(status);
-          }
-        }, {});
-        this.$stomp.send('/app/hello', JSON.stringify({'name': 'teacher'}), {});
+        this.subscribeToTeacherTopic();
       });
     } catch(e) {
       console.log(e);
     }
+  }
+
+  subscribeToTeacherTopic() {
+    this.$stomp.subscribe(`/topic/teacher/${this.runId}`, (message, headers, res) => {
+      if (message.type === 'studentWork') {
+        const studentWork = message.content;
+        studentWork.studentData = JSON.parse(studentWork.studentData);
+        this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: studentWork});
+      } else if (message.type === 'studentStatus') {
+        const studentStatus = message.content;
+        const status = JSON.parse(studentStatus.status);
+        this.handleStudentStatusReceived(status);
+      }
+    });
   }
 
   /*

@@ -78,13 +78,6 @@ public class StudentDataController {
   @Autowired
   private SimpMessagingTemplate simpMessagingTemplate;
 
-  @MessageMapping("/hello/{runId}")
-  @SendTo("/topic/greetings/{runId}")
-  public WebSocketMessage greeting(HelloMessage message, @DestinationVariable Integer runId) throws Exception {
-    Thread.sleep(1000); // simulated delay
-    return new WebSocketMessage("hello", "Hello, " + HtmlUtils.htmlEscape(message.getName()) + "! runId: " + runId);
-  }
-
   @RequestMapping(method = RequestMethod.GET, value = "/student/data")
   public void getWISE5StudentData(
       HttpServletResponse response,
@@ -296,30 +289,16 @@ public class StudentDataController {
     }
   }
 
-  public void broadcastStudentWorkToClassroom(StudentWork componentState) throws Exception {
+  public void broadcastStudentWorkToClassroom(StudentWork componentState) {
     WebSocketMessage message = new WebSocketMessage("studentWork", componentState);
-    simpMessagingTemplate.convertAndSend(
-        String.format("/topic/classroom/%s/%s", componentState.getRunId(), componentState.getPeriodId()),
-        message);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/classroom/%s/%s",
+        componentState.getRunId(), componentState.getPeriodId()), message);
   }
 
-  public void broadcastStudentWorkToTeacher(StudentWork componentState) throws Exception {
+  public void broadcastStudentWorkToTeacher(StudentWork componentState) {
     WebSocketMessage message = new WebSocketMessage("studentWork", componentState);
-    simpMessagingTemplate.convertAndSend(
-        String.format("/topic/teacher/%s", componentState.getRunId()),
-        message);
-  }
-
-  // we need to (un)set these fields because client's student work (componentstate) and
-  // server's student work do not match right now
-  protected StudentWork convertToComponentState(StudentWork studentWork) {
-    studentWork.setRunId(studentWork.getRun().getId());
-    studentWork.setPeriodId(studentWork.getPeriod().getId());
-    studentWork.setWorkgroupId(studentWork.getWorkgroup().getId());
-    studentWork.setRun(null);
-    studentWork.setPeriod(null);
-    studentWork.setWorkgroup(null);
-    return studentWork;
+    simpMessagingTemplate.convertAndSend(String.format("/topic/teacher/%s",
+        componentState.getRunId()), message);
   }
 
   /**
@@ -378,29 +357,10 @@ public class StudentDataController {
               savedStudentWorkJSONObject.put("serverSaveTime", studentWork.getServerSaveTime().getTime());
               studentWorkResultJSONArray.put(savedStudentWorkJSONObject);
 
-              StudentWork componentState = convertToComponentState(studentWork);
-              broadcastStudentWorkToTeacher(componentState);
+              studentWork.convertToComponentState();
+              broadcastStudentWorkToTeacher(studentWork);
               if (studentWork.getComponentType().equals("Discussion")) {
-                broadcastStudentWorkToClassroom(componentState);
-              }
-
-              // send this studentWork immediately to the teacher so the Classroom Monitor can be updated
-              try {
-//                if (webSocketHandler != null && studentWork != null) {
-//                  WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//
-//                  if (wiseWebSocketHandler != null) {
-//                    JSONObject webSocketMessageJSON = new JSONObject();
-//                    webSocketMessageJSON.put("messageType", "newStudentWork");
-//                    webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-//                    webSocketMessageJSON.put("studentWork", studentWork.toJSON());
-//                    wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-//                  }
-//                }
-              } catch (Exception e) {
-                // if something fails during creating annotation and sending to websocket,
-                // allow the rest to continue
-                e.printStackTrace();
+                broadcastStudentWorkToClassroom(studentWork);
               }
             } catch (Exception e) {
               e.printStackTrace();

@@ -979,7 +979,7 @@ class TeacherDataService {
    */
   pauseScreensChanged(periodId, isPaused) {
     this.updatePausedRunStatusValue(periodId, isPaused);
-    this.sendRunStatus().then((response) => {
+    this.sendRunStatus().then(() => {
       if (isPaused) {
         this.TeacherWebSocketService.pauseScreens(periodId);
       } else {
@@ -994,6 +994,19 @@ class TeacherDataService {
     }
     this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     this.$rootScope.$broadcast('pauseScreensChanged', {periods: this.runStatus.periods});
+  }
+
+  sendRunStatus() {
+    const httpParams = {
+      method: 'POST',
+      url: this.ConfigService.getConfigParam('runStatusURL'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        runId: this.ConfigService.getConfigParam('runId'),
+        status: angular.toJson(this.runStatus)
+      })
+    };
+    return this.$http(httpParams);
   }
 
   /**
@@ -1047,19 +1060,6 @@ class TeacherDataService {
       }
     }
   }
-
-  sendRunStatus() {
-    const httpParams = {
-      method: 'POST',
-      url: this.ConfigService.getConfigParam('runStatusURL'),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      data: $.param({
-        runId: this.ConfigService.getConfigParam('runId'),
-        status: angular.toJson(this.runStatus)
-      })
-    };
-    return this.$http(httpParams);
-  };
 }
 
 TeacherDataService.$inject = [

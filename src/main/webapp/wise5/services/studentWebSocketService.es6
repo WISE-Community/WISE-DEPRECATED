@@ -20,65 +20,9 @@ class StudentWebSocketService {
       this.workgroupId = this.ConfigService.getWorkgroupId();
       try {
         this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
-          console.log(`connected! runId: ${this.runId}`);
-          const greetingSubscription = this.$stomp.subscribe(`/topic/greetings/${this.runId}`, (payload, headers, res) => {
-            console.log(`Greeting: ${payload}`);
-          }, {});
-
-          const classroomSubscription = this.$stomp.subscribe(`/topic/classroom/${this.runId}/${this.periodId}`, (message, headers, res) => {
-            if (message.type === 'pause') {
-              this.$rootScope.$broadcast('pauseScreen', {data: message.content});
-            } else if (message.type === 'unpause') {
-              this.$rootScope.$broadcast('unPauseScreen', {data: message.content});
-            } else if (message.type === 'studentWork') {
-              const studentWork = message.content;
-              studentWork.studentData = JSON.parse(studentWork.studentData);
-              this.$rootScope.$broadcast('studentWorkReceived', studentWork);
-            }
-          });
-
-          const notificationSubscription = this.$stomp.subscribe(`/topic/workgroup/${this.workgroupId}`, (message, headers, res) => {
-            if (message.type === 'notification') {
-              this.$rootScope.$broadcast('newNotification', message.content);
-            } else if (message.type === 'annotation') {
-              const annotationData = message.content;
-              this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
-              this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
-            } else if (message.type === 'annotationNotification') {
-              const annotationNotification = message.content;
-              const annotationData = annotationNotification.annotationData;
-              this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
-              this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
-              this.$rootScope.$broadcast('newNotification', annotationNotification.notificationData);
-            }
-          }, {});
-
-          const teacherSubscription = this.$stomp.subscribe(`/topic/teacher/${this.runId}/${this.periodId}`, (payload, headers, res) => {
-
-          });
-
-          /*
-          const pauseSubscription = this.$stomp.subscribe(`/topic/pause/${this.runId}/${this.periodId}`, (payload, headers, res) => {
-            console.log(`Pause: ${payload}`);
-            this.$rootScope.$broadcast('pauseScreen', {data: payload});
-          }, {});
-
-          const unPauseSubscription = this.$stomp.subscribe(`/topic/unpause/${this.runId}/${this.periodId}`, (payload, headers, res) => {
-            console.log(`UnPause: ${payload}`);
-            this.$rootScope.$broadcast('unPauseScreen', {data: payload});
-          }, {});
-
-          const studentWorkSubscription = this.$stomp.subscribe(`/topic/student-work/${this.runId}/${this.periodId}`, (studentWork, headers, res) => {
-            studentWork.studentData = JSON.parse(studentWork.studentData);
-            this.$rootScope.$broadcast('studentWorkReceived', studentWork);
-          }, {});
-
-          const notificationSubscription = this.$stomp.subscribe(`/topic/notification/${this.runId}/${this.periodId}/${this.workgroupId}`, (notification, headers, res) => {
-            this.$rootScope.$broadcast('newNotification', notification);
-          }, {});
-          */
-
-          this.$stomp.send(`/app/hello/${this.runId}`, JSON.stringify({'name': `workgroup ${this.workgroupId}`}), {});
+          this.subscribeToClassroomTopic();
+          this.subscribeToWorkgroupTopic();
+          this.subscribeToTeacherTopic();
         });
       } catch(e) {
         console.log(e);
@@ -86,32 +30,36 @@ class StudentWebSocketService {
     }
   }
 
-  handleWebSocketMessageReceived(data) {
-    this.$rootScope.$broadcast('webSocketMessageReceived', {data: data});
+  subscribeToClassroomTopic() {
+    this.$stomp.subscribe(`/topic/classroom/${this.runId}/${this.periodId}`, (message, headers, res) => {
+      if (message.type === 'pause') {
+        this.$rootScope.$broadcast('pauseScreen', {data: message.content});
+      } else if (message.type === 'unpause') {
+        this.$rootScope.$broadcast('unPauseScreen', {data: message.content});
+      } else if (message.type === 'studentWork') {
+        const studentWork = message.content;
+        studentWork.studentData = JSON.parse(studentWork.studentData);
+        this.$rootScope.$broadcast('studentWorkReceived', studentWork);
+      }
+    });
   }
 
-  handleMessage(message) {
-    const data = JSON.parse(message.data);
-    const messageType = data.messageType;
-    if (messageType === 'pauseScreen') {
-      this.$rootScope.$broadcast('pauseScreen', {data: data});
-    } else if (messageType === 'unPauseScreen') {
-      this.$rootScope.$broadcast('unPauseScreen', {data: data});
-    } else if (messageType === 'notification') {
-      this.$rootScope.$broadcast('newNotification', data.data);
-    } else if (messageType === 'annotationNotification') {
-      // a new annotation + notification combo object was sent over websocket
+  subscribeToWorkgroupTopic() {
+    this.$stomp.subscribe(`/topic/workgroup/${this.workgroupId}`, (message, headers, res) => {
+      if (message.type === 'notification') {
+        this.$rootScope.$broadcast('newNotification', message.content);
+      } else if (message.type === 'annotation') {
+        const annotationData = message.content;
+        annotationData.data = JSON.parse(annotationData.data);
+        this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
+        this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
+      }
+    });
+  }
 
-      // save the new annotation locally
-      let annotationData = data.annotationData;
-      this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
-      this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
-
-      // fire the new notification
-      let notificationData = data.notificationData;
-      this.$rootScope.$broadcast('newNotification', notificationData);
-    }
-    this.handleWebSocketMessageReceived(data);
+  subscribeToTeacherTopic() {
+    this.$stomp.subscribe(`/topic/teacher/${this.runId}/${this.periodId}`, (payload, headers, res) => {
+    });
   }
 
   sendStudentToTeacherMessage(messageType, data) {

@@ -1234,7 +1234,7 @@ var TeacherDataService = function () {
       var _this4 = this;
 
       this.updatePausedRunStatusValue(periodId, isPaused);
-      this.sendRunStatus().then(function (response) {
+      this.sendRunStatus().then(function () {
         if (isPaused) {
           _this4.TeacherWebSocketService.pauseScreens(periodId);
         } else {
@@ -1253,6 +1253,20 @@ var TeacherDataService = function () {
       }
       this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
       this.$rootScope.$broadcast('pauseScreensChanged', { periods: this.runStatus.periods });
+    }
+  }, {
+    key: 'sendRunStatus',
+    value: function sendRunStatus() {
+      var httpParams = {
+        method: 'POST',
+        url: this.ConfigService.getConfigParam('runStatusURL'),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          runId: this.ConfigService.getConfigParam('runId'),
+          status: angular.toJson(this.runStatus)
+        })
+      };
+      return this.$http(httpParams);
     }
 
     /**
@@ -1334,20 +1348,6 @@ var TeacherDataService = function () {
           }
         }
       }
-    }
-  }, {
-    key: 'sendRunStatus',
-    value: function sendRunStatus() {
-      var httpParams = {
-        method: 'POST',
-        url: this.ConfigService.getConfigParam('runStatusURL'),
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        data: $.param({
-          runId: this.ConfigService.getConfigParam('runId'),
-          status: angular.toJson(this.runStatus)
-        })
-      };
-      return this.$http(httpParams);
     }
   }]);
 

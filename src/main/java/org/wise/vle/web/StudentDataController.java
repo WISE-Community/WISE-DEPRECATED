@@ -80,9 +80,6 @@ public class StudentDataController {
   @Autowired
   private Properties wiseProperties;
 
-//  @Autowired
-//  private WebSocketHandler webSocketHandler;
-
   private static boolean DEBUG = false;
 
   // max size for all student work size, in bytes. Default:  500K = 512000 bytes
