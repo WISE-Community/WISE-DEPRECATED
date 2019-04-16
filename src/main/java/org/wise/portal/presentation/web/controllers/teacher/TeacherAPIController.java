@@ -151,12 +151,14 @@ public class TeacherAPIController {
   }
 
   @RequestMapping(value = "/projectlastrun/{projectId}", method = RequestMethod.GET)
-  protected Date getProjectLastRun(@PathVariable Long projectId) {
+  protected String getProjectLastRun(@PathVariable Long projectId)
+      throws JSONException {
     List<Run> runsOfProject = runService.getProjectRuns(projectId);
     for (Run run: runsOfProject) {
       Date lastRun = run.getLastRun();
       if (lastRun != null) {
-        return lastRun;
+        JSONObject runJSON = getRunJSON(run);
+        return runJSON.toString();
       }
     }
     return null;

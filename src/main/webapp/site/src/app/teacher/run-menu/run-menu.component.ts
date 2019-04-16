@@ -72,9 +72,9 @@ export class RunMenuComponent implements OnInit {
   editContent() {
     if (this.run.lastRun) {
       this.dialog.open(EditRunWarningDialogComponent, {
-        ariaLabel: this.i18n('Edit Run Warning'),
-        data: { project: this.run.project },
-        panelClass: 'mat-dialog--md'
+        ariaLabel: this.i18n('Edit Classroom Unit Warning'),
+        data: { run: this.run },
+        panelClass: 'mat-dialog--sm'
       });
     } else {
       window.location.href = this.editLink;

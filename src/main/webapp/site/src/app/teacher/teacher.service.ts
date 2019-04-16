@@ -51,8 +51,8 @@ export class TeacherService {
     return this.http.get<Run>(`${this.runUrl}/${runId}`);
   }
 
-  getProjectLastRun(projectId: number): Observable<Date> {
-    return this.http.get<Date>(`${ this.lastRunUrl }/${ projectId }`);
+  getProjectLastRun(projectId: number): Observable<Run> {
+    return this.http.get<Run>(`${ this.lastRunUrl }/${ projectId }`);
   }
 
   registerTeacherAccount(teacherUser: Teacher, callback: any) {

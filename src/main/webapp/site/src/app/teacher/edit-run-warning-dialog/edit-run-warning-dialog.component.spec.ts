@@ -4,7 +4,7 @@ import { EditRunWarningDialogComponent } from './edit-run-warning-dialog.compone
 import { ConfigService } from '../../services/config.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Project } from '../../domain/project';
+import { Run } from "../../domain/run";
 
 export class MockConfigService {
   getContextPath(): string {
@@ -16,8 +16,8 @@ describe('EditRunWarningDialogComponent', () => {
   let component: EditRunWarningDialogComponent;
   let fixture: ComponentFixture<EditRunWarningDialogComponent>;
 
-  const project = new Project({ id: 1, name: "Test"});
-  project.metadata = {
+  const run = new Run({ id: 1, project: {id: 1, name: "Test"}});
+  run.project.metadata = {
     title: "Test Project"
   };
 
@@ -27,7 +27,7 @@ describe('EditRunWarningDialogComponent', () => {
       providers: [
         { provide: MatDialog },
         { provide: MatDialogRef },
-        { provide: MAT_DIALOG_DATA, useValue: { data: { project }}},
+        { provide: MAT_DIALOG_DATA, useValue: { data: { run }}},
         { provide: ConfigService, useClass: MockConfigService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
@@ -38,7 +38,7 @@ describe('EditRunWarningDialogComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EditRunWarningDialogComponent);
     component = fixture.componentInstance;
-    component.project = project;
+    component.run = run;
     fixture.detectChanges();
   });
 
