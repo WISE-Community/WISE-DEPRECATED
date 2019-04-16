@@ -114,6 +114,23 @@ public class StudentWork extends PersistableDomain {
     this.setWorkgroup(null);
   }
 
+  public StudentWork createCopyWithoutReferences() {
+    StudentWork studentWork = new StudentWork();
+    studentWork.setId(this.id);
+    studentWork.setRunId(this.getRun().getId());
+    studentWork.setPeriodId(this.getPeriod().getId());
+    studentWork.setWorkgroupId(this.getWorkgroup().getId());
+    studentWork.setIsAutoSave(this.isAutoSave);
+    studentWork.setIsSubmit(this.isSubmit);
+    studentWork.setNodeId(this.nodeId);
+    studentWork.setComponentId(this.componentId);
+    studentWork.setComponentType(this.componentType);
+    studentWork.setClientSaveTime(this.clientSaveTime);
+    studentWork.setServerSaveTime(this.serverSaveTime);
+    studentWork.setStudentData(this.studentData);
+    return studentWork;
+  }
+
   public JSONObject toJSON() {
     JSONObject studentWorkJSONObject = new JSONObject();
     try {

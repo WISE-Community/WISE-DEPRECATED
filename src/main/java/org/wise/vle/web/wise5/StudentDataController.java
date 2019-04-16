@@ -27,17 +27,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.util.HtmlUtils;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -47,7 +42,6 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.WebSocketMessage;
-import org.wise.vle.domain.HelloMessage;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.StudentWork;
@@ -357,10 +351,11 @@ public class StudentDataController {
               savedStudentWorkJSONObject.put("serverSaveTime", studentWork.getServerSaveTime().getTime());
               studentWorkResultJSONArray.put(savedStudentWorkJSONObject);
 
-              studentWork.convertToComponentState();
-              broadcastStudentWorkToTeacher(studentWork);
-              if (studentWork.getComponentType().equals("Discussion")) {
-                broadcastStudentWorkToClassroom(studentWork);
+              //studentWork.convertToComponentState();
+              StudentWork componentState = studentWork.createCopyWithoutReferences();
+              broadcastStudentWorkToTeacher(componentState);
+              if (componentState.getComponentType().equals("Discussion")) {
+                broadcastStudentWorkToClassroom(componentState);
               }
             } catch (Exception e) {
               e.printStackTrace();
