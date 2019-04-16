@@ -37,38 +37,50 @@ var TeacherWebSocketService = function () {
             _this.payload = payload;
             console.log(payload);
           }, {});
+          var teacherSubscription = _this.$stomp.subscribe('/topic/teacher/' + _this.runId, function (message, headers, res) {
+            if (message.type === 'studentWork') {
+              var studentWork = message.content;
+              studentWork.studentData = JSON.parse(studentWork.studentData);
+              _this.$rootScope.$broadcast('newStudentWorkReceived', { studentWork: studentWork });
+            } else if (message.type === 'studentStatus') {
+              var studentStatus = message.content;
+              var status = JSON.parse(studentStatus.status);
+              _this.handleStudentStatusReceived(status);
+            }
+          }, {});
           _this.$stomp.send('/app/hello', JSON.stringify({ 'name': 'teacher' }), {});
         });
       } catch (e) {
         console.log(e);
       }
     }
-  }, {
-    key: 'handleMessage',
-    value: function handleMessage(message) {
-      var data = JSON.parse(message.data);
-      var messageType = data.messageType;
+
+    /*
+    handleMessage(message) {
+      const data = JSON.parse(message.data);
+      const messageType = data.messageType;
       if (messageType === 'studentStatus') {
         this.handleStudentStatusReceived(data);
       } else if (messageType === 'studentsOnlineList') {
         this.handleStudentsOnlineReceived(data);
-      } else if (messageType === 'studentConnected') {} else if (messageType === 'studentDisconnected') {
+      } else if (messageType === 'studentConnected') {
+       } else if (messageType === 'studentDisconnected') {
         this.handleStudentDisconnected(data);
       } else if (messageType === 'notification' || messageType === 'CRaterResultNotification') {
         this.$rootScope.$broadcast('newNotification', data.data);
       } else if (messageType === 'newAnnotation') {
-        this.$rootScope.$broadcast('newAnnotationReceived', { annotation: data.annotation });
+        this.$rootScope.$broadcast('newAnnotationReceived', {annotation: data.annotation});
       } else if (messageType === 'newStudentWork') {
-        this.$rootScope.$broadcast('newStudentWorkReceived', { studentWork: data.studentWork });
+        this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: data.studentWork});
       } else if (messageType === 'newStudentAchievement') {
-        this.$rootScope.$broadcast('newStudentAchievement', { studentAchievement: data.studentAchievement });
+        this.$rootScope.$broadcast('newStudentAchievement', {studentAchievement: data.studentAchievement});
       }
     }
-  }, {
-    key: 'sendMessage',
-    value: function sendMessage(messageJSON) {
+    sendMessage(messageJSON) {
       this.dataStream.send(messageJSON);
     }
+    */
+
   }, {
     key: 'handleStudentsOnlineReceived',
     value: function handleStudentsOnlineReceived(studentsOnlineMessage) {

@@ -35,24 +35,53 @@ var StudentWebSocketService = function () {
               console.log('Greeting: ' + payload);
             }, {});
 
-            var pauseSubscription = _this.$stomp.subscribe('/topic/pause/' + _this.runId + '/' + _this.periodId, function (payload, headers, res) {
-              console.log('Pause: ' + payload);
-              _this.$rootScope.$broadcast('pauseScreen', { data: payload });
+            var classroomSubscription = _this.$stomp.subscribe('/topic/classroom/' + _this.runId + '/' + _this.periodId, function (message, headers, res) {
+              if (message.type === 'pause') {
+                _this.$rootScope.$broadcast('pauseScreen', { data: message.content });
+              } else if (message.type === 'unpause') {
+                _this.$rootScope.$broadcast('unPauseScreen', { data: message.content });
+              } else if (message.type === 'studentWork') {
+                var studentWork = message.content;
+                studentWork.studentData = JSON.parse(studentWork.studentData);
+                _this.$rootScope.$broadcast('studentWorkReceived', studentWork);
+              }
+            });
+
+            var notificationSubscription = _this.$stomp.subscribe('/topic/workgroup/' + _this.workgroupId, function (message, headers, res) {
+              if (message.type === 'notification') {
+                _this.$rootScope.$broadcast('newNotification', message.content);
+              } else if (message.type === 'annotation') {
+                var annotationData = message.content;
+                _this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
+                _this.$rootScope.$broadcast('newAnnotationReceived', { annotation: annotationData });
+              } else if (message.type === 'annotationNotification') {
+                var annotationNotification = message.content;
+                var _annotationData = annotationNotification.annotationData;
+                _this.StudentDataService.AnnotationService.addOrUpdateAnnotation(_annotationData);
+                _this.$rootScope.$broadcast('newAnnotationReceived', { annotation: _annotationData });
+                _this.$rootScope.$broadcast('newNotification', annotationNotification.notificationData);
+              }
             }, {});
 
-            var unPauseSubscription = _this.$stomp.subscribe('/topic/unpause/' + _this.runId + '/' + _this.periodId, function (payload, headers, res) {
-              console.log('UnPause: ' + payload);
-              _this.$rootScope.$broadcast('unPauseScreen', { data: payload });
-            }, {});
+            var teacherSubscription = _this.$stomp.subscribe('/topic/teacher/' + _this.runId + '/' + _this.periodId, function (payload, headers, res) {});
 
-            var studentWorkSubscription = _this.$stomp.subscribe('/topic/student-work/' + _this.runId + '/' + _this.periodId, function (studentWork, headers, res) {
+            /*
+            const pauseSubscription = this.$stomp.subscribe(`/topic/pause/${this.runId}/${this.periodId}`, (payload, headers, res) => {
+              console.log(`Pause: ${payload}`);
+              this.$rootScope.$broadcast('pauseScreen', {data: payload});
+            }, {});
+             const unPauseSubscription = this.$stomp.subscribe(`/topic/unpause/${this.runId}/${this.periodId}`, (payload, headers, res) => {
+              console.log(`UnPause: ${payload}`);
+              this.$rootScope.$broadcast('unPauseScreen', {data: payload});
+            }, {});
+             const studentWorkSubscription = this.$stomp.subscribe(`/topic/student-work/${this.runId}/${this.periodId}`, (studentWork, headers, res) => {
               studentWork.studentData = JSON.parse(studentWork.studentData);
-              _this.$rootScope.$broadcast('studentWorkReceived', studentWork);
+              this.$rootScope.$broadcast('studentWorkReceived', studentWork);
             }, {});
-
-            var notificationSubscription = _this.$stomp.subscribe('/topic/notification/' + _this.runId + '/' + _this.periodId + '/' + _this.workgroupId, function (notification, headers, res) {
-              _this.$rootScope.$broadcast('newNotification', notification);
+             const notificationSubscription = this.$stomp.subscribe(`/topic/notification/${this.runId}/${this.periodId}/${this.workgroupId}`, (notification, headers, res) => {
+              this.$rootScope.$broadcast('newNotification', notification);
             }, {});
+            */
 
             _this.$stomp.send('/app/hello/' + _this.runId, JSON.stringify({ 'name': 'workgroup ' + _this.workgroupId }), {});
           });

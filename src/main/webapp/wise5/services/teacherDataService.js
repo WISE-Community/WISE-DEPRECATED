@@ -1231,15 +1231,16 @@ var TeacherDataService = function () {
   }, {
     key: 'pauseScreensChanged',
     value: function pauseScreensChanged(periodId, isPaused) {
+      var _this4 = this;
+
       this.updatePausedRunStatusValue(periodId, isPaused);
-
-      if (isPaused) {
-        this.TeacherWebSocketService.pauseScreens(periodId);
-      } else {
-        this.TeacherWebSocketService.unPauseScreens(periodId);
-      }
-
-      this.sendRunStatus();
+      this.sendRunStatus().then(function (response) {
+        if (isPaused) {
+          _this4.TeacherWebSocketService.pauseScreens(periodId);
+        } else {
+          _this4.TeacherWebSocketService.unPauseScreens(periodId);
+        }
+      });
       var context = "ClassroomMonitor",
           nodeId = null,
           componentId = null,
@@ -1334,35 +1335,19 @@ var TeacherDataService = function () {
         }
       }
     }
-
-    /**
-     * Send the run status back to the server to be saved in the db
-     * @param customPauseMessage the custom pause message text to send to the students
-     */
-
   }, {
     key: 'sendRunStatus',
-    value: function sendRunStatus(customPauseMessage) {
-      var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-      if (runStatusURL != null) {
-        var runId = this.ConfigService.getConfigParam('runId');
-        if (customPauseMessage != null) {
-          this.runStatus.pauseMessage = customPauseMessage;
-        }
-
-        var runStatus = angular.toJson(this.runStatus);
-        var runStatusParams = {
-          runId: runId,
-          status: runStatus
-        };
-
-        var httpParams = {};
-        httpParams.method = 'POST';
-        httpParams.url = runStatusURL;
-        httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-        httpParams.data = $.param(runStatusParams);
-        this.$http(httpParams);
-      }
+    value: function sendRunStatus() {
+      var httpParams = {
+        method: 'POST',
+        url: this.ConfigService.getConfigParam('runStatusURL'),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          runId: this.ConfigService.getConfigParam('runId'),
+          status: angular.toJson(this.runStatus)
+        })
+      };
+      return this.$http(httpParams);
     }
   }]);
 

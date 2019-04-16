@@ -46,7 +46,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
-import org.wise.vle.domain.Greeting;
+import org.wise.vle.domain.WebSocketMessage;
 import org.wise.vle.domain.HelloMessage;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
@@ -75,19 +75,15 @@ public class StudentDataController {
   @Autowired
   private WorkgroupService workgroupService;
 
-//  @Autowired
-//  private WebSocketHandler webSocketHandler;
-
   @Autowired
   private SimpMessagingTemplate simpMessagingTemplate;
 
   @MessageMapping("/hello/{runId}")
   @SendTo("/topic/greetings/{runId}")
-  public Greeting greeting(HelloMessage message, @DestinationVariable Integer runId) throws Exception {
+  public WebSocketMessage greeting(HelloMessage message, @DestinationVariable Integer runId) throws Exception {
     Thread.sleep(1000); // simulated delay
-    return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "! runId: " + runId);
+    return new WebSocketMessage("hello", "Hello, " + HtmlUtils.htmlEscape(message.getName()) + "! runId: " + runId);
   }
-
 
   @RequestMapping(method = RequestMethod.GET, value = "/student/data")
   public void getWISE5StudentData(
@@ -300,11 +296,18 @@ public class StudentDataController {
     }
   }
 
-  public void broadcastStudentWork(StudentWork studentWork) throws Exception {
-    StudentWork componentState = convertToComponentState(studentWork);
+  public void broadcastStudentWorkToClassroom(StudentWork componentState) throws Exception {
+    WebSocketMessage message = new WebSocketMessage("studentWork", componentState);
     simpMessagingTemplate.convertAndSend(
-        String.format("/topic/student-work/%s/%s", componentState.getRunId(), componentState.getPeriodId()),
-        componentState);
+        String.format("/topic/classroom/%s/%s", componentState.getRunId(), componentState.getPeriodId()),
+        message);
+  }
+
+  public void broadcastStudentWorkToTeacher(StudentWork componentState) throws Exception {
+    WebSocketMessage message = new WebSocketMessage("studentWork", componentState);
+    simpMessagingTemplate.convertAndSend(
+        String.format("/topic/teacher/%s", componentState.getRunId()),
+        message);
   }
 
   // we need to (un)set these fields because client's student work (componentstate) and
@@ -375,8 +378,10 @@ public class StudentDataController {
               savedStudentWorkJSONObject.put("serverSaveTime", studentWork.getServerSaveTime().getTime());
               studentWorkResultJSONArray.put(savedStudentWorkJSONObject);
 
+              StudentWork componentState = convertToComponentState(studentWork);
+              broadcastStudentWorkToTeacher(componentState);
               if (studentWork.getComponentType().equals("Discussion")) {
-                broadcastStudentWork(studentWork);
+                broadcastStudentWorkToClassroom(componentState);
               }
 
               // send this studentWork immediately to the teacher so the Classroom Monitor can be updated

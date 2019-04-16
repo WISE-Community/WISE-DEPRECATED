@@ -26,6 +26,17 @@ class TeacherWebSocketService {
           this.payload = payload;
           console.log(payload);
         }, {});
+        const teacherSubscription = this.$stomp.subscribe(`/topic/teacher/${this.runId}`, (message, headers, res) => {
+          if (message.type === 'studentWork') {
+            const studentWork = message.content;
+            studentWork.studentData = JSON.parse(studentWork.studentData);
+            this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: studentWork});
+          } else if (message.type === 'studentStatus') {
+            const studentStatus = message.content;
+            const status = JSON.parse(studentStatus.status);
+            this.handleStudentStatusReceived(status);
+          }
+        }, {});
         this.$stomp.send('/app/hello', JSON.stringify({'name': 'teacher'}), {});
       });
     } catch(e) {
@@ -33,6 +44,7 @@ class TeacherWebSocketService {
     }
   }
 
+  /*
   handleMessage(message) {
     const data = JSON.parse(message.data);
     const messageType = data.messageType;
@@ -54,10 +66,10 @@ class TeacherWebSocketService {
       this.$rootScope.$broadcast('newStudentAchievement', {studentAchievement: data.studentAchievement});
     }
   }
-
   sendMessage(messageJSON) {
     this.dataStream.send(messageJSON);
   }
+*/
 
   handleStudentsOnlineReceived(studentsOnlineMessage) {
     this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;

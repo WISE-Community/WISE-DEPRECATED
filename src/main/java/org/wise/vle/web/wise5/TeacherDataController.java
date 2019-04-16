@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
+import org.wise.vle.domain.WebSocketMessage;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
@@ -54,6 +56,10 @@ public class TeacherDataController {
 
   @Autowired
   private Properties wiseProperties;
+
+  @Autowired
+  private SimpMessagingTemplate simpMessagingTemplate;
+
 
   /**
    * Handles requests for exporting of data for teachers/researchers like student work, events, notebook items
@@ -314,6 +320,15 @@ public class TeacherDataController {
                 // and send it in real-time over the websocket
                 try {
                   Notification notification = this.createNotificationForAnnotation(annotation);
+                  //JSONObject notificationJSON = notification.toJSON();
+                  Long toWorkgroupId = notification.getToWorkgroup().getId();
+//                  JSONObject annotationNotificationJSON = new JSONObject();
+//                  annotationNotificationJSON.put("toWorkgroupId", toWorkgroupId);
+//                  annotationNotificationJSON.put("notificationData", notificationJSON);
+//                  annotationNotificationJSON.put("annotationData", annotation.toJSON());
+                  broadcastAnnotationToStudent(toWorkgroupId, annotation);
+                  broadcastNotificationToStudent(toWorkgroupId, notification);
+
 //                  if (webSocketHandler != null) {
 //                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
 //
@@ -331,6 +346,7 @@ public class TeacherDataController {
                 } catch (Exception e) {
                   // if something fails during creating annotation and sending to websocket,
                   // allow the rest to continue
+                  e.printStackTrace();
                 }
               } catch (Exception e) {
                 e.printStackTrace();
@@ -453,4 +469,48 @@ public class TeacherDataController {
         message, data, timeGenerated, timeDismissed);
     return notification;
   }
+
+  public void broadcastAnnotationToStudent(Long toWorkgroupId, Annotation annotation)
+      throws Exception {
+    Annotation clientAnnotation = convertToClientAnnotation(annotation);
+    WebSocketMessage message = new WebSocketMessage("annotation", clientAnnotation);
+    simpMessagingTemplate.convertAndSend(
+        String.format("/topic/workgroup/%s", toWorkgroupId),
+        message);
+  }
+
+  public void broadcastNotificationToStudent(Long toWorkgroupId, Notification notification)
+      throws Exception {
+    Notification clientNotification = convertToClientNotification(notification);
+    WebSocketMessage message = new WebSocketMessage("notification", notification);
+    simpMessagingTemplate.convertAndSend(
+        String.format("/topic/workgroup/%s", toWorkgroupId),
+        message);
+  }
+
+  private Notification convertToClientNotification(Notification notification) {
+    notification.setRunId(notification.getRun().getId());
+    notification.setPeriodId(notification.getPeriod().getId());
+    notification.setToWorkgroupId(notification.getToWorkgroup().getId());
+    notification.setFromWorkgroupId(notification.getFromWorkgroup().getId());
+    notification.setRun(null);
+    notification.setPeriod(null);
+    notification.setToWorkgroup(null);
+    notification.setFromWorkgroup(null);
+    return notification;
+  }
+
+  private Annotation convertToClientAnnotation(Annotation annotation) {
+    annotation.setRunId(annotation.getRun().getId());
+    annotation.setPeriodId(annotation.getPeriod().getId());
+    annotation.setToWorkgroupId(annotation.getToWorkgroup().getId());
+    annotation.setFromWorkgroupId(annotation.getFromWorkgroup().getId());
+    annotation.setRun(null);
+    annotation.setPeriod(null);
+    annotation.setToWorkgroup(null);
+    annotation.setFromWorkgroup(null);
+    annotation.setStudentWork(null);
+    return annotation;
+  }
+
 }

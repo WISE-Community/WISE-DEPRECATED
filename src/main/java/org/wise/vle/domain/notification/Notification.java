@@ -119,11 +119,6 @@ public class Notification extends PersistableDomain {
     return Notification.class;
   }
 
-  /**
-   * Get the JSON representation of the StudentWork
-   *
-   * @return a JSONObject with the values from the StudentWork
-   */
   public JSONObject toJSON() {
     JSONObject notificationJSONObject = new JSONObject();
     try {

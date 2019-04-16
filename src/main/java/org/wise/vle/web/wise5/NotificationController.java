@@ -20,6 +20,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.vle.domain.WebSocketMessage;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.StudentWork;
 
@@ -51,10 +52,10 @@ public class NotificationController {
 
   public void broadcastNotification(Notification notification) throws Exception {
     Notification clientNotification = convertToClientNotification(notification);
+    WebSocketMessage message = new WebSocketMessage("notification", clientNotification);
     simpMessagingTemplate.convertAndSend(
-      String.format("/topic/notification/%s/%s/%s",
-        clientNotification.getRunId(), clientNotification.getPeriodId(), clientNotification.getToWorkgroupId()),
-      clientNotification);
+        String.format("/topic/workgroup/%s", clientNotification.getToWorkgroupId()),
+        message);
   }
 
   private Notification convertToClientNotification(Notification notification) {

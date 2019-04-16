@@ -25,6 +25,39 @@ class StudentWebSocketService {
             console.log(`Greeting: ${payload}`);
           }, {});
 
+          const classroomSubscription = this.$stomp.subscribe(`/topic/classroom/${this.runId}/${this.periodId}`, (message, headers, res) => {
+            if (message.type === 'pause') {
+              this.$rootScope.$broadcast('pauseScreen', {data: message.content});
+            } else if (message.type === 'unpause') {
+              this.$rootScope.$broadcast('unPauseScreen', {data: message.content});
+            } else if (message.type === 'studentWork') {
+              const studentWork = message.content;
+              studentWork.studentData = JSON.parse(studentWork.studentData);
+              this.$rootScope.$broadcast('studentWorkReceived', studentWork);
+            }
+          });
+
+          const notificationSubscription = this.$stomp.subscribe(`/topic/workgroup/${this.workgroupId}`, (message, headers, res) => {
+            if (message.type === 'notification') {
+              this.$rootScope.$broadcast('newNotification', message.content);
+            } else if (message.type === 'annotation') {
+              const annotationData = message.content;
+              this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
+              this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
+            } else if (message.type === 'annotationNotification') {
+              const annotationNotification = message.content;
+              const annotationData = annotationNotification.annotationData;
+              this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
+              this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
+              this.$rootScope.$broadcast('newNotification', annotationNotification.notificationData);
+            }
+          }, {});
+
+          const teacherSubscription = this.$stomp.subscribe(`/topic/teacher/${this.runId}/${this.periodId}`, (payload, headers, res) => {
+
+          });
+
+          /*
           const pauseSubscription = this.$stomp.subscribe(`/topic/pause/${this.runId}/${this.periodId}`, (payload, headers, res) => {
             console.log(`Pause: ${payload}`);
             this.$rootScope.$broadcast('pauseScreen', {data: payload});
@@ -43,6 +76,7 @@ class StudentWebSocketService {
           const notificationSubscription = this.$stomp.subscribe(`/topic/notification/${this.runId}/${this.periodId}/${this.workgroupId}`, (notification, headers, res) => {
             this.$rootScope.$broadcast('newNotification', notification);
           }, {});
+          */
 
           this.$stomp.send(`/app/hello/${this.runId}`, JSON.stringify({'name': `workgroup ${this.workgroupId}`}), {});
         });
