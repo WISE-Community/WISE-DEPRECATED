@@ -31,6 +31,7 @@ var TeacherWebSocketService = function () {
       try {
         this.$stomp.connect(webSocketURL).then(function (frame) {
           _this.subscribeToTeacherTopic();
+          _this.subscribeToTeacherWorkgroupTopic();
         });
       } catch (e) {
         console.log(e);
@@ -50,8 +51,17 @@ var TeacherWebSocketService = function () {
           var studentStatus = message.content;
           var status = JSON.parse(studentStatus.status);
           _this2.handleStudentStatusReceived(status);
-        } else if (message.type === 'notification') {
-          _this2.$rootScope.$broadcast('newNotification', message.content);
+        }
+      });
+    }
+  }, {
+    key: 'subscribeToTeacherWorkgroupTopic',
+    value: function subscribeToTeacherWorkgroupTopic() {
+      var _this3 = this;
+
+      this.$stomp.subscribe('/topic/workgroup/' + this.ConfigService.getWorkgroupId(), function (message, headers, res) {
+        if (message.type === 'notification') {
+          _this3.$rootScope.$broadcast('newNotification', message.content);
         }
       });
     }

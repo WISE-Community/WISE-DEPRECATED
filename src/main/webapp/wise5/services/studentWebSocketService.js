@@ -32,7 +32,6 @@ var StudentWebSocketService = function () {
           this.$stomp.connect(this.ConfigService.getWebSocketURL()).then(function (frame) {
             _this.subscribeToClassroomTopic();
             _this.subscribeToWorkgroupTopic();
-            _this.subscribeToTeacherTopic();
           });
         } catch (e) {
           console.log(e);
@@ -71,11 +70,6 @@ var StudentWebSocketService = function () {
           _this3.$rootScope.$broadcast('newAnnotationReceived', { annotation: annotationData });
         }
       });
-    }
-  }, {
-    key: 'subscribeToTeacherTopic',
-    value: function subscribeToTeacherTopic() {
-      this.$stomp.subscribe('/topic/teacher/' + this.runId + '/' + this.periodId, function (payload, headers, res) {});
     }
   }, {
     key: 'sendStudentToTeacherMessage',

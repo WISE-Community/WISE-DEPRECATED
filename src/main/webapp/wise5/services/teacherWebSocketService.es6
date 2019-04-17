@@ -20,6 +20,7 @@ class TeacherWebSocketService {
     try {
       this.$stomp.connect(webSocketURL).then((frame) => {
         this.subscribeToTeacherTopic();
+        this.subscribeToTeacherWorkgroupTopic();
       });
     } catch(e) {
       console.log(e);
@@ -36,7 +37,13 @@ class TeacherWebSocketService {
         const studentStatus = message.content;
         const status = JSON.parse(studentStatus.status);
         this.handleStudentStatusReceived(status);
-      } else if (message.type === 'notification') {
+      }
+    });
+  }
+
+  subscribeToTeacherWorkgroupTopic() {
+    this.$stomp.subscribe(`/topic/workgroup/${this.ConfigService.getWorkgroupId()}`, (message, headers, res) => {
+      if (message.type === 'notification') {
         this.$rootScope.$broadcast('newNotification', message.content);
       }
     });

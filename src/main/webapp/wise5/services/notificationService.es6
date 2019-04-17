@@ -11,28 +11,26 @@ class NotificationService {
     this.notifications = [];  // an array of notifications that students haven't seen yet.
 
     this.$rootScope.$on('newNotification', (event, notification) => {
-      if (notification != null) {
-        const workgroupId = this.ConfigService.getWorkgroupId();
-        const mode = this.ConfigService.getMode();
-        if (mode === 'classroomMonitor' || workgroupId === notification.toWorkgroupId) {
-          notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
-          notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-          // check if this notification is new or is an update
-          let isNotificationNew = true;
-          for (let n = 0; n < this.notifications.length; n++) {
-            const currentNotification = this.notifications[n];
-            if (currentNotification.id === notification.id) {
-              // existing notification (with same id) found, so it's an update
-              this.notifications[n] = notification;
-              isNotificationNew = false;
-              this.$rootScope.$broadcast('notificationChanged', notification);
-              break;
-            }
+      const workgroupId = this.ConfigService.getWorkgroupId();
+      const mode = this.ConfigService.getMode();
+      if (mode === 'classroomMonitor' || workgroupId === notification.toWorkgroupId) {
+        notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
+        notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+        // check if this notification is new or is an update
+        let isNotificationNew = true;
+        for (let n = 0; n < this.notifications.length; n++) {
+          const currentNotification = this.notifications[n];
+          if (currentNotification.id === notification.id) {
+            // existing notification (with same id) found, so it's an update
+            this.notifications[n] = notification;
+            isNotificationNew = false;
+            this.$rootScope.$broadcast('notificationChanged', notification);
+            break;
           }
-          if (isNotificationNew) {
-            this.notifications.push(notification);
-            this.$rootScope.$broadcast('notificationAdded', notification);
-          }
+        }
+        if (isNotificationNew) {
+          this.notifications.push(notification);
+          this.$rootScope.$broadcast('notificationAdded', notification);
         }
       }
     });
@@ -160,7 +158,7 @@ class NotificationService {
         notificationMessageToTeacher = notificationMessageToTeacher.replace('{{dismissCode}}', notificationForScore.dismissCode);
 
         const notificationToTeacher = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId,
-            fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
+          fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
         this.saveNotificationToServer(notificationToTeacher);
         // this.saveNotificationToServer(notificationToTeacher).then((savedNotification) => {
         //   // send notification in real-time so teacher sees this right away

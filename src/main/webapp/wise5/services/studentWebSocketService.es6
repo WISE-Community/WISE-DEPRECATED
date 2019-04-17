@@ -22,7 +22,6 @@ class StudentWebSocketService {
         this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
           this.subscribeToClassroomTopic();
           this.subscribeToWorkgroupTopic();
-          this.subscribeToTeacherTopic();
         });
       } catch(e) {
         console.log(e);
@@ -54,11 +53,6 @@ class StudentWebSocketService {
         this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
         this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
       }
-    });
-  }
-
-  subscribeToTeacherTopic() {
-    this.$stomp.subscribe(`/topic/teacher/${this.runId}/${this.periodId}`, (payload, headers, res) => {
     });
   }
 
