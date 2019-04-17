@@ -31,7 +31,7 @@ export class TeacherRunListComponent implements OnInit {
       this.runs.unshift(teacherRun);
       this.runs.sort(this.sortByStartTimeDesc);
       this.populatePeriods([teacherRun]);
-      this.sortPeriods();
+      this.periods.sort();
       this.populateFilterOptions();
       this.reset();
       if (!this.showAll) {
@@ -95,7 +95,7 @@ export class TeacherRunListComponent implements OnInit {
     this.runs = runs;
     this.filteredRuns = runs;
     this.populatePeriods(runs);
-    this.sortPeriods();
+    this.periods.sort();
     this.populateFilterOptions();
     this.performSearchAndFilter();
     this.loaded = true;
@@ -124,24 +124,10 @@ export class TeacherRunListComponent implements OnInit {
     }
   }
 
-  sortPeriods(): void {
-    this.periods.sort(this.compareNumbers);
-  }
-
   populateFilterOptions(): void {
     for (let period of this.periods) {
       this.filterOptions.push({ value: period, label: period });
     }
-  }
-
-  compareNumbers(a, b) {
-    if (a < b) {
-      return -1;
-    }
-    if (a > b) {
-      return 1;
-    }
-    return 0;
   }
 
   runSpansYears(run: TeacherRun) {
