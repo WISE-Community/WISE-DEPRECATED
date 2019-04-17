@@ -26,7 +26,7 @@ export class TeacherRunListComponent implements OnInit {
   constructor(private teacherService: TeacherService,
               private configService: ConfigService) {
     teacherService.newRunSource$.subscribe(run => {
-      let teacherRun: TeacherRun = new TeacherRun(run);
+      const teacherRun: TeacherRun = new TeacherRun(run);
       teacherRun.isHighlighted = true;
       this.runs.unshift(teacherRun);
       this.runs.sort(this.sortByStartTimeDesc);
@@ -35,7 +35,7 @@ export class TeacherRunListComponent implements OnInit {
       this.populateFilterOptions();
       this.reset();
       if (!this.showAll) {
-        let index = this.getRunIndex(teacherRun);
+        const index = this.getRunIndex(teacherRun);
         if (index > 9) {
           this.showAll = true;
         }
@@ -54,7 +54,7 @@ export class TeacherRunListComponent implements OnInit {
   getRuns(): void {
     this.teacherService.getRuns().subscribe(runs => {
       this.personalRuns = [];
-      for (let personalRun of runs) {
+      for (const personalRun of runs) {
         this.personalRuns.push(new TeacherRun(personalRun));
       }
       this.isPersonalRunsRetrieved = true;
@@ -74,7 +74,7 @@ export class TeacherRunListComponent implements OnInit {
   getSharedRuns(): void {
     this.teacherService.getSharedRuns().subscribe(runs => {
       this.sharedRuns = [];
-      for (let sharedRun of runs) {
+      for (const sharedRun of runs) {
         const teacherRun = new TeacherRun(sharedRun);
         teacherRun.shared = true;
         this.sharedRuns.push(teacherRun);
@@ -102,11 +102,9 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   sortByStartTimeDesc(a, b) {
-    let aStartTime = a.startTime;
-    let bStartTime = b.startTime;
-    if (aStartTime < bStartTime) {
+    if (a.startTime < b.startTime) {
       return 1;
-    } else if (aStartTime > bStartTime) {
+    } else if (a.startTime > b.startTime) {
       return -1;
     } else {
       return 0;
@@ -114,9 +112,9 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   populatePeriods(runs: TeacherRun[]): void {
-    for (let run of runs) {
+    for (const run of runs) {
       const periods = run.periods;
-      for (let period of periods) {
+      for (const period of periods) {
         if (this.periods.indexOf(period) < 0) {
           this.periods.push(period);
         }
@@ -125,7 +123,7 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   populateFilterOptions(): void {
-    for (let period of this.periods) {
+    for (const period of this.periods) {
       this.filterOptions.push({ value: period, label: period });
     }
   }
@@ -157,7 +155,7 @@ export class TeacherRunListComponent implements OnInit {
   activeTotal(): number {
     let total = 0;
     const now = this.configService.getCurrentServerTime();
-    for (let run of this.filteredRuns) {
+    for (const run of this.filteredRuns) {
       if (run.isActive(now)) {
         total++;
       }
@@ -168,7 +166,7 @@ export class TeacherRunListComponent implements OnInit {
   completedTotal(): number {
     let total = 0;
     const now = this.configService.getCurrentServerTime();
-    for (let run of this.filteredRuns) {
+    for (const run of this.filteredRuns) {
       if (run.isCompleted(now)) {
         total++;
       }
@@ -179,7 +177,7 @@ export class TeacherRunListComponent implements OnInit {
   scheduledTotal(): number {
     let total = 0;
     const now = this.configService.getCurrentServerTime();
-    for (let run of this.filteredRuns) {
+    for (const run of this.filteredRuns) {
       if (run.isScheduled(now)) {
         total++;
       }
@@ -219,7 +217,7 @@ export class TeacherRunListComponent implements OnInit {
     // TODO: extract this for global use?
     return this.runs.filter((run: TeacherRun) =>
       Object.keys(run).some(prop => {
-        let value = run[prop];
+        const value = run[prop];
         if (typeof value === 'undefined' || value === null) {
           return false;
         } else if (typeof value === 'object') {
