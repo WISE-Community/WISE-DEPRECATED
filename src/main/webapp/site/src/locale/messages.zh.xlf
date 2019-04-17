@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="ng2.template" target-language="zh-TW">
+  <file source-language="en" datatype="plaintext" original="ng2.template" target-language="zh-CN">
     <body>
       <trans-unit id="e19fcf996343543e13789f17b550ab0c08124b5c" datatype="html">
         <source>Create Account</source>
@@ -3865,13 +3865,13 @@
         </context-group>
         <target state="needs-translation">(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
       </trans-unit>
-      <trans-unit id="71c12f48ae03d10ac5f80451d1de92adadb1ad1e" datatype="html">
-        <source>Warning! You will be editing the content of a classroom unit. If students have already started working, this may result lost data or other problems.</source>
+      <trans-unit id="7729e322ed636f18b5930ee33fde3b4a10f2e4ce" datatype="html">
+        <source>Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in lost data or other problems.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Warning! You will be editing the content of a classroom unit. If students have already started working, this may result lost data or other problems.</target>
+        <target state="needs-translation">Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in lost data or other problems.</target>
       </trans-unit>
       <trans-unit id="ce6a02374cf2e2a25534fee1f83fa5b5839fa033" datatype="html">
         <source>Are you sure you wish to proceed?</source>
