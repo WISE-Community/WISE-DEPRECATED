@@ -51,6 +51,10 @@ var TeacherWebSocketService = function () {
           var studentStatus = message.content;
           var status = JSON.parse(studentStatus.status);
           _this2.handleStudentStatusReceived(status);
+        } else if (message.type === 'newStudentAchievement') {
+          var achievement = message.content;
+          achievement.data = JSON.parse(achievement.data);
+          _this2.$rootScope.$broadcast('newStudentAchievement', { studentAchievement: achievement });
         }
       });
     }

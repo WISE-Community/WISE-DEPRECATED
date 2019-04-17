@@ -265,22 +265,14 @@ public class StudentDataController {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    try {
-//      if (webSocketHandler != null && achievement != null) {
-//        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//        if (wiseWebSocketHandler != null) {
-//          JSONObject webSocketMessageJSON = new JSONObject();
-//          webSocketMessageJSON.put("messageType", "newStudentAchievement");
-//          webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-//          webSocketMessageJSON.put("studentAchievement", achievement.toJSON());
-//          wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
-//        }
-//      }
-    } catch (Exception e) {
-      // if something fails during creating annotation and sending to websocket,
-      // allow the rest to continue
-      e.printStackTrace();
-    }
+    achievement.convertToClientAchievement();
+    broadcastAchievementToTeacher(achievement);
+  }
+
+  public void broadcastAchievementToTeacher(Achievement achievement) {
+    WebSocketMessage message = new WebSocketMessage("newStudentAchievement", achievement);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/teacher/%s", achievement.getRunId()),
+        message);
   }
 
   public void broadcastStudentWorkToClassroom(StudentWork componentState) {
