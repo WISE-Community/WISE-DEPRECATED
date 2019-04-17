@@ -62,7 +62,9 @@ var StudentWebSocketService = function () {
 
       this.$stomp.subscribe('/topic/workgroup/' + this.workgroupId, function (message, headers, res) {
         if (message.type === 'notification') {
-          _this3.$rootScope.$broadcast('newNotification', message.content);
+          var notification = message.content;
+          notification.data = JSON.parse(notification.data);
+          _this3.$rootScope.$broadcast('newNotification', notification);
         } else if (message.type === 'annotation') {
           var annotationData = message.content;
           annotationData.data = JSON.parse(annotationData.data);

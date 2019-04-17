@@ -192,27 +192,7 @@ public class NotificationController {
             continue;
           }
           vleService.dismissNotification(notificationInGroup, timeDismissed);
-          try {
-//            if (webSocketHandler != null) {
-//              WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//              if (wiseWebSocketHandler != null) {
-//                String messageParticipants = "";
-//                if (notificationInGroup.getToWorkgroup().isTeacherWorkgroup()) {
-//                  messageParticipants = "studentToTeachers";
-//                } else {
-//                  messageParticipants = "teacherToStudentsInRun";
-//                }
-//                JSONObject notificationJSON = notificationInGroup.toJSON();
-//                JSONObject webSocketMessageJSON = new JSONObject();
-//                webSocketMessageJSON.put("messageType", "notification");
-//                webSocketMessageJSON.put("messageParticipants", messageParticipants);
-//                webSocketMessageJSON.put("toWorkgroupId", notificationInGroup.getToWorkgroup().getId());
-//                webSocketMessageJSON.put("data", notificationJSON);
-//                wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-//              }
-//            }
-          } catch (Exception e) {
-          }
+          broadcastNotification(notificationInGroup);
         }
       }
       response.getWriter().write(notification.toJSON().toString());

@@ -46,7 +46,9 @@ class StudentWebSocketService {
   subscribeToWorkgroupTopic() {
     this.$stomp.subscribe(`/topic/workgroup/${this.workgroupId}`, (message, headers, res) => {
       if (message.type === 'notification') {
-        this.$rootScope.$broadcast('newNotification', message.content);
+        const notification = message.content;
+        notification.data = JSON.parse(notification.data);
+        this.$rootScope.$broadcast('newNotification', notification);
       } else if (message.type === 'annotation') {
         const annotationData = message.content;
         annotationData.data = JSON.parse(annotationData.data);

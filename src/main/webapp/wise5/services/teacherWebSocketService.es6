@@ -44,7 +44,9 @@ class TeacherWebSocketService {
   subscribeToTeacherWorkgroupTopic() {
     this.$stomp.subscribe(`/topic/workgroup/${this.ConfigService.getWorkgroupId()}`, (message, headers, res) => {
       if (message.type === 'notification') {
-        this.$rootScope.$broadcast('newNotification', message.content);
+        const notification = message.content;
+        notification.data = JSON.parse(notification.data);
+        this.$rootScope.$broadcast('newNotification', notification);
       }
     });
   }
