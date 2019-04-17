@@ -23,6 +23,7 @@
  */
 package org.wise.vle.domain.notification;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -58,18 +59,22 @@ public class Notification extends PersistableDomain {
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
+  @JsonIgnore
   private Run run;
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId", nullable = false)
+  @JsonIgnore
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "toWorkgroupId")
+  @JsonIgnore
   private Workgroup toWorkgroup;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "fromWorkgroupId")
+  @JsonIgnore
   private Workgroup fromWorkgroup;
 
   @Column(name = "groupId", length = 30)
@@ -124,10 +129,6 @@ public class Notification extends PersistableDomain {
     this.setPeriodId(this.getPeriod().getId());
     this.setToWorkgroupId(this.getToWorkgroup().getId());
     this.setFromWorkgroupId(this.getFromWorkgroup().getId());
-    this.setRun(null);
-    this.setPeriod(null);
-    this.setToWorkgroup(null);
-    this.setFromWorkgroup(null);
   }
 
   public JSONObject toJSON() {

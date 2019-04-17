@@ -27,6 +27,7 @@ import java.sql.Timestamp;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -57,14 +58,17 @@ public class StudentWork extends PersistableDomain {
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
+  @JsonIgnore
   private Run run;
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId", nullable = false)
+  @JsonIgnore
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = false)
+  @JsonIgnore
   private Workgroup workgroup;
 
   @Column(name = "isAutoSave", nullable = false)
@@ -105,30 +109,10 @@ public class StudentWork extends PersistableDomain {
     return StudentWork.class;
   }
 
-  public void convertToComponentState() {
+  public void convertToClientStudentWork() {
     this.setRunId(this.getRun().getId());
     this.setPeriodId(this.getPeriod().getId());
     this.setWorkgroupId(this.getWorkgroup().getId());
-    this.setRun(null);
-    this.setPeriod(null);
-    this.setWorkgroup(null);
-  }
-
-  public StudentWork createCopyWithoutReferences() {
-    StudentWork studentWork = new StudentWork();
-    studentWork.setId(this.id);
-    studentWork.setRunId(this.getRun().getId());
-    studentWork.setPeriodId(this.getPeriod().getId());
-    studentWork.setWorkgroupId(this.getWorkgroup().getId());
-    studentWork.setIsAutoSave(this.isAutoSave);
-    studentWork.setIsSubmit(this.isSubmit);
-    studentWork.setNodeId(this.nodeId);
-    studentWork.setComponentId(this.componentId);
-    studentWork.setComponentType(this.componentType);
-    studentWork.setClientSaveTime(this.clientSaveTime);
-    studentWork.setServerSaveTime(this.serverSaveTime);
-    studentWork.setStudentData(this.studentData);
-    return studentWork;
   }
 
   public JSONObject toJSON() {

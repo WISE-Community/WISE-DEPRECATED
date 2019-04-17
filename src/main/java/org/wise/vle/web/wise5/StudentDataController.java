@@ -351,11 +351,10 @@ public class StudentDataController {
               savedStudentWorkJSONObject.put("serverSaveTime", studentWork.getServerSaveTime().getTime());
               studentWorkResultJSONArray.put(savedStudentWorkJSONObject);
 
-              //studentWork.convertToComponentState();
-              StudentWork componentState = studentWork.createCopyWithoutReferences();
-              broadcastStudentWorkToTeacher(componentState);
-              if (componentState.getComponentType().equals("Discussion")) {
-                broadcastStudentWorkToClassroom(componentState);
+              studentWork.convertToClientStudentWork();
+              broadcastStudentWorkToTeacher(studentWork);
+              if (studentWork.getComponentType().equals("Discussion")) {
+                broadcastStudentWorkToClassroom(studentWork);
               }
             } catch (Exception e) {
               e.printStackTrace();
