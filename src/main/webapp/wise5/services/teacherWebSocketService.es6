@@ -41,6 +41,10 @@ class TeacherWebSocketService {
         const achievement = message.content;
         achievement.data = JSON.parse(achievement.data);
         this.$rootScope.$broadcast('newStudentAchievement', {studentAchievement: achievement});
+      } else if (message.type === 'annotation') {
+        const annotationData = message.content;
+        annotationData.data = JSON.parse(annotationData.data);
+        this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
       }
     });
   }
@@ -50,37 +54,10 @@ class TeacherWebSocketService {
       if (message.type === 'notification') {
         const notification = message.content;
         notification.data = JSON.parse(notification.data);
-        this.$rootScope.$broadcast('newNotification', notification);
+        this.$rootScope.$broadcast('newNotificationReceived', notification);
       }
     });
   }
-
-  /*
-  handleMessage(message) {
-    const data = JSON.parse(message.data);
-    const messageType = data.messageType;
-    if (messageType === 'studentStatus') {
-      this.handleStudentStatusReceived(data);
-    } else if (messageType === 'studentsOnlineList') {
-      this.handleStudentsOnlineReceived(data);
-    } else if (messageType === 'studentConnected') {
-
-    } else if (messageType === 'studentDisconnected') {
-      this.handleStudentDisconnected(data);
-    } else if (messageType === 'notification' || messageType === 'CRaterResultNotification') {
-      this.$rootScope.$broadcast('newNotification', data.data);
-    } else if (messageType === 'newAnnotation') {
-      this.$rootScope.$broadcast('newAnnotationReceived', {annotation: data.annotation});
-    } else if (messageType === 'newStudentWork') {
-      this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: data.studentWork});
-    } else if (messageType === 'newStudentAchievement') {
-      this.$rootScope.$broadcast('newStudentAchievement', {studentAchievement: data.studentAchievement});
-    }
-  }
-  sendMessage(messageJSON) {
-    this.dataStream.send(messageJSON);
-  }
-*/
 
   handleStudentsOnlineReceived(studentsOnlineMessage) {
     this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;

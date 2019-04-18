@@ -275,6 +275,12 @@ public class StudentDataController {
         message);
   }
 
+  public void broadcastAnnotationToTeacher(Annotation annotation) {
+    WebSocketMessage message = new WebSocketMessage("annotation", annotation);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/teacher/%s", annotation.getRunId()),
+        message);
+  }
+
   public void broadcastStudentWorkToClassroom(StudentWork componentState) {
     WebSocketMessage message = new WebSocketMessage("studentWork", componentState);
     simpMessagingTemplate.convertAndSend(String.format("/topic/classroom/%s/%s",
@@ -425,23 +431,8 @@ public class StudentDataController {
                   annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
 
                 // send this annotation immediately to the teacher so the Classroom Monitor can be updated
-                try {
-//                  if (webSocketHandler != null && annotation != null) {
-//                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//
-//                    if (wiseWebSocketHandler != null) {
-//                      JSONObject webSocketMessageJSON = new JSONObject();
-//                      webSocketMessageJSON.put("messageType", "newAnnotation");
-//                      webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-//                      webSocketMessageJSON.put("annotation", annotation.toJSON());
-//                      wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-//                    }
-//                  }
-                } catch (Exception e) {
-                  // if something fails during creating annotation and sending to websocket,
-                  // allow the rest to continue
-                  e.printStackTrace();
-                }
+                annotation.convertToClientAnnotation();
+                broadcastAnnotationToTeacher(annotation);
               } else {
                 annotation = vleService.saveAnnotation(
                   annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),

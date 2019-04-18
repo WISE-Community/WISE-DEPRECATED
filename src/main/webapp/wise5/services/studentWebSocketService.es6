@@ -48,7 +48,7 @@ class StudentWebSocketService {
       if (message.type === 'notification') {
         const notification = message.content;
         notification.data = JSON.parse(notification.data);
-        this.$rootScope.$broadcast('newNotification', notification);
+        this.$rootScope.$broadcast('newNotificationReceived', notification);
       } else if (message.type === 'annotation') {
         const annotationData = message.content;
         annotationData.data = JSON.parse(annotationData.data);
@@ -56,18 +56,6 @@ class StudentWebSocketService {
         this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
       }
     });
-  }
-
-  sendStudentToTeacherMessage(messageType, data) {
-    if (!this.ConfigService.isPreview()) {
-      const currentNodeId = this.StudentDataService.getCurrentNodeId();
-      const messageJSON = {};
-      messageJSON.messageType = messageType;
-      messageJSON.messageParticipants = 'studentToTeachers';
-      messageJSON.currentNodeId = currentNodeId;
-      messageJSON.data = data;
-      this.dataStream.send(messageJSON);
-    }
   }
 }
 

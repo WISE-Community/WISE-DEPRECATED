@@ -25,16 +25,11 @@ class TopBarController {
             }
         };
 
-        this.$rootScope.$on('notificationAdded', (event, notification) => {
-          this.setNotifications();
-        });
-
         this.$rootScope.$on('notificationChanged', (event, notification) => {
           this.setNotifications();
         });
-
         this.themePath = this.ProjectService.getThemePath();
-          this.contextPath = this.ConfigService.getContextPath();
+        this.contextPath = this.ConfigService.getContextPath();
     }
 
     /**

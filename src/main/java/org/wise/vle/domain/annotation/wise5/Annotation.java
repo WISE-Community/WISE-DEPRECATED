@@ -132,8 +132,12 @@ public class Annotation extends PersistableDomain {
     this.setRunId(this.getRun().getId());
     this.setPeriodId(this.getPeriod().getId());
     this.setToWorkgroupId(this.getToWorkgroup().getId());
-    this.setFromWorkgroupId(this.getFromWorkgroup().getId());
-    this.setStudentWorkId(this.getStudentWork().getId());
+    if (this.getFromWorkgroup() != null) {
+      this.setFromWorkgroupId(this.getFromWorkgroup().getId());
+    }
+    if (this.getStudentWork() != null) {
+      this.setStudentWorkId(this.getStudentWork().getId());
+    }
   }
 
   public JSONObject toJSON() {

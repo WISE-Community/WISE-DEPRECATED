@@ -64,7 +64,7 @@ var StudentWebSocketService = function () {
         if (message.type === 'notification') {
           var notification = message.content;
           notification.data = JSON.parse(notification.data);
-          _this3.$rootScope.$broadcast('newNotification', notification);
+          _this3.$rootScope.$broadcast('newNotificationReceived', notification);
         } else if (message.type === 'annotation') {
           var annotationData = message.content;
           annotationData.data = JSON.parse(annotationData.data);
@@ -72,19 +72,6 @@ var StudentWebSocketService = function () {
           _this3.$rootScope.$broadcast('newAnnotationReceived', { annotation: annotationData });
         }
       });
-    }
-  }, {
-    key: 'sendStudentToTeacherMessage',
-    value: function sendStudentToTeacherMessage(messageType, data) {
-      if (!this.ConfigService.isPreview()) {
-        var currentNodeId = this.StudentDataService.getCurrentNodeId();
-        var messageJSON = {};
-        messageJSON.messageType = messageType;
-        messageJSON.messageParticipants = 'studentToTeachers';
-        messageJSON.currentNodeId = currentNodeId;
-        messageJSON.data = data;
-        this.dataStream.send(messageJSON);
-      }
     }
   }]);
 

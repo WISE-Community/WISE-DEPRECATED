@@ -55,6 +55,10 @@ var TeacherWebSocketService = function () {
           var achievement = message.content;
           achievement.data = JSON.parse(achievement.data);
           _this2.$rootScope.$broadcast('newStudentAchievement', { studentAchievement: achievement });
+        } else if (message.type === 'annotation') {
+          var annotationData = message.content;
+          annotationData.data = JSON.parse(annotationData.data);
+          _this2.$rootScope.$broadcast('newAnnotationReceived', { annotation: annotationData });
         }
       });
     }
@@ -67,37 +71,10 @@ var TeacherWebSocketService = function () {
         if (message.type === 'notification') {
           var notification = message.content;
           notification.data = JSON.parse(notification.data);
-          _this3.$rootScope.$broadcast('newNotification', notification);
+          _this3.$rootScope.$broadcast('newNotificationReceived', notification);
         }
       });
     }
-
-    /*
-    handleMessage(message) {
-      const data = JSON.parse(message.data);
-      const messageType = data.messageType;
-      if (messageType === 'studentStatus') {
-        this.handleStudentStatusReceived(data);
-      } else if (messageType === 'studentsOnlineList') {
-        this.handleStudentsOnlineReceived(data);
-      } else if (messageType === 'studentConnected') {
-       } else if (messageType === 'studentDisconnected') {
-        this.handleStudentDisconnected(data);
-      } else if (messageType === 'notification' || messageType === 'CRaterResultNotification') {
-        this.$rootScope.$broadcast('newNotification', data.data);
-      } else if (messageType === 'newAnnotation') {
-        this.$rootScope.$broadcast('newAnnotationReceived', {annotation: data.annotation});
-      } else if (messageType === 'newStudentWork') {
-        this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: data.studentWork});
-      } else if (messageType === 'newStudentAchievement') {
-        this.$rootScope.$broadcast('newStudentAchievement', {studentAchievement: data.studentAchievement});
-      }
-    }
-    sendMessage(messageJSON) {
-      this.dataStream.send(messageJSON);
-    }
-    */
-
   }, {
     key: 'handleStudentsOnlineReceived',
     value: function handleStudentsOnlineReceived(studentsOnlineMessage) {

@@ -723,12 +723,6 @@ public class StudentDataController {
         response.getWriter().print(jsonResponse.toString());
         if (isSendToWebSockets(nodeVisitJSON)) {
           nodeVisitJSON.put("id", newStepWorkId);
-//          if (webSocketHandler != null) {
-//            WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-//            if (wiseWebSocketHandler != null) {
-//              wiseWebSocketHandler.handleMessage(signedInUser, nodeVisitJSON.toString());
-//            }
-//          }
         }
       } else {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error saving: " + nodeVisitJSON.toString());

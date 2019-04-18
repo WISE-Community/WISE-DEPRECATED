@@ -180,7 +180,6 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                             return AchievementService.retrieveStudentAchievements();
                         },
                         notifications: function (NotificationService, ConfigService, studentStatuses, config, project) {
-                            //return NotificationService.retrieveNotifications(ConfigService.getWorkgroupId());
                             return NotificationService.retrieveNotifications();
                         },
                         webSocket: function(TeacherWebSocketService, config) {

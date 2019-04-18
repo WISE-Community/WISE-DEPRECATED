@@ -34,14 +34,9 @@ var TopBarController = function () {
             }
         };
 
-        this.$rootScope.$on('notificationAdded', function (event, notification) {
-            _this.setNotifications();
-        });
-
         this.$rootScope.$on('notificationChanged', function (event, notification) {
             _this.setNotifications();
         });
-
         this.themePath = this.ProjectService.getThemePath();
         this.contextPath = this.ConfigService.getContextPath();
     }

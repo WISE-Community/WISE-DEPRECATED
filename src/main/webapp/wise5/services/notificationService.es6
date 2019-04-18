@@ -8,30 +8,23 @@ class NotificationService {
     this.ProjectService = ProjectService;
     this.StudentWebSocketService = StudentWebSocketService;
     this.UtilService = UtilService;
-    this.notifications = [];  // an array of notifications that students haven't seen yet.
+    this.notifications = [];
 
-    this.$rootScope.$on('newNotification', (event, notification) => {
-      const workgroupId = this.ConfigService.getWorkgroupId();
-      const mode = this.ConfigService.getMode();
-      if (mode === 'classroomMonitor' || workgroupId === notification.toWorkgroupId) {
-        notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
-        notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-        // check if this notification is new or is an update
-        let isNotificationNew = true;
-        for (let n = 0; n < this.notifications.length; n++) {
-          const currentNotification = this.notifications[n];
-          if (currentNotification.id === notification.id) {
-            // existing notification (with same id) found, so it's an update
-            this.notifications[n] = notification;
-            isNotificationNew = false;
-            this.$rootScope.$broadcast('notificationChanged', notification);
-            break;
-          }
+    this.$rootScope.$on('newNotificationReceived', (event, notification) => {
+      this.setNotificationNodePositionAndTitle(notification);
+      let isNotificationNew = true;
+      for (let n = 0; n < this.notifications.length; n++) {
+        const currentNotification = this.notifications[n];
+        if (currentNotification.id === notification.id) {
+          this.notifications[n] = notification;
+          isNotificationNew = false;
+          this.$rootScope.$broadcast('notificationChanged', notification);
+          break;
         }
-        if (isNotificationNew) {
-          this.notifications.push(notification);
-          this.$rootScope.$broadcast('notificationAdded', notification);
-        }
+      }
+      if (isNotificationNew) {
+        this.notifications.push(notification);
+        this.$rootScope.$broadcast('notificationChanged', notification);
       }
     });
   }
@@ -74,13 +67,11 @@ class NotificationService {
     };
   }
 
+
   retrieveNotifications(toWorkgroupId = null) {
-    const notificationURL = this.ConfigService.getNotificationURL();
-    if (notificationURL == null) {
-      // the notification url is null most likely because we are in preview mode
+    if (this.ConfigService.isPreview()) {
       return Promise.resolve(this.notifications);
     } else {
-      // the notification url is not null so we will retrieve the notifications
       const config = {
         method: 'GET',
         url: this.ConfigService.getNotificationURL(),
@@ -92,26 +83,22 @@ class NotificationService {
         config.params.toWorkgroupId = this.ConfigService.getWorkgroupId();
         config.params.periodId = this.ConfigService.getPeriodId();
       }
-
       return this.$http(config).then((response) => {
         this.notifications = response.data;
-        // populate nodePosition and nodePositionAndTitle, where applicable
-        if (this.notifications != null) {
-          this.notifications.map((notification) => {
-            if (notification.nodeId != null) {
-              notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
-              notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-            }
-            if (notification.data != null) {
-              notification.data = angular.fromJson(notification.data);
-            }
-          });
-        } else {
-          this.notifications = [];
-        }
+        this.notifications.map((notification) => {
+          this.setNotificationNodePositionAndTitle(notification);
+          if (notification.data != null) {
+            notification.data = angular.fromJson(notification.data);
+          }
+        });
         return this.notifications;
       });
     }
+  }
+
+  setNotificationNodePositionAndTitle(notification) {
+    notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
+    notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
   }
 
   dismissNotification(notification) {
@@ -121,7 +108,6 @@ class NotificationService {
   sendNotificationForScore(notificationForScore) {
     const notificationType = notificationForScore.notificationType;
     if (notificationForScore.isNotifyTeacher || notificationForScore.isNotifyStudent) {
-      // notify both teacher and student at the same time
       const fromWorkgroupId = this.ConfigService.getWorkgroupId();
       const notificationGroupId = this.ConfigService.getRunId() + "_" + this.UtilService.generateKey(10);  // links student and teacher notifications together
       const notificationData = {};
@@ -132,58 +118,35 @@ class NotificationService {
         notificationData.dismissCode = notificationForScore.dismissCode;
       }
       if (notificationForScore.isNotifyStudent) {
-        // send notification to student
         const toWorkgroupId = this.ConfigService.getWorkgroupId();
         let notificationMessageToStudent = notificationForScore.notificationMessageToStudent;
-        // replace variables like {{score}} and {{dismissCode}} with actual values
         notificationMessageToStudent = notificationMessageToStudent.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
         notificationMessageToStudent = notificationMessageToStudent.replace('{{score}}', notificationForScore.score);
         notificationMessageToStudent = notificationMessageToStudent.replace('{{dismissCode}}', notificationForScore.dismissCode);
 
         const notificationToStudent = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId,
-          fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
+            fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
         this.saveNotificationToServer(notificationToStudent);
-        // this.saveNotificationToServer(notificationToStudent).then((savedNotification) => {
-        //   this.$rootScope.$broadcast('newNotification', savedNotification);
-        // });
       }
 
       if (notificationForScore.isNotifyTeacher) {
-        // send notification to teacher
         const toWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
         let notificationMessageToTeacher = notificationForScore.notificationMessageToTeacher;
-        // replace variables like {{score}} and {{dismissCode}} with actual values
         notificationMessageToTeacher = notificationMessageToTeacher.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
         notificationMessageToTeacher = notificationMessageToTeacher.replace('{{score}}', notificationForScore.score);
         notificationMessageToTeacher = notificationMessageToTeacher.replace('{{dismissCode}}', notificationForScore.dismissCode);
 
         const notificationToTeacher = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId,
-          fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
+            fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
         this.saveNotificationToServer(notificationToTeacher);
-        // this.saveNotificationToServer(notificationToTeacher).then((savedNotification) => {
-        //   // send notification in real-time so teacher sees this right away
-        //   const messageType = 'CRaterResultNotification';
-        //   this.StudentWebSocketService.sendStudentToTeacherMessage(messageType, savedNotification);
-        // });
       }
     }
   }
 
   saveNotificationToServer(notification) {
     if (this.ConfigService.isPreview()) {
-      // if we're in preview, don't make any request to the server but pretend we did
-      const deferred = this.$q.defer();
-      deferred.resolve(notification);
-      return deferred.promise;
+      return this.pretendServerRequest(notification);
     } else {
-      const config = {
-        method: 'POST',
-        url: this.ConfigService.getNotificationURL(),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      };
-
       const params = {
         periodId: this.ConfigService.getPeriodId(),
         fromWorkgroupId: notification.fromWorkgroupId,
@@ -207,7 +170,14 @@ class NotificationService {
       if (notification.timeDismissed != null) {
         params.timeDismissed = notification.timeDismissed;
       }
-      config.data = $.param(params);
+      const config = {
+        method: 'POST',
+        url: this.ConfigService.getNotificationURL(),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: $.param(params)
+      };
       return this.$http(config).then((result) => {
         const notification = result.data;
         if (notification.data != null) {
@@ -222,44 +192,45 @@ class NotificationService {
     notification.timeDismissed = Date.parse(new Date());
 
     if (this.ConfigService.isPreview()) {
-      // if we're in preview, don't make any request to the server but pretend we did
-      const deferred = this.$q.defer();
-      deferred.resolve(notification);
-      return deferred.promise;
-    } else {
-      if (notification.id == null) {
-        // cannot dismiss a notification that hasn't been saved to db yet
-        return;
-      }
-
-      const config = {
-        method: 'POST',
-        url: this.ConfigService.getNotificationURL() + '/dismiss',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      };
-
-      const params = {
-        notificationId: notification.id,
-        fromWorkgroupId: notification.fromWorkgroupId,
-        toWorkgroupId: notification.toWorkgroupId,
-        type: notification.type,
-        timeDismissed: notification.timeDismissed
-      };
-      if (notification.groupId != null) {
-        params.groupId = notification.groupId;
-      }
-      config.data = $.param(params);
-      return this.$http(config).then((result) => {
-        const notification = result.data;
-        if (notification.data != null) {
-          notification.data = angular.fromJson(notification.data);
-        }
-        this.$rootScope.$broadcast('notificationChanged', notification);
-        return notification;
-      });
+      return this.pretendServerRequest(notification);
     }
+
+    if (notification.id == null) {
+      return; // cannot dismiss a notification that hasn't been saved to db yet
+    }
+
+    const params = {
+      notificationId: notification.id,
+      fromWorkgroupId: notification.fromWorkgroupId,
+      toWorkgroupId: notification.toWorkgroupId,
+      type: notification.type,
+      timeDismissed: notification.timeDismissed
+    };
+    if (notification.groupId != null) {
+      params.groupId = notification.groupId;
+    }
+    const config = {
+      method: 'POST',
+      url: this.ConfigService.getNotificationURL() + '/dismiss',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: $.param(params)
+    };
+    return this.$http(config).then((result) => {
+      const notification = result.data;
+      if (notification.data != null) {
+        notification.data = angular.fromJson(notification.data);
+      }
+      this.$rootScope.$broadcast('notificationChanged', notification);
+      return notification;
+    });
+  }
+
+  pretendServerRequest(notification) {
+    const deferred = this.$q.defer();
+    deferred.resolve(notification);
+    return deferred.promise;
   }
 
   /**

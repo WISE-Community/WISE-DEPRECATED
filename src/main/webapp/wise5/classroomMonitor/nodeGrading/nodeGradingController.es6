@@ -71,19 +71,7 @@ class NodeGradingController {
         });
 
         this.$scope.$on('projectSaved', (event, args) => {
-            // update maxScore
             this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
-        });
-
-        this.$scope.$on('notificationAdded', (event, notification) => {
-            if (notification.type === 'CRaterResult') {
-                // there is a new CRaterResult notification
-                // TODO: expand to encompass other notification types that should be shown to teacher
-                let workgroupId = notification.toWorkgroupId;
-                if (this.workgroupsById[workgroupId]) {
-                    this.updateWorkgroup(workgroupId);
-                }
-            }
         });
 
         this.$scope.$on('notificationChanged', (event, notification) => {
