@@ -96,6 +96,9 @@
               <md-select ng-model='connectedComponent.type'
                          ng-change='discussionController.authoringConnectedComponentTypeChanged(connectedComponent)'
                          style='width: 200'>
+                <md-option value='importWork'>
+                  {{ 'importWork' | translate }}
+                </md-option>
                 <md-option value='showWork'>
                   {{ 'showWork' | translate }}
                 </md-option>

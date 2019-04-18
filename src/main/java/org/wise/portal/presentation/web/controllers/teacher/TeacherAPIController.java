@@ -150,6 +150,20 @@ public class TeacherAPIController {
     return runJSON.toString();
   }
 
+  @RequestMapping(value = "/projectlastrun/{projectId}", method = RequestMethod.GET)
+  protected String getProjectLastRun(@PathVariable Long projectId)
+      throws JSONException {
+    List<Run> runsOfProject = runService.getProjectRuns(projectId);
+    for (Run run: runsOfProject) {
+      Date lastRun = run.getLastRun();
+      if (lastRun != null) {
+        JSONObject runJSON = getRunJSON(run);
+        return runJSON.toString();
+      }
+    }
+    return null;
+  }
+
   @RequestMapping(value = "/usernames", method = RequestMethod.GET)
   protected List<String> getAllTeacherUsernames() {
     return userDetailsService.retrieveAllUsernames("TeacherUserDetails");
@@ -186,7 +200,11 @@ public class TeacherAPIController {
     teacherUserDetails.setLanguage(locale.getLanguage());
     User createdUser = this.userService.createUser(teacherUserDetails);
     String username = createdUser.getUserDetails().getUsername();
-    sendCreateTeacherAccountEmail(email, displayName, username, googleUserId, locale, request);
+    String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled", "false");
+    Boolean iSendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
+    if (iSendEmailEnabled) {
+      sendCreateTeacherAccountEmail(email, displayName, username, googleUserId, locale, request);
+    }
     return username;
   }
 

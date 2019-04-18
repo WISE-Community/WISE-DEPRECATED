@@ -100,7 +100,6 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
       FilterChain chain, Authentication authentication) throws IOException, ServletException {
     HttpSession session = request.getSession();
-
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     User user = userService.retrieveUser(userDetails);
     session.setAttribute(User.CURRENT_USER_SESSION_KEY, user);
@@ -109,15 +108,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
       LOGGER.debug("UserDetails logging in: " + userDetails.getUsername());
     }
 
-    String sessionId = session.getId();
-    HashMap<String, User> allLoggedInUsers =
-        (HashMap<String, User>) session.getServletContext().getAttribute("allLoggedInUsers");
-    if (allLoggedInUsers == null) {
-      allLoggedInUsers = new HashMap<String, User>();
-      session.getServletContext()
-          .setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
-    }
-    allLoggedInUsers.put(sessionId, user);
+    ControllerUtil.addNewSessionToAllLoggedInUsers(request, user);
     super.successfulAuthentication(request, response, chain, authentication);
   }
 

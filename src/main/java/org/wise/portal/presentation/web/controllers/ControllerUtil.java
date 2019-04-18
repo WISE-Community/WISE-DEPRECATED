@@ -37,6 +37,7 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
@@ -45,6 +46,7 @@ import org.wise.portal.service.user.UserService;
 import javax.annotation.PostConstruct;
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -344,6 +346,19 @@ public class ControllerUtil {
 
   public static long convertMinutesToMilliseconds(Integer minutes) {
     return Long.valueOf(minutes) * 60 * 1000;
+  }
+
+  public static void addNewSessionToAllLoggedInUsers(HttpServletRequest request, User user) {
+    HttpSession session = request.getSession();
+    String sessionId = session.getId();
+    HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) session
+        .getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
+    if (allLoggedInUsers == null) {
+      allLoggedInUsers = new HashMap<String, User>();
+      session.getServletContext()
+          .setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
+    }
+    allLoggedInUsers.put(sessionId, user);
   }
 
   public static boolean isRecentNumberOfFailedLoginAttemptsOverLimit(User user) {

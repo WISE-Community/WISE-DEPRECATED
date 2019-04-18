@@ -20,6 +20,7 @@
  */
 package org.wise.portal.service.authentication.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   public UserDetails loadUserByGoogleUserId(String googleUserId) {
     return this.userDetailsDao.retrieveByGoogleUserId(googleUserId);
+  }
+
+  @Override
+  public void updateStatsOnSuccessfulLogin(MutableUserDetails userDetails) {
+    ((MutableUserDetails) userDetails).incrementNumberOfLogins();
+    ((MutableUserDetails) userDetails).setLastLoginTime(Calendar.getInstance().getTime());
+    ((MutableUserDetails) userDetails).setNumberOfRecentFailedLoginAttempts(0);
+    this.updateUserDetails((MutableUserDetails) userDetails);
   }
 
   /**
