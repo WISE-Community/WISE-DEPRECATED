@@ -6,25 +6,21 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.HtmlUtils;
 import org.wise.vle.domain.WebSocketMessage;
-import org.wise.vle.domain.HelloMessage;
 
 @RestController
 public class TeacherRunAPIController {
 
   @MessageMapping("/pause/{runId}/{periodId}")
   @SendTo("/topic/classroom/{runId}/{periodId}")
-  public WebSocketMessage pausePeriod(HelloMessage message,
-      @DestinationVariable Integer runId,
+  public WebSocketMessage pausePeriod(@DestinationVariable Integer runId,
       @DestinationVariable Integer periodId) throws Exception {
-    return new WebSocketMessage("pause", HtmlUtils.htmlEscape(message.getName()) + "! runId: " + runId + " periodId: " + periodId);
+    return new WebSocketMessage("pause", "RunId: " + runId + " PeriodId: " + periodId);
   }
 
   @MessageMapping("/unpause/{runId}/{periodId}")
   @SendTo("/topic/classroom/{runId}/{periodId}")
-  public WebSocketMessage unpausePeriod(HelloMessage message,
-      @DestinationVariable Integer runId,
+  public WebSocketMessage unpausePeriod(@DestinationVariable Integer runId,
       @DestinationVariable Integer periodId) throws Exception {
-    return new WebSocketMessage("unpause", HtmlUtils.htmlEscape(message.getName()) + "! runId: " + runId + " periodId: " + periodId);
+    return new WebSocketMessage("unpause", "RunId: " + runId + " PeriodId: " + periodId);
   }
-
 }
