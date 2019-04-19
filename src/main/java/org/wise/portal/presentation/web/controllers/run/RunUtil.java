@@ -216,23 +216,13 @@ public class RunUtil {
     }
 
     try {
-      Date startTime = run.getStarttime();
-      if (startTime != null) {
-        runInfo.put("startTime", startTime.getTime());
-      } else {
-        runInfo.put("startTime", JSONObject.NULL);
-      }
+      runInfo.put("startTime", run.getStartTimeMilliseconds());
     } catch (JSONException e) {
       e.printStackTrace();
     }
 
     try {
-      Date endTime = run.getEndtime();
-      if (endTime != null) {
-        runInfo.put("endTime", endTime.getTime());
-      } else {
-        runInfo.put("endTime", JSONObject.NULL);
-      }
+      runInfo.put("endTime", run.getEndTimeMilliseconds());
     } catch (JSONException e) {
       e.printStackTrace();
     }

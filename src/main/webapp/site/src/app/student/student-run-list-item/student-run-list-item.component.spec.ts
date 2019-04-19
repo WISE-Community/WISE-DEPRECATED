@@ -15,7 +15,7 @@ export class MockConfigService {
     const config : Config = {
       "contextPath":"vle",
       "logOutURL":"/logout",
-      "currentTime":"2018-10-17 00:00:00.0"
+      "currentTime": new Date("2018-10-17T00:00:00.0").getTime()
     };
     return Observable.create( observer => {
       observer.next(config);
@@ -26,7 +26,7 @@ export class MockConfigService {
     return '/wise';
   }
   getCurrentServerTime(): number {
-    return new Date('2018-10-17 00:00:00.0').getTime();
+    return new Date('2018-10-17T00:00:00.0').getTime();
   }
 }
 
@@ -57,7 +57,7 @@ describe('StudentRunListItemComponent', () => {
     owner.displayName = "Mr. Happy";
     run.owner = owner;
     run.projectThumb = "Happy.png";
-    run.startTime = '2018-10-17 00:00:00.0';
+    run.startTime = new Date('2018-10-17T00:00:00.0').getTime();
     const project: Project = new Project();
     project.id = 1;
     project.name = "Test Project";
@@ -79,7 +79,7 @@ describe('StudentRunListItemComponent', () => {
   });
 
   it('should say a run is not active yet', () => {
-    component.run.startTime = '2100-10-17 00:00:00.0';
+    component.run.startTime = new Date('2100-10-17T00:00:00.0').getTime();
     component.ngOnInit();
     expect(component.isRunActive(component.run)).toBeFalsy();
   });

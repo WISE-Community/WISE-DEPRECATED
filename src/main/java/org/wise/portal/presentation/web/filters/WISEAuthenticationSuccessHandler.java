@@ -162,10 +162,7 @@ public class WISEAuthenticationSuccessHandler
       }
     }
 
-    ((MutableUserDetails) userDetails).incrementNumberOfLogins();
-    ((MutableUserDetails) userDetails).setLastLoginTime(Calendar.getInstance().getTime());
-    ((MutableUserDetails) userDetails).setNumberOfRecentFailedLoginAttempts(0);
-    userDetailsService.updateUserDetails((MutableUserDetails) userDetails);
+    userDetailsService.updateStatsOnSuccessfulLogin((MutableUserDetails) userDetails);
     super.handle(request, response, authentication);
   }
 

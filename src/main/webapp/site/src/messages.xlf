@@ -2789,6 +2789,10 @@
           <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
@@ -3053,6 +3057,44 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="4c49a9bb7a99a9da256c6e678cbb49baa70e268a" datatype="html">
+        <source>Edit Classroom Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="b2e61582bbd238946269a615512bdf8a69880cfd" datatype="html">
+        <source>(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="7729e322ed636f18b5930ee33fde3b4a10f2e4ce" datatype="html">
+        <source>Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in lost data or other problems.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="ce6a02374cf2e2a25534fee1f83fa5b5839fa033" datatype="html">
+        <source>Are you sure you wish to proceed?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="41bcea7b08bbd7328312f727ae01b7f074da6233" datatype="html">
+        <source>Proceed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="8dce5a1b53185785ceb8eaece03a45f95a1058ae" datatype="html">
         <source>Parent ID:</source>
@@ -4340,16 +4382,6 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="b2e61582bbd238946269a615512bdf8a69880cfd" datatype="html">
-        <source>(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
       </trans-unit><trans-unit id="ba04cd26cfc1093921e7196b9c934a2e45c5ca2d" datatype="html">
         <source>View Student Work</source>
         <context-group purpose="location">
@@ -5409,15 +5441,15 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="d6d7f1d8cdd020aaad5471989d8abd9ad96bbd12" datatype="html">
-        <source>Project Details</source>
+      <trans-unit id="7a73a1a02bcf341a627892f0d02e113981f96ee3" datatype="html">
+        <source>Run Settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="7a73a1a02bcf341a627892f0d02e113981f96ee3" datatype="html">
-        <source>Run Settings</source>
+      <trans-unit id="a4a01cfa1a6dfa138c0876ec8bfec1092317137c" datatype="html">
+        <source>Edit Classroom Unit Warning</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
           <context context-type="linenumber">1</context>
