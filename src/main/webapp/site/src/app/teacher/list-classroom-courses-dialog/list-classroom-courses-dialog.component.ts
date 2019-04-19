@@ -11,6 +11,7 @@ import { UserService } from '../../services/user.service';
 })
 export class ListClassroomCoursesDialogComponent implements OnInit {
   courses: Course[] = [];
+  courseIds: string[] = [];
   accessCode: string = '';
   unitTitle: string = '';
   endTime: string = '';
@@ -33,7 +34,18 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  addToClassroom(courseId: string) {
+  addCourseId(courseId: string) {
+    if (this.courseIds.includes(courseId)) {
+      document.getElementById(courseId).style.backgroundColor = 'transparent';
+      const index = this.courseIds.indexOf(courseId);
+      this.courseIds.splice(index, 1);
+    } else {
+      document.getElementById(courseId).style.backgroundColor = '#ddd';
+      this.courseIds.push(courseId);
+    }
+  }
+
+  addToClassroom() {
     let endTime = '';
     if (this.endTime) {
       const date = new Date(this.endTime).getTime();
@@ -41,12 +53,13 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
         endTime = date.toString();
       }
     }
-    this.teacherService.addToClassroom(this.accessCode, this.unitTitle, courseId, this.userService.getUser().getValue().username, endTime)
-      .subscribe(({ error }) => {
-        if (!error) {
+    this.teacherService.addToClassroom(this.accessCode, this.unitTitle, this.courseIds, this.userService.getUser()
+      .getValue().username, endTime).subscribe(({ errors }) => {
+        if (errors.length === 0) {
           this.isAdded = true;
         } else {
-          alert("an error occurred!");
+          alert('an error occurred while adding to courses!');
+          console.log(errors);
         }
     });
   }

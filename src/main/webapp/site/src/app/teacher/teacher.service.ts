@@ -249,14 +249,23 @@ export class TeacherService {
     return this.http.get<Course []>(this.listCoursesUrl, { headers, params });
   }
 
-  addToClassroom(accessCode: string, unitTitle: string, courseId: string, username: string, endTime: string): Observable<any> {
+  addToClassroom(accessCode: string, unitTitle: string, courseIds: string[], username: string, endTime: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
-    let params = new HttpParams();
-    params = params.set('accessCode', accessCode);
-    params = params.set('unitTitle', unitTitle);
-    params = params.set('courseId', courseId);
-    params = params.set('username', username);
-    params = params.set('endTime', endTime);
-    return this.http.post<any>(this.addAssignmentUrl, params, { headers });
+    let params = new HttpParams()
+      .set('accessCode', accessCode)
+      .set('unitTitle', unitTitle)
+      .set('username', username)
+      .set('endTime', endTime);
+    const errors: any[] = [];
+    for (const courseId of courseIds) {
+      params = params.set('courseId', courseId);
+      this.http.post<any>(this.addAssignmentUrl, params, { headers }).subscribe(error => {
+        errors.push(JSON.stringify(error.json()));
+      });
+    }
+    return Observable.create(observer => {
+      observer.next({ errors });
+      observer.complete();
+    });
   }
 }
