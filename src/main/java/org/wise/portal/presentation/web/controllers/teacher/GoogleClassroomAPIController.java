@@ -27,10 +27,10 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/api/google-classroom", produces = "application/json;charset=UTF-8")
 public class GoogleClassroomAPIController {
-  @Value("${classroom.ClientId:}")
+  @Value("${google.classroom.clientId:}")
   private String clientId;
 
-  @Value("${classroom.ClientSecret:}")
+  @Value("${google.classroom.clientSecret:}")
   private String clientSecret;
 
   @Value("${wise.name:}")
@@ -124,7 +124,13 @@ public class GoogleClassroomAPIController {
     if (credential == null) {
       return null;
     }
-    return connectToClassroomAPI(credential).courses().list().execute().getCourses();
+    List<Course> activeCourses = new ArrayList<>();
+    for (Course course: connectToClassroomAPI(credential).courses().list().execute().getCourses()) {
+      if (!course.getCourseState().equals("ARCHIVED")) {
+        activeCourses.add(course);
+      }
+    }
+    return activeCourses;
   }
 
   @RequestMapping(value = "/create-assignment", method = RequestMethod.POST)
