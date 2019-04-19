@@ -236,11 +236,13 @@ public class ProjectServiceImpl implements ProjectService {
   private Project setupImportedProject(Project project, String originalAuthorsString) throws JSONException {
     ProjectMetadata metadata = project.getMetadata();
     JSONObject parentProjectJSON = getParentInfo(metadata, null, metadata.getUri());
-    JSONArray parentAuthors = new JSONArray(originalAuthorsString);
-    for (int i = 0; i < parentAuthors.length(); i++) {
-      JSONObject parentAuthor = parentAuthors.getJSONObject(i);
-      parentAuthor.remove("id");
-      parentAuthors.put(i, parentAuthor);
+    JSONArray parentAuthors = new JSONArray();
+    if (originalAuthorsString != null) {
+      parentAuthors = new JSONArray(originalAuthorsString);
+      for (int i = 0; i < parentAuthors.length(); i++) {
+        JSONObject parentAuthor = parentAuthors.getJSONObject(i);
+        parentAuthor.remove("id");
+      }
     }
     parentProjectJSON.put("authors", parentAuthors);
     metadata.setParentProject(parentProjectJSON.toString());

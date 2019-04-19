@@ -286,7 +286,7 @@ public class InformationController {
     }
 
     try {
-      String username = "";
+      String usernames = "";
       String firstName = "";
       String lastName = "";
       JSONArray userIds = new JSONArray();
@@ -294,13 +294,13 @@ public class InformationController {
         MutableUserDetails userDetails = loggedInUser.getUserDetails();
         firstName = userDetails.getFirstname();
         lastName = userDetails.getLastname();
-        username = userDetails.getUsername();
+        usernames = userDetails.getUsername();
         userIds.put(loggedInUser.getId());
       } else {
-        username = getUsernamesFromWorkgroup(workgroup);
+        usernames = getUsernamesFromWorkgroup(workgroup);
         userIds = getStudentIdsFromWorkgroup(workgroup);
       }
-      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, username, firstName, lastName);
+      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, usernames, firstName, lastName);
       myUserInfo.put("myClassInfo", getMyClassInfoJSONObject(run, workgroup, loggedInUser));
       JSONObject userInfo = new JSONObject();
       userInfo.put("myUserInfo", myUserInfo);

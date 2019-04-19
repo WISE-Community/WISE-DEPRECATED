@@ -620,7 +620,6 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
 
       String standardsAddressedString = metadata.getString("standardsAddressed");
-
       if (standardsAddressedString != null && standardsAddressedString != "null") {
         JSONObject standardsAddressedJSON = new JSONObject(standardsAddressedString);
         metadata.put("standardsAddressed", standardsAddressedJSON);
@@ -629,7 +628,6 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
 
       String parentProjectString = metadata.getString("parentProject");
-
       if (parentProjectString != null && parentProjectString != "null") {
         JSONObject parentProjectJSON = new JSONObject(parentProjectString);
         metadata.put("parentProject", parentProjectJSON);
