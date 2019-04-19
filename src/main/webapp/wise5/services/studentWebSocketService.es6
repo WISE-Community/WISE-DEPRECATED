@@ -4,28 +4,25 @@ class StudentWebSocketService {
   constructor(
       $rootScope,
       $stomp,
-      ConfigService,
-      StudentDataService) {
+      AnnotationService,
+      ConfigService) {
     this.$rootScope = $rootScope;
     this.$stomp = $stomp;
+    this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
-    this.StudentDataService = StudentDataService;
-    this.dataStream = null;
   }
 
   initialize() {
-    if (!this.ConfigService.isPreview()) {
-      this.runId = this.ConfigService.getRunId();
-      this.periodId = this.ConfigService.getPeriodId();
-      this.workgroupId = this.ConfigService.getWorkgroupId();
-      try {
-        this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
-          this.subscribeToClassroomTopic();
-          this.subscribeToWorkgroupTopic();
-        });
-      } catch(e) {
-        console.log(e);
-      }
+    this.runId = this.ConfigService.getRunId();
+    this.periodId = this.ConfigService.getPeriodId();
+    this.workgroupId = this.ConfigService.getWorkgroupId();
+    try {
+      this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
+        this.subscribeToClassroomTopic();
+        this.subscribeToWorkgroupTopic();
+      });
+    } catch(e) {
+      console.log(e);
     }
   }
 
@@ -52,7 +49,7 @@ class StudentWebSocketService {
       } else if (message.type === 'annotation') {
         const annotationData = message.content;
         annotationData.data = JSON.parse(annotationData.data);
-        this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
+        this.AnnotationService.addOrUpdateAnnotation(annotationData);
         this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
       }
     });
@@ -62,8 +59,8 @@ class StudentWebSocketService {
 StudentWebSocketService.$inject = [
   '$rootScope',
   '$stomp',
-  'ConfigService',
-  'StudentDataService'
+  'AnnotationService',
+  'ConfigService'
 ];
 
 export default StudentWebSocketService;

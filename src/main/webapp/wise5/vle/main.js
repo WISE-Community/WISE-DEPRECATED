@@ -289,8 +289,10 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
       runStatus: function runStatus(StudentDataService, config) {
         return StudentDataService.retrieveRunStatus();
       },
-      webSocket: function webSocket(StudentWebSocketService, config, project) {
-        return StudentWebSocketService.initialize();
+      webSocket: function webSocket(StudentWebSocketService, ConfigService, config, project) {
+        if (!ConfigService.isPreview()) {
+          return StudentWebSocketService.initialize();
+        }
       },
       language: function language($translate, ConfigService, config) {
         var locale = ConfigService.getLocale(); // defaults to "en"

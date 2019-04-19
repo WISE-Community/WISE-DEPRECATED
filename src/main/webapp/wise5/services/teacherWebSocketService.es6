@@ -8,7 +8,6 @@ class TeacherWebSocketService {
     this.$stomp = $stomp;
     this.ConfigService = ConfigService;
     this.StudentStatusService = StudentStatusService;
-    this.dataStream = null;
     this.studentsOnlineArray = [];
   }
 

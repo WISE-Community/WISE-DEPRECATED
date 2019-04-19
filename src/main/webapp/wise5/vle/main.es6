@@ -178,8 +178,10 @@ const vleModule = angular.module('vle', [
             runStatus: (StudentDataService, config) => {
               return StudentDataService.retrieveRunStatus();
             },
-            webSocket: (StudentWebSocketService, config, project) => {
-              return StudentWebSocketService.initialize();
+            webSocket: (StudentWebSocketService, ConfigService, config, project) => {
+              if (!ConfigService.isPreview()) {
+                return StudentWebSocketService.initialize();
+              }
             },
             language: ($translate, ConfigService, config) => {
               let locale = ConfigService.getLocale();  // defaults to "en"
