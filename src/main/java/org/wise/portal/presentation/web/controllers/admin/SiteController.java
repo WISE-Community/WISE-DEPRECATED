@@ -47,7 +47,7 @@ public class SiteController {
       method = RequestMethod.GET)
   protected String showSite(HttpServletRequest request) {
     String accessCode = request.getParameter("accessCode");
-    if (!accessCode.equals("null")) {
+    if (accessCode != null && !accessCode.equals("null")) {
       return "forward:/index.html?accessCode=" + accessCode;
     }
     return "forward:/index.html";

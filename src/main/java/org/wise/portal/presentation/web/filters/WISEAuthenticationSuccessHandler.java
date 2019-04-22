@@ -68,7 +68,7 @@ public class WISEAuthenticationSuccessHandler
     MutableUserDetails userDetails = (MutableUserDetails) authentication.getPrincipal();
     boolean userIsAdmin = false;
     if (userDetails instanceof StudentUserDetails) {
-      String accessCode = request.getParameter("accessCode");
+      String accessCode = (String) request.getAttribute("accessCode");
       if (request.getServletPath().contains("google-login")) {
         String contextPath = request.getContextPath();
         response.sendRedirect(contextPath + "/student?accessCode=" + accessCode);
