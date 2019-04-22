@@ -83,7 +83,7 @@ function removeSharedUserClicked() {
 	<div id="sharingSearchBoxHelp" class="dialogSection"><spring:message code="teacher.projects.customized.shareproject.instructions"/></div>
 	
 	<div id="sharingSearchSelect">
-		<form:form method="post" commandName="addSharedTeacherParameters" autocomplete='off'>
+		<form:form method="post" modelAttribute="addSharedTeacherParameters" autocomplete='off'>
 			<spring:message code="teacher.projects.customized.shareproject.searchLabel"/> <form:input path="sharedOwnerUsername" id="sharedOwnerUsernameInput" onkeyup="populatePossibilities(this.value)" size="25"/>
 			<input type="submit" value="<spring:message code="save"/>"></input>
 		</form:form>
@@ -118,7 +118,7 @@ function removeSharedUserClicked() {
 							<td>${sharedowner.userDetails.username}</td>
 							<td>		
 							<form:form method="post" id="${sharedowner.userDetails.username}"
-								commandName="${sharedowner.userDetails.username}" autocomplete='off'>
+								modelAttribute="${sharedowner.userDetails.username}" autocomplete='off'>
 								<form:hidden path="sharedOwnerUsername" />
 							
 								<form:radiobutton path="permission"
@@ -140,7 +140,7 @@ function removeSharedUserClicked() {
 						    </form:form>					    									
 							</td>
 							<td>
-								<form:form method="post" id="${sharedowner.userDetails.username}" commandName="${sharedowner.userDetails.username}" autocomplete='off'>
+								<form:form method="post" id="${sharedowner.userDetails.username}" modelAttribute="${sharedowner.userDetails.username}" autocomplete='off'>
 	            					<form:hidden path="sharedOwnerUsername" />
 	            					<input type="hidden" name="removeUserFromProject" value="true"></input>
 									<input type="submit" value="Remove this User" onclick="return removeSharedUserClicked();"></input>

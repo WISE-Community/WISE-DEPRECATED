@@ -15,7 +15,7 @@
 <div class="dialogContent">
 
 	<div class="dialogSection formSection">
-		<form:form method="post" action="changestudentpassword.html" commandName="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
+		<form:form method="post" action="changestudentpassword.html" modelAttribute="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
 
 		<div>
 			<label for="changestudentpassword"><spring:message code="changePassword_current" /></label>

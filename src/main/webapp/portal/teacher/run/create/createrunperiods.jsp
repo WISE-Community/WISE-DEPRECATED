@@ -59,7 +59,7 @@ function checkIfTextAreaEmpty (form) {
 					<spring:message code="teacher.run.create.createrunperiods.setupAClassroomRun" />
 					<span class="pageTitle"><spring:message code="teacher.run.create.createrunperiods.management"/></span>
 				</div>
-				<form:form method="post" commandName="runParameters" autocomplete='off'>
+				<form:form method="post" modelAttribute="runParameters" autocomplete='off'>
 					<div class="panelContent">
 						<div id="setUpRunBox">
 							<div id="stepNumber" class="sectionHead"><spring:message code="teacher.run.create.createrunperiods.step3Of5"/>&nbsp;<spring:message code="teacher.run.create.createrunperiods.selectPeriods"/></div>
