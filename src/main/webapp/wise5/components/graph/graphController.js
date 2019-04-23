@@ -10,6 +10,10 @@ var _componentController = require('../componentController');
 
 var _componentController2 = _interopRequireDefault(_componentController);
 
+var _canvg = require('canvg');
+
+var _canvg2 = _interopRequireDefault(_canvg);
+
 var _html2canvas = require('html2canvas');
 
 var _html2canvas2 = _interopRequireDefault(_html2canvas);
@@ -72,6 +76,7 @@ var GraphController = function (_ComponentController) {
      */
     _this.addNextComponentStateToUndoStack = false;
     _this.chartId = 'chart_' + _this.componentId;
+    _this.hiddenCanvasId = 'hiddenCanvas_' + _this.componentId;
     _this.initializeComponentContentParams();
     var componentState = _this.$scope.componentState;
     if (_this.isStudentMode()) {
@@ -3107,26 +3112,20 @@ var GraphController = function (_ComponentController) {
         }
       }
     }
-
-    /**
-     * Snip the drawing by converting it to an image
-     * @param $event the click event
-     */
-
   }, {
-    key: 'snipDrawing',
-    value: function snipDrawing($event) {
+    key: 'snipGraph',
+    value: function snipGraph($event) {
       var _this13 = this;
 
-      var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
-      if (highchartsDiv != null && highchartsDiv.length > 0) {
-        highchartsDiv = highchartsDiv[0];
-        (0, _html2canvas2.default)(highchartsDiv).then(function (canvas) {
-          var canvasBase64Image = canvas.toDataURL('image/png');
-          var imageObject = _this13.UtilService.getImageObjectFromBase64String(canvasBase64Image);
+      var chart = $('#' + this.chartId).highcharts();
+      var svgString = chart.getSVG();
+      var hiddenCanvas = document.getElementById(this.hiddenCanvasId);
+      (0, _canvg2.default)(hiddenCanvas, svgString, { renderCallback: function renderCallback() {
+          var base64Image = hiddenCanvas.toDataURL('image/png');
+          var imageObject = _this13.UtilService.getImageObjectFromBase64String(base64Image);
           _this13.NotebookService.addNote($event, imageObject);
-        });
-      }
+        }
+      });
     }
   }, {
     key: 'readCSVIntoActiveSeries',

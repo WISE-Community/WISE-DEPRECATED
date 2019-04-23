@@ -105,7 +105,7 @@
               <md-icon> restore </md-icon> {{ 'graph.resetGraph' | translate }}
             </md-button>
             <md-button class='md-accent md-primary'
-                ng-click='graphController.snipDrawing($event)'
+                ng-click='graphController.snipGraph($event)'
                 ng-if='graphController.isAddToNotebookEnabled()'>
               <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
             </md-button>
@@ -190,6 +190,9 @@
       <component-annotations ng-if='graphController.mode === "student"'
                    annotations='graphController.latestAnnotations'
                    max-score='graphController.componentContent.maxScore'></component-annotations>
+      <div style="display:none">
+        <canvas id="{{graphController.hiddenCanvasId}}"></canvas>
+      </div>
     </div>
   </div>
 </div>

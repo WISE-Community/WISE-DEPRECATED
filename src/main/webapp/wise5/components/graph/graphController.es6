@@ -1,6 +1,7 @@
 'use strict';
 
 import ComponentController from "../componentController";
+import canvg from 'canvg';
 import html2canvas from 'html2canvas';
 
 class GraphController extends ComponentController {
@@ -65,6 +66,7 @@ class GraphController extends ComponentController {
      */
     this.addNextComponentStateToUndoStack = false;
     this.chartId = 'chart_' + this.componentId;
+    this.hiddenCanvasId = 'hiddenCanvas_' + this.componentId;
     this.initializeComponentContentParams();
     const componentState = this.$scope.componentState;
     if (this.isStudentMode()) {
@@ -2222,20 +2224,16 @@ class GraphController extends ComponentController {
     }
   }
 
-  /**
-   * Snip the drawing by converting it to an image
-   * @param $event the click event
-   */
-  snipDrawing($event) {
-    let highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
-    if (highchartsDiv != null && highchartsDiv.length > 0) {
-      highchartsDiv = highchartsDiv[0];
-      html2canvas(highchartsDiv).then((canvas) => {
-        const canvasBase64Image = canvas.toDataURL('image/png');
-        const imageObject = this.UtilService.getImageObjectFromBase64String(canvasBase64Image);
+  snipGraph($event) {
+    const chart = $('#' + this.chartId).highcharts();
+    const svgString = chart.getSVG();
+    const hiddenCanvas = document.getElementById(this.hiddenCanvasId);
+    canvg(hiddenCanvas, svgString, { renderCallback: () => {
+        const base64Image = hiddenCanvas.toDataURL('image/png');
+        const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
         this.NotebookService.addNote($event, imageObject);
-      });
-    }
+      }
+    });
   }
 
   readCSVIntoActiveSeries(csvString) {
