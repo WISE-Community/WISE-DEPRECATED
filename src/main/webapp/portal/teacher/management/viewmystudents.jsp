@@ -104,7 +104,7 @@ $(document).ready(function(){
 	$('.changePassword').on('click',function(){
 		var title = $(this).attr('title');
 		var username = $(this).attr('id').replace('changePassword_','');
-		var path = "changestudentpassword.html?username=" + username;
+		var path = "changestudentpassword?username=" + username;
 		var dialog = $('<div id="studentPasswordDialog" style="overflow-y:hidden;"></div>');
 		var div = dialog.html('<iframe id="studentPasswordIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
@@ -125,7 +125,7 @@ $(document).ready(function(){
 	$('.changePeriod').on('click',function(){
 		var title = $(this).attr('title');
 		var data = $(this).attr('id').replace('changePeriod_','');
-		var path = "changestudentperiod.html?" + data;
+		var path = "changestudentperiod?" + data;
 		var dialog = $('<div id="studentPeriodDialog" style="overflow-y:hidden;"></div>');
 		var div = dialog.html('<iframe id="studentPeriodIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({

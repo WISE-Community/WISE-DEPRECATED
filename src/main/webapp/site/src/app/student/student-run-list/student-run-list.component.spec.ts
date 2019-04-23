@@ -20,7 +20,7 @@ export class MockStudentService {
     name: "Test Project",
     runCode: "Panda123",
     periodName: "1",
-    startTime: "2018-08-22 00:00:00.0",
+    startTime: new Date("2018-08-22T00:00:00.0").getTime(),
     teacherDisplayName: "Spongebob Squarepants",
     teacherFirstName: "Spongebob",
     teacherLastName: "Squarepants",
@@ -31,18 +31,18 @@ export class MockStudentService {
       new Run({
         id:1,
         name:"Photosynthesis",
-        startTime: "2018-08-22 00:00:00.0"
+        startTime: new Date("2018-08-22T00:00:00.0").getTime()
       }),
       new Run({
         id:2,
         name:"Plate Tectonics",
-        startTime: "2018-08-23 00:00:00.0"
+        startTime: new Date("2018-08-23T00:00:00.0").getTime()
       }),
       new Run({
         id:3,
         name:"Chemical Reactions",
-        startTime: "2018-08-20 00:00:00.0",
-        endTime: "2018-08-22 00:00:00.0"
+        startTime: new Date("2018-08-20T00:00:00.0").getTime(),
+        endTime: new Date("2018-08-22T00:00:00.0").getTime()
       })
       ];
     return Observable.create( observer => {
@@ -54,7 +54,7 @@ export class MockStudentService {
 
 export class MockConfigService {
   getCurrentServerTime(): number {
-    return new Date('2018-08-24 00:00:00.0').getTime();
+    return new Date('2018-08-24T00:00:00.0').getTime();
   }
 }
 

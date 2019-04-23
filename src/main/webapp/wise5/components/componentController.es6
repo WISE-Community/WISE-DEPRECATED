@@ -709,31 +709,26 @@ class ComponentController {
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Add a connected component
-   */
   authoringAddConnectedComponent() {
+    const connectedComponent = this.createConnectedComponent();
+    this.addConnectedComponent(connectedComponent);
+    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
 
-    /*
-     * create the new connected component object that will contain a
-     * node id and component id
-     */
-    var newConnectedComponent = {};
-    newConnectedComponent.nodeId = this.nodeId;
-    newConnectedComponent.componentId = null;
-    newConnectedComponent.type = null;
-    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
-
-    // initialize the array of connected components if it does not exist yet
+  addConnectedComponent(connectedComponent) {
     if (this.authoringComponentContent.connectedComponents == null) {
       this.authoringComponentContent.connectedComponents = [];
     }
+    this.authoringComponentContent.connectedComponents.push(connectedComponent);
+  }
 
-    // add the connected component
-    this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
+  createConnectedComponent() {
+    return {
+      nodeId: this.nodeId,
+      componentId: null,
+      type: null
+    };
   }
 
   /**
@@ -767,6 +762,13 @@ class ComponentController {
           connectedComponent.type = 'importWork';
         }
       }
+    }
+    this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+  }
+
+  authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
+    if (connectedComponent.componentId != null) {
+      connectedComponent.type = 'importWork';
     }
   }
 
@@ -833,20 +835,9 @@ class ComponentController {
     }
   }
 
-  /**
-   * The connected component component id has changed
-   * @param connectedComponent the connected component that has changed
-   */
   authoringConnectedComponentComponentIdChanged(connectedComponent) {
-
-    if (connectedComponent != null) {
-
-      // default the type to import work
-      connectedComponent.type = 'importWork';
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
+    this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
   }
 
   /**

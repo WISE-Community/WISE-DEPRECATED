@@ -8,6 +8,7 @@ import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { EditRunWarningDialogComponent } from '../edit-run-warning-dialog/edit-run-warning-dialog.component';
 import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 @Component({
@@ -71,7 +72,6 @@ export class RunMenuComponent implements OnInit {
   showUnitDetails() {
     const project = this.run.project;
     this.dialog.open(LibraryProjectDetailsComponent, {
-      ariaLabel: this.i18n('Project Details'),
       data: { project: project, isRunProject: true },
       panelClass: 'mat-dialog--md'
     });
@@ -97,5 +97,17 @@ export class RunMenuComponent implements OnInit {
       panelClass: 'mat-dialog--md',
       autoFocus: true
     });
+  }
+
+  editContent() {
+    if (this.run.lastRun) {
+      this.dialog.open(EditRunWarningDialogComponent, {
+        ariaLabel: this.i18n('Edit Classroom Unit Warning'),
+        data: { run: this.run },
+        panelClass: 'mat-dialog--sm'
+      });
+    } else {
+      window.location.href = this.editLink;
+    }
   }
 }

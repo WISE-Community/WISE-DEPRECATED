@@ -5,8 +5,8 @@ export class Run {
   id: number;
   name: string;
   runCode: string;
-  startTime: string;
-  endTime: string;
+  startTime: number;
+  endTime: number;
   lastRun: string;
   projectThumb: string;
   numStudents: number;
@@ -72,8 +72,7 @@ export class Run {
   }
 
   isScheduled(now) {
-    const startTime = new Date(this.startTime).getTime();
-    return now < startTime;
+    return now < this.startTime;
   }
 
   isActive(now) {
@@ -82,8 +81,7 @@ export class Run {
 
   isCompleted(now) {
     if (this.hasEndTime()) {
-      const endTime = new Date(this.endTime).getTime();
-      return endTime <= now;
+      return this.endTime <= now;
     }
     return false;
   }

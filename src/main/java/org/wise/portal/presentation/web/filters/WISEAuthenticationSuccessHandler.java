@@ -68,7 +68,7 @@ public class WISEAuthenticationSuccessHandler
     MutableUserDetails userDetails = (MutableUserDetails) authentication.getPrincipal();
     boolean userIsAdmin = false;
     if (userDetails instanceof StudentUserDetails) {
-      String accessCode = request.getParameter("accessCode");
+      String accessCode = (String) request.getAttribute("accessCode");
       if (request.getServletPath().contains("google-login")) {
         String contextPath = request.getContextPath();
         response.sendRedirect(contextPath + "/student?accessCode=" + accessCode);
@@ -162,10 +162,7 @@ public class WISEAuthenticationSuccessHandler
       }
     }
 
-    ((MutableUserDetails) userDetails).incrementNumberOfLogins();
-    ((MutableUserDetails) userDetails).setLastLoginTime(Calendar.getInstance().getTime());
-    ((MutableUserDetails) userDetails).setNumberOfRecentFailedLoginAttempts(0);
-    userDetailsService.updateUserDetails((MutableUserDetails) userDetails);
+    userDetailsService.updateStatsOnSuccessfulLogin((MutableUserDetails) userDetails);
     super.handle(request, response, authentication);
   }
 

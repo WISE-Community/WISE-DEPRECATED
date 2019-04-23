@@ -37,13 +37,12 @@ class DiscussionService extends ComponentService {
     return component;
   }
 
-  getClassmateResponses(runId, periodId, nodeId, componentId) {
+  getClassmateResponses(runId, periodId, components) {
     return this.$q((resolve, reject) => {
       const params = {
         runId: runId,
         periodId: periodId,
-        nodeId: nodeId,
-        componentId: componentId,
+        components: components,
         getStudentWork: true,
         getAnnotations: true
       };
@@ -168,27 +167,36 @@ class DiscussionService extends ComponentService {
   }
 
   componentStateHasStudentWork(componentState, componentContent) {
-    if (componentState != null) {
-      const response = componentState.studentData.response;
-      if (componentContent == null) {
-        if (response != null && response !== '') {
-          return true;
-        }
-      } else {
-        const starterSentence = componentContent.starterSentence;
-        if (starterSentence == null || starterSentence === '') {
-          if (response != null && response !== '') {
-            return true;
-          }
-        } else {
-          if (response != null && response !== '' && response !== starterSentence) {
-            return true;
-          }
-        }
-      }
+    if (this.isStudentWorkHasAttachment(componentState)) {
+      return true;
     }
+    if (this.isComponentHasStarterSentence(componentContent)) {
+      return this.isStudentWorkHasText(componentState) &&
+          this.isStudentResponseDifferentFromStarterSentence(componentState, componentContent);
+    } else {
+      return this.isStudentWorkHasText(componentState);
+    }
+  }
 
-    return false;
+  isComponentHasStarterSentence(componentContent) {
+    const starterSentence = componentContent.starterSentence;
+    return starterSentence != null && starterSentence !== '';
+  }
+
+  isStudentResponseDifferentFromStarterSentence(componentState, componentContent) {
+    const response = componentState.studentData.response;
+    const starterSentence = componentContent.starterSentence;
+    return response !== starterSentence;
+  }
+
+  isStudentWorkHasText(componentState) {
+    const response = componentState.studentData.response;
+    return response != null && response !== '';
+  }
+
+  isStudentWorkHasAttachment(componentState) {
+    const attachments = componentState.studentData.attachments;
+    return attachments != null && attachments.length > 0;
   }
 }
 

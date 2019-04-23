@@ -31,7 +31,7 @@ export class ConfigService {
     this.http.get<Config>(configUrl, { headers: headers })
       .subscribe(config => {
         this.config$.next(config);
-        this.timeDiff = new Date(Date.now()).getTime() - new Date(config.currentTime).getTime();
+        this.timeDiff = Date.now() - config.currentTime;
       });
   }
 

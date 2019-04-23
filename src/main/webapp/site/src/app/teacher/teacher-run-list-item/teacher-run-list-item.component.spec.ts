@@ -18,7 +18,7 @@ export class MockConfigService {
     return '/wise';
   }
   getCurrentServerTime(): number {
-    return new Date('2018-08-24 00:00:00.0').getTime();
+    return new Date('2018-08-24T00:00:00.0').getTime();
   }
 }
 
@@ -52,8 +52,8 @@ describe('TeacherRunListItemComponent', () => {
     const run = new TeacherRun();
     run.id = 1;
     run.name = "Photosynthesis";
-    run.startTime = '2018-10-17 00:00:00.0';
-    run.endTime = '2018-10-18 23:59:59.0';
+    run.startTime = new Date('2018-10-17T00:00:00.0').getTime();
+    run.endTime = new Date('2018-10-18T23:59:59.0').getTime();
     run.numStudents = 30;
     run.periods = ['1', '2'];
     const project = new Project();

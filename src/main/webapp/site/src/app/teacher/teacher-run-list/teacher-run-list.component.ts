@@ -92,7 +92,6 @@ export class TeacherRunListComponent implements OnInit {
 
   processRuns() {
     const runs = this.personalRuns.concat(this.sharedRuns);
-    //runs.sort(this.sortByStartTimeDesc);
     this.runs = runs;
     this.filteredRuns = runs;
     this.populatePeriods(runs);
@@ -103,11 +102,11 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   sortByStartTimeDesc(a, b) {
-    let aStartDate = new Date(a.startTime);
-    let bStartDate = new Date(b.startTime);
-    if (aStartDate < bStartDate) {
+    let aStartTime = a.startTime;
+    let bStartTime = b.startTime;
+    if (aStartTime < bStartTime) {
       return 1;
-    } else if (aStartDate > bStartDate) {
+    } else if (aStartTime > bStartTime) {
       return -1;
     } else {
       return 0;
