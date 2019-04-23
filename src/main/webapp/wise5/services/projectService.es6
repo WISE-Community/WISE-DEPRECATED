@@ -1228,6 +1228,21 @@ class ProjectService {
       return null;
     }
 
+    const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
+    const userInfo = this.ConfigService.getMyUserInfo();
+    let exists = false;
+    for (let [index, author] of authors.entries()) {
+      if (author.id === userInfo.id) {
+        author = userInfo;
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      authors.push(userInfo);
+    }
+    this.project.metadata.authors = authors;
+
     const httpParams = {
       method: 'POST',
       url: saveProjectURL,

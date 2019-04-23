@@ -56,4 +56,6 @@ public class ProjectParameters implements Serializable {
   private Long rootProjectId;
 
   private Integer wiseVersion;
+
+  private Boolean isImport;
 }
