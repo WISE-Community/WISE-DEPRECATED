@@ -2634,8 +2634,8 @@
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-      </trans-unit><trans-unit id="8a7fb82316a17cec6a52e24cef8fe68e8699100e" datatype="html">
-        <source>Hey there! Looks like you don&apos;t have any classroom courses yet.</source>
+      </trans-unit><trans-unit id="955c309a06472b8f36d17ceffa9089a6bfb72b27" datatype="html">
+        <source>Hey there! Looks like you don&apos;t have any classroom courses yet. Visit Google Classroom and first create courses.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">2</context>
