@@ -209,7 +209,7 @@ function createAccount() {
 						</spring:bind>
 					</div>
 
-					<form:form method="post" action="join" commandName="teacherAccountForm" id="teacherRegForm" autocomplete='off'>
+					<form:form method="post" action="join" modelAttribute="teacherAccountForm" id="teacherRegForm" autocomplete='off'>
 					  <table class="regTable">
 					  	<tr>
 					  		<td><label for="firstname" id="firstname1"><spring:message code="teacher.registerteacher.firstName" /></label></td>

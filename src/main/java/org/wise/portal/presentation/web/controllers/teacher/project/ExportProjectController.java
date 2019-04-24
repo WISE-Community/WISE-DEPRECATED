@@ -23,11 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.project;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
@@ -106,6 +102,10 @@ public class ExportProjectController {
       PrintWriter metaOut = new PrintWriter(metaFileName);
       metaOut.println(metadataJSONString);
       metaOut.close();
+    } else if (project.getWiseVersion().equals(5)) {
+      metadata.setUri(projectService.getProjectURI(project));
+      String projectFilePath = projectJSONDir + sep + "project.json";
+      projectService.replaceMetadataInProjectJSONFile(projectFilePath, metadata);
     }
 
     ServletOutputStream outputStream = response.getOutputStream();

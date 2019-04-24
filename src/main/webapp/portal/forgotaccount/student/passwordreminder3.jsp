@@ -29,7 +29,7 @@
 				<div class="infoContentBox">
 					<div class="errorMsgNoBg"><spring:message code="forgotaccount.student.passwordreminder3.thatAnswerIsCorrect"/></div>
 					<div>
-						<form id="submittedAccountPasswords" method="post" commandName="passwordReminderParameters" autocomplete='off'>
+						<form id="submittedAccountPasswords" method="post" modelAttribute="passwordReminderParameters" autocomplete='off'>
 							<table id="submittedAccountPasswordTable" style="margin:0 auto;">
 							<tr>
 								<td><label id="passwordform" for="newPassword"><spring:message code="forgotaccount.student.passwordreminder3.newPassword" />:</label></td>

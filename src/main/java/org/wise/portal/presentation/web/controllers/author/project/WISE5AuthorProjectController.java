@@ -184,11 +184,7 @@ public class WISE5AuthorProjectController {
       copyRandomFeaturedProjectIconIntoAssetsFolder(newProjectAssetsDir);
       // commented below until "W5 AT: new commit message convention #1016" is completed
       //commitChangesToProjectJSON(commitMessage, user, newProjectPath.getAbsolutePath());
-    } catch(IOException e) {
-      e.printStackTrace();
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    } catch (JSONException e) {
+    } catch(IOException | ObjectNotFoundException | JSONException e) {
       e.printStackTrace();
     }
   }
@@ -209,7 +205,7 @@ public class WISE5AuthorProjectController {
   private File getRandomFeaturedProjectIcon() {
     File featuredProjectIconsDir = new File(getFeaturedProjectIconsFolderPathString());
     File[] featuredProjectIcons = featuredProjectIconsDir.listFiles();
-    if (featuredProjectIcons.length > 0) {
+    if (featuredProjectIcons != null && featuredProjectIcons.length > 0) {
       return featuredProjectIcons[new Random().nextInt(featuredProjectIcons.length)];
     } else {
       return null;
@@ -286,54 +282,17 @@ public class WISE5AuthorProjectController {
    * If the parentProjectId is specified, the user is requesting to copy that project
    */
   @RequestMapping(value = "/project/copy/{projectId}", method = RequestMethod.POST)
-  protected void copyProject(@PathVariable Long projectId, HttpServletResponse response) {
+  protected void copyProject(@PathVariable Long projectId, HttpServletResponse response) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (!hasAuthorPermissions(user)) {
       return;
     }
-    try {
-      Project parentProject = projectService.getById(projectId);
-      Set<String> tagNames = new TreeSet<String>();
-      tagNames.add("library");
-      if (parentProject != null && (this.projectService.canAuthorProject(parentProject, user) || parentProject.hasTags(tagNames))) {
-        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        String parentProjectJSONAbsolutePath = curriculumBaseDir + parentProject.getModulePath();
-        File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);
-        File parentProjectDir = parentProjectJSONFile.getParentFile();
-
-        String newProjectDirectoryPath = copyProjectDirectory(parentProjectDir);
-        String modulePath = "/" + newProjectDirectoryPath + "/project.json";
-
-        ProjectParameters pParams = new ProjectParameters();
-        pParams.setModulePath(modulePath);
-        pParams.setOwner(user);
-        pParams.setProjectname(parentProject.getName());
-        pParams.setProjectType(ProjectType.LD);
-        pParams.setWiseVersion(new Integer(5));
-        pParams.setParentProjectId(Long.valueOf(projectId));
-
-        ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
-        if (parentProjectMetadata != null) {
-          ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
-          pParams.setMetadata(newProjectMetadata);
-        } else {
-          ProjectMetadata metadata = new ProjectMetadataImpl();
-          metadata.setTitle(parentProject.getName());
-          pParams.setMetadata(metadata);
-        }
-
-        Project project = projectService.createProject(pParams);
-        response.getWriter().write(project.getId().toString());
-      }
-    } catch (ObjectNotFoundException onfe) {
-      onfe.printStackTrace();
-      return;
-    } catch (IOException ie) {
-      ie.printStackTrace();
-      return;
-    } catch (JSONException je) {
-      je.printStackTrace();
-      return;
+    Project parentProject = projectService.getById(projectId);
+    if (parentProject != null && (this.projectService.canReadProject(parentProject, user) ||
+        parentProject.isOfficialProject() ||
+        parentProject.isCommunityProject())) {
+      Project project = projectService.copyProject(projectId.intValue(), user);
+      response.getWriter().write(project.getId().toString());
     }
   }
 
@@ -348,7 +307,7 @@ public class WISE5AuthorProjectController {
   protected void saveProject(
       @PathVariable Long projectId,
       @RequestParam("commitMessage") String commitMessage,
-      @RequestParam("projectJSONString") String projectJSONString) {
+      @RequestParam("projectJSONString") String projectJSONString) throws JSONException {
     Project project;
     try {
       project = projectService.getById(projectId);
@@ -379,16 +338,21 @@ public class WISE5AuthorProjectController {
         JSONObject projectJSONObject = new JSONObject(projectJSONString);
         JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
         if (projectMetadataJSON != null) {
+          ProjectMetadata oldProjectMetadata = project.getMetadata();
+          ProjectMetadata projectMetadata = new ProjectMetadataImpl(projectMetadataJSON);
           project.setMetadata(projectMetadataJSON.toString());
+          if (!oldProjectMetadata.getTitle().equals(projectMetadata.getTitle()) ||
+              !oldProjectMetadata.getAuthors().equals(projectMetadata.getAuthors())) {
+            String projectFolderPath = FileManager.getProjectFolderPath(project);
+            projectService.writeProjectLicenseFile(projectFolderPath, project);
+          }
           String projectTitle = projectMetadataJSON.getString("title");
           if (projectTitle != null && !projectTitle.equals(project.getName())) {
             project.setName(projectTitle);
           }
           projectService.updateProject(project, user);
         }
-      } catch(JSONException e) {
-        e.printStackTrace();
-      } catch (NotAuthorizedException e) {
+      } catch (JSONException | NotAuthorizedException e) {
         e.printStackTrace();
       }
       // commented below until "W5 AT: new commit message convention #1016" is completed
@@ -521,14 +485,12 @@ public class WISE5AuthorProjectController {
       String username = userDetails.getUsername();
       String firstName = userDetails.getFirstname();
       String lastName = userDetails.getLastname();
-      String fullName = firstName + " " + lastName;
 
       JSONObject myUserInfo = new JSONObject();
       myUserInfo.put("id", user.getId());
       myUserInfo.put("username", username);
       myUserInfo.put("firstName", firstName);
       myUserInfo.put("lastName", lastName);
-      myUserInfo.put("fullName", fullName);
       JSONObject userInfo = new JSONObject();
       userInfo.put("myUserInfo", myUserInfo);
       config.put("userInfo", userInfo);

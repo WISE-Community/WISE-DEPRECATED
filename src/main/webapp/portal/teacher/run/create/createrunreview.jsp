@@ -166,7 +166,7 @@
 							<h5><spring:message code="teacher.run.create.createrunreview.whenYoureReady"/></h5>
 						</div>
 					</div>
-					<form:form method="post" commandName="runParameters" class="center" onSubmit="return createRun('${projectId}','${projectWiseVersion}','${projectType}','${projectName}','${projectJSONFilename}')">
+					<form:form method="post" modelAttribute="runParameters" class="center" onSubmit="return createRun('${projectId}','${projectWiseVersion}','${projectType}','${projectName}','${projectJSONFilename}')">
 						<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunreview.cancel" />" />
 						<input type="submit" id="submit_form" name="_finish" value="<spring:message code="teacher.run.create.createrunreview.done" />" />
 						<input type="hidden" id="newProjectId" name="newProjectId" value="" />
