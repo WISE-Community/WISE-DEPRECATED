@@ -72,7 +72,7 @@ export class MockUserService {
 }
 
 export class MockConfigService {
-  getConfig(): Observable<User[]> {
+  getConfig(): Observable<Config> {
     return Observable.create( observer => {
       const config: Config = {
         contextPath: "/wise",
@@ -101,9 +101,8 @@ describe('TeacherHomeComponent', () => {
         { provide: UserService, useClass: MockUserService },
         { provide: ConfigService, useClass: MockConfigService },
         { provide: Router },
-        { provide: ActivatedRoute, useValue: { data: Observable.create({ selectedTabIndex: 0 })} }
+        { provide: ActivatedRoute, useValue: { data: Observable.create( observer => { const data = {selectedTabIndex: 0 }; observer.next(data); observer.complete(); })} }
       ],
-      imports: [],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
