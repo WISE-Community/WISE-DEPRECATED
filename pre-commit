@@ -7,10 +7,11 @@ if [ "`git diff --cached --name-status | grep src/main/webapp/site | wc -l`" -gt
   if [ "`git diff --name-status | awk '$1 == "M"' | grep xlf | wc -l`" -gt 0 ]; then
     echo "Your code generated changes to the following file(s):"
     git diff --name-status | awk '$1 == "M"' | grep xlf
-    echo "Please test and stage them before committing again."
+    git add src/main/webapp/site/src/messages.xlf
+    echo "messages.xlf was added to commit."
     echo "You can commit with -n to bypass this pre-commit hook."
-    echo "Aborting commit."
-    exit 1
+    echo "Done."
+    exit 0
   fi
 fi
 echo "***************************"
