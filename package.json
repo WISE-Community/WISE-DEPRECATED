@@ -32,7 +32,7 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.13.5",
+    "@angular-devkit/build-angular": "^0.8.9",
     "@angular/cli": "^6.2.1",
     "@angular/compiler-cli": "6.1.7",
     "@angular/language-service": "6.1.7",
@@ -86,7 +86,7 @@
     "bundle-report": "node ./node_modules/webpack-bundle-analyzer/lib/bin/analyzer.js src/main/webapp/site/dist/stats.json",
     "postinstall": "node ./node_modules/jspm/jspm.js install -y",
     "watch-all-wise5": "node node_modules/concurrently/src/main.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-watch\"",
-    "watch-all-site": "node node_modules/concurrently/src/main.js \"ng build --watch\" \"ng test --karma-config src/main/webapp/site/karma.conf.js --browsers Chrome\"",
+    "watch-all-site": "node node_modules/concurrently/src/main.js \"ng build --watch\" \"ng test --source-map=false --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox\"",
     "watch-all-site-headless": "node node_modules/concurrently/src/main.js \"ng build --watch --extract-css=true\" \"ng test --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadless\"",
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
     "update-i18n": "node ./node_modules/gulp/bin/gulp.js update-i18n",
