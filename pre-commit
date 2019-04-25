@@ -5,9 +5,10 @@ echo "*****************************"
 if [ "`git diff --cached --name-status | grep src/main/webapp/site | wc -l`" -gt 0 ]; then
   gulp site-i18n
   if [ "`git diff --name-status | awk '$1 == "M"' | grep xlf | wc -l`" -gt 0 ]; then
-    echo "Your code generated changes to the following file(s) and were added to git for commit:"
+    echo "Your code generated changes to the following file(s):"
     git diff --name-status | awk '$1 == "M"' | grep xlf
     git add src/main/webapp/site/src/messages.xlf
+    echo "Generated file(s) were added to git for commit"
     echo "You can commit with -n to bypass this pre-commit hook."
     echo "Done."
     exit 0
