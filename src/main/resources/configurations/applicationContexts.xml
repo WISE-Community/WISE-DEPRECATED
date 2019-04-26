@@ -54,7 +54,6 @@
     <sec:filter-chain-map request-matcher="ant">
       <sec:filter-chain pattern="/**" filters="
           openSessionInViewFilter,
-          httpSessionContextIntegrationFilter,
           logoutFilter,
           oAuth2ClientContextFilter,
           googleOpenIdConnectFilter,
@@ -103,8 +102,6 @@
   <bean id="anonymousAuthenticationProvider" class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
     <constructor-arg value="fubar" />
   </bean>
-
-  <bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter" />
 
   <bean id="openSessionInViewFilter" class="org.springframework.orm.hibernate5.support.OpenSessionInViewFilter" />
 
