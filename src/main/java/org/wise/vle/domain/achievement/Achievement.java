@@ -23,6 +23,7 @@
  */
 package org.wise.vle.domain.achievement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -57,10 +58,12 @@ public class Achievement extends PersistableDomain {
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
+  @JsonIgnore
   private Run run;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = false)
+  @JsonIgnore
   private Workgroup workgroup;
 
   @Column(name = "achievementId", length = 32, nullable = false)
@@ -75,9 +78,20 @@ public class Achievement extends PersistableDomain {
   @Column(name = "data", length = 65536, columnDefinition = "text", nullable = false)
   private String data;  // achievement data, actual achievement content stored in the project
 
+  @Transient
+  private long runId;
+
+  @Transient
+  private long workgroupId;
+
   @Override
   protected Class<?> getObjectClass() {
     return Achievement.class;
+  }
+
+  public void convertToClientAchievement() {
+    this.setRunId(this.getRun().getId());
+    this.setWorkgroupId(this.getWorkgroup().getId());
   }
 
   public JSONObject toJSON() {

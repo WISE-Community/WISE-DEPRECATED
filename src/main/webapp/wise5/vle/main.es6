@@ -10,6 +10,8 @@ import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularOnload from 'ng-onload';
 import angularSanitize from 'angular-sanitize';
+import angularSock from 'angular-sockjs';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
@@ -82,6 +84,8 @@ const vleModule = angular.module('vle', [
     'ngMaterial',
     'ngOnload',
     'ngSanitize',
+    'bd.sockjs',
+    'ngStomp',
     'ngWebSocket',
     'oc.lazyLoad',
     'openResponseComponentModule',
@@ -174,8 +178,10 @@ const vleModule = angular.module('vle', [
             runStatus: (StudentDataService, config) => {
               return StudentDataService.retrieveRunStatus();
             },
-            webSocket: (StudentWebSocketService, config, project) => {
-              return StudentWebSocketService.initialize();
+            webSocket: (StudentWebSocketService, ConfigService, config, project) => {
+              if (!ConfigService.isPreview()) {
+                return StudentWebSocketService.initialize();
+              }
             },
             language: ($translate, ConfigService, config) => {
               let locale = ConfigService.getLocale();  // defaults to "en"
