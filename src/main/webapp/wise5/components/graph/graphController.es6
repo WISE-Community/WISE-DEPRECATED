@@ -393,14 +393,27 @@ class GraphController extends ComponentController {
    */
   drawRangeRectangle(xMin, xMax, yMin, yMax, strokeColor = 'black', strokeWidth = '.5',
       fillColor = 'black', fillOpacity = '.1') {
+    this.createRectangleIfNecessary(strokeColor, strokeWidth, fillColor, fillOpacity);
+    xMin = this.convertToXPixels(xMin);
+    xMax = this.convertToXPixels(xMax);
+    yMin = this.convertToYPixels(yMin);
+    yMax = this.convertToYPixels(yMax);
+    this.updateRectanglePositionAndSize(xMin, xMax, yMin, yMax);
+  }
+
+  convertToXPixels(graphUnitValue) {
     const chart = $('#' + this.chartId).highcharts();
-    // convert the x and y values to pixel values
-    xMin = chart.xAxis[0].translate(xMin);
-    xMax = chart.xAxis[0].translate(xMax);
-    yMin = chart.yAxis[0].translate(yMin);
-    yMax = chart.yAxis[0].translate(yMax);
-    // create the rectangle if it hasn't been created before
+    return chart.xAxis[0].translate(graphUnitValue);
+  }
+
+  convertToYPixels(graphUnitValue) {
+    const chart = $('#' + this.chartId).highcharts();
+    return chart.yAxis[0].translate(graphUnitValue);
+  }
+
+  createRectangleIfNecessary(strokeColor, strokeWidth, fillColor, fillOpacity) {
     if (this.rectangle == null) {
+      const chart = $('#' + this.chartId).highcharts();
       this.rectangle = chart.renderer.rect(0,0,0,0,0).css({
         stroke: strokeColor,
         strokeWidth: strokeWidth,
@@ -408,7 +421,10 @@ class GraphController extends ComponentController {
         fillOpacity: fillOpacity
       }).add();
     }
-    // update the rectangle position and size
+  }
+
+  updateRectanglePositionAndSize(xMin, xMax, yMin, yMax) {
+    const chart = $('#' + this.chartId).highcharts();
     this.rectangle.attr({
       x: xMin + chart.plotLeft,
       y: chart.plotHeight + chart.plotTop - yMax,
@@ -708,6 +724,13 @@ class GraphController extends ComponentController {
                 drag: this.createPointDragEventHandler(),
                 drop: this.createPointDropEventHandler()
               }
+            }
+          }
+        },
+        exporting: {
+          buttons: {
+            contextButton: {
+              enabled: false
             }
           }
         }
@@ -1015,7 +1038,8 @@ class GraphController extends ComponentController {
    */
   removePointFromSeries(series, x) {
     const data = series.data;
-    for (const dataPoint of data) {
+    for (let d = 0; d < data.length; d++) {
+      const dataPoint = data[d];
       const tempDataXValue = dataPoint[0];
       if (x === tempDataXValue) {
         data.splice(d, 1);
@@ -1523,7 +1547,7 @@ class GraphController extends ComponentController {
   }
 
   getXColumnValue(params) {
-    if (params == null) {
+    if (params == null || params.xColumn == null) {
       return 0;
     } else {
       return params.xColumn;
@@ -1531,7 +1555,7 @@ class GraphController extends ComponentController {
   }
 
   getYColumnValue(params) {
-    if (params == null) {
+    if (params == null || params.yColumn == null) {
       return 1;
     } else {
       return params.yColumn;
@@ -1967,7 +1991,7 @@ class GraphController extends ComponentController {
     const latestStudentDataTrialId = latestStudentDataTrial.id;
     this.removeDefaultTrialIfNecessary(latestStudentDataTrialId);
     const latestTrial = this.createNewTrialIfNecessary(latestStudentDataTrialId);
-    this.copySeriesintoTrial(latestStudentDataTrial, latestTrial, studentData, params);
+    this.copySeriesIntoTrial(latestStudentDataTrial, latestTrial, studentData, params);
     this.copyTrialNameIntoTrial(latestStudentDataTrial, latestTrial);
     this.copyPlotBandsIntoTrial(latestStudentDataTrial, latestTrial);
     this.setLastTrialToActive();
@@ -2010,7 +2034,7 @@ class GraphController extends ComponentController {
       data: series.data,
       color: series.color,
       canEdit: false,
-      alloWPointSelect: false
+      allowPointSelect: false
     };
     if (series.marker != null) {
       newSeries.marker = series.marker;
@@ -2072,7 +2096,7 @@ class GraphController extends ComponentController {
     return trial;
   }
 
-  copySeriesintoTrial(oldTrial, newTrial, studentData, params) {
+  copySeriesIntoTrial(oldTrial, newTrial, studentData, params) {
     newTrial.series = [];
     const series = oldTrial.series;
     for (let s = 0; s < series.length; s++) {
@@ -2113,6 +2137,7 @@ class GraphController extends ComponentController {
       this.activeTrial.show = true;
     }
   }
+
   getTrialById(id) {
     for (const trial of this.trials) {
       if (trial.id === id) {
