@@ -58,7 +58,7 @@ export class LoginHomeComponent implements OnInit {
     this.passwordError = false;
     this.userService.authenticate(this.credentials, (response) => {
       if (this.userService.isAuthenticated) {
-        this.router.navigateByUrl(this.userService.getRedirectUrl());
+        this.router.navigateByUrl(this.getRedirectUrl(''));
       } else {
         this.processing = false;
         this.isRecaptchaRequired = response.isRecaptchaRequired;
@@ -93,10 +93,23 @@ export class LoginHomeComponent implements OnInit {
   }
 
   public socialSignIn(socialPlatform : string) {
-    window.location.href = `${this.configService.getContextPath()}/google-login?accessCode=${this.accessCode}`;
+    window.location.href = this.getRedirectUrl('google-login');
   }
 
   recaptchaResolved(recaptchaResponse) {
     this.credentials.recaptchaResponse = recaptchaResponse;
+  }
+
+  getRedirectUrl(social: string): string {
+    let redirectUrl = '';
+    if (social === 'google-login') {
+      redirectUrl = `${this.configService.getContextPath()}/google-login`;
+    } else {
+      redirectUrl = this.userService.getRedirectUrl();
+    }
+    if (this.accessCode !== '') {
+      redirectUrl = `${redirectUrl}?accessCode=${this.accessCode}`;
+    }
+    return redirectUrl;
   }
 }
