@@ -33,6 +33,15 @@ export class LoginHomeComponent implements OnInit {
         this.isGoogleAuthenticationEnabled = config.googleClientId != null;
         this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
       }
+      if (this.userService.isSignedIn()) {
+        this.userService.getUser().subscribe(({ isGoogleUser }) => {
+          if (isGoogleUser) {
+            this.socialSignIn('google');
+          } else {
+            this.router.navigateByUrl(this.getRedirectUrl(''));
+          }
+        });
+      }
     });
     this.route.params.subscribe(params => {
       if (params['username'] != null) {
@@ -93,7 +102,7 @@ export class LoginHomeComponent implements OnInit {
   }
 
   public socialSignIn(socialPlatform : string) {
-    window.location.href = this.getRedirectUrl('google-login');
+    window.location.href = this.getRedirectUrl(socialPlatform);
   }
 
   recaptchaResolved(recaptchaResponse) {
@@ -102,7 +111,7 @@ export class LoginHomeComponent implements OnInit {
 
   getRedirectUrl(social: string): string {
     let redirectUrl = '';
-    if (social === 'google-login') {
+    if (social === 'google') {
       redirectUrl = `${this.configService.getContextPath()}/google-login`;
     } else {
       redirectUrl = this.userService.getRedirectUrl();
