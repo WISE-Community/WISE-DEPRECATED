@@ -1,134 +1,90 @@
 class TeacherWebSocketService {
   constructor(
       $rootScope,
-      $websocket,
+      $stomp,
       ConfigService,
       StudentStatusService) {
     this.$rootScope = $rootScope;
-    this.$websocket = $websocket;
+    this.$stomp = $stomp;
     this.ConfigService = ConfigService;
     this.StudentStatusService = StudentStatusService;
-    this.dataStream = null;
     this.studentsOnlineArray = [];
   }
 
   initialize() {
-    const runId = this.ConfigService.getRunId();
-    const periodId = this.ConfigService.getPeriodId();
-    const workgroupId = this.ConfigService.getWorkgroupId();
-    const webSocketURL = this.ConfigService.getWebSocketURL() +
-        "?runId=" + runId + "&periodId=" + periodId +
-        "&workgroupId=" + workgroupId;
-    this.dataStream = this.$websocket(webSocketURL);
-    this.dataStream.onMessage((message) => {
-      this.handleMessage(message);
-    });
-  };
-
-  handleMessage(message) {
-    const data = JSON.parse(message.data);
-    const messageType = data.messageType;
-
-    if (messageType === 'studentStatus') {
-      this.handleStudentStatusReceived(data);
-    } else if (messageType === 'studentsOnlineList') {
-      this.handleStudentsOnlineReceived(data);
-    } else if (messageType === 'studentConnected') {
-
-    } else if (messageType === 'studentDisconnected') {
-      this.handleStudentDisconnected(data);
-    } else if (messageType === 'notification' || messageType === 'CRaterResultNotification') {
-      this.$rootScope.$broadcast('newNotification', data.data);
-    } else if (messageType === 'newAnnotation') {
-      this.$rootScope.$broadcast('newAnnotationReceived', {annotation: data.annotation});
-    } else if (messageType === 'newStudentWork') {
-      this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: data.studentWork});
-    } else if (messageType === 'newStudentAchievement') {
-      this.$rootScope.$broadcast('newStudentAchievement', {studentAchievement: data.studentAchievement});
+    this.runId = this.ConfigService.getRunId();
+    try {
+      this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
+        this.subscribeToTeacherTopic();
+        this.subscribeToTeacherWorkgroupTopic();
+      });
+    } catch(e) {
+      console.log(e);
     }
-  };
+  }
 
-  sendMessage(messageJSON) {
-    this.dataStream.send(messageJSON);
+  subscribeToTeacherTopic() {
+    this.$stomp.subscribe(`/topic/teacher/${this.runId}`, (message, headers, res) => {
+      if (message.type === 'studentWork') {
+        const studentWork = message.content;
+        studentWork.studentData = JSON.parse(studentWork.studentData);
+        this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: studentWork});
+      } else if (message.type === 'studentStatus') {
+        const studentStatus = message.content;
+        const status = JSON.parse(studentStatus.status);
+        this.StudentStatusService.setStudentStatus(status);
+        this.$rootScope.$emit('studentStatusReceived', {studentStatus: status});
+      } else if (message.type === 'newStudentAchievement') {
+        const achievement = message.content;
+        achievement.data = JSON.parse(achievement.data);
+        this.$rootScope.$broadcast('newStudentAchievement', {studentAchievement: achievement});
+      } else if (message.type === 'annotation') {
+        const annotationData = message.content;
+        annotationData.data = JSON.parse(annotationData.data);
+        this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
+      }
+    });
+  }
+
+  subscribeToTeacherWorkgroupTopic() {
+    this.$stomp.subscribe(`/topic/workgroup/${this.ConfigService.getWorkgroupId()}`, (message, headers, res) => {
+      if (message.type === 'notification') {
+        const notification = message.content;
+        notification.data = JSON.parse(notification.data);
+        this.$rootScope.$broadcast('newNotificationReceived', notification);
+      }
+    });
   }
 
   handleStudentsOnlineReceived(studentsOnlineMessage) {
     this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
     this.$rootScope.$broadcast('studentsOnlineReceived', {studentsOnline: this.studentsOnlineArray});
-  };
+  }
 
   getStudentsOnline() {
     return this.studentsOnlineArray;
-  };
+  }
 
-  /**
-   * Check to see if a given workgroup is currently online
-   * @param workgroupId the workgroup id
-   * @returns boolean whether a workgroup is online
-   */
   isStudentOnline(workgroupId) {
     return this.studentsOnlineArray.indexOf(workgroupId) > -1;
-  };
+  }
 
-  /**
-   * This function is called when the teacher receives a websocket message
-   * with messageType 'studentStatus'.
-   */
-  handleStudentStatusReceived(studentStatus) {
-    const workgroupId = studentStatus.workgroupId;
-    this.StudentStatusService
-        .setStudentStatusForWorkgroupId(workgroupId, studentStatus);
-    this.$rootScope
-        .$emit('studentStatusReceived', {studentStatus: studentStatus});
-  };
-
-  /**
-   * Handle the student disconnected message
-   */
   handleStudentDisconnected(studentDisconnectedMessage) {
     this.$rootScope.$broadcast('studentDisconnected', {data: studentDisconnectedMessage});
   }
 
-  /**
-   * Pause the screens in the period
-   * @param periodId the period id. if null or -1 is passed in we will pause
-   * all the periods
-   */
   pauseScreens(periodId) {
-    const messageJSON = {};
-    messageJSON.messageType = 'pauseScreen';
-
-    if (periodId == null || periodId == -1) {
-      messageJSON.messageParticipants = 'teacherToStudentsInRun';
-    } else if(periodId != null) {
-      messageJSON.periodId = periodId;
-      messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
-    }
-    this.sendMessage(messageJSON);
+    this.$stomp.send(`/app/pause/${this.runId}/${periodId}`, {}, {});
   }
 
-  /**
-   * Unpause the screens in the period
-   * @param periodId the period id. if null or -1 is passed in we will unpause
-   * all the periods
-   */
   unPauseScreens(periodId) {
-    const messageJSON = {};
-    messageJSON.messageType = 'unPauseScreen';
-
-    if(periodId == null || periodId == -1) {
-      messageJSON.messageParticipants = 'teacherToStudentsInRun';
-    } else if(periodId != null) {
-      messageJSON.periodId = periodId;
-      messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
-    }
-    this.sendMessage(messageJSON);
+    this.$stomp.send(`/app/unpause/${this.runId}/${periodId}`, {}, {});
   }
 }
 
 TeacherWebSocketService.$inject = [
   '$rootScope',
-  '$websocket',
+  '$stomp',
   'ConfigService',
   'StudentStatusService'
 ];

@@ -16,6 +16,7 @@ export class TeacherService {
   private usernamesUrl = 'api/teacher/usernames';
   private createRunUrl = 'api/teacher/run/create';
   private runUrl = 'api/teacher/run';
+  private lastRunUrl = 'api/teacher/projectlastrun';
   private addPeriodToRunUrl = 'api/teacher/run/add/period';
   private deletePeriodFromRunUrl = 'api/teacher/run/delete/period';
   private updateRunStudentsPerTeamUrl = 'api/teacher/run/update/studentsperteam';
@@ -48,6 +49,10 @@ export class TeacherService {
 
   getRun(runId: number): Observable<Run> {
     return this.http.get<Run>(`${this.runUrl}/${runId}`);
+  }
+
+  getProjectLastRun(projectId: number): Observable<Run> {
+    return this.http.get<Run>(`${ this.lastRunUrl }/${ projectId }`);
   }
 
   registerTeacherAccount(teacherUser: Teacher, callback: any) {
@@ -177,21 +182,21 @@ export class TeacherService {
     return this.http.post<Object>(url, body, {headers: headers});
   }
 
-  updateRunStartTime(runId: number, startTime: string) {
+  updateRunStartTime(runId: number, startTime: number) {
     const url = `${this.updateRunStartTimeUrl}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', runId + '');
-    body = body.set('startTime', startTime);
+    body = body.set('startTime', startTime + '');
     return this.http.post<Object>(url, body, {headers: headers});
   }
 
-  updateRunEndTime(runId: number, endTime: string) {
+  updateRunEndTime(runId: number, endTime: number) {
     const url = `${this.updateRunEndTimeUrl}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', runId + '');
-    body = body.set('endTime', endTime);
+    body = body.set('endTime', endTime + '');
     return this.http.post<Object>(url, body, {headers: headers});
   }
 

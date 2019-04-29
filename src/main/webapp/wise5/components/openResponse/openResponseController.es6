@@ -556,9 +556,7 @@ class OpenResponseController extends ComponentController {
                 }
               }
               if (this.componentContent.enableNotifications) {
-                // get the notification properties for the score that the student got.
-                let notificationForScore = this.ProjectService.getNotificationByScore(this.componentContent, previousScore, score);
-
+                const notificationForScore = this.ProjectService.getNotificationByScore(this.componentContent, previousScore, score);
                 if (notificationForScore != null) {
                   notificationForScore.score = score;
                   notificationForScore.nodeId = this.nodeId;
@@ -848,6 +846,18 @@ class OpenResponseController extends ComponentController {
     }
 
     return mergedComponentState;
+  }
+
+  studentDataChanged() {
+    this.setIsDirtyAndBroadcast();
+    if (this.studentResponse === '') {
+      this.setIsSubmitDirty(false);
+    } else {
+      this.setIsSubmitDirtyAndBroadcast();
+    }
+    this.clearSaveText();
+    const action = 'change';
+    this.createComponentStateAndBroadcast(action);
   }
 };
 

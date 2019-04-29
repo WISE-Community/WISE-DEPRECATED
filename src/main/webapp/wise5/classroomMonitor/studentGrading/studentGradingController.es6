@@ -51,24 +51,12 @@ class StudentGradingController {
             this.nodesInViewById = {}; // object that holds whether the node is in view or not
 
             this.setNodesById();
-        }
+        };
 
         this.$scope.$on('projectSaved', (event, args) => {
             // project info has changed, so update max scores
             this.maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
             this.updateNodeMaxScores();
-        });
-
-        this.$scope.$on('notificationAdded', (event, notification) => {
-          if (notification.type === 'CRaterResult') {
-              // there is a new CRaterResult notification
-              // TODO: expand to encompass other notification types that should be shown to teacher
-              let workgroupId = notification.toWorkgroupId;
-              let nodeId = notification.nodeId;
-              if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
-                this.updateNode(nodeId);
-              }
-          }
         });
 
         this.$scope.$on('notificationChanged', (event, notification) => {
@@ -200,9 +188,10 @@ class StudentGradingController {
     }
 
     getAlertNotificationsByNodeId(nodeId) {
-        let args = {};
-        args.nodeId = nodeId;
-        args.toWorkgroupId = this.workgroupId;
+        const args = {
+          nodeId: nodeId,
+          toWorkgroupId: this.workgroupId
+        };
         return this.NotificationService.getAlertNotifications(args);
     }
 

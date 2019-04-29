@@ -24,7 +24,7 @@ export class UseWithClassWarningDialogComponent implements OnInit {
       data: this.data,
       panelClass: 'mat-dialog--md',
       disableClose: true
-    })
+    });
 
     this.dialogRef.close();
   }

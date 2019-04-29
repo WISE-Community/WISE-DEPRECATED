@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -40,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.socket.WebSocketHandler;
+//import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.portal.Portal;
@@ -53,11 +54,11 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.utils.FileManager;
 
 import javax.servlet.ServletContext;
@@ -98,7 +99,10 @@ public class WISE5AuthorProjectController {
   ServletContext servletContext;
 
   @Autowired
-  private WebSocketHandler webSocketHandler;
+  private SimpMessagingTemplate simpMessagingTemplate;
+
+//  @Autowired
+//  private WebSocketHandler webSocketHandler;
 
   private String featuredProjectIconsFolderRelativePath = "wise5/authoringTool/projectIcons";
 
@@ -180,11 +184,7 @@ public class WISE5AuthorProjectController {
       copyRandomFeaturedProjectIconIntoAssetsFolder(newProjectAssetsDir);
       // commented below until "W5 AT: new commit message convention #1016" is completed
       //commitChangesToProjectJSON(commitMessage, user, newProjectPath.getAbsolutePath());
-    } catch(IOException e) {
-      e.printStackTrace();
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    } catch (JSONException e) {
+    } catch(IOException | ObjectNotFoundException | JSONException e) {
       e.printStackTrace();
     }
   }
@@ -205,7 +205,7 @@ public class WISE5AuthorProjectController {
   private File getRandomFeaturedProjectIcon() {
     File featuredProjectIconsDir = new File(getFeaturedProjectIconsFolderPathString());
     File[] featuredProjectIcons = featuredProjectIconsDir.listFiles();
-    if (featuredProjectIcons.length > 0) {
+    if (featuredProjectIcons != null && featuredProjectIcons.length > 0) {
       return featuredProjectIcons[new Random().nextInt(featuredProjectIcons.length)];
     } else {
       return null;
@@ -282,54 +282,17 @@ public class WISE5AuthorProjectController {
    * If the parentProjectId is specified, the user is requesting to copy that project
    */
   @RequestMapping(value = "/project/copy/{projectId}", method = RequestMethod.POST)
-  protected void copyProject(@PathVariable Long projectId, HttpServletResponse response) {
+  protected void copyProject(@PathVariable Long projectId, HttpServletResponse response) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (!hasAuthorPermissions(user)) {
       return;
     }
-    try {
-      Project parentProject = projectService.getById(projectId);
-      Set<String> tagNames = new TreeSet<String>();
-      tagNames.add("library");
-      if (parentProject != null && (this.projectService.canAuthorProject(parentProject, user) || parentProject.hasTags(tagNames))) {
-        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        String parentProjectJSONAbsolutePath = curriculumBaseDir + parentProject.getModulePath();
-        File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);
-        File parentProjectDir = parentProjectJSONFile.getParentFile();
-
-        String newProjectDirectoryPath = copyProjectDirectory(parentProjectDir);
-        String modulePath = "/" + newProjectDirectoryPath + "/project.json";
-
-        ProjectParameters pParams = new ProjectParameters();
-        pParams.setModulePath(modulePath);
-        pParams.setOwner(user);
-        pParams.setProjectname(parentProject.getName());
-        pParams.setProjectType(ProjectType.LD);
-        pParams.setWiseVersion(new Integer(5));
-        pParams.setParentProjectId(Long.valueOf(projectId));
-
-        ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
-        if (parentProjectMetadata != null) {
-          ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
-          pParams.setMetadata(newProjectMetadata);
-        } else {
-          ProjectMetadata metadata = new ProjectMetadataImpl();
-          metadata.setTitle(parentProject.getName());
-          pParams.setMetadata(metadata);
-        }
-
-        Project project = projectService.createProject(pParams);
-        response.getWriter().write(project.getId().toString());
-      }
-    } catch (ObjectNotFoundException onfe) {
-      onfe.printStackTrace();
-      return;
-    } catch (IOException ie) {
-      ie.printStackTrace();
-      return;
-    } catch (JSONException je) {
-      je.printStackTrace();
-      return;
+    Project parentProject = projectService.getById(projectId);
+    if (parentProject != null && (this.projectService.canReadProject(parentProject, user) ||
+        parentProject.isOfficialProject() ||
+        parentProject.isCommunityProject())) {
+      Project project = projectService.copyProject(projectId.intValue(), user);
+      response.getWriter().write(project.getId().toString());
     }
   }
 
@@ -344,7 +307,7 @@ public class WISE5AuthorProjectController {
   protected void saveProject(
       @PathVariable Long projectId,
       @RequestParam("commitMessage") String commitMessage,
-      @RequestParam("projectJSONString") String projectJSONString) {
+      @RequestParam("projectJSONString") String projectJSONString) throws JSONException {
     Project project;
     try {
       project = projectService.getById(projectId);
@@ -375,16 +338,21 @@ public class WISE5AuthorProjectController {
         JSONObject projectJSONObject = new JSONObject(projectJSONString);
         JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
         if (projectMetadataJSON != null) {
+          ProjectMetadata oldProjectMetadata = project.getMetadata();
+          ProjectMetadata projectMetadata = new ProjectMetadataImpl(projectMetadataJSON);
           project.setMetadata(projectMetadataJSON.toString());
+          if (!oldProjectMetadata.getTitle().equals(projectMetadata.getTitle()) ||
+              !oldProjectMetadata.getAuthors().equals(projectMetadata.getAuthors())) {
+            String projectFolderPath = FileManager.getProjectFolderPath(project);
+            projectService.writeProjectLicenseFile(projectFolderPath, project);
+          }
           String projectTitle = projectMetadataJSON.getString("title");
           if (projectTitle != null && !projectTitle.equals(project.getName())) {
             project.setName(projectTitle);
           }
           projectService.updateProject(project, user);
         }
-      } catch(JSONException e) {
-        e.printStackTrace();
-      } catch (NotAuthorizedException e) {
+      } catch (JSONException | NotAuthorizedException e) {
         e.printStackTrace();
       }
       // commented below until "W5 AT: new commit message convention #1016" is completed
@@ -517,15 +485,12 @@ public class WISE5AuthorProjectController {
       String username = userDetails.getUsername();
       String firstName = userDetails.getFirstname();
       String lastName = userDetails.getLastname();
-      String fullName = firstName + " " + lastName;
-      username = fullName + " (" + username + ")";
 
       JSONObject myUserInfo = new JSONObject();
       myUserInfo.put("id", user.getId());
       myUserInfo.put("username", username);
       myUserInfo.put("firstName", firstName);
       myUserInfo.put("lastName", lastName);
-      myUserInfo.put("fullName", fullName);
       JSONObject userInfo = new JSONObject();
       userInfo.put("myUserInfo", myUserInfo);
       config.put("userInfo", userInfo);
@@ -918,7 +883,7 @@ public class WISE5AuthorProjectController {
   @SuppressWarnings("unchecked")
   @RequestMapping(value = "/project/notifyAuthorBegin/{projectId}", method = RequestMethod.POST)
   private ModelAndView handleNotifyAuthorProjectBegin(@PathVariable String projectId,
-      HttpServletRequest request) {
+      HttpServletRequest request) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (hasAuthorPermissions(user)) {
       HttpSession currentUserSession = request.getSession();
@@ -946,7 +911,7 @@ public class WISE5AuthorProjectController {
   @SuppressWarnings("unchecked")
   @RequestMapping(value = "/project/notifyAuthorEnd/{projectId}", method = RequestMethod.POST)
   private ModelAndView handleNotifyAuthorProjectEnd(@PathVariable String projectId,
-      HttpServletRequest request) {
+      HttpServletRequest request) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (hasAuthorPermissions(user)) {
       HttpSession currentSession = request.getSession();
@@ -973,25 +938,39 @@ public class WISE5AuthorProjectController {
     }
   }
 
-  /**
-   * Notify other authors authoring the same project id in real-time
-   * @param projectId
-   */
-  private void notifyCurrentAuthors(String projectId) {
-    try {
-      User user = ControllerUtil.getSignedInUser();
-      if (webSocketHandler != null) {
-        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-        JSONObject webSocketMessageJSON = new JSONObject();
-        webSocketMessageJSON.put("messageType", "currentAuthors");
-        webSocketMessageJSON.put("projectId", projectId);
-        webSocketMessageJSON.put("messageParticipants", "authorToAuthors");
-        wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
-      }
-    } catch (Exception e) {
-      // if something fails while sending to websocket, allow the rest to continue
-      e.printStackTrace();
+  public void notifyCurrentAuthors(String projectId) throws Exception {
+    List<String> usernames = new ArrayList<String>();
+    Set<User> currentAuthors = getCurrentAuthors(projectId);
+    for (User currentAuthor : currentAuthors) {
+      String username = currentAuthor.getUserDetails().getUsername();
+      usernames.add(username);
     }
+    simpMessagingTemplate.convertAndSend(
+        String.format("/topic/current-authors/%s", projectId), usernames);
+  }
+
+  private Set<User> getCurrentAuthors(String projectId) {
+    Set<User> currentAuthors = new HashSet<User>();
+    HashMap<String, ArrayList<String>> openedProjectsToSessions =
+      (HashMap<String, ArrayList<String>>)
+        servletContext.getAttribute("openedProjectsToSessions");
+    if (openedProjectsToSessions == null) {
+      openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
+      servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
+    }
+
+    ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
+    if (sessions != null) {
+      HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
+        .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
+      if (allLoggedInUsers != null) {
+        for (String sessionId : sessions) {
+          User user = allLoggedInUsers.get(sessionId);
+          currentAuthors.add(user);
+        }
+      }
+    }
+    return currentAuthors;
   }
 
   /**

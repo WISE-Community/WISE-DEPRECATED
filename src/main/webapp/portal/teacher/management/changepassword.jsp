@@ -29,7 +29,7 @@
 				<div class="infoContentBox">
 
 					<div>
-						<form:form method="post" action="changepassword.html" commandName="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
+						<form:form method="post" action="changepassword.html" modelAttribute="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
 						<table style="margin:0 auto;">
 							<tr>
 								<td><label for="changestudentpassword">

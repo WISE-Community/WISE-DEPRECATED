@@ -136,26 +136,13 @@ class AuthoringToolProjectService extends ProjectService {
     };
   }
 
-  /**
-   * Notifies others that the specified project is being authored
-   * @param projectId id of the project
-   */
-  notifyAuthorProjectBegin(projectId = null) {
-    if (projectId == null) {
-      if (this.project != null) {
-        projectId = this.project.id;
-      } else {
-        return;
-      }
-    }
-
+  notifyAuthorProjectBegin(projectId) {
     const httpParams = {
-      method: "POST",
+      method: 'POST',
       url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
     };
-
     return this.$http(httpParams).then((result) => {
-      let otherAuthors = result.data;
+      const otherAuthors = result.data;
       return otherAuthors;
     });
   }

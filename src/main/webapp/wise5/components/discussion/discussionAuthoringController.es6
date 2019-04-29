@@ -37,10 +37,31 @@ class DiscussionAuthoringController extends DiscussionController {
       StudentWebSocketService,
       UtilService,
       $mdMedia);
-
     this.allowedConnectedComponentTypes = [
       { type: 'Discussion' }
     ];
+  }
+
+  authoringConnectedComponentTypeChanged(connectedComponent) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(
+        connectedComponent.nodeId, connectedComponent.componentId);
+    this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent.type);
+    this.authoringViewComponentChanged();
+  }
+
+  changeAllDiscussionConnectedComponentTypesToMatch(connectedComponentType) {
+    for (const connectedComponent of this.authoringComponentContent.connectedComponents) {
+      const component = this.ProjectService.getComponentByNodeIdAndComponentId(
+          connectedComponent.nodeId, connectedComponent.componentId);
+      connectedComponent.type = connectedComponentType;
+    }
+  }
+
+  authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
+    if (connectedComponent.componentId != null) {
+      const firstConnectedComponent = this.authoringComponentContent.connectedComponents[0];
+      connectedComponent.type = firstConnectedComponent.type;
+    }
   }
 }
 

@@ -383,7 +383,7 @@ function checkRunCode() {
 						</spring:bind>
 					</div>
 
-					<form:form id="studentRegForm" commandName="studentAccountForm" method="post" action="join" autocomplete='off'>
+					<form:form id="studentRegForm" modelAttribute="studentAccountForm" method="post" action="join" autocomplete='off'>
 
 					  <table class="regTable">
 					  	<tr>

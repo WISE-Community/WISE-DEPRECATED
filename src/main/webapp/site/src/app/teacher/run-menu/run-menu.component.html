@@ -17,7 +17,7 @@
       <mat-icon>info</mat-icon>
       <span i18n>Unit Info</span>
     </a>
-    <a mat-menu-item href="{{ editLink }}" *ngIf="canEdit()">
+    <a mat-menu-item (click)="editContent()" *ngIf="canEdit()">
       <mat-icon>edit</mat-icon>
       <span i18n>Edit Content</span>
     </a>
@@ -29,11 +29,5 @@
       <mat-icon>report_problem</mat-icon>
       <span i18n>Report Problem</span>
     </a>
-    <!-- TODO: put back once restart, and cancel run are implemented
-    <mat-divider></mat-divider>
-    <a mat-menu-item *ngIf="isScheduled()">
-      <mat-icon color="warn">cancel</mat-icon>
-      <span i18n>Cancel Unit</span>
-    </a-->
   </div>
 </mat-menu>

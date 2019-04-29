@@ -2451,25 +2451,28 @@ class GraphController extends ComponentController {
     const nodeId = connectedComponent.nodeId;
     const componentId = connectedComponent.componentId;
     let connectedComponentBackgroundImage = null;
-    const latestComponentState =
+    let latestComponentState =
         this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
     if (latestComponentState != null) {
       if (latestComponentState.componentType === 'ConceptMap' ||
           latestComponentState.componentType === 'Draw' ||
           latestComponentState.componentType === 'Label') {
         let connectedComponentOfComponentState = this.UtilService.
-        getConnectedComponentByComponentState(this.componentContent, latestComponentState);
+            getConnectedComponentByComponentState(this.componentContent, latestComponentState);
         if (connectedComponentOfComponentState.importWorkAsBackground === true) {
           promises.push(this.setComponentStateAsBackgroundImage(latestComponentState));
         }
       } else {
-        promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
-        if (connectedComponent.type === 'showWork') {
+        if (connectedComponent.type ==='showWork') {
           this.isDisabled = true;
+          latestComponentState = this.UtilService.makeCopyOfJSONObject(latestComponentState);
+          const canEdit = false;
+          this.setCanEditForAllSeries(latestComponentState, canEdit);
         }
+        promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
         if (latestComponentState != null &&
-            latestComponentState.studentData != null &&
-            latestComponentState.studentData.backgroundImage != null) {
+          latestComponentState.studentData != null &&
+          latestComponentState.studentData.backgroundImage != null) {
           connectedComponentBackgroundImage = latestComponentState.studentData.backgroundImage;
         }
       }
@@ -2534,7 +2537,8 @@ class GraphController extends ComponentController {
   handleConnectedComponentsHelper(newComponentState, isReset) {
     let mergedComponentState = this.$scope.componentState;
     let firstTime = true;
-    if (mergedComponentState == null || isReset) {
+    if (mergedComponentState == null || isReset ||
+        !this.GraphService.componentStateHasStudentWork(mergedComponentState)) {
       mergedComponentState = newComponentState;
     } else {
       /*
@@ -2548,12 +2552,7 @@ class GraphController extends ComponentController {
       const nodeId = connectedComponent.nodeId;
       const componentId = connectedComponent.componentId;
       const type = connectedComponent.type;
-      if (type === 'showWork') {
-        const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-        if (componentState != null) {
-          componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-        }
-      } else if (type === 'showClassmateWork') {
+      if (type === 'showClassmateWork') {
         mergedComponentState = newComponentState;
       } else if (type === 'importWork' || type == null) {
         const connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
@@ -2696,6 +2695,17 @@ class GraphController extends ComponentController {
     }
   }
 
+  setCanEditForAllSeries(componentState, canEdit) {
+    for (const trial of componentState.studentData.trials) {
+      for (const singleSeries of trial.series) {
+        singleSeries.canEdit = canEdit;
+      }
+    }
+  }
+
+  /**
+   * The undo button was clicked
+   */
   undoClicked() {
     if (this.undoStack != null && this.undoStack.length > 0) {
       const previousComponentState = this.undoStack.pop();

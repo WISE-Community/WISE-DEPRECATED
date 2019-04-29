@@ -18,7 +18,6 @@
 package org.wise.portal.service.impl;
 
 import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,24 +34,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.service.acl.impl.AclServiceImpl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 /**
  * @author Laurel Williams
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(locations = {
-  "classpath:configurations/dispatcherServletContexts.xml",
-  "classpath:configurations/applicationContexts.xml"
-})
+@RunWith(SpringRunner.class)
 public class AclServiceImplTest extends TestCase {
 
   private MutableAclService mutableAclService;
@@ -63,15 +54,12 @@ public class AclServiceImplTest extends TestCase {
   private ObjectIdentity objectIdentity;
   private MutableAcl mockMutableAcl;
 
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
   @Before
   public void setUp() throws Exception {
     super.setUp();
 
     authority = new TestingAuthenticationToken("admin",
-      new GrantedAuthority[] { new SimpleGrantedAuthority("ROLE_ADMINISTRATOR") });
+        new GrantedAuthority[] { new SimpleGrantedAuthority("ROLE_ADMINISTRATOR") });
     authority.setAuthenticated(true);
     securityContext = new SecurityContextImpl();
     securityContext.setAuthentication(authority);
@@ -90,9 +78,6 @@ public class AclServiceImplTest extends TestCase {
     mockMutableAcl = EasyMock.createNiceMock(MutableAcl.class);
   }
 
-  /**
-   * @see junit.framework.TestCase#tearDown()
-   */
   protected void tearDown() throws Exception {
     super.tearDown();
     groupAclService = null;

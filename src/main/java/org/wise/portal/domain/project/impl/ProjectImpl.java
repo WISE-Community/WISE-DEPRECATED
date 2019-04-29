@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -274,23 +274,11 @@ public class ProjectImpl implements Project {
     this.familytag = projectInfo.getFamilyTag();
   }
 
-  /**
-   * Get the shared owners in alphabetical order
-   * @return the shared owners list in alphabetical order
-   */
   public List<User> getSharedOwnersOrderedAlphabetically() {
-
     List<User> sharedOwnersList = new ArrayList<User>();
-
-    // add the shared owners for this project
     sharedOwnersList.addAll(sharedowners);
-
-    // get the comparator that will order the list alphabetically
     UserAlphabeticalComparator userAlphabeticalComparator = new UserAlphabeticalComparator();
-
-    // sort the list alphabetically
     Collections.sort(sharedOwnersList, userAlphabeticalComparator);
-
     return sharedOwnersList;
   }
 
@@ -335,10 +323,6 @@ public class ProjectImpl implements Project {
     }
   }
 
-  /**
-   * Visitor Pattern
-   * @param visitor
-   */
   public Object accept(ProjectVisitor visitor) {
     return visitor.visit(this);
   }
@@ -382,9 +366,6 @@ public class ProjectImpl implements Project {
     this.wiseVersion = wiseVersion;
   }
 
-  /**
-   * Comparator used to order user names alphabetically
-   */
   public static class UserAlphabeticalComparator implements Comparator<User> {
 
     /**
@@ -420,11 +401,11 @@ public class ProjectImpl implements Project {
   }
 
   public boolean isOfficialProject() {
-    return hasTag("library");
+    return hasTag("official");
   }
 
   public boolean isCommunityProject() {
-    return hasTag("teachershared");
+    return hasTag("community");
   }
 
   public boolean hasTag(String tag) {

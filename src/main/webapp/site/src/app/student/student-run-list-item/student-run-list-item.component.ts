@@ -60,4 +60,12 @@ export class StudentRunListItemComponent implements OnInit {
   skipTeamSign() {
     window.location.href = `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
   }
+
+  isRunActive(run) {
+    return run.isActive(this.configService.getCurrentServerTime());
+  }
+
+  isRunCompleted(run) {
+    return run.isCompleted(this.configService.getCurrentServerTime());
+  }
 }

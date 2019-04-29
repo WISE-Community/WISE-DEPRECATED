@@ -7,6 +7,7 @@ import { TeacherService } from "../teacher.service";
 import { Project } from "../../domain/project";
 import { TeacherRun } from "../teacher-run";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import {ConfigService} from "../../services/config.service";
 
 @Component({selector: 'app-teacher-run-list-item', template: ''})
 class TeacherRunListItemStubComponent {
@@ -26,7 +27,7 @@ export class MockTeacherService {
     run1.name = "Photosynthesis";
     run1.numStudents = 30;
     run1.periods = ["1","2"];
-    run1.startTime = '2018-01-01 00:00:00.0';
+    run1.startTime = new Date('2018-01-01T00:00:00.0').getTime();
     const project1 = new Project();
     project1.id = 1;
     project1.name = "Photosynthesis";
@@ -37,7 +38,7 @@ export class MockTeacherService {
     run2.name = "Plate Tectonics";
     run2.numStudents = 15;
     run2.periods = ["3","4"];
-    run2.startTime = '2018-03-03 00:00:00.0';
+    run2.startTime = new Date('2018-03-03T00:00:00.0').getTime();
     const project2 = new Project();
     project2.id = 1;
     project2.name = "Plate Tectonics";
@@ -65,7 +66,12 @@ export class MockTeacherService {
       periods: ["1", "2"]
     }
   );
+}
 
+export class MockConfigService {
+  getCurrentServerTime(): number {
+    return new Date('2018-08-24T00:00:00.0').getTime();
+  }
 }
 
 describe('TeacherRunListComponent', () => {
@@ -76,7 +82,10 @@ describe('TeacherRunListComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListComponent ],
       imports: [ MomentModule ],
-      providers: [ { provide: TeacherService, useClass: MockTeacherService }],
+      providers: [
+        { provide: TeacherService, useClass: MockTeacherService },
+        { provide: ConfigService, useClass: MockConfigService }
+      ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
@@ -89,9 +98,9 @@ describe('TeacherRunListComponent', () => {
   });
 
   function isRunsSortedByStartTimeDesc(runs: TeacherRun[]): boolean {
-    let previous: Date = null;
+    let previous: number = null;
     for (let run of runs) {
-      let current = new Date(run.startTime);
+      let current = run.startTime;
       if (previous && previous < current) {
         return false;
       }
@@ -110,7 +119,7 @@ describe('TeacherRunListComponent', () => {
     run3.name = "Planet Earth";
     run3.numStudents = 10;
     run3.periods = ["6", "7"];
-    run3.startTime = "2018-02-02 00:00:00.0";
+    run3.startTime = new Date("2018-02-02T00:00:00.0").getTime();
     const project3 = new Project();
     project3.id = 1;
     project3.name = "Planet Earth";

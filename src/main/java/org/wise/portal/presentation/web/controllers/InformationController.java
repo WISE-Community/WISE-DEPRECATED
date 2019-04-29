@@ -287,15 +287,20 @@ public class InformationController {
 
     try {
       String usernames = "";
+      String firstName = "";
+      String lastName = "";
       JSONArray userIds = new JSONArray();
-      if (loggedInUser.isAdmin()) {
-        usernames = loggedInUser.getUserDetails().getCoreUsername();
+      if (loggedInUser.isTeacher()) {
+        MutableUserDetails userDetails = loggedInUser.getUserDetails();
+        firstName = userDetails.getFirstname();
+        lastName = userDetails.getLastname();
+        usernames = userDetails.getUsername();
         userIds.put(loggedInUser.getId());
       } else {
         usernames = getUsernamesFromWorkgroup(workgroup);
         userIds = getStudentIdsFromWorkgroup(workgroup);
       }
-      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, usernames);
+      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, usernames, firstName, lastName);
       myUserInfo.put("myClassInfo", getMyClassInfoJSONObject(run, workgroup, loggedInUser));
       JSONObject userInfo = new JSONObject();
       userInfo.put("myUserInfo", myUserInfo);
@@ -399,12 +404,19 @@ public class InformationController {
   }
 
   private JSONObject getMyUserInfoJSONObject(String periodId, String periodName,
-      JSONArray userIds, Long workgroupId, String usernames) {
+      JSONArray userIds, Long workgroupId, String usernames, String firstName,
+      String lastName) {
     JSONObject myUserInfo = new JSONObject();
     try {
       myUserInfo.put("workgroupId", workgroupId);
       myUserInfo.put("username", usernames);
       myUserInfo.put("isSwitchedUser", ControllerUtil.isUserPreviousAdministrator());
+      if (!firstName.isEmpty()) {
+        myUserInfo.put("firstName", firstName);
+      }
+      if (!lastName.isEmpty()) {
+        myUserInfo.put("lastName", lastName);
+      }
 
       try {
         myUserInfo.put("periodId", Long.parseLong(periodId));
@@ -645,18 +657,14 @@ public class InformationController {
       throws JSONException, ObjectNotFoundException {
     String contextPath = request.getContextPath();
     Long runId = run.getId();
-    String annotationsURL = contextPath + "/annotation?type=annotation&runId=" + runId;
-    String studentStatusURL = contextPath + "/studentStatus";
-    String runStatusURL = contextPath + "/runStatus";
-
     config.put("runName", run.getName());
     config.put("runId", runId);
-    config.put("annotationsURL", annotationsURL);
+    config.put("annotationsURL", contextPath + "/annotation?type=annotation&runId=" + runId);
     config.put("runInfo", run.getInfo());
     config.put("isRealTimeEnabled", run.isRealTimeEnabled());
     config.put("webSocketURL", ControllerUtil.getWebSocketURL(request, contextPath));
-    config.put("studentStatusURL", studentStatusURL);
-    config.put("runStatusURL", runStatusURL);
+    config.put("studentStatusURL", contextPath + "/studentStatus");
+    config.put("runStatusURL", contextPath + "/runStatus");
     config.put("userInfo", getUserInfo(run));
     config.put("studentDataURL", contextPath + "/student/data");  // the url to get/post student data
     config.put("studentAssetsURL", contextPath + "/student/asset/" + runId);

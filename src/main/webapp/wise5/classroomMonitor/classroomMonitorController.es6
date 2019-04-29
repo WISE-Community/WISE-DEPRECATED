@@ -177,25 +177,16 @@ class ClassroomMonitorController {
 
         // perform cleanup before the clasroom monitor tab closes
         this.$window.onbeforeunload = () => {
-
-            // unpause all the periods that are currently paused
-
-            // get all the periods
-            var periods = this.TeacherDataService.getRunStatus().periods;
-
+            const periods = this.TeacherDataService.getRunStatus().periods;
             if (periods != null) {
-
-                // loop through all the periods
                 for (var p = 0; p < periods.length; p++) {
-                    var period = periods[p];
-
-                    if (period != null && period.paused) {
-                        // the period is paused so we will unpause it
+                    const period = periods[p];
+                    if (period != null && period.periodId !== -1 && period.paused) {
                         this.TeacherDataService.pauseScreensChanged(period.periodId, false);
                     }
                 }
             }
-        }
+        };
     }
 
     /**

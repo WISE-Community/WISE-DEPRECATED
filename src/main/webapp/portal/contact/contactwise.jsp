@@ -57,7 +57,7 @@
                         </spring:bind>
                     </div>
 
-                    <form:form commandName="contactWISEForm" method="post" action="contactwise.html" id="contactWiseForm" autocomplete='off'>
+                    <form:form modelAttribute="contactWISEForm" method="post" action="contactwise.html" id="contactWiseForm" autocomplete='off'>
 
                         <dl>
 

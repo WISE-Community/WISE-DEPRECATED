@@ -24,7 +24,7 @@
          matTooltipPosition="above"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
         <div fxLayout="column">
-          <mat-card-title [class.secondary-text]="run.isCompleted()"
+          <mat-card-title [class.secondary-text]="isRunCompleted(run)"
                           class="mat-body-2">
             {{ run.name }}
           </mat-card-title>
@@ -35,7 +35,7 @@
       </div>
     </mat-card-content>
     <mat-card-content fxHide fxShow.xs>
-      <div class="info-block" [class.secondary-text]="run.isCompleted()">
+      <div class="info-block" [class.secondary-text]="isRunCompleted(run)">
         <ng-container *ngTemplateOutlet="runInfo"></ng-container>
       </div>
     </mat-card-content>
@@ -45,7 +45,7 @@
          fxLayoutAlign.gt-xs="start center"
          fxLayoutGap="8px">
       <span fxFlex="1 1 auto" fxShow fxHide.xs></span>
-      <a mat-button *ngIf="run.isActive()"
+      <a mat-button *ngIf="isRunActive(run)"
          href="{{ problemLink }}"
          class="secondary-text"
          fxFlex="0 0 auto"
@@ -53,7 +53,7 @@
         <ng-container i18n>Report Problem</ng-container>
       </a>
       <button mat-flat-button
-             *ngIf="run.isActive()"
+             *ngIf="isRunActive(run)"
              (click)="launchRun()"
              color="primary"
              fxFlex="0 0 auto"
@@ -61,7 +61,7 @@
         <mat-icon>play_circle_filled</mat-icon>&nbsp;<ng-container i18n>Launch</ng-container>
       </button>
       <button mat-flat-button
-             *ngIf="run.isCompleted()"
+             *ngIf="isRunCompleted(run)"
              (click)="reviewRun()"
              color="secondary-text"
              fxFlex="0 0 auto"

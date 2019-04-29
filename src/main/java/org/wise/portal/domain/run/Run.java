@@ -378,4 +378,8 @@ public interface Run extends Persistable {
    * @return String survey for this run
    */
   void setSurvey(String survey);
+
+  Long getStartTimeMilliseconds();
+
+  Long getEndTimeMilliseconds();
 }

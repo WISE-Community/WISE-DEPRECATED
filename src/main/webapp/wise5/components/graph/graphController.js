@@ -3391,10 +3391,13 @@ var GraphController = function (_ComponentController) {
             promises.push(this.setComponentStateAsBackgroundImage(latestComponentState));
           }
         } else {
-          promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
           if (connectedComponent.type === 'showWork') {
             this.isDisabled = true;
+            latestComponentState = this.UtilService.makeCopyOfJSONObject(latestComponentState);
+            var canEdit = false;
+            this.setCanEditForAllSeries(latestComponentState, canEdit);
           }
+          promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
           if (latestComponentState != null && latestComponentState.studentData != null && latestComponentState.studentData.backgroundImage != null) {
             connectedComponentBackgroundImage = latestComponentState.studentData.backgroundImage;
           }
@@ -3511,7 +3514,7 @@ var GraphController = function (_ComponentController) {
     value: function handleConnectedComponentsHelper(newComponentState, isReset) {
       var mergedComponentState = this.$scope.componentState;
       var firstTime = true;
-      if (mergedComponentState == null || isReset) {
+      if (mergedComponentState == null || isReset || !this.GraphService.componentStateHasStudentWork(mergedComponentState)) {
         mergedComponentState = newComponentState;
       } else {
         /*
@@ -3532,12 +3535,7 @@ var GraphController = function (_ComponentController) {
           var nodeId = connectedComponent.nodeId;
           var componentId = connectedComponent.componentId;
           var type = connectedComponent.type;
-          if (type === 'showWork') {
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-          } else if (type === 'showClassmateWork') {
+          if (type === 'showClassmateWork') {
             mergedComponentState = newComponentState;
           } else if (type === 'importWork' || type == null) {
             var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
@@ -3788,6 +3786,61 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
+    key: 'setCanEditForAllSeries',
+    value: function setCanEditForAllSeries(componentState, canEdit) {
+      var _iteratorNormalCompletion40 = true;
+      var _didIteratorError40 = false;
+      var _iteratorError40 = undefined;
+
+      try {
+        for (var _iterator40 = componentState.studentData.trials[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
+          var trial = _step40.value;
+          var _iteratorNormalCompletion41 = true;
+          var _didIteratorError41 = false;
+          var _iteratorError41 = undefined;
+
+          try {
+            for (var _iterator41 = trial.series[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+              var singleSeries = _step41.value;
+
+              singleSeries.canEdit = canEdit;
+            }
+          } catch (err) {
+            _didIteratorError41 = true;
+            _iteratorError41 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion41 && _iterator41.return) {
+                _iterator41.return();
+              }
+            } finally {
+              if (_didIteratorError41) {
+                throw _iteratorError41;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError40 = true;
+        _iteratorError40 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion40 && _iterator40.return) {
+            _iterator40.return();
+          }
+        } finally {
+          if (_didIteratorError40) {
+            throw _iteratorError40;
+          }
+        }
+      }
+    }
+
+    /**
+     * The undo button was clicked
+     */
+
+  }, {
     key: 'undoClicked',
     value: function undoClicked() {
       if (this.undoStack != null && this.undoStack.length > 0) {
@@ -3911,71 +3964,6 @@ var GraphController = function (_ComponentController) {
         if (seriesId == null) {
           series = chart.series[chart.series.length - 1];
         } else {
-          var _iteratorNormalCompletion40 = true;
-          var _didIteratorError40 = false;
-          var _iteratorError40 = undefined;
-
-          try {
-            for (var _iterator40 = chart.series[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
-              var singleSeries = _step40.value;
-
-              if (singleSeries.userOptions.name === seriesId) {
-                series = singleSeries;
-              }
-            }
-          } catch (err) {
-            _didIteratorError40 = true;
-            _iteratorError40 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion40 && _iterator40.return) {
-                _iterator40.return();
-              }
-            } finally {
-              if (_didIteratorError40) {
-                throw _iteratorError40;
-              }
-            }
-          }
-        }
-        var points = series.points;
-        var _iteratorNormalCompletion41 = true;
-        var _didIteratorError41 = false;
-        var _iteratorError41 = undefined;
-
-        try {
-          for (var _iterator41 = points[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
-            var point = _step41.value;
-
-            if (point.x === x) {
-              chart.tooltip.refresh(point);
-            }
-          }
-        } catch (err) {
-          _didIteratorError41 = true;
-          _iteratorError41 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion41 && _iterator41.return) {
-              _iterator41.return();
-            }
-          } finally {
-            if (_didIteratorError41) {
-              throw _iteratorError41;
-            }
-          }
-        }
-      }
-    }
-  }, {
-    key: 'highlightPointOnX',
-    value: function highlightPointOnX(seriesId, x) {
-      var chart = $('#' + this.chartId).highcharts();
-      if (chart.series.length > 0) {
-        var series = null;
-        if (seriesId == null) {
-          series = chart.series[chart.series.length - 1];
-        } else {
           var _iteratorNormalCompletion42 = true;
           var _didIteratorError42 = false;
           var _iteratorError42 = undefined;
@@ -3987,7 +3975,6 @@ var GraphController = function (_ComponentController) {
               if (singleSeries.userOptions.name === seriesId) {
                 series = singleSeries;
               }
-              this.removeHoverStateFromPoints(singleSeries.points);
             }
           } catch (err) {
             _didIteratorError42 = true;
@@ -4004,33 +3991,99 @@ var GraphController = function (_ComponentController) {
             }
           }
         }
+        var points = series.points;
+        var _iteratorNormalCompletion43 = true;
+        var _didIteratorError43 = false;
+        var _iteratorError43 = undefined;
+
+        try {
+          for (var _iterator43 = points[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
+            var point = _step43.value;
+
+            if (point.x === x) {
+              chart.tooltip.refresh(point);
+            }
+          }
+        } catch (err) {
+          _didIteratorError43 = true;
+          _iteratorError43 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion43 && _iterator43.return) {
+              _iterator43.return();
+            }
+          } finally {
+            if (_didIteratorError43) {
+              throw _iteratorError43;
+            }
+          }
+        }
+      }
+    }
+  }, {
+    key: 'highlightPointOnX',
+    value: function highlightPointOnX(seriesId, x) {
+      var chart = $('#' + this.chartId).highcharts();
+      if (chart.series.length > 0) {
+        var series = null;
+        if (seriesId == null) {
+          series = chart.series[chart.series.length - 1];
+        } else {
+          var _iteratorNormalCompletion44 = true;
+          var _didIteratorError44 = false;
+          var _iteratorError44 = undefined;
+
+          try {
+            for (var _iterator44 = chart.series[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
+              var singleSeries = _step44.value;
+
+              if (singleSeries.userOptions.name === seriesId) {
+                series = singleSeries;
+              }
+              this.removeHoverStateFromPoints(singleSeries.points);
+            }
+          } catch (err) {
+            _didIteratorError44 = true;
+            _iteratorError44 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion44 && _iterator44.return) {
+                _iterator44.return();
+              }
+            } finally {
+              if (_didIteratorError44) {
+                throw _iteratorError44;
+              }
+            }
+          }
+        }
         this.setHoverStateOnPoint(series.points, x);
       }
     }
   }, {
     key: 'removeHoverStateFromPoints',
     value: function removeHoverStateFromPoints(points) {
-      var _iteratorNormalCompletion43 = true;
-      var _didIteratorError43 = false;
-      var _iteratorError43 = undefined;
+      var _iteratorNormalCompletion45 = true;
+      var _didIteratorError45 = false;
+      var _iteratorError45 = undefined;
 
       try {
-        for (var _iterator43 = points[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
-          var point = _step43.value;
+        for (var _iterator45 = points[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
+          var point = _step45.value;
 
           point.setState('');
         }
       } catch (err) {
-        _didIteratorError43 = true;
-        _iteratorError43 = err;
+        _didIteratorError45 = true;
+        _iteratorError45 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion43 && _iterator43.return) {
-            _iterator43.return();
+          if (!_iteratorNormalCompletion45 && _iterator45.return) {
+            _iterator45.return();
           }
         } finally {
-          if (_didIteratorError43) {
-            throw _iteratorError43;
+          if (_didIteratorError45) {
+            throw _iteratorError45;
           }
         }
       }
@@ -4038,29 +4091,29 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'setHoverStateOnPoint',
     value: function setHoverStateOnPoint(points, x) {
-      var _iteratorNormalCompletion44 = true;
-      var _didIteratorError44 = false;
-      var _iteratorError44 = undefined;
+      var _iteratorNormalCompletion46 = true;
+      var _didIteratorError46 = false;
+      var _iteratorError46 = undefined;
 
       try {
-        for (var _iterator44 = points[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
-          var point = _step44.value;
+        for (var _iterator46 = points[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
+          var point = _step46.value;
 
           if (point.x === x) {
             point.setState('hover');
           }
         }
       } catch (err) {
-        _didIteratorError44 = true;
-        _iteratorError44 = err;
+        _didIteratorError46 = true;
+        _iteratorError46 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion44 && _iterator44.return) {
-            _iterator44.return();
+          if (!_iteratorNormalCompletion46 && _iterator46.return) {
+            _iterator46.return();
           }
         } finally {
-          if (_didIteratorError44) {
-            throw _iteratorError44;
+          if (_didIteratorError46) {
+            throw _iteratorError46;
           }
         }
       }
@@ -4082,13 +4135,13 @@ var GraphController = function (_ComponentController) {
     key: 'convertSelectedCellsToTrialIds',
     value: function convertSelectedCellsToTrialIds(selectedCells) {
       var selectedTrialIds = [];
-      var _iteratorNormalCompletion45 = true;
-      var _didIteratorError45 = false;
-      var _iteratorError45 = undefined;
+      var _iteratorNormalCompletion47 = true;
+      var _didIteratorError47 = false;
+      var _iteratorError47 = undefined;
 
       try {
-        for (var _iterator45 = selectedCells[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
-          var selectedCell = _step45.value;
+        for (var _iterator47 = selectedCells[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
+          var selectedCell = _step47.value;
 
           var material = selectedCell.material;
           var bevTemp = selectedCell.bevTemp;
@@ -4097,16 +4150,16 @@ var GraphController = function (_ComponentController) {
           selectedTrialIds.push(selectedTrialId);
         }
       } catch (err) {
-        _didIteratorError45 = true;
-        _iteratorError45 = err;
+        _didIteratorError47 = true;
+        _iteratorError47 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion45 && _iterator45.return) {
-            _iterator45.return();
+          if (!_iteratorNormalCompletion47 && _iterator47.return) {
+            _iterator47.return();
           }
         } finally {
-          if (_didIteratorError45) {
-            throw _iteratorError45;
+          if (_didIteratorError47) {
+            throw _iteratorError47;
           }
         }
       }

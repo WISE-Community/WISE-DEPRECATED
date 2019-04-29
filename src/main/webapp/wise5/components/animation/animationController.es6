@@ -15,7 +15,6 @@ class AnimationController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
-      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -27,7 +26,6 @@ class AnimationController extends ComponentController {
     this.$q = $q;
     this.$timeout = $timeout;
     this.AnimationService = AnimationService;
-    this.NotificationService = NotificationService;
 
     this.width = 800;
     this.height = 600;
@@ -1038,7 +1036,6 @@ AnimationController.$inject = [
   'ConfigService',
   'NodeService',
   'NotebookService',
-  'NotificationService',
   'ProjectService',
   'StudentAssetService',
   'StudentDataService',

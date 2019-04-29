@@ -79,7 +79,6 @@
   <bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
     <property name="userDetailsService" ref="userDetailsService" />
     <property name="passwordEncoder" ref="passwordEncoder" />
-    <property name="saltSource" ref="systemSaltSource" />
   </bean>
 
   <bean id="oAuth2ClientContextFilter" class="org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter" />
@@ -88,12 +87,6 @@
     <constructor-arg value="/google-login" />
     <property name="authenticationSuccessHandler" ref="authSuccessHandler" />
     <property name="authenticationFailureHandler" ref="authFailureHandler" />
-  </bean>
-
-  <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
-
-  <bean id="systemSaltSource" class="org.springframework.security.authentication.dao.SystemWideSaltSource">
-    <property name="systemWideSalt" value="secret" />
   </bean>
 
   <!-- Automatically receives AuthenticationEvent messages -->

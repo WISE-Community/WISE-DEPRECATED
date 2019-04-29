@@ -41,25 +41,79 @@ var DiscussionController = function (_ComponentController) {
     _this.retrievedClassmateResponses = false;
     if (_this.isStudentMode()) {
       if (_this.ConfigService.isPreview()) {
-        var componentStates = null;
+        var componentStates = [];
         if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
-          // assume there can only be one connected component
-          var connectedComponent = _this.componentContent.connectedComponents[0];
-          componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = _this.componentContent.connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var connectedComponent = _step.value;
+
+              componentStates = componentStates.concat(_this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId));
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+
+          if (_this.isConnectedComponentImportWorkMode()) {
+            componentStates = componentStates.concat(_this.StudentDataService.getComponentStatesByNodeIdAndComponentId(_this.nodeId, _this.componentId));
+          }
         } else {
           componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(_this.nodeId, _this.componentId);
         }
         _this.setClassResponses(componentStates);
       } else {
         if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
-          // assume there can only be one connected component
-          var _connectedComponent = _this.componentContent.connectedComponents[0];
-          _this.getClassmateResponses(_connectedComponent.nodeId, _connectedComponent.componentId);
+          var retrieveWorkFromTheseComponents = [];
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = _this.componentContent.connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var _connectedComponent = _step2.value;
+
+              retrieveWorkFromTheseComponents.push({ nodeId: _connectedComponent.nodeId, componentId: _connectedComponent.componentId });
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
+            }
+          }
+
+          if (_this.isConnectedComponentImportWorkMode()) {
+            retrieveWorkFromTheseComponents.push({ nodeId: _this.nodeId, componentId: _this.componentId });
+          }
+          _this.getClassmateResponses(retrieveWorkFromTheseComponents);
         } else {
           if (_this.isClassmateResponsesGated()) {
             var componentState = _this.$scope.componentState;
-            if (_this.DiscussionService.componentStateHasStudentWork(componentState, _this.componentContent)) {
-              _this.getClassmateResponses();
+            if (componentState != null) {
+              if (_this.DiscussionService.componentStateHasStudentWork(componentState, _this.componentContent)) {
+                _this.getClassmateResponses();
+              }
             }
           } else {
             _this.getClassmateResponses();
@@ -75,13 +129,81 @@ var DiscussionController = function (_ComponentController) {
     _this.initializeScopeSubmitButtonClicked();
     _this.initializeScopeGetComponentState();
     _this.initializeScopeStudentDataChanged();
-    _this.registerWebSocketMessageReceivedListener();
+    _this.registerStudentWorkReceivedListener();
     _this.initializeWatchMdMedia();
     _this.broadcastDoneRenderingComponent();
     return _this;
   }
 
   _createClass(DiscussionController, [{
+    key: 'isConnectedComponentShowWorkMode',
+    value: function isConnectedComponentShowWorkMode() {
+      if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        var isShowWorkMode = true;
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+          for (var _iterator3 = this.componentContent.connectedComponents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var connectedComponent = _step3.value;
+
+            isShowWorkMode = isShowWorkMode && connectedComponent.type === 'showWork';
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
+        }
+
+        return isShowWorkMode;
+      }
+      return false;
+    }
+  }, {
+    key: 'isConnectedComponentImportWorkMode',
+    value: function isConnectedComponentImportWorkMode() {
+      if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        var isImportWorkMode = true;
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
+
+        try {
+          for (var _iterator4 = this.componentContent.connectedComponents[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var connectedComponent = _step4.value;
+
+            isImportWorkMode = isImportWorkMode && connectedComponent.type === 'importWork';
+          }
+        } catch (err) {
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
+            }
+          } finally {
+            if (_didIteratorError4) {
+              throw _iteratorError4;
+            }
+          }
+        }
+
+        return isImportWorkMode;
+      }
+      return false;
+    }
+  }, {
     key: 'initializeScopeSubmitButtonClicked',
     value: function initializeScopeSubmitButtonClicked() {
       var _this2 = this;
@@ -144,25 +266,17 @@ var DiscussionController = function (_ComponentController) {
 
       this.$scope.$on('studentWorkSavedToServer', function (event, args) {
         var componentState = args.studentWork;
-        if (componentState && _this5.nodeId === componentState.nodeId && _this5.componentId === componentState.componentId) {
+        if (componentState && componentState.nodeId === _this5.nodeId && componentState.componentId === _this5.componentId) {
           if (_this5.isClassmateResponsesGated() && !_this5.retrievedClassmateResponses) {
             _this5.getClassmateResponses();
           } else {
             _this5.addClassResponse(componentState);
           }
           _this5.disableComponentIfNecessary();
-          _this5.sendPostToClassmatesInPeriod(componentState);
           _this5.sendPostToStudentsInThread(componentState);
         }
         _this5.isSubmit = null;
       });
-    }
-  }, {
-    key: 'sendPostToClassmatesInPeriod',
-    value: function sendPostToClassmatesInPeriod(componentState) {
-      var messageType = 'studentData';
-      componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
-      this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
     }
   }, {
     key: 'sendPostToStudentsInThread',
@@ -191,86 +305,100 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'sendPostToThreadCreator',
     value: function sendPostToThreadCreator(componentStateIdReplyingTo, notificationType, nodeId, componentId, fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
-      var _this6 = this;
-
       var originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
       var toWorkgroupId = originalPostComponentState.workgroupId;
-      if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
+      if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
         var notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-        this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
-          var messageType = 'notification';
-          _this6.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-        });
+        this.NotificationService.saveNotificationToServer(notification);
         workgroupsNotifiedSoFar.push(toWorkgroupId);
       }
     }
   }, {
     key: 'sendPostToThreadRepliers',
     value: function sendPostToThreadRepliers(componentStateIdReplyingTo, notificationType, nodeId, componentId, fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
-      var _this7 = this;
-
       if (this.responsesMap[componentStateIdReplyingTo].replies != null) {
         var replies = this.responsesMap[componentStateIdReplyingTo].replies;
         for (var r = 0; r < replies.length; r++) {
           var reply = replies[r];
           var toWorkgroupId = reply.workgroupId;
-          if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) == -1) {
+          if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1) {
             var notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-            this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
-              var messageType = 'notification';
-              _this7.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-            });
+            this.NotificationService.saveNotificationToServer(notification);
             workgroupsNotifiedSoFar.push(toWorkgroupId);
           }
         }
       }
     }
   }, {
-    key: 'registerWebSocketMessageReceivedListener',
-    value: function registerWebSocketMessageReceivedListener() {
-      var _this8 = this;
+    key: 'registerStudentWorkReceivedListener',
+    value: function registerStudentWorkReceivedListener() {
+      var _this6 = this;
 
-      this.$rootScope.$on('webSocketMessageReceived', function (event, args) {
-        var data = args.data;
-        var componentState = data.data;
-        if (componentState.nodeId === _this8.nodeId && componentState.componentId === _this8.componentId) {
-          var componentStateWorkgroupId = componentState.workgroupId;
-          var workgroupId = _this8.ConfigService.getWorkgroupId();
-          if (workgroupId !== componentStateWorkgroupId) {
-            if (_this8.retrievedClassmateResponses) {
-              _this8.addClassResponse(componentState);
-            }
-          }
+      this.$rootScope.$on('studentWorkReceived', function (event, componentState) {
+        if ((_this6.isWorkFromThisComponent(componentState) || _this6.isWorkFromConnectedComponent(componentState)) && componentState.workgroupId !== _this6.ConfigService.getWorkgroupId() && _this6.retrievedClassmateResponses) {
+          _this6.addClassResponse(componentState);
         }
       });
     }
   }, {
+    key: 'isWorkFromThisComponent',
+    value: function isWorkFromThisComponent(componentState) {
+      return this.isForThisComponent(componentState);
+    }
+  }, {
+    key: 'isWorkFromConnectedComponent',
+    value: function isWorkFromConnectedComponent(componentState) {
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = this.componentContent.connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var connectedComponent = _step5.value;
+
+          if (connectedComponent.nodeId === componentState.nodeId && connectedComponent.componentId === componentState.componentId) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
     key: 'initializeWatchMdMedia',
     value: function initializeWatchMdMedia() {
-      var _this9 = this;
+      var _this7 = this;
 
       this.$scope.$watch(function () {
-        return _this9.$mdMedia('gt-sm');
+        return _this7.$mdMedia('gt-sm');
       }, function (md) {
-        _this9.$scope.mdScreen = md;
+        _this7.$scope.mdScreen = md;
       });
     }
   }, {
     key: 'getClassmateResponses',
     value: function getClassmateResponses() {
-      var _this10 = this;
+      var _this8 = this;
 
-      var nodeId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.nodeId;
-      var componentId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.componentId;
+      var components = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [{ nodeId: this.nodeId, componentId: this.componentId }];
 
       var runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
-      this.DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then(function (result) {
-        if (result != null) {
-          var componentStates = result.studentWorkList;
-          var annotations = result.annotations;
-          _this10.setClassResponses(componentStates, annotations);
-        }
+      this.DiscussionService.getClassmateResponses(runId, periodId, components).then(function (result) {
+        _this8.setClassResponses(result.studentWorkList, result.annotations);
       });
     }
   }, {
@@ -283,12 +411,12 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
-      var _this11 = this;
+      var _this9 = this;
 
       this.isDirty = true;
       var action = 'change';
       this.createComponentState(action).then(function (componentState) {
-        _this11.$scope.$emit('componentStudentDataChanged', { nodeId: _this11.nodeId, componentId: _this11.componentId, componentState: componentState });
+        _this9.$scope.$emit('componentStudentDataChanged', { nodeId: _this9.nodeId, componentId: _this9.componentId, componentState: componentState });
       });
     }
 
@@ -349,29 +477,29 @@ var DiscussionController = function (_ComponentController) {
     value: function disableComponentIfNecessary() {
       _get(DiscussionController.prototype.__proto__ || Object.getPrototypeOf(DiscussionController.prototype), 'disableComponentIfNecessary', this).call(this);
       if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
 
         try {
-          for (var _iterator = this.componentContent.connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var connectedComponent = _step.value;
+          for (var _iterator6 = this.componentContent.connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var connectedComponent = _step6.value;
 
             if (connectedComponent.type == 'showWork') {
               this.isDisabled = true;
             }
           }
         } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
             }
           } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
@@ -396,13 +524,13 @@ var DiscussionController = function (_ComponentController) {
     key: 'setClassResponses',
     value: function setClassResponses(componentStates, annotations) {
       this.classResponses = [];
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
       try {
-        for (var _iterator2 = componentStates[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var componentState = _step2.value;
+        for (var _iterator7 = componentStates[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var componentState = _step7.value;
 
           if (componentState.studentData.isSubmit) {
             var workgroupId = componentState.workgroupId;
@@ -436,16 +564,16 @@ var DiscussionController = function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
           }
         } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
+          if (_didIteratorError7) {
+            throw _iteratorError7;
           }
         }
       }
@@ -458,27 +586,27 @@ var DiscussionController = function (_ComponentController) {
     value: function getUserIdsDisplay(workgroupId) {
       var userIds = this.ConfigService.getUserIdsByWorkgroupId(workgroupId);
       var userIdsDisplay = [];
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator3 = userIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var userId = _step3.value;
+        for (var _iterator8 = userIds[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var userId = _step8.value;
 
           userIdsDisplay.push('Student ' + userId);
         }
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return) {
-            _iterator3.return();
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
           }
         } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
@@ -489,29 +617,29 @@ var DiscussionController = function (_ComponentController) {
     key: 'getLatestInappropriateFlagAnnotationByStudentWorkId',
     value: function getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
       if (annotations != null) {
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
 
         try {
-          for (var _iterator4 = annotations[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var annotation = _step4.value;
+          for (var _iterator9 = annotations[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            var annotation = _step9.value;
 
-            if (studentWorkId == annotation.studentWorkId && annotation.type == 'inappropriateFlag') {
+            if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
               return annotation;
             }
           }
         } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
+          _didIteratorError9 = true;
+          _iteratorError9 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
+            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+              _iterator9.return();
             }
           } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
+            if (_didIteratorError9) {
+              throw _iteratorError9;
             }
           }
         }
@@ -521,38 +649,38 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'processResponses',
     value: function processResponses(componentStates) {
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
 
       try {
-        for (var _iterator5 = componentStates[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var componentState = _step5.value;
+        for (var _iterator10 = componentStates[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var componentState = _step10.value;
 
           this.responsesMap[componentState.id] = componentState;
         }
       } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
           }
         } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
+          if (_didIteratorError10) {
+            throw _iteratorError10;
           }
         }
       }
 
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
+      var _iteratorNormalCompletion11 = true;
+      var _didIteratorError11 = false;
+      var _iteratorError11 = undefined;
 
       try {
-        for (var _iterator6 = componentStates[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var _componentState = _step6.value;
+        for (var _iterator11 = componentStates[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+          var _componentState = _step11.value;
 
           if (_componentState && _componentState.studentData) {
             var studentData = _componentState.studentData;
@@ -565,16 +693,16 @@ var DiscussionController = function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion11 && _iterator11.return) {
+            _iterator11.return();
           }
         } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
+          if (_didIteratorError11) {
+            throw _iteratorError11;
           }
         }
       }
@@ -615,7 +743,7 @@ var DiscussionController = function (_ComponentController) {
     }
 
     /**
-     * Get the level 1 responses which are posts that are not a2
+     * Get the level 1 responses which are posts that are not a
      * reply to another response.
      * @return an array of responses that are not a reply to another
      * response
@@ -626,13 +754,13 @@ var DiscussionController = function (_ComponentController) {
     value: function getLevel1Responses() {
       var level1Responses = [];
       var classResponses = this.classResponses;
-      var _iteratorNormalCompletion7 = true;
-      var _didIteratorError7 = false;
-      var _iteratorError7 = undefined;
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
 
       try {
-        for (var _iterator7 = classResponses[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-          var classResponse = _step7.value;
+        for (var _iterator12 = classResponses[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var classResponse = _step12.value;
 
           var componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
           if (componentStateIdReplyingTo == null) {
@@ -644,16 +772,16 @@ var DiscussionController = function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError7 = true;
-        _iteratorError7 = err;
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion7 && _iterator7.return) {
-            _iterator7.return();
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
           }
         } finally {
-          if (_didIteratorError7) {
-            throw _iteratorError7;
+          if (_didIteratorError12) {
+            throw _iteratorError12;
           }
         }
       }
@@ -673,7 +801,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'deletebuttonclicked',
     value: function deletebuttonclicked(componentState) {
-      var _this12 = this;
+      var _this10 = this;
 
       var toWorkgroupId = componentState.workgroupId;
       var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
@@ -689,9 +817,9 @@ var DiscussionController = function (_ComponentController) {
       };
       var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
       this.AnnotationService.saveAnnotation(annotation).then(function () {
-        var componentStates = _this12.DiscussionService.getPostsAssociatedWithWorkgroupId(_this12.componentId, _this12.workgroupId);
-        var annotations = _this12.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-        _this12.setClassResponses(componentStates, annotations);
+        var componentStates = _this10.DiscussionService.getPostsAssociatedWithWorkgroupId(_this10.componentId, _this10.workgroupId);
+        var annotations = _this10.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+        _this10.setClassResponses(componentStates, annotations);
       });
     }
 
@@ -707,7 +835,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'undodeletebuttonclicked',
     value: function undodeletebuttonclicked(componentState) {
-      var _this13 = this;
+      var _this11 = this;
 
       var toWorkgroupId = componentState.workgroupId;
       var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
@@ -723,9 +851,9 @@ var DiscussionController = function (_ComponentController) {
       };
       var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
       this.AnnotationService.saveAnnotation(annotation).then(function () {
-        var componentStates = _this13.DiscussionService.getPostsAssociatedWithWorkgroupId(_this13.componentId, _this13.workgroupId);
-        var annotations = _this13.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-        _this13.setClassResponses(componentStates, annotations);
+        var componentStates = _this11.DiscussionService.getPostsAssociatedWithWorkgroupId(_this11.componentId, _this11.workgroupId);
+        var annotations = _this11.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+        _this11.setClassResponses(componentStates, annotations);
       });
     }
 
@@ -741,13 +869,13 @@ var DiscussionController = function (_ComponentController) {
     value: function getInappropriateFlagAnnotationsByComponentStates(componentStates) {
       var annotations = [];
       if (componentStates != null) {
-        var _iteratorNormalCompletion8 = true;
-        var _didIteratorError8 = false;
-        var _iteratorError8 = undefined;
+        var _iteratorNormalCompletion13 = true;
+        var _didIteratorError13 = false;
+        var _iteratorError13 = undefined;
 
         try {
-          for (var _iterator8 = componentStates[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-            var componentState = _step8.value;
+          for (var _iterator13 = componentStates[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+            var componentState = _step13.value;
 
             var latestInappropriateFlagAnnotation = this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(componentState.id, 'inappropriateFlag');
             if (latestInappropriateFlagAnnotation != null) {
@@ -755,16 +883,16 @@ var DiscussionController = function (_ComponentController) {
             }
           }
         } catch (err) {
-          _didIteratorError8 = true;
-          _iteratorError8 = err;
+          _didIteratorError13 = true;
+          _iteratorError13 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-              _iterator8.return();
+            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+              _iterator13.return();
             }
           } finally {
-            if (_didIteratorError8) {
-              throw _iteratorError8;
+            if (_didIteratorError13) {
+              throw _iteratorError13;
             }
           }
         }

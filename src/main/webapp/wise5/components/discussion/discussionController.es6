@@ -1,6 +1,6 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
 
 class DiscussionController extends ComponentController {
   constructor($filter,
@@ -21,9 +21,9 @@ class DiscussionController extends ComponentController {
       UtilService,
       $mdMedia) {
     super($filter, $mdDialog, $rootScope, $scope,
-      AnnotationService, ConfigService, NodeService,
-      NotebookService, ProjectService, StudentAssetService,
-      StudentDataService, UtilService);
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
     this.DiscussionService = DiscussionService;
     this.NotificationService = NotificationService;
@@ -37,12 +37,16 @@ class DiscussionController extends ComponentController {
     this.retrievedClassmateResponses = false;
     if (this.isStudentMode()) {
       if (this.ConfigService.isPreview()) {
-        let componentStates = null;
+        let componentStates = [];
         if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // assume there can only be one connected component
-          const connectedComponent = this.componentContent.connectedComponents[0];
-          componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-              connectedComponent.nodeId, connectedComponent.componentId);
+          for (const connectedComponent of this.componentContent.connectedComponents) {
+            componentStates = componentStates.concat(this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                connectedComponent.nodeId, connectedComponent.componentId));
+          }
+          if (this.isConnectedComponentImportWorkMode()) {
+            componentStates = componentStates.concat(this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                this.nodeId, this.componentId));
+          }
         } else {
           componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
               this.nodeId, this.componentId);
@@ -50,14 +54,22 @@ class DiscussionController extends ComponentController {
         this.setClassResponses(componentStates);
       } else {
         if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // assume there can only be one connected component
-          const connectedComponent = this.componentContent.connectedComponents[0];
-          this.getClassmateResponses(connectedComponent.nodeId, connectedComponent.componentId);
+          const retrieveWorkFromTheseComponents = [];
+          for (const connectedComponent of this.componentContent.connectedComponents) {
+            retrieveWorkFromTheseComponents.push(
+                {nodeId: connectedComponent.nodeId, componentId: connectedComponent.componentId});
+          }
+          if (this.isConnectedComponentImportWorkMode()) {
+            retrieveWorkFromTheseComponents.push({nodeId: this.nodeId, componentId: this.componentId});
+          }
+          this.getClassmateResponses(retrieveWorkFromTheseComponents);
         } else {
           if (this.isClassmateResponsesGated()) {
             const componentState = this.$scope.componentState;
-            if (this.DiscussionService.componentStateHasStudentWork(componentState, this.componentContent)) {
-              this.getClassmateResponses();
+            if (componentState != null) {
+              if (this.DiscussionService.componentStateHasStudentWork(componentState, this.componentContent)) {
+                this.getClassmateResponses();
+              }
             }
           } else {
             this.getClassmateResponses();
@@ -74,9 +86,31 @@ class DiscussionController extends ComponentController {
     this.initializeScopeSubmitButtonClicked();
     this.initializeScopeGetComponentState();
     this.initializeScopeStudentDataChanged();
-    this.registerWebSocketMessageReceivedListener();
+    this.registerStudentWorkReceivedListener();
     this.initializeWatchMdMedia();
     this.broadcastDoneRenderingComponent();
+  }
+
+  isConnectedComponentShowWorkMode() {
+    if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      let isShowWorkMode = true;
+      for (const connectedComponent of this.componentContent.connectedComponents) {
+        isShowWorkMode = isShowWorkMode && connectedComponent.type === 'showWork';
+      }
+      return isShowWorkMode;
+    }
+    return false;
+  }
+
+  isConnectedComponentImportWorkMode() {
+    if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      let isImportWorkMode = true;
+      for (const connectedComponent of this.componentContent.connectedComponents) {
+        isImportWorkMode = isImportWorkMode && connectedComponent.type === 'importWork';
+      }
+      return isImportWorkMode;
+    }
+    return false;
   }
 
   initializeScopeSubmitButtonClicked() {
@@ -132,25 +166,18 @@ class DiscussionController extends ComponentController {
     this.$scope.$on('studentWorkSavedToServer', (event, args) => {
       const componentState = args.studentWork;
       if (componentState &&
-          this.nodeId === componentState.nodeId &&
-          this.componentId === componentState.componentId) {
+          componentState.nodeId === this.nodeId &&
+          componentState.componentId === this.componentId) {
         if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
           this.getClassmateResponses();
         } else {
           this.addClassResponse(componentState);
         }
         this.disableComponentIfNecessary();
-        this.sendPostToClassmatesInPeriod(componentState);
         this.sendPostToStudentsInThread(componentState);
       }
       this.isSubmit = null;
     });
-  }
-
-  sendPostToClassmatesInPeriod(componentState) {
-    const messageType = 'studentData';
-    componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
-    this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
   }
 
   sendPostToStudentsInThread(componentState) {
@@ -179,55 +206,58 @@ class DiscussionController extends ComponentController {
   }
 
   sendPostToThreadCreator(componentStateIdReplyingTo, notificationType, nodeId, componentId,
-                          fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
+      fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
     const originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
     const toWorkgroupId = originalPostComponentState.workgroupId;
-    if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
+    if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
       const notification = this.NotificationService.createNewNotification(
           notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-      this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
-        const messageType = 'notification';
-        this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-      });
+      this.NotificationService.saveNotificationToServer(notification);
       workgroupsNotifiedSoFar.push(toWorkgroupId);
     }
   }
 
   sendPostToThreadRepliers(componentStateIdReplyingTo, notificationType, nodeId, componentId,
-                           fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
+      fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
     if (this.responsesMap[componentStateIdReplyingTo].replies != null) {
       const replies = this.responsesMap[componentStateIdReplyingTo].replies;
       for (let r = 0; r < replies.length; r++) {
         const reply = replies[r];
         const toWorkgroupId = reply.workgroupId;
-        if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId &&
-            workgroupsNotifiedSoFar.indexOf(toWorkgroupId) == -1) {
+        if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId &&
+            workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1) {
           const notification = this.NotificationService.createNewNotification(
               notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-          this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
-            const messageType = 'notification';
-            this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-          });
+          this.NotificationService.saveNotificationToServer(notification);
           workgroupsNotifiedSoFar.push(toWorkgroupId);
         }
       }
     }
   }
 
-  registerWebSocketMessageReceivedListener() {
-    this.$rootScope.$on('webSocketMessageReceived', (event, args) => {
-      const data = args.data;
-      const componentState = data.data;
-      if (componentState.nodeId === this.nodeId && componentState.componentId === this.componentId) {
-        const componentStateWorkgroupId = componentState.workgroupId;
-        const workgroupId = this.ConfigService.getWorkgroupId();
-        if (workgroupId !== componentStateWorkgroupId) {
-          if (this.retrievedClassmateResponses) {
-            this.addClassResponse(componentState);
-          }
-        }
+  registerStudentWorkReceivedListener() {
+    this.$rootScope.$on('studentWorkReceived', (event, componentState) => {
+      if ((this.isWorkFromThisComponent(componentState) ||
+          this.isWorkFromConnectedComponent(componentState)) &&
+          componentState.workgroupId !== this.ConfigService.getWorkgroupId() &&
+          this.retrievedClassmateResponses) {
+        this.addClassResponse(componentState);
       }
     });
+  }
+
+  isWorkFromThisComponent(componentState) {
+    return this.isForThisComponent(componentState);
+  }
+
+  isWorkFromConnectedComponent(componentState) {
+    for (const connectedComponent of this.componentContent.connectedComponents) {
+      if (connectedComponent.nodeId === componentState.nodeId &&
+          connectedComponent.componentId === componentState.componentId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   initializeWatchMdMedia() {
@@ -236,15 +266,11 @@ class DiscussionController extends ComponentController {
     });
   }
 
-  getClassmateResponses(nodeId = this.nodeId, componentId = this.componentId) {
+  getClassmateResponses(components = [{nodeId: this.nodeId, componentId: this.componentId}]) {
     const runId = this.ConfigService.getRunId();
     const periodId = this.ConfigService.getPeriodId();
-    this.DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then((result) => {
-      if (result != null) {
-        const componentStates = result.studentWorkList;
-        const annotations = result.annotations;
-        this.setClassResponses(componentStates, annotations);
-      }
+    this.DiscussionService.getClassmateResponses(runId, periodId, components).then((result) => {
+      this.setClassResponses(result.studentWorkList, result.annotations);
     });
   }
 
@@ -385,8 +411,8 @@ class DiscussionController extends ComponentController {
 
   getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
     if (annotations != null) {
-      for (let annotation of annotations) {
-        if (studentWorkId == annotation.studentWorkId && annotation.type == 'inappropriateFlag') {
+      for (const annotation of annotations) {
+        if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
           return annotation;
         }
       }
@@ -395,10 +421,10 @@ class DiscussionController extends ComponentController {
   }
 
   processResponses(componentStates) {
-    for (let componentState of componentStates) {
+    for (const componentState of componentStates) {
       this.responsesMap[componentState.id] = componentState;
     }
-    for (let componentState of componentStates) {
+    for (const componentState of componentStates) {
       if (componentState && componentState.studentData) {
         const studentData = componentState.studentData;
         const componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;

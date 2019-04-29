@@ -29,7 +29,7 @@
 					<div class="infoContentBox">
 						<c:if test="${displayForgotPasswordSelectAccountTypeLink == false && displayLoginLink == false}">
 							<div>
-								<form id="submittedAccountPasswords" method="post" commandName="passwordReminderParameters" autocomplete='off'>
+								<form id="submittedAccountPasswords" method="post" modelAttribute="passwordReminderParameters" autocomplete='off'>
 									<table id="submittedAccountPasswordTable" style="margin:0 auto;">
 									<tr>
 										<td><label id="passwordform" for="newPassword"><spring:message code="forgotaccount.resetpassword.newPassword" /></label></td>

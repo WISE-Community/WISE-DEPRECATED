@@ -9,7 +9,12 @@ export class MockLibraryService {
   implementationModelOptions = [];
   personalLibraryProjectsSource$ = fakeAsyncResponse([]);
   sharedLibraryProjectsSource$ = fakeAsyncResponse([]);
-  projectFilterOptionsSource$ = fakeAsyncResponse({});
+  projectFilterOptionsSource$ = fakeAsyncResponse({
+    searchValue: "",
+    disciplineValue: [],
+    dciArrangementValue: [],
+    peValue: []
+  });
   newProjectSource$ = fakeAsyncResponse({});
   getPersonalLibraryProjects() {
 
