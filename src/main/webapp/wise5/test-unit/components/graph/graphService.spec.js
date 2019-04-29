@@ -130,25 +130,13 @@ describe('GraphService', function () {
     it('should return false when the student has not changed the axis limit', function () {
       var componentState = {
         studentData: {
-          xAxis: {
-            min: 0,
-            max: 10
-          },
-          yAxis: {
-            min: 0,
-            max: 10
-          }
+          xAxis: { min: 0, max: 10 },
+          yAxis: { min: 0, max: 10 }
         }
       };
       var componentContent = {
-        xAxis: {
-          min: 0,
-          max: 10
-        },
-        yAxis: {
-          min: 0,
-          max: 10
-        }
+        xAxis: { min: 0, max: 10 },
+        yAxis: { min: 0, max: 10 }
       };
       expect(GraphService.isStudentChangedAxisLimit(componentState, componentContent)).toBeFalsy();
     });
@@ -156,25 +144,13 @@ describe('GraphService', function () {
     it('should return true when the student has changed the axis limit', function () {
       var componentState = {
         studentData: {
-          xAxis: {
-            min: 0,
-            max: 20
-          },
-          yAxis: {
-            min: 0,
-            max: 20
-          }
+          xAxis: { min: 0, max: 20 },
+          yAxis: { min: 0, max: 20 }
         }
       };
       var componentContent = {
-        xAxis: {
-          min: 0,
-          max: 10
-        },
-        yAxis: {
-          min: 0,
-          max: 10
-        }
+        xAxis: { min: 0, max: 10 },
+        yAxis: { min: 0, max: 10 }
       };
       expect(GraphService.isStudentChangedAxisLimit(componentState, componentContent)).toBeTruthy();
     });

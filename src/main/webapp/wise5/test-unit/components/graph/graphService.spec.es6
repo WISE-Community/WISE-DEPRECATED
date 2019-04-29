@@ -20,11 +20,7 @@ describe('GraphService', () => {
 
     it('should return false when series data is empty', () => {
       const studentData = {
-        series: [
-          {
-
-          }
-        ]
+        series: [{}]
       };
       expect(GraphService.hasSeriesData(studentData)).toBeFalsy();
     });
@@ -116,25 +112,13 @@ describe('GraphService', () => {
     it('should return false when the student has not changed the axis limit', () => {
       const componentState = {
         studentData: {
-          xAxis: {
-            min: 0,
-            max: 10
-          },
-          yAxis: {
-            min: 0,
-            max: 10
-          }
+          xAxis: { min: 0, max: 10 },
+          yAxis: { min: 0, max: 10 }
         }
       };
       const componentContent = {
-        xAxis: {
-          min: 0,
-          max: 10
-        },
-        yAxis: {
-          min: 0,
-          max: 10
-        }
+        xAxis: { min: 0, max: 10 },
+        yAxis: { min: 0, max: 10 }
       };
       expect(GraphService.isStudentChangedAxisLimit(componentState, componentContent)).toBeFalsy();
     });
@@ -142,25 +126,13 @@ describe('GraphService', () => {
     it('should return true when the student has changed the axis limit', () => {
       const componentState = {
         studentData: {
-          xAxis: {
-            min: 0,
-            max: 20
-          },
-          yAxis: {
-            min: 0,
-            max: 20
-          }
+          xAxis: { min: 0, max: 20 },
+          yAxis: { min: 0, max: 20 }
         }
       };
       const componentContent = {
-        xAxis: {
-          min: 0,
-          max: 10
-        },
-        yAxis: {
-          min: 0,
-          max: 10
-        }
+        xAxis: { min: 0, max: 10 },
+        yAxis: { min: 0, max: 10 }
       };
       expect(GraphService.isStudentChangedAxisLimit(componentState, componentContent)).toBeTruthy();
     });
