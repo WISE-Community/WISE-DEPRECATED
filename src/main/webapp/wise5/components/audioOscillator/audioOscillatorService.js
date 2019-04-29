@@ -44,7 +44,7 @@ var AudioOscillatorService = function (_ComponentService) {
       component.oscilloscopeWidth = 800;
       component.oscilloscopeHeight = 400;
       component.gridCellSize = 50;
-      component.stopAfterGoodDraw = false;
+      component.stopAfterGoodDraw = true;
       return component;
     }
   }, {
