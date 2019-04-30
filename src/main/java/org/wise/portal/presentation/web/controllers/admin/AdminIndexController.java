@@ -23,18 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -51,8 +39,18 @@ import org.wise.portal.domain.admin.DailyAdminJob;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.service.session.SessionService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Controller for Admin index page
@@ -75,6 +73,9 @@ public class AdminIndexController {
   @Autowired
   private DailyAdminJob adminJob;
 
+  @Autowired
+  protected SessionService sessionService;
+
   @RequestMapping(value = "/admin", method = RequestMethod.GET)
   protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
     ModelAndView modelAndView = new ModelAndView("admin/index");
@@ -94,16 +95,7 @@ public class AdminIndexController {
     modelAndView.addObject("updateWISEURL", WISE_UPDATE_URL);
     modelAndView.addObject("isBatchCreateUserAccountsEnabled",
         Boolean.valueOf(wiseProperties.getProperty("isBatchCreateUserAccountsEnabled", "false")));
-
-    HashMap<String, User> allLoggedInUsers =
-        (HashMap<String, User>) request.getSession()
-        .getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-
-    if (allLoggedInUsers != null) {
-      modelAndView.addObject("numCurrentlyLoggedInUsers", allLoggedInUsers.size());
-    } else {
-      modelAndView.addObject("numCurrentlyLoggedInUsers", 0);
-    }
+    modelAndView.addObject("numCurrentlyLoggedInUsers", sessionService.getNumberSignedInUsers());
 
     Calendar todayZeroHour = Calendar.getInstance();
     todayZeroHour.set(Calendar.HOUR_OF_DAY, 0);
