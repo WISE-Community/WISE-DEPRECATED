@@ -264,9 +264,9 @@ var DiscussionController = function (_ComponentController) {
     value: function registerStudentWorkSavedToServerListener() {
       var _this5 = this;
 
-      this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+      this.destroyStudentWorkSavedToServerListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
         var componentState = args.studentWork;
-        if (componentState && componentState.nodeId === _this5.nodeId && componentState.componentId === _this5.componentId) {
+        if (_this5.isWorkFromThisComponent(componentState)) {
           if (_this5.isClassmateResponsesGated() && !_this5.retrievedClassmateResponses) {
             _this5.getClassmateResponses();
           } else {
@@ -334,11 +334,16 @@ var DiscussionController = function (_ComponentController) {
     value: function registerStudentWorkReceivedListener() {
       var _this6 = this;
 
-      this.$rootScope.$on('studentWorkReceived', function (event, componentState) {
-        if ((_this6.isWorkFromThisComponent(componentState) || _this6.isWorkFromConnectedComponent(componentState)) && componentState.workgroupId !== _this6.ConfigService.getWorkgroupId() && _this6.retrievedClassmateResponses) {
+      this.destroyStudentWorkReceivedListener = this.$rootScope.$on('studentWorkReceived', function (event, componentState) {
+        if ((_this6.isWorkFromThisComponent(componentState) || _this6.isWorkFromConnectedComponent(componentState)) && _this6.isWorkFromClassmate(componentState) && _this6.retrievedClassmateResponses) {
           _this6.addClassResponse(componentState);
         }
       });
+    }
+  }, {
+    key: 'isWorkFromClassmate',
+    value: function isWorkFromClassmate(componentState) {
+      return componentState.workgroupId !== this.ConfigService.getWorkgroupId();
     }
   }, {
     key: 'isWorkFromThisComponent',
@@ -348,33 +353,34 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'isWorkFromConnectedComponent',
     value: function isWorkFromConnectedComponent(componentState) {
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      if (this.componentContent.connectedComponents != null) {
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
 
-      try {
-        for (var _iterator5 = this.componentContent.connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var connectedComponent = _step5.value;
-
-          if (connectedComponent.nodeId === componentState.nodeId && connectedComponent.componentId === componentState.componentId) {
-            return true;
-          }
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          for (var _iterator5 = this.componentContent.connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var connectedComponent = _step5.value;
+
+            if (connectedComponent.nodeId === componentState.nodeId && connectedComponent.componentId === componentState.componentId) {
+              return true;
+            }
           }
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
         } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
+            }
           }
         }
       }
-
       return false;
     }
   }, {
@@ -485,7 +491,7 @@ var DiscussionController = function (_ComponentController) {
           for (var _iterator6 = this.componentContent.connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
             var connectedComponent = _step6.value;
 
-            if (connectedComponent.type == 'showWork') {
+            if (connectedComponent.type === 'showWork') {
               this.isDisabled = true;
             }
           }
@@ -898,6 +904,12 @@ var DiscussionController = function (_ComponentController) {
         }
       }
       return annotations;
+    }
+  }, {
+    key: 'cleanupBeforeExiting',
+    value: function cleanupBeforeExiting() {
+      this.destroyStudentWorkSavedToServerListener();
+      this.destroyStudentWorkReceivedListener();
     }
   }]);
 
