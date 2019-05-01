@@ -163,11 +163,10 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+    this.destroyStudentWorkSavedToServerListener =
+        this.$scope.$on('studentWorkSavedToServer', (event, args) => {
       const componentState = args.studentWork;
-      if (componentState &&
-          componentState.nodeId === this.nodeId &&
-          componentState.componentId === this.componentId) {
+      if (this.isWorkFromThisComponent(componentState)) {
         if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
           this.getClassmateResponses();
         } else {
@@ -236,14 +235,19 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkReceivedListener() {
-    this.$rootScope.$on('studentWorkReceived', (event, componentState) => {
+    this.destroyStudentWorkReceivedListener =
+        this.$rootScope.$on('studentWorkReceived', (event, componentState) => {
       if ((this.isWorkFromThisComponent(componentState) ||
           this.isWorkFromConnectedComponent(componentState)) &&
-          componentState.workgroupId !== this.ConfigService.getWorkgroupId() &&
+          this.isWorkFromClassmate(componentState) &&
           this.retrievedClassmateResponses) {
         this.addClassResponse(componentState);
       }
     });
+  }
+
+  isWorkFromClassmate(componentState) {
+    return componentState.workgroupId !== this.ConfigService.getWorkgroupId();
   }
 
   isWorkFromThisComponent(componentState) {
@@ -251,10 +255,12 @@ class DiscussionController extends ComponentController {
   }
 
   isWorkFromConnectedComponent(componentState) {
-    for (const connectedComponent of this.componentContent.connectedComponents) {
-      if (connectedComponent.nodeId === componentState.nodeId &&
+    if (this.componentContent.connectedComponents != null) {
+      for (const connectedComponent of this.componentContent.connectedComponents) {
+        if (connectedComponent.nodeId === componentState.nodeId &&
           connectedComponent.componentId === componentState.componentId) {
-        return true;
+          return true;
+        }
       }
     }
     return false;
@@ -342,7 +348,7 @@ class DiscussionController extends ComponentController {
     super.disableComponentIfNecessary();
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
       for (let connectedComponent of this.componentContent.connectedComponents) {
-        if (connectedComponent.type == 'showWork') {
+        if (connectedComponent.type === 'showWork') {
           this.isDisabled = true;
         }
       }
@@ -569,6 +575,11 @@ class DiscussionController extends ComponentController {
       }
     }
     return annotations;
+  }
+
+  cleanupBeforeExiting() {
+    this.destroyStudentWorkSavedToServerListener();
+    this.destroyStudentWorkReceivedListener();
   }
 }
 
