@@ -125,7 +125,11 @@ public class GoogleClassroomAPIController {
       return null;
     }
     List<Course> activeCourses = new ArrayList<>();
-    for (Course course: connectToClassroomAPI(credential).courses().list().execute().getCourses()) {
+    List<Course> courses = connectToClassroomAPI(credential).courses().list().execute().getCourses();
+    if (courses == null) {
+      return activeCourses;
+    }
+    for (Course course: courses) {
       if (!course.getCourseState().equals("ARCHIVED")) {
         activeCourses.add(course);
       }
