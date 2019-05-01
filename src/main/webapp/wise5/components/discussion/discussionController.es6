@@ -375,7 +375,7 @@ class DiscussionController extends ComponentController {
         const latestInappropriateFlagAnnotation =
             this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
         const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
-        if (usernames.length == 0) {
+        if (usernames.length === 0) {
           componentState.usernames = this.getUserIdsDisplay(workgroupId);
         } else {
           componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
@@ -474,25 +474,18 @@ class DiscussionController extends ComponentController {
   }
 
   /**
-   * Get the level 1 responses which are posts that are not a
-   * reply to another response.
-   * @return an array of responses that are not a reply to another
-   * response
+   * Get the level 1 responses which are posts that are not a reply to
+   * another response.
+   * @return an array of responses that are not a reply to another response
    */
   getLevel1Responses() {
     const level1Responses = [];
-    const classResponses = this.classResponses;
-    for (let classResponse of classResponses) {
+    for (const classResponse of this.classResponses) {
       const componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
       if (componentStateIdReplyingTo == null) {
-        /*
-         * this response was not a reply to another post so it is a
-         * level 1 response
-         */
         level1Responses.push(classResponse);
       }
     }
-
     return level1Responses;
   }
 

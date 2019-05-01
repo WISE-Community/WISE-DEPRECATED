@@ -542,7 +542,7 @@ var DiscussionController = function (_ComponentController) {
             var workgroupId = componentState.workgroupId;
             var latestInappropriateFlagAnnotation = this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
             var usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
-            if (usernames.length == 0) {
+            if (usernames.length === 0) {
               componentState.usernames = this.getUserIdsDisplay(workgroupId);
             } else {
               componentState.usernames = usernames.map(function (obj) {
@@ -749,31 +749,25 @@ var DiscussionController = function (_ComponentController) {
     }
 
     /**
-     * Get the level 1 responses which are posts that are not a
-     * reply to another response.
-     * @return an array of responses that are not a reply to another
-     * response
+     * Get the level 1 responses which are posts that are not a reply to
+     * another response.
+     * @return an array of responses that are not a reply to another response
      */
 
   }, {
     key: 'getLevel1Responses',
     value: function getLevel1Responses() {
       var level1Responses = [];
-      var classResponses = this.classResponses;
       var _iteratorNormalCompletion12 = true;
       var _didIteratorError12 = false;
       var _iteratorError12 = undefined;
 
       try {
-        for (var _iterator12 = classResponses[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+        for (var _iterator12 = this.classResponses[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
           var classResponse = _step12.value;
 
           var componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
           if (componentStateIdReplyingTo == null) {
-            /*
-             * this response was not a reply to another post so it is a
-             * level 1 response
-             */
             level1Responses.push(classResponse);
           }
         }

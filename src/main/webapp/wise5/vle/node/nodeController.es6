@@ -531,7 +531,7 @@ class NodeController {
     }
 
     this.$rootScope.$broadcast('showStudentAssets', {componentController: componentController, $event: $event});
-  };
+  }
 
   /**
    * Called when the student clicks the save button
