@@ -71,7 +71,11 @@ public class WISEAuthenticationSuccessHandler
       String accessCode = (String) request.getAttribute("accessCode");
       if (request.getServletPath().contains("google-login")) {
         String contextPath = request.getContextPath();
-        response.sendRedirect(contextPath + "/student?accessCode=" + accessCode);
+        if (accessCode != null && !accessCode.equals("")) {
+          response.sendRedirect(contextPath + "/student?accessCode=" + accessCode);
+          return;
+        }
+        response.sendRedirect(contextPath + "/student");
         return;
       }
       // pLT= previous login time (not this time, but last time)
