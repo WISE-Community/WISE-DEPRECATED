@@ -77,7 +77,7 @@ public class AdminIndexController {
   protected SessionService sessionService;
 
   @RequestMapping(value = "/admin", method = RequestMethod.GET)
-  protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
+  protected ModelAndView showAdminHome(HttpServletRequest request) throws Exception {
     ModelAndView modelAndView = new ModelAndView("admin/index");
 
     String thisWISEVersion;

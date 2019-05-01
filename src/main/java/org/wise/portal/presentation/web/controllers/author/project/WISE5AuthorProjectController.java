@@ -41,7 +41,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-//import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.portal.Portal;
@@ -59,6 +58,7 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.session.SessionService;
 import org.wise.vle.utils.FileManager;
 
 import javax.servlet.ServletContext;
@@ -93,6 +93,9 @@ public class WISE5AuthorProjectController {
   RunService runService;
 
   @Autowired
+  protected SessionService sessionService;
+
+  @Autowired
   Properties wiseProperties;
 
   @Autowired
@@ -100,9 +103,6 @@ public class WISE5AuthorProjectController {
 
   @Autowired
   private SimpMessagingTemplate simpMessagingTemplate;
-
-//  @Autowired
-//  private WebSocketHandler webSocketHandler;
 
   private String featuredProjectIconsFolderRelativePath = "wise5/authoringTool/projectIcons";
 
@@ -920,25 +920,12 @@ public class WISE5AuthorProjectController {
    */
   @SuppressWarnings("unchecked")
   @RequestMapping(value = "/project/notifyAuthorBegin/{projectId}", method = RequestMethod.POST)
-  private ModelAndView handleNotifyAuthorProjectBegin(@PathVariable String projectId,
+  private ModelAndView authorProjectBegin(@PathVariable String projectId,
       HttpServletRequest request) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-    if (hasAuthorPermissions(user)) {
-      HttpSession currentUserSession = request.getSession();
-      HashMap<String, ArrayList<String>> openedProjectsToSessions =
-          (HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
-      if (openedProjectsToSessions == null) {
-        openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
-        servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
-      }
-
-      if (openedProjectsToSessions.get(projectId) == null) {
-        openedProjectsToSessions.put(projectId, new ArrayList<String>());
-      }
-      ArrayList<String> sessions = openedProjectsToSessions.get(projectId);  // sessions that are currently authoring this project
-      if (!sessions.contains(currentUserSession.getId())) {
-        sessions.add(currentUserSession.getId());
-      }
+    Project project = projectService.getById(projectId);
+    if (projectService.canAuthorProject(project, user)) {
+      sessionService.addCurrentAuthor(project, user.getUserDetails());
       notifyCurrentAuthors(projectId);
       return null;
     } else {
@@ -948,67 +935,42 @@ public class WISE5AuthorProjectController {
 
   @SuppressWarnings("unchecked")
   @RequestMapping(value = "/project/notifyAuthorEnd/{projectId}", method = RequestMethod.POST)
-  private ModelAndView handleNotifyAuthorProjectEnd(@PathVariable String projectId,
+  private ModelAndView authorProjectEnd(@PathVariable String projectId,
       HttpServletRequest request) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-    if (hasAuthorPermissions(user)) {
-      HttpSession currentSession = request.getSession();
-      Map<String, ArrayList<String>> openedProjectsToSessions =
-          (Map<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
-
-      if (openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null) {
-        return null;
-      } else {
-        ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
-        if (!sessions.contains(currentSession.getId())) {
-          return null;
-        } else {
-          sessions.remove(currentSession.getId());
-          if (sessions.size() == 0) {
-            openedProjectsToSessions.remove(projectId);
-          }
-          notifyCurrentAuthors(projectId);
-          return null;
-        }
-      }
+    Project project = projectService.getById(projectId);
+    if (projectService.canAuthorProject(project, user)) {
+      // TODO: implement removing current author using sessionService
+//      HttpSession currentSession = request.getSession();
+//      Map<String, ArrayList<String>> openedProjectsToSessions =
+//          (Map<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
+//
+//      if (openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null) {
+//        return null;
+//      } else {
+//        ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
+//        if (!sessions.contains(currentSession.getId())) {
+//          return null;
+//        } else {
+//          sessions.remove(currentSession.getId());
+//          if (sessions.size() == 0) {
+//            openedProjectsToSessions.remove(projectId);
+//          }
+//          notifyCurrentAuthors(projectId);
+//          return null;
+//        }
+//      }
+      notifyCurrentAuthors(projectId);
+      return null;
     } else {
       return new ModelAndView(new RedirectView("accessdenied.html"));
     }
   }
 
   public void notifyCurrentAuthors(String projectId) throws Exception {
-    List<String> usernames = new ArrayList<String>();
-    Set<User> currentAuthors = getCurrentAuthors(projectId);
-    for (User currentAuthor : currentAuthors) {
-      String username = currentAuthor.getUserDetails().getUsername();
-      usernames.add(username);
-    }
     simpMessagingTemplate.convertAndSend(
-        String.format("/topic/current-authors/%s", projectId), usernames);
-  }
-
-  private Set<User> getCurrentAuthors(String projectId) {
-    Set<User> currentAuthors = new HashSet<User>();
-    HashMap<String, ArrayList<String>> openedProjectsToSessions =
-      (HashMap<String, ArrayList<String>>)
-        servletContext.getAttribute("openedProjectsToSessions");
-    if (openedProjectsToSessions == null) {
-      openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
-      servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
-    }
-
-    ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
-    if (sessions != null) {
-      HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
-        .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-      if (allLoggedInUsers != null) {
-        for (String sessionId : sessions) {
-          User user = allLoggedInUsers.get(sessionId);
-          currentAuthors.add(user);
-        }
-      }
-    }
-    return currentAuthors;
+        String.format("/topic/current-authors/%s", projectId),
+        sessionService.getCurrentAuthors(projectId));
   }
 
   /**
@@ -1019,7 +981,7 @@ public class WISE5AuthorProjectController {
    */
   @SuppressWarnings("unchecked")
   @RequestMapping(value = "/project/importSteps/{projectId}", method = RequestMethod.POST)
-  private ModelAndView handleImportSteps(
+  private ModelAndView importSteps(
       @RequestParam("steps") String steps,
       @RequestParam("toProjectId") Integer toProjectId,
       @RequestParam("fromProjectId") Integer fromProjectId,

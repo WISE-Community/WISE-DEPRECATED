@@ -9,7 +9,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
@@ -50,9 +49,6 @@ public class TeacherDataController {
 
   @Autowired
   private RunService runService;
-
-//  @Autowired
-//  private WebSocketHandler webSocketHandler;
 
   @Autowired
   private Properties wiseProperties;

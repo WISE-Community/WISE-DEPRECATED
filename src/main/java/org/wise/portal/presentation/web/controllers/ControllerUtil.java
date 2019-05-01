@@ -348,19 +348,6 @@ public class ControllerUtil {
     return Long.valueOf(minutes) * 60 * 1000;
   }
 
-  public static void addNewSessionToAllLoggedInUsers(HttpServletRequest request, User user) {
-    HttpSession session = request.getSession();
-    String sessionId = session.getId();
-    HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) session
-        .getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-    if (allLoggedInUsers == null) {
-      allLoggedInUsers = new HashMap<String, User>();
-      session.getServletContext()
-          .setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
-    }
-    allLoggedInUsers.put(sessionId, user);
-  }
-
   public static boolean isRecentNumberOfFailedLoginAttemptsOverLimit(User user) {
     MutableUserDetails mutableUserDetails = user.getUserDetails();
     if (mutableUserDetails != null) {

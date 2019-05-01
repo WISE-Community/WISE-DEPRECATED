@@ -117,9 +117,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("UserDetails logging in: " + userDetails.getUsername());
     }
-
     sessionService.addSignedInUser(userDetails);
-    ControllerUtil.addNewSessionToAllLoggedInUsers(request, user);
     super.successfulAuthentication(request, response, chain, authentication);
   }
 
