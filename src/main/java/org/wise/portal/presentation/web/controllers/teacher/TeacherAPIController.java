@@ -71,12 +71,15 @@ public class TeacherAPIController {
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
-    boolean googleClassroomDisabled = wiseProperties.get("google.classroom.clientId").equals("") ||
-      wiseProperties.get("google.classroom.clientSecret").equals("");
-    configJSON.put("isGoogleClassroomEnabled", !googleClassroomDisabled);
+    configJSON.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
     configJSON.put("currentTime", System.currentTimeMillis());
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
+  }
+
+  private boolean isGoogleClassroomEnabled() {
+    return !wiseProperties.getProperty("google.classroom.clientId", "").equals("") &&
+      !wiseProperties.getProperty("google.classroom.clientSecret", "").equals("");
   }
 
   @RequestMapping(value = "/runs", method = RequestMethod.GET)
