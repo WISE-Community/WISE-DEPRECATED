@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -233,9 +234,15 @@ public class StudentAPIController {
     Run run = runService.retrieveById(runId);
     JSONArray presentUserIdsJSONArray = new JSONArray(presentUserIds);
     Set<User> presentMembers = createMembers(presentUserIdsJSONArray);
-    Workgroup workgroup;
+    Workgroup workgroup = null;
     User user = ControllerUtil.getSignedInUser();
-    if (isCreateNewWorkgroup(workgroupId)) {
+
+    for (User member: presentMembers) {
+      if (workgroupService.isUserInAnyWorkgroupForRun(member, run)) {
+        workgroup = workgroupService.getWorkgroupListByRunAndUser(run, member).get(0);
+      }
+    }
+    if (workgroup == null) {
       if (run.isStudentAssociatedToThisRun(user)) {
         Group period = run.getPeriodOfStudent(user);
         String name = "Workgroup for user: " + user.getUserDetails().getUsername();
@@ -248,21 +255,26 @@ public class StudentAPIController {
         return errorResponse.toString();
       }
     } else {
-      workgroup = workgroupService.retrieveById(workgroupId);
-      boolean isAnyMemberInWorkgroupForRun = false;
-      for (User member: presentMembers) {
-        isAnyMemberInWorkgroupForRun |= workgroupService.isUserInWorkgroupForRun(member, run, workgroup);
-      }
-      if (isAnyMemberInWorkgroupForRun) {
-        workgroupService.addMembers(workgroup, presentMembers);
-        JSONObject response = performLaunchRun(runId, workgroupId, presentUserIds, absentUserIds,
-            request, run, presentMembers, workgroup);
-        return response.toString();
-      } else {
-        ErrorResponse errorResponse = new ErrorResponse("signedInUserNotInSpecifiedWorkgroup");
+      Set<User> newMembers = membersNotInWorkgroup(workgroup, presentMembers);
+      if (newMembers.size() + workgroup.getMembers().size() > run.getMaxWorkgroupSize()) {
+        ErrorResponse errorResponse = new ErrorResponse("tooManyMembersInWorkgroup");
         return errorResponse.toString();
       }
+      workgroupService.addMembers(workgroup, newMembers);
+      JSONObject response = performLaunchRun(runId, workgroupId, presentUserIds, absentUserIds,
+          request, run, presentMembers, workgroup);
+      return response.toString();
     }
+  }
+
+  private Set<User> membersNotInWorkgroup(Workgroup workgroup, Set<User> presentMembers) {
+    Set<User> membersNotInWorkgroup = new HashSet<>();
+    for (User member: presentMembers) {
+      if (!workgroup.getMembers().contains(member)) {
+        membersNotInWorkgroup.add(member);
+      }
+    }
+    return membersNotInWorkgroup;
   }
 
   private JSONObject performLaunchRun(Long runId, Long workgroupId, String presentUserIds,
@@ -274,10 +286,6 @@ public class StudentAPIController {
     updateRunStatistics(run);
     StartProjectController.notifyServletSession(request, run);
     return generateStartProjectUrlResponse(request, workgroup);
-  }
-
-  private boolean isCreateNewWorkgroup(Long workgroupId) {
-    return workgroupId == null;
   }
 
   private void addStudentsToRunIfNecessary(Run run, Set<User> presentMembers, Workgroup workgroup)
@@ -555,6 +563,7 @@ public class StudentAPIController {
     User user = userService.retrieveById(userId);
     Run run = runService.retrieveById(runId);
     JSONObject response = new JSONObject();
+    JSONArray members = new JSONArray();
     response.put("status", false);
     response.put("isTeacher", user.isTeacher());
     Workgroup workgroup = null;
@@ -568,10 +577,31 @@ public class StudentAPIController {
     }
     if (workgroupId == null && workgroupService.isUserInAnyWorkgroupForRun(user, run)) {
       workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
+      workgroup = workgroups.get(0);
       response.put("addUserToWorkgroup", true);
-      response.put("workgroupId", workgroups.get(0).getId());
+      response.put("workgroupId", workgroup.getId());
       response.put("status", true);
+      members.put(convertUserToJSON(user));
+      for (User member: workgroup.getMembers()) {
+        if (!member.getId().equals(userId)) {
+          members.put(convertUserToJSON(member));
+        }
+      }
+      if (workgroup.getMembers().size() == run.getMaxWorkgroupSize()) {
+        response.put("status", false);
+      }
     }
+    response.put("members", members);
     return response.toString();
+  }
+
+  private JSONObject convertUserToJSON(User user) throws JSONException {
+    JSONObject userObject = new JSONObject();
+    MutableUserDetails userDetails = user.getUserDetails();
+    userObject.put("id", user.getId());
+    userObject.put("username", userDetails.getUsername());
+    userObject.put("firstName", userDetails.getFirstname());
+    userObject.put("lastName", userDetails.getLastname());
+    return userObject;
   }
 }
