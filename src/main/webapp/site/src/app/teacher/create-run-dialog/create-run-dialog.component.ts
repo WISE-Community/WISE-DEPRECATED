@@ -6,6 +6,7 @@ import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
 import { UserService } from '../../services/user.service';
+import { ConfigService } from '../../services/config.service';
 import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 @Component({
@@ -33,6 +34,7 @@ export class CreateRunDialogComponent {
               @Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
               private userService: UserService,
+              private configService: ConfigService,
               private fb: FormBuilder) {
     this.project = data.project;
     this.maxStudentsPerTeam = 3;
@@ -61,6 +63,14 @@ export class CreateRunDialogComponent {
       endDate: new FormControl()
     });
     this.setDateRange();
+  }
+
+  isGoogleUser() {
+    return this.userService.isGoogleUser();
+  }
+
+  isGoogleClassroomEnabled() {
+    return this.configService.isGoogleClassroomEnabled();
   }
 
   setPeriodOptions() {

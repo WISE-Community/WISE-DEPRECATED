@@ -43,6 +43,10 @@ export class ConfigService {
     return this.config$.getValue().googleClientId;
   }
 
+  isGoogleClassroomEnabled() {
+    return this.config$.getValue().isGoogleClassroomEnabled;
+  }
+
   getRecaptchaPublicKey() {
     return this.config$.getValue().recaptchaPublicKey;
   }

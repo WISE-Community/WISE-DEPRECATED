@@ -115,6 +115,9 @@ public class UserAPIController {
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
+    boolean googleClassroomDisabled = wiseProperties.get("google.classroom.clientId").equals("") ||
+      wiseProperties.get("google.classroom.clientSecret").equals("");
+    configJSON.put("isGoogleClassroomEnabled", !googleClassroomDisabled);
     configJSON.put("recaptchaPublicKey", wiseProperties.get("recaptcha_public_key"));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
