@@ -298,12 +298,6 @@
                ng-model-options='{ debounce: 1000 }'
                ng-change='labelController.authoringViewComponentChanged()'/>
       </md-input-container>
-      <br/>
-      <md-checkbox class='md-primary'
-                   ng-model='audioOscillatorController.authoringComponentContent.stopAfterGoodDraw'
-                   ng-change='audioOscillatorController.authoringViewComponentChanged()'>
-        {{ 'audioOscillator.oscilloscopeStopAfterGoodDraw' | translate }}
-      </md-checkbox>
     </div>
   </div>
   <div ng-style='{"border": "5px solid black", "padding": "20px"}'>

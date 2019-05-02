@@ -264,9 +264,9 @@ var DiscussionController = function (_ComponentController) {
     value: function registerStudentWorkSavedToServerListener() {
       var _this5 = this;
 
-      this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+      this.destroyStudentWorkSavedToServerListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
         var componentState = args.studentWork;
-        if (componentState && componentState.nodeId === _this5.nodeId && componentState.componentId === _this5.componentId) {
+        if (_this5.isWorkFromThisComponent(componentState)) {
           if (_this5.isClassmateResponsesGated() && !_this5.retrievedClassmateResponses) {
             _this5.getClassmateResponses();
           } else {
@@ -334,11 +334,16 @@ var DiscussionController = function (_ComponentController) {
     value: function registerStudentWorkReceivedListener() {
       var _this6 = this;
 
-      this.$rootScope.$on('studentWorkReceived', function (event, componentState) {
-        if ((_this6.isWorkFromThisComponent(componentState) || _this6.isWorkFromConnectedComponent(componentState)) && componentState.workgroupId !== _this6.ConfigService.getWorkgroupId() && _this6.retrievedClassmateResponses) {
+      this.destroyStudentWorkReceivedListener = this.$rootScope.$on('studentWorkReceived', function (event, componentState) {
+        if ((_this6.isWorkFromThisComponent(componentState) || _this6.isWorkFromConnectedComponent(componentState)) && _this6.isWorkFromClassmate(componentState) && _this6.retrievedClassmateResponses) {
           _this6.addClassResponse(componentState);
         }
       });
+    }
+  }, {
+    key: 'isWorkFromClassmate',
+    value: function isWorkFromClassmate(componentState) {
+      return componentState.workgroupId !== this.ConfigService.getWorkgroupId();
     }
   }, {
     key: 'isWorkFromThisComponent',
@@ -348,33 +353,34 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'isWorkFromConnectedComponent',
     value: function isWorkFromConnectedComponent(componentState) {
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      if (this.componentContent.connectedComponents != null) {
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
 
-      try {
-        for (var _iterator5 = this.componentContent.connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var connectedComponent = _step5.value;
-
-          if (connectedComponent.nodeId === componentState.nodeId && connectedComponent.componentId === componentState.componentId) {
-            return true;
-          }
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          for (var _iterator5 = this.componentContent.connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var connectedComponent = _step5.value;
+
+            if (connectedComponent.nodeId === componentState.nodeId && connectedComponent.componentId === componentState.componentId) {
+              return true;
+            }
           }
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
         } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
+            }
           }
         }
       }
-
       return false;
     }
   }, {
@@ -485,7 +491,7 @@ var DiscussionController = function (_ComponentController) {
           for (var _iterator6 = this.componentContent.connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
             var connectedComponent = _step6.value;
 
-            if (connectedComponent.type == 'showWork') {
+            if (connectedComponent.type === 'showWork') {
               this.isDisabled = true;
             }
           }
@@ -536,7 +542,7 @@ var DiscussionController = function (_ComponentController) {
             var workgroupId = componentState.workgroupId;
             var latestInappropriateFlagAnnotation = this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
             var usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
-            if (usernames.length == 0) {
+            if (usernames.length === 0) {
               componentState.usernames = this.getUserIdsDisplay(workgroupId);
             } else {
               componentState.usernames = usernames.map(function (obj) {
@@ -743,31 +749,25 @@ var DiscussionController = function (_ComponentController) {
     }
 
     /**
-     * Get the level 1 responses which are posts that are not a
-     * reply to another response.
-     * @return an array of responses that are not a reply to another
-     * response
+     * Get the level 1 responses which are posts that are not a reply to
+     * another response.
+     * @return an array of responses that are not a reply to another response
      */
 
   }, {
     key: 'getLevel1Responses',
     value: function getLevel1Responses() {
       var level1Responses = [];
-      var classResponses = this.classResponses;
       var _iteratorNormalCompletion12 = true;
       var _didIteratorError12 = false;
       var _iteratorError12 = undefined;
 
       try {
-        for (var _iterator12 = classResponses[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+        for (var _iterator12 = this.classResponses[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
           var classResponse = _step12.value;
 
           var componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
           if (componentStateIdReplyingTo == null) {
-            /*
-             * this response was not a reply to another post so it is a
-             * level 1 response
-             */
             level1Responses.push(classResponse);
           }
         }
@@ -898,6 +898,12 @@ var DiscussionController = function (_ComponentController) {
         }
       }
       return annotations;
+    }
+  }, {
+    key: 'cleanupBeforeExiting',
+    value: function cleanupBeforeExiting() {
+      this.destroyStudentWorkSavedToServerListener();
+      this.destroyStudentWorkReceivedListener();
     }
   }]);
 

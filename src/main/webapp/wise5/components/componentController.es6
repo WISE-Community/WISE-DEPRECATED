@@ -985,14 +985,14 @@ class ComponentController {
      * the project to the server
      */
     this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-  };
+  }
 
   /**
    * Update the component JSON string that will be displayed in the advanced authoring view textarea
    */
   updateAdvancedAuthoringView() {
     this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-  };
+  }
 
   /**
    * The component has changed in the advanced authoring view so we will update
@@ -1140,30 +1140,25 @@ class ComponentController {
   }
 
   removeAttachment(attachment) {
-    if (this.attachments.indexOf(attachment) != -1) {
+    if (this.attachments.indexOf(attachment) !== -1) {
       this.attachments.splice(this.attachments.indexOf(attachment), 1);
       this.studentDataChanged();
     }
   }
 
   attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
-        if (copiedAsset != null) {
-          const attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.attachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
+    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+      const attachment = {
+        studentAssetId: copiedAsset.id,
+        iconURL: copiedAsset.iconURL
+      };
+      this.attachments.push(attachment);
+      this.studentDataChanged();
+    });
   }
 
   hasMaxScore() {
-    return this.componentContent.maxScore != null && this.componentContent.maxScore != '';
+    return this.componentContent.maxScore != null && this.componentContent.maxScore !== '';
   }
 
   getMaxScore() {

@@ -1142,24 +1142,24 @@ var ComponentController = function () {
        */
       this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
     }
-  }, {
-    key: 'updateAdvancedAuthoringView',
-
 
     /**
      * Update the component JSON string that will be displayed in the advanced authoring view textarea
      */
+
+  }, {
+    key: 'updateAdvancedAuthoringView',
     value: function updateAdvancedAuthoringView() {
       this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     }
-  }, {
-    key: 'advancedAuthoringViewComponentChanged',
-
 
     /**
      * The component has changed in the advanced authoring view so we will update
      * the component and save the project.
      */
+
+  }, {
+    key: 'advancedAuthoringViewComponentChanged',
     value: function advancedAuthoringViewComponentChanged() {
       try {
         /*
@@ -1323,7 +1323,7 @@ var ComponentController = function () {
   }, {
     key: 'removeAttachment',
     value: function removeAttachment(attachment) {
-      if (this.attachments.indexOf(attachment) != -1) {
+      if (this.attachments.indexOf(attachment) !== -1) {
         this.attachments.splice(this.attachments.indexOf(attachment), 1);
         this.studentDataChanged();
       }
@@ -1333,24 +1333,19 @@ var ComponentController = function () {
     value: function attachStudentAsset(studentAsset) {
       var _this7 = this;
 
-      if (studentAsset != null) {
-        this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-          if (copiedAsset != null) {
-            var attachment = {
-              studentAssetId: copiedAsset.id,
-              iconURL: copiedAsset.iconURL
-            };
-
-            _this7.attachments.push(attachment);
-            _this7.studentDataChanged();
-          }
-        });
-      }
+      this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
+        var attachment = {
+          studentAssetId: copiedAsset.id,
+          iconURL: copiedAsset.iconURL
+        };
+        _this7.attachments.push(attachment);
+        _this7.studentDataChanged();
+      });
     }
   }, {
     key: 'hasMaxScore',
     value: function hasMaxScore() {
-      return this.componentContent.maxScore != null && this.componentContent.maxScore != '';
+      return this.componentContent.maxScore != null && this.componentContent.maxScore !== '';
     }
   }, {
     key: 'getMaxScore',

@@ -564,13 +564,13 @@ var NodeController = function () {
 
       this.$rootScope.$broadcast('showStudentAssets', { componentController: componentController, $event: $event });
     }
-  }, {
-    key: 'saveButtonClicked',
-
 
     /**
      * Called when the student clicks the save button
      */
+
+  }, {
+    key: 'saveButtonClicked',
     value: function saveButtonClicked() {
       this.$rootScope.$broadcast('nodeSaveClicked', { nodeId: this.nodeId });
       var isAutoSave = false;
