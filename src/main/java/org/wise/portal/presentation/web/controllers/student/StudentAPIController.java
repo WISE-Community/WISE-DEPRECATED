@@ -573,6 +573,7 @@ public class StudentAPIController {
     }
     if (!workgroupService.isUserInAnyWorkgroupForRun(user, run) ||
         (workgroup != null && workgroupService.isUserInWorkgroupForRun(user, run, workgroup))) {
+      members.put(convertUserToJSON(user));
       response.put("status", true);
     }
     if (workgroupId == null && workgroupService.isUserInAnyWorkgroupForRun(user, run)) {
@@ -581,7 +582,6 @@ public class StudentAPIController {
       response.put("addUserToWorkgroup", true);
       response.put("workgroupId", workgroup.getId());
       response.put("status", true);
-      members.put(convertUserToJSON(user));
       for (User member: workgroup.getMembers()) {
         if (!member.getId().equals(userId)) {
           members.put(convertUserToJSON(member));
