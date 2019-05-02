@@ -940,26 +940,7 @@ public class WISE5AuthorProjectController {
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
-      // TODO: implement removing current author using sessionService
-//      HttpSession currentSession = request.getSession();
-//      Map<String, ArrayList<String>> openedProjectsToSessions =
-//          (Map<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
-//
-//      if (openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null) {
-//        return null;
-//      } else {
-//        ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
-//        if (!sessions.contains(currentSession.getId())) {
-//          return null;
-//        } else {
-//          sessions.remove(currentSession.getId());
-//          if (sessions.size() == 0) {
-//            openedProjectsToSessions.remove(projectId);
-//          }
-//          notifyCurrentAuthors(projectId);
-//          return null;
-//        }
-//      }
+      sessionService.removeCurrentAuthor(project, user.getUserDetails());
       notifyCurrentAuthors(projectId);
       return null;
     } else {

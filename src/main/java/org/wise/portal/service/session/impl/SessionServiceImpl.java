@@ -11,6 +11,7 @@ import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.session.SessionService;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,22 +66,34 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
     outputAllCurrentAuthors();
   }
 
+  public void removeCurrentAuthor(Project project, UserDetails author) {
+    System.out.println("removeCurrentAuthor");
+    Serializable projectId = project.getId();
+    stringRedisTemplate.opsForSet().remove("currentAuthors:" + projectId, author.getUsername());
+    Long numCurrentAuthorsForProject = stringRedisTemplate.opsForSet().size("currentAuthors:" + projectId);
+    if (numCurrentAuthorsForProject == 0) {
+      stringRedisTemplate.opsForSet().remove("currentlyAuthoredProjects", projectId.toString());
+    }
+    outputCurrentlyAuthoredProjects();
+    outputAllCurrentAuthors();
+  }
+
   public Set<String> getCurrentAuthors(String projectId) {
     System.out.println("getCurrentAuthors");
     return stringRedisTemplate.opsForSet().members("currentAuthors:" + projectId);
   }
 
-  void outputSignedInUsers() {
+  private void outputSignedInUsers() {
     Set<String> signedInUsers = stringRedisTemplate.opsForSet().members("signedInUsers");
     System.out.println("signedInUsers=" + signedInUsers);
   }
 
-  void outputSignedInStudents() {
+  private void outputSignedInStudents() {
     Set<String> signedInStudents = stringRedisTemplate.opsForSet().members("signedInStudents");
     System.out.println("signedInStudents=" + signedInStudents);
   }
 
-  void outputSignedInTeachers() {
+  private void outputSignedInTeachers() {
     Set<String> signedInTeachers = stringRedisTemplate.opsForSet().members("signedInTeachers");
     System.out.println("signedInTeachers=" + signedInTeachers);
   }

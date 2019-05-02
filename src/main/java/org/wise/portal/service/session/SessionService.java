@@ -16,4 +16,6 @@ public interface SessionService {
   Set<String> getCurrentAuthors(String projectId);
 
   void addCurrentAuthor(Project project, UserDetails userDetails);
+
+  void removeCurrentAuthor(Project project, UserDetails author);
 }
