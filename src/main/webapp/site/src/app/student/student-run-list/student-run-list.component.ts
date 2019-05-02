@@ -165,7 +165,7 @@ export class StudentRunListComponent implements OnInit {
 
   handleClassroomAccessCode(accessCode: string) {
     for (const run of this.runs) {
-      if (accessCode.localeCompare(run.runCode) === 0) {
+      if (accessCode.toLowerCase() === run.runCode.toLowerCase()) {
         return setTimeout(() => {
           document.getElementById(`run${run.id}`).scrollIntoView({ behavior: "smooth" })
         }, 1500);
