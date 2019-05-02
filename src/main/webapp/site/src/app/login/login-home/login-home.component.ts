@@ -33,6 +33,15 @@ export class LoginHomeComponent implements OnInit {
         this.isGoogleAuthenticationEnabled = config.googleClientId != null;
         this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
       }
+      if (this.userService.isSignedIn()) {
+        this.userService.getUser().subscribe(({ isGoogleUser }) => {
+          if (isGoogleUser) {
+            this.socialSignIn('google');
+          } else {
+            this.router.navigateByUrl(this.getRedirectUrl(''));
+          }
+        });
+      }
     });
     this.route.params.subscribe(params => {
       if (params['username'] != null) {
@@ -58,7 +67,7 @@ export class LoginHomeComponent implements OnInit {
     this.passwordError = false;
     this.userService.authenticate(this.credentials, (response) => {
       if (this.userService.isAuthenticated) {
-        this.router.navigateByUrl(this.userService.getRedirectUrl());
+        this.router.navigateByUrl(this.getRedirectUrl(''));
       } else {
         this.processing = false;
         this.isRecaptchaRequired = response.isRecaptchaRequired;
@@ -93,10 +102,23 @@ export class LoginHomeComponent implements OnInit {
   }
 
   public socialSignIn(socialPlatform : string) {
-    window.location.href = `${this.configService.getContextPath()}/google-login?accessCode=${this.accessCode}`;
+    window.location.href = this.getRedirectUrl(socialPlatform);
   }
 
   recaptchaResolved(recaptchaResponse) {
     this.credentials.recaptchaResponse = recaptchaResponse;
+  }
+
+  getRedirectUrl(social: string): string {
+    let redirectUrl = '';
+    if (social === 'google') {
+      redirectUrl = `${this.configService.getContextPath()}/google-login`;
+    } else {
+      redirectUrl = this.userService.getRedirectUrl();
+    }
+    if (this.accessCode !== '') {
+      redirectUrl = `${redirectUrl}?accessCode=${this.accessCode}`;
+    }
+    return redirectUrl;
   }
 }
