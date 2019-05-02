@@ -2634,23 +2634,75 @@
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-      </trans-unit><trans-unit id="955c309a06472b8f36d17ceffa9089a6bfb72b27" datatype="html">
-        <source>Hey there! Looks like you don&apos;t have any classroom courses yet. Visit Google Classroom and first create courses.</source>
+      </trans-unit><trans-unit id="96f45a0837f1ef4bb6ac97dea9aed6e1b19cd047" datatype="html">
+        <source>Hey there! Looks like you don&apos;t have any Google classes yet. Visit Google Classroom and first create a class.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="a90197fbaf305621cf15da6e9f88ccff3087ea1d" datatype="html">
+        <source>Add to Google Classroom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="1294ed2f135c5da046d5167c8871ad6b874205a0" datatype="html">
+        <source>Select the Google classes for which you&apos;d like to add this unit. This will create assigments in Google Classroom with a link to this unit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit><trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
+        <source>Add</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="f5fd7e6aa50de646a9d357c6fc16d368bcc2dfb1" datatype="html">
         <source>Success! This unit has been added to your Classroom(s).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit><trans-unit id="8dd413cee2228118c536f503709329a4d1a395e2" datatype="html">
         <source>Done</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
@@ -2773,32 +2825,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">59</context>
-        </context-group>
-      </trans-unit><trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
-        <source>Cancel</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
-          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit><trans-unit id="b515510495245a2c50f9001287f9e6d4e6250944" datatype="html">
         <source>Create Run</source>
@@ -3973,12 +3999,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit><trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
-        <source>Add</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="a118959daf55b5584609654f7d5ee9e443b961d0" datatype="html">
         <source>Add unit</source>
