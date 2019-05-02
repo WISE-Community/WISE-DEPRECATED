@@ -567,18 +567,17 @@ public class StudentAPIController {
     response.put("status", false);
     response.put("isTeacher", user.isTeacher());
     Workgroup workgroup = null;
-    List<Workgroup> workgroups;
     if (workgroupId != null) {
       workgroup = workgroupService.retrieveById(workgroupId);
+    } else if (workgroupService.isUserInAnyWorkgroupForRun(user, run)) {
+      workgroup = workgroupService.getWorkgroupListByRunAndUser(run, user).get(0);
     }
     if (!workgroupService.isUserInAnyWorkgroupForRun(user, run) ||
         (workgroup != null && workgroupService.isUserInWorkgroupForRun(user, run, workgroup))) {
       members.put(convertUserToJSON(user));
       response.put("status", true);
     }
-    if (workgroupId == null && workgroupService.isUserInAnyWorkgroupForRun(user, run)) {
-      workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
-      workgroup = workgroups.get(0);
+    if (workgroup != null) {
       response.put("addUserToWorkgroup", true);
       response.put("workgroupId", workgroup.getId());
       response.put("status", true);
