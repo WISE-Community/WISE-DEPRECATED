@@ -2198,24 +2198,12 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'isActiveSeriesIndex',
     value: function isActiveSeriesIndex(seriesIndex) {
-      if (this.series.indexOf(this.activeSeries) === seriesIndex) {
-        return true;
-      }
-      return false;
+      return this.series.indexOf(this.activeSeries) === seriesIndex;
     }
-
-    /**
-     * Whether to show the select series input
-     * @returns whether to show the select series input
-     */
-
   }, {
-    key: 'showSelectSeries',
-    value: function showSelectSeries() {
-      if (this.trialIdsToShow.length && this.hasEditableSeries() && this.isSelectSeriesVisible && this.series.length > 1) {
-        return true;
-      }
-      return false;
+    key: 'isShowSelectSeriesInput',
+    value: function isShowSelectSeriesInput() {
+      return this.trialIdsToShow.length && this.hasEditableSeries() && this.isSelectSeriesVisible && this.series.length > 1;
     }
   }, {
     key: 'newTrialButtonClicked',
@@ -3454,7 +3442,7 @@ var GraphController = function (_ComponentController) {
                   }
                 }
               }
-            } else if (typeof promiseResult === "string") {
+            } else if (typeof promiseResult === 'string') {
               connectedComponentBackgroundImage = promiseResult;
             }
           }
@@ -3835,15 +3823,10 @@ var GraphController = function (_ComponentController) {
         }
       }
     }
-
-    /**
-     * The undo button was clicked
-     */
-
   }, {
     key: 'undoClicked',
     value: function undoClicked() {
-      if (this.undoStack != null && this.undoStack.length > 0) {
+      if (this.undoStack.length > 0) {
         var previousComponentState = this.undoStack.pop();
         this.setStudentWork(previousComponentState);
         this.previousComponentState = previousComponentState;
@@ -3872,11 +3855,7 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'isMousePlotLineOn',
     value: function isMousePlotLineOn() {
-      if (this.isMouseXPlotLineOn() || this.isMouseYPlotLineOn()) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.isMouseXPlotLineOn() || this.isMouseYPlotLineOn();
     }
   }, {
     key: 'isMouseXPlotLineOn',
@@ -4177,7 +4156,7 @@ var GraphController = function (_ComponentController) {
       if (version == null) {
         return this.studentDataVersion == null || this.studentDataVersion === 1;
       } else {
-        return version == null || version === 1;
+        return version === 1;
       }
     }
   }]);

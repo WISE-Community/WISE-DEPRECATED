@@ -761,7 +761,7 @@
                 </md-option>
               </md-select>
             </md-input-container>
-            <md-input-container ng-if='graphController.showSelectSeries()'>
+            <md-input-container ng-if='graphController.isShowSelectSeriesInput()'>
               <label>{{ 'graph.selectSeriesToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeSeries'
                          ng-change='graphController.activeSeriesChanged()'

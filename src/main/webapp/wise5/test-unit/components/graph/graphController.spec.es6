@@ -411,6 +411,15 @@ describe('GraphController', () => {
     expect(graphController.trials.length).toEqual(2);
   });
 
+  it('should not create new trial when not necessary', () => {
+    graphController.trials = [
+      { name: 'Trial 1', id: 'aaaaaaaaaa', show: true }
+    ];
+    const trialId = 'aaaaaaaaaa';
+    graphController.createNewTrialIfNecessary(trialId);
+    expect(graphController.trials.length).toEqual(1);
+  });
+
   it('should copy series into trial', () => {
     const oldTrial = {
       series: [ { id: 'series-0' } ]

@@ -1,6 +1,6 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
 import canvg from 'canvg';
 import html2canvas from 'html2canvas';
 
@@ -1165,7 +1165,7 @@ class GraphController extends ComponentController {
   resetSeries() {
     let confirmMessage = '';
     const seriesName = this.activeSeries.name;
-    if ( seriesName === '') {
+    if (seriesName === '') {
       confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheSeries');
     } else {
       confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheNamedSeries', { seriesName: seriesName });
@@ -1181,7 +1181,7 @@ class GraphController extends ComponentController {
       const isReset = true;
       this.handleConnectedComponents(isReset);
     } else {
-      const activeSeriesIndex  = this.getSeriesIndex(this.activeSeries);
+      const activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
       let originalSeries = this.componentContent.series[activeSeriesIndex];
       if (originalSeries != null) {
         originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
@@ -1402,7 +1402,7 @@ class GraphController extends ComponentController {
   }
 
   getSeriesById(id) {
-    for (let singleSeries of this.getSeries()) {
+    for (const singleSeries of this.getSeries()) {
       if (singleSeries.id === id) {
         return singleSeries;
       }
@@ -1679,22 +1679,12 @@ class GraphController extends ComponentController {
   }
 
   isActiveSeriesIndex(seriesIndex) {
-    if (this.series.indexOf(this.activeSeries) === seriesIndex) {
-      return true;
-    }
-    return false;
+    return this.series.indexOf(this.activeSeries) === seriesIndex;
   }
 
-  /**
-   * Whether to show the select series input
-   * @returns whether to show the select series input
-   */
-  showSelectSeries() {
-    if (this.trialIdsToShow.length && this.hasEditableSeries() &&
-        this.isSelectSeriesVisible && this.series.length > 1) {
-      return true;
-    }
-    return false;
+  isShowSelectSeriesInput() {
+    return this.trialIdsToShow.length && this.hasEditableSeries() &&
+        this.isSelectSeriesVisible && this.series.length > 1;
   }
 
   newTrialButtonClicked() {
@@ -1711,7 +1701,7 @@ class GraphController extends ComponentController {
       maxTrialNumber = trialNumbers[trialNumbers.length - 1];
     }
     if (this.hideAllTrialsOnNewTrial) {
-      for (let trial of this.trials) {
+      for (const trial of this.trials) {
         trial.show = false;
       }
     }
@@ -1904,7 +1894,7 @@ class GraphController extends ComponentController {
       this.parseLatestTrial(studentData, params);
     } else {
       // we need to process specific fields in the student data
-      for (let field of params.fields) {
+      for (const field of params.fields) {
         const name = field.name;
         const when = field.when;
         const action = field.action;
@@ -2216,7 +2206,7 @@ class GraphController extends ComponentController {
           } else if (dataPoint.constructor.name === 'Array') {
             tempX = dataPoint[0];
             tempY = dataPoint[1];
-          } else if(dataPoint.constructor.name === 'Number') {
+          } else if (dataPoint.constructor.name === 'Number') {
             tempY = dataPoint;
           }
           if (tempX > xMax) {
@@ -2463,7 +2453,7 @@ class GraphController extends ComponentController {
           promises.push(this.setComponentStateAsBackgroundImage(latestComponentState));
         }
       } else {
-        if (connectedComponent.type ==='showWork') {
+        if (connectedComponent.type === 'showWork') {
           this.isDisabled = true;
           latestComponentState = this.UtilService.makeCopyOfJSONObject(latestComponentState);
           const canEdit = false;
@@ -2491,13 +2481,13 @@ class GraphController extends ComponentController {
        * Loop through all the promise results. There will be a promise result for each component we
        * are importing from. Each promiseResult is an array of trials or an image url.
        */
-      for (let promiseResult of promiseResults) {
+      for (const promiseResult of promiseResults) {
         if (promiseResult instanceof Array) {
-          let trials = promiseResult;
+          const trials = promiseResult;
           for (const trial of trials) {
             mergedTrials.push(trial);
           }
-        } else if (typeof(promiseResult) === "string") {
+        } else if (typeof(promiseResult) === 'string') {
           connectedComponentBackgroundImage = promiseResult;
         }
       }
@@ -2507,7 +2497,7 @@ class GraphController extends ComponentController {
         version: 2
       };
       if (this.componentContent.backgroundImage != null &&
-        this.componentContent.backgroundImage !== '') {
+          this.componentContent.backgroundImage !== '') {
         newComponentState.studentData.backgroundImage = this.componentContent.backgroundImage;
       } else if (connectedComponentBackgroundImage != null) {
         newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
@@ -2674,7 +2664,7 @@ class GraphController extends ComponentController {
     if (field === 'selectedCells') {
       if (connectedComponentState == null) {
         // we will default to hide all the trials
-        for (let trial of baseComponentState.studentData.trials) {
+        for (const trial of baseComponentState.studentData.trials) {
           trial.show = false;
         }
       } else {
@@ -2682,7 +2672,7 @@ class GraphController extends ComponentController {
         const studentData = connectedComponentState.studentData;
         const selectedCells = studentData[field];
         const selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
-        for (let trial of baseComponentState.studentData.trials) {
+        for (const trial of baseComponentState.studentData.trials) {
           if (selectedTrialIds.includes(trial.id)) {
             trial.show = true;
           } else {
@@ -2703,11 +2693,8 @@ class GraphController extends ComponentController {
     }
   }
 
-  /**
-   * The undo button was clicked
-   */
   undoClicked() {
-    if (this.undoStack != null && this.undoStack.length > 0) {
+    if (this.undoStack.length > 0) {
       const previousComponentState = this.undoStack.pop();
       this.setStudentWork(previousComponentState);
       this.previousComponentState = previousComponentState;
@@ -2735,11 +2722,7 @@ class GraphController extends ComponentController {
   }
 
   isMousePlotLineOn() {
-    if (this.isMouseXPlotLineOn() || this.isMouseYPlotLineOn()) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.isMouseXPlotLineOn() || this.isMouseYPlotLineOn();
   }
 
   isMouseXPlotLineOn() {
@@ -2835,7 +2818,7 @@ class GraphController extends ComponentController {
       if (seriesId == null) {
         series = chart.series[chart.series.length - 1];
       } else {
-        for (let singleSeries of chart.series) {
+        for (const singleSeries of chart.series) {
           if (singleSeries.userOptions.name === seriesId) {
             series = singleSeries;
           }
@@ -2892,7 +2875,7 @@ class GraphController extends ComponentController {
     if (version == null) {
       return this.studentDataVersion == null || this.studentDataVersion === 1;
     } else {
-      return version == null || version === 1;
+      return version === 1;
     }
   }
 }

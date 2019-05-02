@@ -245,7 +245,7 @@ class GraphAuthoringController extends GraphController {
       this.authoringComponentContent.xAxis.categories != null) {
       categoryName = this.authoringComponentContent.xAxis.categories[index];
     }
-    if (categoryName == null || categoryName == '') {
+    if (categoryName == null || categoryName === '') {
       confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheCategory');
     } else {
       confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', { categoryName: categoryName });
@@ -288,7 +288,7 @@ class GraphAuthoringController extends GraphController {
 
   authoringMoveSeriesDataPointDown(series, index) {
     if (index < series.data.length - 1) {
-      var dataPoint = series.data[index];
+      const dataPoint = series.data[index];
       series.data.splice(index, 1);
       series.data.splice(index + 1, 0, dataPoint);
     }
@@ -319,7 +319,7 @@ class GraphAuthoringController extends GraphController {
 
   authoringConvertAllSeriesDataPoints(xAxisType) {
     const series = this.authoringComponentContent.series;
-    for (let singleSeries of series) {
+    for (const singleSeries of series) {
       this.convertSeriesDataPoints(singleSeries, xAxisType);
     }
   }
@@ -347,11 +347,11 @@ class GraphAuthoringController extends GraphController {
   }
 
   authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    let components = this.getComponentsByNodeId(connectedComponent.nodeId);
+    const components = this.getComponentsByNodeId(connectedComponent.nodeId);
     if (components != null) {
       let numberOfAllowedComponents = 0;
       let allowedComponent = null;
-      for (let component of components) {
+      for (const component of components) {
         if (this.isConnectedComponentTypeAllowed(component.type) &&
             component.id !== this.componentId) {
           numberOfAllowedComponents += 1;

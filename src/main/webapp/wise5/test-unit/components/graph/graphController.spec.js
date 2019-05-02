@@ -344,6 +344,13 @@ describe('GraphController', function () {
     expect(graphController.trials.length).toEqual(2);
   });
 
+  it('should not create new trial when not necessary', function () {
+    graphController.trials = [{ name: 'Trial 1', id: 'aaaaaaaaaa', show: true }];
+    var trialId = 'aaaaaaaaaa';
+    graphController.createNewTrialIfNecessary(trialId);
+    expect(graphController.trials.length).toEqual(1);
+  });
+
   it('should copy series into trial', function () {
     var oldTrial = {
       series: [{ id: 'series-0' }]

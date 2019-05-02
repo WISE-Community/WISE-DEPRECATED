@@ -814,7 +814,7 @@ class GraphService extends ComponentService {
    * @return whether the trial contains a data point
    */
   trialHasDataPoint(trial) {
-    for (let singleSeries of trial.series) {
+    for (const singleSeries of trial.series) {
       if (this.seriesHasDataPoint(singleSeries)) {
         return true;
       }
@@ -829,7 +829,7 @@ class GraphService extends ComponentService {
    */
   anySeriesHasDataPoint(multipleSeries) {
     if (multipleSeries != null) {
-      for (let singleSeries of multipleSeries) {
+      for (const singleSeries of multipleSeries) {
         if (this.seriesHasDataPoint(singleSeries)) {
           return true;
         }

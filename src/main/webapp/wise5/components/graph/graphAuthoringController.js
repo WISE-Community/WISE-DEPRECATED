@@ -216,7 +216,7 @@ var GraphAuthoringController = function (_GraphController) {
       if (this.authoringComponentContent.xAxis != null && this.authoringComponentContent.xAxis.categories != null) {
         categoryName = this.authoringComponentContent.xAxis.categories[index];
       }
-      if (categoryName == null || categoryName == '') {
+      if (categoryName == null || categoryName === '') {
         confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheCategory');
       } else {
         confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', { categoryName: categoryName });
