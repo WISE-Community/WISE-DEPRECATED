@@ -89,6 +89,10 @@ export class RunMenuComponent implements OnInit {
     return this.userService.isGoogleUser();
   }
 
+  isGoogleClassroomEnabled() {
+    return this.configService.isGoogleClassroomEnabled();
+  }
+
   showEditRunDetails() {
     const run = this.run;
     this.dialog.open(RunSettingsDialogComponent, {

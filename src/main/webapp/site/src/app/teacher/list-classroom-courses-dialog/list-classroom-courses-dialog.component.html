@@ -1,22 +1,35 @@
 <div class="notice" *ngIf="!courses.length">
-  <p i18n>Hey there! Looks like you don't have any classroom courses yet. Visit Google Classroom and first create courses.</p>
+  <p i18n>Hey there! Looks like you don't have any Google classes yet. Visit Google Classroom and first create a class.</p>
 </div>
 <ng-container *ngIf="courses.length && !isAdded">
-  <h2 class="mat-dialog-title">Classroom courses</h2>
-  <div mat-dialog-content>
-    <div class="info-block">
-      <p class="mat-subheading-2 accent-1">Select which course you'd like to create an assigment for.</p>
-      <ng-container *ngFor="let course of courses">
-        <div (click)="addCourseId(course.id)" id="{{ course.id }}">
-          <h5>{{ course.name }}</h5>
-          <p>{{ course.descriptionHeading }}</p>
+  <form [formGroup]="form" (ngSubmit)="addToClassroom()">
+    <h2 class="mat-dialog-title" i18n>Add to Google Classroom</h2>
+    <div mat-dialog-content>
+      <div class="info-block">
+        <p class="mat-subheading-2 accent-1" i18n>Select the Google classes for which you'd like to add this unit. This will create assigments in Google Classroom with a link to this unit.</p>
+        <div formArrayName="selectedCourses">
+          <p *ngFor="let control of selectedCoursesControl.controls"
+              [formGroup]="control">
+            <mat-checkbox formControlName="checkbox">
+              {{ control.controls.descriptionHeading }}
+            </mat-checkbox>
+          </p>
         </div>
-      </ng-container>
+      </div>
     </div>
-  </div>
-  <div mat-dialog-actions fxLayoutAlign="end">
-    <button mat-button (click)="addToClassroom()">Add Selected Courses</button>
-  </div>
+    <div mat-dialog-actions
+         fxLayout="row"
+         fxLayout.xs="column"
+         fxLayoutAlign="end"
+         fxLayoutGap="8px">
+      <button mat-button (click)="closeAll()" [disabled]="isAdding" i18n>Cancel</button>
+      <button mat-flat-button type="submit" color="primary"
+              [disabled]="form.invalid || isAdding">
+        <mat-progress-bar *ngIf="isAdding" mode="indeterminate"></mat-progress-bar>
+        <ng-container i18n>Add</ng-container>
+      </button>
+    </div>
+  </form>
 </ng-container>
 <ng-container *ngIf="isAdded && courses.length">
   <div mat-dialog-content>

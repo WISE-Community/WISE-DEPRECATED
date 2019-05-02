@@ -17,9 +17,13 @@ import com.google.api.services.classroom.model.*;
 import com.google.api.services.classroom.model.Date;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.authentication.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -27,6 +31,9 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/api/google-classroom", produces = "application/json;charset=UTF-8")
 public class GoogleClassroomAPIController {
+  @Autowired
+  private UserDetailsService userDetailsService;
+
   @Value("${google.classroom.clientId:}")
   private String clientId;
 
@@ -42,8 +49,8 @@ public class GoogleClassroomAPIController {
   private Map<String, String> pendingPermissionRequests = new HashMap<>();
 
   static {
-    SCOPES.add(ClassroomScopes.CLASSROOM_COURSEWORK_STUDENTS);
     SCOPES.add(ClassroomScopes.CLASSROOM_COURSES);
+    SCOPES.add(ClassroomScopes.CLASSROOM_COURSEWORK_STUDENTS);
   }
 
   private class AuthorizationCodeRequestUrlCallbackRunnable implements Runnable {
@@ -125,8 +132,13 @@ public class GoogleClassroomAPIController {
       return null;
     }
     List<Course> activeCourses = new ArrayList<>();
-    for (Course course: connectToClassroomAPI(credential).courses().list().execute().getCourses()) {
-      if (!course.getCourseState().equals("ARCHIVED")) {
+    List<Course> courses = connectToClassroomAPI(credential).courses().list().execute().getCourses();
+    if (courses == null) {
+      return activeCourses;
+    }
+    MutableUserDetails userDetails = (MutableUserDetails) userDetailsService.loadUserByUsername(username);
+    for (Course course: courses) {
+      if (!course.getCourseState().equals("ARCHIVED") && course.getOwnerId().equals(userDetails.getGoogleUserId())) {
         activeCourses.add(course);
       }
     }

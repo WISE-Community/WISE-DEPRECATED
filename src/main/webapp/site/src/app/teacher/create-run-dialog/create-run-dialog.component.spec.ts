@@ -14,6 +14,7 @@ import { Course } from '../../domain/course';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { User } from '../../domain/user';
 import { UserService } from '../../services/user.service';
+import { ConfigService } from '../../services/config.service';
 
 export class MockTeacherService {
   createRun() {
@@ -54,6 +55,16 @@ export class MockUserService {
       observer.complete();
     });
   }
+
+  isGoogleUser() {
+    return false;
+  }
+}
+
+export class MockConfigService {
+  isGoogleClassroomEnabled(): boolean {
+    return false;
+  }
 }
 
 describe('CreateRunDialogComponent', () => {
@@ -85,6 +96,7 @@ describe('CreateRunDialogComponent', () => {
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
+        { provide: ConfigService, useClass: MockConfigService },
         { provide: MatDialog, useValue: {
             closeAll: () => {}
           }},

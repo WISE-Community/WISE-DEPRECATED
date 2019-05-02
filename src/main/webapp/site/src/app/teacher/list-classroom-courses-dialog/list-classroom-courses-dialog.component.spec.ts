@@ -2,10 +2,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListClassroomCoursesDialogComponent } from './list-classroom-courses-dialog.component';
 import { TeacherService } from '../teacher.service';
 import { UserService } from '../../services/user.service';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import {
+  MAT_DIALOG_DATA, MatCheckboxModule,
+  MatDialog,
+  MatDialogRef
+} from '@angular/material';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { User } from '../../domain/user';
 import { Observable } from 'rxjs/internal/Observable';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 
 export class MockTeacherService {
   addToClassroom: (accessCode: string, unitTitle: number, courseId: number) => {};
@@ -28,6 +34,10 @@ describe('ListClassroomCoursesDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        MatCheckboxModule
+      ],
       declarations: [ ListClassroomCoursesDialogComponent ],
       providers: [
         { provide: MatDialog },
@@ -35,7 +45,8 @@ describe('ListClassroomCoursesDialogComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: { accessCode: 'test', unitTitle: 'test', courses: [{ id: '1', name: 'test' }] }},
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService }
-        ]
+        ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
