@@ -158,7 +158,7 @@ public class GoogleClassroomAPIController {
     String authorizationUrl = pair.getLeft();
     Credential credential = pair.getRight();
     if (authorizationUrl != null) {
-      response.put("error", true);
+      response.put("error", "authorizationUrl was set");
       return response.toString();
     }
     Classroom classroom = connectToClassroomAPI(credential);

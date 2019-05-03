@@ -5520,6 +5520,22 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="259ab0dc7ed99898ed18636d73858fbace1b2818" datatype="html">
+        <source>There was an error adding an assignment to the following courses:
+
+<x id="INTERPOLATION" equiv-text="{{courses}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8447ecc2ee7816373dfb3a113b6e390d89b658b7" datatype="html">
+        <source> (Section <x id="INTERPOLATION" equiv-text="{{section}}"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="7a73a1a02bcf341a627892f0d02e113981f96ee3" datatype="html">
         <source>Run Settings</source>
         <context-group purpose="location">

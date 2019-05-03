@@ -4,7 +4,6 @@ import { Course } from '../../domain/course';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { UserService } from '../../services/user.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn } from "@angular/forms";
-import { finalize } from "rxjs/operators";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
@@ -58,10 +57,9 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   isCourseSelected(): ValidatorFn {
-    const validator: ValidatorFn = () => {
+    return () => {
       return this.courseIds.length > 0 ? null : { required: true };
     };
-    return validator;
   }
 
   addToClassroom() {
@@ -75,19 +73,33 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
     }
     this.teacherService.addToClassroom(this.data.run.runCode, this.data.run.name, this.courseIds, this.userService.getUser()
       .getValue().username, endTime, this.form.controls['description'].value)
-      .pipe(
-        finalize(() => {
-          this.isAdding = false;
-        })
-      )
-      .subscribe(({ errors }) => {
-        if (errors.length === 0) {
-          this.isAdded = true;
-        } else {
-          alert('an error occurred while adding to courses!');
-          console.log(errors);
+      .then(() => {
+        this.isAdded = true;
+        this.isAdding = false;
+      })
+      .catch(errors => {
+        console.error(errors);
+        const erroredCourses: string[] = [];
+        for (const id of errors) {
+          const name = this.getCourseNameAndSection(id);
+          erroredCourses.push(name);
         }
-    });
+        alert(this.i18n(`There was an error adding an assignment to the following courses:\n\n{{courses}}`,
+            {courses: erroredCourses.join('\n')}));
+        this.isAdding = false;
+      });
+  }
+
+  getCourseNameAndSection(courseId: string): string {
+    for (const course of this.courses) {
+      if (course.id === courseId) {
+        let courseNameAndSection = course.name;
+        if (course.section) {
+          courseNameAndSection += this.i18n(` (Section {{section}})`, {section: course.section});
+        }
+        return courseNameAndSection;
+      }
+    }
   }
 
   get selectedCoursesControl() {
