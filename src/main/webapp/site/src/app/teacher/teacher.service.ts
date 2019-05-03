@@ -254,13 +254,14 @@ export class TeacherService {
     return this.http.get<Course []>(this.listCoursesUrl, { headers, params });
   }
 
-  addToClassroom(accessCode: string, unitTitle: string, courseIds: string[], username: string, endTime: string): Observable<any> {
+  addToClassroom(accessCode: string, unitTitle: string, courseIds: string[], username: string, endTime: string, description: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     let params = new HttpParams()
       .set('accessCode', accessCode)
       .set('unitTitle', unitTitle)
       .set('username', username)
-      .set('endTime', endTime);
+      .set('endTime', endTime)
+      .set('description', description);
     const errors: any[] = [];
     for (const courseId of courseIds) {
       params = params.set('courseId', courseId);

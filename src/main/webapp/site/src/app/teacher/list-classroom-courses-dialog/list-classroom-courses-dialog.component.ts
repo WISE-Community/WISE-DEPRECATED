@@ -3,8 +3,9 @@ import { TeacherService } from '../teacher.service';
 import { Course } from '../../domain/course';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { UserService } from '../../services/user.service';
-import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn } from "@angular/forms";
 import { finalize } from "rxjs/operators";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-list-classroom-courses-dialog',
@@ -20,14 +21,15 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   isAdded: boolean = false;
   isAdding: boolean = false;
   form: FormGroup;
-  coursesGroup: FormArray;
+  coursesControl: FormArray;
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<ListClassroomCoursesDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
               private userService: UserService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private i18n: I18n) {
     this.accessCode = data.accessCode;
     this.unitTitle = data.unitTitle;
     if (data.endTime != null) {
@@ -39,26 +41,31 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.coursesGroup = new FormArray(this.courses.map(course =>
-      new FormGroup({
-        name: new FormControl(course),
-        checkbox: new FormControl(false)
-      })
+    const descriptionText = this.i18n(`Hi class! Please complete the "{{unitTitle}}" WISE unit. (Access Code: {{accessCode}})`,
+      {unitTitle: this.unitTitle, accessCode: this.accessCode});
+    const description = new FormControl(descriptionText, Validators.required);
+    this.coursesControl = new FormArray(this.courses.map(() =>
+      new FormControl(false)
     ));
-    this.form = this.fb.group({
-      selectedCourses: this.coursesGroup
+    this.coursesControl.valueChanges.subscribe((controls) => {
+      this.courseIds = [];
+      controls.forEach((value, index) => {
+        if (value) {
+          this.courseIds.push(this.courses[index].id);
+        }
+      });
     });
+    this.form = this.fb.group({
+      selectedCourses: this.coursesControl,
+      description: description
+    }, { validator: this.isCourseSelected() });
   }
 
-  addCourseId(courseId: string) {
-    if (this.courseIds.includes(courseId)) {
-      document.getElementById(courseId).style.backgroundColor = 'transparent';
-      const index = this.courseIds.indexOf(courseId);
-      this.courseIds.splice(index, 1);
-    } else {
-      document.getElementById(courseId).style.backgroundColor = '#ddd';
-      this.courseIds.push(courseId);
-    }
+  isCourseSelected(): ValidatorFn {
+    const validator: ValidatorFn = () => {
+      return this.courseIds.length > 0 ? null : { required: true };
+    };
+    return validator;
   }
 
   addToClassroom() {
@@ -71,7 +78,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
       }
     }
     this.teacherService.addToClassroom(this.accessCode, this.unitTitle, this.courseIds, this.userService.getUser()
-      .getValue().username, endTime)
+      .getValue().username, endTime, this.form.controls['description'].value)
       .pipe(
         finalize(() => {
           this.isAdding = false;

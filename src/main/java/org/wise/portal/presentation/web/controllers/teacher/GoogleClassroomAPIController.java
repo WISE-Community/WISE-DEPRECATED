@@ -151,9 +151,9 @@ public class GoogleClassroomAPIController {
                                   @RequestParam("unitTitle") String unitTitle,
                                   @RequestParam("courseId") String courseId,
                                   @RequestParam("username") String username,
-                                  @RequestParam("endTime") String endTime) throws Exception {
+                                  @RequestParam("endTime") String endTime,
+                                  @RequestParam("description") String description) throws Exception {
     JSONObject response = new JSONObject();
-    String description = "Hi class! Please complete the \"" + unitTitle + "\" WISE unit. (Access Code: " + accessCode + ")";
     ImmutablePair<String, Credential> pair = authorize(username);
     String authorizationUrl = pair.getLeft();
     Credential credential = pair.getRight();
