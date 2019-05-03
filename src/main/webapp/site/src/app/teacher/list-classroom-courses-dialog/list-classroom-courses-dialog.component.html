@@ -1,14 +1,29 @@
+<h2 class="mat-dialog-title"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="8px">
+  <mat-icon svgIcon="google-classroom"></mat-icon>
+  <span i18n>Add to Google Classroom</span>
+</h2>
 <ng-container *ngIf="!courses.length">
-  <mat-dialog-content i18n>Hey there! Looks like you don't have any Google classes yet. Visit Google Classroom to create a class.</mat-dialog-content>
+  <mat-dialog-content>
+    <div class="info-block">
+      <p i18n>Hey there! Looks like you don't have any active Google classes.</p>
+      <p i18n>Visit <a href="https://classroom.google.com" target="_blank">Google Classroom</a> to create a class and try again.</p>
+    </div>
+  </mat-dialog-content>
   <mat-dialog-actions fxLayoutAlign="end">
-    <button mat-button (click)="closeAll()" i18n>Close</button>
+    <button mat-button (click)="closeAll()" i18n>OK</button>
   </mat-dialog-actions>
 </ng-container>
 <ng-container *ngIf="courses.length && !isAdded">
   <form [formGroup]="form" (ngSubmit)="addToClassroom()">
-    <h2 class="mat-dialog-title" i18n>Add to Google Classroom</h2>
     <mat-dialog-content class="mat-dialog-content--scroll" fxLayout="column">
-      <p class="mat-subheading-2 accent-1" i18n>Select the Google classes for which you'd like to add this unit. This will create assignments in Google Classroom with a link to the unit.</p>
+      <p class="mat-subheading-1 accent-1">
+        {{ data.run.name }} <span class="mat-caption" i18n>(Run ID: {{ data.run.id }})</span>
+      </p>
+      <p i18n>Add an assignment for this unit in Google Classroom.</p>
+      <h3 i18n>1. Choose Google Class</h3>
       <div formArrayName="selectedCourses">
         <p *ngFor="let control of selectedCoursesControl.controls; let i = index">
           <mat-checkbox [formControl]="control">
@@ -16,8 +31,10 @@
           </mat-checkbox>
         </p>
       </div>
+      <mat-divider></mat-divider>
+      <h3 i18n>2. Add Description</h3>
       <mat-form-field appearance="fill">
-        <mat-label i18n>Assignment Description</mat-label>
+        <mat-label i18n>Assignment description</mat-label>
         <textarea matInput formControlName="description"></textarea>
         <mat-error i18n>Description is required.</mat-error>
       </mat-form-field>
@@ -37,7 +54,14 @@
   </form>
 </ng-container>
 <ng-container *ngIf="isAdded && courses.length">
-  <mat-dialog-content i18n>Success! This unit has been added to Google Classroom.</mat-dialog-content>
+  <mat-dialog-content>
+    <div class="info-block">
+      <p class="mat-subheading-1 accent-1">
+        {{ data.run.name }} <span class="mat-caption" i18n>(Run ID: {{ data.run.id }})</span>
+      </p>
+      <p i18n>Success! This unit has been added to Google Classroom.</p>
+    </div>
+  </mat-dialog-content>
   <mat-dialog-actions fxLayoutAlign="end">
     <button mat-button (click)="closeAll()" i18n>Done</button>
   </mat-dialog-actions>

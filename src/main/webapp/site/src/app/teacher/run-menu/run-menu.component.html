@@ -27,8 +27,8 @@
     </a>
     <a mat-menu-item (click)="checkClassroomAuthorization()"
        *ngIf="isGoogleUser() && isGoogleClassroomEnabled() && !isRunCompleted()">
-      <mat-icon>share</mat-icon>
-      <span i18n>Add to Classroom</span>
+      <mat-icon svgIcon="google-classroom"></mat-icon>
+      <span i18n>Add to Google Classroom</span>
     </a>
     <a mat-menu-item href="{{ reportProblemLink }}">
       <mat-icon>report_problem</mat-icon>

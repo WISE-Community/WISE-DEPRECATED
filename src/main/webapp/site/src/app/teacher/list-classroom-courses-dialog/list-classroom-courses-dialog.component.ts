@@ -15,8 +15,6 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 export class ListClassroomCoursesDialogComponent implements OnInit {
   courses: Course[] = [];
   courseIds: string[] = [];
-  accessCode: string = '';
-  unitTitle: string = '';
   endTime: string = '';
   isAdded: boolean = false;
   isAdding: boolean = false;
@@ -30,10 +28,8 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
               private userService: UserService,
               private fb: FormBuilder,
               private i18n: I18n) {
-    this.accessCode = data.accessCode;
-    this.unitTitle = data.unitTitle;
     if (data.endTime != null) {
-      this.endTime = data.endTime;
+      this.endTime = data.run.endTime;
     }
     for (const course of data.courses) {
       this.courses.push(new Course(course));
@@ -42,7 +38,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
 
   ngOnInit() {
     const descriptionText = this.i18n(`Hi class! Please complete the "{{unitTitle}}" WISE unit. (Access Code: {{accessCode}})`,
-      {unitTitle: this.unitTitle, accessCode: this.accessCode});
+      {unitTitle: this.data.run.name, accessCode: this.data.run.runCode});
     const description = new FormControl(descriptionText, Validators.required);
     this.coursesControl = new FormArray(this.courses.map(() =>
       new FormControl(false)
@@ -77,7 +73,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
         endTime = date.toString();
       }
     }
-    this.teacherService.addToClassroom(this.accessCode, this.unitTitle, this.courseIds, this.userService.getUser()
+    this.teacherService.addToClassroom(this.data.run.runCode, this.data.run.name, this.courseIds, this.userService.getUser()
       .getValue().username, endTime, this.form.controls['description'].value)
       .pipe(
         finalize(() => {

@@ -2593,10 +2593,6 @@
           <context context-type="linenumber">10</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
@@ -2638,47 +2634,85 @@
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-      </trans-unit><trans-unit id="2756bc61ec4e6544f816be06aa9246a133ad4c1e" datatype="html">
-        <source>Hey there! Looks like you don&apos;t have any Google classes yet. Visit Google Classroom to create a class.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
       </trans-unit><trans-unit id="a90197fbaf305621cf15da6e9f88ccff3087ea1d" datatype="html">
         <source>Add to Google Classroom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">6</context>
         </context-group>
-      </trans-unit><trans-unit id="ba95bd1520dc4dc4d7c935f88b56a43dab4a61a5" datatype="html">
-        <source>Select the Google classes for which you&apos;d like to add this unit. This will create assignments in Google Classroom with a link to the unit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="d559090ad7dfe99c26a7143c93579f3b768f4dd3" datatype="html">
+        <source>Hey there! Looks like you don&apos;t have any active Google classes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="c7e87d327022a7084f33267598e99b895289a5cc" datatype="html">
+        <source>Visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Google Classroom<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> to create a class and try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="7e6c975ebea8b5f8b120905ca7acf9f8edf59d8e" datatype="html">
+        <source>OK</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="81d287d330a52df6ba828022a1fcd0a749a27ab1" datatype="html">
+        <source>(Run ID: <x id="INTERPOLATION" equiv-text="{{ data.run.id }}"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit><trans-unit id="b6d98e943848266c1ee9234245f2d1505d969d72" datatype="html">
+        <source>Add an assignment for this unit in Google Classroom.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="3f45dd6922690245cfed6cf0c6dd4f06f125d3ef" datatype="html">
+        <source>1. Choose Google Class</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="5566d6863125d49ad8caf9b1264b49f343f41f44" datatype="html">
         <source> (Section <x id="INTERPOLATION" equiv-text="{{ courses[i].section }}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">30</context>
         </context-group>
-      </trans-unit><trans-unit id="017b961b5a91d61df8ce9b8a88bb12a330681468" datatype="html">
-        <source>Assignment Description</source>
+      </trans-unit><trans-unit id="20b6acf1174cff2aec4931ca70a8c1a3038695af" datatype="html">
+        <source>2. Add Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="af6c19f94a19093641cec5233a2c7f1b03f355a1" datatype="html">
+        <source>Assignment description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit><trans-unit id="8b49c52315ea545a3b62d127fbe3515910bfa5cd" datatype="html">
         <source>Description is required.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
         <source>Cancel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
@@ -2708,7 +2742,7 @@
         <source>Add</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
@@ -2718,13 +2752,13 @@
         <source>Success! This unit has been added to Google Classroom.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit><trans-unit id="8dd413cee2228118c536f503709329a4d1a395e2" datatype="html">
         <source>Done</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
@@ -2887,10 +2921,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">83</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit><trans-unit id="d9b2ffb3e1ce1ca42a3db04d00ea072777898eb3" datatype="html">
         <source>Legacy Unit Warning</source>

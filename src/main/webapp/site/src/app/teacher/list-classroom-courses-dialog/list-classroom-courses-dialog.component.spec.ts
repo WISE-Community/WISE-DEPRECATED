@@ -44,7 +44,14 @@ describe('ListClassroomCoursesDialogComponent', () => {
       providers: [
         { provide: MatDialog },
         { provide: MatDialogRef, useValue: { close: () => {} }},
-        { provide: MAT_DIALOG_DATA, useValue: { accessCode: 'test', unitTitle: 'test', courses: [{ id: '1', name: 'test' }] }},
+        { provide: MAT_DIALOG_DATA, useValue: {
+          run: {
+            id: 1,
+            name: 'Test',
+            accessCode: 'Test123'
+          },
+          courses: [{ id: '1', name: 'Test' }]
+        }},
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
         { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
