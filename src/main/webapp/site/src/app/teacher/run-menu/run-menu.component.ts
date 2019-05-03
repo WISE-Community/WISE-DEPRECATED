@@ -93,6 +93,10 @@ export class RunMenuComponent implements OnInit {
     return this.configService.isGoogleClassroomEnabled();
   }
 
+  isRunCompleted() {
+    return this.run.isCompleted(this.configService.getCurrentServerTime());
+  }
+
   showEditRunDetails() {
     const run = this.run;
     this.dialog.open(RunSettingsDialogComponent, {
