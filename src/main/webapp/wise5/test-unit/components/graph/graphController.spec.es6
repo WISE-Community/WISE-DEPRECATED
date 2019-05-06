@@ -469,6 +469,34 @@ describe('GraphController', () => {
       { id: 'series-0', canEdit: true }
     ];
     expect(graphController.hasEditableSeries()).toEqual(true);
+    const trial0 = {
+      id: 'trial0',
+      series: [
+        {
+          id: 'series0',
+          canEdit: false
+        },
+        {
+          id: 'series1',
+          canEdit: false
+        }
+      ]
+    };
+    expect(graphController.hasEditableSeries(trial0)).toEqual(false);
+    const trial1 = {
+      id: 'trial1',
+      series: [
+        {
+          id: 'series0',
+          canEdit: true
+        },
+        {
+          id: 'series1',
+          canEdit: false
+        }
+      ]
+    };
+    expect(graphController.hasEditableSeries(trial1)).toEqual(true);
   });
 
   it('should get min max values', () => {
@@ -591,6 +619,12 @@ describe('GraphController', () => {
     expect(selectedTrialIds.length).toEqual(2);
     expect(selectedTrialIds[0]).toEqual('Aluminum-HotLiquid');
     expect(selectedTrialIds[1]).toEqual('Aluminum-ColdLiquid');
+  });
+
+  it('should convert null selected cells to empty array of trial ids', () => {
+    const selectedCells = null;
+    const selectedTrialIds = graphController.convertSelectedCellsToTrialIds(selectedCells);
+    expect(selectedTrialIds.length).toEqual(0);
   });
 
   it('should read the connected component field', () => {
@@ -753,6 +787,317 @@ describe('GraphController', () => {
     expect(chartConfig.yAxis.max).toEqual(50);
     expect(chartConfig.series).toEqual(series);
     expect(chartConfig.options.chart.zoomType).toEqual(null);
+  });
+
+  it('should check if a series is editable', () => {
+    const multipleSeries = [
+      { id: 'series0', canEdit: true},
+      { id: 'series1', canEdit: false},
+      { id: 'series2', canEdit: true}
+    ];
+    expect(graphController.isSeriesEditable(multipleSeries, 0)).toEqual(true);
+    expect(graphController.isSeriesEditable(multipleSeries, 1)).toEqual(false);
+    expect(graphController.isSeriesEditable(multipleSeries, 2)).toEqual(true);
+  });
+
+  it('should get the latest editable series index', () => {
+    const multipleSeries0 = [
+      { id: 'series0', canEdit: true},
+      { id: 'series1', canEdit: false},
+      { id: 'series2', canEdit: false}
+    ];
+    expect(graphController.getLatestEditableSeriesIndex(multipleSeries0)).toEqual(0);
+    const multipleSeries1 = [
+      { id: 'series0', canEdit: true},
+      { id: 'series1', canEdit: true},
+      { id: 'series2', canEdit: false}
+    ];
+    expect(graphController.getLatestEditableSeriesIndex(multipleSeries1)).toEqual(1);
+    const multipleSeries2 = [
+      { id: 'series0', canEdit: true},
+      { id: 'series1', canEdit: false},
+      { id: 'series2', canEdit: true}
+    ];
+    expect(graphController.getLatestEditableSeriesIndex(multipleSeries2)).toEqual(2);
+  });
+
+  it('should handle trial ids to show changed', () => {
+    const trial0 = {
+      id: 'aaaaaaaaaa',
+      show: true,
+      series: [
+        {
+          id: '1111111111',
+          canEdit: true
+        }
+      ]
+    };
+    const trial1 = {
+      id: 'bbbbbbbbbb',
+      show: true,
+      series: [
+        {
+          id: '2222222222',
+          canEdit: true
+        }
+      ]
+    };
+    const trial2 = {
+      id: 'cccccccccc',
+      show: true,
+      series: [
+        {
+          id: '3333333333',
+          canEdit: true
+        }
+      ]
+    };
+    graphController.trials = [
+      trial0,
+      trial1,
+      trial2
+    ];
+    graphController.activeTrial = trial1;
+    graphController.activeSeries = trial1.series[0];
+    const trialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb', 'cccccccccc'];
+    graphController.trialIdsToShow = trialIdsToShow;
+    graphController.previousTrialIdsToShow = trialIdsToShow;
+    graphController.trialIdsToShowChanged();
+    expect(graphController.activeTrial).toEqual(trial2);
+    expect(graphController.activeSeries).toEqual(trial2.series[0]);
+  });
+
+  it('should handle trial ids to show changed when the latest trial is not editable', () => {
+    const trial0 = {
+      id: 'aaaaaaaaaa',
+      show: true,
+      series: [
+        {
+          id: '1111111111',
+          canEdit: true
+        }
+      ]
+    };
+    const trial1 = {
+      id: 'bbbbbbbbbb',
+      show: true,
+      series: [
+        {
+          id: '2222222222',
+          canEdit: true
+        }
+      ]
+    };
+    const trial2 = {
+      id: 'cccccccccc',
+      show: true,
+      series: [
+        {
+          id: '3333333333',
+          canEdit: false
+        }
+      ]
+    };
+    graphController.trials = [
+      trial0,
+      trial1,
+      trial2
+    ];
+    graphController.activeTrial = trial1;
+    graphController.activeSeries = trial1.series[0];
+    const trialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb', 'cccccccccc'];
+    graphController.trialIdsToShow = trialIdsToShow;
+    graphController.previousTrialIdsToShow = trialIdsToShow;
+    graphController.trialIdsToShowChanged();
+    expect(graphController.activeTrial).toEqual(trial1);
+    expect(graphController.activeSeries).toEqual(trial1.series[0]);
+  });
+
+  it('should show and hide trials', () => {
+    const trial0 = {
+      id: 'aaaaaaaaaa',
+      show: true,
+      series: [
+        {
+          id: '1111111111',
+          canEdit: true
+        }
+      ]
+    };
+    const trial1 = {
+      id: 'bbbbbbbbbb',
+      show: true,
+      series: [
+        {
+          id: '2222222222',
+          canEdit: true
+        }
+      ]
+    };
+    const trial2 = {
+      id: 'cccccccccc',
+      show: true,
+      series: [
+        {
+          id: '3333333333',
+          canEdit: false
+        }
+      ]
+    };
+    graphController.trials = [
+      trial0,
+      trial1,
+      trial2
+    ];
+    graphController.series = trial1.series;
+    graphController.activeTrial = trial1;
+    graphController.activeSeries = trial1.series[0];
+    const trialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb'];
+    graphController.showOrHideTrials(trialIdsToShow);
+    expect(trial0.show).toEqual(true);
+    expect(trial1.show).toEqual(true);
+    expect(trial2.show).toEqual(false);
+  });
+
+  it('should show trials and hide the currently active trial', () => {
+    const trial0 = {
+      id: 'aaaaaaaaaa',
+      show: true,
+      series: [
+        {
+          id: '1111111111',
+          canEdit: true
+        }
+      ]
+    };
+    const trial1 = {
+      id: 'bbbbbbbbbb',
+      show: true,
+      series: [
+        {
+          id: '2222222222',
+          canEdit: true
+        }
+      ]
+    };
+    const trial2 = {
+      id: 'cccccccccc',
+      show: true,
+      series: [
+        {
+          id: '3333333333',
+          canEdit: false
+        }
+      ]
+    };
+    graphController.trials = [
+      trial0,
+      trial1,
+      trial2
+    ];
+    graphController.series = trial1.series;
+    graphController.activeTrial = trial1;
+    graphController.activeSeries = trial1.series[0];
+    const trialIdsToShow = ['aaaaaaaaaa', 'cccccccccc'];
+    graphController.showOrHideTrials(trialIdsToShow);
+    expect(trial0.show).toEqual(true);
+    expect(trial1.show).toEqual(false);
+    expect(trial2.show).toEqual(true);
+    expect(graphController.series).toEqual([]);
+    expect(graphController.activeTrial).toEqual(null);
+    expect(graphController.activeSeries).toEqual(null);
+  });
+
+  it('should set active trial and series by trial ids to show', () => {
+    const trial0 = {
+      id: 'aaaaaaaaaa',
+      show: true,
+      series: [
+        {
+          id: '1111111111',
+          canEdit: true
+        }
+      ]
+    };
+    const trial1 = {
+      id: 'bbbbbbbbbb',
+      show: true,
+      series: [
+        {
+          id: '2222222222',
+          canEdit: true
+        }
+      ]
+    };
+    const trial2 = {
+      id: 'cccccccccc',
+      show: true,
+      series: [
+        {
+          id: '3333333333',
+          canEdit: false
+        }
+      ]
+    };
+    graphController.trials = [
+      trial0,
+      trial1,
+      trial2
+    ];
+    graphController.series = trial2.series;
+    graphController.activeTrial = trial2;
+    graphController.activeSeries = trial2.series[0];
+    const trialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb'];
+    graphController.setActiveTrialAndSeriesByTrialIdsToShow(trialIdsToShow);
+    expect(graphController.series).toEqual(trial1.series);
+    expect(graphController.activeTrial).toEqual(trial1);
+    expect(graphController.activeSeries).toEqual(trial1.series[0]);
+  });
+
+  it('should not set the active trial and series if the trial can not be edited', () => {
+    const trial0 = {
+      id: 'aaaaaaaaaa',
+      show: true,
+      series: [
+        {
+          id: '1111111111',
+          canEdit: true
+        }
+      ]
+    };
+    const trial1 = {
+      id: 'bbbbbbbbbb',
+      show: true,
+      series: [
+        {
+          id: '2222222222',
+          canEdit: true
+        }
+      ]
+    };
+    const trial2 = {
+      id: 'cccccccccc',
+      show: true,
+      series: [
+        {
+          id: '3333333333',
+          canEdit: false
+        }
+      ]
+    };
+    graphController.trials = [
+      trial0,
+      trial1,
+      trial2
+    ];
+    graphController.series = trial1.series;
+    graphController.activeTrial = trial1;
+    graphController.activeSeries = trial1.series[0];
+    const trialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb', 'cccccccccc'];
+    graphController.setActiveTrialAndSeriesByTrialIdsToShow(trialIdsToShow);
+    expect(graphController.series).toEqual(trial1.series);
+    expect(graphController.activeTrial).toEqual(trial1);
+    expect(graphController.activeSeries).toEqual(trial1.series[0]);
   });
 
 });

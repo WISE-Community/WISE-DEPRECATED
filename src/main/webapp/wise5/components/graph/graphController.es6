@@ -1800,7 +1800,40 @@ class GraphController extends ComponentController {
   }
 
   trialIdsToShowChanged() {
-    let trialIdsToShow = this.trialIdsToShow;
+    this.showOrHideTrials(this.trialIdsToShow);
+    this.setActiveTrialAndSeriesByTrialIdsToShow(this.trialIdsToShow);
+    // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
+    // TODO: figure out why this check is sometimes necessary and remove
+    for (let a = 0; a < this.trialIdsToShow.length; a++) {
+      let idToShow = this.trialIdsToShow[a];
+      if (!this.getTrialById(idToShow)) {
+        this.trialIdsToShow.splice(a, 1);
+      }
+    }
+    /*
+     * Make sure the trialIdsToShow has actually changed. Sometimes
+     * trialIdsToShowChanged() gets called even if trialIdsToShow
+     * does not change because the model for the trial checkbox
+     * select is graphController.trials. This means trialIdsToShowChanged()
+     * will be called when we replace the trials in createComponentState()
+     * but this does not necessarily mean the trialIdsToShow has changed.
+     * We do this check to minimize the number of times studentDataChanged()
+     * is called.
+     */
+    if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, this.trialIdsToShow)) {
+      this.trialIdsToShow = this.trialIdsToShow;
+      this.studentDataChanged();
+    }
+    /*
+     * Remember the trial ids to show so we can use it to make sure the
+     * trialIdsToShow actually change the next time trialIdsToShowChanged()
+     * is called.
+     */
+    this.previousTrialIdsToShow = this.UtilService.makeCopyOfJSONObject(this.trialIdsToShow);
+    this.selectedTrialsText = this.getSelectedTrialsText();
+  }
+
+  showOrHideTrials(trialIdsToShow) {
     for (const trial of this.trials) {
       const id = trial.id;
       if (trialIdsToShow.indexOf(id) !== -1) {
@@ -1814,47 +1847,39 @@ class GraphController extends ComponentController {
         }
       }
     }
-    if (this.trialIdsToShow.length > 0) {
-      const lastShownTrialId = this.trialIdsToShow[this.trialIdsToShow.length - 1];
+  }
+
+  setActiveTrialAndSeriesByTrialIdsToShow(trialIdsToShow) {
+    if (trialIdsToShow.length > 0) {
+      const lastShownTrialId = trialIdsToShow[trialIdsToShow.length - 1];
       const lastShownTrial = this.getTrialById(lastShownTrialId);
-      if (lastShownTrial != null) {
-        const seriesIndex = this.getSeriesIndex(this.activeSeries);
+      if (this.hasEditableSeries(lastShownTrial)) {
+        let seriesIndex = this.getSeriesIndex(this.activeSeries);
         this.activeTrial = lastShownTrial;
+        if (!this.isSeriesEditable(this.activeTrial.series, seriesIndex)) {
+          seriesIndex = this.getLatestEditableSeriesIndex(this.activeTrial.series);
+        }
         this.setSeries(this.activeTrial.series);
         if (seriesIndex != null) {
           this.setActiveSeriesByIndex(seriesIndex);
         }
       }
     }
-    // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
-    // TODO: figure out why this check is sometimes necessary and remove
-    for (let a = 0; a < trialIdsToShow.length; a++) {
-      let idToShow = trialIdsToShow[a];
-      if (!this.getTrialById(idToShow)) {
-        trialIdsToShow.splice(a, 1);
+  }
+
+  isSeriesEditable(multipleSeries, index) {
+    if (multipleSeries[index] != null) {
+      return multipleSeries[index].canEdit;
+    }
+    return false;
+  }
+
+  getLatestEditableSeriesIndex(multipleSeries) {
+    for (let s = multipleSeries.length - 1; s >= 0; s--) {
+      if (multipleSeries[s].canEdit) {
+        return s;
       }
     }
-    /*
-     * Make sure the trialIdsToShow has actually changed. Sometimes
-     * trialIdsToShowChanged() gets called even if trialIdsToShow
-     * does not change because the model for the trial checkbox
-     * select is graphController.trials. This means trialIdsToShowChanged()
-     * will be called when we replace the trials increateComponentState()
-     * but this does not necessarily mean the trialIdsToShow has changed.
-     * We do this check to minimize the number of times studentDataChanged()
-     * is called.
-     */
-    if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, trialIdsToShow)) {
-      this.trialIdsToShow = trialIdsToShow;
-      this.studentDataChanged();
-    }
-    /*
-     * Remember the trial ids to show so we can use it to make sure the
-     * trialIdsToShow actually change the next time trialIdsToShowChanged()
-     * is called.
-     */
-    this.previousTrialIdsToShow = this.UtilService.makeCopyOfJSONObject(this.trialIdsToShow);
-    this.selectedTrialsText = this.getSelectedTrialsText();
   }
 
   setTrialIdsToShow() {
@@ -2135,8 +2160,14 @@ class GraphController extends ComponentController {
     return null;
   }
 
-  hasEditableSeries() {
-    for (const singleSeries of this.getSeries()) {
+  hasEditableSeries(trial) {
+    let multipleSeries = null;
+    if (trial == null) {
+      multipleSeries = this.getSeries();
+    } else {
+      multipleSeries = trial.series;
+    }
+    for (const singleSeries of multipleSeries) {
       if (singleSeries.canEdit) {
         return true;
       }
@@ -2416,7 +2447,7 @@ class GraphController extends ComponentController {
     this.isDisabled = true;
     if (this.ConfigService.isPreview()) {
       const latestComponentState = this.StudentDataService.
-      getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+          getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
       if (latestComponentState != null) {
         promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
         if (latestComponentState != null &&
@@ -2452,7 +2483,6 @@ class GraphController extends ComponentController {
         }
       } else {
         if (connectedComponent.type === 'showWork') {
-          this.isDisabled = true;
           latestComponentState = this.UtilService.makeCopyOfJSONObject(latestComponentState);
           const canEdit = false;
           this.setCanEditForAllSeries(latestComponentState, canEdit);
@@ -2479,11 +2509,18 @@ class GraphController extends ComponentController {
        * Loop through all the promise results. There will be a promise result for each component we
        * are importing from. Each promiseResult is an array of trials or an image url.
        */
+      let trialCount = 0;
+      let activeTrialIndex = 0;
+      let activeSeriesIndex = 0;
       for (const promiseResult of promiseResults) {
         if (promiseResult instanceof Array) {
           const trials = promiseResult;
           for (const trial of trials) {
+            if (this.canEditTrial(trial)) {
+              activeTrialIndex = trialCount;
+            }
             mergedTrials.push(trial);
+            trialCount++;
           }
         } else if (typeof(promiseResult) === 'string') {
           connectedComponentBackgroundImage = promiseResult;
@@ -2492,6 +2529,8 @@ class GraphController extends ComponentController {
       let newComponentState = this.NodeService.createNewComponentState();
       newComponentState.studentData = {
         trials: mergedTrials,
+        activeTrialIndex: activeTrialIndex,
+        activeSeriesIndex: activeSeriesIndex,
         version: 2
       };
       if (this.componentContent.backgroundImage != null &&
@@ -2535,7 +2574,6 @@ class GraphController extends ComponentController {
        */
       firstTime = false;
     }
-    const componentStates = [];
     for (const connectedComponent of this.componentContent.connectedComponents) {
       const nodeId = connectedComponent.nodeId;
       const componentId = connectedComponent.componentId;
@@ -2543,10 +2581,14 @@ class GraphController extends ComponentController {
       if (type === 'showClassmateWork') {
         mergedComponentState = newComponentState;
       } else if (type === 'importWork' || type == null) {
-        const connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+        const connectedComponentState =
+            this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
         const fields = connectedComponent.fields;
         if (connectedComponentState != null) {
-          mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+          if (connectedComponentState.componentType !== 'Graph') {
+            mergedComponentState = this.mergeComponentState(
+                mergedComponentState, connectedComponentState, fields, firstTime);
+          }
         } else {
           mergedComponentState = this.mergeNullComponentState(mergedComponentState, fields, firstTime);
         }
@@ -2855,12 +2897,14 @@ class GraphController extends ComponentController {
 
   convertSelectedCellsToTrialIds(selectedCells) {
     const selectedTrialIds = [];
-    for (const selectedCell of selectedCells) {
-      const material = selectedCell.material;
-      const bevTemp = selectedCell.bevTemp;
-      const airTemp = selectedCell.airTemp;
-      const selectedTrialId = material + '-' + bevTemp + 'Liquid';
-      selectedTrialIds.push(selectedTrialId);
+    if (selectedCells != null) {
+      for (const selectedCell of selectedCells) {
+        const material = selectedCell.material;
+        const bevTemp = selectedCell.bevTemp;
+        const airTemp = selectedCell.airTemp;
+        const selectedTrialId = material + '-' + bevTemp + 'Liquid';
+        selectedTrialIds.push(selectedTrialId);
+      }
     }
     return selectedTrialIds;
   }
