@@ -10,7 +10,7 @@ before_script:
 script:
 - mvn test
 - touch output.txt
-- bash ./wise.sh run > output.txt &
+- bash ./wise.sh run | tee output.txt &
 - while ! grep "Started Application" output.txt >/dev/null; do sleep 2; echo "polling for WISE server..."; done
 - npm test
 - npm run test-angular-portal
