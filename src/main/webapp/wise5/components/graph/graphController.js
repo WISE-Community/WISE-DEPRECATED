@@ -1938,8 +1938,6 @@ var GraphController = function (_ComponentController) {
             marker: {
               'symbol': _this11.seriesMarkers[newSeriesIndex]
             },
-            regression: false,
-            regressionSettings: {},
             canEdit: false
           };
           _this11.series[newSeriesIndex] = series;

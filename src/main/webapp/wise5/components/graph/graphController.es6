@@ -1500,8 +1500,6 @@ class GraphController extends ComponentController {
           marker: {
             'symbol': this.seriesMarkers[newSeriesIndex]
           },
-          regression: false,
-          regressionSettings: {},
           canEdit: false
         };
         this.series[newSeriesIndex] = series;
