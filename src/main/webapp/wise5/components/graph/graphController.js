@@ -2435,12 +2435,11 @@ var GraphController = function (_ComponentController) {
         for (var _iterator20 = this.trials[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
           var trial = _step20.value;
 
-          var id = trial.id;
-          if (trialIdsToShow.indexOf(id) !== -1) {
+          if (trialIdsToShow.indexOf(trial.id) !== -1) {
             trial.show = true;
           } else {
             trial.show = false;
-            if (this.activeTrial != null && this.activeTrial.id === id) {
+            if (this.activeTrial != null && this.activeTrial.id === trial.id) {
               this.activeTrial = null;
               this.activeSeries = null;
               this.series = [];
@@ -2468,9 +2467,9 @@ var GraphController = function (_ComponentController) {
       if (trialIdsToShow.length > 0) {
         var lastShownTrialId = trialIdsToShow[trialIdsToShow.length - 1];
         var lastShownTrial = this.getTrialById(lastShownTrialId);
-        if (this.hasEditableSeries(lastShownTrial)) {
-          var seriesIndex = this.getSeriesIndex(this.activeSeries);
+        if (this.hasEditableSeries(lastShownTrial.series)) {
           this.activeTrial = lastShownTrial;
+          var seriesIndex = this.getSeriesIndex(this.activeSeries);
           if (!this.isSeriesEditable(this.activeTrial.series, seriesIndex)) {
             seriesIndex = this.getLatestEditableSeriesIndex(this.activeTrial.series);
           }
@@ -2497,6 +2496,7 @@ var GraphController = function (_ComponentController) {
           return s;
         }
       }
+      return null;
     }
   }, {
     key: 'setTrialIdsToShow',
@@ -2939,19 +2939,14 @@ var GraphController = function (_ComponentController) {
     }
   }, {
     key: 'hasEditableSeries',
-    value: function hasEditableSeries(trial) {
-      var multipleSeries = null;
-      if (trial == null) {
-        multipleSeries = this.getSeries();
-      } else {
-        multipleSeries = trial.series;
-      }
+    value: function hasEditableSeries() {
+      var series = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getSeries();
       var _iteratorNormalCompletion27 = true;
       var _didIteratorError27 = false;
       var _iteratorError27 = undefined;
 
       try {
-        for (var _iterator27 = multipleSeries[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+        for (var _iterator27 = series[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
           var singleSeries = _step27.value;
 
           if (singleSeries.canEdit) {

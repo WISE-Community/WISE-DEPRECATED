@@ -1805,7 +1805,7 @@ class GraphController extends ComponentController {
     // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
     // TODO: figure out why this check is sometimes necessary and remove
     for (let a = 0; a < this.trialIdsToShow.length; a++) {
-      let idToShow = this.trialIdsToShow[a];
+      const idToShow = this.trialIdsToShow[a];
       if (!this.getTrialById(idToShow)) {
         this.trialIdsToShow.splice(a, 1);
       }
@@ -1835,12 +1835,11 @@ class GraphController extends ComponentController {
 
   showOrHideTrials(trialIdsToShow) {
     for (const trial of this.trials) {
-      const id = trial.id;
-      if (trialIdsToShow.indexOf(id) !== -1) {
+      if (trialIdsToShow.indexOf(trial.id) !== -1) {
         trial.show = true;
       } else {
         trial.show = false;
-        if (this.activeTrial != null && this.activeTrial.id === id) {
+        if (this.activeTrial != null && this.activeTrial.id === trial.id) {
           this.activeTrial = null;
           this.activeSeries = null;
           this.series = [];
@@ -1853,9 +1852,9 @@ class GraphController extends ComponentController {
     if (trialIdsToShow.length > 0) {
       const lastShownTrialId = trialIdsToShow[trialIdsToShow.length - 1];
       const lastShownTrial = this.getTrialById(lastShownTrialId);
-      if (this.hasEditableSeries(lastShownTrial)) {
-        let seriesIndex = this.getSeriesIndex(this.activeSeries);
+      if (this.hasEditableSeries(lastShownTrial.series)) {
         this.activeTrial = lastShownTrial;
+        let seriesIndex = this.getSeriesIndex(this.activeSeries);
         if (!this.isSeriesEditable(this.activeTrial.series, seriesIndex)) {
           seriesIndex = this.getLatestEditableSeriesIndex(this.activeTrial.series);
         }
@@ -1880,6 +1879,7 @@ class GraphController extends ComponentController {
         return s;
       }
     }
+    return null;
   }
 
   setTrialIdsToShow() {
@@ -2160,14 +2160,8 @@ class GraphController extends ComponentController {
     return null;
   }
 
-  hasEditableSeries(trial) {
-    let multipleSeries = null;
-    if (trial == null) {
-      multipleSeries = this.getSeries();
-    } else {
-      multipleSeries = trial.series;
-    }
-    for (const singleSeries of multipleSeries) {
+  hasEditableSeries(series = this.getSeries()) {
+    for (const singleSeries of series) {
       if (singleSeries.canEdit) {
         return true;
       }

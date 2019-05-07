@@ -482,7 +482,7 @@ describe('GraphController', () => {
         }
       ]
     };
-    expect(graphController.hasEditableSeries(trial0)).toEqual(false);
+    expect(graphController.hasEditableSeries(trial0.series)).toEqual(false);
     const trial1 = {
       id: 'trial1',
       series: [
@@ -496,7 +496,7 @@ describe('GraphController', () => {
         }
       ]
     };
-    expect(graphController.hasEditableSeries(trial1)).toEqual(true);
+    expect(graphController.hasEditableSeries(trial1.series)).toEqual(true);
   });
 
   it('should get min max values', () => {
@@ -819,6 +819,12 @@ describe('GraphController', () => {
       { id: 'series2', canEdit: true}
     ];
     expect(graphController.getLatestEditableSeriesIndex(multipleSeries2)).toEqual(2);
+    const multipleSeries3 = [
+      { id: 'series0', canEdit: false},
+      { id: 'series1', canEdit: false},
+      { id: 'series2', canEdit: false}
+    ];
+    expect(graphController.getLatestEditableSeriesIndex(multipleSeries3)).toEqual(null);
   });
 
   it('should handle trial ids to show changed', () => {
@@ -859,12 +865,13 @@ describe('GraphController', () => {
     ];
     graphController.activeTrial = trial1;
     graphController.activeSeries = trial1.series[0];
-    const trialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb', 'cccccccccc'];
-    graphController.trialIdsToShow = trialIdsToShow;
-    graphController.previousTrialIdsToShow = trialIdsToShow;
+    graphController.previousTrialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb'];
+    graphController.trialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb', 'cccccccccc'];
+    const studentDataChangedSpy = spyOn(graphController, 'studentDataChanged').and.callFake(() => {});
     graphController.trialIdsToShowChanged();
     expect(graphController.activeTrial).toEqual(trial2);
     expect(graphController.activeSeries).toEqual(trial2.series[0]);
+    expect(studentDataChangedSpy).toHaveBeenCalled();
   });
 
   it('should handle trial ids to show changed when the latest trial is not editable', () => {
