@@ -2392,7 +2392,41 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'trialIdsToShowChanged',
     value: function trialIdsToShowChanged() {
-      var trialIdsToShow = this.trialIdsToShow;
+      this.showOrHideTrials(this.trialIdsToShow);
+      this.setActiveTrialAndSeriesByTrialIdsToShow(this.trialIdsToShow);
+      // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
+      // TODO: figure out why this check is sometimes necessary and remove
+      for (var a = 0; a < this.trialIdsToShow.length; a++) {
+        var idToShow = this.trialIdsToShow[a];
+        if (!this.getTrialById(idToShow)) {
+          this.trialIdsToShow.splice(a, 1);
+        }
+      }
+      /*
+       * Make sure the trialIdsToShow has actually changed. Sometimes
+       * trialIdsToShowChanged() gets called even if trialIdsToShow
+       * does not change because the model for the trial checkbox
+       * select is graphController.trials. This means trialIdsToShowChanged()
+       * will be called when we replace the trials in createComponentState()
+       * but this does not necessarily mean the trialIdsToShow has changed.
+       * We do this check to minimize the number of times studentDataChanged()
+       * is called.
+       */
+      if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, this.trialIdsToShow)) {
+        this.trialIdsToShow = this.trialIdsToShow;
+        this.studentDataChanged();
+      }
+      /*
+       * Remember the trial ids to show so we can use it to make sure the
+       * trialIdsToShow actually change the next time trialIdsToShowChanged()
+       * is called.
+       */
+      this.previousTrialIdsToShow = this.UtilService.makeCopyOfJSONObject(this.trialIdsToShow);
+      this.selectedTrialsText = this.getSelectedTrialsText();
+    }
+  }, {
+    key: 'showOrHideTrials',
+    value: function showOrHideTrials(trialIdsToShow) {
       var _iteratorNormalCompletion20 = true;
       var _didIteratorError20 = false;
       var _iteratorError20 = undefined;
@@ -2401,12 +2435,11 @@ var GraphController = function (_ComponentController) {
         for (var _iterator20 = this.trials[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
           var trial = _step20.value;
 
-          var id = trial.id;
-          if (trialIdsToShow.indexOf(id) !== -1) {
+          if (trialIdsToShow.indexOf(trial.id) !== -1) {
             trial.show = true;
           } else {
             trial.show = false;
-            if (this.activeTrial != null && this.activeTrial.id === id) {
+            if (this.activeTrial != null && this.activeTrial.id === trial.id) {
               this.activeTrial = null;
               this.activeSeries = null;
               this.series = [];
@@ -2427,48 +2460,43 @@ var GraphController = function (_ComponentController) {
           }
         }
       }
-
-      if (this.trialIdsToShow.length > 0) {
-        var lastShownTrialId = this.trialIdsToShow[this.trialIdsToShow.length - 1];
+    }
+  }, {
+    key: 'setActiveTrialAndSeriesByTrialIdsToShow',
+    value: function setActiveTrialAndSeriesByTrialIdsToShow(trialIdsToShow) {
+      if (trialIdsToShow.length > 0) {
+        var lastShownTrialId = trialIdsToShow[trialIdsToShow.length - 1];
         var lastShownTrial = this.getTrialById(lastShownTrialId);
-        if (lastShownTrial != null) {
-          var seriesIndex = this.getSeriesIndex(this.activeSeries);
+        if (this.hasEditableSeries(lastShownTrial.series)) {
           this.activeTrial = lastShownTrial;
+          var seriesIndex = this.getSeriesIndex(this.activeSeries);
+          if (!this.isSeriesEditable(this.activeTrial.series, seriesIndex)) {
+            seriesIndex = this.getLatestEditableSeriesIndex(this.activeTrial.series);
+          }
           this.setSeries(this.activeTrial.series);
           if (seriesIndex != null) {
             this.setActiveSeriesByIndex(seriesIndex);
           }
         }
       }
-      // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
-      // TODO: figure out why this check is sometimes necessary and remove
-      for (var a = 0; a < trialIdsToShow.length; a++) {
-        var idToShow = trialIdsToShow[a];
-        if (!this.getTrialById(idToShow)) {
-          trialIdsToShow.splice(a, 1);
+    }
+  }, {
+    key: 'isSeriesEditable',
+    value: function isSeriesEditable(multipleSeries, index) {
+      if (multipleSeries[index] != null) {
+        return multipleSeries[index].canEdit;
+      }
+      return false;
+    }
+  }, {
+    key: 'getLatestEditableSeriesIndex',
+    value: function getLatestEditableSeriesIndex(multipleSeries) {
+      for (var s = multipleSeries.length - 1; s >= 0; s--) {
+        if (multipleSeries[s].canEdit) {
+          return s;
         }
       }
-      /*
-       * Make sure the trialIdsToShow has actually changed. Sometimes
-       * trialIdsToShowChanged() gets called even if trialIdsToShow
-       * does not change because the model for the trial checkbox
-       * select is graphController.trials. This means trialIdsToShowChanged()
-       * will be called when we replace the trials increateComponentState()
-       * but this does not necessarily mean the trialIdsToShow has changed.
-       * We do this check to minimize the number of times studentDataChanged()
-       * is called.
-       */
-      if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, trialIdsToShow)) {
-        this.trialIdsToShow = trialIdsToShow;
-        this.studentDataChanged();
-      }
-      /*
-       * Remember the trial ids to show so we can use it to make sure the
-       * trialIdsToShow actually change the next time trialIdsToShowChanged()
-       * is called.
-       */
-      this.previousTrialIdsToShow = this.UtilService.makeCopyOfJSONObject(this.trialIdsToShow);
-      this.selectedTrialsText = this.getSelectedTrialsText();
+      return null;
     }
   }, {
     key: 'setTrialIdsToShow',
@@ -2912,12 +2940,13 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'hasEditableSeries',
     value: function hasEditableSeries() {
+      var series = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getSeries();
       var _iteratorNormalCompletion27 = true;
       var _didIteratorError27 = false;
       var _iteratorError27 = undefined;
 
       try {
-        for (var _iterator27 = this.getSeries()[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+        for (var _iterator27 = series[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
           var singleSeries = _step27.value;
 
           if (singleSeries.canEdit) {
@@ -3378,7 +3407,6 @@ var GraphController = function (_ComponentController) {
           }
         } else {
           if (connectedComponent.type === 'showWork') {
-            this.isDisabled = true;
             latestComponentState = this.UtilService.makeCopyOfJSONObject(latestComponentState);
             var canEdit = false;
             this.setCanEditForAllSeries(latestComponentState, canEdit);
@@ -3406,6 +3434,9 @@ var GraphController = function (_ComponentController) {
          * Loop through all the promise results. There will be a promise result for each component we
          * are importing from. Each promiseResult is an array of trials or an image url.
          */
+        var trialCount = 0;
+        var activeTrialIndex = 0;
+        var activeSeriesIndex = 0;
         var _iteratorNormalCompletion33 = true;
         var _didIteratorError33 = false;
         var _iteratorError33 = undefined;
@@ -3424,7 +3455,11 @@ var GraphController = function (_ComponentController) {
                 for (var _iterator34 = trials[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
                   var trial = _step34.value;
 
+                  if (_this15.canEditTrial(trial)) {
+                    activeTrialIndex = trialCount;
+                  }
                   mergedTrials.push(trial);
+                  trialCount++;
                 }
               } catch (err) {
                 _didIteratorError34 = true;
@@ -3462,6 +3497,8 @@ var GraphController = function (_ComponentController) {
         var newComponentState = _this15.NodeService.createNewComponentState();
         newComponentState.studentData = {
           trials: mergedTrials,
+          activeTrialIndex: activeTrialIndex,
+          activeSeriesIndex: activeSeriesIndex,
           version: 2
         };
         if (_this15.componentContent.backgroundImage != null && _this15.componentContent.backgroundImage !== '') {
@@ -3509,7 +3546,6 @@ var GraphController = function (_ComponentController) {
          */
         firstTime = false;
       }
-      var componentStates = [];
       var _iteratorNormalCompletion35 = true;
       var _didIteratorError35 = false;
       var _iteratorError35 = undefined;
@@ -3527,7 +3563,9 @@ var GraphController = function (_ComponentController) {
             var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
             var fields = connectedComponent.fields;
             if (connectedComponentState != null) {
-              mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+              if (connectedComponentState.componentType !== 'Graph') {
+                mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+              }
             } else {
               mergedComponentState = this.mergeNullComponentState(mergedComponentState, fields, firstTime);
             }
@@ -4112,35 +4150,36 @@ var GraphController = function (_ComponentController) {
     key: 'convertSelectedCellsToTrialIds',
     value: function convertSelectedCellsToTrialIds(selectedCells) {
       var selectedTrialIds = [];
-      var _iteratorNormalCompletion47 = true;
-      var _didIteratorError47 = false;
-      var _iteratorError47 = undefined;
+      if (selectedCells != null) {
+        var _iteratorNormalCompletion47 = true;
+        var _didIteratorError47 = false;
+        var _iteratorError47 = undefined;
 
-      try {
-        for (var _iterator47 = selectedCells[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
-          var selectedCell = _step47.value;
-
-          var material = selectedCell.material;
-          var bevTemp = selectedCell.bevTemp;
-          var airTemp = selectedCell.airTemp;
-          var selectedTrialId = material + '-' + bevTemp + 'Liquid';
-          selectedTrialIds.push(selectedTrialId);
-        }
-      } catch (err) {
-        _didIteratorError47 = true;
-        _iteratorError47 = err;
-      } finally {
         try {
-          if (!_iteratorNormalCompletion47 && _iterator47.return) {
-            _iterator47.return();
+          for (var _iterator47 = selectedCells[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
+            var selectedCell = _step47.value;
+
+            var material = selectedCell.material;
+            var bevTemp = selectedCell.bevTemp;
+            var airTemp = selectedCell.airTemp;
+            var selectedTrialId = material + '-' + bevTemp + 'Liquid';
+            selectedTrialIds.push(selectedTrialId);
           }
+        } catch (err) {
+          _didIteratorError47 = true;
+          _iteratorError47 = err;
         } finally {
-          if (_didIteratorError47) {
-            throw _iteratorError47;
+          try {
+            if (!_iteratorNormalCompletion47 && _iterator47.return) {
+              _iterator47.return();
+            }
+          } finally {
+            if (_didIteratorError47) {
+              throw _iteratorError47;
+            }
           }
         }
       }
-
       return selectedTrialIds;
     }
   }, {
