@@ -332,7 +332,7 @@ var ComponentController = function () {
       var componentState = args.studentWork;
       if (this.isForThisComponent(componentState)) {
         this.setIsDirty(false);
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: this.getIsDirty() });
+        this.emitComponentDirty(this.getIsDirty());
         var clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
         if (componentState.isSubmit) {
           this.setSubmittedMessage(clientSaveTime);
@@ -487,13 +487,13 @@ var ComponentController = function () {
     key: 'setIsDirtyAndBroadcast',
     value: function setIsDirtyAndBroadcast() {
       this.setIsDirty(true);
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
+      this.emitComponentDirty(true);
     }
   }, {
     key: 'setIsSubmitDirtyAndBroadcast',
     value: function setIsSubmitDirtyAndBroadcast() {
       this.setIsSubmitDirty(true);
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+      this.emitComponentSubmitDirty(true);
     }
 
     /*
@@ -509,12 +509,21 @@ var ComponentController = function () {
       var _this5 = this;
 
       this.createComponentState(action).then(function (componentState) {
-        _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
-
+        _this5.emitComponentStudentDataChanged(componentState);
         if (componentState.isCompleted) {
-          _this5.$scope.$emit('componentCompleted', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
+          _this5.emitComponentCompleted(componentState);
         }
       });
+    }
+  }, {
+    key: 'emitComponentStudentDataChanged',
+    value: function emitComponentStudentDataChanged(componentState) {
+      this.$scope.$emit('componentStudentDataChanged', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
+    }
+  }, {
+    key: 'emitComponentCompleted',
+    value: function emitComponentCompleted(componentState) {
+      this.$scope.$emit('componentCompleted', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
     }
   }, {
     key: 'processLatestStudentWork',

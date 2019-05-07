@@ -319,7 +319,7 @@ class ComponentController {
     const componentState = args.studentWork;
     if (this.isForThisComponent(componentState)) {
       this.setIsDirty(false);
-      this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: this.getIsDirty()});
+      this.emitComponentDirty(this.getIsDirty());
       const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
       if (componentState.isSubmit) {
         this.setSubmittedMessage(clientSaveTime);
@@ -458,12 +458,12 @@ class ComponentController {
 
   setIsDirtyAndBroadcast() {
     this.setIsDirty(true);
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
+    this.emitComponentDirty(true);
   }
 
   setIsSubmitDirtyAndBroadcast() {
     this.setIsSubmitDirty(true);
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+    this.emitComponentSubmitDirty(true);
   }
 
   /*
@@ -474,12 +474,21 @@ class ComponentController {
    */
   createComponentStateAndBroadcast(action) {
     this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
-
+      this.emitComponentStudentDataChanged(componentState);
       if (componentState.isCompleted) {
-        this.$scope.$emit('componentCompleted', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+        this.emitComponentCompleted(componentState);
       }
     });
+  }
+
+  emitComponentStudentDataChanged(componentState) {
+    this.$scope.$emit('componentStudentDataChanged',
+        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+  }
+
+  emitComponentCompleted(componentState) {
+    this.$scope.$emit('componentCompleted',
+        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
   }
 
   processLatestStudentWork() {
