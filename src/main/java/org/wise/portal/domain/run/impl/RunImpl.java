@@ -262,7 +262,7 @@ public class RunImpl implements Run {
   }
 
   public boolean isEnded() {
-    return this.endtime != null;
+    return this.endtime != null && this.endtime.before(Calendar.getInstance().getTime());
   }
 
   public boolean isStudentAssociatedToThisRun(User studentUser) {
