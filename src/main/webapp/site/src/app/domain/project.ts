@@ -15,6 +15,9 @@ export class Project {
   sharedOwners: User[] = [];
   run: Run;
   parentId: number;
+  wiseVersion: number;
+  uri: String;
+  license: String;
 
   static readonly VIEW_PERMISSION: number = 1;
   static readonly EDIT_PERMISSION: number = 2;

@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Input } from '@angular/core';
+import { Component, Input, TRANSLATIONS, LOCALE_ID, TRANSLATIONS_FORMAT} from '@angular/core';
 import { Observable } from "rxjs";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { LibraryProjectDetailsComponent } from './library-project-details.component';
@@ -9,12 +9,15 @@ import { NGSSStandards } from "../ngssStandards";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LibraryService } from "../../../services/library.service";
 import { ConfigService } from "../../../services/config.service";
+import { translationsFactory } from "../../../app.module";
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { ParentProject } from "../../../domain/parentProject";
 
-@Component({ selector: 'app-library-project-menu', template: '' })
-export class LibraryProjectMenuStubComponent {
-  @Input()
-  project: Project;
-}
+// @Component({ selector: 'app-library-project-menu', template: '' })
+// export class LibraryProjectMenuStubComponent {
+//   @Input()
+//   project: Project;
+// }
 
 export class MockMatDialog {
 
@@ -40,6 +43,15 @@ export class MockConfigService {
   }
 }
 
+const parentProject = new ParentProject({
+  "id": 1000,
+  "title": "Photosynthesis",
+  "uri": "http://localhost:8080/project/1000",
+  "authors": [
+    {"id": 6, "firstName": "Susie", "lastName": "Derkins", "username": "SusieDerkins"}
+  ]
+});
+
 describe('LibraryProjectDetailsComponent', () => {
   let component: LibraryProjectDetailsComponent;
   let fixture: ComponentFixture<LibraryProjectDetailsComponent>;
@@ -54,7 +66,14 @@ describe('LibraryProjectDetailsComponent', () => {
         { provide: ConfigService, useClass: MockConfigService },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: [] },
-        { provide: MatDialog, useClass: MockMatDialog }
+        { provide: MatDialog, useClass: MockMatDialog },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -68,6 +87,16 @@ describe('LibraryProjectDetailsComponent', () => {
     project.id = 1;
     project.name = "Photosynthesis & Cellular Respiration";
     project.projectThumb = "photo.png";
+    project.metadata = {
+      "grades": ["7"],
+      "title": "Photosynthesis & Cellular Respiration",
+      "summary": "A really great unit.",
+      "totalTime": "6-7 hours",
+      "authors": [
+        {"id": 10, "firstName": "Spaceman", "lastName": "Spiff", "username": "SpacemanSpiff"},
+        {"id": 12, "firstName": "Captain", "lastName": "Napalm", "username": "CaptainNapalm"}
+      ]
+    };
     const ngssObject: any = {
       "disciplines": [{
         "name": "Life Sciences",
@@ -88,16 +117,10 @@ describe('LibraryProjectDetailsComponent', () => {
     const ngss: NGSSStandards = new NGSSStandards();
     ngss.disciplines = ngssObject.disciplines;
     ngss.dciArrangements = ngssObject.dciArrangements;
-    project.metadata = {
-      "grades": ["7"],
-      "title": "Photosynthesis & Cellular Respiration",
-      "summary": "A really great unit.",
-      "author": {"fullname": "ad min", "username": "admin"},
-      "totalTime": "6-7 hours",
-      "lessonPlan": null
-    };
     component.ngss = ngss;
-    component.data.project = project;
+    component.project = new Project(project);
+    component.parentProject = new ParentProject();
+    component.setLicenseInfo();
     fixture.detectChanges();
   });
 
@@ -105,13 +128,37 @@ describe('LibraryProjectDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show project title', () => {
+  it('should show project title and summary', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('Photosynthesis & Cellular Respiration');
+    expect(compiled.textContent).toContain('A really great unit.');
   });
 
   it('should show project performance expectations', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('MS-LS1-6');
+  });
+
+  it('should show project license and authors', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.textContent).toContain('by Spaceman Spiff, Captain Napalm');
+  });
+
+  it('should show derivative project info', () => {
+    component.parentProject = parentProject;
+    component.setLicenseInfo();
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.textContent).toContain('is a derivative of Photosynthesis');
+    expect(compiled.textContent).toContain('Susie Derkins');
+  });
+
+  it('should show copied project info', () => {
+    component.project.metadata.authors = [];
+    component.parentProject = parentProject;
+    component.setLicenseInfo();
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.textContent).toContain('is a copy of Photosynthesis');
   });
 });
