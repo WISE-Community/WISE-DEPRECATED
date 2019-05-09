@@ -6,10 +6,10 @@ class MockTeacherDataService {
   constructor() {
 
   }
-  getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId) {
+  getComponentStatesByWorkgroupIdAndComponentIds(workgroupId, componentId) {
     return [];
   }
-  getComponentStatesByComponentId(componentId) {
+  getComponentStatesByComponentIds(componentIds) {
     return [];
   }
 }
@@ -88,18 +88,21 @@ describe('DiscussionService', () => {
     const componentId = 'component1';
     const componentStateId = 1;
     DiscussionService.TeacherDataService = TeacherDataService;
-    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByComponentId').and.callFake(() => {
+    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByComponentIds')
+        .and.callFake(() => {
       const componentStates = [
         createComponentState(1, nodeId, componentId, null, 'Hello'),
-        createComponentState(2, nodeId, componentId, 1, 'World')
+        createComponentState(2, nodeId, componentId, 1, 'World'),
+        createComponentState(3, nodeId, componentId, null, 'OK')
       ];
       return componentStates;
     });
-    const postAndAllReplies = DiscussionService.getPostAndAllReplies(componentId, componentStateId);
+    const postAndAllReplies =
+        DiscussionService.getPostAndAllRepliesByComponentIds([componentId], componentStateId);
     expect(postAndAllReplies.length).toEqual(2);
   });
 
-  it('should get posts associated with workgroup id', () => {
+  it('should get posts associated with component ids and workgroup id', () => {
     const nodeId = 'node1';
     const componentId = 'component1';
     const workgroupId = 1;
@@ -108,7 +111,7 @@ describe('DiscussionService', () => {
     const bobPost1 = createComponentState(3, nodeId, componentId, null, 'Bob Thread');
     const alicePost3 = createComponentState(4, nodeId, componentId, 3, 'Alice reply in Bob Thread');
     DiscussionService.TeacherDataService = TeacherDataService;
-    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByWorkgroupIdAndComponentId')
+    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByWorkgroupIdAndComponentIds')
         .and.callFake(() => {
       const componentStates = [
         alicePost1,
@@ -117,7 +120,7 @@ describe('DiscussionService', () => {
       ];
       return componentStates;
     });
-    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByComponentId')
+    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByComponentIds')
         .and.callFake(() => {
       const componentStates = [
         alicePost1,
@@ -127,7 +130,7 @@ describe('DiscussionService', () => {
       ];
       return componentStates;
     });
-    const postAndAllReplies = DiscussionService.getPostsAssociatedWithWorkgroupId(componentId, workgroupId);
+    const postAndAllReplies = DiscussionService.getPostsAssociatedWithComponentIdsAndWorkgroupId([componentId], workgroupId);
     expect(postAndAllReplies.length).toEqual(4);
   });
 

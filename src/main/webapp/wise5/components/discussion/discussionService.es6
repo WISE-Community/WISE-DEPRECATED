@@ -98,29 +98,21 @@ class DiscussionService extends ComponentService {
     return false;
   }
 
-  /**
-   * Get all the posts associated with a workgroup id. This will get all the posts and replies that
-   * the workgroup posted or replied to as well as all the other replies classmates made.
-   * @param componentId the component id
-   * @param workgroupId the workgroup id
-   * @returns an array containing all the component states for top level posts and replies that are
-   * associated with the workgroup
-   */
-  getPostsAssociatedWithWorkgroupId(componentId, workgroupId) {
+  getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, workgroupId) {
     let allPosts = [];
     const topLevelComponentStateIdsFound = [];
-    const componentStates =
-        this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId);
+    const componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentIds(
+        workgroupId, componentIds);
     for (let componentState of componentStates) {
       const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
       if (this.isTopLevelPost(componentState)) {
         if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentState.id)) {
-          allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, componentState.id));
+          allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentState.id));
           topLevelComponentStateIdsFound.push(componentState.id);
         }
       } else {
         if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateIdReplyingTo)) {
-          allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, componentStateIdReplyingTo));
+          allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentStateIdReplyingTo));
           topLevelComponentStateIdsFound.push(componentStateIdReplyingTo);
         }
       }
@@ -133,19 +125,13 @@ class DiscussionService extends ComponentService {
   }
 
   isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateId) {
-    return topLevelComponentStateIdsFound.indexOf(componentStateId) != -1;
+    return topLevelComponentStateIdsFound.indexOf(componentStateId) !== -1;
   }
 
-  /**
-   * Get the top level post and all the replies to it
-   * @param componentId the component id
-   * @param componentStateId the component state id
-   * @returns an array containing the top level post and all the replies
-   */
-  getPostAndAllReplies(componentId, componentStateId) {
+  getPostAndAllRepliesByComponentIds(componentIds, componentStateId) {
     const postAndAllReplies = [];
-    const componentStatesForNodeId = this.TeacherDataService.getComponentStatesByComponentId(componentId);
-    for (let componentState of componentStatesForNodeId) {
+    const componentStatesForComponentIds = this.TeacherDataService.getComponentStatesByComponentIds(componentIds);
+    for (let componentState of componentStatesForComponentIds) {
       if (componentStateId === componentState.id) {
         postAndAllReplies.push(componentState);
       } else {

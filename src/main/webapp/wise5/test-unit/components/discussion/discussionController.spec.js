@@ -59,5 +59,55 @@ describe('DiscussionController', function () {
     var level1Responses = discussionController.getLevel1Responses();
     expect(level1Responses.length).toEqual(2);
   });
+
+  it('should get grading component ids', function () {
+    var componentId1 = 'component1';
+    discussionController.componentId = componentId1;
+    discussionController.componentContent = {
+      id: componentId1
+    };
+    var gradingComponentIds1 = discussionController.getGradingComponentIds();
+    expect(gradingComponentIds1.length).toEqual(1);
+    var componentId2 = 'component2';
+    discussionController.componentContent = {
+      id: componentId2,
+      connectedComponents: [{
+        nodeId: 'node1', componentId: 'component1'
+      }]
+    };
+    var gradingComponentIds2 = discussionController.getGradingComponentIds();
+    expect(gradingComponentIds2.length).toEqual(2);
+    var componentId3 = 'component2';
+    discussionController.componentContent = {
+      id: componentId3,
+      connectedComponents: [{
+        nodeId: 'node1', componentId: 'component1'
+      }, {
+        nodeId: 'node2', componentId: 'component2'
+      }]
+    };
+    var gradingComponentIds3 = discussionController.getGradingComponentIds();
+    expect(gradingComponentIds3.length).toEqual(3);
+  });
+
+  it('should sort component states by server save time', function () {
+    var componentState1 = {
+      id: 1,
+      serverSaveTime: 1
+    };
+    var componentState2 = {
+      id: 2,
+      serverSaveTime: 2
+    };
+    var componentState3 = {
+      id: 3,
+      serverSaveTime: 3
+    };
+    var componentStates = [componentState1, componentState3, componentState2];
+    var sortedComponentStates = componentStates.sort(discussionController.sortByServerSaveTime);
+    expect(sortedComponentStates[0]).toEqual(componentState1);
+    expect(sortedComponentStates[1]).toEqual(componentState2);
+    expect(sortedComponentStates[2]).toEqual(componentState3);
+  });
 });
 //# sourceMappingURL=discussionController.spec.js.map
