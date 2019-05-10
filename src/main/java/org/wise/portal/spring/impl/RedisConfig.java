@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
@@ -45,5 +46,10 @@ public class RedisConfig {
     StringRedisTemplate stringRedisTemplate = new StringRedisTemplate(redisConnectionFactory());
     stringRedisTemplate.setEnableTransactionSupport(true);
     return stringRedisTemplate;
+  }
+
+  @Bean
+  public static ConfigureRedisAction configureRedisAction() {
+    return ConfigureRedisAction.NO_OP;
   }
 }
