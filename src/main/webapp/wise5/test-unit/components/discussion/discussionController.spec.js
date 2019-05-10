@@ -109,5 +109,38 @@ describe('DiscussionController', function () {
     expect(sortedComponentStates[1]).toEqual(componentState2);
     expect(sortedComponentStates[2]).toEqual(componentState3);
   });
+
+  it('should check if a thread has a post from this component and workgroup id', function () {
+    var componentId1 = 'component1';
+    var componentId2 = 'component2';
+    var workgroupId1 = 1;
+    var workgroupId2 = 2;
+    var componentState1 = {
+      id: 1,
+      componentId: componentId1,
+      workgroupId: workgroupId1,
+      replies: []
+    };
+    var componentState2 = {
+      id: 2,
+      componentId: componentId2,
+      workgroupId: workgroupId2,
+      replies: [{
+        id: 3,
+        componentId: componentId2,
+        workgroupId: workgroupId1
+      }]
+    };
+    discussionController.componentId = componentId1;
+    discussionController.workgroupId = workgroupId2;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1)).toEqual(false);
+    discussionController.workgroupId = workgroupId1;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1)).toEqual(true);
+    discussionController.componentId = componentId2;
+    discussionController.workgroupId = workgroupId2;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2)).toEqual(true);
+    discussionController.workgroupId = workgroupId1;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2)).toEqual(true);
+  });
 });
 //# sourceMappingURL=discussionController.spec.js.map

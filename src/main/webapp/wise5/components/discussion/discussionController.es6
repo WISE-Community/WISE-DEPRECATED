@@ -78,11 +78,13 @@ class DiscussionController extends ComponentController {
       }
       this.disableComponentIfNecessary();
     } else if (this.isGradingMode() || this.isGradingRevisionMode()) {
-      const componentIds = this.getGradingComponentIds();
-      const componentStates = this.DiscussionService.
-          getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, this.workgroupId);
-      const annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-      this.setClassResponses(componentStates, annotations);
+      if (this.DiscussionService.workgroupHasWorkForComponent(this.workgroupId, this.componentId)) {
+        const componentIds = this.getGradingComponentIds();
+        const componentStates = this.DiscussionService.
+            getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, this.workgroupId);
+        const annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+        this.setClassResponses(componentStates, annotations);
+      }
     }
     this.initializeScopeSubmitButtonClicked();
     this.initializeScopeGetComponentState();
@@ -464,6 +466,28 @@ class DiscussionController extends ComponentController {
       }
     }
     this.topLevelResponses = this.getLevel1Responses();
+    if (this.isGradingMode() || this.isGradingRevisionMode()) {
+      this.topLevelResponses =
+          this.topLevelResponses.filter(this.threadHasPostFromThisComponentAndWorkgroupId());
+    }
+  }
+
+  threadHasPostFromThisComponentAndWorkgroupId() {
+    const thisComponentId = this.componentId;
+    const thisWorkgroupId = this.workgroupId;
+    return (componentState) => {
+      if (componentState.componentId === thisComponentId &&
+          componentState.workgroupId === thisWorkgroupId) {
+        return true;
+      }
+      for (const replyComponentState of componentState.replies) {
+        if (replyComponentState.componentId === thisComponentId &&
+            replyComponentState.workgroupId === thisWorkgroupId) {
+          return true;
+        }
+      }
+      return false;
+    };
   }
 
   addClassResponse(componentState) {

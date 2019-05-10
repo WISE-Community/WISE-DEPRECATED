@@ -111,4 +111,43 @@ describe('DiscussionController', () => {
     expect(sortedComponentStates[2]).toEqual(componentState3);
   });
 
+  it('should check if a thread has a post from this component and workgroup id', () => {
+    const componentId1 = 'component1';
+    const componentId2 = 'component2';
+    const workgroupId1 = 1;
+    const workgroupId2 = 2;
+    const componentState1 = {
+      id: 1,
+      componentId: componentId1,
+      workgroupId: workgroupId1,
+      replies: []
+    };
+    const componentState2 = {
+      id: 2,
+      componentId: componentId2,
+      workgroupId: workgroupId2,
+      replies: [
+        {
+          id: 3,
+          componentId: componentId2,
+          workgroupId: workgroupId1
+        }
+      ]
+    };
+    discussionController.componentId = componentId1;
+    discussionController.workgroupId = workgroupId2;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1))
+        .toEqual(false);
+    discussionController.workgroupId = workgroupId1;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1))
+        .toEqual(true);
+    discussionController.componentId = componentId2;
+    discussionController.workgroupId = workgroupId2;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2))
+        .toEqual(true);
+    discussionController.workgroupId = workgroupId1;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2))
+        .toEqual(true);
+  });
+
 });

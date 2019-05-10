@@ -131,7 +131,7 @@ var DiscussionService = function (_ComponentService) {
           for (var _iterator2 = connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
             var connectedComponent = _step2.value;
 
-            if (connectedComponent.type == 'showWork') {
+            if (connectedComponent.type === 'showWork') {
               var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
               if (componentStates.length > 0) {
                 return true;
@@ -186,6 +186,11 @@ var DiscussionService = function (_ComponentService) {
       }
 
       return false;
+    }
+  }, {
+    key: 'workgroupHasWorkForComponent',
+    value: function workgroupHasWorkForComponent(workgroupId, componentId) {
+      return this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId).length > 0;
     }
   }, {
     key: 'getPostsAssociatedWithComponentIdsAndWorkgroupId',

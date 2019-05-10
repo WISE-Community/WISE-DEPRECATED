@@ -76,7 +76,7 @@ class DiscussionService extends ComponentService {
     const connectedComponents = componentContent.connectedComponents;
     if (connectedComponents != null) {
       for (let connectedComponent of connectedComponents) {
-        if (connectedComponent.type == 'showWork') {
+        if (connectedComponent.type === 'showWork') {
           const componentStates =
               this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
               connectedComponent.nodeId, connectedComponent.componentId);
@@ -96,6 +96,11 @@ class DiscussionService extends ComponentService {
       }
     }
     return false;
+  }
+
+  workgroupHasWorkForComponent(workgroupId, componentId) {
+    return this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId,
+        componentId).length > 0;
   }
 
   getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, workgroupId) {

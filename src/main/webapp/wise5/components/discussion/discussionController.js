@@ -122,10 +122,12 @@ var DiscussionController = function (_ComponentController) {
       }
       _this.disableComponentIfNecessary();
     } else if (_this.isGradingMode() || _this.isGradingRevisionMode()) {
-      var componentIds = _this.getGradingComponentIds();
-      var _componentStates = _this.DiscussionService.getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, _this.workgroupId);
-      var annotations = _this.getInappropriateFlagAnnotationsByComponentStates(_componentStates);
-      _this.setClassResponses(_componentStates, annotations);
+      if (_this.DiscussionService.workgroupHasWorkForComponent(_this.workgroupId, _this.componentId)) {
+        var componentIds = _this.getGradingComponentIds();
+        var _componentStates = _this.DiscussionService.getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, _this.workgroupId);
+        var annotations = _this.getInappropriateFlagAnnotationsByComponentStates(_componentStates);
+        _this.setClassResponses(_componentStates, annotations);
+      }
     }
     _this.initializeScopeSubmitButtonClicked();
     _this.initializeScopeGetComponentState();
@@ -758,6 +760,48 @@ var DiscussionController = function (_ComponentController) {
       }
 
       this.topLevelResponses = this.getLevel1Responses();
+      if (this.isGradingMode() || this.isGradingRevisionMode()) {
+        this.topLevelResponses = this.topLevelResponses.filter(this.threadHasPostFromThisComponentAndWorkgroupId());
+      }
+    }
+  }, {
+    key: 'threadHasPostFromThisComponentAndWorkgroupId',
+    value: function threadHasPostFromThisComponentAndWorkgroupId() {
+      var thisComponentId = this.componentId;
+      var thisWorkgroupId = this.workgroupId;
+      return function (componentState) {
+        if (componentState.componentId === thisComponentId && componentState.workgroupId === thisWorkgroupId) {
+          return true;
+        }
+        var _iteratorNormalCompletion13 = true;
+        var _didIteratorError13 = false;
+        var _iteratorError13 = undefined;
+
+        try {
+          for (var _iterator13 = componentState.replies[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+            var replyComponentState = _step13.value;
+
+            if (replyComponentState.componentId === thisComponentId && replyComponentState.workgroupId === thisWorkgroupId) {
+              return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError13 = true;
+          _iteratorError13 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+              _iterator13.return();
+            }
+          } finally {
+            if (_didIteratorError13) {
+              throw _iteratorError13;
+            }
+          }
+        }
+
+        return false;
+      };
     }
   }, {
     key: 'addClassResponse',
@@ -802,13 +846,13 @@ var DiscussionController = function (_ComponentController) {
     key: 'getLevel1Responses',
     value: function getLevel1Responses() {
       var level1Responses = [];
-      var _iteratorNormalCompletion13 = true;
-      var _didIteratorError13 = false;
-      var _iteratorError13 = undefined;
+      var _iteratorNormalCompletion14 = true;
+      var _didIteratorError14 = false;
+      var _iteratorError14 = undefined;
 
       try {
-        for (var _iterator13 = this.classResponses[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-          var classResponse = _step13.value;
+        for (var _iterator14 = this.classResponses[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+          var classResponse = _step14.value;
 
           var componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
           if (componentStateIdReplyingTo == null) {
@@ -816,16 +860,16 @@ var DiscussionController = function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError13 = true;
-        _iteratorError13 = err;
+        _didIteratorError14 = true;
+        _iteratorError14 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion13 && _iterator13.return) {
-            _iterator13.return();
+          if (!_iteratorNormalCompletion14 && _iterator14.return) {
+            _iterator14.return();
           }
         } finally {
-          if (_didIteratorError13) {
-            throw _iteratorError13;
+          if (_didIteratorError14) {
+            throw _iteratorError14;
           }
         }
       }
@@ -913,13 +957,13 @@ var DiscussionController = function (_ComponentController) {
     value: function getInappropriateFlagAnnotationsByComponentStates(componentStates) {
       var annotations = [];
       if (componentStates != null) {
-        var _iteratorNormalCompletion14 = true;
-        var _didIteratorError14 = false;
-        var _iteratorError14 = undefined;
+        var _iteratorNormalCompletion15 = true;
+        var _didIteratorError15 = false;
+        var _iteratorError15 = undefined;
 
         try {
-          for (var _iterator14 = componentStates[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-            var componentState = _step14.value;
+          for (var _iterator15 = componentStates[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+            var componentState = _step15.value;
 
             var latestInappropriateFlagAnnotation = this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(componentState.id, 'inappropriateFlag');
             if (latestInappropriateFlagAnnotation != null) {
@@ -927,16 +971,16 @@ var DiscussionController = function (_ComponentController) {
             }
           }
         } catch (err) {
-          _didIteratorError14 = true;
-          _iteratorError14 = err;
+          _didIteratorError15 = true;
+          _iteratorError15 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion14 && _iterator14.return) {
-              _iterator14.return();
+            if (!_iteratorNormalCompletion15 && _iterator15.return) {
+              _iterator15.return();
             }
           } finally {
-            if (_didIteratorError14) {
-              throw _iteratorError14;
+            if (_didIteratorError15) {
+              throw _iteratorError15;
             }
           }
         }
