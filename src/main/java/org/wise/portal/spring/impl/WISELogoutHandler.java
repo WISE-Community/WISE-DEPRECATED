@@ -1,7 +1,10 @@
 package org.wise.portal.spring.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.session.Session;
@@ -9,8 +12,9 @@ import org.wise.portal.service.session.SessionService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
-public class WISELogoutHandler<S extends Session> implements LogoutHandler {
+public class WISELogoutHandler<S extends Session> implements LogoutHandler, ApplicationListener<SessionDestroyedEvent> {
 
   @Autowired
   protected SessionService sessionService;
@@ -19,5 +23,14 @@ public class WISELogoutHandler<S extends Session> implements LogoutHandler {
   public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     sessionService.removeSignedInUser(userDetails);
+  }
+
+  @Override
+  public void onApplicationEvent(SessionDestroyedEvent sessionDestroyedEvent) {
+    List<SecurityContext> securityContexts = sessionDestroyedEvent.getSecurityContexts();
+    for (SecurityContext securityContext : securityContexts) {
+      UserDetails userDetails = (UserDetails) securityContext.getAuthentication().getPrincipal();
+      sessionService.removeSignedInUser(userDetails);
+    }
   }
 }
