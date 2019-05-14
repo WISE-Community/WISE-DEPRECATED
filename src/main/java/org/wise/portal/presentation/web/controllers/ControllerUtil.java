@@ -230,14 +230,7 @@ public class ControllerUtil {
     projectJSON.put("parentId", project.getParentProjectId());
     projectJSON.put("wiseVersion", project.getWiseVersion());
     projectJSON.put("uri", projectService.getProjectURI(project));
-    String licensePath = getProjectLocalPath(project) + LICENSE_PATH;
-    File licenseFile = new File(licensePath);
-    if (licenseFile.isFile()) {
-      licensePath = getProjectPath(project) + LICENSE_PATH;
-    } else {
-      licensePath = "";
-    }
-    projectJSON.put("license", licensePath);
+    projectJSON.put("license", getLicensePath(project));
     return projectJSON;
   }
 
@@ -330,6 +323,16 @@ public class ControllerUtil {
       return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
     }
     return "";
+  }
+
+  public static String getLicensePath(Project project) {
+    String licensePath = getProjectLocalPath(project) + LICENSE_PATH;
+    File licenseFile = new File(licensePath);
+    if (licenseFile.isFile()) {
+      return getProjectPath(project) + LICENSE_PATH;
+    } else {
+      return "";
+    }
   }
 
   /**

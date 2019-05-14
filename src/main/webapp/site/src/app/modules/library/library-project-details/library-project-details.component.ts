@@ -95,11 +95,9 @@ export class LibraryProjectDetailsComponent implements OnInit {
     if (!authors) {
       return '';
     }
-    return authors.map(
-      (author) => {
+    return authors.map((author) => {
         return `${author.firstName} ${author.lastName}`;
-      }
-    ).join(', ');
+      }).join(', ');
   }
 
   runProject() {
