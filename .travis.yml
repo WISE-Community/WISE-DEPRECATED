@@ -13,7 +13,7 @@ script:
 - bash ./wise.sh run > output.txt &
 - while ! grep "Started Application" output.txt >/dev/null; do sleep 2; echo "polling for WISE server..."; done
 - npm test
-- npm run test-angular-portal
+- npm run test-site
 notifications:
   email:
   - honchikun@gmail.com
