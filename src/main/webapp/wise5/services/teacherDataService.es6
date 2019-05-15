@@ -239,14 +239,13 @@ class TeacherDataService {
   }
 
   getAllRelatedComponents(nodeId) {
-    let components = [];
-    components = components.concat(this.ProjectService.getNodeIdsAndComponentIds(nodeId));
+    let components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
     components = components.concat(this.getConnectedComponentsIfNecessary(components));
     return components;
   }
 
   getConnectedComponentsIfNecessary(components) {
-    let connectedComponents = [];
+    const connectedComponents = [];
     for (const component of components) {
       const componentContent = this.ProjectService.getComponentByNodeIdAndComponentId(
           component.nodeId, component.componentId);

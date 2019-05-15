@@ -136,12 +136,12 @@ class DiscussionService extends ComponentService {
   getPostAndAllRepliesByComponentIds(componentIds, componentStateId) {
     const postAndAllReplies = [];
     const componentStatesForComponentIds = this.TeacherDataService.getComponentStatesByComponentIds(componentIds);
-    for (let componentState of componentStatesForComponentIds) {
-      if (componentStateId === componentState.id) {
+    for (const componentState of componentStatesForComponentIds) {
+      if (componentState.id === componentStateId) {
         postAndAllReplies.push(componentState);
       } else {
         const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
-        if (componentStateId === componentStateIdReplyingTo) {
+        if (componentStateIdReplyingTo === componentStateId) {
           postAndAllReplies.push(componentState);
         }
       }

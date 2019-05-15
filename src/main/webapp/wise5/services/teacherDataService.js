@@ -253,8 +253,7 @@ var TeacherDataService = function () {
   }, {
     key: 'getAllRelatedComponents',
     value: function getAllRelatedComponents(nodeId) {
-      var components = [];
-      components = components.concat(this.ProjectService.getNodeIdsAndComponentIds(nodeId));
+      var components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
       components = components.concat(this.getConnectedComponentsIfNecessary(components));
       return components;
     }

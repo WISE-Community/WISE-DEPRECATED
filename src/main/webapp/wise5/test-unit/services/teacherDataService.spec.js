@@ -21,15 +21,7 @@ describe('TeacherDataService', function () {
       TeacherDataService = void 0,
       $rootScope = void 0,
       $httpBackend = void 0;
-  beforeEach(inject(function (_ConfigService_, _ProjectService_, _TeacherDataService_, _$rootScope_, _$httpBackend_) {
-    ConfigService = _ConfigService_;
-    ProjectService = _ProjectService_;
-    TeacherDataService = _TeacherDataService_;
-    $rootScope = _$rootScope_;
-    $httpBackend = _$httpBackend_;
-  }));
-
-  it('should get all related components', function () {
+  var initializeIdToNode = function initializeIdToNode() {
     ProjectService.idToNode['node1'] = {
       id: 'node1',
       components: [{
@@ -64,6 +56,17 @@ describe('TeacherDataService', function () {
         }]
       }]
     };
+  };
+  beforeEach(inject(function (_ConfigService_, _ProjectService_, _TeacherDataService_, _$rootScope_, _$httpBackend_) {
+    ConfigService = _ConfigService_;
+    ProjectService = _ProjectService_;
+    TeacherDataService = _TeacherDataService_;
+    $rootScope = _$rootScope_;
+    $httpBackend = _$httpBackend_;
+  }));
+
+  it('should get all related components', function () {
+    initializeIdToNode();
     var node1Components = TeacherDataService.getAllRelatedComponents('node1');
     expect(node1Components.length).toEqual(2);
     expect(node1Components[0].nodeId).toEqual('node1');
@@ -83,40 +86,7 @@ describe('TeacherDataService', function () {
   });
 
   it('should get connected components if necessary', function () {
-    ProjectService.idToNode['node1'] = {
-      id: 'node1',
-      components: [{
-        id: 'vg5uzarhir',
-        type: 'Discussion'
-      }, {
-        id: '4h834b2zbd',
-        type: 'OpenResponse'
-      }]
-    };
-    ProjectService.idToNode['node2'] = {
-      id: 'node2',
-      components: [{
-        id: '1xph6u3mea',
-        type: 'Discussion',
-        connectedComponents: [{
-          componentId: 'vg5uzarhir',
-          type: 'importWork',
-          nodeId: 'node1'
-        }]
-      }]
-    };
-    ProjectService.idToNode['node3'] = {
-      id: 'node3',
-      components: [{
-        id: 'j2fsu892t3',
-        type: 'Graph',
-        connectedComponents: [{
-          componentId: '4h834b2zbd',
-          type: 'importWork',
-          nodeId: 'node1'
-        }]
-      }]
-    };
+    initializeIdToNode();
     var node2ConnectedComponents = TeacherDataService.getConnectedComponentsIfNecessary([{ nodeId: 'node2', componentId: '1xph6u3mea' }]);
     expect(node2ConnectedComponents.length).toEqual(1);
     expect(node2ConnectedComponents[0].nodeId).toEqual('node1');

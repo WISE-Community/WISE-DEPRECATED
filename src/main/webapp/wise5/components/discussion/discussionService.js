@@ -259,11 +259,11 @@ var DiscussionService = function (_ComponentService) {
         for (var _iterator5 = componentStatesForComponentIds[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
           var componentState = _step5.value;
 
-          if (componentStateId === componentState.id) {
+          if (componentState.id === componentStateId) {
             postAndAllReplies.push(componentState);
           } else {
             var componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
-            if (componentStateId === componentStateIdReplyingTo) {
+            if (componentStateIdReplyingTo === componentStateId) {
               postAndAllReplies.push(componentState);
             }
           }
