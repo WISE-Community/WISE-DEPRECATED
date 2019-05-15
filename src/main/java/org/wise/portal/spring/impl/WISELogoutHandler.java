@@ -8,6 +8,7 @@ import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.session.Session;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.service.session.SessionService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,16 +22,14 @@ public class WISELogoutHandler<S extends Session> implements LogoutHandler, Appl
 
   @Override
   public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    sessionService.removeSignedInUser(userDetails);
+    sessionService.removeUser((UserDetails) authentication.getPrincipal());
   }
 
   @Override
   public void onApplicationEvent(SessionDestroyedEvent sessionDestroyedEvent) {
     List<SecurityContext> securityContexts = sessionDestroyedEvent.getSecurityContexts();
     for (SecurityContext securityContext : securityContexts) {
-      UserDetails userDetails = (UserDetails) securityContext.getAuthentication().getPrincipal();
-      sessionService.removeSignedInUser(userDetails);
+      sessionService.removeUser((UserDetails) securityContext.getAuthentication().getPrincipal());
     }
   }
 }

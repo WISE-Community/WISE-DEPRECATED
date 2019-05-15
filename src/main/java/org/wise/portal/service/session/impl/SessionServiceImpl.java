@@ -37,6 +37,16 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
     outputSignedInTeachers();
   }
 
+  @Override
+  public Set<String> getLoggedInStudents() {
+    return stringRedisTemplate.opsForSet().members("signedInStudents");
+  }
+
+  @Override
+  public Set<String> getLoggedInTeachers() {
+    return stringRedisTemplate.opsForSet().members("signedInTeachers");
+  }
+
   public void removeSignedInUser(UserDetails userDetails) {
     System.out.println("removeSignedInUser");
     String username = userDetails.getUsername();
@@ -54,6 +64,11 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
     outputSignedInTeachers();
   }
 
+  @Override
+  public Set<String> getCurrentlyAuthoredProjects() {
+    return stringRedisTemplate.opsForSet().members("currentlyAuthoredProjects");
+  }
+
   public int getNumberSignedInUsers() {
     return stringRedisTemplate.opsForSet().members("signedInUsers").size();
   }
@@ -66,9 +81,17 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
     outputAllCurrentAuthors();
   }
 
-  public void removeCurrentAuthor(Project project, UserDetails author) {
+  @Override
+  public void removeCurrentAuthor(UserDetails author) {
     System.out.println("removeCurrentAuthor");
-    Serializable projectId = project.getId();
+    Set<String> currentlyAuthoredProjects = stringRedisTemplate.opsForSet().members("currentlyAuthoredProjects");
+    for (String projectId : currentlyAuthoredProjects) {
+      removeCurrentAuthor(projectId, author);
+    }
+  }
+
+  public void removeCurrentAuthor(Serializable projectId, UserDetails author) {
+    System.out.println("removeCurrentAuthor");
     stringRedisTemplate.opsForSet().remove("currentAuthors:" + projectId, author.getUsername());
     Long numCurrentAuthorsForProject = stringRedisTemplate.opsForSet().size("currentAuthors:" + projectId);
     if (numCurrentAuthorsForProject == 0) {
@@ -76,6 +99,14 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
     }
     outputCurrentlyAuthoredProjects();
     outputAllCurrentAuthors();
+  }
+
+  @Override
+  public void removeUser(UserDetails user) {
+    removeSignedInUser(user);
+    if (user instanceof TeacherUserDetails) {
+      removeCurrentAuthor(user);
+    }
   }
 
   public Set<String> getCurrentAuthors(String projectId) {

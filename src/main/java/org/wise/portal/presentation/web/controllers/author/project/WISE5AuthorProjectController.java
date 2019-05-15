@@ -940,7 +940,7 @@ public class WISE5AuthorProjectController {
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
-      sessionService.removeCurrentAuthor(project, user.getUserDetails());
+      sessionService.removeCurrentAuthor(project.getId(), user.getUserDetails());
       notifyCurrentAuthors(projectId);
       return null;
     } else {
