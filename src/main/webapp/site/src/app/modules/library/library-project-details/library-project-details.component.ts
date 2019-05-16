@@ -28,7 +28,6 @@ export class LibraryProjectDetailsComponent implements OnInit {
   parentAuthorsString: string = '';
   more: boolean = false;
   isCopy: boolean = false;
-  isDerivative: boolean = false;
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
@@ -40,8 +39,9 @@ export class LibraryProjectDetailsComponent implements OnInit {
     this.isRunProject = data.isRunProject;
     if (this.data.project) {
       this.project = new Project(this.data.project);
-      if (this.data.project.metadata.parentProject.title) {
-        this.parentProject = new ParentProject(this.data.project.metadata.parentProject);
+      const numParents = this.data.project.metadata.parentProjects.length;
+      if (numParents) {
+        this.parentProject = new ParentProject(this.data.project.metadata.parentProjects[numParents-1]);
       }
       this.setNGSS();
       this.setLicenseInfo();
@@ -83,9 +83,7 @@ export class LibraryProjectDetailsComponent implements OnInit {
     this.authorsString = this.getAuthorsString(this.project.metadata.authors);
     if (this.parentProject) {
       this.parentAuthorsString = this.getAuthorsString(this.parentProject.authors);
-      if (this.authorsString) {
-        this.isDerivative = true;
-      } else {
+      if (!this.authorsString) {
         this.isCopy = true;
       }
     }

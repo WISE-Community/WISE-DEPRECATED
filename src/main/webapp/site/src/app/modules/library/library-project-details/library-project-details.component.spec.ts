@@ -144,15 +144,6 @@ describe('LibraryProjectDetailsComponent', () => {
     expect(compiled.textContent).toContain('by Spaceman Spiff, Captain Napalm');
   });
 
-  it('should show derivative project info', () => {
-    component.parentProject = parentProject;
-    component.setLicenseInfo();
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.textContent).toContain('is a derivative of Photosynthesis');
-    expect(compiled.textContent).toContain('Susie Derkins');
-  });
-
   it('should show copied project info', () => {
     component.project.metadata.authors = [];
     component.parentProject = parentProject;

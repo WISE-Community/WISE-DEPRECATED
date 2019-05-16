@@ -208,7 +208,7 @@ public class ProjectServiceImpl implements ProjectService {
       if (parentProjectMetadata != null) {
         try {
           JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
-          metadata.setParentProject(parentProjectJSON.toString());
+          metadata.setParentProjects(addToParentProjects(parentProjectJSON, parentProjectMetadata).toString());
         } catch (JSONException e) {
           e.printStackTrace();
         }
@@ -239,13 +239,9 @@ public class ProjectServiceImpl implements ProjectService {
     JSONArray parentAuthors = new JSONArray();
     if (originalAuthorsString != null) {
       parentAuthors = new JSONArray(originalAuthorsString);
-      for (int i = 0; i < parentAuthors.length(); i++) {
-        JSONObject parentAuthor = parentAuthors.getJSONObject(i);
-        parentAuthor.remove("id");
-      }
     }
     parentProjectJSON.put("authors", parentAuthors);
-    metadata.setParentProject(parentProjectJSON.toString());
+    metadata.setParentProjects(addToParentProjects(parentProjectJSON, metadata).toString());
     metadata.setUri(getProjectURI(project));
     metadata.setAuthors(new JSONArray().toString());
     project.setMetadata(metadata);
@@ -552,7 +548,7 @@ public class ProjectServiceImpl implements ProjectService {
       ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
       newProjectMetadata.setAuthors(new JSONArray().toString());
       JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
-      newProjectMetadata.setParentProject(parentProjectJSON.toString());
+      newProjectMetadata.setParentProjects(addToParentProjects(parentProjectJSON, parentProjectMetadata).toString());
       pParams.setMetadata(newProjectMetadata);
     }
     return createProject(pParams);
@@ -604,7 +600,7 @@ public class ProjectServiceImpl implements ProjectService {
     return projectDao.getAllSharedProjects();
   }
 
-  public JSONObject getParentInfo(ProjectMetadata parentProjectMetadata,
+  private JSONObject getParentInfo(ProjectMetadata parentProjectMetadata,
       Long parentProjectId, String uri) throws JSONException {
     String parentAuthorsString = parentProjectMetadata.getAuthors();
     String parentProjectTitle = parentProjectMetadata.getTitle();
@@ -619,7 +615,25 @@ public class ProjectServiceImpl implements ProjectService {
     parentProjectJSON.put("title", parentProjectTitle);
     parentProjectJSON.put("authors", parentAuthors);
     parentProjectJSON.put("uri", uri);
+    parentProjectJSON.put("dateCopied", new Date());
     return parentProjectJSON;
+  }
+
+  private JSONArray getParentProjects(ProjectMetadata metadata)
+      throws JSONException {
+    String parentProjectsString = metadata.getParentProjects();
+    if (parentProjectsString != null) {
+      return new JSONArray(parentProjectsString);
+    } else {
+      return new JSONArray();
+    }
+  }
+
+  private JSONArray addToParentProjects(JSONObject parentProjectJSON, ProjectMetadata metadata) 
+      throws JSONException {
+    JSONArray parentProjects = getParentProjects(metadata);
+    parentProjects.put(parentProjectJSON);
+    return parentProjects;
   }
 
   public String getProjectURI(Project project) {
@@ -655,37 +669,48 @@ public class ProjectServiceImpl implements ProjectService {
     String title = metadata.getTitle();
     JSONArray authorsArray = new JSONArray(metadata.getAuthors());
     String authors = getAuthorsString(authorsArray);
-    String license = "\"" + title + "\" (" + getProjectURI(project) + ") " +
-      "is licensed under CC BY-SA";
+    String titleAndUri = "\"" + title + "\" (" + getProjectURI(project) + ")";
+    String license = titleAndUri + " is licensed under CC BY-SA";
     if (!authors.isEmpty()) {
       license += " by " + authors + ".";
     } else {
       license += ".";
     }
-    String parentProject = metadata.getParentProject();
-    String parentLicense = "";
-    if (parentProject != null && !parentProject.equals("{}")) {
-      JSONObject parentProjectJSON = new JSONObject(parentProject);
+    license = WordUtils.wrap(license, 72) + "\n\n";
+    JSONArray parentProjects = getParentProjects(metadata);
+    for (int i = parentProjects.length()-1; i >= 0; i--) {
+      JSONObject parentProjectJSON = parentProjects.getJSONObject(i);
       String parentTitle = parentProjectJSON.getString("title");
       String parentAuthors =
         getAuthorsString(parentProjectJSON.getJSONArray("authors"));
       String parentURI = parentProjectJSON.getString("uri");
+      String parentLicense = "\n";
+      if (i == parentProjects.length()-1) {
+        parentLicense = "----\n\n";
+      }
+      parentLicense += WordUtils.wrap(titleAndUri, 72);
       if (authors.isEmpty()) {
-        parentLicense += " This work is a copy of ";
+        parentLicense += "\nis a copy of ";
       } else {
-        parentLicense += " This work is a derivative of ";
+        parentLicense += "\nis a derivative of ";
       }
-      parentLicense += "\"" + parentTitle + "\" (" + parentURI + ")";
+      titleAndUri = "\"" + parentTitle + "\" (" + parentURI + ")";
+      parentLicense += "\n" + WordUtils.wrap(titleAndUri, 72);
       if (!parentAuthors.isEmpty()) {
-        parentLicense += " by " + parentAuthors;
+        parentLicense += WordUtils.wrap("\nby " + parentAuthors, 72);
       }
-      parentLicense += " [used under CC BY-SA].";
-      parentLicense = "\n\n" + WordUtils.wrap(parentLicense, 72);
+      parentLicense += "\n[used under CC BY-SA, copied " + 
+          parentProjectJSON.getString("dateCopied") + "].\n";
+      license += parentLicense;
+      if (i == 0) {
+        license += "\n----\n\n";
+      }
+      authors = parentAuthors;
     }
-    license = WordUtils.wrap(license, 72) + parentLicense + "\n\n" +
-      WordUtils.wrap("License pertains to original content created by " +
-      "the author(s). Authors are responsible for the usage and attribution " +
-      "of any third-party content linked to or included in this work.", 72);
+    license += WordUtils.wrap("License pertains to original content created " +
+        "by the author(s). Authors are responsible for the usage and " +
+        "attribution of any third-party content linked to or included in " +
+        "this work.", 72);
     String ccLicenseText = "";
     InputStream ccLicense =
       FileManager.class.getClassLoader().getResourceAsStream("cc-by-sa.txt");

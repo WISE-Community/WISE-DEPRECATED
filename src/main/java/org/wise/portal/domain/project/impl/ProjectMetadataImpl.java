@@ -77,7 +77,7 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 
   @Getter
   @Setter
-  private String parentProject;
+  private String parentProjects;
 
   @Column(name = "subject")
   @Getter
@@ -256,13 +256,13 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
-    if (metadataJSON.has("parentProject") && !metadataJSON.isNull("parentProject")) {
+    if (metadataJSON.has("parentProjects") && !metadataJSON.isNull("parentProjects")) {
       try {
-        JSONObject parentProject = metadataJSON.getJSONObject("parentProject");
-        if (parentProject.equals("null")) {
-          parentProject = new JSONObject();
+        JSONArray parentProjects = metadataJSON.getJSONArray("parentProjects");
+        if (parentProjects.equals("null")) {
+          parentProjects = new JSONArray();
         }
-        setParentProject(parentProject.toString());
+        setParentProjects(parentProjects.toString());
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -627,12 +627,12 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
         metadata.put("standardsAddressed", new JSONObject());
       }
 
-      String parentProjectString = metadata.getString("parentProject");
-      if (parentProjectString != null && parentProjectString != "null") {
-        JSONObject parentProjectJSON = new JSONObject(parentProjectString);
-        metadata.put("parentProject", parentProjectJSON);
+      String parentProjectsString = metadata.getString("parentProjects");
+      if (parentProjectsString != null && parentProjectsString != "null") {
+        JSONArray parentProjectsJSON = new JSONArray(parentProjectsString);
+        metadata.put("parentProjects", parentProjectsJSON);
       } else {
-        metadata.put("parentProject", new JSONObject());
+        metadata.put("parentProjects", new JSONArray());
       }
 
     } catch (JSONException e) {
