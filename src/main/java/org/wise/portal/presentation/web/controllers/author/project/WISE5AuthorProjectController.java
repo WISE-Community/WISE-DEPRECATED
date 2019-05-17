@@ -949,7 +949,7 @@ public class WISE5AuthorProjectController {
 
   public void notifyCurrentAuthors(String projectId) throws Exception {
     JSONObject message = new JSONObject();
-    message.put("type", String.format("currentAuthors"));
+    message.put("type", "currentAuthors");
     message.put("topic", String.format("/topic/current-authors/%s", projectId));
     message.put("currentAuthors", sessionService.getCurrentAuthors(projectId));
     redisPublisher.publish(message.toString());

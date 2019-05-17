@@ -5,7 +5,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
-import org.wise.vle.domain.WebSocketMessage;
+import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
@@ -54,8 +53,7 @@ public class TeacherDataController {
   private Properties wiseProperties;
 
   @Autowired
-  private SimpMessagingTemplate simpMessagingTemplate;
-
+  private MessagePublisher redisPublisher;
 
   /**
    * Handles requests for exporting of data for teachers/researchers like student work, events, notebook items
@@ -445,17 +443,21 @@ public class TeacherDataController {
     return notification;
   }
 
-  public void broadcastAnnotationToStudent(Long toWorkgroupId, Annotation annotation) {
+  public void broadcastAnnotationToStudent(Long toWorkgroupId, Annotation annotation) throws JSONException {
     annotation.convertToClientAnnotation();
-    WebSocketMessage message = new WebSocketMessage("annotation", annotation);
-    simpMessagingTemplate.convertAndSend(String.format("/topic/workgroup/%s", toWorkgroupId),
-        message);
+    JSONObject message = new JSONObject();
+    message.put("type", "annotationToStudent");
+    message.put("topic", String.format("/topic/workgroup/%s", toWorkgroupId));
+    message.put("annotation", annotation.toJSON());
+    redisPublisher.publish(message.toString());
   }
 
-  public void broadcastNotificationToStudent(Long toWorkgroupId, Notification notification) {
+  public void broadcastNotificationToStudent(Long toWorkgroupId, Notification notification) throws JSONException {
     notification.convertToClientNotification();
-    WebSocketMessage message = new WebSocketMessage("notification", notification);
-    simpMessagingTemplate.convertAndSend(String.format("/topic/workgroup/%s", toWorkgroupId),
-        message);
+    JSONObject message = new JSONObject();
+    message.put("type", "notification");
+    message.put("topic", String.format("/topic/workgroup/%s", toWorkgroupId));
+    message.put("notification", notification.toJSON());
+    redisPublisher.publish(message.toString());
   }
 }

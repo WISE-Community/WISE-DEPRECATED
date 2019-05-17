@@ -7,6 +7,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.wise.vle.domain.WebSocketMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,31 @@ public class RedisMessageSubscriber implements MessageListener {
       if (messageJSON.get("type").equals("currentAuthors")) {
         simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"),
             messageJSON.getJSONArray("currentAuthors").toString());
+      } else if (messageJSON.get("type").equals("studentWorkToClassroom") ||
+          messageJSON.get("type").equals("studentWorkToTeacher")) {
+        WebSocketMessage webSockeMessage = new WebSocketMessage("studentWork", messageJSON.getString("studentWork"));
+        simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
+      } else if (messageJSON.get("type").equals("annotationToTeacher")) {
+        WebSocketMessage webSockeMessage = new WebSocketMessage("annotation", messageJSON.getString("annotation"));
+        simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
+      } else if (messageJSON.get("type").equals("studentStatusToTeacher")) {
+        WebSocketMessage webSockeMessage = new WebSocketMessage("studentStatus", messageJSON.getString("studentStatus"));
+        simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
+      } else if (messageJSON.get("type").equals("achievementToTeacher")) {
+        WebSocketMessage webSockeMessage = new WebSocketMessage("newStudentAchievement", messageJSON.getString("achievement"));
+        simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
+      } else if (messageJSON.get("type").equals("annotationToStudent")) {
+        WebSocketMessage webSockeMessage = new WebSocketMessage("annotation", messageJSON.getString("annotation"));
+        simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
+      } else if (messageJSON.get("type").equals("notification")) {
+        WebSocketMessage webSockeMessage = new WebSocketMessage("notification", messageJSON.getString("notification"));
+        simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
+      } else if (messageJSON.get("type").equals("pause")) {
+        WebSocketMessage webSockeMessage = new WebSocketMessage("pause", "");
+        simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
+      } else if (messageJSON.get("type").equals("unpause")) {
+        WebSocketMessage webSockeMessage = new WebSocketMessage("unpause", "");
+        simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
       }
     } catch (JSONException e) {
       e.printStackTrace();
