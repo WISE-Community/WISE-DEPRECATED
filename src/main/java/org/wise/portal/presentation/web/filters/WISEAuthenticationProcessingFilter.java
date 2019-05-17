@@ -47,7 +47,6 @@ import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.session.SessionService;
 import org.wise.portal.service.user.UserService;
 import redis.clients.jedis.Jedis;

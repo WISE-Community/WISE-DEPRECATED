@@ -260,15 +260,6 @@ public class StartProjectController {
    * @param run run that the logged in user is running
    */
   public static void notifyServletSession(HttpServletRequest request, Run run) {
-    HttpSession session = request.getSession();
-    String sessionId = session.getId();
-    HashMap<String, Long> studentToRunIds =
-        (HashMap<String, Long>) session.getServletContext().getAttribute("studentsToRunIds");
-    if (studentToRunIds == null) {
-      studentToRunIds = new HashMap<String, Long>();
-      session.getServletContext().setAttribute("studentsToRunIds", studentToRunIds);
-    }
-    studentToRunIds.put(sessionId, run.getId());
   }
 
   /**

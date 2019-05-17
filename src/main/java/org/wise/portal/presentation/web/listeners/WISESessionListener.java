@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -38,36 +38,10 @@ import org.wise.portal.domain.user.User;
  */
 public class WISESessionListener implements HttpSessionListener {
 
-  public static final String ALL_LOGGED_IN_USERS = "allLoggedInUsers";
-
   public void sessionCreated(HttpSessionEvent event) {
   }
 
   @SuppressWarnings("unchecked")
   public void sessionDestroyed(HttpSessionEvent event) {
-    HttpSession session = event.getSession();
-    String sessionId = session.getId();
-
-    HashMap<String, User> allLoggedInUsers =
-        ((HashMap<String, User>) session.getServletContext().getAttribute(ALL_LOGGED_IN_USERS));
-    if (allLoggedInUsers != null) {
-      allLoggedInUsers.remove(sessionId);
-    }
-
-    HashMap<String, Long> studentsToRunIds =
-        ((HashMap<String, Long>) session.getServletContext().getAttribute("studentsToRunIds"));
-    if (studentsToRunIds != null) {
-      studentsToRunIds.remove(sessionId);
-    }
-
-    HashMap<String, ArrayList<String>> openedProjectToSessions =
-        (HashMap<String, ArrayList<String>>) session.getServletContext()
-        .getAttribute("openedProjectsToSessions");
-    if (openedProjectToSessions != null) {
-      Collection<ArrayList<String>> sessionsForAllProjects = openedProjectToSessions.values();
-      for (ArrayList<String> sessionsForProject : sessionsForAllProjects) {
-        sessionsForProject.remove(sessionId);
-      }
-    }
   }
 }
