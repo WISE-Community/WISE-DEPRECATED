@@ -138,8 +138,6 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
     Set<String> currentlyAuthoredProjects = stringRedisTemplate.opsForSet().members("currentlyAuthoredProjects");
     for (String currentlyAuthoredProject : currentlyAuthoredProjects) {
       outputCurrentAuthors(currentlyAuthoredProject);
-      Set<String> currentAuthors = stringRedisTemplate.opsForSet().members("currentAuthors:" + currentlyAuthoredProject);
-      System.out.println("currentAuthors:" + currentlyAuthoredProject + "=" + currentAuthors);
     }
   }
 

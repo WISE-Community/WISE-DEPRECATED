@@ -8,7 +8,14 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.session.data.redis.config.ConfigureRedisAction;
+import org.wise.portal.spring.data.redis.MessagePublisher;
+import org.wise.portal.spring.data.redis.RedisMessagePublisher;
+import org.wise.portal.spring.data.redis.RedisMessageSubscriber;
 import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
@@ -38,6 +45,7 @@ public class RedisConfig {
     RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
     redisTemplate.setConnectionFactory(redisConnectionFactory());
     redisTemplate.setEnableTransactionSupport(true);
+    redisTemplate.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
     return redisTemplate;
   }
 
@@ -51,5 +59,33 @@ public class RedisConfig {
   @Bean
   public static ConfigureRedisAction configureRedisAction() {
     return ConfigureRedisAction.NO_OP;
+  }
+
+  @Bean
+  MessageListenerAdapter messageListener() {
+    return new MessageListenerAdapter(redisMessageSubscriber());
+  }
+
+  @Bean
+  RedisMessageSubscriber redisMessageSubscriber() {
+    return new RedisMessageSubscriber();
+  }
+
+  @Bean
+  RedisMessageListenerContainer redisContainer() {
+    RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+    container.setConnectionFactory(redisConnectionFactory());
+    container.addMessageListener(messageListener(), topic());
+    return container;
+  }
+
+  @Bean
+  MessagePublisher redisPublisher() {
+    return new RedisMessagePublisher(redisTemplate(), topic());
+  }
+
+  @Bean
+  ChannelTopic topic() {
+    return new ChannelTopic("messageQueue");
   }
 }

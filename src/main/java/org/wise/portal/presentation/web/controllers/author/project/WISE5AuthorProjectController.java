@@ -30,7 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -53,26 +52,26 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.session.SessionService;
+import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.utils.FileManager;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -102,7 +101,7 @@ public class WISE5AuthorProjectController {
   ServletContext servletContext;
 
   @Autowired
-  private SimpMessagingTemplate simpMessagingTemplate;
+  private MessagePublisher redisPublisher;
 
   private String featuredProjectIconsFolderRelativePath = "wise5/authoringTool/projectIcons";
 
@@ -949,9 +948,11 @@ public class WISE5AuthorProjectController {
   }
 
   public void notifyCurrentAuthors(String projectId) throws Exception {
-    simpMessagingTemplate.convertAndSend(
-        String.format("/topic/current-authors/%s", projectId),
-        sessionService.getCurrentAuthors(projectId));
+    JSONObject message = new JSONObject();
+    message.put("type", String.format("currentAuthors"));
+    message.put("topic", String.format("/topic/current-authors/%s", projectId));
+    message.put("currentAuthors", sessionService.getCurrentAuthors(projectId));
+    redisPublisher.publish(message.toString());
   }
 
   /**
