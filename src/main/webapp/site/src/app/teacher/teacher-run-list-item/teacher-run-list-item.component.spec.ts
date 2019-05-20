@@ -73,5 +73,4 @@ describe('TeacherRunListItemComponent', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('Photosynthesis');
   });
-
 });

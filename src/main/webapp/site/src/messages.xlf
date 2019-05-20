@@ -4136,29 +4136,39 @@
         <source>Run ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit><trans-unit id="5bbe77fbbc93c3a34cea3b4b7c99aac62e670e08" datatype="html">
         <source>Report Problem</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-      </trans-unit><trans-unit id="2874cc3a35edcf67e588849afeb796f57163458b" datatype="html">
-        <source>Launch</source>
+      </trans-unit><trans-unit id="b0e70620d635e9fc164c5ea3c2f1f658513b0b97" datatype="html">
+        <source>Starts <x id="INTERPOLATION" equiv-text="{{run.startTime | amTimeAgo}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-      </trans-unit><trans-unit id="6523895cfd110d53667e04c82c0f769c19d8ee74" datatype="html">
-        <source>Review</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit><trans-unit id="2874cc3a35edcf67e588849afeb796f57163458b" datatype="html">
+        <source>Launch</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit><trans-unit id="385a5a4a2c1453ee22b0ab14da5cd4fb83df0ee5" datatype="html">
+        <source>Review Work</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit><trans-unit id="a41a1ea741ebed7a4ff655f233fc2d275b9bfa42" datatype="html">
         <source>Account Info</source>
@@ -4362,29 +4372,25 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-      </trans-unit><trans-unit id="b40dea18c018d5190bbe69d6012873e36f086db0" datatype="html">
+      </trans-unit><trans-unit id="036f708ee8fd9a343c47dc81fb0df7650488f5da" datatype="html">
         <source>
-    Shared by <x id="INTERPOLATION" equiv-text="{{ run.owner.displayName }}"/>
+    Shared by <x id="INTERPOLATION" equiv-text="{{run.owner.displayName}}"/>
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-      </trans-unit><trans-unit id="4af64447b2fbd70a957846ad4ca1573eccb4b5db" datatype="html">
-        <source>Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/></source>
+      </trans-unit><trans-unit id="492e00b6b69577737a10d7af505fd3c483173468" datatype="html">
+        <source>Last student login: <x id="INTERPOLATION" equiv-text="{{run.lastRun | amCalendar}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit><trans-unit id="f31a4ac5cfc26f2d23677bd24f59219dc5f1c491" datatype="html">
         <source>Teacher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit><trans-unit id="a164f074813172df85048d4ce91c4e922abfcdf9" datatype="html">
         <source>Share Classroom Unit</source>
