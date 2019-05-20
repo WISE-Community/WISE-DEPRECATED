@@ -65,9 +65,9 @@ public interface ProjectMetadata{
 
   void setAuthors(String authors);
 
-  String getParentProject();
+  String getParentProjects();
 
-  void setParentProject(String parentProject);
+  void setParentProjects(String parentProjects);
 
   /**
    * @return <code>String</code> the subject to get
