@@ -15,13 +15,10 @@ import java.util.List;
 @Service
 public class RedisMessageSubscriber implements MessageListener {
 
-  public static List<String> messageList = new ArrayList<>();
-
   @Autowired
   private SimpMessagingTemplate simpMessagingTemplate;
 
   public void onMessage(Message message, byte[] pattern) {
-    messageList.add(message.toString());
     try {
       JSONObject messageJSON = new JSONObject(new String(message.getBody()));
       if (messageJSON.get("type").equals("currentAuthors")) {
