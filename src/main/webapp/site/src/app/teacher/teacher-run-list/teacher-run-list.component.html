@@ -33,7 +33,9 @@
         <ng-container><span i18n>{{ activeTotal() }} active</span>, </ng-container>
         <ng-container><span i18n>{{ completedTotal() }} completed</span></ng-container>)
       </span>
-      <a *ngIf="searchValue || filterValue" [routerLink]="" (click)="reset()" i18n>Reset</a>
+      <ng-container *ngIf="searchValue || filterValue">
+        | <a [routerLink]="" (click)="reset()" i18n>Reset</a>
+      </ng-container>
     </p>
   </div>
 
