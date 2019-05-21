@@ -18,7 +18,9 @@
 
 <mat-card [ngClass]="{ 'highlighted': run.isHighlighted }">
   <mat-card-content fxLayout="row" fxLayoutGap="12px">
-    <div mat-card-avatar [style.background-image]="thumbStyle"
+    <div mat-card-avatar
+         [style.background-image]="thumbStyle"
+         [class.disabled]="isRunCompleted(run)"
          i18n-matTooltip
          matTooltip="Run ID: {{run.id}}"
          matTooltipPosition="above"></div>
@@ -45,13 +47,19 @@
          fxLayoutAlign.gt-xs="start center"
          fxLayoutGap="8px">
       <span fxFlex="1 1 auto" fxShow fxHide.xs></span>
-      <a mat-button *ngIf="isRunActive(run)"
-         href="{{ problemLink }}"
-         class="secondary-text"
+      <a mat-button
+         href="{{problemLink}}"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
         <ng-container i18n>Report Problem</ng-container>
       </a>
+      <button *ngIf="!isRunActive(run) && !isRunCompleted(run)"
+              mat-flat-button
+              disabled
+              fxFlex="0 0 auto"
+              fxFlex.xs="100">
+        <ng-container i18n>Starts {{run.startTime | amTimeAgo}}</ng-container>
+      </button>
       <button mat-flat-button
              *ngIf="isRunActive(run)"
              (click)="launchRun()"
@@ -63,10 +71,10 @@
       <button mat-flat-button
              *ngIf="isRunCompleted(run)"
              (click)="reviewRun()"
-             color="secondary-text"
+             color="primary"
              fxFlex="0 0 auto"
              fxFlex.xs="100">
-        <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Review</ng-container>
+        <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Review Work</ng-container>
     </button>
     </div>
   </mat-card-actions>

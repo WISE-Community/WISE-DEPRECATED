@@ -10,7 +10,7 @@
         <ng-template ngPluralCase="other" i18n>periods</ng-template>
       </ng-container>
     </span> |
-    <a href="{{ manageStudentsLink }}">
+    <a href="{{manageStudentsLink}}" [class.secondary-text]="isRunCompleted(run)">
       {{run.numStudents}}
       <ng-container [ngPlural]="run.numStudents">
         <ng-template ngPluralCase="=0" i18n>students</ng-template>
@@ -21,17 +21,19 @@
   </div>
   <div i18n>Access Code: {{ run.runCode }}</div>
   <div *ngIf="run.shared" class="info" i18n>
-    Shared by {{ run.owner.displayName }}
+    Shared by {{run.owner.displayName}}
   </div>
 </ng-template>
 
-<mat-card [ngClass]="{ 'highlighted': run.isHighlighted }">
+<mat-card [ngClass]="{'highlighted': run.isHighlighted}">
   <mat-card-content fxLayout="row" fxLayoutGap="12px">
-    <div mat-card-avatar [style.background-image]="run.project.thumbStyle"></div>
+    <div mat-card-avatar
+         [style.background-image]="run.project.thumbStyle" 
+         [class.disabled]="isRunCompleted(run)"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
       <div fxLayout="column">
         <mat-card-title [class.secondary-text]="isRunCompleted(run)" class="mat-body-2">
-          {{ run.project.name }}
+          {{run.project.name}}
         </mat-card-title>
         <mat-card-subtitle fxHide fxShow.gt-xs>
           <ng-container *ngTemplateOutlet="runInfo"></ng-container>
@@ -54,22 +56,21 @@
          fxLayoutGap="16px">
       <span *ngIf="run.lastRun"
             class="mat-caption secondary-text center"
-            i18n>Last student login: {{ run.lastRun | amCalendar }}</span>
-      <a *ngIf="isRunActive(run)"
+            i18n>Last student login: {{run.lastRun | amCalendar}}</span>
+      <button *ngIf="!isRunActive(run) && !isRunCompleted(run)"
+              mat-flat-button
+              disabled
+              fxFlex="0 0 auto"
+              fxFlex.xs="100">
+        <ng-container i18n>Starts {{run.startTime | amTimeAgo}}</ng-container>
+      </button>
+      <a *ngIf="isRunActive(run) || isRunCompleted(run)"
          mat-flat-button
-         href="{{ gradeAndManageLink }}"
+         href="{{gradeAndManageLink}}"
          color="primary"
          fxFlex="0 0 auto"
          fxFlex.xs="100">
-        <mat-icon>build</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>
-      </a>
-      <a *ngIf="isRunCompleted(run)"
-         mat-flat-button
-         href="{{ gradeAndManageLink }}"
-         color="secondary-text"
-         fxFlex="0 0 auto"
-         fxFlex.xs="100">
-        <mat-icon>build</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>
+        <mat-icon>assignment_turned_in</mat-icon>&nbsp;<ng-container i18n>Teacher Tools</ng-container>
       </a>
     </div>
   </mat-card-actions>
