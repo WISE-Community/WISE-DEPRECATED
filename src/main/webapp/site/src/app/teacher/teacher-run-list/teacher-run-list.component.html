@@ -31,7 +31,7 @@
       <span class="mat-caption" *ngIf="filteredRuns.length">
         (<ng-container *ngIf="scheduledTotal()"><span i18n>{{ scheduledTotal() }} scheduled</span>, </ng-container>
         <ng-container><span i18n>{{ activeTotal() }} active</span>, </ng-container>
-        <ng-container><span i18n>{{ completedTotal() }} completed</span></ng-container>).
+        <ng-container><span i18n>{{ completedTotal() }} completed</span></ng-container>)
       </span>
       <a *ngIf="searchValue || filterValue" [routerLink]="" (click)="reset()" i18n>Reset</a>
     </p>
