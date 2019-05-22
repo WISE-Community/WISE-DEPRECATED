@@ -55,15 +55,35 @@ describe('ConfigService Unit Test', function () {
     });
 
     it('should sort the classmates alphabetically by name when setting config', function () {
-      spyOn(ConfigService, 'sortClassmateUserInfosAlphabeticallyByNameHelper').and.callThrough(); // actually call through the function
-      var classmateUserInfosBefore = sampleConfig1.userInfo.myUserInfo.myClassInfo.classmateUserInfos;
-      //expect(classmateUserInfosBefore[0].workgroupId).toEqual(3);
-      //expect(classmateUserInfosBefore[1].workgroupId).toEqual(8);
-      ConfigService.setConfig(sampleConfig1); // setting the config should sort the classmates alphabetically by name
+      var config = {
+        userInfo: {
+          myUserInfo: {
+            myClassInfo: {
+              classmateUserInfos: [{
+                periodId: 1,
+                workgroupId: 3,
+                userIds: [6],
+                periodName: '1',
+                username: 't t (tt0101)'
+              }, {
+                periodId: 1,
+                workgroupId: 8,
+                userIds: [8],
+                periodName: '1',
+                username: 'k t (kt0101)'
+              }]
+            }
+          }
+        }
+      };
+      var classmateUserInfos = config.userInfo.myUserInfo.myClassInfo.classmateUserInfos;
+      expect(classmateUserInfos[0].workgroupId).toEqual(3);
+      expect(classmateUserInfos[1].workgroupId).toEqual(8);
+      spyOn(ConfigService, 'sortClassmateUserInfosAlphabeticallyByNameHelper').and.callThrough();
+      ConfigService.setConfig(config);
       expect(ConfigService.sortClassmateUserInfosAlphabeticallyByNameHelper).toHaveBeenCalled();
-      var classmateUserInfosAfter = ConfigService.getClassmateUserInfos();
-      expect(classmateUserInfosAfter[0].workgroupId).toEqual(8);
-      expect(classmateUserInfosAfter[1].workgroupId).toEqual(3);
+      expect(classmateUserInfos[0].workgroupId).toEqual(8);
+      expect(classmateUserInfos[1].workgroupId).toEqual(3);
     });
 
     // Test getLocale()
@@ -148,7 +168,7 @@ describe('ConfigService Unit Test', function () {
     it('should get the period id given the workgroup id', function () {
 
       ConfigService.setConfig(sampleConfig1);
-      spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.callThrough(); // actually call through the function
+      spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.callThrough();
 
       // If workgroupId is null, period should be null
       var nullWorkgroupPeriodId = ConfigService.getPeriodIdByWorkgroupId(null);
