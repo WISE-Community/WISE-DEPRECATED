@@ -14,7 +14,7 @@
         <app-edit-profile></app-edit-profile>
       </div>
     </mat-tab>
-    <mat-tab i18n-label label="Password">
+    <mat-tab i18n-label label="Password" *ngIf="!isGoogleUser">
       <div class="section__tab">
         <app-edit-password></app-edit-password>
       </div>
