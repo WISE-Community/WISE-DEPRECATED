@@ -70,6 +70,9 @@ class ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      if (!this.ConfigService.isRunActive()) {
+        this.isDisabled = true;
+      }
     } else if (this.isGradingMode()) {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;

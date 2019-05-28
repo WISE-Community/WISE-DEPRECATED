@@ -92,10 +92,12 @@
             ng-model='labelController.selectedLabel.textString'
             ng-if='labelController.editLabelMode'
             ng-change='labelController.selectedLabelTextChanged(labelController.selectedLabel, labelController.selectedLabel.text, labelController.selectedLabel.textString)'
-            size='50'/>
+            size='50'
+            ng-disabled='labelController.isDisabled'/>
         <md-button class='studentButton md-raised md-primary'
             ng-click='labelController.deleteLabelButtonClicked()'
-            ng-if='!labelController.isDisabled && labelController.selectedLabel != null && labelController.selectedLabel.canDelete'>
+            ng-if='!labelController.isDisabled && labelController.selectedLabel != null && labelController.selectedLabel.canDelete'
+            ng-disabled='labelController.isDisabled'>
           <md-icon>delete</md-icon>
           <md-tooltip md-direction='top'
               class='projectButtonTooltip'>
@@ -105,13 +107,15 @@
         <span style='flex-grow: 1;'></span>
         <md-button class='md-accent'
             ng-click='labelController.resetButtonClicked()'
-            ng-if='labelController.isResetButtonVisible'>
+            ng-if='labelController.isResetButtonVisible'
+            ng-disabled='labelController.isDisabled'>
             <md-icon>restore</md-icon>
             {{ 'RESET' | translate }}
         </md-button>
         <md-button class='studentButton md-accent md-primary'
             ng-click='labelController.snipImage($event)'
-            ng-if='labelController.isAddToNotebookEnabled()'>
+            ng-if='labelController.isAddToNotebookEnabled()'
+            ng-disabled='labelController.isDisabled'>
           <md-icon> note_add </md-icon>
           <md-tooltip md-direction='top'
               class='projectButtonTooltip'>
@@ -124,7 +128,8 @@
           <input type='file'
               ng-if='labelController.componentContent.enableStudentUploadBackground'
               onchange='angular.element(this).scope().fileUploadChanged(this)'
-              style='display:inline'/>
+              style='display:inline'
+              ng-disabled='labelController.isDisabled'/>
         </div>
       </div>
       <div id='canvasParent_{{labelController.canvasId}}' style='margin-top: 10px;'>
@@ -140,7 +145,8 @@
           layout-wrap='true'>
         <div class='component__add-attachment'>
           <md-button class='md-accent'
-              ng-click='nodeController.showStudentAssets($event, component.id, labelController.isDisabled)'>
+              ng-click='nodeController.showStudentAssets($event, component.id, labelController.isDisabled)'
+              ng-disabled='labelController.isDisabled'>
             <md-icon>image</md-icon>
             <span>{{ 'label.addFile' | translate }}</span>
           </md-button>
@@ -151,6 +157,7 @@
               class='component__attachment__content' />
           <md-button class='component__attachment__delete'
               ng-click='labelController.removeAttachment(attachment)'
+              ng-disabled='labelController.isDisabled'
               title='Remove file'>
             <md-icon>cancel</md-icon>
           </md-button>

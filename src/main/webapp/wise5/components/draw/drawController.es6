@@ -244,6 +244,10 @@ class DrawController extends ComponentController {
     } else {
       this.setupTools();
     }
+
+    if (this.isDisabled) {
+      this.drawingTool.canvas.removeListeners();
+    }
   }
 
   handleConnectedComponentsPostProcess() {

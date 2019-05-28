@@ -19,18 +19,13 @@ class ConfigService {
   retrieveConfig(configURL) {
     return this.$http.get(configURL).then((result) => {
       const configJSON = result.data;
-      if (configJSON.retrievalTimestamp != null) {
-        const clientTimestamp = new Date().getTime();
-        const serverTimestamp = configJSON.retrievalTimestamp;
-        const timestampDiff = clientTimestamp - serverTimestamp;
-        configJSON.timestampDiff = timestampDiff;
-      }
+      this.setTimestampDiff(configJSON);
 
       let constraints = true;
 
       const absURL = this.$location.$$absUrl;
 
-      if (configJSON.mode == 'preview') {
+      if (configJSON.mode === 'preview') {
         // constraints can only be disabled using the url in preview mode
 
         // regex to match constraints=false in the url
@@ -56,6 +51,8 @@ class ConfigService {
         console.log(projectPath);
       }
 
+      configJSON.isRunActive = this.calculateIsRunActive(configJSON);
+
       this.setConfig(configJSON);
 
       if (this.isPreview()) {
@@ -68,6 +65,17 @@ class ConfigService {
 
       return configJSON;
     });
+  }
+
+  setTimestampDiff(configJSON) {
+    if (configJSON.retrievalTimestamp != null) {
+      const clientTimestamp = new Date().getTime();
+      const serverTimestamp = configJSON.retrievalTimestamp;
+      const timestampDiff = clientTimestamp - serverTimestamp;
+      configJSON.timestampDiff = timestampDiff;
+    } else {
+      configJSON.timestampDiff = 0;
+    }
   }
 
   getConfigParam(paramName) {
@@ -854,6 +862,21 @@ class ConfigService {
     } else {
       return 0;
     }
+  }
+
+  calculateIsRunActive(configJSON) {
+    const currentTime = new Date().getTime();
+    if (currentTime < this.convertToClientTimestamp(configJSON.startTime)) {
+      return false;
+    } else if (configJSON.endTime != null &&
+        currentTime > this.convertToClientTimestamp(configJSON.endTime)) {
+      return false;
+    }
+    return true;
+  }
+
+  isRunActive() {
+    return this.config.isRunActive;
   }
 }
 

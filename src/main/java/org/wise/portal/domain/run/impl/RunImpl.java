@@ -512,4 +512,15 @@ public class RunImpl implements Run {
       return result;
     }
   }
+
+  public Boolean isActive() {
+    Date currentDate = new Date();
+    if (currentDate.before(this.starttime)) {
+      return false;
+    } else if (this.endtime != null && currentDate.after(this.endtime)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }

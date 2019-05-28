@@ -551,6 +551,9 @@ class GraphController extends ComponentController {
     if (this.activeSeries == null) {
       this.setDefaultActiveSeries();
     }
+    if (this.isDisabled) {
+      this.setCanEditForAllSeries(series, false);
+    }
     this.showUndoButton = false;
     this.setAllSeriesFields(series);
     this.refreshSeriesIds(series);
@@ -2479,7 +2482,7 @@ class GraphController extends ComponentController {
         if (connectedComponent.type === 'showWork') {
           latestComponentState = this.UtilService.makeCopyOfJSONObject(latestComponentState);
           const canEdit = false;
-          this.setCanEditForAllSeries(latestComponentState, canEdit);
+          this.setCanEditForAllSeriesInComponentState(latestComponentState, canEdit);
         }
         promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
         if (latestComponentState != null &&
@@ -2719,11 +2722,15 @@ class GraphController extends ComponentController {
     }
   }
 
-  setCanEditForAllSeries(componentState, canEdit) {
+  setCanEditForAllSeriesInComponentState(componentState, canEdit) {
     for (const trial of componentState.studentData.trials) {
-      for (const singleSeries of trial.series) {
-        singleSeries.canEdit = canEdit;
-      }
+      this.setCanEditForAllSeries(trial.series, canEdit);
+    }
+  }
+
+  setCanEditForAllSeries(series, canEdit) {
+    for (const singleSeries of series) {
+      singleSeries.canEdit = canEdit;
     }
   }
 

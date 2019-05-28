@@ -14,6 +14,7 @@
         <div class='component--grading__response__content'>
           <svg id='{{conceptMapController.svgId}}'
                ng-if='conceptMapController.$scope.componentState'
+               ng-disabled='conceptMapController.isDisabled'
                width='800'
                height='600'
                ng-style='{"background-image": conceptMapController.background != null ? "url(" + conceptMapController.background + ")" : "",
@@ -61,7 +62,8 @@
         <div class='input-wrapper'>
           <md-button class='md-raised md-primary'
                      ng-if='conceptMapController.mode !== "grading"'
-                     ng-click='conceptMapController.resetConceptMap()'>
+                     ng-click='conceptMapController.resetConceptMap()'
+                     ng-disabled='conceptMapController.isDisabled'>
             {{ 'RESET' | translate }}
           </md-button>
           <md-button class='md-accent'
@@ -111,7 +113,8 @@
                 <span>{{conceptMapController.getLinksTitle()}}</span>
               </div>
               <md-radio-group ng-model='conceptMapController.selectedLinkType'
-                              ng-change='conceptMapController.studentDataChanged()'>
+                              ng-change='conceptMapController.studentDataChanged()'
+                              ng-disabled='conceptMapController.isDisabled'>
                 <div ng-repeat='link in conceptMapController.availableLinks'>
                   <md-radio-button class='md-primary'
                                    ng-value='link.id'
@@ -150,7 +153,8 @@
        layout-wrap='true'>
     <div class='component__add-attachment'>
       <md-button class='md-accent'
-                 ng-click='nodeController.showStudentAssets($event, component.id, conceptMapController.isDisabled)'>
+                 ng-click='nodeController.showStudentAssets($event, component.id, conceptMapController.isDisabled)'
+                 ng-disabled='conceptMapController.isDisabled'>
         <md-icon>image</md-icon>
         <span>{{ 'conceptMap.addFile' | translate }}</span>
       </md-button>
@@ -162,7 +166,8 @@
       <md-button ng-if='!conceptMapController.isDisabled'
                  class='component__attachment__delete'
                  ng-click='conceptMapController.removeAttachment(attachment)'
-                 title='Remove file'>
+                 title='Remove file'
+                 ng-disabled='conceptMapController.isDisabled'>
         <md-icon>cancel</md-icon>
       </md-button>
     </div>
