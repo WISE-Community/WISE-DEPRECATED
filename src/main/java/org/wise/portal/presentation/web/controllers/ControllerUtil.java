@@ -31,6 +31,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -158,6 +160,15 @@ public class ControllerUtil {
    * ex: http://128.32.xxx.11:8080/webapp
    */
   public static String getPortalUrlString(HttpServletRequest request) {
+    return getBaseUrlString(request) + request.getContextPath();
+  }
+  public static String getBaseUrlString() {
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    return getBaseUrlString(request);
+  }
+
+  public static String getPortalUrlString() {
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     return getBaseUrlString(request) + request.getContextPath();
   }
 
