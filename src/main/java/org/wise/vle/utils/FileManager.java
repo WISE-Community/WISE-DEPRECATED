@@ -2100,7 +2100,7 @@ public class FileManager {
     String filePath = null;
     if (project != null) {
       String projectFolderPath = getProjectFolderPath(project);
-      filePath = projectFolderPath + fileName;
+      filePath = projectFolderPath + "/" + fileName;
     }
     return filePath;
   }
