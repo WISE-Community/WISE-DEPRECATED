@@ -21,13 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -61,8 +66,14 @@ public class GoogleClassroomAPIController {
   }
 
   @RequestMapping(value = "/googleOAuth", method = RequestMethod.GET)
-  private String googleOAuthToken(@RequestParam String code, @RequestParam String username)
+  private String googleOAuthToken(@RequestParam String code, HttpServletRequest request)
       throws GeneralSecurityException, IOException {
+    String state = request.getParameter("state");
+    String sessionState = (String) request.getSession().getAttribute("state");
+    if (!state.equals(sessionState)) {
+      throw new GeneralSecurityException("Invalid State Parameter.");
+    }
+    String username = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
     NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     GoogleClientSecrets.Details credentials = new GoogleClientSecrets.Details();
     credentials.setClientId(clientId);
@@ -72,11 +83,9 @@ public class GoogleClassroomAPIController {
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
         clientSecrets, SCOPES).setDataStoreFactory(new FileDataStoreFactory(new java.io.File(tokensDirectoryPath)))
         .build();
-    String portalUrlString = ControllerUtil.getPortalUrlString();
-    String redirectUri = portalUrlString + "/api/google-classroom/googleOAuth?username=" + username;
-    TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
+    TokenResponse response = flow.newTokenRequest(code).setRedirectUri(getRedirectUri()).execute();
     flow.createAndStoreCredential(response, username);
-    return "Successfully authenticated with Google. Please close this window to proceed.";
+    return "Successfully linked with Google Classroom. Please close this window to proceed.";
   }
 
   private ImmutablePair<String, Credential> authorize(String username) throws Exception {
@@ -95,11 +104,20 @@ public class GoogleClassroomAPIController {
       return new ImmutablePair<>(null, credential);
     }
 
-    String portalUrlString = ControllerUtil.getPortalUrlString();
-    String redirectUri = portalUrlString + "/api/google-classroom/googleOAuth?username=" + username;
-    AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(redirectUri);
-    String authorizationUri = authorizationUrl.build();
+    AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(getRedirectUri());
+    String state = getState();
+    String authorizationUri = authorizationUrl.setState(state).build();
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    request.getSession().setAttribute("state", state);
     return new ImmutablePair<>(authorizationUri, null);
+  }
+
+  private String getState() throws NoSuchAlgorithmException {
+    return new BigInteger(130, new SecureRandom()).toString(32);
+  }
+
+  private String getRedirectUri() {
+    return ControllerUtil.getPortalUrlString() + "/api/google-classroom/googleOAuth";
   }
 
   private Classroom connectToClassroomAPI(Credential credential) throws Exception {
