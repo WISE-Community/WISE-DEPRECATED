@@ -122,8 +122,8 @@ public class UserAPIController {
   }
 
   private boolean isGoogleClassroomEnabled() {
-    return !wiseProperties.getProperty("google.classroom.clientId", "").equals("") &&
-      !wiseProperties.getProperty("google.classroom.clientSecret", "").equals("");
+    return !wiseProperties.getProperty("google.clientId", "").equals("") &&
+      !wiseProperties.getProperty("google.clientSecret", "").equals("");
   }
 
   @RequestMapping(value = "/check-authentication", method = RequestMethod.POST)

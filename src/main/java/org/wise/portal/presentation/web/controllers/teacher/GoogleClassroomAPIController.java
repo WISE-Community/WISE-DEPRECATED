@@ -45,10 +45,10 @@ public class GoogleClassroomAPIController {
   @Autowired
   private UserDetailsService userDetailsService;
 
-  @Value("${google.classroom.clientId:}")
+  @Value("${google.clientId:}")
   private String clientId;
 
-  @Value("${google.classroom.clientSecret:}")
+  @Value("${google.clientSecret:}")
   private String clientSecret;
 
   @Value("${wise.name:}")
@@ -65,7 +65,7 @@ public class GoogleClassroomAPIController {
     SCOPES.add(ClassroomScopes.CLASSROOM_COURSEWORK_STUDENTS);
   }
 
-  @RequestMapping(value = "/googleOAuth", method = RequestMethod.GET)
+  @RequestMapping(value = "/oauth", method = RequestMethod.GET)
   private String googleOAuthToken(@RequestParam String code, HttpServletRequest request)
       throws GeneralSecurityException, IOException {
     String state = request.getParameter("state");
@@ -117,7 +117,7 @@ public class GoogleClassroomAPIController {
   }
 
   private String getRedirectUri() {
-    return ControllerUtil.getPortalUrlString() + "/api/google-classroom/googleOAuth";
+    return ControllerUtil.getPortalUrlString() + "/api/google-classroom/oauth";
   }
 
   private Classroom connectToClassroomAPI(Credential credential) throws Exception {
