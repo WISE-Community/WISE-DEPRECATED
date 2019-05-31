@@ -486,8 +486,12 @@ var displayNotification = function(message) {
 							    	<li><spring:message code="teacher.management.viewmystudents.accessCode"/>&nbsp;<span class="manageDataStyle">${viewmystudentsperiod.run.runcode}</span></li>
 							    	<li style="float:right;">
 							    		<a onclick="createNewWorkgroup(${viewmystudentsperiod.period.id}, ${viewmystudentsperiod.run.id});"><img class="icon" alt="new team" src="${contextPath}/<spring:theme code="multi_agents"/>" /><span><spring:message code="teacher.management.viewmystudents.createNewTeam"/></span></a>
-							     		<a class="changeAllPasswords" id="changeAllPasswords_groupId=${viewmystudentsperiod.period.id}&runId=${viewmystudentsperiod.run.id}" title="<spring:message code="teacher.management.viewmystudents.changeAllPasswords"/>: <spring:message code="run_period"/> ${viewmystudentsperiod.period.name}"><img class="icon" alt="password" src="${contextPath}/<spring:theme code="shield"/>" /><span><spring:message code="teacher.management.viewmystudents.changeAllPasswords"/></span></a>
-							       		<a><spring:message code="help"/></a>
+							     		<c:choose>
+                        <c:when test="${!user.getUserDetails().isGoogleUser()}">
+                          <a class="changeAllPasswords" id="changeAllPasswords_groupId=${viewmystudentsperiod.period.id}&runId=${viewmystudentsperiod.run.id}" title="<spring:message code="teacher.management.viewmystudents.changeAllPasswords"/>: <spring:message code="run_period"/> ${viewmystudentsperiod.period.name}"><img class="icon" alt="password" src="${contextPath}/<spring:theme code="shield"/>" /><span><spring:message code="teacher.management.viewmystudents.changeAllPasswords"/></span></a>
+                        </c:when>
+                      </c:choose>
+                      <a><spring:message code="help"/></a>
 							       	</li>
 							    </ul>
 							</div>
@@ -498,16 +502,14 @@ var displayNotification = function(message) {
 									<div class="workarea" id="groupless_div_${viewmystudentsperiod.period.id}">
 									  <ul id="ul_${viewmystudentsperiod.period.id}_workgroup_groupless" class="draglist">
 									    <li class="grouplessHeader"><spring:message code="teacher.management.viewmystudents.unassignedStudents"/></li>
-						
-						                <c:forEach var="mem" items="${viewmystudentsperiod.grouplessStudents}">
+                      <c:forEach var="mem" items="${viewmystudentsperiod.grouplessStudents}">
 									      <li class="grouplesslist" id="li_${mem.id}_groupless">
 									      
 									         <span class="usernameWithinView">${mem.userDetails.firstname} ${mem.userDetails.lastname} <span dir=ltr>(${mem.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
-							    			     <c:set var="isGoogleUser" value="${mem.userDetails.isGoogleUser()}"/>
                              <c:choose>
-                               <c:when test="${isGoogleUser == false}">
+                               <c:when test="${!user.getUserDetails().isGoogleUser() && !mem.userDetails.isGoogleUser()}">
                                  <a class="userLinks changePassword" id="changePassword_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>
                                </c:when>
                              </c:choose>
@@ -536,9 +538,8 @@ var displayNotification = function(message) {
 									         <span class="usernameWithinView">${workgroupMember.userDetails.firstname} ${workgroupMember.userDetails.lastname} <span dir=ltr>(${workgroupMember.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
-							    			     <c:set var="isGoogleUser" value="${workgroupMember.userDetails.isGoogleUser()}"/>
                              <c:choose>
-                               <c:when test="${isGoogleUser == false}">
+                               <c:when test="${!user.getUserDetails().isGoogleUser() && !mem.userDetails.isGoogleUser()}">
                                  <a class="userLinks changePassword" id="changePassword_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>
                                </c:when>
                              </c:choose>
