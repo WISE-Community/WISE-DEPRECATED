@@ -259,6 +259,10 @@ var DrawController = function (_ComponentController) {
       } else {
         this.setupTools();
       }
+
+      if (this.isDisabled) {
+        this.drawingTool.canvas.removeListeners();
+      }
     }
   }, {
     key: 'handleConnectedComponentsPostProcess',

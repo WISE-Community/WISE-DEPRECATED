@@ -671,6 +671,8 @@ public class InformationController {
     config.put("studentNotebookURL", contextPath + "/student/notebook/" + runId);
     config.put("achievementURL", contextPath + "/achievement/" + runId);
     config.put("notificationURL", contextPath + "/notification/" + runId);
+    config.put("startTime", run.getStartTimeMilliseconds());
+    config.put("endTime", run.getEndTimeMilliseconds());
   }
 
   private void printConfigToResponse(HttpServletResponse response, JSONObject config)

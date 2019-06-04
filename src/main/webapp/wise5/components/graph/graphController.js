@@ -620,6 +620,9 @@ var GraphController = function (_ComponentController) {
       if (this.activeSeries == null) {
         this.setDefaultActiveSeries();
       }
+      if (this.isDisabled) {
+        this.setCanEditForAllSeries(series, false);
+      }
       this.showUndoButton = false;
       this.setAllSeriesFields(series);
       this.refreshSeriesIds(series);
@@ -3409,7 +3412,7 @@ var GraphController = function (_ComponentController) {
           if (connectedComponent.type === 'showWork') {
             latestComponentState = this.UtilService.makeCopyOfJSONObject(latestComponentState);
             var canEdit = false;
-            this.setCanEditForAllSeries(latestComponentState, canEdit);
+            this.setCanEditForAllSeriesInComponentState(latestComponentState, canEdit);
           }
           promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
           if (latestComponentState != null && latestComponentState.studentData != null && latestComponentState.studentData.backgroundImage != null) {
@@ -3810,8 +3813,8 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'setCanEditForAllSeries',
-    value: function setCanEditForAllSeries(componentState, canEdit) {
+    key: 'setCanEditForAllSeriesInComponentState',
+    value: function setCanEditForAllSeriesInComponentState(componentState, canEdit) {
       var _iteratorNormalCompletion40 = true;
       var _didIteratorError40 = false;
       var _iteratorError40 = undefined;
@@ -3819,30 +3822,8 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator40 = componentState.studentData.trials[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
           var trial = _step40.value;
-          var _iteratorNormalCompletion41 = true;
-          var _didIteratorError41 = false;
-          var _iteratorError41 = undefined;
 
-          try {
-            for (var _iterator41 = trial.series[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
-              var singleSeries = _step41.value;
-
-              singleSeries.canEdit = canEdit;
-            }
-          } catch (err) {
-            _didIteratorError41 = true;
-            _iteratorError41 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion41 && _iterator41.return) {
-                _iterator41.return();
-              }
-            } finally {
-              if (_didIteratorError41) {
-                throw _iteratorError41;
-              }
-            }
-          }
+          this.setCanEditForAllSeries(trial.series, canEdit);
         }
       } catch (err) {
         _didIteratorError40 = true;
@@ -3855,6 +3836,34 @@ var GraphController = function (_ComponentController) {
         } finally {
           if (_didIteratorError40) {
             throw _iteratorError40;
+          }
+        }
+      }
+    }
+  }, {
+    key: 'setCanEditForAllSeries',
+    value: function setCanEditForAllSeries(series, canEdit) {
+      var _iteratorNormalCompletion41 = true;
+      var _didIteratorError41 = false;
+      var _iteratorError41 = undefined;
+
+      try {
+        for (var _iterator41 = series[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+          var singleSeries = _step41.value;
+
+          singleSeries.canEdit = canEdit;
+        }
+      } catch (err) {
+        _didIteratorError41 = true;
+        _iteratorError41 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion41 && _iterator41.return) {
+            _iterator41.return();
+          }
+        } finally {
+          if (_didIteratorError41) {
+            throw _iteratorError41;
           }
         }
       }

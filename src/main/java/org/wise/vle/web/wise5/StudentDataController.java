@@ -312,7 +312,7 @@ public class StudentDataController {
     JSONObject result = new JSONObject();
     try {
       Run run = runService.retrieveById(new Long(runId));
-      if (run.isStudentAssociatedToThisRun(signedInUser)) {
+      if (run.isActive() && run.isStudentAssociatedToThisRun(signedInUser)) {
         // maps nodeId_componentId to StudentWork.
         HashMap<String, StudentWork> savedStudentWorkList = new HashMap<>();
         // Used later for handling simultaneous POST of CRater annotation
