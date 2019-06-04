@@ -293,7 +293,7 @@ export class TeamSignInDialogComponent implements OnInit {
       return member.username;
     });
     let existingWorkgroupMemberIndex = 0;
-    for (const [index, teamMember] of Object.entries(this.teamMembers)) {
+    this.teamMembers.forEach((teamMember, index) => {
       if (!existingWorkgroupMembersUsernames.includes(teamMember.username)) {
         this.clearTeamMember(index);
         if (existingWorkgroupMemberIndex < existingWorkgroupMembersNotSignedIn.length) {
@@ -301,7 +301,7 @@ export class TeamSignInDialogComponent implements OnInit {
           existingWorkgroupMemberIndex++;
         }
       }
-    }
+    });
   }
 
   updateTeamMember(index: number, workgroupMember: any) {
@@ -330,11 +330,11 @@ export class TeamSignInDialogComponent implements OnInit {
     const workgroupMembersUsernames = workgroupMembers.map(member => {
       return member.username;
     });
-    for (const [index, teamMember] of Object.entries(this.teamMembers)) {
+    this.teamMembers.forEach((teamMember, index) => {
       if (workgroupMembersUsernames.includes(teamMember.username)) {
         this.clearTeamMember(index);
       }
-    }
+    });
   }
   
   clearTeamMember(index: number) {
