@@ -5,6 +5,9 @@ import { SafeStyle } from '@angular/platform-browser';
 import { ConfigService } from "../../services/config.service";
 import { MatDialog } from "@angular/material/dialog";
 import { TeamSignInDialogComponent } from "../team-sign-in-dialog/team-sign-in-dialog.component";
+import {Student} from "../../domain/student";
+import {StudentService} from "../student.service";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-student-run-list-item',
@@ -21,7 +24,9 @@ export class StudentRunListItemComponent implements OnInit {
 
   constructor(private sanitizer: DomSanitizer,
               private configService: ConfigService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private studentService: StudentService,
+              private userService: UserService) {
     this.sanitizer = sanitizer;
     this.configService = configService;
   }
@@ -44,7 +49,7 @@ export class StudentRunListItemComponent implements OnInit {
 
   launchRun() {
     if (this.run.maxStudentsPerTeam === 1) {
-      this.skipTeamSign();
+      this.skipTeamSignIn();
     } else {
       this.dialog.open(TeamSignInDialogComponent, {
         data: { run: this.run },
@@ -54,11 +59,17 @@ export class StudentRunListItemComponent implements OnInit {
   }
 
   reviewRun() {
-    this.skipTeamSign();
+    this.skipTeamSignIn();
   }
 
-  skipTeamSign() {
-    window.location.href = `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
+  skipTeamSignIn() {
+    const user = <Student>this.userService.getUser().getValue();
+    const presentUserIds = [user.id];
+    const absentUserIds = [];
+    this.studentService.launchRun(this.run.id, this.run.workgroupId, presentUserIds, absentUserIds)
+        .subscribe((response: any) => {
+      window.location.href = response.startProjectUrl;
+    });
   }
 
   isRunActive(run) {
