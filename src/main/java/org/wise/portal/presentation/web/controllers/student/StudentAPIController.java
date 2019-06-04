@@ -30,12 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
-import org.springframework.security.acls.model.Permission;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
@@ -54,6 +50,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.ErrorResponse;
+import org.wise.portal.presentation.web.response.LaunchRunErrorResponse;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.project.ProjectService;
@@ -63,8 +60,6 @@ import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -257,7 +252,7 @@ public class StudentAPIController {
     } else {
       Set<User> newMembers = membersNotInWorkgroup(workgroup, presentMembers);
       if (newMembers.size() + workgroup.getMembers().size() > run.getMaxWorkgroupSize()) {
-        ErrorResponse errorResponse = new ErrorResponse("tooManyMembersInWorkgroup");
+        ErrorResponse errorResponse = new LaunchRunErrorResponse("tooManyMembersInWorkgroup", workgroup);
         return errorResponse.toString();
       }
       workgroupService.addMembers(workgroup, newMembers);
@@ -586,11 +581,12 @@ public class StudentAPIController {
           members.put(convertUserToJSON(member));
         }
       }
-      if (workgroup.getMembers().size() == run.getMaxWorkgroupSize()) {
+      if (workgroup.getMembers().size() == run.getMaxWorkgroupSize() &&
+          !workgroup.getMembers().contains(ControllerUtil.getSignedInUser())) {
         response.put("status", false);
       }
     }
-    response.put("members", members);
+    response.put("workgroupMembers", members);
     return response.toString();
   }
 
@@ -601,6 +597,7 @@ public class StudentAPIController {
     userObject.put("username", userDetails.getUsername());
     userObject.put("firstName", userDetails.getFirstname());
     userObject.put("lastName", userDetails.getLastname());
+    userObject.put("isGoogleUser", user.getUserDetails().isGoogleUser());
     return userObject;
   }
 }
