@@ -14,6 +14,7 @@ export class EditPasswordComponent implements OnInit {
 
   @ViewChild('changePasswordForm') changePasswordForm;
   isSaving: boolean = false;
+  isGoogleUser: boolean = false;
 
   newPasswordFormGroup: FormGroup = this.fb.group({
     newPassword: new FormControl('', [Validators.required]),
@@ -31,6 +32,9 @@ export class EditPasswordComponent implements OnInit {
               private i18n: I18n) { }
 
   ngOnInit() {
+    this.userService.getUser().subscribe(user => {
+      this.isGoogleUser = user.isGoogleUser;
+    });
   }
 
   passwordMatchValidator(passwordsFormGroup: FormGroup) {
