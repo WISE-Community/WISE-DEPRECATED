@@ -5,9 +5,9 @@ import { SafeStyle } from '@angular/platform-browser';
 import { ConfigService } from "../../services/config.service";
 import { MatDialog } from "@angular/material/dialog";
 import { TeamSignInDialogComponent } from "../team-sign-in-dialog/team-sign-in-dialog.component";
-import {Student} from "../../domain/student";
-import {StudentService} from "../student.service";
-import {UserService} from "../../services/user.service";
+import { Student } from "../../domain/student";
+import { StudentService } from "../student.service";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: 'app-student-run-list-item',

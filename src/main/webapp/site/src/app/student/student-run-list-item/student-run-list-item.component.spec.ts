@@ -9,8 +9,8 @@ import { Project } from "../../domain/project";
 import { User } from "../../domain/user";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import {StudentService} from "../student.service";
-import {UserService} from "../../services/user.service";
+import { StudentService } from "../student.service";
+import { UserService } from "../../services/user.service";
 
 export class MockConfigService {
   getConfig(): Observable<Config> {
