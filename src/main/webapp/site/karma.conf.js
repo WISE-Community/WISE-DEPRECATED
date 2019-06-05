@@ -4,12 +4,12 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    frameworks: ['parallel', 'jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
-      require('karma-phantomjs-launcher'),
+      require('karma-parallel'),
       require('karma-chrome-launcher'),
-      require('karma-jasmine-html-reporter'),
+      require('karma-spec-reporter'),
       require('karma-coverage-istanbul-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
@@ -23,11 +23,12 @@ module.exports = function (config) {
     angularCli: {
       environment: 'dev'
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['spec'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
+    autoWatchBatchDelay: 500,
     browsers: ['Chrome','ChromeHeadlessNoSandbox'],
     singleRun: false,
     customLaunchers: {

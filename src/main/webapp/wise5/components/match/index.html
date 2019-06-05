@@ -193,7 +193,8 @@
                       <div><compile data='matchController.buckets[0].value'></compile></div>
                       <div ng-if="matchController.componentContent.canCreateChoices">
                         <md-button ng-click="matchController.addChoice()"
-                                   class='studentButton md-raised md-primary'>
+                                   class='studentButton md-raised md-primary'
+                                   ng-disabled='matchController.isDisabled'>
                           <md-icon>add</md-icon>
                           <md-tooltip md-direction='top'>
                             {{ 'match.addChoice' | translate }}
@@ -220,7 +221,8 @@
                             </span>
                             <span flex></span>
                             <md-button ng-if="item.studentCreated"
-                                       ng-click="matchController.deleteChoice(item)">
+                                       ng-click="matchController.deleteChoice(item)"
+                                       ng-disabled='matchController.isDisabled'>
                               <md-icon>clear</md-icon>
                             </md-button>
                             <md-icon>open_with</md-icon>
@@ -281,7 +283,8 @@
                               </span>
                               <span flex></span>
                               <md-button ng-if="item.studentCreated"
-                                         ng-click="matchController.deleteChoice(item)">
+                                         ng-click="matchController.deleteChoice(item)"
+                                         ng-disabled='matchController.isDisabled'>
                                 <md-icon>clear</md-icon>
                               </md-button>
                               <md-icon>open_with</md-icon>

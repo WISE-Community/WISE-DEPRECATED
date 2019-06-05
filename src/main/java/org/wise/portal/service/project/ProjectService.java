@@ -320,8 +320,6 @@ public interface ProjectService {
 
   String getProjectURI(Project project);
 
-  JSONObject getParentInfo(ProjectMetadata parentProjectMetadata, Long parentProjectId, String uri) throws ObjectNotFoundException, JSONException;
-
   void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException;
 
   void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata) throws IOException, JSONException;

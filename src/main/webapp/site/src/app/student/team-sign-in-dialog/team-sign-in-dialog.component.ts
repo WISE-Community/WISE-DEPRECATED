@@ -234,10 +234,9 @@ export class TeamSignInDialogComponent implements OnInit {
   }
 
   launchRun() {
-    const presentUserIds = [];
-    presentUserIds.push(this.user.id);
+    const presentUserIds = [this.user.id];
     const absentUserIds = [];
-    for (let member of this.teamMembers) {
+    for (const member of this.teamMembers) {
       if (member.id != null) {
         if (member.status === 'signedIn') {
           presentUserIds.push(member.id);

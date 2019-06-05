@@ -51,8 +51,8 @@ export class StudentService {
     return this.http.post<StudentRun>(this.addRunUrl, body, { headers: headers });
   }
 
-  launchRun(runId: number, workgroupId: number, presentUserIds: string[],
-      absentUserIds: string[]) {
+  launchRun(runId: number, workgroupId: number, presentUserIds: number[],
+      absentUserIds: number[]) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', String(runId));

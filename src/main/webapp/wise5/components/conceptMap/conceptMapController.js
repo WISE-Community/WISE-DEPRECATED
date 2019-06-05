@@ -253,7 +253,9 @@ var ConceptMapController = function (_ComponentController) {
         this.disableSubmitButton();
       }
 
-      this.enableNodeDragging();
+      if (!this.isDisabled) {
+        this.enableNodeDragging();
+      }
       this.disableComponentIfNecessary();
       this.broadcastDoneRenderingComponent();
     }
@@ -323,7 +325,9 @@ var ConceptMapController = function (_ComponentController) {
           var height = node.height;
           var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, filePath, label, x, y, width, height, this.componentContent.showNodeLabels);
           this.addNode(conceptMapNode);
-          this.setNodeMouseEvents(conceptMapNode);
+          if (!this.isDisabled) {
+            this.setNodeMouseEvents(conceptMapNode);
+          }
         }
       } catch (err) {
         _didIteratorError = true;
@@ -375,7 +379,9 @@ var ConceptMapController = function (_ComponentController) {
 
           var conceptMapLink = this.ConceptMapService.newConceptMapLink(this.draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp);
           this.addLink(conceptMapLink);
-          this.setLinkMouseEvents(conceptMapLink);
+          if (!this.isDisabled) {
+            this.setLinkMouseEvents(conceptMapLink);
+          }
         }
       } catch (err) {
         _didIteratorError2 = true;
@@ -843,21 +849,23 @@ var ConceptMapController = function (_ComponentController) {
       this.drawingLink = false;
       this.newlyCreatedLink = null;
 
-      this.draw.mousedown(function (event) {
-        _this3.svgMouseDown(event);
-      });
+      if (!this.isDisabled) {
+        this.draw.mousedown(function (event) {
+          _this3.svgMouseDown(event);
+        });
 
-      this.draw.mouseup(function (event) {
-        _this3.svgMouseUp(event);
-      });
+        this.draw.mouseup(function (event) {
+          _this3.svgMouseUp(event);
+        });
 
-      this.draw.mousemove(function (event) {
-        _this3.svgMouseMove(event);
-      });
+        this.draw.mousemove(function (event) {
+          _this3.svgMouseMove(event);
+        });
 
-      this.addDragOverListenerIfNecessary();
-      this.addDropListenerIfNecessary();
-      this.setLinkTypeChooserStyle();
+        this.addDragOverListenerIfNecessary();
+        this.addDropListenerIfNecessary();
+        this.setLinkTypeChooserStyle();
+      }
     }
   }, {
     key: 'addDragOverListenerIfNecessary',

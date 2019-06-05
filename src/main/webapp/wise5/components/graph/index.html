@@ -34,7 +34,8 @@
           <input type='file'
                accept='.csv'
                ng-if='graphController.componentContent.enableFileUpload'
-               onchange='angular.element(this).scope().fileUploadChanged(this)'/>
+               onchange='angular.element(this).scope().fileUploadChanged(this)'
+               ng-disabled='graphController.isDisabled'/>
           <div class='component__actions' layout='row' ng-if='graphController.showTrialSelect'>
             <md-input-container ng-if='graphController.componentContent.enableTrials'>
               <label>{{ 'graph.selectTrialsToShow' | translate }}</label>
@@ -42,6 +43,7 @@
                      ng-change='graphController.trialIdsToShowChanged()'
                      md-selected-text='graphController.selectedTrialsText'
                      class='graph-select'
+                     ng-disabled='graphController.isDisabled'
                      multiple>
                 <md-option ng-repeat='trial in graphController.trials'
                        ng-value='trial.id'
@@ -50,7 +52,8 @@
                   <md-button ng-click='graphController.deleteTrial($index)'
                          ng-if='graphController.componentContent.canDeleteTrials'
                          aria-label='Delete trial'
-                         class='md-icon-button'>
+                         class='md-icon-button'
+                         ng-disabled='graphController.isDisabled'>
                     <md-icon> delete </md-icon>
                   </md-button>
                 </md-option>
@@ -60,7 +63,8 @@
               <label>{{ 'graph.selectTrialToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeTrial'
                      ng-change='graphController.activeTrialChanged()'
-                     class='graph-select'>
+                     class='graph-select'
+                     ng-disabled='graphController.isDisabled'>
                 <md-option ng-repeat='trial in graphController.trials'
                        ng-value='trial'
                        ng-if='trial.show && graphController.canEditTrial(trial)'>
@@ -68,11 +72,12 @@
                 </md-option>
               </md-select>
             </md-input-container>
-            <md-input-container ng-if='graphController.showSelectSeries()'>
+            <md-input-container ng-if="graphController.isShowSelectSeriesInput()">
               <label>{{ 'graph.selectSeriesToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeSeries'
                      ng-change='graphController.activeSeriesChanged()'
-                     class='graph-select'>
+                     class='graph-select'
+                     ng-disabled='graphController.isDisabled'>
                 <md-option ng-repeat='series in graphController.series'
                        ng-value='series'>
                   {{series.name}}
@@ -82,13 +87,15 @@
             <md-input-container>
               <md-button class='md-accent'
                      ng-click='graphController.resetSeries()'
-                     ng-if='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'>
+                     ng-if='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'
+                     ng-disabled='graphController.isDisabled'>
                 <md-icon> restore </md-icon> {{ 'graph.resetSeries' | translate }}
               </md-button>
             </md-input-container>
             <md-input-container ng-if='graphController.showUndoButton'>
               <md-button class='md-accent'
-                     ng-click='graphController.undoClicked()'>
+                     ng-click='graphController.undoClicked()'
+                     ng-disabled='graphController.isDisabled'>
                 <md-icon>undo</md-icon> {{ 'undo' | translate }}
               </md-button>
             </md-input-container>
@@ -96,21 +103,25 @@
           <div class='component__actions'>
             <md-button class='md-accent'
                    ng-click='graphController.newTrialButtonClicked()'
-                   ng-if='graphController.componentContent.canCreateNewTrials'>
+                   ng-if='graphController.componentContent.canCreateNewTrials'
+                   ng-disabled='graphController.isDisabled'>
               <md-icon> add </md-icon> {{ 'graph.newTrial' | translate }}
             </md-button>
             <md-button class='md-accent'
                    ng-click='graphController.resetGraph()'
-                   ng-if='graphController.showResetGraphButton()'>
+                   ng-if='graphController.showResetGraphButton()'
+                   ng-disabled='graphController.isDisabled'>
               <md-icon> restore </md-icon> {{ 'graph.resetGraph' | translate }}
             </md-button>
             <md-button class='md-accent md-primary'
-                ng-click='graphController.snipDrawing($event)'
-                ng-if='graphController.isAddToNotebookEnabled()'>
+                ng-click='graphController.snipGraph($event)'
+                ng-if='graphController.isAddToNotebookEnabled()'
+                ng-disabled='graphController.isDisabled'>
               <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
             </md-button>
             <md-button class='md-accent' ng-if='graphController.isStudentAttachmentEnabled'
-                   ng-click='nodeController.showStudentAssets($event, component.id, graphController.isDisabled)'>
+                   ng-click='nodeController.showStudentAssets($event, component.id, graphController.isDisabled)'
+                   ng-disabled='graphController.isDisabled'>
               <md-icon>image</md-icon> {{ 'graph.importData' | translate }}
             </md-button>
           </div>
@@ -125,7 +136,8 @@
                        style='width: 60'
                        ng-model='graphController.yAxis.max'
                        ng-model-options='{ debounce: 1000 }'
-                       ng-change='graphController.studentDataChanged()'/>
+                       ng-change='graphController.studentDataChanged()'
+                       ng-disabled='graphController.isDisabled'/>
                 </md-input-container>
                 <span flex></span>
                 <md-input-container>
@@ -134,7 +146,8 @@
                        style='width: 60'
                        ng-model='graphController.yAxis.min'
                        ng-model-options='{ debounce: 1000 }'
-                       ng-change='graphController.studentDataChanged()'/>
+                       ng-change='graphController.studentDataChanged()'
+                       ng-disabled='graphController.isDisabled'/>
                 </md-input-container>
               </div>
               <div style="width: 100%;">
@@ -156,7 +169,8 @@
                        style='width: 60'
                        ng-model='graphController.xAxis.min'
                        ng-model-options='{ debounce: 1000 }'
-                       ng-change='graphController.studentDataChanged()'/>
+                       ng-change='graphController.studentDataChanged()'
+                       ng-disabled='graphController.isDisabled'/>
                 </md-input-container>
                 <span style='width: {{graphController.xAxisLimitSpacerWidth}};'></span>
                 <md-input-container>
@@ -165,7 +179,8 @@
                        style='width: 60'
                        ng-model='graphController.xAxis.max'
                        ng-model-options='{ debounce: 1000 }'
-                       ng-change='graphController.studentDataChanged()'/>
+                       ng-change='graphController.studentDataChanged()'
+                       ng-disabled='graphController.isDisabled'/>
                 </md-input-container>
               </div>
             </div>
@@ -190,6 +205,9 @@
       <component-annotations ng-if='graphController.mode === "student"'
                    annotations='graphController.latestAnnotations'
                    max-score='graphController.componentContent.maxScore'></component-annotations>
+      <div style="display:none">
+        <canvas id="{{graphController.hiddenCanvasId}}"></canvas>
+      </div>
     </div>
   </div>
 </div>

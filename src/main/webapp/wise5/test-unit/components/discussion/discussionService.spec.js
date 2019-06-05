@@ -22,13 +22,13 @@ var MockTeacherDataService = function () {
   }
 
   _createClass(MockTeacherDataService, [{
-    key: 'getComponentStatesByWorkgroupIdAndComponentId',
-    value: function getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId) {
+    key: 'getComponentStatesByWorkgroupIdAndComponentIds',
+    value: function getComponentStatesByWorkgroupIdAndComponentIds(workgroupId, componentId) {
       return [];
     }
   }, {
-    key: 'getComponentStatesByComponentId',
-    value: function getComponentStatesByComponentId(componentId) {
+    key: 'getComponentStatesByComponentIds',
+    value: function getComponentStatesByComponentIds(componentIds) {
       return [];
     }
   }]);
@@ -110,15 +110,15 @@ describe('DiscussionService', function () {
     var componentId = 'component1';
     var componentStateId = 1;
     DiscussionService.TeacherDataService = TeacherDataService;
-    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByComponentId').and.callFake(function () {
-      var componentStates = [createComponentState(1, nodeId, componentId, null, 'Hello'), createComponentState(2, nodeId, componentId, 1, 'World')];
+    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByComponentIds').and.callFake(function () {
+      var componentStates = [createComponentState(1, nodeId, componentId, null, 'Hello'), createComponentState(2, nodeId, componentId, 1, 'World'), createComponentState(3, nodeId, componentId, null, 'OK')];
       return componentStates;
     });
-    var postAndAllReplies = DiscussionService.getPostAndAllReplies(componentId, componentStateId);
+    var postAndAllReplies = DiscussionService.getPostAndAllRepliesByComponentIds([componentId], componentStateId);
     expect(postAndAllReplies.length).toEqual(2);
   });
 
-  it('should get posts associated with workgroup id', function () {
+  it('should get posts associated with component ids and workgroup id', function () {
     var nodeId = 'node1';
     var componentId = 'component1';
     var workgroupId = 1;
@@ -127,15 +127,15 @@ describe('DiscussionService', function () {
     var bobPost1 = createComponentState(3, nodeId, componentId, null, 'Bob Thread');
     var alicePost3 = createComponentState(4, nodeId, componentId, 3, 'Alice reply in Bob Thread');
     DiscussionService.TeacherDataService = TeacherDataService;
-    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByWorkgroupIdAndComponentId').and.callFake(function () {
+    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByWorkgroupIdAndComponentIds').and.callFake(function () {
       var componentStates = [alicePost1, alicePost2, alicePost3];
       return componentStates;
     });
-    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByComponentId').and.callFake(function () {
+    spyOn(DiscussionService.TeacherDataService, 'getComponentStatesByComponentIds').and.callFake(function () {
       var componentStates = [alicePost1, alicePost2, bobPost1, alicePost3];
       return componentStates;
     });
-    var postAndAllReplies = DiscussionService.getPostsAssociatedWithWorkgroupId(componentId, workgroupId);
+    var postAndAllReplies = DiscussionService.getPostsAssociatedWithComponentIdsAndWorkgroupId([componentId], workgroupId);
     expect(postAndAllReplies.length).toEqual(4);
   });
 });

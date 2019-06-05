@@ -277,8 +277,10 @@ public class StudentAPIController {
       Workgroup workgroup) throws ObjectNotFoundException, PeriodNotFoundException,
       StudentUserAlreadyAssociatedWithRunException, JSONException {
     addStudentsToRunIfNecessary(run, presentMembers, workgroup);
-    saveStudentAttendance(runId, workgroupId, presentUserIds, absentUserIds);
-    updateRunStatistics(run);
+    if (!run.isEnded()) {
+      saveStudentAttendance(runId, workgroupId, presentUserIds, absentUserIds);
+      updateRunStatistics(run);
+    }
     StartProjectController.notifyServletSession(request, run);
     return generateStartProjectUrlResponse(request, workgroup);
   }

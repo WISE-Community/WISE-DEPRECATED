@@ -262,7 +262,7 @@ public class RunImpl implements Run {
   }
 
   public boolean isEnded() {
-    return this.endtime != null;
+    return this.endtime != null && this.endtime.before(Calendar.getInstance().getTime());
   }
 
   public boolean isStudentAssociatedToThisRun(User studentUser) {
@@ -510,6 +510,17 @@ public class RunImpl implements Run {
         }
       }
       return result;
+    }
+  }
+
+  public Boolean isActive() {
+    Date currentDate = new Date();
+    if (currentDate.before(this.starttime)) {
+      return false;
+    } else if (this.endtime != null && currentDate.after(this.endtime)) {
+      return false;
+    } else {
+      return true;
     }
   }
 }

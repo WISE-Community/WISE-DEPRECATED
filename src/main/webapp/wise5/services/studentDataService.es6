@@ -1256,6 +1256,8 @@ class StudentDataService {
       let deferred = this.$q.defer();
       deferred.resolve(savedStudentDataResponse);
       return deferred.promise;
+    } else if (!this.ConfigService.isRunActive()) {
+      return this.$q.defer().promise;
     } else {
       // set the workgroup id and run id
       const params = {};
@@ -1420,7 +1422,7 @@ class StudentDataService {
    * Returns a promise of the POST request
    */
   saveStudentStatus() {
-    if (!this.ConfigService.isPreview()) {
+    if (!this.ConfigService.isPreview() && this.ConfigService.isRunActive()) {
       const studentStatusURL = this.ConfigService.getStudentStatusURL();
       if (studentStatusURL != null) {
         const runId = this.ConfigService.getRunId();

@@ -34,13 +34,15 @@
           </label>
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.snipButtonClicked($event)'
-                     ng-if='openResponseController.isAddToNotebookEnabled()'>
+                     ng-if='openResponseController.isAddToNotebookEnabled()'
+                     ng-disabled='openResponseController.isDisabled'>
             <md-icon>note_add</md-icon>
             {{ 'ADD_TO_NOTEBOOK' | translate:{label:openResponseController.notebookConfig.label} }}
           </md-button>
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.copyPublicNotebookItemButtonClicked($event)'
-                     ng-if='openResponseController.showCopyPublicNotebookItemButton()'>
+                     ng-if='openResponseController.showCopyPublicNotebookItemButton()'
+                     ng-disabled='openResponseController.isDisabled'>
             <md-icon>file_download</md-icon>
             {{ 'importClassmateWork' | translate:{label:openResponseController.notebookConfig.label} }}
           </md-button>
@@ -49,6 +51,7 @@
                   ui-tinymce='openResponseController.tinymceOptions'
                   ng-model='openResponseController.studentResponse'
                   ng-model-options='{ debounce: 100 }'
+                  ng-disabled='openResponseController.isDisabled'
                   ng-change='openResponseController.studentDataChanged()'></textarea>
             <div ng-if='openResponseController.isRichTextEnabled && openResponseController.isDisabled'
                class='input--textarea input--textarea--disabled'>
@@ -75,13 +78,18 @@
     <div class='component__actions' ng-if='openResponseController.isStudentAttachmentEnabled' layout='row' layout-wrap='true'>
       <div class='component__add-attachment'>
         <md-button class='md-accent'
-               ng-click='nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)'>
+               ng-click='nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)'
+               ng-disabled='openResponseController.isDisabled'>
           <md-icon>image</md-icon> <span>{{ 'openResponse.addFile' | translate }}</span>
         </md-button>
       </div>
       <div class='component__attachment' ng-repeat='attachment in openResponseController.attachments'>
         <img ng-src='{{attachment.iconURL}}' class='component__attachment__content' />
-        <md-button ng-show='!openResponseController.isDisabled' class='component__attachment__delete' ng-click='openResponseController.removeAttachment(attachment)' title='Remove file'><md-icon>cancel</md-icon></md-button>
+        <md-button ng-show='!openResponseController.isDisabled' class='component__attachment__delete'
+                   ng-click='openResponseController.removeAttachment(attachment)' title='Remove file'
+                   ng-disabled='openResponseController.isDisabled'>
+          <md-icon>cancel</md-icon>
+        </md-button>
       </div>
     </div>
     <div ng-if='openResponseController.isSaveButtonVisible || openResponseController.isSubmitButtonVisible'

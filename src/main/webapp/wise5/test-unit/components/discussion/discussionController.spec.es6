@@ -9,7 +9,8 @@ describe('DiscussionController', () => {
   let $scope;
   let discussionController;
   let component;
-  const createComponentState = (componentStateId, nodeId, componentId, componentStateIdReplyingTo, response) => {
+  const createComponentState = (componentStateId, nodeId, componentId, componentStateIdReplyingTo,
+        response) => {
     return {
       id: componentStateId,
       nodeId: nodeId,
@@ -53,6 +54,100 @@ describe('DiscussionController', () => {
     ];
     const level1Responses = discussionController.getLevel1Responses();
     expect(level1Responses.length).toEqual(2);
+  });
+
+  it('should get grading component ids', () => {
+    const componentId1 = 'component1';
+    discussionController.componentId = componentId1;
+    discussionController.componentContent = {
+      id: componentId1
+    };
+    const gradingComponentIds1 = discussionController.getGradingComponentIds();
+    expect(gradingComponentIds1.length).toEqual(1);
+    const componentId2 = 'component2';
+    discussionController.componentContent = {
+      id: componentId2,
+      connectedComponents: [
+        {
+          nodeId: 'node1', componentId: 'component1'
+        }
+      ]
+    };
+    const gradingComponentIds2 = discussionController.getGradingComponentIds();
+    expect(gradingComponentIds2.length).toEqual(2);
+    const componentId3 = 'component2';
+    discussionController.componentContent = {
+      id: componentId3,
+      connectedComponents: [
+        {
+          nodeId: 'node1', componentId: 'component1'
+        },
+        {
+          nodeId: 'node2', componentId: 'component2'
+        }
+      ]
+    };
+    const gradingComponentIds3 = discussionController.getGradingComponentIds();
+    expect(gradingComponentIds3.length).toEqual(3);
+  });
+
+  it('should sort component states by server save time', () => {
+    const componentState1 = {
+      id: 1,
+      serverSaveTime: 1
+    };
+    const componentState2 = {
+      id: 2,
+      serverSaveTime: 2
+    };
+    const componentState3 = {
+      id: 3,
+      serverSaveTime: 3
+    };
+    const componentStates = [componentState1, componentState3, componentState2];
+    const sortedComponentStates = componentStates.sort(discussionController.sortByServerSaveTime);
+    expect(sortedComponentStates[0]).toEqual(componentState1);
+    expect(sortedComponentStates[1]).toEqual(componentState2);
+    expect(sortedComponentStates[2]).toEqual(componentState3);
+  });
+
+  it('should check if a thread has a post from this component and workgroup id', () => {
+    const componentId1 = 'component1';
+    const componentId2 = 'component2';
+    const workgroupId1 = 1;
+    const workgroupId2 = 2;
+    const componentState1 = {
+      id: 1,
+      componentId: componentId1,
+      workgroupId: workgroupId1,
+      replies: []
+    };
+    const componentState2 = {
+      id: 2,
+      componentId: componentId2,
+      workgroupId: workgroupId2,
+      replies: [
+        {
+          id: 3,
+          componentId: componentId2,
+          workgroupId: workgroupId1
+        }
+      ]
+    };
+    discussionController.componentId = componentId1;
+    discussionController.workgroupId = workgroupId2;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1))
+        .toEqual(false);
+    discussionController.workgroupId = workgroupId1;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1))
+        .toEqual(true);
+    discussionController.componentId = componentId2;
+    discussionController.workgroupId = workgroupId2;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2))
+        .toEqual(true);
+    discussionController.workgroupId = workgroupId1;
+    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2))
+        .toEqual(true);
   });
 
 });
