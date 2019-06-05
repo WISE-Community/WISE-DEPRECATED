@@ -36,18 +36,13 @@ var ConfigService = function () {
 
       return this.$http.get(configURL).then(function (result) {
         var configJSON = result.data;
-        if (configJSON.retrievalTimestamp != null) {
-          var clientTimestamp = new Date().getTime();
-          var serverTimestamp = configJSON.retrievalTimestamp;
-          var timestampDiff = clientTimestamp - serverTimestamp;
-          configJSON.timestampDiff = timestampDiff;
-        }
+        _this.setTimestampDiff(configJSON);
 
         var constraints = true;
 
         var absURL = _this.$location.$$absUrl;
 
-        if (configJSON.mode == 'preview') {
+        if (configJSON.mode === 'preview') {
           // constraints can only be disabled using the url in preview mode
 
           // regex to match constraints=false in the url
@@ -73,6 +68,8 @@ var ConfigService = function () {
           console.log(projectPath);
         }
 
+        configJSON.isRunActive = _this.calculateIsRunActive(configJSON);
+
         _this.setConfig(configJSON);
 
         if (_this.isPreview()) {
@@ -85,6 +82,18 @@ var ConfigService = function () {
 
         return configJSON;
       });
+    }
+  }, {
+    key: 'setTimestampDiff',
+    value: function setTimestampDiff(configJSON) {
+      if (configJSON.retrievalTimestamp != null) {
+        var clientTimestamp = new Date().getTime();
+        var serverTimestamp = configJSON.retrievalTimestamp;
+        var timestampDiff = clientTimestamp - serverTimestamp;
+        configJSON.timestampDiff = timestampDiff;
+      } else {
+        configJSON.timestampDiff = 0;
+      }
     }
   }, {
     key: 'getConfigParam',
@@ -1147,6 +1156,22 @@ var ConfigService = function () {
       } else {
         return 0;
       }
+    }
+  }, {
+    key: 'calculateIsRunActive',
+    value: function calculateIsRunActive(configJSON) {
+      var currentTime = new Date().getTime();
+      if (currentTime < this.convertToClientTimestamp(configJSON.startTime)) {
+        return false;
+      } else if (configJSON.endTime != null && currentTime > this.convertToClientTimestamp(configJSON.endTime)) {
+        return false;
+      }
+      return true;
+    }
+  }, {
+    key: 'isRunActive',
+    value: function isRunActive() {
+      return this.config.isRunActive;
     }
   }]);
 

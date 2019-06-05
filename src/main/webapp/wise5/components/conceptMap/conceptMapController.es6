@@ -229,7 +229,9 @@ class ConceptMapController extends ComponentController {
       this.disableSubmitButton();
     }
 
-    this.enableNodeDragging();
+    if (!this.isDisabled) {
+      this.enableNodeDragging();
+    }
     this.disableComponentIfNecessary();
     this.broadcastDoneRenderingComponent();
   }
@@ -289,7 +291,9 @@ class ConceptMapController extends ComponentController {
         this.draw, instanceId, originalId, filePath, label,
         x, y, width, height, this.componentContent.showNodeLabels);
       this.addNode(conceptMapNode);
-      this.setNodeMouseEvents(conceptMapNode);
+      if (!this.isDisabled) {
+        this.setNodeMouseEvents(conceptMapNode);
+      }
     }
   }
 
@@ -321,7 +325,9 @@ class ConceptMapController extends ComponentController {
         this.draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature,
         startCurveUp, endCurveUp);
       this.addLink(conceptMapLink);
-      this.setLinkMouseEvents(conceptMapLink);
+      if (!this.isDisabled) {
+        this.setLinkMouseEvents(conceptMapLink);
+      }
     }
   }
 
@@ -674,21 +680,23 @@ class ConceptMapController extends ComponentController {
     this.drawingLink = false;
     this.newlyCreatedLink = null;
 
-    this.draw.mousedown((event) => {
-      this.svgMouseDown(event);
-    });
+    if (!this.isDisabled) {
+      this.draw.mousedown((event) => {
+        this.svgMouseDown(event);
+      });
 
-    this.draw.mouseup((event) => {
-      this.svgMouseUp(event);
-    });
+      this.draw.mouseup((event) => {
+        this.svgMouseUp(event);
+      });
 
-    this.draw.mousemove((event) => {
-      this.svgMouseMove(event);
-    });
+      this.draw.mousemove((event) => {
+        this.svgMouseMove(event);
+      });
 
-    this.addDragOverListenerIfNecessary();
-    this.addDropListenerIfNecessary();
-    this.setLinkTypeChooserStyle();
+      this.addDragOverListenerIfNecessary();
+      this.addDropListenerIfNecessary();
+      this.setLinkTypeChooserStyle();
+    }
   }
 
   addDragOverListenerIfNecessary() {

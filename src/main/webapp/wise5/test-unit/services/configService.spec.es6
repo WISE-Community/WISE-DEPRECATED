@@ -175,5 +175,42 @@ describe('ConfigService Unit Test', () => {
       expect(ConfigService.getUserInfoByWorkgroupId).toHaveBeenCalledWith(existingWorkgroupId);
       expect(existingWorkgroupPeriodId).toEqual(1);
     });
+
+    it('should calculate if a run is active when a run only has a start time', () => {
+      jasmine.clock().install();
+      const configJSON = {
+        startTime: new Date(2019, 5, 10).getTime(),
+        timestampDiff: 0
+      };
+      jasmine.clock().mockDate(new Date(2019, 5, 9));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeFalsy();
+      jasmine.clock().mockDate(new Date(2019, 5, 10));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 11));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().uninstall();
+    });
+
+    it('should calculate if a run is active when it has a start time and end time', () => {
+      jasmine.clock().install();
+      const configJSON = {
+        startTime: new Date(2019, 5, 10).getTime(),
+        endTime: new Date(2019, 5, 20).getTime(),
+        timestampDiff: 0
+      };
+      jasmine.clock().mockDate(new Date(2019, 5, 9));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeFalsy();
+      jasmine.clock().mockDate(new Date(2019, 5, 10));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 11));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 19));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 20));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 21));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeFalsy();
+      jasmine.clock().uninstall();
+    });
   });
 });
