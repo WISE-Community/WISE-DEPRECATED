@@ -3,7 +3,7 @@ import { AppComponent } from './app.component';
 import { Component } from "@angular/core";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MediaChange, ObservableMedia } from '@angular/flex-layout';
+import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { UtilService } from "./services/util.service";
@@ -26,7 +26,7 @@ export class MockObservableMedia {
     return false;
   }
 
-  subscribe(): Observable<MediaChange> {
+  asObservable(): Observable<MediaChange> {
     return Observable.create(observer => {
       observer.next(new MediaChange());
       observer.complete();
@@ -39,7 +39,7 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: UtilService, useClass: MockUtilService },
-        { provide: ObservableMedia, useClass: MockObservableMedia },
+        { provide: MediaObserver, useClass: MockObservableMedia },
         { provide: MatDialog, useValue: {
             closeAll: () => {
 

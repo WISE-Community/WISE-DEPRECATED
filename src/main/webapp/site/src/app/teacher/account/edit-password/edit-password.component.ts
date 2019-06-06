@@ -12,7 +12,7 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 })
 export class EditPasswordComponent implements OnInit {
 
-  @ViewChild('changePasswordForm') changePasswordForm;
+  @ViewChild('changePasswordForm', { static: true }) changePasswordForm;
   isSaving: boolean = false;
 
   newPasswordFormGroup: FormGroup = this.fb.group({
