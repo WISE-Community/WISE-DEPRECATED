@@ -5384,6 +5384,18 @@
         </context-group>
         <target state="needs-translation">Change Password</target>
       </trans-unit>
+      <trans-unit id="1622b67543d6f79dc5e9730e121f7e21b3d034b1" datatype="html">
+        <source>This account was created using Google and doesn't use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <target state="needs-translation">This account was created using Google and doesn't use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+      </trans-unit>
       <trans-unit id="6567489ecf0899e98c10bc65395798320d53ecc9" datatype="html">
         <source>Class Schedule</source>
         <context-group purpose="location">
