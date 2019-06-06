@@ -71,7 +71,6 @@ import org.wise.portal.service.student.StudentService;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ControllerUtil.class)
-@PowerMockIgnore( {"javax.management.*"})
 public class AddProjectControllerTest extends TestCase {
 
   private static final String RUNCODE = "fly8978";
