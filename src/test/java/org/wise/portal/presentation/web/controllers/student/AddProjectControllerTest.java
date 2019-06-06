@@ -41,6 +41,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
@@ -70,6 +71,7 @@ import org.wise.portal.service.student.StudentService;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ControllerUtil.class)
+@PowerMockIgnore( {"javax.management.*"})
 public class AddProjectControllerTest extends TestCase {
 
   private static final String RUNCODE = "fly8978";
