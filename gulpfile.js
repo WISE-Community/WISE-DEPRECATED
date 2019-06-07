@@ -104,7 +104,7 @@ gulp.task('transpile', gulp.series(() => {
 
     gulp.src(changedFilePath)
       .pipe(sourcemaps.init())
-      .pipe(babel({ presets: ['es2015'] }))
+      .pipe(babel({ presets: ['@babel/preset-env'] }))
       .on('error', console.error.bind(console))
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(changedFileDir));
