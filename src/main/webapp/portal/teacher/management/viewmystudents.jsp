@@ -498,22 +498,22 @@ var displayNotification = function(message) {
 									<div class="workarea" id="groupless_div_${viewmystudentsperiod.period.id}">
 									  <ul id="ul_${viewmystudentsperiod.period.id}_workgroup_groupless" class="draglist">
 									    <li class="grouplessHeader"><spring:message code="teacher.management.viewmystudents.unassignedStudents"/></li>
-						
-						                <c:forEach var="mem" items="${viewmystudentsperiod.grouplessStudents}">
+<%--                      <c:set var="isGoogleTeacherUser" value="${viewmystudentsperiod.user}"/>--%>
+                      <c:forEach var="mem" items="${viewmystudentsperiod.grouplessStudents}">
 									      <li class="grouplesslist" id="li_${mem.id}_groupless">
 									      
 									         <span class="usernameWithinView">${mem.userDetails.firstname} ${mem.userDetails.lastname} <span dir=ltr>(${mem.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
-							    			     <c:set var="isGoogleUser" value="${mem.userDetails.isGoogleUser()}"/>
+							    			     <c:set var="isGoogleStudentUser" value="${mem.userDetails.isGoogleUser()}"/>
                              <c:choose>
-                               <c:when test="${isGoogleUser == false}">
+                               <c:when test="${isGoogleStudentUser == false}">
                                  <a class="userLinks changePassword" id="changePassword_${mem.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>
                                </c:when>
                              </c:choose>
 							    			     <a class="userLinks changePeriod" id="changePeriod_userId=${mem.id}&runId=${viewmystudentsperiod.run.id}&projectCode=${viewmystudentsperiod.period.name}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPeriodTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPeriod"/></a>
 							    			     <a class="userLinks removeStudent" id="removeStudent_runId=${viewmystudentsperiod.run.id}&userId=${mem.id}" title="<spring:message code="teacher.management.viewmystudents.removeStudentTitle"/> ${mem.userDetails.username}"><spring:message code="teacher.management.viewmystudents.removeStudent"/></a>
-							    			 </span>
+                           </span>
 						    			  </li>
 									    </c:forEach>
 						  			  </ul>
@@ -527,18 +527,18 @@ var displayNotification = function(message) {
 						            <c:forEach var="workgroupInPeriod" varStatus="workgroupVarStatus" items="${viewmystudentsperiod.workgroups}" >
 						                <td>
 						              <div class="workarea" id="div_${workgroupInPeriod.id}">
-									    <ul id="ul_${viewmystudentsperiod.period.id}_workgroup_${workgroupInPeriod.id}" class="draglist">  
+									    <ul id="ul_${viewmystudentsperiod.period.id}_workgroup_${workgroupInPeriod.id}" class="draglist">
 									      <li class="workgroupHeader"><spring:message code="teacher.management.viewmystudents.team"/> ${workgroupInPeriod.id}
 									      </li>
-									      
+
 									      <c:forEach var="workgroupMember" items="${workgroupInPeriod.members}">
 									        <li class="workgrouplist" id="li_${workgroupMember.id}_${workgroupInPeriod.id}">
 									         <span class="usernameWithinView">${workgroupMember.userDetails.firstname} ${workgroupMember.userDetails.lastname} <span dir=ltr>(${workgroupMember.userDetails.username})</span></span>
 						    			     <span class="userLinksBar">
 							    			     <a class="userLinks studentInfo" id="studentInfo_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.studentInfoTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.studentInfo"/></a>
-							    			     <c:set var="isGoogleUser" value="${workgroupMember.userDetails.isGoogleUser()}"/>
+							    			     <c:set var="isGoogleStudentUser" value="${workgroupMember.userDetails.isGoogleUser()}"/>
                              <c:choose>
-                               <c:when test="${isGoogleUser == false}">
+                               <c:when test="${isGoogleStudentUser == false}">
                                  <a class="userLinks changePassword" id="changePassword_${workgroupMember.userDetails.username}" title="<spring:message code="teacher.management.viewmystudents.changeStudentPasswordTitle"/> ${workgroupMember.userDetails.username}"><spring:message code="teacher.management.viewmystudents.changeStudentPassword"/></a>
                                </c:when>
                              </c:choose>
