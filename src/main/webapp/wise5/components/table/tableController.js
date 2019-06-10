@@ -1155,62 +1155,69 @@ var TableController = function (_ComponentController) {
         });
       }
     }
-
-    /**
-     * Copy the table data cell text from one component state to another
-     * @param fromComponentState get the cell text values from this component state
-     * @param toComponentState set the cell text values in this component state
-     */
-
   }, {
-    key: 'copyTableDataCellText',
-    value: function copyTableDataCellText(fromComponentState, toComponentState) {
+    key: 'handleConnectedComponents',
+    value: function handleConnectedComponents() {
+      var isStudentDataChanged = false;
+      var connectedComponentsAndTheirComponentStates = this.getConnectedComponentsAndTheirComponentStates();
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
-      if (fromComponentState != null && toComponentState != null) {
-        var fromStudentData = fromComponentState.studentData;
-        var toStudentData = toComponentState.studentData;
+      try {
+        for (var _iterator5 = connectedComponentsAndTheirComponentStates[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var connectedComponentAndComponentState = _step5.value;
 
-        if (fromStudentData != null && toStudentData != null) {
-          var fromTableData = fromStudentData.tableData;
-          var toTableData = toStudentData.tableData;
-
-          if (fromTableData != null & toTableData != null) {
-
-            // loop through all the rows
-            for (var y = 0; y < this.getNumRows(); y++) {
-
-              // loop through all the columns
-              for (var x = 0; x < this.getNumColumns(); x++) {
-
-                // get the cell value
-                var cellValue = this.getTableDataCellValue(x, y, fromTableData);
-
-                if (cellValue != null) {
-                  // set the cell value
-                  this.setTableDataCellValue(x, y, toTableData, cellValue);
-                }
-              }
+          var connectedComponent = connectedComponentAndComponentState.connectedComponent;
+          var componentState = connectedComponentAndComponentState.componentState;
+          if (componentState != null) {
+            if (connectedComponent.type === 'showWork') {
+              this.tableData = componentState.studentData.tableData;
+              this.isDisabled = true;
+            } else {
+              this.mergeComponentState(componentState);
             }
+            isStudentDataChanged = true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
 
-      return toComponentState;
+      if (isStudentDataChanged) {
+        this.studentDataChanged();
+      }
     }
-
-    /**
-     * Only merges the first component state
-     * TODO: implement merging all component states
-     * @param {array} componentStates
-     * @return {object} merged component state
-     */
-
   }, {
-    key: 'createMergedComponentState',
-    value: function createMergedComponentState(componentStates) {
-      var defaultComponentState = this.createBlankComponentState();
-      defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);
-      return this.copyTableDataCellText(componentStates[0], defaultComponentState);
+    key: 'mergeComponentState',
+    value: function mergeComponentState(componentState) {
+      if (this.tableData == null) {
+        this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+      }
+      this.mergeTableData(componentState.studentData.tableData);
+    }
+  }, {
+    key: 'mergeTableData',
+    value: function mergeTableData(tableData) {
+      for (var y = 0; y < this.getNumRows(); y++) {
+        for (var x = 0; x < this.getNumColumns(); x++) {
+          var cellValue = this.getTableDataCellValue(x, y, tableData);
+          if (cellValue != null) {
+            this.setTableDataCellValue(x, y, this.tableData, cellValue);
+          }
+        }
+      }
     }
   }]);
 

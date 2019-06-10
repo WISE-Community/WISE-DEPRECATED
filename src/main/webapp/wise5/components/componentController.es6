@@ -624,7 +624,7 @@ class ComponentController {
         if (componentState != null) {
           componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
         }
-        if (connectedComponent.type == 'showWork') {
+        if (connectedComponent.type === 'showWork') {
           this.isDisabled = true;
         }
       }
@@ -642,6 +642,20 @@ class ComponentController {
 
   handleConnectedComponentsPostProcess() {
     // overridden by children
+  }
+
+  getConnectedComponentsAndTheirComponentStates() {
+    const connectedComponentsAndTheirComponentStates = [];
+    for (let connectedComponent of this.componentContent.connectedComponents) {
+      const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+        connectedComponent.nodeId, connectedComponent.componentId);
+      const connectedComponentsAndomponentState = {
+        connectedComponent: connectedComponent,
+        componentState: this.UtilService.makeCopyOfJSONObject(componentState)
+      };
+      connectedComponentsAndTheirComponentStates.push(connectedComponentsAndomponentState);
+    }
+    return connectedComponentsAndTheirComponentStates;
   }
 
   showCopyPublicNotebookItemButton() {

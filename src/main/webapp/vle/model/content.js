@@ -239,7 +239,7 @@ function createContent(url, contentBaseUrlParam){
 		
 		/* Returns the filename for this content given the contentBaseUrl */
 		var getFilename = function(contentBase){
-			return url.substring(url.indexOf(contentBase) + contentBase.length + 1, url.length);
+			return url.substring(url.indexOf(contentBase) + contentBase.length, url.length);
 		};
 		
 		return {
