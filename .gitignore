@@ -11,7 +11,6 @@ node_modules
 target
 src/main/webapp/wise5/jspm_packages
 src/main/webapp/wise5/node_modules
-src/main/resources/application.properties
 src/main/resources/wise.properties
 *.bak
 .idea
