@@ -1175,7 +1175,11 @@ var TableController = function (_ComponentController) {
               this.tableData = componentState.studentData.tableData;
               this.isDisabled = true;
             } else {
-              this.mergeComponentState(componentState);
+              if (connectedComponent.action === 'append') {
+                this.appendComponentState(componentState, connectedComponent);
+              } else {
+                this.mergeComponentState(componentState);
+              }
             }
             isStudentDataChanged = true;
           }
@@ -1205,7 +1209,11 @@ var TableController = function (_ComponentController) {
       if (this.tableData == null) {
         this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
       }
-      this.mergeTableData(componentState.studentData.tableData);
+      if (this.componentContent.numRows === 0 || this.componentContent.numColumns === 0) {
+        this.tableData = componentState.studentData.tableData;
+      } else {
+        this.mergeTableData(componentState.studentData.tableData);
+      }
     }
   }, {
     key: 'mergeTableData',
@@ -1213,11 +1221,28 @@ var TableController = function (_ComponentController) {
       for (var y = 0; y < this.getNumRows(); y++) {
         for (var x = 0; x < this.getNumColumns(); x++) {
           var cellValue = this.getTableDataCellValue(x, y, tableData);
-          if (cellValue != null) {
+          if (cellValue != null && cellValue !== '') {
             this.setTableDataCellValue(x, y, this.tableData, cellValue);
           }
         }
       }
+    }
+  }, {
+    key: 'appendComponentState',
+    value: function appendComponentState(componentState, connectedComponent) {
+      if (this.tableData == null) {
+        this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+      }
+      var tableData = componentState.studentData.tableData;
+      if (connectedComponent.excludeFirstRow) {
+        tableData = tableData.slice(1);
+      }
+      this.appendTable(tableData);
+    }
+  }, {
+    key: 'appendTable',
+    value: function appendTable(tableData) {
+      this.tableData = this.tableData.concat(tableData);
     }
   }]);
 

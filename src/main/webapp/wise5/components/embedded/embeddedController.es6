@@ -491,8 +491,11 @@ class EmbeddedController extends ComponentController {
       this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
     if (connectedComponentState != null) {
       const fields = connectedComponent.fields;
-      mergedComponentState = this.mergeComponentState(
-        mergedComponentState, connectedComponentState, fields, firstTime);
+      const when = connectedComponent.when;
+      if (when == null || (when === 'firstTime' && firstTime)) {
+        mergedComponentState = this.mergeComponentState(
+          mergedComponentState, connectedComponentState, fields, firstTime);
+      }
     }
     return mergedComponentState;
   }
@@ -508,7 +511,7 @@ class EmbeddedController extends ComponentController {
   mergeComponentState(toComponentState, fromComponentState, mergeFields, firstTime) {
     if (mergeFields == null) {
       // there are no merge fields specified so we will get all of the fields
-      if (fromComponentState.componentType == 'Embedded') {
+      if (fromComponentState.componentType === 'Embedded') {
         toComponentState.studentData =
             this.UtilService.makeCopyOfJSONObject(fromComponentState.studentData);
       }

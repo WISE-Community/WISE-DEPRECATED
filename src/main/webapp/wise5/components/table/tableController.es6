@@ -997,7 +997,11 @@ class TableController extends ComponentController {
           this.tableData = componentState.studentData.tableData;
           this.isDisabled = true;
         } else {
-          this.mergeComponentState(componentState);
+          if (connectedComponent.action === 'append') {
+            this.appendComponentState(componentState, connectedComponent);
+          } else {
+            this.mergeComponentState(componentState);
+          }
         }
         isStudentDataChanged = true;
       }
@@ -1011,18 +1015,37 @@ class TableController extends ComponentController {
     if (this.tableData == null) {
       this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
     }
-    this.mergeTableData(componentState.studentData.tableData);
+    if (this.componentContent.numRows === 0 || this.componentContent.numColumns === 0) {
+      this.tableData = componentState.studentData.tableData;
+    } else {
+      this.mergeTableData(componentState.studentData.tableData);
+    }
   }
 
   mergeTableData(tableData) {
     for (let y = 0; y < this.getNumRows(); y++) {
       for (let x = 0; x < this.getNumColumns(); x++) {
         const cellValue = this.getTableDataCellValue(x, y, tableData);
-        if (cellValue != null) {
+        if (cellValue != null && cellValue !== '') {
           this.setTableDataCellValue(x, y, this.tableData, cellValue);
         }
       }
     }
+  }
+
+  appendComponentState(componentState, connectedComponent) {
+    if (this.tableData == null) {
+      this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+    }
+    let tableData = componentState.studentData.tableData;
+    if (connectedComponent.excludeFirstRow) {
+      tableData = tableData.slice(1);
+    }
+    this.appendTable(tableData);
+  }
+
+  appendTable(tableData) {
+    this.tableData = this.tableData.concat(tableData);
   }
 }
 
