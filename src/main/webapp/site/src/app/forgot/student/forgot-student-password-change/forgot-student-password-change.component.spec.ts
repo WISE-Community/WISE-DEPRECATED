@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/index';
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
   changePassword(username: string, answer: string, password: string, confirmPassword: string): Observable<any> {
@@ -55,7 +56,7 @@ describe('ForgotStudentPasswordChangeComponent', () => {
     return fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotStudentPasswordChangeComponent ],
       imports: [
@@ -75,8 +76,7 @@ describe('ForgotStudentPasswordChangeComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotStudentPasswordChangeComponent);

@@ -11,6 +11,7 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { StudentService } from "../student.service";
 import { UserService } from "../../services/user.service";
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockConfigService {
   getConfig(): Observable<Config> {
@@ -44,7 +45,7 @@ describe('StudentRunListItemComponent', () => {
   let component: StudentRunListItemComponent;
   let fixture: ComponentFixture<StudentRunListItemComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [ MomentModule ],
       declarations: [ StudentRunListItemComponent ],
@@ -55,9 +56,8 @@ describe('StudentRunListItemComponent', () => {
         { provide: MatDialog }
         ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StudentRunListItemComponent);
