@@ -248,15 +248,17 @@ export class TeamSignInDialogComponent implements OnInit {
     this.studentService.launchRun(this.run.id, this.run.workgroupId, presentUserIds, absentUserIds)
         .subscribe((response: any) => {
           if (response.status === 'error') {
+            let targetMember;
             if (this.isLoggedInUserInWorkgroup(response.workgroupMembers)) {
               this.updateTeamMembers(response.workgroupMembers);
-              setTimeout(() => alert(this.i18n(`${this.getNameDisplay(this.user)} is already in a team with 
-                  \n${this.getWorkgroupTeammatesDisplay(response.workgroupMembers)}`)), 100);
+              targetMember = this.user;
             } else {
-              this.removeTeamMembersAlreadyInAWorkgroup(response.workgroupMembers);
-              setTimeout(() => alert(this.i18n(`${this.getWorkgroupTeammatesDisplay(response.workgroupMembers)} is already 
-                  in a team and cannot be added`)), 100);
+              targetMember = this.removeTeamMembersAlreadyInAWorkgroup(response.workgroupMembers);
             }
+            const teamMatesDisplay = this.getWorkgroupTeammatesDisplay(response.workgroupMembers, targetMember.username);
+            setTimeout(() => {
+              alert(this.i18n(`${this.getNameDisplay(targetMember)} is already in a team with ${teamMatesDisplay}`));
+            }, 100);
           } else {
             window.location.href = response.startProjectUrl;
           }
@@ -267,14 +269,18 @@ export class TeamSignInDialogComponent implements OnInit {
     return `${user.firstName} ${user.lastName} (${user.username})`;
   }
 
-  getWorkgroupTeammatesDisplay(workgroupMembers: any[]) {
-    let message = [];
+  getWorkgroupTeammatesDisplay(workgroupMembers: any[], targetUsername: string) {
+    const teamMateNameDisplays = [];
     for (const workgroupMember of workgroupMembers) {
-      if (!this.isLoggedInUser(workgroupMember.username)) {
-        message.push(this.getNameDisplay(workgroupMember));
+      if (workgroupMember.username !== targetUsername) {
+        teamMateNameDisplays.push(this.getNameDisplay(workgroupMember));
       }
     }
-    return message.join('\n');
+    if (teamMateNameDisplays.length <= 1) {
+      return teamMateNameDisplays.join();
+    }
+    const lastNameDisplay = teamMateNameDisplays.pop();
+    return `${teamMateNameDisplays.join(', ')} and ${lastNameDisplay}`;
   }
 
   isLoggedInUserInWorkgroup(workgroupMembers: any[]) {
@@ -325,15 +331,18 @@ export class TeamSignInDialogComponent implements OnInit {
     return existingWorkgroupMembersNotSignedIn;
   }
 
-  removeTeamMembersAlreadyInAWorkgroup(workgroupMembers: any[]) {
+  removeTeamMembersAlreadyInAWorkgroup(workgroupMembers: any[]): any {
     const workgroupMembersUsernames = workgroupMembers.map(member => {
       return member.username;
     });
+    let removedMember = null;
     this.teamMembers.forEach((teamMember, index) => {
       if (workgroupMembersUsernames.includes(teamMember.username)) {
         this.clearTeamMember(index);
+        removedMember = teamMember;
       }
     });
+    return removedMember;
   }
   
   clearTeamMember(index: number) {
