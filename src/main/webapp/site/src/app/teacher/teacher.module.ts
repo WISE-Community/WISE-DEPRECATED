@@ -27,6 +27,8 @@ import { EditPasswordComponent } from './account/edit-password/edit-password.com
 import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-dialog.component';
 import { UseWithClassWarningDialogComponent } from './use-with-class-warning-dialog/use-with-class-warning-dialog.component';
 import { EditRunWarningDialogComponent } from './edit-run-warning-dialog/edit-run-warning-dialog.component';
+import {RouteReuseStrategy} from '@angular/router';
+import {TeacherRouteReuseStrategy} from './teacher-route-reuse.strategy';
 
 const materialModules = [
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
@@ -69,7 +71,8 @@ const materialModules = [
     EditRunWarningDialogComponent
   ],
   providers: [
-    AuthGuard
+    AuthGuard,
+    { provide: RouteReuseStrategy, useClass: TeacherRouteReuseStrategy }
   ],
   exports: [
     TeacherComponent,
