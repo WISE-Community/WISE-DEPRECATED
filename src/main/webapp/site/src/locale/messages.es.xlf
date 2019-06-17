@@ -24,7 +24,7 @@
           <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Create Account</target>
+        <target state="translated">Crear cuenta</target>
       </trans-unit>
       <trans-unit id="6cdb1fea93d77c07950c0c76c6e0ad79ebbef084" datatype="html">
         <source>Features</source>
@@ -40,7 +40,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Features</target>
+        <target state="translated">Funcionalidades</target>
       </trans-unit>
       <trans-unit id="847171f94c5e932a67df0c3b4d57e4e10d844b52" datatype="html">
         <source>About Us</source>
@@ -60,7 +60,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">About Us</target>
+        <target state="translated">Sobre nosotros</target>
       </trans-unit>
       <trans-unit id="1d0974afae70914072a4fbf19e53328e517bae73" datatype="html">
         <source>News</source>
@@ -80,7 +80,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">News</target>
+        <target state="translated">Noticias</target>
       </trans-unit>
       <trans-unit id="53c1019d0a23e95290e125bf93e34257eaadb8b6" datatype="html">
         <source>Help + FAQs</source>
@@ -92,7 +92,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">125</context>
         </context-group>
-        <target state="needs-translation">Help + FAQs</target>
+        <target state="translated">Ayuda + Preguntas frecuentes</target>
       </trans-unit>
       <trans-unit id="3d469f0ca2f579eedee96edd4ef40883f65e77aa" datatype="html">
         <source>Privacy + Use</source>
@@ -100,7 +100,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Privacy + Use</target>
+        <target state="translated">Privacidad + Uso</target>
       </trans-unit>
       <trans-unit id="02e9e69ddcbf93de9fd38bc4d0f312142658610d" datatype="html">
         <source>Contact Us</source>
@@ -112,7 +112,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">134</context>
         </context-group>
-        <target state="needs-translation">Contact Us</target>
+        <target state="translated">Contáctanos</target>
       </trans-unit>
       <trans-unit id="d97fd6757dbd8190c0e310c2be8432718b2a417b" datatype="html">
         <source>Legacy</source>
@@ -120,7 +120,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Legacy</target>
+        <target state="translated">Legado</target>
       </trans-unit>
       <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
         <source>WISE on Facebook</source>
@@ -132,7 +132,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">WISE on Facebook</target>
+        <target state="translated">WISE en Facebook</target>
       </trans-unit>
       <trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html">
         <source>WISE on Twitter</source>
@@ -144,7 +144,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">96</context>
         </context-group>
-        <target state="needs-translation">WISE on Twitter</target>
+        <target state="translated">WISE en Twitter</target>
       </trans-unit>
       <trans-unit id="540452d4091ec883af6967b28abf89f2ac0c853d" datatype="html">
         <source>WISE on Github</source>
@@ -156,7 +156,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
-        <target state="needs-translation">WISE on Github</target>
+        <target state="translated">WISE en Github</target>
       </trans-unit>
       <trans-unit id="d8f2e89cc8dde7834ae2c3337aff293e23aec97f" datatype="html">
         <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -180,7 +180,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="needs-translation">National Science Foundation</target>
+        <target state="translated">Fundación Nacional de Ciencias</target>
       </trans-unit>
       <trans-unit id="eb6ec6c4564dfbd4ffc8020d00aa0c48400f629b" datatype="html">
         <source>UC Berkeley</source>
@@ -188,7 +188,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation">UC Berkeley</target>
+        <target state="translated">UC Berkeley</target>
       </trans-unit>
       <trans-unit id="8f885baf51f23ab4c81a547cd984d9355bea0239" datatype="html">
         <source>Concord Consortium</source>
@@ -220,7 +220,7 @@
           <context context-type="sourcefile">app/modules/header/header.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">WISE header logo</target>
+        <target state="translated">Logo de encabezado WISE</target>
       </trans-unit>
       <trans-unit id="32b2b5a41c731dedcd41bc360ffdc42a36fe481f" datatype="html">
         <source>Main menu</source>
@@ -228,7 +228,7 @@
           <context context-type="sourcefile">app/modules/header/header.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Main menu</target>
+        <target state="translated">Menú principal</target>
       </trans-unit>
       <trans-unit id="99ee4faa69cd2ea8e3678c1f557c0ff1f05aae46" datatype="html">
         <source>Clear</source>
@@ -244,7 +244,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="needs-translation">Clear</target>
+        <target state="translated">Limpiar</target>
       </trans-unit>
       <trans-unit id="7f32abe3fc638f65c0d3eb269d478ee49ad41ebe" datatype="html">
         <source>more</source>
@@ -252,7 +252,7 @@
           <context context-type="sourcefile">app/modules/shared/select-menu/select-menu.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">more</target>
+        <target state="translated">más</target>
       </trans-unit>
       <trans-unit id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d" datatype="html">
         <source>Current Password</source>
@@ -260,7 +260,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Current Password</target>
+        <target state="translated">Contraseña actual</target>
       </trans-unit>
       <trans-unit id="9b79b69a1ba8ba29e68a45acd0829da17da704ce" datatype="html">
         <source>Current Password required</source>
@@ -268,7 +268,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Current Password required</target>
+        <target state="translated">Contraseña actual requerida</target>
       </trans-unit>
       <trans-unit id="0315d84608647a2d4a2b2e7e509d10ad0ec78536" datatype="html">
         <source>Current Password is incorrect</source>
@@ -276,7 +276,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Current Password is incorrect</target>
+        <target state="translated">La contraseña actual es incorrecta</target>
       </trans-unit>
       <trans-unit id="c7014c6360e94b236286b869c3fe0ea9911c0387" datatype="html">
         <source>New Password</source>
@@ -284,7 +284,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">New Password</target>
+        <target state="translated">Nueva contraseña</target>
       </trans-unit>
       <trans-unit id="ae26b4e37fa94304d1fa1b0c46b10ad979bcecfa" datatype="html">
         <source>New Password required</source>
@@ -292,7 +292,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">New Password required</target>
+        <target state="translated">Nueva contraseña requerida</target>
       </trans-unit>
       <trans-unit id="b81fbd1b5d0723eba41870071d02065674bdd565" datatype="html">
         <source>Confirm New Password</source>
