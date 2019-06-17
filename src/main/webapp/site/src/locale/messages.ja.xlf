@@ -2,7 +2,7 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="ja">
     <body>
-      <trans-unit id="e19fcf996343543e13789f17b550ab0c08124b5c" datatype="html">
+      <trans-unit id="e19fcf996343543e13789f17b550ab0c08124b5c" datatype="html" approved="yes">
         <source>Create Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -29,7 +29,7 @@
           <target>アカウントを作成します。</target>
         </alt-trans>
       </trans-unit>
-      <trans-unit id="6cdb1fea93d77c07950c0c76c6e0ad79ebbef084" datatype="html">
+      <trans-unit id="6cdb1fea93d77c07950c0c76c6e0ad79ebbef084" datatype="html" approved="yes">
         <source>Features</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -43,9 +43,9 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Features</target>
+        <target state="translated">機能紹介</target>
       </trans-unit>
-      <trans-unit id="847171f94c5e932a67df0c3b4d57e4e10d844b52" datatype="html">
+      <trans-unit id="847171f94c5e932a67df0c3b4d57e4e10d844b52" datatype="html" approved="yes">
         <source>About Us</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -63,9 +63,9 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">About Us</target>
+        <target state="translated">概要</target>
       </trans-unit>
-      <trans-unit id="1d0974afae70914072a4fbf19e53328e517bae73" datatype="html">
+      <trans-unit id="1d0974afae70914072a4fbf19e53328e517bae73" datatype="html" approved="yes">
         <source>News</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -83,9 +83,12 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="translated">ニュース</target>
+        <target state="translated">お知らせ</target>
+        <alt-trans>
+          <target>ニュース</target>
+        </alt-trans>
       </trans-unit>
-      <trans-unit id="53c1019d0a23e95290e125bf93e34257eaadb8b6" datatype="html">
+      <trans-unit id="53c1019d0a23e95290e125bf93e34257eaadb8b6" datatype="html" approved="yes">
         <source>Help + FAQs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -95,17 +98,20 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">125</context>
         </context-group>
-        <target state="translated">ヘルプ + FAQ</target>
+        <target state="translated">ヘルプ／よくある質問</target>
+        <alt-trans>
+          <target>ヘルプ + FAQ</target>
+        </alt-trans>
       </trans-unit>
-      <trans-unit id="3d469f0ca2f579eedee96edd4ef40883f65e77aa" datatype="html">
+      <trans-unit id="3d469f0ca2f579eedee96edd4ef40883f65e77aa" datatype="html" approved="yes">
         <source>Privacy + Use</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Privacy + Use</target>
+        <target state="translated">プライバシー</target>
       </trans-unit>
-      <trans-unit id="02e9e69ddcbf93de9fd38bc4d0f312142658610d" datatype="html">
+      <trans-unit id="02e9e69ddcbf93de9fd38bc4d0f312142658610d" datatype="html" approved="yes">
         <source>Contact Us</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -117,15 +123,15 @@
         </context-group>
         <target state="translated">お問い合わせ</target>
       </trans-unit>
-      <trans-unit id="d97fd6757dbd8190c0e310c2be8432718b2a417b" datatype="html">
+      <trans-unit id="d97fd6757dbd8190c0e310c2be8432718b2a417b" datatype="html" approved="yes">
         <source>Legacy</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Legacy</target>
+        <target state="translated">レガシー</target>
       </trans-unit>
-      <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
+      <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html" approved="yes">
         <source>WISE on Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -135,9 +141,12 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">WISE on Facebook</target>
+        <target state="translated">WISE＠フェイスブック</target>
+        <alt-trans>
+          <target>WISE＠Facebook</target>
+        </alt-trans>
       </trans-unit>
-      <trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html">
+      <trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html" approved="yes">
         <source>WISE on Twitter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -147,9 +156,9 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">96</context>
         </context-group>
-        <target state="needs-translation">WISE on Twitter</target>
+        <target state="translated">WISE@ツイッター</target>
       </trans-unit>
-      <trans-unit id="540452d4091ec883af6967b28abf89f2ac0c853d" datatype="html">
+      <trans-unit id="540452d4091ec883af6967b28abf89f2ac0c853d" datatype="html" approved="yes">
         <source>WISE on Github</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -159,15 +168,15 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
-        <target state="needs-translation">WISE on Github</target>
+        <target state="translated">WISE@ギットハブ</target>
       </trans-unit>
-      <trans-unit id="d8f2e89cc8dde7834ae2c3337aff293e23aec97f" datatype="html">
+      <trans-unit id="d8f2e89cc8dde7834ae2c3337aff293e23aec97f" datatype="html" approved="yes">
         <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">53</context>
         </context-group>
-        <target state="needs-translation">Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">WISEは<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> と <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>でパワーされています。</target>
       </trans-unit>
       <trans-unit id="3e1904c6c60cfbdcfde26154fe8ed09b5ce0f9f4" datatype="html">
         <source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</source>
@@ -177,29 +186,29 @@
         </context-group>
         <target state="needs-translation">This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</target>
       </trans-unit>
-      <trans-unit id="0dc5b912bfe8d326a1af3975c6a7d049521eae12" datatype="html">
+      <trans-unit id="0dc5b912bfe8d326a1af3975c6a7d049521eae12" datatype="html" approved="yes">
         <source>National Science Foundation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="needs-translation">National Science Foundation</target>
+        <target state="translated">National Science Foundation</target>
       </trans-unit>
-      <trans-unit id="eb6ec6c4564dfbd4ffc8020d00aa0c48400f629b" datatype="html">
+      <trans-unit id="eb6ec6c4564dfbd4ffc8020d00aa0c48400f629b" datatype="html" approved="yes">
         <source>UC Berkeley</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation">UC Berkeley</target>
+        <target state="translated">バークレー大学</target>
       </trans-unit>
-      <trans-unit id="8f885baf51f23ab4c81a547cd984d9355bea0239" datatype="html">
+      <trans-unit id="8f885baf51f23ab4c81a547cd984d9355bea0239" datatype="html" approved="yes">
         <source>Concord Consortium</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">Concord Consortium</target>
+        <target state="translated">コンコードコンソーシアム</target>
       </trans-unit>
       <trans-unit id="f8a12f0f1530051d1bc70b7df85a11832436cf00" datatype="html">
         <source>SAIL (Scalable Architecture for Interactive Learning)</source>
@@ -565,7 +574,7 @@
         </context-group>
         <target state="needs-translation">Research <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></target>
       </trans-unit>
-      <trans-unit id="ba4f24bf9bf3dc4db3d6bc1b8b63339295f0b806" datatype="html">
+      <trans-unit id="ba4f24bf9bf3dc4db3d6bc1b8b63339295f0b806" datatype="html" approved="yes">
         <source>Sign In</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
