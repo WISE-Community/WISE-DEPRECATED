@@ -64,7 +64,6 @@
 							<td><form:password path="passwd2" /></td>
 							</tr>
 						</table>
-
 								<div class="errorMsgNoBg">
 									<!-- Support for Spring errors object -->
 									<spring:bind path="changeStudentPasswordParameters.*">

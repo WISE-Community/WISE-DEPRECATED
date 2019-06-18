@@ -6,7 +6,8 @@ import { StudentService } from '../student.service';
 import { StudentRunListComponent } from "./student-run-list.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { Run } from '../../domain/run';
-import {ConfigService} from "../../services/config.service";
+import { ConfigService } from "../../services/config.service";
+import { configureTestSuite } from 'ng-bullet';
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -60,7 +61,7 @@ describe('StudentRunListComponent', () => {
   let component: StudentRunListComponent;
   let fixture: ComponentFixture<StudentRunListComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ StudentRunListComponent ],
       imports: [ MomentModule ],
@@ -69,9 +70,8 @@ describe('StudentRunListComponent', () => {
         { provide: ConfigService, useClass: MockConfigService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StudentRunListComponent);

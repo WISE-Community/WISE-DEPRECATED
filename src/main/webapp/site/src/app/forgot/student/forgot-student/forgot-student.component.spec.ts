@@ -1,19 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ForgotStudentComponent } from './forgot-student.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { configureTestSuite } from 'ng-bullet';
 
 describe('ForgotStudentComponent', () => {
   let component: ForgotStudentComponent;
   let fixture: ComponentFixture<ForgotStudentComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotStudentComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotStudentComponent);

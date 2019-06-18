@@ -127,8 +127,12 @@ public class BatchStudentChangePasswordController {
         Long groupId = batchStudentChangePasswordParameters.getGroupId();
         Group group = groupService.retrieveById(groupId);
         Iterator<User> membersIter = group.getMembers().iterator();
+        User member;
         while(membersIter.hasNext()) {
-          userService.updateUserPassword(membersIter.next(), batchStudentChangePasswordParameters.getPasswd1());
+          member = membersIter.next();
+          if (!member.getUserDetails().isGoogleUser()) {
+            userService.updateUserPassword(member, batchStudentChangePasswordParameters.getPasswd1());
+          }
         }
         view = successView;
         sessionStatus.setComplete();

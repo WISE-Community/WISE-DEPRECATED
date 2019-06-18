@@ -210,6 +210,90 @@
           <context context-type="sourcefile">app/modules/shared/select-menu/select-menu.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
+      </trans-unit><trans-unit id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d" datatype="html">
+        <source>Current Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="9b79b69a1ba8ba29e68a45acd0829da17da704ce" datatype="html">
+        <source>Current Password required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="0315d84608647a2d4a2b2e7e509d10ad0ec78536" datatype="html">
+        <source>Current Password is incorrect</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="c7014c6360e94b236286b869c3fe0ea9911c0387" datatype="html">
+        <source>New Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="ae26b4e37fa94304d1fa1b0c46b10ad979bcecfa" datatype="html">
+        <source>New Password required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="b81fbd1b5d0723eba41870071d02065674bdd565" datatype="html">
+        <source>Confirm New Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="4b4b336ca43da85eee55391d95fbc03d921353b5" datatype="html">
+        <source>Confirm Password required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit><trans-unit id="0a9dcaac5aadd48fe716eaff77ab9b21a8bef3af" datatype="html">
+        <source>Passwords do not match</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit><trans-unit id="5edf054f14aa57bc25a28cb7db01956fee53dac8" datatype="html">
+        <source>Change Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="1622b67543d6f79dc5e9730e121f7e21b3d034b1" datatype="html">
+        <source>This account was created using Google and doesn&apos;t use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
       </trans-unit><trans-unit id="9df7621dfbe30a790903d461e721c9029627ff34" datatype="html">
         <source>Elicit Ideas</source>
         <context-group purpose="location">
@@ -2448,24 +2532,6 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-      </trans-unit><trans-unit id="5edf054f14aa57bc25a28cb7db01956fee53dac8" datatype="html">
-        <source>Change Password</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
       </trans-unit><trans-unit id="5ead54400cc272b882d8fb68895f8cf558d8edd7" datatype="html">
         <source>Password required</source>
         <context-group purpose="location">
@@ -2501,32 +2567,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">99</context>
-        </context-group>
-      </trans-unit><trans-unit id="4b4b336ca43da85eee55391d95fbc03d921353b5" datatype="html">
-        <source>Confirm Password required</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">135</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">106</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit><trans-unit id="3979fc2476b643d89e8a9f38d1bbc3014c4a4891" datatype="html">
         <source>Password Changed</source>
@@ -4568,86 +4608,6 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">119</context>
         </context-group>
-      </trans-unit><trans-unit id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d" datatype="html">
-        <source>Current Password</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-      </trans-unit><trans-unit id="9b79b69a1ba8ba29e68a45acd0829da17da704ce" datatype="html">
-        <source>Current Password required</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="0315d84608647a2d4a2b2e7e509d10ad0ec78536" datatype="html">
-        <source>Current Password is incorrect</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="c7014c6360e94b236286b869c3fe0ea9911c0387" datatype="html">
-        <source>New Password</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">21</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit><trans-unit id="ae26b4e37fa94304d1fa1b0c46b10ad979bcecfa" datatype="html">
-        <source>New Password required</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit><trans-unit id="b81fbd1b5d0723eba41870071d02065674bdd565" datatype="html">
-        <source>Confirm New Password</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-      </trans-unit><trans-unit id="0a9dcaac5aadd48fe716eaff77ab9b21a8bef3af" datatype="html">
-        <source>Passwords do not match</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-      </trans-unit><trans-unit id="1622b67543d6f79dc5e9730e121f7e21b3d034b1" datatype="html">
-        <source>This account was created using Google and doesn&apos;t use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
       </trans-unit><trans-unit id="6567489ecf0899e98c10bc65395798320d53ecc9" datatype="html">
         <source>Class Schedule</source>
         <context-group purpose="location">
@@ -5319,6 +5279,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
+        <source>Password changed.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/edit-password/edit-password.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="c8f0dbda0d557e58e54598c7d29d719d6c764413" datatype="html">
         <source>Select an option</source>
         <context-group purpose="location">
@@ -5388,17 +5355,6 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
-        <source>Password changed.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/student/account/edit-password/edit-password.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-password/edit-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

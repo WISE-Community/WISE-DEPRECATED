@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/index';
 import { Router } from '@angular/router';
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   checkVerificationCode(username: string, verificationCode: string): Observable<any> {
@@ -50,7 +51,7 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
     return errorMessageDiv.textContent;
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotTeacherPasswordVerifyComponent ],
       imports: [
@@ -69,8 +70,7 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotTeacherPasswordVerifyComponent);
