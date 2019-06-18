@@ -92,6 +92,17 @@ class GraphAuthoringController extends GraphController {
       }
     ];
 
+    this.availableSeriesTypes = [
+      {
+        value: 'line',
+        text: this.$translate('graph.line')
+      },
+      {
+        value: 'scatter',
+        text: this.$translate('graph.point')
+      }
+    ];
+
     this.availableLineTypes = [
       {
         value: 'Solid',
@@ -187,6 +198,12 @@ class GraphAuthoringController extends GraphController {
 
   authoringAddSeriesClicked() {
     const newSeries = this.createNewSeries();
+    if (this.authoringComponentContent.graphType === 'line') {
+      newSeries.type = 'line';
+      newSeries.dashStyle = 'Solid';
+    } else if (this.authoringComponentContent.graphType === 'scatter') {
+      newSeries.type = 'scatter';
+    }
     this.authoringComponentContent.series.push(newSeries);
     this.authoringViewComponentChanged();
   }
