@@ -3494,6 +3494,7 @@ var GraphController = function (_ComponentController) {
           }
         }
 
+        activeTrialIndex = _this15.addTrialFromThisComponentIfNecessary(mergedTrials, trialCount, activeTrialIndex);
         var newComponentState = _this15.NodeService.createNewComponentState();
         newComponentState.studentData = {
           trials: mergedTrials,
@@ -3510,6 +3511,20 @@ var GraphController = function (_ComponentController) {
         _this15.setStudentWork(newComponentState);
         _this15.studentDataChanged();
       };
+    }
+  }, {
+    key: 'addTrialFromThisComponentIfNecessary',
+    value: function addTrialFromThisComponentIfNecessary(mergedTrials, trialCount, activeTrialIndex) {
+      if (this.componentContent.series.length > 0) {
+        var trial = this.createNewTrial(this.UtilService.generateKey(10));
+        trial.name = this.$translate('graph.trial') + ' ' + trialCount;
+        trial.series = this.UtilService.makeCopyOfJSONObject(this.componentContent.series);
+        mergedTrials.push(trial);
+        if (this.canEditTrial(trial)) {
+          activeTrialIndex = trialCount;
+        }
+      }
+      return activeTrialIndex;
     }
 
     /**

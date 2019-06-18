@@ -335,7 +335,8 @@ class GraphAuthoringController extends GraphController {
       this.authoringComponentContent.connectedComponents = [];
     }
     this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-    if (this.authoringComponentContent.connectedComponents.length > 1) {
+    if (this.authoringComponentContent.connectedComponents.length > 1 ||
+        this.authoringComponentContent.series.length > 0) {
       /*
        * there is more than one connected component so we will enable
        * trials so that each connected component can put work in a
