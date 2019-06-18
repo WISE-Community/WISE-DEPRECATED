@@ -12,6 +12,7 @@ import { ConfigService } from "../../../services/config.service";
 import { translationsFactory } from "../../../app.module";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { ParentProject } from "../../../domain/parentProject";
+import { configureTestSuite } from 'ng-bullet';
 
 // @Component({ selector: 'app-library-project-menu', template: '' })
 // export class LibraryProjectMenuStubComponent {
@@ -56,7 +57,7 @@ describe('LibraryProjectDetailsComponent', () => {
   let component: LibraryProjectDetailsComponent;
   let fixture: ComponentFixture<LibraryProjectDetailsComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ LibraryProjectDetailsComponent ],
       imports: [ ],
@@ -77,8 +78,7 @@ describe('LibraryProjectDetailsComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LibraryProjectDetailsComponent);

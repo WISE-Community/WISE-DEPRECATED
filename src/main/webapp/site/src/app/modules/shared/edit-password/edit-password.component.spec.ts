@@ -10,6 +10,7 @@ import { By } from '@angular/platform-browser';
 import { User } from "../../../domain/user";
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {
@@ -49,7 +50,7 @@ describe('EditPasswordComponent', () => {
     return fixture.debugElement.query(By.css('form'));
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ EditPasswordComponent ],
       imports: [
@@ -66,13 +67,14 @@ describe('EditPasswordComponent', () => {
         I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+    });
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(EditPasswordComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

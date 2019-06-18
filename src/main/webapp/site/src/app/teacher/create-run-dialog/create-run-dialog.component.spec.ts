@@ -10,6 +10,7 @@ import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   createRun() {
@@ -44,8 +45,8 @@ describe('CreateRunDialogComponent', () => {
   const getForm = () => {
     return fixture.debugElement.query(By.css('form'));
   };
-  
-  beforeEach(async(() => {
+
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
@@ -75,8 +76,7 @@ describe('CreateRunDialogComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CreateRunDialogComponent);

@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ForgotTeacherPasswordChangeComponent } from './forgot-teacher-password-change.component';
 import {NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -9,6 +8,7 @@ import {Observable} from 'rxjs/index';
 import {Router} from '@angular/router';
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   changePassword(username: string, verificationCode: string, password: string,
@@ -52,7 +52,7 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
     return errorMessageDiv.textContent;
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotTeacherPasswordChangeComponent ],
       imports: [
@@ -71,8 +71,7 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotTeacherPasswordChangeComponent);
