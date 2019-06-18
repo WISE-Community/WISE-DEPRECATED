@@ -375,6 +375,7 @@ class TableController extends ComponentController {
   resetTable() {
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
       // this component imports work so we will import the work again
+      this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
       this.handleConnectedComponents();
     } else {
       // get the original table from the step content
