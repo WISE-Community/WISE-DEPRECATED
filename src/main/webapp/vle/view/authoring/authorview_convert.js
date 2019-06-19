@@ -1681,6 +1681,7 @@ View.prototype.convertGrapher = function(node, nodeContent) {
     component.xAxis.title = {};
     component.xAxis.title.text = nodeContent.graphParams.xLabel;
     component.xAxis.locked = true;
+    component.xAxis.type = 'limits';
 
     if (nodeContent.graphParams.xmin != null) {
         component.xAxis.min = parseFloat(nodeContent.graphParams.xmin);
@@ -1709,13 +1710,15 @@ View.prototype.convertGrapher = function(node, nodeContent) {
             "data": [
             ],
             "color": "blue",
+            "dashStyle": "Solid",
             "marker": {
                 "symbol": "square"
             },
             "regression": false,
             "regressionSettings": {
             },
-            "canEdit": true
+            "canEdit": true,
+            "type": "line"
         }
     ];
 
