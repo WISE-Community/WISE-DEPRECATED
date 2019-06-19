@@ -19,7 +19,7 @@ export class LoginHomeComponent implements OnInit {
   isShowGoogleLogin: boolean = true;
   recaptchaPublicKey: string = "";
   isRecaptchaRequired: boolean = false;
-  @ViewChild('recaptchaRef') recaptchaRef: any;
+  @ViewChild('recaptchaRef', { static: false }) recaptchaRef: any;
 
   constructor(private userService: UserService, private http: HttpClient,
       private router: Router, private route: ActivatedRoute,

@@ -12,7 +12,7 @@ import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material';
   styleUrls: ['./teacher-home.component.scss']
 })
 export class TeacherHomeComponent implements OnInit {
-  @ViewChild('tabs') tabs: MatTabGroup;
+  @ViewChild('tabs', { static: true }) tabs: MatTabGroup;
 
   user: User = new User();
   selectedTabIndex: number = 0;
