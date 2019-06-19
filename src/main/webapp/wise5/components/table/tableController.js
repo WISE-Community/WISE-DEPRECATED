@@ -1245,6 +1245,21 @@ var TableController = function (_ComponentController) {
     value: function appendTable(tableData) {
       this.tableData = this.tableData.concat(tableData);
     }
+  }, {
+    key: 'authoringAutomaticallySetConnectedComponentFieldsIfPossible',
+    value: function authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+      if (connectedComponent.type === 'importWork' && connectedComponent.action == null) {
+        connectedComponent.action = 'merge';
+      } else if (connectedComponent.type === 'showWork') {
+        connectedComponent.action = null;
+      }
+    }
+  }, {
+    key: 'authoringConnectedComponentTypeChanged',
+    value: function authoringConnectedComponentTypeChanged(connectedComponent) {
+      this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+      this.authoringViewComponentChanged();
+    }
   }]);
 
   return TableController;

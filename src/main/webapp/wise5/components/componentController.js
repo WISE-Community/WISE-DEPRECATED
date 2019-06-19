@@ -941,7 +941,11 @@ var ComponentController = function () {
       if (connectedComponent.componentId != null) {
         connectedComponent.type = 'importWork';
       }
+      this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
     }
+  }, {
+    key: 'authoringAutomaticallySetConnectedComponentFieldsIfPossible',
+    value: function authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {}
 
     /**
      * Delete a connected component
@@ -1032,11 +1036,11 @@ var ComponentController = function () {
 
       if (connectedComponent != null) {
 
-        if (connectedComponent.type == 'importWork') {
+        if (connectedComponent.type === 'importWork') {
           /*
            * the type has changed to import work
            */
-        } else if (connectedComponent.type == 'showWork') {}
+        } else if (connectedComponent.type === 'showWork') {}
         /*
          * the type has changed to show work
          */

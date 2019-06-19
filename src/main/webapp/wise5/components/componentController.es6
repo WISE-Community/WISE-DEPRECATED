@@ -793,6 +793,11 @@ class ComponentController {
     if (connectedComponent.componentId != null) {
       connectedComponent.type = 'importWork';
     }
+    this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+  }
+
+  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+
   }
 
   /**
@@ -871,11 +876,11 @@ class ComponentController {
 
     if (connectedComponent != null) {
 
-      if (connectedComponent.type == 'importWork') {
+      if (connectedComponent.type === 'importWork') {
         /*
          * the type has changed to import work
          */
-      } else if (connectedComponent.type == 'showWork') {
+      } else if (connectedComponent.type === 'showWork') {
         /*
          * the type has changed to show work
          */

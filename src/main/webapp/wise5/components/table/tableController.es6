@@ -1048,6 +1048,19 @@ class TableController extends ComponentController {
   appendTable(tableData) {
     this.tableData = this.tableData.concat(tableData);
   }
+
+  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+    if (connectedComponent.type === 'importWork' && connectedComponent.action == null) {
+      connectedComponent.action = 'merge';
+    } else if (connectedComponent.type === 'showWork') {
+      connectedComponent.action = null;
+    }
+  }
+
+  authoringConnectedComponentTypeChanged(connectedComponent) {
+    this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
 }
 
 TableController.$inject = [
