@@ -68,20 +68,23 @@
               layout='row'>
             <md-button class='md-accent'
                 ng-if='tableController.isStudentAttachmentEnabled'
-                ng-click='nodeController.showStudentAssets($event, component.id, tableController.isDisabled)'>
+                ng-click='nodeController.showStudentAssets($event, component.id, tableController.isDisabled)'
+                ng-disabled='tableController.isDisabled'>
               <md-icon>image</md-icon>
               {{ 'table.importData' | translate }}
             </md-button>
           </div>
           <md-button class='md-accent'
               ng-click='tableController.resetTable()'
-              ng-if='tableController.showResetTableButton()'>
+              ng-if='tableController.showResetTableButton()'
+              ng-disabled='tableController.isDisabled'>
             <md-icon>restore</md-icon>
             {{ 'reset' | translate }}
           </md-button>
           <md-button class='md-accent'
               ng-click='tableController.snipTable($event)'
-              ng-if='tableController.isAddToNotebookEnabled()'>
+              ng-if='tableController.isAddToNotebookEnabled()'
+              ng-disabled='tableController.isDisabled'>
             <md-icon>note_add</md-icon>
             {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
           </md-button>
@@ -94,6 +97,7 @@
                   <input type='text'
                       ng-model='cell.text'
                       ng-change='tableController.studentDataChanged()'
+                      ng-disabled='tableController.isDisabled'
                       aria-label='Text'
                       size='{{cell.size || tableController.componentContent.globalCellSize}}'
                       ng-disabled='!cell.editable || tableController.isDisabled''/>

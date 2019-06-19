@@ -1,14 +1,19 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ComponentController = function () {
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ComponentController =
+/*#__PURE__*/
+function () {
   function ComponentController($filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, ComponentController);
 
@@ -25,7 +30,6 @@ var ComponentController = function () {
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
-
     this.nodeId = this.$scope.nodeId;
     this.componentContent = this.$scope.componentContent;
     this.componentId = this.componentContent.id;
@@ -40,35 +44,31 @@ var ComponentController = function () {
     this.isDirty = false;
     this.parentStudentWorkIds = null;
     this.attachments = [];
-
     this.isSubmitDirty = false;
-
     this.isSubmit = false;
-
     this.saveMessage = {
       text: '',
       time: ''
     };
-
     this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
     this.isPromptVisible = true;
     this.isSaveButtonVisible = false;
     this.isSubmitButtonVisible = false;
     this.isSubmitButtonDisabled = false;
     this.submitCounter = 0;
-
     this.isSnipButtonVisible = true;
-
     this.workgroupId = this.$scope.workgroupId;
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
-
     this.showAddToNotebookButton = this.componentContent.showAddToNotebookButton == null ? true : this.componentContent.showAddToNotebookButton;
 
     if (this.isStudentMode()) {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+      if (!this.ConfigService.isRunActive()) {
+        this.isDisabled = true;
+      }
     } else if (this.isGradingMode()) {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
@@ -96,6 +96,7 @@ var ComponentController = function () {
       if (this.authoringComponentContent.showAddToNotebookButton == null) {
         this.authoringComponentContent.showAddToNotebookButton = true;
       }
+
       this.authoringConstructor();
     }
 
@@ -104,103 +105,105 @@ var ComponentController = function () {
   }
 
   _createClass(ComponentController, [{
-    key: 'isStudentMode',
+    key: "isStudentMode",
     value: function isStudentMode() {
       return this.mode === 'student';
     }
   }, {
-    key: 'isAuthoringMode',
+    key: "isAuthoringMode",
     value: function isAuthoringMode() {
       return this.mode === 'authoring';
     }
   }, {
-    key: 'isGradingMode',
+    key: "isGradingMode",
     value: function isGradingMode() {
       return this.mode === 'grading';
     }
   }, {
-    key: 'isGradingRevisionMode',
+    key: "isGradingRevisionMode",
     value: function isGradingRevisionMode() {
       return this.mode === 'gradingRevision';
     }
   }, {
-    key: 'isOnlyShowWorkMode',
+    key: "isOnlyShowWorkMode",
     value: function isOnlyShowWorkMode() {
       return this.mode === 'onlyShowWork';
     }
   }, {
-    key: 'registerListeners',
+    key: "registerListeners",
     value: function registerListeners() {
       var _this = this;
 
       this.$scope.$on('annotationSavedToServer', function (event, args) {
         var annotation = args.annotation;
+
         if (_this.isEventTargetThisComponent(annotation)) {
           _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
         }
       });
-
       this.$scope.$on('nodeSubmitClicked', function (event, args) {
         if (_this.nodeId === args.nodeId) {
           _this.handleNodeSubmit();
         }
       });
-
       /**
        * Listen for the 'exitNode' event which is fired when the student
        * exits the parent node. This will perform any necessary cleanup
        * when the student exits the parent node.
        */
+
       this.$scope.$on('exitNode', function (event, args) {
         _this.cleanupBeforeExiting(event, args);
       });
-
       this.registerStudentWorkSavedToServerListener();
     }
   }, {
-    key: 'initializeScopeGetComponentState',
+    key: "initializeScopeGetComponentState",
     value: function initializeScopeGetComponentState(scope, childControllerName) {
       var _this2 = this;
 
       scope.getComponentState = function (isSubmit) {
         var deferred = _this2.$q.defer();
+
         var childController = scope[childControllerName];
+
         if (_this2.hasDirtyWorkToSendToParent(childController, isSubmit)) {
           var action = _this2.getDirtyWorkToSendToParentAction(childController, isSubmit);
+
           childController.createComponentState(action).then(function (componentState) {
             deferred.resolve(componentState);
           });
         } else {
           deferred.resolve();
         }
+
         return deferred.promise;
       };
     }
   }, {
-    key: 'hasDirtyWorkToSendToParent',
+    key: "hasDirtyWorkToSendToParent",
     value: function hasDirtyWorkToSendToParent(childController, isSubmit) {
       return isSubmit && childController.isSubmitDirty || childController.isDirty;
     }
   }, {
-    key: 'getDirtyWorkToSendToParentAction',
+    key: "getDirtyWorkToSendToParentAction",
     value: function getDirtyWorkToSendToParentAction(childController, isSubmit) {
       if (isSubmit && childController.isSubmitDirty) {
         return 'submit';
       } else if (childController.isDirty) {
         return 'save';
       }
+
       return 'change';
     }
   }, {
-    key: 'authoringConstructor',
+    key: "authoringConstructor",
     value: function authoringConstructor() {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
       this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
       this.summernoteRubricHTML = this.componentContent.rubric;
-
       var insertAssetString = this.$translate('INSERT_ASSET');
       var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
       this.summernoteRubricOptions = {
@@ -211,12 +214,11 @@ var ComponentController = function () {
           insertAssetButton: InsertAssetButton
         }
       };
-
       this.registerAuthoringListeners();
       this.updateAdvancedAuthoringView();
     }
   }, {
-    key: 'registerAuthoringListeners',
+    key: "registerAuthoringListeners",
     value: function registerAuthoringListeners() {
       var _this3 = this;
 
@@ -225,20 +227,19 @@ var ComponentController = function () {
       }, function (newValue, oldValue) {
         _this3.handleAuthoringComponentContentChanged(newValue, oldValue);
       }, true);
-
       this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
         if (_this3.componentId === args.componentId) {
           _this3.showAdvancedAuthoring = !_this3.showAdvancedAuthoring;
+
           _this3.UtilService.hideJSONValidMessage();
         }
       });
-
       this.$scope.$on('assetSelected', function (event, args) {
         _this3.assetSelected(event, args);
       });
     }
   }, {
-    key: 'handleAuthoringComponentContentChanged',
+    key: "handleAuthoringComponentContentChanged",
     value: function handleAuthoringComponentContentChanged(newValue, oldValue) {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -249,35 +250,37 @@ var ComponentController = function () {
       this.submitCounter = 0;
     }
   }, {
-    key: 'getFullAssetPath',
+    key: "getFullAssetPath",
     value: function getFullAssetPath(fileName) {
       var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
       return assetsDirectoryPath + '/' + fileName;
     }
   }, {
-    key: 'getSummernoteId',
+    key: "getSummernoteId",
     value: function getSummernoteId(args) {
       var summernoteId = '';
+
       if (args.target == 'prompt') {
         summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
       } else if (args.target == 'rubric') {
         summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
       }
+
       return summernoteId;
     }
   }, {
-    key: 'restoreSummernoteCursorPosition',
+    key: "restoreSummernoteCursorPosition",
     value: function restoreSummernoteCursorPosition(summernoteId) {
       $('#' + summernoteId).summernote('editor.restoreRange');
       $('#' + summernoteId).summernote('editor.focus');
     }
   }, {
-    key: 'insertImageIntoSummernote',
+    key: "insertImageIntoSummernote",
     value: function insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
       $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
     }
   }, {
-    key: 'insertVideoIntoSummernote',
+    key: "insertVideoIntoSummernote",
     value: function insertVideoIntoSummernote(summernoteId, fullAssetPath) {
       var videoElement = document.createElement('video');
       videoElement.controls = 'true';
@@ -285,7 +288,7 @@ var ComponentController = function () {
       $('#' + summernoteId).summernote('insertNode', videoElement);
     }
   }, {
-    key: 'assetSelected',
+    key: "assetSelected",
     value: function assetSelected(event, args) {
       if (this.isEventTargetThisComponent(args)) {
         if (args.target === 'rubric') {
@@ -293,6 +296,7 @@ var ComponentController = function () {
           var summernoteId = this.getSummernoteId(args);
           this.restoreSummernoteCursorPosition(summernoteId);
           var fullAssetPath = this.getFullAssetPath(fileName);
+
           if (this.UtilService.isImage(fileName)) {
             this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
           } else if (this.UtilService.isVideo(fileName)) {
@@ -300,25 +304,29 @@ var ComponentController = function () {
           }
         }
       }
+
       this.$mdDialog.hide();
     }
   }, {
-    key: 'registerComponentWithParentNode',
+    key: "registerComponentWithParentNode",
     value: function registerComponentWithParentNode() {
       if (this.$scope.$parent.nodeController != null) {
         this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
       }
     }
   }, {
-    key: 'cleanupBeforeExiting',
+    key: "cleanupBeforeExiting",
     value: function cleanupBeforeExiting() {}
   }, {
-    key: 'broadcastDoneRenderingComponent',
+    key: "broadcastDoneRenderingComponent",
     value: function broadcastDoneRenderingComponent() {
-      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+      this.$rootScope.$broadcast('doneRenderingComponent', {
+        nodeId: this.nodeId,
+        componentId: this.componentId
+      });
     }
   }, {
-    key: 'registerStudentWorkSavedToServerListener',
+    key: "registerStudentWorkSavedToServerListener",
     value: function registerStudentWorkSavedToServerListener() {
       var _this4 = this;
 
@@ -327,53 +335,60 @@ var ComponentController = function () {
       });
     }
   }, {
-    key: 'handleStudentWorkSavedToServer',
+    key: "handleStudentWorkSavedToServer",
     value: function handleStudentWorkSavedToServer(event, args) {
       var componentState = args.studentWork;
+
       if (this.isForThisComponent(componentState)) {
         this.setIsDirty(false);
         this.emitComponentDirty(this.getIsDirty());
         var clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
+
         if (componentState.isSubmit) {
           this.setSubmittedMessage(clientSaveTime);
           this.lockIfNecessary();
           this.setIsSubmitDirty(false);
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: this.isSubmitDirty });
+          this.$scope.$emit('componentSubmitDirty', {
+            componentId: this.componentId,
+            isDirty: this.isSubmitDirty
+          });
         } else if (componentState.isAutoSave) {
           this.setAutoSavedMessage(clientSaveTime);
         } else {
           this.setSavedMessage(clientSaveTime);
         }
       }
+
       this.handleStudentWorkSavedToServerAdditionalProcessing(event, args);
     }
   }, {
-    key: 'handleStudentWorkSavedToServerAdditionalProcessing',
+    key: "handleStudentWorkSavedToServerAdditionalProcessing",
     value: function handleStudentWorkSavedToServerAdditionalProcessing(event, args) {}
   }, {
-    key: 'handleNodeSubmit',
+    key: "handleNodeSubmit",
     value: function handleNodeSubmit() {
       this.isSubmit = true;
     }
   }, {
-    key: 'getPrompt',
+    key: "getPrompt",
     value: function getPrompt() {
       return this.componentContent.prompt;
     }
   }, {
-    key: 'saveButtonClicked',
+    key: "saveButtonClicked",
     value: function saveButtonClicked() {
-      this.isSubmit = false;
+      this.isSubmit = false; // tell the parent node to save
 
-      // tell the parent node to save
-      this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+      this.$scope.$emit('componentSaveTriggered', {
+        nodeId: this.nodeId,
+        componentId: this.componentId
+      });
     }
   }, {
-    key: 'submitButtonClicked',
+    key: "submitButtonClicked",
     value: function submitButtonClicked() {
       this.submit('componentSubmitButton');
     }
-
     /**
      * A submit was triggered by the component submit button or node submit button.
      * @param {string} submitTriggeredBy What triggered the submit.
@@ -381,7 +396,7 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'submit',
+    key: "submit",
     value: function submit(submitTriggeredBy) {
       if (this.getIsSubmitDirty()) {
         var isPerformSubmit = true;
@@ -406,12 +421,12 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'disableSubmitButton',
+    key: "disableSubmitButton",
     value: function disableSubmitButton() {
       this.isSubmitButtonDisabled = true;
     }
   }, {
-    key: 'performSubmit',
+    key: "performSubmit",
     value: function performSubmit(submitTriggeredBy) {
       this.setIsSubmit(true);
       this.incrementSubmitCounter();
@@ -436,47 +451,50 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'hasSubmitMessage',
+    key: "hasSubmitMessage",
     value: function hasSubmitMessage() {
       return false;
     }
   }, {
-    key: 'incrementSubmitCounter',
+    key: "incrementSubmitCounter",
     value: function incrementSubmitCounter() {
       this.submitCounter++;
     }
   }, {
-    key: 'emitComponentSubmitTriggered',
+    key: "emitComponentSubmitTriggered",
     value: function emitComponentSubmitTriggered() {
-      this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+      this.$scope.$emit('componentSubmitTriggered', {
+        nodeId: this.nodeId,
+        componentId: this.componentId
+      });
     }
   }, {
-    key: 'disableComponentIfNecessary',
+    key: "disableComponentIfNecessary",
     value: function disableComponentIfNecessary() {
       if (this.isLockAfterSubmit()) {
         var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+
         if (this.NodeService.isWorkSubmitted(componentStates)) {
           this.isDisabled = true;
         }
       }
     }
   }, {
-    key: 'lockIfNecessary',
+    key: "lockIfNecessary",
     value: function lockIfNecessary() {
       if (this.isLockAfterSubmit()) {
         this.isDisabled = true;
       }
     }
   }, {
-    key: 'isLockAfterSubmit',
+    key: "isLockAfterSubmit",
     value: function isLockAfterSubmit() {
       return this.componentContent.lockAfterSubmit;
     }
   }, {
-    key: 'studentDataChanged',
+    key: "studentDataChanged",
     value: function studentDataChanged() {
       var isCompleted = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
       this.setIsDirtyAndBroadcast();
       this.setIsSubmitDirtyAndBroadcast();
       this.clearSaveText();
@@ -484,18 +502,17 @@ var ComponentController = function () {
       this.createComponentStateAndBroadcast(action);
     }
   }, {
-    key: 'setIsDirtyAndBroadcast',
+    key: "setIsDirtyAndBroadcast",
     value: function setIsDirtyAndBroadcast() {
       this.setIsDirty(true);
       this.emitComponentDirty(true);
     }
   }, {
-    key: 'setIsSubmitDirtyAndBroadcast',
+    key: "setIsSubmitDirtyAndBroadcast",
     value: function setIsSubmitDirtyAndBroadcast() {
       this.setIsSubmitDirty(true);
       this.emitComponentSubmitDirty(true);
     }
-
     /*
      * the student work in this component has changed so we will tell
      * the parent node that the student data will need to be saved.
@@ -504,35 +521,45 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'createComponentStateAndBroadcast',
+    key: "createComponentStateAndBroadcast",
     value: function createComponentStateAndBroadcast(action) {
       var _this5 = this;
 
       this.createComponentState(action).then(function (componentState) {
         _this5.emitComponentStudentDataChanged(componentState);
+
         if (componentState.isCompleted) {
           _this5.emitComponentCompleted(componentState);
         }
       });
     }
   }, {
-    key: 'emitComponentStudentDataChanged',
+    key: "emitComponentStudentDataChanged",
     value: function emitComponentStudentDataChanged(componentState) {
-      this.$scope.$emit('componentStudentDataChanged', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
+      this.$scope.$emit('componentStudentDataChanged', {
+        nodeId: this.nodeId,
+        componentId: this.componentId,
+        componentState: componentState
+      });
     }
   }, {
-    key: 'emitComponentCompleted',
+    key: "emitComponentCompleted",
     value: function emitComponentCompleted(componentState) {
-      this.$scope.$emit('componentCompleted', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
+      this.$scope.$emit('componentCompleted', {
+        nodeId: this.nodeId,
+        componentId: this.componentId,
+        componentState: componentState
+      });
     }
   }, {
-    key: 'processLatestStudentWork',
+    key: "processLatestStudentWork",
     value: function processLatestStudentWork() {
       var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
       if (latestComponentState) {
         var serverSaveTime = latestComponentState.serverSaveTime;
         var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+
         if (latestComponentState.isSubmit) {
           this.setIsSubmitDirty(false);
           this.emitComponentSubmitDirty(false);
@@ -545,63 +572,67 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'setIsSubmitDirty',
+    key: "setIsSubmitDirty",
     value: function setIsSubmitDirty(isDirty) {
       this.isSubmitDirty = isDirty;
     }
   }, {
-    key: 'getIsSubmitDirty',
+    key: "getIsSubmitDirty",
     value: function getIsSubmitDirty() {
       return this.isSubmitDirty;
     }
   }, {
-    key: 'emitComponentDirty',
+    key: "emitComponentDirty",
     value: function emitComponentDirty(isDirty) {
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: isDirty });
+      this.$scope.$emit('componentDirty', {
+        componentId: this.componentId,
+        isDirty: isDirty
+      });
     }
   }, {
-    key: 'emitComponentSubmitDirty',
+    key: "emitComponentSubmitDirty",
     value: function emitComponentSubmitDirty(isDirty) {
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
+      this.$scope.$emit('componentSubmitDirty', {
+        componentId: this.componentId,
+        isDirty: isDirty
+      });
     }
   }, {
-    key: 'setSavedMessage',
+    key: "setSavedMessage",
     value: function setSavedMessage(time) {
       this.setSaveText(this.$translate('SAVED'), time);
     }
   }, {
-    key: 'setAutoSavedMessage',
+    key: "setAutoSavedMessage",
     value: function setAutoSavedMessage(time) {
       this.setSaveText(this.$translate('AUTO_SAVED'), time);
     }
   }, {
-    key: 'setSubmittedMessage',
+    key: "setSubmittedMessage",
     value: function setSubmittedMessage(time) {
       this.setSaveText(this.$translate('SUBMITTED'), time);
     }
   }, {
-    key: 'setSaveText',
+    key: "setSaveText",
     value: function setSaveText(message, time) {
       this.saveMessage.text = message;
       this.saveMessage.time = time;
     }
   }, {
-    key: 'clearSaveText',
+    key: "clearSaveText",
     value: function clearSaveText() {
       this.setSaveText('', null);
     }
-
     /**
      * Get all the step node ids in the project
      * @returns {array} an array of step node id strings
      */
 
   }, {
-    key: 'getStepNodeIds',
+    key: "getStepNodeIds",
     value: function getStepNodeIds() {
       return this.ProjectService.getNodeIds();
     }
-
     /**
      * Get the step number and title for a node
      * @param {string} get the step number and title for this node
@@ -609,11 +640,10 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'getNodePositionAndTitleByNodeId',
+    key: "getNodePositionAndTitleByNodeId",
     value: function getNodePositionAndTitleByNodeId(nodeId) {
       return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
     }
-
     /**
      * Get the components in a step
      * @param {string} id of the step
@@ -621,11 +651,10 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'getComponentsByNodeId',
+    key: "getComponentsByNodeId",
     value: function getComponentsByNodeId(nodeId) {
       return this.ProjectService.getComponentsByNodeId(nodeId);
     }
-
     /**
      * Check if a node is a step node
      * @param {string} nodeId the node id to check
@@ -633,11 +662,10 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'isApplicationNode',
+    key: "isApplicationNode",
     value: function isApplicationNode(nodeId) {
       return this.ProjectService.isApplicationNode(nodeId);
     }
-
     /**
      * Create a new component state populated with the student data
      * @param action the action that is triggering creating of this component state
@@ -646,9 +674,8 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'createComponentState',
+    key: "createComponentState",
     value: function createComponentState(action) {}
-
     /**
      * Perform any additional processing that is required before returning the
      * component state
@@ -661,7 +688,7 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'createComponentStateAdditionalProcessing',
+    key: "createComponentStateAdditionalProcessing",
     value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
       /*
        * we don't need to perform any additional processing so we can resolve
@@ -669,15 +696,15 @@ var ComponentController = function () {
        */
       deferred.resolve(componentState);
     }
-
     /**
      * Import any work needed from connected components
      */
 
   }, {
-    key: 'handleConnectedComponents',
+    key: "handleConnectedComponents",
     value: function handleConnectedComponents() {
       var connectedComponents = this.componentContent.connectedComponents;
+
       if (connectedComponents != null) {
         var componentStates = [];
         var _iteratorNormalCompletion = true;
@@ -687,11 +714,12 @@ var ComponentController = function () {
         try {
           for (var _iterator = connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var connectedComponent = _step.value;
-
             var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+
             if (componentState != null) {
               componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
             }
+
             if (connectedComponent.type === 'showWork') {
               this.isDisabled = true;
             }
@@ -701,8 +729,8 @@ var ComponentController = function () {
           _iteratorError = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
             }
           } finally {
             if (_didIteratorError) {
@@ -719,17 +747,16 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'createMergedComponentState',
+    key: "createMergedComponentState",
     value: function createMergedComponentState(componentStates) {
       return componentStates[0];
     }
   }, {
-    key: 'handleConnectedComponentsPostProcess',
-    value: function handleConnectedComponentsPostProcess() {
-      // overridden by children
+    key: "handleConnectedComponentsPostProcess",
+    value: function handleConnectedComponentsPostProcess() {// overridden by children
     }
   }, {
-    key: 'getConnectedComponentsAndTheirComponentStates',
+    key: "getConnectedComponentsAndTheirComponentStates",
     value: function getConnectedComponentsAndTheirComponentStates() {
       var connectedComponentsAndTheirComponentStates = [];
       var _iteratorNormalCompletion2 = true;
@@ -739,7 +766,6 @@ var ComponentController = function () {
       try {
         for (var _iterator2 = this.componentContent.connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var connectedComponent = _step2.value;
-
           var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
           var connectedComponentsAndomponentState = {
             connectedComponent: connectedComponent,
@@ -752,8 +778,8 @@ var ComponentController = function () {
         _iteratorError2 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+            _iterator2["return"]();
           }
         } finally {
           if (_didIteratorError2) {
@@ -765,58 +791,64 @@ var ComponentController = function () {
       return connectedComponentsAndTheirComponentStates;
     }
   }, {
-    key: 'showCopyPublicNotebookItemButton',
+    key: "showCopyPublicNotebookItemButton",
     value: function showCopyPublicNotebookItemButton() {
       return this.ProjectService.isSpaceExists("public");
     }
   }, {
-    key: 'copyPublicNotebookItemButtonClicked',
+    key: "copyPublicNotebookItemButtonClicked",
     value: function copyPublicNotebookItemButtonClicked(event) {
-      this.$rootScope.$broadcast('openNotebook', { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+      this.$rootScope.$broadcast('openNotebook', {
+        nodeId: this.nodeId,
+        componentId: this.componentId,
+        insertMode: true,
+        requester: this.nodeId + '-' + this.componentId,
+        visibleSpace: "public"
+      });
     }
   }, {
-    key: 'importWorkByStudentWorkId',
+    key: "importWorkByStudentWorkId",
     value: function importWorkByStudentWorkId(studentWorkId) {
       var _this6 = this;
 
       this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
         if (componentState != null) {
           _this6.setStudentWork(componentState);
+
           _this6.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+
           _this6.$rootScope.$broadcast('closeNotebook');
         }
       });
     }
   }, {
-    key: 'setParentStudentWorkIdToCurrentStudentWork',
+    key: "setParentStudentWorkIdToCurrentStudentWork",
     value: function setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
       this.parentStudentWorkIds = [studentWorkId];
     }
   }, {
-    key: 'isNotebookEnabled',
+    key: "isNotebookEnabled",
     value: function isNotebookEnabled() {
       return this.NotebookService.isNotebookEnabled();
     }
   }, {
-    key: 'isStudentNoteClippingEnabled',
+    key: "isStudentNoteClippingEnabled",
     value: function isStudentNoteClippingEnabled() {
       return this.NotebookService.isStudentNoteClippingEnabled();
     }
   }, {
-    key: 'isAddToNotebookEnabled',
+    key: "isAddToNotebookEnabled",
     value: function isAddToNotebookEnabled() {
       return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled();
     }
-
     /**
      * Set the show submit button value
      * @param show whether to show the submit button
      */
 
   }, {
-    key: 'setShowSubmitButtonValue',
+    key: "setShowSubmitButtonValue",
     value: function setShowSubmitButtonValue(show) {
-
       if (show == null || show == false) {
         // we are hiding the submit button
         this.authoringComponentContent.showSaveButton = false;
@@ -826,34 +858,36 @@ var ComponentController = function () {
         this.authoringComponentContent.showSaveButton = true;
         this.authoringComponentContent.showSubmitButton = true;
       }
-
       /*
        * notify the parent node that this component is changing its
        * showSubmitButton value so that it can show save buttons on the
        * step or sibling components accordingly
        */
-      this.$scope.$emit('componentShowSubmitButtonValueChanged', { nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show });
-    }
 
+
+      this.$scope.$emit('componentShowSubmitButtonValueChanged', {
+        nodeId: this.nodeId,
+        componentId: this.componentId,
+        showSubmitButton: show
+      });
+    }
     /**
      * The showSubmitButton value has changed
      */
 
   }, {
-    key: 'showSubmitButtonValueChanged',
+    key: "showSubmitButtonValueChanged",
     value: function showSubmitButtonValueChanged() {
-
       /*
        * perform additional processing for when we change the showSubmitButton
        * value
        */
-      this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
+      this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton); // the authoring component content has changed so we will save the project
 
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringAddConnectedComponent',
+    key: "authoringAddConnectedComponent",
     value: function authoringAddConnectedComponent() {
       var connectedComponent = this.createConnectedComponent();
       this.addConnectedComponent(connectedComponent);
@@ -861,15 +895,16 @@ var ComponentController = function () {
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'addConnectedComponent',
+    key: "addConnectedComponent",
     value: function addConnectedComponent(connectedComponent) {
       if (this.authoringComponentContent.connectedComponents == null) {
         this.authoringComponentContent.connectedComponents = [];
       }
+
       this.authoringComponentContent.connectedComponents.push(connectedComponent);
     }
   }, {
-    key: 'createConnectedComponent',
+    key: "createConnectedComponent",
     value: function createConnectedComponent() {
       return {
         nodeId: this.nodeId,
@@ -877,7 +912,6 @@ var ComponentController = function () {
         type: null
       };
     }
-
     /**
      * Automatically set the component id for the connected component if there
      * is only one viable option.
@@ -885,10 +919,11 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'authoringAutomaticallySetConnectedComponentComponentIdIfPossible',
+    key: "authoringAutomaticallySetConnectedComponentComponentIdIfPossible",
     value: function authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
       if (connectedComponent != null) {
         var components = this.getComponentsByNodeId(connectedComponent.nodeId);
+
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
@@ -913,8 +948,8 @@ var ComponentController = function () {
             _iteratorError3 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+              if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+                _iterator3["return"]();
               }
             } finally {
               if (_didIteratorError3) {
@@ -933,44 +968,42 @@ var ComponentController = function () {
           }
         }
       }
+
       this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
     }
   }, {
-    key: 'authoringAutomaticallySetConnectedComponentTypeIfPossible',
+    key: "authoringAutomaticallySetConnectedComponentTypeIfPossible",
     value: function authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
       if (connectedComponent.componentId != null) {
         connectedComponent.type = 'importWork';
       }
+
       this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
     }
   }, {
-    key: 'authoringAutomaticallySetConnectedComponentFieldsIfPossible',
+    key: "authoringAutomaticallySetConnectedComponentFieldsIfPossible",
     value: function authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {}
-
     /**
      * Delete a connected component
      * @param index the index of the component to delete
      */
 
   }, {
-    key: 'authoringDeleteConnectedComponent',
+    key: "authoringDeleteConnectedComponent",
     value: function authoringDeleteConnectedComponent(index) {
-
       // ask the author if they are sure they want to delete the connected component
       var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
 
       if (answer) {
         // the author answered yes to delete
-
         if (this.authoringComponentContent.connectedComponents != null) {
           this.authoringComponentContent.connectedComponents.splice(index, 1);
-        }
+        } // the authoring component content has changed so we will save the project
 
-        // the authoring component content has changed so we will save the project
+
         this.authoringViewComponentChanged();
       }
     }
-
     /**
      * Get the connected component type
      * @param connectedComponent get the component type of this connected component
@@ -978,18 +1011,15 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'authoringGetConnectedComponentType',
+    key: "authoringGetConnectedComponentType",
     value: function authoringGetConnectedComponentType(connectedComponent) {
-
       var connectedComponentType = null;
 
       if (connectedComponent != null) {
-
         // get the node id and component id of the connected component
         var nodeId = connectedComponent.nodeId;
-        var componentId = connectedComponent.componentId;
+        var componentId = connectedComponent.componentId; // get the component
 
-        // get the component
         var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
         if (component != null) {
@@ -1000,42 +1030,37 @@ var ComponentController = function () {
 
       return connectedComponentType;
     }
-
     /**
      * The connected component node id has changed
      * @param connectedComponent the connected component that has changed
      */
 
   }, {
-    key: 'authoringConnectedComponentNodeIdChanged',
+    key: "authoringConnectedComponentNodeIdChanged",
     value: function authoringConnectedComponentNodeIdChanged(connectedComponent) {
       if (connectedComponent != null) {
         connectedComponent.componentId = null;
         connectedComponent.type = null;
-        this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+        this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent); // the authoring component content has changed so we will save the project
 
-        // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
       }
     }
   }, {
-    key: 'authoringConnectedComponentComponentIdChanged',
+    key: "authoringConnectedComponentComponentIdChanged",
     value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
       this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
       this.authoringViewComponentChanged();
     }
-
     /**
      * The connected component type has changed
      * @param connectedComponent the connected component that changed
      */
 
   }, {
-    key: 'authoringConnectedComponentTypeChanged',
+    key: "authoringConnectedComponentTypeChanged",
     value: function authoringConnectedComponentTypeChanged(connectedComponent) {
-
       if (connectedComponent != null) {
-
         if (connectedComponent.type === 'importWork') {
           /*
            * the type has changed to import work
@@ -1044,13 +1069,12 @@ var ComponentController = function () {
         /*
          * the type has changed to show work
          */
-
-
         // the authoring component content has changed so we will save the project
+
+
         this.authoringViewComponentChanged();
       }
     }
-
     /**
      * Check if we are allowed to connect to this component type
      * @param componentType the component type
@@ -1058,14 +1082,11 @@ var ComponentController = function () {
      */
 
   }, {
-    key: 'isConnectedComponentTypeAllowed',
+    key: "isConnectedComponentTypeAllowed",
     value: function isConnectedComponentTypeAllowed(componentType) {
-
       if (componentType != null) {
+        var allowedConnectedComponentTypes = this.allowedConnectedComponentTypes; // loop through the allowed connected component types
 
-        var allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-
-        // loop through the allowed connected component types
         for (var a = 0; a < allowedConnectedComponentTypes.length; a++) {
           var allowedConnectedComponentType = allowedConnectedComponentTypes[a];
 
@@ -1081,22 +1102,22 @@ var ComponentController = function () {
       return false;
     }
   }, {
-    key: 'addTag',
+    key: "addTag",
     value: function addTag() {
       if (this.authoringComponentContent.tags == null) {
         this.authoringComponentContent.tags = [];
       }
+
       this.authoringComponentContent.tags.push('');
       this.authoringViewComponentChanged();
     }
-
     /**
      * Move a tag up
      * @param index the index of the tag to move up
      */
 
   }, {
-    key: 'moveTagUp',
+    key: "moveTagUp",
     value: function moveTagUp(index) {
       if (index > 0) {
         // the index is not at the top so we can move it up
@@ -1106,14 +1127,13 @@ var ComponentController = function () {
         this.authoringViewComponentChanged();
       }
     }
-
     /**
      * Move a tag down
      * @param index the index of the tag to move down
      */
 
   }, {
-    key: 'moveTagDown',
+    key: "moveTagDown",
     value: function moveTagDown(index) {
       if (index < this.authoringComponentContent.tags.length - 1) {
         // the index is not at the bottom so we can move it down
@@ -1124,25 +1144,22 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'deleteTag',
+    key: "deleteTag",
     value: function deleteTag(indexOfTagToDelete) {
       if (confirm(this.$translate('areYouSureYouWantToDeleteThisTag'))) {
         this.authoringComponentContent.tags.splice(indexOfTagToDelete, 1);
         this.authoringViewComponentChanged();
       }
     }
-
     /**
      * The author has changed the rubric
      */
 
   }, {
-    key: 'summernoteRubricHTMLChanged',
+    key: "summernoteRubricHTMLChanged",
     value: function summernoteRubricHTMLChanged() {
-
       // get the summernote rubric html
       var html = this.summernoteRubricHTML;
-
       /*
        * remove the absolute asset paths
        * e.g.
@@ -1150,81 +1167,74 @@ var ComponentController = function () {
        * will be changed to
        * <img src='sun.png'/>
        */
-      html = this.ConfigService.removeAbsoluteAssetPaths(html);
 
+      html = this.ConfigService.removeAbsoluteAssetPaths(html);
       /*
        * replace <a> and <button> elements with <wiselink> elements when
        * applicable
        */
-      html = this.UtilService.insertWISELinks(html);
 
-      // update the component rubric
-      this.authoringComponentContent.rubric = html;
+      html = this.UtilService.insertWISELinks(html); // update the component rubric
 
-      // the authoring component content has changed so we will save the project
+      this.authoringComponentContent.rubric = html; // the authoring component content has changed so we will save the project
+
       this.authoringViewComponentChanged();
     }
-
     /**
      * The component has changed in the regular authoring view so we will save the project
      */
 
   }, {
-    key: 'authoringViewComponentChanged',
+    key: "authoringViewComponentChanged",
     value: function authoringViewComponentChanged() {
-
       // update the JSON string in the advanced authoring view textarea
       this.updateAdvancedAuthoringView();
-
       /*
        * notify the parent node that the content has changed which will save
        * the project to the server
        */
+
       this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
     }
-
     /**
      * Update the component JSON string that will be displayed in the advanced authoring view textarea
      */
 
   }, {
-    key: 'updateAdvancedAuthoringView',
+    key: "updateAdvancedAuthoringView",
     value: function updateAdvancedAuthoringView() {
       this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     }
-
     /**
      * The component has changed in the advanced authoring view so we will update
      * the component and save the project.
      */
 
   }, {
-    key: 'advancedAuthoringViewComponentChanged',
+    key: "advancedAuthoringViewComponentChanged",
     value: function advancedAuthoringViewComponentChanged() {
       try {
         /*
          * create a new component by converting the JSON string in the advanced
          * authoring view into a JSON object
          */
-        var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
+        var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString); // replace the component in the project
 
-        // replace the component in the project
-        this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+        this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent); // set the new component into the controller
 
-        // set the new component into the controller
         this.componentContent = editedComponentContent;
-
         /*
          * notify the parent node that the content has changed which will save
          * the project to the server
          */
+
         this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
       } catch (e) {
         this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
       }
     }
   }, {
-    key: 'showJSONButtonClicked',
+    key: "showJSONButtonClicked",
     value: function showJSONButtonClicked() {
       if (this.showJSONAuthoring) {
         // we were showing the JSON authoring view and now we want to hide it
@@ -1234,6 +1244,7 @@ var ComponentController = function () {
           this.UtilService.hideJSONValidMessage();
         } else {
           var isRollback = confirm(this.$translate('jsonInvalidErrorMessage'));
+
           if (isRollback) {
             // the author wants to revert back to the last valid JSON
             this.toggleJSONAuthoringView();
@@ -1250,14 +1261,15 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'toggleJSONAuthoringView',
+    key: "toggleJSONAuthoringView",
     value: function toggleJSONAuthoringView() {
       this.showJSONAuthoring = !this.showJSONAuthoring;
     }
   }, {
-    key: 'authoringJSONChanged',
+    key: "authoringJSONChanged",
     value: function authoringJSONChanged() {
       this.isJSONStringChanged = true;
+
       if (this.isJSONValid()) {
         this.UtilService.showJSONValidMessage();
         this.rememberRecentValidJSON();
@@ -1266,7 +1278,7 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'isJSONValid',
+    key: "isJSONValid",
     value: function isJSONValid() {
       try {
         angular.fromJson(this.authoringComponentContentJSONString);
@@ -1276,92 +1288,93 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'rememberRecentValidJSON',
+    key: "rememberRecentValidJSON",
     value: function rememberRecentValidJSON() {
       this.authoringValidComponentContentJSONString = this.authoringComponentContentJSONString;
     }
   }, {
-    key: 'rollbackToRecentValidJSON',
+    key: "rollbackToRecentValidJSON",
     value: function rollbackToRecentValidJSON() {
       this.authoringComponentContentJSONString = this.authoringValidComponentContentJSONString;
     }
-
     /**
      * The component has changed in the advanced authoring view so we will update
      * the component and save the project.
      */
 
   }, {
-    key: 'saveJSONAuthoringViewChanges',
+    key: "saveJSONAuthoringViewChanges",
     value: function saveJSONAuthoringViewChanges() {
       try {
         var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
         this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
         this.componentContent = editedComponentContent;
         this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
+        this.$rootScope.$broadcast('scrollToComponent', {
+          componentId: this.componentId
+        });
         this.isJSONStringChanged = false;
       } catch (e) {
         this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
       }
     }
   }, {
-    key: 'isEventTargetThisComponent',
+    key: "isEventTargetThisComponent",
     value: function isEventTargetThisComponent(args) {
       return this.isForThisComponent(args);
     }
   }, {
-    key: 'isForThisComponent',
+    key: "isForThisComponent",
     value: function isForThisComponent(object) {
       return this.nodeId == object.nodeId && this.componentId == object.componentId;
     }
   }, {
-    key: 'canSubmit',
+    key: "canSubmit",
     value: function canSubmit() {
       return !this.hasMaxSubmitCount() || this.hasSubmitsLeft();
     }
   }, {
-    key: 'hasMaxSubmitCount',
+    key: "hasMaxSubmitCount",
     value: function hasMaxSubmitCount() {
       return this.getMaxSubmitCount() != null;
     }
   }, {
-    key: 'getMaxSubmitCount',
+    key: "getMaxSubmitCount",
     value: function getMaxSubmitCount() {
       return this.componentContent.maxSubmitCount;
     }
   }, {
-    key: 'getNumberOfSubmitsLeft',
+    key: "getNumberOfSubmitsLeft",
     value: function getNumberOfSubmitsLeft() {
       return this.getMaxSubmitCount() - this.submitCounter;
     }
   }, {
-    key: 'hasSubmitsLeft',
+    key: "hasSubmitsLeft",
     value: function hasSubmitsLeft() {
       return this.getNumberOfSubmitsLeft() > 0;
     }
   }, {
-    key: 'setIsSubmit',
+    key: "setIsSubmit",
     value: function setIsSubmit(isSubmit) {
       this.isSubmit = isSubmit;
     }
   }, {
-    key: 'getIsSubmit',
+    key: "getIsSubmit",
     value: function getIsSubmit() {
       return this.isSubmit;
     }
   }, {
-    key: 'setIsDirty',
+    key: "setIsDirty",
     value: function setIsDirty(isDirty) {
       this.isDirty = isDirty;
     }
   }, {
-    key: 'getIsDirty',
+    key: "getIsDirty",
     value: function getIsDirty() {
       return this.isDirty;
     }
   }, {
-    key: 'removeAttachment',
+    key: "removeAttachment",
     value: function removeAttachment(attachment) {
       if (this.attachments.indexOf(attachment) !== -1) {
         this.attachments.splice(this.attachments.indexOf(attachment), 1);
@@ -1369,7 +1382,7 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'attachStudentAsset',
+    key: "attachStudentAsset",
     value: function attachStudentAsset(studentAsset) {
       var _this7 = this;
 
@@ -1378,38 +1391,41 @@ var ComponentController = function () {
           studentAssetId: copiedAsset.id,
           iconURL: copiedAsset.iconURL
         };
+
         _this7.attachments.push(attachment);
+
         _this7.studentDataChanged();
       });
     }
   }, {
-    key: 'hasMaxScore',
+    key: "hasMaxScore",
     value: function hasMaxScore() {
       return this.componentContent.maxScore != null && this.componentContent.maxScore !== '';
     }
   }, {
-    key: 'getMaxScore',
+    key: "getMaxScore",
     value: function getMaxScore() {
       return this.componentContent.maxScore;
     }
   }, {
-    key: 'createAutoScoreAnnotation',
+    key: "createAutoScoreAnnotation",
     value: function createAutoScoreAnnotation(data) {
       return this.createAutoAnnotation('autoScore', data);
     }
   }, {
-    key: 'createAutoCommentAnnotation',
+    key: "createAutoCommentAnnotation",
     value: function createAutoCommentAnnotation(data) {
       return this.createAutoAnnotation('autoComment', data);
     }
   }, {
-    key: 'createAutoAnnotation',
+    key: "createAutoAnnotation",
     value: function createAutoAnnotation(type, data) {
       var runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
       var nodeId = this.nodeId;
       var componentId = this.componentId;
       var toWorkgroupId = this.ConfigService.getWorkgroupId();
+
       if (type === 'autoScore') {
         return this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
       } else if (type === 'autoComment') {
@@ -1417,12 +1433,12 @@ var ComponentController = function () {
       }
     }
   }, {
-    key: 'updateLatestScoreAnnotation',
+    key: "updateLatestScoreAnnotation",
     value: function updateLatestScoreAnnotation(annotation) {
       this.latestAnnotations.score = annotation;
     }
   }, {
-    key: 'updateLatestCommentAnnotation',
+    key: "updateLatestCommentAnnotation",
     value: function updateLatestCommentAnnotation(annotation) {
       this.latestAnnotations.comment = annotation;
     }
@@ -1432,5 +1448,6 @@ var ComponentController = function () {
 }();
 
 ComponentController.$inject = [];
-exports.default = ComponentController;
+var _default = ComponentController;
+exports["default"] = _default;
 //# sourceMappingURL=componentController.js.map

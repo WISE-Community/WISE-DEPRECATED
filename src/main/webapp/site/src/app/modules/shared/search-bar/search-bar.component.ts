@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime ,  distinctUntilChanged } from 'rxjs/operators';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({

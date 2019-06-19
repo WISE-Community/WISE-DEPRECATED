@@ -1,22 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { configureTestSuite } from 'ng-bullet';
 import { ForgotTeacherUsernameCompleteComponent } from './forgot-teacher-username-complete.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {Router} from '@angular/router';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
 describe('ForgotTeacherUsernameCompleteComponent', () => {
   let component: ForgotTeacherUsernameCompleteComponent;
   let fixture: ComponentFixture<ForgotTeacherUsernameCompleteComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotTeacherUsernameCompleteComponent ],
       imports: [ RouterTestingModule ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotTeacherUsernameCompleteComponent);

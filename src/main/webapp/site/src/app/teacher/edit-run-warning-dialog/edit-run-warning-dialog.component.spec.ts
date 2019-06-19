@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EditRunWarningDialogComponent } from './edit-run-warning-dialog.component';
 import { ConfigService } from '../../services/config.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Run } from "../../domain/run";
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockConfigService {
   getContextPath(): string {
@@ -21,7 +21,7 @@ describe('EditRunWarningDialogComponent', () => {
     title: "Test Project"
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ EditRunWarningDialogComponent ],
       providers: [
@@ -32,8 +32,7 @@ describe('EditRunWarningDialogComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EditRunWarningDialogComponent);

@@ -96,7 +96,8 @@
                         class='discussion-post__attachment discussion-new__attachment__content' />
                     <md-button class='component__attachment__delete'
                         ng-click='discussionController.removeAttachment(attachment)'
-                        title='Remove file'>
+                        title='Remove file'
+                        ng-disabled='discussionController.isDisabled'>
                       <md-icon>cancel</md-icon>
                     </md-button>
                   </div>
@@ -107,7 +108,8 @@
                   <md-button class='md-accent md-icon-button'
                       ng-click='nodeController.showStudentAssets($event, discussionController.componentId, discussionController.isDisabled)'
                       ng-if='discussionController.isStudentAttachmentEnabled'
-                      title='Add picture'>
+                      title='Add picture'
+                      ng-disabled='discussionController.isDisabled'>
                     <md-icon>image</md-icon>
                   </md-button>
                   <!--<md-button class='md-primary'

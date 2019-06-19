@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable ,  Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 
 import { RunInfo } from './run-info';
 import { Student } from "../domain/student";
 import { StudentRun } from './student-run';
-import { Subject } from "rxjs";
 
 @Injectable()
 export class StudentService {
@@ -51,8 +50,8 @@ export class StudentService {
     return this.http.post<StudentRun>(this.addRunUrl, body, { headers: headers });
   }
 
-  launchRun(runId: number, workgroupId: number, presentUserIds: string[],
-      absentUserIds: string[]) {
+  launchRun(runId: number, workgroupId: number, presentUserIds: number[],
+      absentUserIds: number[]) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', String(runId));

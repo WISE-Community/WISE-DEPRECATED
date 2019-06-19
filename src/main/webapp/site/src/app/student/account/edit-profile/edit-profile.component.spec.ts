@@ -14,6 +14,7 @@ import { By } from '@angular/platform-browser';
 import { Student } from "../../../domain/student";
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserService {
 
@@ -72,7 +73,7 @@ describe('EditProfileComponent', () => {
     form.triggerEventHandler('submit', null);
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ EditProfileComponent ],
       imports: [
@@ -95,8 +96,7 @@ describe('EditProfileComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EditProfileComponent);

@@ -29,12 +29,12 @@ export class CallToActionComponent implements OnInit {
   @Input()
   headline: string;
 
-  @ContentChild('headlineTemplate') headlineRef: TemplateRef<any>;
+  @ContentChild('headlineTemplate', {static:false}) headlineRef: TemplateRef<any>;
 
   @Input()
   content: string;
 
-  @ContentChild('contentTemplate') contentRef: TemplateRef<any>;
+  @ContentChild('contentTemplate', {static:false}) contentRef: TemplateRef<any>;
 
   constructor() { }
 

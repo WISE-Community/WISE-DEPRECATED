@@ -26,7 +26,7 @@ export class MockUserService {
 }
 
 export class MockStudentService {
-  launchRun(runId: string, workgroupId: string, presentUserIds: string[], absentUserIds: string[]): Observable<any> {
+  launchRun(runId: string, workgroupId: string, presentUserIds: number[], absentUserIds: number[]): Observable<any> {
     return Observable.create(observer => {
       observer.next({
         status: 'success',

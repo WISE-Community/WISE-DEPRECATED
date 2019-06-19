@@ -4,12 +4,13 @@ import { UserService } from "../../../services/user.service";
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Provider, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { User } from "../../../domain/user";
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {
@@ -49,13 +50,11 @@ describe('EditPasswordComponent', () => {
     return fixture.debugElement.query(By.css('form'));
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ EditPasswordComponent ],
       imports: [
-        BrowserAnimationsModule,
-        ReactiveFormsModule,
-        MatSnackBarModule
+        BrowserAnimationsModule, ReactiveFormsModule, MatSnackBarModule
       ],
       providers: [
         { provide: UserService, useValue: new MockUserService() },
@@ -68,13 +67,14 @@ describe('EditPasswordComponent', () => {
         I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+    });
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(EditPasswordComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -3,10 +3,11 @@ import { AppComponent } from './app.component';
 import { Component } from "@angular/core";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MediaChange, ObservableMedia } from '@angular/flex-layout';
+import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { UtilService } from "./services/util.service";
+import { configureTestSuite } from 'ng-bullet';
 
 @Component({selector: 'router-outlet', template: ''})
 class RouterOutletStubComponent { }
@@ -26,7 +27,7 @@ export class MockObservableMedia {
     return false;
   }
 
-  subscribe(): Observable<MediaChange> {
+  asObservable(): Observable<MediaChange> {
     return Observable.create(observer => {
       observer.next(new MediaChange());
       observer.complete();
@@ -35,14 +36,15 @@ export class MockObservableMedia {
 }
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  let app;
+
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: UtilService, useClass: MockUtilService },
-        { provide: ObservableMedia, useClass: MockObservableMedia },
+        { provide: MediaObserver, useClass: MockObservableMedia },
         { provide: MatDialog, useValue: {
             closeAll: () => {
-
             }
           }
         }
@@ -50,16 +52,19 @@ describe('AppComponent', () => {
       declarations: [ AppComponent ],
       imports: [ RouterTestingModule ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    }).compileComponents();
-  }));
-  it('should create the app', async(() => {
+    });
+  });
+
+  beforeEach(() => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
+    app = fixture.debugElement.componentInstance;
+  });
+
+  it('should create the app', async(() => {
     expect(app).toBeTruthy();
   }));
+
   it(`should have as title 'app'`, async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('app');
   }));
 });

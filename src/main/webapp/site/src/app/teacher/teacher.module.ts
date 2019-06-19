@@ -23,7 +23,6 @@ import { ShareRunDialogComponent } from './share-run-dialog/share-run-dialog.com
 import { TimelineModule } from "../modules/timeline/timeline.module";
 import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
-import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-dialog.component';
 import { UseWithClassWarningDialogComponent } from './use-with-class-warning-dialog/use-with-class-warning-dialog.component';
 import { EditRunWarningDialogComponent } from './edit-run-warning-dialog/edit-run-warning-dialog.component';
@@ -57,7 +56,6 @@ const materialModules = [
     ShareRunDialogComponent,
     EditComponent,
     EditProfileComponent,
-    EditPasswordComponent,
     UseWithClassWarningDialogComponent,
     EditRunWarningDialogComponent
   ],
