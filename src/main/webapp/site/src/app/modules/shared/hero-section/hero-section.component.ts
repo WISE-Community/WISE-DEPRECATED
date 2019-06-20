@@ -15,12 +15,12 @@ export class HeroSectionComponent implements OnInit {
   @Input()
   headline: string;
 
-  @ContentChild('headlineTemplate') headlineRef: TemplateRef<any>;
+  @ContentChild('headlineTemplate', {static:false}) headlineRef: TemplateRef<any>;
 
   @Input()
   tagline: string;
 
-  @ContentChild('taglineTemplate') taglineRef: TemplateRef<any>;
+  @ContentChild('taglineTemplate', {static:false}) taglineRef: TemplateRef<any>;
 
   bgStyle: SafeStyle;
 

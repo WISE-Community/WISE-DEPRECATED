@@ -24,10 +24,12 @@
 	<div class="sectionContent"><span style="color:red;"><spring:message code="teacher.management.batchstudentchangepassword.warning"/></span></div>
 
 	<form:form method="post" action="batchstudentchangepassword.html" modelAttribute="batchStudentChangePasswordParameters" id="batchstudentchangepassword" autocomplete='off'>
-		<div class="sectionContent">
-			<label><spring:message code="teacher.management.batchstudentchangepassword.typeTeacherPassword"/></label>
-			<form:password path="passwd0"/>
-		</div>
+		<c:if test="${!batchStudentChangePasswordParameters.teacherUser.getUserDetails().isGoogleUser()}">
+      <div class="sectionContent">
+        <label><spring:message code="teacher.management.batchstudentchangepassword.typeTeacherPassword"/></label>
+        <form:password path="passwd0"/>
+      </div>
+    </c:if>
 		<div class="sectionContent">
 			<label><spring:message code="teacher.management.batchstudentchangepassword.typeStudentPassword"/></label>
 			<form:password path="passwd1"/>

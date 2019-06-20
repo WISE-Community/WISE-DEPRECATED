@@ -7,30 +7,25 @@ class ConfigService {
     this.$location = $location;
     this.config = null;
     this.$translate = this.$filter('translate');
-  };
+  }
 
   setConfig(config) {
     this.config = config;
     this.sortClassmateUserInfosAlphabeticallyByName();
     this.setPermissions();
     this.setClassmateDisplayNames();
-  };
+  }
 
   retrieveConfig(configURL) {
     return this.$http.get(configURL).then((result) => {
       const configJSON = result.data;
-      if (configJSON.retrievalTimestamp != null) {
-        const clientTimestamp = new Date().getTime();
-        const serverTimestamp = configJSON.retrievalTimestamp;
-        const timestampDiff = clientTimestamp - serverTimestamp;
-        configJSON.timestampDiff = timestampDiff;
-      }
+      this.setTimestampDiff(configJSON);
 
       let constraints = true;
 
       const absURL = this.$location.$$absUrl;
 
-      if (configJSON.mode == 'preview') {
+      if (configJSON.mode === 'preview') {
         // constraints can only be disabled using the url in preview mode
 
         // regex to match constraints=false in the url
@@ -56,6 +51,8 @@ class ConfigService {
         console.log(projectPath);
       }
 
+      configJSON.isRunActive = this.calculateIsRunActive(configJSON);
+
       this.setConfig(configJSON);
 
       if (this.isPreview()) {
@@ -68,7 +65,18 @@ class ConfigService {
 
       return configJSON;
     });
-  };
+  }
+
+  setTimestampDiff(configJSON) {
+    if (configJSON.retrievalTimestamp != null) {
+      const clientTimestamp = new Date().getTime();
+      const serverTimestamp = configJSON.retrievalTimestamp;
+      const timestampDiff = clientTimestamp - serverTimestamp;
+      configJSON.timestampDiff = timestampDiff;
+    } else {
+      configJSON.timestampDiff = 0;
+    }
+  }
 
   getConfigParam(paramName) {
     if (this.config !== null) {
@@ -76,76 +84,76 @@ class ConfigService {
     } else {
       return null;
     }
-  };
+  }
 
   getAchievementsURL() {
     return this.getConfigParam('achievementURL');
-  };
+  }
 
   getCRaterRequestURL() {
     return this.getConfigParam('cRaterRequestURL');
-  };
+  }
 
   getMainHomePageURL() {
     return this.getConfigParam('mainHomePageURL');
-  };
+  }
 
   getNotificationURL() {
     return this.getConfigParam('notificationURL');
-  };
+  }
 
   getRunId() {
     return this.getConfigParam('runId');
-  };
+  }
 
   getProjectId() {
     return this.getConfigParam('projectId');
-  };
+  }
 
   getSessionLogOutURL() {
     return this.getConfigParam('sessionLogOutURL');
-  };
+  }
 
   getStudentAssetsURL() {
     return this.getConfigParam('studentAssetsURL');
-  };
+  }
 
   getStudentStatusURL() {
     return this.getConfigParam('studentStatusURL');
-  };
+  }
 
   getStudentMaxTotalAssetsSize() {
     return this.getConfigParam('studentMaxTotalAssetsSize');
-  };
+  }
 
   getStudentNotebookURL() {
     return this.getConfigParam('studentNotebookURL');
-  };
+  }
 
   getStudentUploadsBaseURL() {
     return this.getConfigParam('studentUploadsBaseURL');
-  };
+  }
 
   getUserInfo() {
     return this.getConfigParam('userInfo');
-  };
+  }
 
   getWebSocketURL() {
-    return window.location.protocol.replace("http", "ws") + "//" + window.location.host +
+    return window.location.protocol + "//" + window.location.host +
         this.getContextPath() + "/websocket";
-  };
+  }
 
   getWISEBaseURL() {
     return this.getConfigParam('wiseBaseURL');
-  };
+  }
 
   getLocale() {
     return this.getConfigParam('locale') || 'en';
-  };
+  }
 
   getMode() {
     return this.getConfigParam('mode');
-  };
+  }
 
   getContextPath() {
     return this.getConfigParam('contextPath');
@@ -160,7 +168,7 @@ class ConfigService {
       return myUserInfo.periodId;
     }
     return null;
-  };
+  }
 
   /**
    * Get the periods
@@ -177,7 +185,7 @@ class ConfigService {
       }
     }
     return [];
-  };
+  }
 
   getWorkgroupId() {
     const myUserInfo = this.getMyUserInfo();
@@ -185,7 +193,7 @@ class ConfigService {
       return myUserInfo.workgroupId;
     }
     return null;
-  };
+  }
 
   /**
    * Get the user id (aka WISE ID)
@@ -205,12 +213,8 @@ class ConfigService {
       return userInfo.myUserInfo;
     }
     return null;
-  };
+  }
 
-  /**
-   * Get the user name of the signed in user
-   * @return the user name of the signed in user
-   */
   getMyUsername() {
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
@@ -228,7 +232,7 @@ class ConfigService {
       }
     }
     return null;
-  };
+  }
 
   setClassmateDisplayNames() {
     let classmateUserInfos = this.getClassmateUserInfos();
@@ -282,7 +286,7 @@ class ConfigService {
       return teacherUserInfo.workgroupId;
     }
     return null;
-  };
+  }
 
   getTeacherUserInfo() {
     const myUserInfo = this.getMyUserInfo();
@@ -293,7 +297,7 @@ class ConfigService {
       }
     }
     return null;
-  };
+  }
 
   /**
    * Get the shared teacher user infos for the run
@@ -335,7 +339,7 @@ class ConfigService {
       classmateUserInfos.sort(this.sortClassmateUserInfosAlphabeticallyByNameHelper);
     }
     return classmateUserInfos;
-  };
+  }
 
   sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
     if (a != null && a.username != null && b != null && b.username != null) {
@@ -348,7 +352,7 @@ class ConfigService {
       }
     }
     return 0;
-  };
+  }
 
   setPermissions() {
     let role = this.getTeacherRole(this.getWorkgroupId());
@@ -376,7 +380,7 @@ class ConfigService {
     return {
       canViewStudentNames: this.config.canViewStudentNames && !this.isSwitchedUser(),
       canGradeStudentWork: this.config.canGradeStudentWork && !this.isSwitchedUser()
-    }
+    };
   }
 
   getUserInfoByWorkgroupId(workgroupId) {
@@ -406,7 +410,7 @@ class ConfigService {
       }
     }
     return userInfo;
-  };
+  }
 
   /**
    * Get the period id for a workgroup id
@@ -421,7 +425,7 @@ class ConfigService {
       }
     }
     return null;
-  };
+  }
 
   /**
    * Get the student names
@@ -445,7 +449,7 @@ class ConfigService {
       }
     }
     return studentNames;
-  };
+  }
 
   getUserIdsByWorkgroupId(workgroupId) {
     if (workgroupId != null) {
@@ -455,7 +459,7 @@ class ConfigService {
       }
     }
     return [];
-  };
+  }
 
   getUsernameByWorkgroupId(workgroupId) {
     if (workgroupId != null) {
@@ -465,7 +469,7 @@ class ConfigService {
       }
     }
     return null;
-  };
+  }
 
   getDisplayNamesByWorkgroupId(workgroupId) {
     if (workgroupId != null) {
@@ -475,7 +479,7 @@ class ConfigService {
       }
     }
     return null;
-  };
+  }
 
   getUsernamesByWorkgroupId(workgroupId) {
     let usernamesObjects = [];
@@ -499,7 +503,7 @@ class ConfigService {
       }
     }
     return usernamesObjects;
-  };
+  }
 
   getDisplayUsernamesByWorkgroupId(workgroupId) {
     let usernames = '';
@@ -528,12 +532,12 @@ class ConfigService {
       }
     }
     return usernames;
-  };
+  }
 
   isPreview() {
     const mode = this.getMode();
     return mode != null && mode === 'preview';
-  };
+  }
 
   /**
    * Convert a client timestamp to a server timestamp. This is required
@@ -788,7 +792,7 @@ class ConfigService {
      */
     html = html.replace(assetsDirectoryPathIncludingHostRegEx, '');
     html = html.replace(assetsDirectoryPathNotIncludingHostRegEx, '');
-    return html
+    return html;
   }
 
   /**
@@ -858,6 +862,21 @@ class ConfigService {
     } else {
       return 0;
     }
+  }
+
+  calculateIsRunActive(configJSON) {
+    const currentTime = new Date().getTime();
+    if (currentTime < this.convertToClientTimestamp(configJSON.startTime)) {
+      return false;
+    } else if (configJSON.endTime != null &&
+        currentTime > this.convertToClientTimestamp(configJSON.endTime)) {
+      return false;
+    }
+    return true;
+  }
+
+  isRunActive() {
+    return this.config.isRunActive;
   }
 }
 

@@ -27,12 +27,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -40,8 +40,8 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
-import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.vle.domain.WebSocketMessage;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.StudentWork;
@@ -70,7 +70,7 @@ public class StudentDataController {
   private WorkgroupService workgroupService;
 
   @Autowired
-  private WebSocketHandler webSocketHandler;
+  private SimpMessagingTemplate simpMessagingTemplate;
 
   @RequestMapping(method = RequestMethod.GET, value = "/student/data")
   public void getWISE5StudentData(
@@ -265,22 +265,32 @@ public class StudentDataController {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    try {
-      if (webSocketHandler != null && achievement != null) {
-        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-        if (wiseWebSocketHandler != null) {
-          JSONObject webSocketMessageJSON = new JSONObject();
-          webSocketMessageJSON.put("messageType", "newStudentAchievement");
-          webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-          webSocketMessageJSON.put("studentAchievement", achievement.toJSON());
-          wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
-        }
-      }
-    } catch (Exception e) {
-      // if something fails during creating annotation and sending to websocket,
-      // allow the rest to continue
-      e.printStackTrace();
-    }
+    achievement.convertToClientAchievement();
+    broadcastAchievementToTeacher(achievement);
+  }
+
+  public void broadcastAchievementToTeacher(Achievement achievement) {
+    WebSocketMessage message = new WebSocketMessage("newStudentAchievement", achievement);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/teacher/%s", achievement.getRunId()),
+        message);
+  }
+
+  public void broadcastAnnotationToTeacher(Annotation annotation) {
+    WebSocketMessage message = new WebSocketMessage("annotation", annotation);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/teacher/%s", annotation.getRunId()),
+        message);
+  }
+
+  public void broadcastStudentWorkToClassroom(StudentWork componentState) {
+    WebSocketMessage message = new WebSocketMessage("studentWork", componentState);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/classroom/%s/%s",
+        componentState.getRunId(), componentState.getPeriodId()), message);
+  }
+
+  public void broadcastStudentWorkToTeacher(StudentWork componentState) {
+    WebSocketMessage message = new WebSocketMessage("studentWork", componentState);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/teacher/%s",
+        componentState.getRunId()), message);
   }
 
   /**
@@ -302,7 +312,7 @@ public class StudentDataController {
     JSONObject result = new JSONObject();
     try {
       Run run = runService.retrieveById(new Long(runId));
-      if (run.isStudentAssociatedToThisRun(signedInUser)) {
+      if (run.isActive() && run.isStudentAssociatedToThisRun(signedInUser)) {
         // maps nodeId_componentId to StudentWork.
         HashMap<String, StudentWork> savedStudentWorkList = new HashMap<>();
         // Used later for handling simultaneous POST of CRater annotation
@@ -339,23 +349,10 @@ public class StudentDataController {
               savedStudentWorkJSONObject.put("serverSaveTime", studentWork.getServerSaveTime().getTime());
               studentWorkResultJSONArray.put(savedStudentWorkJSONObject);
 
-              // send this studentWork immediately to the teacher so the Classroom Monitor can be updated
-              try {
-                if (webSocketHandler != null && studentWork != null) {
-                  WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-
-                  if (wiseWebSocketHandler != null) {
-                    JSONObject webSocketMessageJSON = new JSONObject();
-                    webSocketMessageJSON.put("messageType", "newStudentWork");
-                    webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-                    webSocketMessageJSON.put("studentWork", studentWork.toJSON());
-                    wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-                  }
-                }
-              } catch (Exception e) {
-                // if something fails during creating annotation and sending to websocket,
-                // allow the rest to continue
-                e.printStackTrace();
+              studentWork.convertToClientStudentWork();
+              broadcastStudentWorkToTeacher(studentWork);
+              if (studentWork.getComponentType().equals("Discussion")) {
+                broadcastStudentWorkToClassroom(studentWork);
               }
             } catch (Exception e) {
               e.printStackTrace();
@@ -434,23 +431,8 @@ public class StudentDataController {
                   annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
 
                 // send this annotation immediately to the teacher so the Classroom Monitor can be updated
-                try {
-                  if (webSocketHandler != null && annotation != null) {
-                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-
-                    if (wiseWebSocketHandler != null) {
-                      JSONObject webSocketMessageJSON = new JSONObject();
-                      webSocketMessageJSON.put("messageType", "newAnnotation");
-                      webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-                      webSocketMessageJSON.put("annotation", annotation.toJSON());
-                      wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-                    }
-                  }
-                } catch (Exception e) {
-                  // if something fails during creating annotation and sending to websocket,
-                  // allow the rest to continue
-                  e.printStackTrace();
-                }
+                annotation.convertToClientAnnotation();
+                broadcastAnnotationToTeacher(annotation);
               } else {
                 annotation = vleService.saveAnnotation(
                   annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),

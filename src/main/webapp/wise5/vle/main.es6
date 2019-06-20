@@ -10,6 +10,8 @@ import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularOnload from 'ng-onload';
 import angularSanitize from 'angular-sanitize';
+import angularSock from 'angular-sockjs';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
@@ -19,6 +21,7 @@ import angularWebSocket from 'angular-websocket';
 import AnimationComponentModule from '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
+import canvg from 'canvg';
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
@@ -29,6 +32,7 @@ import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
 import Filters from '../filters/filters';
 import Highcharts from '../lib/highcharts@4.2.1';
+import HighchartsExporting from '../lib/highcharts-exporting@4.2.1';
 import draggablePoints from '../lib/draggable-points/draggable-points';
 import GraphComponentModule from '../components/graph/graphComponentModule';
 import HTMLComponentModule from '../components/html/htmlComponentModule';
@@ -82,6 +86,8 @@ const vleModule = angular.module('vle', [
     'ngMaterial',
     'ngOnload',
     'ngSanitize',
+    'bd.sockjs',
+    'ngStomp',
     'ngWebSocket',
     'oc.lazyLoad',
     'openResponseComponentModule',
@@ -174,8 +180,10 @@ const vleModule = angular.module('vle', [
             runStatus: (StudentDataService, config) => {
               return StudentDataService.retrieveRunStatus();
             },
-            webSocket: (StudentWebSocketService, config, project) => {
-              return StudentWebSocketService.initialize();
+            webSocket: (StudentWebSocketService, ConfigService, config, project) => {
+              if (!ConfigService.isPreview()) {
+                return StudentWebSocketService.initialize();
+              }
             },
             language: ($translate, ConfigService, config) => {
               let locale = ConfigService.getLocale();  // defaults to "en"

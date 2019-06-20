@@ -27,6 +27,7 @@ import java.sql.Timestamp;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -57,14 +58,17 @@ public class StudentWork extends PersistableDomain {
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
+  @JsonIgnore
   private Run run;
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId", nullable = false)
+  @JsonIgnore
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = false)
+  @JsonIgnore
   private Workgroup workgroup;
 
   @Column(name = "isAutoSave", nullable = false)
@@ -91,9 +95,24 @@ public class StudentWork extends PersistableDomain {
   @Column(name = "studentData", length = 5120000, columnDefinition = "mediumtext", nullable = false)
   private String studentData;
 
+  @Transient
+  private long runId;
+
+  @Transient
+  private long periodId;
+
+  @Transient
+  private long workgroupId;
+
   @Override
   protected Class<?> getObjectClass() {
     return StudentWork.class;
+  }
+
+  public void convertToClientStudentWork() {
+    this.setRunId(this.getRun().getId());
+    this.setPeriodId(this.getPeriod().getId());
+    this.setWorkgroupId(this.getWorkgroup().getId());
   }
 
   public JSONObject toJSON() {

@@ -657,24 +657,22 @@ public class InformationController {
       throws JSONException, ObjectNotFoundException {
     String contextPath = request.getContextPath();
     Long runId = run.getId();
-    String annotationsURL = contextPath + "/annotation?type=annotation&runId=" + runId;
-    String studentStatusURL = contextPath + "/studentStatus";
-    String runStatusURL = contextPath + "/runStatus";
-
     config.put("runName", run.getName());
     config.put("runId", runId);
-    config.put("annotationsURL", annotationsURL);
+    config.put("annotationsURL", contextPath + "/annotation?type=annotation&runId=" + runId);
     config.put("runInfo", run.getInfo());
     config.put("isRealTimeEnabled", run.isRealTimeEnabled());
     config.put("webSocketURL", ControllerUtil.getWebSocketURL(request, contextPath));
-    config.put("studentStatusURL", studentStatusURL);
-    config.put("runStatusURL", runStatusURL);
+    config.put("studentStatusURL", contextPath + "/studentStatus");
+    config.put("runStatusURL", contextPath + "/runStatus");
     config.put("userInfo", getUserInfo(run));
     config.put("studentDataURL", contextPath + "/student/data");  // the url to get/post student data
     config.put("studentAssetsURL", contextPath + "/student/asset/" + runId);
     config.put("studentNotebookURL", contextPath + "/student/notebook/" + runId);
     config.put("achievementURL", contextPath + "/achievement/" + runId);
     config.put("notificationURL", contextPath + "/notification/" + runId);
+    config.put("startTime", run.getStartTimeMilliseconds());
+    config.put("endTime", run.getEndTimeMilliseconds());
   }
 
   private void printConfigToResponse(HttpServletResponse response, JSONObject config)

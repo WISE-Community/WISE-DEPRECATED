@@ -23,6 +23,7 @@
  */
 package org.wise.vle.domain.annotation.wise5;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -59,18 +60,22 @@ public class Annotation extends PersistableDomain {
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
+  @JsonIgnore
   private Run run;
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId", nullable = false)
+  @JsonIgnore
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "fromWorkgroupId", nullable = true)
+  @JsonIgnore
   private Workgroup fromWorkgroup;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "toWorkgroupId", nullable = false)
+  @JsonIgnore
   private Workgroup toWorkgroup;
 
   @Column(name = "nodeId", length = 30, nullable = true)
@@ -81,6 +86,7 @@ public class Annotation extends PersistableDomain {
 
   @ManyToOne(targetEntity = StudentWork.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "studentWorkId", nullable = true)
+  @JsonIgnore
   private StudentWork studentWork;
 
   @Column(name = "localNotebookItemId", length = 30, nullable = true)
@@ -102,9 +108,36 @@ public class Annotation extends PersistableDomain {
   @Column(name = "serverSaveTime", nullable = false)
   private Timestamp serverSaveTime;
 
+  @Transient
+  private long runId;
+
+  @Transient
+  private long periodId;
+
+  @Transient
+  private long toWorkgroupId;
+
+  @Transient
+  private long fromWorkgroupId;
+
+  @Transient
+  private long studentWorkId;
+
   @Override
   protected Class<?> getObjectClass() {
     return Annotation.class;
+  }
+
+  public void convertToClientAnnotation() {
+    this.setRunId(this.getRun().getId());
+    this.setPeriodId(this.getPeriod().getId());
+    this.setToWorkgroupId(this.getToWorkgroup().getId());
+    if (this.getFromWorkgroup() != null) {
+      this.setFromWorkgroupId(this.getFromWorkgroup().getId());
+    }
+    if (this.getStudentWork() != null) {
+      this.setStudentWorkId(this.getStudentWork().getId());
+    }
   }
 
   public JSONObject toJSON() {

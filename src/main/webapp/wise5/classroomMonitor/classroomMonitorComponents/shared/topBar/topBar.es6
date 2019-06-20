@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class TopBarController {
     constructor($rootScope,
@@ -9,29 +9,25 @@ class TopBarController {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
-
-        // get the teacher workgroup id
         this.workgroupId = this.ConfigService.getWorkgroupId();
 
         if (this.workgroupId == null) {
-            /*
-             * the teacher doesn't have a workgroup id so we will use a random
-             * number
-             */
+            // the teacher doesn't have a workgroup id so we will use a random number
             this.workgroupId = parseInt(100 * Math.random());
         }
 
-        // get the avatar color for the teacher
         this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
-
         this.userInfo = this.ConfigService.getMyUserInfo();
 
         this.$onChanges = (changesObj) => {
             if (changesObj.notifications) {
                 this.setNotifications();
             }
-        }
+        };
 
+        this.$rootScope.$on('notificationChanged', (event, notification) => {
+          this.setNotifications();
+        });
         this.themePath = this.ProjectService.getThemePath();
         this.contextPath = this.ConfigService.getContextPath();
     }
@@ -70,11 +66,7 @@ class TopBarController {
         return this.TeacherDataService.isAnyPeriodPaused();
     }
 
-    /**
-     * Navigate the teacher to the teacher home page
-     */
     goHome() {
-        // save goHome event
         var context = "ClassroomMonitor";
         var nodeId = null;
         var componentId = null;
@@ -83,16 +75,10 @@ class TopBarController {
         var event = "goHomeButtonClicked";
         var eventData = {};
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, eventData);
-
-        // fire the goHome event
         this.$rootScope.$broadcast('goHome');
-    };
+    }
 
-    /**
-     * Log the teacher out of WISE
-     */
     logOut() {
-        // save logOut event
         var context = "ClassroomMonitor";
         var nodeId = null;
         var componentId = null;
@@ -101,10 +87,8 @@ class TopBarController {
         var event = "logOutButtonClicked";
         var eventData = {};
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, eventData);
-
-        // fire the logOut event
         this.$rootScope.$broadcast('logOut');
-    };
+    }
 }
 
 TopBarController.$inject = [

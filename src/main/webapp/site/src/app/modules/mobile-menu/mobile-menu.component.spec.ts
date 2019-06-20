@@ -3,10 +3,10 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from 'rxjs';
 import { NO_ERRORS_SCHEMA, Provider } from '@angular/core';
 import { By } from '@angular/platform-browser';
-
 import { MobileMenuComponent } from './mobile-menu.component';
 import { User } from "../../domain/user";
 import { UserService } from "../../services/user.service";
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserServiceLogIn {
   getUser(): Observable<User[]> {
@@ -51,8 +51,8 @@ describe('MobileMenuComponent', () => {
     fixture.detectChanges();
   }
 
-  describe('', () => {
-    beforeEach(() => {
+  describe('when user is logged in', () => {
+    configureTestSuite(() => {
       createComponent();
     });
 
@@ -66,8 +66,8 @@ describe('MobileMenuComponent', () => {
     });
   });
 
-  describe('', () => {
-    beforeEach(() => {
+  describe('when user is logged out', () => {
+    configureTestSuite(() => {
       TestBed.overrideProvider(UserService, { useValue: new MockUserServiceLogOut() });
       createComponent();
     });

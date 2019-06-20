@@ -36,18 +36,13 @@ var ConfigService = function () {
 
       return this.$http.get(configURL).then(function (result) {
         var configJSON = result.data;
-        if (configJSON.retrievalTimestamp != null) {
-          var clientTimestamp = new Date().getTime();
-          var serverTimestamp = configJSON.retrievalTimestamp;
-          var timestampDiff = clientTimestamp - serverTimestamp;
-          configJSON.timestampDiff = timestampDiff;
-        }
+        _this.setTimestampDiff(configJSON);
 
         var constraints = true;
 
         var absURL = _this.$location.$$absUrl;
 
-        if (configJSON.mode == 'preview') {
+        if (configJSON.mode === 'preview') {
           // constraints can only be disabled using the url in preview mode
 
           // regex to match constraints=false in the url
@@ -73,6 +68,8 @@ var ConfigService = function () {
           console.log(projectPath);
         }
 
+        configJSON.isRunActive = _this.calculateIsRunActive(configJSON);
+
         _this.setConfig(configJSON);
 
         if (_this.isPreview()) {
@@ -85,6 +82,18 @@ var ConfigService = function () {
 
         return configJSON;
       });
+    }
+  }, {
+    key: 'setTimestampDiff',
+    value: function setTimestampDiff(configJSON) {
+      if (configJSON.retrievalTimestamp != null) {
+        var clientTimestamp = new Date().getTime();
+        var serverTimestamp = configJSON.retrievalTimestamp;
+        var timestampDiff = clientTimestamp - serverTimestamp;
+        configJSON.timestampDiff = timestampDiff;
+      } else {
+        configJSON.timestampDiff = 0;
+      }
     }
   }, {
     key: 'getConfigParam',
@@ -163,7 +172,7 @@ var ConfigService = function () {
   }, {
     key: 'getWebSocketURL',
     value: function getWebSocketURL() {
-      return window.location.protocol.replace("http", "ws") + "//" + window.location.host + this.getContextPath() + "/websocket";
+      return window.location.protocol + "//" + window.location.host + this.getContextPath() + "/websocket";
     }
   }, {
     key: 'getWISEBaseURL',
@@ -199,14 +208,14 @@ var ConfigService = function () {
       }
       return null;
     }
-  }, {
-    key: 'getPeriods',
-
 
     /**
      * Get the periods
      * @returns an array of period objects
      */
+
+  }, {
+    key: 'getPeriods',
     value: function getPeriods() {
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
@@ -228,14 +237,14 @@ var ConfigService = function () {
       }
       return null;
     }
-  }, {
-    key: 'getUserId',
-
 
     /**
      * Get the user id (aka WISE ID)
      * @return the user id
      */
+
+  }, {
+    key: 'getUserId',
     value: function getUserId() {
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
@@ -254,12 +263,6 @@ var ConfigService = function () {
     }
   }, {
     key: 'getMyUsername',
-
-
-    /**
-     * Get the user name of the signed in user
-     * @return the user name of the signed in user
-     */
     value: function getMyUsername() {
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
@@ -395,13 +398,13 @@ var ConfigService = function () {
       }
       return null;
     }
-  }, {
-    key: 'getSharedTeacherUserInfos',
-
 
     /**
      * Get the shared teacher user infos for the run
      */
+
+  }, {
+    key: 'getSharedTeacherUserInfos',
     value: function getSharedTeacherUserInfos() {
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
@@ -559,15 +562,15 @@ var ConfigService = function () {
       }
       return userInfo;
     }
-  }, {
-    key: 'getPeriodIdByWorkgroupId',
-
 
     /**
      * Get the period id for a workgroup id
      * @param workgroupId the workgroup id
      * @returns the period id the workgroup id is in
      */
+
+  }, {
+    key: 'getPeriodIdByWorkgroupId',
     value: function getPeriodIdByWorkgroupId(workgroupId) {
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
@@ -577,15 +580,15 @@ var ConfigService = function () {
       }
       return null;
     }
-  }, {
-    key: 'getStudentFirstNamesByWorkgroupId',
-
 
     /**
      * Get the student names
      * @param workgroupId the workgroup id
      * @return an array containing the student names
      */
+
+  }, {
+    key: 'getStudentFirstNamesByWorkgroupId',
     value: function getStudentFirstNamesByWorkgroupId(workgroupId) {
       var studentNames = [];
       var usernames = this.getUsernameByWorkgroupId(workgroupId);
@@ -740,15 +743,15 @@ var ConfigService = function () {
       var mode = this.getMode();
       return mode != null && mode === 'preview';
     }
-  }, {
-    key: 'convertToServerTimestamp',
-
 
     /**
      * Convert a client timestamp to a server timestamp. This is required
      * in case the client and server clocks are not synchronized.
      * @param clientTimestamp the client timestamp
      */
+
+  }, {
+    key: 'convertToServerTimestamp',
     value: function convertToServerTimestamp(clientTimestamp) {
       var timestampDiff = this.getConfigParam('timestampDiff');
       var serverTimestamp = clientTimestamp - timestampDiff;
@@ -1153,6 +1156,22 @@ var ConfigService = function () {
       } else {
         return 0;
       }
+    }
+  }, {
+    key: 'calculateIsRunActive',
+    value: function calculateIsRunActive(configJSON) {
+      var currentTime = new Date().getTime();
+      if (currentTime < this.convertToClientTimestamp(configJSON.startTime)) {
+        return false;
+      } else if (configJSON.endTime != null && currentTime > this.convertToClientTimestamp(configJSON.endTime)) {
+        return false;
+      }
+      return true;
+    }
+  }, {
+    key: 'isRunActive',
+    value: function isRunActive() {
+      return this.config.isRunActive;
     }
   }]);
 

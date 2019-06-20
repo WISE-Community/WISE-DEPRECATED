@@ -228,21 +228,41 @@ class TeacherDataService {
    * @returns the student data for the node id
    */
   retrieveStudentDataByNodeId(nodeId) {
-    const nodeIdsAndComponentIds =
-        this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-
-    let components = [];
-    components = components.concat(nodeIdsAndComponentIds);
-
     const params = {};
     params.periodId = null;
     params.workgroupId = null;
-    params.components = components;
+    params.components = this.getAllRelatedComponents(nodeId);
     params.getAnnotations = false;
     params.getEvents = false;
 
     return this.retrieveStudentData(params);
-  };
+  }
+
+  getAllRelatedComponents(nodeId) {
+    let components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+    components = components.concat(this.getConnectedComponentsIfNecessary(components));
+    return components;
+  }
+
+  getConnectedComponentsIfNecessary(components) {
+    const connectedComponents = [];
+    for (const component of components) {
+      const componentContent = this.ProjectService.getComponentByNodeIdAndComponentId(
+          component.nodeId, component.componentId);
+      if (this.isConnectedComponentStudentDataRequired(componentContent)) {
+        for (const connectedComponent of componentContent.connectedComponents) {
+          connectedComponents.push(connectedComponent);
+        }
+      }
+    }
+    return connectedComponents;
+  }
+
+  isConnectedComponentStudentDataRequired(componentContent) {
+    return componentContent.type === 'Discussion' &&
+        componentContent.connectedComponents != null &&
+        componentContent.connectedComponents.length !== 0;
+  }
 
   /**
    * Retrieve the student data for the workgroup id
@@ -483,6 +503,15 @@ class TeacherDataService {
     return [];
   }
 
+  getComponentStatesByComponentIds(componentIds) {
+    let componentStatesByComponentId = [];
+    for (const componentId of componentIds) {
+      componentStatesByComponentId = componentStatesByComponentId.concat(
+          this.studentData.componentStatesByComponentId[componentId]);
+    }
+    return componentStatesByComponentId;
+  }
+
   getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(
       workgroupId, nodeId, componentId) {
     let latestComponentState = null;
@@ -494,8 +523,7 @@ class TeacherDataService {
         if (componentState != null) {
           const componentStateNodeId = componentState.nodeId;
           const componentStateComponentId = componentState.componentId;
-          if (nodeId == componentStateNodeId &&
-              componentId == componentStateComponentId) {
+          if (nodeId === componentStateNodeId && componentId === componentStateComponentId) {
             latestComponentState = componentState;
             break;
           }
@@ -506,7 +534,6 @@ class TeacherDataService {
   }
 
   getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
-    let latestComponentState = null;
     const componentStates =
         this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
     if (componentStates != null) {
@@ -626,10 +653,20 @@ class TeacherDataService {
   getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId) {
     const componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
     const componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
-
-    // find the intersect and return it
     return componentStatesByWorkgroupId.filter((n) => {
-      return componentStatesByComponentId.indexOf(n) != -1;
+      return componentStatesByComponentId.indexOf(n) !== -1;
+    });
+  }
+
+  getComponentStatesByWorkgroupIdAndComponentIds(workgroupId, componentIds) {
+    const componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
+    let componentStatesByComponentId = [];
+    for (const componentId of componentIds) {
+      componentStatesByComponentId =
+          componentStatesByComponentId.concat(this.getComponentStatesByComponentId(componentId));
+    }
+    return componentStatesByWorkgroupId.filter((n) => {
+      return componentStatesByComponentId.indexOf(n) !== -1;
     });
   }
 
@@ -978,25 +1015,35 @@ class TeacherDataService {
    * @param isPaused Boolean whether the period should be paused or not
    */
   pauseScreensChanged(periodId, isPaused) {
-    if (periodId) {
-      this.updatePausedRunStatusValue(periodId, isPaused);
-
+    this.updatePausedRunStatusValue(periodId, isPaused);
+    this.sendRunStatus().then(() => {
       if (isPaused) {
         this.TeacherWebSocketService.pauseScreens(periodId);
       } else {
         this.TeacherWebSocketService.unPauseScreens(periodId);
       }
-
-      this.sendRunStatus();
-      let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
-        category = "TeacherAction", data = { periodId: periodId };
-      let event = "pauseScreen";
-      if (!isPaused) {
-        event = "unPauseScreen";
-      }
-      this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-      this.$rootScope.$broadcast('pauseScreensChanged', {periods: this.runStatus.periods});
+    });
+    const context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
+      category = "TeacherAction", data = { periodId: periodId };
+    let event = "pauseScreen";
+    if (!isPaused) {
+      event = "unPauseScreen";
     }
+    this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    this.$rootScope.$broadcast('pauseScreensChanged', {periods: this.runStatus.periods});
+  }
+
+  sendRunStatus() {
+    const httpParams = {
+      method: 'POST',
+      url: this.ConfigService.getConfigParam('runStatusURL'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        runId: this.ConfigService.getConfigParam('runId'),
+        status: angular.toJson(this.runStatus)
+      })
+    };
+    return this.$http(httpParams);
   }
 
   /**
@@ -1050,33 +1097,6 @@ class TeacherDataService {
       }
     }
   }
-
-  /**
-   * Send the run status back to the server to be saved in the db
-   * @param customPauseMessage the custom pause message text to send to the students
-   */
-  sendRunStatus(customPauseMessage) {
-    const runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-    if (runStatusURL != null) {
-      const runId = this.ConfigService.getConfigParam('runId');
-      if (customPauseMessage != null) {
-        this.runStatus.pauseMessage = customPauseMessage;
-      }
-
-      const runStatus = angular.toJson(this.runStatus);
-      const runStatusParams = {
-        runId:runId,
-        status:runStatus
-      };
-
-      const httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = runStatusURL;
-      httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-      httpParams.data = $.param(runStatusParams);
-      this.$http(httpParams);
-    }
-  };
 }
 
 TeacherDataService.$inject = [

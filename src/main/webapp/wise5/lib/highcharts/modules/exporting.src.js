@@ -9,11 +9,7 @@
 
 /* eslint indent:0 */
 (function (factory) {
-    if (typeof module === 'object' && module.exports) {
-        module.exports = factory;
-    } else {
-        factory(Highcharts);
-    }
+  factory(Highcharts);
 }(function (Highcharts) {
 
 // create shortcuts

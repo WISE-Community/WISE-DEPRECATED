@@ -9,7 +9,8 @@ import {
 } from "@angular/material";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ActivatedRoute } from '@angular/router';
-import {Observable} from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs/internal/Observable';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
 
@@ -19,7 +20,7 @@ describe('AddProjectDialogComponent', () => {
   let component: AddProjectDialogComponent;
   let fixture: ComponentFixture<AddProjectDialogComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ AddProjectDialogComponent ],
       imports: [
@@ -39,8 +40,7 @@ describe('AddProjectDialogComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AddProjectDialogComponent);

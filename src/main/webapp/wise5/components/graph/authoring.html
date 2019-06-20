@@ -355,7 +355,7 @@
           <md-input-container style='margin-right: 20px; width: 120px;'>
             <label>{{ 'graph.plotType' | translate }}</label>
             <md-select ng-model='graphController.authoringComponentContent.graphType'
-                       ng-change='graphController.authoringViewGraphTypeChanged(graphController.authoringComponentContent.graphType, "{{graphController.authoringComponentContent.graphType}}")'
+                       ng-change='graphController.authoringViewComponentChanged()'
                        style='width: 120px'>
               <md-option ng-repeat='availableGraphType in graphController.availableGraphTypes'
                          value='{{availableGraphType.value}}'>
@@ -503,7 +503,7 @@
           </md-input-container>
           <md-input-container>
             <md-button class='topButton md-raised md-primary'
-                       ng-click='graphController.chooseBackgroundImage()'>
+                       ng-click="graphController.showChooseBackgroundImagePopup()">
               <md-icon>insert_photo</md-icon>
               <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'chooseAnImage' | translate }}</md-tooltip>
             </md-button>
@@ -761,7 +761,7 @@
                 </md-option>
               </md-select>
             </md-input-container>
-            <md-input-container ng-if='graphController.showSelectSeries()'>
+            <md-input-container ng-if='graphController.isShowSelectSeriesInput()'>
               <label>{{ 'graph.selectSeriesToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeSeries'
                          ng-change='graphController.activeSeriesChanged()'

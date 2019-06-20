@@ -294,7 +294,7 @@ class VLEController {
     this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
 
     this.$rootScope.$broadcast('goHome');
-  };
+  }
 
   logOut() {
     const nodeId = null;
@@ -306,11 +306,11 @@ class VLEController {
     this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
 
     this.$rootScope.$broadcast('logOut');
-  };
+  }
 
   loadRoot() {
     this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.ProjectService.rootNode.id);
-  };
+  }
 
   /**
    * The user moved the mouse on the page
@@ -319,7 +319,7 @@ class VLEController {
     // tell the session service a mouse event occurred
     // so it can reset the session timeout timers
     this.SessionService.mouseEventOccurred();
-  };
+  }
 
   /**
    * Returns true iff there are new notifications
@@ -463,7 +463,7 @@ class VLEController {
         this.dismissNotification(event, notification);
       }
     }
-  };
+  }
 
   /**
    * Dismiss the specified notification aggregate object and visit the node
@@ -500,8 +500,8 @@ class VLEController {
   }
 
   unPauseScreen() {
-    this.$mdDialog.hide( this.pauseDialog, "finished" );
-    this.pauseDialog = undefined;
+    this.$mdDialog.hide();
+    this.pauseDialog = null;
   }
 
   isPreview() {
@@ -617,7 +617,7 @@ class VLEController {
       getMaxScoreForComponent: (nodeId, componentId) => {
         return this.ProjectService.getMaxScoreForComponent(nodeId, componentId);
       }
-    }
+    };
   }
 }
 

@@ -2,6 +2,12 @@ import angular from 'angular';
 import mainModule from 'authoringTool/main';
 import 'angular-mocks';
 
+const mockUtilService = {
+  generateKey: function(length) {
+    return '1234567890';
+  }
+};
+
 describe('AnimationAuthoringController', () => {
 
   let $controller;
@@ -35,7 +41,8 @@ describe('AnimationAuthoringController', () => {
     $scope.componentContent = JSON.parse(JSON.stringify(component));
     $scope.authoringComponentContent = JSON.parse(JSON.stringify(component));
 
-    animationAuthoringController = $controller('AnimationAuthoringController', { $scope: $scope });
+    animationAuthoringController = $controller('AnimationAuthoringController',
+        { $scope: $scope, UtilService: mockUtilService });
   }));
 
   it('should add an animation object', () => {

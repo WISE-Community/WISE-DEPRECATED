@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9,152 +9,107 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TeacherWebSocketService = function () {
-  function TeacherWebSocketService($rootScope, $websocket, ConfigService, StudentStatusService) {
+  function TeacherWebSocketService($rootScope, $stomp, ConfigService, StudentStatusService) {
     _classCallCheck(this, TeacherWebSocketService);
 
     this.$rootScope = $rootScope;
-    this.$websocket = $websocket;
+    this.$stomp = $stomp;
     this.ConfigService = ConfigService;
     this.StudentStatusService = StudentStatusService;
-    this.dataStream = null;
     this.studentsOnlineArray = [];
   }
 
   _createClass(TeacherWebSocketService, [{
-    key: "initialize",
+    key: 'initialize',
     value: function initialize() {
       var _this = this;
 
-      var runId = this.ConfigService.getRunId();
-      var periodId = this.ConfigService.getPeriodId();
-      var workgroupId = this.ConfigService.getWorkgroupId();
-      var webSocketURL = this.ConfigService.getWebSocketURL() + "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
-      this.dataStream = this.$websocket(webSocketURL);
-      this.dataStream.onMessage(function (message) {
-        _this.handleMessage(message);
-      });
-    }
-  }, {
-    key: "handleMessage",
-    value: function handleMessage(message) {
-      var data = JSON.parse(message.data);
-      var messageType = data.messageType;
-
-      if (messageType === 'studentStatus') {
-        this.handleStudentStatusReceived(data);
-      } else if (messageType === 'studentsOnlineList') {
-        this.handleStudentsOnlineReceived(data);
-      } else if (messageType === 'studentConnected') {} else if (messageType === 'studentDisconnected') {
-        this.handleStudentDisconnected(data);
-      } else if (messageType === 'notification' || messageType === 'CRaterResultNotification') {
-        this.$rootScope.$broadcast('newNotification', data.data);
-      } else if (messageType === 'newAnnotation') {
-        this.$rootScope.$broadcast('newAnnotationReceived', { annotation: data.annotation });
-      } else if (messageType === 'newStudentWork') {
-        this.$rootScope.$broadcast('newStudentWorkReceived', { studentWork: data.studentWork });
-      } else if (messageType === 'newStudentAchievement') {
-        this.$rootScope.$broadcast('newStudentAchievement', { studentAchievement: data.studentAchievement });
+      this.runId = this.ConfigService.getRunId();
+      try {
+        this.$stomp.connect(this.ConfigService.getWebSocketURL()).then(function (frame) {
+          _this.subscribeToTeacherTopic();
+          _this.subscribeToTeacherWorkgroupTopic();
+        });
+      } catch (e) {
+        console.log(e);
       }
     }
   }, {
-    key: "sendMessage",
-    value: function sendMessage(messageJSON) {
-      this.dataStream.send(messageJSON);
+    key: 'subscribeToTeacherTopic',
+    value: function subscribeToTeacherTopic() {
+      var _this2 = this;
+
+      this.$stomp.subscribe('/topic/teacher/' + this.runId, function (message, headers, res) {
+        if (message.type === 'studentWork') {
+          var studentWork = message.content;
+          studentWork.studentData = JSON.parse(studentWork.studentData);
+          _this2.$rootScope.$broadcast('newStudentWorkReceived', { studentWork: studentWork });
+        } else if (message.type === 'studentStatus') {
+          var studentStatus = message.content;
+          var status = JSON.parse(studentStatus.status);
+          _this2.StudentStatusService.setStudentStatus(status);
+          _this2.$rootScope.$emit('studentStatusReceived', { studentStatus: status });
+        } else if (message.type === 'newStudentAchievement') {
+          var achievement = message.content;
+          achievement.data = JSON.parse(achievement.data);
+          _this2.$rootScope.$broadcast('newStudentAchievement', { studentAchievement: achievement });
+        } else if (message.type === 'annotation') {
+          var annotationData = message.content;
+          annotationData.data = JSON.parse(annotationData.data);
+          _this2.$rootScope.$broadcast('newAnnotationReceived', { annotation: annotationData });
+        }
+      });
     }
   }, {
-    key: "handleStudentsOnlineReceived",
+    key: 'subscribeToTeacherWorkgroupTopic',
+    value: function subscribeToTeacherWorkgroupTopic() {
+      var _this3 = this;
+
+      this.$stomp.subscribe('/topic/workgroup/' + this.ConfigService.getWorkgroupId(), function (message, headers, res) {
+        if (message.type === 'notification') {
+          var notification = message.content;
+          notification.data = JSON.parse(notification.data);
+          _this3.$rootScope.$broadcast('newNotificationReceived', notification);
+        }
+      });
+    }
+  }, {
+    key: 'handleStudentsOnlineReceived',
     value: function handleStudentsOnlineReceived(studentsOnlineMessage) {
       this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
       this.$rootScope.$broadcast('studentsOnlineReceived', { studentsOnline: this.studentsOnlineArray });
     }
   }, {
-    key: "getStudentsOnline",
+    key: 'getStudentsOnline',
     value: function getStudentsOnline() {
       return this.studentsOnlineArray;
     }
   }, {
-    key: "isStudentOnline",
-
-
-    /**
-     * Check to see if a given workgroup is currently online
-     * @param workgroupId the workgroup id
-     * @returns boolean whether a workgroup is online
-     */
+    key: 'isStudentOnline',
     value: function isStudentOnline(workgroupId) {
       return this.studentsOnlineArray.indexOf(workgroupId) > -1;
     }
   }, {
-    key: "handleStudentStatusReceived",
-
-
-    /**
-     * This function is called when the teacher receives a websocket message
-     * with messageType 'studentStatus'.
-     */
-    value: function handleStudentStatusReceived(studentStatus) {
-      var workgroupId = studentStatus.workgroupId;
-      this.StudentStatusService.setStudentStatusForWorkgroupId(workgroupId, studentStatus);
-      this.$rootScope.$emit('studentStatusReceived', { studentStatus: studentStatus });
-    }
-  }, {
-    key: "handleStudentDisconnected",
-
-
-    /**
-     * Handle the student disconnected message
-     */
+    key: 'handleStudentDisconnected',
     value: function handleStudentDisconnected(studentDisconnectedMessage) {
       this.$rootScope.$broadcast('studentDisconnected', { data: studentDisconnectedMessage });
     }
-
-    /**
-     * Pause the screens in the period
-     * @param periodId the period id. if null or -1 is passed in we will pause
-     * all the periods
-     */
-
   }, {
-    key: "pauseScreens",
+    key: 'pauseScreens',
     value: function pauseScreens(periodId) {
-      var messageJSON = {};
-      messageJSON.messageType = 'pauseScreen';
-
-      if (periodId == null || periodId == -1) {
-        messageJSON.messageParticipants = 'teacherToStudentsInRun';
-      } else if (periodId != null) {
-        messageJSON.periodId = periodId;
-        messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
-      }
-      this.sendMessage(messageJSON);
+      this.$stomp.send('/app/pause/' + this.runId + '/' + periodId, {}, {});
     }
-
-    /**
-     * Unpause the screens in the period
-     * @param periodId the period id. if null or -1 is passed in we will unpause
-     * all the periods
-     */
-
   }, {
-    key: "unPauseScreens",
+    key: 'unPauseScreens',
     value: function unPauseScreens(periodId) {
-      var messageJSON = {};
-      messageJSON.messageType = 'unPauseScreen';
-
-      if (periodId == null || periodId == -1) {
-        messageJSON.messageParticipants = 'teacherToStudentsInRun';
-      } else if (periodId != null) {
-        messageJSON.periodId = periodId;
-        messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
-      }
-      this.sendMessage(messageJSON);
+      this.$stomp.send('/app/unpause/' + this.runId + '/' + periodId, {}, {});
     }
   }]);
 
   return TeacherWebSocketService;
 }();
 
-TeacherWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService', 'StudentStatusService'];
+TeacherWebSocketService.$inject = ['$rootScope', '$stomp', 'ConfigService', 'StudentStatusService'];
 
 exports.default = TeacherWebSocketService;
 //# sourceMappingURL=teacherWebSocketService.js.map

@@ -69,6 +69,9 @@ var ComponentController = function () {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      if (!this.ConfigService.isRunActive()) {
+        this.isDisabled = true;
+      }
     } else if (this.isGradingMode()) {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
@@ -332,7 +335,7 @@ var ComponentController = function () {
       var componentState = args.studentWork;
       if (this.isForThisComponent(componentState)) {
         this.setIsDirty(false);
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: this.getIsDirty() });
+        this.emitComponentDirty(this.getIsDirty());
         var clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
         if (componentState.isSubmit) {
           this.setSubmittedMessage(clientSaveTime);
@@ -487,13 +490,13 @@ var ComponentController = function () {
     key: 'setIsDirtyAndBroadcast',
     value: function setIsDirtyAndBroadcast() {
       this.setIsDirty(true);
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
+      this.emitComponentDirty(true);
     }
   }, {
     key: 'setIsSubmitDirtyAndBroadcast',
     value: function setIsSubmitDirtyAndBroadcast() {
       this.setIsSubmitDirty(true);
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+      this.emitComponentSubmitDirty(true);
     }
 
     /*
@@ -509,12 +512,21 @@ var ComponentController = function () {
       var _this5 = this;
 
       this.createComponentState(action).then(function (componentState) {
-        _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
-
+        _this5.emitComponentStudentDataChanged(componentState);
         if (componentState.isCompleted) {
-          _this5.$scope.$emit('componentCompleted', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
+          _this5.emitComponentCompleted(componentState);
         }
       });
+    }
+  }, {
+    key: 'emitComponentStudentDataChanged',
+    value: function emitComponentStudentDataChanged(componentState) {
+      this.$scope.$emit('componentStudentDataChanged', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
+    }
+  }, {
+    key: 'emitComponentCompleted',
+    value: function emitComponentCompleted(componentState) {
+      this.$scope.$emit('componentCompleted', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
     }
   }, {
     key: 'processLatestStudentWork',
@@ -1133,24 +1145,24 @@ var ComponentController = function () {
        */
       this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
     }
-  }, {
-    key: 'updateAdvancedAuthoringView',
-
 
     /**
      * Update the component JSON string that will be displayed in the advanced authoring view textarea
      */
+
+  }, {
+    key: 'updateAdvancedAuthoringView',
     value: function updateAdvancedAuthoringView() {
       this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     }
-  }, {
-    key: 'advancedAuthoringViewComponentChanged',
-
 
     /**
      * The component has changed in the advanced authoring view so we will update
      * the component and save the project.
      */
+
+  }, {
+    key: 'advancedAuthoringViewComponentChanged',
     value: function advancedAuthoringViewComponentChanged() {
       try {
         /*
@@ -1314,7 +1326,7 @@ var ComponentController = function () {
   }, {
     key: 'removeAttachment',
     value: function removeAttachment(attachment) {
-      if (this.attachments.indexOf(attachment) != -1) {
+      if (this.attachments.indexOf(attachment) !== -1) {
         this.attachments.splice(this.attachments.indexOf(attachment), 1);
         this.studentDataChanged();
       }
@@ -1324,24 +1336,19 @@ var ComponentController = function () {
     value: function attachStudentAsset(studentAsset) {
       var _this7 = this;
 
-      if (studentAsset != null) {
-        this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-          if (copiedAsset != null) {
-            var attachment = {
-              studentAssetId: copiedAsset.id,
-              iconURL: copiedAsset.iconURL
-            };
-
-            _this7.attachments.push(attachment);
-            _this7.studentDataChanged();
-          }
-        });
-      }
+      this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
+        var attachment = {
+          studentAssetId: copiedAsset.id,
+          iconURL: copiedAsset.iconURL
+        };
+        _this7.attachments.push(attachment);
+        _this7.studentDataChanged();
+      });
     }
   }, {
     key: 'hasMaxScore',
     value: function hasMaxScore() {
-      return this.componentContent.maxScore != null && this.componentContent.maxScore != '';
+      return this.componentContent.maxScore != null && this.componentContent.maxScore !== '';
     }
   }, {
     key: 'getMaxScore',

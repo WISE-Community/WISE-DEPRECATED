@@ -8,6 +8,7 @@ import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { translationsFactory } from "../../app.module";
 import { MomentModule } from "ngx-moment";
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
 
@@ -26,7 +27,7 @@ describe('TeacherRunListItemComponent', () => {
   let component: TeacherRunListItemComponent;
   let fixture: ComponentFixture<TeacherRunListItemComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListItemComponent ],
       imports: [ MomentModule ],
@@ -42,9 +43,8 @@ describe('TeacherRunListItemComponent', () => {
         I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TeacherRunListItemComponent);
@@ -73,5 +73,4 @@ describe('TeacherRunListItemComponent', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('Photosynthesis');
   });
-
 });

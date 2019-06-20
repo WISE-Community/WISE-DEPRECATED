@@ -12,21 +12,25 @@ describe('ConfigService Unit Test', () => {
   }));
 
   describe('ConfigService', () => {
-    const configURL = "http://localhost:8080/wise/config/1";
+    const configURL = 'http://localhost:8080/wise/config/1';
 
     // Load sample configs
-    const sampleConfig1 = window.mocks['test-unit/sampleData/config/config1'];
+    let sampleConfig1;
     const sampleConfig2 = window.mocks['test-unit/sampleData/config/config2'];
+
+    beforeEach(() => {
+      sampleConfig1 = window.mocks['test-unit/sampleData/config/config1'];
+    });
 
     // i18n
     const sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
     const sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
-    const i18nURL_common_en = "wise5/i18n/common/i18n_en.json";
-    const i18nURL_vle_en = "wise5/i18n/vle/i18n_en.json";
+    const i18nURL_common_en = 'wise5/i18n/common/i18n_en.json';
+    const i18nURL_vle_en = 'wise5/i18n/vle/i18n_en.json';
 
     xit('should retrieve config', () => {
-      spyOn(ConfigService, "setConfig").and.callThrough();
-      spyOn(ConfigService, "sortClassmateUserInfosAlphabeticallyByName");
+      spyOn(ConfigService, 'setConfig').and.callThrough();
+      spyOn(ConfigService, 'sortClassmateUserInfosAlphabeticallyByName');
       $httpBackend.when('GET', configURL).respond(sampleConfig1);
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
@@ -40,28 +44,48 @@ describe('ConfigService Unit Test', () => {
     });
 
     it('should sort the classmates alphabetically by name when setting config', () => {
-      spyOn(ConfigService, "sortClassmateUserInfosAlphabeticallyByNameHelper").and.callThrough(); // actually call through the function
-      const classmateUserInfosBefore = sampleConfig1.userInfo.myUserInfo.myClassInfo.classmateUserInfos;
-      expect(classmateUserInfosBefore[0].workgroupId).toEqual(3);
-      expect(classmateUserInfosBefore[1].workgroupId).toEqual(8);
-      ConfigService.setConfig(sampleConfig1);  // setting the config should sort the classmates alphabetically by name
+      const config = {
+        userInfo: {
+          myUserInfo: {
+            myClassInfo: {
+              classmateUserInfos: [{
+                periodId: 1,
+                workgroupId: 3,
+                userIds: [6],
+                periodName: '1',
+                username: 't t (tt0101)'
+              }, {
+                periodId: 1,
+                workgroupId: 8,
+                userIds: [8],
+                periodName: '1',
+                username: 'k t (kt0101)'
+              }]
+            }
+          }
+        }
+      };
+      const classmateUserInfos = config.userInfo.myUserInfo.myClassInfo.classmateUserInfos;
+      expect(classmateUserInfos[0].workgroupId).toEqual(3);
+      expect(classmateUserInfos[1].workgroupId).toEqual(8);
+      spyOn(ConfigService, 'sortClassmateUserInfosAlphabeticallyByNameHelper').and.callThrough();
+      ConfigService.setConfig(config);
       expect(ConfigService.sortClassmateUserInfosAlphabeticallyByNameHelper).toHaveBeenCalled();
-      const classmateUserInfosAfter = ConfigService.getClassmateUserInfos();
-      expect(classmateUserInfosAfter[0].workgroupId).toEqual(8);
-      expect(classmateUserInfosAfter[1].workgroupId).toEqual(3);
+      expect(classmateUserInfos[0].workgroupId).toEqual(8);
+      expect(classmateUserInfos[1].workgroupId).toEqual(3);
     });
 
     // Test getLocale()
     it('should get the locale', () => {
-      // Sample config 1 doesn't have locale set, so it should default to "en"
+      // Sample config 1 doesn't have locale set, so it should default to 'en'
       ConfigService.setConfig(sampleConfig1);
       const locale = ConfigService.getLocale();
-      expect(locale).toEqual("en");
+      expect(locale).toEqual('en');
 
-      // Sample config 2 should have "ja" locale.
+      // Sample config 2 should have 'ja' locale.
       ConfigService.setConfig(sampleConfig2);
       const locale2 = ConfigService.getLocale();
-      expect(locale2).toEqual("ja");
+      expect(locale2).toEqual('ja');
     });
 
     // Test getMode and isPreview()
@@ -69,13 +93,13 @@ describe('ConfigService Unit Test', () => {
       ConfigService.setConfig(sampleConfig1);
       const mode = ConfigService.getMode();
       const isPreview = ConfigService.isPreview();
-      expect(mode).toEqual("run");
+      expect(mode).toEqual('run');
       expect(isPreview).toEqual(false);
 
       ConfigService.setConfig(sampleConfig2);
       const mode2 = ConfigService.getMode();
       const isPreview2 = ConfigService.isPreview();
-      expect(mode2).toEqual("preview");
+      expect(mode2).toEqual('preview');
       expect(isPreview2).toEqual(true);
     });
 
@@ -133,7 +157,7 @@ describe('ConfigService Unit Test', () => {
     it('should get the period id given the workgroup id', () => {
 
       ConfigService.setConfig(sampleConfig1);
-      spyOn(ConfigService, "getUserInfoByWorkgroupId").and.callThrough(); // actually call through the function
+      spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.callThrough();
 
       // If workgroupId is null, period should be null
       const nullWorkgroupPeriodId = ConfigService.getPeriodIdByWorkgroupId(null);
@@ -150,6 +174,43 @@ describe('ConfigService Unit Test', () => {
       const existingWorkgroupPeriodId = ConfigService.getPeriodIdByWorkgroupId(existingWorkgroupId);
       expect(ConfigService.getUserInfoByWorkgroupId).toHaveBeenCalledWith(existingWorkgroupId);
       expect(existingWorkgroupPeriodId).toEqual(1);
+    });
+
+    it('should calculate if a run is active when a run only has a start time', () => {
+      jasmine.clock().install();
+      const configJSON = {
+        startTime: new Date(2019, 5, 10).getTime(),
+        timestampDiff: 0
+      };
+      jasmine.clock().mockDate(new Date(2019, 5, 9));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeFalsy();
+      jasmine.clock().mockDate(new Date(2019, 5, 10));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 11));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().uninstall();
+    });
+
+    it('should calculate if a run is active when it has a start time and end time', () => {
+      jasmine.clock().install();
+      const configJSON = {
+        startTime: new Date(2019, 5, 10).getTime(),
+        endTime: new Date(2019, 5, 20).getTime(),
+        timestampDiff: 0
+      };
+      jasmine.clock().mockDate(new Date(2019, 5, 9));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeFalsy();
+      jasmine.clock().mockDate(new Date(2019, 5, 10));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 11));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 19));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 20));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+      jasmine.clock().mockDate(new Date(2019, 5, 21));
+      expect(ConfigService.calculateIsRunActive(configJSON)).toBeFalsy();
+      jasmine.clock().uninstall();
     });
   });
 });

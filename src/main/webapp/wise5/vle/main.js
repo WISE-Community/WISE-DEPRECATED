@@ -44,6 +44,14 @@ var _angularSanitize = require('angular-sanitize');
 
 var _angularSanitize2 = _interopRequireDefault(_angularSanitize);
 
+var _angularSockjs = require('angular-sockjs');
+
+var _angularSockjs2 = _interopRequireDefault(_angularSockjs);
+
+var _ngStompStandalone = require('../lib/stomp/ng-stomp.standalone.min');
+
+var _ngStompStandalone2 = _interopRequireDefault(_ngStompStandalone);
+
 var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
 
 var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
@@ -79,6 +87,10 @@ var _annotationService2 = _interopRequireDefault(_annotationService);
 var _audioOscillatorComponentModule = require('../components/audioOscillator/audioOscillatorComponentModule');
 
 var _audioOscillatorComponentModule2 = _interopRequireDefault(_audioOscillatorComponentModule);
+
+var _canvg = require('canvg');
+
+var _canvg2 = _interopRequireDefault(_canvg);
 
 var _conceptMapComponentModule = require('../components/conceptMap/conceptMapComponentModule');
 
@@ -119,6 +131,10 @@ var _filters2 = _interopRequireDefault(_filters);
 var _highcharts = require('../lib/highcharts@4.2.1');
 
 var _highcharts2 = _interopRequireDefault(_highcharts);
+
+var _highchartsExporting = require('../lib/highcharts-exporting@4.2.1');
+
+var _highchartsExporting2 = _interopRequireDefault(_highchartsExporting);
 
 var _draggablePoints = require('../lib/draggable-points/draggable-points');
 
@@ -238,7 +254,7 @@ var _angularSummernote2 = _interopRequireDefault(_angularSummernote);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngOnload', 'ngSanitize', 'ngWebSocket', 'oc.lazyLoad', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'studentAsset', 'summernote', 'tableComponentModule', 'ui.router', 'ui.scrollpoint']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_componentService2.default.name, _componentService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_planningService2.default.name, _planningService2.default).service(_projectService2.default.name, _vleProjectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_navigationController2.default.name, _navigationController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_vleController2.default.name, _vleController2.default).filter(_filters2.default.name, _filters2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
+var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngOnload', 'ngSanitize', 'bd.sockjs', 'ngStomp', 'ngWebSocket', 'oc.lazyLoad', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'studentAsset', 'summernote', 'tableComponentModule', 'ui.router', 'ui.scrollpoint']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_componentService2.default.name, _componentService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_planningService2.default.name, _planningService2.default).service(_projectService2.default.name, _vleProjectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_navigationController2.default.name, _navigationController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_vleController2.default.name, _vleController2.default).filter(_filters2.default.name, _filters2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
   $urlRouterProvider.otherwise('/vle/');
 
   _angular2.default.module('vle').$controllerProvider = $controllerProvider;
@@ -281,8 +297,10 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
       runStatus: function runStatus(StudentDataService, config) {
         return StudentDataService.retrieveRunStatus();
       },
-      webSocket: function webSocket(StudentWebSocketService, config, project) {
-        return StudentWebSocketService.initialize();
+      webSocket: function webSocket(StudentWebSocketService, ConfigService, config, project) {
+        if (!ConfigService.isPreview()) {
+          return StudentWebSocketService.initialize();
+        }
       },
       language: function language($translate, ConfigService, config) {
         var locale = ConfigService.getLocale(); // defaults to "en"

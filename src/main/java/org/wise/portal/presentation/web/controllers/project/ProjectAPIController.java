@@ -88,14 +88,14 @@ public class ProjectAPIController {
   }
 
   @RequestMapping(value = "/community", method = RequestMethod.GET)
-  protected String getCommunityLibrayProjects(ModelMap modelMap) throws JSONException {
+  protected String getCommunityLibraryProjects(ModelMap modelMap) throws JSONException {
     List<Project> teacherSharedProjects = projectService.getTeacherSharedProjectList();
     JSONArray projectsJSON = getProjectsJSON(teacherSharedProjects);
     return projectsJSON.toString();
   }
 
   @RequestMapping(value = "/personal", method = RequestMethod.GET)
-  protected String getPersonalLibrayProjects(ModelMap modelMap) throws JSONException {
+  protected String getPersonalLibraryProjects(ModelMap modelMap) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
     List<Project> projectsWithoutRuns = projectService.getProjectsWithoutRuns(signedInUser);
     JSONArray projectsJSON = getProjectsJSON(projectsWithoutRuns);
@@ -103,7 +103,7 @@ public class ProjectAPIController {
   }
 
   @RequestMapping(value = "/shared", method = RequestMethod.GET)
-  protected String getSharedLibrayProjects(ModelMap modelMap) throws JSONException {
+  protected String getSharedLibraryProjects(ModelMap modelMap) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
     List<Project> sharedProjectList = projectService.getSharedProjectList(signedInUser);
     JSONArray projectsJSON = getProjectsJSON(sharedProjectList);
@@ -126,13 +126,13 @@ public class ProjectAPIController {
     return projectsJSON;
   }
 
-  private void populateProjectMetadata(JSONObject projectLibraryGroup) throws JSONException {
+  private JSONObject populateProjectMetadata(JSONObject projectLibraryGroup) throws JSONException {
     if (projectLibraryGroup.getString("type").equals("group")) {
       JSONArray children = projectLibraryGroup.getJSONArray("children");
       for (int c = 0; c < children.length(); c++) {
-        JSONObject child = children.getJSONObject(c);
-        if (canAccess(child)) {
-          populateProjectMetadata(child);
+        JSONObject childJSON = children.getJSONObject(c);
+        if (canAccess(childJSON)) {
+          children.put(c, populateProjectMetadata(childJSON));
         } else {
           children.remove(c--);
         }
@@ -141,18 +141,14 @@ public class ProjectAPIController {
       Integer projectId = projectLibraryGroup.getInt("id");
       try {
         Project project = projectService.getById(projectId);
-        ProjectMetadata metadata = project.getMetadata();
-        projectLibraryGroup.put("metadata", metadata.toJSONObject());
-        projectLibraryGroup.put("projectThumb", getProjectThumb(project));
-        projectLibraryGroup.put("name", project.getName());
-        projectLibraryGroup.put("owner", ControllerUtil.getOwnerJSON(project.getOwner()));
-        projectLibraryGroup.put("sharedOwners", ControllerUtil.getProjectSharedOwnersJSON(project));
-        projectLibraryGroup.put("dateCreated", project.getDateCreated());
-        projectLibraryGroup.put("wiseVersion", project.getWiseVersion());
+        JSONObject projectJSON = ControllerUtil.getProjectJSON(project);
+        projectJSON.put("type", "project");
+        return projectJSON;
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
     }
+    return projectLibraryGroup;
   }
 
   private String getProjectThumb(Project project) {

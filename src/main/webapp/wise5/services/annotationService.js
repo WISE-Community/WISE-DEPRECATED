@@ -351,47 +351,36 @@ var AnnotationService = function () {
       }
       return localAnnotation;
     }
-
-    /**
-     * Add or update the annotation to our local collection
-     * @param annotation the annotation object
-     */
-
   }, {
     key: 'addOrUpdateAnnotation',
     value: function addOrUpdateAnnotation(annotation) {
-      if (annotation != null) {
-        var updated = false;
-        var annotations = this.annotations;
-        if (annotations != null) {
-          for (var a = annotations.length - 1; a >= 0; a--) {
-            var tempAnnotation = annotations[a];
-            if (tempAnnotation != null) {
-              if (annotation.id == tempAnnotation.id && annotation.nodeId == tempAnnotation.nodeId && annotation.componentId == tempAnnotation.componentId && annotation.fromWorkgroupId == tempAnnotation.fromWorkgroupId && annotation.toWorkgroupId == tempAnnotation.toWorkgroupId && annotation.type == tempAnnotation.type && annotation.studentWorkId == tempAnnotation.studentWorkId && annotation.runId == tempAnnotation.runId && annotation.periodId == tempAnnotation.periodId) {
-
-                // the annotation matches so we will update it
-                tempAnnotation.data = annotation.data;
-                tempAnnotation.clientSaveTime = annotation.clientSaveTime;
-                tempAnnotation.serverSaveTime = annotation.serverSaveTime;
-                updated = true;
-              }
-            }
-          }
+      var isAnnotationFound = false;
+      for (var a = this.annotations.length - 1; a >= 0; a--) {
+        var localAnnotation = this.annotations[a];
+        if (this.isAnnotationMatch(annotation, localAnnotation)) {
+          isAnnotationFound = true;
+          localAnnotation.data = annotation.data;
+          localAnnotation.clientSaveTime = annotation.clientSaveTime;
+          localAnnotation.serverSaveTime = annotation.serverSaveTime;
         }
-        if (!updated) {
-          // we did not find a match so we will add it
-          annotations.push(annotation);
-        }
+      }
+      if (!isAnnotationFound) {
+        this.annotations.push(annotation);
       }
     }
   }, {
-    key: 'setAnnotations',
-
+    key: 'isAnnotationMatch',
+    value: function isAnnotationMatch(annotation1, annotation2) {
+      return annotation1.id === annotation2.id && annotation1.nodeId === annotation2.nodeId && annotation1.componentId === annotation2.componentId && annotation1.fromWorkgroupId === annotation2.fromWorkgroupId && annotation1.toWorkgroupId === annotation2.toWorkgroupId && annotation1.type === annotation2.type && annotation1.studentWorkId === annotation2.studentWorkId && annotation1.runId === annotation2.runId && annotation1.periodId === annotation2.periodId;
+    }
 
     /**
      * Set the annotations
      * @param annotations the annotations aray
      */
+
+  }, {
+    key: 'setAnnotations',
     value: function setAnnotations(annotations) {
       this.annotations = annotations;
     }

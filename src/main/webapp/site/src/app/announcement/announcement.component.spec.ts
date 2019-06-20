@@ -1,19 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-
 import { AnnouncementComponent } from './announcement.component';
+import { configureTestSuite } from 'ng-bullet';
 
 describe('AnnouncementComponent', () => {
   let component: AnnouncementComponent;
   let fixture: ComponentFixture<AnnouncementComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ AnnouncementComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AnnouncementComponent);

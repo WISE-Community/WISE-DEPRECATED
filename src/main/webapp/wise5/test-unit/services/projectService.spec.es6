@@ -271,7 +271,7 @@ describe('ProjectService Unit Test', () => {
       expect(nodeIdsActual).toEqual(nodeIdsExpected);
     });
 
-    it('should get the component by node id and comonent id', () => {
+    it('should get the component by node id and component id', () => {
       ProjectService.setProject(scootersProjectJSON);
       // nodeId is null
       const nullNodeIdResult = ProjectService.getComponentByNodeIdAndComponentId(null, "57lxhwfp5r");

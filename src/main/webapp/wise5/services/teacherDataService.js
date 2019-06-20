@@ -241,29 +241,93 @@ var TeacherDataService = function () {
      * @returns the student data for the node id
      */
     value: function retrieveStudentDataByNodeId(nodeId) {
-      var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-
-      var components = [];
-      components = components.concat(nodeIdsAndComponentIds);
-
       var params = {};
       params.periodId = null;
       params.workgroupId = null;
-      params.components = components;
+      params.components = this.getAllRelatedComponents(nodeId);
       params.getAnnotations = false;
       params.getEvents = false;
 
       return this.retrieveStudentData(params);
     }
   }, {
-    key: 'retrieveStudentDataByWorkgroupId',
+    key: 'getAllRelatedComponents',
+    value: function getAllRelatedComponents(nodeId) {
+      var components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+      components = components.concat(this.getConnectedComponentsIfNecessary(components));
+      return components;
+    }
+  }, {
+    key: 'getConnectedComponentsIfNecessary',
+    value: function getConnectedComponentsIfNecessary(components) {
+      var connectedComponents = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
+      try {
+        for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var component = _step.value;
+
+          var componentContent = this.ProjectService.getComponentByNodeIdAndComponentId(component.nodeId, component.componentId);
+          if (this.isConnectedComponentStudentDataRequired(componentContent)) {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+              for (var _iterator2 = componentContent.connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var connectedComponent = _step2.value;
+
+                connectedComponents.push(connectedComponent);
+              }
+            } catch (err) {
+              _didIteratorError2 = true;
+              _iteratorError2 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                  _iterator2.return();
+                }
+              } finally {
+                if (_didIteratorError2) {
+                  throw _iteratorError2;
+                }
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return connectedComponents;
+    }
+  }, {
+    key: 'isConnectedComponentStudentDataRequired',
+    value: function isConnectedComponentStudentDataRequired(componentContent) {
+      return componentContent.type === 'Discussion' && componentContent.connectedComponents != null && componentContent.connectedComponents.length !== 0;
+    }
 
     /**
      * Retrieve the student data for the workgroup id
      * @param workgroupId the workgroup id
      * @returns the student data for the workgroup id
      */
+
+  }, {
+    key: 'retrieveStudentDataByWorkgroupId',
     value: function retrieveStudentDataByWorkgroupId(workgroupId) {
       var params = {};
       params.periodId = null;
@@ -332,27 +396,27 @@ var TeacherDataService = function () {
             var componentStates = resultData.studentWorkList;
 
             // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId objects
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
             try {
-              for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var componentState = _step.value;
+              for (var _iterator3 = componentStates[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var componentState = _step3.value;
 
                 _this2.addOrUpdateComponentState(componentState);
               }
             } catch (err) {
-              _didIteratorError = true;
-              _iteratorError = err;
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                  _iterator.return();
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
                 }
               } finally {
-                if (_didIteratorError) {
-                  throw _iteratorError;
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
                 }
               }
             }
@@ -367,13 +431,13 @@ var TeacherDataService = function () {
             _this2.studentData.allEvents = resultData.events;
             _this2.studentData.eventsByWorkgroupId = {};
             _this2.studentData.eventsByNodeId = {};
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
 
             try {
-              for (var _iterator2 = resultData.events[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var event = _step2.value;
+              for (var _iterator4 = resultData.events[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                var event = _step4.value;
 
                 var eventWorkgroupId = event.workgroupId;
                 if (_this2.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
@@ -387,16 +451,16 @@ var TeacherDataService = function () {
                 _this2.studentData.eventsByNodeId[eventNodeId].push(event);
               }
             } catch (err) {
-              _didIteratorError2 = true;
-              _iteratorError2 = err;
+              _didIteratorError4 = true;
+              _iteratorError4 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                  _iterator2.return();
+                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                  _iterator4.return();
                 }
               } finally {
-                if (_didIteratorError2) {
-                  throw _iteratorError2;
+                if (_didIteratorError4) {
+                  throw _iteratorError4;
                 }
               }
             }
@@ -407,13 +471,13 @@ var TeacherDataService = function () {
             _this2.studentData.annotations = resultData.annotations;
             _this2.studentData.annotationsToWorkgroupId = {};
             _this2.studentData.annotationsByNodeId = {};
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
 
             try {
-              for (var _iterator3 = resultData.annotations[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                var annotation = _step3.value;
+              for (var _iterator5 = resultData.annotations[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                var annotation = _step5.value;
 
                 var annotationWorkgroupId = annotation.toWorkgroupId;
                 if (!_this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
@@ -427,16 +491,16 @@ var TeacherDataService = function () {
                 _this2.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
               }
             } catch (err) {
-              _didIteratorError3 = true;
-              _iteratorError3 = err;
+              _didIteratorError5 = true;
+              _iteratorError5 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                  _iterator3.return();
+                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                  _iterator5.return();
                 }
               } finally {
-                if (_didIteratorError3) {
-                  throw _iteratorError3;
+                if (_didIteratorError5) {
+                  throw _iteratorError5;
                 }
               }
             }
@@ -579,6 +643,37 @@ var TeacherDataService = function () {
       return [];
     }
   }, {
+    key: 'getComponentStatesByComponentIds',
+    value: function getComponentStatesByComponentIds(componentIds) {
+      var componentStatesByComponentId = [];
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = componentIds[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var componentId = _step6.value;
+
+          componentStatesByComponentId = componentStatesByComponentId.concat(this.studentData.componentStatesByComponentId[componentId]);
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
+
+      return componentStatesByComponentId;
+    }
+  }, {
     key: 'getLatestComponentStateByWorkgroupIdNodeIdAndComponentId',
     value: function getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId) {
       var latestComponentState = null;
@@ -589,7 +684,7 @@ var TeacherDataService = function () {
           if (componentState != null) {
             var componentStateNodeId = componentState.nodeId;
             var componentStateComponentId = componentState.componentId;
-            if (nodeId == componentStateNodeId && componentId == componentStateComponentId) {
+            if (nodeId === componentStateNodeId && componentId === componentStateComponentId) {
               latestComponentState = componentState;
               break;
             }
@@ -601,7 +696,6 @@ var TeacherDataService = function () {
   }, {
     key: 'getLatestComponentStateByWorkgroupIdNodeId',
     value: function getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
-      var latestComponentState = null;
       var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
       if (componentStates != null) {
         for (var c = componentStates.length - 1; c >= 0; c--) {
@@ -639,13 +733,13 @@ var TeacherDataService = function () {
            * states for already
            */
           var componentsFound = {};
-          var _iteratorNormalCompletion4 = true;
-          var _didIteratorError4 = false;
-          var _iteratorError4 = undefined;
+          var _iteratorNormalCompletion7 = true;
+          var _didIteratorError7 = false;
+          var _iteratorError7 = undefined;
 
           try {
-            for (var _iterator4 = componentStatesForWorkgroup[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-              var _componentState = _step4.value;
+            for (var _iterator7 = componentStatesForWorkgroup[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+              var _componentState = _step7.value;
 
               if (_componentState != null) {
                 // get the node id and component id of the component state
@@ -670,16 +764,16 @@ var TeacherDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _didIteratorError7 = true;
+            _iteratorError7 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                _iterator4.return();
+              if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                _iterator7.return();
               }
             } finally {
-              if (_didIteratorError4) {
-                throw _iteratorError4;
+              if (_didIteratorError7) {
+                throw _iteratorError7;
               }
             }
           }
@@ -747,10 +841,42 @@ var TeacherDataService = function () {
     value: function getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId) {
       var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
       var componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
-
-      // find the intersect and return it
       return componentStatesByWorkgroupId.filter(function (n) {
-        return componentStatesByComponentId.indexOf(n) != -1;
+        return componentStatesByComponentId.indexOf(n) !== -1;
+      });
+    }
+  }, {
+    key: 'getComponentStatesByWorkgroupIdAndComponentIds',
+    value: function getComponentStatesByWorkgroupIdAndComponentIds(workgroupId, componentIds) {
+      var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
+      var componentStatesByComponentId = [];
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
+
+      try {
+        for (var _iterator8 = componentIds[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var componentId = _step8.value;
+
+          componentStatesByComponentId = componentStatesByComponentId.concat(this.getComponentStatesByComponentId(componentId));
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
+          }
+        }
+      }
+
+      return componentStatesByWorkgroupId.filter(function (n) {
+        return componentStatesByComponentId.indexOf(n) !== -1;
       });
     }
   }, {
@@ -872,24 +998,24 @@ var TeacherDataService = function () {
        */
       var runStatusPeriods = this.runStatus.periods;
 
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      var _iteratorNormalCompletion9 = true;
+      var _didIteratorError9 = false;
+      var _iteratorError9 = undefined;
 
       try {
-        for (var _iterator5 = periods[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var period = _step5.value;
+        for (var _iterator9 = periods[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var period = _step9.value;
 
           if (period != null) {
             var runStatusPeriod = null;
             if (runStatusPeriods != null) {
-              var _iteratorNormalCompletion6 = true;
-              var _didIteratorError6 = false;
-              var _iteratorError6 = undefined;
+              var _iteratorNormalCompletion10 = true;
+              var _didIteratorError10 = false;
+              var _iteratorError10 = undefined;
 
               try {
-                for (var _iterator6 = runStatusPeriods[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                  var tempRunStatusPeriod = _step6.value;
+                for (var _iterator10 = runStatusPeriods[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                  var tempRunStatusPeriod = _step10.value;
 
                   if (tempRunStatusPeriod != null) {
                     if (period.periodId == tempRunStatusPeriod.periodId) {
@@ -898,16 +1024,16 @@ var TeacherDataService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError6 = true;
-                _iteratorError6 = err;
+                _didIteratorError10 = true;
+                _iteratorError10 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                    _iterator6.return();
+                  if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                    _iterator10.return();
                   }
                 } finally {
-                  if (_didIteratorError6) {
-                    throw _iteratorError6;
+                  if (_didIteratorError10) {
+                    throw _iteratorError10;
                   }
                 }
               }
@@ -925,16 +1051,16 @@ var TeacherDataService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          if (!_iteratorNormalCompletion9 && _iterator9.return) {
+            _iterator9.return();
           }
         } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
+          if (_didIteratorError9) {
+            throw _iteratorError9;
           }
         }
       }
@@ -1129,13 +1255,13 @@ var TeacherDataService = function () {
         var periods = runStatus.periods;
         var nPeriods = periods.length;
         var nPeriodsPaused = 0;
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iteratorNormalCompletion11 = true;
+        var _didIteratorError11 = false;
+        var _iteratorError11 = undefined;
 
         try {
-          for (var _iterator7 = periods[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var period = _step7.value;
+          for (var _iterator11 = periods[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            var period = _step11.value;
 
             if (period != null) {
               if (period.paused) {
@@ -1144,16 +1270,16 @@ var TeacherDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _didIteratorError11 = true;
+          _iteratorError11 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-              _iterator7.return();
+            if (!_iteratorNormalCompletion11 && _iterator11.return) {
+              _iterator11.return();
             }
           } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
+            if (_didIteratorError11) {
+              throw _iteratorError11;
             }
           }
         }
@@ -1178,13 +1304,13 @@ var TeacherDataService = function () {
         var nPeriods = periods.length;
         var nPeriodsPaused = 0;
 
-        var _iteratorNormalCompletion8 = true;
-        var _didIteratorError8 = false;
-        var _iteratorError8 = undefined;
+        var _iteratorNormalCompletion12 = true;
+        var _didIteratorError12 = false;
+        var _iteratorError12 = undefined;
 
         try {
-          for (var _iterator8 = periods[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-            var period = _step8.value;
+          for (var _iterator12 = periods[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+            var period = _step12.value;
 
             if (period != null) {
               isPaused = period.paused;
@@ -1201,16 +1327,16 @@ var TeacherDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError8 = true;
-          _iteratorError8 = err;
+          _didIteratorError12 = true;
+          _iteratorError12 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-              _iterator8.return();
+            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+              _iterator12.return();
             }
           } finally {
-            if (_didIteratorError8) {
-              throw _iteratorError8;
+            if (_didIteratorError12) {
+              throw _iteratorError12;
             }
           }
         }
@@ -1231,29 +1357,42 @@ var TeacherDataService = function () {
   }, {
     key: 'pauseScreensChanged',
     value: function pauseScreensChanged(periodId, isPaused) {
-      if (periodId) {
-        this.updatePausedRunStatusValue(periodId, isPaused);
+      var _this4 = this;
 
+      this.updatePausedRunStatusValue(periodId, isPaused);
+      this.sendRunStatus().then(function () {
         if (isPaused) {
-          this.TeacherWebSocketService.pauseScreens(periodId);
+          _this4.TeacherWebSocketService.pauseScreens(periodId);
         } else {
-          this.TeacherWebSocketService.unPauseScreens(periodId);
+          _this4.TeacherWebSocketService.unPauseScreens(periodId);
         }
-
-        this.sendRunStatus();
-        var context = "ClassroomMonitor",
-            nodeId = null,
-            componentId = null,
-            componentType = null,
-            category = "TeacherAction",
-            data = { periodId: periodId };
-        var event = "pauseScreen";
-        if (!isPaused) {
-          event = "unPauseScreen";
-        }
-        this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-        this.$rootScope.$broadcast('pauseScreensChanged', { periods: this.runStatus.periods });
+      });
+      var context = "ClassroomMonitor",
+          nodeId = null,
+          componentId = null,
+          componentType = null,
+          category = "TeacherAction",
+          data = { periodId: periodId };
+      var event = "pauseScreen";
+      if (!isPaused) {
+        event = "unPauseScreen";
       }
+      this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+      this.$rootScope.$broadcast('pauseScreensChanged', { periods: this.runStatus.periods });
+    }
+  }, {
+    key: 'sendRunStatus',
+    value: function sendRunStatus() {
+      var httpParams = {
+        method: 'POST',
+        url: this.ConfigService.getConfigParam('runStatusURL'),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          runId: this.ConfigService.getConfigParam('runId'),
+          status: angular.toJson(this.runStatus)
+        })
+      };
+      return this.$http(httpParams);
     }
 
     /**
@@ -1267,27 +1406,27 @@ var TeacherDataService = function () {
       var runStatus = {};
       runStatus.runId = this.ConfigService.getConfigParam('runId');
       var periods = this.ConfigService.getPeriods();
-      var _iteratorNormalCompletion9 = true;
-      var _didIteratorError9 = false;
-      var _iteratorError9 = undefined;
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
 
       try {
-        for (var _iterator9 = periods[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-          var period = _step9.value;
+        for (var _iterator13 = periods[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var period = _step13.value;
 
           period.paused = false;
         }
       } catch (err) {
-        _didIteratorError9 = true;
-        _iteratorError9 = err;
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion9 && _iterator9.return) {
-            _iterator9.return();
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
           }
         } finally {
-          if (_didIteratorError9) {
-            throw _iteratorError9;
+          if (_didIteratorError13) {
+            throw _iteratorError13;
           }
         }
       }
@@ -1334,36 +1473,6 @@ var TeacherDataService = function () {
             tempPeriod.paused = allPeriodsPaused;
           }
         }
-      }
-    }
-
-    /**
-     * Send the run status back to the server to be saved in the db
-     * @param customPauseMessage the custom pause message text to send to the students
-     */
-
-  }, {
-    key: 'sendRunStatus',
-    value: function sendRunStatus(customPauseMessage) {
-      var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-      if (runStatusURL != null) {
-        var runId = this.ConfigService.getConfigParam('runId');
-        if (customPauseMessage != null) {
-          this.runStatus.pauseMessage = customPauseMessage;
-        }
-
-        var runStatus = angular.toJson(this.runStatus);
-        var runStatusParams = {
-          runId: runId,
-          status: runStatus
-        };
-
-        var httpParams = {};
-        httpParams.method = 'POST';
-        httpParams.url = runStatusURL;
-        httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-        httpParams.data = $.param(runStatusParams);
-        this.$http(httpParams);
       }
     }
   }]);

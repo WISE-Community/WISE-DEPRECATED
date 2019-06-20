@@ -7,7 +7,8 @@ import { TeacherService } from "../teacher.service";
 import { Project } from "../../domain/project";
 import { TeacherRun } from "../teacher-run";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-import {ConfigService} from "../../services/config.service";
+import { ConfigService } from "../../services/config.service";
+import { configureTestSuite } from 'ng-bullet';
 
 @Component({selector: 'app-teacher-run-list-item', template: ''})
 class TeacherRunListItemStubComponent {
@@ -78,7 +79,7 @@ describe('TeacherRunListComponent', () => {
   let component: TeacherRunListComponent;
   let fixture: ComponentFixture<TeacherRunListComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListComponent ],
       imports: [ MomentModule ],
@@ -87,9 +88,8 @@ describe('TeacherRunListComponent', () => {
         { provide: ConfigService, useClass: MockConfigService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TeacherRunListComponent);

@@ -122,14 +122,17 @@ var DiscussionController = function (_ComponentController) {
       }
       _this.disableComponentIfNecessary();
     } else if (_this.isGradingMode() || _this.isGradingRevisionMode()) {
-      var _componentStates = _this.DiscussionService.getPostsAssociatedWithWorkgroupId(_this.componentId, _this.workgroupId);
-      var annotations = _this.getInappropriateFlagAnnotationsByComponentStates(_componentStates);
-      _this.setClassResponses(_componentStates, annotations);
+      if (_this.DiscussionService.workgroupHasWorkForComponent(_this.workgroupId, _this.componentId)) {
+        var componentIds = _this.getGradingComponentIds();
+        var _componentStates = _this.DiscussionService.getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, _this.workgroupId);
+        var annotations = _this.getInappropriateFlagAnnotationsByComponentStates(_componentStates);
+        _this.setClassResponses(_componentStates, annotations);
+      }
     }
     _this.initializeScopeSubmitButtonClicked();
     _this.initializeScopeGetComponentState();
     _this.initializeScopeStudentDataChanged();
-    _this.registerWebSocketMessageReceivedListener();
+    _this.registerStudentWorkReceivedListener();
     _this.initializeWatchMdMedia();
     _this.broadcastDoneRenderingComponent();
     return _this;
@@ -204,6 +207,38 @@ var DiscussionController = function (_ComponentController) {
       return false;
     }
   }, {
+    key: 'getGradingComponentIds',
+    value: function getGradingComponentIds() {
+      var connectedComponentIds = [this.componentId];
+      if (this.componentContent.connectedComponents != null) {
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
+
+        try {
+          for (var _iterator5 = this.componentContent.connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var connectedComponent = _step5.value;
+
+            connectedComponentIds.push(connectedComponent.componentId);
+          }
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
+            }
+          }
+        }
+      }
+      return connectedComponentIds;
+    }
+  }, {
     key: 'initializeScopeSubmitButtonClicked',
     value: function initializeScopeSubmitButtonClicked() {
       var _this2 = this;
@@ -264,27 +299,19 @@ var DiscussionController = function (_ComponentController) {
     value: function registerStudentWorkSavedToServerListener() {
       var _this5 = this;
 
-      this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+      this.destroyStudentWorkSavedToServerListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
         var componentState = args.studentWork;
-        if (componentState && _this5.nodeId === componentState.nodeId && _this5.componentId === componentState.componentId) {
+        if (_this5.isWorkFromThisComponent(componentState)) {
           if (_this5.isClassmateResponsesGated() && !_this5.retrievedClassmateResponses) {
             _this5.getClassmateResponses();
           } else {
             _this5.addClassResponse(componentState);
           }
           _this5.disableComponentIfNecessary();
-          _this5.sendPostToClassmatesInPeriod(componentState);
           _this5.sendPostToStudentsInThread(componentState);
         }
         _this5.isSubmit = null;
       });
-    }
-  }, {
-    key: 'sendPostToClassmatesInPeriod',
-    value: function sendPostToClassmatesInPeriod(componentState) {
-      var messageType = 'studentData';
-      componentState.usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(componentState.workgroupId);
-      this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
     }
   }, {
     key: 'sendPostToStudentsInThread',
@@ -313,57 +340,45 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'sendPostToThreadCreator',
     value: function sendPostToThreadCreator(componentStateIdReplyingTo, notificationType, nodeId, componentId, fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
-      var _this6 = this;
-
       var originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
       var toWorkgroupId = originalPostComponentState.workgroupId;
-      if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
+      if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
         var notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-        this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
-          var messageType = 'notification';
-          _this6.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-        });
+        this.NotificationService.saveNotificationToServer(notification);
         workgroupsNotifiedSoFar.push(toWorkgroupId);
       }
     }
   }, {
     key: 'sendPostToThreadRepliers',
     value: function sendPostToThreadRepliers(componentStateIdReplyingTo, notificationType, nodeId, componentId, fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
-      var _this7 = this;
-
       if (this.responsesMap[componentStateIdReplyingTo].replies != null) {
         var replies = this.responsesMap[componentStateIdReplyingTo].replies;
         for (var r = 0; r < replies.length; r++) {
           var reply = replies[r];
           var toWorkgroupId = reply.workgroupId;
-          if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) == -1) {
+          if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1) {
             var notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-            this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
-              var messageType = 'notification';
-              _this7.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-            });
+            this.NotificationService.saveNotificationToServer(notification);
             workgroupsNotifiedSoFar.push(toWorkgroupId);
           }
         }
       }
     }
   }, {
-    key: 'registerWebSocketMessageReceivedListener',
-    value: function registerWebSocketMessageReceivedListener() {
-      var _this8 = this;
+    key: 'registerStudentWorkReceivedListener',
+    value: function registerStudentWorkReceivedListener() {
+      var _this6 = this;
 
-      this.$rootScope.$on('webSocketMessageReceived', function (event, args) {
-        var componentState = args.data.data;
-        if (_this8.isWorkFromThisComponent(componentState) || _this8.isWorkFromConnectedComponent(componentState)) {
-          var componentStateWorkgroupId = componentState.workgroupId;
-          var workgroupId = _this8.ConfigService.getWorkgroupId();
-          if (componentStateWorkgroupId !== workgroupId) {
-            if (_this8.retrievedClassmateResponses) {
-              _this8.addClassResponse(componentState);
-            }
-          }
+      this.destroyStudentWorkReceivedListener = this.$rootScope.$on('studentWorkReceived', function (event, componentState) {
+        if ((_this6.isWorkFromThisComponent(componentState) || _this6.isWorkFromConnectedComponent(componentState)) && _this6.isWorkFromClassmate(componentState) && _this6.retrievedClassmateResponses) {
+          _this6.addClassResponse(componentState);
         }
       });
+    }
+  }, {
+    key: 'isWorkFromClassmate',
+    value: function isWorkFromClassmate(componentState) {
+      return componentState.workgroupId !== this.ConfigService.getWorkgroupId();
     }
   }, {
     key: 'isWorkFromThisComponent',
@@ -373,57 +388,58 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'isWorkFromConnectedComponent',
     value: function isWorkFromConnectedComponent(componentState) {
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      if (this.componentContent.connectedComponents != null) {
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
 
-      try {
-        for (var _iterator5 = this.componentContent.connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var connectedComponent = _step5.value;
-
-          if (connectedComponent.nodeId === componentState.nodeId && connectedComponent.componentId === componentState.componentId) {
-            return true;
-          }
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          for (var _iterator6 = this.componentContent.connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var connectedComponent = _step6.value;
+
+            if (connectedComponent.nodeId === componentState.nodeId && connectedComponent.componentId === componentState.componentId) {
+              return true;
+            }
           }
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
         } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
+            }
           }
         }
       }
-
       return false;
     }
   }, {
     key: 'initializeWatchMdMedia',
     value: function initializeWatchMdMedia() {
-      var _this9 = this;
+      var _this7 = this;
 
       this.$scope.$watch(function () {
-        return _this9.$mdMedia('gt-sm');
+        return _this7.$mdMedia('gt-sm');
       }, function (md) {
-        _this9.$scope.mdScreen = md;
+        _this7.$scope.mdScreen = md;
       });
     }
   }, {
     key: 'getClassmateResponses',
     value: function getClassmateResponses() {
-      var _this10 = this;
+      var _this8 = this;
 
       var components = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [{ nodeId: this.nodeId, componentId: this.componentId }];
 
       var runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
       this.DiscussionService.getClassmateResponses(runId, periodId, components).then(function (result) {
-        _this10.setClassResponses(result.studentWorkList, result.annotations);
+        _this8.setClassResponses(result.studentWorkList, result.annotations);
       });
     }
   }, {
@@ -436,12 +452,12 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
-      var _this11 = this;
+      var _this9 = this;
 
       this.isDirty = true;
       var action = 'change';
       this.createComponentState(action).then(function (componentState) {
-        _this11.$scope.$emit('componentStudentDataChanged', { nodeId: _this11.nodeId, componentId: _this11.componentId, componentState: componentState });
+        _this9.$scope.$emit('componentStudentDataChanged', { nodeId: _this9.nodeId, componentId: _this9.componentId, componentState: componentState });
       });
     }
 
@@ -502,29 +518,29 @@ var DiscussionController = function (_ComponentController) {
     value: function disableComponentIfNecessary() {
       _get(DiscussionController.prototype.__proto__ || Object.getPrototypeOf(DiscussionController.prototype), 'disableComponentIfNecessary', this).call(this);
       if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-          for (var _iterator6 = this.componentContent.connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var connectedComponent = _step6.value;
+          for (var _iterator7 = this.componentContent.connectedComponents[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var connectedComponent = _step7.value;
 
-            if (connectedComponent.type == 'showWork') {
+            if (connectedComponent.type === 'showWork') {
               this.isDisabled = true;
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
             }
           } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
@@ -549,19 +565,20 @@ var DiscussionController = function (_ComponentController) {
     key: 'setClassResponses',
     value: function setClassResponses(componentStates, annotations) {
       this.classResponses = [];
-      var _iteratorNormalCompletion7 = true;
-      var _didIteratorError7 = false;
-      var _iteratorError7 = undefined;
+      componentStates = componentStates.sort(this.sortByServerSaveTime);
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator7 = componentStates[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-          var componentState = _step7.value;
+        for (var _iterator8 = componentStates[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var componentState = _step8.value;
 
           if (componentState.studentData.isSubmit) {
             var workgroupId = componentState.workgroupId;
             var latestInappropriateFlagAnnotation = this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
             var usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
-            if (usernames.length == 0) {
+            if (usernames.length === 0) {
               componentState.usernames = this.getUserIdsDisplay(workgroupId);
             } else {
               componentState.usernames = usernames.map(function (obj) {
@@ -580,46 +597,13 @@ var DiscussionController = function (_ComponentController) {
               }
               this.classResponses.push(componentState);
             } else if (this.isStudentMode()) {
-              if (latestInappropriateFlagAnnotation != null && latestInappropriateFlagAnnotation.data != null && latestInappropriateFlagAnnotation.data.action == 'Delete') {
+              if (latestInappropriateFlagAnnotation != null && latestInappropriateFlagAnnotation.data != null && latestInappropriateFlagAnnotation.data.action === 'Delete') {
                 // do not show this post because the teacher has deleted it
               } else {
                 this.classResponses.push(componentState);
               }
             }
           }
-        }
-      } catch (err) {
-        _didIteratorError7 = true;
-        _iteratorError7 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion7 && _iterator7.return) {
-            _iterator7.return();
-          }
-        } finally {
-          if (_didIteratorError7) {
-            throw _iteratorError7;
-          }
-        }
-      }
-
-      this.processResponses(this.classResponses);
-      this.retrievedClassmateResponses = true;
-    }
-  }, {
-    key: 'getUserIdsDisplay',
-    value: function getUserIdsDisplay(workgroupId) {
-      var userIds = this.ConfigService.getUserIdsByWorkgroupId(workgroupId);
-      var userIdsDisplay = [];
-      var _iteratorNormalCompletion8 = true;
-      var _didIteratorError8 = false;
-      var _iteratorError8 = undefined;
-
-      try {
-        for (var _iterator8 = userIds[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-          var userId = _step8.value;
-
-          userIdsDisplay.push('Student ' + userId);
         }
       } catch (err) {
         _didIteratorError8 = true;
@@ -636,35 +620,78 @@ var DiscussionController = function (_ComponentController) {
         }
       }
 
+      this.processResponses(this.classResponses);
+      this.retrievedClassmateResponses = true;
+    }
+  }, {
+    key: 'sortByServerSaveTime',
+    value: function sortByServerSaveTime(componentState1, componentState2) {
+      if (componentState1.serverSaveTime < componentState2.serverSaveTime) {
+        return -1;
+      } else if (componentState1.serverSaveTime > componentState2.serverSaveTime) {
+        return 1;
+      }
+      return 0;
+    }
+  }, {
+    key: 'getUserIdsDisplay',
+    value: function getUserIdsDisplay(workgroupId) {
+      var userIds = this.ConfigService.getUserIdsByWorkgroupId(workgroupId);
+      var userIdsDisplay = [];
+      var _iteratorNormalCompletion9 = true;
+      var _didIteratorError9 = false;
+      var _iteratorError9 = undefined;
+
+      try {
+        for (var _iterator9 = userIds[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var userId = _step9.value;
+
+          userIdsDisplay.push('Student ' + userId);
+        }
+      } catch (err) {
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion9 && _iterator9.return) {
+            _iterator9.return();
+          }
+        } finally {
+          if (_didIteratorError9) {
+            throw _iteratorError9;
+          }
+        }
+      }
+
       return userIdsDisplay.join(', ');
     }
   }, {
     key: 'getLatestInappropriateFlagAnnotationByStudentWorkId',
     value: function getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
       if (annotations != null) {
-        var _iteratorNormalCompletion9 = true;
-        var _didIteratorError9 = false;
-        var _iteratorError9 = undefined;
+        var _iteratorNormalCompletion10 = true;
+        var _didIteratorError10 = false;
+        var _iteratorError10 = undefined;
 
         try {
-          for (var _iterator9 = annotations[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-            var annotation = _step9.value;
+          for (var _iterator10 = annotations[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+            var annotation = _step10.value;
 
-            if (studentWorkId == annotation.studentWorkId && annotation.type == 'inappropriateFlag') {
+            if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
               return annotation;
             }
           }
         } catch (err) {
-          _didIteratorError9 = true;
-          _iteratorError9 = err;
+          _didIteratorError10 = true;
+          _iteratorError10 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion9 && _iterator9.return) {
-              _iterator9.return();
+            if (!_iteratorNormalCompletion10 && _iterator10.return) {
+              _iterator10.return();
             }
           } finally {
-            if (_didIteratorError9) {
-              throw _iteratorError9;
+            if (_didIteratorError10) {
+              throw _iteratorError10;
             }
           }
         }
@@ -674,48 +701,15 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'processResponses',
     value: function processResponses(componentStates) {
-      var _iteratorNormalCompletion10 = true;
-      var _didIteratorError10 = false;
-      var _iteratorError10 = undefined;
-
-      try {
-        for (var _iterator10 = componentStates[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-          var componentState = _step10.value;
-
-          this.responsesMap[componentState.id] = componentState;
-        }
-      } catch (err) {
-        _didIteratorError10 = true;
-        _iteratorError10 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion10 && _iterator10.return) {
-            _iterator10.return();
-          }
-        } finally {
-          if (_didIteratorError10) {
-            throw _iteratorError10;
-          }
-        }
-      }
-
       var _iteratorNormalCompletion11 = true;
       var _didIteratorError11 = false;
       var _iteratorError11 = undefined;
 
       try {
         for (var _iterator11 = componentStates[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-          var _componentState = _step11.value;
+          var componentState = _step11.value;
 
-          if (_componentState && _componentState.studentData) {
-            var studentData = _componentState.studentData;
-            var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-            if (componentStateIdReplyingTo) {
-              if (this.responsesMap[componentStateIdReplyingTo] && this.responsesMap[componentStateIdReplyingTo].replies) {
-                this.responsesMap[componentStateIdReplyingTo].replies.push(_componentState);
-              }
-            }
-          }
+          this.responsesMap[componentState.id] = componentState;
         }
       } catch (err) {
         _didIteratorError11 = true;
@@ -732,7 +726,82 @@ var DiscussionController = function (_ComponentController) {
         }
       }
 
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
+
+      try {
+        for (var _iterator12 = componentStates[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var _componentState = _step12.value;
+
+          if (_componentState && _componentState.studentData) {
+            var studentData = _componentState.studentData;
+            var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+            if (componentStateIdReplyingTo) {
+              if (this.responsesMap[componentStateIdReplyingTo] && this.responsesMap[componentStateIdReplyingTo].replies) {
+                this.responsesMap[componentStateIdReplyingTo].replies.push(_componentState);
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
+          }
+        } finally {
+          if (_didIteratorError12) {
+            throw _iteratorError12;
+          }
+        }
+      }
+
       this.topLevelResponses = this.getLevel1Responses();
+      if (this.isGradingMode() || this.isGradingRevisionMode()) {
+        this.topLevelResponses = this.topLevelResponses.filter(this.threadHasPostFromThisComponentAndWorkgroupId());
+      }
+    }
+  }, {
+    key: 'threadHasPostFromThisComponentAndWorkgroupId',
+    value: function threadHasPostFromThisComponentAndWorkgroupId() {
+      var thisComponentId = this.componentId;
+      var thisWorkgroupId = this.workgroupId;
+      return function (componentState) {
+        if (componentState.componentId === thisComponentId && componentState.workgroupId === thisWorkgroupId) {
+          return true;
+        }
+        var _iteratorNormalCompletion13 = true;
+        var _didIteratorError13 = false;
+        var _iteratorError13 = undefined;
+
+        try {
+          for (var _iterator13 = componentState.replies[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+            var replyComponentState = _step13.value;
+
+            if (replyComponentState.componentId === thisComponentId && replyComponentState.workgroupId === thisWorkgroupId) {
+              return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError13 = true;
+          _iteratorError13 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+              _iterator13.return();
+            }
+          } finally {
+            if (_didIteratorError13) {
+              throw _iteratorError13;
+            }
+          }
+        }
+
+        return false;
+      };
     }
   }, {
     key: 'addClassResponse',
@@ -768,45 +837,39 @@ var DiscussionController = function (_ComponentController) {
     }
 
     /**
-     * Get the level 1 responses which are posts that are not a
-     * reply to another response.
-     * @return an array of responses that are not a reply to another
-     * response
+     * Get the level 1 responses which are posts that are not a reply to
+     * another response.
+     * @return an array of responses that are not a reply to another response
      */
 
   }, {
     key: 'getLevel1Responses',
     value: function getLevel1Responses() {
       var level1Responses = [];
-      var classResponses = this.classResponses;
-      var _iteratorNormalCompletion12 = true;
-      var _didIteratorError12 = false;
-      var _iteratorError12 = undefined;
+      var _iteratorNormalCompletion14 = true;
+      var _didIteratorError14 = false;
+      var _iteratorError14 = undefined;
 
       try {
-        for (var _iterator12 = classResponses[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-          var classResponse = _step12.value;
+        for (var _iterator14 = this.classResponses[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+          var classResponse = _step14.value;
 
           var componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
           if (componentStateIdReplyingTo == null) {
-            /*
-             * this response was not a reply to another post so it is a
-             * level 1 response
-             */
             level1Responses.push(classResponse);
           }
         }
       } catch (err) {
-        _didIteratorError12 = true;
-        _iteratorError12 = err;
+        _didIteratorError14 = true;
+        _iteratorError14 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion12 && _iterator12.return) {
-            _iterator12.return();
+          if (!_iteratorNormalCompletion14 && _iterator14.return) {
+            _iterator14.return();
           }
         } finally {
-          if (_didIteratorError12) {
-            throw _iteratorError12;
+          if (_didIteratorError14) {
+            throw _iteratorError14;
           }
         }
       }
@@ -826,7 +889,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'deletebuttonclicked',
     value: function deletebuttonclicked(componentState) {
-      var _this12 = this;
+      var _this10 = this;
 
       var toWorkgroupId = componentState.workgroupId;
       var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
@@ -842,9 +905,9 @@ var DiscussionController = function (_ComponentController) {
       };
       var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
       this.AnnotationService.saveAnnotation(annotation).then(function () {
-        var componentStates = _this12.DiscussionService.getPostsAssociatedWithWorkgroupId(_this12.componentId, _this12.workgroupId);
-        var annotations = _this12.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-        _this12.setClassResponses(componentStates, annotations);
+        var componentStates = _this10.DiscussionService.getPostsAssociatedWithWorkgroupIds(_this10.getGradingComponentIds(), _this10.workgroupId);
+        var annotations = _this10.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+        _this10.setClassResponses(componentStates, annotations);
       });
     }
 
@@ -860,7 +923,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'undodeletebuttonclicked',
     value: function undodeletebuttonclicked(componentState) {
-      var _this13 = this;
+      var _this11 = this;
 
       var toWorkgroupId = componentState.workgroupId;
       var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
@@ -876,9 +939,9 @@ var DiscussionController = function (_ComponentController) {
       };
       var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
       this.AnnotationService.saveAnnotation(annotation).then(function () {
-        var componentStates = _this13.DiscussionService.getPostsAssociatedWithWorkgroupId(_this13.componentId, _this13.workgroupId);
-        var annotations = _this13.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-        _this13.setClassResponses(componentStates, annotations);
+        var componentStates = _this11.DiscussionService.getPostsAssociatedWithWorkgroupIds(_this11.getGradingComponentIds(), _this11.workgroupId);
+        var annotations = _this11.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+        _this11.setClassResponses(componentStates, annotations);
       });
     }
 
@@ -894,13 +957,13 @@ var DiscussionController = function (_ComponentController) {
     value: function getInappropriateFlagAnnotationsByComponentStates(componentStates) {
       var annotations = [];
       if (componentStates != null) {
-        var _iteratorNormalCompletion13 = true;
-        var _didIteratorError13 = false;
-        var _iteratorError13 = undefined;
+        var _iteratorNormalCompletion15 = true;
+        var _didIteratorError15 = false;
+        var _iteratorError15 = undefined;
 
         try {
-          for (var _iterator13 = componentStates[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-            var componentState = _step13.value;
+          for (var _iterator15 = componentStates[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+            var componentState = _step15.value;
 
             var latestInappropriateFlagAnnotation = this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(componentState.id, 'inappropriateFlag');
             if (latestInappropriateFlagAnnotation != null) {
@@ -908,21 +971,27 @@ var DiscussionController = function (_ComponentController) {
             }
           }
         } catch (err) {
-          _didIteratorError13 = true;
-          _iteratorError13 = err;
+          _didIteratorError15 = true;
+          _iteratorError15 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion13 && _iterator13.return) {
-              _iterator13.return();
+            if (!_iteratorNormalCompletion15 && _iterator15.return) {
+              _iterator15.return();
             }
           } finally {
-            if (_didIteratorError13) {
-              throw _iteratorError13;
+            if (_didIteratorError15) {
+              throw _iteratorError15;
             }
           }
         }
       }
       return annotations;
+    }
+  }, {
+    key: 'cleanupBeforeExiting',
+    value: function cleanupBeforeExiting() {
+      this.destroyStudentWorkSavedToServerListener();
+      this.destroyStudentWorkReceivedListener();
     }
   }]);
 

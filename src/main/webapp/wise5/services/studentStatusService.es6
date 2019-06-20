@@ -25,11 +25,11 @@ class StudentStatusService {
       this.studentStatuses = studentStatuses;
       return studentStatuses;
     });
-  };
+  }
 
   getStudentStatuses() {
     return this.studentStatuses;
-  };
+  }
 
   /**
    * Get the current node position and title for a workgroup
@@ -44,34 +44,31 @@ class StudentStatusService {
       return this.ProjectService.getNodePositionAndTitleByNodeId(currentNodeId);
     }
     return null;
-  };
+  }
 
   getStudentStatusForWorkgroupId(workgroupId) {
     const studentStatuses = this.getStudentStatuses();
     for (let tempStudentStatus of studentStatuses) {
       if (tempStudentStatus != null) {
         const tempWorkgroupId = tempStudentStatus.workgroupId;
-        if (workgroupId == tempWorkgroupId) {
+        if (workgroupId === tempWorkgroupId) {
           return tempStudentStatus;
         }
       }
     }
     return null;
-  };
+  }
 
-  setStudentStatusForWorkgroupId(workgroupId, studentStatus) {
+  setStudentStatus(studentStatus) {
     const studentStatuses = this.getStudentStatuses();
     for (let x = 0; x < studentStatuses.length; x++) {
-      const tempStudentStatus = studentStatuses[x];
-      if (tempStudentStatus != null) {
-        const tempWorkgroupId = tempStudentStatus.workgroupId;
-        if (workgroupId === tempWorkgroupId) {
-          studentStatuses.splice(x, 1, studentStatus);
-          break;
-        }
+      const aStudentStatus = studentStatuses[x];
+      if (aStudentStatus.workgroupId === studentStatus.workgroupId) {
+        studentStatuses.splice(x, 1, studentStatus);
+        break;
       }
     }
-  };
+  }
 
   /**
    * Get the student project completion data by workgroup id
@@ -128,7 +125,7 @@ class StudentStatusService {
     let studentStatuses = this.studentStatuses;
     for (let studentStatus of studentStatuses) {
       if (studentStatus != null) {
-        if (periodId == -1 || periodId == studentStatus.periodId) {
+        if (periodId === -1 || periodId === studentStatus.periodId) {
           let currentNodeId = studentStatus.currentNodeId;
           if (nodeId === currentNodeId) {
             workgroupIds.push(studentStatus.workgroupId);
@@ -164,7 +161,7 @@ class StudentStatusService {
     let studentStatuses = this.studentStatuses;
     for (let studentStatus of studentStatuses) {
       if (studentStatus) {
-        if (periodId == -1 || periodId == studentStatus.periodId) {
+        if (periodId === -1 || periodId === studentStatus.periodId) {
           if (!workgroupId || workgroupId === studentStatus.workgroupId) {
             let nodeStatuses = studentStatus.nodeStatuses;
             if (nodeStatuses) {
@@ -264,7 +261,7 @@ class StudentStatusService {
       let studentStatus = this.getStudentStatusForWorkgroupId(workgroup);
       if (studentStatus) {
         let pId = studentStatus.periodId;
-        if (periodId == -1 || pId == periodId) {
+        if (periodId === -1 || pId === periodId) {
           workgroupsOnlineInPeriod.push(workgroup);
         }
       }
@@ -295,7 +292,7 @@ class StudentStatusService {
 
     for (let studentStatus of studentStatuses) {
       if (studentStatus != null) {
-        if (periodId == -1 || periodId == studentStatus.periodId) {
+        if (periodId === -1 || periodId === studentStatus.periodId) {
           // the period matches the one we are looking for
           let workgroupId = studentStatus.workgroupId;
 
@@ -315,7 +312,7 @@ class StudentStatusService {
 
     let averageScore = null;
 
-    if (numStudentsWithScore != 0) {
+    if (numStudentsWithScore !== 0) {
       // calculate the average score for this node rounded down to the nearest hundredth
       averageScore = Math.floor(100 * studentScoreSum / numStudentsWithScore) / 100;
     }

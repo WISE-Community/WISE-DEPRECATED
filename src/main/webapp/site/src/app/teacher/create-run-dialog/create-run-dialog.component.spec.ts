@@ -15,6 +15,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { User } from '../../domain/user';
 import { UserService } from '../../services/user.service';
 import { ConfigService } from '../../services/config.service';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   createRun() {
@@ -84,8 +85,8 @@ describe('CreateRunDialogComponent', () => {
   const getForm = () => {
     return fixture.debugElement.query(By.css('form'));
   };
-  
-  beforeEach(async(() => {
+
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
@@ -117,8 +118,7 @@ describe('CreateRunDialogComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CreateRunDialogComponent);

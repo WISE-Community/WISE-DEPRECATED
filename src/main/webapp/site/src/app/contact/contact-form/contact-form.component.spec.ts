@@ -13,6 +13,7 @@ import { StudentService } from "../../student/student.service";
 import { User } from "../../domain/user";
 import { BehaviorSubject } from 'rxjs';
 import { translationsFactory } from "../../app.module";
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {
@@ -45,7 +46,7 @@ describe('ContactFormComponent', () => {
   let component: ContactFormComponent;
   let fixture: ComponentFixture<ContactFormComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ContactFormComponent ],
       imports: [
@@ -68,9 +69,8 @@ describe('ContactFormComponent', () => {
         I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ContactFormComponent);

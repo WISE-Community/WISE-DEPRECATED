@@ -5,10 +5,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.socket.WebSocketHandler;
+//import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
@@ -17,7 +18,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
-import org.wise.portal.service.websocket.WISEWebSocketHandler;
+import org.wise.vle.domain.WebSocketMessage;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
@@ -50,11 +51,15 @@ public class TeacherDataController {
   @Autowired
   private RunService runService;
 
-  @Autowired
-  private WebSocketHandler webSocketHandler;
+//  @Autowired
+//  private WebSocketHandler webSocketHandler;
 
   @Autowired
   private Properties wiseProperties;
+
+  @Autowired
+  private SimpMessagingTemplate simpMessagingTemplate;
+
 
   /**
    * Handles requests for exporting of data for teachers/researchers like student work, events, notebook items
@@ -310,29 +315,7 @@ public class TeacherDataController {
                 savedAnnotationJSONObject.put("requestToken", requestToken);
                 savedAnnotationJSONObject.put("serverSaveTime", annotation.getServerSaveTime().getTime());
                 annotationsResultJSONArray.put(savedAnnotationJSONObject);
-
-                // create notification for each annotation so the students will be notified
-                // and send it in real-time over the websocket
-                try {
-                  Notification notification = this.createNotificationForAnnotation(annotation);
-                  if (webSocketHandler != null) {
-                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-
-                    if (wiseWebSocketHandler != null) {
-                      JSONObject notificationJSON = notification.toJSON();
-                      JSONObject webSocketMessageJSON = new JSONObject();
-                      webSocketMessageJSON.put("messageType", "annotationNotification");
-                      webSocketMessageJSON.put("messageParticipants", "teacherToStudent");
-                      webSocketMessageJSON.put("toWorkgroupId", notification.getToWorkgroup().getId());
-                      webSocketMessageJSON.put("notificationData", notificationJSON);
-                      webSocketMessageJSON.put("annotationData", annotation.toJSON());
-                      wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-                    }
-                  }
-                } catch (Exception e) {
-                  // if something fails during creating annotation and sending to websocket,
-                  // allow the rest to continue
-                }
+                this.sendAnnotationNotificationToStudent(annotation);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -387,6 +370,17 @@ public class TeacherDataController {
       writer.write(result.toString());
       writer.close();
     } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void sendAnnotationNotificationToStudent(Annotation annotation) {
+    try {
+      Notification notification = this.createNotificationForAnnotation(annotation);
+      Long toWorkgroupId = notification.getToWorkgroup().getId();
+      broadcastAnnotationToStudent(toWorkgroupId, annotation);
+      broadcastNotificationToStudent(toWorkgroupId, notification);
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -453,5 +447,19 @@ public class TeacherDataController {
         fromWorkgroupId, toWorkgroupId, groupId, nodeId, componentId, componentType, type,
         message, data, timeGenerated, timeDismissed);
     return notification;
+  }
+
+  public void broadcastAnnotationToStudent(Long toWorkgroupId, Annotation annotation) {
+    annotation.convertToClientAnnotation();
+    WebSocketMessage message = new WebSocketMessage("annotation", annotation);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/workgroup/%s", toWorkgroupId),
+        message);
+  }
+
+  public void broadcastNotificationToStudent(Long toWorkgroupId, Notification notification) {
+    notification.convertToClientNotification();
+    WebSocketMessage message = new WebSocketMessage("notification", notification);
+    simpMessagingTemplate.convertAndSend(String.format("/topic/workgroup/%s", toWorkgroupId),
+        message);
   }
 }

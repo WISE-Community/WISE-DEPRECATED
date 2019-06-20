@@ -51,11 +51,11 @@ var StudentAssetController = function () {
         _this2.studentAssets = studentAssets;
       });
     }
-  }, {
-    key: 'uploadStudentAssets',
-
 
     // TODO can we ensure files is not null?
+
+  }, {
+    key: 'uploadStudentAssets',
     value: function uploadStudentAssets(files) {
       var _this3 = this;
 
@@ -114,7 +114,7 @@ var StudentAssetController = function () {
   return StudentAssetController;
 }();
 
-StudentAssetController.$inject = ["$filter", "$injector", "$rootScope", "$scope", "ConfigService", "ProjectService", "StudentAssetService"];
+StudentAssetController.$inject = ['$filter', '$injector', '$rootScope', '$scope', 'ConfigService', 'ProjectService', 'StudentAssetService'];
 
 exports.default = StudentAssetController;
 //# sourceMappingURL=studentAssetController.js.map
