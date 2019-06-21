@@ -157,7 +157,7 @@ export class CreateRunDialogComponent {
   getClassroomCourses() {
     this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(courses => {
       this.dialog.open(ListClassroomCoursesDialogComponent, {
-        data: { accessCode: this.run.runCode, unitTitle: this.run.name, endTime: this.run.endTime, courses },
+        data: { run: this.run, courses },
         panelClass: 'mat-dialog-md'
       });
     });

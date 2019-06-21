@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { UserService } from '../../services/user.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn } from "@angular/forms";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { Run } from "../../domain/run";
 
 @Component({
   selector: 'app-list-classroom-courses-dialog',
@@ -12,6 +13,7 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
   styleUrls: ['./list-classroom-courses-dialog.component.scss']
 })
 export class ListClassroomCoursesDialogComponent implements OnInit {
+  run: Run;
   courses: Course[] = [];
   courseIds: string[] = [];
   endTime: string = '';
@@ -27,9 +29,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
               private userService: UserService,
               private fb: FormBuilder,
               private i18n: I18n) {
-    if (data.endTime != null) {
-      this.endTime = data.run.endTime;
-    }
+    this.run = data.run;
     for (const course of data.courses) {
       this.courses.push(new Course(course));
     }
@@ -65,8 +65,8 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   addToClassroom() {
     this.isAdding = true;
     let endTime = '';
-    if (this.endTime) {
-      const date = new Date(this.endTime).getTime();
+    if (this.run.endTime) {
+      const date = new Date(this.run.endTime).getTime();
       if (date > Date.now()) {
         endTime = date.toString();
       }
