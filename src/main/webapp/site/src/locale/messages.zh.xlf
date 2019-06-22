@@ -60,7 +60,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">About Us</target>
+        <target state="translated">关于我们</target>
       </trans-unit>
       <trans-unit id="1d0974afae70914072a4fbf19e53328e517bae73" datatype="html">
         <source>News</source>
