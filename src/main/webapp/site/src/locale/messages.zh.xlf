@@ -92,7 +92,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">125</context>
         </context-group>
-        <target state="needs-translation">Help + FAQs</target>
+        <target state="translated">帮助/常见问题</target>
       </trans-unit>
       <trans-unit id="3d469f0ca2f579eedee96edd4ef40883f65e77aa" datatype="html">
         <source>Privacy + Use</source>
@@ -100,7 +100,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Privacy + Use</target>
+        <target state="translated">使用隐私条款 </target>
       </trans-unit>
       <trans-unit id="02e9e69ddcbf93de9fd38bc4d0f312142658610d" datatype="html">
         <source>Contact Us</source>
