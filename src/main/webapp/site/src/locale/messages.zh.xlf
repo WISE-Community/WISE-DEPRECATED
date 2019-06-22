@@ -40,7 +40,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Features</target>
+        <target state="translated">功能</target>
       </trans-unit>
       <trans-unit id="847171f94c5e932a67df0c3b4d57e4e10d844b52" datatype="html">
         <source>About Us</source>
@@ -80,7 +80,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">News</target>
+        <target state="translated">消息</target>
       </trans-unit>
       <trans-unit id="53c1019d0a23e95290e125bf93e34257eaadb8b6" datatype="html">
         <source>Help + FAQs</source>
@@ -112,7 +112,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">134</context>
         </context-group>
-        <target state="needs-translation">Contact Us</target>
+        <target state="translated">联系我们</target>
       </trans-unit>
       <trans-unit id="d97fd6757dbd8190c0e310c2be8432718b2a417b" datatype="html">
         <source>Legacy</source>
