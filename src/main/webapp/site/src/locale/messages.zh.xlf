@@ -244,7 +244,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="needs-translation">Clear</target>
+        <target state="translated">清除</target>
       </trans-unit>
       <trans-unit id="7f32abe3fc638f65c0d3eb269d478ee49ad41ebe" datatype="html">
         <source>more</source>
@@ -252,7 +252,7 @@
           <context context-type="sourcefile">app/modules/shared/select-menu/select-menu.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">more</target>
+        <target state="translated">更多</target>
       </trans-unit>
       <trans-unit id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d" datatype="html">
         <source>Current Password</source>
@@ -260,7 +260,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Current Password</target>
+        <target state="translated">密码</target>
       </trans-unit>
       <trans-unit id="9b79b69a1ba8ba29e68a45acd0829da17da704ce" datatype="html">
         <source>Current Password required</source>
@@ -268,7 +268,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Current Password required</target>
+        <target state="translated">请输入当前密码</target>
       </trans-unit>
       <trans-unit id="0315d84608647a2d4a2b2e7e509d10ad0ec78536" datatype="html">
         <source>Current Password is incorrect</source>
@@ -276,7 +276,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Current Password is incorrect</target>
+        <target state="translated">您输入的密码错误</target>
       </trans-unit>
       <trans-unit id="c7014c6360e94b236286b869c3fe0ea9911c0387" datatype="html">
         <source>New Password</source>
@@ -284,7 +284,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">New Password</target>
+        <target state="translated">新密码</target>
       </trans-unit>
       <trans-unit id="ae26b4e37fa94304d1fa1b0c46b10ad979bcecfa" datatype="html">
         <source>New Password required</source>
@@ -292,7 +292,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">New Password required</target>
+        <target state="translated">请输入新密码</target>
       </trans-unit>
       <trans-unit id="b81fbd1b5d0723eba41870071d02065674bdd565" datatype="html">
         <source>Confirm New Password</source>
@@ -300,7 +300,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation">Confirm New Password</target>
+        <target state="translated">确认新密码</target>
       </trans-unit>
       <trans-unit id="4b4b336ca43da85eee55391d95fbc03d921353b5" datatype="html">
         <source>Confirm Password required</source>
@@ -332,7 +332,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <target state="needs-translation">Passwords do not match</target>
+        <target state="translated">密码不正确</target>
       </trans-unit>
       <trans-unit id="5edf054f14aa57bc25a28cb7db01956fee53dac8" datatype="html">
         <source>Change Password</source>
