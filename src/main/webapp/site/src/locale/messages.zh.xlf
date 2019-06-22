@@ -196,7 +196,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">Concord Consortium</target>
+        <target state="translated">协和联盟</target>
       </trans-unit>
       <trans-unit id="f8a12f0f1530051d1bc70b7df85a11832436cf00" datatype="html">
         <source>SAIL (Scalable Architecture for Interactive Learning)</source>
