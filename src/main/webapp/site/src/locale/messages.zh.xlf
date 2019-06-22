@@ -120,7 +120,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Legacy</target>
+        <target state="translated">传统的BIOS</target>
       </trans-unit>
       <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
         <source>WISE on Facebook</source>
@@ -132,7 +132,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">WISE on Facebook</target>
+        <target state="translated">分享到Facebook</target>
       </trans-unit>
       <trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html">
         <source>WISE on Twitter</source>
@@ -144,7 +144,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">96</context>
         </context-group>
-        <target state="needs-translation">WISE on Twitter</target>
+        <target state="translated">分享到Twitter</target>
       </trans-unit>
       <trans-unit id="540452d4091ec883af6967b28abf89f2ac0c853d" datatype="html">
         <source>WISE on Github</source>
@@ -156,7 +156,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
-        <target state="needs-translation">WISE on Github</target>
+        <target state="translated">上传到Github</target>
       </trans-unit>
       <trans-unit id="d8f2e89cc8dde7834ae2c3337aff293e23aec97f" datatype="html">
         <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
