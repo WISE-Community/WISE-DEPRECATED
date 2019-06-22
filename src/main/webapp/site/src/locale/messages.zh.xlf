@@ -172,7 +172,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
-        <target state="needs-translation">This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</target>
+        <target state="translated">本材料建立在由美国国家科学基金会支持开展的项目的基础上。本材料中所表达的任何观点、发现、结论或建议均为作者的观点，并不一定反映国家科学基金会的意见。</target>
       </trans-unit>
       <trans-unit id="0dc5b912bfe8d326a1af3975c6a7d049521eae12" datatype="html">
         <source>National Science Foundation</source>
@@ -180,7 +180,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="needs-translation">National Science Foundation</target>
+        <target state="translated">国家科学基金会</target>
       </trans-unit>
       <trans-unit id="eb6ec6c4564dfbd4ffc8020d00aa0c48400f629b" datatype="html">
         <source>UC Berkeley</source>
@@ -188,7 +188,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation">UC Berkeley</target>
+        <target state="translated">加州大学伯克利分校</target>
       </trans-unit>
       <trans-unit id="8f885baf51f23ab4c81a547cd984d9355bea0239" datatype="html">
         <source>Concord Consortium</source>
