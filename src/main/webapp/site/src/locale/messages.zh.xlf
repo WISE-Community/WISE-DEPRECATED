@@ -204,7 +204,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">SAIL (Scalable Architecture for Interactive Learning)</target>
+        <target state="translated">互动学习升级系统</target>
       </trans-unit>
       <trans-unit id="ffac91e3ed3d3f9238f218aaa135735f55daec60" datatype="html">
         <source>©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</source>
@@ -212,7 +212,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="needs-translation">©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</target>
+        <target state="translated">1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | 基于网络的科学探究学习环境</target>
       </trans-unit>
       <trans-unit id="470b3fb4b02529d4f9f25850711632271fd27508" datatype="html">
         <source>WISE header logo</source>
@@ -220,7 +220,7 @@
           <context context-type="sourcefile">app/modules/header/header.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">WISE header logo</target>
+        <target state="translated">WISE标题标志</target>
       </trans-unit>
       <trans-unit id="32b2b5a41c731dedcd41bc360ffdc42a36fe481f" datatype="html">
         <source>Main menu</source>
@@ -228,7 +228,7 @@
           <context context-type="sourcefile">app/modules/header/header.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Main menu</target>
+        <target state="translated">主菜单</target>
       </trans-unit>
       <trans-unit id="99ee4faa69cd2ea8e3678c1f557c0ff1f05aae46" datatype="html">
         <source>Clear</source>
