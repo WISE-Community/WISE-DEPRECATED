@@ -205,19 +205,35 @@ public class StudentAPIController {
     JSONObject runRegisterInfo = new JSONObject();
     try {
       Run run = runService.retrieveRunByRuncode(runCode);
-      runRegisterInfo.put("id", run.getId());
-      runRegisterInfo.put("name", run.getName());
-      runRegisterInfo.put("runCode", run.getRuncode());
-      User owner = run.getOwner();
-      runRegisterInfo.put("teacherFirstName", owner.getUserDetails().getFirstname());
-      runRegisterInfo.put("teacherLastName", owner.getUserDetails().getLastname());
-      runRegisterInfo.put("startTime", run.getStartTimeMilliseconds());
-      runRegisterInfo.put("endTime", run.getEndTimeMilliseconds());
-      runRegisterInfo.put("periods", this.getPeriods(run));
+      getRunInfo(runRegisterInfo, run);
     } catch (ObjectNotFoundException e) {
       runRegisterInfo.put("error", "runNotFound");
     }
     return runRegisterInfo.toString();
+  }
+
+  @RequestMapping(value = "/run/info-by-id", method = RequestMethod.GET)
+  protected String getRunInfoById(@RequestParam("runId") Long runId) throws JSONException {
+    JSONObject runRegisterInfo = new JSONObject();
+    try {
+      Run run = runService.retrieveById(runId);
+      getRunInfo(runRegisterInfo, run);
+    } catch (ObjectNotFoundException e) {
+      runRegisterInfo.put("error", "runNotFound");
+    }
+    return runRegisterInfo.toString();
+  }
+
+  private void getRunInfo(JSONObject runJSONObject, Run run) throws JSONException {
+    runJSONObject.put("id", run.getId());
+    runJSONObject.put("name", run.getName());
+    runJSONObject.put("runCode", run.getRuncode());
+    User owner = run.getOwner();
+    runJSONObject.put("teacherFirstName", owner.getUserDetails().getFirstname());
+    runJSONObject.put("teacherLastName", owner.getUserDetails().getLastname());
+    runJSONObject.put("startTime", run.getStartTimeMilliseconds());
+    runJSONObject.put("endTime", run.getEndTimeMilliseconds());
+    runJSONObject.put("periods", this.getPeriods(run));
   }
 
   @RequestMapping(value = "/run/launch", method = RequestMethod.POST)
