@@ -26,7 +26,8 @@
             <input matInput
                    id="name"
                    name="name"
-                   formControlName="name" />
+                   formControlName="name"
+                   [readonly]="isSignedIn" />
             <mat-error *ngIf="contactFormGroup.controls['name'].hasError('required')" i18n>Name required</mat-error>
           </mat-form-field>
         </p>
@@ -36,7 +37,8 @@
             <input matInput
                    id="email"
                    name="email"
-                   formControlName="email" />
+                   formControlName="email"
+                   [readonly]="isSignedIn" />
             <mat-error *ngIf="contactFormGroup.controls['email'].hasError('required')" i18n>Email required</mat-error>
             <mat-error *ngIf="contactFormGroup.controls['email'].hasError('email')" i18n>Invalid Email</mat-error>
           </mat-form-field>
