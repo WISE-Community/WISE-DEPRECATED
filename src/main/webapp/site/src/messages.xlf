@@ -2034,6 +2034,28 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
+      </trans-unit><trans-unit id="244aae9346da82b0922506c2d2581373a15641cc" datatype="html">
+        <source>Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher/register-teacher.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
       </trans-unit><trans-unit id="234ce1f48e2e7c754873c9728092e878e08cf71d" datatype="html">
         <source>Email required</source>
         <context-group purpose="location">
@@ -2519,24 +2541,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.html</context>
           <context context-type="linenumber">31</context>
-        </context-group>
-      </trans-unit><trans-unit id="244aae9346da82b0922506c2d2581373a15641cc" datatype="html">
-        <source>Email</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher/register-teacher.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit><trans-unit id="23af976ab1853a354809cbada9c79f9a9c64df3d" datatype="html">
         <source>Teacher Forgot Password</source>
