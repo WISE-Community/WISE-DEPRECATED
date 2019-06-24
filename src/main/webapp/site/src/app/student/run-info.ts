@@ -6,4 +6,5 @@ export class RunInfo {
   startTime: number;
   teacherName: string;
   error: string;
+  name: string;
 }

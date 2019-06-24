@@ -63,6 +63,15 @@
             <mat-error *ngIf="contactFormGroup.controls['issueType'].hasError('required')" i18n>Issue Type required</mat-error>
           </mat-form-field>
         </p>
+        <p *ngIf="projectName">
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label>Project Name</mat-label>
+            <input matInput
+                   name="projectName"
+                   [value]="projectName"
+                   disabled />
+          </mat-form-field>
+        </p>
         <p>
           <mat-form-field appearance="fill" fxFlex>
             <mat-label>Summary</mat-label>
