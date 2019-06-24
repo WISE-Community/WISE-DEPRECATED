@@ -21,6 +21,10 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   isAdding: boolean = false;
   form: FormGroup;
   coursesControl: FormArray;
+  addSuccessCount: number = 0;
+  addFailureCount: number = 0;
+  coursesSuccessfullyAdded: any[] = [];
+  coursesFailedToAdd: any[] = [];
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<ListClassroomCoursesDialogComponent>,
@@ -71,23 +75,30 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
         endTime = date.toString();
       }
     }
-    this.teacherService.addToClassroom(this.data.run.runCode, this.data.run.name, this.courseIds, this.userService.getUser()
-      .getValue().username, endTime, this.form.controls['description'].value)
-      .then(() => {
-        this.isAdded = true;
-        this.isAdding = false;
-      })
-      .catch(errors => {
-        console.error(errors);
-        const erroredCourses: string[] = [];
-        for (const id of errors) {
-          const name = this.getCourseNameAndSection(id);
-          erroredCourses.push(name);
-        }
-        alert(this.i18n(`There was an error adding an assignment to the following courses:\n\n{{courses}}`,
-            {courses: erroredCourses.join('\n')}));
-        this.isAdding = false;
+    this.teacherService.addToClassroom(this.data.run.runCode, this.data.run.name, this.courseIds,
+        this.userService.getUser().getValue().username, endTime,
+      this.form.controls['description'].value).subscribe((response) => {
+        this.showAddToClassroomResults(response.courses);
       });
+  }
+
+  showAddToClassroomResults(courses) {
+    this.isAdded = true;
+    this.isAdding = false;
+    this.addSuccessCount = 0;
+    this.addFailureCount = 0;
+    this.coursesSuccessfullyAdded = [];
+    this.coursesFailedToAdd = [];
+    for (const course of courses) {
+      course.name = this.getCourseNameAndSection(course.id);
+      if (course.success) {
+        this.coursesSuccessfullyAdded.push(course);
+        this.addSuccessCount++;
+      } else {
+        this.coursesFailedToAdd.push(course);
+        this.addFailureCount++;
+      }
+    }
   }
 
   getCourseNameAndSection(courseId: string): string {

@@ -255,47 +255,15 @@ export class TeacherService {
     return this.http.get<Course []>(this.listCoursesUrl, { headers, params });
   }
 
-  addToClassroom(accessCode: string, unitTitle: string, courseIds: string[], username: string, endTime: string, description: string): Promise<any> {
+  addToClassroom(accessCode: string, unitTitle: string, courseIds: string[], username: string, endTime: string, description: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     let params = new HttpParams()
       .set('accessCode', accessCode)
       .set('unitTitle', unitTitle)
       .set('username', username)
       .set('endTime', endTime)
-      .set('description', description);
-    const errors: any[] = [];
-    let responses = 0;
-    const addToClassroomPromise: Promise<any> = new Promise<any>((resolve, reject) => {
-      for (const courseId of courseIds) {
-        params = params.set('courseId', courseId);
-        this.http.post<any>(this.addAssignmentUrl, params, {headers})
-          .pipe(
-            catchError(error => {
-              errors.push(courseId);
-              return errors;
-            }),
-            finalize(() => {
-              responses++;
-              if (responses === courseIds.length) {
-                if (errors.length) {
-                  reject(errors);
-                } else {
-                  resolve();
-                }
-              }
-            })
-          )
-          .subscribe( (msg) => {
-            if (msg.error != null) {
-              errors.push(courseId);
-            }
-          })
-      }});
-    return addToClassroomPromise;
-
-    // return Observable.create(observer => {
-    //   observer.next({ errors });
-    //   observer.complete();
-    // });
+      .set('description', description)
+      .set('courseIds', JSON.stringify(courseIds));
+    return this.http.post<any>(this.addAssignmentUrl, params, {headers});
   }
 }

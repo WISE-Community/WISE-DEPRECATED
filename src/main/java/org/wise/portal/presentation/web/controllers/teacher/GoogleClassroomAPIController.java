@@ -14,6 +14,8 @@ import com.google.api.services.classroom.Classroom;
 import com.google.api.services.classroom.ClassroomScopes;
 import com.google.api.services.classroom.model.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -156,10 +158,10 @@ public class GoogleClassroomAPIController {
   protected String addToClassroom(HttpServletRequest request,
                                   @RequestParam("accessCode") String accessCode,
                                   @RequestParam("unitTitle") String unitTitle,
-                                  @RequestParam("courseId") String courseId,
                                   @RequestParam("username") String username,
                                   @RequestParam("endTime") String endTime,
-                                  @RequestParam("description") String description) throws Exception {
+                                  @RequestParam("description") String description,
+                                  @RequestParam("courseIds") String courseIdsString) throws Exception {
     JSONObject response = new JSONObject();
     ImmutablePair<String, Credential> pair = authorize(username);
     String authorizationUrl = pair.getLeft();
@@ -198,7 +200,30 @@ public class GoogleClassroomAPIController {
       coursework.put("dueDate", dueDate);
       coursework.put("dueTime", dueTime);
     }
-    classroom.courses().courseWork().create(courseId, coursework).execute();
+    response.put("courses", addAssignmentToCourses(classroom, coursework, courseIdsString));
     return response.toString();
+  }
+
+  private JSONArray addAssignmentToCourses(Classroom classroom, CourseWork coursework,
+      String courseIdsString) throws JSONException {
+    JSONArray courses = new JSONArray();
+    JSONArray courseIds = new JSONArray(courseIdsString);
+    for (int c = 0; c < courseIds.length(); c++) {
+      courses.put(addAssignmentToCourse(classroom, coursework, courseIds.getString(c)));
+    }
+    return courses;
+  }
+
+  private JSONObject addAssignmentToCourse(Classroom classroom, CourseWork coursework,
+      String courseId) throws JSONException {
+    JSONObject courseJSON = new JSONObject();
+    courseJSON.put("id", courseId);
+    try {
+      classroom.courses().courseWork().create(courseId, coursework).execute();
+      courseJSON.put("success", true);
+    } catch(Exception e) {
+      courseJSON.put("success", false);
+    }
+    return courseJSON;
   }
 }

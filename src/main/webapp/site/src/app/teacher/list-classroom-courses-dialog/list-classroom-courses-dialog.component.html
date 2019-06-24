@@ -59,7 +59,16 @@
       <p class="mat-subheading-1 accent-1">
         {{ data.run.name }} <span class="mat-caption" i18n>(Run ID: {{ data.run.id }})</span>
       </p>
-      <p i18n>Success! This unit has been added to Google Classroom.</p>
+      <div *ngIf="addSuccessCount > 0">
+        <br/>
+        <p i18n>The unit has been successfully added to the following Google Classroom(s)</p>
+        <p *ngFor="let course of coursesSuccessfullyAdded">{{ course.name }}</p>
+      </div>
+      <div *ngIf="addFailureCount > 0" style="color: red">
+        <br/>
+        <p i18n>There was a problem trying to add the unit to the following Google Classroom(s)</p>
+        <p *ngFor="let course of coursesFailedToAdd">{{ course.name }}</p>
+      </div>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions fxLayoutAlign="end">
