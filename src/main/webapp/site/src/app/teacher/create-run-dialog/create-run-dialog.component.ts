@@ -5,6 +5,9 @@ import { finalize } from 'rxjs/operators';
 import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
+import { UserService } from '../../services/user.service';
+import { ConfigService } from '../../services/config.service';
+import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 @Component({
   selector: 'create-run-dialog',
@@ -30,6 +33,8 @@ export class CreateRunDialogComponent {
               public dialogRef: MatDialogRef<CreateRunDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
+              private userService: UserService,
+              private configService: ConfigService,
               private fb: FormBuilder) {
     this.project = data.project;
     this.maxStudentsPerTeam = 3;
@@ -58,6 +63,14 @@ export class CreateRunDialogComponent {
       endDate: new FormControl()
     });
     this.setDateRange();
+  }
+
+  isGoogleUser() {
+    return this.userService.isGoogleUser();
+  }
+
+  isGoogleClassroomEnabled() {
+    return this.configService.isGoogleClassroomEnabled();
   }
 
   setPeriodOptions() {
@@ -123,5 +136,30 @@ export class CreateRunDialogComponent {
 
   closeAll() {
     this.dialog.closeAll();
+  }
+
+  checkClassroomAuthorization() {
+    this.teacherService.getClassroomAuthorizationUrl(this.userService.getUser().getValue().username).subscribe(({ authorizationUrl }) => {
+      if (authorizationUrl == null) {
+        this.getClassroomCourses();
+      } else {
+        const authWindow = window.open(authorizationUrl, "authorize", "width=600,height=800");
+        const timer = setInterval(() => {
+          if (authWindow.closed) {
+            clearInterval(timer);
+            this.checkClassroomAuthorization();
+          }
+        }, 1000);
+      }
+    });
+  }
+
+  getClassroomCourses() {
+    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(courses => {
+      this.dialog.open(ListClassroomCoursesDialogComponent, {
+        data: { run: this.run, courses },
+        panelClass: 'mat-dialog-md'
+      });
+    });
   }
 }
