@@ -1301,7 +1301,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation">In order to use some features of WISE, you will need to register by creating a user account. Creating an account is optional, but without an account you will not be able to create or publish curriculum projects or use WISE curricula to capture, store, review, or assess student work.</target>
+        <target state="translated">您需要通过创建用户帐户进行注册，以使用WISE的某些功能。 是否创建帐户是可选的，但如果没有帐户，您将无法创建或发布课程项目，也不能使用WISE课程来捕获、存储、检阅或评估学生的学习情况。</target>
       </trans-unit>
       <trans-unit id="75c166e888318c9399a404e476a0637d5662cac3" datatype="html">
         <source>When creating a WISE teacher account, we ask you to provide your first and last name, email address, password, city, state, country, school name, school level, and school subjects. To create a WISE student account, we ask you to provide your first and last name, birth day and month, gender, and password, and choose a security question and answer.</source>
@@ -1309,7 +1309,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="needs-translation">When creating a WISE teacher account, we ask you to provide your first and last name, email address, password, city, state, country, school name, school level, and school subjects. To create a WISE student account, we ask you to provide your first and last name, birth day and month, gender, and password, and choose a security question and answer.</target>
+        <target state="translated">在创建WISE教师帐户时，我们需要您提供您的姓名、电子邮件地址、密码，城市、州、国家/地区、学校名称、学校级别和学校科目。 在创建WISE学生帐户时，我们需要您提供您的姓名、出生日期和月份、性别和密码，并选择安全问题和答案。</target>
       </trans-unit>
       <trans-unit id="c02f40b7046d211db3ea7287615181de66447ed8" datatype="html">
         <source>To help ensure unauthorized use of your account, please keep your password secret. You are solely responsible for any use of your account, even if your account is used by another person. If any use of your account violates the Terms of Use, your account may be suspended or deleted.</source>
@@ -1317,7 +1317,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">36</context>
         </context-group>
-        <target state="needs-translation">To help ensure unauthorized use of your account, please keep your password secret. You are solely responsible for any use of your account, even if your account is used by another person. If any use of your account violates the Terms of Use, your account may be suspended or deleted.</target>
+        <target state="translated">为确保未经授权使用您的帐户，请对您的密码进行保密。 即使您的帐户被其他人使用，您也将对自己的帐户使用承担全部责任。 如果您的账户违反了使用条款，您的帐户可能会被暂停或删除。</target>
       </trans-unit>
       <trans-unit id="fb6011f7bb1a29887f28e6d6347878061932492d" datatype="html">
         <source>If you believe that your account is no longer secure for any reason, please change your password. If you cannot access your account to change your password, contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
