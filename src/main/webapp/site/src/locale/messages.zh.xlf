@@ -685,7 +685,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="needs-translation">Construct explanations through reflection and discussion</target>
+        <target state="translated">通过反思和讨论构建解释</target>
       </trans-unit>
       <trans-unit id="9fb0cd948878e98ed66ee30acc38db27f54ee91c" datatype="html">
         <source>Design and build evidence-based solutions</source>
@@ -693,7 +693,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation">Design and build evidence-based solutions</target>
+        <target state="translated">设计和构建基于证据的解决方案</target>
       </trans-unit>
       <trans-unit id="120d488ee5852e71a5ff417392534368677d0e1d" datatype="html">
         <source>Inquiry-Based Learning</source>
@@ -701,7 +701,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation">Inquiry-Based Learning</target>
+        <target state="translated">基于探究的学习</target>
       </trans-unit>
       <trans-unit id="ffe45ae6c8c4ce43774404fc9113d577f474b482" datatype="html">
         <source>WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</source>
@@ -709,7 +709,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</target>
+        <target state="translated">WISE让学生学习真正的科学家和工程师的方法。 我们采用多学科方法，让学生通过强调阅读，写作和多媒体素养的基本技能的活动来学习探究。 我们的很多学习单元也都是基于项目的，同时提供实践动手操作的设计挑战。</target>
       </trans-unit>
       <trans-unit id="7681bdf7430711347073032e83e99c10be4f4e7b" datatype="html">
         <source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</source>
