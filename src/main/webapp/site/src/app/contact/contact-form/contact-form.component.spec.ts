@@ -14,6 +14,7 @@ import { User } from "../../domain/user";
 import { BehaviorSubject } from 'rxjs';
 import { translationsFactory } from "../../app.module";
 import { configureTestSuite } from 'ng-bullet';
+import {LibraryService} from '../../services/library.service';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {
@@ -42,6 +43,10 @@ export class MockStudentService {
 
 }
 
+export class MockLibraryService {
+
+}
+
 describe('ContactFormComponent', () => {
   let component: ContactFormComponent;
   let fixture: ComponentFixture<ContactFormComponent>;
@@ -60,6 +65,7 @@ describe('ContactFormComponent', () => {
         { provide: ConfigService, useClass: MockConfigService },
         { provide: UserService, useClass: MockUserService },
         { provide: StudentService, useClass: MockStudentService },
+        { provide: LibraryService, useClass: MockLibraryService },
         { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
         {
           provide: TRANSLATIONS,

@@ -9,9 +9,7 @@ before_install:
 before_script:
 script:
 - mvn test
-- touch output.txt
-- bash ./wise.sh run | tee output.txt &
-- while ! grep "Started Application" output.txt >/dev/null; do sleep 2; echo "polling for WISE server to start..."; done
+- npm install
 - npm test
 - npm run test-site
 notifications:
