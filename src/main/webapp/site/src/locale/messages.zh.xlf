@@ -427,7 +427,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">Integrated science learning and teaching with technology</target>
+        <target state="translated">整合科学教学和技术</target>
       </trans-unit>
       <trans-unit id="d0339bceaff58f22bba77d0231838a8df686c98e" datatype="html">
         <source>The WISE Advantage</source>
@@ -435,7 +435,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="needs-translation">The WISE Advantage</target>
+        <target state="translated">WISE优势</target>
       </trans-unit>
       <trans-unit id="8127b5c0780e941a1948d8ac7b49af813bd7df98" datatype="html">
         <source>
@@ -445,8 +445,8 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">
-              Free, standards-aligned, and research-based inquiry curricula that address <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>NGSS 3D proficiency<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+        <target state="translated">
+              免费，标准一致且基于研究的探究学习课程，课程地址是<x id =“START_LINK”ctype =“xa”equiv-text =“＆lt; a＆gt;”/> NGSS 3D熟练程度<x id =“CLOSE_LINK”ctype = “xa”equiv-text =“＆lt; / a＆gt;”/>
             </target>
       </trans-unit>
       <trans-unit id="ea65faeacfcd369b74fd184e411eeb5d36b59c12" datatype="html">
@@ -455,7 +455,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target state="needs-translation">WISE project on laptop</target>
+        <target state="translated">笔记本电脑上的WISE项目</target>
       </trans-unit>
       <trans-unit id="0c8d974a19a8a92110e0b43514330732e936da2b" datatype="html">
         <source>Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</source>
@@ -463,7 +463,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <target state="needs-translation">Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</target>
+        <target state="translated">交互式科学模型以及实践活动、个性化指导和丰富的嵌入式评估</target>
       </trans-unit>
       <trans-unit id="82fc5ad6af1a149044ba97ac4d4e567312c6ce9f" datatype="html">
         <source>WISE students and teacher</source>
@@ -471,7 +471,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">53</context>
         </context-group>
-        <target state="needs-translation">WISE students and teacher</target>
+        <target state="translated">WISE学生和教师</target>
       </trans-unit>
       <trans-unit id="2acf9aae127d9822ffecf4d7509f05744f09e788" datatype="html">
         <source>Robust teacher grading and management tools supporting individualized and customized learning</source>
@@ -479,7 +479,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">Robust teacher grading and management tools supporting individualized and customized learning</target>
+        <target state="translated">强大的支持个性化和定制化学习的教师评分和管理工具</target>
       </trans-unit>
       <trans-unit id="23bd67ab9c1e8b08481bd99aa471c2a29b587143" datatype="html">
         <source>Curriculum Offerings</source>
@@ -487,7 +487,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation">Curriculum Offerings</target>
+        <target state="translated">课程设置</target>
       </trans-unit>
       <trans-unit id="dcd4eff483113708f4fd91f98236bee705e676a8" datatype="html">
         <source>Ready to try WISE in the Classroom?</source>
@@ -495,7 +495,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <target state="needs-translation">Ready to try WISE in the Classroom?</target>
+        <target state="translated">准备在课堂上尝试使用WISE了吗？</target>
       </trans-unit>
       <trans-unit id="b4b200f1299f2e043cae72f59718dca3b12f1f38" datatype="html">
         <source>Sign up for free!</source>
@@ -503,7 +503,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
-        <target state="needs-translation">Sign up for free!</target>
+        <target state="translated">免费注册！</target>
       </trans-unit>
       <trans-unit id="da6aa9950c74cadd85a3bf26272f34f28d8338c8" datatype="html">
         <source>Connect</source>
@@ -511,7 +511,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="needs-translation">Connect</target>
+        <target state="translated">连接</target>
       </trans-unit>
       <trans-unit id="34dc5c906ca725ffe2bfacaa6983bfdc30561ddb" datatype="html">
         <source>Learn what's new in the WISE community.</source>
