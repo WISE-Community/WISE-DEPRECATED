@@ -375,7 +375,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <target state="needs-translation">Elicit Ideas</target>
+        <target state="translated">激发想法</target>
       </trans-unit>
       <trans-unit id="cba3bcc252b9f7b980c934ce394a1345eebfd970" datatype="html">
         <source>Add Ideas</source>
@@ -387,7 +387,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="needs-translation">Add Ideas</target>
+        <target state="translated">添加想法</target>
       </trans-unit>
       <trans-unit id="6f2168a4a47a1e6fa5d58a4334c7b67805dd3fe0" datatype="html">
         <source>Distinguish Ideas</source>
@@ -403,7 +403,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="needs-translation">Distinguish Ideas</target>
+        <target state="translated">区分想法</target>
       </trans-unit>
       <trans-unit id="b85ab229e72d6560e6193e30a362083ce7e12da6" datatype="html">
         <source>Connect Ideas</source>
@@ -419,7 +419,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">84</context>
         </context-group>
-        <target state="needs-translation">Connect Ideas</target>
+        <target state="translated">联通想法</target>
       </trans-unit>
       <trans-unit id="6ce56d323684d1af10f44ca44809177cef1412eb" datatype="html">
         <source>Integrated science learning and teaching with technology</source>
