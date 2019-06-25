@@ -1261,7 +1261,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-        <target state="needs-translation">These Terms of Use and Privacy Policy constitute an agreement between you and the Web-based Inquiry Science Environment team that governs your use of wise.berkeley.edu and all associated services and websites (collectively "WISE"). The WISE team is a federally-funded research group headquartered at the University of California, Berkeley and is a non-profit organization.</target>
+        <target state="translated">这些使用条款和隐私政策是您与基于网络的探究科学环境团队之间的协议，该团队管理您对wise.berkeley.edu及所有相关服务和网站（统称为“WISE”）的使用。 WISE团队是一个联邦政府资助的研究小组，总部设在加州大学伯克利分校，是一个非盈利组织。</target>
       </trans-unit>
       <trans-unit id="b35b13440a00be341535fafb52bf90eae8c7456c" datatype="html">
         <source>Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -1269,7 +1269,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">请仔细阅读此文件。 请使用WISE确认您已阅读、理解并接受所列出的条款和条件。 如果您不同意任何这些条件，请不要使用WISE。 如果您对此政策有任何疑问，请随时使用我们的<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="5403166a98d789195745d246a5135c0416d77fe2" datatype="html">
         <source>This policy was last updated on September 8, 2017.</source>
@@ -1277,7 +1277,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="needs-translation">This policy was last updated on September 8, 2017.</target>
+        <target state="translated">此政策最后更新于2017年9月8日。</target>
       </trans-unit>
       <trans-unit id="2c6ce41500d1363e6ae097bccbab4712c0943d42" datatype="html">
         <source>2. Information We Collect</source>
@@ -1285,7 +1285,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">2. Information We Collect</target>
+        <target state="translated">2.信息收集</target>
       </trans-unit>
       <trans-unit id="2b16d754538c43298a40b3efa2b957beb1d29f27" datatype="html">
         <source>Personal Information</source>
@@ -1293,7 +1293,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">Personal Information</target>
+        <target state="translated">个人信息</target>
       </trans-unit>
       <trans-unit id="5398c70dfe79e17bc0f165376e45834878a98540" datatype="html">
         <source>In order to use some features of WISE, you will need to register by creating a user account. Creating an account is optional, but without an account you will not be able to create or publish curriculum projects or use WISE curricula to capture, store, review, or assess student work.</source>
