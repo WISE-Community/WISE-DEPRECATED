@@ -519,7 +519,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">118</context>
         </context-group>
-        <target state="needs-translation">Learn what's new in the WISE community.</target>
+        <target state="translated">了解WISE社区的新内容</target>
       </trans-unit>
       <trans-unit id="ba44ee280d91539e6c5892dccbb8556bcce235be" datatype="html">
         <source>View tutorials and common questions.</source>
@@ -527,7 +527,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="needs-translation">View tutorials and common questions.</target>
+        <target state="translated">查看教程和常见问题</target>
       </trans-unit>
       <trans-unit id="c2e1e231feb67c7dd4f5e748cce6c1c46fbdf9cf" datatype="html">
         <source>Want to get in touch? Send us a message.</source>
@@ -535,7 +535,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">136</context>
         </context-group>
-        <target state="needs-translation">Want to get in touch? Send us a message.</target>
+        <target state="translated">想要取得联系吗？ 请给我们发送消息。</target>
       </trans-unit>
       <trans-unit id="a55bfaabb5258f66c2f853ce2383cfead1abd258" datatype="html">
         <source>Close menu</source>
@@ -543,7 +543,7 @@
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Close menu</target>
+        <target state="translated">关闭菜单</target>
       </trans-unit>
       <trans-unit id="c0b05f996bb39c9db400e2ec0d5506b75d464af0" datatype="html">
         <source>WISE Home</source>
@@ -551,7 +551,10 @@
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">WISE Home</target>
+        <target state="translated">WISE主页</target>
+        <alt-trans>
+          <target>WISE首页</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="ab8be185fd77636da821443e6071c033ebc47a59" datatype="html">
         <source>Research <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></source>
@@ -563,7 +566,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Research <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></target>
+        <target state="translated">研究 <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>呼叫_<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></target>
       </trans-unit>
       <trans-unit id="ba4f24bf9bf3dc4db3d6bc1b8b63339295f0b806" datatype="html">
         <source>Sign In</source>
@@ -591,7 +594,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">Sign In</target>
+        <target state="translated">登录</target>
       </trans-unit>
       <trans-unit id="acd82db1a5e5f81b87f6a6b1639f028a4d106d49" datatype="html">
         <source>WISE logo</source>
@@ -599,7 +602,7 @@
           <context context-type="sourcefile">app/register/register.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">WISE logo</target>
+        <target state="translated">WISE图标</target>
       </trans-unit>
       <trans-unit id="abc0c762d328168e523abf84749240e43593f8df" datatype="html">
         <source>WISE Features</source>
@@ -607,7 +610,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">WISE Features</target>
+        <target state="translated">WISE功能</target>
       </trans-unit>
       <trans-unit id="ddf8132cf62ce6ac16351585c35e306e6971af4b" datatype="html">
         <source>A powerful online platform for designing, developing, and implementing science inquiry units</source>
@@ -615,7 +618,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">A powerful online platform for designing, developing, and implementing science inquiry units</target>
+        <target state="translated">一个用于设计、开发和实施科学探究学习的强大的在线平台</target>
       </trans-unit>
       <trans-unit id="49a463f2fe873efdcbedb06a71cfbadc9c83cb14" datatype="html">
         <source>Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</source>
@@ -623,7 +626,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-        <target state="needs-translation">Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</target>
+        <target state="translated">自1997年以来，WISE已经为超过20,000名教师、研究人员和课程设计师以及全球20多万名K-12学生提供服务。</target>
       </trans-unit>
       <trans-unit id="53d2c0a09cfd0d1836aa6306785412e894b571d5" datatype="html">
         <source>WISE students</source>
@@ -631,7 +634,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">WISE students</target>
+        <target state="translated">WISE学生</target>
       </trans-unit>
       <trans-unit id="3c7d295a97553e2107807061d481f221cee12704" datatype="html">
         <source>WISE students collaborate to:</source>
@@ -639,7 +642,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">WISE students collaborate to:</target>
+        <target state="translated">WISE学生协作：</target>
       </trans-unit>
       <trans-unit id="c98d738b85e189cd244839c16b3dcdee30cac973" datatype="html">
         <source>Explore issues of social importance</source>
@@ -647,7 +650,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
-        <target state="needs-translation">Explore issues of social importance</target>
+        <target state="translated">探索社会重要问题</target>
       </trans-unit>
       <trans-unit id="704339fc471e1b8d675435af5455c289241dbe1c" datatype="html">
         <source>Pose relevant questions and make predictions</source>
@@ -655,7 +658,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">Pose relevant questions and make predictions</target>
+        <target state="translated">提出相关问题并作出预测</target>
+        <alt-trans>
+          <target>提出相关问题并做出预测</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="a372d9315580ccb7e6cc4bdaa345a9bc0b428fc4" datatype="html">
         <source>Experiment with computational models</source>
@@ -663,7 +669,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">Experiment with computational models</target>
+        <target state="translated">计算模型实验</target>
       </trans-unit>
       <trans-unit id="b07d8ea0af45cef781e5d604f6e9c2a7b2f701f0" datatype="html">
         <source>Evaluate and distinguish discrepant information</source>
@@ -671,7 +677,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">Evaluate and distinguish discrepant information</target>
+        <target state="translated">评估并区分不一致的信息</target>
       </trans-unit>
       <trans-unit id="85031434993fe1bad0400c10fb78687a633a21ac" datatype="html">
         <source>Construct explanations through reflection and discussion</source>
