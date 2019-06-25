@@ -1413,7 +1413,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">When you log in, WISE will ask your browser to put a "cookie" on your computer. This allows WISE to remember that you are logged in when you go to a different page. You can delete this cookie at any time through your browser's settings.</target>
+        <target state="translated">当您登录时，WISE会请求您的浏览器在计算机上放置一个“cookie”。 这使得WISE记住您在转到其他页面时已处于登录状态。 您可以随时通过浏览器的设置删除此cookie。</target>
       </trans-unit>
       <trans-unit id="eddb0914a7a33bdc6f8e1fb3318df254558527bf" datatype="html">
         <source>Google Analytics</source>
@@ -1421,7 +1421,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
-        <target state="needs-translation">Google Analytics</target>
+        <target state="translated">谷歌分析</target>
       </trans-unit>
       <trans-unit id="22cdbb653a197077d357885fc2daa5bb7fbeb795" datatype="html">
         <source>WISE uses Google Analytics to help us understand our site usage. We use data like which pages you visit and clicks you make to help us improve the site.  Information collected and processed by Google Analytics includes user IP addresses, network locations, and geographic locations. Some browsers allow you to opt-out of the Google Analytics tracking by installing add-ons for your browser.</source>
@@ -1429,7 +1429,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">WISE uses Google Analytics to help us understand our site usage. We use data like which pages you visit and clicks you make to help us improve the site.  Information collected and processed by Google Analytics includes user IP addresses, network locations, and geographic locations. Some browsers allow you to opt-out of the Google Analytics tracking by installing add-ons for your browser.</target>
+        <target state="translated">WISE使用谷歌分析帮助我们了解该网站使用情况。 我们会使用类似于您访问或点击过的网页的数据来帮助我们改进网站。 谷歌分析收集和处理的信息包括用户IP地址、网络位置和地理位置。 某些浏览器允许您通过为浏览器安装附加组件来选择退出谷歌分析跟踪。</target>
       </trans-unit>
       <trans-unit id="9af481581bbddd55af685583742a16757964160e" datatype="html">
         <source>3. How We Use the Data</source>
@@ -1437,7 +1437,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">3. How We Use the Data</target>
+        <target state="translated">3.我们如何使用数据</target>
       </trans-unit>
       <trans-unit id="e0623fb9a358c80cf9e4e20163c6178325b7ddb7" datatype="html">
         <source>We will not sell your information to anyone under any circumstances.</source>
@@ -1445,7 +1445,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">We will not sell your information to anyone under any circumstances.</target>
+        <target state="translated">在任何情况下，我们都不会将您的信息出售给任何人。</target>
       </trans-unit>
       <trans-unit id="ea5d4b60a8833374b7aab8168c828d0b22971ed6" datatype="html">
         <source>The WISE team uses de-identified user data to perform research. Researchers in the Graduate School of Education at The University of California at Berkeley and partner institutions may use de-identified data to perform data analyses and explore research topics. This data includes both user-generated and auto-generated content (see 'Information We Collect' section). Results of our research may be shared with educators and other researchers through conferences, journals, and other publications.</source>
