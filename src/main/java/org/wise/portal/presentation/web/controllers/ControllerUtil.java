@@ -43,12 +43,10 @@ import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
-import org.wise.vle.utils.FileManager;
 
 import javax.annotation.PostConstruct;
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;

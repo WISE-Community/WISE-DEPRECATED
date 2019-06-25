@@ -20,8 +20,6 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.session.SessionService;
 import org.wise.portal.service.user.UserService;
