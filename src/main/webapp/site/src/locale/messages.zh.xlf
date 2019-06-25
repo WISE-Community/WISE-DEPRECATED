@@ -1229,7 +1229,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">State &amp; Federal Laws</target>
+        <target state="translated">国家和联邦法律</target>
       </trans-unit>
       <trans-unit id="75d5b0f2bf76429bfac084e2e1e1002c01c320ad" datatype="html">
         <source>Changes &amp; Updates</source>
@@ -1237,7 +1237,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Changes &amp; Updates</target>
+        <target state="translated">修改与更新</target>
       </trans-unit>
       <trans-unit id="78713b0ca875ff567b8eae9e9c8966d96e31b7b5" datatype="html">
         <source>1. User Agreement</source>
@@ -1245,7 +1245,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">1. User Agreement</target>
+        <target state="translated">1.用户协议</target>
       </trans-unit>
       <trans-unit id="3b103ca309b22df74ae171e0bccc2982acba1185" datatype="html">
         <source>We understand how important privacy is to our community, especially the teachers and students all over the world who use WISE resources in their educational endeavors. This policy explains what information we collect, how we use it, and what we do to keep it safe.</source>
@@ -1253,7 +1253,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-        <target state="needs-translation">We understand how important privacy is to our community, especially the teachers and students all over the world who use WISE resources in their educational endeavors. This policy explains what information we collect, how we use it, and what we do to keep it safe.</target>
+        <target state="translated">我们了解社区中隐私的重要性，特别是世界各地的教师和学生在教育活动中使用WISE资源。 该政策解释了我们收集什么信息、我们如何使用以及我们如何保护其安全。</target>
       </trans-unit>
       <trans-unit id="d8cb0bb1a320c0fdf31c9939c9e6f8deb55f3a63" datatype="html">
         <source>These Terms of Use and Privacy Policy constitute an agreement between you and the Web-based Inquiry Science Environment team that governs your use of wise.berkeley.edu and all associated services and websites (collectively "WISE"). The WISE team is a federally-funded research group headquartered at the University of California, Berkeley and is a non-profit organization.</source>
