@@ -10,6 +10,12 @@ import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { Course } from '../../domain/course';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { User } from '../../domain/user';
+import { UserService } from '../../services/user.service';
+import { ConfigService } from '../../services/config.service';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   createRun() {
@@ -25,6 +31,41 @@ export class MockTeacherService {
   addNewRun() {}
 
   setTabIndex() {}
+
+  checkClassroomAuthorization(): Observable<string> {
+    return Observable.create("");
+  }
+
+  getClassroomCourses(): Observable<Course[]> {
+    const courses: Course[] = [];
+    const course = new Course({ id: '1', name: 'Test' });
+    courses.push(course);
+    return Observable.create(observer => {
+      observer.next(courses);
+      observer.complete();
+    });
+  }
+}
+
+export class MockUserService {
+  getUser(): BehaviorSubject<User> {
+    const user: User = new User();
+    user.username = 'test';
+    return Observable.create(observer => {
+      observer.next(user);
+      observer.complete();
+    });
+  }
+
+  isGoogleUser() {
+    return false;
+  }
+}
+
+export class MockConfigService {
+  isGoogleClassroomEnabled(): boolean {
+    return false;
+  }
 }
 
 describe('CreateRunDialogComponent', () => {
@@ -44,8 +85,8 @@ describe('CreateRunDialogComponent', () => {
   const getForm = () => {
     return fixture.debugElement.query(By.css('form'));
   };
-  
-  beforeEach(async(() => {
+
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
@@ -55,6 +96,8 @@ describe('CreateRunDialogComponent', () => {
       declarations: [ CreateRunDialogComponent ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
+        { provide: UserService, useClass: MockUserService },
+        { provide: ConfigService, useClass: MockConfigService },
         { provide: MatDialog, useValue: {
             closeAll: () => {}
           }},
@@ -75,8 +118,7 @@ describe('CreateRunDialogComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CreateRunDialogComponent);

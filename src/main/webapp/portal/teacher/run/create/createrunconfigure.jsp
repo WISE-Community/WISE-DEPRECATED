@@ -32,7 +32,7 @@
 					<spring:message code="teacher.run.create.createrunconfigure.setupAClassroomRun" />
 					<span class="pageTitle"><spring:message code="teacher.run.create.createrunconfigure.management"/></span>
 				</div>
-				<form:form method="post" commandName="runParameters" autocomplete='off'>
+				<form:form method="post" modelAttribute="runParameters" autocomplete='off'>
 					<div class="panelContent">
 						<div id="setUpRunBox">
 							<div id="stepNumber" class="sectionHead"><spring:message code="teacher.run.create.createrunconfigure.step4Of5"/>&nbsp;<spring:message code="teacher.run.create.createrunconfigure.configureTheRun"/></div>
@@ -61,7 +61,7 @@
 						</div>
 					</div>
 				</form:form>
-				<form:form method="post" commandName="runParameters" autocomplete='off'>
+				<form:form method="post" modelAttribute="runParameters" autocomplete='off'>
 				    <input id=goToPageField" type="hidden" name="_page" value="2" />
 				</form:form>
 				

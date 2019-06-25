@@ -30,7 +30,7 @@
 					<div><spring:message code="forgotaccount.student.searchforstudentusername.searchForUsername"/></div>
 					<div class="instructions"><spring:message code="forgotaccount.student.searchforstudentusername.fillInInformationAndSearch"/></div>
 					<div>
-						<form:form name="projectCode" method="post" commandName="passwordReminderParameters" autocomplete='off'>
+						<form:form name="projectCode" method="post" modelAttribute="passwordReminderParameters" autocomplete='off'>
 							<table width="100%" style="border-collapse:separate;border-spacing:10px">
 								<tr>
 									<td align="right"><label id="firstNameLabel" for="firstName"><spring:message code="forgotaccount.student.searchforstudentusername.firstName"/>:</label></td>

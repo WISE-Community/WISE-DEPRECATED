@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RunSettingsDialogComponent } from './run-settings-dialog.component';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBarModule } from "@angular/material";
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
@@ -9,6 +8,7 @@ import { Observable } from 'rxjs';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { MomentModule } from 'ngx-moment';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   addPeriodToRun(runId, periodName) {
@@ -60,8 +60,8 @@ describe('RunSettingsDialogComponent', () => {
     return fixture.debugElement.nativeElement.querySelectorAll('input')[2];
   };
 
-  beforeEach(async(() => {
-    let run = new Run({
+  function createNewRun() {
+    return new Run({
       id: 1,
       name: 'Test Project',
       periods: ['1', '2', '3'],
@@ -69,13 +69,16 @@ describe('RunSettingsDialogComponent', () => {
       startTime: new Date('2018-10-17T00:00:00.0').getTime(),
       endTime: new Date('2018-10-19T23:59:00.0').getTime()
     });
+  }
+
+  configureTestSuite(() =>
     TestBed.configureTestingModule({
       declarations: [ RunSettingsDialogComponent ],
       imports: [ MatSnackBarModule, MomentModule ],
       providers: [
         { provide: MatDialog, useValue: {} },
         { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: { run: run } },
+        { provide: MAT_DIALOG_DATA, useValue: { run: createNewRun() } },
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
         {
@@ -86,13 +89,12 @@ describe('RunSettingsDialogComponent', () => {
         I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RunSettingsDialogComponent);
     component = fixture.componentInstance;
+    component.run = createNewRun();
     fixture.detectChanges();
   });
 
@@ -101,7 +103,7 @@ describe('RunSettingsDialogComponent', () => {
   });
 
   it('should populate the periods', () => {
-    const periodContainers =  fixture.debugElement.nativeElement.querySelectorAll('.info-block');
+    const periodContainers = fixture.debugElement.nativeElement.querySelectorAll('.info-block');
     expect(periodContainers.length).toBe(3);
   });
 
@@ -125,8 +127,11 @@ describe('RunSettingsDialogComponent', () => {
   });
 
   it('should add a period', () => {
+    console.log(component.run.periods);
     component.run.periods.push("4");
+    console.log(component.run.periods);
     fixture.detectChanges();
+    console.log(component.run.periods);
     const periodContainers = fixture.debugElement.nativeElement.querySelectorAll('.info-block');
     expect(periodContainers.length).toBe(4);
   });

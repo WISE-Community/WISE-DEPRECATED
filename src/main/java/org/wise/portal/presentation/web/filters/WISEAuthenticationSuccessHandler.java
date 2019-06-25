@@ -46,7 +46,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
@@ -68,8 +67,13 @@ public class WISEAuthenticationSuccessHandler
     MutableUserDetails userDetails = (MutableUserDetails) authentication.getPrincipal();
     boolean userIsAdmin = false;
     if (userDetails instanceof StudentUserDetails) {
+      String accessCode = (String) request.getAttribute("accessCode");
       if (request.getServletPath().contains("google-login")) {
         String contextPath = request.getContextPath();
+        if (accessCode != null && !accessCode.equals("")) {
+          response.sendRedirect(contextPath + "/student?accessCode=" + accessCode);
+          return;
+        }
         response.sendRedirect(contextPath + "/student");
         return;
       }

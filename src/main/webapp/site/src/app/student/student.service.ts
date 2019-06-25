@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable ,  Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 
 import { RunInfo } from './run-info';
 import { Student } from "../domain/student";
 import { StudentRun } from './student-run';
-import { Subject } from "rxjs";
+import {Run} from '../domain/run';
 
 @Injectable()
 export class StudentService {
 
   private runsUrl = 'api/student/runs';
   private runInfoUrl = 'api/student/run/info';
+  private runInfoByIdUrl = 'api/student/run/info-by-id';
   private addRunUrl = 'api/student/run/register';
   private launchRunUrl = 'api/student/run/launch';
   private registerUrl = 'api/student/register';
@@ -43,6 +44,11 @@ export class StudentService {
     return this.http.get<RunInfo>(this.runInfoUrl, { params: params });
   }
 
+  getRunInfoById(runId: number): Observable<RunInfo> {
+    let params = new HttpParams().set("runId", String(runId));
+    return this.http.get<RunInfo>(this.runInfoByIdUrl, { params });
+  }
+
   addRun(runCode: string, period: string): Observable<StudentRun> {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
@@ -51,8 +57,8 @@ export class StudentService {
     return this.http.post<StudentRun>(this.addRunUrl, body, { headers: headers });
   }
 
-  launchRun(runId: number, workgroupId: number, presentUserIds: string[],
-      absentUserIds: string[]) {
+  launchRun(runId: number, workgroupId: number, presentUserIds: number[],
+      absentUserIds: number[]) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', String(runId));

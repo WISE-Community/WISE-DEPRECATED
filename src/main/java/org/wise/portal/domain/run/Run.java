@@ -382,4 +382,6 @@ public interface Run extends Persistable {
   Long getStartTimeMilliseconds();
 
   Long getEndTimeMilliseconds();
+
+  Boolean isActive();
 }

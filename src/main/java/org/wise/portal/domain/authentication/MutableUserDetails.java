@@ -260,4 +260,6 @@ public interface MutableUserDetails extends UserDetails, Persistable {
   void clearNumberOfRecentFailedVerificationCodeAttempts();
 
   boolean isGoogleUser();
+
+  String getGoogleUserId();
 }

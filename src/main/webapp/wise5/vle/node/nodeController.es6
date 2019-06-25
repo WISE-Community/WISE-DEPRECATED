@@ -42,6 +42,7 @@ class NodeController {
     this.submit = false;
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.teacherWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
+    this.isDisabled = !this.ConfigService.isRunActive();
 
     /*
      * an object that holds the mappings with the key being the component
@@ -531,7 +532,7 @@ class NodeController {
     }
 
     this.$rootScope.$broadcast('showStudentAssets', {componentController: componentController, $event: $event});
-  };
+  }
 
   /**
    * Called when the student clicks the save button

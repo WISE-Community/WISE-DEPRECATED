@@ -88,6 +88,10 @@ var _audioOscillatorComponentModule = require('../components/audioOscillator/aud
 
 var _audioOscillatorComponentModule2 = _interopRequireDefault(_audioOscillatorComponentModule);
 
+var _canvg = require('canvg');
+
+var _canvg2 = _interopRequireDefault(_canvg);
+
 var _conceptMapComponentModule = require('../components/conceptMap/conceptMapComponentModule');
 
 var _conceptMapComponentModule2 = _interopRequireDefault(_conceptMapComponentModule);
@@ -127,6 +131,10 @@ var _filters2 = _interopRequireDefault(_filters);
 var _highcharts = require('../lib/highcharts@4.2.1');
 
 var _highcharts2 = _interopRequireDefault(_highcharts);
+
+var _highchartsExporting = require('../lib/highcharts-exporting@4.2.1');
+
+var _highchartsExporting2 = _interopRequireDefault(_highchartsExporting);
 
 var _draggablePoints = require('../lib/draggable-points/draggable-points');
 

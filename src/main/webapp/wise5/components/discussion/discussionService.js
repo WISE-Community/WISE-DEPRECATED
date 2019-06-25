@@ -131,7 +131,7 @@ var DiscussionService = function (_ComponentService) {
           for (var _iterator2 = connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
             var connectedComponent = _step2.value;
 
-            if (connectedComponent.type == 'showWork') {
+            if (connectedComponent.type === 'showWork') {
               var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
               if (componentStates.length > 0) {
                 return true;
@@ -187,22 +187,17 @@ var DiscussionService = function (_ComponentService) {
 
       return false;
     }
-
-    /**
-     * Get all the posts associated with a workgroup id. This will get all the posts and replies that
-     * the workgroup posted or replied to as well as all the other replies classmates made.
-     * @param componentId the component id
-     * @param workgroupId the workgroup id
-     * @returns an array containing all the component states for top level posts and replies that are
-     * associated with the workgroup
-     */
-
   }, {
-    key: 'getPostsAssociatedWithWorkgroupId',
-    value: function getPostsAssociatedWithWorkgroupId(componentId, workgroupId) {
+    key: 'workgroupHasWorkForComponent',
+    value: function workgroupHasWorkForComponent(workgroupId, componentId) {
+      return this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId).length > 0;
+    }
+  }, {
+    key: 'getPostsAssociatedWithComponentIdsAndWorkgroupId',
+    value: function getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, workgroupId) {
       var allPosts = [];
       var topLevelComponentStateIdsFound = [];
-      var componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId);
+      var componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentIds(workgroupId, componentIds);
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
       var _iteratorError4 = undefined;
@@ -214,12 +209,12 @@ var DiscussionService = function (_ComponentService) {
           var componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
           if (this.isTopLevelPost(componentState)) {
             if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentState.id)) {
-              allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, componentState.id));
+              allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentState.id));
               topLevelComponentStateIdsFound.push(componentState.id);
             }
           } else {
             if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateIdReplyingTo)) {
-              allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, componentStateIdReplyingTo));
+              allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentStateIdReplyingTo));
               topLevelComponentStateIdsFound.push(componentStateIdReplyingTo);
             }
           }
@@ -249,34 +244,26 @@ var DiscussionService = function (_ComponentService) {
   }, {
     key: 'isTopLevelComponentStateIdFound',
     value: function isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateId) {
-      return topLevelComponentStateIdsFound.indexOf(componentStateId) != -1;
+      return topLevelComponentStateIdsFound.indexOf(componentStateId) !== -1;
     }
-
-    /**
-     * Get the top level post and all the replies to it
-     * @param componentId the component id
-     * @param componentStateId the component state id
-     * @returns an array containing the top level post and all the replies
-     */
-
   }, {
-    key: 'getPostAndAllReplies',
-    value: function getPostAndAllReplies(componentId, componentStateId) {
+    key: 'getPostAndAllRepliesByComponentIds',
+    value: function getPostAndAllRepliesByComponentIds(componentIds, componentStateId) {
       var postAndAllReplies = [];
-      var componentStatesForNodeId = this.TeacherDataService.getComponentStatesByComponentId(componentId);
+      var componentStatesForComponentIds = this.TeacherDataService.getComponentStatesByComponentIds(componentIds);
       var _iteratorNormalCompletion5 = true;
       var _didIteratorError5 = false;
       var _iteratorError5 = undefined;
 
       try {
-        for (var _iterator5 = componentStatesForNodeId[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        for (var _iterator5 = componentStatesForComponentIds[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
           var componentState = _step5.value;
 
-          if (componentStateId === componentState.id) {
+          if (componentState.id === componentStateId) {
             postAndAllReplies.push(componentState);
           } else {
             var componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
-            if (componentStateId === componentStateIdReplyingTo) {
+            if (componentStateIdReplyingTo === componentStateId) {
               postAndAllReplies.push(componentState);
             }
           }

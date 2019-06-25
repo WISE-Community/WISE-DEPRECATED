@@ -6,6 +6,7 @@ import { SimpleChange, NO_ERRORS_SCHEMA } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockLibraryService {
   public officialLibraryProjectsSource$ = fakeAsyncResponse([]);
@@ -13,7 +14,6 @@ export class MockLibraryService {
   public sharedLibraryProjectsSource$ = fakeAsyncResponse([]);
   public personalLibraryProjectsSource$ = fakeAsyncResponse([]);
   filterOptions(projectFilterOptions: ProjectFilterOptions) {
-
   }
 }
 
@@ -21,15 +21,15 @@ describe('LibraryFiltersComponent', () => {
   let component: LibraryFiltersComponent;
   let fixture: ComponentFixture<LibraryFiltersComponent>;
   let projects: LibraryProject[];
-  beforeEach(async(() => {
+
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [ ],
       declarations: [ LibraryFiltersComponent ],
       providers: [ { provide: LibraryService, useClass: MockLibraryService } ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-      .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     projects = sampleLibraryProjects;

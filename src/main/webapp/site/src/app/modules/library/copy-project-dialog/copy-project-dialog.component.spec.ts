@@ -6,6 +6,7 @@ import { Project } from "../../../domain/project";
 import { Observable, Subject } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LibraryProject } from "../libraryProject";
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockLibraryService {
   newProjectSource = new Subject<LibraryProject>();
@@ -42,7 +43,7 @@ describe('CopyProjectDialogComponent', () => {
     return buttons[1];
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ CopyProjectDialogComponent ],
       providers: [
@@ -69,9 +70,8 @@ describe('CopyProjectDialogComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: { project: projectObj } }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CopyProjectDialogComponent);

@@ -6,15 +6,15 @@ import { FormsModule } from '@angular/forms';
 import { PrivacyComponent } from "./privacy/privacy.component";
 
 const routes: Routes = [
-  { path: '', loadChildren: './home/home.module#HomeModule' },
-  { path: 'about', loadChildren: './about/about.module#AboutModule' },
-  { path: 'contact', loadChildren: './contact/contact.module#ContactModule' },
-  { path: 'features', loadChildren: './features/features.module#FeaturesModule' },
-  { path: 'forgot', loadChildren: './forgot/forgot.module#ForgotModule' },
-  { path: 'help', loadChildren: './help/help.module#HelpModule' },
-  { path: 'join', loadChildren: './register/register.module#RegisterModule' },
-  { path: 'login', loadChildren: './login/login.module#LoginModule' },
-  { path: 'news', loadChildren: './news/news.module#NewsModule' },
+  { path: '', loadChildren: () => import('./home/home.module').then(m => m.HomeModule) },
+  { path: 'about', loadChildren: () => import('./about/about.module').then(m => m.AboutModule) },
+  { path: 'contact', loadChildren: () => import('./contact/contact.module').then(m => m.ContactModule) },
+  { path: 'features', loadChildren: () => import('./features/features.module').then(m => m.FeaturesModule) },
+  { path: 'forgot', loadChildren: () => import('./forgot/forgot.module').then(m => m.ForgotModule) },
+  { path: 'help', loadChildren: () => import('./help/help.module').then(m => m.HelpModule) },
+  { path: 'join', loadChildren: () => import('./register/register.module').then(m => m.RegisterModule) },
+  { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
+  { path: 'news', loadChildren: () => import('./news/news.module').then(m => m.NewsModule) },
   { path: 'privacy', component: PrivacyComponent }
 ];
 

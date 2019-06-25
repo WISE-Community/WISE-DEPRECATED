@@ -3,6 +3,7 @@ import { MatDialog } from "@angular/material/dialog"
 import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
 import { AddProjectDialogComponent } from "../add-project-dialog/add-project-dialog.component";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-student-home',
@@ -27,6 +28,6 @@ export class StudentHomeComponent implements OnInit {
   }
 
   showAddRun() {
-    const dialogRef = this.dialog.open(AddProjectDialogComponent);
+    this.dialog.open(AddProjectDialogComponent);
   }
 }

@@ -9,6 +9,9 @@ import { Project } from "../../domain/project";
 import { User } from "../../domain/user";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { MatDialog } from "@angular/material";
+import { StudentService } from "../student.service";
+import { UserService } from "../../services/user.service";
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockConfigService {
   getConfig(): Observable<Config> {
@@ -30,22 +33,31 @@ export class MockConfigService {
   }
 }
 
+export class MockStudentService {
+
+}
+
+export class MockUserService {
+
+}
+
 describe('StudentRunListItemComponent', () => {
   let component: StudentRunListItemComponent;
   let fixture: ComponentFixture<StudentRunListItemComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [ MomentModule ],
       declarations: [ StudentRunListItemComponent ],
       providers: [
         { provide: ConfigService, useClass: MockConfigService },
+        { provide: StudentService, useClass: MockStudentService },
+        { provide: UserService, useClass: MockUserService },
         { provide: MatDialog }
         ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StudentRunListItemComponent);

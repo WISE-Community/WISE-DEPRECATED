@@ -31,6 +31,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -41,15 +43,13 @@ import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
+import org.wise.vle.utils.FileManager;
 
 import javax.annotation.PostConstruct;
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -79,6 +79,8 @@ public class ControllerUtil {
   private static RunService runService;
 
   private static boolean isReCaptchaEnabled = false;
+  private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
+  private static final String LICENSE_PATH = "/license.txt";
 
   @Autowired
   public void setWiseProperties(Properties wiseProperties){
@@ -159,6 +161,15 @@ public class ControllerUtil {
   public static String getPortalUrlString(HttpServletRequest request) {
     return getBaseUrlString(request) + request.getContextPath();
   }
+  public static String getBaseUrlString() {
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    return getBaseUrlString(request);
+  }
+
+  public static String getPortalUrlString() {
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    return getBaseUrlString(request) + request.getContextPath();
+  }
 
   /**
    * Returns the version of this WISE instance
@@ -223,11 +234,13 @@ public class ControllerUtil {
     projectJSON.put("metadata", project.getMetadata().toJSONObject());
     projectJSON.put("dateCreated", project.getDateCreated());
     projectJSON.put("dateArchived", project.getDateDeleted());
-    projectJSON.put("projectThumb", getProjectThumbIconPath(project));
+    projectJSON.put("projectThumb", getProjectPath(project) + PROJECT_THUMB_PATH);
     projectJSON.put("owner", getOwnerJSON(project.getOwner()));
     projectJSON.put("sharedOwners", getProjectSharedOwnersJSON(project));
     projectJSON.put("parentId", project.getParentProjectId());
     projectJSON.put("wiseVersion", project.getWiseVersion());
+    projectJSON.put("uri", projectService.getProjectURI(project));
+    projectJSON.put("license", getLicensePath(project));
     return projectJSON;
   }
 
@@ -301,14 +314,35 @@ public class ControllerUtil {
     return sharedOwnerPermissions;
   }
 
-  public static String getProjectThumbIconPath(Project project) {
+  public static String getProjectPath(Project project) {
     String modulePath = project.getModulePath();
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
     if (lastIndexOfSlash != -1) {
+      String hostname = ControllerUtil.wiseProperties.getProperty("wise.hostname");
       String curriculumBaseWWW = ControllerUtil.wiseProperties.getProperty("curriculum_base_www");
-      return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + "/assets/project_thumb.png";
+      return hostname + curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
     }
     return "";
+  }
+
+  public static String getProjectLocalPath(Project project) {
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      String curriculumBaseWWW = ControllerUtil.wiseProperties.getProperty("curriculum_base_dir");
+      return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
+    }
+    return "";
+  }
+
+  public static String getLicensePath(Project project) {
+    String licensePath = getProjectLocalPath(project) + LICENSE_PATH;
+    File licenseFile = new File(licensePath);
+    if (licenseFile.isFile()) {
+      return getProjectPath(project) + LICENSE_PATH;
+    } else {
+      return "";
+    }
   }
 
   /**

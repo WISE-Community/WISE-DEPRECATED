@@ -17,7 +17,7 @@ class TopBarController {
         }
 
         this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
-        this.username = this.ConfigService.getMyUsername();
+        this.userInfo = this.ConfigService.getMyUserInfo();
 
         this.$onChanges = (changesObj) => {
             if (changesObj.notifications) {

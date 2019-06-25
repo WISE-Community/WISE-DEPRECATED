@@ -55,26 +55,30 @@
             layout='row'>
           <md-button class='md-accent'
               ng-if='drawController.isStudentAttachmentEnabled'
-              ng-click='nodeController.showStudentAssets($event, component.id, drawController.isDisabled)'>
+              ng-click='nodeController.showStudentAssets($event, component.id, drawController.isDisabled)'
+              ng-disabled='drawController.isDisabled'>
             <md-icon>image</md-icon>
             {{ 'draw.insertFile' | translate }}
           </md-button>
         </div>
         <md-button class='md-accent'
             ng-click='drawController.resetButtonClicked()'
-            ng-if='drawController.isResetButtonVisible'>
+            ng-if='drawController.isResetButtonVisible'
+            ng-disabled='drawController.isDisabled'>
             <md-icon>restore</md-icon>
             {{ 'RESET' | translate }}
         </md-button>
         <md-button class='md-accent md-primary'
             ng-click='drawController.snipButtonClicked($event)'
-            ng-if='drawController.isAddToNotebookEnabled()'>
+            ng-if='drawController.isAddToNotebookEnabled()'
+            ng-disabled='drawController.isDisabled'>
           <md-icon>note_add</md-icon>
           {{ 'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
         </md-button>
         <md-button class='md-accent md-primary'
                    ng-click='drawController.copyPublicNotebookItemButtonClicked($event)'
-                   ng-if='drawController.showCopyPublicNotebookItemButton()'>
+                   ng-if='drawController.showCopyPublicNotebookItemButton()'
+                   ng-disabled='drawController.isDisabled'>
           <md-icon>file_download</md-icon>
           {{ 'importClassmateWork' | translate:{label:drawController.notebookConfig.label} }}
         </md-button>
@@ -99,7 +103,8 @@
         </div>
         <md-button class='revision md-icon-button'
             ng-click='nodeController.showRevisions($event, component.id)'
-            ng-if='nodeController.getRevisions(component.id).length > 1'>
+            ng-if='nodeController.getRevisions(component.id).length > 1'
+            ng-disabled='drawController.isDisabled'>
           <md-icon> history </md-icon>
           <md-tooltip md-direction='top'>
             {{nodeController.getRevisions(component.id).length}} {{ 'draw.versions' | translate }}

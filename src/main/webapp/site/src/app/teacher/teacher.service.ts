@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, of, from } from "rxjs";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Project } from "../domain/project";
 import { Teacher } from "../domain/teacher";
 import { Run } from "../domain/run";
+import {Course} from '../domain/course';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Injectable()
 export class TeacherService {
@@ -27,6 +29,9 @@ export class TeacherService {
   private getVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
   private checkVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
   private changePasswordUrl = 'api/teacher/forgot/password/change';
+  private classroomAuthorizationUrl = 'api/google-classroom/get-authorization-url';
+  private listCoursesUrl = 'api/google-classroom/list-courses';
+  private addAssignmentUrl = 'api/google-classroom/create-assignment';
   private newProjectSource = new Subject<Project>();
   public newProjectSource$ = this.newProjectSource.asObservable();
   private newRunSource = new Subject<Run>();
@@ -234,5 +239,31 @@ export class TeacherService {
     params = params.set('password', password);
     params = params.set('confirmPassword', confirmPassword);
     return this.http.post<any>(this.changePasswordUrl, params, { headers: headers });
+  }
+
+  getClassroomAuthorizationUrl(username: string): Observable<any> {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    let params = new HttpParams();
+    params = params.set('username', username);
+    return this.http.get<any>(this.classroomAuthorizationUrl, { headers, params });
+  }
+
+  getClassroomCourses(username: string): Observable<Course []> {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    let params = new HttpParams();
+    params = params.set('username', username);
+    return this.http.get<Course []>(this.listCoursesUrl, { headers, params });
+  }
+
+  addToClassroom(accessCode: string, unitTitle: string, courseIds: string[], username: string, endTime: string, description: string): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    let params = new HttpParams()
+      .set('accessCode', accessCode)
+      .set('unitTitle', unitTitle)
+      .set('username', username)
+      .set('endTime', endTime)
+      .set('description', description)
+      .set('courseIds', JSON.stringify(courseIds));
+    return this.http.post<any>(this.addAssignmentUrl, params, {headers});
   }
 }

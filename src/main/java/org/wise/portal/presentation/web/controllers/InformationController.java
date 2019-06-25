@@ -287,15 +287,20 @@ public class InformationController {
 
     try {
       String usernames = "";
+      String firstName = "";
+      String lastName = "";
       JSONArray userIds = new JSONArray();
-      if (loggedInUser.isAdmin()) {
-        usernames = loggedInUser.getUserDetails().getCoreUsername();
+      if (loggedInUser.isTeacher()) {
+        MutableUserDetails userDetails = loggedInUser.getUserDetails();
+        firstName = userDetails.getFirstname();
+        lastName = userDetails.getLastname();
+        usernames = userDetails.getUsername();
         userIds.put(loggedInUser.getId());
       } else {
         usernames = getUsernamesFromWorkgroup(workgroup);
         userIds = getStudentIdsFromWorkgroup(workgroup);
       }
-      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, usernames);
+      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, usernames, firstName, lastName);
       myUserInfo.put("myClassInfo", getMyClassInfoJSONObject(run, workgroup, loggedInUser));
       JSONObject userInfo = new JSONObject();
       userInfo.put("myUserInfo", myUserInfo);
@@ -399,12 +404,19 @@ public class InformationController {
   }
 
   private JSONObject getMyUserInfoJSONObject(String periodId, String periodName,
-      JSONArray userIds, Long workgroupId, String usernames) {
+      JSONArray userIds, Long workgroupId, String usernames, String firstName,
+      String lastName) {
     JSONObject myUserInfo = new JSONObject();
     try {
       myUserInfo.put("workgroupId", workgroupId);
       myUserInfo.put("username", usernames);
       myUserInfo.put("isSwitchedUser", ControllerUtil.isUserPreviousAdministrator());
+      if (!firstName.isEmpty()) {
+        myUserInfo.put("firstName", firstName);
+      }
+      if (!lastName.isEmpty()) {
+        myUserInfo.put("lastName", lastName);
+      }
 
       try {
         myUserInfo.put("periodId", Long.parseLong(periodId));
@@ -659,6 +671,8 @@ public class InformationController {
     config.put("studentNotebookURL", contextPath + "/student/notebook/" + runId);
     config.put("achievementURL", contextPath + "/achievement/" + runId);
     config.put("notificationURL", contextPath + "/notification/" + runId);
+    config.put("startTime", run.getStartTimeMilliseconds());
+    config.put("endTime", run.getEndTimeMilliseconds());
   }
 
   private void printConfigToResponse(HttpServletResponse response, JSONObject config)

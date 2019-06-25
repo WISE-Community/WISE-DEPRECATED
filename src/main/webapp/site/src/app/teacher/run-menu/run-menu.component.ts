@@ -9,6 +9,7 @@ import { ConfigService } from "../../services/config.service";
 import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { EditRunWarningDialogComponent } from '../edit-run-warning-dialog/edit-run-warning-dialog.component';
+import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 @Component({
   selector: 'app-run-menu',
@@ -21,7 +22,6 @@ export class RunMenuComponent implements OnInit {
   run: TeacherRun;
 
   editLink: string = '';
-  previewLink: string = '';
   reportProblemLink: string = '';
 
   constructor(private dialog: MatDialog,
@@ -32,7 +32,6 @@ export class RunMenuComponent implements OnInit {
 
   ngOnInit() {
     this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${this.run.project.id}`;
-    this.previewLink = `${this.configService.getContextPath()}/previewproject.html?projectId=${this.run.project.id}`;
     this.reportProblemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
   }
 
@@ -40,6 +39,32 @@ export class RunMenuComponent implements OnInit {
     this.dialog.open(ShareRunDialogComponent, {
       data: { run: this.run },
       panelClass: 'mat-dialog--md'
+    });
+  }
+
+  checkClassroomAuthorization() {
+    this.teacherService.getClassroomAuthorizationUrl(this.userService.getUser().getValue().username).subscribe(({ authorizationUrl }) => {
+      if (authorizationUrl == null) {
+        this.getClassroomCourses();
+      } else {
+        const authWindow = window.open(authorizationUrl, "authorize", "width=600,height=800");
+        const timer = setInterval(() => {
+          if (authWindow.closed) {
+            clearInterval(timer);
+            this.checkClassroomAuthorization();
+          }
+        }, 1000);
+      }
+    });
+  }
+
+  getClassroomCourses() {
+    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(courses => {
+      const panelClass = courses.length ? 'mat-dialog--md' : '';
+      this.dialog.open(ListClassroomCoursesDialogComponent, {
+        data: { run: this.run, courses },
+        panelClass: panelClass
+      });
     });
   }
 
@@ -57,6 +82,18 @@ export class RunMenuComponent implements OnInit {
 
   canShare() {
     return this.run.canGradeAndManage(this.userService.getUserId());
+  }
+
+  isGoogleUser() {
+    return this.userService.isGoogleUser();
+  }
+
+  isGoogleClassroomEnabled() {
+    return this.configService.isGoogleClassroomEnabled();
+  }
+
+  isRunCompleted() {
+    return this.run.isCompleted(this.configService.getCurrentServerTime());
   }
 
   showEditRunDetails() {

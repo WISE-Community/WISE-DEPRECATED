@@ -31,7 +31,7 @@
 				<div class="infoContentBox">
 					<div><spring:message code="forgotaccount.student.passwordreminder.step1"/>: <spring:message code="forgotaccount.student.passwordreminder.enterYourWISEUsername"/>:</div>
 					<div>
-						<form:form id="username" name="retrievepassword" method="post" commandName="passwordReminderParameters" autocomplete='off'>
+						<form:form id="username" name="retrievepassword" method="post" modelAttribute="passwordReminderParameters" autocomplete='off'>
 							<label style="font-weight:bold;" for="username"><spring:message code="forgotaccount.student.passwordreminder.username" />:</label>
 				  			<input class="dataBoxStyle" type="text" name="username" id="username" size="20" tabindex="1" />
 

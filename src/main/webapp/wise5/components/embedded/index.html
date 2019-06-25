@@ -36,7 +36,8 @@
           <div style='text-align: center'>
             <md-button class='md-accent md-primary'
                   ng-click='embeddedController.snipModel($event)'
-                  ng-if='embeddedController.isAddToNotebookEnabled()'>
+                  ng-if='embeddedController.isAddToNotebookEnabled()'
+                  ng-disabled='embeddedController.isDisabled'>
               <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
             </md-button>
             <br/>

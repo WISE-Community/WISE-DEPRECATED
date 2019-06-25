@@ -16,7 +16,6 @@
   "audioOscillator.oscillatorTypes": "Oscillator Types",
   "audioOscillator.oscillatorHeight": "Oscilloscope Height",
   "audioOscillator.oscillatorWidth": "Oscilloscope Width",
-  "audioOscillator.oscilloscopeStopAfterGoodDraw": "Oscilloscope Stop After Good Draw",
   "audioOscillator.play": "Play",
   "audioOscillator.save": "Save",
   "audioOscillator.sawtooth": "Sawtooth",

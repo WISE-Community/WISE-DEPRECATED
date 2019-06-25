@@ -33,7 +33,7 @@
 					<spring:message code="teacher.run.create.createrunarchive.setupAClassroomRun" />
 					<span class="pageTitle"><spring:message code="teacher.run.create.createrunarchive.management"/></span>
 				</div>
-				<form:form method="post" commandName="runParameters" autocomplete='off'>
+				<form:form method="post" modelAttribute="runParameters" autocomplete='off'>
 				
 				<div class="panelContent">
 				

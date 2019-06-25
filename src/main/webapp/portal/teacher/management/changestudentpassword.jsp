@@ -20,11 +20,13 @@
 
 	<div class="sectionHead"><spring:message code="changePassword" /></div>
 
-	<form:form method="post" action="changestudentpassword" commandName="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
-		<div class="sectionContent">
-			<label><spring:message code="teacher.management.changestudentpassword.typeTeacherPassword" /></label>
-	      	<form:password path="passwd0" />
-		</div>
+	<form:form method="post" action="changestudentpassword" modelAttribute="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
+    <c:if test="${!changeStudentPasswordParameters.teacherUser.getUserDetails().isGoogleUser()}">
+      <div class="sectionContent">
+        <label><spring:message code="teacher.management.changestudentpassword.typeTeacherPassword" /></label>
+        <form:password path="passwd0" />
+      </div>
+    </c:if>
 
 		<div class="sectionContent">
 			<label><spring:message code="teacher.management.changestudentpassword.typeStudentPassword" /></label>

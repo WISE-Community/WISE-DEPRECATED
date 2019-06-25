@@ -15,7 +15,6 @@ class ClassResponseController {
       (oldValue, newValue) => {
         if (newValue !== oldValue) {
           this.toggleExpanded(true);
-          this.response.replyText = '';
         }
       }
     );

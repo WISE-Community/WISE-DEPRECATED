@@ -9,7 +9,7 @@
       <mat-icon>settings</mat-icon>
       <span>Edit Settings</span>
     </a>
-    <a mat-menu-item href="{{ previewLink }}" target="_blank">
+    <a mat-menu-item href="{{ run.project.uri }}" target="_blank">
       <mat-icon>tv</mat-icon>
       <span i18n>Preview</span>
     </a>
@@ -24,6 +24,11 @@
     <a mat-menu-item (click)="shareRun()" *ngIf="canShare()">
       <mat-icon>share</mat-icon>
       <span i18n>Share</span>
+    </a>
+    <a mat-menu-item (click)="checkClassroomAuthorization()"
+       *ngIf="isGoogleUser() && isGoogleClassroomEnabled() && !isRunCompleted()">
+      <mat-icon svgIcon="google-classroom"></mat-icon>
+      <span i18n>Add to Google Classroom</span>
     </a>
     <a mat-menu-item href="{{ reportProblemLink }}">
       <mat-icon>report_problem</mat-icon>

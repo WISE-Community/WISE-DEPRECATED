@@ -70,6 +70,9 @@ class ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      if (!this.ConfigService.isRunActive()) {
+        this.isDisabled = true;
+      }
     } else if (this.isGradingMode()) {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
@@ -319,7 +322,7 @@ class ComponentController {
     const componentState = args.studentWork;
     if (this.isForThisComponent(componentState)) {
       this.setIsDirty(false);
-      this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: this.getIsDirty()});
+      this.emitComponentDirty(this.getIsDirty());
       const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
       if (componentState.isSubmit) {
         this.setSubmittedMessage(clientSaveTime);
@@ -458,12 +461,12 @@ class ComponentController {
 
   setIsDirtyAndBroadcast() {
     this.setIsDirty(true);
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
+    this.emitComponentDirty(true);
   }
 
   setIsSubmitDirtyAndBroadcast() {
     this.setIsSubmitDirty(true);
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+    this.emitComponentSubmitDirty(true);
   }
 
   /*
@@ -474,12 +477,21 @@ class ComponentController {
    */
   createComponentStateAndBroadcast(action) {
     this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
-
+      this.emitComponentStudentDataChanged(componentState);
       if (componentState.isCompleted) {
-        this.$scope.$emit('componentCompleted', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+        this.emitComponentCompleted(componentState);
       }
     });
+  }
+
+  emitComponentStudentDataChanged(componentState) {
+    this.$scope.$emit('componentStudentDataChanged',
+        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+  }
+
+  emitComponentCompleted(componentState) {
+    this.$scope.$emit('componentCompleted',
+        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
   }
 
   processLatestStudentWork() {
@@ -976,14 +988,14 @@ class ComponentController {
      * the project to the server
      */
     this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-  };
+  }
 
   /**
    * Update the component JSON string that will be displayed in the advanced authoring view textarea
    */
   updateAdvancedAuthoringView() {
     this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-  };
+  }
 
   /**
    * The component has changed in the advanced authoring view so we will update
@@ -1131,30 +1143,25 @@ class ComponentController {
   }
 
   removeAttachment(attachment) {
-    if (this.attachments.indexOf(attachment) != -1) {
+    if (this.attachments.indexOf(attachment) !== -1) {
       this.attachments.splice(this.attachments.indexOf(attachment), 1);
       this.studentDataChanged();
     }
   }
 
   attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
-        if (copiedAsset != null) {
-          const attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.attachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
+    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+      const attachment = {
+        studentAssetId: copiedAsset.id,
+        iconURL: copiedAsset.iconURL
+      };
+      this.attachments.push(attachment);
+      this.studentDataChanged();
+    });
   }
 
   hasMaxScore() {
-    return this.componentContent.maxScore != null && this.componentContent.maxScore != '';
+    return this.componentContent.maxScore != null && this.componentContent.maxScore !== '';
   }
 
   getMaxScore() {

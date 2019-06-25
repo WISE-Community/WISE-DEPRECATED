@@ -111,7 +111,7 @@ unzipped:
 			</div>
 			<br/><br/>
 			<form:form method="post" action="import"
-					   commandName="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off' onsubmit="return validateForm();">
+					   modelAttribute="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off' onsubmit="return validateForm();">
 
 				<!--
 				Which WISE version is this project?<br/>

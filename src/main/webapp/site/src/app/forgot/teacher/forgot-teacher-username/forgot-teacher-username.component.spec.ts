@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/index';
 import { Router } from '@angular/router';
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   sendForgotUsernameEmail(email: string): Observable<any> {
@@ -50,7 +51,7 @@ describe('ForgotTeacherUsernameComponent', () => {
     return errorMessage.textContent;
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotTeacherUsernameComponent ],
       imports: [
@@ -69,8 +70,7 @@ describe('ForgotTeacherUsernameComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotTeacherUsernameComponent);

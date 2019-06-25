@@ -228,21 +228,41 @@ class TeacherDataService {
    * @returns the student data for the node id
    */
   retrieveStudentDataByNodeId(nodeId) {
-    const nodeIdsAndComponentIds =
-        this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-
-    let components = [];
-    components = components.concat(nodeIdsAndComponentIds);
-
     const params = {};
     params.periodId = null;
     params.workgroupId = null;
-    params.components = components;
+    params.components = this.getAllRelatedComponents(nodeId);
     params.getAnnotations = false;
     params.getEvents = false;
 
     return this.retrieveStudentData(params);
-  };
+  }
+
+  getAllRelatedComponents(nodeId) {
+    let components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+    components = components.concat(this.getConnectedComponentsIfNecessary(components));
+    return components;
+  }
+
+  getConnectedComponentsIfNecessary(components) {
+    const connectedComponents = [];
+    for (const component of components) {
+      const componentContent = this.ProjectService.getComponentByNodeIdAndComponentId(
+          component.nodeId, component.componentId);
+      if (this.isConnectedComponentStudentDataRequired(componentContent)) {
+        for (const connectedComponent of componentContent.connectedComponents) {
+          connectedComponents.push(connectedComponent);
+        }
+      }
+    }
+    return connectedComponents;
+  }
+
+  isConnectedComponentStudentDataRequired(componentContent) {
+    return componentContent.type === 'Discussion' &&
+        componentContent.connectedComponents != null &&
+        componentContent.connectedComponents.length !== 0;
+  }
 
   /**
    * Retrieve the student data for the workgroup id
@@ -483,6 +503,15 @@ class TeacherDataService {
     return [];
   }
 
+  getComponentStatesByComponentIds(componentIds) {
+    let componentStatesByComponentId = [];
+    for (const componentId of componentIds) {
+      componentStatesByComponentId = componentStatesByComponentId.concat(
+          this.studentData.componentStatesByComponentId[componentId]);
+    }
+    return componentStatesByComponentId;
+  }
+
   getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(
       workgroupId, nodeId, componentId) {
     let latestComponentState = null;
@@ -494,8 +523,7 @@ class TeacherDataService {
         if (componentState != null) {
           const componentStateNodeId = componentState.nodeId;
           const componentStateComponentId = componentState.componentId;
-          if (nodeId == componentStateNodeId &&
-              componentId == componentStateComponentId) {
+          if (nodeId === componentStateNodeId && componentId === componentStateComponentId) {
             latestComponentState = componentState;
             break;
           }
@@ -506,7 +534,6 @@ class TeacherDataService {
   }
 
   getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
-    let latestComponentState = null;
     const componentStates =
         this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
     if (componentStates != null) {
@@ -626,10 +653,20 @@ class TeacherDataService {
   getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId) {
     const componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
     const componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
-
-    // find the intersect and return it
     return componentStatesByWorkgroupId.filter((n) => {
-      return componentStatesByComponentId.indexOf(n) != -1;
+      return componentStatesByComponentId.indexOf(n) !== -1;
+    });
+  }
+
+  getComponentStatesByWorkgroupIdAndComponentIds(workgroupId, componentIds) {
+    const componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
+    let componentStatesByComponentId = [];
+    for (const componentId of componentIds) {
+      componentStatesByComponentId =
+          componentStatesByComponentId.concat(this.getComponentStatesByComponentId(componentId));
+    }
+    return componentStatesByWorkgroupId.filter((n) => {
+      return componentStatesByComponentId.indexOf(n) !== -1;
     });
   }
 
