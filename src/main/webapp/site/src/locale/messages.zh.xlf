@@ -1094,7 +1094,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">128</context>
         </context-group>
-        <target state="needs-translation">WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</target>
+        <target state="translated">WISE为更多的教师和学生提供了进行探究式科学学习的机会。我们学习单元使得对于教师教学和学生学习中难以理解的概念变得易于理解和掌握。WISE课程帮助学生认识到自己有能力从事科学，并意识到，无论他们的背景如何，科学都可以成为一种潜在的职业。</target>
       </trans-unit>
       <trans-unit id="d528a21d07675cb0c41c688a22371f4cc925a969" datatype="html">
         <source>Accessible to All</source>
@@ -1102,7 +1102,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">134</context>
         </context-group>
-        <target state="needs-translation">Accessible to All</target>
+        <target state="translated">所有人都可以访问</target>
       </trans-unit>
       <trans-unit id="416ce0bcfd9bbe81b9ccc34d764504df4c8088d1" datatype="html">
         <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
@@ -1110,7 +1110,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">135</context>
         </context-group>
-        <target state="needs-translation">WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</target>
+        <target state="translated">WISSE 是 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免费<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 和 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>开放源码<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>！ WISE依靠国家科学基金会的慷慨支持，这意味着任何有互联网连接的人都可以使用它。在活跃的开发者社群驱动下，WISE正在不断扩大和改进。致力于将科学调查引入课堂、博物馆、课后或家庭环境！</target>
       </trans-unit>
       <trans-unit id="4ad1e5cce5dbc999f93e23e6bc9fa28d9cbb0ee1" datatype="html">
         <source>WISE on student computer</source>
@@ -1118,7 +1118,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">141</context>
         </context-group>
-        <target state="needs-translation">WISE on student computer</target>
+        <target state="translated">学生电脑端的WISE</target>
       </trans-unit>
       <trans-unit id="14a76370983f28622ac762d950962707e124e964" datatype="html">
         <source>WISE researcher</source>
@@ -1126,7 +1126,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">142</context>
         </context-group>
-        <target state="needs-translation">WISE researcher</target>
+        <target state="translated">WISE研究人员</target>
       </trans-unit>
       <trans-unit id="6cc03c819c2923d3c2dd2a236ee0040ddac13c4b" datatype="html">
         <source>WISE teachers and researcher</source>
@@ -1134,7 +1134,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">143</context>
         </context-group>
-        <target state="needs-translation">WISE teachers and researcher</target>
+        <target state="translated">WISE教师和研究人员</target>
       </trans-unit>
       <trans-unit id="9d4d981f8068dbb230ef2048664016f5ff9c255e" datatype="html">
         <source>WISE developers and teacher</source>
