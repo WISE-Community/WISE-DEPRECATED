@@ -840,7 +840,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">128</context>
         </context-group>
-        <target state="needs-translation">WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</target>
+        <target state="translated">WISE提供了一套广泛的集成工具，帮助教师规划、监控进度、获取洞察力、提供反馈以及更高效地评分。 这些工具在与了解管理现代教室的真正挑战的实践教师之间的合作来不断完善。</target>
       </trans-unit>
       <trans-unit id="4f7d6b85797f6cd6114c235b464ad7910657c631" datatype="html">
         <source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</source>
@@ -848,7 +848,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">129</context>
         </context-group>
-        <target state="needs-translation">By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</target>
+        <target state="translated">WISE平台帮助教师更高效地处理一些必要但耗时的任务，这样教师可以自由地专注于他们不可或缺的工作：为个别学生提供高质量的教学。</target>
       </trans-unit>
       <trans-unit id="794ce33c32874cf59374bff4939512bbc71585d2" datatype="html">
         <source>WISE teacher progress</source>
@@ -856,7 +856,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">131</context>
         </context-group>
-        <target state="needs-translation">WISE teacher progress</target>
+        <target state="translated">WISE教师进展</target>
       </trans-unit>
       <trans-unit id="334e3ef2374254d76dfe1f56599cf1d0598372e8" datatype="html">
         <source>WISE teacher grading</source>
@@ -864,7 +864,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">132</context>
         </context-group>
-        <target state="needs-translation">WISE teacher grading</target>
+        <target state="translated">WISE教师评分</target>
       </trans-unit>
       <trans-unit id="7f5177858a6d5d359f61637516a36470cbf6ba89" datatype="html">
         <source>Featured Teacher Tools:</source>
@@ -872,7 +872,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">138</context>
         </context-group>
-        <target state="needs-translation">Featured Teacher Tools:</target>
+        <target state="translated">特色教师工具：</target>
       </trans-unit>
       <trans-unit id="6acdfffcc102679870fecbf9a48a200663b14017" datatype="html">
         <source>Real-time progress monitor</source>
@@ -880,7 +880,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">142</context>
         </context-group>
-        <target state="needs-translation">Real-time progress monitor</target>
+        <target state="translated">实时进度监视器</target>
       </trans-unit>
       <trans-unit id="cb1e93373a4084ceca88b2c7f7d135792293b743" datatype="html">
         <source>Grade and give feedback + sample scoring rubrics</source>
@@ -888,7 +888,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">146</context>
         </context-group>
-        <target state="needs-translation">Grade and give feedback + sample scoring rubrics</target>
+        <target state="translated">评分和提供反馈+案例评分标准</target>
+        <alt-trans>
+          <target>评分并提供反馈+案例评分标准</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="6047c27c7e32ac81f954987ee2574c123e088014" datatype="html">
         <source>Automatically scored assessment items</source>
@@ -896,7 +899,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">150</context>
         </context-group>
-        <target state="needs-translation">Automatically scored assessment items</target>
+        <target state="translated">自动记分评估项目</target>
       </trans-unit>
       <trans-unit id="eff210843d034ee2569f9b96f6b643934e473a45" datatype="html">
         <source>Pause student screens</source>
@@ -904,7 +907,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">154</context>
         </context-group>
-        <target state="needs-translation">Pause student screens</target>
+        <target state="translated">暂停学生屏幕</target>
       </trans-unit>
       <trans-unit id="b062a147b8e789096be63da3fb5db00eb7e15304" datatype="html">
         <source>Share and collaborate with colleagues</source>
@@ -912,7 +915,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">158</context>
         </context-group>
-        <target state="needs-translation">Share and collaborate with colleagues</target>
+        <target state="translated">与同事分享和协作</target>
       </trans-unit>
       <trans-unit id="5c6c920ee56f5a35c5768fe01c5f9abfcd4ea002" datatype="html">
         <source>Authoring environment that supports customization and creation of new units</source>
@@ -920,7 +923,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">162</context>
         </context-group>
-        <target state="needs-translation">Authoring environment that supports customization and creation of new units</target>
+        <target state="translated">支持自定义和创建新学习单元的创作环境</target>
       </trans-unit>
       <trans-unit id="9e46c9aca377fd39515f72e323c4c1e3e13fb3cb" datatype="html">
         <source>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</source>
