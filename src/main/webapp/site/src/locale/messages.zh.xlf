@@ -931,7 +931,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">166</context>
         </context-group>
-        <target state="needs-translation">In development: Automated insights into student NGSS understanding + suggested classroom interventions!</target>
+        <target state="translated">在发展中：对学生NGSS理解的自动洞察+建议的课堂干预！</target>
       </trans-unit>
       <trans-unit id="337a4aa817a8f5f73548041105128b973b9fb6d2" datatype="html">
         <source>Explore what WISE has to offer!</source>
@@ -939,7 +939,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">175</context>
         </context-group>
-        <target state="needs-translation">Explore what WISE has to offer!</target>
+        <target state="translated">探索WISE提供的服务！</target>
       </trans-unit>
       <trans-unit id="681e76367080f43321e94e6462dd735296dc5c2f" datatype="html">
         <source>Join for free</source>
@@ -947,7 +947,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">176</context>
         </context-group>
-        <target state="needs-translation">Join for free</target>
+        <target state="translated">免费加入</target>
       </trans-unit>
       <trans-unit id="ffc2518d2bc8ccd34f05251329883a6d0642a4ca" datatype="html">
         <source>WISE is the product of more than 25 years of research on teaching and learning with educational technologies</source>
@@ -955,7 +955,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">WISE is the product of more than 25 years of research on teaching and learning with educational technologies</target>
+        <target state="translated">WISE是25年以上的教学与教育技术研究的产物</target>
+        <alt-trans>
+          <target>WISE是超过25年的教学与教育技术研究的产物</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="70ff1cc8f851490c4cb6237ec6991ef6a644d4e4" datatype="html">
         <source>WISE student and teacher</source>
@@ -963,7 +966,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">WISE student and teacher</target>
+        <target state="translated">WISE学生和教师</target>
       </trans-unit>
       <trans-unit id="2b4a83d9816a80170d470f0cbe714553f33450ae" datatype="html">
         <source>WISE teacher workshop design</source>
@@ -971,7 +974,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">WISE teacher workshop design</target>
+        <target state="translated">WISE老师工作室设计</target>
       </trans-unit>
       <trans-unit id="cf46260d6f44d44d379d124ec8df098441107eb5" datatype="html">
         <source>Marcia at WISE workshop</source>
@@ -979,7 +982,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target state="needs-translation">Marcia at WISE workshop</target>
+        <target state="translated">Marcia 在WISE工作室</target>
       </trans-unit>
       <trans-unit id="c0025974cf98becba943b54047f136ecdf25e5c1" datatype="html">
         <source>Based on Research, Refined Through Practice</source>
@@ -987,7 +990,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">44</context>
         </context-group>
-        <target state="needs-translation">Based on Research, Refined Through Practice</target>
+        <target state="translated">基于研究，通过实践完善</target>
       </trans-unit>
       <trans-unit id="fd1c49d6e3e02db68fe37f6c2d12cf7d1658f200" datatype="html">
         <source>Through our collaborations with teachers, administrators, technology designers, and education researchers, we have refined a set of principles which guide the design of all WISE curriculum materials and tools.</source>
@@ -995,7 +998,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="needs-translation">Through our collaborations with teachers, administrators, technology designers, and education researchers, we have refined a set of principles which guide the design of all WISE curriculum materials and tools.</target>
+        <target state="translated">我们通过与教师，管理人员，技术设计师和教育研究人员的合作，完善了一套指导所有WISE课程材料和工具设计的原则。</target>
       </trans-unit>
       <trans-unit id="93d7310ae0cdb74d49573a47634d9a7b1c771462" datatype="html">
         <source>This means that when implementing WISE units, you can be assured that what you're using is grown from a solid foundation, advised by real teachers' experiences, and tested in classrooms with real students.</source>
@@ -1003,7 +1006,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">This means that when implementing WISE units, you can be assured that what you're using is grown from a solid foundation, advised by real teachers' experiences, and tested in classrooms with real students.</target>
+        <target state="translated">这意味着，在实施WISE学习单元时，您可以确保您所使用内容的是从坚实的基础发展而来，由真正的教师提供经验建议，并在教室中与真正的学生一起进行测试过的。</target>
       </trans-unit>
       <trans-unit id="ba47fad2e84864c65ead1cd83f593ddb919c274f" datatype="html">
         <source>Our Research + Team</source>
@@ -1011,7 +1014,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">Our Research + Team</target>
+        <target state="translated">我们的研究和团队</target>
       </trans-unit>
       <trans-unit id="2430d9c22ccaf6b5daf94c0135b02f753ca6b185" datatype="html">
         <source>Knowledge Integration</source>
@@ -1019,7 +1022,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">Knowledge Integration</target>
+        <target state="translated">知识整合</target>
       </trans-unit>
       <trans-unit id="1a90e48699c691ba54728351e4be72af77b280ce" datatype="html">
         <source>As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</source>
