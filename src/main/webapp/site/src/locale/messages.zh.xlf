@@ -1030,7 +1030,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="needs-translation">As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</target>
+        <target state="translated">研究表明，当学生努力克服多种冲突和混乱的想法时，这时将学生观点作为科学研究的起点，教学是最有效的。</target>
       </trans-unit>
       <trans-unit id="e40dc97986107e694a5c5860f0fbf5bd0ddadeae" datatype="html">
         <source>The KI Processes:</source>
@@ -1038,7 +1038,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">The KI Processes:</target>
+        <target state="translated">KI流程：</target>
       </trans-unit>
       <trans-unit id="e85808e27272fa3c1d2dfaf998ce12ca205e5fbd" datatype="html">
         <source>~ WISE Goals ~</source>
@@ -1046,7 +1046,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">94</context>
         </context-group>
-        <target state="needs-translation">~ WISE Goals ~</target>
+        <target state="translated">WISE目标</target>
       </trans-unit>
       <trans-unit id="a8c4f4b7ff2dc03b066549737367901b95c1f556" datatype="html">
         <source>Make Science Meaningful</source>
@@ -1054,7 +1054,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">108</context>
         </context-group>
-        <target state="needs-translation">Make Science Meaningful</target>
+        <target state="translated">使科学有意义</target>
       </trans-unit>
       <trans-unit id="d1d5c7485a7278e9df8a76c3481541ef3d231792" datatype="html">
         <source>WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</source>
@@ -1062,7 +1062,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">109</context>
         </context-group>
-        <target state="needs-translation">WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</target>
+        <target state="translated">WISE学习单元通过个人和社会相关主题向学生介绍复杂的科学概念。 每个单元都运用经过课堂测试的教学模式，这种模式重视学生产生的想法，帮助他们将新信息与其个人经历联系起来，并将他们的想法融合为对科学的连贯理解。</target>
       </trans-unit>
       <trans-unit id="ae2bc001ed6c6fb5416b490b7c6dbe2260697024" datatype="html">
         <source>Support Diverse Learners</source>
@@ -1070,7 +1070,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">114</context>
         </context-group>
-        <target state="needs-translation">Support Diverse Learners</target>
+        <target state="translated">支持多种不同的学习者</target>
       </trans-unit>
       <trans-unit id="e582a65e12f2b176d3eef63cd4caa67d68cfb5b9" datatype="html">
         <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</source>
@@ -1078,7 +1078,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">115</context>
         </context-group>
-        <target state="needs-translation">Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</target>
+        <target state="translated">不同的学生个体在经验、兴趣和能力上各不相同。 WISE提供各种工具、活动模式和教学支架，以支持多种表达和评估理解的方式。 这样，所有学生的能力都能够得到认可，所有人都有机会获得成功。</target>
       </trans-unit>
       <trans-unit id="92bb340c07c783bf551cd704462f3d7efa15f8a4" datatype="html">
         <source>Increase Participation in Science</source>
