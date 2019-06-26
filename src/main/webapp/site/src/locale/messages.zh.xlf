@@ -821,7 +821,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">116</context>
         </context-group>
-        <target state="needs-translation">Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</target>
+        <target state="translated">学生可使用交互式模拟和模型开展调查。 笔记本工具可帮助学生收集想法并将证据整合到研究和设计报告中。 WISE学习单元通过协作反思活动，以及自动化、个性化指导和自适应指导来促进学生的自我监控。</target>
       </trans-unit>
       <trans-unit id="7b049ab7ccd15afcbe53f4b4dae5b4292919fbb7" datatype="html">
         <source>Comprehensive Instructional Supports</source>
@@ -829,7 +829,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="needs-translation">Comprehensive Instructional Supports</target>
+        <target state="translated">综合教学支持</target>
+        <alt-trans>
+          <target>全面教学支持</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="62933fa524d08c2b75f7b687ff566b5ee1118ec1" datatype="html">
         <source>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</source>
