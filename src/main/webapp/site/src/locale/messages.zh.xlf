@@ -1086,7 +1086,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="needs-translation">Increase Participation in Science</target>
+        <target state="translated">提高科学学习的参与度</target>
       </trans-unit>
       <trans-unit id="eb68c61cc5bb54a55a39d5ad7702268ba2c656f2" datatype="html">
         <source>WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</source>
