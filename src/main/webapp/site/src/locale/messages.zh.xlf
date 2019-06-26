@@ -1142,7 +1142,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">144</context>
         </context-group>
-        <target state="needs-translation">WISE developers and teacher</target>
+        <target state="translated">WISE开发者和教师</target>
       </trans-unit>
       <trans-unit id="200502912bfe3f4b49e1da25067287453a24e78c" datatype="html">
         <source>Welcome to our new site!</source>
@@ -1150,7 +1150,7 @@
           <context context-type="sourcefile">app/app.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">Welcome to our new site!</target>
+        <target state="translated">欢迎来到我们的新网站！</target>
       </trans-unit>
       <trans-unit id="1801bfa6ba6eb7a02fd61bafb37e35f5d0aebfdc" datatype="html">
         <source>Learn More</source>
@@ -1158,7 +1158,7 @@
           <context context-type="sourcefile">app/app.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">Learn More</target>
+        <target state="translated">了解更多</target>
       </trans-unit>
       <trans-unit id="ea4d9fe61420a3fce81cf54c4c615e3c19c646a6" datatype="html">
         <source>Dismiss</source>
@@ -1166,7 +1166,7 @@
           <context context-type="sourcefile">app/announcement/announcement.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Dismiss</target>
+        <target state="translated">取消</target>
       </trans-unit>
       <trans-unit id="51d583eae34e00ff68b64c83bb27a77927206e5c" datatype="html">
         <source>WISE Terms of Use &amp; Privacy Policy</source>
@@ -1174,7 +1174,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">WISE Terms of Use &amp; Privacy Policy</target>
+        <target state="translated">WISE使用条款和隐私政策</target>
       </trans-unit>
       <trans-unit id="632476f072cc8007d0fd769265b1dd21675f9b19" datatype="html">
         <source>Table of Contents</source>
@@ -1190,7 +1190,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Table of Contents</target>
+        <target state="translated">目录</target>
       </trans-unit>
       <trans-unit id="73546446e442c1b3861297089d5436ee268b4866" datatype="html">
         <source>User Agreement</source>
@@ -1198,7 +1198,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">User Agreement</target>
+        <target state="translated">用户协议</target>
       </trans-unit>
       <trans-unit id="bc5c8fc1c4e71b3ee81861339adbe75a81f330bd" datatype="html">
         <source>Information We Collect</source>
@@ -1206,7 +1206,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Information We Collect</target>
+        <target state="translated">信息收集</target>
       </trans-unit>
       <trans-unit id="3b2c25aac9bb263b63bc9310da65eb68324d83da" datatype="html">
         <source>How We Use the Data</source>
@@ -1214,7 +1214,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">How We Use the Data</target>
+        <target state="translated">我们如何使用数据</target>
       </trans-unit>
       <trans-unit id="fdceccac4c4cd3ede00411684560fc40b0b9df41" datatype="html">
         <source>Rules of Use</source>
@@ -1222,7 +1222,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Rules of Use</target>
+        <target state="translated">使用规则</target>
       </trans-unit>
       <trans-unit id="d3a3efa42b14f2671bf3418fe0a7462293334ac0" datatype="html">
         <source>Information Security</source>
@@ -1230,7 +1230,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Information Security</target>
+        <target state="translated">信息安全</target>
       </trans-unit>
       <trans-unit id="a364c9c2a87d2b9cf91adffebe1e931310d94d60" datatype="html">
         <source>State &amp; Federal Laws</source>
@@ -1366,7 +1366,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <target state="needs-translation">Some sections or features of WISE may allow you to share information concerning your opinions, experiences, or preferences about WISE content or other topics. For example, you might be able to voluntarily review or rate WISE resources, answer user questions, designate favorite WISE projects, respond to surveys, share personal information or social media profile links to your public WISE profile, etc. Information you provide will be stored by WISE and may be shared with other WISE users either anonymously or not (as long as you provide permission). Unless otherwise expressly provided for in this policy, WISE shall have no liability to you or to any third party with respect to information submitted voluntarily by you via the WISE site.</target>
+        <target state="translated">WISE的某些部分或功能可能允许您分享您对WISE内容或其他主题的观点、经验或偏好。 例如，您可以自愿审核或评价WISE资源，回答用户问题，标明最喜欢的WISE项目，回复调查，分享个人信息或社交媒体资料链接到您的公共WISE个人资料等。您提供的信息将被存储 通过WISE，可以匿名或不与其他WISE用户共享（只要您提供许可）。 除非本政策另有明确规定，否则WISE对您或任何第三方对您通过WISE网站自愿提交的信息不承担任何责任。</target>
       </trans-unit>
       <trans-unit id="568b67fc6418a4b7c573ddceac9823ee0cfa9adc" datatype="html">
         <source>Licensing</source>
@@ -1374,7 +1374,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">44</context>
         </context-group>
-        <target state="needs-translation">Licensing</target>
+        <target state="translated">授权</target>
       </trans-unit>
       <trans-unit id="d3cee34156cc74603c393d78d45916c7f94c8a8f" datatype="html">
         <source>All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://creativecommons.org/licenses/by-sa/4.0/<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</source>
@@ -1382,7 +1382,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="needs-translation">All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://creativecommons.org/licenses/by-sa/4.0/<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</target>
+        <target state="translated">您在WISE网站上创建或共享的所有项目均应根据知识共享署名 - 相同方式共享4.0许可进行许可。 有关此许可条款的详细信息，请访问<x id =“START_LINK”ctype =“xa”equiv-text =“＆lt; a＆gt;”/> https://creativecommons.org/licenses/by-sa/4.0 / <x id =“CLOSE_LINK”ctype =“xa”equiv-text =“＆lt; / a＆gt;”/>。 WISE团队保留删除任何由WISE团队自行决定对社区有害或违反WISE使用条款的内容的权利。 有害使用包括垃圾邮件或通过项目，评论或讨论帖重复商业广告，以及不适当或令人反感的材料。</target>
       </trans-unit>
       <trans-unit id="d832788aab0ba91d394cc36c4c63bedb07a7e5ea" datatype="html">
         <source>You may link to or include outside resources or materials in your WISE projects or in any public parts of the WISE site, but it is your responsibility to obtain any necessary permission from the original owners and include any required attribution for your use of such content. WISE will not be held responsible for the unauthorized use by a WISE account holder of any third-party content in WISE projects or on any other sections of the WISE site.</source>
@@ -1390,7 +1390,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target state="needs-translation">You may link to or include outside resources or materials in your WISE projects or in any public parts of the WISE site, but it is your responsibility to obtain any necessary permission from the original owners and include any required attribution for your use of such content. WISE will not be held responsible for the unauthorized use by a WISE account holder of any third-party content in WISE projects or on any other sections of the WISE site.</target>
+        <target state="translated">您可以链接到WISE项目或WISE网站的任何公共部分中的外部资源或材料，但您有责任从原始所有者那里获得任何必要的许可，并包含您使用此类内容所需的任何归属。 对于WISE帐户持有者未经授权使用WISE项目或WISE网站任何其他部分的任何第三方内容，WISE概不负责。</target>
       </trans-unit>
       <trans-unit id="716f7328f7d5fa0ca3e779de08cbb57f0e170883" datatype="html">
         <source>Auto-Generated Data</source>
