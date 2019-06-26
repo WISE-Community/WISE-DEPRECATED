@@ -1398,7 +1398,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <target state="needs-translation">Auto-Generated Data</target>
+        <target state="translated">自动生成的数据</target>
       </trans-unit>
       <trans-unit id="b1f5669bb23dc1a815043d912919ee226524739c" datatype="html">
         <source>When students and teachers use WISE, we save event data such as mouse clicks, time spent viewing pages, and other site interactions. This data is used for research purposes and for automated analyses and tools within WISE project runs. (See ‘How We Use the Data' for more information.)</source>
@@ -1406,7 +1406,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">When students and teachers use WISE, we save event data such as mouse clicks, time spent viewing pages, and other site interactions. This data is used for research purposes and for automated analyses and tools within WISE project runs. (See ‘How We Use the Data' for more information.)</target>
+        <target state="translated">当学生和教师使用WISE时，我们会保存事件数据，例如鼠标点击，查看页面所花费的时间以及其他网站交互。 该数据用于研究目的以及WISE项目运行中的自动分析和工具。 （有关详细信息，请参阅“我们如何使用数据”。）</target>
       </trans-unit>
       <trans-unit id="4f489cc30da4fa5f11f653ae52eacef505ba9170" datatype="html">
         <source>Cookies</source>
@@ -1414,7 +1414,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">Cookies</target>
+        <target state="translated">补丁</target>
       </trans-unit>
       <trans-unit id="bd0246d98ce40cc5ad586bd1792e8ca55f1b7269" datatype="html">
         <source>When you log in, WISE will ask your browser to put a "cookie" on your computer. This allows WISE to remember that you are logged in when you go to a different page. You can delete this cookie at any time through your browser's settings.</source>
@@ -1462,7 +1462,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="needs-translation">The WISE team uses de-identified user data to perform research. Researchers in the Graduate School of Education at The University of California at Berkeley and partner institutions may use de-identified data to perform data analyses and explore research topics. This data includes both user-generated and auto-generated content (see 'Information We Collect' section). Results of our research may be shared with educators and other researchers through conferences, journals, and other publications.</target>
+        <target state="translated">WISE团队使用非识别的用户数据进行研究。 加州大学伯克利分校教育研究生院和合作院校的研究人员可以使用非识别数据进行数据分析和探索研究课题。 此数据包括用户生成的内容和自动生成的内容（请参阅“我们收集的信息”部分）。 我们的研究结果可以通过会议，期刊和其他出版物与教育工作者和其他研究人员分享。</target>
       </trans-unit>
       <trans-unit id="c3e5c34f74aeac58acd9e6656046d51d968bae86" datatype="html">
         <source>When generating and analyzing research data, student names are removed from all student work and replaced with identification numbers. This process of replacing names with identification numbers is performed automatically by the WISE platform when exporting research data and will be performed by teachers if any other student work (e.g., from other instructional materials) is to be analyzed by researchers.</source>
@@ -1470,7 +1470,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation">When generating and analyzing research data, student names are removed from all student work and replaced with identification numbers. This process of replacing names with identification numbers is performed automatically by the WISE platform when exporting research data and will be performed by teachers if any other student work (e.g., from other instructional materials) is to be analyzed by researchers.</target>
+        <target state="translated">在生成和分析研究数据时，学生姓名将从所有学生作业中删除，并替换为识别号码。 在输出研究数据时，WISE平台自动执行用识别号替换姓名的过程，并且如果研究人员要分析任何其他学生的工作（例如，来自其他教学材料），则由教师执行。</target>
       </trans-unit>
       <trans-unit id="d87525b73f1b562f8e65e395225c27c3a95fa920" datatype="html">
         <source>Email addresses for teacher accounts are used for communication: (a) for support, and (b) for occasional public announcements from the WISE Team. Teacher email addresses are also used to facilitate resetting of passwords.</source>
@@ -1478,7 +1478,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation">Email addresses for teacher accounts are used for communication: (a) for support, and (b) for occasional public announcements from the WISE Team. Teacher email addresses are also used to facilitate resetting of passwords.</target>
+        <target state="translated">教师帐户的电子邮件地址用于沟通：（a）支持；（b）WISE团队的临时公告。 教师电子邮件地址也用于帮助重置密码。</target>
       </trans-unit>
       <trans-unit id="79fd12be51fabc3997ebf91056835b68468377e4" datatype="html">
         <source>We do not ask students for their email address and do not share any student personal information with outside parties. Only the students' teachers can access student names and usernames within WISE (for purposes of reviewing student work, grading, sending feedback, etc). Each participating teacher will have access to his or her own students' project work and will not be able to see any information from other teachers' students. Teachers are also able to reset passwords for their students.</source>
@@ -1486,7 +1486,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation">We do not ask students for their email address and do not share any student personal information with outside parties. Only the students' teachers can access student names and usernames within WISE (for purposes of reviewing student work, grading, sending feedback, etc). Each participating teacher will have access to his or her own students' project work and will not be able to see any information from other teachers' students. Teachers are also able to reset passwords for their students.</target>
+        <target state="translated">我们不会要求学生提供他们的电子邮件地址，也不会与外界分享任何学生的个人信息。 只有学生的老师才能访问WISE中的学生姓名和用户名（用于查看学生作业、评分、发送反馈等）。 每位参与的老师都可以访问自己学生的项目工作，并且无法看到其他教师学生的任何信息。 教师还可以为学生重置密码。</target>
       </trans-unit>
       <trans-unit id="25bb43838a3729ddd0f3d61f352a80c55ce81010" datatype="html">
         <source>A small set of WISE administrators are able to access user account information and data for support and technical purposes. A few select researchers may access teacher accounts to view anonymized student work or support teachers in setting up and managing projects and runs.</source>
@@ -1494,7 +1494,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">66</context>
         </context-group>
-        <target state="needs-translation">A small set of WISE administrators are able to access user account information and data for support and technical purposes. A few select researchers may access teacher accounts to view anonymized student work or support teachers in setting up and managing projects and runs.</target>
+        <target state="translated">每个小组的WISE管理员可以访问用户帐户信息和数据以获得支持和技术目的。 一些精选的研究人员可以访问教师帐户以查看匿名学生作业或支持教师设置和管理项目和运行。</target>
       </trans-unit>
       <trans-unit id="1fc37dc8b8c475ae1e94dfaacd972514a289d08a" datatype="html">
         <source>We will not disclose your personally identifying information to any other parties except in the following cases: 1) In cases where you (or a legal guardian) have provided your express consent; 2) As required by applicable law; or 3) With the appropriate authorities (including schools, school districts, and law enforcement, when necessary) for the purposes of protecting the safety of users, other individuals, or the security of the site.</source>
@@ -1502,7 +1502,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">67</context>
         </context-group>
-        <target state="needs-translation">We will not disclose your personally identifying information to any other parties except in the following cases: 1) In cases where you (or a legal guardian) have provided your express consent; 2) As required by applicable law; or 3) With the appropriate authorities (including schools, school districts, and law enforcement, when necessary) for the purposes of protecting the safety of users, other individuals, or the security of the site.</target>
+        <target state="translated">我们不会向任何其他方披露您的个人身份信息，除非以下情况：1）如果您（或法定监护人）已明确表示同意; 2）根据适用法律的要求; 3）在保护用户，其他个人或网站安全的前提下，由相应的主管部门（包括学校，学区和执法部门）提供。</target>
       </trans-unit>
       <trans-unit id="ef29710ebb07c1bf2c97e99c8967001a8ce9caf8" datatype="html">
         <source>4. Rules of Use</source>
@@ -1510,7 +1510,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">4. Rules of Use</target>
+        <target state="translated">使用规则</target>
       </trans-unit>
       <trans-unit id="b1bf615bcd41ce20e24ba76efcffeca199138119" datatype="html">
         <source>WISE promotes and supports freedom of speech and expression and strives to create a welcoming, supportive, and productive community of educators and learners.</source>
@@ -1518,7 +1518,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <target state="needs-translation">WISE promotes and supports freedom of speech and expression and strives to create a welcoming, supportive, and productive community of educators and learners.</target>
+        <target state="translated">WISE促进和支持言论和表达自由，并努力创建一个受教育者和学习者欢迎，具有支持性和富有成效的社区。</target>
       </trans-unit>
       <trans-unit id="47fff652811daadbc91494bd2dffc16ae02f45fa" datatype="html">
         <source>You may not use WISE to promote bigotry, discrimination, hatred, or violence against any individual or group. You may not expose any other person's identifying or contact information without that person's permission. Threatening, harassing, or intimidating any other person is not allowed and we reserve the right to remove any user-generated content that, in our discretion, does so. Projects, discussion posts, and user-profile pages containing offensive or sexually explicit material will not be tolerated and removed from the site immediately once brought to the attention of the WISE team.</source>
@@ -1526,7 +1526,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
-        <target state="needs-translation">You may not use WISE to promote bigotry, discrimination, hatred, or violence against any individual or group. You may not expose any other person's identifying or contact information without that person's permission. Threatening, harassing, or intimidating any other person is not allowed and we reserve the right to remove any user-generated content that, in our discretion, does so. Projects, discussion posts, and user-profile pages containing offensive or sexually explicit material will not be tolerated and removed from the site immediately once brought to the attention of the WISE team.</target>
+        <target state="translated">您不得使用WISE来促进对任何个人或团体的偏见、歧视、仇恨或暴力。 未经本人许可，您不得泄露任何其他人的身份或联系信息。 不允许威胁、骚扰或恐吓任何其他人，我们保留删除任何由我们自行决定的用户生成内容的权利。 请WISE团队注意，若项目、讨论帖和用户个人资料页面一旦包含冒犯性或露骨色情内容，将不会被容忍，并立即从网站上删除。</target>
       </trans-unit>
       <trans-unit id="f1330e63665b0b21c183e95f2531534fa397e652" datatype="html">
         <source>You may not deliberately perform actions that are intended to negatively affect the WISE website or its users. You may not post links to harmful sites to download viruses or malware.</source>
@@ -1534,7 +1534,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">74</context>
         </context-group>
-        <target state="needs-translation">You may not deliberately perform actions that are intended to negatively affect the WISE website or its users. You may not post links to harmful sites to download viruses or malware.</target>
+        <target state="translated">您不能故意执行对WISE网站或其用户产生负面影响的操作。 您不能发布有害网站的链接以下载病毒或恶意软件。</target>
       </trans-unit>
       <trans-unit id="da13c45e9a2a5de6912e6c9674b210d0345d739b" datatype="html">
         <source>All user-generated content is provided as-is. The WISE Team is not responsible for the accuracy or reliability of any user-generated content available through WISE. The WISE Team does not endorse any views, opinions, or advice expressed in user-generated content. You agree to relieve the WISE Team of any and all liability arising from your user-generated content.</source>
@@ -1542,7 +1542,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="needs-translation">All user-generated content is provided as-is. The WISE Team is not responsible for the accuracy or reliability of any user-generated content available through WISE. The WISE Team does not endorse any views, opinions, or advice expressed in user-generated content. You agree to relieve the WISE Team of any and all liability arising from your user-generated content.</target>
+        <target state="translated">所有用户生成的内容均按原样提供。 WISE团队不对通过WISE提供的任何用户生成内容的准确性或可靠性负责。 WISE团队不对用户生成的内容中表达的任何观点，意见或建议负责。 您同意免除WISE团队因用户生成的内容而产生的所有责任。</target>
       </trans-unit>
       <trans-unit id="58bf2f522bfb669f040c49d745a07badf14f8157" datatype="html">
         <source>If you notice any offensive material or user-generated content that are in violation with the rules above, please report them to the WISE Team using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
