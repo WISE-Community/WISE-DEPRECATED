@@ -27,7 +27,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.run.Run;
@@ -439,4 +438,6 @@ public interface RunService {
   boolean isAllowedToGradeStudentWork(Run run, User user);
 
   boolean isAllowedToViewStudentNames(Run run, User user);
+
+  SharedOwner changeOwner(Long runId, String teacherUsername);
 }

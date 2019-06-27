@@ -23,7 +23,6 @@
  */
 package org.wise.portal.service.run.impl;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
@@ -632,11 +631,31 @@ public class RunServiceImpl implements RunService {
   }
 
   @Transactional()
+  public SharedOwner changeOwner(Long runId, String teacherUsername) {
+    try {
+      Run run = retrieveById(runId);
+      User owner = run.getOwner();
+      removeSharedTeacherPermission(runId, owner.getId(), 16);
+      User newOwner = userDao.retrieveByUsername(teacherUsername);
+      addSharedTeacherPermission(runId, newOwner.getId(), 16);
+      run.setOwner(newOwner);
+      this.runDao.save(run);
+      List<Integer> newPermissions = new ArrayList<>();
+      newPermissions.add(RunPermission.ADMINISTRATION.getMask());
+      return new SharedOwner(newOwner.getId(), newOwner.getUserDetails().getUsername(),
+        newOwner.getUserDetails().getFirstname(), newOwner.getUserDetails().getLastname(), newPermissions);
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  @Transactional()
   public void setStartTime(Long runId, Long startTime) {
     try {
       Run run = this.retrieveById(runId);
       run.setStarttime(new Date(startTime));
-      this.runDao.save(run);
+      runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }

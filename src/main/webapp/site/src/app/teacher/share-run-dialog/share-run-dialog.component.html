@@ -31,7 +31,7 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1" *ngIf="!isTransfer">
     <ng-container matColumnDef="name" sticky>
       <th mat-header-cell *matHeaderCellDef i18n>Name</th>
       <td mat-cell *matCellDef="let sharedOwner">

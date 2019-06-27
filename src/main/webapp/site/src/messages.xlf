@@ -1382,7 +1382,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="d559090ad7dfe99c26a7143c93579f3b768f4dd3" datatype="html">
         <source>Hey there! Looks like you don&apos;t have any active Google classes.</source>
@@ -4676,7 +4676,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="b0e70620d635e9fc164c5ea3c2f1f658513b0b97" datatype="html">
         <source>Starts <x id="INTERPOLATION" equiv-text="{{run.startTime | amTimeAgo}}"/></source>
@@ -4935,6 +4935,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="987c58bf54a75a2dad4d366b6546d80749bc5a30" datatype="html">
+        <source>Transfer Ownership</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="e438ba78cbafdb5bcbce0820bfaad995a504f222" datatype="html">
         <source>Display Name</source>

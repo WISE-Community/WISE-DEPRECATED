@@ -4,8 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Project } from "../domain/project";
 import { Teacher } from "../domain/teacher";
 import { Run } from "../domain/run";
-import {Course} from '../domain/course';
-import { catchError, finalize } from 'rxjs/operators';
+import { Course } from '../domain/course';
 
 @Injectable()
 export class TeacherService {
@@ -89,10 +88,10 @@ export class TeacherService {
     return this.http.get<string[]>(this.usernamesUrl, { headers: headers })
   }
 
-  addSharedOwner(runId: number, teacherUsername: string) {
-    const url = `${this.runPermissionUrl}/${runId}/${teacherUsername}`;
+  addSharedOwner(runId: number, teacherUsername: string, isTransfer: boolean) {
+    const url = `${this.runPermissionUrl}/${runId}/${teacherUsername}/${isTransfer}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.put<Object>(url, null, {headers: headers});
+    return this.http.put<Object>(url, null, { headers });
   }
 
   removeSharedOwner(runId: number, username: string) {

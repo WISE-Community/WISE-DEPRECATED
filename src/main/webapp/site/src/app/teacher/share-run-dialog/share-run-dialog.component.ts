@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar,
   MatTableDataSource } from "@angular/material";
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-share-run-dialog',
@@ -17,14 +18,17 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   dataSource: MatTableDataSource<any[]> = new MatTableDataSource<any[]>();
   displayedColumns: string[] = ['name', 'permissions'];
   duplicate: boolean = false;
+  isTransfer: boolean;
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public teacherService: TeacherService,
+              private userService: UserService,
               public snackBar: MatSnackBar,
               i18n: I18n) {
     super(dialogRef, data, teacherService, snackBar, i18n);
     this.runId = data.run.id;
+    this.isTransfer = data.isTransfer;
     this.teacherService.getRun(this.runId).subscribe((run: Run) => {
       this.run = run;
       this.project = run.project;
@@ -112,15 +116,20 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     const sharedOwnerUsername = this.teacherSearchControl.value;
     if (this.run.owner.username !== sharedOwnerUsername &&
       !this.isSharedOwner(sharedOwnerUsername)) {
-      this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername)
-          .subscribe((newSharedOwner) => {
-        if (newSharedOwner != null) {
-          this.setDefaultRunPermissions(newSharedOwner);
-          this.setDefaultProjectPermissions(newSharedOwner);
-          this.addSharedOwner(newSharedOwner);
-          this.teacherSearchControl.setValue('');
-        }
-      });
+      this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername, this.isTransfer)
+        .subscribe((newSharedOwner) => {
+          if (newSharedOwner != null) {
+            this.setDefaultRunPermissions(newSharedOwner);
+            this.setDefaultProjectPermissions(newSharedOwner);
+            this.addSharedOwner(newSharedOwner);
+            this.teacherSearchControl.setValue('');
+          }
+          if (this.isTransfer) {
+            this.setDefaultProjectPermissions(this.run.owner);
+            this.setDefaultProjectPermissions(this.run.owner);
+            this.addSharedOwner(newSharedOwner);
+          }
+        });
     } else {
       this.duplicate = true;
     }

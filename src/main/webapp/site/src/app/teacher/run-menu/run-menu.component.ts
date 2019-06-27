@@ -35,9 +35,9 @@ export class RunMenuComponent implements OnInit {
     this.reportProblemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
   }
 
-  shareRun() {
+  shareRun(isTransfer) {
     this.dialog.open(ShareRunDialogComponent, {
-      data: { run: this.run },
+      data: { run: this.run, isTransfer },
       panelClass: 'mat-dialog--md'
     });
   }
@@ -82,6 +82,10 @@ export class RunMenuComponent implements OnInit {
 
   canShare() {
     return this.run.canGradeAndManage(this.userService.getUserId());
+  }
+
+  isOwner() {
+    return this.run.isOwner(this.userService.getUserId());
   }
 
   isGoogleUser() {

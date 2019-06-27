@@ -21,14 +21,22 @@ public class TeacherRunPermissionsAPIController {
   @Autowired
   private RunService runService;
 
-  @RequestMapping(value = "/{runId}/{teacherUsername}", method = RequestMethod.PUT)
+  @RequestMapping(value = "/{runId}/{teacherUsername}/{isTransfer}", method = RequestMethod.PUT)
   protected SharedOwner addSharedOwner(@PathVariable Long runId,
-                                       @PathVariable String teacherUsername) {
+                                       @PathVariable String teacherUsername,
+                                       @PathVariable Boolean isTransfer) {
     try {
-      return runService.addSharedTeacher(runId, teacherUsername);
+      SharedOwner sharedOwner = runService.addSharedTeacher(runId, teacherUsername);
+      if (isTransfer) {
+        runService.changeOwner(runId, teacherUsername);
+      }
+      return sharedOwner;
     } catch (ObjectNotFoundException e) {
       return null;
     } catch (TeacherAlreadySharedWithRunException e2) {
+      if (isTransfer) {
+        runService.changeOwner(runId, teacherUsername);
+      }
       return null;
     }
   }
