@@ -1638,7 +1638,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">98</context>
         </context-group>
-        <target state="needs-translation">If you have any questions or concerns about this document or the WISE site, please contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. We can also be reached by mail at:</target>
+        <target state="translated">如果您对本文档或WISE网站有任何问题或疑虑，请通过 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>与我们联系。您也可以通过邮件联系我们：</target>
       </trans-unit>
       <trans-unit id="a53ebef13aa69d9f02d5e74bad14f75519260813" datatype="html">
         <source>UC Berkeley Graduate School of Education</source>
@@ -1646,7 +1646,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">100</context>
         </context-group>
-        <target state="needs-translation">UC Berkeley Graduate School of Education</target>
+        <target state="translated">加州大学伯克利分校教育研究生院</target>
       </trans-unit>
       <trans-unit id="60d92c21ade5f819b7a1482c77f1cd0199d44440" datatype="html">
         <source>Web-based Inquiry Science Environment (WISE)</source>
@@ -1654,7 +1654,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
-        <target state="needs-translation">Web-based Inquiry Science Environment (WISE)</target>
+        <target state="translated">基于网络的探究科学环境（WISE）</target>
       </trans-unit>
       <trans-unit id="25fdbce3537fcb574f51e927a84a17b5eef828c1" datatype="html">
         <source>Attn: David Crowell</source>
@@ -1662,7 +1662,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">102</context>
         </context-group>
-        <target state="needs-translation">Attn: David Crowell</target>
+        <target state="translated">Attn: David Crowell</target>
       </trans-unit>
       <trans-unit id="f39e4e0e398d7d2caf4f0330f322059d52593c09" datatype="html">
         <source>2121 Berkeley Way, Room 4203</source>
@@ -1670,7 +1670,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">103</context>
         </context-group>
-        <target state="needs-translation">2121 Berkeley Way, Room 4203</target>
+        <target state="translated">2121 Berkeley Way，4203室</target>
       </trans-unit>
       <trans-unit id="1d7e5910925c9f4101d153ff63e6d89e23f9ea82" datatype="html">
         <source>Berkeley, CA 94720-1670</source>
@@ -1678,7 +1678,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">104</context>
         </context-group>
-        <target state="needs-translation">Berkeley, CA 94720-1670</target>
+        <target state="translated">Berkeley, CA 94720-1670</target>
       </trans-unit>
       <trans-unit id="891537ceca296c8821e5edf088b3e9cc5c6f17c9" datatype="html">
         <source>Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.</source>
