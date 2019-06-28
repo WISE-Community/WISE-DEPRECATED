@@ -1686,7 +1686,7 @@
           <context context-type="sourcefile">app/modules/library/home-page-project-library/home-page-project-library.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.</target>
+        <target state="translated">探索为特定年级水平建议的WISE课程，或者搜索满足您需求的特定学习单元。</target>
       </trans-unit>
       <trans-unit id="32994fe5ec4e53b681a661dd565256e91a9eb515" datatype="html">
         <source>unit(s)</source>
@@ -1694,7 +1694,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">unit(s)</target>
+        <target state="translated">学习单元</target>
       </trans-unit>
       <trans-unit id="5080207bff284204adb9544ae12ef39917aa74ae" datatype="html">
         <source>WISE Tested</source>
@@ -1702,7 +1702,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">WISE Tested</target>
+        <target state="translated">WISE测试</target>
       </trans-unit>
       <trans-unit id="babd041c8f47bf5bb8dcabfc02d9904a8e363c9c" datatype="html">
         <source>The "WISE Tested" library contains curricula developed by the WISE team.</source>
@@ -1710,7 +1710,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">The "WISE Tested" library contains curricula developed by the WISE team.</target>
+        <target state="translated">“WISE测试”库包含WISE团队开发的课程。</target>
       </trans-unit>
       <trans-unit id="cda4813957412f125af0b3c464de60460ca0fe2f" datatype="html">
         <source>Each of the units in this collection has been designed and iteratively refined through a partnership of university-based education researchers and science teachers. They have all been implemeneted and tested in real classrooms and have shown proven learning gains.</source>
@@ -1718,7 +1718,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">Each of the units in this collection has been designed and iteratively refined through a partnership of university-based education researchers and science teachers. They have all been implemeneted and tested in real classrooms and have shown proven learning gains.</target>
+        <target state="translated">该系列中的每个单元都是通过大学教育研究人员和科学教师的合作设计和迭代完善的。 它们都在真实的教室中进行了实施和测试，并且已经证明了具有一定的学习成效。</target>
       </trans-unit>
       <trans-unit id="e67065cfae11c998159fc6722e70e4ee76db2c8f" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Learn more<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> about our design process and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>check out our research and publications<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -1726,7 +1726,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Learn more<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> about our design process and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>check out our research and publications<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>了解更多<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 我们的设计过程 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>查看我们的研究和出版物<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="f4e529ae5ffd73001d1ff4bbdeeb0a72e342e5c8" datatype="html">
         <source>Close</source>
@@ -1746,7 +1746,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
       </trans-unit>
       <trans-unit id="73da064756ecee7cf3d056dc8a0b99f0f39863b6" datatype="html">
         <source>What is WISE Tested?</source>
@@ -1754,7 +1754,7 @@
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">What is WISE Tested?</target>
+        <target state="translated">什么是WISE测试？</target>
       </trans-unit>
       <trans-unit id="01d380d7c105dbdc51d2659949a726359153e11b" datatype="html">
         <source>WISE Tested (<x id="INTERPOLATION" equiv-text="{{numberOfOfficialProjectsVisible}}"/>)</source>
@@ -1762,7 +1762,7 @@
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">WISE Tested (<x id="INTERPOLATION" equiv-text="{{numberOfOfficialProjectsVisible}}"/>)</target>
+        <target state="translated">WISE测试(<x id="INTERPOLATION" equiv-text="{{numberOfOfficialProjectsVisible}}"/>)</target>
       </trans-unit>
       <trans-unit id="9f25d6d4cac1adba2cfad085fa7657824d860a2e" datatype="html">
         <source>Community Built (<x id="INTERPOLATION" equiv-text="{{numberOfCommunityProjectsVisible}}"/>)</source>
