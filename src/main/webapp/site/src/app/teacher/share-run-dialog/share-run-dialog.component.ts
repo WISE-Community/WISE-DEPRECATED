@@ -5,7 +5,8 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar,
   MatTableDataSource } from "@angular/material";
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
-import {UserService} from '../../services/user.service';
+import { UserService } from '../../services/user.service';
+import { User } from '../../domain/user';
 
 @Component({
   selector: 'app-share-run-dialog',
@@ -118,16 +119,13 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
       !this.isSharedOwner(sharedOwnerUsername)) {
       this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername, this.isTransfer)
         .subscribe((newSharedOwner) => {
-          if (newSharedOwner != null) {
+          if (newSharedOwner != null && !this.isTransfer) {
             this.setDefaultRunPermissions(newSharedOwner);
             this.setDefaultProjectPermissions(newSharedOwner);
             this.addSharedOwner(newSharedOwner);
             this.teacherSearchControl.setValue('');
-          }
-          if (this.isTransfer) {
-            this.setDefaultProjectPermissions(this.run.owner);
-            this.setDefaultProjectPermissions(this.run.owner);
-            this.addSharedOwner(newSharedOwner);
+          } else if (newSharedOwner != null && this.isTransfer) {
+            this.transferRunOwnership(sharedOwnerUsername);
           }
         });
     } else {

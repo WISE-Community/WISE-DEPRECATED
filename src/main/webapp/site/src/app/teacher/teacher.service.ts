@@ -91,7 +91,7 @@ export class TeacherService {
   addSharedOwner(runId: number, teacherUsername: string, isTransfer: boolean) {
     const url = `${this.runPermissionUrl}/${runId}/${teacherUsername}/${isTransfer}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.put<Object>(url, null, { headers });
+    return this.http.post<Object>(url, null, { headers });
   }
 
   removeSharedOwner(runId: number, username: string) {

@@ -142,4 +142,9 @@ export abstract class ShareItemDialogComponent implements OnInit {
       }
     }
   }
+
+  transferRunOwnership(newOwnerUsername) {
+    this.snackBar.open(this.i18n(`Transferred run ownership to: ${newOwnerUsername}`));
+    this.dialogRef.close();
+  }
 }
