@@ -1946,7 +1946,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation">There was a problem trying to add the unit to the following Google Classroom(s)</target>
+        <target state="translated">进程在尝试将该单元添加到以下Google课堂时出现问题</target>
       </trans-unit>
       <trans-unit id="8dd413cee2228118c536f503709329a4d1a395e2" datatype="html">
         <source>Done</source>
@@ -1970,7 +1970,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">Done</target>
+        <target state="translated">完成</target>
       </trans-unit>
       <trans-unit id="053c99466a9288207400b49f2ca907192b5bd44d" datatype="html">
         <source>Use with Class</source>
@@ -1982,7 +1982,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">Use with Class</target>
+        <target state="translated">与课堂一起使用</target>
       </trans-unit>
       <trans-unit id="a40392824621859bfd694580f1bb21debbc50eb0" datatype="html">
         <source>(Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
@@ -1998,7 +1998,7 @@
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">(Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
+        <target state="translated">(Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="a2d9400df68d9f4e89fe24f6a3f40bc5322f19f2" datatype="html">
         <source>1. Choose Periods</source>
@@ -2006,7 +2006,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">1. Choose Periods</target>
+        <target state="translated">1. 选择周期</target>
       </trans-unit>
       <trans-unit id="91272b78c905b6e7e35774c484eb61a33cd3dd12" datatype="html">
         <source>Add your own periods</source>
@@ -2014,7 +2014,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Add your own periods</target>
+        <target state="translated">添加您自己的时间</target>
       </trans-unit>
       <trans-unit id="b13b5b62a4356cdcd81f358640fb7863fdde1361" datatype="html">
         <source>For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.</source>
@@ -2022,7 +2022,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.</target>
+        <target state="translated">对于“周期9”，只需输入数字9.用逗号分隔句号（例如“第1节，第2节”）。 手动命名的时间长度不应超过16个字符。</target>
       </trans-unit>
       <trans-unit id="6b0dd0933835c1e0d9e3ed4a19c8eb88a9df417b" datatype="html">
         <source>2. Choose Students Per Team</source>
@@ -2502,7 +2502,7 @@
           <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in lost data or other problems.</target>
+        <target state="translated">警告！ 您将编辑教室单元的内容。 如果学生已经开始学习，这可能会导致数据丢失或出现其他问题。</target>
       </trans-unit>
       <trans-unit id="ce6a02374cf2e2a25534fee1f83fa5b5839fa033" datatype="html">
         <source>Are you sure you wish to proceed?</source>
@@ -2510,7 +2510,7 @@
           <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Are you sure you wish to proceed?</target>
+        <target state="translated">你确定要继续吗？</target>
       </trans-unit>
       <trans-unit id="41bcea7b08bbd7328312f727ae01b7f074da6233" datatype="html">
         <source>Proceed</source>
@@ -2518,7 +2518,7 @@
           <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-        <target state="needs-translation">Proceed</target>
+        <target state="translated">继续</target>
       </trans-unit>
       <trans-unit id="8dce5a1b53185785ceb8eaece03a45f95a1058ae" datatype="html">
         <source>Parent ID:</source>
@@ -2526,7 +2526,10 @@
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Parent ID:</target>
+        <target state="translated">上级ID：</target>
+        <alt-trans>
+          <target>上级目录：</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="28f86ffd419b869711aa13f5e5ff54be6d70731c" datatype="html">
         <source>Edit</source>
@@ -2534,7 +2537,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">Edit</target>
+        <target state="translated">编辑</target>
       </trans-unit>
       <trans-unit id="0bd8b27f60a1f098a53e06328426d818e3508ff9" datatype="html">
         <source>Share</source>
@@ -2546,7 +2549,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="needs-translation">Share</target>
+        <target state="translated">分享</target>
       </trans-unit>
       <trans-unit id="1ada756975a68f38f92477600b2ca2864ea89533" datatype="html">
         <source>Toggle filters</source>
@@ -2554,7 +2557,7 @@
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Toggle filters</target>
+        <target state="translated">切换过滤器</target>
       </trans-unit>
       <trans-unit id="b8d343aa7d7ecf599df1c34a0d4ba1bdb7de759f" datatype="html">
         <source>Filter by <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (NGSS).</source>
