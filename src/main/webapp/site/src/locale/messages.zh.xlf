@@ -1574,7 +1574,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="needs-translation">You can help us protect against unauthorized access to your account by choosing a strong password and keeping your password secret at all times.</target>
+        <target state="translated">您可以通过选设置强密码，并始终保密密码帮助我们防止未经授权访问您的帐户。</target>
       </trans-unit>
       <trans-unit id="5af2549b2c02c290b49d68890ec5308298eea08a" datatype="html">
         <source>6. State &amp; Federal Laws</source>
@@ -1582,7 +1582,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">86</context>
         </context-group>
-        <target state="needs-translation">6. State &amp; Federal Laws</target>
+        <target state="translated">国家和联邦法律</target>
       </trans-unit>
       <trans-unit id="55c5e54bedb1da154bb6679ee9574546eafb6198" datatype="html">
         <source>California Privacy Rights for Minors</source>
@@ -1590,7 +1590,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">88</context>
         </context-group>
-        <target state="needs-translation">California Privacy Rights for Minors</target>
+        <target state="translated">加州未成年人隐私权</target>
       </trans-unit>
       <trans-unit id="07bee5a94bc5a2dd9e6ae5a3718009e22c1e2308" datatype="html">
         <source>If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child's content or information, please contact us at https://wise.berkeley.edu/contact for assistance or you can delete specific information from you or your child's account.</source>
@@ -1598,7 +1598,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">89</context>
         </context-group>
-        <target state="needs-translation">If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child's content or information, please contact us at https://wise.berkeley.edu/contact for assistance or you can delete specific information from you or your child's account.</target>
+        <target state="translated">如果您居住在加利福尼亚州且未满18岁，或者是未满18岁学生的父母或法定监护人，您可以要求从我们的网站上删除您的信息。 当您要求删除您的信息时，我们会尽最大努力删除您的所有个人信息。 请注意，我们可能无法删除存储在我们数据库中的所有去识别信息或内容，我们可能无法删除根据适用的联邦和州法律要求保留的内容。 如果您要求删除您或您孩子的内容或信息，请通过https://wise.berkeley.edu/contact与我们联系以获取帮助，或者您可以从您或您孩子的帐户中删除特定信息。</target>
       </trans-unit>
       <trans-unit id="a696cb5c99995dd1420b2dd62b2c6409888b9605" datatype="html">
         <source>Family Educational Rights and Privacy Act (FERPA)</source>
@@ -1606,7 +1606,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">Family Educational Rights and Privacy Act (FERPA)</target>
+        <target state="translated">家庭教育权和隐私权法案（FERPA）</target>
       </trans-unit>
       <trans-unit id="d961fdb0f1ecf8986fa129281805855cee5cca75" datatype="html">
         <source>We take care to be familiar with FERPA legislation and we take all possible measures to ensure your compliance with FERPA's requirements when you use WISE. We are confident that the protection of data outlined in this document satisfies its requirements.</source>
@@ -1614,7 +1614,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">92</context>
         </context-group>
-        <target state="needs-translation">We take care to be familiar with FERPA legislation and we take all possible measures to ensure your compliance with FERPA's requirements when you use WISE. We are confident that the protection of data outlined in this document satisfies its requirements.</target>
+        <target state="translated">我们会注重熟悉《家庭教育权和隐私权法案》，并且采取一切可能的措施来确保您在使用WISE时符合《家庭教育权和隐私权法案》的要求。 我们认为，本文档中概述的数据保护符合其要求。</target>
       </trans-unit>
       <trans-unit id="41443d0531f4cbd040cbd27d732a1ab7b361b751" datatype="html">
         <source>7. Changes and Updates to the Terms of Use &amp; Privacy Policy</source>
@@ -1622,7 +1622,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">96</context>
         </context-group>
-        <target state="needs-translation">7. Changes and Updates to the Terms of Use &amp; Privacy Policy</target>
+        <target state="translated">使用条款和隐私策略的变更和更新</target>
       </trans-unit>
       <trans-unit id="c48aa34c21d6e247f54757d5fb617b1faa59f064" datatype="html">
         <source>We may occasionally update or modify our Terms of Use and Privacy Policy. We will always display the date this document was last updated. If we make significant changes to these terms, we will display a prominent notice on the WISE home page and may notify users via registered email.  We encourage you to review this document periodically. By continuing to use WISE after any changes to this document, you acknowledge that you agree to the current version of these terms.</source>
@@ -1630,7 +1630,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
-        <target state="needs-translation">We may occasionally update or modify our Terms of Use and Privacy Policy. We will always display the date this document was last updated. If we make significant changes to these terms, we will display a prominent notice on the WISE home page and may notify users via registered email.  We encourage you to review this document periodically. By continuing to use WISE after any changes to this document, you acknowledge that you agree to the current version of these terms.</target>
+        <target state="translated">我们可能偶尔会更新或修改我们的使用条款和隐私政策。 我们将始终显示此文档上次更新的日期。 如果我们对这些条款进行重大更改，我们将在WISE主页上显示醒目的通知，并可能通过注册的电子邮件通知用户。 我们建议您定期查看本文档。 在对本文档进行任何更改后继续使用WISE，即表示您同意这些条款的当前版本。</target>
       </trans-unit>
       <trans-unit id="88698050f16ebf91474ddae66b687f795af7e57b" datatype="html">
         <source>If you have any questions or concerns about this document or the WISE site, please contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. We can also be reached by mail at:</source>
