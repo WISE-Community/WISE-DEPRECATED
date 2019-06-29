@@ -2422,7 +2422,7 @@
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">View &amp; Use with Students</target>
+        <target state="translated">查看学生使用</target>
       </trans-unit>
       <trans-unit id="66b2e8f48c13af491ad76683bc68fb0b07df83c4" datatype="html">
         <source>Edit Unit Content</source>
@@ -2434,7 +2434,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">66</context>
         </context-group>
-        <target state="needs-translation">Edit Unit Content</target>
+        <target state="translated">编辑单元内容</target>
       </trans-unit>
       <trans-unit id="d1acaeb5fa466988ff526619702c4bf21e0a5e15" datatype="html">
         <source>Copy Unit</source>
@@ -2442,7 +2442,7 @@
           <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Copy Unit</target>
+        <target state="translated">复制单元</target>
       </trans-unit>
       <trans-unit id="2883a2c78d97119d2ab3002336e04da6657a7dfd" datatype="html">
         <source>(Unit ID: <x id="INTERPOLATION" equiv-text="{{ data.project.id }}"/>)</source>
