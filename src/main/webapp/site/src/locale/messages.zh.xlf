@@ -4545,7 +4545,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">151</context>
         </context-group>
-        <target state="needs-translation">Next to each student's work, you will be able to give them a score and comment.</target>
+        <target state="translated">在每个学生的作业旁边，您可以给他们一个分数和评论。</target>
       </trans-unit>
       <trans-unit id="ce87a87a75de3f9a89f4ccb83b69b189c217f30b" datatype="html">
         <source>How do students see my comments and scores for their work?</source>
@@ -4553,7 +4553,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">153</context>
         </context-group>
-        <target state="needs-translation">How do students see my comments and scores for their work?</target>
+        <target state="translated">学生如何看查看我的作品评论和分数？</target>
       </trans-unit>
       <trans-unit id="6f1b5176d1ac687e91e947309867726178ea6075" datatype="html">
         <source>The student must sign into WISE with their student account.</source>
@@ -4561,7 +4561,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">155</context>
         </context-group>
-        <target state="needs-translation">The student must sign into WISE with their student account.</target>
+        <target state="translated">学生必须使用学生帐户登录WISE。</target>
       </trans-unit>
       <trans-unit id="3841de15fe215a519a782c724a896d08e6629bea" datatype="html">
         <source>Open the project.</source>
@@ -4569,7 +4569,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">156</context>
         </context-group>
-        <target state="needs-translation">Open the project.</target>
+        <target state="translated">打开项目</target>
       </trans-unit>
       <trans-unit id="fd1e6e8e6b4e2772c8bd4dece6ed05076b1a6647" datatype="html">
         <source>Go to the step that the teacher graded.</source>
@@ -4577,7 +4577,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">157</context>
         </context-group>
-        <target state="needs-translation">Go to the step that the teacher graded.</target>
+        <target state="translated">跳转至老师评分的步骤</target>
       </trans-unit>
       <trans-unit id="2f82e4eae51beaa2d83a4e717af35b409bec8993" datatype="html">
         <source>The comment and score will be displayed under the piece of work that was graded.</source>
@@ -4585,7 +4585,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">158</context>
         </context-group>
-        <target state="needs-translation">The comment and score will be displayed under the piece of work that was graded.</target>
+        <target state="translated">评论和分数将显示在被评的作品栏下。</target>
       </trans-unit>
       <trans-unit id="f4f0bb05aa6bad172e17cce01cddc091c3abe59c" datatype="html">
         <source>What should I look for in my student's answers?</source>
@@ -4593,7 +4593,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">160</context>
         </context-group>
-        <target state="needs-translation">What should I look for in my student's answers?</target>
+        <target state="translated">我应该在学生的答案中查看什么？</target>
       </trans-unit>
       <trans-unit id="8ad1ae10ce55dbadbc0d79c5df1e0e3236a443ce" datatype="html">
         <source>The following link will give you a sample rubric for grading a step in the Mitosis and Cell Processes project. The rubric is based on our TELS Center research on how students integrate their knowledge of complex science concepts. We hope that it can give you a start in developing your own rubrics for the notes and steps you plan to grade.</source>
