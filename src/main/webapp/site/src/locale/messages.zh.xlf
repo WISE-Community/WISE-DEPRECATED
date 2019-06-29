@@ -4445,7 +4445,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">133</context>
         </context-group>
-        <target state="needs-translation">On the run, click the three vertical dots to view the run options.</target>
+        <target state="translated">在运行中，单击省略号以查看运行选项。</target>
       </trans-unit>
       <trans-unit id="caf98385e768f00b3e1734b93aa31eaed64d7bc1" datatype="html">
         <source>Click "Edit Settings".</source>
@@ -4457,7 +4457,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">134</context>
         </context-group>
-        <target state="needs-translation">Click "Edit Settings".</target>
+        <target state="translated">单击“编辑设置”</target>
       </trans-unit>
       <trans-unit id="dd80561bf8a3ed6b8c7dbc171555263c3a993121" datatype="html">
         <source>Enter a period name in the "Add New Period" field.</source>
