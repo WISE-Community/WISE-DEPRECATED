@@ -4043,7 +4043,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">Third, if the student can't solve the problem directly, you can change their password for them using the instructions below.</target>
+        <target state="translated">第三，如果学生无法自主解决问题，您可以使用以下说明更改密码。</target>
       </trans-unit>
       <trans-unit id="289c7c9faaf6520c30e7822ca87e7456179d6c98" datatype="html">
         <source>How do I change a student's password?</source>
@@ -4051,7 +4051,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">How do I change a student's password?</target>
+        <target state="translated">教师如何更改学生的密码？</target>
       </trans-unit>
       <trans-unit id="cb4e82ff9c49f15fee75a56ccd4bb3feccbcb850" datatype="html">
         <source>Sign into WISE with your teacher account.</source>
@@ -4091,7 +4091,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">206</context>
         </context-group>
-        <target state="needs-translation">Sign into WISE with your teacher account.</target>
+        <target state="translated">使用您的教师帐户登录WISE。</target>
       </trans-unit>
       <trans-unit id="ca00e98ef0f13b9fd9899fac4169da61b2d05856" datatype="html">
         <source>Find the run in your Teacher Home Page.</source>
@@ -4123,7 +4123,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">147</context>
         </context-group>
-        <target state="needs-translation">Find the run in your Teacher Home Page.</target>
+        <target state="translated">在教师主页中查找运行。</target>
       </trans-unit>
       <trans-unit id="f0c1ec314fd1d5147dfff4a0411434d4263193f7" datatype="html">
         <source>Click the "Teacher Tools" button on the run.</source>
@@ -4143,7 +4143,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">148</context>
         </context-group>
-        <target state="needs-translation">Click the "Teacher Tools" button on the run.</target>
+        <target state="translated">单击其中的“教师工具”按钮。</target>
       </trans-unit>
       <trans-unit id="7104fd0691398e7245d187335be218b7ae1eb417" datatype="html">
         <source>Click on the "Manage Students" icon on the left side bar.</source>
@@ -4159,7 +4159,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">78</context>
         </context-group>
-        <target state="needs-translation">Click on the "Manage Students" icon on the left side bar.</target>
+        <target state="translated">单击左侧栏中的“管理学生”图标。</target>
       </trans-unit>
       <trans-unit id="2ebe8a4dc9e74fe00021dd7a5a1d7938c26bbf7d" datatype="html">
         <source>Find the period the student is in.</source>
@@ -4175,7 +4175,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
-        <target state="needs-translation">Find the period the student is in.</target>
+        <target state="translated">找出学生所在的课时。</target>
       </trans-unit>
       <trans-unit id="94caa8f0ed38f74d051cf5bff5256123b00f480c" datatype="html">
         <source>Find the student and click "Change Password".</source>
@@ -4183,7 +4183,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">58</context>
         </context-group>
-        <target state="needs-translation">Find the student and click "Change Password".</target>
+        <target state="translated">找到学生，然后单击“更改密码”。</target>
       </trans-unit>
       <trans-unit id="941958bcf0217f57435b86d50e2a4806cbf5d679" datatype="html">
         <source>Alternatively, you can change the password for ALL students in the current period (the new password will be applied to all the students in the period).</source>
@@ -4191,7 +4191,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="needs-translation">Alternatively, you can change the password for ALL students in the current period (the new password will be applied to all the students in the period).</target>
+        <target state="translated">或者，您可以更改当前课时所有学生的密码（新密码将应用于该期间的所有学生）。</target>
       </trans-unit>
       <trans-unit id="3444260f02adf2bf6ac230295ebd2beb0cf5780a" datatype="html">
         <source>How do I change a student team after they've started a project run?</source>
@@ -4199,7 +4199,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">How do I change a student team after they've started a project run?</target>
+        <target state="translated">教师如何在项目开始后更改学生团队？</target>
       </trans-unit>
       <trans-unit id="e2ba447afc78e6be3baf2014b334cac6656236aa" datatype="html">
         <source>Drag-and-drop student names to move them from one team to another. Make sure to save your changes before leaving this window.</source>
@@ -4207,7 +4207,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">Drag-and-drop student names to move them from one team to another. Make sure to save your changes before leaving this window.</target>
+        <target state="translated">拖放学生姓名以将他们从一个团队移动到另一个团队，确保在关闭此窗口之前保存更改。</target>
       </trans-unit>
       <trans-unit id="8651e5c9fed5b42224d970458cb11046917dc6a6" datatype="html">
         <source>If you want to move students into a brand new team, click New Team, then drag 1 or more students into the new team. Save your changes.</source>
@@ -4215,7 +4215,10 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation">If you want to move students into a brand new team, click New Team, then drag 1 or more students into the new team. Save your changes.</target>
+        <target state="translated">如果您想将学生转移到一个全新的团队，请单击“新建团队”，然后将一个或多个学生拖入新团队，并保存更改。</target>
+        <alt-trans>
+          <target>如果您想将学生转移到一个全新的团队，请单击“新建团队”，然后将一个或多个学生拖入新团队。 保存更改。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="5418b88e19814f7ddcb2b6dbdd2d0d5adf57b556" datatype="html">
         <source>Warning 1</source>
@@ -4223,7 +4226,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">Warning 1</target>
+        <target state="translated">警告1</target>
       </trans-unit>
       <trans-unit id="bce5e9f9e8847d8a1cf6f535b8d6ba481bf878ae" datatype="html">
         <source>If you move Student A into an established team, student A loses all of their current work and inherits the current work of the established team.</source>
@@ -4231,7 +4234,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">If you move Student A into an established team, student A loses all of their current work and inherits the current work of the established team.</target>
+        <target state="translated">如果您将学生A转移到已建立的团队，学生A将丢失他们当前的所有工作并继承现有团队的当前工作。</target>
       </trans-unit>
       <trans-unit id="9679a6f25e8483c0ebd3cadfe78df295eb1f6512" datatype="html">
         <source>Warning 2</source>
@@ -4239,7 +4242,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">Warning 2</target>
+        <target state="translated">警告2</target>
       </trans-unit>
       <trans-unit id="65bda4225be9598df7203894abde67e92a0d83ad" datatype="html">
         <source>If you move Student A into a newly created (blank) team, student A will lose all of their work.</source>
@@ -4247,7 +4250,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">If you move Student A into a newly created (blank) team, student A will lose all of their work.</target>
+        <target state="translated">如果您将学生A移动到新创建的（空白）团队中，学生A将丢失他们的所有工作。</target>
       </trans-unit>
       <trans-unit id="a5c647f6fc8b21841e3c0e59c93539b2c5a2b665" datatype="html">
         <source>How do I change the period for a student?</source>
@@ -4255,7 +4258,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
-        <target state="needs-translation">How do I change the period for a student?</target>
+        <target state="translated">如何更改学生的学习时间？</target>
       </trans-unit>
       <trans-unit id="a8b110d308f84783e8f7b8ec3f441206dbefc360" datatype="html">
         <source>Find the student.</source>
@@ -4263,7 +4266,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="needs-translation">Find the student.</target>
+        <target state="translated">找到学生</target>
       </trans-unit>
       <trans-unit id="5160d5b8364d4cce587256880224e695f6ed90e1" datatype="html">
         <source>Click the "Period" link.</source>
@@ -4271,7 +4274,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">81</context>
         </context-group>
-        <target state="needs-translation">Click the "Period" link.</target>
+        <target state="translated">单击“课时”链接</target>
       </trans-unit>
       <trans-unit id="53b4864816bce90f3e8063cad9dcf3e17ff0d6a8" datatype="html">
         <source>A popup will show up that will allow you to choose a different period for the student.</source>
@@ -4279,7 +4282,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="needs-translation">A popup will show up that will allow you to choose a different period for the student.</target>
+        <target state="translated">这时将显示一个弹出窗口，允许您为学生选择不同的学习时间段。</target>
       </trans-unit>
       <trans-unit id="f353c2c7b347f7afe8c9531375d467d1a71ce91f" datatype="html">
         <source>Choose a different period.</source>
@@ -4287,7 +4290,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">83</context>
         </context-group>
-        <target state="needs-translation">Choose a different period.</target>
+        <target state="translated">选择不同的课时</target>
       </trans-unit>
       <trans-unit id="d7f5dbf0fe2a5617bcb850bda0f3fa07a8d43b9e" datatype="html">
         <source>Click "Save Changes".</source>
@@ -4295,7 +4298,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">84</context>
         </context-group>
-        <target state="needs-translation">Click "Save Changes".</target>
+        <target state="translated">点击“保存更改”</target>
       </trans-unit>
       <trans-unit id="a8059e31694578c1b0344a76a345357dd60e8f01" datatype="html">
         <source>Warning</source>
@@ -4303,7 +4306,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">85</context>
         </context-group>
-        <target state="needs-translation">Warning</target>
+        <target state="translated">警告</target>
       </trans-unit>
       <trans-unit id="4ad84d4f3bbc9a37b27cd1ff908aea5fa83dccf3" datatype="html">
         <source>If you move a student to a different period, they will lose all of their work.</source>
@@ -4311,7 +4314,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">85</context>
         </context-group>
-        <target state="needs-translation">If you move a student to a different period, they will lose all of their work.</target>
+        <target state="translated">如果您将学生转移到另一个课时，他将失去所有工作。</target>
       </trans-unit>
       <trans-unit id="bfe729cbf22d109dbf516f23ddff904b60f0b601" datatype="html">
         <source>I do not remember my teacher access code that students need to create their account for my new students.</source>
@@ -4319,7 +4322,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="needs-translation">I do not remember my teacher access code that students need to create their account for my new students.</target>
+        <target state="translated">我不记得学生需要的教师访问代码了，我需要为我的新学生创建他们的帐户。</target>
       </trans-unit>
       <trans-unit id="800efa41db8f7709cb535c6d48b3f49f603d634c" datatype="html">
         <source>The Access Code will be displayed below the run title.</source>
@@ -4327,7 +4330,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">The Access Code will be displayed below the run title.</target>
+        <target state="translated">访问代码将时钟显示在项目标题下方。</target>
       </trans-unit>
       <trans-unit id="e23e4609edb082ee01454228ae34637e0e21f82a" datatype="html">
         <source>When should I set up my project run?</source>
@@ -4335,7 +4338,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">95</context>
         </context-group>
-        <target state="needs-translation">When should I set up my project run?</target>
+        <target state="translated">我应该什么时候设置项目运行？</target>
       </trans-unit>
       <trans-unit id="3b669d1c2b153fe50d2f46ade325daca573deb5e" datatype="html">
         <source>You need to set up your project run anytime before the students can start working on the project. They will need the Access Code for the run in order to start working.</source>
@@ -4343,7 +4346,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
-        <target state="needs-translation">You need to set up your project run anytime before the students can start working on the project. They will need the Access Code for the run in order to start working.</target>
+        <target state="translated">您需要在学生开始处理项目之前及时设置项目运行。 他们将需要运行的访问代码才能开始工作。</target>
       </trans-unit>
       <trans-unit id="61504e3160c50523130413ebf4b97bf35a3c7eb8" datatype="html">
         <source>How long does it take to run a project?</source>
@@ -4351,7 +4354,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">99</context>
         </context-group>
-        <target state="needs-translation">How long does it take to run a project?</target>
+        <target state="translated">运行项目需要多长时间？</target>
       </trans-unit>
       <trans-unit id="f6117a2f6b2cc6e0e1486862c4d224d971012416" datatype="html">
         <source>Project durations vary from about 3 days to 10 days. Some projects may display an estimation of the number of hours it will take for students to complete the project.</source>
@@ -4359,7 +4362,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
-        <target state="needs-translation">Project durations vary from about 3 days to 10 days. Some projects may display an estimation of the number of hours it will take for students to complete the project.</target>
+        <target state="translated">项目持续时间从大约3天到10天不等。 有些项目可能会显示学生完成项目所需的小时数。</target>
       </trans-unit>
       <trans-unit id="3702fe4b7cd0484bfe65aaa4a1d7ecc2befd1845" datatype="html">
         <source>Can I shorten a project run to 1 or 2 days?</source>
@@ -4367,7 +4370,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">103</context>
         </context-group>
-        <target state="needs-translation">Can I shorten a project run to 1 or 2 days?</target>
+        <target state="translated">我可以将项目运行时间缩短到1天或2天吗？</target>
       </trans-unit>
       <trans-unit id="0c2c1379edf193d2ea730116d589f5e38871ffad" datatype="html">
         <source>It is not recommended to shorten a project. Each project has been carefully designed to lead the student through an inquiry process and cutting it short will result in a less satisfactory educational student experience. Nevertheless, if you are under a time constraint and knowledgeable of the project topic, you could customize the project and shorten it to your specific needs.</source>
@@ -4375,7 +4378,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">105</context>
         </context-group>
-        <target state="needs-translation">It is not recommended to shorten a project. Each project has been carefully designed to lead the student through an inquiry process and cutting it short will result in a less satisfactory educational student experience. Nevertheless, if you are under a time constraint and knowledgeable of the project topic, you could customize the project and shorten it to your specific needs.</target>
+        <target state="translated">我们不建议缩短项目。 每个项目都经过精心设计，引导学生完成一个探究过程，缩短学习时间会导致学生对学习体验不太满意。 但是，如果您具有时间限制并且对项目主题有所了解，则可以自定义项目并将其缩短以满足您的特定需求。</target>
       </trans-unit>
       <trans-unit id="3024ecf162acff3ec72fe6d47aee6bf2ea097db3" datatype="html">
         <source>Where do I find out about lesson plans and standards for WISE projects?</source>
@@ -4383,7 +4386,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="needs-translation">Where do I find out about lesson plans and standards for WISE projects?</target>
+        <target state="translated">我在哪里可以找到有关WISE项目的课程计划和标准？</target>
       </trans-unit>
       <trans-unit id="62eba7a349fc52a73bcc8fa453b5820324eed7a6" datatype="html">
         <source>Find a project you would like to learn about.</source>
@@ -6914,7 +6917,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Hi class! Please complete the "<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>" WISE unit. (Access Code: <x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>)</target>
+        <target state="translated">你好，请完成 "<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>" WISE单元. (Access Code: <x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>)</target>
       </trans-unit>
       <trans-unit id="8447ecc2ee7816373dfb3a113b6e390d89b658b7" datatype="html">
         <source> (Section <x id="INTERPOLATION" equiv-text="{{section}}"/>)</source>
@@ -7066,7 +7069,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-run-list-item/teacher-run-list-item.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Class Periods:</target>
+        <target state="translated">课程时间：</target>
       </trans-unit>
     </body>
   </file>
