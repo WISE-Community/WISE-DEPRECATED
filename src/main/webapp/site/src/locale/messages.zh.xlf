@@ -4465,7 +4465,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">126</context>
         </context-group>
-        <target state="needs-translation">Enter a period name in the "Add New Period" field.</target>
+        <target state="translated">在“添加新课时”字段中输入课时名称。</target>
       </trans-unit>
       <trans-unit id="df671da9712c9c220f2219c80e8eb13d8c591d09" datatype="html">
         <source>Click "Add Period".</source>
@@ -4473,7 +4473,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="needs-translation">Click "Add Period".</target>
+        <target state="translated">单击“添加课时”</target>
       </trans-unit>
       <trans-unit id="33b8b8009eda1df67d154a725b9cd11e690a5405" datatype="html">
         <source>How do I delete a period after creating a run?</source>
@@ -4481,7 +4481,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">129</context>
         </context-group>
-        <target state="needs-translation">How do I delete a period after creating a run?</target>
+        <target state="translated">如何在创建运行后删除课时？</target>
       </trans-unit>
       <trans-unit id="bb7ab3ec40a26c50c521d920bb1d22eec80d5880" datatype="html">
         <source>Find the period you want to delete and click the "Delete" button next to it.</source>
@@ -4489,7 +4489,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">135</context>
         </context-group>
-        <target state="needs-translation">Find the period you want to delete and click the "Delete" button next to it.</target>
+        <target state="translated">找到要删除的课时，然后单击旁边的“删除”按钮。</target>
       </trans-unit>
       <trans-unit id="10ea9b60d7c7d6dd481af2b5d1920d07f4e84cc5" datatype="html">
         <source>Note: You are not allowed to delete a period that has students in it.</source>
@@ -4497,7 +4497,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">136</context>
         </context-group>
-        <target state="needs-translation">Note: You are not allowed to delete a period that has students in it.</target>
+        <target state="translated">注意：您不能删除包含学生的课时。</target>
       </trans-unit>
       <trans-unit id="4004c45063f2adf542a30c59d71e6a9b0b1a7587" datatype="html">
         <source>What if I run out of computer lab time but some of my students are not finished with the project?</source>
@@ -4505,7 +4505,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">138</context>
         </context-group>
-        <target state="needs-translation">What if I run out of computer lab time but some of my students are not finished with the project?</target>
+        <target state="translated">如果我的计算机实验室时间不足，但一些学生还没有完成项目怎么办？</target>
       </trans-unit>
       <trans-unit id="e42c6ee16c0475e7cd0a418736dd8da66fdde98f" datatype="html">
         <source>WISE is a web-based learning environments, so students can sign in from a computer at school or at home. This means that students can complete the project from any home or community based computer, per the teacher's discretion.</source>
@@ -4513,7 +4513,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">140</context>
         </context-group>
-        <target state="needs-translation">WISE is a web-based learning environments, so students can sign in from a computer at school or at home. This means that students can complete the project from any home or community based computer, per the teacher's discretion.</target>
+        <target state="translated">WISE是一个基于网络的学习环境，因此学生可以从学校或家中的计算机登录。 这意味着学生可以根据教师的设定，从任何家庭或社区计算机完成项目。</target>
       </trans-unit>
       <trans-unit id="a40fe31275b2daa3205d75bd58536d5a7830f3e6" datatype="html">
         <source>How do I review and grade student work?</source>
@@ -4521,7 +4521,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">144</context>
         </context-group>
-        <target state="needs-translation">How do I review and grade student work?</target>
+        <target state="translated">我如何审查和评估学生的作业？</target>
       </trans-unit>
       <trans-unit id="6d1b5c10cbc1d79f81c60e7c39c78579489cbf7c" datatype="html">
         <source>Here you will be able to look at your students' work.</source>
@@ -4529,7 +4529,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">149</context>
         </context-group>
-        <target state="needs-translation">Here you will be able to look at your students' work.</target>
+        <target state="translated">在此处，您可以看到学生的作业。</target>
       </trans-unit>
       <trans-unit id="ee4f7ca95b6b6fab1891ae6d1e2228eed8a81a44" datatype="html">
         <source>On the left sidebar you can choose to look at the work by step by clicking "Grade By Step" or you can choose to look at the work by team by clicking "Grade By Team".</source>
@@ -4537,7 +4537,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">150</context>
         </context-group>
-        <target state="needs-translation">On the left sidebar you can choose to look at the work by step by clicking "Grade By Step" or you can choose to look at the work by team by clicking "Grade By Team".</target>
+        <target state="translated">在左侧栏目上，您可以选择通过单击“按步骤分级”逐步查看作业，也可以选择通过单击“按团队分级”按团队查看作业。</target>
       </trans-unit>
       <trans-unit id="01d297ec79e8da8648c32bea29cc49b500480938" datatype="html">
         <source>Next to each student's work, you will be able to give them a score and comment.</source>
