@@ -5503,7 +5503,7 @@
           <context context-type="sourcefile">app/login/login-google-user-not-found/login-google-user-not-found.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-        <target state="needs-translation">Your Google User ID was not found in WISE.</target>
+        <target state="translated">我们在WISE中找不到您的Google用户账号。</target>
       </trans-unit>
       <trans-unit id="69780389024fe4b31a860424a4ca428609fdde0f" datatype="html">
         <source>What's New?</source>
@@ -5511,7 +5511,7 @@
           <context context-type="sourcefile">app/news/news.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">What's New?</target>
+        <target state="translated">有什么新功能？</target>
       </trans-unit>
       <trans-unit id="ca98710638193518e4fe1302f8977d2db4f2b842" datatype="html">
         <source>Show More</source>
@@ -5527,7 +5527,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <target state="needs-translation">Show More</target>
+        <target state="translated">显示更多</target>
       </trans-unit>
       <trans-unit id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Sign In<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
@@ -5536,8 +5536,8 @@
           <context context-type="sourcefile">app/modules/header/header-signin/header-signin.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">
-  <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Sign In<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+        <target state="translated">
+  <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>注册<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>登录<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
 </target>
       </trans-unit>
       <trans-unit id="17f37e96c7b8059b23c07791dca1bdb3f3f6853f" datatype="html">
@@ -5550,7 +5550,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Welcome <x id="INTERPOLATION" equiv-text="{{ user.firstName }}"/>!</target>
+        <target state="translated">欢迎 <x id="INTERPOLATION" equiv-text="{{ user.firstName }}"/>!</target>
       </trans-unit>
       <trans-unit id="d222f6ff9f7e28fdb4e8b2af47898446cf2eafe4" datatype="html">
         <source>Account Menu</source>
@@ -5562,7 +5562,7 @@
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Account Menu</target>
+        <target state="translated">账户菜单</target>
       </trans-unit>
       <trans-unit id="879fef27271d8247d791381cf1f9bb0eb8974166" datatype="html">
         <source>Account avatar</source>
@@ -5574,7 +5574,7 @@
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Account avatar</target>
+        <target state="translated">账号头像</target>
       </trans-unit>
       <trans-unit id="c4e3e4170654ee5a353d29a0c34b8008cd25a635" datatype="html">
         <source>Student Home</source>
@@ -5586,7 +5586,7 @@
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Student Home</target>
+        <target state="translated">学生主页</target>
       </trans-unit>
       <trans-unit id="4c42d0c12ddaebc2efdfc00bbf1d714bf385f278" datatype="html">
         <source>Teacher Home</source>
@@ -5598,7 +5598,7 @@
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Teacher Home</target>
+        <target state="translated">教师主页</target>
       </trans-unit>
       <trans-unit id="d3781ad331fdd0bc9055c45a41664ac467de63af" datatype="html">
         <source>Edit Profile</source>
@@ -5618,7 +5618,7 @@
           <context context-type="sourcefile">app/teacher/account/edit/edit.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Edit Profile</target>
+        <target state="translated">编辑个人资料</target>
       </trans-unit>
       <trans-unit id="ea7254c3121598c9cfd72210e1336473441546e3" datatype="html">
         <source>Researcher Tools</source>
@@ -5626,7 +5626,7 @@
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">56</context>
         </context-group>
-        <target state="needs-translation">Researcher Tools</target>
+        <target state="translated">研究人员工具</target>
       </trans-unit>
       <trans-unit id="593d1ae1c4b71457eda8476df2bb52624a3c6e74" datatype="html">
         <source>Admin Tools</source>
@@ -5634,7 +5634,7 @@
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="needs-translation">Admin Tools</target>
+        <target state="translated">管理工具</target>
       </trans-unit>
       <trans-unit id="85b79c9064aed1ead31ace985f31aa1363f6bdaf" datatype="html">
         <source>Help</source>
@@ -5646,7 +5646,7 @@
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">78</context>
         </context-group>
-        <target state="needs-translation">Help</target>
+        <target state="translated">帮助</target>
       </trans-unit>
       <trans-unit id="640eec093c685babaa3265137215e3cc92ad704d" datatype="html">
         <source>Sign Out</source>
@@ -5654,7 +5654,7 @@
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">83</context>
         </context-group>
-        <target state="needs-translation">Sign Out</target>
+        <target state="translated">退出</target>
       </trans-unit>
       <trans-unit id="36a606470097ddf0c32a250c8a902441729ca8ca" datatype="html">
         <source>Add Unit</source>
@@ -5666,7 +5666,7 @@
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="needs-translation">Add Unit</target>
+        <target state="translated">添加单元</target>
       </trans-unit>
       <trans-unit id="190a0caf6ddac8b5347008c55791abc9e26655d8" datatype="html">
         <source>Access Code</source>
@@ -5674,7 +5674,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Access Code</target>
+        <target state="translated">访问代码</target>
       </trans-unit>
       <trans-unit id="7064e250d464079d38eeeb1f35293ff374673d7f" datatype="html">
         <source>Invalid Access Code</source>
@@ -5682,7 +5682,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Invalid Access Code</target>
+        <target state="translated">无效访问代码</target>
       </trans-unit>
       <trans-unit id="708f75da14455350322691fa2ad7543355b7f372" datatype="html">
         <source>You have already added this unit.</source>
@@ -5690,7 +5690,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">You have already added this unit.</target>
+        <target state="translated">您已添加此单元。</target>
       </trans-unit>
       <trans-unit id="38b627ddc0611e9f2027cb255872829f3c7917fc" datatype="html">
         <source>Choose Period</source>
@@ -5698,7 +5698,10 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Choose Period</target>
+        <target state="translated">选择课时</target>
+        <alt-trans>
+          <target>选择时间</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="a118959daf55b5584609654f7d5ee9e443b961d0" datatype="html">
         <source>Add unit</source>
@@ -5706,7 +5709,7 @@
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Add unit</target>
+        <target state="translated">添加单元</target>
       </trans-unit>
       <trans-unit id="2278f83021a218f6d93e2cea52ba171c864b7b9d" datatype="html">
         <source>Hey there! Looks like you don't have any WISE units yet.</source>
