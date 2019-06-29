@@ -2565,7 +2565,7 @@
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Filter by <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (NGSS).</target>
+        <target state="translated">筛选，由 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科学标准<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (NGSS)。</target>
       </trans-unit>
       <trans-unit id="06c663bf1474713f57551123a46b34318543b67d" datatype="html">
         <source>Reset</source>
@@ -2581,7 +2581,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
-        <target state="needs-translation">Reset</target>
+        <target state="translated">重新设置</target>
       </trans-unit>
       <trans-unit id="e2f5ddbb1c62ee08bb0cc5a18ecba95e1e621760" datatype="html">
         <source>Discipline</source>
@@ -2589,7 +2589,7 @@
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
           <context context-type="linenumber">36</context>
         </context-group>
-        <target state="needs-translation">Discipline</target>
+        <target state="translated">学科：</target>
       </trans-unit>
       <trans-unit id="b26db160af51478944575eeb0137e167ab054cca" datatype="html">
         <source>DCI Arrangement</source>
@@ -2597,7 +2597,7 @@
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
-        <target state="needs-translation">DCI Arrangement</target>
+        <target state="translated">学科核心理念安排</target>
       </trans-unit>
       <trans-unit id="b17d72cdba2d53ad1c4952c8c3ba0d70ffc7ed1d" datatype="html">
         <source>Performance Expectation</source>
@@ -2605,7 +2605,7 @@
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation">Performance Expectation</target>
+        <target state="translated">绩效期望</target>
       </trans-unit>
       <trans-unit id="5fb96f87d294d558a0de557ff5cd2049b9e3d635" datatype="html">
         <source>What is Community Built?</source>
@@ -2613,7 +2613,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-        <target state="needs-translation">What is Community Built?</target>
+        <target state="translated">什么是社区建设？</target>
       </trans-unit>
       <trans-unit id="4f6276982b612e3be0a1c89c456d29506016d863" datatype="html">
         <source>No community designed units found.</source>
@@ -2621,7 +2621,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="needs-translation">No community designed units found.</target>
+        <target state="translated">未找到社区设计的课程单元。</target>
       </trans-unit>
       <trans-unit id="481add1796f59f7dfdcfb8e69283dd39230d67e9" datatype="html">
         <source>Community Built</source>
@@ -2629,7 +2629,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Community Built</target>
+        <target state="translated">社区建设</target>
       </trans-unit>
       <trans-unit id="adc984d8f77dc423434e753052fcf8b519a4d69d" datatype="html">
         <source>The "Community Built" library contains units that were designed and contributed by WISE community members. Want to publicly share your custom unit? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</source>
