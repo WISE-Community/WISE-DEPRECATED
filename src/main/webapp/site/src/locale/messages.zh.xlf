@@ -6616,7 +6616,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.</target>
+        <target state="translated">您提交的无效验证码太多次了。 出于安全原因，我们将更改密码的功能锁定10分钟。 10分钟后，您可以再试一次。</target>
       </trans-unit>
       <trans-unit id="5e14de974094b2e38989db1da25c34badbcb0888" datatype="html">
         <source>The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</source>
@@ -6624,7 +6624,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</target>
+        <target state="translated">服务器发生错误，无法向您发送电子邮件。 请再试一次。 如果错误继续发生，请与我们联系。</target>
       </trans-unit>
       <trans-unit id="4b2d0bc81118fc043b3b4474eb9924070cc22777" datatype="html">
         <source>We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.</source>
@@ -6632,7 +6632,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.</target>
+        <target state="translated">我们未找到与该电子邮件关联的WISE帐户。 请确保您已正确输入您的电子邮件地址。</target>
       </trans-unit>
       <trans-unit id="0acdb2c552977a58eb0966e2f4a82f443ad2916e" datatype="html">
         <source>The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</source>
@@ -6640,7 +6640,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</target>
+        <target state="translated">服务器发生错误，无法向您发送电子邮件。 请再试一次。 如果错误继续发生，请与我们联系。</target>
       </trans-unit>
       <trans-unit id="5d6fe85e070e0a0291dcb60f4a95ac1cb9a4a991" datatype="html">
         <source>An error occurred: </source>
@@ -6648,7 +6648,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">An error occurred: </target>
+        <target state="translated">发生错误： </target>
       </trans-unit>
       <trans-unit id="5093f1c7a1a2d4ef9a87d65d94c536a3d6b1e175" datatype="html">
         <source>Backend returned code <x id="INTERPOLATION" equiv-text="{{status}}"/>, body was: <x id="INTERPOLATION_1" equiv-text="{{error}}"/></source>
@@ -6656,7 +6656,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Backend returned code <x id="INTERPOLATION" equiv-text="{{status}}"/>, body was: <x id="INTERPOLATION_1" equiv-text="{{error}}"/></target>
+        <target state="translated">后端返回代码 <x id="INTERPOLATION" equiv-text="{{status}}"/>, body was: <x id="INTERPOLATION_1" equiv-text="{{error}}"/></target>
       </trans-unit>
       <trans-unit id="050662d81fa6f59adbcc1190eee2435910b9e927" datatype="html">
         <source>An error occurred. Please check your connection and try again.</source>
@@ -6664,7 +6664,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">An error occurred. Please check your connection and try again.</target>
+        <target state="translated">发生未知错误。 请检查您的网络连接再试一次。</target>
       </trans-unit>
       <trans-unit id="d936b9392ac810869ea9ae7c392a327b9267b0fd" datatype="html">
         <source>License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.</source>
@@ -6672,7 +6672,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/library-project-details/library-project-details.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.</target>
+        <target state="translated">许可证适用于作者创建的原始内容。 作者负责链接或包含在本作品中的任何第三方内容的使用权和所有权。</target>
       </trans-unit>
       <trans-unit id="dbe9ffa58b07d48dc33f34c86b15c3ce33bbd2c2" datatype="html">
         <source>Unit Details</source>
@@ -6680,7 +6680,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/library-project/library-project.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Unit Details</target>
+        <target state="translated">单元详情</target>
       </trans-unit>
       <trans-unit id="615b3b60d98013117fa5ced450b1345d5ba5262d" datatype="html">
         <source>Show:</source>
@@ -6688,7 +6688,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Show:</target>
+        <target state="translated">显示：</target>
       </trans-unit>
       <trans-unit id="ce3cefb1cd0099aa5003dda16ec9eb21fd8ba789" datatype="html">
         <source>Next page</source>
@@ -6696,7 +6696,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Next page</target>
+        <target state="translated">下一页</target>
       </trans-unit>
       <trans-unit id="575e782fd27f2ee70a034a775efe9ad162472250" datatype="html">
         <source>Previous page</source>
@@ -6704,7 +6704,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Previous page</target>
+        <target state="translated">上一页</target>
       </trans-unit>
       <trans-unit id="dddb2fd891082b5905adb176fbb382e6ccf3e10f" datatype="html">
         <source>0 of <x id="INTERPOLATION" equiv-text="{{total}}"/></source>
@@ -6712,7 +6712,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">0 of <x id="INTERPOLATION" equiv-text="{{total}}"/></target>
+        <target state="translated">0 of <x id="INTERPOLATION" equiv-text="{{total}}"/></target>
       </trans-unit>
       <trans-unit id="1fa889a57be6df3fc55b83d402af3b2933b89acd" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{start}}"/> - <x id="INTERPOLATION_1" equiv-text="{{end}}"/> of <x id="INTERPOLATION_2" equiv-text="{{total}}"/></source>
@@ -6720,7 +6720,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation"><x id="INTERPOLATION" equiv-text="{{start}}"/> - <x id="INTERPOLATION_1" equiv-text="{{end}}"/> of <x id="INTERPOLATION_2" equiv-text="{{total}}"/></target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{start}}"/> - <x id="INTERPOLATION_1" equiv-text="{{end}}"/> of <x id="INTERPOLATION_2" equiv-text="{{total}}"/></target>
       </trans-unit>
       <trans-unit id="46e4ba42c378685244d606204ade725e243a5572" datatype="html">
         <source>Sharing permissions updated for <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
@@ -6740,7 +6740,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/share-run-dialog/share-run-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Sharing permissions updated for <x id="INTERPOLATION" equiv-text="{{username}}"/>.</target>
+        <target state="translated">共享权限更新<x id="INTERPOLATION" equiv-text="{{username}}"/>.</target>
       </trans-unit>
       <trans-unit id="33b9dd7d7bbb965d7208dcf0e33cc0545a3030a2" datatype="html">
         <source>Added shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
@@ -6748,7 +6748,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Added shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</target>
+        <target state="translated">添加共享的教师：<x id="INTERPOLATION" equiv-text="{{username}}"/></target>
       </trans-unit>
       <trans-unit id="a468fe0f9732107893d00498816aaf811c0e4190" datatype="html">
         <source>Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
@@ -6756,7 +6756,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</target>
+        <target state="translated">清除共享的教师：<x id="INTERPOLATION" equiv-text="{{username}}"/></target>
       </trans-unit>
       <trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
         <source>Password changed.</source>
@@ -6764,7 +6764,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/edit-password/edit-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Password changed.</target>
+        <target state="translated">密码已更改</target>
       </trans-unit>
       <trans-unit id="c8f0dbda0d557e58e54598c7d29d719d6c764413" datatype="html">
         <source>Select an option</source>
@@ -6772,7 +6772,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/select-menu/select-menu.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Select an option</target>
+        <target state="translated">请选择一个选项</target>
       </trans-unit>
       <trans-unit id="18f3bafdc69b800737e303bc1cb0753bd9dd3f32" datatype="html">
         <source>Female</source>
@@ -6780,7 +6780,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Female</target>
+        <target state="translated">女</target>
       </trans-unit>
       <trans-unit id="097b5dfee5665aa0f7daba8b696acecde6445474" datatype="html">
         <source>Male</source>
@@ -6788,7 +6788,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Male</target>
+        <target state="translated">男</target>
       </trans-unit>
       <trans-unit id="f60d7936217a148dd26aae9c64f8d676369be901" datatype="html">
         <source>No Answer/Other</source>
@@ -6796,7 +6796,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">No Answer/Other</target>
+        <target state="translated">没有答案/其他</target>
       </trans-unit>
       <trans-unit id="a318c6afca84af8f01f017d075ff1c3f6257e4f3" datatype="html">
         <source>Elementary School</source>
@@ -6808,7 +6808,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Elementary School</target>
+        <target state="translated">小学</target>
       </trans-unit>
       <trans-unit id="09637ca64b2d5d3a393bd1ab2713c0bd4edbcc95" datatype="html">
         <source>Middle School</source>
