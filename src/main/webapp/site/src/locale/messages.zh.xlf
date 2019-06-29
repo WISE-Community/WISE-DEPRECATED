@@ -3396,7 +3396,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">94</context>
         </context-group>
-        <target state="needs-translation">Password required</target>
+        <target state="translated">密码是必填的</target>
       </trans-unit>
       <trans-unit id="c1b7e6d75ff4285c7636c67e5ef259629b81725b" datatype="html">
         <source>Confirm Password</source>
@@ -3416,7 +3416,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">99</context>
         </context-group>
-        <target state="needs-translation">Confirm Password</target>
+        <target state="translated">确认密码</target>
       </trans-unit>
       <trans-unit id="3979fc2476b643d89e8a9f38d1bbc3014c4a4891" datatype="html">
         <source>Password Changed</source>
@@ -3428,7 +3428,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-complete/forgot-teacher-password-complete.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Password Changed</target>
+        <target state="translated">密码已更改</target>
       </trans-unit>
       <trans-unit id="2784275ed58bc0769631888b08b14612543c64ec" datatype="html">
         <source>Your password has been successfully changed. Click the button below to sign in.</source>
@@ -3440,7 +3440,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-complete/forgot-teacher-password-complete.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Your password has been successfully changed. Click the button below to sign in.</target>
+        <target state="translated">你的密码已成功更改。 请点击下面的按钮重新登录</target>
       </trans-unit>
       <trans-unit id="5c112eccf2cd10cf48736fb8fd2c18c1788b6bb9" datatype="html">
         <source>Email Sent</source>
@@ -3448,7 +3448,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-username-complete/forgot-teacher-username-complete.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Email Sent</target>
+        <target state="translated">邮件已发送</target>
       </trans-unit>
       <trans-unit id="d435ebc318d809e47590e548156cb48e005bf444" datatype="html">
         <source>Your username has been sent to your email. Once you have received your username, you can use the button below to sign in.</source>
