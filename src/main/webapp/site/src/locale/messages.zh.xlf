@@ -6229,7 +6229,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">Edit Content</target>
+        <target state="translated">编辑内容</target>
       </trans-unit>
       <trans-unit id="e438ba78cbafdb5bcbce0820bfaad995a504f222" datatype="html">
         <source>Display Name</source>
@@ -6237,7 +6237,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Display Name</target>
+        <target state="translated">显示名称</target>
       </trans-unit>
       <trans-unit id="a46da4e5dedf077f8ee26fa4af926df0fc909e0c" datatype="html">
         <source>This is the name your students will see.</source>
@@ -6245,7 +6245,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation">This is the name your students will see.</target>
+        <target state="translated">这是您的学生将看到的名称。</target>
       </trans-unit>
       <trans-unit id="8633775b7643de744fc8b916ccef6b1c8700e83e" datatype="html">
         <source>Display Name required</source>
@@ -6253,7 +6253,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="needs-translation">Display Name required</target>
+        <target state="translated">显示名字是必需的!</target>
       </trans-unit>
       <trans-unit id="de4fdef260a86fc9c409a2d4562e8910d93e2b6d" datatype="html">
         <source>Trouble Signing In</source>
@@ -6265,7 +6265,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Trouble Signing In</target>
+        <target state="translated">无法登录</target>
       </trans-unit>
       <trans-unit id="84ca5513dca4fe431338da8c2b1f43d8c0d075cb" datatype="html">
         <source>Need Help Using WISE</source>
@@ -6277,7 +6277,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Need Help Using WISE</target>
+        <target state="translated">在使用WISE需要帮助</target>
       </trans-unit>
       <trans-unit id="6a6f97816b45d44504a072d73938c951bbd01810" datatype="html">
         <source>Problems with a WISE Unit</source>
@@ -6289,7 +6289,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Problems with a WISE Unit</target>
+        <target state="translated">WISE单元的问题</target>
       </trans-unit>
       <trans-unit id="f1807ecd6fbc3fe83f80ac9aa16bc7070b8b8710" datatype="html">
         <source>Feedback to WISE</source>
@@ -6301,7 +6301,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Feedback to WISE</target>
+        <target state="translated">反馈给WISE平台</target>
       </trans-unit>
       <trans-unit id="c2a9de3714f5767b174d0424bc8abe2dc37acc41" datatype="html">
         <source>Other</source>
@@ -6321,7 +6321,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Other</target>
+        <target state="translated">其他</target>
       </trans-unit>
       <trans-unit id="f00f3d70974c43864db310ec95f4f39f7db4889d" datatype="html">
         <source>Need Help with Authoring</source>
@@ -6329,7 +6329,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Need Help with Authoring</target>
+        <target state="translated">需要创作帮助</target>
       </trans-unit>
       <trans-unit id="5b010f83da62819ebc8fe9ef4617d06655d9956d" datatype="html">
         <source>Password cannot be blank. Please try again.</source>
