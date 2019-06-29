@@ -6377,7 +6377,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.</target>
+        <target state="translated">我们找不到该用户名。 请确保正确输入并重新尝试。 如果您忘记了用户名，请使用下面的忘记用户名选项。</target>
       </trans-unit>
       <trans-unit id="0034d12a18c80ed8071f50dd902cc8bfc5694397" datatype="html">
         <source>01 (Jan)</source>
@@ -6389,7 +6389,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">01 (Jan)</target>
+        <target state="translated">一月</target>
       </trans-unit>
       <trans-unit id="0931fb286156dee1394c7e61710a4f1ee029bec1" datatype="html">
         <source>02 (Feb)</source>
@@ -6401,7 +6401,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">02 (Feb)</target>
+        <target state="translated">二月</target>
       </trans-unit>
       <trans-unit id="fb954f4c2bd25a40575cbbfd7dabf8c21413ff09" datatype="html">
         <source>03 (Mar)</source>
@@ -6413,7 +6413,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">03 (Mar)</target>
+        <target state="translated">三月</target>
       </trans-unit>
       <trans-unit id="059ffe65f2882d4fa6aec1f22cd8bff61c648016" datatype="html">
         <source>04 (Apr)</source>
@@ -6425,7 +6425,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">04 (Apr)</target>
+        <target state="translated">四月</target>
       </trans-unit>
       <trans-unit id="788337d5af8315eb94f8eeb875152947d81ed970" datatype="html">
         <source>05 (May)</source>
@@ -6437,7 +6437,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">05 (May)</target>
+        <target state="translated">五月</target>
       </trans-unit>
       <trans-unit id="e78cea38fcaa585fd19d98676e1812b5d5837d34" datatype="html">
         <source>06 (Jun)</source>
@@ -6449,7 +6449,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">06 (Jun)</target>
+        <target state="translated">六月</target>
       </trans-unit>
       <trans-unit id="ab1bb567d433c94269b4f2875fdd898d7276d5a6" datatype="html">
         <source>07 (Jul)</source>
@@ -6461,7 +6461,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">07 (Jul)</target>
+        <target state="translated">七月</target>
       </trans-unit>
       <trans-unit id="490b1aa4b4768e1596c6c19e8dca77c401247588" datatype="html">
         <source>08 (Aug)</source>
@@ -6473,7 +6473,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">08 (Aug)</target>
+        <target state="translated">八月</target>
       </trans-unit>
       <trans-unit id="06c5170eda5041ce09d9381ca2e5f739c7b6df6e" datatype="html">
         <source>09 (Sep)</source>
@@ -6485,7 +6485,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">09 (Sep)</target>
+        <target state="translated">九月</target>
       </trans-unit>
       <trans-unit id="3245dcf86cb2ee2fba808cce33907d7f67b57f70" datatype="html">
         <source>10 (Oct)</source>
@@ -6497,7 +6497,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">10 (Oct)</target>
+        <target state="translated">十月</target>
       </trans-unit>
       <trans-unit id="bc64ec063b9c3a1adfa2f4134e0b1cbcb0c6e02e" datatype="html">
         <source>11 (Nov)</source>
@@ -6509,7 +6509,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">11 (Nov)</target>
+        <target state="translated">十一月</target>
       </trans-unit>
       <trans-unit id="fac808901a559404cc61fb3322fd0c351f1aa923" datatype="html">
         <source>12 (Dec)</source>
@@ -6521,7 +6521,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">12 (Dec)</target>
+        <target state="translated">十二月</target>
       </trans-unit>
       <trans-unit id="7d2b424cec500d06336a5c74c64b0c93e126cbff" datatype="html">
         <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
@@ -6529,7 +6529,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can't find your account, ask a teacher for help or contact us for assistance.</target>
+        <target state="translated">我们未找到与您提供的信息相匹配的任何用户名。 请确保您输入的信息正确无误。 如果您找不到自己的帐户，请向老师寻求帮助或与我们联系以获取帮助。</target>
       </trans-unit>
       <trans-unit id="93256df87c3e35873c0b60f3c2478c9651291881" datatype="html">
         <source>We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.</source>
@@ -6537,7 +6537,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.</target>
+        <target state="translated">我们找到了匹配的用户名。 请选择它以登录。如果此用户名不是您的用户名，请向老师寻求帮助或与我们联系以获取帮助。</target>
       </trans-unit>
       <trans-unit id="6b6d7c8be10b5e98805335844750cd1035e23f8d" datatype="html">
         <source>We found multiple usernames that match. If one of these is yours, select it to log in. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
@@ -6545,7 +6545,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">We found multiple usernames that match. If one of these is yours, select it to log in. If you can't find your account, ask a teacher for help or contact us for assistance.</target>
+        <target state="translated">我们发现了多个匹配的用户名。 如果其中一个是您的，请选择它以登录。如果您找不到您的帐户，请向老师寻求帮助或联系我们寻求帮助。</target>
       </trans-unit>
       <trans-unit id="bc97abab83efdcc1facad857f5ca74f8e420000d" datatype="html">
         <source>The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.</source>
@@ -6557,7 +6557,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.</target>
+        <target state="translated">该验证码已过期。 验证码有效期为10分钟。 请返回“教师忘记密码”页面以生成新的验证码。</target>
+        <alt-trans>
+          <target>该验证码已过期。 验证码有效期为10分钟。 请返回“教师忘记密码”页面以生成新的密码。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="4a0bbc0b76303940c748153ce1b20a3911abad6b" datatype="html">
         <source>The verification code is invalid. Please try again.</source>
@@ -6569,7 +6572,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">The verification code is invalid. Please try again.</target>
+        <target state="translated">该验证码无效。 请再试一次。</target>
       </trans-unit>
       <trans-unit id="a36838ad01418074c9380499aeb8250c051c5067" datatype="html">
         <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.</source>
@@ -6581,7 +6584,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.</target>
+        <target state="translated">您提交的无效验证码太多次了。 出于安全原因，我们将锁定更改密码功能10分钟。 10分钟后，请返回教师忘记密码页面以生成新的验证码。</target>
       </trans-unit>
       <trans-unit id="55cf53e519557dc8c87c01afd630ab40c7546172" datatype="html">
         <source>Password cannot be blank, please enter a password.</source>
@@ -6589,7 +6592,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Password cannot be blank, please enter a password.</target>
+        <target state="translated">密码不能为空，请输入密码。</target>
       </trans-unit>
       <trans-unit id="9ea89a76186e703222a3c0a8c261ef6f81c62791" datatype="html">
         <source>Passwords do not match, please try again.</source>
@@ -6597,7 +6600,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Passwords do not match, please try again.</target>
+        <target state="translated">密码不匹配，请再试一次。</target>
       </trans-unit>
       <trans-unit id="7ff2c787c56ea04e33595ef32a0f23104e3214ae" datatype="html">
         <source>An error occurred, please try again.</source>
@@ -6605,7 +6608,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">An error occurred, please try again.</target>
+        <target state="translated">发生错误，请重新尝试。</target>
       </trans-unit>
       <trans-unit id="108de953d59b965b4454434ac2f8664651c396d5" datatype="html">
         <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.</source>
