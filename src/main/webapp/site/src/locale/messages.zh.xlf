@@ -2214,7 +2214,7 @@
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Legacy Unit</target>
+        <target state="translated">旧版单元</target>
       </trans-unit>
       <trans-unit id="3c2ac8a727b69d981f7f6559cc2fd8d0688ebd76" datatype="html">
         <source>This unit is from an old version of WISE and will eventually be phased out.</source>
@@ -2222,7 +2222,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">36</context>
         </context-group>
-        <target state="needs-translation">This unit is from an old version of WISE and will eventually be phased out.</target>
+        <target state="translated">该单元来自WISE的旧版本，最终将被淘汰。</target>
       </trans-unit>
       <trans-unit id="c38ef07814e33a674bada9fe331ffd114cec319d" datatype="html">
         <source>Discipline:</source>
@@ -2230,7 +2230,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <target state="needs-translation">Discipline:</target>
+        <target state="translated">学科：</target>
       </trans-unit>
       <trans-unit id="4cdcf77b0a246131946d080de95cf21fbd5516a9" datatype="html">
         <source>Features:</source>
@@ -2238,7 +2238,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">Features:</target>
+        <target state="translated">功能：</target>
       </trans-unit>
       <trans-unit id="4a074ee53886e04659f3cec8ec30b94ce5ce717c" datatype="html">
         <source>NGSS Performance Expectations: </source>
@@ -2246,7 +2246,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">NGSS Performance Expectations: </target>
+        <target state="translated">NGSS绩效期望： </target>
       </trans-unit>
       <trans-unit id="e006584d24da002b44d8299a4b831c6de00c916c" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -2254,7 +2254,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="e1a9512fac0019f8aa827c5e846ea6402f43644d" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION_1" equiv-text="{{authorsString}}"/>.</source>
@@ -2262,7 +2262,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION_1" equiv-text="{{authorsString}}"/>.</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION_1" equiv-text="{{authorsString}}"/>.</target>
       </trans-unit>
       <trans-unit id="19812b33be1cdeaa076d46cad963bf90e2fd2eb0" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a copy of <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{parentProject.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (used under <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>).</source>
@@ -2270,7 +2270,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">67</context>
         </context-group>
-        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a copy of <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{parentProject.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (used under <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>).</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a copy of <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{parentProject.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (used under <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>).</target>
       </trans-unit>
       <trans-unit id="41476bcc74edf123139f9d304fc569c7a066b386" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a copy of <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{parentProject.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION_1" equiv-text="{{parentAuthorsString}}"/> (used under <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>).</source>
@@ -2278,7 +2278,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a copy of <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{parentProject.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION_1" equiv-text="{{parentAuthorsString}}"/> (used under <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>).</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a copy of <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{parentProject.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION_1" equiv-text="{{parentAuthorsString}}"/> (used under <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>).</target>
       </trans-unit>
       <trans-unit id="ac0f81713a84217c9bd1d9bb460245d8190b073f" datatype="html">
         <source>More</source>
@@ -2286,7 +2286,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">74</context>
         </context-group>
-        <target state="needs-translation">More</target>
+        <target state="translated">更多</target>
       </trans-unit>
       <trans-unit id="01b7fa43a3428af3967f5ddeb02a21315ec636e4" datatype="html">
         <source>View License</source>
@@ -2294,7 +2294,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">77</context>
         </context-group>
-        <target state="needs-translation">View License</target>
+        <target state="translated">查看许可证</target>
       </trans-unit>
       <trans-unit id="3e2a583f531f7dd9f089f68a6968e444c372c3e8" datatype="html">
         <source>Preview</source>
@@ -2306,7 +2306,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Preview</target>
+        <target state="translated">预览</target>
       </trans-unit>
       <trans-unit id="53c647ed0bda0187e7653c35e0856deea80c268b" datatype="html">
         <source>(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
@@ -2314,7 +2314,7 @@
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
+        <target state="translated">(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="e3ae8640f4d05cb4f78a31cfbf18d5701f41d57e" datatype="html">
         <source>Shared by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></source>
@@ -2322,7 +2322,7 @@
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-        <target state="needs-translation">Shared by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></target>
+        <target state="translated">由<x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/>共享</target>
       </trans-unit>
       <trans-unit id="4bad40355890bcbe1b4003d9fd0632beeffd6580" datatype="html">
         <source>Show project details</source>
@@ -2330,7 +2330,7 @@
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Show project details</target>
+        <target state="translated">显示项目详情</target>
       </trans-unit>
       <trans-unit id="cf981dceeed8f731260f5eff3c51a5ea148cf8fe" datatype="html">
         <source>Share Unit</source>
@@ -2338,7 +2338,7 @@
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Share Unit</target>
+        <target state="translated">分享单元</target>
       </trans-unit>
       <trans-unit id="ee4d90b52495d483667dffbd2236c15b0c722cbb" datatype="html">
         <source>Enter teacher username</source>
@@ -2350,7 +2350,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Enter teacher username</target>
+        <target state="translated">请输入教师用户名</target>
       </trans-unit>
       <trans-unit id="39e715b9ebc52d3b9c9a0b629419034bf1610efa" datatype="html">
         <source>Teacher is already on shared list.</source>
@@ -2362,7 +2362,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Teacher is already on shared list.</target>
+        <target state="translated">老师已经在共享列表中。</target>
       </trans-unit>
       <trans-unit id="cff1428d10d59d14e45edec3c735a27b5482db59" datatype="html">
         <source>Name</source>
@@ -2378,7 +2378,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">36</context>
         </context-group>
-        <target state="needs-translation">Name</target>
+        <target state="translated">名字</target>
       </trans-unit>
       <trans-unit id="53ea2772322e7d4d21515bb0c6dead283f8e18a5" datatype="html">
         <source>Revoke</source>
@@ -2390,7 +2390,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <target state="needs-translation">Revoke</target>
+        <target state="translated">撤销</target>
       </trans-unit>
       <trans-unit id="70f45880fce6ac5d8e468e25e82aefbba8098cfe" datatype="html">
         <source>Permissions</source>
@@ -2402,7 +2402,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">Permissions</target>
+        <target state="translated">权限</target>
       </trans-unit>
       <trans-unit id="e4c62e79146aa053669046c6d0d40e889049f8a1" datatype="html">
         <source>Owner. Full permissions.</source>
@@ -2414,7 +2414,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">Owner. Full permissions.</target>
+        <target state="translated">所有者权限</target>
       </trans-unit>
       <trans-unit id="6bd0461d56d457667267858196994feefee0de48" datatype="html">
         <source>View &amp; Use with Students</source>
