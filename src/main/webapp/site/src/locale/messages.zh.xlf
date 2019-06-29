@@ -2154,7 +2154,7 @@
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Legacy Unit Warning</target>
+        <target state="translated">旧版单元警告</target>
       </trans-unit>
       <trans-unit id="6f526813fe643e11e1e0c4632ab8d782aa2eb1f0" datatype="html">
         <source>WARNING: this is a legacy unit from a version of WISE that is many years old.</source>
@@ -2162,7 +2162,7 @@
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">WARNING: this is a legacy unit from a version of WISE that is many years old.</target>
+        <target state="translated">警告：这是许多年前的WISE版本的旧版单元。</target>
       </trans-unit>
       <trans-unit id="7673ea16907fbb64650af880042cb4e045382160" datatype="html">
         <source>We recommend finding a newer version in the library, as support for classroom implementations of legacy units will be phased out over the coming year. If you cannot find a newer version, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> if you're interested in upgrading the unit. Thanks!</source>
