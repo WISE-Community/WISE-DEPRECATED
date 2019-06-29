@@ -2170,7 +2170,7 @@
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">We recommend finding a newer version in the library, as support for classroom implementations of legacy units will be phased out over the coming year. If you cannot find a newer version, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> if you're interested in upgrading the unit. Thanks!</target>
+        <target state="translated">我们建议在库中找到更新的版本，因为支持旧版单元的课堂实施将在明年逐步取消。 如果找不到更新的版本，<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>请联系我们<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>如果您有兴趣升级单元版本。谢谢！</target>
       </trans-unit>
       <trans-unit id="c90c99f8160be2e6bb39fcba6ae4a0009e652474" datatype="html">
         <source>Proceed Anyway</source>
@@ -2178,7 +2178,7 @@
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Proceed Anyway</target>
+        <target state="translated">仍要继续吗</target>
       </trans-unit>
       <trans-unit id="07ab43ffb10e6bed417b203bfdc02cdda6aa1b61" datatype="html">
         <source>Grade level:</source>
@@ -2186,7 +2186,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Grade level:</target>
+        <target state="translated">年级：</target>
       </trans-unit>
       <trans-unit id="b7d0b2b380f3fd86cdc87454b0758c8dfe0ce49b" datatype="html">
         <source>Duration: <x id="INTERPOLATION" equiv-text="{{ project.metadata.totalTime }}"/></source>
@@ -2194,7 +2194,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">Duration: <x id="INTERPOLATION" equiv-text="{{ project.metadata.totalTime }}"/></target>
+        <target state="translated">持续时间：<x id="INTERPOLATION" equiv-text="{{ project.metadata.totalTime }}"/></target>
       </trans-unit>
       <trans-unit id="e9459a08449fe148a8a37f309d9d5e298e4944ed" datatype="html">
         <source>Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/></source>
@@ -2202,7 +2202,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/></target>
+        <target state="translated">单元ID：<x id="INTERPOLATION" equiv-text="{{ project.id }}"/></target>
       </trans-unit>
       <trans-unit id="59a08e65c39e2cecb841fc7123a77756f52c8db3" datatype="html">
         <source>Legacy Unit</source>
