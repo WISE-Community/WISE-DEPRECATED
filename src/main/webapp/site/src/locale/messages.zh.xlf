@@ -2450,7 +2450,7 @@
           <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">(Unit ID: <x id="INTERPOLATION" equiv-text="{{ data.project.id }}"/>)</target>
+        <target state="translated">(Unit ID: <x id="INTERPOLATION" equiv-text="{{ data.project.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="459457d652be00e6fe313f88d938d4f063c3b3e0" datatype="html">
         <source>Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</source>
@@ -2458,7 +2458,7 @@
           <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</target>
+        <target state="translated">复制会创建一个将出现在“我的单位”中的副本。 您将成为所有者，可以编辑内容并与其他WISE用户共享新单元。</target>
       </trans-unit>
       <trans-unit id="1979da7460819153e11d2078244645d94291b69c" datatype="html">
         <source>Copy</source>
@@ -2470,7 +2470,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Copy</target>
+        <target state="translated">复制</target>
       </trans-unit>
       <trans-unit id="4c49a9bb7a99a9da256c6e678cbb49baa70e268a" datatype="html">
         <source>Edit Classroom Unit</source>
@@ -2478,7 +2478,7 @@
           <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-        <target state="needs-translation">Edit Classroom Unit</target>
+        <target state="translated">编辑课堂单元</target>
       </trans-unit>
       <trans-unit id="b2e61582bbd238946269a615512bdf8a69880cfd" datatype="html">
         <source>(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</source>
@@ -2494,7 +2494,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
+        <target state="translated">(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="7729e322ed636f18b5930ee33fde3b4a10f2e4ce" datatype="html">
         <source>Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in lost data or other problems.</source>
@@ -3249,7 +3249,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="needs-translation">Last Name</target>
+        <target state="translated">姓</target>
       </trans-unit>
       <trans-unit id="17de8a2f90413b5c8a6d622d9cfa4c5eda8bb742" datatype="html">
         <source>Last Name required</source>
@@ -3273,7 +3273,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-        <target state="needs-translation">Last Name required</target>
+        <target state="translated">姓氏是必填的</target>
       </trans-unit>
       <trans-unit id="4b7e7f2459572a6ee907c22976119464ae2556bf" datatype="html">
         <source>Birthday (Month)</source>
