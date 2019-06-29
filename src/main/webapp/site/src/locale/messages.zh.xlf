@@ -4713,7 +4713,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target state="needs-translation">You can try <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>clearing your browser cache<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and then reloading the WISE web site.</target>
+        <target state="translated">您可以尝试 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>清除您的浏览器缓存<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ，然后重新加载WISE网站。</target>
       </trans-unit>
       <trans-unit id="2b8d27d2ef531e0cdf597e90b8c80e339d679ad3" datatype="html">
         <source>You can try using a different web browser. We recommend using Chrome or Firefox.</source>
@@ -4725,7 +4725,10 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">You can try using a different web browser. We recommend using Chrome or Firefox.</target>
+        <target state="translated">您可以尝试使用其他Web浏览器。 我们建议您使用Chrome或Firefox。</target>
+        <alt-trans>
+          <target>您可以尝试使用其他Web浏览器。 我们建议使用Chrome或Firefox。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="47fdad3268de5bb44d62ef7bf2e4b8e39c432588" datatype="html">
         <source>How many computers do I need to run WISE?</source>
@@ -4733,7 +4736,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">194</context>
         </context-group>
-        <target state="needs-translation">How many computers do I need to run WISE?</target>
+        <target state="translated">运行WISE需要多少台电脑？</target>
       </trans-unit>
       <trans-unit id="f12bc480c8322f1948f28e8ef2d1925c2caf9bf0" datatype="html">
         <source>We strongly recommend one computer for every two students. Research shows that students benefit from working together as a team of two.</source>
@@ -4741,7 +4744,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">196</context>
         </context-group>
-        <target state="needs-translation">We strongly recommend one computer for every two students. Research shows that students benefit from working together as a team of two.</target>
+        <target state="translated">我们强烈建议每两名学生共同使用一台电脑。 研究表明，学生可以从两人一起工作中受益。</target>
       </trans-unit>
       <trans-unit id="72d03fe604d9ac13e9a9b1a46d1421fdc4284eca" datatype="html">
         <source>What if I have trouble logging in?</source>
@@ -4753,7 +4756,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">What if I have trouble logging in?</target>
+        <target state="translated">如果我登录时出现问题，该怎么办？</target>
       </trans-unit>
       <trans-unit id="ef91b6733f15c82512f30d911641bc4b2076879c" datatype="html">
         <source>If you do not remember your username or password click the Lost Username or Password link and follow the instructions. </source>
