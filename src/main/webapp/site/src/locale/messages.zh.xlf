@@ -3456,7 +3456,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-username-complete/forgot-teacher-username-complete.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Your username has been sent to your email. Once you have received your username, you can use the button below to sign in.</target>
+        <target state="translated">您的用户名已发送到您的电子邮箱。 收到用户名后，您可以点击下面的按钮登录。</target>
       </trans-unit>
       <trans-unit id="a4d0068934144e3f61b8e981a62e014ab0a90ebe" datatype="html">
         <source>Enter Verification Code</source>
@@ -3464,7 +3464,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Enter Verification Code</target>
+        <target state="translated">输入验证码</target>
       </trans-unit>
       <trans-unit id="f5678bbf6890d459f03f2b9e563a5643af79f3f0" datatype="html">
         <source>We have sent a verification code to your email. Please check your email and enter the verification code below.</source>
@@ -3472,7 +3472,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">We have sent a verification code to your email. Please check your email and enter the verification code below.</target>
+        <target state="translated">我们已向您的电子邮件发送了验证码。 请查收您的电子邮件并输入以下验证码。</target>
       </trans-unit>
       <trans-unit id="0b0c831918036f2a99b923ae0d79076409374fef" datatype="html">
         <source>Verification Code</source>
@@ -3480,7 +3480,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Verification Code</target>
+        <target state="translated">验证码</target>
       </trans-unit>
       <trans-unit id="e84f19d665b761a941a2038aca627b2011f34a26" datatype="html">
         <source>Verification Code required</source>
@@ -3488,7 +3488,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Verification Code required</target>
+        <target state="translated">验证码是必填的</target>
       </trans-unit>
       <trans-unit id="486c6addfeb93356cab8bbb37310c8f61534e1f2" datatype="html">
         <source>Getting Started</source>
@@ -3508,7 +3508,7 @@
           <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Getting Started</target>
+        <target state="translated">开始使用</target>
       </trans-unit>
       <trans-unit id="d8a1b53c813ad335ed55f8201498c45af536f8b5" datatype="html">
         <source>Creating an Account</source>
@@ -3516,7 +3516,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Creating an Account</target>
+        <target state="translated">创建账户</target>
       </trans-unit>
       <trans-unit id="d38483514cb4d3dfdb109d7a3381dee14b11cfc1" datatype="html">
         <source>
