@@ -3285,7 +3285,10 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">44</context>
         </context-group>
-        <target state="needs-translation">Birthday (Month)</target>
+        <target state="translated">出生日期（月）</target>
+        <alt-trans>
+          <target>出生月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="53b5f38b420c0d1f9b62a0b34612ed28a20d37d8" datatype="html">
         <source>Month required</source>
@@ -3297,7 +3300,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
-        <target state="needs-translation">Month required</target>
+        <target state="translated">出生月是必填的</target>
       </trans-unit>
       <trans-unit id="e3945fcac2b828a12bd531c748cf8bd08b04498c" datatype="html">
         <source>Birthday (Day)</source>
@@ -3309,7 +3312,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">Birthday (Day)</target>
+        <target state="translated">出生日期（日）</target>
       </trans-unit>
       <trans-unit id="c086edf00fc75cb05dc70186d7c2b60ddc8a7cb4" datatype="html">
         <source>Day required</source>
@@ -3321,7 +3324,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">Day required</target>
+        <target state="translated">出生日期是必填的</target>
       </trans-unit>
       <trans-unit id="7e892ba15f2c6c17e83510e273b3e10fc32ea016" datatype="html">
         <source>Search</source>
@@ -3329,7 +3332,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-username/forgot-student-username.component.html</context>
           <context context-type="linenumber">58</context>
         </context-group>
-        <target state="needs-translation">Search</target>
+        <target state="translated">搜索</target>
       </trans-unit>
       <trans-unit id="53a454dd8d85d4a61d248f7452828b57d70e5055" datatype="html">
         <source>Forgot Teacher Username</source>
@@ -3341,7 +3344,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Forgot Teacher Username</target>
+        <target state="translated">忘记教师用户名</target>
       </trans-unit>
       <trans-unit id="23af976ab1853a354809cbada9c79f9a9c64df3d" datatype="html">
         <source>Teacher Forgot Password</source>
@@ -3357,7 +3360,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">Teacher Forgot Password</target>
+        <target state="translated">教师忘记密码</target>
       </trans-unit>
       <trans-unit id="8994fda971a6de5ac8b393ab5f86aed5e914de4a" datatype="html">
         <source>Answer Security Question</source>
@@ -3365,7 +3368,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Answer Security Question</target>
+        <target state="translated">回答安全问题</target>
       </trans-unit>
       <trans-unit id="36a316cb26f14955dcbc311d9f6f326a079df159" datatype="html">
         <source>Answer required</source>
@@ -3373,7 +3376,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Answer required</target>
+        <target state="translated">回答是必填的</target>
       </trans-unit>
       <trans-unit id="5ead54400cc272b882d8fb68895f8cf558d8edd7" datatype="html">
         <source>Password required</source>
