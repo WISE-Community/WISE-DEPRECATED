@@ -3789,7 +3789,7 @@
           <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-        <target state="needs-translation">Teacher FAQ</target>
+        <target state="translated">教师常见问题</target>
       </trans-unit>
       <trans-unit id="d8f48c61abfa7f1be0a4b4c00eca42c3c29f35be" datatype="html">
         <source>Questions from teachers.</source>
@@ -3805,7 +3805,7 @@
           <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="needs-translation">Questions from teachers.</target>
+        <target state="translated">教师提出的问题</target>
       </trans-unit>
       <trans-unit id="419c84ee97b4daf0f91e70af256dc7a4e8e11de8" datatype="html">
         <source>Student FAQ</source>
@@ -3821,7 +3821,7 @@
           <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">Student FAQ</target>
+        <target state="translated">学生常见问题</target>
       </trans-unit>
       <trans-unit id="5eef4cac2276bc97a3b1cc8a29b21436112bdaab" datatype="html">
         <source>Questions from students.</source>
@@ -3837,7 +3837,7 @@
           <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="needs-translation">Questions from students.</target>
+        <target state="translated">学生提出的问题</target>
       </trans-unit>
       <trans-unit id="38e95ec15a2f0fb793f968881f7579478c680f40" datatype="html">
         <source>Teacher Frequently Asked Questions</source>
@@ -3845,7 +3845,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Teacher Frequently Asked Questions</target>
+        <target state="translated">老师常见问题</target>
       </trans-unit>
       <trans-unit id="a266982867e61e43775b42a9d5f471fb904dbd2a" datatype="html">
         <source>General Questions</source>
@@ -4385,7 +4385,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">111</context>
         </context-group>
-        <target state="needs-translation">Find a project you would like to learn about.</target>
+        <target state="translated">查找您想要了解的项目</target>
       </trans-unit>
       <trans-unit id="4214fdac6b2b04e5afb05556b5ba647563c02b92" datatype="html">
         <source>Click on the project.</source>
@@ -4393,7 +4393,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">112</context>
         </context-group>
-        <target state="needs-translation">Click on the project.</target>
+        <target state="translated">单击该项目</target>
       </trans-unit>
       <trans-unit id="7c669c5c1a3a10743f60933f238fa21a6e23b1e0" datatype="html">
         <source>This will display a popup that displays information about the project.</source>
@@ -4401,7 +4401,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">113</context>
         </context-group>
-        <target state="needs-translation">This will display a popup that displays information about the project.</target>
+        <target state="translated">系统会显示一个弹出窗口来呈现项目的相关信息。</target>
       </trans-unit>
       <trans-unit id="fb31dc42edfa71c489ba8d350f1ddc61c72f0bda" datatype="html">
         <source>Note: Some projects may not have much information because it is dependent on the author to provide the lesson plan and standards.</source>
@@ -4409,7 +4409,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">114</context>
         </context-group>
-        <target state="needs-translation">Note: Some projects may not have much information because it is dependent on the author to provide the lesson plan and standards.</target>
+        <target state="translated">注意：有些项目可能没有太多的信息，因为它依赖于作者提供的课程计划和标准。</target>
       </trans-unit>
       <trans-unit id="0caa9631c30a1085708f8f7ac6f6b207af99c1b9" datatype="html">
         <source>How do I fit a WISE project into my curriculum?</source>
@@ -4417,7 +4417,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">116</context>
         </context-group>
-        <target state="needs-translation">How do I fit a WISE project into my curriculum?</target>
+        <target state="translated">如何将WISE项目引入到我的课程中？</target>
       </trans-unit>
       <trans-unit id="8067ba3441dfe3495b289859b58d59b28fed36f0" datatype="html">
         <source>In general students will benefit from some pre-teaching of the topic covered in the project. It is really up to the teacher to decide where it best fits to support student learning. Many teachers use a WISE project as a capstone activity while others integrate it into their curriculum at a midpoint. Some teachers elect to use WISE projects an introductory activity for a unit, or as a summation activity for a unit.</source>
@@ -4425,7 +4425,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">118</context>
         </context-group>
-        <target state="needs-translation">In general students will benefit from some pre-teaching of the topic covered in the project. It is really up to the teacher to decide where it best fits to support student learning. Many teachers use a WISE project as a capstone activity while others integrate it into their curriculum at a midpoint. Some teachers elect to use WISE projects an introductory activity for a unit, or as a summation activity for a unit.</target>
+        <target state="translated">一般来说，学生将受益于项目中涉及的一些主题的预习。这是由教师决定最适合支持学生学习的地方。许多教师使用WISE项目作为顶点活动，而其他教师则将其整合到他们的课程中间的环节。 一些教师选择使用WISE项目作为单元的导入活动，或作为单元的总结活动。</target>
       </trans-unit>
       <trans-unit id="4c1a3a26df6b1a44c59f821d35521cb0dee57b8b" datatype="html">
         <source>How do I add a period after creating a run?</source>
@@ -4433,7 +4433,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">120</context>
         </context-group>
-        <target state="needs-translation">How do I add a period after creating a run?</target>
+        <target state="translated">如何在创建运行后添加一个时间？</target>
       </trans-unit>
       <trans-unit id="154b39e56c182703eed32833f84f4e6f955cf89d" datatype="html">
         <source>On the run, click the three vertical dots to view the run options.</source>
