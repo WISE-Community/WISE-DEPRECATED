@@ -4768,7 +4768,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">If you do not remember your username or password click the Lost Username or Password link and follow the instructions. </target>
+        <target state="translated">如果您忘记了用户名或密码，请单击“忘记用户名”或“忘记密码”的链接，然后按照说明操作。 </target>
       </trans-unit>
       <trans-unit id="df6ec49a683a1c798d509516f3b73dd1befb6a62" datatype="html">
         <source>Can I use WISE in another language?</source>
