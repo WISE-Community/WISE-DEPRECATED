@@ -4601,7 +4601,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">162</context>
         </context-group>
-        <target state="needs-translation">The following link will give you a sample rubric for grading a step in the Mitosis and Cell Processes project. The rubric is based on our TELS Center research on how students integrate their knowledge of complex science concepts. We hope that it can give you a start in developing your own rubrics for the notes and steps you plan to grade.</target>
+        <target state="translated">以下链接将为您提供样本标准示例，用于对有丝分裂和细胞过程项目中的步骤进行分级。 该专栏是在我们TELS中心的一项研究学生如何整合他们对复杂科学概念的知识的研究项目的基础上进行的。我们希望它可以帮助您开始为计划评分的笔记和步骤开发自己的规则。</target>
       </trans-unit>
       <trans-unit id="4d5c08a9dd67d4172985bfa1e4ba5afaa90c8dd8" datatype="html">
         <source>Sample rubric for assessing student work</source>
@@ -4609,7 +4609,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">163</context>
         </context-group>
-        <target state="needs-translation">Sample rubric for assessing student work</target>
+        <target state="translated">用于评估学生作业的样本量规</target>
       </trans-unit>
       <trans-unit id="6f12118a17d16549ad4800a13e534af3c06f8196" datatype="html">
         <source>How can I encourage my students to review the graded notes and comments I have made?</source>
@@ -4617,7 +4617,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">165</context>
         </context-group>
-        <target state="needs-translation">How can I encourage my students to review the graded notes and comments I have made?</target>
+        <target state="translated">我如何鼓励我的学生查看已经发布的评分说明和评论？</target>
       </trans-unit>
       <trans-unit id="4c89f57cff7fe4aa81c04b787bcfeefa40c6ee32" datatype="html">
         <source>Many teachers find it advantageous to grade the first step or two at the end of the first day of the project run. At the beginning of class the next day they share with the whole class some sample responses and have the class critique the work.</source>
@@ -4625,7 +4625,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">167</context>
         </context-group>
-        <target state="needs-translation">Many teachers find it advantageous to grade the first step or two at the end of the first day of the project run. At the beginning of class the next day they share with the whole class some sample responses and have the class critique the work.</target>
+        <target state="translated">许多教师发现在项目运行的第一天结束时对第一步或第二步进行评分是有利的。 在第二天上课时，他们与全班同学分享一些样本回复，并让班级评论这项作业。</target>
       </trans-unit>
       <trans-unit id="15649bf7feb32472ef18cfb49d0014856da86b86" datatype="html">
         <source>How do I find time to grade all of the student work?</source>
@@ -4633,7 +4633,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">169</context>
         </context-group>
-        <target state="needs-translation">How do I find time to grade all of the student work?</target>
+        <target state="translated">我如何抽出时间评估所有学生的作业？</target>
       </trans-unit>
       <trans-unit id="aa25bf22d74c6350808bdcad5b07d6af280353b6" datatype="html">
         <source>We recommend that you go through the project and select a few steps that you think best demonstrate the students' understanding of the complex concepts covered in the module and grade those steps. Then tell your students they must complete all questions but should concentrate their efforts on the key steps. We recognize that critically grading each step is very time consuming and unpractical.</source>
