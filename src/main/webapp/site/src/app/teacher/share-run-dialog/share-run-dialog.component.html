@@ -74,6 +74,7 @@
   </table>
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="end">
-  <button mat-flat-button color="primary" mat-dialog-close i18n>Done</button>
+  <button mat-flat-button color="primary" mat-dialog-close i18n *ngIf="!isTransfer">Done</button>
+  <button mat-flat-button color="primary" mat-dialog-close i18n *ngIf="isTransfer">Cancel</button>
 </mat-dialog-actions>
 
