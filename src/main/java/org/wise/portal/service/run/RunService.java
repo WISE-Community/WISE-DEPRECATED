@@ -439,5 +439,5 @@ public interface RunService {
 
   boolean isAllowedToViewStudentNames(Run run, User user);
 
-  SharedOwner changeOwner(Long runId, String teacherUsername);
+  SharedOwner transferRunOwnership(Long runId, String teacherUsername) throws ObjectNotFoundException, TeacherAlreadySharedWithRunException;
 }

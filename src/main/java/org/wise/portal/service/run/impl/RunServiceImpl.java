@@ -317,6 +317,17 @@ public class RunServiceImpl implements RunService {
     }
   }
 
+  public SharedOwner transferRunOwnership(Long runId, String teacherUsername)
+    throws ObjectNotFoundException, TeacherAlreadySharedWithRunException {
+    Run run = retrieveById(runId);
+    User newOwner = userDao.retrieveByUsername(teacherUsername);
+    if (run.getSharedowners().contains(newOwner)) {
+      removeSharedTeacher(teacherUsername, runId);
+    }
+    addSharedTeacher(runId, run.getOwner().getUserDetails().getUsername());
+    return changeOwner(run, newOwner);
+  }
+
   private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user) throws ObjectNotFoundException {
     if (workgroupService.getWorkgroupListByRunAndUser(run, user).size() == 0) {
       return createSharedTeacherWorkgroup(run, user);
@@ -631,23 +642,13 @@ public class RunServiceImpl implements RunService {
   }
 
   @Transactional()
-  public SharedOwner changeOwner(Long runId, String teacherUsername) {
-    try {
-      Run run = retrieveById(runId);
-      User owner = run.getOwner();
-      removeSharedTeacherPermission(runId, owner.getId(), 16);
-      User newOwner = userDao.retrieveByUsername(teacherUsername);
-      addSharedTeacherPermission(runId, newOwner.getId(), 16);
-      run.setOwner(newOwner);
-      this.runDao.save(run);
-      List<Integer> newPermissions = new ArrayList<>();
-      newPermissions.add(RunPermission.ADMINISTRATION.getMask());
-      return new SharedOwner(newOwner.getId(), newOwner.getUserDetails().getUsername(),
-        newOwner.getUserDetails().getFirstname(), newOwner.getUserDetails().getLastname(), newPermissions);
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-      return null;
-    }
+  public SharedOwner changeOwner(Run run, User newOwner) {
+    run.setOwner(newOwner);
+    runDao.save(run);
+    aclService.removePermission(run, BasePermission.ADMINISTRATION, run.getOwner());
+    aclService.addPermission(run, BasePermission.ADMINISTRATION, newOwner);
+    return new SharedOwner(newOwner.getId(), newOwner.getUserDetails().getUsername(),
+      newOwner.getUserDetails().getFirstname(), newOwner.getUserDetails().getLastname(), new ArrayList<>());
   }
 
   @Transactional()

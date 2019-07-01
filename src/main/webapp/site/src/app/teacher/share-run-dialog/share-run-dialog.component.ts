@@ -6,7 +6,6 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar,
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { UserService } from '../../services/user.service';
-import { User } from '../../domain/user';
 
 @Component({
   selector: 'app-share-run-dialog',
