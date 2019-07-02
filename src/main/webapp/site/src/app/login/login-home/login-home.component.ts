@@ -34,13 +34,7 @@ export class LoginHomeComponent implements OnInit {
         this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
       }
       if (this.userService.isSignedIn()) {
-        this.userService.getUser().subscribe(({ isGoogleUser }) => {
-          if (isGoogleUser) {
-            this.socialSignIn('google');
-          } else {
-            this.router.navigateByUrl(this.getRedirectUrl(''));
-          }
-        });
+        this.router.navigateByUrl(this.getRedirectUrl(''));
       }
     });
     this.route.params.subscribe(params => {
