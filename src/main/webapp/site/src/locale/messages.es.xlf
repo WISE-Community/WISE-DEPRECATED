@@ -375,7 +375,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <target state="needs-translation">Elicit Ideas</target>
+        <target state="translated">Obtener ideas</target>
       </trans-unit>
       <trans-unit id="cba3bcc252b9f7b980c934ce394a1345eebfd970" datatype="html">
         <source>Add Ideas</source>
@@ -403,7 +403,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="needs-translation">Distinguish Ideas</target>
+        <target state="translated">Distinguir ideas</target>
       </trans-unit>
       <trans-unit id="b85ab229e72d6560e6193e30a362083ce7e12da6" datatype="html">
         <source>Connect Ideas</source>
@@ -427,7 +427,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">Integrated science learning and teaching with technology</target>
+        <target state="translated">Aprendizaje y enseñanza de la ciencia integrada con tecnología</target>
       </trans-unit>
       <trans-unit id="d0339bceaff58f22bba77d0231838a8df686c98e" datatype="html">
         <source>The WISE Advantage</source>
