@@ -172,7 +172,10 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
-        <target state="needs-translation">This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</target>
+        <target state="translated">Este material está basado en el trabajo apoyado por la National Science Foundation. Todas las opiniones, hallazgos y conclusiones o recomendaciones expresadas en este material son las del autor (es) y no reflejan necesariamente los puntos de vista de la National Science Foundation.</target>
+        <alt-trans>
+          <target>Este material se basa en el trabajo apoyado por la National Science Foundation. Todas las opiniones, hallazgos y conclusiones o recomendaciones expresadas en este material son las del autor (es) y no reflejan necesariamente los puntos de vista de la National Science Foundation.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="0dc5b912bfe8d326a1af3975c6a7d049521eae12" datatype="html">
         <source>National Science Foundation</source>
@@ -356,7 +359,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">This account was created using Google and doesn't use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">Esta cuenta fue creada usando Google y no utiliza una contraseña WISE. Si desea desvincular su cuenta de Google, por favor <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>póngase en contacto con nosotros<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="9df7621dfbe30a790903d461e721c9029627ff34" datatype="html">
         <source>Elicit Ideas</source>
