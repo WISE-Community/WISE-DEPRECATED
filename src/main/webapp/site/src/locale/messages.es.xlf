@@ -463,7 +463,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <target state="needs-translation">Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</target>
+        <target state="translated">Modelos científicos interactivos más actividades prácticas, orientación personalizada y evaluaciones embebidas</target>
+        <alt-trans>
+          <target>Modelos científicos interactivos más actividades prácticas, orientación personalizada y evaluaciones embebidas ricas</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="82fc5ad6af1a149044ba97ac4d4e567312c6ce9f" datatype="html">
         <source>WISE students and teacher</source>
@@ -471,7 +474,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">53</context>
         </context-group>
-        <target state="needs-translation">WISE students and teacher</target>
+        <target state="translated">WISE estudiantes y docente</target>
+        <alt-trans>
+          <target>WISE estudiantes y profesor</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="2acf9aae127d9822ffecf4d7509f05744f09e788" datatype="html">
         <source>Robust teacher grading and management tools supporting individualized and customized learning</source>
@@ -479,7 +485,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">Robust teacher grading and management tools supporting individualized and customized learning</target>
+        <target state="translated">Herramientas sólidas de evaluación y gestión docente que apoyan el aprendizaje personalizado</target>
+        <alt-trans>
+          <target>Herramientas de evaluación y gestión de profesores sólidas que apoyan el aprendizaje personalizado y personalizado</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="23bd67ab9c1e8b08481bd99aa471c2a29b587143" datatype="html">
         <source>Curriculum Offerings</source>
@@ -543,7 +552,7 @@
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Close menu</target>
+        <target state="translated">Cerrar menú</target>
       </trans-unit>
       <trans-unit id="c0b05f996bb39c9db400e2ec0d5506b75d464af0" datatype="html">
         <source>WISE Home</source>
@@ -551,7 +560,7 @@
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">WISE Home</target>
+        <target state="translated">WISE Principal</target>
       </trans-unit>
       <trans-unit id="ab8be185fd77636da821443e6071c033ebc47a59" datatype="html">
         <source>Research <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></source>
@@ -591,7 +600,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">Sign In</target>
+        <target state="translated">Ingresar</target>
       </trans-unit>
       <trans-unit id="acd82db1a5e5f81b87f6a6b1639f028a4d106d49" datatype="html">
         <source>WISE logo</source>
@@ -599,7 +608,7 @@
           <context context-type="sourcefile">app/register/register.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">WISE logo</target>
+        <target state="translated">Logo de WISE</target>
       </trans-unit>
       <trans-unit id="abc0c762d328168e523abf84749240e43593f8df" datatype="html">
         <source>WISE Features</source>
@@ -607,7 +616,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">WISE Features</target>
+        <target state="translated">Características de WISE</target>
       </trans-unit>
       <trans-unit id="ddf8132cf62ce6ac16351585c35e306e6971af4b" datatype="html">
         <source>A powerful online platform for designing, developing, and implementing science inquiry units</source>
@@ -615,7 +624,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">A powerful online platform for designing, developing, and implementing science inquiry units</target>
+        <target state="translated">Una poderosa plataforma en línea para diseñar, desarrollar e implementar unidades didácticas para el aprendizaje basado en indagación</target>
+        <alt-trans>
+          <target>Una poderosa plataforma en línea para diseñar, desarrollar e implementar unidades de investigación científica</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="49a463f2fe873efdcbedb06a71cfbadc9c83cb14" datatype="html">
         <source>Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</source>
@@ -623,7 +635,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-        <target state="needs-translation">Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</target>
+        <target state="translated">Desde 1997, WISE ha servido a una comunidad creciente de más de 20.000 docentes, investigadores y especialistas en el diseño curricular, así como a más de 200.000 estudiantes de toda la etapa escolar en todo el mundo.</target>
+        <alt-trans>
+          <target>Desde 1997, WISE ha servido a una comunidad creciente de más de 20.000 profesores, investigadores y diseñadores de planes de estudios, así como más de 200.000 estudiantes de 12 años en todo el mundo.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="53d2c0a09cfd0d1836aa6306785412e894b571d5" datatype="html">
         <source>WISE students</source>
@@ -631,7 +646,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">WISE students</target>
+        <target state="translated">Estudiantes WISE</target>
       </trans-unit>
       <trans-unit id="3c7d295a97553e2107807061d481f221cee12704" datatype="html">
         <source>WISE students collaborate to:</source>
@@ -647,7 +662,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
-        <target state="needs-translation">Explore issues of social importance</target>
+        <target state="translated">Explorar temas de importancia social</target>
       </trans-unit>
       <trans-unit id="704339fc471e1b8d675435af5455c289241dbe1c" datatype="html">
         <source>Pose relevant questions and make predictions</source>
@@ -655,7 +670,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">Pose relevant questions and make predictions</target>
+        <target state="translated">Formular preguntas relevantes y hacer predicciones</target>
       </trans-unit>
       <trans-unit id="a372d9315580ccb7e6cc4bdaa345a9bc0b428fc4" datatype="html">
         <source>Experiment with computational models</source>
@@ -663,7 +678,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">Experiment with computational models</target>
+        <target state="translated">Experimentar con modelos computacionales</target>
       </trans-unit>
       <trans-unit id="b07d8ea0af45cef781e5d604f6e9c2a7b2f701f0" datatype="html">
         <source>Evaluate and distinguish discrepant information</source>
@@ -671,7 +686,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">Evaluate and distinguish discrepant information</target>
+        <target state="translated">Evaluar y distinguir información discrepante</target>
+        <alt-trans>
+          <target>Evaluar y distinguir información discreta</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="85031434993fe1bad0400c10fb78687a633a21ac" datatype="html">
         <source>Construct explanations through reflection and discussion</source>
@@ -679,7 +697,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="needs-translation">Construct explanations through reflection and discussion</target>
+        <target state="translated">Construir explicaciones a través de la reflexión y el debate</target>
       </trans-unit>
       <trans-unit id="9fb0cd948878e98ed66ee30acc38db27f54ee91c" datatype="html">
         <source>Design and build evidence-based solutions</source>
@@ -687,7 +705,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation">Design and build evidence-based solutions</target>
+        <target state="translated">Diseñar y construir soluciones basadas en evidencias</target>
+        <alt-trans>
+          <target>Diseñar y construir soluciones basadas en pruebas</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="120d488ee5852e71a5ff417392534368677d0e1d" datatype="html">
         <source>Inquiry-Based Learning</source>
@@ -695,7 +716,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation">Inquiry-Based Learning</target>
+        <target state="translated">Aprendizaje basado en indagación</target>
       </trans-unit>
       <trans-unit id="ffe45ae6c8c4ce43774404fc9113d577f474b482" datatype="html">
         <source>WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</source>
@@ -703,7 +724,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</target>
+        <target state="translated">WISE motiva a los estudiantes a utilizar los métodos que utilizan científicos e ingenieros en la vida real. Tomamos un enfoque multidisciplinario para que los estudiantes aprendan a investigar a través de actividades que enfatizan las habilidades esenciales en la lectura, la escritura y la alfabetización multimedia. Muchas de nuestras unidades también están basadas en proyectos y presentan desafíos de diseño prácticos.</target>
+        <alt-trans>
+          <target>WISE se dedica a estudiantes en los métodos de científicos e ingenieros reales. Tomamos un enfoque multidisciplinario para que los estudiantes aprendan la investigación a través de actividades que enfatizan las habilidades esenciales en la lectura, la escritura y la alfabetización multimedia. Muchas de nuestras unidades también están basadas en proyectos y presentan desafíos de diseño prácticos.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="7681bdf7430711347073032e83e99c10be4f4e7b" datatype="html">
         <source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</source>
@@ -711,7 +735,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</target>
+        <target state="translated">Con las unidades didácticas basadas en indagación de WISE, los estudiantes no sólo aprenden habilidades que los preparan para tener éxito en proyectos de STEM, sino que también aprenden habilidades necesarias para ser ciudadanos responsables y críticos.</target>
+        <alt-trans>
+          <target>Con unidades de investigación de WISE, los estudiantes no sólo aprenden habilidades que los preparan para tener éxito en STEM, sino que también aprenden habilidades necesarias para ser ciudadanos responsables y críticos.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="811c99b1c960d5acedf84179c8c29e177ae0bf27" datatype="html">
         <source>Standards-Aligned Curricula</source>
@@ -719,7 +746,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="needs-translation">Standards-Aligned Curricula</target>
+        <target state="translated">Diseño curricular alineado con los estándares</target>
       </trans-unit>
       <trans-unit id="28963fab05c3d72dc5ca696c47dd7d486df8292c" datatype="html">
         <source>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</source>
@@ -727,7 +754,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">83</context>
         </context-group>
-        <target state="needs-translation">WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</target>
+        <target state="translated">WISE ofrece una creciente colección de unidades didácticas que abordan las dificultades conceptuales clave que los estudiantes encuentran en la ciencia. Las unidades didácticas están cuidadosamente diseñadas para complementar el alcance y la secuencia de los diseños curriculares y se refinan iterativamente a través de la investigación basada en su implementación en el aula.</target>
+        <alt-trans>
+          <target>WISE ofrece una creciente colección de unidades de currículum que abordan las dificultades conceptuales clave que los estudiantes encuentran en la ciencia. Unidades se diseñan cuidadosamente para complementar el alcance y secuencia de los programas de los profesores y se refinan iterativamente a través de la investigación basada en aulas.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="09ce791db454a957cfc6658b0c198962ea7cac6c" datatype="html">
         <source>WISE units support the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3-dimensional learning<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, and can be adapted to address local standards.</source>
@@ -735,7 +765,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">85</context>
         </context-group>
-        <target state="needs-translation">WISE units support the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3-dimensional learning<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, and can be adapted to address local standards.</target>
+        <target state="translated">Las unidades de WISE están alineadas con los <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, promueven <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>el aprendizaje en 3 dimensiones<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, y pueden ser adaptadas a los estándares locales.</target>
       </trans-unit>
       <trans-unit id="6e15a0555bed4b010ba36febb47e87ff32616dd8" datatype="html">
         <source>Design Process &amp; Goals</source>
@@ -743,7 +773,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="needs-translation">Design Process &amp; Goals</target>
+        <target state="translated">Proceso de diseño &amp; Objetivos</target>
       </trans-unit>
       <trans-unit id="5ba7433a2233cdf924ae0948dc017372200293e3" datatype="html">
         <source>WISE solar ovens unit</source>
@@ -751,7 +781,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">92</context>
         </context-group>
-        <target state="needs-translation">WISE solar ovens unit</target>
+        <target state="translated">Unidad WISE sobre hornos solares</target>
       </trans-unit>
       <trans-unit id="13e72d05735ba2963b1725426c59ba2f513bd709" datatype="html">
         <source>WISE students building solar oven</source>
@@ -759,7 +789,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">93</context>
         </context-group>
-        <target state="needs-translation">WISE students building solar oven</target>
+        <target state="translated">Estudiantes de WISE construyendo un horno solar</target>
+        <alt-trans>
+          <target>WISE estudiantes construyendo horno solar</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="faf67b4eceba9ca62f5db3703ae2d16a7da9dc2c" datatype="html">
         <source>MyModel diagram with guidance</source>
@@ -767,7 +800,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="needs-translation">MyModel diagram with guidance</target>
+        <target state="translated">Diagrama de MyModel guiado</target>
+        <alt-trans>
+          <target>Diagrama de MyModel con orientación</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e7c4c4ab5b72934b5a6783e1e6084202e8610c4c" datatype="html">
         <source>WISE cellular respiration model</source>
@@ -775,7 +811,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">108</context>
         </context-group>
-        <target state="needs-translation">WISE cellular respiration model</target>
+        <target state="translated">Modelo de respiración celular WISE</target>
       </trans-unit>
       <trans-unit id="68f9c6b469faf7dc111d7f51a9a77ff188844867" datatype="html">
         <source>WISE design report</source>
@@ -783,7 +819,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">109</context>
         </context-group>
-        <target state="needs-translation">WISE design report</target>
+        <target state="translated">Informe de diseño WISE</target>
       </trans-unit>
       <trans-unit id="6a00767c4e60cdb9e156cced2058eaccb255c100" datatype="html">
         <source>WISE thermodynamics insulator model</source>
@@ -791,7 +827,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">110</context>
         </context-group>
-        <target state="needs-translation">WISE thermodynamics insulator model</target>
+        <target state="translated">Modelo de aislamiento termodinámico WISE</target>
       </trans-unit>
       <trans-unit id="4382ac8d5db5536ce6c46dfe9e65a4d2b47fb2b4" datatype="html">
         <source>Powerful Learning Technologies</source>
@@ -799,7 +835,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">114</context>
         </context-group>
-        <target state="needs-translation">Powerful Learning Technologies</target>
+        <target state="translated">Tecnologías de aprendizaje potentes</target>
       </trans-unit>
       <trans-unit id="5153efa236be513c65eb59c5f8daccf57898030a" datatype="html">
         <source>WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</source>
@@ -807,7 +843,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">115</context>
         </context-group>
-        <target state="needs-translation">WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</target>
+        <target state="translated">WISE ofrece una interfaz de usuario sencilla, ayudas cognitivas, evaluaciones embebidas y discusiones en línea, así como herramientas para dibujar, anotar, para hacer mapas conceptuales, diagramas y gráficos.</target>
+        <alt-trans>
+          <target>WISE proporciona una interfaz de usuario sencilla, pistas cognitivas, evaluaciones incrustadas y discusiones en línea, así como herramientas para dibujar, anotar, mapeo conceptual, diagramming y gráfico.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e8c9262fe52f9282929800e851aee426dfd6ae48" datatype="html">
         <source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</source>
@@ -815,7 +854,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">116</context>
         </context-group>
-        <target state="needs-translation">Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</target>
+        <target state="translated">Los estudiantes realizan investigaciones utilizando simulaciones y modelos interactivos. Una herramienta de notebook ayuda a los estudiantes a recopilar ideas y organizar pruebas en informes de investigación y diseño. Las unidades de WISE promueven el auto-monitoreo a través de actividades de reflexión colaborativas, así como una orientación automatizada y personalizada y una instrucción adaptativa.</target>
       </trans-unit>
       <trans-unit id="7b049ab7ccd15afcbe53f4b4dae5b4292919fbb7" datatype="html">
         <source>Comprehensive Instructional Supports</source>
