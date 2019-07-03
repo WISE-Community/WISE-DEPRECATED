@@ -128,7 +128,7 @@
   <mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
   <mvc:resources mapping="/studentuploads/**" location="/studentuploads/" order="1" />
   <mvc:resources mapping="/curriculumWISE5/**" location="/curriculumWISE5/" order="1" />
-  <mvc:resources mapping="/**" location="/site/dist/" order="2" />
+  <mvc:resources mapping="/**" location="/wise/dist/" order="2" />
 
   <mvc:interceptors>
     <ref bean="localeChangeInterceptor"/>

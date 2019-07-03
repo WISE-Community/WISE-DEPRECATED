@@ -146,4 +146,4 @@ export function translationsFactory(locale: string) {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class SiteModule { }

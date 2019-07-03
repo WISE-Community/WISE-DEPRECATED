@@ -5,24 +5,24 @@
   "projects": {
     "WISE Portal": {
       "root": "src/main/webapp/site",
-      "sourceRoot": "src/main/webapp/site/src",
+      "sourceRoot": "src/main/webapp/wise/src",
       "projectType": "application",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "src/main/webapp/site/dist",
-            "index": "src/main/webapp/site/src/index.html",
-            "main": "src/main/webapp/site/src/main.ts",
-            "tsConfig": "src/main/webapp/site/src/tsconfig.app.json",
-            "polyfills": "src/main/webapp/site/src/polyfills.ts",
+            "outputPath": "src/main/webapp/wise/dist",
+            "index": "src/main/webapp/wise/src/index.html",
+            "main": "src/main/webapp/wise/src/main.ts",
+            "tsConfig": "src/main/webapp/wise/src/tsconfig.app.json",
+            "polyfills": "src/main/webapp/wise/src/polyfills.ts",
             "extractCss": true,
             "assets": [
-              "src/main/webapp/site/src/assets",
-              "src/main/webapp/site/src/favicon.ico"
+              "src/main/webapp/wise/src/assets",
+              "src/main/webapp/wise/src/favicon.ico"
             ],
             "styles": [
-              "src/main/webapp/site/src/style/styles.scss"
+              "src/main/webapp/wise/src/style/styles.scss"
             ],
             "scripts": []
           },
@@ -39,8 +39,8 @@
               "buildOptimizer": true,
               "fileReplacements": [
                 {
-                  "replace": "src/main/webapp/site/src/environments/environment.ts",
-                  "with": "src/main/webapp/site/src/environments/environment.prod.ts"
+                  "replace": "src/main/webapp/wise/src/environments/environment.ts",
+                  "with": "src/main/webapp/wise/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -66,17 +66,17 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/main/webapp/site/src/test.ts",
+            "main": "src/main/webapp/wise/src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/main/webapp/site/src/polyfills.ts",
-            "tsConfig": "src/main/webapp/site/src/tsconfig.spec.json",
+            "polyfills": "src/main/webapp/wise/src/polyfills.ts",
+            "tsConfig": "src/main/webapp/wise/src/tsconfig.spec.json",
             "scripts": [],
             "styles": [
-              "src/main/webapp/site/src/style/styles.scss"
+              "src/main/webapp/wise/src/style/styles.scss"
             ],
             "assets": [
-              "src/main/webapp/site/src/assets",
-              "src/main/webapp/site/src/favicon.ico"
+              "src/main/webapp/wise/src/assets",
+              "src/main/webapp/wise/src/favicon.ico"
             ]
           }
         },
@@ -95,8 +95,8 @@
       }
     },
     "WISE Portal-e2e": {
-      "root": "src/main/webapp/site/e2e",
-      "sourceRoot": "src/main/webapp/site/e2e",
+      "root": "src/main/webapp/wise/e2e",
+      "sourceRoot": "src/main/webapp/wise/e2e",
       "projectType": "application",
       "architect": {
         "e2e": {
