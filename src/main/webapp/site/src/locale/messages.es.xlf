@@ -854,7 +854,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">116</context>
         </context-group>
-        <target state="translated">Los estudiantes realizan investigaciones utilizando simulaciones y modelos interactivos. Una herramienta de notebook ayuda a los estudiantes a recopilar ideas y organizar pruebas en informes de investigación y diseño. Las unidades de WISE promueven el auto-monitoreo a través de actividades de reflexión colaborativas, así como una orientación automatizada y personalizada y una instrucción adaptativa.</target>
+        <target state="translated">Los estudiantes realizan investigaciones utilizando simulaciones y modelos interactivos. La herramienta "cuaderno" ayuda a los estudiantes a recopilar ideas y organizar las evidencias encontradas en informes de investigación y diseño. Las unidades de WISE promueven el auto-monitoreo a través de actividades de reflexión colaborativas, así como una orientación automatizada y personalizada y una instrucción adaptativa.</target>
+        <alt-trans>
+          <target>Los estudiantes realizan investigaciones utilizando simulaciones y modelos interactivos. Una herramienta de notebook ayuda a los estudiantes a recopilar ideas y organizar pruebas en informes de investigación y diseño. Las unidades de WISE promueven el auto-monitoreo a través de actividades de reflexión colaborativas, así como una orientación automatizada y personalizada y una instrucción adaptativa.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="7b049ab7ccd15afcbe53f4b4dae5b4292919fbb7" datatype="html">
         <source>Comprehensive Instructional Supports</source>
@@ -862,7 +865,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="needs-translation">Comprehensive Instructional Supports</target>
+        <target state="translated">Ayuda comprensiva para la instrucción</target>
       </trans-unit>
       <trans-unit id="62933fa524d08c2b75f7b687ff566b5ee1118ec1" datatype="html">
         <source>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</source>
@@ -870,7 +873,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">128</context>
         </context-group>
-        <target state="needs-translation">WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</target>
+        <target state="translated">WISE ofrece un amplio conjunto de herramientas integradas que ayudan a los profesores a planificar, monitorear el progreso, obtener información, proporcionar retroalimentación y calificar de manera más eficiente, las cuales se perfeccionan continuamente mediante colaboraciones con profesores que comprenden los verdaderos desafíos de gestionar las aulas modernas.</target>
+        <alt-trans>
+          <target>WISE ofrece un amplio conjunto de herramientas integradas que ayudan a los profesores a planificar, monitorear el progreso, obtener información, proporcionar retroalimentación y grado de manera más eficiente, y que se perfeccionan continuamente mediante colaboraciones con profesores que entienden los verdaderos desafíos de gestionar las aulas modernas.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="4f7d6b85797f6cd6114c235b464ad7910657c631" datatype="html">
         <source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</source>
@@ -878,7 +884,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">129</context>
         </context-group>
-        <target state="needs-translation">By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</target>
+        <target state="translated">Al facilitar estas tareas necesarias pero que requieren tiempo, los docentes tienen más tiempo para enfocarse en lo que los hace indispensables: proporcionar una enseñanza de calidad a cada uno de los estudiantes.</target>
+        <alt-trans>
+          <target>Al facilitar estas tareas necesarias pero que requieren tiempo, los profesores son libres de centrarse en lo que los hace indispensables: proporcionar una instrucción de calidad a los estudiantes individuales.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="794ce33c32874cf59374bff4939512bbc71585d2" datatype="html">
         <source>WISE teacher progress</source>
@@ -886,7 +895,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">131</context>
         </context-group>
-        <target state="needs-translation">WISE teacher progress</target>
+        <target state="translated">Avance del profesor WISE</target>
       </trans-unit>
       <trans-unit id="334e3ef2374254d76dfe1f56599cf1d0598372e8" datatype="html">
         <source>WISE teacher grading</source>
@@ -894,7 +903,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">132</context>
         </context-group>
-        <target state="needs-translation">WISE teacher grading</target>
+        <target state="translated">Calificación de profesor WISE</target>
       </trans-unit>
       <trans-unit id="7f5177858a6d5d359f61637516a36470cbf6ba89" datatype="html">
         <source>Featured Teacher Tools:</source>
