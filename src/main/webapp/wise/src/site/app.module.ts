@@ -94,11 +94,7 @@ export function translationsFactory(locale: string) {
     FeaturesModule,
     MatSidenavModule,
     MatDialogModule,
-    AboutModule,
-    RouterModule.forRoot([], {
-      scrollPositionRestoration: 'enabled',
-      anchorScrolling: 'enabled',
-    })
+    AboutModule
   ],
   entryComponents: [ AnnouncementDialogComponent ],
   providers: [

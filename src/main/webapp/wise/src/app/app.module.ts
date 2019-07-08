@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
     SiteModule,
     AppRoutingModule,
     RouterModule
-  ]
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

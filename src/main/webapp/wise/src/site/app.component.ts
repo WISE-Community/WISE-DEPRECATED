@@ -9,7 +9,7 @@ import { UtilService } from "./services/util.service";
 import { ConfigService } from "./services/config.service";
 
 @Component({
-  selector: 'app-root',
+  selector: 'site',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
