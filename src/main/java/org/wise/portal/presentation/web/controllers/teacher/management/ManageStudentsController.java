@@ -197,7 +197,7 @@ public class ManageStudentsController {
     } else {
       User user = ControllerUtil.getSignedInUser();
       if (runService.hasRunPermission(params.getRun(), user, BasePermission.WRITE) ||
-        runService.hasRunPermission(params.getRun(), user, BasePermission.ADMINISTRATION)) {
+          runService.hasRunPermission(params.getRun(), user, BasePermission.ADMINISTRATION)) {
         try {
           if (!params.getProjectcodeTo().equals(params.getProjectcode())) {
             studentService.removeStudentFromRun(params.getStudent(), params.getRun());
