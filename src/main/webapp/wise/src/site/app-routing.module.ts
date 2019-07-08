@@ -13,6 +13,14 @@ const routes: Routes = [
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
       },
       {
+        path: 'teacher',
+        loadChildren: () => import('./teacher/teacher.module').then(m => m.TeacherModule)
+      },
+      {
+        path: 'student',
+        loadChildren: () => import('./student/student.module').then(m => m.StudentModule)
+      },
+      {
         path: 'about',
         loadChildren: () => import('./about/about.module').then(m => m.AboutModule)},
       {
@@ -58,7 +66,7 @@ export class XhrInterceptor implements HttpInterceptor {
 
 @NgModule({
   declarations: [ PrivacyComponent ],
-  imports: [ RouterModule.forRoot(routes), FormsModule ],
+  imports: [ RouterModule.forChild(routes), FormsModule ],
   exports: [ RouterModule ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }]
 })

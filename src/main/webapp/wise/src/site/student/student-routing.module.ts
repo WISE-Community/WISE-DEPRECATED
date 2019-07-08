@@ -8,7 +8,7 @@ import { EditComponent } from "./account/edit/edit.component";
 
 const studentRoutes: Routes = [
   {
-    path: 'student',
+    path: '',
     component: StudentComponent,
     canActivate: [AuthGuard],
     children: [

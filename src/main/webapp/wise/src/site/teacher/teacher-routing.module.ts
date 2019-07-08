@@ -9,7 +9,7 @@ import { TeacherProjectLibraryComponent } from "../modules/library/teacher-proje
 
 const teacherRoutes: Routes = [
   {
-    path: 'teacher',
+    path: '',
     component: TeacherComponent,
     canActivate: [AuthGuard],
     children: [
