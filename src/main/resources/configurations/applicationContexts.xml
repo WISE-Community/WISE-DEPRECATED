@@ -645,6 +645,7 @@
     <property name="locations">
       <list>
         <value>classpath:wise.properties</value>
+        <value>classpath:application.properties</value>
       </list>
     </property>
   </bean>

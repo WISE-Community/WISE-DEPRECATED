@@ -36,23 +36,28 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.impl.ChangePeriodParameters;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.teacher.management.ViewMyStudentsPeriod;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
@@ -64,6 +69,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * @author Hiroki Terashima
  */
 @Controller
+@SessionAttributes("changePeriodParameters")
 public class ManageStudentsController {
 
   @Autowired
@@ -80,6 +86,12 @@ public class ManageStudentsController {
 
   @Autowired
   private AclService<Run> aclService;
+
+  @Autowired
+  private StudentService studentService;
+
+  @Autowired
+  protected ChangePeriodParametersValidator changePeriodParametersValidator;
 
   /**
    * Handles request for viewing students in the specified run
@@ -160,6 +172,45 @@ public class ManageStudentsController {
         user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
         aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
         aclService.hasPermission(run, BasePermission.READ, user);
+  }
+
+  @GetMapping("/teacher/management/changestudentperiod")
+  public String showChangePeriodForm(ModelMap model,
+       @RequestParam("userId") Long userId,
+       @RequestParam("runId") Long runId,
+       @RequestParam("projectCode") String projectCode) throws Exception {
+    ChangePeriodParameters params = new ChangePeriodParameters();
+    params.setStudent(userService.retrieveById(userId));
+    params.setRun(runService.retrieveById(runId));
+    params.setProjectcode(projectCode);
+    model.addAttribute("changePeriodParameters", params);
+    return "teacher/management/changestudentperiod";
+  }
+
+  @PostMapping("/teacher/management/changestudentperiod")
+  protected String changeStudentPeriod(
+      @ModelAttribute("changePeriodParameters") ChangePeriodParameters params,
+      BindingResult bindingResult) {
+    changePeriodParametersValidator.validate(params, bindingResult);
+    if (bindingResult.hasErrors()) {
+      return "errors/accessdenied";
+    } else {
+      User user = ControllerUtil.getSignedInUser();
+      if (runService.hasRunPermission(params.getRun(), user, BasePermission.WRITE) ||
+          runService.hasRunPermission(params.getRun(), user, BasePermission.ADMINISTRATION)) {
+        try {
+          if (!params.getProjectcodeTo().equals(params.getProjectcode())) {
+            studentService.removeStudentFromRun(params.getStudent(), params.getRun());
+            studentService.addStudentToRun(params.getStudent(),
+                new Projectcode(params.getRun().getRuncode(), params.getProjectcodeTo()));
+          }
+        } catch (Exception e) {
+        }
+        return "teacher/management/changestudentperiodsuccess";
+      } else {
+        return "errors/accessdenied";
+      }
+    }
   }
 
   /**
