@@ -46,8 +46,7 @@ var StudentWebSocketService = function () {
         } else if (message.type === 'unpause') {
           _this2.$rootScope.$broadcast('unPauseScreen', { data: message.content });
         } else if (message.type === 'studentWork') {
-          var studentWork = message.content;
-          studentWork.studentData = JSON.parse(studentWork.studentData);
+          var studentWork = JSON.parse(message.content);
           _this2.$rootScope.$broadcast('studentWorkReceived', studentWork);
         }
       });
@@ -59,12 +58,10 @@ var StudentWebSocketService = function () {
 
       this.$stomp.subscribe('/topic/workgroup/' + this.workgroupId, function (message, headers, res) {
         if (message.type === 'notification') {
-          var notification = message.content;
-          notification.data = JSON.parse(notification.data);
+          var notification = JSON.parse(message.content);
           _this3.$rootScope.$broadcast('newNotificationReceived', notification);
         } else if (message.type === 'annotation') {
-          var annotationData = message.content;
-          annotationData.data = JSON.parse(annotationData.data);
+          var annotationData = JSON.parse(message.content);
           _this3.AnnotationService.addOrUpdateAnnotation(annotationData);
           _this3.$rootScope.$broadcast('newAnnotationReceived', { annotation: annotationData });
         }

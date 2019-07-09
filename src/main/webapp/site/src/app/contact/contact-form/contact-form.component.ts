@@ -8,6 +8,7 @@ import { Teacher } from "../../domain/teacher";
 import { Student } from "../../domain/student";
 import { ConfigService } from "../../services/config.service";
 import { StudentService } from "../../student/student.service";
+import {LibraryService} from '../../services/library.service';
 
 @Component({
   selector: 'app-contact-form',
@@ -26,6 +27,7 @@ export class ContactFormComponent implements OnInit {
   });
   runId: number;
   projectId: number;
+  projectName: string;
   isStudent: boolean = false;
   isSignedIn: boolean = false;
   isSendingRequest: boolean = false;
@@ -40,6 +42,7 @@ export class ContactFormComponent implements OnInit {
               private userService: UserService,
               private configService: ConfigService,
               private studentService: StudentService,
+              private libraryService: LibraryService,
               private route: ActivatedRoute,
               private router: Router,
               private i18n: I18n) {
@@ -61,6 +64,16 @@ export class ContactFormComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.runId = params['runId'];
       this.projectId = params['projectId'];
+      if (this.runId) {
+        this.studentService.getRunInfoById(this.runId).subscribe(runInfo => {
+          this.projectName = runInfo.name;
+        });
+      }
+      if (this.projectId) {
+        this.libraryService.getProjectInfo(this.projectId).subscribe(project => {
+          this.projectName = project.name;
+        });
+      }
     });
   }
 

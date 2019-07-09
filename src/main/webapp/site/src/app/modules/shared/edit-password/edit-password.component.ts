@@ -12,7 +12,7 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 })
 export class EditPasswordComponent implements OnInit {
 
-  @ViewChild('changePasswordForm') changePasswordForm;
+  @ViewChild('changePasswordForm', { static: false }) changePasswordForm;
   isSaving: boolean = false;
   isGoogleUser: boolean = false;
 
@@ -27,9 +27,9 @@ export class EditPasswordComponent implements OnInit {
   });
 
   constructor(private fb: FormBuilder,
-              private userService: UserService,
-              public snackBar: MatSnackBar,
-              private i18n: I18n) { }
+      private userService: UserService,
+      public snackBar: MatSnackBar,
+      private i18n: I18n) { }
 
   ngOnInit() {
     this.userService.getUser().subscribe(user => {
@@ -55,14 +55,14 @@ export class EditPasswordComponent implements OnInit {
     const newPassword: string = this.getControlFieldValue('newPassword');
     const username = this.getUsername();
     this.userService.changePassword(username, oldPassword, newPassword)
-      .pipe(
-        finalize(() => {
-          this.isSaving = false;
-        })
-      )
-      .subscribe((response) => {
-        this.handleChangePasswordResponse(response);
-      });
+        .pipe(
+          finalize(() => {
+            this.isSaving = false;
+          })
+        )
+        .subscribe((response) => {
+          this.handleChangePasswordResponse(response);
+        });
   }
 
   getControlFieldValue(fieldName) {

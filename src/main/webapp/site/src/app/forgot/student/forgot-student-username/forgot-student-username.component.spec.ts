@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
 
@@ -22,7 +23,7 @@ describe('ForgotStudentUsernameComponent', () => {
     return fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotStudentUsernameComponent ],
       imports: [
@@ -44,8 +45,7 @@ describe('ForgotStudentUsernameComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotStudentUsernameComponent);

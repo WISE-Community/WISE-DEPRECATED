@@ -9,6 +9,7 @@ import { StudentService } from '../../../student/student.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/index';
 import { translationsFactory } from "../../../app.module";
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
   getSecurityQuestion(username: string): Observable<any> {
@@ -55,7 +56,7 @@ describe('ForgotStudentPasswordComponent', () => {
     return fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ForgotStudentPasswordComponent ],
       imports: [
@@ -75,8 +76,7 @@ describe('ForgotStudentPasswordComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotStudentPasswordComponent);

@@ -3,6 +3,9 @@ import { DateFormatPipe } from 'ngx-moment';
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import {ConfigService} from "../../services/config.service";
+import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dialog.component';
 
 @Component({
   selector: 'app-student-run-list',
@@ -18,7 +21,9 @@ export class StudentRunListComponent implements OnInit {
   showAll: boolean = false;
 
   constructor(private studentService: StudentService,
-              private configService: ConfigService) {
+              private configService: ConfigService,
+              private route: ActivatedRoute,
+              private dialog: MatDialog) {
     studentService.newRunSource$.subscribe(run => {
       run.isHighlighted = true;
       this.runs.unshift(new StudentRun(run));
@@ -47,6 +52,11 @@ export class StudentRunListComponent implements OnInit {
         this.filteredRuns = runs;
         this.searchUpdated(this.search);
         this.loaded = true;
+        this.route.queryParams.subscribe(params => {
+          if (params['accessCode'] != null) {
+            this.handleClassroomAccessCode(params['accessCode']);
+          }
+        });
       });
   }
 
@@ -151,6 +161,17 @@ export class StudentRunListComponent implements OnInit {
         }
       })
     );
+  }
+
+  handleClassroomAccessCode(accessCode: string) {
+    for (const run of this.runs) {
+      if (accessCode.toLowerCase() === run.runCode.toLowerCase()) {
+        return setTimeout(() => {
+          document.getElementById(`run${run.id}`).scrollIntoView({ behavior: "smooth" })
+        }, 1500);
+      }
+    }
+    this.dialog.open(AddProjectDialogComponent);
   }
 
   reset(): void {

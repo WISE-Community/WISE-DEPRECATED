@@ -281,7 +281,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.2.RELEASE</version>
+    <version>2.1.5.RELEASE</version>
   </parent>
 
   <dependencies>
@@ -298,6 +298,16 @@
           <artifactId>spring-boot-starter-logging</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+      <version>2.1.4.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.session</groupId>
+      <artifactId>spring-session-data-redis</artifactId>
+      <version>2.1.4.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -379,9 +389,9 @@
       <artifactId>ehcache</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-c3p0</artifactId>
-      <version>${org.hibernate.version}</version>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>3.3.1</version>
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>
@@ -465,6 +475,26 @@
       <groupId>net.bull.javamelody</groupId>
       <artifactId>javamelody-core</artifactId>
       <version>1.74.0</version>
+    </dependency>
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>2.9.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>1.28.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.oauth-client</groupId>
+      <artifactId>google-oauth-client-jetty</artifactId>
+      <version>1.28.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-classroom</artifactId>
+      <version>v1-rev274-1.22.0</version>
     </dependency>
   </dependencies>
 

@@ -13,6 +13,8 @@ import { StudentService } from "../../student/student.service";
 import { User } from "../../domain/user";
 import { BehaviorSubject } from 'rxjs';
 import { translationsFactory } from "../../app.module";
+import { configureTestSuite } from 'ng-bullet';
+import {LibraryService} from '../../services/library.service';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {
@@ -41,11 +43,15 @@ export class MockStudentService {
 
 }
 
+export class MockLibraryService {
+
+}
+
 describe('ContactFormComponent', () => {
   let component: ContactFormComponent;
   let fixture: ComponentFixture<ContactFormComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ ContactFormComponent ],
       imports: [
@@ -59,6 +65,7 @@ describe('ContactFormComponent', () => {
         { provide: ConfigService, useClass: MockConfigService },
         { provide: UserService, useClass: MockUserService },
         { provide: StudentService, useClass: MockStudentService },
+        { provide: LibraryService, useClass: MockLibraryService },
         { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
         {
           provide: TRANSLATIONS,
@@ -68,9 +75,8 @@ describe('ContactFormComponent', () => {
         I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ContactFormComponent);

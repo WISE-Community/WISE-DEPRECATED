@@ -1,9 +1,10 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { LibraryService } from './library.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { configureTestSuite } from 'ng-bullet';
 
 describe('LibraryService', () => {
-  beforeEach(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       providers: [ LibraryService ],
       imports: [ HttpClientTestingModule ]

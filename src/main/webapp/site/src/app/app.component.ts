@@ -4,7 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { MatDialog, MatDialogRef } from "@angular/material";
 import { Subscription } from 'rxjs';
-import { MediaChange, ObservableMedia } from '@angular/flex-layout';
+import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { UtilService } from "./services/util.service";
 import { ConfigService } from "./services/config.service";
 
@@ -27,7 +27,7 @@ export class AppComponent {
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer,
               utilService: UtilService,
-              media: ObservableMedia,
+              media: MediaObserver,
               public dialog: MatDialog) {
     iconRegistry.addSvgIcon(
       'ki-elicit',
@@ -69,11 +69,15 @@ export class AppComponent {
       'github-ffffff',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/github-ffffff.svg')
     );
+    iconRegistry.addSvgIcon(
+      'google-classroom',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/google-classroom.svg')
+    );
     utilService.getMobileMenuState()
       .subscribe(state => {
         this.showMobileMenu = state;
       });
-    this.mediaWatcher = media.subscribe((change: MediaChange) => {
+    this.mediaWatcher = media.asObservable().subscribe((change: MediaChange[]) => {
       if (media.isActive('gt-sm')) {
         utilService.showMobileMenu(false);
       }

@@ -1,25 +1,35 @@
 package org.wise.portal.presentation.web.controllers.teacher.run;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
+import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.WebSocketMessage;
 
 @RestController
 public class TeacherRunAPIController {
 
+  @Autowired
+  private MessagePublisher redisPublisher;
+
   @MessageMapping("/pause/{runId}/{periodId}")
-  @SendTo("/topic/classroom/{runId}/{periodId}")
-  public WebSocketMessage pausePeriod(@DestinationVariable Integer runId,
+  public void pausePeriod(@DestinationVariable Integer runId,
       @DestinationVariable Integer periodId) throws Exception {
-    return new WebSocketMessage("pause", "RunId: " + runId + " PeriodId: " + periodId);
+    JSONObject message = new JSONObject();
+    message.put("type", "pause");
+    message.put("topic", String.format("/topic/classroom/%s/%s", runId, periodId));
+    redisPublisher.publish(message.toString());
   }
 
   @MessageMapping("/unpause/{runId}/{periodId}")
-  @SendTo("/topic/classroom/{runId}/{periodId}")
-  public WebSocketMessage unpausePeriod(@DestinationVariable Integer runId,
+  public void unpausePeriod(@DestinationVariable Integer runId,
       @DestinationVariable Integer periodId) throws Exception {
-    return new WebSocketMessage("unpause", "RunId: " + runId + " PeriodId: " + periodId);
+    JSONObject message = new JSONObject();
+    message.put("type", "unpause");
+    message.put("topic", String.format("/topic/classroom/%s/%s", runId, periodId));
+    redisPublisher.publish(message.toString());
   }
 }
