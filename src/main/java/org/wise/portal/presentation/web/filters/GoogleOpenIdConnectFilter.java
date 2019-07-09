@@ -20,9 +20,8 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.session.SessionService;
 import org.wise.portal.service.user.UserService;
 
 import javax.servlet.FilterChain;
@@ -54,6 +53,9 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  protected SessionService sessionService;
 
   protected GoogleOpenIdConnectFilter(String defaultFilterProcessesUrl) {
     super(defaultFilterProcessesUrl);
@@ -128,8 +130,7 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
       FilterChain chain, Authentication authentication) throws IOException, ServletException {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    User user = userService.retrieveUser(userDetails);
-    ControllerUtil.addNewSessionToAllLoggedInUsers(request, user);
+    sessionService.addSignedInUser(userDetails);
     userDetailsService.updateStatsOnSuccessfulLogin((MutableUserDetails) userDetails);
     super.successfulAuthentication(request, response, chain, authentication);
   }

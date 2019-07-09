@@ -41,21 +41,17 @@ var TeacherWebSocketService = function () {
 
       this.$stomp.subscribe('/topic/teacher/' + this.runId, function (message, headers, res) {
         if (message.type === 'studentWork') {
-          var studentWork = message.content;
-          studentWork.studentData = JSON.parse(studentWork.studentData);
+          var studentWork = JSON.parse(message.content);
           _this2.$rootScope.$broadcast('newStudentWorkReceived', { studentWork: studentWork });
         } else if (message.type === 'studentStatus') {
-          var studentStatus = message.content;
-          var status = JSON.parse(studentStatus.status);
+          var status = JSON.parse(message.content);
           _this2.StudentStatusService.setStudentStatus(status);
           _this2.$rootScope.$emit('studentStatusReceived', { studentStatus: status });
         } else if (message.type === 'newStudentAchievement') {
-          var achievement = message.content;
-          achievement.data = JSON.parse(achievement.data);
+          var achievement = JSON.parse(message.content);
           _this2.$rootScope.$broadcast('newStudentAchievement', { studentAchievement: achievement });
         } else if (message.type === 'annotation') {
-          var annotationData = message.content;
-          annotationData.data = JSON.parse(annotationData.data);
+          var annotationData = JSON.parse(message.content);
           _this2.$rootScope.$broadcast('newAnnotationReceived', { annotation: annotationData });
         }
       });
@@ -67,8 +63,7 @@ var TeacherWebSocketService = function () {
 
       this.$stomp.subscribe('/topic/workgroup/' + this.ConfigService.getWorkgroupId(), function (message, headers, res) {
         if (message.type === 'notification') {
-          var notification = message.content;
-          notification.data = JSON.parse(notification.data);
+          var notification = JSON.parse(message.content);
           _this3.$rootScope.$broadcast('newNotificationReceived', notification);
         }
       });

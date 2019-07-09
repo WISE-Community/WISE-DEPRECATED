@@ -105,41 +105,41 @@
                             <sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
                                 <spring:message code='admin.index.list' />
                                 <spring:message code='admin.index.allUsersWhoLoggedIn' />
-                                <a href="${contextPath}/admin/account/manageusers.html?onlyShowLoggedInUser=true">
+                                <a href="${contextPath}/admin/account/manageusers?onlyShowLoggedInUser=true">
                                     <spring:message code='now' /> (${numCurrentlyLoggedInUsers})</a> |
-                                <a href="${contextPath}/admin/account/manageusers.html?onlyShowUsersWhoLoggedIn=today">
+                                <a href="${contextPath}/admin/account/manageusers?onlyShowUsersWhoLoggedIn=today">
                                     <spring:message code='today' /> (${numUsersWhoLoggedInToday})</a> |
-                                <a href="${contextPath}/admin/account/manageusers.html?onlyShowUsersWhoLoggedIn=thisWeek">
+                                <a href="${contextPath}/admin/account/manageusers?onlyShowUsersWhoLoggedIn=thisWeek">
                                     <spring:message code='thisWeek' /></a> |
-                                <a href="${contextPath}/admin/account/manageusers.html?onlyShowUsersWhoLoggedIn=thisMonth">
+                                <a href="${contextPath}/admin/account/manageusers?onlyShowUsersWhoLoggedIn=thisMonth">
                                     <spring:message code='thisMonth' /></a> |
-                                <a href="${contextPath}/admin/account/manageusers.html?onlyShowUsersWhoLoggedIn=thisYear">
+                                <a href="${contextPath}/admin/account/manageusers?onlyShowUsersWhoLoggedIn=thisYear">
                                     <spring:message code='thisYear' /></a>
                             </sec:authorize>
                         </h5>
                         <h5>
                             <spring:message code='admin.index.find' />
-                            <a href="${contextPath}/admin/account/lookupuser?userType=teacher"><spring:message
-                                    code='teacher_cap' /></a> | <a
-                                href="${contextPath}/admin/account/lookupuser?userType=student"><spring:message
-                                code='student_cap' /></a>
+                            <a href="${contextPath}/admin/account/lookupuser?userType=teacher">
+                                <spring:message code='teacher_cap' /></a> |
+                            <a href="${contextPath}/admin/account/lookupuser?userType=student">
+                                <spring:message code='student_cap' /></a>
                         </h5>
                         <h5>
                             <spring:message code='admin.index.list' />
-                            <a href="${contextPath}/admin/account/manageusers.html?userType=teacher"><spring:message
-                                    code='admin.index.allTeachers' /></a> | <a
-                                href="${contextPath}/admin/account/manageusers.html?userType=student"><spring:message
-                                code='admin.index.allStudents' /></a>
+                            <a href="${contextPath}/admin/account/manageusers?userType=teacher">
+                                <spring:message code='admin.index.allTeachers' /></a> |
+                            <a href="${contextPath}/admin/account/manageusers?userType=student">
+                                <spring:message code='admin.index.allStudents' /></a>
 
                         </h5>
                         <h5>
-                            <a href="${contextPath}/admin/account/enabledisableuser"><spring:message
-                                    code='admin.index.enableDisableUser' /></a>
+                            <a href="${contextPath}/admin/account/enabledisableuser">
+                                <spring:message code='admin.index.enableDisableUser' /></a>
                         </h5>
                         <c:if test="${isBatchCreateUserAccountsEnabled}">
                             <h5>
-                                <a href="${contextPath}/admin/account/batchcreateuseraccounts.html"><spring:message
-                                        code='admin.index.batchCreateUserAccounts' /></a>
+                                <a href="${contextPath}/admin/account/batchcreateuseraccounts.html">
+                                    <spring:message code='admin.index.batchCreateUserAccounts' /></a>
                             </h5>
                         </c:if>
                     </div>
@@ -187,15 +187,15 @@
                                 <input type="text" name="projectLookupValue" id="projectLookupValue" size="20"></input>
                                 <input type="Submit" value="Go"></input>
                             </form> |
-                            <a href="${contextPath}/admin/project/manageallprojects.html"><spring:message
-                                    code='admin.index.manageAllProjects' /></a>
+                            <a href="${contextPath}/admin/project/manageallprojects.html">
+                                <spring:message code='admin.index.manageAllProjects' /></a>
                             <h5>
-                                <a href="${contextPath}/admin/project/currentlyAuthoredProjects.html"><spring:message
-                                        code='admin.index.viewCurrentAuthors' /></a>
+                                <a href="${contextPath}/admin/project/currentlyAuthoredProjects">
+                                    <spring:message code='admin.index.viewCurrentAuthors' /></a>
                             </h5>
                             <h5>
-                                <a href="${contextPath}/admin/project/import"><spring:message
-                                        code='admin.index.importProject' /></a>
+                                <a href="${contextPath}/admin/project/import">
+                                    <spring:message code='admin.index.importProject' /></a>
                             </h5>
                         </div>
                     </sec:authorize>
@@ -221,8 +221,8 @@
                         </div>
                         <div class="sectionContent">
                             <h5>
-                                <a href="${contextPath}/admin/news/manage"><spring:message
-                                        code='admin.index.workWithNewsItems' /></a>
+                                <a href="${contextPath}/admin/news/manage">
+                                    <spring:message code='admin.index.workWithNewsItems' /></a>
                             </h5>
                         </div>
 
@@ -231,16 +231,16 @@
                         </div>
                         <div class="sectionContent">
                             <h5>
-                                <a href="${contextPath}/admin/portal/manage"><spring:message
-                                        code='admin.index.configureWISESettings' /></a>
+                                <a href="${contextPath}/admin/portal/manage">
+                                    <spring:message code='admin.index.configureWISESettings' /></a>
                             </h5>
                             <h5>
-                                <a href="${contextPath}/pages/statistics.html"><spring:message
-                                        code='admin.index.statistics' /></a>
+                                <a href="${contextPath}/pages/statistics.html">
+                                    <spring:message code='admin.index.statistics' /></a>
                             </h5>
                             <h5>
-                                <a href="${contextPath}/admin/memorymonitor.html"><spring:message
-                                        code='admin.index.memoryMonitor' /></a>
+                                <a href="${contextPath}/admin/memorymonitor.html">
+                                    <spring:message code='admin.index.memoryMonitor' /></a>
                             </h5>
                             <table class="table table-condensed table-hover">
                                 <thead style="background-color: antiquewhite">
