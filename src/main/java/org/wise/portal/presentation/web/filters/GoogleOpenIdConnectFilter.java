@@ -6,8 +6,6 @@ import com.auth0.jwk.UrlJwkProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,21 +15,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.config.GoogleOpenIdConnectConfig;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.session.SessionService;
 import org.wise.portal.service.user.UserService;
 
 import javax.servlet.FilterChain;
@@ -41,8 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -66,6 +54,9 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
   @Autowired
   private UserService userService;
 
+  @Autowired
+  protected SessionService sessionService;
+
   protected GoogleOpenIdConnectFilter(String defaultFilterProcessesUrl) {
     super(defaultFilterProcessesUrl);
     setAuthenticationManager(new NoopAuthenticationManager());
@@ -75,6 +66,12 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
     OAuth2AccessToken accessToken;
     try {
+      String accessCodeFromParameter = request.getParameter("accessCode");
+      String accessCodeFromState = (String) googleOpenIdRestTemplate.getOAuth2ClientContext()
+          .removePreservedState("accessCode");
+      googleOpenIdRestTemplate.getOAuth2ClientContext()
+          .setPreservedState("accessCode", accessCodeFromParameter);
+      request.setAttribute("accessCode", accessCodeFromState);
       accessToken = googleOpenIdRestTemplate.getAccessToken();
     } catch (final OAuth2Exception e) {
       throw new BadCredentialsException("Could not obtain access token", e);
@@ -133,9 +130,7 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
       FilterChain chain, Authentication authentication) throws IOException, ServletException {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    User user = userService.retrieveUser(userDetails);
-    ControllerUtil.addNewSessionToAllLoggedInUsers(request, user);
-
+    sessionService.addSignedInUser(userDetails);
     userDetailsService.updateStatsOnSuccessfulLogin((MutableUserDetails) userDetails);
     super.successfulAuthentication(request, response, chain, authentication);
   }

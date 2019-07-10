@@ -27,6 +27,7 @@ if [ $1 = "reset" ]; then
 fi
 
 if [ $1 = "package" ]; then
+  npm install
   ng build --configuration=production --stats-json
   ./mvnw clean -Dmaven.test.skip=true package
   exit 0

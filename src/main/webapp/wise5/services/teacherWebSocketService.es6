@@ -26,21 +26,17 @@ class TeacherWebSocketService {
   subscribeToTeacherTopic() {
     this.$stomp.subscribe(`/topic/teacher/${this.runId}`, (message, headers, res) => {
       if (message.type === 'studentWork') {
-        const studentWork = message.content;
-        studentWork.studentData = JSON.parse(studentWork.studentData);
+        const studentWork = JSON.parse(message.content);
         this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: studentWork});
       } else if (message.type === 'studentStatus') {
-        const studentStatus = message.content;
-        const status = JSON.parse(studentStatus.status);
+        const status = JSON.parse(message.content);
         this.StudentStatusService.setStudentStatus(status);
         this.$rootScope.$emit('studentStatusReceived', {studentStatus: status});
       } else if (message.type === 'newStudentAchievement') {
-        const achievement = message.content;
-        achievement.data = JSON.parse(achievement.data);
+        const achievement = JSON.parse(message.content);
         this.$rootScope.$broadcast('newStudentAchievement', {studentAchievement: achievement});
       } else if (message.type === 'annotation') {
-        const annotationData = message.content;
-        annotationData.data = JSON.parse(annotationData.data);
+        const annotationData = JSON.parse(message.content);
         this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
       }
     });
@@ -49,8 +45,7 @@ class TeacherWebSocketService {
   subscribeToTeacherWorkgroupTopic() {
     this.$stomp.subscribe(`/topic/workgroup/${this.ConfigService.getWorkgroupId()}`, (message, headers, res) => {
       if (message.type === 'notification') {
-        const notification = message.content;
-        notification.data = JSON.parse(notification.data);
+        const notification = JSON.parse(message.content);
         this.$rootScope.$broadcast('newNotificationReceived', notification);
       }
     });

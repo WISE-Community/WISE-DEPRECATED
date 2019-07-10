@@ -22,7 +22,7 @@
         <h2 class="accent center" i18n>Contact WISE</h2>
         <p>
           <mat-form-field appearance="fill" fxFlex>
-            <mat-label>Name</mat-label>
+            <mat-label i18n>Name</mat-label>
             <input matInput
                    id="name"
                    name="name"
@@ -32,7 +32,7 @@
         </p>
         <p *ngIf="!isStudent">
           <mat-form-field appearance="fill" fxFlex>
-            <mat-label>Email</mat-label>
+            <mat-label i18n>Email</mat-label>
             <input matInput
                    id="email"
                    name="email"
@@ -43,7 +43,7 @@
         </p>
         <p *ngIf="isStudent && teachers.length > 0">
           <mat-form-field appearance="fill" fxFlex>
-            <mat-label>Teacher</mat-label>
+            <mat-label i18n>Teacher</mat-label>
             <mat-select formControlName="teacher">
               <mat-option *ngFor="let teacher of teachers" [value]="teacher.username">
                 {{teacher.displayName}}
@@ -54,7 +54,7 @@
         </p>
         <p>
           <mat-form-field appearance="fill" fxFlex>
-            <mat-label>Issue Type</mat-label>
+            <mat-label i18n>Issue Type</mat-label>
             <mat-select formControlName="issueType">
               <mat-option *ngFor="let issueType of issueTypes" [value]="issueType.key">
                 {{issueType.value}}
@@ -63,9 +63,18 @@
             <mat-error *ngIf="contactFormGroup.controls['issueType'].hasError('required')" i18n>Issue Type required</mat-error>
           </mat-form-field>
         </p>
+        <p *ngIf="projectName">
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label i18n>Project Name</mat-label>
+            <input matInput
+                   name="projectName"
+                   [value]="projectName"
+                   disabled />
+          </mat-form-field>
+        </p>
         <p>
           <mat-form-field appearance="fill" fxFlex>
-            <mat-label>Summary</mat-label>
+            <mat-label i18n>Summary</mat-label>
             <input matInput
                    id="summary"
                    name="summary"
@@ -75,7 +84,7 @@
         </p>
         <p>
           <mat-form-field appearance="fill" fxFlex>
-            <mat-label>Description</mat-label>
+            <mat-label i18n>Description</mat-label>
             <textarea matInput
                       id="description"
                       name="description"

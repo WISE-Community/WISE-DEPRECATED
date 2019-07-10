@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from "@angular/material";
 import { StudentService } from "../student.service";
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-project-dialog',
@@ -14,6 +15,7 @@ export class AddProjectDialogComponent implements OnInit {
   registerRunRunCode: string = '';
   registerRunPeriods: string[] = [];
   selectedPeriod: string = '';
+  accessCode: string = null;
   runCodeFormControl = new FormControl('', [runCodeValidator(this.validRunCodeSyntaxRegEx)]);
   addProjectForm: FormGroup = new FormGroup({
     runCode: this.runCodeFormControl,
@@ -22,10 +24,18 @@ export class AddProjectDialogComponent implements OnInit {
   isAdding = false;
 
   constructor(public dialog: MatDialog,
-              private studentService: StudentService) {
+              private studentService: StudentService,
+              private route: ActivatedRoute ) {
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['accessCode'] != null) {
+        this.accessCode = params['accessCode'];
+        this.addProjectForm.controls['runCode'].setValue(params['accessCode']);
+        this.checkRunCode();
+      }
+    });
   }
 
   submit() {
@@ -48,8 +58,8 @@ export class AddProjectDialogComponent implements OnInit {
     this.addProjectForm.controls['period'].disable();
   }
 
-  checkRunCode(event: KeyboardEvent) {
-    const runCode = (<HTMLInputElement>event.target).value;
+  checkRunCode() {
+    const runCode = this.addProjectForm.controls['runCode'].value;
     this.registerRunRunCode = runCode;
     if (this.isValidRunCodeSyntax(runCode)) {
       this.studentService.getRunInfo(runCode).subscribe(runInfo => {

@@ -12,7 +12,6 @@ target
 src/main/webapp/wise5/jspm_packages
 src/main/webapp/wise5/node_modules
 src/main/resources/wise.properties
-src/main/resources/application.properties
 *.bak
 .idea
 !.idea/compiler.xml
@@ -25,3 +24,4 @@ src/main/webapp/curriculum/*
 !src/main/webapp/curriculum/demo/
 !src/main/webapp/curriculum/e2e-test1/
 .classpath
+tokens/

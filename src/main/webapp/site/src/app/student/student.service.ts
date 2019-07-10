@@ -6,12 +6,14 @@ import { tap } from 'rxjs/operators';
 import { RunInfo } from './run-info';
 import { Student } from "../domain/student";
 import { StudentRun } from './student-run';
+import {Run} from '../domain/run';
 
 @Injectable()
 export class StudentService {
 
   private runsUrl = 'api/student/runs';
   private runInfoUrl = 'api/student/run/info';
+  private runInfoByIdUrl = 'api/student/run/info-by-id';
   private addRunUrl = 'api/student/run/register';
   private launchRunUrl = 'api/student/run/launch';
   private registerUrl = 'api/student/register';
@@ -40,6 +42,11 @@ export class StudentService {
   getRunInfo(runCode: string): Observable<RunInfo> {
     let params = new HttpParams().set("runCode", runCode);
     return this.http.get<RunInfo>(this.runInfoUrl, { params: params });
+  }
+
+  getRunInfoById(runId: number): Observable<RunInfo> {
+    let params = new HttpParams().set("runId", String(runId));
+    return this.http.get<RunInfo>(this.runInfoByIdUrl, { params });
   }
 
   addRun(runCode: string, period: string): Observable<StudentRun> {

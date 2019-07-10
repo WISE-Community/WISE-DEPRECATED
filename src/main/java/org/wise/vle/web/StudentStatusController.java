@@ -23,33 +23,30 @@
  */
 package org.wise.vle.web;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.vle.VLEService;
+import org.wise.portal.spring.data.redis.MessagePublisher;
+import org.wise.vle.domain.status.StudentStatus;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-//import org.springframework.web.socket.WebSocketHandler;
-import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.run.RunService;
-import org.wise.portal.service.vle.VLEService;
-import org.wise.vle.domain.WebSocketMessage;
-import org.wise.vle.domain.status.StudentStatus;
 
 @Controller
 @RequestMapping("/studentStatus")
@@ -62,7 +59,7 @@ public class StudentStatusController {
   private RunService runService;
 
   @Autowired
-  private SimpMessagingTemplate simpMessagingTemplate;
+  private MessagePublisher redisPublisher;
 
   /**
    * Handles GET requests from the teacher when a teacher requests for all the student
@@ -215,10 +212,11 @@ public class StudentStatusController {
   }
 
   public void broadcastStudentStatusToTeacher(StudentStatus studentStatus) throws Exception {
-    WebSocketMessage message = new WebSocketMessage("studentStatus", studentStatus);
-    simpMessagingTemplate.convertAndSend(
-        String.format("/topic/teacher/%s", studentStatus.getRunId()),
-        message);
+    JSONObject message = new JSONObject();
+    message.put("type", "studentStatusToTeacher");
+    message.put("topic", String.format("/topic/teacher/%s", studentStatus.getRunId()));
+    message.put("studentStatus", studentStatus.getStatus());
+    redisPublisher.publish(message.toString());
   }
 
 }
