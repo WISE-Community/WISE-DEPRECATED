@@ -649,14 +649,14 @@ class ComponentController {
 
   getConnectedComponentsAndTheirComponentStates() {
     const connectedComponentsAndTheirComponentStates = [];
-    for (let connectedComponent of this.componentContent.connectedComponents) {
+    for (const connectedComponent of this.componentContent.connectedComponents) {
       const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
         connectedComponent.nodeId, connectedComponent.componentId);
-      const connectedComponentsAndomponentState = {
+      const connectedComponentsAndComponentState = {
         connectedComponent: connectedComponent,
         componentState: this.UtilService.makeCopyOfJSONObject(componentState)
       };
-      connectedComponentsAndTheirComponentStates.push(connectedComponentsAndomponentState);
+      connectedComponentsAndTheirComponentStates.push(connectedComponentsAndComponentState);
     }
     return connectedComponentsAndTheirComponentStates;
   }

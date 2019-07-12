@@ -767,11 +767,11 @@ function () {
         for (var _iterator2 = this.componentContent.connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var connectedComponent = _step2.value;
           var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
-          var connectedComponentsAndomponentState = {
+          var connectedComponentsAndComponentState = {
             connectedComponent: connectedComponent,
             componentState: this.UtilService.makeCopyOfJSONObject(componentState)
           };
-          connectedComponentsAndTheirComponentStates.push(connectedComponentsAndomponentState);
+          connectedComponentsAndTheirComponentStates.push(connectedComponentsAndComponentState);
         }
       } catch (err) {
         _didIteratorError2 = true;
