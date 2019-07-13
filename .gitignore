@@ -3,6 +3,8 @@
 *.DS_Store
 build
 .classpath
+.factoryPath
+.vscode
 .jspm
 .m2
 .npm
