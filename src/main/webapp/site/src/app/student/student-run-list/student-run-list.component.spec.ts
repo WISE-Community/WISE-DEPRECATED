@@ -6,7 +6,9 @@ import { StudentService } from '../student.service';
 import { StudentRunListComponent } from "./student-run-list.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { Run } from '../../domain/run';
-import { ConfigService } from "../../services/config.service";
+import { ConfigService } from '../../services/config.service';
+import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material';
 import { configureTestSuite } from 'ng-bullet';
 
 export function fakeAsyncResponse<T>(data: T) {
@@ -67,7 +69,9 @@ describe('StudentRunListComponent', () => {
       imports: [ MomentModule ],
       providers: [
         { provide: StudentService, useClass: MockStudentService },
-        { provide: ConfigService, useClass: MockConfigService }
+        { provide: ConfigService, useClass: MockConfigService },
+        { provide: ActivatedRoute, useValue: { queryParams: Observable.create() } },
+        { provide: MatDialog, useValue: {} }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

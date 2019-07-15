@@ -72,6 +72,7 @@ public class UserAPIController {
       userJSON.put("firstName", userDetails.getFirstname());
       userJSON.put("lastName", userDetails.getLastname());
       userJSON.put("username", userDetails.getUsername());
+      userJSON.put("isGoogleUser", userDetails.isGoogleUser());
 
       if (isStudent) {
         userJSON.put("role", "student");
@@ -114,9 +115,15 @@ public class UserAPIController {
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
+    configJSON.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
     configJSON.put("recaptchaPublicKey", wiseProperties.get("recaptcha_public_key"));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
+  }
+
+  private boolean isGoogleClassroomEnabled() {
+    return !wiseProperties.getProperty("google.clientId", "").equals("") &&
+      !wiseProperties.getProperty("google.clientSecret", "").equals("");
   }
 
   @RequestMapping(value = "/check-authentication", method = RequestMethod.POST)

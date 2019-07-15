@@ -1,0 +1,77 @@
+<h2 class="mat-dialog-title"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="8px">
+  <mat-icon svgIcon="google-classroom"></mat-icon>
+  <span i18n>Add to Google Classroom</span>
+</h2>
+<ng-container *ngIf="!courses.length">
+  <mat-dialog-content>
+    <div class="info-block">
+      <p i18n>Hey there! Looks like you don't have any active Google classes.</p>
+      <p i18n>Visit <a href="https://classroom.google.com" target="_blank">Google Classroom</a> to create a class and try again.</p>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end">
+    <button mat-button (click)="closeAll()" i18n>OK</button>
+  </mat-dialog-actions>
+</ng-container>
+<ng-container *ngIf="courses.length && !isAdded">
+  <form [formGroup]="form" (ngSubmit)="addToClassroom()">
+    <mat-dialog-content class="mat-dialog-content--scroll" fxLayout="column">
+      <p class="mat-subheading-1 accent-1">
+        {{ data.run.name }} <span class="mat-caption" i18n>(Run ID: {{ data.run.id }})</span>
+      </p>
+      <p i18n>Add an assignment for this unit in Google Classroom.</p>
+      <h3 i18n>1. Choose Google Class</h3>
+      <div formArrayName="selectedCourses">
+        <p *ngFor="let control of selectedCoursesControl.controls; let i = index">
+          <mat-checkbox [formControl]="control">
+            {{ courses[i].name }} <ng-container *ngIf="courses[i].section" i18n> (Section {{ courses[i].section }})</ng-container>
+          </mat-checkbox>
+        </p>
+      </div>
+      <mat-divider></mat-divider>
+      <h3 i18n>2. Add Description</h3>
+      <mat-form-field appearance="fill">
+        <mat-label i18n>Assignment description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+        <mat-error i18n>Description is required.</mat-error>
+      </mat-form-field>
+    </mat-dialog-content>
+    <div mat-dialog-actions
+         fxLayout="row"
+         fxLayout.xs="column"
+         fxLayoutAlign="end"
+         fxLayoutGap="8px">
+      <button mat-button (click)="closeAll()" [disabled]="isAdding" i18n>Cancel</button>
+      <button mat-flat-button type="submit" color="primary"
+              [disabled]="form.invalid || isAdding">
+        <mat-progress-bar *ngIf="isAdding" mode="indeterminate"></mat-progress-bar>
+        <ng-container i18n>Add</ng-container>
+      </button>
+    </div>
+  </form>
+</ng-container>
+<ng-container *ngIf="isAdded && courses.length">
+  <mat-dialog-content>
+    <div class="info-block">
+      <p class="mat-subheading-1 accent-1">
+        {{ data.run.name }} <span class="mat-caption" i18n>(Run ID: {{ data.run.id }})</span>
+      </p>
+      <div *ngIf="addSuccessCount > 0">
+        <br/>
+        <p i18n>The unit has been successfully added to the following Google Classroom(s)</p>
+        <p *ngFor="let course of coursesSuccessfullyAdded">{{ course.name }}</p>
+      </div>
+      <div *ngIf="addFailureCount > 0" style="color: red">
+        <br/>
+        <p i18n>There was a problem trying to add the unit to the following Google Classroom(s)</p>
+        <p *ngFor="let course of coursesFailedToAdd">{{ course.name }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end">
+    <button mat-button (click)="closeAll()" i18n>Done</button>
+  </mat-dialog-actions>
+</ng-container>

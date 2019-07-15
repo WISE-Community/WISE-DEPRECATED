@@ -52,7 +52,6 @@ import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.presentation.web.controllers.TaggerController;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.portal.PortalService;
@@ -446,7 +445,7 @@ public class AuthorProjectController {
         return handleGetConfig(request, response);
       } else if (command.equals("getEditors")) {
         if (projectService.canAuthorProject(project, user)) {
-          return handleGetEditors(request, response);
+          return handleGetEditors(response);
         } else {
           return new ModelAndView("errors/accessdenied");
         }
@@ -661,37 +660,6 @@ public class AuthorProjectController {
       HttpServletResponse response) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (hasAuthorPermissions(user)) {
-      String projectId = request.getParameter("projectId");
-      HttpSession currentUserSession = request.getSession();
-      HashMap<String, ArrayList<String>> openedProjectsToSessions =
-          (HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
-      if (openedProjectsToSessions == null) {
-        openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
-        servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
-      }
-      if (openedProjectsToSessions.get(projectId) == null) {
-        openedProjectsToSessions.put(projectId, new ArrayList<String>());
-      }
-      ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
-      if (!sessions.contains(currentUserSession.getId())) {
-        sessions.add(currentUserSession.getId());
-      }
-      HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
-          .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-
-      String otherUsersAlsoEditingProject = "";
-      for (String sessionId : sessions) {
-        if (sessionId != currentUserSession.getId()) {
-          user = allLoggedInUsers.get(sessionId);
-          if (user != null) {
-            otherUsersAlsoEditingProject += user.getUserDetails().getUsername() + ",";
-          }
-        }
-      }
-      if (otherUsersAlsoEditingProject.contains(",")) {
-        otherUsersAlsoEditingProject = otherUsersAlsoEditingProject.substring(0, otherUsersAlsoEditingProject.length() - 1);
-      }
-      response.getWriter().write(otherUsersAlsoEditingProject);
       return null;
     } else {
       return new ModelAndView("errors/accessdenied");
@@ -703,26 +671,8 @@ public class AuthorProjectController {
       HttpServletResponse response) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (hasAuthorPermissions(user)) {
-      String projectId = request.getParameter("projectId");
-      HttpSession currentSession = request.getSession();
-      Map<String, ArrayList<String>> openedProjectsToSessions =
-          (Map<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
-      if (openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null) {
-        return null;
-      } else {
-        ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
-        if (!sessions.contains(currentSession.getId())) {
-          return null;
-        } else {
-          sessions.remove(currentSession.getId());
-          // if there are no more users authoring this project, remove this project from openedProjectsToSessions
-          if (sessions.size() == 0) {
-            openedProjectsToSessions.remove(projectId);
-          }
-          response.getWriter().write("success");
-          return null;
-        }
-      }
+      response.getWriter().write("success");
+      return null;
     } else {
       return new ModelAndView("errors/accessdenied");
     }
@@ -736,35 +686,8 @@ public class AuthorProjectController {
    * @throws Exception
    */
   @SuppressWarnings("unchecked")
-  private ModelAndView handleGetEditors(HttpServletRequest request,
-      HttpServletResponse response) throws Exception{
-    String projectPath = request.getParameter("param1");
-    HttpSession currentUserSession = request.getSession();
-    HashMap<String, ArrayList<String>> openedProjectsToSessions =
-        (HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
-
-    if (openedProjectsToSessions != null) {
-      ArrayList<String> sessions = openedProjectsToSessions.get(projectPath);
-      HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
-          .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-      String otherUsersAlsoEditingProject = "";
-      if (sessions != null) {
-        for (String sessionId : sessions) {
-          if (sessionId != currentUserSession.getId()) {
-            User user = allLoggedInUsers.get(sessionId);
-            if (user != null) {
-              otherUsersAlsoEditingProject += user.getUserDetails().getUsername() + ",";
-            }
-          }
-        }
-      }
-      if (otherUsersAlsoEditingProject.contains(",")) {
-        otherUsersAlsoEditingProject = otherUsersAlsoEditingProject.substring(0, otherUsersAlsoEditingProject.length() - 1);
-      }
-      response.getWriter().write(otherUsersAlsoEditingProject);
-    } else {
-      response.getWriter().write("");
-    }
+  private ModelAndView handleGetEditors(HttpServletResponse response) throws Exception {
+    response.getWriter().write("");
     return null;
   }
 

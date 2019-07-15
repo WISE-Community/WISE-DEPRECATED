@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, GoogleLoginProvider } from "angularx-social-login";
-import { TeacherService } from "../../teacher/teacher.service";
 import { Router } from "@angular/router";
 import { StudentService } from '../../student/student.service';
 import { UserService } from '../../services/user.service';

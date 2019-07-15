@@ -10,7 +10,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RecaptchaModule } from "ng-recaptcha";
 
 export class MockUserService {
-
+  isSignedIn(): boolean {
+    return false;
+  }
 }
 
 export class MockConfigService {
