@@ -43,6 +43,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.opencsv.CSVWriter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -76,8 +77,6 @@ import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.utils.FileManager;
-
-import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * Handles student work export in XLS format
