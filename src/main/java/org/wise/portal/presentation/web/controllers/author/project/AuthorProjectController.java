@@ -991,8 +991,8 @@ public class AuthorProjectController {
    * @throws ObjectNotFoundException
    */
   private ModelAndView handleGetConfig(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ObjectNotFoundException{
-    User user = (User) request.getSession().getAttribute(User.CURRENT_USER_SESSION_KEY);
+      throws IOException, ObjectNotFoundException {
+    User user = ControllerUtil.getSignedInUser();
     String username = user.getUserDetails().getUsername();
     String contextPath = request.getContextPath();
     String projectMetadataURL = contextPath + "/metadata.html";

@@ -138,9 +138,8 @@ public class ImportProjectController {
 
     String sep = "/";
     String filename = zipFilename.substring(0, zipFilename.indexOf(".zip"));
-    int newProjectId = projectService.getNextAvailableProjectId();
+    long newProjectId = projectService.getNextAvailableProjectId();
     String newFilename = String.valueOf(newProjectId);
-
     String newFileFullPath = curriculumBaseDir + sep + newFilename + ".zip";
 
     File uploadedFile = new File(newFileFullPath);
@@ -221,7 +220,7 @@ public class ImportProjectController {
 
     User signedInUser = ControllerUtil.getSignedInUser();
     ProjectParameters pParams = new ProjectParameters();
-    pParams.setProjectId((long) newProjectId);
+    pParams.setProjectId(newProjectId);
     pParams.setModulePath(path);
     pParams.setOwner(signedInUser);
     pParams.setProjectname(name);
