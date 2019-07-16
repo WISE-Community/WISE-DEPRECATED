@@ -358,7 +358,9 @@ public class CreateRunController {
       String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
       if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
-        String newProjectDirname = FileManager.copyProject(curriculumBaseDir, projectFolderPath);
+        long newProjectId = projectService.getNextAvailableProjectId();
+        String newProjectDirname = FileManager.copyProject(curriculumBaseDir, projectFolderPath,
+            String.valueOf(newProjectId));
         String newProjectPath = "/" + newProjectDirname + "/project.json";
         String newProjectName = project.getName();
         Long parentProjectId = (Long) project.getId();

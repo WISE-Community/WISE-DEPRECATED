@@ -300,12 +300,13 @@ public class FileManager {
    * @throws JSONException
    * @throws ServletException
    */
-  public static String createProject(String curriculumBaseDir, String projectName)
-      throws IOException {
+  public static String createProject(String curriculumBaseDir, String folderName, 
+      String projectName) throws IOException {
     String result = "";
     File parent = new File(curriculumBaseDir);
     ensureDir(parent);
-    File newProjectPath = createNewprojectPath(parent);
+    File newProjectPath = new File(curriculumBaseDir, folderName);
+    newProjectPath.mkdir();
     File newProjectAssetsDir = new File(newProjectPath, "assets");
     newProjectAssetsDir.mkdir();
     File newFile = new File(newProjectPath, "wise4.project.json");
@@ -332,11 +333,12 @@ public class FileManager {
    * @throws JSONException
    * @throws ServletException
    */
-  public static String createWISE5Project(String curriculumBaseDir) {
+  public static String createWISE5Project(String curriculumBaseDir, String folderName) {
     String result = "";
     File parent = new File(curriculumBaseDir);
     ensureDir(parent);
-    File newProjectPath = createNewprojectPath(parent);
+    File newProjectPath = new File(curriculumBaseDir, folderName);
+    newProjectPath.mkdir();
     File newProjectAssetsDir = new File(newProjectPath, "assets");
     newProjectAssetsDir.mkdir();
     File newFile = new File(newProjectPath, "project.json");
@@ -672,16 +674,16 @@ public class FileManager {
    * @return the path to the new project
    * @throws IOException
    */
-  public static String copyProject(String curriculumBaseDir, String projectFolderPath)
-      throws IOException {
+  public static String copyProject(String curriculumBaseDir, String projectFolderPath,
+      String newProjectDir) throws IOException {
     String result = "";
     File srcDir = new File(projectFolderPath);
     if (srcDir.exists() && srcDir.isDirectory()) {
       File destDir;
       if (curriculumBaseDir != null && curriculumBaseDir != "") {
-        destDir = createNewprojectPath(new File(curriculumBaseDir));
+        destDir = new File(curriculumBaseDir, newProjectDir);
       } else {
-        destDir = createNewprojectPath(srcDir.getParentFile());
+        destDir = new File(srcDir.getParentFile(), newProjectDir);
       }
       copy(srcDir, destDir);
       result = destDir.getName();
