@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -105,99 +105,83 @@ public class WISE5AuthorProjectController {
 
   private String featuredProjectIconsFolderRelativePath = "wise5/authoringTool/projectIcons";
 
-  /**
-   * Handle user's request to launch the Authoring Tool without a specified project
-   */
-  @RequestMapping(value = "/author", method = RequestMethod.GET)
+  @GetMapping("/author")
   protected String authorProject(HttpServletRequest request, HttpServletResponse response,
-      ModelMap modelMap) {
-    try {
-      Portal portal = portalService.getById(new Integer(1));
-      if (!portal.isLoginAllowed()) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-          new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        SecurityContextHolder.getContext().setAuthentication(null);
-        return "redirect:/index.html";
+      ModelMap modelMap) throws ObjectNotFoundException {
+    Portal portal = portalService.getById(new Integer(1));
+    if (!portal.isLoginAllowed()) {
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth != null) {
+        new SecurityContextLogoutHandler().logout(request, response, auth);
       }
-    } catch (ObjectNotFoundException e) {
-      // do nothing
+      SecurityContextHolder.getContext().setAuthentication(null);
+      return "redirect:/index.html";
     }
-
     String contextPath = request.getContextPath();
     modelMap.put("configURL", contextPath + "/authorConfig");
     return "author";
   }
 
   /**
-   * Handle user's request to register a new WISE5 project.
-   * Registers the new project in DB and returns the new project ID
-   * If the parentProjectId is specified, the user is requesting to copy that project
+   * Handle user's request to register a new WISE5 project. Registers the new
+   * project in DB and returns the new project ID If the parentProjectId is
+   * specified, the user is requesting to copy that project
+   * 
+   * @throws ObjectNotFoundException
+   * @throws JSONException
+   * @throws IOException
    */
-  @RequestMapping(value = "/project/new", method = RequestMethod.POST)
-  protected void registerNewProject(
+  @PostMapping("/project/new")
+  @ResponseBody
+  protected String registerNewProject(
       @RequestParam(value = "parentProjectId", required = false) String parentProjectId,
       @RequestParam("projectJSONString") String projectJSONString,
-      @RequestParam("commitMessage") String commitMessage,
-      HttpServletResponse response) {
+      @RequestParam("commitMessage") String commitMessage)
+      throws ObjectNotFoundException, JSONException, IOException {
     User user = ControllerUtil.getSignedInUser();
     if (!hasAuthorPermissions(user)) {
-      return;
+      return null;
     }
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-    File curriculumBaseDirFile = new File(curriculumBaseDir);
-    File newProjectPath = FileManager.createNewprojectPath(curriculumBaseDirFile);
-    File newProjectAssetsDir = new File(newProjectPath, "assets");
+    File curriculumBaseDir = new File(wiseProperties.getProperty("curriculum_base_dir"));
+    long newProjectId = projectService.getNextAvailableProjectId();
+    File newProjectDir = new File(curriculumBaseDir, String.valueOf(newProjectId));
+    newProjectDir.mkdir();
+    File newProjectAssetsDir = new File(newProjectDir, "assets");
     newProjectAssetsDir.mkdir();
-
-    try {
-      JSONObject projectJSONObject = new JSONObject(projectJSONString);
-      String projectName = projectJSONObject.getJSONObject("metadata").getString("title");
-      String projectJSONFilename = "project.json";
-      File newProjectJSONFile = new File(newProjectPath, projectJSONFilename);
-      if (!newProjectJSONFile.exists()) {
-        newProjectJSONFile.createNewFile();
-      }
-      Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
-      writer.write(projectJSONString.toString());
-      writer.close();
-
-      String projectFolderName = newProjectJSONFile.getParentFile().getName();
-      String projectPathRelativeToCurriculumBaseDir = "/" + projectFolderName + "/" + projectJSONFilename;
-
-      ProjectParameters pParams = new ProjectParameters();
-      pParams.setModulePath(projectPathRelativeToCurriculumBaseDir);
-      pParams.setOwner(user);
-      pParams.setProjectname(projectName);
-      pParams.setProjectType(ProjectType.LD);
-      pParams.setWiseVersion(new Integer(5));
-
-      // since this is new original project, set a new fresh metadata object
-      ProjectMetadata metadata = new ProjectMetadataImpl();
-      metadata.setTitle(projectName);
-      pParams.setMetadata(metadata);
-
-      Project project = projectService.createProject(pParams);
-      response.getWriter().write(project.getId().toString());
-      copyRandomFeaturedProjectIconIntoAssetsFolder(newProjectAssetsDir);
-      // commented below until "W5 AT: new commit message convention #1016" is completed
-      //commitChangesToProjectJSON(commitMessage, user, newProjectPath.getAbsolutePath());
-    } catch(IOException | ObjectNotFoundException | JSONException e) {
-      e.printStackTrace();
+    copyRandomFeaturedProjectIconIntoAssetsFolder(newProjectAssetsDir);
+    JSONObject projectJSONObject = new JSONObject(projectJSONString);
+    String projectName = projectJSONObject.getJSONObject("metadata").getString("title");
+    String projectJSONFilename = "project.json";
+    File newProjectJSONFile = new File(newProjectDir, projectJSONFilename);
+    if (!newProjectJSONFile.exists()) {
+      newProjectJSONFile.createNewFile();
     }
+    Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
+    writer.write(projectJSONString.toString());
+    writer.close();
+
+    ProjectParameters pParams = new ProjectParameters();
+    pParams.setProjectId(newProjectId);
+    pParams.setModulePath("/" + newProjectId + "/" + projectJSONFilename);
+    pParams.setOwner(user);
+    pParams.setProjectname(projectName);
+    pParams.setProjectType(ProjectType.LD);
+    pParams.setWiseVersion(new Integer(5));
+
+    ProjectMetadata metadata = new ProjectMetadataImpl();
+    metadata.setTitle(projectName);
+    pParams.setMetadata(metadata);
+    Project project = projectService.createProject(pParams);
+    return project.getId().toString();
   }
 
-  private void copyRandomFeaturedProjectIconIntoAssetsFolder(File newProjectAssetsDir) {
-    try {
-      File randomFeaturedProjectIcon = getRandomFeaturedProjectIcon();
-      if (randomFeaturedProjectIcon != null) {
-        Path fromImagePath = Paths.get(randomFeaturedProjectIcon.getPath());
-        Path toImagePath = Paths.get(newProjectAssetsDir.getPath() + "/project_thumb.png");
-        Files.copy(fromImagePath, toImagePath, StandardCopyOption.REPLACE_EXISTING);
-      }
-    } catch(IOException e) {
-      e.printStackTrace();
+  private void copyRandomFeaturedProjectIconIntoAssetsFolder(File folder)
+      throws IOException {
+    File randomFeaturedProjectIcon = getRandomFeaturedProjectIcon();
+    if (randomFeaturedProjectIcon != null) {
+      Path fromImagePath = Paths.get(randomFeaturedProjectIcon.getPath());
+      Path toImagePath = Paths.get(folder.getPath() + "/project_thumb.png");
+      Files.copy(fromImagePath, toImagePath, StandardCopyOption.REPLACE_EXISTING);
     }
   }
 
@@ -212,7 +196,7 @@ public class WISE5AuthorProjectController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/project/featured/icons", method = RequestMethod.GET)
+  @GetMapping("/project/featured/icons")
   protected String getFeaturedProjectIcons() {
     File featuredProjectIconsDir = new File(getFeaturedProjectIconsFolderPathString());
     File[] featuredProjectIcons = featuredProjectIconsDir.listFiles();
@@ -224,7 +208,7 @@ public class WISE5AuthorProjectController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/project/featured/icon", method = RequestMethod.POST)
+  @PostMapping("/project/featured/icon")
   protected String setFeaturedProjectIcon(@RequestParam("projectId") Long projectId,
         @RequestParam("projectIcon") String projectIcon)
         throws JSONException {
@@ -233,7 +217,7 @@ public class WISE5AuthorProjectController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/project/custom/icon", method = RequestMethod.POST)
+  @PostMapping("/project/custom/icon")
   protected String setCustomProjectIcon(@RequestParam("projectId") Long projectId,
         @RequestParam("projectIcon") String projectIcon)
         throws JSONException {
@@ -280,41 +264,38 @@ public class WISE5AuthorProjectController {
    * Registers the new project in DB and returns the new project ID
    * If the parentProjectId is specified, the user is requesting to copy that project
    */
-  @RequestMapping(value = "/project/copy/{projectId}", method = RequestMethod.POST)
-  protected void copyProject(@PathVariable Long projectId, HttpServletResponse response) throws Exception {
+  @PostMapping("/project/copy/{projectId}")
+  @ResponseBody
+  protected String copyProject(@PathVariable Long projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (!hasAuthorPermissions(user)) {
-      return;
+      return null;
     }
     Project parentProject = projectService.getById(projectId);
     if (parentProject != null && (this.projectService.canReadProject(parentProject, user) ||
         parentProject.isOfficialProject() ||
         parentProject.isCommunityProject())) {
       Project project = projectService.copyProject(projectId.intValue(), user);
-      response.getWriter().write(project.getId().toString());
+      return project.getId().toString();
     }
+    return null;
   }
 
   /**
    * Save project and and commit changes to project.json file
+   * 
    * @param projectId id of project to save
    * @param commitMessage commit message, can be null
    * @param projectJSONString a valid-JSON string of the project
+   * @throws ObjectNotFoundException
    */
-  @RequestMapping(value = "/project/save/{projectId}", method = RequestMethod.POST)
+  @PostMapping("/project/save/{projectId}")
   @ResponseStatus(HttpStatus.OK)
-  protected void saveProject(
-      @PathVariable Long projectId,
+  protected void saveProject(@PathVariable Long projectId,
       @RequestParam("commitMessage") String commitMessage,
-      @RequestParam("projectJSONString") String projectJSONString) throws JSONException {
-    Project project;
-    try {
-      project = projectService.getById(projectId);
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
-
+      @RequestParam("projectJSONString") String projectJSONString)
+      throws JSONException, ObjectNotFoundException {
+    Project project = projectService.getById(projectId);
     User user = ControllerUtil.getSignedInUser();
     if (!projectService.canAuthorProject(project, user)) {
       return;
@@ -323,7 +304,6 @@ public class WISE5AuthorProjectController {
     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
     String projectModulePath = project.getModulePath();
     String projectJSONPath = curriculumBaseDir + projectModulePath;
-
     File projectFile = new File(projectJSONPath);
     try {
       if (!projectFile.exists()) {
@@ -354,9 +334,6 @@ public class WISE5AuthorProjectController {
       } catch (JSONException | NotAuthorizedException e) {
         e.printStackTrace();
       }
-      // commented below until "W5 AT: new commit message convention #1016" is completed
-      //String projectDirPath = projectJSONPath.substring(0, projectJSONPath.lastIndexOf("/"));
-      //commitChangesToProjectJSON(commitMessage, user, projectDirPath);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -364,91 +341,65 @@ public class WISE5AuthorProjectController {
 
   @SuppressWarnings("unused")
   private void commitChangesToProjectJSON(String commitMessage, User user, String projectDirPath)
+      throws IOException, GitAPIException {
+    String authorUsername = user.getUserDetails().getUsername();
+    String authorEmail = user.getUserDetails().getEmailAddress();
+    JGitUtils.commitChangesToProjectJSON(projectDirPath, authorUsername, authorEmail,
+        commitMessage);
+  }
+
+  @GetMapping("/authorConfig")
+  @ResponseBody
+  protected String getAuthorProjectConfigChooser(HttpServletRequest request) 
       throws IOException {
-    try {
-      String authorUsername = user.getUserDetails().getUsername();
-      String authorEmail = user.getUserDetails().getEmailAddress();
-      JGitUtils.commitChangesToProjectJSON(projectDirPath, authorUsername, authorEmail,
-          commitMessage);
-    } catch (GitAPIException e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Handles request to get a config object for authoring tool without any specific project
-   */
-  @RequestMapping(value = "/authorConfig", method = RequestMethod.GET)
-  protected void getAuthorProjectConfigChooser(HttpServletRequest request,
-      HttpServletResponse response) throws IOException {
     JSONObject config = getDefaultAuthoringConfigJsonObject(request);
-    PrintWriter writer = response.getWriter();
-    writer.write(config.toString());
-    writer.close();
+    return config.toString();
   }
 
-  /**
-   * Handles request to get a config object for a specific project
-   */
-  @RequestMapping(value = "/authorConfig/{projectId}", method = RequestMethod.GET)
-  protected void getAuthorProjectConfig(HttpServletRequest request, HttpServletResponse response,
-      @PathVariable Long projectId) throws IOException {
-    Project project;
-    try {
-      project = projectService.getById(projectId);
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
-
+  @GetMapping(value = "/authorConfig/{projectId}")
+  @ResponseBody
+  protected String getAuthorProjectConfig(HttpServletRequest request, HttpServletResponse response,
+      @PathVariable Long projectId) throws IOException, ObjectNotFoundException, JSONException {
+    Project project = projectService.getById(projectId);
     JSONObject config = getDefaultAuthoringConfigJsonObject(request);
-    try {
-      String contextPath = request.getContextPath();
-      String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-      String rawProjectUrl = project.getModulePath();
-      String projectURL = curriculumBaseWWW + rawProjectUrl;
-      String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
-      Long projectAssetTotalSizeMax = project.getMaxTotalAssetsSize();
-      if (projectAssetTotalSizeMax == null) {
-        projectAssetTotalSizeMax =
-            new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
-      }
-
-      config.put("projectId", projectId);
-      config.put("projectURL", projectURL);
-      config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
-      config.put("projectAssetURL", contextPath + "/project/asset/" + projectId);
-      config.put("projectBaseURL", projectBaseURL);
-      config.put("previewProjectURL", contextPath + "/project/" + projectId);
-      config.put("cRaterRequestURL", contextPath + "/c-rater");
-      config.put("importStepsURL", contextPath + "/project/importSteps/" + projectId);
-      config.put("featuredProjectIcons", contextPath + "/project/featured/icons");
-      config.put("featuredProjectIcon", contextPath + "/project/featured/icon");
-      config.put("customProjectIcon", contextPath + "/project/custom/icon");
-      config.put("mode", "author");
-
-      if (projectService.canAuthorProject(project, ControllerUtil.getSignedInUser())) {
-        config.put("saveProjectURL", contextPath + "/project/save/" + projectId);
-        config.put("commitProjectURL", contextPath + "/project/commit/" + projectId);
-      }
-
-      User user = ControllerUtil.getSignedInUser();
-      List<Run> runsOwnedByUser = runService.getRunListByOwner(user);
-      Long runId = getRunId(projectId, runsOwnedByUser);
-      if (runId != null) {
-        config.put("runId", runId);
-      }
-    } catch (JSONException e) {
-      e.printStackTrace();
+    String contextPath = request.getContextPath();
+    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String rawProjectUrl = project.getModulePath();
+    String projectURL = curriculumBaseWWW + rawProjectUrl;
+    String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
+    Long projectAssetTotalSizeMax = project.getMaxTotalAssetsSize();
+    if (projectAssetTotalSizeMax == null) {
+      projectAssetTotalSizeMax =
+          new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
     }
-    PrintWriter writer = response.getWriter();
-    writer.write(config.toString());
-    writer.close();
+
+    config.put("projectId", projectId);
+    config.put("projectURL", projectURL);
+    config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
+    config.put("projectAssetURL", contextPath + "/project/asset/" + projectId);
+    config.put("projectBaseURL", projectBaseURL);
+    config.put("previewProjectURL", contextPath + "/project/" + projectId);
+    config.put("cRaterRequestURL", contextPath + "/c-rater");
+    config.put("importStepsURL", contextPath + "/project/importSteps/" + projectId);
+    config.put("featuredProjectIcons", contextPath + "/project/featured/icons");
+    config.put("featuredProjectIcon", contextPath + "/project/featured/icon");
+    config.put("customProjectIcon", contextPath + "/project/custom/icon");
+    config.put("mode", "author");
+
+    if (projectService.canAuthorProject(project, ControllerUtil.getSignedInUser())) {
+      config.put("saveProjectURL", contextPath + "/project/save/" + projectId);
+      config.put("commitProjectURL", contextPath + "/project/commit/" + projectId);
+    }
+
+    User user = ControllerUtil.getSignedInUser();
+    List<Run> runsOwnedByUser = runService.getRunListByOwner(user);
+    Long runId = getRunId(projectId, runsOwnedByUser);
+    if (runId != null) {
+      config.put("runId", runId);
+    }
+    return config.toString();
   }
 
-  /**
-   * Creates and returns a default Authoring config object that is the same for all projects
-   */
   private JSONObject getDefaultAuthoringConfigJsonObject(HttpServletRequest request) {
     JSONObject config = new JSONObject();
     User user = ControllerUtil.getSignedInUser();
@@ -568,7 +519,7 @@ public class WISE5AuthorProjectController {
    * @param projectId
    * @throws Exception
    */
-  @RequestMapping(value = "/project/commit/{projectId}", method = RequestMethod.GET)
+  @GetMapping("/project/commit/{projectId}")
   protected void getCommitHistory(@PathVariable Long projectId, HttpServletResponse response)
       throws Exception {
     Project project = projectService.getById(projectId);
@@ -576,7 +527,6 @@ public class WISE5AuthorProjectController {
     if (!projectService.canAuthorProject(project, user)) {
       return;
     }
-
     String projectDirPath = getProjectDirectoryPath(project);
     JSONArray commitHistoryJSONArray = JGitUtils.getCommitHistoryJSONArray(projectDirPath);
     response.getWriter().print(commitHistoryJSONArray);
@@ -589,9 +539,6 @@ public class WISE5AuthorProjectController {
     return projectDirPath.substring(0, projectDirPath.lastIndexOf("/"));
   }
 
-  /**
-   * Returns the absolute path to the specified project's assets directory
-   */
   private String getProjectAssetsDirectoryPath(Project project) {
     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
     String rawProjectUrl = project.getModulePath();
@@ -600,55 +547,33 @@ public class WISE5AuthorProjectController {
     return projectBaseDir + "/assets";
   }
 
-  /**
-   * Prints project assets in output stream.
-   */
-  @RequestMapping(value = "/project/asset/{projectId}", method = RequestMethod.GET)
-  protected void getProjectAssets(HttpServletResponse response, @PathVariable Long projectId) {
-    try {
-      Project project = projectService.getById(projectId);
-      User user = ControllerUtil.getSignedInUser();
-      if (projectService.canAuthorProject(project, user)) {
-        String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
-        writeAssetsToResponse(response, projectAssetsDirPath);
-      }
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    } catch (JSONException je) {
-      je.printStackTrace();
-    } catch (IOException ioe) {
-      ioe.printStackTrace();
+  @GetMapping("/project/asset/{projectId}")
+  protected void getProjectAssets(HttpServletResponse response, @PathVariable Long projectId) 
+      throws ObjectNotFoundException, JSONException, IOException {
+    Project project = projectService.getById(projectId);
+    User user = ControllerUtil.getSignedInUser();
+    if (projectService.canAuthorProject(project, user)) {
+      String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
+      writeAssetsToResponse(response, projectAssetsDirPath);
     }
   }
 
-  /**
-   * Prints specified project asset in output stream so it can be downloaded by the user
-   */
-  @RequestMapping(value = "/project/asset/{projectId}/download", method = RequestMethod.GET)
+  @GetMapping("/project/asset/{projectId}/download")
   protected void downloadProjectAsset(HttpServletResponse response, @PathVariable Long projectId,
-      @RequestParam("assetFileName") String assetFileName) {
-    try {
-      Project project = projectService.getById(projectId);
-      User user = ControllerUtil.getSignedInUser();
-      if (projectService.canAuthorProject(project, user)) {
-        String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
-        File projectAssetFile = new File(projectAssetsDirPath + "/" + assetFileName);
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=\"" + assetFileName + "\"");
-        FileUtils.copyFile(projectAssetFile, response.getOutputStream());
-      }
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException ioe) {
-      ioe.printStackTrace();
-    }
+      @RequestParam("assetFileName") String assetFileName)
+      throws ObjectNotFoundException, IOException {
+    Project project = projectService.getById(projectId);
+    User user = ControllerUtil.getSignedInUser();
+    if (projectService.canAuthorProject(project, user)) {
+      String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
+      File projectAssetFile = new File(projectAssetsDirPath + "/" + assetFileName);
+      response.setContentType("application/octet-stream");
+      response.setHeader("Content-Disposition", "attachment;filename=\"" + assetFileName + "\"");
+      FileUtils.copyFile(projectAssetFile, response.getOutputStream());
+    } 
   }
 
-  /**
-   * Saves POSTed file into the project's asset folder
-   * Writes updated project assets directory to response
-   */
-  @RequestMapping(method = RequestMethod.POST, value = "/project/asset/{projectId}")
+  @PostMapping("/project/asset/{projectId}")
   protected void saveProjectAsset(@PathVariable Long projectId, HttpServletRequest request,
       String assetFileName, HttpServletResponse response) throws ServletException, IOException,
       ObjectNotFoundException, JSONException {
@@ -731,16 +656,11 @@ public class WISE5AuthorProjectController {
    * @param file file that the user is trying to upload
    */
   private boolean isUserAllowedToUpload(User user, MultipartFile file) {
-    String allowedProjectAssetContentTypesStr =
-        wiseProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
+    String allowedTypes = wiseProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
     if (user.isTrustedAuthor()) {
-      allowedProjectAssetContentTypesStr +=
-          "," + wiseProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
+      allowedTypes += "," + wiseProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
     }
-    if (!allowedProjectAssetContentTypesStr.contains(file.getContentType())) {
-      return false;
-    }
-    return true;
+    return allowedTypes.contains(file.getContentType()); 
   }
 
   /**
@@ -813,7 +733,7 @@ public class WISE5AuthorProjectController {
     }
   }
 
-  /**
+   /**
    * Given a parent directory, attempts to generate and return a unique project directory.
    * @param parent
    */
@@ -874,15 +794,8 @@ public class WISE5AuthorProjectController {
     return null;
   }
 
-  /**
-   * Handles notifications of opened projects
-   * @param request
-   * @throws Exception
-   */
-  @SuppressWarnings("unchecked")
-  @RequestMapping(value = "/project/notifyAuthorBegin/{projectId}", method = RequestMethod.POST)
-  private ModelAndView authorProjectBegin(@PathVariable String projectId,
-      HttpServletRequest request) throws Exception {
+  @PostMapping("/project/notifyAuthorBegin/{projectId}")
+  private ModelAndView authorProjectBegin(@PathVariable String projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
@@ -894,10 +807,8 @@ public class WISE5AuthorProjectController {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  @RequestMapping(value = "/project/notifyAuthorEnd/{projectId}", method = RequestMethod.POST)
-  private ModelAndView authorProjectEnd(@PathVariable String projectId,
-      HttpServletRequest request) throws Exception {
+  @PostMapping("/project/notifyAuthorEnd/{projectId}")
+  private ModelAndView authorProjectEnd(@PathVariable String projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
@@ -923,8 +834,7 @@ public class WISE5AuthorProjectController {
    * @param toProjectId the project id we are importing into
    * @param fromProjectId the project id we are importing from
    */
-  @SuppressWarnings("unchecked")
-  @RequestMapping(value = "/project/importSteps/{projectId}", method = RequestMethod.POST)
+  @PostMapping("/project/importSteps/{projectId}")
   private ModelAndView importSteps(
       @RequestParam("steps") String steps,
       @RequestParam("toProjectId") Integer toProjectId,

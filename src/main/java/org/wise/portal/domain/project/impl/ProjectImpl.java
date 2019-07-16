@@ -183,7 +183,6 @@ public class ProjectImpl implements Project {
   private Long rootProjectId = null;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   @Getter
   @Setter
   public Long id = null;

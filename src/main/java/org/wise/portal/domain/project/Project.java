@@ -45,6 +45,8 @@ public interface Project extends Persistable {
 
   Serializable getId();
 
+  void setId(Long id);
+
   FamilyTag getFamilytag();
 
   void setFamilytag(FamilyTag familytag);
