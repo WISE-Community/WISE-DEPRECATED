@@ -40,6 +40,8 @@ import org.wise.portal.domain.user.User;
 public class ProjectParameters implements Serializable {
 
   private static final long serialVersionUID = 1L;
+  
+  private Long projectId;
 
   private String projectname;
 

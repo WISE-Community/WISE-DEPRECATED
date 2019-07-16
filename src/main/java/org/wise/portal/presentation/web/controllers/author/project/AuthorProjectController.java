@@ -504,6 +504,7 @@ public class AuthorProjectController {
       File wise5AssetsFolder = new File(wise5AssetsFolderPath);
       FileManager.copy(wise4AssetsFolder, wise5AssetsFolder);
       ProjectParameters pParams = new ProjectParameters();
+      pParams.setProjectId(projectService.getNextAvailableProjectId());
       pParams.setModulePath(relativeWISE5ProjectFilePath);
       pParams.setOwner(user);
       pParams.setProjectname(wise5ProjectName);
@@ -628,6 +629,7 @@ public class AuthorProjectController {
       String parentProjectId = request.getParameter("parentProjectId");
 
       ProjectParameters pParams = new ProjectParameters();
+      pParams.setProjectId(projectService.getNextAvailableProjectId());
       pParams.setModulePath(path);
       pParams.setOwner(user);
       pParams.setProjectname(name);

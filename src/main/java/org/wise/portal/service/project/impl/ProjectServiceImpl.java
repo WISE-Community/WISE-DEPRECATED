@@ -171,6 +171,7 @@ public class ProjectServiceImpl implements ProjectService {
     Project project = projectDao.createEmptyProject();
     User owner = projectParameters.getOwner();
     String modulePath = projectParameters.getModulePath();
+    project.setId(projectParameters.getProjectId());
     project.setModulePath(modulePath);
     project.setName(projectParameters.getProjectname());
     project.setOwner(owner);
@@ -525,21 +526,37 @@ public class ProjectServiceImpl implements ProjectService {
       }
     }
   }
+  
+  public long getNextAvailableProjectId() {
+    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    File curriculumBaseDirFile = new File(curriculumBaseDir);
+    long nextId = projectDao.getMaxProjectId() + 1;
+    while (true) {
+      File nextFolder = new File(curriculumBaseDirFile, String.valueOf(nextId));
+      if (nextFolder.exists()) {
+        nextId++;
+      } else {
+        break;
+      }
+    }
+    return nextId;
+  }
 
   public Project copyProject(Integer projectId, User user) throws Exception {
     Project parentProject = getById(projectId);
-    String projectFolderPath = FileManager.getProjectFolderPath(parentProject);
+    long newProjectId = getNextAvailableProjectId();
+    File parentProjectDir = new File(FileManager.getProjectFolderPath(parentProject));
     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-    String newProjectDirname = FileManager.copyProject(curriculumBaseDir, projectFolderPath);
+    File newProjectDir = new File(curriculumBaseDir, String.valueOf(newProjectId));
+    FileManager.copy(parentProjectDir, newProjectDir);
     String projectModulePath = parentProject.getModulePath();
     String projectJSONFilename = projectModulePath.substring(projectModulePath.lastIndexOf("/") + 1);
-    String newProjectPath = "/" + newProjectDirname + "/" + projectJSONFilename;
-    String newProjectName = parentProject.getName();
     Long parentProjectId = (Long) parentProject.getId();
     ProjectParameters pParams = new ProjectParameters();
-    pParams.setModulePath(newProjectPath);
+    pParams.setProjectId(newProjectId);
+    pParams.setModulePath("/" + newProjectId + "/" + projectJSONFilename);
     pParams.setOwner(user);
-    pParams.setProjectname(newProjectName);
+    pParams.setProjectname(parentProject.getName());
     pParams.setProjectType(ProjectType.LD);
     pParams.setWiseVersion(parentProject.getWiseVersion());
     pParams.setParentProjectId(parentProjectId);

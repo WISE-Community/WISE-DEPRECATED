@@ -175,7 +175,7 @@ public class ProjectAPIController {
       return "";
     }
     Project parentProject = projectService.getById(Long.parseLong(projectId));
-    if (parentProject != null && (this.projectService.canReadProject(parentProject, user) ||
+    if (parentProject != null && (projectService.canReadProject(parentProject, user) ||
           parentProject.isOfficialProject() ||
           parentProject.isCommunityProject())) {
       Project project = projectService.copyProject(Integer.parseInt(projectId), user);

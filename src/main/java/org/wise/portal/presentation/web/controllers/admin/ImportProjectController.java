@@ -44,7 +44,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,7 +80,7 @@ public class ImportProjectController {
 
   private String getWISEProjectsURL = "http://wise5.org/wiseup/getProject.php";
 
-  @RequestMapping(value = "/admin/project/importFromHub", method = RequestMethod.POST)
+  @PostMapping("/admin/project/importFromHub")
   protected String importFromHub(
       @RequestParam(value = "importableProjectId", required = true) String importableProjectId,
       ModelMap modelMap) throws Exception {
@@ -109,7 +111,7 @@ public class ImportProjectController {
     return "admin/project/import";
   }
 
-  @RequestMapping(value = "/admin/project/import", method = RequestMethod.POST)
+  @PostMapping("/admin/project/import")
   protected String onSubmit(@ModelAttribute("projectZipFile") ProjectUpload projectUpload,
       ModelMap modelMap) throws Exception {
     // TODO: check zip contents for maliciousness. For now, it's only accessible to admin.
@@ -135,17 +137,15 @@ public class ImportProjectController {
     }
 
     String sep = "/";
-    long timeInMillis = Calendar.getInstance().getTimeInMillis();
     String filename = zipFilename.substring(0, zipFilename.indexOf(".zip"));
-    String newFilename = filename;
-    if (new File(curriculumBaseDir + sep + filename).exists()) {
-      newFilename = filename + "-" + timeInMillis;
-    }
+    int newProjectId = projectService.getNextAvailableProjectId();
+    String newFilename = String.valueOf(newProjectId);
+
     String newFileFullPath = curriculumBaseDir + sep + newFilename + ".zip";
 
     File uploadedFile = new File(newFileFullPath);
     uploadedFile.createNewFile();
-    FileCopyUtils.copy(fileBytes,uploadedFile);
+    FileCopyUtils.copy(fileBytes, uploadedFile);
     String newFileFullDir = curriculumBaseDir + sep + newFilename;
     File newFileFullDirFile = new File(newFileFullDir);
     newFileFullDirFile.mkdir();
@@ -221,6 +221,7 @@ public class ImportProjectController {
 
     User signedInUser = ControllerUtil.getSignedInUser();
     ProjectParameters pParams = new ProjectParameters();
+    pParams.setProjectId((long) newProjectId);
     pParams.setModulePath(path);
     pParams.setOwner(signedInUser);
     pParams.setProjectname(name);
@@ -260,7 +261,7 @@ public class ImportProjectController {
     return projectService.createProject(pParams);
   }
 
-  @RequestMapping(value = "/admin/project/getImportableProjects", method = RequestMethod.GET)
+  @GetMapping("/admin/project/getImportableProjects")
   public void getImportableProjects(HttpServletResponse response) {
     try {
       URL url = new URL(getWISEProjectsURL);
@@ -274,7 +275,7 @@ public class ImportProjectController {
     }
   }
 
-  @RequestMapping(value = "/admin/project/import", method = RequestMethod.GET)
+  @GetMapping("/admin/project/import")
   public void initializeForm(ModelMap modelMap) {
     modelMap.put("projectZipFile", new ProjectUpload());
   }
