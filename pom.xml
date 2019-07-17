@@ -447,11 +447,13 @@
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
+    <!--
     <dependency>
       <groupId>net.bull.javamelody</groupId>
       <artifactId>javamelody-spring-boot-starter</artifactId>
       <version>1.78.0</version>
     </dependency>
+    -->
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>

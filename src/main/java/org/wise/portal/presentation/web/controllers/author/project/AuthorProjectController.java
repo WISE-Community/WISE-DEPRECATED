@@ -163,7 +163,8 @@ public class AuthorProjectController {
                 String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
                 String result = "";
                 if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, curriculumBaseDir)) {
-                  result = FileManager.createProject(curriculumBaseDir, projectName);
+                  long projectId = projectService.getNextAvailableProjectId();
+                  result = FileManager.createProject(curriculumBaseDir, String.valueOf(projectId), projectName);
                 } else {
                   response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                   result = "unauthorized";
@@ -270,7 +271,9 @@ public class AuthorProjectController {
                 String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
                 String result = "";
                 if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
-                  result = FileManager.copyProject(curriculumBaseDir, projectFolderPath);
+                  long newProjectId = projectService.getNextAvailableProjectId();
+                  result = FileManager.copyProject(curriculumBaseDir, projectFolderPath, 
+                      String.valueOf(newProjectId));
                 } else {
                   response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                   result = "unauthorized";
@@ -494,7 +497,9 @@ public class AuthorProjectController {
       Project wise4Project = projectService.getById(Long.parseLong(wise4ProjectId));
       String wise4ProjectFolderPath = FileManager.getProjectFolderPath(wise4Project);
       String wise4AssetsFolderPath = wise4ProjectFolderPath + "/assets";
-      String relativeWISE5ProjectFilePath = FileManager.createWISE5Project(curriculumBaseDir);
+      long wise5ProjectId = projectService.getNextAvailableProjectId();
+      String relativeWISE5ProjectFilePath = 
+          FileManager.createWISE5Project(curriculumBaseDir, String.valueOf(wise5ProjectId));
       String wise5ProjectFilePath = curriculumBaseDir + relativeWISE5ProjectFilePath;
       String wise5ProjectFolderPath = wise5ProjectFilePath.substring(0, wise5ProjectFilePath.indexOf("/project.json"));
       String wise5AssetsFolderPath = wise5ProjectFolderPath + "/assets";
@@ -504,12 +509,12 @@ public class AuthorProjectController {
       File wise5AssetsFolder = new File(wise5AssetsFolderPath);
       FileManager.copy(wise4AssetsFolder, wise5AssetsFolder);
       ProjectParameters pParams = new ProjectParameters();
+      pParams.setProjectId(wise5ProjectId);
       pParams.setModulePath(relativeWISE5ProjectFilePath);
       pParams.setOwner(user);
       pParams.setProjectname(wise5ProjectName);
       pParams.setProjectType(ProjectType.LD);
       pParams.setWiseVersion(5);
-
       if (wise4Project != null) {
         pParams.setParentProjectId(Long.valueOf(wise4ProjectId));
         ProjectMetadata parentProjectMetadata = wise4Project.getMetadata();
@@ -628,6 +633,7 @@ public class AuthorProjectController {
       String parentProjectId = request.getParameter("parentProjectId");
 
       ProjectParameters pParams = new ProjectParameters();
+      pParams.setProjectId(getProjectIdFromPath(path));
       pParams.setModulePath(path);
       pParams.setOwner(user);
       pParams.setProjectname(name);
@@ -653,6 +659,10 @@ public class AuthorProjectController {
     } else {
       return new ModelAndView("errors/accessdenied");
     }
+  }
+
+  private long getProjectIdFromPath(String projectPath) {
+    return Long.parseLong(projectPath.substring(1, projectPath.lastIndexOf("/")));
   }
 
   @SuppressWarnings("unchecked")
@@ -981,8 +991,8 @@ public class AuthorProjectController {
    * @throws ObjectNotFoundException
    */
   private ModelAndView handleGetConfig(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ObjectNotFoundException{
-    User user = (User) request.getSession().getAttribute(User.CURRENT_USER_SESSION_KEY);
+      throws IOException, ObjectNotFoundException {
+    User user = ControllerUtil.getSignedInUser();
     String username = user.getUserDetails().getUsername();
     String contextPath = request.getContextPath();
     String projectMetadataURL = contextPath + "/metadata.html";
