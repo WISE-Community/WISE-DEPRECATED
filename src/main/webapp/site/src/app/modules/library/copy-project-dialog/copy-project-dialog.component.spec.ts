@@ -9,6 +9,7 @@ import { LibraryProject } from "../libraryProject";
 import { configureTestSuite } from 'ng-bullet';
 import { I18n } from "@ngx-translate/i18n-polyfill";
 import { translationsFactory } from "../../../app.module";
+import { MatSnackBarModule } from '@angular/material';
 
 export class MockLibraryService {
   newProjectSource = new Subject<LibraryProject>();
@@ -48,6 +49,7 @@ describe('CopyProjectDialogComponent', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ CopyProjectDialogComponent ],
+      imports: [ MatSnackBarModule ], 
       providers: [
         { provide: LibraryService, useClass: MockLibraryService },
         { provide: MatDialog, useValue: {
