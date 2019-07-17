@@ -501,24 +501,11 @@ public class TeacherAPIController {
   }
 
   private JSONObject createSuccessResponse() {
-    JSONObject response = new JSONObject();
-    try {
-      response.put("status", "success");
-    } catch(JSONException e) {
-
-    }
-    return response;
+    return ControllerUtil.createSuccessResponse();
   }
 
   private JSONObject createFailureResponse(String messageCode) {
-    JSONObject response = new JSONObject();
-    try {
-      response.put("status", "failure");
-      response.put("messageCode", messageCode);
-    } catch(JSONException e) {
-
-    }
-    return response;
+    return ControllerUtil.createFailureResponse(messageCode);
   }
 
   private JSONObject addRunToResponse(JSONObject response, Run run) {

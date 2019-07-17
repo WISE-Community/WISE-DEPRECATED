@@ -4,9 +4,11 @@ import { LibraryService } from "../../../services/library.service";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Project } from "../../../domain/project";
 import { Observable, Subject } from 'rxjs';
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { LOCALE_ID, NO_ERRORS_SCHEMA, TRANSLATIONS, TRANSLATIONS_FORMAT } from "@angular/core";
 import { LibraryProject } from "../libraryProject";
 import { configureTestSuite } from 'ng-bullet';
+import { I18n } from "@ngx-translate/i18n-polyfill";
+import { translationsFactory } from "../../../app.module";
 
 export class MockLibraryService {
   newProjectSource = new Subject<LibraryProject>();
@@ -67,7 +69,14 @@ describe('CopyProjectDialogComponent', () => {
             }
           }
         },
-        { provide: MAT_DIALOG_DATA, useValue: { project: projectObj } }
+        { provide: MAT_DIALOG_DATA, useValue: { project: projectObj } },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

@@ -448,4 +448,25 @@ public class ControllerUtil {
     }
     return isValid;
   }
+
+  public static JSONObject createSuccessResponse() {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "success");
+    } catch(JSONException e) {
+
+    }
+    return response;
+  }
+
+  public static JSONObject createFailureResponse(String messageCode) {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "failure");
+      response.put("messageCode", messageCode);
+    } catch(JSONException e) {
+
+    }
+    return response;
+  }
 }
