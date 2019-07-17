@@ -2232,19 +2232,11 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">77</context>
         </context-group>
-      </trans-unit><trans-unit id="526394b14298e223b7e076e1b0cd15e54b03fe22" datatype="html">
-        <source>City required</source>
+      </trans-unit><trans-unit id="f57c6e5b9225f1a36757d76b0cb2a0b739487c87" datatype="html">
+        <source>Summary required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">82</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit><trans-unit id="eec715de352a6b114713b30b640d319fa78207a0" datatype="html">
         <source>Description</source>
@@ -2252,19 +2244,11 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-      </trans-unit><trans-unit id="1417d4b0e633084ccb2b0bdb43d119c17ac0cd01" datatype="html">
-        <source>State required</source>
+      </trans-unit><trans-unit id="7491b1ebfc5dd457492a5c481e2d2254216dc1fc" datatype="html">
+        <source>Description required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">95</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">65</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit><trans-unit id="5d9f08dc105485d86dacb30c4f2a3ac7ab951843" datatype="html">
         <source>Sorry, there was a problem submitting the form. Please try again.</source>
@@ -4114,6 +4098,16 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
+      </trans-unit><trans-unit id="526394b14298e223b7e076e1b0cd15e54b03fe22" datatype="html">
+        <source>City required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
       </trans-unit><trans-unit id="873b72903b1858a9cd6c8967521030b4d7d1435b" datatype="html">
         <source>State</source>
         <context-group purpose="location">
@@ -4123,6 +4117,16 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit><trans-unit id="1417d4b0e633084ccb2b0bdb43d119c17ac0cd01" datatype="html">
+        <source>State required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit><trans-unit id="a43f25a9ac40e8e2441ff0be7a36b8e5d15534df" datatype="html">
         <source>Country</source>
