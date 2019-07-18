@@ -18,10 +18,8 @@ import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.controllers.author.project.WISE5AuthorProjectController;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.user.UserService;
 import org.wise.vle.web.SecurityUtils;
 
 /**
@@ -147,16 +145,15 @@ public class ProjectAPIController {
 
   @PostMapping("/copy")
   protected String copyProject(@RequestParam("projectId") String projectId) throws Exception {
-    JSONObject response = ControllerUtil.createFailureResponse("copyProjectError");
     User user = ControllerUtil.getSignedInUser();
     if (SecurityUtils.isTeacher(user)) {
       Project project = projectService.getById(Long.parseLong(projectId));
       if (this.projectService.canReadProject(project, user) ||
           project.isOfficialProject() || project.isCommunityProject()) {
         Project newProject = projectService.copyProject(Integer.parseInt(projectId), user);
-        response = ControllerUtil.getProjectJSON(newProject);
+        return ControllerUtil.getProjectJSON(newProject).toString();
       }
     }
-    return response.toString();
+    return ControllerUtil.createErrorResponse("copyProjectError").toString();
   }
 }

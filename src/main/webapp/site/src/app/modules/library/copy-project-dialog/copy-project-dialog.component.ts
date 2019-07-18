@@ -43,7 +43,7 @@ export class CopyProjectDialogComponent implements OnInit {
           })
         )
         .subscribe((response: any) => {
-          if (response.status === 'failure') {
+          if (response.status === 'error') {
             this.showErrorMessage();
           } else {
             const newLibraryProject: LibraryProject = new LibraryProject(response);
