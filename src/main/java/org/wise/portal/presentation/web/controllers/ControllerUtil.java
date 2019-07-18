@@ -463,18 +463,33 @@ public class ControllerUtil {
     try {
       response.put("status", "success");
     } catch(JSONException e) {
+    }
+    return response;
+  }
 
+  public static JSONObject createSuccessResponse(String messageCode) {
+    JSONObject response = createSuccessResponse();
+    try {
+      response.put("messageCode", messageCode);
+    } catch(JSONException e) {
+    }
+    return response;
+  }
+
+  public static JSONObject createErrorResponse() {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "error");
+    } catch(JSONException e) {
     }
     return response;
   }
 
   public static JSONObject createErrorResponse(String messageCode) {
-    JSONObject response = new JSONObject();
+    JSONObject response = createErrorResponse();
     try {
-      response.put("status", "error");
       response.put("messageCode", messageCode);
     } catch(JSONException e) {
-
     }
     return response;
   }

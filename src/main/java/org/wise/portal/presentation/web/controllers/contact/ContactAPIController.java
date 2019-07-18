@@ -82,9 +82,7 @@ public class ContactAPIController {
       JSONObject response = sendEmail(fromEmail, toEmails, cc, subject, body);
       return response.toString();
     } else {
-      JSONObject response = new JSONObject();
-      response.put("status", "failure");
-      return response.toString();
+      return ControllerUtil.createErrorResponse().toString();
     }
   }
 
@@ -123,15 +121,13 @@ public class ContactAPIController {
 
   private JSONObject sendEmail(String fromEmail, String[] toEmails, String[] cc, String subject,
         String body) throws JSONException {
-    JSONObject response = new JSONObject();
     try {
       mailService.postMail(toEmails, subject, body, fromEmail, cc);
-      response.put("status", "success");
+      return ControllerUtil.createSuccessResponse();
     } catch (MessagingException e) {
       e.printStackTrace();
-      response.put("status", "failure");
+      return ControllerUtil.createErrorResponse();
     }
-    return response;
   }
 
   private String getSubject(String issueType, String summary) {

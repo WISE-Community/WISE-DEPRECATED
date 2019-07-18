@@ -187,7 +187,7 @@ export class ContactFormComponent implements OnInit {
   handleSendContactMessageResponse(response: any) {
     if (response.status == "success") {
       this.complete = true;
-    } else if (response.status == "failure") {
+    } else if (response.status == "error") {
       this.failure = true;
       if (this.isRecaptchaEnabled) {
         this.resetRecaptcha();

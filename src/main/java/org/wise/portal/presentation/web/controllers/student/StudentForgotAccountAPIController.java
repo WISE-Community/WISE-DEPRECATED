@@ -1,18 +1,21 @@
 package org.wise.portal.presentation.web.controllers.student;
 
+import java.util.List;
+import java.util.Properties;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.wise.portal.domain.AccountQuestion;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.user.UserService;
-
-import java.util.List;
-import java.util.Properties;
 
 @RestController
 @RequestMapping(value = "/api/student/forgot", produces = "application/json;charset=UTF-8")
@@ -26,9 +29,9 @@ public class StudentForgotAccountAPIController {
 
   @RequestMapping(value = "/username/search", method = RequestMethod.GET)
   protected String getStudentUsernames(@RequestParam("firstName") String firstName,
-                                       @RequestParam("lastName") String lastName,
-                                       @RequestParam("birthMonth") Integer birthMonth,
-                                       @RequestParam("birthDay") Integer birthDay) {
+        @RequestParam("lastName") String lastName,
+        @RequestParam("birthMonth") Integer birthMonth,
+        @RequestParam("birthDay") Integer birthDay) {
     String[] fields = new String[4];
     fields[0] = "firstname";
     fields[1] = "lastname";
@@ -56,73 +59,63 @@ public class StudentForgotAccountAPIController {
   }
 
   @RequestMapping(value = "/password/security-question", method = RequestMethod.GET)
-  protected String getSecurityQuestion(@RequestParam("username") String username) throws JSONException {
+  protected String getSecurityQuestion(@RequestParam("username") String username) 
+      throws JSONException {
     User user = userService.retrieveUserByUsername(username);
-    JSONObject response = new JSONObject();
+    JSONObject response;
     if (user != null && user.isStudent()) {
       String accountQuestionKey = getAccountQuestionKey(user);
       String accountQuestionValue = getAccountQuestionValue(accountQuestionKey);
+      response = ControllerUtil.createSuccessResponse("usernameFound");
       response.put("question", accountQuestionValue);
       response.put("questionKey", accountQuestionKey);
-      response.put("status", "success");
-      response.put("messageCode", "usernameFound");
     } else {
-      response.put("status", "failure");
-      response.put("messageCode", "usernameNotFound");
+      response = ControllerUtil.createErrorResponse("usernameNotFound");
     }
     return response.toString();
   }
 
   @RequestMapping(value = "/password/security-question", method = RequestMethod.POST)
   protected String checkSecurityAnswer(@RequestParam("username") String username,
-                                       @RequestParam("answer") String answer) throws JSONException {
+        @RequestParam("answer") String answer) throws JSONException {
     User user = userService.retrieveUserByUsername(username);
-    JSONObject response = new JSONObject();
+    JSONObject response; 
     if (user != null) {
       if (isAnswerCorrect(user, answer)) {
-        response.put("status", "success");
-        response.put("messageCode", "correctAnswer");
+        response = ControllerUtil.createSuccessResponse("correctAnswer");
       } else {
-        response.put("status", "failure");
-        response.put("messageCode", "incorrectAnswer");
+        response = ControllerUtil.createErrorResponse("incorrectAnswer");
       }
     } else {
-      response.put("status", "failure");
-      response.put("messageCode", "invalidUsername");
+      response = ControllerUtil.createErrorResponse("invalidUsername");
     }
     return response.toString();
   }
 
   @RequestMapping(value = "/password/change", method = RequestMethod.POST)
   protected String checkSecurityAnswer(@RequestParam("username") String username,
-                                       @RequestParam("answer") String answer,
-                                       @RequestParam("password") String password,
-                                       @RequestParam("confirmPassword") String confirmPassword) throws JSONException {
+        @RequestParam("answer") String answer,
+        @RequestParam("password") String password,
+        @RequestParam("confirmPassword") String confirmPassword) throws JSONException {
     User user = userService.retrieveUserByUsername(username);
-    JSONObject response = new JSONObject();
+    JSONObject response;
     if (user != null) {
       if (isAnswerCorrect(user, answer)) {
         if (isPasswordBlank(password, confirmPassword)) {
-          response.put("status", "failure");
-          response.put("messageCode", "passwordIsBlank");
+          response = ControllerUtil.createErrorResponse("passwordIsBlank");
         } else if (!isPasswordsMatch(password, confirmPassword)) {
-          response.put("status", "failure");
-          response.put("messageCode", "passwordsDoNotMatch");
+          response = ControllerUtil.createErrorResponse("passwordsDoNotMatch");
         } else if (isPasswordsMatch(password, confirmPassword)) {
           userService.updateUserPassword(user, password);
-          response.put("status", "success");
-          response.put("messageCode", "passwordChanged");
+          response = ControllerUtil.createSuccessResponse("passwordChanged");
         } else {
-          response.put("status", "failure");
-          response.put("messageCode", "invalidPassword");
+          response = ControllerUtil.createErrorResponse("invalidPassword");
         }
       } else {
-        response.put("status", "failure");
-        response.put("messageCode", "incorrectAnswer");
+        response = ControllerUtil.createErrorResponse("incorrectAnswer");
       }
     } else {
-      response.put("status", "failure");
-      response.put("messageCode", "invalidUsername");
+      response = ControllerUtil.createErrorResponse("invalidUsername");
     }
     return response.toString();
   }

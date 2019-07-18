@@ -39,25 +39,27 @@ public class TeacherForgotAccountAPIController {
 
   @RequestMapping(value = "/username", method = RequestMethod.POST)
   protected String sendForgotUsernameEmail(HttpServletRequest request,
-                                           @RequestParam("email") String email) throws JSONException {
+      @RequestParam("email") String email) throws JSONException {
     List<User> users = userService.retrieveUserByEmailAddress(email);
     JSONObject response;
     if (users.isEmpty()) {
-      response = getEmailNotFoundFailureResponse();
+      response = getEmailNotFoundErrorResponse();
     } else {
       User user = users.get(0);
       String username = user.getUserDetails().getUsername();
       String from = wiseProperties.getProperty("portalemailaddress");
       String [] to = new String[] {email};
-      String subject = messageSource.getMessage("forgotaccount.teacher.username.email.subject", new Object[] {}, Locale.US);
+      String subject = messageSource.getMessage("forgotaccount.teacher.username.email.subject", 
+          new Object[] {}, Locale.US);
       String signInUrl = getSignInUrl(request);
       String contactUrl = getContactUrl(request);
-      String body = messageSource.getMessage("forgotaccount.teacher.username.email.body", new Object[] {username, signInUrl, contactUrl}, Locale.US);
+      String body = messageSource.getMessage("forgotaccount.teacher.username.email.body", 
+          new Object[] {username, signInUrl, contactUrl}, Locale.US);
       boolean successfullySentEmail = sendEmail(to, subject, body, from);
       if (successfullySentEmail) {
         response = getEmailSentSuccessResponse();
       } else {
-        response = getFailedToSendEmailFailureResponse();
+        response = getFailedToSendEmailErrorResponse();
       }
     }
     return response.toString();
@@ -84,19 +86,18 @@ public class TeacherForgotAccountAPIController {
     User user = userService.retrieveUserByUsername(username);
     if (user != null && user.isTeacher()) {
       if (isTooManyVerificationCodeAttempts(user)) {
-        response = getVerificationCodeTooManyAttemptsFailureResponse();
+        response = getVerificationCodeTooManyAttemptsErrorResponse();
       } else {
         boolean successfullySentEmail = sendVerificationCodeEmail(request, user);
         if (successfullySentEmail) {
           response = getEmailSentSuccessResponse();
         } else {
-          response = getFailedToSendEmailFailureResponse();
+          response = getFailedToSendEmailErrorResponse();
         }
       }
     } else {
-      response = getUsernameNotFoundFailureResponse();
+      response = getUsernameNotFoundErrorResponse();
     }
-
     return response.toString();
   }
 
@@ -104,10 +105,12 @@ public class TeacherForgotAccountAPIController {
     String from = wiseProperties.getProperty("portalemailaddress");
     String email = user.getUserDetails().getEmailAddress();
     String [] to = new String[] {email};
-    String subject = messageSource.getMessage("forgotaccount.teacher.verificationcode.email.subject", new Object[] {}, Locale.US);
+    String subject = messageSource.getMessage(
+        "forgotaccount.teacher.verificationcode.email.subject", new Object[] {}, Locale.US);
     String verificationCode = getVerificationCode(user);
     String contactUrl = getContactUrl(request);
-    String body = messageSource.getMessage("forgotaccount.teacher.verificationcode.email.body", new Object[] {verificationCode, contactUrl}, Locale.US);
+    String body = messageSource.getMessage("forgotaccount.teacher.verificationcode.email.body",
+        new Object[] {verificationCode, contactUrl}, Locale.US);
     boolean successfullySentEmail = sendEmail(to, subject, body, from);
     return successfullySentEmail;
   }
@@ -117,11 +120,12 @@ public class TeacherForgotAccountAPIController {
         user.getUserDetails().getRecentFailedVerificationCodeAttemptTime();
     Integer numberOfRecentFailedVerificationCodeAttempts =
         user.getUserDetails().getNumberOfRecentFailedVerificationCodeAttempts();
-    if (recentFailedVerificationCodeAttemptTime == null || numberOfRecentFailedVerificationCodeAttempts == null) {
+    if (recentFailedVerificationCodeAttemptTime == null || 
+        numberOfRecentFailedVerificationCodeAttempts == null) {
       return false;
     } else {
       return isWithinLast10Minutes(recentFailedVerificationCodeAttemptTime) &&
-        numberOfRecentFailedVerificationCodeAttempts >= 5;
+          numberOfRecentFailedVerificationCodeAttempts >= 5;
     }
   }
 
@@ -137,34 +141,35 @@ public class TeacherForgotAccountAPIController {
 
   @RequestMapping(value = "/password/verification-code", method = RequestMethod.POST)
   protected String checkVerificationCode(@RequestParam("username") String username,
-                                         @RequestParam("verificationCode") String verificationCode) throws JSONException {
+        @RequestParam("verificationCode") String verificationCode) throws JSONException {
     JSONObject response = new JSONObject();
     User user = userService.retrieveUserByUsername(username);
     if (user != null) {
       resetVerificationCodeAttemptsIfNecessary(user);
       if (isTooManyVerificationCodeAttempts(user)) {
-        response = getVerificationCodeTooManyAttemptsFailureResponse();
+        response = getVerificationCodeTooManyAttemptsErrorResponse();
       } else if (isVerificationCodeExpired(user)) {
-        response = getVerificationCodeExpiredFailureResponse();
+        response = getVerificationCodeExpiredErrorResponse();
       } else if (!isVerificationCodeCorrect(user, verificationCode)) {
         incrementFailedVerificationCodeAttempt(user);
         if (isTooManyVerificationCodeAttempts(user)) {
-          response = getVerificationCodeTooManyAttemptsFailureResponse();
+          response = getVerificationCodeTooManyAttemptsErrorResponse();
         } else {
-          response = getVerificationCodeIncorrectFailureResponse();
+          response = getVerificationCodeIncorrectErrorResponse();
         }
-      } else if (!isVerificationCodeExpired(user) && isVerificationCodeCorrect(user, verificationCode)) {
+      } else if (!isVerificationCodeExpired(user) && 
+          isVerificationCodeCorrect(user, verificationCode)) {
         response = getVerificationCodeCorrectSuccessResponse();
       }
     } else {
-      response = getUsernameNotFoundFailureResponse();
+      response = getUsernameNotFoundErrorResponse();
     }
-
     return response.toString();
   }
 
   private void resetVerificationCodeAttemptsIfNecessary(User user) {
-    Date recentFailedVerificationCodeAttemptTime = user.getUserDetails().getRecentFailedVerificationCodeAttemptTime();
+    Date recentFailedVerificationCodeAttemptTime = 
+        user.getUserDetails().getRecentFailedVerificationCodeAttemptTime();
     if (!isWithinLast10Minutes(recentFailedVerificationCodeAttemptTime)) {
       user.getUserDetails().clearNumberOfRecentFailedVerificationCodeAttempts();
     }
@@ -178,22 +183,22 @@ public class TeacherForgotAccountAPIController {
 
   @RequestMapping(value = "/password/change", method = RequestMethod.POST)
   protected String changePassword(@RequestParam("username") String username,
-                                  @RequestParam("verificationCode") String verificationCode,
-                                  @RequestParam("password") String password,
-                                  @RequestParam("confirmPassword") String confirmPassword) throws JSONException {
+        @RequestParam("verificationCode") String verificationCode,
+        @RequestParam("password") String password,
+        @RequestParam("confirmPassword") String confirmPassword) throws JSONException {
     JSONObject response = new JSONObject();
     User user = userService.retrieveUserByUsername(username);
     if (user != null) {
       if (isTooManyVerificationCodeAttempts(user)) {
-        response = getVerificationCodeTooManyAttemptsFailureResponse();
+        response = getVerificationCodeTooManyAttemptsErrorResponse();
       } else if (isVerificationCodeExpired(user)) {
-        response = getVerificationCodeExpiredFailureResponse();
+        response = getVerificationCodeExpiredErrorResponse();
       } else if (!isVerificationCodeCorrect(user, verificationCode)) {
-        response = getVerificationCodeIncorrectFailureResponse();
+        response = getVerificationCodeIncorrectErrorResponse();
       } else if (isPasswordBlank(password, confirmPassword)) {
-        response = getPasswordIsBlankFailureResponse();
+        response = getPasswordIsBlankErrorResponse();
       } else if (!isPasswordsMatch(password, confirmPassword)) {
-        response = getPasswordsDoNotMatchFailureResponse();
+        response = getPasswordsDoNotMatchErrorResponse();
       } else if (!isVerificationCodeExpired(user) &&
           isVerificationCodeCorrect(user, verificationCode) &&
           !isPasswordBlank(password, confirmPassword) &&
@@ -203,7 +208,7 @@ public class TeacherForgotAccountAPIController {
         clearVerificationCodeData(user);
       }
     } else {
-      response = getUsernameNotFoundFailureResponse();
+      response = getUsernameNotFoundErrorResponse();
     }
     return response.toString();
   }
@@ -220,9 +225,11 @@ public class TeacherForgotAccountAPIController {
   }
 
   private boolean isVerificationCodeExpired(User user) {
-    Date verificationCodeCreationTime = user.getUserDetails().getResetPasswordVerificationCodeRequestTime();
+    Date verificationCodeCreationTime = 
+        user.getUserDetails().getResetPasswordVerificationCodeRequestTime();
     Date now = new Date();
-    long timeDifferenceInMilliseconds = getTimeDifferenceInMilliseconds(now, verificationCodeCreationTime);
+    long timeDifferenceInMilliseconds = 
+        getTimeDifferenceInMilliseconds(now, verificationCodeCreationTime);
     long expirationInMilliseconds = ControllerUtil.convertMinutesToMilliseconds(10);
     return timeDifferenceInMilliseconds > expirationInMilliseconds;
   }
@@ -256,73 +263,43 @@ public class TeacherForgotAccountAPIController {
   }
 
   private JSONObject getEmailSentSuccessResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "success");
-    response.put("messageCode", "emailSent");
-    return response;
+    return ControllerUtil.createSuccessResponse("emailSent");
   }
 
-  private JSONObject getFailedToSendEmailFailureResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "failure");
-    response.put("messageCode", "failedToSendEmail");
-    return response;
+  private JSONObject getFailedToSendEmailErrorResponse() throws JSONException {
+    return ControllerUtil.createErrorResponse("failedToSendEmail");
   }
 
-  private JSONObject getEmailNotFoundFailureResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "failure");
-    response.put("messageCode", "emailNotFound");
-    return response;
+  private JSONObject getEmailNotFoundErrorResponse() throws JSONException {
+    return ControllerUtil.createErrorResponse("emailNotFound");
   }
 
-  private JSONObject getUsernameNotFoundFailureResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "failure");
-    response.put("messageCode", "usernameNotFound");
-    return response;
+  private JSONObject getUsernameNotFoundErrorResponse() throws JSONException {
+    return ControllerUtil.createErrorResponse("usernameNotFound");
   }
 
-  private JSONObject getVerificationCodeExpiredFailureResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "failure");
-    response.put("messageCode", "verificationCodeExpired");
-    return response;
+  private JSONObject getVerificationCodeExpiredErrorResponse() throws JSONException {
+    return ControllerUtil.createErrorResponse("verificationCodeExpired");
   }
 
-  private JSONObject getVerificationCodeIncorrectFailureResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "failure");
-    response.put("messageCode", "verificationCodeIncorrect");
-    return response;
+  private JSONObject getVerificationCodeIncorrectErrorResponse() throws JSONException {
+    return ControllerUtil.createErrorResponse("verificationCodeIncorrect");
   }
 
-  private JSONObject getVerificationCodeTooManyAttemptsFailureResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "failure");
-    response.put("messageCode", "tooManyVerificationCodeAttempts");
-    return response;
+  private JSONObject getVerificationCodeTooManyAttemptsErrorResponse() throws JSONException {
+    return ControllerUtil.createErrorResponse("tooManyVerificationCodeAttempts");
   }
 
   private JSONObject getVerificationCodeCorrectSuccessResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "success");
-    response.put("messageCode", "verificationCodeCorrect");
-    return response;
+    return ControllerUtil.createSuccessResponse("verificationCodeCorrect");
   }
 
-  private JSONObject getPasswordIsBlankFailureResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "failure");
-    response.put("messageCode", "passwordIsBlank");
-    return response;
+  private JSONObject getPasswordIsBlankErrorResponse() throws JSONException {
+    return ControllerUtil.createErrorResponse("passwordIsBlank");
   }
 
-  private JSONObject getPasswordsDoNotMatchFailureResponse() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "failure");
-    response.put("messageCode", "passwordsDoNotMatch");
-    return response;
+  private JSONObject getPasswordsDoNotMatchErrorResponse() throws JSONException {
+    return ControllerUtil.createErrorResponse("passwordsDoNotMatch");
   }
 
   private String getContactUrl(HttpServletRequest request) {

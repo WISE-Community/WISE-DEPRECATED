@@ -85,9 +85,8 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
     }
 
     if (this.isNewSite(request)) {
-      JSONObject responseJSON = new JSONObject();
       try {
-        responseJSON.put("status", "failure");
+        JSONObject responseJSON = ControllerUtil.createErrorResponse();
         responseJSON.put("isRecaptchaRequired", ControllerUtil.isReCaptchaRequired(request));
         response.getWriter().write(responseJSON.toString());
       } catch (JSONException e) {
