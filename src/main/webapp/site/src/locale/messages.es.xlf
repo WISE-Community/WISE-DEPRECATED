@@ -6684,6 +6684,14 @@
         </context-group>
         <target state="needs-translation">An error occurred. Please check your connection and try again.</target>
       </trans-unit>
+      <trans-unit id="d527aaa5bbf9cc38467c1ba388a7a16d2eb3aabc" datatype="html">
+        <source>There was an error trying to copy the project. Please refresh the page and try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/copy-project-dialog/copy-project-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">There was an error trying to copy the project. Please refresh the page and try again.</target>
+      </trans-unit>
       <trans-unit id="d936b9392ac810869ea9ae7c392a327b9267b0fd" datatype="html">
         <source>License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.</source>
         <context-group purpose="location">
