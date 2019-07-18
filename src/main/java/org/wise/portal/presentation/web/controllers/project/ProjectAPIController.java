@@ -18,9 +18,9 @@ import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.controllers.author.project.WISE5AuthorProjectController;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.vle.web.SecurityUtils;
 
 /**
  * Project REST API
@@ -146,16 +146,14 @@ public class ProjectAPIController {
   @PostMapping("/copy")
   protected String copyProject(@RequestParam("projectId") String projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-    if (!WISE5AuthorProjectController.hasAuthorPermissions(user)) {
-      return "";
+    if (SecurityUtils.isTeacher(user)) {
+      Project project = projectService.getById(Long.parseLong(projectId));
+      if (this.projectService.canReadProject(project, user) ||
+          project.isOfficialProject() || project.isCommunityProject()) {
+        Project newProject = projectService.copyProject(Integer.parseInt(projectId), user);
+        return ControllerUtil.getProjectJSON(newProject).toString();
+      }
     }
-    Project parentProject = projectService.getById(Long.parseLong(projectId));
-    if (parentProject != null && (projectService.canReadProject(parentProject, user) ||
-          parentProject.isOfficialProject() ||
-          parentProject.isCommunityProject())) {
-      Project project = projectService.copyProject(Integer.parseInt(projectId), user);
-      return ControllerUtil.getProjectJSON(project).toString();
-    }
-    return "";
+    return ControllerUtil.createErrorResponse("copyProjectError").toString();
   }
 }

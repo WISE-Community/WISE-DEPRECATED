@@ -1,5 +1,16 @@
 package org.wise.portal.presentation.web.controllers.teacher;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,7 +20,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.authentication.Schoollevel;
@@ -18,7 +34,6 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
@@ -28,11 +43,6 @@ import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
-import java.util.*;
 
 /**
  * Controller for Teacher REST API
@@ -400,14 +410,14 @@ public class TeacherAPIController {
     if (run.isTeacherAssociatedToThisRun(user)) {
       try {
         if (run.getPeriodByName(periodName) != null) {
-          response = createFailureResponse("periodNameAlreadyExists");
+          response = ControllerUtil.createErrorResponse("periodNameAlreadyExists");
         }
       } catch(PeriodNotFoundException e) {
         runService.addPeriodToRun(runId, periodName);
-        response = createSuccessResponse();
+        response = ControllerUtil.createSuccessResponse();
       }
     } else {
-      response = createFailureResponse("noPermissionToAddPeriod");
+      response = ControllerUtil.createErrorResponse("noPermissionToAddPeriod");
     }
     addRunToResponse(response, run);
     return response.toString();
@@ -424,12 +434,12 @@ public class TeacherAPIController {
       Group period = run.getPeriodByName(periodName);
       if (period.getMembers().size() == 0) {
         runService.deletePeriodFromRun(runId, periodName);
-        response = createSuccessResponse();
+        response = ControllerUtil.createSuccessResponse();
       } else {
-        response = createFailureResponse("notAllowedToDeletePeriodWithStudents");
+        response = ControllerUtil.createErrorResponse("notAllowedToDeletePeriodWithStudents");
       }
     } else {
-      response = createFailureResponse("noPermissionToDeletePeriod");
+      response = ControllerUtil.createErrorResponse("noPermissionToDeletePeriod");
     }
     addRunToResponse(response, run);
     return response.toString();
@@ -449,12 +459,12 @@ public class TeacherAPIController {
       }
       if (canChange) {
         runService.setMaxWorkgroupSize(runId, maxStudentsPerTeam);
-        response = createSuccessResponse();
+        response = ControllerUtil.createSuccessResponse();
       } else {
-        response = createFailureResponse("notAllowedToDecreaseMaxStudentsPerTeam");
+        response = ControllerUtil.createErrorResponse("notAllowedToDecreaseMaxStudentsPerTeam");
       }
     } else {
-      response = createFailureResponse("noPermissionToChangeMaxStudentsPerTeam");
+      response = ControllerUtil.createErrorResponse("noPermissionToChangeMaxStudentsPerTeam");
     }
     addRunToResponse(response, run);
     return response.toString();
@@ -471,15 +481,15 @@ public class TeacherAPIController {
       Long endTime = run.getEndTimeMilliseconds();
       if (endTime == null) {
         runService.setStartTime(runId, startTime);
-        response = createSuccessResponse();
+        response = ControllerUtil.createSuccessResponse();
       } else if (startTime < endTime) {
         runService.setStartTime(runId, startTime);
-        response = createSuccessResponse();
+        response = ControllerUtil.createSuccessResponse();
       } else {
-        response = createFailureResponse("startDateAfterEndDate");
+        response = ControllerUtil.createErrorResponse("startDateAfterEndDate");
       }
     } else {
-      response = createFailureResponse("noPermissionToChangeDate");
+      response = ControllerUtil.createErrorResponse("noPermissionToChangeDate");
     }
     addRunToResponse(response, run);
     return response.toString();
@@ -495,36 +505,15 @@ public class TeacherAPIController {
     if (run.isTeacherAssociatedToThisRun(user)) {
       if (run.getStartTimeMilliseconds() < endTime) {
         runService.setEndTime(runId, endTime);
-        response = createSuccessResponse();
+        response = ControllerUtil.createSuccessResponse();
       } else {
-        response = createFailureResponse("endDateBeforeStartDate");
+        response = ControllerUtil.createErrorResponse("endDateBeforeStartDate");
       }
     } else {
-      response = createFailureResponse("noPermissionToChangeDate");
+      response = ControllerUtil.createErrorResponse("noPermissionToChangeDate");
     }
     addRunToResponse(response, run);
     return response.toString();
-  }
-
-  private JSONObject createSuccessResponse() {
-    JSONObject response = new JSONObject();
-    try {
-      response.put("status", "success");
-    } catch(JSONException e) {
-
-    }
-    return response;
-  }
-
-  private JSONObject createFailureResponse(String messageCode) {
-    JSONObject response = new JSONObject();
-    try {
-      response.put("status", "failure");
-      response.put("messageCode", messageCode);
-    } catch(JSONException e) {
-
-    }
-    return response;
   }
 
   private JSONObject addRunToResponse(JSONObject response, Run run) {

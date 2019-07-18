@@ -20,6 +20,23 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,14 +60,6 @@ import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
-
-import javax.annotation.PostConstruct;
-import javax.net.ssl.HttpsURLConnection;
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
 
 /**
  * A utility class for use by all controllers
@@ -447,5 +456,26 @@ public class ControllerUtil {
       }
     }
     return isValid;
+  }
+
+  public static JSONObject createSuccessResponse() {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "success");
+    } catch(JSONException e) {
+
+    }
+    return response;
+  }
+
+  public static JSONObject createErrorResponse(String messageCode) {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "error");
+      response.put("messageCode", messageCode);
+    } catch(JSONException e) {
+
+    }
+    return response;
   }
 }
