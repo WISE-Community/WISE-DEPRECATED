@@ -16,29 +16,29 @@ import java.util.Arrays;
 public class GoogleOpenIdConnectConfig {
 
   @Value("${google.clientId:}")
-  private String clientId;
+  private String googleClientId;
 
   @Value("${google.clientSecret:}")
-  private String clientSecret;
+  private String googleClientSecret;
 
   @Value("${google.accessTokenUri:}")
-  private String accessTokenUri;
+  private String googleAccessTokenUri;
 
   @Value("${google.userAuthorizationUri:}")
-  private String userAuthorizationUri;
+  private String googleUserAuthorizationUri;
 
   @Value("${google.redirectUri:}")
-  private String redirectUri;
+  private String googleRedirectUri;
 
   @Bean
   public OAuth2ProtectedResourceDetails googleOpenId() {
     final AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
-    details.setClientId(clientId);
-    details.setClientSecret(clientSecret);
-    details.setAccessTokenUri(accessTokenUri);
-    details.setUserAuthorizationUri(userAuthorizationUri);
+    details.setClientId(googleClientId);
+    details.setClientSecret(googleClientSecret);
+    details.setAccessTokenUri(googleAccessTokenUri);
+    details.setUserAuthorizationUri(googleUserAuthorizationUri);
     details.setScope(Arrays.asList("openid", "email"));
-    details.setPreEstablishedRedirectUri(redirectUri);
+    details.setPreEstablishedRedirectUri(googleRedirectUri);
     details.setUseCurrentUri(false);
     return details;
   }

@@ -37,13 +37,13 @@ import java.util.Map;
 public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingFilter {
 
   @Value("${google.clientId:}")
-  private String clientId;
+  private String googleClientId;
 
   @Value("${google.issuer:}")
-  private String issuer;
+  private String googleIssuer;
 
   @Value("${google.jwkUrl:}")
-  private String jwkUrl;
+  private String googleJwkUrl;
 
   @Autowired
   private OAuth2RestTemplate googleOpenIdRestTemplate;
@@ -103,13 +103,14 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
     int exp = (int) claims.get("exp");
     Date expireDate = new Date(exp * 1000L);
     Date now = new Date();
-    if (expireDate.before(now) || !claims.get("iss").equals(issuer) || !claims.get("aud").equals(clientId)) {
+    if (expireDate.before(now) || !claims.get("iss").equals(googleIssuer) || 
+        !claims.get("aud").equals(googleClientId)) {
       throw new RuntimeException("Invalid claims");
     }
   }
 
   private RsaVerifier verifier(String kid) throws Exception {
-    JwkProvider provider = new UrlJwkProvider(new URL(jwkUrl));
+    JwkProvider provider = new UrlJwkProvider(new URL(googleJwkUrl));
     Jwk jwk = provider.get(kid);
     return new RsaVerifier((RSAPublicKey) jwk.getPublicKey());
   }

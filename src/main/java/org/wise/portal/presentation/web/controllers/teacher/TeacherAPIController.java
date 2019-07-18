@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
@@ -65,12 +66,18 @@ public class TeacherAPIController {
   @Autowired
   protected MessageSource messageSource;
 
+  @Value("${google.clientId:}")
+  private String googleClientId;
+
+  @Value("${google.clientSecret:}")
+  private String googleClientSecret;
+
   @RequestMapping(value = "/config", method = RequestMethod.GET)
   protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
     JSONObject configJSON = new JSONObject();
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
-    configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
+    configJSON.put("googleClientId", googleClientId);
     configJSON.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
     configJSON.put("currentTime", System.currentTimeMillis());
     configJSON.put("logOutURL", contextPath + "/logout");
@@ -78,8 +85,7 @@ public class TeacherAPIController {
   }
 
   private boolean isGoogleClassroomEnabled() {
-    return !wiseProperties.getProperty("google.clientId", "").equals("") &&
-      !wiseProperties.getProperty("google.clientSecret", "").equals("");
+    return !googleClientId.equals("") && !googleClientSecret.equals("");
   }
 
   @RequestMapping(value = "/runs", method = RequestMethod.GET)
