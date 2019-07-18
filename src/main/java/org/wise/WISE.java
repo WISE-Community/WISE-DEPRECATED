@@ -117,7 +117,7 @@ public class WISE {
     IOException {
     ConfigurableApplicationContext applicationContext = null;
     try {
-      File wisePropertiesFile = new File("target/classes/wise.properties");
+      File wisePropertiesFile = new File("target/classes/application.properties");
       String wisePropertiesString = FileUtils.readFileToString( wisePropertiesFile );
       wisePropertiesString = wisePropertiesString.replaceAll("#hibernate.hbm2ddl.auto=create", "");
       wisePropertiesString = wisePropertiesString.replaceAll("hibernate.hbm2ddl.auto=create", "");

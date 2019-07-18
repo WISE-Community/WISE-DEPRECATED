@@ -40,8 +40,8 @@ public class WISEJdbcMutableAclService extends JdbcMutableAclService {
   public WISEJdbcMutableAclService(DataSource dataSource, LookupStrategy lookupStrategy,
       AclCache aclCache, Properties wiseProperties) {
     super(dataSource, lookupStrategy, aclCache);
-    if (wiseProperties.containsKey("hibernate.connection.driver_class")) {
-      String driverClass = (String) wiseProperties.get("hibernate.connection.driver_class");
+    if (wiseProperties.containsKey("spring.datasource.driver-class-name")) {
+      String driverClass = (String) wiseProperties.get("spring.datasource.driver-class-name");
       if ("com.mysql.jdbc.Driver".equals(driverClass)) {
         setClassIdentityQuery("SELECT @@IDENTITY");
         setSidIdentityQuery("SELECT @@IDENTITY");

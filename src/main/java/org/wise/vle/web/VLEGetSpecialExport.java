@@ -142,7 +142,7 @@ public class VLEGetSpecialExport {
   {
     try {
       vleProperties = new Properties();
-      vleProperties.load(getClass().getClassLoader().getResourceAsStream("wise.properties"));
+      vleProperties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
     } catch (Exception e) {
       System.err.println("VLEGetSpecialExport could not read in vleProperties file");
       e.printStackTrace();

@@ -227,9 +227,9 @@ public class DailyAdminJob {
 
   public void gatherVLEStatistics() {
     try {
-      String username = this.wiseProperties.getProperty("hibernate.connection.username");
-      String password = this.wiseProperties.getProperty("hibernate.connection.password");
-      String url = this.wiseProperties.getProperty("hibernate.connection.url");
+      String username = wiseProperties.getProperty("spring.datasource.username");
+      String password = wiseProperties.getProperty("spring.datasource.password");
+      String url = wiseProperties.getProperty("spring.datasource.url");
       Class.forName("com.mysql.jdbc.Driver").newInstance();
       Connection conn = DriverManager.getConnection(url, username, password);
       Statement statement = conn.createStatement();

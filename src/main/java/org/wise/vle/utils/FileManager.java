@@ -90,7 +90,7 @@ public class FileManager {
     try {
       wiseProperties = new Properties();
       wiseProperties.load(
-          FileManager.class.getClassLoader().getResourceAsStream("wise.properties"));
+          FileManager.class.getClassLoader().getResourceAsStream("application.properties"));
     } catch (Exception e) {
       System.err.println("FileManager could not read in wiseProperties file");
       e.printStackTrace();

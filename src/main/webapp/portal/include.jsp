@@ -31,7 +31,7 @@
 <%@ page import="java.util.Properties" %>
 <% 
 Properties wiseProperties = new Properties();
-wiseProperties.load(getClass().getClassLoader().getResourceAsStream("wise.properties"));
+wiseProperties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
 String defaultLocale = wiseProperties.getProperty("defaultLocale");
 request.setAttribute("defaultLocale", defaultLocale);
 %>

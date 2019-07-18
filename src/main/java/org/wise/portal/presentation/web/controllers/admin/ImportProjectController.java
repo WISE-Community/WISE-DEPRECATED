@@ -133,7 +133,7 @@ public class ImportProjectController {
     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
     if (!new File(curriculumBaseDir).exists()) {
       throw new Exception("Curriculum upload directory \"" +
-          curriculumBaseDir + "\" does not exist. Please verify the path you specified for curriculum_base_dir in wise.properties.");
+          curriculumBaseDir + "\" does not exist. Please verify the path you specified for curriculum_base_dir in application.properties.");
     }
 
     String sep = "/";
