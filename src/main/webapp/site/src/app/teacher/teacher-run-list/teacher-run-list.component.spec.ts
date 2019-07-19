@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { defer, Observable } from "rxjs";
 import { MomentModule } from 'ngx-moment';
 import { TeacherRunListComponent } from './teacher-run-list.component';

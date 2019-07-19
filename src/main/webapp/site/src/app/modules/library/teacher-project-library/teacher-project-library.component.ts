@@ -1,9 +1,10 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { MatDialog } from '@angular/material';
 import { OfficialLibraryDetailsComponent } from '../official-library/official-library.component';
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-teacher-project-library',
@@ -17,53 +18,56 @@ import { OfficialLibraryDetailsComponent } from '../official-library/official-li
 export class TeacherProjectLibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];
-  selectedTabIndex: number = 0;
-  numberOfOfficialProjectsVisible;
-  numberOfCommunityProjectsVisible;
-  numberOfPersonalProjectsVisible;
+  numberOfOfficialProjectsVisible: number = 0;
+  numberOfCommunityProjectsVisible: number = 0;
+  numberOfPersonalProjectsVisible: number = 0;
+  route: String;
+  tabs: any[] = [
+    { path: 'library/tested', label: this.i18n(`WISE Tested`), numVisible: 0 },
+    { path: 'library/community', label: this.i18n(`Community Built`), numVisible: 0 },
+    { path: 'library/personal', label: this.i18n(`My Units`), numVisible: 0 }
+  ];
 
-  constructor(private libraryService: LibraryService,
+  constructor(libraryService: LibraryService,
               public dialog: MatDialog,
               private router: Router,
-              private activatedRoute: ActivatedRoute) {
-    libraryService.tabIndexSource$.subscribe((tabIndex) => {
-      this.selectedTabIndex = tabIndex;
+              private i18n: I18n) {
+    libraryService.numberOfOfficialProjectsVisible$.subscribe((num) => {
+      this.tabs[0].numVisible = num;
     });
-  }
-
-  ngOnInit(): void {
-    if (this.activatedRoute.snapshot.firstChild !== null) {
-      const selectedTabIndex = this.activatedRoute.snapshot.firstChild.data.selectedTabIndex;
-      this.libraryService.setTabIndex(selectedTabIndex);
+    libraryService.numberOfCommunityProjectsVisible$.subscribe((num) => {
+      this.tabs[1].numVisible = num;
+    });
+    libraryService.numberOfPersonalProjectsVisible$.subscribe((num) => {
+      this.tabs[2].numVisible = num;
+    });
+    if (!libraryService.hasLoaded) {
+      libraryService.getCommunityLibraryProjects();
+      libraryService.getOfficialLibraryProjects();
+      libraryService.getPersonalLibraryProjects();
+      libraryService.getSharedLibraryProjects();
+      libraryService.hasLoaded = true;
     }
   }
 
-  updateNumberOfOfficialProjectsVisible(count) {
-    this.numberOfOfficialProjectsVisible = count;
+  ngOnInit() {
   }
 
-  updateNumberOfCommunityProjectsVisible(count) {
-    this.numberOfCommunityProjectsVisible = count;
+  isOfficialRoute(): boolean {
+    return this.router.url === '/teacher/home/library/tested';
   }
 
-  updateNumberOfPersonalProjectsVisible(count) {
-    this.numberOfPersonalProjectsVisible = count;
+  isCommunityRoute(): boolean {
+    return this.router.url === '/teacher/home/library/community';
+  }
+
+  isPersonalRoute(): boolean {
+    return this.router.url === '/teacher/home/library/personal';
   }
 
   showInfo() {
     this.dialog.open(OfficialLibraryDetailsComponent, {
       panelClass: 'mat-dialog--sm'
     });
-  }
-
-  tabClicked(event) {
-    const tabIndex = event.index;
-    if (tabIndex === 0) {
-      this.router.navigate(['tested'], { relativeTo: this.activatedRoute });
-    } else if (tabIndex === 1) {
-      this.router.navigate(['community'], { relativeTo: this.activatedRoute });
-    } else if (tabIndex === 2) {
-      this.router.navigate(['personal'], { relativeTo: this.activatedRoute });
-    }
   }
 }

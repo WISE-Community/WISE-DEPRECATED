@@ -3,7 +3,7 @@ import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { NGSSStandards } from "../ngssStandards";
 import { Standard } from "../standard";
-import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
+import { ProjectFilterValues } from "../../../domain/projectFilterValues";
 
 @Component({
   selector: 'app-library-filters',
@@ -14,18 +14,14 @@ import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 
 export class LibraryFiltersComponent implements OnInit {
 
+  @Input()
+  split: boolean = false;
+  
   allProjects: LibraryProject[] = [];
   libraryProjects: LibraryProject[] = [];
   communityProjects: LibraryProject[] = [];
   sharedProjects: LibraryProject[] = [];
   personalProjects: LibraryProject[] = [];
-
-  @Input()
-  split: boolean = false;
-
-  @Output()
-  update: EventEmitter<object> = new EventEmitter<object>();
-
   searchValue: string = '';
   dciArrangementOptions: Standard[] = [];
   dciArrangementValue = [];
@@ -55,6 +51,11 @@ export class LibraryFiltersComponent implements OnInit {
   }
 
   ngOnInit() {
+    const filterOptions: ProjectFilterValues = this.libraryService.getFilterValues();
+    this.dciArrangementValue = filterOptions.dciArrangementValue;
+    this.disciplineValue = filterOptions.disciplineValue;
+    this.peValue = filterOptions.peValue;
+    this.searchValue = filterOptions.searchValue;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -63,9 +64,6 @@ export class LibraryFiltersComponent implements OnInit {
     }
   }
 
-  /**
-   * Iterate through list of projects to populate metadata filter options
-   */
   populateFilterOptions(): void {
     this.allProjects = this.getAllProjects();
     for (let project of this.allProjects) {
@@ -130,29 +128,18 @@ export class LibraryFiltersComponent implements OnInit {
     this.sortOptions(this.peOptions, 'id');
   }
 
-  /**
-   * Remove duplicates from an object array by property
-   * TODO: extract to util function
-   * @param {any[]} array
-   * @param {string} prop
-   * @return {any[]}
-   */
+  // TODO: extract to util function
   removeDuplicates(array: any[], prop: string): any[] {
     return array.filter((obj, pos, arr) => {
       return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
     });
   }
 
-  /**
-   * Sort an object array alphabetically A-Z by property
-   * TODO: extract to util function
-   * @param {any[]} array
-   * @param {string} prop
-   */
+  // TODO: extract to util function
   sortOptions(array: any[], prop: string): void {
     array.sort( (a: Standard, b: Standard) => {
-      const valA = a[prop].toLocaleLowerCase(); // ignore case
-      const valB = b[prop].toLocaleLowerCase(); // ignore case
+      const valA = a[prop].toLocaleLowerCase();
+      const valB = b[prop].toLocaleLowerCase();
       if (valA < valB) {
         return -1;
       }
@@ -163,28 +150,15 @@ export class LibraryFiltersComponent implements OnInit {
     });
   }
 
-  /**
-   * Check and return whether there are any active filters
-   * @return {boolean}
-   */
   hasFilters(): boolean {
     return this.dciArrangementValue.length > 0 || this.peValue.length > 0 || this.disciplineValue.length > 0;
   }
 
-  /**
-   * Given new search string, filter for visible projects
-   * @param {string} value
-   */
   searchUpdated(value: string): void {
     this.searchValue = value.toLocaleLowerCase();
     this.emitFilterValues();
   }
 
-  /**
-   * Filter options or search string have changed, so update visible projects
-   * @param {string[]} value
-   * @param {string} context
-   */
   filterUpdated(value: string[] = [], context: string = ''): void {
     switch(context) {
       case 'discipline':
@@ -201,21 +175,21 @@ export class LibraryFiltersComponent implements OnInit {
   }
 
   emitFilterValues() {
-    const filterOptions: ProjectFilterOptions = {
+    const filterOptions: ProjectFilterValues = {
       searchValue: this.searchValue,
       disciplineValue: this.disciplineValue,
       dciArrangementValue: this.dciArrangementValue,
       peValue: this.peValue
     };
-    this.libraryService.filterOptions(filterOptions);
+    this.libraryService.setFilterValues(filterOptions);
   }
 
   reset() {
-    this.resetFilterOptions();
+    this.resetFilterValues();
     this.emitFilterValues();
   }
 
-  resetFilterOptions() {
+  resetFilterValues() {
     this.dciArrangementValue = [];
     this.disciplineValue = [];
     this.peValue = [];

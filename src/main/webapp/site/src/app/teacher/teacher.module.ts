@@ -26,8 +26,6 @@ import { EditProfileComponent } from './account/edit-profile/edit-profile.compon
 import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-dialog.component';
 import { UseWithClassWarningDialogComponent } from './use-with-class-warning-dialog/use-with-class-warning-dialog.component';
 import { EditRunWarningDialogComponent } from './edit-run-warning-dialog/edit-run-warning-dialog.component';
-import { RouteReuseStrategy } from '@angular/router';
-import { TeacherRouteReuseStrategy } from './teacher-route-reuse.strategy';
 import { ListClassroomCoursesDialogComponent } from './list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 const materialModules = [
@@ -72,8 +70,7 @@ const materialModules = [
     ListClassroomCoursesDialogComponent
   ],
   providers: [
-    AuthGuard,
-    { provide: RouteReuseStrategy, useClass: TeacherRouteReuseStrategy }
+    AuthGuard
   ],
   exports: [
     TeacherComponent,

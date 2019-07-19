@@ -6,6 +6,10 @@
 
 .library-teacher {
   margin-top: 24px;
+
+  .mat-tab-link {
+    flex-grow: 1;
+  }
 }
 
 .library-teacher__header {
@@ -26,11 +30,6 @@
   @media (min-width: breakpoint('sm.min')) {
     padding-top: 20px;
   }
-}
-
-app-official-library {
-  display: block;
-  margin-top: 20px;
 }
 
 .mat-tab-header {

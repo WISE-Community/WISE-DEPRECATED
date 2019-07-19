@@ -5,6 +5,7 @@ import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "
 import { MatDialog } from "@angular/material";
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { Router } from '@angular/router';
 
 describe('LibraryProjectComponent', () => {
   let component: LibraryProjectComponent;
@@ -16,6 +17,7 @@ describe('LibraryProjectComponent', () => {
       imports: [ ],
       providers: [
         { provide: MatDialog },
+        { provide: Router },
         { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
         {
           provide: TRANSLATIONS,

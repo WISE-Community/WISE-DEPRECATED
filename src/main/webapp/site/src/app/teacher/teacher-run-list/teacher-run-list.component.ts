@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DateFormatPipe } from 'ngx-moment';
 import { TeacherService } from '../teacher.service';
 import { TeacherRun } from '../teacher-run';
-import {ConfigService} from "../../services/config.service";
+import { ConfigService } from "../../services/config.service";
 
 @Component({
   selector: 'app-teacher-run-list',
@@ -14,7 +14,7 @@ export class TeacherRunListComponent implements OnInit {
   personalRuns: TeacherRun[] = [];
   sharedRuns: TeacherRun[] = [];
   filteredRuns: TeacherRun[] = [];
-  loaded: boolean = false; // whether array of runs has been retrieved from server
+  loaded: boolean = false;
   searchValue: string = '';
   periods: string[] = [];
   filterOptions: any[] = [{ value: '', label: 'All Periods' }];

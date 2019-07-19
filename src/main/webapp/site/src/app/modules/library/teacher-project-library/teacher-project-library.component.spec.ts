@@ -1,18 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeacherProjectLibraryComponent } from './teacher-project-library.component';
 import { MatMenuModule, MatDialog } from "@angular/material";
-import { LibraryService } from "../../../services/library.service";
-import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID, Component } from "@angular/core";
+import { RouterTestingModule } from '@angular/router/testing';
+import { LibraryService } from '../../../services/library.service';
+import { translationsFactory } from '../../../app.module';
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { defer } from 'rxjs';
 
-import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/internal/Observable';
+export function fakeAsyncResponse<T>(data: T) {
+  return defer(() => Promise.resolve(data));
+}
 
 export class MockLibraryService {
-  setTabIndex(index: number) {
-    fakeAsyncResponse(index);
-  }
-  tabIndexSource$ = fakeAsyncResponse(1);
+  numberOfOfficialProjectsVisible$ = fakeAsyncResponse(0)
+  numberOfCommunityProjectsVisible$ = fakeAsyncResponse(0);
+  numberOfPersonalProjectsVisible$ = fakeAsyncResponse(0);
+  getOfficialLibraryProjects(){}
+  getCommunityLibraryProjects(){}
+  getPersonalLibraryProjects(){}
+  getSharedLibraryProjects(){}
 }
 
 describe('TeacherProjectLibraryComponent', () => {
@@ -20,15 +27,19 @@ describe('TeacherProjectLibraryComponent', () => {
   let fixture: ComponentFixture<TeacherProjectLibraryComponent>;
 
   beforeEach(async(() => {
-    const data = Observable.create({ selectedTabIndex: 0 });
     TestBed.configureTestingModule({
-      imports: [ MatMenuModule ],
+      imports: [ MatMenuModule, RouterTestingModule ],
       declarations: [ TeacherProjectLibraryComponent ],
       providers: [
-        { provide: LibraryService, useClass: MockLibraryService },
         { provide: MatDialog },
-        { provide: ActivatedRoute, useValue: { snapshot: { firstChild: { data } }} },
-        { provide: Router }
+        { provide: LibraryService, useClass: MockLibraryService },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

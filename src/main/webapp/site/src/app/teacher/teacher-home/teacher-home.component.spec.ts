@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {ActivatedRoute, Router} from '@angular/router';
 import { defer, Observable } from "rxjs";
 import { UserService } from "../../services/user.service";
 import { TeacherService } from "../teacher.service";
@@ -7,9 +6,13 @@ import { User } from "../../domain/user";
 import { Project} from "../../domain/project";
 import { TeacherHomeComponent } from "./teacher-home.component";
 import { Run } from "../../domain/run";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { NO_ERRORS_SCHEMA, LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT, Component } from "@angular/core";
 import { ConfigService } from "../../services/config.service";
 import { Config } from "../../domain/config";
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { translationsFactory } from '../../app.module';
+import { LibraryService } from '../../services/library.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -93,6 +96,10 @@ export class MockConfigService {
   }
 }
 
+export class MockLibraryService {
+  reset(): void {}
+}
+
 describe('TeacherHomeComponent', () => {
   let component: TeacherHomeComponent;
   let fixture: ComponentFixture<TeacherHomeComponent>;
@@ -100,12 +107,19 @@ describe('TeacherHomeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherHomeComponent ],
+      imports: [ RouterTestingModule ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
         { provide: ConfigService, useClass: MockConfigService },
-        { provide: Router },
-        { provide: ActivatedRoute, useValue: { data: Observable.create( observer => { const data = {selectedTabIndex: 0 }; observer.next(data); observer.complete(); })} }
+        { provide: LibraryService, useClass: MockLibraryService },
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

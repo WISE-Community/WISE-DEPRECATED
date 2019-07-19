@@ -18,25 +18,22 @@ export class PersonalLibraryComponent extends LibraryComponent {
 
   constructor(libraryService: LibraryService, public dialog: MatDialog) {
     super(libraryService);
+    this.libraryService = libraryService;
 
-    libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
+    this.libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
       this.personalProjects = personalProjects;
       this.updateProjects();
     });
-
-    libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
+    this.libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
       this.sharedProjects = sharedProjects;
       this.updateProjects();
     });
-
-    libraryService.newProjectSource$.subscribe(project => {
-      this.projects.unshift(project);
-      this.filterUpdated();
-      this.libraryService.setTabIndex(2);
+    this.libraryService.newProjectSource$.subscribe(project => {
+      if (project) {
+        this.projects.unshift(project);
+        this.filterUpdated();
+      }
     });
-
-    libraryService.getPersonalLibraryProjects();
-    libraryService.getSharedLibraryProjects();
   }
 
   ngOnInit() {
@@ -60,6 +57,14 @@ export class PersonalLibraryComponent extends LibraryComponent {
       return -1;
     } else {
       return 0;
+    }
+  }
+
+  emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
+    if (numProjectsVisible) {
+      this.libraryService.numberOfPersonalProjectsVisible.next(numProjectsVisible);
+    } else {
+      this.libraryService.numberOfPersonalProjectsVisible.next(this.filteredProjects.length);
     }
   }
 
