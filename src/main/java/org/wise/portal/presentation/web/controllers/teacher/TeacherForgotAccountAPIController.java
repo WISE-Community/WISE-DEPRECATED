@@ -5,8 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.domain.user.User;
@@ -37,7 +38,7 @@ public class TeacherForgotAccountAPIController {
   @Autowired
   protected MessageSource messageSource;
 
-  @RequestMapping(value = "/username", method = RequestMethod.POST)
+  @PostMapping("/username")
   protected String sendForgotUsernameEmail(HttpServletRequest request,
       @RequestParam("email") String email) throws JSONException {
     List<User> users = userService.retrieveUserByEmailAddress(email);
@@ -79,7 +80,7 @@ public class TeacherForgotAccountAPIController {
     }
   }
 
-  @RequestMapping(value = "/password/verification-code", method = RequestMethod.GET)
+  @GetMapping("/password/verification-code")
   protected String sendVerificationCodeEmail(HttpServletRequest request,
         @RequestParam("username") String username) throws JSONException {
     JSONObject response;
@@ -139,7 +140,7 @@ public class TeacherForgotAccountAPIController {
     }
   }
 
-  @RequestMapping(value = "/password/verification-code", method = RequestMethod.POST)
+  @PostMapping("/password/verification-code")
   protected String checkVerificationCode(@RequestParam("username") String username,
         @RequestParam("verificationCode") String verificationCode) throws JSONException {
     JSONObject response = new JSONObject();
@@ -181,7 +182,7 @@ public class TeacherForgotAccountAPIController {
     userService.updateUser(user);
   }
 
-  @RequestMapping(value = "/password/change", method = RequestMethod.POST)
+  @PostMapping("/password/change")
   protected String changePassword(@RequestParam("username") String username,
         @RequestParam("verificationCode") String verificationCode,
         @RequestParam("password") String password,

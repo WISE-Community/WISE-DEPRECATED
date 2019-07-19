@@ -7,8 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -27,7 +28,7 @@ public class StudentForgotAccountAPIController {
   @Autowired
   private Properties i18nProperties;
 
-  @RequestMapping(value = "/username/search", method = RequestMethod.GET)
+  @GetMapping("/username/search")
   protected String getStudentUsernames(@RequestParam("firstName") String firstName,
         @RequestParam("lastName") String lastName,
         @RequestParam("birthMonth") Integer birthMonth,
@@ -58,7 +59,7 @@ public class StudentForgotAccountAPIController {
     return usernamesJSON;
   }
 
-  @RequestMapping(value = "/password/security-question", method = RequestMethod.GET)
+  @GetMapping("/password/security-question")
   protected String getSecurityQuestion(@RequestParam("username") String username) 
       throws JSONException {
     User user = userService.retrieveUserByUsername(username);
@@ -75,7 +76,7 @@ public class StudentForgotAccountAPIController {
     return response.toString();
   }
 
-  @RequestMapping(value = "/password/security-question", method = RequestMethod.POST)
+  @PostMapping("/password/security-question")
   protected String checkSecurityAnswer(@RequestParam("username") String username,
         @RequestParam("answer") String answer) throws JSONException {
     User user = userService.retrieveUserByUsername(username);
@@ -92,7 +93,7 @@ public class StudentForgotAccountAPIController {
     return response.toString();
   }
 
-  @RequestMapping(value = "/password/change", method = RequestMethod.POST)
+  @PostMapping("/password/change")
   protected String checkSecurityAnswer(@RequestParam("username") String username,
         @RequestParam("answer") String answer,
         @RequestParam("password") String password,
