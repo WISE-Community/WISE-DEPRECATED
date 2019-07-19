@@ -70,7 +70,7 @@ public class UpdateRunController {
   private IMailFacade mailService;
 
   @Autowired
-  protected Properties wiseProperties;
+  protected Properties appProperties;
 
   @RequestMapping(method = RequestMethod.GET)
   protected ModelAndView handleGET(HttpServletRequest request) throws Exception {
@@ -204,14 +204,14 @@ public class UpdateRunController {
     @Override
     public void run() {
       try {
-        String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled");
+        String sendEmailEnabledStr = appProperties.getProperty("send_email_enabled");
         Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
         if (!sendEmailEnabled) {
           return;
         }
 
-        String fromEmail = wiseProperties.getProperty("portalemailaddress");
-        String[] recipients = wiseProperties.getProperty("project_setup").split(",");
+        String fromEmail = appProperties.getProperty("portalemailaddress");
+        String[] recipients = appProperties.getProperty("project_setup").split(",");
 
         mailService.postMail(recipients, messageSubject, messageBody, fromEmail);
       } catch (MessagingException e) {

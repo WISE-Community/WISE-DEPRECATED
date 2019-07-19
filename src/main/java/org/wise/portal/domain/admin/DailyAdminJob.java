@@ -98,7 +98,7 @@ public class DailyAdminJob {
   private VLEService vleService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private PortalService portalService;
@@ -145,7 +145,7 @@ public class DailyAdminJob {
       if (portal.isSendStatisticsToHub()) {
         try {
           JSONObject wiseStatisticsJSONObject = new JSONObject();
-          wiseStatisticsJSONObject.put("wiseName", wiseProperties.getProperty("wise.name"));
+          wiseStatisticsJSONObject.put("wiseName", appProperties.getProperty("wise.name"));
 
           PortalStatistics latestPortalStatistics = portalStatisticsService.getLatestPortalStatistics();
           wiseStatisticsJSONObject.put("portal", latestPortalStatistics.getJSONObject());
@@ -227,9 +227,9 @@ public class DailyAdminJob {
 
   public void gatherVLEStatistics() {
     try {
-      String username = this.wiseProperties.getProperty("hibernate.connection.username");
-      String password = this.wiseProperties.getProperty("hibernate.connection.password");
-      String url = this.wiseProperties.getProperty("hibernate.connection.url");
+      String username = appProperties.getProperty("spring.datasource.username");
+      String password = appProperties.getProperty("spring.datasource.password");
+      String url = appProperties.getProperty("spring.datasource.url");
       Class.forName("com.mysql.jdbc.Driver").newInstance();
       Connection conn = DriverManager.getConnection(url, username, password);
       Statement statement = conn.createStatement();
@@ -433,11 +433,11 @@ public class DailyAdminJob {
    * Try to score the CRater student work that previously failed to be scored
    */
   private void handleIncompleteCRaterRequests() {
-    String cRaterScoringUrl = this.wiseProperties.getProperty("cRater_scoring_url");
-    String cRaterClientId = this.wiseProperties.getProperty("cRater_client_id");
-    String cRaterPassword = this.wiseProperties.getProperty("cRaterPassword");
-    String henryScoringUrl = this.wiseProperties.getProperty("henry_scoring_url");
-    String henryClientId = this.wiseProperties.getProperty("henry_client_id");
+    String cRaterScoringUrl = appProperties.getProperty("cRater_scoring_url");
+    String cRaterClientId = appProperties.getProperty("cRater_client_id");
+    String cRaterPassword = appProperties.getProperty("cRaterPassword");
+    String henryScoringUrl = appProperties.getProperty("henry_scoring_url");
+    String henryClientId = appProperties.getProperty("henry_client_id");
 
     if (cRaterScoringUrl != null || henryScoringUrl != null) {
       List<CRaterRequest> incompleteCRaterRequests = this.cRaterRequestDao.getIncompleteCRaterRequests();
@@ -556,9 +556,9 @@ public class DailyAdminJob {
   }
 
   public void sendEmail(String message) {
-    String[] recipients = wiseProperties.getProperty("uber_admin").split(",");
+    String[] recipients = appProperties.getProperty("uber_admin").split(",");
     String subject = "Daily Admin Report on Portal: "
-        + " (" + wiseProperties.getProperty("wise.name") + ")";
+        + " (" + appProperties.getProperty("wise.name") + ")";
 
     String msg = message;
     String fromEmail = "wise_gateway@berkeley.edu";
@@ -577,7 +577,7 @@ public class DailyAdminJob {
       HttpClient client = HttpClientBuilder.create().build();
       HttpPost post = new HttpPost(WISE_HUB_URL);
       List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-      urlParameters.add(new BasicNameValuePair("name", wiseProperties.getProperty("wise.name")));
+      urlParameters.add(new BasicNameValuePair("name", appProperties.getProperty("wise.name")));
       urlParameters.add(new BasicNameValuePair("stats", wiseStatisticsString));
 
       try {

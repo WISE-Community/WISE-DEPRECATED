@@ -58,9 +58,6 @@ public class GradeWorkController {
   @Autowired
   private RunService runService;
 
-  @Autowired
-  Properties wiseProperties;
-
   /**
    * Invokes WISE4 or WISE5 Classroom Monitor based on the specified run
    * @param runId ID of the run

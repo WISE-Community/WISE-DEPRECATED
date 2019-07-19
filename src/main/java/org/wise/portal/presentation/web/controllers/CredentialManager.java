@@ -57,7 +57,7 @@ public final class CredentialManager {
 
   private static ProjectService projectService;
 
-  private static Properties wiseProperties;
+  private static Properties appProperties;
 
   @Autowired
   public void setProjectService(ProjectService projectService) {
@@ -65,11 +65,9 @@ public final class CredentialManager {
   }
 
   @Autowired
-  public void setWiseProperties(Properties wiseProperties) {
-    CredentialManager.wiseProperties = wiseProperties;
+  public void setAppProperties(Properties appProperties) {
+    CredentialManager.appProperties = appProperties;
   }
-
-  private static final String AUTHENTICATE = "authenticate";
 
   private static final String PROJECTID = "projectId";
 
@@ -110,10 +108,10 @@ public final class CredentialManager {
 
   public static String getAllowedPathAccess(HttpServletRequest request) {
     String idStr = request.getParameter(PROJECTID);
-    String accessPath = wiseProperties.getProperty("curriculum_base_dir");
+    String accessPath = appProperties.getProperty("curriculum_base_dir");
     if ("studentAssetUpload".equals(request.getParameter("cmd")) ||
         "studentAssetCopyForReference".equals(request.getParameter("command"))) {
-      accessPath = wiseProperties.getProperty("studentuploads_base_dir");
+      accessPath = appProperties.getProperty("studentuploads_base_dir");
     }
     if (idStr != null && !idStr.equals("") && !idStr.equals("none")) {
       try {

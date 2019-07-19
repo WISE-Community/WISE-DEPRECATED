@@ -76,7 +76,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 @RequestMapping("/assetManager")
 public class AssetManager {
 
-  private static Properties wiseProperties;
+  private static Properties appProperties;
 
   @Autowired
   private RunService runService;
@@ -85,8 +85,8 @@ public class AssetManager {
   private WorkgroupService workgroupService;
 
   @Autowired
-  public void setWiseProperties(Properties wiseProperties) {
-    AssetManager.wiseProperties = wiseProperties;
+  public void setAppProperties(Properties appProperties) {
+    AssetManager.appProperties = appProperties;
   }
 
   public AssetManager() {
@@ -122,7 +122,7 @@ public class AssetManager {
               JSONObject workgroupAsset = new JSONObject();
               try {
                 String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
-                String path = wiseProperties.getProperty("studentuploads_base_dir");
+                String path = appProperties.getProperty("studentuploads_base_dir");
                 JSONArray assetList = getAssetList(path, dirName);
                 workgroupAsset.put("workgroupId", workgroupId);
                 workgroupAsset.put("assets", assetList);
@@ -141,7 +141,7 @@ public class AssetManager {
           Workgroup workgroup = workgroupListByRunAndUser.get(0);
           Long workgroupId = workgroup.getId();
           String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
-          String path = wiseProperties.getProperty("studentuploads_base_dir");
+          String path = appProperties.getProperty("studentuploads_base_dir");
           JSONArray assetList = getAssetList(path, dirName);
           response.getWriter().write(assetList.toString());
         }
@@ -161,7 +161,7 @@ public class AssetManager {
         Workgroup workgroup = workgroupListByRunAndUser.get(0);
         Long workgroupId = workgroup.getId();
         String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
-        String path = wiseProperties.getProperty("studentuploads_base_dir");
+        String path = appProperties.getProperty("studentuploads_base_dir");
         String result = getSize(path, dirName);
         response.getWriter().write(result);
       }
@@ -191,7 +191,7 @@ public class AssetManager {
         Workgroup workgroup = workgroupListByRunAndUser.get(0);
         Long workgroupId = workgroup.getId();
         String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
-        String path = wiseProperties.getProperty("studentuploads_base_dir");
+        String path = appProperties.getProperty("studentuploads_base_dir");
         String assetFileName = request.getParameter("asset");
         String result = removeAsset(path, dirName, assetFileName);
         response.getWriter().write(result);
@@ -234,8 +234,8 @@ public class AssetManager {
         Workgroup workgroup = workgroupListByRunAndUser.get(0);
         Long workgroupId = workgroup.getId();
         String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
-        String path = wiseProperties.getProperty("studentuploads_base_dir");
-        Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
+        String path = appProperties.getProperty("studentuploads_base_dir");
+        Long studentMaxTotalAssetsSize = new Long(appProperties.getProperty("student_max_total_assets_size", "5242880"));
         String pathToCheckSize = path + "/" + dirName;
         DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
         Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
@@ -331,7 +331,7 @@ public class AssetManager {
       String fileName) {
     String unreferencedAssetsDirName = dirName;
     String referencedAssetsDirName = referencedDirName;
-    String studentUploadsBaseDirStr = wiseProperties.getProperty("studentuploads_base_dir");
+    String studentUploadsBaseDirStr = appProperties.getProperty("studentuploads_base_dir");
 
     // file upload is coming from the portal so we need to read the bytes
     // that the portal set in the attribute
@@ -506,7 +506,7 @@ public class AssetManager {
     JSONObject response = new JSONObject();
     String unreferencedAssetsDirName = dirName;
     String referencedAssetsDirName = referencedDirName;
-    String studentUploadsBaseDirStr = wiseProperties.getProperty("studentuploads_base_dir");
+    String studentUploadsBaseDirStr = appProperties.getProperty("studentuploads_base_dir");
 
     // file upload is coming from the portal so we need to read the bytes
     // that the portal set in the attribute

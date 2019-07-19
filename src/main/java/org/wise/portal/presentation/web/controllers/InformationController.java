@@ -69,7 +69,7 @@ import java.util.*;
 public class InformationController {
 
   @Autowired
-  Properties wiseProperties;
+  Properties appProperties;
 
   @Autowired
   ProjectService projectService;
@@ -531,14 +531,14 @@ public class InformationController {
       config.put("contextPath", contextPath);
       config.put("mode", mode);
       config.put("projectMetadataURL", contextPath + "/metadata.html");
-      String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+      String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
       String rawProjectUrl = project.getModulePath();
       String projectURL = curriculumBaseWWW + rawProjectUrl;
       config.put("projectId", project.getId());
       config.put("parentProjectId", project.getParentProjectId());
       config.put("projectURL", projectURL);
       addProjectBaseURL(config, projectURL);
-      config.put("studentUploadsBaseURL",  wiseProperties.getProperty("studentuploads_base_www"));
+      config.put("studentUploadsBaseURL",  appProperties.getProperty("studentuploads_base_www"));
       config.put("theme", "WISE");
       config.put("cRaterRequestURL", contextPath + "/c-rater");
       config.put("mainHomePageURL", contextPath);
@@ -595,7 +595,7 @@ public class InformationController {
 
   private void addStudentMaxTotalAssetSize(JSONObject config) throws JSONException {
     Long studentMaxTotalAssetsSizeBytes =
-      new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
+      new Long(appProperties.getProperty("student_max_total_assets_size", "5242880"));
     config.put("studentMaxTotalAssetsSize", studentMaxTotalAssetsSizeBytes);
   }
 
@@ -713,7 +713,7 @@ public class InformationController {
       HttpServletRequest request, JSONObject config, Project project,
       String rawProjectUrl) throws JSONException {
     assert project != null;
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     String projectURL = curriculumBaseWWW + rawProjectUrl;
 
     String contextPath = request.getContextPath();
@@ -724,7 +724,7 @@ public class InformationController {
     config.put("theme", "WISE");
     config.put("projectURL", projectURL);
     addProjectBaseURL(config, projectURL);
-    config.put("studentUploadsBaseURL", wiseProperties.getProperty("studentuploads_base_www"));
+    config.put("studentUploadsBaseURL", appProperties.getProperty("studentuploads_base_www"));
     config.put("cRaterRequestURL", contextPath + "/c-rater");
     config.put("contextPath", contextPath);
     config.put("mainHomePageURL", contextPath);
@@ -929,21 +929,5 @@ public class InformationController {
       }
     }
     return users;
-  }
-
-  private boolean isUserOwnerOfRun(Run run, User user) {
-    return run.getOwner().getId() == user.getId();
-  }
-
-  private boolean isSharedOwnerWithGradePermissionOfRun(Run run, User user) {
-    for (User sharedOwner : run.getSharedowners()) {
-      if (user.getId() == sharedOwner.getId()) {
-        String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
-        if (sharedTeacherRole != null && sharedTeacherRole.equals(UserDetailsService.RUN_GRADE_ROLE)) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }

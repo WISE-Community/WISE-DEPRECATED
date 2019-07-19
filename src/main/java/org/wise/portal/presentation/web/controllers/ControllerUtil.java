@@ -65,6 +65,7 @@ import org.wise.portal.service.user.UserService;
  * A utility class for use by all controllers
  *
  * @author Laurel Williams
+ * @author Geoffrey Kwan
  */
 @Component
 public class ControllerUtil {
@@ -77,7 +78,7 @@ public class ControllerUtil {
   private static PortalService portalService;
 
   @Autowired
-  private static Properties wiseProperties;
+  private static Properties appProperties;
 
   @Autowired
   private static ProjectService projectService;
@@ -90,8 +91,8 @@ public class ControllerUtil {
   private static final String LICENSE_PATH = "/license.txt";
 
   @Autowired
-  public void setWiseProperties(Properties wiseProperties){
-    ControllerUtil.wiseProperties = wiseProperties;
+  public void setAppProperties(Properties appProperties){
+    ControllerUtil.appProperties = appProperties;
   }
 
   @Autowired
@@ -325,8 +326,8 @@ public class ControllerUtil {
     String modulePath = project.getModulePath();
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
     if (lastIndexOfSlash != -1) {
-      String hostname = ControllerUtil.wiseProperties.getProperty("wise.hostname");
-      String curriculumBaseWWW = ControllerUtil.wiseProperties.getProperty("curriculum_base_www");
+      String hostname = ControllerUtil.appProperties.getProperty("wise.hostname");
+      String curriculumBaseWWW = ControllerUtil.appProperties.getProperty("curriculum_base_www");
       return hostname + curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
     }
     return "";
@@ -336,7 +337,7 @@ public class ControllerUtil {
     String modulePath = project.getModulePath();
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
     if (lastIndexOfSlash != -1) {
-      String curriculumBaseWWW = ControllerUtil.wiseProperties.getProperty("curriculum_base_dir");
+      String curriculumBaseWWW = ControllerUtil.appProperties.getProperty("curriculum_base_dir");
       return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
     }
     return "";
@@ -406,8 +407,8 @@ public class ControllerUtil {
 
   @PostConstruct
   public static void checkReCaptchaEnabled() {
-    String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    String reCaptchaPublicKey = appProperties.getProperty("recaptcha_public_key");
+    String reCaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
     isReCaptchaEnabled = reCaptchaPublicKey != null && reCaptchaPrivateKey != null;
   }
 
@@ -417,7 +418,7 @@ public class ControllerUtil {
    * @return whether the user answered the ReCaptcha successfully
    */
   public static boolean isReCaptchaResponseValid(String gRecaptchaResponse) {
-    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    String reCaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
     boolean isValid = false;
     if (isReCaptchaEnabled &&
         gRecaptchaResponse != null &&

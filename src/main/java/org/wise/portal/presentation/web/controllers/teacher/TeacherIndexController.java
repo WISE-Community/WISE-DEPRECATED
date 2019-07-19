@@ -47,7 +47,7 @@ import java.util.*;
 public class TeacherIndexController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private RunService runService;
@@ -95,7 +95,7 @@ public class TeacherIndexController {
     modelMap.put("workgroup_map", workgroupMap);
     modelMap.put("teacherOnlyNewsItems", newsItemService.retrieveByType("teacherOnly"));
 
-    String discourseURL = wiseProperties.getProperty("discourse_url");
+    String discourseURL = appProperties.getProperty("discourse_url");
     if (discourseURL != null && !discourseURL.isEmpty()) {
       String discourseSSOLoginURL = discourseURL + "/session/sso";
       modelMap.put("discourseSSOLoginURL", discourseSSOLoginURL);

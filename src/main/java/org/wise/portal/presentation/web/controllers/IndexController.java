@@ -27,9 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 import org.wise.portal.domain.project.Project;
@@ -54,7 +54,7 @@ public class IndexController {
   private ProjectService projectService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private MessageSource messageSource;
@@ -62,17 +62,17 @@ public class IndexController {
   // path to project thumbnail image relative to project folder
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
-  @RequestMapping(value = "/join", method = RequestMethod.GET)
+  @GetMapping("/join")
   protected String showJoinPage() {
     return "join";
   }
 
-  @RequestMapping(value = "/pages/{filename}", method = RequestMethod.GET)
+  @GetMapping("/pages/{filename}")
   protected String showStaticPages(@PathVariable String filename) {
     return "pages/" + filename;
   }
 
-  @RequestMapping(value = "/forgotaccount/selectaccounttype", method = RequestMethod.GET)
+  @GetMapping("/forgotaccount/selectaccounttype")
   protected String showForgotAccountSelectAccountPage() {
     return "forgotaccount/selectaccounttype";
   }
@@ -80,7 +80,7 @@ public class IndexController {
   /**
    * Displays the home page with news items and public library projects
    */
-  @RequestMapping(method = RequestMethod.GET)
+  @GetMapping
   protected String showHomePage(
       HttpServletRequest request,
       ModelMap modelMap) throws Exception {
@@ -114,7 +114,7 @@ public class IndexController {
     }
 
     Map<Long,String> projectThumbMap = new TreeMap<Long,String>();
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     for (Project p : libraryProjectsList) {
       if (p.isCurrent()) {
         String modulePath = p.getModulePath();

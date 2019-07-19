@@ -86,7 +86,7 @@ import org.wise.vle.utils.FileManager;
 public class VLEGetXLS {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private VLEService vleService;
@@ -272,7 +272,7 @@ public class VLEGetXLS {
       projectMetaDataJSONString = metadata.toJSONString();
     }
 
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String rawProjectUrl = run.getProject().getModulePath();
     String projectPath = curriculumBaseDir + rawProjectUrl;
 

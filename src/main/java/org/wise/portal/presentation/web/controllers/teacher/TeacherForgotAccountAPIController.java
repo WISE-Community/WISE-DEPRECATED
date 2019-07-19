@@ -26,7 +26,7 @@ import java.util.Properties;
 public class TeacherForgotAccountAPIController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private UserService userService;
@@ -47,7 +47,7 @@ public class TeacherForgotAccountAPIController {
     } else {
       User user = users.get(0);
       String username = user.getUserDetails().getUsername();
-      String from = wiseProperties.getProperty("portalemailaddress");
+      String from = appProperties.getProperty("portalemailaddress");
       String [] to = new String[] {email};
       String subject = messageSource.getMessage("forgotaccount.teacher.username.email.subject", new Object[] {}, Locale.US);
       String signInUrl = getSignInUrl(request);
@@ -101,7 +101,7 @@ public class TeacherForgotAccountAPIController {
   }
 
   private boolean sendVerificationCodeEmail(HttpServletRequest request, User user) {
-    String from = wiseProperties.getProperty("portalemailaddress");
+    String from = appProperties.getProperty("portalemailaddress");
     String email = user.getUserDetails().getEmailAddress();
     String [] to = new String[] {email};
     String subject = messageSource.getMessage("forgotaccount.teacher.verificationcode.email.subject", new Object[] {}, Locale.US);

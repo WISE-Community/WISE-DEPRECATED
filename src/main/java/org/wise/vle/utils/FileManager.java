@@ -84,15 +84,15 @@ public class FileManager {
 
   private boolean modeRetrieved = false;
 
-  private static Properties wiseProperties = null;
+  private static Properties appProperties = null;
 
   static {
     try {
-      wiseProperties = new Properties();
-      wiseProperties.load(
-          FileManager.class.getClassLoader().getResourceAsStream("wise.properties"));
+      appProperties = new Properties();
+      appProperties.load(
+          FileManager.class.getClassLoader().getResourceAsStream("application.properties"));
     } catch (Exception e) {
-      System.err.println("FileManager could not read in wiseProperties file");
+      System.err.println("FileManager could not read in appProperties file");
       e.printStackTrace();
     }
   }
@@ -2048,7 +2048,7 @@ public class FileManager {
       projectMaxTotalAssetsSizeString = projectMaxTotalAssetsSizeLong.toString();
     } else {
       projectMaxTotalAssetsSizeString =
-          wiseProperties.getProperty("project_max_total_assets_size", "15728640");
+          appProperties.getProperty("project_max_total_assets_size", "15728640");
     }
     String usageString = sizeUsed + "/" + projectMaxTotalAssetsSizeString;
     result = usageString;
@@ -2086,7 +2086,7 @@ public class FileManager {
    * e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
    */
   public static String getProjectFilePath(Project project) {
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String projectModulePath = project.getModulePath();
     return curriculumBaseDir + projectModulePath;
   }

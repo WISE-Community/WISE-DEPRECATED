@@ -50,7 +50,7 @@ import java.util.*;
 public class TranslateWISEController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private IMailFacade mailService;
@@ -103,7 +103,7 @@ public class TranslateWISEController {
   @RequestMapping(value = "/translate", method = RequestMethod.GET)
   protected ModelAndView getIndexPage(HttpServletRequest request) throws Exception {
     ModelAndView modelAndView = new ModelAndView("translate/index");
-    String supportedLocales = wiseProperties.getProperty("supportedLocales", "en");
+    String supportedLocales = appProperties.getProperty("supportedLocales", "en");
     modelAndView.addObject("supportedLocales", supportedLocales);
     return modelAndView;
   }
@@ -165,7 +165,7 @@ public class TranslateWISEController {
     } else {
       String projectFileDir = projectToFileDirMap.get(projectType);
       String projectFilePath = projectFileDir + "i18n_" + locale + ".json";
-      String wiseBaseDir = wiseProperties.getProperty("wiseBaseDir", "/");
+      String wiseBaseDir = appProperties.getProperty("wiseBaseDir", "/");
       if (!wiseBaseDir.endsWith("/")) {
         // make sure wiseBaseDir ends with "/" or the path will be incorrect.
         wiseBaseDir += "/";
@@ -246,7 +246,7 @@ public class TranslateWISEController {
 
     public void run() {
       try {
-        String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled");
+        String sendEmailEnabledStr = appProperties.getProperty("send_email_enabled");
         Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
         if (!sendEmailEnabled) {
           return;
@@ -257,14 +257,14 @@ public class TranslateWISEController {
             teacherUserDetails.getLastname();
         String teacherEmail = teacherUserDetails.getEmailAddress();
         String message = translationString;
-        String fromEmail = wiseProperties.getProperty("portalemailaddress");
+        String fromEmail = appProperties.getProperty("portalemailaddress");
         String adminSubject = "Translation saved. Project: " + projectType +
             ", locale: " + locale + ", teacher: " + teacherName;
         if (isComplete) {
           adminSubject = "[Completed] " + adminSubject;
         }
 
-        String[] recipients = wiseProperties.getProperty("uber_admin").split(",");
+        String[] recipients = appProperties.getProperty("uber_admin").split(",");
         mailService.postMail(recipients, adminSubject, message, fromEmail);
         String[] teacherRecipient = new String[]{teacherEmail};
         if (!isComplete) {

@@ -95,7 +95,7 @@ public class WISE5AuthorProjectController {
   protected SessionService sessionService;
 
   @Autowired
-  Properties wiseProperties;
+  Properties appProperties;
 
   @Autowired
   ServletContext servletContext;
@@ -142,7 +142,7 @@ public class WISE5AuthorProjectController {
     if (!hasAuthorPermissions(user)) {
       return null;
     }
-    File curriculumBaseDir = new File(wiseProperties.getProperty("curriculum_base_dir"));
+    File curriculumBaseDir = new File(appProperties.getProperty("curriculum_base_dir"));
     long newProjectId = projectService.getNextAvailableProjectId();
     File newProjectDir = new File(curriculumBaseDir, String.valueOf(newProjectId));
     newProjectDir.mkdir();
@@ -301,7 +301,7 @@ public class WISE5AuthorProjectController {
       return;
     }
 
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String projectModulePath = project.getModulePath();
     String projectJSONPath = curriculumBaseDir + projectModulePath;
     File projectFile = new File(projectJSONPath);
@@ -363,14 +363,14 @@ public class WISE5AuthorProjectController {
     Project project = projectService.getById(projectId);
     JSONObject config = getDefaultAuthoringConfigJsonObject(request);
     String contextPath = request.getContextPath();
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     String rawProjectUrl = project.getModulePath();
     String projectURL = curriculumBaseWWW + rawProjectUrl;
     String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
     Long projectAssetTotalSizeMax = project.getMaxTotalAssetsSize();
     if (projectAssetTotalSizeMax == null) {
       projectAssetTotalSizeMax =
-          new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+          new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
     }
 
     config.put("projectId", projectId);
@@ -533,14 +533,14 @@ public class WISE5AuthorProjectController {
   }
 
   private String getProjectDirectoryPath(Project project) {
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String rawProjectUrl = project.getModulePath();
     String projectDirPath = curriculumBaseDir + rawProjectUrl;
     return projectDirPath.substring(0, projectDirPath.lastIndexOf("/"));
   }
 
   private String getProjectAssetsDirectoryPath(Project project) {
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String rawProjectUrl = project.getModulePath();
     String projectURL = curriculumBaseDir + rawProjectUrl;
     String projectBaseDir = projectURL.substring(0, projectURL.indexOf("project.json"));
@@ -607,7 +607,7 @@ public class WISE5AuthorProjectController {
       Project project, User user, File projectAssetsDir) throws IOException {
     Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
     if (projectMaxTotalAssetsSize == null) {
-      projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+      projectMaxTotalAssetsSize = new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
     }
     long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
 
@@ -656,9 +656,9 @@ public class WISE5AuthorProjectController {
    * @param file file that the user is trying to upload
    */
   private boolean isUserAllowedToUpload(User user, MultipartFile file) {
-    String allowedTypes = wiseProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
+    String allowedTypes = appProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
     if (user.isTrustedAuthor()) {
-      allowedTypes += "," + wiseProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
+      allowedTypes += "," + appProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
     }
     return allowedTypes.contains(file.getContentType()); 
   }
@@ -875,7 +875,7 @@ public class WISE5AuthorProjectController {
     String fromProjectUrl = fromProject.getModulePath();
     Project toProject = projectService.getById(toProjectId);
     String toProjectUrl = toProject.getModulePath();
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
 
     // get the index of the last separator from the fromProjectUrl
     int fromProjectUrlLastIndexOfSlash = fromProjectUrl.lastIndexOf("/");

@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.project.Project;
@@ -52,12 +52,12 @@ public class ProjectInfoController {
   private RunService runService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   // path to project thumb image relative to project folder
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
-  @RequestMapping("/projectInfo")
+  @GetMapping("/projectInfo")
   protected ModelAndView handleRequestInternal(
       @RequestParam("projectId") String projectIdStr,
       HttpServletRequest request,
@@ -75,7 +75,7 @@ public class ProjectInfoController {
         return null;
       }
 
-      String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+      String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
       String url = project.getModulePath();
       if (url != null && url != "") {
         int ndx = url.lastIndexOf("/");

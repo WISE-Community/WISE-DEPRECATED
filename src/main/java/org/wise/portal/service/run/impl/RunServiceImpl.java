@@ -93,7 +93,7 @@ public class RunServiceImpl implements RunService {
   private UserDao<User> userDao;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   protected AclService<Persistable> aclService;
@@ -151,9 +151,9 @@ public class RunServiceImpl implements RunService {
     }
     String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
     String runcodePrefixesStr =
-        wiseProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
-    if (wiseProperties.containsKey("runcode_prefixes_"+language)) {
-      runcodePrefixesStr = wiseProperties.getProperty("runcode_prefixes_" + language);
+        appProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
+    if (appProperties.containsKey("runcode_prefixes_"+language)) {
+      runcodePrefixesStr = appProperties.getProperty("runcode_prefixes_" + language);
     }
     String[] runcodePrefixes = runcodePrefixesStr.split(",");
     String word = runcodePrefixes[rand.nextInt(runcodePrefixes.length)];

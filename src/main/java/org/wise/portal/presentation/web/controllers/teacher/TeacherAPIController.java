@@ -56,7 +56,7 @@ import org.wise.portal.service.user.UserService;
 public class TeacherAPIController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private ProjectService projectService;
@@ -222,7 +222,7 @@ public class TeacherAPIController {
     teacherUserDetails.setLanguage(locale.getLanguage());
     User createdUser = this.userService.createUser(teacherUserDetails);
     String username = createdUser.getUserDetails().getUsername();
-    String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled", "false");
+    String sendEmailEnabledStr = appProperties.getProperty("send_email_enabled", "false");
     Boolean iSendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
     if (iSendEmailEnabled) {
       sendCreateTeacherAccountEmail(email, displayName, username, googleUserId, locale, request);
@@ -232,7 +232,7 @@ public class TeacherAPIController {
 
   private void sendCreateTeacherAccountEmail(String email, String displayName, String username, String googleUserId, Locale locale,
         HttpServletRequest request) {
-    String fromEmail = wiseProperties.getProperty("portalemailaddress");
+    String fromEmail = appProperties.getProperty("portalemailaddress");
     String [] recipients = {email};
     String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
     String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, locale);
@@ -318,7 +318,7 @@ public class TeacherAPIController {
     String modulePath = project.getModulePath();
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
     if (lastIndexOfSlash != -1) {
-      String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+      String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
       return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + "/assets/project_thumb.png";
     }
     return "";

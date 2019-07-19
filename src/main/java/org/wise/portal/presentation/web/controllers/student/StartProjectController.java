@@ -84,7 +84,7 @@ public class StartProjectController {
   private StudentAttendanceService studentAttendanceService;
 
   @Autowired
-  protected Properties wiseProperties;
+  protected Properties appProperties;
 
   private static final String SELECT_TEAM_URL = "student/selectteam";
 
@@ -172,7 +172,7 @@ public class StartProjectController {
         modelAndView.addObject("runId", runId);
         Integer maxWorkgroupSize = run.getMaxWorkgroupSize();
         if (maxWorkgroupSize == null) {
-          String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
+          String maxWorkgroupSizeStr = appProperties.getProperty("maxWorkgroupSize", "3");
           maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
         }
         modelAndView.addObject("maxWorkgroupSize",maxWorkgroupSize);

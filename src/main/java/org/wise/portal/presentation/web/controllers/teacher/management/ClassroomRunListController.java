@@ -55,7 +55,7 @@ public class ClassroomRunListController {
   private RunService runService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private WorkgroupService workgroupService;
@@ -95,7 +95,7 @@ public class ClassroomRunListController {
     modelMap.put("user", user);
     modelMap.put("gradingParam", gradingParam);
 
-    String isRealTimeEnabledStr = wiseProperties.getProperty("isRealTimeEnabled");
+    String isRealTimeEnabledStr = appProperties.getProperty("isRealTimeEnabled");
     boolean isRealTimeEnabled = isRealTimeEnabledStr != null ? Boolean.valueOf(isRealTimeEnabledStr) : false;
     modelMap.put("isRealTimeEnabled", isRealTimeEnabled);
     modelMap.put("current_run_list", current_run_list);
