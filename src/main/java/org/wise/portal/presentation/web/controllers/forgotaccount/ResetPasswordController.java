@@ -35,9 +35,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
@@ -52,7 +53,7 @@ public class ResetPasswordController {
   protected UserService userService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   protected MailService mailService;
@@ -73,7 +74,7 @@ public class ResetPasswordController {
    * @param request the http request
    * @return the path of the view to display
    */
-  @RequestMapping(method = RequestMethod.GET)
+  @GetMapping
   public String initializeForm(
       @ModelAttribute("passwordReminderParameters") PasswordReminderParameters passwordReminderParameters,
       BindingResult bindingResult, ModelMap modelMap, HttpServletRequest request) {
@@ -136,7 +137,7 @@ public class ResetPasswordController {
    * @param request the http request
    * @return the path of the view to display
    */
-  @RequestMapping(method = RequestMethod.POST)
+  @PostMapping
   protected String onSubmit(
       @ModelAttribute("passwordReminderParameters") PasswordReminderParameters passwordReminderParameters,
       BindingResult bindingResult, Model model, HttpServletRequest request) throws Exception {
@@ -160,7 +161,7 @@ public class ResetPasswordController {
       user.getUserDetails().setResetPasswordRequestTime(null);
       userService.updateUser(user);
       String username = user.getUserDetails().getUsername();
-      String portalName = wiseProperties.getProperty("wise.name");
+      String portalName = appProperties.getProperty("wise.name");
       String userEmail = user.getUserDetails().getEmailAddress();
       String[] recipients = new String[]{userEmail};
       Locale userLocale = request.getLocale();

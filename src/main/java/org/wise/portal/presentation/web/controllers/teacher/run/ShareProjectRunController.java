@@ -85,7 +85,7 @@ public class ShareProjectRunController {
   private IMailFacade mailService;
 
   @Autowired
-  protected Properties wiseProperties;
+  protected Properties appProperties;
 
   @Autowired
   private MessageSource messageSource;
@@ -291,7 +291,7 @@ public class ShareProjectRunController {
       TeacherUserDetails shareeDetails = (TeacherUserDetails) sharee.getUserDetails();
 
       String[] shareeEmailAddress = {shareeDetails.getEmailAddress()};
-      String[] recipients = (String[]) ArrayUtils.addAll(shareeEmailAddress, wiseProperties.getProperty("uber_admin").split(","));
+      String[] recipients = (String[]) ArrayUtils.addAll(shareeEmailAddress, appProperties.getProperty("uber_admin").split(","));
 
       String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.ShareProjectRunController.shareProjectRunConfirmationEmailSubject",
           new Object[] {sharerName}, Locale.US);
@@ -304,8 +304,8 @@ public class ShareProjectRunController {
           new Object[] {sharerName, run.getName(), run.getId(), run.getProject().getName(), run.getProject().getId(), shareeDetails.getUsername(), sdf.format(date) },
           defaultMessage, locale);
 
-      if (wiseProperties.containsKey("discourse_url")) {
-        String discourseURL = wiseProperties.getProperty("discourse_url");
+      if (appProperties.containsKey("discourse_url")) {
+        String discourseURL = appProperties.getProperty("discourse_url");
         if (discourseURL != null && !discourseURL.isEmpty()) {
           // if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
           String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);

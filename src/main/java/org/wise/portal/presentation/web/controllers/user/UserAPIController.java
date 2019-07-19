@@ -33,7 +33,7 @@ import java.util.*;
 public class UserAPIController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   protected UserService userService;
@@ -123,7 +123,7 @@ public class UserAPIController {
     configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", googleClientId);
     configJSON.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
-    configJSON.put("recaptchaPublicKey", wiseProperties.get("recaptcha_public_key"));
+    configJSON.put("recaptchaPublicKey", appProperties.get("recaptcha_public_key"));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
   }
@@ -170,7 +170,7 @@ public class UserAPIController {
 
   @RequestMapping(value = "/languages", method = RequestMethod.GET)
   protected String getSupportedLanguages() throws JSONException {
-    String supportedLocales = wiseProperties.getProperty("supportedLocales");
+    String supportedLocales = appProperties.getProperty("supportedLocales");
     String[] supportedLocalesArray = supportedLocales.split(",");
     JSONArray supportedLocalesJSONArray = new JSONArray();
     for (String localeString: supportedLocalesArray) {

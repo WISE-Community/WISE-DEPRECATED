@@ -33,7 +33,7 @@ public class Application extends SpringBootServletInitializer {
   }
 
   @Bean
-  public PropertiesFactoryBean wiseProperties() {
+  public PropertiesFactoryBean appProperties() {
     PropertiesFactoryBean bean = new PropertiesFactoryBean();
     bean.setLocation(new ClassPathResource("application.properties"));
     return bean;

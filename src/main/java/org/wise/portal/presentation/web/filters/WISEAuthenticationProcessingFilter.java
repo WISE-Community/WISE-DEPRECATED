@@ -68,7 +68,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
   protected SessionService sessionService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   public static final String STUDENT_DEFAULT_TARGET_PATH = "/legacy/student";
   public static final String TEACHER_DEFAULT_TARGET_PATH = "/legacy/teacher";

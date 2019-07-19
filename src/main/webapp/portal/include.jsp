@@ -30,9 +30,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.Properties" %>
 <% 
-Properties wiseProperties = new Properties();
-wiseProperties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
-String defaultLocale = wiseProperties.getProperty("defaultLocale");
+Properties appProperties = new Properties();
+appProperties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+String defaultLocale = appProperties.getProperty("defaultLocale");
 request.setAttribute("defaultLocale", defaultLocale);
 %>
 

@@ -76,7 +76,7 @@ import java.util.*;
 public class ProjectServiceImpl implements ProjectService {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private ProjectDao<Project> projectDao;
@@ -338,7 +338,7 @@ public class ProjectServiceImpl implements ProjectService {
     String vleurl = contextPath + "/vle/vle.html";
     modelAndView.addObject("vleurl", vleurl);
     modelAndView.addObject("vleConfigUrl", vleConfigUrl);
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     String rawProjectUrl = project.getModulePath();
     String contentUrl = curriculumBaseWWW + rawProjectUrl;
     modelAndView.addObject("contentUrl", contentUrl);
@@ -528,7 +528,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
   
   public long getNextAvailableProjectId() {
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     File curriculumBaseDirFile = new File(curriculumBaseDir);
     long nextId = projectDao.getMaxProjectId() + 1;
     while (true) {
@@ -546,7 +546,7 @@ public class ProjectServiceImpl implements ProjectService {
     Project parentProject = getById(projectId);
     long newProjectId = getNextAvailableProjectId();
     File parentProjectDir = new File(FileManager.getProjectFolderPath(parentProject));
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     File newProjectDir = new File(curriculumBaseDir, String.valueOf(newProjectId));
     FileManager.copy(parentProjectDir, newProjectDir);
     String projectModulePath = parentProject.getModulePath();
@@ -658,7 +658,7 @@ public class ProjectServiceImpl implements ProjectService {
     if (project.getWiseVersion().equals(4)) {
       previewPath = "/previewproject.html?projectId=";
     }
-    return wiseProperties.getProperty("wise.hostname") + previewPath + project.getId();
+    return appProperties.getProperty("wise.hostname") + previewPath + project.getId();
   }
 
   private String getAuthorsString(JSONArray authors) {

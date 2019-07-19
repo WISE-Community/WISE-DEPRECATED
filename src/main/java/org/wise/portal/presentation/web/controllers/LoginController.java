@@ -46,7 +46,7 @@ import org.wise.portal.service.portal.PortalService;
 public class LoginController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   PortalService portalService;
@@ -58,8 +58,8 @@ public class LoginController {
     String requireCaptcha = request.getParameter("requireCaptcha");
     String reCaptchaFailed = request.getParameter("reCaptchaFailed");
     String username = request.getParameter("username");
-    String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    String reCaptchaPublicKey = appProperties.getProperty("recaptcha_public_key");
+    String reCaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
 
     if (StringUtils.hasText(failed)) {
       modelMap.put("failed", Boolean.TRUE);

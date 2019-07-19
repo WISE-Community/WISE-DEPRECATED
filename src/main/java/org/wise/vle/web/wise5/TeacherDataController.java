@@ -50,7 +50,7 @@ public class TeacherDataController {
   private RunService runService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private MessagePublisher redisPublisher;
@@ -101,7 +101,7 @@ public class TeacherDataController {
           writer.write(resultArray.toString());
           writer.close();
         } else if ("studentAssets".equals(exportType)) {
-          String studentUploadsBaseDir = wiseProperties.getProperty("studentuploads_base_dir");
+          String studentUploadsBaseDir = appProperties.getProperty("studentuploads_base_dir");
           String sep = System.getProperty("file.separator");
           String runStudentAssetsDir = studentUploadsBaseDir + sep + runId.toString() + sep;
           String zipFileName = runId.toString() + "_student_uploads.zip";

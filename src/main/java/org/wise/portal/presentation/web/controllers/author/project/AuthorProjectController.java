@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -22,6 +22,20 @@
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.wise.portal.presentation.web.controllers.author.project;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,15 +74,6 @@ import org.wise.vle.utils.FileManager;
 import org.wise.vle.web.AssetManager;
 import org.wise.vle.web.SecurityUtils;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
 /**
  * Controller for users with author privileges to author WISE4 projects
  *
@@ -90,7 +95,7 @@ public class AuthorProjectController {
   private ProjectService projectService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private TaggerController taggerController;
@@ -160,7 +165,7 @@ public class AuthorProjectController {
               String pathAllowedToAccess = CredentialManager.getAllowedPathAccess(request);
               if (command.equals("createProject")) {
                 String projectName = request.getParameter("projectName");
-                String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+                String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
                 String result = "";
                 if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, curriculumBaseDir)) {
                   long projectId = projectService.getNextAvailableProjectId();
@@ -268,7 +273,7 @@ public class AuthorProjectController {
                 response.getWriter().write(result);
               } else if (command.equals("copyProject")) {
                 String projectFolderPath = FileManager.getProjectFolderPath(project);
-                String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+                String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
                 String result = "";
                 if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
                   long newProjectId = projectService.getNextAvailableProjectId();
@@ -291,7 +296,7 @@ public class AuthorProjectController {
                 }
                 response.getWriter().write(result);
               } else if (command.equals("reviewUpdateProject")) {
-                String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+                String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
                 String projectUrl = project.getModulePath();
                 Long parentProjectId = project.getParentProjectId();
                 Project parentProject = projectService.getById(parentProjectId);
@@ -299,7 +304,7 @@ public class AuthorProjectController {
                 String result = FileManager.reviewUpdateProject(curriculumBaseDir, parentProjectUrl, projectUrl);
                 response.getWriter().write(result);
               } else if (command.equals("updateProject")) {
-                String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+                String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
                 String childProjectUrl = project.getModulePath();
                 String childProjectFolderPath = FileManager.getProjectFolderPath(project);
                 Long parentProjectId = project.getParentProjectId();
@@ -314,7 +319,7 @@ public class AuthorProjectController {
                 }
                 response.getWriter().write(result);
               } else if (command.equals("importSteps")) {
-                String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+                String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
                 String fromProjectUrl = "";
                 String fromProjectIdStr = request.getParameter("fromProjectId");
                 if (fromProjectIdStr != null) {
@@ -356,11 +361,11 @@ public class AuthorProjectController {
               String pathToCheckSize = projectFolderPath;
               Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
               if (projectMaxTotalAssetsSize == null) {
-                projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+                projectMaxTotalAssetsSize = new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
               }
-              String allowedProjectAssetContentTypesStr = wiseProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
+              String allowedProjectAssetContentTypesStr = appProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
               if (user.isTrustedAuthor()) {
-                allowedProjectAssetContentTypesStr += "," + wiseProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
+                allowedProjectAssetContentTypesStr += "," + appProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
               }
 
               DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
@@ -488,7 +493,7 @@ public class AuthorProjectController {
       HttpServletResponse response) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (hasAuthorPermissions(user)) {
-      String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+      String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
       String wise4ProjectId = request.getParameter("wise4ProjectId");
       String wise5ProjectString = request.getParameter("wise5Project");
       JSONObject wise5ProjectJSON = new JSONObject(wise5ProjectString);
@@ -977,7 +982,7 @@ public class AuthorProjectController {
    */
   private ModelAndView handleGetCurriculumBaseUrl(HttpServletRequest request,
       HttpServletResponse response) throws IOException {
-    String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseUrl = appProperties.getProperty("curriculum_base_www");
     response.getWriter().write(curriculumBaseUrl);
     return null;
   }
@@ -997,7 +1002,7 @@ public class AuthorProjectController {
     String contextPath = request.getContextPath();
     String projectMetadataURL = contextPath + "/metadata.html";
     String cRaterRequestURL = contextPath + "/c-rater";
-    String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseUrl = appProperties.getProperty("curriculum_base_www");
     String previewProjectUrl = contextPath + "/previewproject.html";
     String deleteProjectUrl = contextPath + "/teacher/projects/deleteproject.html";
     String analyzeProjectUrl = contextPath + "/teacher/projects/analyzeproject.html";
@@ -1028,7 +1033,7 @@ public class AuthorProjectController {
       String projectIdStr = request.getParameter("projectId");
       if (projectIdStr != null) {
         Project project = projectService.getById(projectIdStr);
-        String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+        String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
         String rawProjectUrl = project.getModulePath();
         String projectURL = curriculumBaseWWW + rawProjectUrl;
 

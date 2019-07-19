@@ -77,7 +77,7 @@ public class StudentDataController {
   private RunService runService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   private static boolean DEBUG = false;
 
@@ -273,7 +273,7 @@ public class StudentDataController {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "get data node list is empty for aggregrate type");
         return null;
       }
-      String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+      String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
       String rawProjectUrl = run.getProject().getModulePath();
       String projectPath = curriculumBaseDir + rawProjectUrl;
       File projectFile = new File(projectPath);
@@ -502,7 +502,7 @@ public class StudentDataController {
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    studentMaxWorkSize = Integer.valueOf(wiseProperties.getProperty("student_max_work_size", "512000"));
+    studentMaxWorkSize = Integer.valueOf(appProperties.getProperty("student_max_work_size", "512000"));
     User signedInUser = ControllerUtil.getSignedInUser();
     String runId = request.getParameter("runId");
     String userId = request.getParameter("userId");

@@ -57,7 +57,7 @@ public class WISESimpleMappingExceptionResolver extends SimpleMappingExceptionRe
   protected IMailFacade mailService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   private static final String HANDLE_EXCEPTION_PROPERTY_KEY = "handle_exception";
 
@@ -67,14 +67,14 @@ public class WISESimpleMappingExceptionResolver extends SimpleMappingExceptionRe
   public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
       Object handler, Exception exception) {
     exception.printStackTrace();
-    String sendEmailOnExceptionStr = wiseProperties.getProperty("send_email_on_exception");
+    String sendEmailOnExceptionStr = appProperties.getProperty("send_email_on_exception");
     boolean sendEmailOnException = sendEmailOnExceptionStr.equalsIgnoreCase("true");
 
     if (sendEmailOnException) {
-      String portalName = wiseProperties.getProperty("wise.name");
-      String[] recipients = wiseProperties.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
+      String portalName = appProperties.getProperty("wise.name");
+      String[] recipients = appProperties.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
       String subject = HANDLE_EXCEPTION_MAIL_SUBJECT + ": (" + portalName + ")";
-      String fromEmail = wiseProperties.getProperty("mail.from");
+      String fromEmail = appProperties.getProperty("mail.from");
       String message = getHandleExceptionMessage(request, exception);
 
       ExceptionEmailSender emailSender =

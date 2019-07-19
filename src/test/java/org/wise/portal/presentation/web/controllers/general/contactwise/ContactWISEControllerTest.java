@@ -88,7 +88,7 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 	
 	private IMailFacade mockMail;
 	
-	private Properties wiseProperties;
+	private Properties appProperties;
 	
 	private Properties uiHTMLProperties;
 	
@@ -104,14 +104,14 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 		errors = new BindException(contactDetails, "");
 		mockMail = createMock(IMailFacade.class);
 		
-		wiseProperties = new Properties();
-		wiseProperties.setProperty("trouble_logging_in", "WISE3-trouble-logging-in@googlegroups.com");
-		wiseProperties.setProperty("need_help_using_wise", "WISE3-need-help-using@googlegroups.com");
-		wiseProperties.setProperty("project_problems", "WISE3-project-problems@googlegroups.com");
-		wiseProperties.setProperty("student_management", "WISE3-student-management@googlegroups.com");
-		wiseProperties.setProperty("authoring", "WISE3-authoring-help@googlegroups.com");
-		wiseProperties.setProperty("feedback", "WISE3-feedback@googlegroups.com");
-		wiseProperties.setProperty("other", "WISE3-other@googlegroups.com");
+		appProperties = new Properties();
+		appProperties.setProperty("trouble_logging_in", "WISE3-trouble-logging-in@googlegroups.com");
+		appProperties.setProperty("need_help_using_wise", "WISE3-need-help-using@googlegroups.com");
+		appProperties.setProperty("project_problems", "WISE3-project-problems@googlegroups.com");
+		appProperties.setProperty("student_management", "WISE3-student-management@googlegroups.com");
+		appProperties.setProperty("authoring", "WISE3-authoring-help@googlegroups.com");
+		appProperties.setProperty("feedback", "WISE3-feedback@googlegroups.com");
+		appProperties.setProperty("other", "WISE3-other@googlegroups.com");
 
 		uiHTMLProperties = new Properties();
 		uiHTMLProperties.setProperty("issuetypes.TROUBLE_LOGGING_IN", "Trouble Signing In");

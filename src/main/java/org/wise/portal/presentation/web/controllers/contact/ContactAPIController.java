@@ -38,7 +38,7 @@ import java.util.Properties;
 public class ContactAPIController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   protected UserService userService;
@@ -73,7 +73,7 @@ public class ContactAPIController {
     if (this.isAuthorized(recaptchaResponse)) {
       boolean isStudent = isStudent();
       String issueTypeValue = getIssueTypeValue(issueType);
-      String fromEmail = wiseProperties.getProperty("portalemailaddress");
+      String fromEmail = appProperties.getProperty("portalemailaddress");
       String[] toEmails = getContactMessageToEmails(isStudent, runId, teacherUsername);
       String[] cc = getContactMessageCCs(email, isStudent);
       String subject = getSubject(issueTypeValue, summary);
@@ -97,8 +97,8 @@ public class ContactAPIController {
   }
 
   private boolean isRecaptchaEnabled() {
-    String recaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-    String recaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    String recaptchaPublicKey = appProperties.getProperty("recaptcha_public_key");
+    String recaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
     return recaptchaPublicKey != null && !recaptchaPublicKey.equals("") &&
       recaptchaPrivateKey != null && !recaptchaPrivateKey.equals("");
   }
@@ -147,13 +147,13 @@ public class ContactAPIController {
         return new String[] {getTeacherEmail(teacherUsername)};
       }
     }
-    String contactEmailString = wiseProperties.getProperty("contact_email");
+    String contactEmailString = appProperties.getProperty("contact_email");
     return contactEmailString.split(",");
   }
 
   protected String[] getContactMessageCCs(String email, boolean isStudent) {
     if (isStudent) {
-      String contactEmailString = wiseProperties.getProperty("contact_email");
+      String contactEmailString = appProperties.getProperty("contact_email");
       return contactEmailString.split(",");
     } else {
       return new String[] {email};
@@ -253,7 +253,7 @@ public class ContactAPIController {
 
   private void addUserSystemDetailsToBody(StringBuffer body, String userAgent)
     throws IOException, JSONException {
-    if(wisePropertiesHasUserAgentParseKey()) {
+    if(appPropertiesHasUserAgentParseKey()) {
       JSONObject userSystemDetails = getUserAgentParseResult(userAgent);
       addOperatingSystemToBody(body, userSystemDetails);
       addBrowserToBody(body, userSystemDetails);
@@ -288,8 +288,8 @@ public class ContactAPIController {
     return "";
   }
 
-  private boolean wisePropertiesHasUserAgentParseKey() {
-    String userKey = wiseProperties.getProperty("userAgentParseKey");
+  private boolean appPropertiesHasUserAgentParseKey() {
+    String userKey = appProperties.getProperty("userAgentParseKey");
     return userKey != null && !userKey.equals("");
   }
 
@@ -304,7 +304,7 @@ public class ContactAPIController {
   }
 
   private HttpPost prepareUserAgentParseRequest(String userAgent) {
-    String userKey = wiseProperties.getProperty("userAgentParseKey");
+    String userKey = appProperties.getProperty("userAgentParseKey");
     HttpPost post = new HttpPost(userAgentParseURL);
     List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
     urlParameters.add(new BasicNameValuePair("user_key", userKey));

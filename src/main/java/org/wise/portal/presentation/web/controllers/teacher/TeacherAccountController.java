@@ -65,7 +65,7 @@ import java.util.Properties;
 public class TeacherAccountController {
 
   @Autowired
-  protected Properties wiseProperties;
+  protected Properties appProperties;
 
   @Autowired
   protected IMailFacade mailService;
@@ -130,7 +130,7 @@ public class TeacherAccountController {
     try {
       modelMap.put("schoollevels", Schoollevel.values());
       modelMap.put("curriculumsubjects",Curriculumsubjects.values());
-      String supportedLocales = wiseProperties
+      String supportedLocales = appProperties
           .getProperty("supportedLocales", "en,zh_TW,zh_CN,nl,he,ja,ko,es,pt,tr");
       modelMap.put("languages", supportedLocales.split(","));
     } catch (Exception e) {
@@ -170,7 +170,7 @@ public class TeacherAccountController {
     try {
       userDetails.setDisplayname(userDetails.getFirstname() + " " + userDetails.getLastname());
       userDetails.setEmailValid(true);
-      userDetails.setLanguage(wiseProperties.getProperty("defaultLocale", "en"));
+      userDetails.setLanguage(appProperties.getProperty("defaultLocale", "en"));
       User createdUser = this.userService.createUser(userDetails);
       NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser, request.getLocale(), request);
       Thread thread = new Thread(newAccountEmailService);
@@ -316,7 +316,7 @@ public class TeacherAccountController {
     }
 
     public void run() {
-      String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled", "false");
+      String sendEmailEnabledStr = appProperties.getProperty("send_email_enabled", "false");
       Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
       if (!sendEmailEnabled) {
         return;
@@ -333,7 +333,7 @@ public class TeacherAccountController {
       String userUsername = newUserDetails.getUsername();
       String userEmailAddress[] = {newUserDetails.getEmailAddress()};
       String[] recipients = (String[]) ArrayUtils.addAll(userEmailAddress,
-          wiseProperties.getProperty("uber_admin").split(","));
+          appProperties.getProperty("uber_admin").split(","));
       String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
       String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, this.locale);
       String portalString = ControllerUtil.getPortalUrlString(request);
@@ -341,8 +341,8 @@ public class TeacherAccountController {
       String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, Locale.US);
       String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, defaultBody, this.locale);
 
-      if (wiseProperties.containsKey("discourse_url")) {
-        String discourseURL = wiseProperties.getProperty("discourse_url");
+      if (appProperties.containsKey("discourse_url")) {
+        String discourseURL = appProperties.getProperty("discourse_url");
         if (discourseURL != null && !discourseURL.isEmpty()) {
           // if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
           String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);
@@ -350,7 +350,7 @@ public class TeacherAccountController {
           message += "\n\n"+pS;
         }
       }
-      String fromEmail = wiseProperties.getProperty("portalemailaddress");
+      String fromEmail = appProperties.getProperty("portalemailaddress");
       try {
         mailService.postMail(recipients, subject, message, fromEmail);
       } catch (MessagingException e) {

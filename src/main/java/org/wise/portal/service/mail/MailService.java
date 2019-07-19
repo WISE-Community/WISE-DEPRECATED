@@ -41,7 +41,7 @@ import org.springframework.stereotype.Service;
 public class MailService implements IMailFacade {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private JavaMailSenderImpl javaMailSender;
@@ -53,13 +53,13 @@ public class MailService implements IMailFacade {
 
   public void postMail(String[] recipients, String subject, String message,
       String from, String[] cc) throws MessagingException {
-    javaMailSender.setUsername(wiseProperties.getProperty("mail.user"));
-    javaMailSender.setPassword(wiseProperties.getProperty("mail.password"));
-    javaMailSender.setHost(wiseProperties.getProperty("mail.smtp.host"));
-    String portString = wiseProperties.getProperty("mail.smtp.port");
+    javaMailSender.setUsername(appProperties.getProperty("mail.user"));
+    javaMailSender.setPassword(appProperties.getProperty("mail.password"));
+    javaMailSender.setHost(appProperties.getProperty("mail.smtp.host"));
+    String portString = appProperties.getProperty("mail.smtp.port");
     javaMailSender.setPort(Integer.valueOf(portString));
-    javaMailSender.setProtocol(wiseProperties.getProperty("mail.transport.protocol"));
-    javaMailSender.setJavaMailProperties(wiseProperties);
+    javaMailSender.setProtocol(appProperties.getProperty("mail.transport.protocol"));
+    javaMailSender.setJavaMailProperties(appProperties);
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
     helper.setFrom(from);

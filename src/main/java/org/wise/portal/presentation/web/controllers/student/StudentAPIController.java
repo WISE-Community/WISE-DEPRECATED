@@ -84,7 +84,7 @@ public class StudentAPIController {
   private StudentAttendanceService studentAttendanceService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private UserService userService;
@@ -142,7 +142,7 @@ public class StudentAPIController {
   private JSONObject getRunJSON(User user, Run run) throws JSONException {
     JSONObject runJSON = new JSONObject();
     Project project = run.getProject();
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     String projectThumb = "";
     String modulePath = project.getModulePath();
     int lastIndexOfSlash = modulePath.lastIndexOf("/");

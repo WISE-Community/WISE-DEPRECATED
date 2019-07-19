@@ -595,7 +595,7 @@
     <constructor-arg ref="dataSource" />
     <constructor-arg ref="lookupStrategy" />
     <constructor-arg ref="aclCache" />
-    <constructor-arg ref="wiseProperties" />
+    <constructor-arg ref="appProperties" />
   </bean>
 
   <bean id="aclServiceImpl" class="org.wise.portal.service.acl.impl.AclServiceImpl">

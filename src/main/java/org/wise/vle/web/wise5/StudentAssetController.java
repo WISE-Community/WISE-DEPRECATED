@@ -63,7 +63,7 @@ public class StudentAssetController {
   private RunService runService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private WorkgroupService workgroupService;
@@ -91,7 +91,7 @@ public class StudentAssetController {
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
-    String studentUploadsBaseDir = wiseProperties.getProperty("studentuploads_base_dir");
+    String studentUploadsBaseDir = appProperties.getProperty("studentuploads_base_dir");
     if (workgroups != null) {
       // this is a request from the teacher of the run or admin who wants to see the run's students' assets
             /* COMMENTED OUT FOR NOW. This block will work, but does not use the StudentAsset domain object.
@@ -161,9 +161,9 @@ public class StudentAssetController {
     }
 
     String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
-    String path = wiseProperties.getProperty("studentuploads_base_dir");
-    Long studentMaxAssetSize = new Long(wiseProperties.getProperty("student_max_asset_size", "5242880"));
-    Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "10485760"));
+    String path = appProperties.getProperty("studentuploads_base_dir");
+    Long studentMaxAssetSize = new Long(appProperties.getProperty("student_max_asset_size", "5242880"));
+    Long studentMaxTotalAssetsSize = new Long(appProperties.getProperty("student_max_total_assets_size", "10485760"));
     String pathToCheckSize = path + "/" + dirName;
     DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
     Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
@@ -233,7 +233,7 @@ public class StudentAssetController {
     }
     String assetFileName = studentAsset.getFileName();
     String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-    String path = wiseProperties.getProperty("studentuploads_base_dir");
+    String path = appProperties.getProperty("studentuploads_base_dir");
     Boolean removeSuccess = AssetManager.removeAssetWISE5(path, dirName, assetFileName);
     if (removeSuccess) {
       studentAsset = vleService.deleteStudentAsset(studentAssetId, clientDeleteTime);
@@ -318,7 +318,7 @@ public class StudentAssetController {
     Workgroup workgroup = workgroupListByRunAndUser.get(0);
     Long workgroupId = workgroup.getId();
     String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-    String path = wiseProperties.getProperty("studentuploads_base_dir");
+    String path = appProperties.getProperty("studentuploads_base_dir");
     String result = AssetManager.getSize(path, dirName);
     response.getWriter().write(result);
   }

@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,9 +65,8 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator;
 import org.wise.portal.service.mail.IMailFacade;
-import org.wise.portal.service.run.RunService;
-import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
 @Controller
@@ -87,13 +87,10 @@ public class ContactWiseController {
   private RunService runService;
 
   @Autowired
-  private PortalService portalService;
-
-  @Autowired
   private UserService userService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private ContactWISEValidator contactWISEValidator;
@@ -122,7 +119,7 @@ public class ContactWiseController {
     }
 
     // get our user key for the user agent parse site
-    String userKey = wiseProperties.getProperty("userAgentParseKey");
+    String userKey = appProperties.getProperty("userAgentParseKey");
 
     if (userKey != null && !userKey.equals("")) {
       String userAgent = request.getParameter("usersystem");
@@ -226,7 +223,7 @@ public class ContactWiseController {
     return "contact/contactwiseconfirm";
   }
 
-  @RequestMapping(method = RequestMethod.GET)
+  @GetMapping
   public String initializeForm(ModelMap modelMap, HttpServletRequest request)
       throws NumberFormatException, ObjectNotFoundException {
     ContactWISEForm contactWISEForm = new ContactWISEForm();
@@ -287,7 +284,7 @@ public class ContactWiseController {
    */
   @ModelAttribute("reCaptchaPublicKey")
   public String populateReCaptchaPublicKey() {
-    return wiseProperties.getProperty("recaptcha_public_key");
+    return appProperties.getProperty("recaptcha_public_key");
   }
 
   /**
@@ -298,7 +295,7 @@ public class ContactWiseController {
    */
   @ModelAttribute("reCaptchaPrivateKey")
   public String populateReCaptchaPrivateKey() {
-    return wiseProperties.getProperty("recaptcha_private_key");
+    return appProperties.getProperty("recaptcha_private_key");
   }
 
   /**
@@ -359,7 +356,7 @@ public class ContactWiseController {
       if (userDetails != null && userDetails instanceof TeacherUserDetails) {
         // if discourse is enabled for this WISE instance, add the link to the model
         // so the view can display it
-        String discourseURL = wiseProperties.getProperty("discourse_url");
+        String discourseURL = appProperties.getProperty("discourse_url");
         if (discourseURL != null && !discourseURL.isEmpty()) {
           discourseSSOLoginURL = discourseURL + "/session/sso";
         }
@@ -398,14 +395,14 @@ public class ContactWiseController {
 
   public String[] getMailRecipients() {
     String[] recipients = new String[0];
-    String contactEmail = wiseProperties.getProperty("contact_email");
+    String contactEmail = appProperties.getProperty("contact_email");
     recipients = contactEmail.split(",");
     if (recipients.length == 0) {
       /*
        * we did not have an email address for the issue type so we will try
        * to use the uber_admin email address
        */
-      String uberAdminEmailAddress = wiseProperties.getProperty("uber_admin");
+      String uberAdminEmailAddress = appProperties.getProperty("uber_admin");
       if (uberAdminEmailAddress != null && !uberAdminEmailAddress.equals("")) {
         recipients = uberAdminEmailAddress.split(",");
       }

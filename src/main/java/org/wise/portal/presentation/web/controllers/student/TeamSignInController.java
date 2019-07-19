@@ -105,7 +105,7 @@ public class TeamSignInController {
   private GroupService groupService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private TeamSignInFormValidator teamSignInFormValidator;
@@ -305,7 +305,7 @@ public class TeamSignInController {
 
     TeamSignInForm form = new TeamSignInForm();
     form.setUsername1(signedInUsername);
-    String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
+    String maxWorkgroupSizeStr = appProperties.getProperty("maxWorkgroupSize", "3");
     int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
 
     try {

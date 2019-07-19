@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -31,11 +31,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -47,8 +48,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.wise.portal.domain.project.Project;
@@ -60,8 +59,6 @@ import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Admin tool for uploading a zipped WISE project.
@@ -76,7 +73,7 @@ public class ImportProjectController {
   private ProjectService projectService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   private String getWISEProjectsURL = "http://wise5.org/wiseup/getProject.php";
 
@@ -130,7 +127,7 @@ public class ImportProjectController {
   }
 
   private Project importProject(String zipFilename, byte[] fileBytes) throws Exception {
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     if (!new File(curriculumBaseDir).exists()) {
       throw new Exception("Curriculum upload directory \"" +
           curriculumBaseDir + "\" does not exist. Please verify the path you specified for curriculum_base_dir in application.properties.");
