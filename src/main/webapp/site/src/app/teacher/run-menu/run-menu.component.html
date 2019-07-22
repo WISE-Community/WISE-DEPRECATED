@@ -21,13 +21,9 @@
       <mat-icon>edit</mat-icon>
       <span i18n>Edit Content</span>
     </a>
-    <a mat-menu-item (click)="shareRun(false)" *ngIf="canShare()">
+    <a mat-menu-item (click)="shareRun()" *ngIf="canShare()">
       <mat-icon>share</mat-icon>
       <span i18n>Share</span>
-    </a>
-    <a mat-menu-item (click)="shareRun(true)" *ngIf="isOwner()">
-      <mat-icon>screen_share</mat-icon>
-      <span i18n>Transfer Ownership</span>
     </a>
     <a mat-menu-item (click)="checkClassroomAuthorization()"
        *ngIf="isGoogleUser() && isGoogleClassroomEnabled() && !isRunCompleted()">

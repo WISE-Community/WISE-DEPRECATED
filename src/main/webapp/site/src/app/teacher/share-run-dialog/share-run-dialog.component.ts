@@ -18,7 +18,9 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   dataSource: MatTableDataSource<any[]> = new MatTableDataSource<any[]>();
   displayedColumns: string[] = ['name', 'permissions'];
   duplicate: boolean = false;
-  isTransfer: boolean;
+  isTransfer: boolean = false;
+  transferUnitWarning: boolean = false;
+  newOwnerUsername: string = '';
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -28,7 +30,6 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
               i18n: I18n) {
     super(dialogRef, data, teacherService, snackBar, i18n);
     this.runId = data.run.id;
-    this.isTransfer = data.isTransfer;
     this.teacherService.getRun(this.runId).subscribe((run: Run) => {
       this.run = run;
       this.project = run.project;
@@ -116,20 +117,29 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     const sharedOwnerUsername = this.teacherSearchControl.value;
     if (this.run.owner.username !== sharedOwnerUsername &&
       !this.isSharedOwner(sharedOwnerUsername)) {
-      this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername, this.isTransfer)
-        .subscribe((newSharedOwner) => {
-          if (newSharedOwner != null && !this.isTransfer) {
-            this.setDefaultRunPermissions(newSharedOwner);
-            this.setDefaultProjectPermissions(newSharedOwner);
-            this.addSharedOwner(newSharedOwner);
-            this.teacherSearchControl.setValue('');
-          } else if (newSharedOwner != null && this.isTransfer) {
-            this.transferRunOwnership(sharedOwnerUsername);
-          }
-        });
+      if (this.isTransfer) {
+        this.newOwnerUsername = sharedOwnerUsername;
+        this.transferUnitWarning = true;
+      } else {
+        this.completeUnitShareOrTransfer(sharedOwnerUsername);
+      }
     } else {
       this.duplicate = true;
     }
+  }
+
+  completeUnitShareOrTransfer(sharedOwnerUsername: string) {
+    this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername, this.isTransfer)
+      .subscribe((newSharedOwner) => {
+        if (newSharedOwner != null && !this.isTransfer) {
+          this.setDefaultRunPermissions(newSharedOwner);
+          this.setDefaultProjectPermissions(newSharedOwner);
+          this.addSharedOwner(newSharedOwner);
+          this.teacherSearchControl.setValue('');
+        } else if (newSharedOwner != null && this.isTransfer) {
+          this.transferRunOwnership(sharedOwnerUsername);
+        }
+      });
     document.getElementById("share-run-dialog-search").blur();
   }
 
@@ -138,5 +148,14 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
         .subscribe((response) => {
       this.removeSharedOwner(sharedOwner);
     });
+  }
+
+  openTransferRunDialog() {
+    this.isTransfer = true;
+  }
+
+  closeTransferRunDialog() {
+    this.isTransfer = false;
+    this.transferUnitWarning = false;
   }
 }

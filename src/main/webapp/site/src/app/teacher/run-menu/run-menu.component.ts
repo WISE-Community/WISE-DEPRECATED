@@ -35,9 +35,9 @@ export class RunMenuComponent implements OnInit {
     this.reportProblemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
   }
 
-  shareRun(isTransfer) {
+  shareRun() {
     this.dialog.open(ShareRunDialogComponent, {
-      data: { run: this.run, isTransfer },
+      data: { run: this.run },
       panelClass: 'mat-dialog--md'
     });
   }
