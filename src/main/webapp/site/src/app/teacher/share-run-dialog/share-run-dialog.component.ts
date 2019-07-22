@@ -89,14 +89,14 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
             if (response.status == "success") {
               this.addRunPermissionToSharedOwner(sharedOwnerId, permissionId);
             }
-      })
+      });
     } else {
       this.teacherService.removeSharedOwnerRunPermission(this.runId, sharedOwnerId, permissionId)
         .subscribe((response: any) => {
           if (response.status == "success") {
             this.removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId);
           }
-      })
+      });
     }
   }
 
@@ -116,7 +116,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     this.duplicate = false;
     const sharedOwnerUsername = this.teacherSearchControl.value;
     if (this.run.owner.username !== sharedOwnerUsername &&
-      !this.isSharedOwner(sharedOwnerUsername)) {
+      (!this.isSharedOwner(sharedOwnerUsername) || this.isTransfer)) {
       if (this.isTransfer) {
         this.newOwnerUsername = sharedOwnerUsername;
         this.transferUnitWarning = true;
