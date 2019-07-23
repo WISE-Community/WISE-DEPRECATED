@@ -5332,8 +5332,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="050662d81fa6f59adbcc1190eee2435910b9e927" datatype="html">
-        <source>An error occurred. Please check your connection and try again.</source>
+      <trans-unit id="7ddad2424cc5ebd2be4f9908c07b9b84c40d983b" datatype="html">
+        <source>An error occurred. Please refresh this page and try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
           <context context-type="linenumber">1</context>
