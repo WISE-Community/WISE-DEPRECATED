@@ -61,7 +61,8 @@ class GraphService extends ComponentService {
         marker: {
           symbol: 'circle'
         },
-        canEdit: true
+        canEdit: true,
+        type: 'line'
       }
     ];
     return component;
