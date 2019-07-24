@@ -74,7 +74,6 @@ import org.wise.portal.service.mail.MailService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {
-  "classpath:configurations/dispatcherServletContexts.xml",
   "classpath:configurations/applicationContexts.xml"
 })
 public class JavaMailTest extends AbstractSpringTests {
