@@ -120,8 +120,12 @@
     background-color: map-get($background, card);
   }
 
+  .can-highlight {
+    transition: 1s background-color;
+  }
+
   .highlighted {
-    background-color: lighten(map-get($colors, info), 70);
+    background-color: map-get($colors, highlighted);
   }
 
   .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {

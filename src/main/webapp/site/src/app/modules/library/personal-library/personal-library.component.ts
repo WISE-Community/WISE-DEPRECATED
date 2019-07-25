@@ -30,6 +30,7 @@ export class PersonalLibraryComponent extends LibraryComponent {
     });
     this.libraryService.newProjectSource$.subscribe(project => {
       if (project) {
+        project.isHighlighted = true;
         this.projects.unshift(project);
         this.filterUpdated();
       }

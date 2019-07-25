@@ -3,6 +3,7 @@ import { DateFormatPipe } from 'ngx-moment';
 import { TeacherService } from '../teacher.service';
 import { TeacherRun } from '../teacher-run';
 import { ConfigService } from "../../services/config.service";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-teacher-run-list',
@@ -24,7 +25,8 @@ export class TeacherRunListComponent implements OnInit {
   showAll: boolean = false;
 
   constructor(private teacherService: TeacherService,
-              private configService: ConfigService) {
+              private configService: ConfigService,
+              router: Router) {
     teacherService.newRunSource$.subscribe(run => {
       const teacherRun: TeacherRun = new TeacherRun(run);
       teacherRun.isHighlighted = true;
@@ -40,9 +42,11 @@ export class TeacherRunListComponent implements OnInit {
           this.showAll = true;
         }
       }
-      setTimeout(() => {
-        document.getElementById(`run${teacherRun.id}`).scrollIntoView({behavior: "smooth"})
-      }, 1500);
+      router.navigateByUrl('teacher/home/schedule').then(() => {
+        setTimeout(() => {
+          document.getElementById(`run${teacherRun.id}`).scrollIntoView({behavior: "smooth"});
+        }, 1000);
+      });
     });
   }
 

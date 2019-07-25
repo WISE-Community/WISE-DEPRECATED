@@ -6,6 +6,7 @@ import { MatDialog } from "@angular/material";
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Router } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LibraryProjectComponent', () => {
   let component: LibraryProjectComponent;
@@ -14,7 +15,7 @@ describe('LibraryProjectComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ LibraryProjectComponent ],
-      imports: [ ],
+      imports: [ BrowserAnimationsModule ],
       providers: [
         { provide: MatDialog },
         { provide: Router },

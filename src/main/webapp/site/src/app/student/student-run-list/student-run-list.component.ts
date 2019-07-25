@@ -35,7 +35,7 @@ export class StudentRunListComponent implements OnInit {
       }
       setTimeout(() => {
         document.getElementById(`run${run.id}`).scrollIntoView({behavior: "smooth"})
-      }, 1500);
+      }, 1000);
     });
   }
 

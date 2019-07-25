@@ -25,7 +25,9 @@
   </div>
 </ng-template>
 
-<mat-card [ngClass]="{'highlighted': run.isHighlighted}" class="mat-elevation-z3">
+<mat-card class="mat-elevation-z3 can-highlight"
+          [ngClass]="{'highlighted': run.isHighlighted}"
+          [@flash]="{value: '*', params: {duration: animateDuration, delay: animateDuration}}">
   <mat-card-content fxLayout="row" fxLayoutGap="12px">
     <div mat-card-avatar
          [style.background-image]="run.project.thumbStyle" 

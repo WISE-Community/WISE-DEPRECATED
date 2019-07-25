@@ -9,6 +9,7 @@ import { TeacherRun } from "../teacher-run";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ConfigService } from "../../services/config.service";
 import { configureTestSuite } from 'ng-bullet';
+import { Router } from "@angular/router";
 
 @Component({selector: 'app-teacher-run-list-item', template: ''})
 class TeacherRunListItemStubComponent {
@@ -85,7 +86,8 @@ describe('TeacherRunListComponent', () => {
       imports: [ MomentModule ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: ConfigService, useClass: MockConfigService }
+        { provide: ConfigService, useClass: MockConfigService },
+        { provide: Router }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

@@ -3,9 +3,9 @@
     <app-library-filters></app-library-filters>
   </div>
   <div class="library__content library-teacher__content">
-    <nav mat-tab-nav-bar 
-          i18n-aria-label 
-          aria-label="Teacher unit library navigation">
+    <nav mat-tab-nav-bar
+         i18n-aria-label 
+         aria-label="Teacher unit library navigation">
       <a mat-tab-link *ngFor="let tab of tabs; index as i"
           [routerLink]="[tab.path]"
           routerLinkActive

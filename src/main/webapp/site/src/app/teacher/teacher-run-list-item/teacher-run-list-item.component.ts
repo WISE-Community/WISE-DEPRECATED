@@ -1,15 +1,17 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser';
 import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { flash } from '../../animations';
 
 
 @Component({
   selector: 'app-teacher-run-list-item',
   templateUrl: './teacher-run-list-item.component.html',
-  styleUrls: ['./teacher-run-list-item.component.scss']
+  styleUrls: ['./teacher-run-list-item.component.scss'],
+  animations: [ flash ]
 })
 export class TeacherRunListItemComponent implements OnInit {
 
@@ -20,10 +22,12 @@ export class TeacherRunListItemComponent implements OnInit {
   gradeAndManageLink: string = '';
   manageStudentsLink: string = '';
   thumbStyle: SafeStyle;
+  animateDuration: string = '0s';
 
   constructor(private sanitizer: DomSanitizer,
               private configService: ConfigService,
-              private i18n: I18n) {
+              private i18n: I18n,
+              private elRef: ElementRef) {
     this.sanitizer = sanitizer;
   }
 
@@ -40,10 +44,17 @@ export class TeacherRunListItemComponent implements OnInit {
       this.gradeAndManageLink = `${this.configService.getContextPath()}/teacher/run/manage/${this.run.id}`;
       this.manageStudentsLink = `${this.configService.getContextPath()}/teacher/run/manage/${ this.run.id }/#/manageStudents`;
       if (this.run.isHighlighted) {
+        this.animateDuration = '2s';
         setTimeout(() => {
           this.run.isHighlighted = false;
-        }, 5000)
+        }, 7000)
       }
+    }
+  }
+
+  ngAfterViewInit() {
+    if (this.run.isHighlighted) {
+      this.elRef.nativeElement.querySelector('mat-card').scrollIntoView({behavior: "smooth"});
     }
   }
 
