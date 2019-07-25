@@ -23,14 +23,9 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 
 /**
  * Controller for single-page site app built with Angular
@@ -41,25 +36,10 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 @RequestMapping("/")
 public class SiteController {
 
-  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news", "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"})
+  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", 
+      "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news",
+      "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"})
   protected String showSite() {
     return "forward:/index.html";
-  }
-
-  @ResponseBody
-  @GetMapping("/user")
-  protected String user() {
-    User signedInUser = ControllerUtil.getSignedInUser();
-    if (signedInUser != null) {
-      String username = signedInUser.getUserDetails().getUsername();
-      JSONObject user = new JSONObject();
-      try {
-        user.put("username", username);
-        return user.toString();
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    }
-    return null;
   }
 }

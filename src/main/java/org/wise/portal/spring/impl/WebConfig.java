@@ -137,10 +137,12 @@ public class WebConfig implements WebMvcConfigurer {
   public WISESimpleMappingExceptionResolver wiseSimpleMappingExceptionResolver() {
     WISESimpleMappingExceptionResolver resolver = new WISESimpleMappingExceptionResolver();
     Properties mappings = new Properties();
-    mappings.setProperty("org.springframework.web.multipart.MaxUploadSizeExceededException", "errors/maxUploadSizeExceededError");
+    mappings.setProperty("org.springframework.web.multipart.MaxUploadSizeExceededException",
+        "errors/maxUploadSizeExceededError");
     mappings.setProperty("java.lang.Exception", "errors/friendlyError");
     mappings.setProperty("org.acegisecurity.AccessDeniedException", "errors/securityFriendlyError");
-    mappings.setProperty("org.wise.portal.presentation.web.exception.NotAuthorizedException", "errors/accessdenied<");
+    mappings.setProperty("org.wise.portal.presentation.web.exception.NotAuthorizedException", 
+        "errors/accessdenied");
     resolver.setExceptionMappings(mappings);
     return resolver;
   }
