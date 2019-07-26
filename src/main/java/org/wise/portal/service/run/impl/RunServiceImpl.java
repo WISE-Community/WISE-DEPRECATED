@@ -324,6 +324,12 @@ public class RunServiceImpl implements RunService {
     if (run.getSharedowners().contains(newOwner)) {
       removeSharedTeacher(teacherUsername, runId);
     }
+    Project project = run.getProject();
+    User oldProjectOwner = project.getOwner();
+    project.setOwner(newOwner);
+    project.getSharedowners().add(oldProjectOwner);
+    projectDao.save(project);
+
     addSharedTeacher(runId, run.getOwner().getUserDetails().getUsername());
     return changeOwner(run, newOwner);
   }
