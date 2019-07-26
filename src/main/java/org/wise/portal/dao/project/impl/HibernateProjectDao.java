@@ -275,11 +275,11 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
   }
 
   @Override
-  public int getMaxProjectId() {
+  public long getMaxProjectId() {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
     Criteria crit = session.createCriteria(ProjectImpl.class);
     crit.setProjection(Projections.max("id"));
     List<Long> results = crit.list();
-    return results.get(0).intValue();
+    return results.get(0);
   }
 }

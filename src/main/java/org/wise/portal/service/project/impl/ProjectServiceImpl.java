@@ -43,6 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -80,6 +81,9 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Autowired
   private ProjectDao<Project> projectDao;
+
+  @Autowired
+  private RunDao<Run> runDao;
 
   @Autowired
   private AclService<Project> aclService;
@@ -530,7 +534,7 @@ public class ProjectServiceImpl implements ProjectService {
   public long getNextAvailableProjectId() {
     String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     File curriculumBaseDirFile = new File(curriculumBaseDir);
-    long nextId = projectDao.getMaxProjectId() + 1;
+    long nextId = Math.max(projectDao.getMaxProjectId(), runDao.getMaxRunId()) + 1;
     while (true) {
       File nextFolder = new File(curriculumBaseDirFile, String.valueOf(nextId));
       if (nextFolder.exists()) {
