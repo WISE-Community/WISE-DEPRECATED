@@ -33,6 +33,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithProjectException;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
 import org.wise.portal.presentation.web.response.SharedOwner;
 
@@ -439,5 +440,6 @@ public interface RunService {
 
   boolean isAllowedToViewStudentNames(Run run, User user);
 
-  SharedOwner transferRunOwnership(Long runId, String teacherUsername) throws ObjectNotFoundException, TeacherAlreadySharedWithRunException;
+  SharedOwner transferRunOwnership(Long runId, String teacherUsername) throws ObjectNotFoundException,
+    TeacherAlreadySharedWithRunException, TeacherAlreadySharedWithProjectException;
 }
