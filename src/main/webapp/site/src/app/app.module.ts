@@ -35,6 +35,7 @@ import { AnnouncementComponent } from './announcement/announcement.component';
 import { AnnouncementDialogComponent } from './app.component';
 import { AboutModule } from "./about/about.module";
 import { TrackScrollDirective } from './track-scroll.directive';
+import { AdminComponent } from './admin/admin.component';
 
 export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
   return (): Promise<any> => {
@@ -72,7 +73,8 @@ export function translationsFactory(locale: string) {
     AppComponent,
     AnnouncementComponent,
     AnnouncementDialogComponent,
-    TrackScrollDirective
+    TrackScrollDirective,
+    AdminComponent
   ],
   imports: [
     BrowserModule,

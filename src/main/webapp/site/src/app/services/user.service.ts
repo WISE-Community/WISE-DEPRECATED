@@ -50,6 +50,10 @@ export class UserService {
       (role === 'teacher' || role === 'admin' || role === 'researcher');
   }
 
+  isAdmin(): boolean {
+    return this.isSignedIn() && this.getUser().getValue().role === 'admin';
+  }
+
   isGoogleUser(): boolean {
     return this.getUser().getValue().isGoogleUser;
   }
