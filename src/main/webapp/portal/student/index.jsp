@@ -178,9 +178,11 @@
                 <li>
                   <a id="addprojectLink" class="wisebutton altbutton"><spring:message code="student.addproject.title" /></a>
                 </li>
-                <li>
-                  <a id="changePasswordLink" class="wisebutton altbutton-small"><spring:message code="changePassword" /></a>
-                </li>
+                <c:if test="${!user.userDetails.isGoogleUser()}">
+                  <li>
+                    <a id="changePasswordLink" class="wisebutton altbutton-small"><spring:message code="changePassword" /></a>
+                  </li>
+                </c:if>
                 <li>
                   <a class="wisebutton altbutton-small" href="${contextPath}/logout" id="studentsignout"><spring:message code="signOut" /></a>
                 </li>
