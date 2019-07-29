@@ -22,7 +22,7 @@
 </div>
 <div class="library-filters" [class.expand]="showFilters" [class.isSplitScreen]="isSplitScreen">
   <div class="notice">
-    <ng-container i18n>Filter by <a href="https://www.nextgenscience.org/" target="_blank">Next Generation Science Standards</a> (NGSS).</ng-container>&nbsp;<a *ngIf="hasFilters()" href="#" (click)="!!reset()" i18n>Reset</a>
+    <ng-container i18n>Filter by <a href="https://www.nextgenscience.org/" target="_blank">Next Generation Science Standards</a> (NGSS).</ng-container>&nbsp;<a *ngIf="hasFilters()" href="#" (click)="!!clearFilterValues()" i18n>Reset</a>
   </div>
   <div fxLayout="column"
        fxLayout.gt-sm="{{ isSplitScreen ? 'column' : 'row' }}"

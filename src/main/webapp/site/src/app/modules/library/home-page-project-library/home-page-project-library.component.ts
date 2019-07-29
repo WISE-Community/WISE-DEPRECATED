@@ -16,6 +16,6 @@ export class HomePageProjectLibraryComponent {
   }
 
   ngOnDestroy() {
-    this.libraryService.reset();
+    this.libraryService.clearAll();
   }
 }

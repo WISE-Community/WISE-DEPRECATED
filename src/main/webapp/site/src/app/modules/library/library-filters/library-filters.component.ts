@@ -184,14 +184,10 @@ export class LibraryFiltersComponent implements OnInit {
     this.libraryService.setFilterValues(filterOptions);
   }
 
-  reset() {
-    this.resetFilterValues();
-    this.emitFilterValues();
-  }
-
-  resetFilterValues() {
+  clearFilterValues() {
     this.dciArrangementValue = [];
     this.disciplineValue = [];
     this.peValue = [];
+    this.emitFilterValues();
   }
 }

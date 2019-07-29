@@ -158,7 +158,7 @@ export class LibraryService {
     this.numberOfPersonalProjectsVisible.next(count);
   }
 
-  reset(): void {
+  clearAll(): void {
     this.libraryGroupsSource.next([]);
     this.officialLibraryProjectsSource.next([]);
     this.communityLibraryProjectsSource.next([]);

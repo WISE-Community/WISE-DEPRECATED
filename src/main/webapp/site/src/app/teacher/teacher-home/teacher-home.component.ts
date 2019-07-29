@@ -39,7 +39,7 @@ export class TeacherHomeComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.libraryService.reset();
+    this.libraryService.clearAll();
   }
 
   getUser() {
