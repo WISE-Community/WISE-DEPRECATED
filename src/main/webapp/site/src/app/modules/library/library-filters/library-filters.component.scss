@@ -12,7 +12,7 @@
     max-height: 1000px;
   }
 
-  &.split {
+  &.isSplitScreen {
     @media (min-width: breakpoint('md.min')) {
       max-height: 1000px;
     }

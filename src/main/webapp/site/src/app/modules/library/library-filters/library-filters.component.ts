@@ -15,7 +15,7 @@ import { ProjectFilterValues } from "../../../domain/projectFilterValues";
 export class LibraryFiltersComponent implements OnInit {
 
   @Input()
-  split: boolean = false;
+  isSplitScreen: boolean = false;
   
   allProjects: LibraryProject[] = [];
   libraryProjects: LibraryProject[] = [];

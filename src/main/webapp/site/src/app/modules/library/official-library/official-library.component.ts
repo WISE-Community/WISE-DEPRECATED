@@ -13,7 +13,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 })
 export class OfficialLibraryComponent extends LibraryComponent {
   @Input()
-  split: boolean = false;
+  isSplitScreen: boolean = false;
 
   projects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];

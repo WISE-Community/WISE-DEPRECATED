@@ -22,8 +22,8 @@
           <ng-container *ngFor="let project of group.children">
             <div *ngIf="project.visible"
                 fxFlex.sm="50"
-                fxFlex.md="{{ split ? 50 : 33 }}"
-                fxFlex.gt-md="{{ split ? 33 : 25 }}">
+                fxFlex.md="{{ isSplitScreen ? 50 : 33 }}"
+                fxFlex.gt-md="{{ isSplitScreen ? 33 : 25 }}">
               <app-library-project [project]="project" ></app-library-project>
             </div>
           </ng-container>
@@ -33,13 +33,13 @@
   </mat-accordion>
 </ng-template>
 
-<div *ngIf="!split" class="content-block library-teacher__official">
+<div *ngIf="!isSplitScreen" class="content-block library-teacher__official">
   <p ngClass.xs="center">
     <a class="info mat-caption" [routerLink]="" (click)="showInfo()" i18n>What is WISE Tested?</a>
   </p>
   <ng-container *ngTemplateOutlet="library"></ng-container>
 </div>
 
-<div *ngIf="split">
+<div *ngIf="isSplitScreen">
   <ng-container *ngTemplateOutlet="library"></ng-container>
 </div>
