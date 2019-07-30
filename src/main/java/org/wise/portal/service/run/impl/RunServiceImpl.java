@@ -328,13 +328,15 @@ public class RunServiceImpl implements RunService {
       removeSharedTeacher(teacherUsername, runId);
       projectService.removeSharedTeacher((Long) project.getId(), teacherUsername);
     }
+    aclService.removePermission(run, BasePermission.ADMINISTRATION, oldOwner);
     run.setOwner(newOwner);
     runDao.save(run);
+    aclService.addPermission(run, BasePermission.ADMINISTRATION, newOwner);
+    aclService.removePermission(project, BasePermission.ADMINISTRATION, oldOwner);
     project.setOwner(newOwner);
     projectDao.save(project);
-    aclService.removePermission(project, BasePermission.ADMINISTRATION, oldOwner);
     aclService.addPermission(project, BasePermission.ADMINISTRATION, newOwner);
-    addSharedTeacher(runId, run.getOwner().getUserDetails().getUsername());
+    addSharedTeacher(runId, oldOwner.getUserDetails().getUsername());
     projectService.addSharedTeacher((Long) project.getId(), oldOwner.getUserDetails().getUsername());
     List<Integer> newProjectOwnerPermissions = new ArrayList<>();
     newProjectOwnerPermissions.add(BasePermission.ADMINISTRATION.getMask());
