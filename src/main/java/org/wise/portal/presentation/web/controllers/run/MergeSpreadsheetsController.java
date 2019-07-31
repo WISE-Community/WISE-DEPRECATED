@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents). Created
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3.
@@ -22,27 +22,29 @@
  */
 package org.wise.portal.presentation.web.controllers.run;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.BufferedInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.apache.poi.ss.usermodel.*;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Admin/researcher tool to merge multiple spreadsheets based on one common column in each sheet.
@@ -60,24 +62,17 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/admin/run/mergespreadsheets")
 public class MergeSpreadsheetsController {
 
-  @RequestMapping(method = RequestMethod.POST)
-  protected ModelAndView onSubmit(
-    @RequestParam("uploadFile") MultipartFile uploadFile,
-    @RequestParam("mergeColumnTitle") String mergeColumnTitle,
-    HttpServletResponse response
+  @PostMapping
+  protected ModelAndView mergeSpreadsheets(
+      @RequestParam("uploadFile") MultipartFile uploadFile,
+      @RequestParam("mergeColumnTitle") String mergeColumnTitle,
+      HttpServletResponse response
   ) throws Exception {
-
-    // TODO: this line is saving uploadFile to home directory. Can we do without saving to home directory?
-    File file = multipartToFile(uploadFile);
-    String mergedResultFileName = "merged_" + file.getName();
-    FileInputStream fis = new FileInputStream(file);
-
-    // Finds the workbook instance of XLSX file
+    BufferedInputStream fis = new BufferedInputStream(uploadFile.getInputStream());
     XSSFWorkbook workbook = new XSSFWorkbook(fis);
+    fis.close();
     DataFormatter objDefaultFormat = new DataFormatter();
     FormulaEvaluator objFormulaEvaluator = new XSSFFormulaEvaluator((XSSFWorkbook) workbook);
-
-    // number of sheets in the workbook
     int numberOfSheets = workbook.getNumberOfSheets();
 
     // contains all values of the merge column across all sheets
@@ -95,7 +90,6 @@ public class MergeSpreadsheetsController {
     // loop through the sheets in the workbook and populate the variables
     for (int sheetIndex = 0; sheetIndex < numberOfSheets; sheetIndex++) {
       XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
-
       int mergeColumnIndex = -1;  // index of the merge column in this sheet
       int rowIteratorIndex = 0;   // index of current row iteration
 
@@ -183,8 +177,8 @@ public class MergeSpreadsheetsController {
 
     // Now we are ready to make the merge sheet. We will be writing one row at a time.
 
-    Workbook wb = new XSSFWorkbook();  // new output workbook
-    Sheet mergedSheet = wb.createSheet("merged");  // output merged result in "merged" sheet
+    Workbook wbOut = new XSSFWorkbook();
+    Sheet mergedSheet = wbOut.createSheet("merged");  // output merged result in "merged" sheet
 
     // make the header row
     Row headerRow = mergedSheet.createRow(0);
@@ -196,9 +190,7 @@ public class MergeSpreadsheetsController {
     // current column index "cursor" where we will be writing to
     int cellIndexWithoutMergeColumn = 1;
 
-    // make the header row
     for (int sheetIndex = 0; sheetIndex < numberOfSheets; sheetIndex++) {
-
       Integer maxSheetRowCount = sheetIndexToMaxSheetRowCount.get(sheetIndex);
       ArrayList<String> sheetColumnHeaders = sheetIndexToSheetColumnHeaders.get(sheetIndex);
       XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
@@ -275,31 +267,14 @@ public class MergeSpreadsheetsController {
       }
     }
 
-    // write to response output
+    String mergedResultFileName = "merged_" + uploadFile.getOriginalFilename();
     response.setHeader("Content-Disposition", "attachment; filename=\"" + mergedResultFileName + "\"");
-    ServletOutputStream outputStream = response.getOutputStream();
-    wb.write(outputStream);
-    fis.close();
-
+    wbOut.write(response.getOutputStream());
     return null;
   }
 
-  @RequestMapping(method=RequestMethod.GET)
-  public ModelAndView initializeForm(ModelMap model) {
-    ModelAndView mav = new ModelAndView();
-    return mav;
-  }
-
-  /**
-   * Converts a MultipartFile into a File object and returns the result
-   * @param multipart
-   * @return
-   * @throws IllegalStateException
-   * @throws IOException
-   */
-  public File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException {
-    File convFile = new File( multipart.getOriginalFilename());
-    multipart.transferTo(convFile);
-    return convFile;
+  @GetMapping
+  public ModelAndView initializeForm() {
+    return new ModelAndView();
   }
 }
