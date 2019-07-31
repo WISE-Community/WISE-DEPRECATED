@@ -36,8 +36,6 @@ export class TeacherService {
   private newRunSource = new Subject<Run>();
   public newRunSource$ = this.newRunSource.asObservable();
   private updateProfileUrl = 'api/teacher/profile/update';
-  private tabIndexSource = new Subject<number>();
-  public tabIndexSource$ = this.tabIndexSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -153,10 +151,6 @@ export class TeacherService {
     body = body.set('schoolLevel', schoolLevel);
     body = body.set('language', language);
     return this.http.post<any>(this.updateProfileUrl, body, { headers: headers });
-  }
-
-  setTabIndex(index: number) {
-    this.tabIndexSource.next(index);
   }
 
   addPeriodToRun(runId: number, periodName: string) {

@@ -124,10 +124,6 @@
     transition: 1s background-color;
   }
 
-  .highlighted {
-    background-color: map-get($colors, highlighted);
-  }
-
   .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
     min-width: 0;
   }
