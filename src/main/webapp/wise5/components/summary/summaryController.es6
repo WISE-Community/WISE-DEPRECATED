@@ -9,7 +9,6 @@ class SummaryController extends ComponentController {
       $q,
       $rootScope,
       $scope,
-      SummaryService,
       AnnotationService,
       ConfigService,
       NodeService,
@@ -17,6 +16,7 @@ class SummaryController extends ComponentController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
+      SummaryService,
       UtilService) {
     super($filter,
         $mdDialog,
@@ -30,6 +30,7 @@ class SummaryController extends ComponentController {
         StudentAssetService,
         StudentDataService,
         UtilService);
+    this.SummaryService = SummaryService;
     this.summaryNodeId = this.componentContent.summaryNodeId;
     this.summaryComponentId = this.componentContent.summaryComponentId;
     this.prompt = this.componentContent.prompt;
@@ -55,7 +56,6 @@ SummaryController.$inject = [
     '$q',
     '$rootScope',
     '$scope',
-    'SummaryService',
     'AnnotationService',
     'ConfigService',
     'NodeService',
@@ -63,6 +63,7 @@ SummaryController.$inject = [
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
+    'SummaryService',
     'UtilService'
 ];
 

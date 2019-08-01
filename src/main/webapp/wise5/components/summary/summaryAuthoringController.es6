@@ -8,7 +8,6 @@ class SummaryAuthoringController extends SummaryController {
       $q,
       $rootScope,
       $scope,
-      SummaryService,
       AnnotationService,
       ConfigService,
       NodeService,
@@ -17,13 +16,13 @@ class SummaryAuthoringController extends SummaryController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
+      SummaryService,
       UtilService) {
     super($filter,
         $mdDialog,
         $q,
         $rootScope,
         $scope,
-        SummaryService,
         AnnotationService,
         ConfigService,
         NodeService,
@@ -31,6 +30,7 @@ class SummaryAuthoringController extends SummaryController {
         ProjectService,
         StudentAssetService,
         StudentDataService,
+        SummaryService,
         UtilService);
   }
 
@@ -52,7 +52,7 @@ class SummaryAuthoringController extends SummaryController {
   }
 
   isComponentTypeAllowed(componentType) {
-    return componentType === 'MultipleChoice';
+    return this.SummaryService.isComponentTypeAllowed(componentType);
   }
 }
 
@@ -62,7 +62,6 @@ SummaryAuthoringController.$inject = [
   '$q',
   '$rootScope',
   '$scope',
-  'SummaryService',
   'AnnotationService',
   'ConfigService',
   'NodeService',
@@ -71,6 +70,7 @@ SummaryAuthoringController.$inject = [
   'ProjectService',
   'StudentAssetService',
   'StudentDataService',
+  'SummaryService',
   'UtilService'
 ];
 

@@ -1,14 +1,17 @@
 'use strict';
 
 class SummaryDisplayController {
-  constructor($injector,
+  constructor($filter,
+      $injector,
       $q,
       ConfigService,
       ProjectService) {
+    this.$filter = $filter;
     this.$injector = $injector;
     this.$q = $q;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.$translate = this.$filter('translate');
     this.dataService = null;
     const mode = this.ConfigService.getMode();
     if (this.ConfigService.isPreview() || mode === 'studentRun') {
@@ -17,8 +20,10 @@ class SummaryDisplayController {
       this.dataService = this.$injector.get('TeacherDataService'); 
     }
     this.renderDisplay();
-    this.$onChanges = (changes) => {
-      this.renderDisplay();
+    if (mode === 'author') {
+      this.$onChanges = (changes) => {
+        this.renderDisplay();
+      }
     }
   }
 
@@ -27,7 +32,7 @@ class SummaryDisplayController {
         this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
     if (summaryComponent != null) {
       this.getComponentStates(this.nodeId, this.componentId, this.periodId)
-          .then((componentStates) => {
+          .then((componentStates = []) => {
         this.processComponentStates(componentStates);
       });
     } else {
@@ -111,7 +116,7 @@ class SummaryDisplayController {
     const { data, total } = this.createSeriesData(component, summaryData);
     const series = this.createSeries(data);
     const chartType = 'column';
-    const title = 'Class Results';
+    const title = this.$translate('CLASS_RESULTS');
     const xAxisType = 'category';
     this.chartConfig =  this.createChartConfig(chartType, title, xAxisType, total, series);
   }
@@ -178,6 +183,11 @@ class SummaryDisplayController {
       xAxis: {
         type: xAxisType
       },
+      yAxis: {
+        title: {
+          text: this.$translate('COUNT')
+        }
+      },
       series: series
     };
   }
@@ -236,6 +246,7 @@ class SummaryDisplayController {
 }
 
 SummaryDisplayController.$inject = [
+  '$filter',
   '$injector',
   '$q',
   'ConfigService',

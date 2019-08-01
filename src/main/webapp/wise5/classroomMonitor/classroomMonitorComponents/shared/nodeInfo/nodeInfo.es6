@@ -2,10 +2,14 @@
 
 class NodeInfoController {
     constructor(ProjectService,
+                SummaryService,
+                TeacherDataService,
                 UtilService) {
         this.ProjectService = ProjectService;
+        this.SummaryService = SummaryService;
+        this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
-
+        this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
         this.$onInit = () => {
             this.nodeContent = this.getNodeContent();
             this.components = this.getComponents();
@@ -76,10 +80,16 @@ class NodeInfoController {
     getComponentTypeLabel(componentType) {
         return this.UtilService.getComponentTypeLabel(componentType);
     }
+
+    isSummaryAvailable(componentType) {
+        return this.SummaryService.isComponentTypeAllowed(componentType);
+    }
 }
 
 NodeInfoController.$inject = [
     'ProjectService',
+    'SummaryService',
+    'TeacherDataService',
     'UtilService'
 ];
 
@@ -127,6 +137,9 @@ const NodeInfo = {
                            <div ng-bind-html="$ctrl.getRubricWithAssetPaths(component.rubric)"></div>
                        </md-card-content>
                     </md-card>
+                    <div ng-if='$ctrl.isSummaryAvailable(component.type)'>
+                        <summary-display node-id='$ctrl.nodeId' component-id='component.id' period-id='$ctrl.periodId'></summary-display>
+                    </div>
                 </div>
             </md-card-content>
         </md-card>`

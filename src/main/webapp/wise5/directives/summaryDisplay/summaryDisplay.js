@@ -14,15 +14,17 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var SummaryDisplayController =
 /*#__PURE__*/
 function () {
-  function SummaryDisplayController($injector, $q, ConfigService, ProjectService) {
+  function SummaryDisplayController($filter, $injector, $q, ConfigService, ProjectService) {
     var _this = this;
 
     _classCallCheck(this, SummaryDisplayController);
 
+    this.$filter = $filter;
     this.$injector = $injector;
     this.$q = $q;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.$translate = this.$filter('translate');
     this.dataService = null;
     var mode = this.ConfigService.getMode();
 
@@ -34,9 +36,11 @@ function () {
 
     this.renderDisplay();
 
-    this.$onChanges = function (changes) {
-      _this.renderDisplay();
-    };
+    if (mode === 'author') {
+      this.$onChanges = function (changes) {
+        _this.renderDisplay();
+      };
+    }
   }
 
   _createClass(SummaryDisplayController, [{
@@ -47,7 +51,9 @@ function () {
       var summaryComponent = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
 
       if (summaryComponent != null) {
-        this.getComponentStates(this.nodeId, this.componentId, this.periodId).then(function (componentStates) {
+        this.getComponentStates(this.nodeId, this.componentId, this.periodId).then(function () {
+          var componentStates = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
           _this2.processComponentStates(componentStates);
         });
       } else {
@@ -143,7 +149,7 @@ function () {
 
       var series = this.createSeries(data);
       var chartType = 'column';
-      var title = 'Class Results';
+      var title = this.$translate('CLASS_RESULTS');
       var xAxisType = 'category';
       this.chartConfig = this.createChartConfig(chartType, title, xAxisType, total, series);
     }
@@ -277,6 +283,11 @@ function () {
         xAxis: {
           type: xAxisType
         },
+        yAxis: {
+          title: {
+            text: this.$translate('COUNT')
+          }
+        },
         series: series
       };
     }
@@ -390,7 +401,7 @@ function () {
   return SummaryDisplayController;
 }();
 
-SummaryDisplayController.$inject = ['$injector', '$q', 'ConfigService', 'ProjectService', 'StudentDataService'];
+SummaryDisplayController.$inject = ['$filter', '$injector', '$q', 'ConfigService', 'ProjectService', 'StudentDataService'];
 var SummaryDisplay = {
   bindings: {
     nodeId: '<',

@@ -25,6 +25,10 @@ class SummaryService extends ComponentService {
   componentHasWork(component) {
     return false;
   }
+
+  isComponentTypeAllowed(componentType) {
+    return componentType === 'MultipleChoice';
+  }
 }
 
 SummaryService.$inject = [

@@ -28,12 +28,13 @@ var SummaryController =
 function (_ComponentController) {
   _inherits(SummaryController, _ComponentController);
 
-  function SummaryController($filter, $mdDialog, $q, $rootScope, $scope, SummaryService, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+  function SummaryController($filter, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService) {
     var _this;
 
     _classCallCheck(this, SummaryController);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(SummaryController).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
+    _this.SummaryService = SummaryService;
     _this.summaryNodeId = _this.componentContent.summaryNodeId;
     _this.summaryComponentId = _this.componentContent.summaryComponentId;
     _this.prompt = _this.componentContent.prompt;
@@ -59,7 +60,7 @@ function (_ComponentController) {
   return SummaryController;
 }(_componentController["default"]);
 
-SummaryController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', 'SummaryService', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+SummaryController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'SummaryService', 'UtilService'];
 var _default = SummaryController;
 exports["default"] = _default;
 //# sourceMappingURL=summaryController.js.map

@@ -63,6 +63,11 @@ function (_ComponentService) {
     value: function componentHasWork(component) {
       return false;
     }
+  }, {
+    key: "isComponentTypeAllowed",
+    value: function isComponentTypeAllowed(componentType) {
+      return componentType === 'MultipleChoice';
+    }
   }]);
 
   return SummaryService;
