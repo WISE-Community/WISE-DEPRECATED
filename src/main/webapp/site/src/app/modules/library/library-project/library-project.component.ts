@@ -19,6 +19,7 @@ export class LibraryProjectComponent implements OnInit {
   project: LibraryProject = new LibraryProject();
 
   animateDuration: string = '0s';
+  animateDelay: string = '0s';
 
   constructor(public dialog: MatDialog, 
               private sanitizer: DomSanitizer,
@@ -30,6 +31,7 @@ export class LibraryProjectComponent implements OnInit {
     this.project.thumbStyle = this.getThumbStyle(this.project.projectThumb);
     if (this.project.isHighlighted) {
       this.animateDuration = '2s';
+      this.animateDelay = '1s';
       setTimeout(() => {
         this.project.isHighlighted = false;
       }, 7000);

@@ -24,6 +24,7 @@ export class StudentRunListItemComponent implements OnInit {
   problemLink: string = '';
   thumbStyle: SafeStyle;
   animateDuration: string = '0s';
+  animateDelay: string = '0s';
 
   constructor(private sanitizer: DomSanitizer,
               private configService: ConfigService,
@@ -45,6 +46,7 @@ export class StudentRunListItemComponent implements OnInit {
     this.problemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
     if (this.run.isHighlighted) {
       this.animateDuration = '2s';
+      this.animateDelay = '1s';
       setTimeout(() => {
         this.run.isHighlighted = false;
       }, 7000)

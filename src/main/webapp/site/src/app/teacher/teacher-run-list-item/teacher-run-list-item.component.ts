@@ -23,6 +23,7 @@ export class TeacherRunListItemComponent implements OnInit {
   manageStudentsLink: string = '';
   thumbStyle: SafeStyle;
   animateDuration: string = '0s';
+  animateDelay: string = '0s';
 
   constructor(private sanitizer: DomSanitizer,
               private configService: ConfigService,
@@ -45,6 +46,7 @@ export class TeacherRunListItemComponent implements OnInit {
       this.manageStudentsLink = `${this.configService.getContextPath()}/teacher/run/manage/${ this.run.id }/#/manageStudents`;
       if (this.run.isHighlighted) {
         this.animateDuration = '2s';
+        this.animateDelay = '1s';
         setTimeout(() => {
           this.run.isHighlighted = false;
         }, 7000)
