@@ -4,10 +4,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.spring.data.redis.MessagePublisher;
-import org.wise.vle.domain.WebSocketMessage;
 
 @RestController
 public class TeacherRunAPIController {

@@ -48,6 +48,8 @@ public interface Run extends Persistable {
    */
   Long getId();
 
+  void setId(Long id);
+
   /**
    * @return the endtime
    */
