@@ -13,7 +13,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 
 @SpringBootApplication
-@ImportResource({"classpath:configurations/applicationContexts.xml", "classpath:configurations/dispatcherServletContexts.xml"})
+@ImportResource({"classpath:configurations/applicationContexts.xml"})
 public class Application extends SpringBootServletInitializer {
 
   @Override

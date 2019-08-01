@@ -31,7 +31,6 @@ public final class SpringConfigurationImpl implements SpringConfiguration {
 
   public String[] getDispatcherServletContextConfigLocations() {
     return new String[] {
-      "classpath:configurations/dispatcherServletContexts.xml"
     };
   }
 

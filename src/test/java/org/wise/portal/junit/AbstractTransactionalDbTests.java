@@ -35,7 +35,6 @@ import org.wise.portal.spring.impl.SpringConfigurationImpl;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {
-  "classpath:configurations/dispatcherServletContexts.xml",
   "classpath:configurations/applicationContexts.xml"
 })
 public abstract class AbstractTransactionalDbTests extends

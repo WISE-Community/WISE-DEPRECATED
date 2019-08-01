@@ -1,9 +1,21 @@
 package org.wise.portal.presentation.web.filters;
 
+import java.io.IOException;
+import java.net.URL;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Date;
+import java.util.Map;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,17 +34,6 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.session.SessionService;
-import org.wise.portal.service.user.UserService;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URL;
-import java.security.interfaces.RSAPublicKey;
-import java.util.Date;
-import java.util.Map;
 
 public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -50,9 +51,6 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
 
   @Autowired
   private UserDetailsService userDetailsService;
-
-  @Autowired
-  private UserService userService;
 
   @Autowired
   protected SessionService sessionService;
@@ -84,10 +82,10 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
       verifyClaims(authInfo);
       String googleUserId = authInfo.get("sub");
       final UserDetails user = userDetailsService.loadUserByGoogleUserId(googleUserId);
+      invalidateAccesToken();
       if (user != null) {
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
       } else {
-        invalidateAccesToken();
         throw new BadCredentialsException("google user not found");
       }
     } catch (final Exception e) {
