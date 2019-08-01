@@ -56,6 +56,7 @@ function (_ComponentService) {
       component.summaryNodeId = null;
       component.summaryComponentId = null;
       component.summarySource = 'period';
+      component.chartType = 'column';
       return component;
     }
   }, {

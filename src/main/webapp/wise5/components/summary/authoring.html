@@ -181,6 +181,19 @@
           </md-option>
         </md-select>
       </md-input-container>
+      <md-input-container style='margin-right: 20; width: 200;'>
+          <label>{{ 'summary.chartType' | translate }}</label>
+          <md-select ng-model='summaryController.authoringComponentContent.chartType'
+                     ng-change='summaryController.authoringViewComponentChanged()'
+                     style='width: 200'>
+            <md-option value='column'>
+              {{ 'summary.bar' | translate }}
+            </md-option>
+            <md-option value='pie'>
+              {{ 'summary.pie' | translate }}
+            </md-option>
+          </md-select>
+        </md-input-container>
   </div>
   <div>
     <md-input-container>
@@ -203,7 +216,8 @@
       </div>
       <summary-display node-id='summaryController.authoringComponentContent.summaryNodeId'
           component-id='summaryController.authoringComponentContent.summaryComponentId'
-          period-id='summaryController.authoringComponentContent.periodId'>
+          period-id='summaryController.authoringComponentContent.periodId'
+          chart-type='summaryController.authoringComponentContent.chartType'>
       </summary-display>
     </div>
   </div>

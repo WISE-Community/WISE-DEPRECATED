@@ -13,6 +13,9 @@ class SummaryDisplayController {
     this.ProjectService = ProjectService;
     this.$translate = this.$filter('translate');
     this.dataService = null;
+    if (this.chartType == null) {
+      this.chartType = 'column';
+    }
     const mode = this.ConfigService.getMode();
     if (this.ConfigService.isPreview() || mode === 'studentRun') {
       this.dataService = this.$injector.get('StudentDataService');
@@ -115,7 +118,7 @@ class SummaryDisplayController {
     const summaryData = this.createSummaryData(component, componentStates);
     const { data, total } = this.createSeriesData(component, summaryData);
     const series = this.createSeries(data);
-    const chartType = 'column';
+    const chartType = this.chartType;
     const title = this.$translate('CLASS_RESULTS');
     const xAxisType = 'category';
     this.chartConfig =  this.createChartConfig(chartType, title, xAxisType, total, series);
@@ -157,7 +160,7 @@ class SummaryDisplayController {
   }
 
   createChartConfig(chartType, title, xAxisType, total, series) {
-    return {
+    const chartConfig = {
       options: {
         chart: {
           type: chartType
@@ -190,6 +193,19 @@ class SummaryDisplayController {
       },
       series: series
     };
+    if (chartType === 'column') {
+
+    } else if (chartType === 'pie') {
+      chartConfig.options.plotOptions = {
+        pie: {
+          dataLabels: {
+            enabled: true,
+            format: '<br>{point.name}</b>: {point.y}'
+          }
+        }
+      };
+    }
+    return chartConfig;
   }
 
   hasCorrectAnswer(component) {
@@ -258,7 +274,8 @@ const SummaryDisplay = {
   bindings: {
     nodeId: '<',
     componentId: '<',
-    periodId: '<'
+    periodId: '<',
+    chartType: '<'
   },
   templateUrl: 'wise5/directives/summaryDisplay/summaryDisplay.html',
   controller: SummaryDisplayController,

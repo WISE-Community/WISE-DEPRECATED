@@ -1,4 +1,7 @@
 {
+  "summary.bar": "Bar",
+  "summary.chartType": "Chart Type",
   "summary.componentTypeLabel": "Summary",
+  "summary.pie": "Pie",
   "summary.showPromptFromOtherComponent": "Show Prompt From Other Component"
 }

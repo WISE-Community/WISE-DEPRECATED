@@ -33,6 +33,7 @@ class SummaryController extends ComponentController {
     this.SummaryService = SummaryService;
     this.summaryNodeId = this.componentContent.summaryNodeId;
     this.summaryComponentId = this.componentContent.summaryComponentId;
+    this.chartType = this.componentContent.chartType;
     this.prompt = this.componentContent.prompt;
     if (this.componentContent.showPromptFromOtherComponent) {
       const otherComponent = this.ProjectService.getComponentByNodeIdAndComponentId(

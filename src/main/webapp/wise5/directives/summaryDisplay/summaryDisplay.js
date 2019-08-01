@@ -26,6 +26,11 @@ function () {
     this.ProjectService = ProjectService;
     this.$translate = this.$filter('translate');
     this.dataService = null;
+
+    if (this.chartType == null) {
+      this.chartType = 'column';
+    }
+
     var mode = this.ConfigService.getMode();
 
     if (this.ConfigService.isPreview() || mode === 'studentRun') {
@@ -148,7 +153,7 @@ function () {
           total = _this$createSeriesDat.total;
 
       var series = this.createSeries(data);
-      var chartType = 'column';
+      var chartType = this.chartType;
       var title = this.$translate('CLASS_RESULTS');
       var xAxisType = 'category';
       this.chartConfig = this.createChartConfig(chartType, title, xAxisType, total, series);
@@ -257,7 +262,7 @@ function () {
   }, {
     key: "createChartConfig",
     value: function createChartConfig(chartType, title, xAxisType, total, series) {
-      return {
+      var chartConfig = {
         options: {
           chart: {
             type: chartType
@@ -290,6 +295,19 @@ function () {
         },
         series: series
       };
+
+      if (chartType === 'column') {} else if (chartType === 'pie') {
+        chartConfig.options.plotOptions = {
+          pie: {
+            dataLabels: {
+              enabled: true,
+              format: '<br>{point.name}</b>: {point.y}'
+            }
+          }
+        };
+      }
+
+      return chartConfig;
     }
   }, {
     key: "hasCorrectAnswer",
@@ -406,7 +424,8 @@ var SummaryDisplay = {
   bindings: {
     nodeId: '<',
     componentId: '<',
-    periodId: '<'
+    periodId: '<',
+    chartType: '<'
   },
   templateUrl: 'wise5/directives/summaryDisplay/summaryDisplay.html',
   controller: SummaryDisplayController,

@@ -37,6 +37,7 @@ function (_ComponentController) {
     _this.SummaryService = SummaryService;
     _this.summaryNodeId = _this.componentContent.summaryNodeId;
     _this.summaryComponentId = _this.componentContent.summaryComponentId;
+    _this.chartType = _this.componentContent.chartType;
     _this.prompt = _this.componentContent.prompt;
 
     if (_this.componentContent.showPromptFromOtherComponent) {
