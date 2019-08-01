@@ -55,6 +55,7 @@ import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
+import SummaryComponentModule from '../components/summary/summaryComponentModule';
 import TableComponentModule from '../components/table/tableComponentModule';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
@@ -65,6 +66,7 @@ import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.mi
 
 const vleModule = angular.module('vle', [
     angularDragula(angular),
+    'summaryComponentModule',
     'angularMoment',
     'angular-toArrayFilter',
     'animationComponentModule',

@@ -1,0 +1,11 @@
+<div class='summary' ng-controller='SummaryController as summaryController' flex>
+  <compile data='summaryController.prompt'></compile>
+  <div ng-if='summaryController.componentContent.showPromptFromOtherComponent'>
+      <br/>
+      <compile data='summaryController.otherPrompt'></compile>
+  </div>
+  <summary-display node-id='summaryController.summaryNodeId'
+      component-id='summaryController.summaryComponentId'
+      period-id='summaryController.periodId'>
+  </summary-display>
+</div>

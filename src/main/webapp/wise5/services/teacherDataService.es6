@@ -295,6 +295,20 @@ class TeacherDataService {
     return this.retrieveStudentData(params);
   };
 
+  retrieveStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
+    const params = {
+      nodeId: nodeId,
+      componentId: componentId,
+      periodId: periodId,
+      getStudentWork: true,
+      getEvents: false,
+      getAnnotations: false
+    };
+    return this.retrieveStudentData(params).then((result) => {
+      return result.studentWorkList;
+    });
+  }
+
   /**
    * Retrieve the student data
    * @param params the params that specify what student data we want

@@ -63,6 +63,7 @@ import StudentGradingController from './studentGrading/studentGradingController'
 import StudentProgressController from './studentProgress/studentProgressController';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
+import SummaryComponentModule from '../components/summary/summaryComponentModule';
 import TableComponentModule from '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
@@ -73,6 +74,7 @@ import moment from 'moment';
 
 const classroomMonitorModule = angular.module('classroomMonitor', [
         angularDragula(angular),
+        'summaryComponentModule',
         'angularMoment',
         'angular-inview',
         'angular-toArrayFilter',
