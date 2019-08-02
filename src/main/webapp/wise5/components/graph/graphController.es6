@@ -2455,7 +2455,7 @@ class GraphController extends ComponentController {
         }
       }
     } else {
-      let period = null;
+      let periodId = null;
       if (connectedComponent.showClassmateWorkSource === 'period') {
         periodId = this.ConfigService.getPeriodId();
       }

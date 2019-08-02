@@ -3592,7 +3592,7 @@ function (_ComponentController) {
           }
         }
       } else {
-        var period = null;
+        var periodId = null;
 
         if (connectedComponent.showClassmateWorkSource === 'period') {
           periodId = this.ConfigService.getPeriodId();

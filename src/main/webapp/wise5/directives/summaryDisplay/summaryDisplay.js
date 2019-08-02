@@ -313,7 +313,7 @@ function () {
         series: series
       };
 
-      if (chartType === 'column') {} else if (chartType === 'pie') {
+      if (chartType === 'pie') {
         chartConfig.options.plotOptions = {
           pie: {
             dataLabels: {
