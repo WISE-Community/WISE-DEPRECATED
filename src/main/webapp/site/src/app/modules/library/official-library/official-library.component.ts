@@ -1,8 +1,8 @@
 import { Component, Input, ViewEncapsulation, Inject } from '@angular/core';
-import { LibraryGroup } from "../libraryGroup";
-import { LibraryProject } from "../libraryProject";
-import { LibraryService } from "../../../services/library.service";
-import { LibraryComponent } from "../library/library.component";
+import { LibraryGroup } from '../libraryGroup';
+import { LibraryProject } from '../libraryProject';
+import { LibraryService } from '../../../services/library.service';
+import { LibraryComponent } from '../library/library.component';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 @Component({
@@ -19,7 +19,7 @@ export class OfficialLibraryComponent extends LibraryComponent {
   libraryGroups: LibraryGroup[] = [];
   expandedGroups: object = {};
 
-  constructor(libraryService: LibraryService, public dialog: MatDialog,) {
+  constructor(libraryService: LibraryService, public dialog: MatDialog) {
     super(libraryService);
     libraryService.libraryGroupsSource$.subscribe((libraryGroups) => {
       this.libraryGroups = libraryGroups;

@@ -1,14 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { defer, Observable } from "rxjs";
-import { UserService } from "../../services/user.service";
-import { TeacherService } from "../teacher.service";
-import { User } from "../../domain/user";
-import { Project} from "../../domain/project";
-import { TeacherHomeComponent } from "./teacher-home.component";
-import { Run } from "../../domain/run";
-import { NO_ERRORS_SCHEMA, LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT, Component } from "@angular/core";
-import { ConfigService } from "../../services/config.service";
-import { Config } from "../../domain/config";
+import { defer, Observable } from 'rxjs';
+import { UserService } from '../../services/user.service';
+import { TeacherService } from '../teacher.service';
+import { User } from '../../domain/user';
+import { Project} from '../../domain/project';
+import { TeacherHomeComponent } from './teacher-home.component';
+import { Run } from '../../domain/run';
+import { NO_ERRORS_SCHEMA, LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT, Component } from '@angular/core';
+import { ConfigService } from '../../services/config.service';
+import { Config } from '../../domain/config';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { translationsFactory } from '../../app.module';
 import { LibraryService } from '../../services/library.service';
@@ -23,21 +23,21 @@ export class MockTeacherService {
     const runs : Run[] = [];
     const run1 = new Run();
     run1.id = 1;
-    run1.name = "Photosynthesis";
+    run1.name = 'Photosynthesis';
     run1.numStudents = 12;
     const project1 = new Project();
     project1.id = 1;
-    project1.name = "Photosynthesis";
-    project1.projectThumb = "";
+    project1.name = 'Photosynthesis';
+    project1.projectThumb = '';
     run1.project = project1;
     const run2 = new Run();
     run2.id = 2;
-    run2.name = "Plate Tectonics";
+    run2.name = 'Plate Tectonics';
     run2.numStudents = 21;
     const project2 = new Project();
     project2.id = 1;
-    project2.name = "Photosynthesis";
-    project2.projectThumb = "";
+    project2.name = 'Photosynthesis';
+    project2.projectThumb = '';
     run2.project = project2;
     runs.push(run1);
     runs.push(run2);
@@ -52,8 +52,8 @@ export class MockTeacherService {
   newRunSource$ = fakeAsyncResponse([
     {
       id: 3,
-      name: "Global Climate Change",
-      periods: ["1", "2"]
+      name: 'Global Climate Change',
+      periods: ['1', '2']
     }
   ]);
   tabIndexSource$ = fakeAsyncResponse(0);
@@ -78,9 +78,9 @@ export class MockConfigService {
   getConfig(): Observable<Config> {
     return Observable.create( observer => {
       const config: Config = {
-        contextPath: "/wise",
-        logOutURL: "/logout",
-        currentTime: new Date("2018-10-17T00:00:00.0").getTime()
+        contextPath: '/wise',
+        logOutURL: '/logout',
+        currentTime: new Date('2018-10-17T00:00:00.0').getTime()
       };
       observer.next(config);
       observer.complete();
@@ -88,7 +88,7 @@ export class MockConfigService {
   }
 
   getContextPath(): string {
-    return "/wise";
+    return '/wise';
   }
 
   getCurrentServerTime(): number {
@@ -113,7 +113,7 @@ describe('TeacherHomeComponent', () => {
         { provide: UserService, useClass: MockUserService },
         { provide: ConfigService, useClass: MockConfigService },
         { provide: LibraryService, useClass: MockLibraryService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,

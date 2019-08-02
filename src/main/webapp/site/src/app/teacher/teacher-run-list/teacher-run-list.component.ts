@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DateFormatPipe } from 'ngx-moment';
 import { TeacherService } from '../teacher.service';
 import { TeacherRun } from '../teacher-run';
-import { ConfigService } from "../../services/config.service";
+import { ConfigService } from '../../services/config.service';
 import { Router } from '@angular/router';
 
 @Component({

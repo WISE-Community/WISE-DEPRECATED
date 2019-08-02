@@ -29,9 +29,6 @@ export class CopyProjectDialogComponent implements OnInit {
 
   copy() {
     this.isCopying = true;
-    this.dialogRef.afterClosed().subscribe(() => {
-      scrollTo(0, 0);
-    });
     this.libraryService.copyProject(this.data.project.id)
         .pipe(
           finalize(() => {

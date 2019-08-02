@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeacherProjectLibraryComponent } from './teacher-project-library.component';
 import { MatMenuModule, MatDialog } from "@angular/material";
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID, Component } from "@angular/core";
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LibraryService } from '../../../services/library.service';
 import { translationsFactory } from '../../../app.module';

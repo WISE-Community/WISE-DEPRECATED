@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog} from '@angular/material';
-import { LibraryProject } from "../libraryProject";
-import { LibraryProjectDetailsComponent } from "../library-project-details/library-project-details.component";
+import { LibraryProject } from '../libraryProject';
+import { LibraryProjectDetailsComponent } from '../library-project-details/library-project-details.component';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { flash } from '../../../animations';
 

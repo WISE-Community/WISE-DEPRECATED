@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
-import { LibraryProject } from "../libraryProject";
-import { LibraryService } from "../../../services/library.service";
-import { NGSSStandards } from "../ngssStandards";
-import { Standard } from "../standard";
-import { ProjectFilterValues } from "../../../domain/projectFilterValues";
+import { LibraryProject } from '../libraryProject';
+import { LibraryService } from '../../../services/library.service';
+import { NGSSStandards } from '../ngssStandards';
+import { Standard } from '../standard';
+import { ProjectFilterValues } from '../../../domain/projectFilterValues';
 
 @Component({
   selector: 'app-library-filters',
