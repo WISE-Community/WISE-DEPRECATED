@@ -44,7 +44,7 @@ export class TeacherRunListComponent implements OnInit {
       }
       router.navigateByUrl('teacher/home/schedule').then(() => {
         setTimeout(() => {
-          document.getElementById(`run${teacherRun.id}`).scrollIntoView({behavior: "smooth"});
+          document.getElementById(`run${teacherRun.id}`).scrollIntoView();
         }, 1000);
       });
     });

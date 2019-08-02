@@ -40,7 +40,7 @@ export class LibraryProjectComponent implements OnInit {
 
   ngAfterViewInit() {
     if (this.project.isHighlighted) {
-      this.elRef.nativeElement.querySelector('mat-card').scrollIntoView({behavior: "smooth"});
+      this.elRef.nativeElement.querySelector('mat-card').scrollIntoView();
     }
   }
 
