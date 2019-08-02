@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2018 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -38,6 +38,7 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.portal.Portal;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.AuthorityNotFoundException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.portal.PortalService;
@@ -56,6 +57,7 @@ import java.util.Locale;
 public class WISEAuthenticationSuccessHandler
     extends SavedRequestAwareAuthenticationSuccessHandler {
 
+  @Autowired
   private UserDetailsService userDetailsService;
 
   @Autowired
@@ -68,8 +70,9 @@ public class WISEAuthenticationSuccessHandler
     boolean userIsAdmin = false;
     if (userDetails instanceof StudentUserDetails) {
       String accessCode = (String) request.getAttribute("accessCode");
-      if (request.getServletPath().contains("google-login")) {
-        String contextPath = request.getContextPath();
+      String contextPath = request.getContextPath();
+      if (request.getServletPath().contains("google-login") ||
+          ControllerUtil.isUserPreviousAdministrator()) {
         if (accessCode != null && !accessCode.equals("")) {
           response.sendRedirect(contextPath + "/student?accessCode=" + accessCode);
           return;
@@ -85,7 +88,8 @@ public class WISEAuthenticationSuccessHandler
       }
       setDefaultTargetUrl(WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH + "?pLT=" + pLT);
     } else if (userDetails instanceof TeacherUserDetails) {
-      if (request.getServletPath().contains("google-login")) {
+      if (request.getServletPath().contains("google-login") ||
+          ControllerUtil.isUserPreviousAdministrator()) {
         String contextPath = request.getContextPath();
         response.sendRedirect(contextPath + "/teacher");
         return;
@@ -167,13 +171,5 @@ public class WISEAuthenticationSuccessHandler
 
     userDetailsService.updateStatsOnSuccessfulLogin((MutableUserDetails) userDetails);
     super.handle(request, response, authentication);
-  }
-
-  public UserDetailsService getUserDetailsService() {
-    return userDetailsService;
-  }
-
-  public void setUserDetailsService(UserDetailsService userDetailsService) {
-    this.userDetailsService = userDetailsService;
   }
 }

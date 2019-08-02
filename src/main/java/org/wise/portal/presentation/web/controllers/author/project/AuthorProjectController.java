@@ -48,7 +48,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -277,7 +277,7 @@ public class AuthorProjectController {
                 String result = "";
                 if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
                   long newProjectId = projectService.getNextAvailableProjectId();
-                  result = FileManager.copyProject(curriculumBaseDir, projectFolderPath, 
+                  result = FileManager.copyProject(curriculumBaseDir, projectFolderPath,
                       String.valueOf(newProjectId));
                 } else {
                   response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -368,7 +368,7 @@ public class AuthorProjectController {
                 allowedProjectAssetContentTypesStr += "," + appProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
               }
 
-              DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
+              StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
               Map<String,MultipartFile> fileMap = multiRequest.getFileMap();
 
               Iterator<String> iter = multiRequest.getFileNames();
@@ -503,7 +503,7 @@ public class AuthorProjectController {
       String wise4ProjectFolderPath = FileManager.getProjectFolderPath(wise4Project);
       String wise4AssetsFolderPath = wise4ProjectFolderPath + "/assets";
       long wise5ProjectId = projectService.getNextAvailableProjectId();
-      String relativeWISE5ProjectFilePath = 
+      String relativeWISE5ProjectFilePath =
           FileManager.createWISE5Project(curriculumBaseDir, String.valueOf(wise5ProjectId));
       String wise5ProjectFilePath = curriculumBaseDir + relativeWISE5ProjectFilePath;
       String wise5ProjectFolderPath = wise5ProjectFilePath.substring(0, wise5ProjectFilePath.indexOf("/project.json"));

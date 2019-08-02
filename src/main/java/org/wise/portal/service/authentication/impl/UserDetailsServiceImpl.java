@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2019 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -28,6 +28,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.authentication.GrantedAuthorityDao;
 import org.wise.portal.dao.authentication.UserDetailsDao;
@@ -40,6 +41,7 @@ import org.wise.portal.service.authentication.UserDetailsService;
 /**
  * @author Hiroki Terashima
  */
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired
