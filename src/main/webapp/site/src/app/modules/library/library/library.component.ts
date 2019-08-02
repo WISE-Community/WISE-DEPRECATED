@@ -98,28 +98,6 @@ export abstract class LibraryComponent implements OnInit {
     return this.dciArrangementValue.length > 0 || this.peValue.length > 0 || this.disciplineValue.length > 0;
   }
 
-  // TODO: extract to util function
-  removeDuplicates(array: any[], prop: string): any[] {
-    return array.filter((obj, pos, arr) => {
-      return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
-    });
-  }
-
-  // TODO: extract to util function
-  sortOptions(array: any[], prop: string): void {
-    array.sort( (a: Standard, b: Standard) => {
-      const valA = a[prop].toLocaleLowerCase();
-      const valB = b[prop].toLocaleLowerCase();
-      if (valA < valB) {
-        return -1;
-      }
-      if (valA > valB) {
-        return 1;
-      }
-      return 0;
-    });
-  }
-
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
     if (searchValue) {
       let data: any = project.metadata;

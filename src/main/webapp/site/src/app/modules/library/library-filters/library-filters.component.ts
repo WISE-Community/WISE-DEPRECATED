@@ -4,6 +4,7 @@ import { LibraryService } from '../../../services/library.service';
 import { NGSSStandards } from '../ngssStandards';
 import { Standard } from '../standard';
 import { ProjectFilterValues } from '../../../domain/projectFilterValues';
+import { UtilService } from '../../../services/util.service';
 
 @Component({
   selector: 'app-library-filters',
@@ -31,7 +32,8 @@ export class LibraryFiltersComponent implements OnInit {
   peValue = [];
   showFilters: boolean = false;
 
-  constructor(private libraryService: LibraryService) {
+  constructor(private libraryService: LibraryService,
+              private utilService: UtilService) {
     libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects: LibraryProject[]) => {
         this.libraryProjects = libraryProjects;
         this.populateFilterOptions();
@@ -120,34 +122,14 @@ export class LibraryFiltersComponent implements OnInit {
   }
 
   removeDuplicatesAndSortAlphabetically() {
-    this.dciArrangementOptions = this.removeDuplicates(this.dciArrangementOptions, 'id');
-    this.sortOptions(this.dciArrangementOptions, 'id');
-    this.disciplineOptions = this.removeDuplicates(this.disciplineOptions, 'id');
-    this.sortOptions(this.disciplineOptions, 'name');
-    this.peOptions = this.removeDuplicates(this.peOptions, 'id');
-    this.sortOptions(this.peOptions, 'id');
-  }
-
-  // TODO: extract to util function
-  removeDuplicates(array: any[], prop: string): any[] {
-    return array.filter((obj, pos, arr) => {
-      return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
-    });
-  }
-
-  // TODO: extract to util function
-  sortOptions(array: any[], prop: string): void {
-    array.sort( (a: Standard, b: Standard) => {
-      const valA = a[prop].toLocaleLowerCase();
-      const valB = b[prop].toLocaleLowerCase();
-      if (valA < valB) {
-        return -1;
-      }
-      if (valA > valB) {
-        return 1;
-      }
-      return 0;
-    });
+    this.dciArrangementOptions = 
+      this.utilService.removeObjectArrayDuplicatesByProperty(this.dciArrangementOptions, 'id');
+    this.utilService.sortObjectArrayByProperty(this.dciArrangementOptions, 'id');
+    this.disciplineOptions = 
+      this.utilService.removeObjectArrayDuplicatesByProperty(this.disciplineOptions, 'id');
+    this.utilService.sortObjectArrayByProperty(this.disciplineOptions, 'name');
+    this.peOptions = this.utilService.removeObjectArrayDuplicatesByProperty(this.peOptions, 'id');
+    this.utilService.sortObjectArrayByProperty(this.peOptions, 'id');
   }
 
   hasFilters(): boolean {
