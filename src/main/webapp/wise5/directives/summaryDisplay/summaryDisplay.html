@@ -1,3 +1,17 @@
 <div style='width: 95%;'>
   <highchart config='summaryDisplayCtrl.chartConfig'></highchart>
+  <br/>
+  <div style='display: flex; justify-content: center'>
+    <b>
+    <span>{{ 'RESPONSES' | translate }} / {{ 'TOTAL_WORKGROUPS' | translate }}:</span>
+    <span>{{summaryDisplayCtrl.numResponses}}</span> /
+    <span>{{summaryDisplayCtrl.totalWorkgroups}}</span>
+    </b>
+  </div>
+  <div style='display: flex; justify-content: center'>
+    <b>
+    <span>{{ 'PERCENT_OF_CLASS_RESPONDED' | translate }}:</span>
+    <span>{{summaryDisplayCtrl.percentResponded}}%</span>
+    </b>
+  </div>
 </div>

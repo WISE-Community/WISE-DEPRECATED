@@ -393,7 +393,6 @@ class ConfigService {
           userInfo = myUserInfo;
         }
       }
-
       if (userInfo == null) {
         const classmateUserInfos = this.getClassmateUserInfos();
         if (classmateUserInfos != null) {
@@ -410,6 +409,24 @@ class ConfigService {
       }
     }
     return userInfo;
+  }
+
+  getWorkgroupsByPeriod(periodId) {
+    const workgroupsInPeriod = [];
+    const myUserInfo = this.getMyUserInfo();
+    if (periodId == null || periodId === -1 || myUserInfo.periodId === periodId) {
+      workgroupsInPeriod.push(myUserInfo);
+    }
+    for (const classmateUserInfo of this.getClassmateUserInfos()) {
+      if (periodId == null || periodId === -1 || classmateUserInfo.periodId === periodId) {
+        workgroupsInPeriod.push(classmateUserInfo);
+      }
+    }
+    return workgroupsInPeriod;
+  }
+
+  getNumberOfWorkgroupsInPeriod(periodId) {
+    return this.getWorkgroupsByPeriod(periodId).length;
   }
 
   /**

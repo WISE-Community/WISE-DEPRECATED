@@ -122,6 +122,21 @@ class SummaryDisplayController {
     const title = this.$translate('CLASS_RESULTS');
     const xAxisType = 'category';
     this.chartConfig =  this.createChartConfig(chartType, title, xAxisType, total, series);
+    this.numResponses = componentStates.length;
+    this.totalWorkgroups = this.getTotalWorkgroups(componentStates);
+    this.percentResponded = this.getPercentResponded(this.numResponses, this.totalWorkgroups);
+  }
+
+  getTotalWorkgroups(componentStates) {
+    if (this.ConfigService.isPreview() || this.ConfigService.getMode() === 'author') {
+      return componentStates.length;
+    } else {
+      return this.ConfigService.getNumberOfWorkgroupsInPeriod(this.periodId);
+    }
+  }
+
+  getPercentResponded(numResponses, totalWorkgroups) {
+    return Math.floor(100 * numResponses / totalWorkgroups);
   }
 
   createSummaryData(component, componentStates) {

@@ -49,7 +49,11 @@ function (_ComponentController) {
     }
 
     if (_this.ConfigService.getMode() === 'studentRun') {
-      _this.periodId = _this.ConfigService.getPeriodId();
+      if (_this.componentContent.summarySource === 'period') {
+        _this.periodId = _this.ConfigService.getPeriodId();
+      } else if (_this.componentContent.summarySource === 'allPeriods') {
+        _this.periodId = null;
+      }
     } else if (_this.ConfigService.getMode() === 'classroomMonitor') {
       var studentWorkgroupId = _this.workgroupId;
       _this.periodId = _this.ConfigService.getPeriodIdByWorkgroupId(studentWorkgroupId);

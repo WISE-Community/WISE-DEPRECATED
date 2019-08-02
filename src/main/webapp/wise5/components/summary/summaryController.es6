@@ -43,7 +43,11 @@ class SummaryController extends ComponentController {
       }
     }
     if (this.ConfigService.getMode() === 'studentRun') {
-      this.periodId = this.ConfigService.getPeriodId();
+      if (this.componentContent.summarySource === 'period') {
+        this.periodId = this.ConfigService.getPeriodId();
+      } else if (this.componentContent.summarySource === 'allPeriods') {
+        this.periodId = null;
+      }
     } else if (this.ConfigService.getMode() === 'classroomMonitor') {
       const studentWorkgroupId = this.workgroupId;
       this.periodId = this.ConfigService.getPeriodIdByWorkgroupId(studentWorkgroupId);
