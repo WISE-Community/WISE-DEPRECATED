@@ -1,0 +1,18 @@
+<header fxLayout="row" class="content__header">
+  <h1 class="accent"
+      fxLayoutAlign="center center"
+      fxLayoutGap="8px"
+      ngClass="mat-display-1"
+      [ngClass.xs]="{ 'mat-display-1': false }">
+    <mat-icon>settings</mat-icon><span i18n>Administrator Tools</span>
+  </h1>
+</header>
+<section>
+  <h4>User Management</h4>
+  <a mat-button
+     routerLink="/admin/search"
+     routerLinkActive="active"
+     [routerLinkActiveOptions]="{ exact: true }">
+    <span i18n>Find User</span>
+  </a>
+</section>

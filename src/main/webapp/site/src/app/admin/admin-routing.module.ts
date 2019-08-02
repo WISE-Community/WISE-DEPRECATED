@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminComponent } from './admin.component';
 import { AuthGuard } from './auth.guard';
+import { AdminComponent } from './admin.component';
+import { AdminHomeComponent } from './admin-home/admin-home.component';
+import { FindUserComponent } from './find-user/find-user.component';
 
 const adminRoutes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
     canActivate: [AuthGuard],
-    children: []
+    children: [
+      { path: '', component: AdminHomeComponent },
+      { path: 'search', component: FindUserComponent }
+    ]
   }
 ];
 

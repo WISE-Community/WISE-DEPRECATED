@@ -5,7 +5,6 @@ import { Project } from "../domain/project";
 import { Teacher } from "../domain/teacher";
 import { Run } from "../domain/run";
 import {Course} from '../domain/course';
-import { catchError, finalize } from 'rxjs/operators';
 
 @Injectable()
 export class TeacherService {

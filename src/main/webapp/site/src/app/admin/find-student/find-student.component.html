@@ -1,0 +1,77 @@
+<mat-card class="standalone__content mat-elevation-z2">
+  <mat-card-content>
+    <form role="form" fxLayout="column">
+      <h2 class="center" i18n>Search for WISE Students</h2>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>First Name</mat-label>
+          <input matInput id="firstName" name="firstName" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Last Name</mat-label>
+          <input matInput id="lastName" name="lastName" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Username</mat-label>
+          <input matInput id="username" name="username" />
+        </mat-form-field>
+      </p>
+      <p *ngIf="showSearchById">
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>ID</mat-label>
+          <input matInput id="id" name="id" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Gender</mat-label>
+          <input matInput id="gender" name="gender" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Run ID</mat-label>
+          <input matInput id="runId" name="runId" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Workgroup ID</mat-label>
+          <input matInput id="workgroupId" name="workgroupId" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Teacher Username</mat-label>
+          <input matInput id="teacherUsername" name="teacherUsername" />
+        </mat-form-field>
+      </p>
+    </form>
+  </mat-card-content>
+  <mat-card-actions fxLayoutAlign="center" fxLayoutGap="8px">
+    <button mat-flat-button color="primary" i18n>Search</button>
+    <button mat-flat-button color="accent" (click)="clearFormFields()" i18n>Reset</button>
+  </mat-card-actions>
+</mat-card>
+<!--<table mat-table [dataSource]="dataSource" class="mat-elevation-z1" *ngIf="searchResultsAvailable">-->
+<!--  <ng-container matColumnDef="name" sticky>-->
+<!--    <th mat-header-cell *matHeaderCellDef i18n>Username</th>-->
+<!--    <td mat-cell *matCellDef="let student">{{student.username}}</td>-->
+<!--  </ng-container>-->
+<!--  <ng-container matColumnDef="changePassword">-->
+<!--    <th mat-header-cell *matHeaderCellDef i18n>Change</th>-->
+<!--    <td mat-cell><a>Change Password</a></td>-->
+<!--  </ng-container>-->
+<!--  <ng-container matColumnDef="loginAsUser">-->
+<!--    <th mat-header-cell *matHeaderCellDef i18n>Login</th>-->
+<!--    <td><a>Login As This User</a></td>-->
+<!--  </ng-container>-->
+<!--  <ng-container matColumnDef="userInfo">-->
+<!--    <th mat-header-cell *matHeaderCellDef i18n>Info</th>-->
+<!--    <td>User Info</td>-->
+<!--  </ng-container>-->
+<!--</table>-->

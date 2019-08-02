@@ -35,7 +35,7 @@ import { AnnouncementComponent } from './announcement/announcement.component';
 import { AnnouncementDialogComponent } from './app.component';
 import { AboutModule } from "./about/about.module";
 import { TrackScrollDirective } from './track-scroll.directive';
-import { AdminComponent } from './admin/admin.component';
+import { AdminModule } from './admin/admin.module';
 
 export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
   return (): Promise<any> => {
@@ -73,8 +73,7 @@ export function translationsFactory(locale: string) {
     AppComponent,
     AnnouncementComponent,
     AnnouncementDialogComponent,
-    TrackScrollDirective,
-    AdminComponent
+    TrackScrollDirective
   ],
   imports: [
     BrowserModule,
@@ -97,6 +96,7 @@ export function translationsFactory(locale: string) {
     MatSidenavModule,
     MatDialogModule,
     AboutModule,
+    AdminModule,
     RouterModule.forRoot([], {
       scrollPositionRestoration: 'enabled',
       anchorScrolling: 'enabled',
