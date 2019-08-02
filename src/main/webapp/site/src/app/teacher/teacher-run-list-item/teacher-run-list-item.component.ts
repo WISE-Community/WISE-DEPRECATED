@@ -56,7 +56,7 @@ export class TeacherRunListItemComponent implements OnInit {
 
   ngAfterViewInit() {
     if (this.run.isHighlighted) {
-      this.elRef.nativeElement.querySelector('mat-card').scrollIntoView({behavior: "smooth"});
+      this.elRef.nativeElement.querySelector('mat-card').scrollIntoView();
     }
   }
 
