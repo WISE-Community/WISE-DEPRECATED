@@ -607,7 +607,9 @@ function () {
       var myUserInfo = this.getMyUserInfo();
 
       if (periodId == null || periodId === -1 || myUserInfo.periodId === periodId) {
-        workgroupsInPeriod.push(myUserInfo);
+        if (!this.isRunOwner() && !this.isRunSharedTeacher()) {
+          workgroupsInPeriod.push(myUserInfo);
+        }
       }
 
       var _iteratorNormalCompletion5 = true;

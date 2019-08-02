@@ -415,7 +415,9 @@ class ConfigService {
     const workgroupsInPeriod = [];
     const myUserInfo = this.getMyUserInfo();
     if (periodId == null || periodId === -1 || myUserInfo.periodId === periodId) {
-      workgroupsInPeriod.push(myUserInfo);
+      if (!this.isRunOwner() && !this.isRunSharedTeacher()) {
+        workgroupsInPeriod.push(myUserInfo);
+      }
     }
     for (const classmateUserInfo of this.getClassmateUserInfos()) {
       if (periodId == null || periodId === -1 || classmateUserInfo.periodId === periodId) {
