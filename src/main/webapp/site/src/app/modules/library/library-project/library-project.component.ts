@@ -38,12 +38,6 @@ export class LibraryProjectComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit() {
-    if (this.project.isHighlighted) {
-      this.elRef.nativeElement.querySelector('mat-card').scrollIntoView();
-    }
-  }
-
   /**
    * Returns the background-image css value for project thumbnail
    * @param {string} projectThumb

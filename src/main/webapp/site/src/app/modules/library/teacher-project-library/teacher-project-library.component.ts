@@ -48,6 +48,11 @@ export class TeacherProjectLibraryComponent implements OnInit {
       libraryService.getSharedLibraryProjects();
       libraryService.hasLoaded = true;
     }
+    libraryService.newProjectSource$.subscribe(project => {
+      if (project) {
+        document.querySelector('.library').scrollIntoView();
+      }
+    });
   }
 
   ngOnInit() {

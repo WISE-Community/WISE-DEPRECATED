@@ -16,6 +16,7 @@ export class MockLibraryService {
   numberOfOfficialProjectsVisible$ = fakeAsyncResponse(0)
   numberOfCommunityProjectsVisible$ = fakeAsyncResponse(0);
   numberOfPersonalProjectsVisible$ = fakeAsyncResponse(0);
+  newProjectSource$ = fakeAsyncResponse(0);
   getOfficialLibraryProjects(){}
   getCommunityLibraryProjects(){}
   getPersonalLibraryProjects(){}

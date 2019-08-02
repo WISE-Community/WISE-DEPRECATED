@@ -5,7 +5,7 @@ import { LibraryService } from '../../../services/library.service';
 
 export class MockLibraryService {
   getOfficialLibraryProjects(){}
-  reset(){}
+  clearAll(){}
 }
 
 describe('HomePageProjectLibraryComponent', () => {

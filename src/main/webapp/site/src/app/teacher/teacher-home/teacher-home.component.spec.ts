@@ -97,7 +97,7 @@ export class MockConfigService {
 }
 
 export class MockLibraryService {
-  reset(): void {}
+  clearAll(): void {}
 }
 
 describe('TeacherHomeComponent', () => {
