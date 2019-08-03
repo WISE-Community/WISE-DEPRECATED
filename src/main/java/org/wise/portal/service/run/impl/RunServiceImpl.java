@@ -40,6 +40,7 @@ import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectPermission;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.run.impl.RunParameters;
@@ -328,20 +329,37 @@ public class RunServiceImpl implements RunService {
       removeSharedTeacher(teacherUsername, runId);
       projectService.removeSharedTeacher((Long) project.getId(), teacherUsername);
     }
-    aclService.removePermission(run, BasePermission.ADMINISTRATION, oldOwner);
-    run.setOwner(newOwner);
-    runDao.save(run);
-    aclService.addPermission(run, BasePermission.ADMINISTRATION, newOwner);
-    aclService.removePermission(project, BasePermission.ADMINISTRATION, oldOwner);
-    project.setOwner(newOwner);
-    projectDao.save(project);
-    aclService.addPermission(project, BasePermission.ADMINISTRATION, newOwner);
-    addSharedTeacher(runId, oldOwner.getUserDetails().getUsername());
-    projectService.addSharedTeacher((Long) project.getId(), oldOwner.getUserDetails().getUsername());
+    changeOwnerAndPermissions(run, project, newOwner);
+
+//    aclService.removePermission(run, BasePermission.ADMINISTRATION, oldOwner);
+//    run.setOwner(newOwner);
+//    project.setOwner(newOwner);
+//    aclService.addPermission(run, BasePermission.ADMINISTRATION, newOwner);
+//    projectService.addSharedTeacher((Long) project.getId(), oldOwner.getUserDetails().getUsername());
+//    aclService.removePermission(project, BasePermission.ADMINISTRATION, oldOwner);
+//    aclService.addPermission(project, ProjectPermission.WRITE, oldOwner);
+//    aclService.addPermission(project, BasePermission.ADMINISTRATION, newOwner);
+//    addSharedTeacher(runId, oldOwner.getUserDetails().getUsername());
+//    aclService.addPermission(run, RunPermission.VIEW_STUDENT_NAMES, oldOwner);
+//    aclService.addPermission(run, RunPermission.GRADE_AND_MANAGE, oldOwner);
+//    runDao.save(run);
+//    projectDao.save(project);
     List<Integer> newProjectOwnerPermissions = new ArrayList<>();
     newProjectOwnerPermissions.add(BasePermission.ADMINISTRATION.getMask());
     return new SharedOwner(newOwner.getId(), newOwner.getUserDetails().getUsername(),
       newOwner.getUserDetails().getFirstname(), newOwner.getUserDetails().getLastname(), newProjectOwnerPermissions);
+  }
+
+  private void changeOwnerAndPermissions(Run run, Project project, User newOwner) {
+    User owner = run.getOwner();
+    aclService.addPermission(run, BasePermission.ADMINISTRATION, newOwner);
+    aclService.addPermission(project, BasePermission.ADMINISTRATION, newOwner);
+    aclService.removePermission(run, BasePermission.ADMINISTRATION, owner);
+    aclService.removePermission(project, BasePermission.ADMINISTRATION, owner);
+    run.setOwner(newOwner);
+    project.setOwner(newOwner);
+    runDao.save(run);
+    projectDao.save(project);
   }
 
   private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user) throws ObjectNotFoundException {
