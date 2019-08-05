@@ -9,6 +9,7 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 import { translationsFactory } from "../../app.module";
 import { MomentModule } from "ngx-moment";
 import { configureTestSuite } from 'ng-bullet';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export class MockTeacherService {
 
@@ -30,7 +31,7 @@ describe('TeacherRunListItemComponent', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListItemComponent ],
-      imports: [ MomentModule ],
+      imports: [ MomentModule, BrowserAnimationsModule ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: ConfigService, useClass: MockConfigService },

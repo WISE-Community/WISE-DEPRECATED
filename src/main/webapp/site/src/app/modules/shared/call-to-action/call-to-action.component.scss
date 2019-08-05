@@ -9,22 +9,12 @@
   text-align: center;
   text-transform: none;
   white-space: normal;
-  @include mat-elevation-transition;
-  @include mat-elevation(4);
-
-  &:not([disabled]):active:not([class*=mat-elevation-z]) {
-    @include mat-elevation(8);
-  }
 
   &:hover, &:focus {
     .cta__headline .mat-icon {
       transform: rotate(360deg);
       transition: all 0.5s ease-in-out;
     }
-  }
-
-  .mat-button-focus-overlay {
-    display: none;
   }
 }
 

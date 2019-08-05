@@ -60,8 +60,8 @@
     <div class="library-project-details__license notice-bg-bg mat-caption secondary-text">
       <img src="../../../../assets/img/by-sa.png" alt="CC BY-SA"/>&nbsp;
       <span *ngIf="!isCopy" [ngSwitch]="authorsString.length">
-        <ng-container *ngSwitchCase="0" i18n><a href="{{project.uri}}" target="_blank">{{project.metadata.title}}</a> is licensed under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a>.</ng-container>
-        <ng-container *ngSwitchDefault i18n><a href="{{project.uri}}" target="_blank">{{project.metadata.title}}</a> is licensed under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a> by {{authorsString}}.</ng-container>
+        <ng-container *ngSwitchCase="0" i18n><a href="{{project.uri}}" target="_blank">This unit</a> is licensed under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a>.</ng-container>
+        <ng-container *ngSwitchDefault i18n><a href="{{project.uri}}" target="_blank">This unit</a> is licensed under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a> by {{authorsString}}.</ng-container>
       </span>
       <span *ngIf="isCopy" [ngSwitch]="parentAuthorsString.length">
         <ng-container *ngSwitchCase="0" i18n><a href="{{project.uri}}" target="_blank">This unit</a> is a copy of <a href="{{parentProject.uri}}" target="_blank">{{parentProject.title}}</a> (used under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a>).</ng-container>

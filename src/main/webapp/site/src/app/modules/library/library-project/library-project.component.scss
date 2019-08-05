@@ -20,7 +20,7 @@ $config: mat-typography-config();
   padding-top: 75%;
   background-size: cover;
   background-position: center;
-  border-radius: $card-border-radius;
+  border-radius: $button-border-radius;
 
   &:after {
     content: '';
@@ -30,7 +30,7 @@ $config: mat-typography-config();
     left: 0;
     right: 0;
     background-color: rgba(0,0,0,0.15);
-    border-radius: $card-border-radius;
+    border-radius: $button-border-radius;
     transition: background-color 280ms cubic-bezier(.4,0,.2,1);
   }
 }

@@ -7,33 +7,12 @@
     text-decoration: none;
   }
 
-  &:not(.mat-icon-button) {
-    border-radius: $card-border-radius;
-  }
-
   mat-progress-bar {
     position: absolute;
     left: 0;
     bottom: 0;
     border-bottom-left-radius: $card-border-radius;
     border-bottom-right-radius: $card-border-radius;
-  }
-}
-
-.mat-raised-button {
-  &:not(.mat-icon-button) {
-    &:not([class*=mat-elevation-z]) {
-      @include mat-elevation(3);
-    }
-  }
-}
-
-.button--card {
-  cursor: pointer;
-
-  &:hover, &:focus {
-    outline: none;
-    @include mat-elevation(8);
   }
 }
 

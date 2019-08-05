@@ -4,19 +4,18 @@ import { fakeAsyncResponse } from "../../../student/student-run-list/student-run
 import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { MatDialog } from '@angular/material';
+import { BehaviorSubject } from 'rxjs';
 
 export class MockLibraryService {
   implementationModelOptions = [];
   communityLibraryProjectsSource$ = fakeAsyncResponse([]);
-  projectFilterOptionsSource$ = fakeAsyncResponse({
+  projectFilterValuesSource$ = fakeAsyncResponse({
     searchValue: "",
     disciplineValue: [],
     dciArrangementValue: [],
     peValue: []
   });
-  getCommunityLibraryProjects() {
-
-  };
+  numberOfCommunityProjectsVisible = new BehaviorSubject<number>(0);
 }
 
 describe('CommunityLibraryComponent', () => {
