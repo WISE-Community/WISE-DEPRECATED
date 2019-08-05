@@ -7,7 +7,7 @@ class SessionService {
     this.checkMouseEventInMinutesInterval = 1;
     this.showWarningInMinutesInterval = 25;
     this.forceLogoutAfterWarningInMinutesInterval = 5;
-    this.lastActivityTimestamp = new Date();
+    this.updateLastActivityTimestamp();
     this.initializeListeners();
     this.initializeSession();
   }
@@ -58,15 +58,25 @@ class SessionService {
    * Note: This does not get called when the warning popup is being shown.
    */
   mouseMoved() {
+    this.updateLastActivityTimestamp();
+  }
+  
+  updateLastActivityTimestamp() {
     this.lastActivityTimestamp = new Date();
   }
 
   checkMouseEvent() {
-    if (this.isInactiveLongEnoughToForceLogout()) {
+    if (this.isActiveWithinLastMinute()) {
+      this.renewSession();
+    } else if (this.isInactiveLongEnoughToForceLogout()) {
       this.forceLogOut();
     } else if (this.isInactiveLongEnoughToWarn() && !this.isShowingWarning()) {
       this.showWarning();
     }
+  }
+
+  isActiveWithinLastMinute() {
+    return new Date() - this.lastActivityTimestamp < this.convertMinutesToMilliseconds(1);
   }
 
   isInactiveLongEnoughToForceLogout() {
@@ -99,9 +109,17 @@ class SessionService {
     this.$rootScope.$broadcast('showSessionWarning');
   }
 
-  renewSession() {
-    this.lastActivityTimestamp = new Date();
+  closeWarningAndRenewSession() {
     this.warningVisible = false;
+    this.updateLastActivityTimestamp();
+    this.renewSession();
+  }
+
+  renewSession() {
+    const renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
+    this.$http.get(renewSessionURL).then((result) => {
+
+    });
   }
 }
 
