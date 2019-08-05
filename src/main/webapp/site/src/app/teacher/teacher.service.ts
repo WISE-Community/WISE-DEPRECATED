@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, of, from } from "rxjs";
+import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Project } from "../domain/project";
-import { Teacher } from "../domain/teacher";
-import { Run } from "../domain/run";
-import {Course} from '../domain/course';
-import { catchError, finalize } from 'rxjs/operators';
+import { Project } from '../domain/project';
+import { Teacher } from '../domain/teacher';
+import { Run } from '../domain/run';
+import { Course } from '../domain/course';
 
 @Injectable()
 export class TeacherService {
@@ -37,8 +36,6 @@ export class TeacherService {
   private newRunSource = new Subject<Run>();
   public newRunSource$ = this.newRunSource.asObservable();
   private updateProfileUrl = 'api/teacher/profile/update';
-  private tabIndexSource = new Subject<number>();
-  public tabIndexSource$ = this.tabIndexSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -66,7 +63,7 @@ export class TeacherService {
     };
     this.http.post(this.registerUrl,
       teacherUser,
-      { headers: headers, responseType: "text" })
+      { headers: headers, responseType: 'text' })
       .subscribe(response => {
         const username = response;
         callback(username);
@@ -154,10 +151,6 @@ export class TeacherService {
     body = body.set('schoolLevel', schoolLevel);
     body = body.set('language', language);
     return this.http.post<any>(this.updateProfileUrl, body, { headers: headers });
-  }
-
-  setTabIndex(index: number) {
-    this.tabIndexSource.next(index);
   }
 
   addPeriodToRun(runId: number, periodName: string) {

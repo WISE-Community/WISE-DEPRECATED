@@ -2,7 +2,7 @@
   text-align: center;
   padding: 0.725em;
   margin: 24px auto;
-  border-radius: 3px;
+  border-radius: $card-border-radius;
   font-size: mat-font-size($config, body-1);
 
   @media (min-width: breakpoint('sm.min')) {

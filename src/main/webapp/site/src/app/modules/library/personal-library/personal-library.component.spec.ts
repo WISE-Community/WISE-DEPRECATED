@@ -4,27 +4,20 @@ import { fakeAsyncResponse } from "../../../student/student-run-list/student-run
 import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { MatDialog } from '@angular/material';
+import { BehaviorSubject } from 'rxjs';
 
 export class MockLibraryService {
   implementationModelOptions = [];
   personalLibraryProjectsSource$ = fakeAsyncResponse([]);
   sharedLibraryProjectsSource$ = fakeAsyncResponse([]);
-  projectFilterOptionsSource$ = fakeAsyncResponse({
+  projectFilterValuesSource$ = fakeAsyncResponse({
     searchValue: "",
     disciplineValue: [],
     dciArrangementValue: [],
     peValue: []
   });
   newProjectSource$ = fakeAsyncResponse({});
-  getPersonalLibraryProjects() {
-
-  }
-  getSharedLibraryProjects() {
-
-  }
-  setTabIndex() {
-
-  }
+  numberOfPersonalProjectsVisible = new BehaviorSubject<number>(0);
 }
 
 describe('PersonalLibraryComponent', () => {

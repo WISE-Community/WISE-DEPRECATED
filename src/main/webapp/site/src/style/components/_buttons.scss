@@ -7,10 +7,6 @@
     text-decoration: none;
   }
 
-  &:not(.mat-icon-button) {
-    border-radius: $card-border-radius;
-  }
-
   mat-progress-bar {
     position: absolute;
     left: 0;

@@ -12,6 +12,7 @@ import { MatDialog } from "@angular/material";
 import { StudentService } from "../student.service";
 import { UserService } from "../../services/user.service";
 import { configureTestSuite } from 'ng-bullet';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export class MockConfigService {
   getConfig(): Observable<Config> {
@@ -47,7 +48,7 @@ describe('StudentRunListItemComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      imports: [ MomentModule ],
+      imports: [ MomentModule, BrowserAnimationsModule ],
       declarations: [ StudentRunListItemComponent ],
       providers: [
         { provide: ConfigService, useClass: MockConfigService },

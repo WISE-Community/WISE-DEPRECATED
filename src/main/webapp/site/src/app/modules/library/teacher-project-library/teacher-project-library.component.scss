@@ -6,6 +6,10 @@
 
 .library-teacher {
   margin-top: 24px;
+
+  .mat-tab-link {
+    flex-grow: 1;
+  }
 }
 
 .library-teacher__header {
@@ -28,12 +32,7 @@
   }
 }
 
-app-official-library {
-  display: block;
-  margin-top: 20px;
-}
-
-.mat-tab-header {
-  background-color: #ffffff;
+.mat-tab-links {
+  background-color: white;
   margin: 0 1px;
 }

@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { defer, Observable } from "rxjs";
+import { defer, Observable } from 'rxjs';
 import { MomentModule } from 'ngx-moment';
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
-import { StudentRunListComponent } from "./student-run-list.component";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { StudentRunListComponent } from './student-run-list.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Run } from '../../domain/run';
 import { ConfigService } from '../../services/config.service';
 import { ActivatedRoute } from '@angular/router';
@@ -18,32 +18,32 @@ export function fakeAsyncResponse<T>(data: T) {
 export class MockStudentService {
   public newRunSource$ = fakeAsyncResponse({
     id: 12345,
-    name: "Test Project",
-    runCode: "Panda123",
-    periodName: "1",
-    startTime: new Date("2018-08-22T00:00:00.0").getTime(),
-    teacherDisplayName: "Spongebob Squarepants",
-    teacherFirstName: "Spongebob",
-    teacherLastName: "Squarepants",
-    projectThumb: "/wise/curriculum/360/assets/project_thumb.png"
+    name: 'Test Project',
+    runCode: 'Panda123',
+    periodName: '1',
+    startTime: new Date('2018-08-22T00:00:00.0').getTime(),
+    teacherDisplayName: 'Spongebob Squarepants',
+    teacherFirstName: 'Spongebob',
+    teacherLastName: 'Squarepants',
+    projectThumb: '/wise/curriculum/360/assets/project_thumb.png'
   });
   getRuns(): Observable<StudentRun[]> {
     const runs : Run[] = [
       new Run({
         id:1,
-        name:"Photosynthesis",
-        startTime: new Date("2018-08-22T00:00:00.0").getTime()
+        name:'Photosynthesis',
+        startTime: new Date('2018-08-22T00:00:00.0').getTime()
       }),
       new Run({
         id:2,
-        name:"Plate Tectonics",
-        startTime: new Date("2018-08-23T00:00:00.0").getTime()
+        name:'Plate Tectonics',
+        startTime: new Date('2018-08-23T00:00:00.0').getTime()
       }),
       new Run({
         id:3,
-        name:"Chemical Reactions",
-        startTime: new Date("2018-08-20T00:00:00.0").getTime(),
-        endTime: new Date("2018-08-22T00:00:00.0").getTime()
+        name:'Chemical Reactions',
+        startTime: new Date('2018-08-20T00:00:00.0').getTime(),
+        endTime: new Date('2018-08-22T00:00:00.0').getTime()
       })
       ];
     return Observable.create( observer => {
