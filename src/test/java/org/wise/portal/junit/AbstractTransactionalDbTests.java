@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2019 Encore Research Group, University of Toronto
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,6 @@ package org.wise.portal.junit;
 
 import org.hibernate.SessionFactory;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -34,9 +33,6 @@ import org.wise.portal.spring.impl.SpringConfigurationImpl;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {
-  "classpath:configurations/applicationContexts.xml"
-})
 public abstract class AbstractTransactionalDbTests extends
     AbstractTransactionalJUnit4SpringContextTests {
 
@@ -46,14 +42,11 @@ public abstract class AbstractTransactionalDbTests extends
 
   protected HibernateFlusher toilet;
 
-  //@Override
   protected void onSetUpBeforeTransaction() throws Exception {
-    //super.onSetUpBeforeTransaction();
     this.toilet = new HibernateFlusher();
     this.toilet.setSessionFactory(this.sessionFactory);
   }
 
-  //@Override
   protected String[] getConfigLocations() {
     return SPRING_CONFIG.getRootApplicationContextConfigLocations();
   }

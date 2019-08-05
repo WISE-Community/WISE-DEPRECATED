@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -48,6 +48,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.crater.CRaterRequestDao;
@@ -77,6 +79,7 @@ import org.wise.vle.web.VLEAnnotationController;
  * Jobs to be run daily such as creating and sending usage reports
  * @author Geoffrey Kwan
  */
+@Component
 public class DailyAdminJob {
 
   @Autowired
@@ -125,6 +128,7 @@ public class DailyAdminJob {
   }
 
   @Transactional
+  @Scheduled(cron = "0 0 0 * * ?")
   public void doJob() {
     //query for the portal statistics and save a new row in the portalStatistics table
     gatherPortalStatistics();

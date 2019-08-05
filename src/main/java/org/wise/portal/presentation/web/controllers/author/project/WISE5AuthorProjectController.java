@@ -37,7 +37,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -126,7 +126,7 @@ public class WISE5AuthorProjectController {
    * Handle user's request to register a new WISE5 project. Registers the new
    * project in DB and returns the new project ID If the parentProjectId is
    * specified, the user is requesting to copy that project
-   * 
+   *
    * @throws ObjectNotFoundException
    * @throws JSONException
    * @throws IOException
@@ -283,7 +283,7 @@ public class WISE5AuthorProjectController {
 
   /**
    * Save project and and commit changes to project.json file
-   * 
+   *
    * @param projectId id of project to save
    * @param commitMessage commit message, can be null
    * @param projectJSONString a valid-JSON string of the project
@@ -350,7 +350,7 @@ public class WISE5AuthorProjectController {
 
   @GetMapping("/authorConfig")
   @ResponseBody
-  protected String getAuthorProjectConfigChooser(HttpServletRequest request) 
+  protected String getAuthorProjectConfigChooser(HttpServletRequest request)
       throws IOException {
     JSONObject config = getDefaultAuthoringConfigJsonObject(request);
     return config.toString();
@@ -548,7 +548,7 @@ public class WISE5AuthorProjectController {
   }
 
   @GetMapping("/project/asset/{projectId}")
-  protected void getProjectAssets(HttpServletResponse response, @PathVariable Long projectId) 
+  protected void getProjectAssets(HttpServletResponse response, @PathVariable Long projectId)
       throws ObjectNotFoundException, JSONException, IOException {
     Project project = projectService.getById(projectId);
     User user = ControllerUtil.getSignedInUser();
@@ -570,7 +570,7 @@ public class WISE5AuthorProjectController {
       response.setContentType("application/octet-stream");
       response.setHeader("Content-Disposition", "attachment;filename=\"" + assetFileName + "\"");
       FileUtils.copyFile(projectAssetFile, response.getOutputStream());
-    } 
+    }
   }
 
   @PostMapping("/project/asset/{projectId}")
@@ -586,7 +586,7 @@ public class WISE5AuthorProjectController {
       if (assetFileName != null) {
         deleteExistingAsset(assetFileName, projectAssetsDir);
       } else {
-        if (addNewAsset((DefaultMultipartHttpServletRequest) request, response, project,
+        if (addNewAsset((StandardMultipartHttpServletRequest) request, response, project,
             user, projectAssetsDir)) {
           return;
         }
@@ -603,7 +603,7 @@ public class WISE5AuthorProjectController {
     writer.close();
   }
 
-  private boolean addNewAsset(DefaultMultipartHttpServletRequest request, HttpServletResponse response,
+  private boolean addNewAsset(StandardMultipartHttpServletRequest request, HttpServletResponse response,
       Project project, User user, File projectAssetsDir) throws IOException {
     Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
     if (projectMaxTotalAssetsSize == null) {
@@ -611,7 +611,7 @@ public class WISE5AuthorProjectController {
     }
     long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
 
-    DefaultMultipartHttpServletRequest multiRequest = request;
+    StandardMultipartHttpServletRequest multiRequest = request;
     Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
     if (fileMap != null && fileMap.size() > 0) {
       for (String key : fileMap.keySet()) {
@@ -660,7 +660,7 @@ public class WISE5AuthorProjectController {
     if (user.isTrustedAuthor()) {
       allowedTypes += "," + appProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
     }
-    return allowedTypes.contains(file.getContentType()); 
+    return allowedTypes.contains(file.getContentType());
   }
 
   /**
