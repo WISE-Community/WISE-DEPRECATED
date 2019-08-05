@@ -1686,9 +1686,17 @@
         <source>unit(s)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/official-library/official-library.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <target state="needs-translation">unit(s)</target>
+      </trans-unit>
+      <trans-unit id="73da064756ecee7cf3d056dc8a0b99f0f39863b6" datatype="html">
+        <source>What is WISE Tested?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/official-library/official-library.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <target state="needs-translation">What is WISE Tested?</target>
       </trans-unit>
       <trans-unit id="5080207bff284204adb9544ae12ef39917aa74ae" datatype="html">
         <source>WISE Tested</source>
@@ -1742,45 +1750,13 @@
         </context-group>
         <target state="needs-translation">Close</target>
       </trans-unit>
-      <trans-unit id="73da064756ecee7cf3d056dc8a0b99f0f39863b6" datatype="html">
-        <source>What is WISE Tested?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <target state="needs-translation">What is WISE Tested?</target>
-      </trans-unit>
-      <trans-unit id="01d380d7c105dbdc51d2659949a726359153e11b" datatype="html">
-        <source>WISE Tested (<x id="INTERPOLATION" equiv-text="{{numberOfOfficialProjectsVisible}}"/>)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-        <target state="needs-translation">WISE Tested (<x id="INTERPOLATION" equiv-text="{{numberOfOfficialProjectsVisible}}"/>)</target>
-      </trans-unit>
-      <trans-unit id="9f25d6d4cac1adba2cfad085fa7657824d860a2e" datatype="html">
-        <source>Community Built (<x id="INTERPOLATION" equiv-text="{{numberOfCommunityProjectsVisible}}"/>)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-        <target state="needs-translation">Community Built (<x id="INTERPOLATION" equiv-text="{{numberOfCommunityProjectsVisible}}"/>)</target>
-      </trans-unit>
-      <trans-unit id="6ffdd9679bd4e8739d579bde3c858b33c7ca7f66" datatype="html">
-        <source>My Units (<x id="INTERPOLATION" equiv-text="{{numberOfPersonalProjectsVisible}}"/>)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <target state="needs-translation">My Units (<x id="INTERPOLATION" equiv-text="{{numberOfPersonalProjectsVisible}}"/>)</target>
-      </trans-unit>
-      <trans-unit id="b845ed35ecca01a3b92ddf4c2a12905fac6776f1" datatype="html">
-        <source>Select unit library view</source>
+      <trans-unit id="4d4b87e130f67964a35a56bdd05df593406fcc17" datatype="html">
+        <source>Teacher unit library navigation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Select unit library view</target>
+        <target state="needs-translation">Teacher unit library navigation</target>
       </trans-unit>
       <trans-unit id="a90197fbaf305621cf15da6e9f88ccff3087ea1d" datatype="html">
         <source>Add to Google Classroom</source>
@@ -2206,7 +2182,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <target state="needs-translation">Legacy Unit</target>
       </trans-unit>
@@ -2242,21 +2218,21 @@
         </context-group>
         <target state="needs-translation">NGSS Performance Expectations: </target>
       </trans-unit>
-      <trans-unit id="e006584d24da002b44d8299a4b831c6de00c916c" datatype="html">
-        <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+      <trans-unit id="94481bdbeb153b8de94b4c86878ceae0e2b5359b" datatype="html">
+        <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
-      <trans-unit id="e1a9512fac0019f8aa827c5e846ea6402f43644d" datatype="html">
-        <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION_1" equiv-text="{{authorsString}}"/>.</source>
+      <trans-unit id="88440ddf34ab09a19c9f781fe3d93f2cbbd0630c" datatype="html">
+        <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION" equiv-text="{{authorsString}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{project.metadata.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION_1" equiv-text="{{authorsString}}"/>.</target>
+        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is licensed under <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION" equiv-text="{{authorsString}}"/>.</target>
       </trans-unit>
       <trans-unit id="19812b33be1cdeaa076d46cad963bf90e2fd2eb0" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>This unit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a copy of <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{parentProject.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (used under <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>).</source>
@@ -2306,7 +2282,7 @@
         <source>(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <target state="needs-translation">(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
       </trans-unit>
@@ -2314,7 +2290,7 @@
         <source>Shared by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <target state="needs-translation">Shared by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></target>
       </trans-unit>
@@ -2322,7 +2298,7 @@
         <source>Show project details</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <target state="needs-translation">Show project details</target>
       </trans-unit>
@@ -2578,7 +2554,7 @@
         <source>Discipline</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <target state="needs-translation">Discipline</target>
       </trans-unit>
@@ -2586,7 +2562,7 @@
         <source>DCI Arrangement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <target state="needs-translation">DCI Arrangement</target>
       </trans-unit>
@@ -2594,7 +2570,7 @@
         <source>Performance Expectation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <target state="needs-translation">Performance Expectation</target>
       </trans-unit>
@@ -2602,7 +2578,7 @@
         <source>What is Community Built?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/community-library/community-library.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">3</context>
         </context-group>
         <target state="needs-translation">What is Community Built?</target>
       </trans-unit>
@@ -2610,7 +2586,7 @@
         <source>No community designed units found.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/community-library/community-library.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <target state="needs-translation">No community designed units found.</target>
       </trans-unit>
@@ -2642,7 +2618,7 @@
         <source>What are My Units?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">3</context>
         </context-group>
         <target state="needs-translation">What are My Units?</target>
       </trans-unit>
@@ -2650,7 +2626,7 @@
         <source>No owned or shared units found.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <target state="needs-translation">No owned or shared units found.</target>
       </trans-unit>
@@ -5849,7 +5825,7 @@
         <source>Run ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <target state="needs-translation">Run ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></target>
       </trans-unit>
@@ -5857,7 +5833,7 @@
         <source>Report Problem</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
@@ -5869,11 +5845,11 @@
         <source>Starts <x id="INTERPOLATION" equiv-text="{{run.startTime | amTimeAgo}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <target state="needs-translation">Starts <x id="INTERPOLATION" equiv-text="{{run.startTime | amTimeAgo}}"/></target>
       </trans-unit>
@@ -5881,7 +5857,7 @@
         <source>Launch</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <target state="needs-translation">Launch</target>
       </trans-unit>
@@ -5889,7 +5865,7 @@
         <source>Review Work</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <target state="needs-translation">Review Work</target>
       </trans-unit>
@@ -5949,29 +5925,21 @@
         </context-group>
         <target state="needs-translation">Save Changes</target>
       </trans-unit>
-      <trans-unit id="6567489ecf0899e98c10bc65395798320d53ecc9" datatype="html">
-        <source>Class Schedule</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-        <target state="needs-translation">Class Schedule</target>
-      </trans-unit>
-      <trans-unit id="7aa747f76006993d92c4f88be5fa8a8968fa5dc2" datatype="html">
-        <source>Browse WISE Units</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-        <target state="needs-translation">Browse WISE Units</target>
-      </trans-unit>
       <trans-unit id="9f4ae450ac1d2d2939642f56dffcfa210fd6020e" datatype="html">
         <source>Authoring Tool</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <target state="needs-translation">Authoring Tool</target>
+      </trans-unit>
+      <trans-unit id="48ae429835665b58a2711db68e68b9a4dfa1f0ff" datatype="html">
+        <source>Teacher home navigation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <target state="needs-translation">Teacher home navigation</target>
       </trans-unit>
       <trans-unit id="2353459e710912ab1e887bf5c0adbeaaf7e6b2af" datatype="html">
         <source>Hey there! Looks like you haven't run any WISE units in your classes yet.</source>
@@ -6053,7 +6021,7 @@
         <source>Last student login: <x id="INTERPOLATION" equiv-text="{{run.lastRun | amCalendar}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <target state="needs-translation">Last student login: <x id="INTERPOLATION" equiv-text="{{run.lastRun | amCalendar}}"/></target>
       </trans-unit>
@@ -6061,7 +6029,7 @@
         <source>Teacher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <target state="needs-translation">Teacher Tools</target>
       </trans-unit>
@@ -7040,6 +7008,22 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <target state="needs-translation">Unit settings updated.</target>
+      </trans-unit>
+      <trans-unit id="6567489ecf0899e98c10bc65395798320d53ecc9" datatype="html">
+        <source>Class Schedule</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-home/teacher-home.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">Class Schedule</target>
+      </trans-unit>
+      <trans-unit id="7aa747f76006993d92c4f88be5fa8a8968fa5dc2" datatype="html">
+        <source>Browse WISE Units</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-home/teacher-home.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">Browse WISE Units</target>
       </trans-unit>
       <trans-unit id="db4ff4b19bb2e0fe93c88a3dc04372503caa1135" datatype="html">
         <source>Class Periods:</source>
