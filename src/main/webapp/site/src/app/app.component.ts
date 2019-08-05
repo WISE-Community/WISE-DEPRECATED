@@ -124,10 +124,11 @@ export class AppComponent {
     this.hasAnnouncement = false;
   }
 
-  onYPositionChange(pageY:number) {
-    this.pageY = pageY;
-    this.scroll = this.pageY > 360 && this.pageY < this.prevPageY;
-    this.prevPageY = pageY;
+  onYPositionChange(el:HTMLElement) {
+    this.pageY = el.scrollTop;
+    const isAtBottom = this.pageY >= el.scrollHeight - el.offsetHeight - 2;
+    this.scroll = isAtBottom || (this.pageY > 360 && this.pageY < this.prevPageY);
+    this.prevPageY = this.pageY;
   }
 
   scrollToTop() {
