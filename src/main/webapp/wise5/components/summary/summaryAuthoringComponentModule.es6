@@ -4,7 +4,7 @@ import SummaryService from './summaryService';
 import SummaryController from './summaryController';
 import SummaryAuthoringController from './summaryAuthoringController';
 
-let summaryAuthoringComponentModule = angular.module('summaryAuthoringComponentModule', [
+const summaryAuthoringComponentModule = angular.module('summaryAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
   .service(SummaryService.name, SummaryService)

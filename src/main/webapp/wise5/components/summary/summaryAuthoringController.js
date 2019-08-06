@@ -32,10 +32,10 @@ var SummaryAuthoringController =
 function (_SummaryController) {
   _inherits(SummaryAuthoringController, _SummaryController);
 
-  function SummaryAuthoringController($filter, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService) {
+  function SummaryAuthoringController($filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService) {
     _classCallCheck(this, SummaryAuthoringController);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(SummaryAuthoringController).call(this, $filter, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService));
+    return _possibleConstructorReturn(this, _getPrototypeOf(SummaryAuthoringController).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService));
   }
 
   _createClass(SummaryAuthoringController, [{
@@ -73,10 +73,17 @@ function (_SummaryController) {
         }
       }
 
-      if (numberOfAllowedComponents == 1) {
+      if (numberOfAllowedComponents === 1) {
         this.authoringComponentContent.summaryComponentId = allowedComponent.id;
       }
 
+      this.updateOtherPrompt();
+      this.authoringViewComponentChanged();
+    }
+  }, {
+    key: "authoringSummaryComponentIdChanged",
+    value: function authoringSummaryComponentIdChanged() {
+      this.updateOtherPrompt();
       this.authoringViewComponentChanged();
     }
   }, {
@@ -84,12 +91,17 @@ function (_SummaryController) {
     value: function isComponentTypeAllowed(componentType) {
       return this.SummaryService.isComponentTypeAllowed(componentType);
     }
+  }, {
+    key: "updateOtherPrompt",
+    value: function updateOtherPrompt() {
+      this.otherPrompt = this.getOtherPrompt(this.authoringComponentContent.summaryNodeId, this.authoringComponentContent.summaryComponentId);
+    }
   }]);
 
   return SummaryAuthoringController;
 }(_summaryController["default"]);
 
-SummaryAuthoringController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'SummaryService', 'UtilService'];
+SummaryAuthoringController.$inject = ['$filter', '$mdDialog', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'SummaryService', 'UtilService'];
 var _default = SummaryAuthoringController;
 exports["default"] = _default;
 //# sourceMappingURL=summaryAuthoringController.js.map

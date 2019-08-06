@@ -13,6 +13,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -28,7 +32,7 @@ var SummaryController =
 function (_ComponentController) {
   _inherits(SummaryController, _ComponentController);
 
-  function SummaryController($filter, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService) {
+  function SummaryController($filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService) {
     var _this;
 
     _classCallCheck(this, SummaryController);
@@ -41,11 +45,7 @@ function (_ComponentController) {
     _this.prompt = _this.componentContent.prompt;
 
     if (_this.componentContent.showPromptFromOtherComponent) {
-      var otherComponent = _this.ProjectService.getComponentByNodeIdAndComponentId(_this.summaryNodeId, _this.summaryComponentId);
-
-      if (otherComponent != null) {
-        _this.otherPrompt = otherComponent.prompt;
-      }
+      _this.otherPrompt = _this.getOtherPrompt(_this.summaryNodeId, _this.summaryComponentId);
     }
 
     if (_this.ConfigService.getMode() === 'studentRun') {
@@ -62,10 +62,23 @@ function (_ComponentController) {
     return _this;
   }
 
+  _createClass(SummaryController, [{
+    key: "getOtherPrompt",
+    value: function getOtherPrompt(nodeId, componentId) {
+      var otherComponent = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+      if (otherComponent != null) {
+        return otherComponent.prompt;
+      }
+
+      return null;
+    }
+  }]);
+
   return SummaryController;
 }(_componentController["default"]);
 
-SummaryController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'SummaryService', 'UtilService'];
+SummaryController.$inject = ['$filter', '$mdDialog', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'SummaryService', 'UtilService'];
 var _default = SummaryController;
 exports["default"] = _default;
 //# sourceMappingURL=summaryController.js.map

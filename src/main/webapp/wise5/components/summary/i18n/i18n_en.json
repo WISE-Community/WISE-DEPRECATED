@@ -2,7 +2,9 @@
   "summary.bar": "Bar",
   "summary.chartType": "Chart Type",
   "summary.componentTypeLabel": "Summary",
-  "summary.pleaseChooseTheStepAndComponent": "Please choose the step and component to show the summary data for.",
+  "summary.chooseTheStepAndComponent": "Choose the step and component to show the summary data for.",
+  "summary.onlyStudentsInPeriod": "Only Students In Period",
   "summary.pie": "Pie",
-  "summary.showPromptFromOtherComponent": "Show Prompt From Other Component"
+  "summary.showPromptFromOtherComponent": "Show Prompt From Other Component",
+  "summary.studentsInAllPeriods": "Students In All Periods"
 }

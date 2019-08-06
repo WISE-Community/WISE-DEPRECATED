@@ -414,17 +414,21 @@ class ConfigService {
   getWorkgroupsByPeriod(periodId) {
     const workgroupsInPeriod = [];
     const myUserInfo = this.getMyUserInfo();
-    if (periodId == null || periodId === -1 || myUserInfo.periodId === periodId) {
-      if (!this.isRunOwner() && !this.isRunSharedTeacher()) {
+    if (this.isStudent()) {
+      if (this.isAllPeriods(periodId) || myUserInfo.periodId === periodId) {
         workgroupsInPeriod.push(myUserInfo);
       }
     }
     for (const classmateUserInfo of this.getClassmateUserInfos()) {
-      if (periodId == null || periodId === -1 || classmateUserInfo.periodId === periodId) {
+      if (this.isAllPeriods(periodId) || classmateUserInfo.periodId === periodId) {
         workgroupsInPeriod.push(classmateUserInfo);
       }
     }
     return workgroupsInPeriod;
+  }
+
+  isAllPeriods(periodId) {
+    return periodId == null || periodId === -1;
   }
 
   getNumberOfWorkgroupsInPeriod(periodId) {
@@ -578,6 +582,10 @@ class ConfigService {
     const timestampDiff = this.getConfigParam('timestampDiff');
     const clientTimestamp = serverTimestamp + timestampDiff;
     return clientTimestamp;
+  }
+
+  isStudent(workgroupId) {
+    return !this.isRunOwner(workgroupId) && !this.isRunSharedTeacher();
   }
 
   /**

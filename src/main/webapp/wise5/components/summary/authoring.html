@@ -140,7 +140,7 @@
   </div>
   <div>
     <md-input-container>
-      {{ 'summary.pleaseChooseTheStepAndComponent' | translate }}
+      {{ 'summary.chooseTheStepAndComponent' | translate }}
     </md-input-container>
   </div>
   <div flex>
@@ -159,7 +159,7 @@
     <md-input-container style='margin-right: 20; width: 300;'>
       <label>{{ 'component' | translate }}</label>
       <md-select ng-model='summaryController.authoringComponentContent.summaryComponentId'
-          ng-change='summaryController.authoringViewComponentChanged()'
+          ng-change='summaryController.authoringSummaryComponentIdChanged()'
           style='width: 300'>
         <md-option ng-repeat='(componentIndex, component) in summaryController.getComponentsByNodeId(summaryController.authoringComponentContent.summaryNodeId)'
             value='{{component.id}}'
@@ -174,10 +174,10 @@
           ng-change='summaryController.authoringViewComponentChanged()'
           style='width: 200'>
         <md-option value='period'>
-          {{ 'period' | translate }}
+          {{ 'summary.onlyStudentsInPeriod' | translate }}
         </md-option>
         <md-option value='allPeriods'>
-          {{ 'allPeriods' | translate }}
+          {{ 'summary.studentsInAllPeriods' | translate }}
         </md-option>
       </md-select>
     </md-input-container>

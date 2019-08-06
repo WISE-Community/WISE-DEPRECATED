@@ -606,8 +606,8 @@ function () {
       var workgroupsInPeriod = [];
       var myUserInfo = this.getMyUserInfo();
 
-      if (periodId == null || periodId === -1 || myUserInfo.periodId === periodId) {
-        if (!this.isRunOwner() && !this.isRunSharedTeacher()) {
+      if (this.isStudent()) {
+        if (this.isAllPeriods(periodId) || myUserInfo.periodId === periodId) {
           workgroupsInPeriod.push(myUserInfo);
         }
       }
@@ -620,7 +620,7 @@ function () {
         for (var _iterator5 = this.getClassmateUserInfos()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
           var classmateUserInfo = _step5.value;
 
-          if (periodId == null || periodId === -1 || classmateUserInfo.periodId === periodId) {
+          if (this.isAllPeriods(periodId) || classmateUserInfo.periodId === periodId) {
             workgroupsInPeriod.push(classmateUserInfo);
           }
         }
@@ -640,6 +640,11 @@ function () {
       }
 
       return workgroupsInPeriod;
+    }
+  }, {
+    key: "isAllPeriods",
+    value: function isAllPeriods(periodId) {
+      return periodId == null || periodId === -1;
     }
   }, {
     key: "getNumberOfWorkgroupsInPeriod",
@@ -870,6 +875,11 @@ function () {
       var timestampDiff = this.getConfigParam('timestampDiff');
       var clientTimestamp = serverTimestamp + timestampDiff;
       return clientTimestamp;
+    }
+  }, {
+    key: "isStudent",
+    value: function isStudent(workgroupId) {
+      return !this.isRunOwner(workgroupId) && !this.isRunSharedTeacher();
     }
     /**
      * Check if the workgroup is the owner of the run

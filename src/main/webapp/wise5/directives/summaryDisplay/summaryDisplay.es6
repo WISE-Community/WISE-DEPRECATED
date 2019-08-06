@@ -1,11 +1,7 @@
 'use strict';
 
 class SummaryDisplayController {
-  constructor($filter,
-      $injector,
-      $q,
-      ConfigService,
-      ProjectService) {
+  constructor($filter, $injector, $q, ConfigService, ProjectService) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$q = $q;
@@ -60,31 +56,56 @@ class SummaryDisplayController {
   }
 
   getComponentStates(nodeId, componentId, periodId) {
-    if (this.ConfigService.isPreview() || this.ConfigService.getMode() === 'author') {
-      return this.getClassmateStudentWorkForPreview(nodeId, componentId);
-    } else if (this.ConfigService.getMode() === 'studentRun') {
+    if (this.isVLEPreview()) {
+      return this.getDummyStudentWorkForVLEPreview(nodeId, componentId);
+    } else if (this.isAuthoringPreview()) {
+      return this.getDummyStudentWorkForAuthoringPreview(nodeId, componentId);
+    } else if (this.isStudentRun()) {
       return this.dataService.getClassmateStudentWork(nodeId, componentId, periodId);
-    } else if (this.ConfigService.getMode() === 'classroomMonitor') {
+    } else if (this.isClassroomMonitor()) {
       return this.dataService.retrieveStudentDataByNodeIdAndComponentIdAndPeriodId(
           nodeId, componentId, periodId);
     }
   }
 
-  getClassmateStudentWorkForPreview(nodeId, componentId) {
+  isVLEPreview() {
+    return this.ConfigService.isPreview();
+  }
+
+  isAuthoringPreview() {
+    return this.ConfigService.getMode() === 'author';
+  }
+
+  isStudentRun() {
+    return this.ConfigService.getMode() === 'studentRun';
+  }
+
+  isClassroomMonitor() {
+    return this.ConfigService.getMode() === 'classroomMonitor';
+  }
+
+  getDummyStudentWorkForVLEPreview(nodeId, componentId) {
     const componentStates = this.createDummyClassmateStudentWork();
-    if (this.ConfigService.isPreview()) {
-      const componentState = this.dataService
-          .getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-      if (componentState != null) {
-        componentStates.push(componentState);
-      }
+    const componentState = this.dataService
+        .getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    if (componentState != null) {
+      componentStates.push(componentState);
     }
-    // We need to set a delay otherwise the graph won't render properly
+    return this.resolveComponentStates(componentStates);
+  }
+
+  getDummyStudentWorkForAuthoringPreview() {
+    const componentStates = this.createDummyClassmateStudentWork();
+    return this.resolveComponentStates(componentStates);
+  }
+
+  resolveComponentStates(componentStates) {
     const deferred = this.$q.defer();
-    setTimeout(function() {
+    // We need to set a delay otherwise the graph won't render properly
+    setTimeout(() => {
       deferred.resolve(componentStates);
     }, 1);
-    return deferred.promise;
+    return deferred.promise
   }
 
   createDummyClassmateStudentWork() {
@@ -92,7 +113,7 @@ class SummaryDisplayController {
         this.nodeId, this.componentId);
     const choices = component.choices;
     const dummyComponentStates = [];
-    for (let dummyCounter = 0; dummyCounter < 10; dummyCounter++) {
+    for (let dummyCounter = 0; dummyCounter < 20; dummyCounter++) {
       dummyComponentStates.push(this.createDummyComponentState(choices));
     }
     return dummyComponentStates;
@@ -128,10 +149,12 @@ class SummaryDisplayController {
   }
 
   getTotalWorkgroups(componentStates) {
+    const numComponentStates = componentStates.length;
     if (this.ConfigService.isPreview() || this.ConfigService.getMode() === 'author') {
-      return componentStates.length;
+      return numComponentStates;
     } else {
-      return this.ConfigService.getNumberOfWorkgroupsInPeriod(this.periodId);
+      const numWorkgroups = this.ConfigService.getNumberOfWorkgroupsInPeriod(this.periodId);
+      return Math.max(numWorkgroups, numComponentStates);
     }
   }
 

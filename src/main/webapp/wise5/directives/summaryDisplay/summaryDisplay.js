@@ -85,29 +85,59 @@ function () {
   }, {
     key: "getComponentStates",
     value: function getComponentStates(nodeId, componentId, periodId) {
-      if (this.ConfigService.isPreview() || this.ConfigService.getMode() === 'author') {
-        return this.getClassmateStudentWorkForPreview(nodeId, componentId);
-      } else if (this.ConfigService.getMode() === 'studentRun') {
+      if (this.isVLEPreview()) {
+        return this.getDummyStudentWorkForVLEPreview(nodeId, componentId);
+      } else if (this.isAuthoringPreview()) {
+        return this.getDummyStudentWorkForAuthoringPreview(nodeId, componentId);
+      } else if (this.isStudentRun()) {
         return this.dataService.getClassmateStudentWork(nodeId, componentId, periodId);
-      } else if (this.ConfigService.getMode() === 'classroomMonitor') {
+      } else if (this.isClassroomMonitor()) {
         return this.dataService.retrieveStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId);
       }
     }
   }, {
-    key: "getClassmateStudentWorkForPreview",
-    value: function getClassmateStudentWorkForPreview(nodeId, componentId) {
+    key: "isVLEPreview",
+    value: function isVLEPreview() {
+      return this.ConfigService.isPreview();
+    }
+  }, {
+    key: "isAuthoringPreview",
+    value: function isAuthoringPreview() {
+      return this.ConfigService.getMode() === 'author';
+    }
+  }, {
+    key: "isStudentRun",
+    value: function isStudentRun() {
+      return this.ConfigService.getMode() === 'studentRun';
+    }
+  }, {
+    key: "isClassroomMonitor",
+    value: function isClassroomMonitor() {
+      return this.ConfigService.getMode() === 'classroomMonitor';
+    }
+  }, {
+    key: "getDummyStudentWorkForVLEPreview",
+    value: function getDummyStudentWorkForVLEPreview(nodeId, componentId) {
       var componentStates = this.createDummyClassmateStudentWork();
+      var componentState = this.dataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
 
-      if (this.ConfigService.isPreview()) {
-        var componentState = this.dataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+      if (componentState != null) {
+        componentStates.push(componentState);
+      }
 
-        if (componentState != null) {
-          componentStates.push(componentState);
-        }
-      } // We need to set a delay otherwise the graph won't render properly
+      return this.resolveComponentStates(componentStates);
+    }
+  }, {
+    key: "getDummyStudentWorkForAuthoringPreview",
+    value: function getDummyStudentWorkForAuthoringPreview() {
+      var componentStates = this.createDummyClassmateStudentWork();
+      return this.resolveComponentStates(componentStates);
+    }
+  }, {
+    key: "resolveComponentStates",
+    value: function resolveComponentStates(componentStates) {
+      var deferred = this.$q.defer(); // We need to set a delay otherwise the graph won't render properly
 
-
-      var deferred = this.$q.defer();
       setTimeout(function () {
         deferred.resolve(componentStates);
       }, 1);
@@ -120,7 +150,7 @@ function () {
       var choices = component.choices;
       var dummyComponentStates = [];
 
-      for (var dummyCounter = 0; dummyCounter < 10; dummyCounter++) {
+      for (var dummyCounter = 0; dummyCounter < 20; dummyCounter++) {
         dummyComponentStates.push(this.createDummyComponentState(choices));
       }
 
@@ -164,10 +194,13 @@ function () {
   }, {
     key: "getTotalWorkgroups",
     value: function getTotalWorkgroups(componentStates) {
+      var numComponentStates = componentStates.length;
+
       if (this.ConfigService.isPreview() || this.ConfigService.getMode() === 'author') {
-        return componentStates.length;
+        return numComponentStates;
       } else {
-        return this.ConfigService.getNumberOfWorkgroupsInPeriod(this.periodId);
+        var numWorkgroups = this.ConfigService.getNumberOfWorkgroupsInPeriod(this.periodId);
+        return Math.max(numWorkgroups, numComponentStates);
       }
     }
   }, {

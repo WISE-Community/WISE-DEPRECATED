@@ -1,12 +1,8 @@
 import ComponentService from '../componentService';
 
 class SummaryService extends ComponentService {
-  constructor($filter,
-      ConfigService,
-      UtilService) {
-    super($filter,
-        ConfigService,
-        UtilService);
+  constructor($filter, ConfigService, UtilService) {
+    super($filter, ConfigService, UtilService);
   }
 
   getComponentTypeLabel() {

@@ -3,7 +3,7 @@
 import SummaryService from './summaryService';
 import SummaryController from './summaryController';
 
-let summaryComponentModule = angular.module('summaryComponentModule', [
+const summaryComponentModule = angular.module('summaryComponentModule', [
     'pascalprecht.translate'
   ])
   .service(SummaryService.name, SummaryService)

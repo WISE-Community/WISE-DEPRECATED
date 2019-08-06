@@ -3,10 +3,8 @@
 import ComponentController from '../componentController';
 
 class SummaryController extends ComponentController {
-
   constructor($filter,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
       AnnotationService,
@@ -36,11 +34,7 @@ class SummaryController extends ComponentController {
     this.chartType = this.componentContent.chartType;
     this.prompt = this.componentContent.prompt;
     if (this.componentContent.showPromptFromOtherComponent) {
-      const otherComponent = this.ProjectService.getComponentByNodeIdAndComponentId(
-          this.summaryNodeId, this.summaryComponentId);
-      if (otherComponent != null) {
-        this.otherPrompt = otherComponent.prompt;
-      }
+      this.otherPrompt = this.getOtherPrompt(this.summaryNodeId, this.summaryComponentId);
     }
     if (this.ConfigService.getMode() === 'studentRun') {
       if (this.componentContent.summarySource === 'period') {
@@ -53,12 +47,20 @@ class SummaryController extends ComponentController {
       this.periodId = this.ConfigService.getPeriodIdByWorkgroupId(studentWorkgroupId);
     }
   }
+
+  getOtherPrompt(nodeId, componentId) {
+    const otherComponent = this.ProjectService.getComponentByNodeIdAndComponentId(
+        nodeId, componentId);
+    if (otherComponent != null) {
+      return otherComponent.prompt;
+    }
+    return null;
+  }
 }
 
 SummaryController.$inject = [
     '$filter',
     '$mdDialog',
-    '$q',
     '$rootScope',
     '$scope',
     'AnnotationService',
