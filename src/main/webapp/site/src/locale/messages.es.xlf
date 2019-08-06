@@ -1193,6 +1193,14 @@
         </context-group>
         <target state="needs-translation">Learn More</target>
       </trans-unit>
+      <trans-unit id="69410cfd03d0c317234765d99d86c2c9e88bb915" datatype="html">
+        <source>Back to Top</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/app.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <target state="needs-translation">Back to Top</target>
+      </trans-unit>
       <trans-unit id="ea4d9fe61420a3fce81cf54c4c615e3c19c646a6" datatype="html">
         <source>Dismiss</source>
         <context-group purpose="location">
