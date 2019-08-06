@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
@@ -93,20 +93,15 @@ export class AppComponent {
      * TODO: remove when https://github.com/angular/material2/issues/4280 is resolved
      */
     this.router.events.subscribe((ev: any) => {
-      const sidenavContentElement = document.querySelector(
-        '.mat-sidenav-content',
-      );
-      if (!sidenavContentElement) {
+      const topElement = document.querySelector('.top-content',);
+      if (!topElement) {
         return;
       }
       if (ev instanceof NavigationStart) {
         this.popstate = ev.navigationTrigger === 'popstate';
       } else if (ev instanceof NavigationEnd) {
         if (!this.popstate) {
-          sidenavContentElement.scroll({
-            left: 0,
-            top: 0
-          });
+          topElement.scrollIntoView();
         }
       }
     });
@@ -129,10 +124,15 @@ export class AppComponent {
     this.hasAnnouncement = false;
   }
 
-  onYPositionChange(pageY:number) {
-    this.pageY = pageY;
-    this.scroll = this.pageY > 120 && this.pageY > this.prevPageY;
-    this.prevPageY = pageY;
+  onYPositionChange(el:HTMLElement) {
+    this.pageY = el.scrollTop;
+    const isAtBottom = this.pageY >= el.scrollHeight - el.offsetHeight - 2;
+    this.scroll = isAtBottom || (this.pageY > 360 && this.pageY < this.prevPageY);
+    this.prevPageY = this.pageY;
+  }
+
+  scrollToTop() {
+    document.querySelector('.top-content').scrollIntoView();
   }
 }
 
