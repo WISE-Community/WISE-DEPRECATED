@@ -8,14 +8,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.mail.IMailFacade;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +40,9 @@ public class UserAPIController {
 
   @Autowired
   protected UserService userService;
+
+  @Autowired
+  protected RunService runService;
 
   @Autowired
   protected IMailFacade mailService;
@@ -209,6 +215,42 @@ public class UserAPIController {
       response.put("lastName", user.getUserDetails().getLastname());
     }
     return response.toString();
+  }
+
+  @RequestMapping(value = "/by-id", method = RequestMethod.GET)
+  protected String getUserById(@RequestParam String userId) throws JSONException {
+    JSONObject response = new JSONObject();
+    JSONArray runsArray = new JSONArray();
+    try {
+      User user = userService.retrieveById(Long.parseLong(userId));
+      response.put("userId", user.getId());
+      response.put("username", user.getUserDetails().getUsername());
+      response.put("firstName", user.getUserDetails().getFirstname());
+      response.put("lastName", user.getUserDetails().getLastname());
+      response.put("numberOfLogins", user.getUserDetails().getNumberOfLogins());
+      List<Run> runs = runService.getRunList(user);
+      for (Run run: runs) {
+        runsArray.put(runToJSON(run));
+      }
+      response.put("runs", runsArray);
+    } catch (ObjectNotFoundException nfe) {
+      response.put("error", "User not found.");
+    }
+    return response.toString();
+  }
+
+  private JSONObject runToJSON(Run run) {
+    JSONObject runJSON = new JSONObject();
+    try {
+      runJSON.put("runId", run.getId());
+      runJSON.put("name", run.getName());
+      runJSON.put("startTime", run.getStarttime());
+      runJSON.put("teacherUsername", run.getOwner().getUserDetails().getUsername());
+      runJSON.put("teacherEmail", run.getOwner().getUserDetails().getEmailAddress());
+    } catch (JSONException je) {
+      return null;
+    }
+    return runJSON;
   }
 
   protected String getLanguageName(String localeString) {

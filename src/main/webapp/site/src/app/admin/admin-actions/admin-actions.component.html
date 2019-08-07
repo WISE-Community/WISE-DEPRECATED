@@ -1,0 +1,95 @@
+<ng-container *ngIf="isChangePassword">
+  <h2 class="mat-dialog-title" i18n>Change User Password</h2>
+  <form #adminChangePasswordForm="ngForm"
+        role="form"
+        (submit)="saveChanges()"
+        [formGroup]="adminChangePasswordFormGroup">
+    <div fxLayout="column">
+      <p>
+        <mat-form-field fxFlex appearance="fill">
+          <mat-label i18n>Current Admin Password</mat-label>
+          <input matInput
+                 id="oldPassword"
+                 type="password"
+                 name="oldPassword"
+                 formControlName="oldPassword"
+                 required />
+          <mat-error *ngIf="adminChangePasswordFormGroup.controls['oldPassword'].hasError('required')" i18n>Current Admin Password required</mat-error>
+          <mat-error *ngIf="adminChangePasswordFormGroup.controls['oldPassword'].hasError('incorrectPassword')" i18n>Current Admin Password is incorrect</mat-error>
+        </mat-form-field>
+      </p>
+      <div formGroupName="newPasswordFormGroup">
+        <p>
+          <mat-form-field fxFlex appearance="fill">
+            <mat-label i18n>New Password for {{user.username}}</mat-label>
+            <input matInput
+                   id="newPassword"
+                   type="password"
+                   name="newPassword"
+                   formControlName="newPassword"
+                   required />
+            <mat-error *ngIf="newPasswordFormGroup.controls['newPassword'].hasError('required')" i18n>New Password for {{user.username}} required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex appearance="fill">
+            <mat-label i18n>Confirm New Password for {{user.username}}</mat-label>
+            <input matInput
+                   id="confirmNewPassword"
+                   type="password"
+                   name="confirmNewPassword"
+                   formControlName="confirmNewPassword"
+                   required />
+            <mat-error *ngIf="newPasswordFormGroup.controls['confirmNewPassword'].hasError('required')" i18n>Confirm Password for {{user.username}} required</mat-error>
+            <mat-error *ngIf="newPasswordFormGroup.hasError('passwordDoesNotMatch')" i18n>Passwords do not match</mat-error>
+          </mat-form-field>
+        </p>
+      </div>
+      <div mat-dialog-actions
+           fxLayout="row"
+           fxLayout.xs="column"
+           fxLayoutAlign="end"
+           fxLayoutGap="8px">
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!adminChangePasswordFormGroup.valid || isSaving"
+                fxFlex
+                fxFlex.gt-xs="0 0 auto">
+          <ng-container i18n>Change Password</ng-container>
+          <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
+        </button>
+        <button mat-flat-button color="primary" mat-dialog-close i18n>Cancel</button>
+      </div>
+    </div>
+  </form>
+</ng-container>
+<ng-container *ngIf="isViewUserInfo">
+  <h2 class="mat-dialog-title" i18n>User Info</h2>
+  <table mat-table [dataSource]="userInfoDataSource" class="standalone__content">
+    <ng-container matColumnDef="label">
+      <th mat-header-cell *matHeaderCellDef i18n>Label</th>
+      <td mat-cell *matCellDef="let row">{{row.label}}</td>
+    </ng-container>
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef i18n>Value</th>
+      <td mat-cell *matCellDef="let row">{{row.value}}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="userInfoDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: userInfoDisplayedColumns;"></tr>
+  </table>
+  <p fxLayoutAlign="center">User Runs</p>
+  <table mat-table [dataSource]="runsDataSource" class="standalone__content">
+    <ng-container matColumnDef="label">
+      <td mat-cell *matCellDef="let row">{{row.label}}</td>
+    </ng-container>
+    <ng-container [matColumnDef]="'column' + i" *ngFor="let column of runs; let i = index">
+      <td mat-cell *matCellDef="let row">{{row['column' + i]}}</td>
+    </ng-container>
+    <tr mat-row *matRowDef="let row; columns: runDisplayedColumns;"></tr>
+  </table>
+  <div fxLayoutAlign="end">
+    <button mat-flat-button color="primary" mat-dialog-close i18n>Close</button>
+  </div>
+</ng-container>
+

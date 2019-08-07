@@ -109,6 +109,9 @@ public interface UserDao<T extends User> extends SimpleDao<T> {
    */
   List<T> retrieveByFields(String[] fields, String[] values, String classVar);
 
+  List<T> searchStudents(String firstName, String lastName, String username, Long userId,
+                         Long runId, Long workgroupId, String teacherUsername);
+
   /**
    * Given a reset password key retrieve a corresponding user.
    * @param resetPasswordKey an alphanumeric key

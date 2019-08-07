@@ -5,7 +5,9 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Student } from '../../domain/student';
 import { AdminService } from '../admin.service';
-import {UserService} from '../../services/user.service';
+import { UserService } from '../../services/user.service';
+import { MatDialog, MatTableModule } from '@angular/material';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export class MockAdminService {
   searchStudents(): Observable<Student []> {
@@ -30,9 +32,11 @@ describe('FindStudentComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FindStudentComponent ],
+      imports: [ MatTableModule, ReactiveFormsModule ],
       providers: [
         { provide: AdminService, useClass: MockAdminService },
-        { provide: UserService, useClass: MockUserService }
+        { provide: UserService, useClass: MockUserService },
+        { provide: MatDialog, useValue: { open: () => {} }}
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

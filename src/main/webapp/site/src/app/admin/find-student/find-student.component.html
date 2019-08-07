@@ -1,77 +1,82 @@
 <mat-card class="standalone__content mat-elevation-z2">
-  <mat-card-content>
-    <form role="form" fxLayout="column">
+  <form #searchStudentFieldsForm="ngForm"
+        role="form"
+        (submit)="search()"
+        [formGroup]="searchStudentFieldsFormGroup">
+    <mat-card-content>
       <h2 class="center" i18n>Search for WISE Students</h2>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>First Name</mat-label>
-          <input matInput id="firstName" name="firstName" />
+          <input matInput id="firstName" name="firstName" formControlName="firstName" />
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>Last Name</mat-label>
-          <input matInput id="lastName" name="lastName" />
+          <input matInput id="lastName" name="lastName" formControlName="lastName" />
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>Username</mat-label>
-          <input matInput id="username" name="username" />
+          <input matInput id="username" name="username" formControlName="username" />
         </mat-form-field>
       </p>
       <p *ngIf="showSearchById">
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>ID</mat-label>
-          <input matInput id="id" name="id" />
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field appearance="fill" fxFlex>
-          <mat-label i18n>Gender</mat-label>
-          <input matInput id="gender" name="gender" />
+          <input matInput id="userId" name="userId" formControlName="userId" />
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>Run ID</mat-label>
-          <input matInput id="runId" name="runId" />
+          <input matInput id="runId" name="runId" formControlName="runId" />
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>Workgroup ID</mat-label>
-          <input matInput id="workgroupId" name="workgroupId" />
+          <input matInput id="workgroupId" name="workgroupId" formControlName="workgroupId" />
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>Teacher Username</mat-label>
-          <input matInput id="teacherUsername" name="teacherUsername" />
+          <input matInput id="teacherUsername" name="teacherUsername" formControlName="teacherUsername" />
         </mat-form-field>
       </p>
-    </form>
-  </mat-card-content>
-  <mat-card-actions fxLayoutAlign="center" fxLayoutGap="8px">
-    <button mat-flat-button color="primary" i18n>Search</button>
-    <button mat-flat-button color="accent" (click)="clearFormFields()" i18n>Reset</button>
-  </mat-card-actions>
+    </mat-card-content>
+    <mat-card-actions fxLayoutAlign="center" fxLayoutGap="8px">
+      <button mat-flat-button color="primary" type="submit" i18n>Search</button>
+      <button mat-flat-button color="accent" (click)="clearFormFields()" i18n>Reset</button>
+    </mat-card-actions>
+  </form>
 </mat-card>
-<!--<table mat-table [dataSource]="dataSource" class="mat-elevation-z1" *ngIf="searchResultsAvailable">-->
-<!--  <ng-container matColumnDef="name" sticky>-->
-<!--    <th mat-header-cell *matHeaderCellDef i18n>Username</th>-->
-<!--    <td mat-cell *matCellDef="let student">{{student.username}}</td>-->
-<!--  </ng-container>-->
-<!--  <ng-container matColumnDef="changePassword">-->
-<!--    <th mat-header-cell *matHeaderCellDef i18n>Change</th>-->
-<!--    <td mat-cell><a>Change Password</a></td>-->
-<!--  </ng-container>-->
-<!--  <ng-container matColumnDef="loginAsUser">-->
-<!--    <th mat-header-cell *matHeaderCellDef i18n>Login</th>-->
-<!--    <td><a>Login As This User</a></td>-->
-<!--  </ng-container>-->
-<!--  <ng-container matColumnDef="userInfo">-->
-<!--    <th mat-header-cell *matHeaderCellDef i18n>Info</th>-->
-<!--    <td>User Info</td>-->
-<!--  </ng-container>-->
-<!--</table>-->
+<table mat-table [dataSource]="dataSource" class="standalone__content mat-elevation-z2" *ngIf="searchResultsAvailable">
+  <ng-container matColumnDef="username">
+    <th mat-header-cell *matHeaderCellDef i18n>Username</th>
+    <td mat-cell *matCellDef="let student">{{student.username}}</td>
+  </ng-container>
+  <ng-container matColumnDef="changePassword">
+    <th mat-header-cell *matHeaderCellDef i18n></th>
+    <td mat-cell *matCellDef="let student">
+      <button mat-button (click)="openAdminActions(student.id, 'changePassword')">Change Password</button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="loginAsUser">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let student">
+      <button mat-flat-button (click)="loginAsUser(student.id)">Login As This User</button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="userInfo">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let student">
+      <button mat-flat-button (click)="openAdminActions(student.id, 'viewUserInfo')">User Info</button>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

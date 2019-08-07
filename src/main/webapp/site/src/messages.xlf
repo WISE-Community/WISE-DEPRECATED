@@ -274,6 +274,10 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
       </trans-unit><trans-unit id="5edf054f14aa57bc25a28cb7db01956fee53dac8" datatype="html">
         <source>Change Password</source>
         <context-group purpose="location">
@@ -287,6 +291,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.html</context>
           <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit><trans-unit id="1622b67543d6f79dc5e9730e121f7e21b3d034b1" datatype="html">
         <source>This account was created using Google and doesn&apos;t use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -560,7 +568,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit><trans-unit id="ca98710638193518e4fe1302f8977d2db4f2b842" datatype="html">
         <source>Show More</source>
@@ -1430,6 +1438,10 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
       </trans-unit><trans-unit id="73da064756ecee7cf3d056dc8a0b99f0f39863b6" datatype="html">
         <source>What is WISE Tested?</source>
         <context-group purpose="location">
@@ -1567,6 +1579,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit><trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
         <source>Add</source>
@@ -2440,7 +2456,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit><trans-unit id="9a0d8c396fd0398b5d49f9b509f33dce97a4f35d" datatype="html">
         <source>Look up username</source>
@@ -2598,7 +2618,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit><trans-unit id="dfb446b53f5c04e99f7deed2f454d3e959e1d324" datatype="html">
         <source>First Name required</source>
@@ -2650,7 +2670,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit><trans-unit id="17de8a2f90413b5c8a6d622d9cfa4c5eda8bb742" datatype="html">
         <source>Last Name required</source>
@@ -2722,7 +2742,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit><trans-unit id="53a454dd8d85d4a61d248f7452828b57d70e5055" datatype="html">
         <source>Forgot Teacher Username</source>
@@ -4392,10 +4412,6 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
       </trans-unit><trans-unit id="5497bf7696a020473be2ec2082c78d6c6c81e29a" datatype="html">
         <source>Gender required</source>
         <context-group purpose="location">
@@ -5014,35 +5030,101 @@
           <context context-type="sourcefile">app/admin/find-user/find-user.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
+      </trans-unit><trans-unit id="0eb26ebfe2877b8e1af82b07300e454e48602591" datatype="html">
+        <source>Change User Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="066801b69e67bf043744ac0596f64f597f51e732" datatype="html">
+        <source>Current Admin Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="3e771c75946d927bd2b4f7780a44f4933565374c" datatype="html">
+        <source>Current Admin Password required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit><trans-unit id="4780ed7cfbed64cb09fb4391d104c928c94c27f1" datatype="html">
+        <source>Current Admin Password is incorrect</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="c5dee775862192d4f5103036762843a3c5566f25" datatype="html">
+        <source>New Password for <x id="INTERPOLATION" equiv-text="{{user.username}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="25579b0f074224cc9140ae55b6b8555d0a9bb0f8" datatype="html">
+        <source>New Password for <x id="INTERPOLATION" equiv-text="{{user.username}}"/> required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="81d1933f74aed3c850821984307053fa8d130a15" datatype="html">
+        <source>Confirm New Password for <x id="INTERPOLATION" equiv-text="{{user.username}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="298702aef88e139fb1b967eaa4d2231f2fdc0bb9" datatype="html">
+        <source>Confirm Password for <x id="INTERPOLATION" equiv-text="{{user.username}}"/> required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit><trans-unit id="e6813c3b5512d6371f91151ca704e636ba1af1c2" datatype="html">
+        <source>User Info</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit><trans-unit id="863226cffd5b66a6fee9810a9282a5006d6ef576" datatype="html">
+        <source>Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit><trans-unit id="5049e204c14c648691ac775a64fb504467aeb549" datatype="html">
+        <source>Value</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
       </trans-unit><trans-unit id="1c08e3855b676651845a3e3b748f498733d22ad4" datatype="html">
         <source>Search for WISE Students</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="45cc8ca94b5a50842a9a8ef804a5ab089a38ae5c" datatype="html">
         <source>ID</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="dc834df3c90c7b9021cfa37b2be737c2134249a5" datatype="html">
         <source>Run ID</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit><trans-unit id="b8a2a02fb76d3b8313dd93a1ad8c7257dc8947e1" datatype="html">
         <source>Workgroup ID</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit><trans-unit id="0b22f081d43462128d00e8f6b6d04e4f2fbba1db" datatype="html">
         <source>Teacher Username</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-student/find-student.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="de4fdef260a86fc9c409a2d4562e8910d93e2b6d" datatype="html">

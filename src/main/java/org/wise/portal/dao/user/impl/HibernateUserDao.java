@@ -23,20 +23,24 @@ package org.wise.portal.dao.user.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.user.UserDao;
+import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
+
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * @author Cynick Young
@@ -223,6 +227,28 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     // run the query and return the results
     List<User> result = queryObject.list();
     return result;
+  }
+
+  public List<User> searchStudents(String firstName, String lastName, String username, Long userId,
+                                   Long runId, Long workgroupId, String teacherUsername) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<Tuple> cr = cb.createQuery(Tuple.class);
+    Root<UserImpl> userRoot = cr.from(UserImpl.class);
+    Root<RunImpl> runRoot = cr.from(RunImpl.class);
+    Root<WorkgroupImpl> workgroupRoot = cr.from(WorkgroupImpl.class);
+    cr.select(cb.tuple(userRoot, runRoot, workgroupRoot)).where(
+      cb.and(
+        cb.like(userRoot.get("firstname"),firstName),
+        cb.like(userRoot.get("lastname"), lastName),
+        cb.like(userRoot.get("username"), username),
+        cb.equal(userRoot.get("id"), userId),
+        cb.equal(runRoot.get("id"), runId),
+        cb.equal(workgroupRoot.get("id"), workgroupId)
+      )
+    );
+    javax.persistence.Query query = session.createQuery(cr);
+    return query.getResultList();
   }
 
   /**

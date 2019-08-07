@@ -151,6 +151,9 @@ public interface UserService {
    */
   List<User> retrieveByFields(String[] fields, String[] values, String classVar);
 
+  List<User> searchStudents(String firstName, String lastName, String username, Long userId,
+                         Long runId, Long workgroupId, String teacherUsername);
+
   /**
    * Get the User object given the reset password key
    * @param resetPasswordKey an alphanumeric string

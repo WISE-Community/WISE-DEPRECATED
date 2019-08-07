@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
-import { Student } from '../domain/student';
-import { Teacher } from '../domain/teacher';
 
 @Injectable({
   providedIn: 'root'
@@ -15,22 +13,22 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   searchStudents(firstName: string, lastName: string, username: string, userId: string,
-                 runId: string, workgroupId: string, teacherUsername: string): Observable<Student []> {
+                 runId: string, workgroupId: string, teacherUsername: string): Observable<any []> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    const params = new HttpParams();
-    params.append('firstName', firstName);
-    params.append('lastName', lastName);
-    params.append('username', username);
-    params.append('userId', userId);
-    params.append('runId', runId);
-    params.append('workgroupId', workgroupId);
-    params.append('teacherUsername', teacherUsername);
-    return this.http.get<Student[]>(this.searchStudentsUrl, { headers, params });
+    const params = new HttpParams()
+      .set('firstName', firstName)
+      .set('lastName', lastName)
+      .set('username', username)
+      .set('userId', userId)
+      .set('runId', runId)
+      .set('workgroupId', workgroupId)
+      .set('teacherUsername', teacherUsername);
+    return this.http.get<any[]>(this.searchStudentsUrl, { headers, params });
   }
 
-  searchTeachers(): Observable<Teacher []> {
+  searchTeachers(): Observable<any []> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     const params = new HttpParams();
-    return this.http.get<Teacher []>(this.searchTeachersUrl, { headers, params });
+    return this.http.get<any[]>(this.searchTeachersUrl, { headers, params });
   }
 }
