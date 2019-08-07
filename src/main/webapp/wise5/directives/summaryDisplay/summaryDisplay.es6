@@ -105,7 +105,7 @@ class SummaryDisplayController {
     setTimeout(() => {
       deferred.resolve(componentStates);
     }, 1);
-    return deferred.promise
+    return deferred.promise;
   }
 
   createDummyClassmateStudentWork() {

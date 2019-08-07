@@ -606,10 +606,8 @@ function () {
       var workgroupsInPeriod = [];
       var myUserInfo = this.getMyUserInfo();
 
-      if (this.isStudent()) {
-        if (this.isAllPeriods(periodId) || myUserInfo.periodId === periodId) {
-          workgroupsInPeriod.push(myUserInfo);
-        }
+      if (this.isStudent() && (this.isAllPeriods(periodId) || myUserInfo.periodId === periodId)) {
+        workgroupsInPeriod.push(myUserInfo);
       }
 
       var _iteratorNormalCompletion5 = true;

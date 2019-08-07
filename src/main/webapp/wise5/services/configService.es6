@@ -414,10 +414,8 @@ class ConfigService {
   getWorkgroupsByPeriod(periodId) {
     const workgroupsInPeriod = [];
     const myUserInfo = this.getMyUserInfo();
-    if (this.isStudent()) {
-      if (this.isAllPeriods(periodId) || myUserInfo.periodId === periodId) {
-        workgroupsInPeriod.push(myUserInfo);
-      }
+    if (this.isStudent() && (this.isAllPeriods(periodId) || myUserInfo.periodId === periodId)) {
+      workgroupsInPeriod.push(myUserInfo);
     }
     for (const classmateUserInfo of this.getClassmateUserInfos()) {
       if (this.isAllPeriods(periodId) || classmateUserInfo.periodId === periodId) {
