@@ -92,7 +92,7 @@ function () {
       } else if (this.isStudentRun()) {
         return this.dataService.getClassmateStudentWork(nodeId, componentId, periodId);
       } else if (this.isClassroomMonitor()) {
-        return this.dataService.retrieveStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId);
+        return this.dataService.retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId);
       }
     }
   }, {

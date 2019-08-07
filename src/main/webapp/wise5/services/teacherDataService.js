@@ -362,15 +362,17 @@ function () {
       return this.retrieveStudentData(params);
     }
   }, {
-    key: "retrieveStudentDataByNodeIdAndComponentIdAndPeriodId",
-    value: function retrieveStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
+    key: "retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId",
+    value: function retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
       var params = {
+        runId: this.ConfigService.getRunId(),
         nodeId: nodeId,
         componentId: componentId,
         periodId: periodId,
         getStudentWork: true,
         getEvents: false,
-        getAnnotations: false
+        getAnnotations: false,
+        onlyGetLatest: true
       };
       return this.retrieveStudentData(params).then(function (result) {
         return result.studentWorkList;

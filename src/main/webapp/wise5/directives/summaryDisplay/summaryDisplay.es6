@@ -63,7 +63,7 @@ class SummaryDisplayController {
     } else if (this.isStudentRun()) {
       return this.dataService.getClassmateStudentWork(nodeId, componentId, periodId);
     } else if (this.isClassroomMonitor()) {
-      return this.dataService.retrieveStudentDataByNodeIdAndComponentIdAndPeriodId(
+      return this.dataService.retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(
           nodeId, componentId, periodId);
     }
   }

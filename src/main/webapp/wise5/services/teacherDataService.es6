@@ -295,14 +295,16 @@ class TeacherDataService {
     return this.retrieveStudentData(params);
   };
 
-  retrieveStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
+  retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
     const params = {
+      runId: this.ConfigService.getRunId(),
       nodeId: nodeId,
       componentId: componentId,
       periodId: periodId,
       getStudentWork: true,
       getEvents: false,
-      getAnnotations: false
+      getAnnotations: false,
+      onlyGetLatest: true
     };
     return this.retrieveStudentData(params).then((result) => {
       return result.studentWorkList;
