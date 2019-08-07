@@ -21,15 +21,26 @@ function () {
     this.$rootScope = $rootScope;
     this.ConfigService = ConfigService;
     this.warningVisible = false;
-    this.checkMouseEventInMinutesInterval = 1;
-    this.showWarningInMinutesInterval = 25;
-    this.forceLogoutAfterWarningInMinutesInterval = 5;
+    var intervals = this.calculateIntervals(this.ConfigService.getConfigParam('sessionTimeout'));
+    this.showWarningInterval = intervals.showWarningInterval;
+    this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
+    this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
     this.updateLastActivityTimestamp();
     this.initializeListeners();
     this.initializeSession();
   }
 
   _createClass(SessionService, [{
+    key: "calculateIntervals",
+    value: function calculateIntervals(sessionTimeout) {
+      var forceLogoutAfterWarningInterval = Math.min(sessionTimeout * 0.1, this.convertMinutesToSeconds(5));
+      var showWarningInterval = sessionTimeout - forceLogoutAfterWarningInterval;
+      return {
+        showWarningInterval: showWarningInterval,
+        forceLogoutAfterWarningInterval: forceLogoutAfterWarningInterval
+      };
+    }
+  }, {
     key: "initializeListeners",
     value: function initializeListeners() {
       var _this = this;
@@ -76,7 +87,12 @@ function () {
 
       setInterval(function () {
         _this2.checkMouseEvent();
-      }, this.convertMinutesToMilliseconds(this.checkMouseEventInMinutesInterval));
+      }, this.checkMouseEventInterval);
+    }
+  }, {
+    key: "convertMinutesToSeconds",
+    value: function convertMinutesToSeconds(minutes) {
+      return minutes * 60;
     }
   }, {
     key: "convertMinutesToMilliseconds",
@@ -116,12 +132,12 @@ function () {
   }, {
     key: "isInactiveLongEnoughToForceLogout",
     value: function isInactiveLongEnoughToForceLogout() {
-      return this.getInactiveTimeInMinutes() >= this.showWarningInMinutesInterval + this.forceLogoutAfterWarningInMinutesInterval;
+      return this.getInactiveTimeInSeconds() >= this.showWarningInterval + this.forceLogoutAfterWarningInterval;
     }
   }, {
     key: "isInactiveLongEnoughToWarn",
     value: function isInactiveLongEnoughToWarn() {
-      return this.getInactiveTimeInMinutes() >= this.showWarningInMinutesInterval;
+      return this.getInactiveTimeInSeconds() >= this.showWarningInterval;
     }
   }, {
     key: "isShowingWarning",
@@ -129,9 +145,9 @@ function () {
       return this.warningVisible;
     }
   }, {
-    key: "getInactiveTimeInMinutes",
-    value: function getInactiveTimeInMinutes() {
-      return Math.floor(this.getInactiveTimeInMilliseconds() / 1000 / 60);
+    key: "getInactiveTimeInSeconds",
+    value: function getInactiveTimeInSeconds() {
+      return Math.floor(this.getInactiveTimeInMilliseconds() / 1000);
     }
   }, {
     key: "getInactiveTimeInMilliseconds",

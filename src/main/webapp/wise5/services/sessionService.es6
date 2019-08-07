@@ -4,12 +4,23 @@ class SessionService {
     this.$rootScope = $rootScope;
     this.ConfigService = ConfigService;
     this.warningVisible = false;
-    this.checkMouseEventInMinutesInterval = 1;
-    this.showWarningInMinutesInterval = 25;
-    this.forceLogoutAfterWarningInMinutesInterval = 5;
+    const intervals = this.calculateIntervals(this.ConfigService.getConfigParam('sessionTimeout'));
+    this.showWarningInterval = intervals.showWarningInterval;
+    this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
+    this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
     this.updateLastActivityTimestamp();
     this.initializeListeners();
     this.initializeSession();
+  }
+
+  calculateIntervals(sessionTimeout) {
+    const forceLogoutAfterWarningInterval = 
+        Math.min(sessionTimeout * 0.1, this.convertMinutesToSeconds(5));
+    const showWarningInterval = sessionTimeout - forceLogoutAfterWarningInterval;
+    return {
+      showWarningInterval: showWarningInterval,
+      forceLogoutAfterWarningInterval: forceLogoutAfterWarningInterval
+    };
   }
 
   initializeListeners() {
@@ -46,8 +57,11 @@ class SessionService {
   }
 
   startCheckMouseEvent() {
-    setInterval(() => { this.checkMouseEvent(); },
-        this.convertMinutesToMilliseconds(this.checkMouseEventInMinutesInterval));
+    setInterval(() => { this.checkMouseEvent(); }, this.checkMouseEventInterval);
+  }
+
+  convertMinutesToSeconds(minutes) {
+    return minutes * 60;
   }
 
   convertMinutesToMilliseconds(minutes) {
@@ -76,24 +90,24 @@ class SessionService {
   }
 
   isActiveWithinLastMinute() {
-    return new Date() - this.lastActivityTimestamp < this.convertMinutesToMilliseconds(1);
+    return (new Date() - this.lastActivityTimestamp) < this.convertMinutesToMilliseconds(1);
   }
 
   isInactiveLongEnoughToForceLogout() {
-    return this.getInactiveTimeInMinutes() >=
-        (this.showWarningInMinutesInterval + this.forceLogoutAfterWarningInMinutesInterval);
+    return this.getInactiveTimeInSeconds() >=
+        (this.showWarningInterval + this.forceLogoutAfterWarningInterval);
   }
 
   isInactiveLongEnoughToWarn() {
-    return this.getInactiveTimeInMinutes() >= this.showWarningInMinutesInterval;
+    return this.getInactiveTimeInSeconds() >= this.showWarningInterval;
   }
 
   isShowingWarning() {
     return this.warningVisible;
   }
 
-  getInactiveTimeInMinutes() {
-    return Math.floor(this.getInactiveTimeInMilliseconds() / 1000 / 60);
+  getInactiveTimeInSeconds() {
+    return Math.floor(this.getInactiveTimeInMilliseconds() / 1000);
   }
 
   getInactiveTimeInMilliseconds() {
