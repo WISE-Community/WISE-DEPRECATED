@@ -4,6 +4,7 @@ class SessionService {
     this.$rootScope = $rootScope;
     this.ConfigService = ConfigService;
     this.warningVisible = false;
+    this.defaultForceLogoutAfterWarningInterval = this.convertMinutesToSeconds(5);
     const intervals = this.calculateIntervals(this.ConfigService.getConfigParam('sessionTimeout'));
     this.showWarningInterval = intervals.showWarningInterval;
     this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
@@ -15,7 +16,7 @@ class SessionService {
 
   calculateIntervals(sessionTimeout) {
     const forceLogoutAfterWarningInterval = 
-        Math.min(sessionTimeout * 0.1, this.convertMinutesToSeconds(5));
+        Math.min(sessionTimeout * 0.1, this.defaultForceLogoutAfterWarningInterval);
     const showWarningInterval = sessionTimeout - forceLogoutAfterWarningInterval;
     return {
       showWarningInterval: showWarningInterval,
