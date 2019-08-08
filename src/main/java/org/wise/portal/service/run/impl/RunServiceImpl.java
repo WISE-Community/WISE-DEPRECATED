@@ -350,7 +350,8 @@ public class RunServiceImpl implements RunService {
       newOwner.getUserDetails().getFirstname(), newOwner.getUserDetails().getLastname(), newProjectOwnerPermissions);
   }
 
-  private void changeOwnerAndPermissions(Run run, Project project, User newOwner) {
+  @Transactional()
+  public void changeOwnerAndPermissions(Run run, Project project, User newOwner) {
     User owner = run.getOwner();
     aclService.addPermission(run, BasePermission.ADMINISTRATION, newOwner);
     aclService.addPermission(project, BasePermission.ADMINISTRATION, newOwner);
@@ -358,8 +359,8 @@ public class RunServiceImpl implements RunService {
     aclService.removePermission(project, BasePermission.ADMINISTRATION, owner);
     run.setOwner(newOwner);
     project.setOwner(newOwner);
-    runDao.save(run);
     projectDao.save(project);
+    runDao.save(run);
   }
 
   private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user) throws ObjectNotFoundException {
