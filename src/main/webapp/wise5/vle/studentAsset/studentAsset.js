@@ -3,12 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _studentAssetController = require('./studentAssetController');
+var _studentAssetController = _interopRequireDefault(require("./studentAssetController"));
 
-var _studentAssetController2 = _interopRequireDefault(_studentAssetController);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var studentAssetModule = angular.module('studentAsset', []).directive('studentassets', function () {
   return {
@@ -22,7 +21,7 @@ var studentAssetModule = angular.module('studentAsset', []).directive('studentas
     controllerAs: 'studentAssetController',
     bindToController: true
   };
-}).controller('StudentAssetController', _studentAssetController2.default);
-
-exports.default = studentAssetModule;
+}).controller('StudentAssetController', _studentAssetController["default"]);
+var _default = studentAssetModule;
+exports["default"] = _default;
 //# sourceMappingURL=studentAsset.js.map
