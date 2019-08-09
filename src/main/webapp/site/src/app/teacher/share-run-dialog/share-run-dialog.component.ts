@@ -1,10 +1,11 @@
 import { Component, Inject } from '@angular/core';
-import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatTableDataSource } from "@angular/material";
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { UserService } from '../../services/user.service';
+import { Teacher } from '../../domain/teacher';
+import { TeacherRun } from '../teacher-run';
 
 @Component({
   selector: 'app-share-run-dialog',
@@ -13,7 +14,7 @@ import { UserService } from '../../services/user.service';
 })
 export class ShareRunDialogComponent extends ShareItemDialogComponent {
 
-  run: Run = new Run();
+  run: TeacherRun = new TeacherRun();
   dataSource: MatTableDataSource<any[]> = new MatTableDataSource<any[]>();
   displayedColumns: string[] = ['name', 'permissions'];
   duplicate: boolean = false;
@@ -29,7 +30,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
               i18n: I18n) {
     super(dialogRef, data, teacherService, snackBar, i18n);
     this.runId = data.run.id;
-    this.teacherService.getRun(this.runId).subscribe((run: Run) => {
+    this.teacherService.getRun(this.runId).subscribe((run: TeacherRun) => {
       this.run = run;
       this.project = run.project;
       this.projectId = run.project.id;
@@ -129,7 +130,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
 
   completeUnitShareOrTransfer(sharedOwnerUsername: string) {
     this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername, this.isTransfer)
-      .subscribe((newSharedOwner) => {
+      .subscribe((newSharedOwner: Teacher) => {
         if (newSharedOwner != null && !this.isTransfer) {
           this.setDefaultRunPermissions(newSharedOwner);
           this.setDefaultProjectPermissions(newSharedOwner);
@@ -137,6 +138,8 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
           this.teacherSearchControl.setValue('');
         } else if (newSharedOwner != null && this.isTransfer) {
           this.transferRunOwnership(sharedOwnerUsername);
+          this.data.run.owner = newSharedOwner;
+          this.data.run.shared = true;
         }
       });
     document.getElementById("share-run-dialog-search").blur();

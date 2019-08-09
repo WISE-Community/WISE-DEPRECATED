@@ -4814,9 +4814,9 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-      </trans-unit><trans-unit id="036f708ee8fd9a343c47dc81fb0df7650488f5da" datatype="html">
+      </trans-unit><trans-unit id="958238c9a38f867922fab7579f5e7c77194fe6a1" datatype="html">
         <source>
-    Shared by <x id="INTERPOLATION" equiv-text="{{run.owner.displayName}}"/>
+    Shared by <x id="INTERPOLATION" equiv-text="{{run.owner.firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{run.owner.lastName}}"/>
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>

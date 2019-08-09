@@ -21,14 +21,14 @@
   </div>
   <div i18n>Access Code: {{ run.runCode }}</div>
   <div *ngIf="run.shared" class="info" i18n>
-    Shared by {{run.owner.displayName}}
+    Shared by {{run.owner.firstName}} {{run.owner.lastName}}
   </div>
 </ng-template>
 
 <mat-card [ngClass]="{'highlighted': run.isHighlighted}">
   <mat-card-content fxLayout="row" fxLayoutGap="12px">
     <div mat-card-avatar
-         [style.background-image]="run.project.thumbStyle" 
+         [style.background-image]="run.project.thumbStyle"
          [class.disabled]="isRunCompleted(run)"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
       <div fxLayout="column">

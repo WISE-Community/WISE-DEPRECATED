@@ -42,7 +42,7 @@ const runObj = {
       lastName: "Squarepants",
       permissions: [2]
     }]
-  }
+  },
 };
 
 export class MockTeacherService {
