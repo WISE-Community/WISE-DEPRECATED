@@ -66,7 +66,9 @@ export class MockTeacherService {
 }
 
 export class MockUserService {
-
+  getUserId() {
+    return 1;
+  }
 }
 
 describe('ShareRunDialogComponent', () => {

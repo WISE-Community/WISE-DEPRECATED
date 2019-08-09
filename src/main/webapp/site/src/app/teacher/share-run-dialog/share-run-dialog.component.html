@@ -83,9 +83,9 @@
 <div mat-dialog-actions
      fxLayoutAlign="end"
      fxLayoutGap="8px">
-  <button mat-button color="accent" (click)="openTransferRunDialog()" i18n *ngIf="!isTransfer">Transfer Ownership</button>
-  <button mat-flat-button color="accent" (click)="completeUnitShareOrTransfer(newOwnerUsername)" i18n *ngIf="transferUnitWarning">Proceed with Transfer</button>
-  <button mat-flat-button color="primary" (click)="closeTransferRunDialog()" *ngIf="isTransfer">Cancel</button>
+  <button mat-button color="accent" (click)="openTransferUnitDialog()" i18n *ngIf="isOwner && !isTransfer">Transfer Ownership</button>
+  <button mat-flat-button color="accent" (click)="completeShareOrTransferUnit(newOwnerUsername)" i18n *ngIf="transferUnitWarning">Proceed with Transfer</button>
+  <button mat-flat-button color="primary" (click)="closeTransferUnitDialog()" *ngIf="isTransfer">Cancel</button>
   <button mat-flat-button color="primary" mat-dialog-close i18n *ngIf="!isTransfer">Done</button>
 </div>
 
