@@ -62,7 +62,8 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
   public void addPermission(T object, Permission permission) {
     if (object != null) {
       MutableAcl acl = null;
-      ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object.getId());
+      ObjectIdentity objectIdentity = new ObjectIdentityImpl(
+        HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
 
       try {
         acl = (MutableAcl) mutableAclService.readAclById(objectIdentity);
@@ -81,7 +82,8 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
   public void addPermission(T object, Permission permission, User user) {
     if (object != null) {
       MutableAcl acl = null;
-      ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object.getId());
+      ObjectIdentity objectIdentity = new ObjectIdentityImpl(
+        HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
 
       try {
         acl = (MutableAcl) mutableAclService.readAclById(objectIdentity);

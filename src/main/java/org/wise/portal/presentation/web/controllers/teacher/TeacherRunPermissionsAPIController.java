@@ -27,8 +27,9 @@ public class TeacherRunPermissionsAPIController {
     try {
       if (isTransfer) {
         return runService.transferRunOwnership(runId, teacherUsername);
+      } else {
+        return runService.addSharedTeacher(runId, teacherUsername);
       }
-      return runService.addSharedTeacher(runId, teacherUsername);
     } catch (Exception e) {
       return null;
     }

@@ -13,7 +13,7 @@ import {
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
-import {UserService} from '../../services/user.service';
+import { UserService } from '../../services/user.service';
 
 const runObj = {
   id: 1,

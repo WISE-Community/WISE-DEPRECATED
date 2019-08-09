@@ -23,9 +23,7 @@
  */
 package org.wise.portal.service.project;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
@@ -313,6 +311,8 @@ public interface ProjectService {
   void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
 
   void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
+
+  void transferProjectOwnership(Long projectId, String teacherUsername) throws ObjectNotFoundException;
 
   List<Project> getProjectsWithoutRuns(User user);
 

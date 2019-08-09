@@ -1,8 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar,
-  MatTableDataSource } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatTableDataSource } from "@angular/material";
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { UserService } from '../../services/user.service';

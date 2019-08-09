@@ -592,6 +592,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
+  public void transferProjectOwnership(Long projectId, String teacherUsername) throws ObjectNotFoundException {
+    try {
+      Project project = projectDao.getById(projectId);
+      User oldOwner = project.getOwner();
+      User newOwner = userService.retrieveUserByUsername(teacherUsername);
+      removeSharedTeacherFromProject(newOwner.getUserDetails().getUsername(), project);
+      project.setOwner(newOwner);
+      aclService.removePermission(project, BasePermission.ADMINISTRATION, oldOwner);
+      aclService.addPermission(project, BasePermission.ADMINISTRATION, newOwner);
+      addSharedTeacher(projectId, oldOwner.getUserDetails().getUsername());
+      aclService.addPermission(project, ProjectPermission.EDIT_PROJECT, oldOwner);
+      projectDao.save(project);
+    } catch (TeacherAlreadySharedWithProjectException e) {
+      // ignore
+    }
+  }
+
   public List<Project> getProjectsWithoutRuns(User user) {
     return projectDao.getProjectsWithoutRuns(user);
   }
@@ -629,7 +646,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
-  private JSONArray addToParentProjects(JSONObject parentProjectJSON, ProjectMetadata metadata) 
+  private JSONArray addToParentProjects(JSONObject parentProjectJSON, ProjectMetadata metadata)
       throws JSONException {
     JSONArray parentProjects = getParentProjects(metadata);
     parentProjects.put(parentProjectJSON);
@@ -699,7 +716,7 @@ public class ProjectServiceImpl implements ProjectService {
       if (!parentAuthors.isEmpty()) {
         parentLicense += WordUtils.wrap("\nby " + parentAuthors, 72);
       }
-      parentLicense += "\n[used under CC BY-SA, copied " + 
+      parentLicense += "\n[used under CC BY-SA, copied " +
           parentProjectJSON.getString("dateCopied") + "].\n";
       license += parentLicense;
       if (i == 0) {
