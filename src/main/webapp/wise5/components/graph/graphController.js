@@ -3,37 +3,45 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _componentController = _interopRequireDefault(require("../componentController"));
 
-var _componentController = require('../componentController');
+var _canvg = _interopRequireDefault(require("canvg"));
 
-var _componentController2 = _interopRequireDefault(_componentController);
+var _html2canvas = _interopRequireDefault(require("html2canvas"));
 
-var _canvg = require('canvg');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _canvg2 = _interopRequireDefault(_canvg);
-
-var _html2canvas = require('html2canvas');
-
-var _html2canvas2 = _interopRequireDefault(_html2canvas);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var GraphController = function (_ComponentController) {
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var GraphController =
+/*#__PURE__*/
+function (_ComponentController) {
   _inherits(GraphController, _ComponentController);
 
   function GraphController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, GraphService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    var _this;
+
     _classCallCheck(this, GraphController);
 
-    var _this = _possibleConstructorReturn(this, (GraphController.__proto__ || Object.getPrototypeOf(GraphController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(GraphController).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
     _this.$q = $q;
     _this.$timeout = $timeout;
     _this.GraphService = GraphService;
@@ -69,16 +77,21 @@ var GraphController = function (_ComponentController) {
      * The undoStack will contain the component states from the current
      * visit except for the current component state.
      */
+
     _this.undoStack = [];
     /*
      * whether to add the next component state created in
      * studentDataChanged() to the undoStack
      */
+
     _this.addNextComponentStateToUndoStack = false;
     _this.chartId = 'chart_' + _this.componentId;
     _this.hiddenCanvasId = 'hiddenCanvas_' + _this.componentId;
+
     _this.initializeComponentContentParams();
+
     var componentState = _this.$scope.componentState;
+
     if (_this.isStudentMode()) {
       _this.initializeStudentMode(componentState);
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
@@ -86,57 +99,75 @@ var GraphController = function (_ComponentController) {
     } else if (_this.mode === 'onlyShowWork') {
       _this.initializeOnlyShowWorkMode();
     }
+
     if (!_this.isStudentMode() && _this.GraphService.componentStateHasStudentWork(componentState, _this.componentContent)) {
       _this.setStudentWork(componentState);
     }
+
     _this.initialComponentState = componentState;
     _this.previousComponentState = componentState;
+
     if (!_this.canSubmit()) {
       _this.isSubmitButtonDisabled = true;
     }
+
     _this.disableComponentIfNecessary();
+
     _this.initializeHandleConnectedComponentStudentDataChanged();
+
     _this.initializeDeleteKeyPressedListener();
+
     _this.initializeFileUploadChanged();
+
     _this.initializeScopeGetComponentState(_this.$scope, 'graphController');
+
     _this.drawGraph().then(function () {
       _this.broadcastDoneRenderingComponent();
     });
+
     return _this;
   }
 
   _createClass(GraphController, [{
-    key: 'initializeComponentContentParams',
+    key: "initializeComponentContentParams",
     value: function initializeComponentContentParams() {
       this.graphType = this.componentContent.graphType;
+
       if (this.graphType == null) {
         this.graphType = 'line';
       }
+
       if (this.componentContent.canCreateNewTrials != null) {
         this.canCreateNewTrials = this.componentContent.canCreateNewTrials;
       }
+
       if (this.componentContent.canDeleteTrials != null) {
         this.canDeleteTrials = this.componentContent.canDeleteTrials;
       }
+
       if (this.componentContent.hideAllTrialsOnNewTrial === false) {
         this.hideAllTrialsOnNewTrial = false;
       }
+
       if (this.componentContent.hideLegend) {
         this.isLegendEnabled = false;
       }
+
       if (this.componentContent.hideTrialSelect) {
         this.showTrialSelect = false;
       }
     }
   }, {
-    key: 'initializeStudentMode',
+    key: "initializeStudentMode",
     value: function initializeStudentMode(componentState) {
       this.isResetSeriesButtonVisible = true;
       this.isSelectSeriesVisible = true;
       this.backgroundImage = this.componentContent.backgroundImage;
+
       if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
         this.newTrial();
       }
+
       if (this.UtilService.hasConnectedComponentAlwaysField(this.componentContent)) {
         this.handleConnectedComponents();
       } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
@@ -146,10 +177,11 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'initializeGradingMode',
+    key: "initializeGradingMode",
     value: function initializeGradingMode(componentState) {
       this.isResetSeriesButtonVisible = false;
       this.isSelectSeriesVisible = false;
+
       if (componentState != null) {
         if (this.mode === 'gradingRevision') {
           this.chartId = 'chart_gradingRevision_' + componentState.id;
@@ -159,7 +191,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'initializeOnlyShowWorkMode',
+    key: "initializeOnlyShowWorkMode",
     value: function initializeOnlyShowWorkMode() {
       this.isResetGraphButtonVisible = false;
       this.isResetSeriesButtonVisible = false;
@@ -167,12 +199,13 @@ var GraphController = function (_ComponentController) {
       this.backgroundImage = this.componentContent.backgroundImage;
     }
   }, {
-    key: 'initializeHandleConnectedComponentStudentDataChanged',
+    key: "initializeHandleConnectedComponentStudentDataChanged",
     value: function initializeHandleConnectedComponentStudentDataChanged() {
       var _this2 = this;
 
       this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
         var componentType = connectedComponent.type;
+
         if (componentType === 'Table') {
           _this2.handleTableConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
         } else if (componentType === 'Embedded') {
@@ -183,7 +216,7 @@ var GraphController = function (_ComponentController) {
       };
     }
   }, {
-    key: 'initializeDeleteKeyPressedListener',
+    key: "initializeDeleteKeyPressedListener",
     value: function initializeDeleteKeyPressedListener() {
       var _this3 = this;
 
@@ -192,18 +225,20 @@ var GraphController = function (_ComponentController) {
       });
     }
   }, {
-    key: 'initializeFileUploadChanged',
+    key: "initializeFileUploadChanged",
     value: function initializeFileUploadChanged() {
       var _this4 = this;
 
       this.$scope.fileUploadChanged = function (element) {
         var activeSeriesData = _this4.activeSeries.data;
         var overwrite = true;
+
         if (activeSeriesData.length > 0) {
           if (!confirm(_this4.$translate('graph.areYouSureYouWantToOverwriteTheCurrentLineData'))) {
             overwrite = false;
           }
         }
+
         if (overwrite) {
           _this4.uploadFileAndReadContent(element);
         }
@@ -211,67 +246,83 @@ var GraphController = function (_ComponentController) {
          * clear the file input element value so that onchange() will be
          * called again if the student wants to upload the same file again
          */
+
+
         element.value = null;
       };
     }
   }, {
-    key: 'uploadFileAndReadContent',
+    key: "uploadFileAndReadContent",
     value: function uploadFileAndReadContent(element) {
       var _this5 = this;
 
       var files = element.files;
       var reader = new FileReader();
+
       reader.onload = function () {
         var fileContent = reader.result;
+
         _this5.readCSVIntoActiveSeries(fileContent);
+
         _this5.setUploadedFileName(_this5.fileName);
+
         _this5.studentDataChanged();
       };
+
       reader.scope = this;
       reader.fileName = files[0].name;
       reader.readAsText(files[0]);
       this.StudentAssetService.uploadAsset(files[0]);
     }
   }, {
-    key: 'cleanupBeforeExiting',
+    key: "cleanupBeforeExiting",
     value: function cleanupBeforeExiting() {
       this.deleteKeyPressedListenerDestroyer();
     }
   }, {
-    key: 'handleTableConnectedComponentStudentDataChanged',
+    key: "handleTableConnectedComponentStudentDataChanged",
     value: function handleTableConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState) {
       var studentData = componentState.studentData;
+
       if (studentData != null && studentData.tableData != null) {
         var rows = studentData.tableData;
         var data = this.convertRowDataToSeriesData(rows, connectedComponentParams);
         var seriesIndex = connectedComponentParams.seriesIndex;
+
         if (seriesIndex == null) {
           seriesIndex = 0;
         }
+
         if (this.isStudentDataVersion1()) {
           var series = this.series[seriesIndex];
+
           if (series == null) {
             series = {};
             this.series[seriesIndex] = series;
           }
+
           series.data = data;
         } else {
           var trial = this.activeTrial;
+
           if (trial != null && trial.series != null) {
             var _series = trial.series[seriesIndex];
+
             if (_series == null) {
               _series = {};
               this.series[seriesIndex] = _series;
             }
+
             _series.data = data;
           }
         }
+
         this.drawGraph();
         this.isDirty = true;
       }
     }
   }, {
-    key: 'handleEmbeddedConnectedComponentStudentDataChanged',
+    key: "handleEmbeddedConnectedComponentStudentDataChanged",
     value: function handleEmbeddedConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState) {
       componentState = this.UtilService.makeCopyOfJSONObject(componentState);
       var studentData = componentState.studentData;
@@ -279,7 +330,7 @@ var GraphController = function (_ComponentController) {
       this.studentDataChanged();
     }
   }, {
-    key: 'handleAnimationConnectedComponentStudentDataChanged',
+    key: "handleAnimationConnectedComponentStudentDataChanged",
     value: function handleAnimationConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState) {
       if (componentState.t != null) {
         this.setVerticalPlotLine(componentState.t);
@@ -287,12 +338,12 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'handleNodeSubmit',
+    key: "handleNodeSubmit",
     value: function handleNodeSubmit() {
       this.submit('nodeSubmitButton');
     }
   }, {
-    key: 'setupMouseMoveListener',
+    key: "setupMouseMoveListener",
     value: function setupMouseMoveListener() {
       var _this6 = this;
 
@@ -304,6 +355,7 @@ var GraphController = function (_ComponentController) {
         $('#' + this.chartId).unbind();
         $('#' + this.chartId).bind('mousedown', function (e) {
           _this6.mouseDown = true;
+
           _this6.mouseDownEventOccurred(e);
         });
         $('#' + this.chartId).bind('mouseup', function (e) {
@@ -320,14 +372,13 @@ var GraphController = function (_ComponentController) {
         this.setupMouseMoveListenerDone = true;
       }
     }
-
     /**
      * The student has moved the mouse while holding the mouse button down.
      * @param e The mouse event.
      */
 
   }, {
-    key: 'mouseDownEventOccurred',
+    key: "mouseDownEventOccurred",
     value: function mouseDownEventOccurred(e) {
       /*
        * Firefox displays abnormal behavior when the student drags the plot line.
@@ -340,8 +391,10 @@ var GraphController = function (_ComponentController) {
       if (e.offsetX < 10 || e.offsetY < 10) {
         return;
       }
+
       var x = this.handleMouseDownXPosition(e);
       var y = this.handleMouseDownYPosition(e);
+
       if (this.componentContent.saveMouseOverPoints) {
         /*
          * Make sure we aren't saving the points too frequently. We want to avoid
@@ -352,7 +405,9 @@ var GraphController = function (_ComponentController) {
          * Make sure this many milliseconds has passed before saving another mouse
          * over point.
          */
+
         var timeBetweenSendingMouseOverPoints = 200;
+
         if (this.lastSavedMouseMoveTimestamp == null || currentTimestamp - this.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
           this.addMouseOverPoint(x, y);
           this.studentDataChanged();
@@ -361,30 +416,33 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'handleMouseDownXPosition',
+    key: "handleMouseDownXPosition",
     value: function handleMouseDownXPosition(e) {
       var chart = $('#' + this.chartId).highcharts();
       var chartXAxis = chart.xAxis[0];
       var x = chartXAxis.toValue(e.offsetX, false);
       x = this.makeSureXIsWithinXMinMaxLimits(x);
+
       if (this.componentContent.showMouseXPlotLine) {
         this.showXPlotLine(x);
       }
+
       return x;
     }
   }, {
-    key: 'handleMouseDownYPosition',
+    key: "handleMouseDownYPosition",
     value: function handleMouseDownYPosition(e) {
       var chart = $('#' + this.chartId).highcharts();
       var chartYAxis = chart.yAxis[0];
       var y = chartYAxis.toValue(e.offsetY, false);
       y = this.makeSureYIsWithinYMinMaxLimits(y);
+
       if (this.componentContent.showMouseYPlotLine) {
         this.showYPlotLine(y);
       }
+
       return y;
     }
-
     /**
      * Show the vertical plot line at the given x.
      * @param x The x value to show the vertical line at.
@@ -392,7 +450,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'showXPlotLine',
+    key: "showXPlotLine",
     value: function showXPlotLine(x, text) {
       var chart = $('#' + this.chartId).highcharts();
       var chartXAxis = chart.xAxis[0];
@@ -403,18 +461,20 @@ var GraphController = function (_ComponentController) {
         width: 4,
         id: 'plot-line-x'
       };
+
       if (text != null && text !== '') {
         plotLine.label = {
           text: text,
           verticalAlign: 'top'
         };
       }
+
       chartXAxis.addPlotLine(plotLine);
+
       if (this.componentContent.highlightXRangeFromZero) {
         this.drawRangeRectangle(0, x, chart.yAxis[0].min, chart.yAxis[0].max);
       }
     }
-
     /**
      * Draw a rectangle on the graph. This is used for highlighting a range.
      * @param xMin The left x value in the graph x axis units.
@@ -428,13 +488,12 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'drawRangeRectangle',
+    key: "drawRangeRectangle",
     value: function drawRangeRectangle(xMin, xMax, yMin, yMax) {
       var strokeColor = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'black';
       var strokeWidth = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : '.5';
       var fillColor = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 'black';
       var fillOpacity = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : '.1';
-
       this.createRectangleIfNecessary(strokeColor, strokeWidth, fillColor, fillOpacity);
       xMin = this.convertToXPixels(xMin);
       xMax = this.convertToXPixels(xMax);
@@ -443,19 +502,19 @@ var GraphController = function (_ComponentController) {
       this.updateRectanglePositionAndSize(xMin, xMax, yMin, yMax);
     }
   }, {
-    key: 'convertToXPixels',
+    key: "convertToXPixels",
     value: function convertToXPixels(graphUnitValue) {
       var chart = $('#' + this.chartId).highcharts();
       return chart.xAxis[0].translate(graphUnitValue);
     }
   }, {
-    key: 'convertToYPixels',
+    key: "convertToYPixels",
     value: function convertToYPixels(graphUnitValue) {
       var chart = $('#' + this.chartId).highcharts();
       return chart.yAxis[0].translate(graphUnitValue);
     }
   }, {
-    key: 'createRectangleIfNecessary',
+    key: "createRectangleIfNecessary",
     value: function createRectangleIfNecessary(strokeColor, strokeWidth, fillColor, fillOpacity) {
       if (this.rectangle == null) {
         var chart = $('#' + this.chartId).highcharts();
@@ -468,7 +527,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'updateRectanglePositionAndSize',
+    key: "updateRectanglePositionAndSize",
     value: function updateRectanglePositionAndSize(xMin, xMax, yMin, yMax) {
       var chart = $('#' + this.chartId).highcharts();
       this.rectangle.attr({
@@ -478,7 +537,6 @@ var GraphController = function (_ComponentController) {
         height: yMax - yMin
       });
     }
-
     /**
      * Show the horizontal plot line at the given y.
      * @param y The y value to show the horizontal line at.
@@ -486,7 +544,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'showYPlotLine',
+    key: "showYPlotLine",
     value: function showYPlotLine(y, text) {
       var chart = $('#' + this.chartId).highcharts();
       var chartYAxis = chart.yAxis[0];
@@ -497,16 +555,18 @@ var GraphController = function (_ComponentController) {
         width: 2,
         id: 'plot-line-y'
       };
+
       if (text != null && text !== '') {
         plotLine.label = {
           text: text,
           align: 'right'
         };
       }
+
       chartYAxis.addPlotLine(plotLine);
     }
   }, {
-    key: 'clearPlotLines',
+    key: "clearPlotLines",
     value: function clearPlotLines() {
       var chart = Highcharts.charts[0];
       var chartXAxis = chart.xAxis[0];
@@ -514,7 +574,6 @@ var GraphController = function (_ComponentController) {
       var chartYAxis = chart.yAxis[0];
       chartYAxis.removePlotLine('plot-line-y');
     }
-
     /**
      * If the x value is not within the x min and max limits, we will modify the x value to be at the
      * limit.
@@ -523,17 +582,18 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'makeSureXIsWithinXMinMaxLimits',
+    key: "makeSureXIsWithinXMinMaxLimits",
     value: function makeSureXIsWithinXMinMaxLimits(x) {
       if (x < this.xAxis.min) {
         x = this.xAxis.min;
       }
+
       if (x > this.xAxis.max) {
         x = this.xAxis.max;
       }
+
       return x;
     }
-
     /**
      * If the y value is not within the y min and max limits, we will modify the y value to be at the
      * limit.
@@ -542,17 +602,18 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'makeSureYIsWithinYMinMaxLimits',
+    key: "makeSureYIsWithinYMinMaxLimits",
     value: function makeSureYIsWithinYMinMaxLimits(y) {
       if (y < this.yAxis.min) {
         y = this.yAxis.min;
       }
+
       if (y > this.yAxis.max) {
         y = this.yAxis.max;
       }
+
       return y;
     }
-
     /**
      * Add a mouse over point to the array of student mouse over points.
      * @param x the x value in graph units
@@ -560,21 +621,21 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'addMouseOverPoint',
+    key: "addMouseOverPoint",
     value: function addMouseOverPoint(x, y) {
       this.mouseOverPoints.push([x, y]);
     }
-
     /**
      * @param useTimeout whether to call the drawGraphHelper() function in a timeout callback
      */
 
   }, {
-    key: 'drawGraph',
+    key: "drawGraph",
     value: function drawGraph(useTimeout) {
       var _this7 = this;
 
       var deferred = this.$q.defer();
+
       if (useTimeout) {
         /*
          * Clear the chart config so that the graph is completely refreshed. We need to do this
@@ -586,21 +647,22 @@ var GraphController = function (_ComponentController) {
          * Call the setup graph helper after a timeout. this is required so that the graph is
          * completely refreshed so that only the active series will react to mouseover.
          */
+
         this.$timeout(function () {
           _this7.drawGraphHelper(deferred);
         });
       } else {
         this.drawGraphHelper(deferred);
       }
+
       return deferred.promise;
     }
-
     /**
      * @param deferred A promise that should be resolved after the graph is done rendering.
      */
 
   }, {
-    key: 'drawGraphHelper',
+    key: "drawGraphHelper",
     value: function drawGraphHelper(deferred) {
       var _this8 = this;
 
@@ -611,77 +673,90 @@ var GraphController = function (_ComponentController) {
       this.setupHeight();
       this.setupXAxisLimitSpacerWidth();
       var series = null;
+
       if (this.isTrialsEnabled()) {
         series = this.getSeriesFromTrials(this.trials);
         xAxis.plotBands = this.getPlotBandsFromTrials(this.trials);
       } else {
         series = this.getSeries();
       }
+
       if (this.activeSeries == null) {
         this.setDefaultActiveSeries();
       }
+
       if (this.isDisabled) {
         this.setCanEditForAllSeries(series, false);
       }
+
       this.showUndoButton = false;
       this.setAllSeriesFields(series);
       this.refreshSeriesIds(series);
       this.updateMinMaxAxisValues(series, xAxis, yAxis);
+
       if (this.plotLines != null) {
         xAxis.plotLines = this.plotLines;
       }
+
       var zoomType = this.getZoomType();
       this.chartConfig = this.createChartConfig(deferred, title, xAxis, yAxis, series, zoomType);
+
       if (this.componentContent.useCustomLegend) {
         // use a timeout so the graph has a chance to render before we set the custom legend
         this.$timeout(function () {
           _this8.setCustomLegend();
         });
       }
+
       return deferred.promise;
     }
   }, {
-    key: 'setupXAxis',
+    key: "setupXAxis",
     value: function setupXAxis() {
       if (this.xAxis == null && this.componentContent.xAxis != null) {
         this.xAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.xAxis);
       }
+
       if (this.xAxis != null) {
         this.xAxis.allowDecimals = false;
         this.xAxis.plotBands = null;
+
         if (this.componentContent.xAxis != null && this.componentContent.xAxis.plotBands != null) {
           this.xAxis.plotBands = this.componentContent.xAxis.plotBands;
         }
       }
+
       return this.xAxis;
     }
   }, {
-    key: 'setupYAxis',
+    key: "setupYAxis",
     value: function setupYAxis() {
       if (this.yAxis == null && this.componentContent.yAxis != null) {
         this.yAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.yAxis);
       }
+
       if (this.yAxis != null) {
         this.yAxis.allowDecimals = false;
       }
+
       return this.yAxis;
     }
   }, {
-    key: 'setupWidth',
+    key: "setupWidth",
     value: function setupWidth() {
       if (this.componentContent.width != null) {
         this.width = this.componentContent.width;
       }
     }
   }, {
-    key: 'setupHeight',
+    key: "setupHeight",
     value: function setupHeight() {
       if (this.componentContent.height != null) {
         this.height = this.componentContent.height;
       }
     }
   }, {
-    key: 'setupXAxisLimitSpacerWidth',
+    key: "setupXAxisLimitSpacerWidth",
     value: function setupXAxisLimitSpacerWidth() {
       if (this.width > 100) {
         this.xAxisLimitSpacerWidth = this.width - 100;
@@ -690,7 +765,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getSeriesFromTrials',
+    key: "getSeriesFromTrials",
     value: function getSeriesFromTrials(trials) {
       var series = [];
       var _iteratorNormalCompletion = true;
@@ -710,8 +785,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
           }
         } finally {
           if (_didIteratorError) {
@@ -723,7 +798,7 @@ var GraphController = function (_ComponentController) {
       return series;
     }
   }, {
-    key: 'getPlotBandsFromTrials',
+    key: "getPlotBandsFromTrials",
     value: function getPlotBandsFromTrials(trials) {
       var trialPlotBands = [];
       var _iteratorNormalCompletion2 = true;
@@ -743,8 +818,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError2 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+            _iterator2["return"]();
           }
         } finally {
           if (_didIteratorError2) {
@@ -756,13 +831,13 @@ var GraphController = function (_ComponentController) {
       return trialPlotBands;
     }
   }, {
-    key: 'refreshSeriesIds',
+    key: "refreshSeriesIds",
     value: function refreshSeriesIds(series) {
       this.clearSeriesIds(series);
       this.setSeriesIds(series);
     }
   }, {
-    key: 'setAllSeriesFields',
+    key: "setAllSeriesFields",
     value: function setAllSeriesFields(series) {
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
@@ -771,7 +846,6 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator3 = series[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var singleSeries = _step3.value;
-
           this.setSingleSeriesFields(singleSeries);
         }
       } catch (err) {
@@ -779,8 +853,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError3 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return) {
-            _iterator3.return();
+          if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+            _iterator3["return"]();
           }
         } finally {
           if (_didIteratorError3) {
@@ -790,7 +864,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'setSingleSeriesFields',
+    key: "setSingleSeriesFields",
     value: function setSingleSeriesFields(singleSeries) {
       if (singleSeries.canEdit && this.isActiveSeries(singleSeries)) {
         if (this.graphType === 'line' || this.graphType === 'scatter') {
@@ -798,6 +872,7 @@ var GraphController = function (_ComponentController) {
         } else if (this.graphType === 'column') {
           singleSeries.draggableX = false;
         }
+
         singleSeries.draggableY = true;
         singleSeries.cursor = 'move';
         singleSeries.stickyTracking = false;
@@ -813,21 +888,23 @@ var GraphController = function (_ComponentController) {
         singleSeries.allowPointSelect = false;
         singleSeries.enableMouseTracking = false;
       }
+
       if (singleSeries.allowPointMouseOver === true) {
         singleSeries.allowPointSelect = true;
         singleSeries.enableMouseTracking = true;
       }
+
       if (this.isMousePlotLineOn()) {
         singleSeries.enableMouseTracking = true;
       }
     }
   }, {
-    key: 'getZoomType',
+    key: "getZoomType",
     value: function getZoomType() {
       return this.mode === 'grading' || this.mode === 'gradingRevision' ? 'xy' : null;
     }
   }, {
-    key: 'clearChartConfig',
+    key: "clearChartConfig",
     value: function clearChartConfig() {
       this.chartConfig = {
         chart: {
@@ -838,7 +915,7 @@ var GraphController = function (_ComponentController) {
       };
     }
   }, {
-    key: 'createChartConfig',
+    key: "createChartConfig",
     value: function createChartConfig(deferred, title, xAxis, yAxis, series, zoomType) {
       var chartConfig = {
         options: {
@@ -896,11 +973,12 @@ var GraphController = function (_ComponentController) {
       return chartConfig;
     }
   }, {
-    key: 'createTooltipFormatter',
+    key: "createTooltipFormatter",
     value: function createTooltipFormatter() {
       var thisGraphController = this;
       return function () {
         var text = '';
+
         if (thisGraphController.isLimitXAxisType(thisGraphController.xAxis)) {
           text = thisGraphController.getSeriesText(this.series);
           var xText = thisGraphController.getXTextForLimitGraph(this.series, this.x);
@@ -908,18 +986,23 @@ var GraphController = function (_ComponentController) {
           text += thisGraphController.combineXTextAndYText(xText, yText);
         } else if (thisGraphController.isCategoriesXAxisType(thisGraphController.xAxis)) {
           text = thisGraphController.getSeriesText(this.series);
+
           var _xText = thisGraphController.getXTextForCategoriesGraph(this.point, this.x);
+
           var _yText = thisGraphController.getYTextForCategoriesGraph(this.y);
+
           text += _xText + ' ' + _yText;
         }
+
         if (thisGraphController.pointHasCustomTooltip(this.point)) {
           text += '<br/>' + this.point.tooltip;
         }
+
         return text;
       };
     }
   }, {
-    key: 'getXAxisUnits',
+    key: "getXAxisUnits",
     value: function getXAxisUnits(series) {
       if (series.xAxis != null && series.xAxis.userOptions != null && series.xAxis.userOptions.units != null) {
         return series.xAxis.userOptions.units;
@@ -928,7 +1011,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getYAxisUnits',
+    key: "getYAxisUnits",
     value: function getYAxisUnits(series) {
       if (series.yAxis != null && series.yAxis.userOptions != null && series.yAxis.userOptions.units != null) {
         return series.yAxis.userOptions.units;
@@ -937,58 +1020,67 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'isLimitXAxisType',
+    key: "isLimitXAxisType",
     value: function isLimitXAxisType(xAxis) {
       return xAxis.type === 'limits';
     }
   }, {
-    key: 'isCategoriesXAxisType',
+    key: "isCategoriesXAxisType",
     value: function isCategoriesXAxisType(xAxis) {
       return xAxis.type === 'categories';
     }
   }, {
-    key: 'getSeriesText',
+    key: "getSeriesText",
     value: function getSeriesText(series) {
       var text = '';
+
       if (series.name !== '') {
         text = '<b>' + series.name + '</b><br/>';
       }
+
       return text;
     }
   }, {
-    key: 'getXTextForLimitGraph',
+    key: "getXTextForLimitGraph",
     value: function getXTextForLimitGraph(series, x) {
       var text = this.performRounding(x);
       var xAxisUnits = this.getXAxisUnits(series);
+
       if (xAxisUnits != null && xAxisUnits !== '') {
         text += ' ' + xAxisUnits;
       }
+
       return text;
     }
   }, {
-    key: 'getYTextForLimitGraph',
+    key: "getYTextForLimitGraph",
     value: function getYTextForLimitGraph(series, y) {
       var text = this.performRounding(y);
       var yAxisUnits = this.getYAxisUnits(this.series);
+
       if (yAxisUnits != null && yAxisUnits !== '') {
         text += ' ' + yAxisUnits;
       }
+
       return text;
     }
   }, {
-    key: 'combineXTextAndYText',
+    key: "combineXTextAndYText",
     value: function combineXTextAndYText(xText, yText) {
       var text = xText;
+
       if (xText !== '') {
         text += ', ';
       }
+
       text += yText;
       return text;
     }
   }, {
-    key: 'getXTextForCategoriesGraph',
+    key: "getXTextForCategoriesGraph",
     value: function getXTextForCategoriesGraph(point, x) {
       var category = this.getCategoryByIndex(point.index);
+
       if (category != null) {
         return category;
       } else {
@@ -996,17 +1088,17 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getYTextForCategoriesGraph',
+    key: "getYTextForCategoriesGraph",
     value: function getYTextForCategoriesGraph(y) {
       return this.performRounding(y);
     }
   }, {
-    key: 'pointHasCustomTooltip',
+    key: "pointHasCustomTooltip",
     value: function pointHasCustomTooltip(point) {
       return point.tooltip != null && point.tooltip !== '';
     }
   }, {
-    key: 'createGraphClickHandler',
+    key: "createGraphClickHandler",
     value: function createGraphClickHandler() {
       var thisGraphController = this;
       return function (event) {
@@ -1019,7 +1111,6 @@ var GraphController = function (_ComponentController) {
         }
       };
     }
-
     /*
      * Check if the last drop event was within the last 100 milliseconds so we will not register the
      * click. We need to do this because when students drag points, a click event is fired when they
@@ -1028,16 +1119,17 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'isIgnoreClickEvent',
+    key: "isIgnoreClickEvent",
     value: function isIgnoreClickEvent() {
       var currentTime = new Date().getTime();
       return this.lastDropTime != null && currentTime - this.lastDropTime < 100;
     }
   }, {
-    key: 'handleGraphClickEvent',
+    key: "handleGraphClickEvent",
     value: function handleGraphClickEvent(event, series) {
       if (!this.isDisabled) {
         var activeSeries = this.activeSeries;
+
         if (activeSeries != null && this.canEdit(activeSeries)) {
           var activeSeriesId = activeSeries.id;
           var _iteratorNormalCompletion4 = true;
@@ -1059,8 +1151,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError4 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                _iterator4.return();
+              if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+                _iterator4["return"]();
               }
             } finally {
               if (_didIteratorError4) {
@@ -1083,11 +1175,12 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'createLegendItemClickHandler',
+    key: "createLegendItemClickHandler",
     value: function createLegendItemClickHandler() {
       var thisGraphController = this;
       return function (event) {
         var canHideSeries = thisGraphController.componentContent.canStudentHideSeriesOnLegendClick === true;
+
         if (canHideSeries) {
           /*
            * Update the show field in all the series depending on whether each line is active
@@ -1100,8 +1193,8 @@ var GraphController = function (_ComponentController) {
           try {
             for (var _iterator5 = this.yAxis.series[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
               var yAxisSeries = _step5.value;
-
               var series = thisGraphController.getSeriesById(yAxisSeries.userOptions.id);
+
               if (this.userOptions.id === series.id) {
                 series.show = !yAxisSeries.visible;
               } else {
@@ -1113,8 +1206,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError5 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                _iterator5.return();
+              if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+                _iterator5["return"]();
               }
             } finally {
               if (_didIteratorError5) {
@@ -1125,16 +1218,18 @@ var GraphController = function (_ComponentController) {
 
           thisGraphController.studentDataChanged();
         }
+
         return canHideSeries;
       };
     }
   }, {
-    key: 'createPointDragEventHandler',
+    key: "createPointDragEventHandler",
     value: function createPointDragEventHandler() {
       var thisGraphController = this;
       return function (event) {
         if (!thisGraphController.isDisabled) {
           var activeSeries = thisGraphController.activeSeries;
+
           if (thisGraphController.canEdit(activeSeries)) {
             thisGraphController.dragging = true;
           }
@@ -1142,7 +1237,7 @@ var GraphController = function (_ComponentController) {
       };
     }
   }, {
-    key: 'createPointDropEventHandler',
+    key: "createPointDropEventHandler",
     value: function createPointDropEventHandler() {
       var thisGraphController = this;
       return function (event) {
@@ -1156,43 +1251,47 @@ var GraphController = function (_ComponentController) {
           var y = thisGraphController.performRounding(target.y);
           var index = target.index;
           var data = activeSeries.data;
+
           if (thisGraphController.isLimitXAxisType(thisGraphController.xAxis)) {
             data[index] = [x, y];
           } else if (thisGraphController.isCategoriesXAxisType(thisGraphController.xAxis)) {
             data[index] = y;
           }
+
           thisGraphController.addNextComponentStateToUndoStack = true;
           thisGraphController.studentDataChanged();
         }
       };
     }
   }, {
-    key: 'createGraphCallbackHandler',
+    key: "createGraphCallbackHandler",
     value: function createGraphCallbackHandler() {
       var thisGraphController = this;
       return function (chart) {
         thisGraphController.$timeout(function () {
           thisGraphController.showXPlotLineIfOn('Drag Me');
           thisGraphController.showYPlotLineIfOn('Drag Me');
+
           if (thisGraphController.isMouseXPlotLineOn() || thisGraphController.isMouseYPlotLineOn() || thisGraphController.isSaveMouseOverPoints()) {
             thisGraphController.setupMouseMoveListener();
           }
+
           chart.reflow();
         }, 1000);
       };
     }
-
     /**
      * Overwrite the existing legend with the custom authored legend.
      */
 
   }, {
-    key: 'setCustomLegend',
+    key: "setCustomLegend",
     value: function setCustomLegend() {
       if (!this.hasCustomLegendBeenSet) {
         if ($('.highcharts-legend').length > 0) {
           // move the legend to the very left by setting the x position to 0
           var userAgent = navigator.userAgent;
+
           if (userAgent.indexOf('Firefox') !== -1) {
             /*
              * Regex to split the transform string into three groups. We will use
@@ -1206,8 +1305,8 @@ var GraphController = function (_ComponentController) {
              * The x value of the translate is captured in group 2.
              */
             var matrixRegEx = /(translate\()(\d*)(,\s*\d*\))/;
-            var currentTransform = $('.highcharts-legend').attr('transform');
-            // replace the second group with 0
+            var currentTransform = $('.highcharts-legend').attr('transform'); // replace the second group with 0
+
             var newTransform = currentTransform.replace(matrixRegEx, '$10$3');
             $('.highcharts-legend').attr('transform', newTransform);
           } else {
@@ -1223,27 +1322,32 @@ var GraphController = function (_ComponentController) {
              * The x value of the matrix is captured in group 2.
              */
             var _matrixRegEx = /(matrix\(\d*,\s*\d*,\s*\d*,\s*\d*,\s*)(\d*)(,\s*\d*\))/;
-            var _currentTransform = $('.highcharts-legend').css('transform');
-            // replace the second group with 0
+
+            var _currentTransform = $('.highcharts-legend').css('transform'); // replace the second group with 0
+
+
             var _newTransform = _currentTransform.replace(_matrixRegEx, '$10$3');
+
             $('.highcharts-legend').css('transform', _newTransform);
           }
+
           $('.highcharts-legend').html(this.componentContent.customLegend);
         }
+
         this.hasCustomLegendBeenSet = true;
       }
     }
   }, {
-    key: 'addPointToSeries',
+    key: "addPointToSeries",
     value: function addPointToSeries(series, x, y) {
       var data = series.data;
+
       if (this.isCategoriesXAxisType(this.componentContent.xAxis)) {
         data[x] = y;
       } else {
         data.push([x, y]);
       }
     }
-
     /**
      * Remove a point from a series. We will remove all points that have the given x value.
      * @param series the series to remove the point from
@@ -1251,12 +1355,14 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'removePointFromSeries',
+    key: "removePointFromSeries",
     value: function removePointFromSeries(series, x) {
       var data = series.data;
+
       for (var d = 0; d < data.length; d++) {
         var dataPoint = data[d];
         var tempDataXValue = dataPoint[0];
+
         if (x === tempDataXValue) {
           data.splice(d, 1);
           d--;
@@ -1264,41 +1370,40 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'canEdit',
+    key: "canEdit",
     value: function canEdit(series) {
       return series.canEdit;
     }
   }, {
-    key: 'setSeries',
+    key: "setSeries",
     value: function setSeries(series) {
       this.series = series;
     }
   }, {
-    key: 'getSeries',
+    key: "getSeries",
     value: function getSeries() {
       return this.series;
     }
   }, {
-    key: 'setSeriesByIndex',
+    key: "setSeriesByIndex",
     value: function setSeriesByIndex(series, index) {
       this.series[index] = series;
     }
   }, {
-    key: 'getSeriesByIndex',
+    key: "getSeriesByIndex",
     value: function getSeriesByIndex(index) {
       return this.series[index];
     }
   }, {
-    key: 'setTrials',
+    key: "setTrials",
     value: function setTrials(trials) {
       this.trials = trials;
     }
   }, {
-    key: 'getTrials',
+    key: "getTrials",
     value: function getTrials() {
       return this.trials;
     }
-
     /**
      * Get the index of the trial
      * @param trial the trial object
@@ -1306,23 +1411,25 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'getTrialIndex',
+    key: "getTrialIndex",
     value: function getTrialIndex(trial) {
       for (var t = 0; t < this.trials.length; t++) {
         var tempTrial = this.trials[t];
+
         if (trial === tempTrial) {
           return t;
         }
       }
+
       return -1;
     }
   }, {
-    key: 'setActiveTrialByIndex',
+    key: "setActiveTrialByIndex",
     value: function setActiveTrialByIndex(index) {
       this.activeTrial = this.trials[index];
     }
   }, {
-    key: 'canEditTrial',
+    key: "canEditTrial",
     value: function canEditTrial(trial) {
       var series = trial.series;
       var _iteratorNormalCompletion6 = true;
@@ -1342,8 +1449,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError6 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+            _iterator6["return"]();
           }
         } finally {
           if (_didIteratorError6) {
@@ -1354,14 +1461,13 @@ var GraphController = function (_ComponentController) {
 
       return false;
     }
-
     /**
      * Set whether to show the active trial select menu
      * @return whether to show the active trial select menu
      */
 
   }, {
-    key: 'showSelectActiveTrials',
+    key: "showSelectActiveTrials",
     value: function showSelectActiveTrials() {
       var editableTrials = 0;
       var _iteratorNormalCompletion7 = true;
@@ -1374,6 +1480,7 @@ var GraphController = function (_ComponentController) {
 
           if (this.canEditTrial(trial) && trial.show) {
             editableTrials++;
+
             if (editableTrials > 1) {
               return true;
             }
@@ -1384,8 +1491,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError7 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion7 && _iterator7.return) {
-            _iterator7.return();
+          if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+            _iterator7["return"]();
           }
         } finally {
           if (_didIteratorError7) {
@@ -1397,68 +1504,75 @@ var GraphController = function (_ComponentController) {
       return false;
     }
   }, {
-    key: 'setXAxis',
+    key: "setXAxis",
     value: function setXAxis(xAxis) {
       this.xAxis = this.UtilService.makeCopyOfJSONObject(xAxis);
     }
   }, {
-    key: 'getXAxis',
+    key: "getXAxis",
     value: function getXAxis() {
       return this.xAxis;
     }
   }, {
-    key: 'setYAxis',
+    key: "setYAxis",
     value: function setYAxis(yAxis) {
       this.yAxis = this.UtilService.makeCopyOfJSONObject(yAxis);
     }
   }, {
-    key: 'getYAxis',
+    key: "getYAxis",
     value: function getYAxis() {
       return this.yAxis;
     }
   }, {
-    key: 'setActiveSeries',
+    key: "setActiveSeries",
     value: function setActiveSeries(series) {
       this.activeSeries = series;
     }
   }, {
-    key: 'setActiveSeriesByIndex',
+    key: "setActiveSeriesByIndex",
     value: function setActiveSeriesByIndex(index) {
       var series = this.getSeriesByIndex(index);
       this.setActiveSeries(series);
     }
   }, {
-    key: 'resetGraph',
+    key: "resetGraph",
     value: function resetGraph() {
       this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
+
       if (this.componentContent.xAxis != null) {
         this.setXAxis(this.componentContent.xAxis);
       }
+
       if (this.componentContent.yAxis != null) {
         this.setYAxis(this.componentContent.yAxis);
-      }
-      // set the active series to null so that the default series will become selected later
+      } // set the active series to null so that the default series will become selected later
+
+
       this.setActiveSeries(null);
       this.backgroundImage = this.componentContent.backgroundImage;
       this.addNextComponentStateToUndoStack = true;
       this.studentDataChanged();
     }
   }, {
-    key: 'resetSeries',
+    key: "resetSeries",
     value: function resetSeries() {
       var confirmMessage = '';
       var seriesName = this.activeSeries.name;
+
       if (seriesName === '') {
         confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheSeries');
       } else {
-        confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheNamedSeries', { seriesName: seriesName });
+        confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheNamedSeries', {
+          seriesName: seriesName
+        });
       }
+
       if (confirm(confirmMessage)) {
         this.resetSeriesHelper();
       }
     }
   }, {
-    key: 'resetSeriesHelper',
+    key: "resetSeriesHelper",
     value: function resetSeriesHelper() {
       if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         this.newTrial();
@@ -1467,16 +1581,20 @@ var GraphController = function (_ComponentController) {
       } else {
         var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
         var originalSeries = this.componentContent.series[activeSeriesIndex];
+
         if (originalSeries != null) {
           originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
           this.setSeriesByIndex(originalSeries, activeSeriesIndex);
           this.setActiveSeriesByIndex(activeSeriesIndex);
+
           if (this.componentContent.xAxis != null) {
             this.setXAxis(this.componentContent.xAxis);
           }
+
           if (this.componentContent.yAxis != null) {
             this.setYAxis(this.componentContent.yAxis);
           }
+
           this.backgroundImage = this.componentContent.backgroundImage;
           this.addNextComponentStateToUndoStack = true;
           this.studentDataChanged();
@@ -1484,18 +1602,21 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'setStudentWork',
+    key: "setStudentWork",
     value: function setStudentWork(componentState) {
       var studentData = componentState.studentData;
+
       if (this.isStudentDataVersion1(studentData.version)) {
         this.studentDataVersion = 1;
         this.setSeries(this.UtilService.makeCopyOfJSONObject(studentData.series));
       } else {
         this.studentDataVersion = studentData.version;
+
         if (studentData.trials != null && studentData.trials.length > 0) {
           var trialsCopy = this.UtilService.makeCopyOfJSONObject(studentData.trials);
           this.setTrials(trialsCopy);
           var activeTrialIndex = studentData.activeTrialIndex;
+
           if (activeTrialIndex == null) {
             if (trialsCopy.length > 0) {
               this.setActiveTrialByIndex(studentData.trials.length - 1);
@@ -1503,39 +1624,49 @@ var GraphController = function (_ComponentController) {
           } else {
             this.setActiveTrialByIndex(activeTrialIndex);
           }
+
           if (this.activeTrial != null && this.activeTrial.series != null) {
             this.series = this.activeTrial.series;
           }
         }
       }
+
       this.setTrialIdsToShow();
+
       if (studentData.xAxis != null) {
         this.setXAxis(studentData.xAxis);
       }
+
       if (studentData.yAxis != null) {
         this.setYAxis(studentData.yAxis);
       }
+
       this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
+
       if (studentData.backgroundImage != null) {
         this.backgroundImage = studentData.backgroundImage;
       }
+
       var submitCounter = studentData.submitCounter;
+
       if (submitCounter != null) {
         this.submitCounter = submitCounter;
       }
+
       if (studentData.mouseOverPoints != null && studentData.mouseOverPoints.length > 0) {
         this.mouseOverPoints = studentData.mouseOverPoints;
       }
+
       this.processLatestStudentWork();
     }
   }, {
-    key: 'activeSeriesChanged',
+    key: "activeSeriesChanged",
     value: function activeSeriesChanged() {
       var useTimeoutSetupGraph = true;
       this.studentDataChanged(useTimeoutSetupGraph);
     }
   }, {
-    key: 'studentDataChanged',
+    key: "studentDataChanged",
     value: function studentDataChanged(useTimeoutSetupGraph) {
       var _this9 = this;
 
@@ -1551,6 +1682,7 @@ var GraphController = function (_ComponentController) {
        * this will also notify connected parts that this component's student
        * data has changed.
        */
+
       var action = 'change';
       this.createComponentState(action).then(function (componentState) {
         if (_this9.addNextComponentStateToUndoStack) {
@@ -1568,6 +1700,8 @@ var GraphController = function (_ComponentController) {
            * Basically the undoStack contains the component states from the
            * current visit except for the current component state.
            */
+
+
           _this9.previousComponentState = componentState;
           _this9.addNextComponentStateToUndoStack = false;
         }
@@ -1577,12 +1711,13 @@ var GraphController = function (_ComponentController) {
          * listeners can initialize before this and are then able to process
          * this componentStudentDataChanged event
          */
+
+
         _this9.$timeout(function () {
           _this9.emitComponentStudentDataChanged(componentState);
         }, 100);
       });
     }
-
     /**
      * Create a new component state populated with the student data
      * @param action the action that is triggering creating of this component state
@@ -1591,12 +1726,13 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'createComponentState',
+    key: "createComponentState",
     value: function createComponentState(action) {
       var deferred = this.$q.defer();
       var componentState = this.NodeService.createNewComponentState();
       var studentData = {};
       studentData.version = this.studentDataVersion;
+
       if (this.isStudentDataVersion1()) {
         studentData.series = this.UtilService.makeCopyOfJSONObject(this.getSeries());
       } else {
@@ -1606,27 +1742,37 @@ var GraphController = function (_ComponentController) {
           studentData.activeTrialIndex = activeTrialIndex;
         }
       }
+
       studentData.xAxis = this.UtilService.makeCopyOfJSONObject(this.getXAxis());
       delete studentData.xAxis.plotBands;
+
       if (this.componentContent.xAxis != null && this.componentContent.xAxis.plotBands != null) {
         studentData.xAxis.plotBands = this.componentContent.xAxis.plotBands;
       }
+
       studentData.yAxis = this.getYAxis();
       var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+
       if (activeSeriesIndex != null) {
         studentData.activeSeriesIndex = activeSeriesIndex;
       }
+
       var uploadedFileName = this.getUploadedFileName();
+
       if (uploadedFileName != null) {
         studentData.uploadedFileName = uploadedFileName;
       }
+
       if (this.backgroundImage != null) {
         studentData.backgroundImage = this.backgroundImage;
       }
+
       studentData.submitCounter = this.submitCounter;
+
       if (this.mouseOverPoints.length !== 0) {
         studentData.mouseOverPoints = this.mouseOverPoints;
       }
+
       componentState.isSubmit = this.isSubmit;
       componentState.studentData = studentData;
       componentState.componentType = 'Graph';
@@ -1636,7 +1782,6 @@ var GraphController = function (_ComponentController) {
       this.createComponentStateAdditionalProcessing(deferred, componentState, action);
       return deferred.promise;
     }
-
     /**
      * Perform any additional processing that is required before returning the component state
      * Note: this function must call deferred.resolve() otherwise student work will not be saved
@@ -1647,7 +1792,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'createComponentStateAdditionalProcessing',
+    key: "createComponentStateAdditionalProcessing",
     value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
       if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
         var additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(this.nodeId, this.componentId);
@@ -1659,7 +1804,6 @@ var GraphController = function (_ComponentController) {
         try {
           for (var _iterator8 = additionalProcessingFunctions[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
             var additionalProcessingFunction = _step8.value;
-
             var defer = this.$q.defer();
             var promise = defer.promise;
             allPromises.push(promise);
@@ -1670,8 +1814,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-              _iterator8.return();
+            if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
+              _iterator8["return"]();
             }
           } finally {
             if (_didIteratorError8) {
@@ -1688,40 +1832,43 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'showPrompt',
+    key: "showPrompt",
     value: function showPrompt() {
       return this.isPromptVisible === true;
     }
   }, {
-    key: 'showResetGraphButton',
+    key: "showResetGraphButton",
     value: function showResetGraphButton() {
       return this.isResetGraphButtonVisible === true;
     }
   }, {
-    key: 'showResetSeriesButton',
+    key: "showResetSeriesButton",
     value: function showResetSeriesButton() {
       return this.isResetSeriesButtonVisible === true;
     }
   }, {
-    key: 'getSeriesIndex',
+    key: "getSeriesIndex",
     value: function getSeriesIndex(series) {
       var multipleSeries = this.getSeries();
+
       for (var s = 0; s < multipleSeries.length; s++) {
         var singleSeries = multipleSeries[s];
+
         if (series === singleSeries) {
           return s;
         }
       }
+
       return null;
     }
   }, {
-    key: 'getSeriesByIndex',
+    key: "getSeriesByIndex",
     value: function getSeriesByIndex(index) {
       var series = this.getSeries();
       return series[index];
     }
   }, {
-    key: 'getSeriesById',
+    key: "getSeriesById",
     value: function getSeriesById(id) {
       var _iteratorNormalCompletion9 = true;
       var _didIteratorError9 = false;
@@ -1740,8 +1887,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError9 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion9 && _iterator9.return) {
-            _iterator9.return();
+          if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
+            _iterator9["return"]();
           }
         } finally {
           if (_didIteratorError9) {
@@ -1752,7 +1899,6 @@ var GraphController = function (_ComponentController) {
 
       return null;
     }
-
     /**
      * Get the trials from classmates
      * @param nodeId the node id
@@ -1764,7 +1910,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'getTrialsFromClassmates',
+    key: "getTrialsFromClassmates",
     value: function getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource) {
       var _this10 = this;
 
@@ -1778,7 +1924,6 @@ var GraphController = function (_ComponentController) {
         try {
           for (var _iterator10 = componentStates[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
             var componentState = _step10.value;
-
             promises.push(_this10.getTrialsFromComponentState(nodeId, componentId, componentState));
           }
         } catch (err) {
@@ -1786,8 +1931,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError10 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion10 && _iterator10.return) {
-              _iterator10.return();
+            if (!_iteratorNormalCompletion10 && _iterator10["return"] != null) {
+              _iterator10["return"]();
             }
           } finally {
             if (_didIteratorError10) {
@@ -1812,7 +1957,6 @@ var GraphController = function (_ComponentController) {
               try {
                 for (var _iterator12 = trials[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
                   var trial = _step12.value;
-
                   mergedTrials.push(trial);
                 }
               } catch (err) {
@@ -1820,8 +1964,8 @@ var GraphController = function (_ComponentController) {
                 _iteratorError12 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                    _iterator12.return();
+                  if (!_iteratorNormalCompletion12 && _iterator12["return"] != null) {
+                    _iterator12["return"]();
                   }
                 } finally {
                   if (_didIteratorError12) {
@@ -1835,8 +1979,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError11 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                _iterator11.return();
+              if (!_iteratorNormalCompletion11 && _iterator11["return"] != null) {
+                _iterator11["return"]();
               }
             } finally {
               if (_didIteratorError11) {
@@ -1850,7 +1994,6 @@ var GraphController = function (_ComponentController) {
       });
       return deferred.promise;
     }
-
     /**
      * Get the trials from a component state.
      * Note: The code in this function doesn't actually require usage of a
@@ -1864,12 +2007,13 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'getTrialsFromComponentState',
+    key: "getTrialsFromComponentState",
     value: function getTrialsFromComponentState(nodeId, componentId, componentState) {
       var deferred = this.$q.defer();
       var mergedTrials = [];
       var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
       var studentData = componentState.studentData;
+
       if (this.isStudentDataVersion1(studentData.version)) {
         var series = studentData.series;
         var newTrial = {
@@ -1881,6 +2025,7 @@ var GraphController = function (_ComponentController) {
         mergedTrials.push(newTrial);
       } else {
         var trials = studentData.trials;
+
         if (trials != null) {
           var _iteratorNormalCompletion13 = true;
           var _didIteratorError13 = false;
@@ -1891,6 +2036,7 @@ var GraphController = function (_ComponentController) {
               var trial = _step13.value;
 
               var _newTrial = this.UtilService.makeCopyOfJSONObject(trial);
+
               _newTrial.name = nodePositionAndTitle;
               _newTrial.show = true;
               mergedTrials.push(_newTrial);
@@ -1900,8 +2046,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError13 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion13 && _iterator13.return) {
-                _iterator13.return();
+              if (!_iteratorNormalCompletion13 && _iterator13["return"] != null) {
+                _iterator13["return"]();
               }
             } finally {
               if (_didIteratorError13) {
@@ -1911,29 +2057,32 @@ var GraphController = function (_ComponentController) {
           }
         }
       }
+
       deferred.resolve(mergedTrials);
       return deferred.promise;
     }
-
     /**
      * Handle importing external data (we only support csv for now)
      * @param studentAsset CSV file student asset
      */
 
   }, {
-    key: 'attachStudentAsset',
+    key: "attachStudentAsset",
     value: function attachStudentAsset(studentAsset) {
       var _this11 = this;
 
       this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
         _this11.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
           var rowData = _this11.StudentDataService.CSVToArray(assetContent);
+
           var params = {
             skipFirstRow: true,
             xColumn: 0,
             yColumn: 1
           };
+
           var seriesData = _this11.convertRowDataToSeriesData(rowData, params);
+
           var newSeriesIndex = _this11.series.length;
           var series = {
             name: copiedAsset.fileName,
@@ -1947,11 +2096,11 @@ var GraphController = function (_ComponentController) {
           series.data = seriesData;
           _this11.isDirty = true;
           _this11.addNextComponentStateToUndoStack = true;
+
           _this11.studentDataChanged();
         });
       });
     }
-
     /**
      * Convert the table data into series data
      * @param componentState the component state to get table data from
@@ -1960,27 +2109,31 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'convertRowDataToSeriesData',
+    key: "convertRowDataToSeriesData",
     value: function convertRowDataToSeriesData(rows, params) {
       var data = [];
       var skipFirstRow = this.getSkipFirstRowValue(params);
       var xColumn = this.getXColumnValue(params);
       var yColumn = this.getYColumnValue(params);
+
       for (var r = 0; r < rows.length; r++) {
         if (skipFirstRow && r === 0) {
           continue;
         }
+
         var row = rows[r];
         var xCell = row[xColumn];
         var yCell = row[yColumn];
+
         if (xCell != null && yCell != null) {
           this.addPointFromTableIntoData(xCell, yCell, data);
         }
       }
+
       return data;
     }
   }, {
-    key: 'getSkipFirstRowValue',
+    key: "getSkipFirstRowValue",
     value: function getSkipFirstRowValue(params) {
       if (params == null) {
         return false;
@@ -1989,7 +2142,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getXColumnValue',
+    key: "getXColumnValue",
     value: function getXColumnValue(params) {
       if (params == null || params.xColumn == null) {
         return 0;
@@ -1998,7 +2151,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getYColumnValue',
+    key: "getYColumnValue",
     value: function getYColumnValue(params) {
       if (params == null || params.yColumn == null) {
         return 1;
@@ -2007,29 +2160,33 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'addPointFromTableIntoData',
+    key: "addPointFromTableIntoData",
     value: function addPointFromTableIntoData(xCell, yCell, data) {
       var xText = xCell.text;
       var yText = yCell.text;
+
       if (xText != null && xText !== '' && yText != null && yText !== '') {
         var xNumber = Number(xText);
         var yNumber = Number(yText);
         var point = [];
+
         if (!isNaN(xNumber)) {
           point.push(xNumber);
         } else {
           point.push(xText);
         }
+
         if (!isNaN(yNumber)) {
           point.push(yNumber);
         } else {
           point.push(yText);
         }
+
         data.push(point);
       }
     }
   }, {
-    key: 'setSeriesIds',
+    key: "setSeriesIds",
     value: function setSeriesIds(allSeries) {
       var usedSeriesIds = this.getAllUsedSeriesIds(allSeries);
       var _iteratorNormalCompletion14 = true;
@@ -2051,8 +2208,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError14 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion14 && _iterator14.return) {
-            _iterator14.return();
+          if (!_iteratorNormalCompletion14 && _iterator14["return"] != null) {
+            _iterator14["return"]();
           }
         } finally {
           if (_didIteratorError14) {
@@ -2062,7 +2219,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getAllUsedSeriesIds',
+    key: "getAllUsedSeriesIds",
     value: function getAllUsedSeriesIds(allSeries) {
       var usedSeriesIds = [];
       var _iteratorNormalCompletion15 = true;
@@ -2072,7 +2229,6 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator15 = allSeries[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
           var singleSeries = _step15.value;
-
           usedSeriesIds.push(singleSeries.id);
         }
       } catch (err) {
@@ -2080,8 +2236,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError15 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion15 && _iterator15.return) {
-            _iterator15.return();
+          if (!_iteratorNormalCompletion15 && _iterator15["return"] != null) {
+            _iterator15["return"]();
           }
         } finally {
           if (_didIteratorError15) {
@@ -2092,7 +2248,6 @@ var GraphController = function (_ComponentController) {
 
       return usedSeriesIds;
     }
-
     /**
      * Get the next available series id
      * @param usedSeriesIds an array of used series ids
@@ -2100,13 +2255,15 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'getNextSeriesId',
+    key: "getNextSeriesId",
     value: function getNextSeriesId(usedSeriesIds) {
       var nextSeriesId = null;
       var currentSeriesNumber = 0;
       var foundNextSeriesId = false;
+
       while (!foundNextSeriesId) {
         var tempSeriesId = 'series-' + currentSeriesNumber;
+
         if (usedSeriesIds.indexOf(tempSeriesId) === -1) {
           nextSeriesId = tempSeriesId;
           foundNextSeriesId = true;
@@ -2114,16 +2271,19 @@ var GraphController = function (_ComponentController) {
           currentSeriesNumber++;
         }
       }
+
       return nextSeriesId;
     }
   }, {
-    key: 'handleDeleteKeyPressed',
+    key: "handleDeleteKeyPressed",
     value: function handleDeleteKeyPressed() {
       var series = this.activeSeries;
+
       if (this.canEdit(series)) {
         var chart = $('#' + this.chartId).highcharts();
         var selectedPoints = chart.getSelectedPoints();
         var index = null;
+
         if (selectedPoints != null) {
           var indexesToDelete = [];
           var data = series.data;
@@ -2134,9 +2294,9 @@ var GraphController = function (_ComponentController) {
           try {
             for (var _iterator16 = selectedPoints[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
               var selectedPoint = _step16.value;
-
               index = selectedPoint.index;
               var dataPoint = data[index];
+
               if (dataPoint != null) {
                 /*
                  * make sure the x and y values match the selected point
@@ -2153,13 +2313,14 @@ var GraphController = function (_ComponentController) {
              * points starting from lower indexes first, then the indexes
              * will shift and we will end up deleting the wrong points.
              */
+
           } catch (err) {
             _didIteratorError16 = true;
             _iteratorError16 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion16 && _iterator16.return) {
-                _iterator16.return();
+              if (!_iteratorNormalCompletion16 && _iterator16["return"] != null) {
+                _iterator16["return"]();
               }
             } finally {
               if (_didIteratorError16) {
@@ -2168,18 +2329,19 @@ var GraphController = function (_ComponentController) {
             }
           }
 
-          indexesToDelete.sort().reverse();
-          // loop through all the indexes and remove them from the series data
+          indexesToDelete.sort().reverse(); // loop through all the indexes and remove them from the series data
+
           for (var i = 0; i < indexesToDelete.length; i++) {
             data.splice(indexesToDelete[i], 1);
           }
+
           this.addNextComponentStateToUndoStack = true;
           this.studentDataChanged();
         }
       }
     }
   }, {
-    key: 'createNewSeries',
+    key: "createNewSeries",
     value: function createNewSeries() {
       return {
         name: '',
@@ -2191,37 +2353,39 @@ var GraphController = function (_ComponentController) {
       };
     }
   }, {
-    key: 'isActiveSeries',
+    key: "isActiveSeries",
     value: function isActiveSeries(series) {
       var seriesIndex = this.getSeriesIndex(series);
       return this.isActiveSeriesIndex(seriesIndex);
     }
   }, {
-    key: 'isActiveSeriesIndex',
+    key: "isActiveSeriesIndex",
     value: function isActiveSeriesIndex(seriesIndex) {
       return this.series.indexOf(this.activeSeries) === seriesIndex;
     }
   }, {
-    key: 'isShowSelectSeriesInput',
+    key: "isShowSelectSeriesInput",
     value: function isShowSelectSeriesInput() {
       return this.trialIdsToShow.length && this.hasEditableSeries() && this.isSelectSeriesVisible && this.series.length > 1;
     }
   }, {
-    key: 'newTrialButtonClicked',
+    key: "newTrialButtonClicked",
     value: function newTrialButtonClicked() {
       this.newTrial();
       this.addNextComponentStateToUndoStack = true;
       this.studentDataChanged();
     }
   }, {
-    key: 'newTrial',
+    key: "newTrial",
     value: function newTrial() {
       var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
       var trialNumbers = this.getTrialNumbers();
       var maxTrialNumber = 0;
+
       if (trialNumbers.length > 0) {
         maxTrialNumber = trialNumbers[trialNumbers.length - 1];
       }
+
       if (this.hideAllTrialsOnNewTrial) {
         var _iteratorNormalCompletion17 = true;
         var _didIteratorError17 = false;
@@ -2230,7 +2394,6 @@ var GraphController = function (_ComponentController) {
         try {
           for (var _iterator17 = this.trials[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
             var _trial = _step17.value;
-
             _trial.show = false;
           }
         } catch (err) {
@@ -2238,8 +2401,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError17 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion17 && _iterator17.return) {
-              _iterator17.return();
+            if (!_iteratorNormalCompletion17 && _iterator17["return"] != null) {
+              _iterator17["return"]();
             }
           } finally {
             if (_didIteratorError17) {
@@ -2248,6 +2411,7 @@ var GraphController = function (_ComponentController) {
           }
         }
       }
+
       var series = this.UtilService.makeCopyOfJSONObject(this.componentContent.series);
       var trial = {
         name: this.$translate('graph.trial') + ' ' + (maxTrialNumber + 1),
@@ -2258,15 +2422,17 @@ var GraphController = function (_ComponentController) {
       this.trials.push(trial);
       this.activeTrial = trial;
       this.series = series;
+
       if (this.activeSeries == null) {
         this.setDefaultActiveSeries();
       } else {
         this.setActiveSeriesByIndex(activeSeriesIndex);
       }
+
       this.setTrialIdsToShow();
     }
   }, {
-    key: 'getTrialNumbers',
+    key: "getTrialNumbers",
     value: function getTrialNumbers() {
       var trialNumbers = [];
       var trialNumberRegex = /Trial (\d*)/;
@@ -2277,9 +2443,9 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator18 = this.trials[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
           var trial = _step18.value;
-
           var tempTrialName = trial.name;
           var match = trialNumberRegex.exec(tempTrialName);
+
           if (match != null && match.length > 0) {
             var tempTrialNumber = match[1];
             trialNumbers.push(parseInt(tempTrialNumber));
@@ -2290,8 +2456,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError18 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion18 && _iterator18.return) {
-            _iterator18.return();
+          if (!_iteratorNormalCompletion18 && _iterator18["return"] != null) {
+            _iterator18["return"]();
           }
         } finally {
           if (_didIteratorError18) {
@@ -2304,16 +2470,18 @@ var GraphController = function (_ComponentController) {
       return trialNumbers;
     }
   }, {
-    key: 'deleteTrial',
+    key: "deleteTrial",
     value: function deleteTrial(trialIndex) {
       var trialToRemove = this.trials[trialIndex];
       var trialToRemoveId = trialToRemove.id;
       this.trials.splice(trialIndex, 1);
+
       for (var t = 0; t < this.trialIdsToShow.length; t++) {
         if (trialToRemoveId === this.trialIdsToShow[t]) {
           this.trialIdsToShow.splice(t, 1);
         }
       }
+
       if (this.trials.length === 0) {
         // there are no more trials so we will create a new empty trial
         this.newTrial();
@@ -2324,29 +2492,32 @@ var GraphController = function (_ComponentController) {
           this.makeHighestTrialActive();
         }
       }
+
       this.setTrialIdsToShow();
       this.addNextComponentStateToUndoStack = true;
       this.studentDataChanged();
       this.selectedTrialsText = this.getSelectedTrialsText();
     }
   }, {
-    key: 'makeHighestTrialActive',
+    key: "makeHighestTrialActive",
     value: function makeHighestTrialActive() {
       this.activeTrial = null;
       this.activeSeries = null;
       this.series = [];
       var highestTrial = this.getHighestTrial();
+
       if (highestTrial != null) {
         var seriesIndex = this.getSeriesIndex(this.activeSeries);
         this.activeTrial = highestTrial;
         this.setSeries(this.activeTrial.series);
+
         if (seriesIndex != null) {
           this.setActiveSeriesByIndex(seriesIndex);
         }
       }
     }
   }, {
-    key: 'getHighestTrial',
+    key: "getHighestTrial",
     value: function getHighestTrial() {
       var highestTrialIndex = null;
       var highestTrial = null;
@@ -2357,9 +2528,9 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator19 = this.trialIdsToShow[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
           var trialId = _step19.value;
-
           var trial = this.getTrialById(trialId);
           var trialIndex = this.getTrialIndex(trial);
+
           if (highestTrialIndex == null || trialIndex > highestTrialIndex) {
             highestTrialIndex = trialIndex;
             highestTrial = trial;
@@ -2370,8 +2541,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError19 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion19 && _iterator19.return) {
-            _iterator19.return();
+          if (!_iteratorNormalCompletion19 && _iterator19["return"] != null) {
+            _iterator19["return"]();
           }
         } finally {
           if (_didIteratorError19) {
@@ -2383,7 +2554,7 @@ var GraphController = function (_ComponentController) {
       return highestTrial;
     }
   }, {
-    key: 'activeTrialChanged',
+    key: "activeTrialChanged",
     value: function activeTrialChanged() {
       var seriesIndex = this.getSeriesIndex(this.activeSeries);
       var activeTrial = this.activeTrial;
@@ -2393,14 +2564,15 @@ var GraphController = function (_ComponentController) {
       this.studentDataChanged();
     }
   }, {
-    key: 'trialIdsToShowChanged',
+    key: "trialIdsToShowChanged",
     value: function trialIdsToShowChanged() {
       this.showOrHideTrials(this.trialIdsToShow);
-      this.setActiveTrialAndSeriesByTrialIdsToShow(this.trialIdsToShow);
-      // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
+      this.setActiveTrialAndSeriesByTrialIdsToShow(this.trialIdsToShow); // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
       // TODO: figure out why this check is sometimes necessary and remove
+
       for (var a = 0; a < this.trialIdsToShow.length; a++) {
         var idToShow = this.trialIdsToShow[a];
+
         if (!this.getTrialById(idToShow)) {
           this.trialIdsToShow.splice(a, 1);
         }
@@ -2415,6 +2587,8 @@ var GraphController = function (_ComponentController) {
        * We do this check to minimize the number of times studentDataChanged()
        * is called.
        */
+
+
       if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, this.trialIdsToShow)) {
         this.trialIdsToShow = this.trialIdsToShow;
         this.studentDataChanged();
@@ -2424,11 +2598,13 @@ var GraphController = function (_ComponentController) {
        * trialIdsToShow actually change the next time trialIdsToShowChanged()
        * is called.
        */
+
+
       this.previousTrialIdsToShow = this.UtilService.makeCopyOfJSONObject(this.trialIdsToShow);
       this.selectedTrialsText = this.getSelectedTrialsText();
     }
   }, {
-    key: 'showOrHideTrials',
+    key: "showOrHideTrials",
     value: function showOrHideTrials(trialIdsToShow) {
       var _iteratorNormalCompletion20 = true;
       var _didIteratorError20 = false;
@@ -2442,6 +2618,7 @@ var GraphController = function (_ComponentController) {
             trial.show = true;
           } else {
             trial.show = false;
+
             if (this.activeTrial != null && this.activeTrial.id === trial.id) {
               this.activeTrial = null;
               this.activeSeries = null;
@@ -2454,8 +2631,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError20 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion20 && _iterator20.return) {
-            _iterator20.return();
+          if (!_iteratorNormalCompletion20 && _iterator20["return"] != null) {
+            _iterator20["return"]();
           }
         } finally {
           if (_didIteratorError20) {
@@ -2465,18 +2642,22 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'setActiveTrialAndSeriesByTrialIdsToShow',
+    key: "setActiveTrialAndSeriesByTrialIdsToShow",
     value: function setActiveTrialAndSeriesByTrialIdsToShow(trialIdsToShow) {
       if (trialIdsToShow.length > 0) {
         var lastShownTrialId = trialIdsToShow[trialIdsToShow.length - 1];
         var lastShownTrial = this.getTrialById(lastShownTrialId);
+
         if (this.hasEditableSeries(lastShownTrial.series)) {
           this.activeTrial = lastShownTrial;
           var seriesIndex = this.getSeriesIndex(this.activeSeries);
+
           if (!this.isSeriesEditable(this.activeTrial.series, seriesIndex)) {
             seriesIndex = this.getLatestEditableSeriesIndex(this.activeTrial.series);
           }
+
           this.setSeries(this.activeTrial.series);
+
           if (seriesIndex != null) {
             this.setActiveSeriesByIndex(seriesIndex);
           }
@@ -2484,25 +2665,27 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'isSeriesEditable',
+    key: "isSeriesEditable",
     value: function isSeriesEditable(multipleSeries, index) {
       if (multipleSeries[index] != null) {
         return multipleSeries[index].canEdit;
       }
+
       return false;
     }
   }, {
-    key: 'getLatestEditableSeriesIndex',
+    key: "getLatestEditableSeriesIndex",
     value: function getLatestEditableSeriesIndex(multipleSeries) {
       for (var s = multipleSeries.length - 1; s >= 0; s--) {
         if (multipleSeries[s].canEdit) {
           return s;
         }
       }
+
       return null;
     }
   }, {
-    key: 'setTrialIdsToShow',
+    key: "setTrialIdsToShow",
     value: function setTrialIdsToShow() {
       var idsToShow = [];
       var _iteratorNormalCompletion21 = true;
@@ -2522,8 +2705,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError21 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion21 && _iterator21.return) {
-            _iterator21.return();
+          if (!_iteratorNormalCompletion21 && _iterator21["return"] != null) {
+            _iterator21["return"]();
           }
         } finally {
           if (_didIteratorError21) {
@@ -2535,7 +2718,7 @@ var GraphController = function (_ComponentController) {
       this.trialIdsToShow = idsToShow;
     }
   }, {
-    key: 'getSelectedTrialsText',
+    key: "getSelectedTrialsText",
     value: function getSelectedTrialsText() {
       if (this.trialIdsToShow.length === 1) {
         var id = this.trialIdsToShow[0];
@@ -2546,7 +2729,6 @@ var GraphController = function (_ComponentController) {
         return this.$translate('graph.selectTrialsToShow');
       }
     }
-
     /**
      * Process the student data that we have received from a connected component.
      * @param studentData The student data from a connected component.
@@ -2554,7 +2736,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'processConnectedComponentStudentData',
+    key: "processConnectedComponentStudentData",
     value: function processConnectedComponentStudentData(studentData, params) {
       if (params.fields == null) {
         /*
@@ -2571,20 +2753,17 @@ var GraphController = function (_ComponentController) {
         try {
           for (var _iterator22 = params.fields[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
             var field = _step22.value;
-
             var name = field.name;
             var when = field.when;
             var action = field.action;
             var firstTime = false;
+
             if (when === 'firstTime' && firstTime === true) {
-              if (action === 'write') {
-                // TODO
-              } else if (action === 'read') {
-                // TODO
+              if (action === 'write') {// TODO
+              } else if (action === 'read') {// TODO
               }
             } else if (when === 'always') {
-              if (action === 'write') {
-                // TODO
+              if (action === 'write') {// TODO
               } else if (action === 'read') {
                 this.readConnectedComponentFieldFromStudentData(studentData, params, name);
               }
@@ -2595,8 +2774,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError22 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion22 && _iterator22.return) {
-              _iterator22.return();
+            if (!_iteratorNormalCompletion22 && _iterator22["return"] != null) {
+              _iterator22["return"]();
             }
           } finally {
             if (_didIteratorError22) {
@@ -2606,7 +2785,6 @@ var GraphController = function (_ComponentController) {
         }
       }
     }
-
     /**
      * Read the field from the new student data and perform any processing on our
      * existing student data based upon the new student data.
@@ -2616,11 +2794,12 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'readConnectedComponentFieldFromStudentData',
+    key: "readConnectedComponentFieldFromStudentData",
     value: function readConnectedComponentFieldFromStudentData(studentData, params, name) {
       if (name === 'selectedCells') {
         // only show the trials that are specified in the selectedCells array
         var selectedCells = studentData[name];
+
         if (selectedCells != null) {
           var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
           var _iteratorNormalCompletion23 = true;
@@ -2642,8 +2821,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError23 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion23 && _iterator23.return) {
-                _iterator23.return();
+              if (!_iteratorNormalCompletion23 && _iterator23["return"] != null) {
+                _iterator23["return"]();
               }
             } finally {
               if (_didIteratorError23) {
@@ -2658,14 +2837,13 @@ var GraphController = function (_ComponentController) {
         this.deleteTrialsByTrialId(studentData.trialIdsToDelete);
       }
     }
-
     /**
      * Delete the trials
      * @param trialIdsToDelete An array of trial ids to delete
      */
 
   }, {
-    key: 'deleteTrialsByTrialId',
+    key: "deleteTrialsByTrialId",
     value: function deleteTrialsByTrialId(trialIdsToDelete) {
       if (trialIdsToDelete != null) {
         var _iteratorNormalCompletion24 = true;
@@ -2675,7 +2853,6 @@ var GraphController = function (_ComponentController) {
         try {
           for (var _iterator24 = trialIdsToDelete[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
             var trialIdToDelete = _step24.value;
-
             this.deleteTrialId(trialIdToDelete);
           }
         } catch (err) {
@@ -2683,8 +2860,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError24 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion24 && _iterator24.return) {
-              _iterator24.return();
+            if (!_iteratorNormalCompletion24 && _iterator24["return"] != null) {
+              _iterator24["return"]();
             }
           } finally {
             if (_didIteratorError24) {
@@ -2694,24 +2871,23 @@ var GraphController = function (_ComponentController) {
         }
       }
     }
-
     /**
      * Delete a trial
      * @param trialId The trial id string to delete
      */
 
   }, {
-    key: 'deleteTrialId',
+    key: "deleteTrialId",
     value: function deleteTrialId(trialId) {
       for (var t = 0; t < this.trials.length; t++) {
         var trial = this.trials[t];
+
         if (trial.id === trialId) {
           this.trials.splice(t, 1);
           break;
         }
       }
     }
-
     /**
      * Parse the latest trial and set it into the component
      * @param studentData the student data object that has a trials field
@@ -2720,7 +2896,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'parseLatestTrial',
+    key: "parseLatestTrial",
     value: function parseLatestTrial(studentData, params) {
       var latestStudentDataTrial = this.getLatestStudentDataTrial(studentData);
       var latestStudentDataTrialId = latestStudentDataTrial.id;
@@ -2730,26 +2906,31 @@ var GraphController = function (_ComponentController) {
       this.copyTrialNameIntoTrial(latestStudentDataTrial, latestTrial);
       this.copyPlotBandsIntoTrial(latestStudentDataTrial, latestTrial);
       this.setLastTrialToActive();
+
       if (studentData.xPlotLine != null) {
         this.showXPlotLine(studentData.xPlotLine);
       }
+
       this.setTrialIdsToShow();
       this.activeTrialChanged();
     }
   }, {
-    key: 'getLatestStudentDataTrial',
+    key: "getLatestStudentDataTrial",
     value: function getLatestStudentDataTrial(studentData) {
       var latestStudentDataTrial = null;
+
       if (studentData.trial != null) {
         latestStudentDataTrial = studentData.trial;
       }
+
       if (studentData.trials != null && studentData.trials.length > 0) {
         latestStudentDataTrial = studentData.trials[studentData.trials.length - 1];
       }
+
       return latestStudentDataTrial;
     }
   }, {
-    key: 'hideAllTrials',
+    key: "hideAllTrials",
     value: function hideAllTrials() {
       var _iteratorNormalCompletion25 = true;
       var _didIteratorError25 = false;
@@ -2758,7 +2939,6 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator25 = this.trials[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
           var trial = _step25.value;
-
           trial.show = false;
         }
       } catch (err) {
@@ -2766,8 +2946,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError25 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion25 && _iterator25.return) {
-            _iterator25.return();
+          if (!_iteratorNormalCompletion25 && _iterator25["return"] != null) {
+            _iterator25["return"]();
           }
         } finally {
           if (_didIteratorError25) {
@@ -2777,7 +2957,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'createNewTrial',
+    key: "createNewTrial",
     value: function createNewTrial(id) {
       return {
         id: id,
@@ -2787,7 +2967,7 @@ var GraphController = function (_ComponentController) {
       };
     }
   }, {
-    key: 'copySeries',
+    key: "copySeries",
     value: function copySeries(series) {
       var newSeries = {
         name: series.name,
@@ -2796,19 +2976,23 @@ var GraphController = function (_ComponentController) {
         canEdit: false,
         allowPointSelect: false
       };
+
       if (series.marker != null) {
         newSeries.marker = series.marker;
       }
+
       if (series.dashStyle != null) {
         newSeries.dashStyle = series.dashStyle;
       }
+
       if (series.allowPointMouseOver != null) {
         newSeries.allowPointMouseOver = series.allowPointMouseOver;
       }
+
       return newSeries;
     }
   }, {
-    key: 'removeDefaultTrialIfNecessary',
+    key: "removeDefaultTrialIfNecessary",
     value: function removeDefaultTrialIfNecessary(latestStudentDataTrialId) {
       /*
        * remove the first default trial that is automatically created
@@ -2822,6 +3006,7 @@ var GraphController = function (_ComponentController) {
          * have any series it means it was automatically created by
          * the component.
          */
+
         if (this.isTrialHasEmptySeries(firstTrial)) {
           if (firstTrial.id == null || firstTrial.id !== latestStudentDataTrialId) {
             this.deleteFirstTrial(this.trials);
@@ -2830,46 +3015,51 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'isTrialHasEmptySeries',
+    key: "isTrialHasEmptySeries",
     value: function isTrialHasEmptySeries(trial) {
       return trial.series == null || trial.series.length === 0 || this.isSeriesEmpty(trial.series);
     }
   }, {
-    key: 'isSeriesEmpty',
+    key: "isSeriesEmpty",
     value: function isSeriesEmpty(series) {
       return series.length === 1 && series[0].data.length === 0;
     }
   }, {
-    key: 'deleteFirstTrial',
+    key: "deleteFirstTrial",
     value: function deleteFirstTrial(trials) {
       trials.shift();
     }
   }, {
-    key: 'createNewTrialIfNecessary',
+    key: "createNewTrialIfNecessary",
     value: function createNewTrialIfNecessary(trialId) {
       var trial = this.getTrialById(trialId);
+
       if (trial == null) {
         if (this.hideAllTrialsOnNewTrial) {
           this.hideAllTrials();
         }
+
         trial = this.createNewTrial(trialId);
         trial.show = true;
         this.setXAxis(this.componentContent.xAxis);
         this.setYAxis(this.componentContent.yAxis);
         this.trials.push(trial);
       }
+
       return trial;
     }
   }, {
-    key: 'copySeriesIntoTrial',
+    key: "copySeriesIntoTrial",
     value: function copySeriesIntoTrial(oldTrial, newTrial, studentData, params) {
       var _this12 = this;
 
       newTrial.series = [];
       var series = oldTrial.series;
+
       for (var s = 0; s < series.length; s++) {
         if (this.isAddSeries(params, s)) {
           newTrial.series.push(this.copySeries(series[s]));
+
           if (params.highlightLatestPoint) {
             this.$timeout(function () {
               _this12.highlightPointOnX(studentData.trial.id, studentData.xPointToHighlight);
@@ -2879,29 +3069,30 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'isAddSeries',
+    key: "isAddSeries",
     value: function isAddSeries(params, seriesIndex) {
       return params == null || params.seriesNumbers == null || params.seriesNumbers.length === 0 || params.seriesNumbers != null && params.seriesNumbers.indexOf(seriesIndex) !== -1;
     }
   }, {
-    key: 'copyTrialNameIntoTrial',
+    key: "copyTrialNameIntoTrial",
     value: function copyTrialNameIntoTrial(oldTrial, newTrial) {
       if (oldTrial.name != null) {
         newTrial.name = oldTrial.name;
       }
     }
   }, {
-    key: 'copyPlotBandsIntoTrial',
+    key: "copyPlotBandsIntoTrial",
     value: function copyPlotBandsIntoTrial(oldTrial, newTrial) {
       if (oldTrial.xAxis != null && oldTrial.xAxis.plotBands != null) {
         if (newTrial.xAxis == null) {
           newTrial.xAxis = {};
         }
+
         newTrial.xAxis.plotBands = oldTrial.xAxis.plotBands;
       }
     }
   }, {
-    key: 'setLastTrialToActive',
+    key: "setLastTrialToActive",
     value: function setLastTrialToActive() {
       if (this.trials.length > 0) {
         this.activeTrial = this.trials[this.trials.length - 1];
@@ -2909,7 +3100,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getTrialById',
+    key: "getTrialById",
     value: function getTrialById(id) {
       var _iteratorNormalCompletion26 = true;
       var _didIteratorError26 = false;
@@ -2928,8 +3119,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError26 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion26 && _iterator26.return) {
-            _iterator26.return();
+          if (!_iteratorNormalCompletion26 && _iterator26["return"] != null) {
+            _iterator26["return"]();
           }
         } finally {
           if (_didIteratorError26) {
@@ -2941,7 +3132,7 @@ var GraphController = function (_ComponentController) {
       return null;
     }
   }, {
-    key: 'hasEditableSeries',
+    key: "hasEditableSeries",
     value: function hasEditableSeries() {
       var series = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getSeries();
       var _iteratorNormalCompletion27 = true;
@@ -2961,8 +3152,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError27 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion27 && _iterator27.return) {
-            _iterator27.return();
+          if (!_iteratorNormalCompletion27 && _iterator27["return"] != null) {
+            _iterator27["return"]();
           }
         } finally {
           if (_didIteratorError27) {
@@ -2973,7 +3164,6 @@ var GraphController = function (_ComponentController) {
 
       return false;
     }
-
     /**
      * Update the x and y axis min and max values if necessary to make sure
      * all points are visible in the graph view.
@@ -2983,14 +3173,14 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'updateMinMaxAxisValues',
+    key: "updateMinMaxAxisValues",
     value: function updateMinMaxAxisValues(series, xAxis, yAxis) {
       var minMaxValues = this.getMinMaxValues(series);
       this.updateXAxisMinMaxIfNecessary(xAxis, minMaxValues);
       this.updateYAxisMinMaxIfNecessary(yAxis, minMaxValues);
     }
   }, {
-    key: 'updateXAxisMinMaxIfNecessary',
+    key: "updateXAxisMinMaxIfNecessary",
     value: function updateXAxisMinMaxIfNecessary(xAxis, minMaxValues) {
       if (xAxis != null && !xAxis.locked) {
         if (minMaxValues.xMin < xAxis.min) {
@@ -2998,6 +3188,7 @@ var GraphController = function (_ComponentController) {
           xAxis.min = null;
           xAxis.minPadding = 0.2;
         }
+
         if (minMaxValues.xMax >= xAxis.max) {
           // set the value to null so highcharts will automatically set the value
           xAxis.max = null;
@@ -3006,7 +3197,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'updateYAxisMinMaxIfNecessary',
+    key: "updateYAxisMinMaxIfNecessary",
     value: function updateYAxisMinMaxIfNecessary(yAxis, minMaxValues) {
       if (yAxis != null && !yAxis.locked) {
         if (minMaxValues.yMin < yAxis.min) {
@@ -3014,6 +3205,7 @@ var GraphController = function (_ComponentController) {
           yAxis.min = null;
           yAxis.minPadding = 0.2;
         }
+
         if (minMaxValues.yMax >= yAxis.max) {
           // set the value to null so highcharts will automatically set the value
           yAxis.max = null;
@@ -3022,7 +3214,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getMinMaxValues',
+    key: "getMinMaxValues",
     value: function getMinMaxValues(series) {
       var xMin = 0;
       var xMax = 0;
@@ -3035,7 +3227,6 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator28 = series[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
           var singleSeries = _step28.value;
-
           var data = singleSeries.data;
           var _iteratorNormalCompletion29 = true;
           var _didIteratorError29 = false;
@@ -3048,6 +3239,7 @@ var GraphController = function (_ComponentController) {
               if (dataPoint != null) {
                 var tempX = null;
                 var tempY = null;
+
                 if (dataPoint.constructor.name === 'Object') {
                   tempX = dataPoint.x;
                   tempY = dataPoint.y;
@@ -3057,15 +3249,19 @@ var GraphController = function (_ComponentController) {
                 } else if (dataPoint.constructor.name === 'Number') {
                   tempY = dataPoint;
                 }
+
                 if (tempX > xMax) {
                   xMax = tempX;
                 }
+
                 if (tempX < xMin) {
                   xMin = tempX;
                 }
+
                 if (tempY > yMax) {
                   yMax = tempY;
                 }
+
                 if (tempY < yMin) {
                   yMin = tempY;
                 }
@@ -3076,8 +3272,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError29 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion29 && _iterator29.return) {
-                _iterator29.return();
+              if (!_iteratorNormalCompletion29 && _iterator29["return"] != null) {
+                _iterator29["return"]();
               }
             } finally {
               if (_didIteratorError29) {
@@ -3091,8 +3287,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError28 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion28 && _iterator28.return) {
-            _iterator28.return();
+          if (!_iteratorNormalCompletion28 && _iterator28["return"] != null) {
+            _iterator28["return"]();
           }
         } finally {
           if (_didIteratorError28) {
@@ -3110,7 +3306,7 @@ var GraphController = function (_ComponentController) {
       return result;
     }
   }, {
-    key: 'clearSeriesIds',
+    key: "clearSeriesIds",
     value: function clearSeriesIds(series) {
       var _iteratorNormalCompletion30 = true;
       var _didIteratorError30 = false;
@@ -3119,7 +3315,6 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator30 = series[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
           var singleSeries = _step30.value;
-
           singleSeries.id = null;
         }
       } catch (err) {
@@ -3127,8 +3322,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError30 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion30 && _iterator30.return) {
-            _iterator30.return();
+          if (!_iteratorNormalCompletion30 && _iterator30["return"] != null) {
+            _iterator30["return"]();
           }
         } finally {
           if (_didIteratorError30) {
@@ -3138,22 +3333,25 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'snipGraph',
+    key: "snipGraph",
     value: function snipGraph($event) {
       var _this13 = this;
 
       var chart = $('#' + this.chartId).highcharts();
       var svgString = chart.getSVG();
       var hiddenCanvas = document.getElementById(this.hiddenCanvasId);
-      (0, _canvg2.default)(hiddenCanvas, svgString, { renderCallback: function renderCallback() {
+      (0, _canvg["default"])(hiddenCanvas, svgString, {
+        renderCallback: function renderCallback() {
           var base64Image = hiddenCanvas.toDataURL('image/png');
+
           var imageObject = _this13.UtilService.getImageObjectFromBase64String(base64Image);
+
           _this13.NotebookService.addNote($event, imageObject);
         }
       });
     }
   }, {
-    key: 'readCSVIntoActiveSeries',
+    key: "readCSVIntoActiveSeries",
     value: function readCSVIntoActiveSeries(csvString) {
       var lines = csvString.split(/\r\n|\n/);
       this.activeSeries.data = [];
@@ -3164,10 +3362,10 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator31 = lines[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
           var line = _step31.value;
-
           var values = line.split(',');
           var x = parseFloat(values[0]);
           var y = parseFloat(values[1]);
+
           if (!isNaN(x) && !isNaN(y)) {
             var dataPoint = [x, y];
             this.activeSeries.data.push(dataPoint);
@@ -3178,8 +3376,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError31 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion31 && _iterator31.return) {
-            _iterator31.return();
+          if (!_iteratorNormalCompletion31 && _iterator31["return"] != null) {
+            _iterator31["return"]();
           }
         } finally {
           if (_didIteratorError31) {
@@ -3189,16 +3387,15 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'setUploadedFileName',
+    key: "setUploadedFileName",
     value: function setUploadedFileName(fileName) {
       this.uploadedFileName = fileName;
     }
   }, {
-    key: 'getUploadedFileName',
+    key: "getUploadedFileName",
     value: function getUploadedFileName() {
       return this.uploadedFileName;
     }
-
     /**
      * Convert all the data points in the series
      * @param series convert the data points in the series
@@ -3206,12 +3403,14 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'convertSeriesDataPoints',
+    key: "convertSeriesDataPoints",
     value: function convertSeriesDataPoints(series, xAxisType) {
       var data = series.data;
       var convertedData = [];
+
       for (var d = 0; d < data.length; d++) {
         var oldDataPoint = data[d];
+
         if (xAxisType == null || xAxisType === '' || xAxisType === 'limits') {
           if (!Array.isArray(oldDataPoint)) {
             convertedData.push([d + 1, oldDataPoint]);
@@ -3226,9 +3425,9 @@ var GraphController = function (_ComponentController) {
           }
         }
       }
+
       series.data = convertedData;
     }
-
     /**
      * Round the number according to the authoring settings
      * @param number a number
@@ -3236,7 +3435,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'performRounding',
+    key: "performRounding",
     value: function performRounding(number) {
       if (this.componentContent.roundValuesTo === 'integer') {
         number = this.roundToNearestInteger(number);
@@ -3245,30 +3444,30 @@ var GraphController = function (_ComponentController) {
       } else if (this.componentContent.roundValuesTo === 'hundredth') {
         number = this.roundToNearestHundredth(number);
       }
+
       return number;
     }
   }, {
-    key: 'roundToNearestInteger',
+    key: "roundToNearestInteger",
     value: function roundToNearestInteger(x) {
       x = parseFloat(x);
       x = Math.round(x);
       return x;
     }
   }, {
-    key: 'roundToNearestTenth',
+    key: "roundToNearestTenth",
     value: function roundToNearestTenth(x) {
       x = parseFloat(x);
       x = Math.round(x * 10) / 10;
       return x;
     }
   }, {
-    key: 'roundToNearestHundredth',
+    key: "roundToNearestHundredth",
     value: function roundToNearestHundredth(x) {
       x = parseFloat(x);
       x = Math.round(x * 100) / 100;
       return x;
     }
-
     /**
      * Set the active series to the first series that the student can edit
      * or if there are no series the student can edit, set the active series
@@ -3276,15 +3475,17 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'setDefaultActiveSeries',
+    key: "setDefaultActiveSeries",
     value: function setDefaultActiveSeries() {
       for (var s = 0; s < this.series.length; s++) {
         var singleSeries = this.series[s];
+
         if (singleSeries.canEdit) {
           this.setActiveSeriesByIndex(s);
           break;
         }
       }
+
       if (this.activeSeries == null && this.series.length > 0) {
         /*
          * we did not find any series that the student can edit so we will
@@ -3294,7 +3495,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'setVerticalPlotLine',
+    key: "setVerticalPlotLine",
     value: function setVerticalPlotLine(x) {
       var _this14 = this;
 
@@ -3310,11 +3511,11 @@ var GraphController = function (_ComponentController) {
        * don't call this, the line position won't get updated unless the student
        * moves their mouse around which forces angular to update.
        */
+
       this.$timeout(function () {
         _this14.$scope.$apply();
       });
     }
-
     /**
      * Import any work we need from connected components
      * @param {boolean} isReset (optional) Whether this function call was
@@ -3322,7 +3523,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'handleConnectedComponents',
+    key: "handleConnectedComponents",
     value: function handleConnectedComponents(isReset) {
       /*
        * This will hold all the promises that will return the trials that we want. The trials will
@@ -3333,6 +3534,7 @@ var GraphController = function (_ComponentController) {
        * this will end up containing the background from the last
        * connected component
        */
+
       var connectedComponentBackgroundImage = null;
       var _iteratorNormalCompletion32 = true;
       var _didIteratorError32 = false;
@@ -3341,26 +3543,26 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator32 = this.componentContent.connectedComponents[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
           var connectedComponent = _step32.value;
-
           var type = connectedComponent.type;
+
           if (type === 'showClassmateWork') {
             connectedComponentBackgroundImage = this.handleShowClassmateWorkConnectedComponent(connectedComponent, promises);
           } else if (type === 'showWork' || type === 'importWork' || type == null) {
             connectedComponentBackgroundImage = this.handleShowOrImportWorkConnectedComponent(connectedComponent, promises);
           }
         }
-
         /*
          * wait for all the promises to resolve because we may need to request the classmate work from
          * the server
          */
+
       } catch (err) {
         _didIteratorError32 = true;
         _iteratorError32 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion32 && _iterator32.return) {
-            _iterator32.return();
+          if (!_iteratorNormalCompletion32 && _iterator32["return"] != null) {
+            _iterator32["return"]();
           }
         } finally {
           if (_didIteratorError32) {
@@ -3372,16 +3574,19 @@ var GraphController = function (_ComponentController) {
       this.$q.all(promises).then(this.handleConnectedComponentPromiseResults(connectedComponentBackgroundImage, isReset));
     }
   }, {
-    key: 'handleShowClassmateWorkConnectedComponent',
+    key: "handleShowClassmateWorkConnectedComponent",
     value: function handleShowClassmateWorkConnectedComponent(connectedComponent, promises) {
       var nodeId = connectedComponent.nodeId;
       var componentId = connectedComponent.componentId;
       var connectedComponentBackgroundImage = null;
       this.isDisabled = true;
+
       if (this.ConfigService.isPreview()) {
         var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
         if (latestComponentState != null) {
           promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
+
           if (latestComponentState != null && latestComponentState.studentData != null && latestComponentState.studentData.backgroundImage != null) {
             connectedComponentBackgroundImage = latestComponentState.studentData.backgroundImage;
           }
@@ -3393,18 +3598,21 @@ var GraphController = function (_ComponentController) {
         component = this.ProjectService.injectAssetPaths(component);
         connectedComponentBackgroundImage = component.backgroundImage;
       }
+
       return connectedComponentBackgroundImage;
     }
   }, {
-    key: 'handleShowOrImportWorkConnectedComponent',
+    key: "handleShowOrImportWorkConnectedComponent",
     value: function handleShowOrImportWorkConnectedComponent(connectedComponent, promises) {
       var nodeId = connectedComponent.nodeId;
       var componentId = connectedComponent.componentId;
       var connectedComponentBackgroundImage = null;
       var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
       if (latestComponentState != null) {
         if (latestComponentState.componentType === 'ConceptMap' || latestComponentState.componentType === 'Draw' || latestComponentState.componentType === 'Label') {
           var connectedComponentOfComponentState = this.UtilService.getConnectedComponentByComponentState(this.componentContent, latestComponentState);
+
           if (connectedComponentOfComponentState.importWorkAsBackground === true) {
             promises.push(this.setComponentStateAsBackgroundImage(latestComponentState));
           }
@@ -3414,16 +3622,19 @@ var GraphController = function (_ComponentController) {
             var canEdit = false;
             this.setCanEditForAllSeriesInComponentState(latestComponentState, canEdit);
           }
+
           promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
+
           if (latestComponentState != null && latestComponentState.studentData != null && latestComponentState.studentData.backgroundImage != null) {
             connectedComponentBackgroundImage = latestComponentState.studentData.backgroundImage;
           }
         }
       }
+
       return connectedComponentBackgroundImage;
     }
   }, {
-    key: 'handleConnectedComponentPromiseResults',
+    key: "handleConnectedComponentPromiseResults",
     value: function handleConnectedComponentPromiseResults(connectedComponentBackgroundImage, isReset) {
       var _this15 = this;
 
@@ -3437,6 +3648,7 @@ var GraphController = function (_ComponentController) {
          * Loop through all the promise results. There will be a promise result for each component we
          * are importing from. Each promiseResult is an array of trials or an image url.
          */
+
         var trialCount = 0;
         var activeTrialIndex = 0;
         var activeSeriesIndex = 0;
@@ -3461,6 +3673,7 @@ var GraphController = function (_ComponentController) {
                   if (_this15.canEditTrial(trial)) {
                     activeTrialIndex = trialCount;
                   }
+
                   mergedTrials.push(trial);
                   trialCount++;
                 }
@@ -3469,8 +3682,8 @@ var GraphController = function (_ComponentController) {
                 _iteratorError34 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion34 && _iterator34.return) {
-                    _iterator34.return();
+                  if (!_iteratorNormalCompletion34 && _iterator34["return"] != null) {
+                    _iterator34["return"]();
                   }
                 } finally {
                   if (_didIteratorError34) {
@@ -3487,8 +3700,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError33 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion33 && _iterator33.return) {
-              _iterator33.return();
+            if (!_iteratorNormalCompletion33 && _iterator33["return"] != null) {
+              _iterator33["return"]();
             }
           } finally {
             if (_didIteratorError33) {
@@ -3497,24 +3710,46 @@ var GraphController = function (_ComponentController) {
           }
         }
 
+        activeTrialIndex = _this15.addTrialFromThisComponentIfNecessary(mergedTrials, trialCount, activeTrialIndex);
+
         var newComponentState = _this15.NodeService.createNewComponentState();
+
         newComponentState.studentData = {
           trials: mergedTrials,
           activeTrialIndex: activeTrialIndex,
           activeSeriesIndex: activeSeriesIndex,
           version: 2
         };
+
         if (_this15.componentContent.backgroundImage != null && _this15.componentContent.backgroundImage !== '') {
           newComponentState.studentData.backgroundImage = _this15.componentContent.backgroundImage;
         } else if (connectedComponentBackgroundImage != null) {
           newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
         }
+
         newComponentState = _this15.handleConnectedComponentsHelper(newComponentState, isReset);
+
         _this15.setStudentWork(newComponentState);
+
         _this15.studentDataChanged();
       };
     }
+  }, {
+    key: "addTrialFromThisComponentIfNecessary",
+    value: function addTrialFromThisComponentIfNecessary(mergedTrials, trialCount, activeTrialIndex) {
+      if (this.componentContent.series.length > 0) {
+        var trial = this.createNewTrial(this.UtilService.generateKey(10));
+        trial.name = this.$translate('graph.trial') + ' ' + trialCount;
+        trial.series = this.UtilService.makeCopyOfJSONObject(this.componentContent.series);
+        mergedTrials.push(trial);
 
+        if (this.canEditTrial(trial)) {
+          activeTrialIndex = trialCount;
+        }
+      }
+
+      return activeTrialIndex;
+    }
     /**
      * Create an image from a component state and set the image as the background.
      * @param componentState A component state.
@@ -3522,13 +3757,12 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'setComponentStateAsBackgroundImage',
+    key: "setComponentStateAsBackgroundImage",
     value: function setComponentStateAsBackgroundImage(componentState) {
       return this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
         return image.url;
       });
     }
-
     /**
      * Perform additional connected component processing.
      * @param newComponentState The new component state generated by accumulating the trials from all
@@ -3536,10 +3770,11 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'handleConnectedComponentsHelper',
+    key: "handleConnectedComponentsHelper",
     value: function handleConnectedComponentsHelper(newComponentState, isReset) {
       var mergedComponentState = this.$scope.componentState;
       var firstTime = true;
+
       if (mergedComponentState == null || isReset || !this.GraphService.componentStateHasStudentWork(mergedComponentState)) {
         mergedComponentState = newComponentState;
       } else {
@@ -3549,6 +3784,7 @@ var GraphController = function (_ComponentController) {
          */
         firstTime = false;
       }
+
       var _iteratorNormalCompletion35 = true;
       var _didIteratorError35 = false;
       var _iteratorError35 = undefined;
@@ -3556,15 +3792,16 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator35 = this.componentContent.connectedComponents[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
           var connectedComponent = _step35.value;
-
           var nodeId = connectedComponent.nodeId;
           var componentId = connectedComponent.componentId;
           var type = connectedComponent.type;
+
           if (type === 'showClassmateWork') {
             mergedComponentState = newComponentState;
           } else if (type === 'importWork' || type == null) {
             var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
             var fields = connectedComponent.fields;
+
             if (connectedComponentState != null) {
               if (connectedComponentState.componentType !== 'Graph') {
                 mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
@@ -3579,8 +3816,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError35 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion35 && _iterator35.return) {
-            _iterator35.return();
+          if (!_iteratorNormalCompletion35 && _iterator35["return"] != null) {
+            _iterator35["return"]();
           }
         } finally {
           if (_didIteratorError35) {
@@ -3592,12 +3829,13 @@ var GraphController = function (_ComponentController) {
       if (mergedComponentState.studentData.version == null) {
         mergedComponentState.studentData.version = this.studentDataVersion;
       }
+
       if (newComponentState.studentData.backgroundImage != null) {
         mergedComponentState.studentData.backgroundImage = newComponentState.studentData.backgroundImage;
       }
+
       return mergedComponentState;
     }
-
     /**
      * Merge the component state from the connected component into the component
      * state from this component.
@@ -3622,7 +3860,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'mergeComponentState',
+    key: "mergeComponentState",
     value: function mergeComponentState(baseComponentState, connectedComponentState, mergeFields, firstTime) {
       if (mergeFields == null) {
         if (connectedComponentState.componentType === 'Graph' && firstTime) {
@@ -3638,15 +3876,14 @@ var GraphController = function (_ComponentController) {
         try {
           for (var _iterator36 = mergeFields[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
             var mergeField = _step36.value;
-
             var name = mergeField.name;
             var when = mergeField.when;
             var action = mergeField.action;
+
             if (when === 'firstTime' && firstTime) {
               if (action === 'write') {
                 baseComponentState.studentData[name] = connectedComponentState.studentData[name];
-              } else if (action === 'read') {
-                // TODO
+              } else if (action === 'read') {// TODO
               }
             } else if (when === 'always') {
               if (action === 'write') {
@@ -3661,8 +3898,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError36 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion36 && _iterator36.return) {
-              _iterator36.return();
+            if (!_iteratorNormalCompletion36 && _iterator36["return"] != null) {
+              _iterator36["return"]();
             }
           } finally {
             if (_didIteratorError36) {
@@ -3671,9 +3908,9 @@ var GraphController = function (_ComponentController) {
           }
         }
       }
+
       return baseComponentState;
     }
-
     /**
      * We want to merge the component state from the connected component into this
      * component but the connected component does not have any work. We will
@@ -3687,10 +3924,9 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'mergeNullComponentState',
+    key: "mergeNullComponentState",
     value: function mergeNullComponentState(baseComponentState, mergeFields, firstTime) {
-      if (mergeFields == null) {
-        // TODO
+      if (mergeFields == null) {// TODO
       } else {
         var _iteratorNormalCompletion37 = true;
         var _didIteratorError37 = false;
@@ -3699,19 +3935,16 @@ var GraphController = function (_ComponentController) {
         try {
           for (var _iterator37 = mergeFields[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
             var mergeField = _step37.value;
-
             var name = mergeField.name;
             var when = mergeField.when;
             var action = mergeField.action;
+
             if (when === 'firstTime' && firstTime == true) {
-              if (action === 'write') {
-                // TODO
-              } else if (action === 'read') {
-                // TODO
+              if (action === 'write') {// TODO
+              } else if (action === 'read') {// TODO
               }
             } else if (when === 'always') {
-              if (action === 'write') {
-                // TODO
+              if (action === 'write') {// TODO
               } else if (action === 'read') {
                 var connectedComponentState = null;
                 this.readConnectedComponentField(baseComponentState, connectedComponentState, name);
@@ -3723,8 +3956,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError37 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion37 && _iterator37.return) {
-              _iterator37.return();
+            if (!_iteratorNormalCompletion37 && _iterator37["return"] != null) {
+              _iterator37["return"]();
             }
           } finally {
             if (_didIteratorError37) {
@@ -3733,9 +3966,9 @@ var GraphController = function (_ComponentController) {
           }
         }
       }
+
       return baseComponentState;
     }
-
     /**
      * Read the field from the connected component's component state.
      * @param baseComponentState The component state from this component.
@@ -3745,7 +3978,7 @@ var GraphController = function (_ComponentController) {
      */
 
   }, {
-    key: 'readConnectedComponentField',
+    key: "readConnectedComponentField",
     value: function readConnectedComponentField(baseComponentState, connectedComponentState, field) {
       if (field === 'selectedCells') {
         if (connectedComponentState == null) {
@@ -3757,7 +3990,6 @@ var GraphController = function (_ComponentController) {
           try {
             for (var _iterator38 = baseComponentState.studentData.trials[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
               var trial = _step38.value;
-
               trial.show = false;
             }
           } catch (err) {
@@ -3765,8 +3997,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError38 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion38 && _iterator38.return) {
-                _iterator38.return();
+              if (!_iteratorNormalCompletion38 && _iterator38["return"] != null) {
+                _iterator38["return"]();
               }
             } finally {
               if (_didIteratorError38) {
@@ -3798,8 +4030,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError39 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion39 && _iterator39.return) {
-                _iterator39.return();
+              if (!_iteratorNormalCompletion39 && _iterator39["return"] != null) {
+                _iterator39["return"]();
               }
             } finally {
               if (_didIteratorError39) {
@@ -3808,12 +4040,11 @@ var GraphController = function (_ComponentController) {
             }
           }
         }
-      } else if (field === 'trial') {
-        // TODO
+      } else if (field === 'trial') {// TODO
       }
     }
   }, {
-    key: 'setCanEditForAllSeriesInComponentState',
+    key: "setCanEditForAllSeriesInComponentState",
     value: function setCanEditForAllSeriesInComponentState(componentState, canEdit) {
       var _iteratorNormalCompletion40 = true;
       var _didIteratorError40 = false;
@@ -3822,7 +4053,6 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator40 = componentState.studentData.trials[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
           var trial = _step40.value;
-
           this.setCanEditForAllSeries(trial.series, canEdit);
         }
       } catch (err) {
@@ -3830,8 +4060,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError40 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion40 && _iterator40.return) {
-            _iterator40.return();
+          if (!_iteratorNormalCompletion40 && _iterator40["return"] != null) {
+            _iterator40["return"]();
           }
         } finally {
           if (_didIteratorError40) {
@@ -3841,7 +4071,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'setCanEditForAllSeries',
+    key: "setCanEditForAllSeries",
     value: function setCanEditForAllSeries(series, canEdit) {
       var _iteratorNormalCompletion41 = true;
       var _didIteratorError41 = false;
@@ -3850,7 +4080,6 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator41 = series[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
           var singleSeries = _step41.value;
-
           singleSeries.canEdit = canEdit;
         }
       } catch (err) {
@@ -3858,8 +4087,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError41 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion41 && _iterator41.return) {
-            _iterator41.return();
+          if (!_iteratorNormalCompletion41 && _iterator41["return"] != null) {
+            _iterator41["return"]();
           }
         } finally {
           if (_didIteratorError41) {
@@ -3869,7 +4098,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'undoClicked',
+    key: "undoClicked",
     value: function undoClicked() {
       if (this.undoStack.length > 0) {
         var previousComponentState = this.undoStack.pop();
@@ -3885,106 +4114,117 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'trialCheckboxClicked',
+    key: "trialCheckboxClicked",
     value: function trialCheckboxClicked() {
       this.addNextComponentStateToUndoStack = true;
     }
   }, {
-    key: 'getCategoryByIndex',
+    key: "getCategoryByIndex",
     value: function getCategoryByIndex(index) {
       if (this.componentContent.xAxis != null && this.componentContent.xAxis.categories != null && index < this.componentContent.xAxis.categories.length) {
         return this.componentContent.xAxis.categories[index];
       }
+
       return null;
     }
   }, {
-    key: 'isMousePlotLineOn',
+    key: "isMousePlotLineOn",
     value: function isMousePlotLineOn() {
       return this.isMouseXPlotLineOn() || this.isMouseYPlotLineOn();
     }
   }, {
-    key: 'isMouseXPlotLineOn',
+    key: "isMouseXPlotLineOn",
     value: function isMouseXPlotLineOn() {
       return this.componentContent.showMouseXPlotLine;
     }
   }, {
-    key: 'isMouseYPlotLineOn',
+    key: "isMouseYPlotLineOn",
     value: function isMouseYPlotLineOn() {
       return this.componentContent.showMouseYPlotLine;
     }
   }, {
-    key: 'isSaveMouseOverPoints',
+    key: "isSaveMouseOverPoints",
     value: function isSaveMouseOverPoints() {
       return this.componentContent.saveMouseOverPoints;
     }
   }, {
-    key: 'getXValueFromDataPoint',
+    key: "getXValueFromDataPoint",
     value: function getXValueFromDataPoint(dataPoint) {
       if (dataPoint.constructor.name === 'Object') {
         return dataPoint.x;
       } else if (dataPoint.constructor.name === 'Array') {
         return dataPoint[0];
       }
+
       return null;
     }
   }, {
-    key: 'getYValueFromDataPoint',
+    key: "getYValueFromDataPoint",
     value: function getYValueFromDataPoint(dataPoint) {
       if (dataPoint.constructor.name === 'Object') {
         return dataPoint.y;
       } else if (dataPoint.constructor.name === 'Array') {
         return dataPoint[1];
       }
+
       return null;
     }
   }, {
-    key: 'getLatestMouseOverPointX',
+    key: "getLatestMouseOverPointX",
     value: function getLatestMouseOverPointX() {
       if (this.mouseOverPoints.length > 0) {
         return this.getXValueFromDataPoint(this.mouseOverPoints[this.mouseOverPoints.length - 1]);
       }
+
       return null;
     }
   }, {
-    key: 'getLatestMouseOverPointY',
+    key: "getLatestMouseOverPointY",
     value: function getLatestMouseOverPointY() {
       if (this.mouseOverPoints.length > 0) {
         return this.getYValueFromDataPoint(this.mouseOverPoints[this.mouseOverPoints.length - 1]);
       }
+
       return null;
     }
   }, {
-    key: 'showXPlotLineIfOn',
+    key: "showXPlotLineIfOn",
     value: function showXPlotLineIfOn() {
       var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
       if (this.isMouseXPlotLineOn()) {
         var x = this.getLatestMouseOverPointX();
+
         if (x == null) {
           x = 0;
         }
+
         this.showXPlotLine(x, text);
       }
     }
   }, {
-    key: 'showYPlotLineIfOn',
+    key: "showYPlotLineIfOn",
     value: function showYPlotLineIfOn() {
       var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
       if (this.isMouseYPlotLineOn()) {
         var y = this.getLatestMouseOverPointY();
+
         if (y == null) {
           y = 0;
         }
+
         this.showYPlotLine(y, text);
       }
     }
   }, {
-    key: 'showTooltipOnX',
+    key: "showTooltipOnX",
     value: function showTooltipOnX(seriesId, x) {
       var chart = $('#' + this.chartId).highcharts();
+
       if (chart.series.length > 0) {
         var series = null;
+
         if (seriesId == null) {
           series = chart.series[chart.series.length - 1];
         } else {
@@ -4005,8 +4245,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError42 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion42 && _iterator42.return) {
-                _iterator42.return();
+              if (!_iteratorNormalCompletion42 && _iterator42["return"] != null) {
+                _iterator42["return"]();
               }
             } finally {
               if (_didIteratorError42) {
@@ -4015,6 +4255,7 @@ var GraphController = function (_ComponentController) {
             }
           }
         }
+
         var points = series.points;
         var _iteratorNormalCompletion43 = true;
         var _didIteratorError43 = false;
@@ -4033,8 +4274,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError43 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion43 && _iterator43.return) {
-              _iterator43.return();
+            if (!_iteratorNormalCompletion43 && _iterator43["return"] != null) {
+              _iterator43["return"]();
             }
           } finally {
             if (_didIteratorError43) {
@@ -4045,11 +4286,13 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'highlightPointOnX',
+    key: "highlightPointOnX",
     value: function highlightPointOnX(seriesId, x) {
       var chart = $('#' + this.chartId).highcharts();
+
       if (chart.series.length > 0) {
         var series = null;
+
         if (seriesId == null) {
           series = chart.series[chart.series.length - 1];
         } else {
@@ -4064,6 +4307,7 @@ var GraphController = function (_ComponentController) {
               if (singleSeries.userOptions.name === seriesId) {
                 series = singleSeries;
               }
+
               this.removeHoverStateFromPoints(singleSeries.points);
             }
           } catch (err) {
@@ -4071,8 +4315,8 @@ var GraphController = function (_ComponentController) {
             _iteratorError44 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion44 && _iterator44.return) {
-                _iterator44.return();
+              if (!_iteratorNormalCompletion44 && _iterator44["return"] != null) {
+                _iterator44["return"]();
               }
             } finally {
               if (_didIteratorError44) {
@@ -4081,11 +4325,12 @@ var GraphController = function (_ComponentController) {
             }
           }
         }
+
         this.setHoverStateOnPoint(series.points, x);
       }
     }
   }, {
-    key: 'removeHoverStateFromPoints',
+    key: "removeHoverStateFromPoints",
     value: function removeHoverStateFromPoints(points) {
       var _iteratorNormalCompletion45 = true;
       var _didIteratorError45 = false;
@@ -4094,7 +4339,6 @@ var GraphController = function (_ComponentController) {
       try {
         for (var _iterator45 = points[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
           var point = _step45.value;
-
           point.setState('');
         }
       } catch (err) {
@@ -4102,8 +4346,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError45 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion45 && _iterator45.return) {
-            _iterator45.return();
+          if (!_iteratorNormalCompletion45 && _iterator45["return"] != null) {
+            _iterator45["return"]();
           }
         } finally {
           if (_didIteratorError45) {
@@ -4113,7 +4357,7 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'setHoverStateOnPoint',
+    key: "setHoverStateOnPoint",
     value: function setHoverStateOnPoint(points, x) {
       var _iteratorNormalCompletion46 = true;
       var _didIteratorError46 = false;
@@ -4132,8 +4376,8 @@ var GraphController = function (_ComponentController) {
         _iteratorError46 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion46 && _iterator46.return) {
-            _iterator46.return();
+          if (!_iteratorNormalCompletion46 && _iterator46["return"] != null) {
+            _iterator46["return"]();
           }
         } finally {
           if (_didIteratorError46) {
@@ -4143,12 +4387,14 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'showTooltipOnLatestPoint',
+    key: "showTooltipOnLatestPoint",
     value: function showTooltipOnLatestPoint() {
       var chart = $('#' + this.chartId).highcharts();
+
       if (chart.series.length > 0) {
         var latestSeries = chart.series[chart.series.length - 1];
         var points = latestSeries.points;
+
         if (points.length > 0) {
           var latestPoint = points[points.length - 1];
           chart.tooltip.refresh(latestPoint);
@@ -4156,9 +4402,10 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'convertSelectedCellsToTrialIds',
+    key: "convertSelectedCellsToTrialIds",
     value: function convertSelectedCellsToTrialIds(selectedCells) {
       var selectedTrialIds = [];
+
       if (selectedCells != null) {
         var _iteratorNormalCompletion47 = true;
         var _didIteratorError47 = false;
@@ -4167,7 +4414,6 @@ var GraphController = function (_ComponentController) {
         try {
           for (var _iterator47 = selectedCells[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
             var selectedCell = _step47.value;
-
             var material = selectedCell.material;
             var bevTemp = selectedCell.bevTemp;
             var airTemp = selectedCell.airTemp;
@@ -4179,8 +4425,8 @@ var GraphController = function (_ComponentController) {
           _iteratorError47 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion47 && _iterator47.return) {
-              _iterator47.return();
+            if (!_iteratorNormalCompletion47 && _iterator47["return"] != null) {
+              _iterator47["return"]();
             }
           } finally {
             if (_didIteratorError47) {
@@ -4189,15 +4435,16 @@ var GraphController = function (_ComponentController) {
           }
         }
       }
+
       return selectedTrialIds;
     }
   }, {
-    key: 'isTrialsEnabled',
+    key: "isTrialsEnabled",
     value: function isTrialsEnabled() {
       return this.componentContent.enableTrials === true;
     }
   }, {
-    key: 'isStudentDataVersion1',
+    key: "isStudentDataVersion1",
     value: function isStudentDataVersion1(version) {
       if (version == null) {
         return this.studentDataVersion == null || this.studentDataVersion === 1;
@@ -4208,9 +4455,9 @@ var GraphController = function (_ComponentController) {
   }]);
 
   return GraphController;
-}(_componentController2.default);
+}(_componentController["default"]);
 
 GraphController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'GraphService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-exports.default = GraphController;
+var _default = GraphController;
+exports["default"] = _default;
 //# sourceMappingURL=graphController.js.map

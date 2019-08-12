@@ -1,9 +1,9 @@
 import { Component, Input, ViewEncapsulation, Inject } from '@angular/core';
-import { LibraryGroup } from "../libraryGroup";
-import { LibraryProject } from "../libraryProject";
-import { LibraryService } from "../../../services/library.service";
-import { LibraryComponent } from "../library/library.component";
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { LibraryGroup } from '../libraryGroup';
+import { LibraryProject } from '../libraryProject';
+import { LibraryService } from '../../../services/library.service';
+import { LibraryComponent } from '../library/library.component';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-official-library',
@@ -13,24 +13,38 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 })
 export class OfficialLibraryComponent extends LibraryComponent {
   @Input()
-  split: boolean = false;
+  isSplitScreen: boolean = false;
 
   projects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];
+  expandedGroups: object = {};
 
-  constructor(libraryService: LibraryService) {
+  constructor(libraryService: LibraryService, public dialog: MatDialog) {
     super(libraryService);
     libraryService.libraryGroupsSource$.subscribe((libraryGroups) => {
       this.libraryGroups = libraryGroups;
-      this.filterUpdated();
     });
     libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
       this.projects = libraryProjects;
+      this.filterUpdated();
     });
-    libraryService.getOfficialLibraryProjects();
   }
 
   ngOnInit() {
+  }
+
+  emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
+    if (numProjectsVisible) {
+      this.libraryService.numberOfOfficialProjectsVisible.next(numProjectsVisible);
+    } else {
+      this.libraryService.numberOfOfficialProjectsVisible.next(this.filteredProjects.length);
+    }
+  }
+
+  showInfo() {
+    this.dialog.open(OfficialLibraryDetailsComponent, {
+      panelClass: 'mat-dialog--sm'
+    });
   }
 }
 

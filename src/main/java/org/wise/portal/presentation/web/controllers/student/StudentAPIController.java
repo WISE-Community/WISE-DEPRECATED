@@ -29,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -83,7 +84,7 @@ public class StudentAPIController {
   private StudentAttendanceService studentAttendanceService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private UserService userService;
@@ -96,6 +97,9 @@ public class StudentAPIController {
 
   @Autowired
   private Properties i18nProperties;
+
+  @Value("${google.clientId:}")
+  private String googleClientId;
 
   // path to project thumbnail image relative to project folder
   // TODO: make this dynamic, part of project metadata?
@@ -138,7 +142,7 @@ public class StudentAPIController {
   private JSONObject getRunJSON(User user, Run run) throws JSONException {
     JSONObject runJSON = new JSONObject();
     Project project = run.getProject();
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     String projectThumb = "";
     String modulePath = project.getModulePath();
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
@@ -440,7 +444,7 @@ public class StudentAPIController {
     JSONObject configJSON = new JSONObject();
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
-    configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
+    configJSON.put("googleClientId", googleClientId);
     configJSON.put("logOutURL", contextPath + "/logout");
     configJSON.put("currentTime", System.currentTimeMillis());
     return configJSON.toString();

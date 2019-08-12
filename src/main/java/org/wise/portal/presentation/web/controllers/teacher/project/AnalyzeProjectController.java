@@ -56,7 +56,7 @@ public class AnalyzeProjectController {
   private ProjectService projectService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   private HashMap<String, String> nodeIdToNodeContent = new HashMap<String, String>();
 
@@ -711,7 +711,7 @@ public class AnalyzeProjectController {
    * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
    */
   private String getProjectFileLocalPath(Project project) {
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String projectUrl = project.getModulePath();
     String projectFilePath = curriculumBaseDir + projectUrl;
     return projectFilePath;
@@ -725,7 +725,7 @@ public class AnalyzeProjectController {
    * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
    */
   private String getProjectFileWebPath(Project project) {
-    String curriculumBaseWebDir = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWebDir = appProperties.getProperty("curriculum_base_www");
     String projectUrl = project.getModulePath();
     String projectFilePath = curriculumBaseWebDir + projectUrl;
     return projectFilePath;

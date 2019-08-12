@@ -8,7 +8,7 @@ import { Teacher } from "../../domain/teacher";
 import { Student } from "../../domain/student";
 import { ConfigService } from "../../services/config.service";
 import { StudentService } from "../../student/student.service";
-import {LibraryService} from '../../services/library.service';
+import { LibraryService } from '../../services/library.service';
 
 @Component({
   selector: 'app-contact-form',
@@ -120,10 +120,13 @@ export class ContactFormComponent implements OnInit {
       if (this.isStudent) {
         const user = <Student>this.userService.getUser().getValue();
         this.setControlFieldValue('name', user.firstName + ' ' + user.lastName);
+        this.markControlFieldAsDisabled('name');
       } else {
         const user = <Teacher>this.userService.getUser().getValue();
         this.setControlFieldValue('name', user.firstName + ' ' + user.lastName);
         this.setControlFieldValue('email', user.email);
+        this.markControlFieldAsDisabled('name');
+        this.markControlFieldAsDisabled('email');
       }
     }
   }
@@ -169,8 +172,8 @@ export class ContactFormComponent implements OnInit {
     const userAgent = this.getUserAgent();
     const recaptchaResponse = this.getRecaptchaResponse();
     this.setIsSendingRequest(true);
-    this.userService.sendContactMessage(name, email, teacherUsername, issueType, summary,
-        description, runId, projectId, userAgent, recaptchaResponse)
+    this.userService.sendContactMessage(name, email, teacherUsername, issueType,
+        summary, description, runId, projectId, userAgent, recaptchaResponse)
       .pipe(
         finalize(() => {
           this.setIsSendingRequest(false);
@@ -182,9 +185,9 @@ export class ContactFormComponent implements OnInit {
   }
 
   handleSendContactMessageResponse(response: any) {
-    if (response.status == "success") {
+    if (response.status === "success") {
       this.complete = true;
-    } else if (response.status == "failure") {
+    } else if (response.status === "error") {
       this.failure = true;
       if (this.isRecaptchaEnabled) {
         this.resetRecaptcha();
@@ -195,6 +198,10 @@ export class ContactFormComponent implements OnInit {
 
   setControlFieldValue(name: string, value: string) {
     this.contactFormGroup.controls[name].setValue(value);
+  }
+
+  markControlFieldAsDisabled(name: string) {
+    this.contactFormGroup.controls[name].disable();
   }
 
   getControlFieldValue(fieldName) {

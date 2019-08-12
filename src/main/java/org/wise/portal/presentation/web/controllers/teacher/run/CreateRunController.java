@@ -111,7 +111,7 @@ public class CreateRunController {
   private MessageSource messageSource;
 
   @Autowired
-  protected Properties wiseProperties;
+  protected Properties appProperties;
 
   private Map<Long,String> postLevelTextMap;
 
@@ -271,7 +271,7 @@ public class CreateRunController {
     postLevelTextMap.put(1l, postLevelLowMessage);
 
     Project project = runParameters.getProject();
-    String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
+    String maxWorkgroupSizeStr = appProperties.getProperty("maxWorkgroupSize", "3");
     int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
     runParameters.setMaxWorkgroupSize(maxWorkgroupSize);
     modelMap.put("maxWorkgroupSize", maxWorkgroupSize);
@@ -355,10 +355,12 @@ public class CreateRunController {
        * e.g.
        * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
        */
-      String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+      String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
 
       if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
-        String newProjectDirname = FileManager.copyProject(curriculumBaseDir, projectFolderPath);
+        long newProjectId = projectService.getNextAvailableProjectId();
+        String newProjectDirname = FileManager.copyProject(curriculumBaseDir, projectFolderPath,
+            String.valueOf(newProjectId));
         String newProjectPath = "/" + newProjectDirname + "/project.json";
         String newProjectName = project.getName();
         Long parentProjectId = (Long) project.getId();
@@ -445,7 +447,7 @@ public class CreateRunController {
 
     public void run() {
       try {
-        String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled");
+        String sendEmailEnabledStr = appProperties.getProperty("send_email_enabled");
         Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
         if (!sendEmailEnabled) {
           return;
@@ -495,18 +497,18 @@ public class CreateRunController {
 
       String previewProjectUrl = fullWiseContextPath + "/previewproject.html?projectId="+run.getProject().getId();
 
-      String[] recipients = wiseProperties.getProperty("project_setup").split(",");
+      String[] recipients = appProperties.getProperty("project_setup").split(",");
 
       String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject",
-        new Object[]{wiseProperties.getProperty("wise.name")}, Locale.US);
+        new Object[]{appProperties.getProperty("wise.name")}, Locale.US);
 
       String subject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject",
-        new Object[]{wiseProperties.getProperty("wise.name")},defaultSubject, locale);
+        new Object[]{appProperties.getProperty("wise.name")},defaultSubject, locale);
 
 
       String defaultMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage",
         new Object[]{
-          wiseProperties.getProperty("wise.name"),
+          appProperties.getProperty("wise.name"),
           teacherName,
           teacherUserDetails.getUsername(),
           teacherEmail,
@@ -524,7 +526,7 @@ public class CreateRunController {
 
       String message = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage",
         new Object[]{
-          wiseProperties.getProperty("wise.name"),
+          appProperties.getProperty("wise.name"),
           teacherName,
           teacherUserDetails.getUsername(),
           teacherEmail,
@@ -541,7 +543,7 @@ public class CreateRunController {
         defaultMessage,
         locale);
 
-      String fromEmail = wiseProperties.getProperty("portalemailaddress");
+      String fromEmail = appProperties.getProperty("portalemailaddress");
 
       //for testing out the email functionality without spamming the groups
       if (DEBUG) {
@@ -582,8 +584,8 @@ public class CreateRunController {
         defaultTeacherMessage,
         locale);
 
-      if (wiseProperties.containsKey("discourse_url")) {
-        String discourseURL = wiseProperties.getProperty("discourse_url");
+      if (appProperties.containsKey("discourse_url")) {
+        String discourseURL = appProperties.getProperty("discourse_url");
         if (discourseURL != null && !discourseURL.isEmpty()) {
           // if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
           String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);

@@ -27,7 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +40,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.WebSocketMessage;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
@@ -70,7 +70,7 @@ public class StudentDataController {
   private WorkgroupService workgroupService;
 
   @Autowired
-  private SimpMessagingTemplate simpMessagingTemplate;
+  private MessagePublisher redisPublisher;
 
   @RequestMapping(method = RequestMethod.GET, value = "/student/data")
   public void getWISE5StudentData(
@@ -233,7 +233,7 @@ public class StudentDataController {
       @RequestParam(value = "achievementId", required = true) String achievementId,
       @RequestParam(value = "type", required = true) String type,
       @RequestParam(value = "data", required = true) String data,
-      HttpServletResponse response) {
+      HttpServletResponse response) throws JSONException {
     User user = ControllerUtil.getSignedInUser();
     Run run = null;
     Workgroup workgroup = null;
@@ -269,28 +269,37 @@ public class StudentDataController {
     broadcastAchievementToTeacher(achievement);
   }
 
-  public void broadcastAchievementToTeacher(Achievement achievement) {
-    WebSocketMessage message = new WebSocketMessage("newStudentAchievement", achievement);
-    simpMessagingTemplate.convertAndSend(String.format("/topic/teacher/%s", achievement.getRunId()),
-        message);
+  public void broadcastAchievementToTeacher(Achievement achievement) throws JSONException {
+    JSONObject message = new JSONObject();
+    message.put("type", "achievementToTeacher");
+    message.put("topic", String.format("/topic/teacher/%s", achievement.getRunId()));
+    message.put("achievement", achievement.toJSON());
+    redisPublisher.publish(message.toString());
   }
 
-  public void broadcastAnnotationToTeacher(Annotation annotation) {
-    WebSocketMessage message = new WebSocketMessage("annotation", annotation);
-    simpMessagingTemplate.convertAndSend(String.format("/topic/teacher/%s", annotation.getRunId()),
-        message);
+  public void broadcastAnnotationToTeacher(Annotation annotation) throws JSONException {
+    JSONObject message = new JSONObject();
+    message.put("type", "annotationToTeacher");
+    message.put("topic", String.format("/topic/teacher/%s", annotation.getRunId()));
+    message.put("annotation", annotation.toJSON());
+    redisPublisher.publish(message.toString());
   }
 
-  public void broadcastStudentWorkToClassroom(StudentWork componentState) {
-    WebSocketMessage message = new WebSocketMessage("studentWork", componentState);
-    simpMessagingTemplate.convertAndSend(String.format("/topic/classroom/%s/%s",
-        componentState.getRunId(), componentState.getPeriodId()), message);
+  public void broadcastStudentWorkToClassroom(StudentWork componentState) throws JSONException {
+    JSONObject message = new JSONObject();
+    message.put("type", "studentWorkToClassroom");
+    message.put("topic", String.format("/topic/classroom/%s/%s",
+        componentState.getRunId(), componentState.getPeriodId()));
+    message.put("studentWork", componentState.toJSON());
+    redisPublisher.publish(message.toString());
   }
 
-  public void broadcastStudentWorkToTeacher(StudentWork componentState) {
-    WebSocketMessage message = new WebSocketMessage("studentWork", componentState);
-    simpMessagingTemplate.convertAndSend(String.format("/topic/teacher/%s",
-        componentState.getRunId()), message);
+  public void broadcastStudentWorkToTeacher(StudentWork componentState) throws JSONException {
+    JSONObject message = new JSONObject();
+    message.put("type", "studentWorkToTeacher");
+    message.put("topic", String.format("/topic/teacher/%s", componentState.getRunId()));
+    message.put("studentWork", componentState.toJSON());
+    redisPublisher.publish(message.toString());
   }
 
   /**

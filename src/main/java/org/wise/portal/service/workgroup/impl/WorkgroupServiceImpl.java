@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2019 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
@@ -46,6 +47,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * @author Cynick Young
  * @author Hiroki Terashima
  */
+@Service
 public class WorkgroupServiceImpl implements WorkgroupService {
 
   @Autowired

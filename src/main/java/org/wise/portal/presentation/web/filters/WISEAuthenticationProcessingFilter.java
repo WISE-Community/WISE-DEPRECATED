@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -24,8 +24,6 @@
 package org.wise.portal.presentation.web.filters;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Properties;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -42,7 +40,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
+import org.wise.portal.service.session.SessionService;
 import org.wise.portal.service.user.UserService;
 
 /**
@@ -59,7 +57,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
   protected UserService userService;
 
   @Autowired
-  private Properties wiseProperties;
+  protected SessionService sessionService;
 
   public static final String STUDENT_DEFAULT_TARGET_PATH = "/legacy/student";
   public static final String TEACHER_DEFAULT_TARGET_PATH = "/legacy/teacher";
@@ -107,8 +105,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("UserDetails logging in: " + userDetails.getUsername());
     }
-
-    ControllerUtil.addNewSessionToAllLoggedInUsers(request, user);
+    sessionService.addSignedInUser(userDetails);
     super.successfulAuthentication(request, response, chain, authentication);
   }
 

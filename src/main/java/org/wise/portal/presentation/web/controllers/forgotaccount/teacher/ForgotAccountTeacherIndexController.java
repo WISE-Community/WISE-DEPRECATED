@@ -30,9 +30,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.TeacherAccountFormValidator;
@@ -64,7 +65,7 @@ public class ForgotAccountTeacherIndexController {
   protected MailService mailService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private MessageSource messageSource;
@@ -80,7 +81,7 @@ public class ForgotAccountTeacherIndexController {
    * @param model the model object that contains values for the page to use when rendering the view
    * @return the path of the view to display
    */
-  @RequestMapping(method = RequestMethod.GET)
+  @GetMapping
   public String initializeForm(ModelMap model) {
     TeacherUserDetails userDetails = new TeacherUserDetails();
     model.addAttribute("userDetails", userDetails);
@@ -95,7 +96,7 @@ public class ForgotAccountTeacherIndexController {
    * @param request the http request
    * @return the path of the view to display
    */
-  @RequestMapping(method = RequestMethod.POST)
+  @PostMapping
   protected String onSubmit(@ModelAttribute("userDetails") TeacherUserDetails userDetails,
       Model model,
       HttpServletRequest request) {
@@ -158,7 +159,7 @@ public class ForgotAccountTeacherIndexController {
         portalContextURL = ControllerUtil.getPortalUrlString(request);
       }
       String passwordResetLink = portalContextURL + "/legacy/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
-      String portalName = wiseProperties.getProperty("wise.name");
+      String portalName = appProperties.getProperty("wise.name");
       String userEmail = user.getUserDetails().getEmailAddress();
       String[] recipients = new String[]{userEmail};
 

@@ -16,7 +16,6 @@ export class CommunityLibraryComponent extends LibraryComponent {
 
   constructor(libraryService: LibraryService, public dialog: MatDialog) {
     super(libraryService);
-    libraryService.getCommunityLibraryProjects();
     libraryService.communityLibraryProjectsSource$.subscribe((communityProjects) => {
       this.projects = communityProjects;
       this.filterUpdated();
@@ -24,6 +23,14 @@ export class CommunityLibraryComponent extends LibraryComponent {
   }
 
   ngOnInit() {
+  }
+
+  emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
+    if (numProjectsVisible) {
+      this.libraryService.numberOfCommunityProjectsVisible.next(numProjectsVisible);
+    } else {
+      this.libraryService.numberOfCommunityProjectsVisible.next(this.filteredProjects.length);
+    }
   }
 
   showInfo() {

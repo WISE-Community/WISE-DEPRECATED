@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +33,19 @@ import java.util.*;
 public class UserAPIController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   protected UserService userService;
 
   @Autowired
   protected IMailFacade mailService;
+
+  @Value("${google.clientId:}")
+  private String googleClientId;
+
+  @Value("${google.clientSecret:}")
+  private String googleClientSecret;
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   protected String getUserInfo(ModelMap modelMap,
@@ -114,16 +121,15 @@ public class UserAPIController {
     JSONObject configJSON = new JSONObject();
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
-    configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
+    configJSON.put("googleClientId", googleClientId);
     configJSON.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
-    configJSON.put("recaptchaPublicKey", wiseProperties.get("recaptcha_public_key"));
+    configJSON.put("recaptchaPublicKey", appProperties.get("recaptcha_public_key"));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
   }
 
   private boolean isGoogleClassroomEnabled() {
-    return !wiseProperties.getProperty("google.clientId", "").equals("") &&
-      !wiseProperties.getProperty("google.clientSecret", "").equals("");
+    return !googleClientId.equals("") && !googleClientSecret.equals("");
   }
 
   @RequestMapping(value = "/check-authentication", method = RequestMethod.POST)
@@ -164,7 +170,7 @@ public class UserAPIController {
 
   @RequestMapping(value = "/languages", method = RequestMethod.GET)
   protected String getSupportedLanguages() throws JSONException {
-    String supportedLocales = wiseProperties.getProperty("supportedLocales");
+    String supportedLocales = appProperties.getProperty("supportedLocales");
     String[] supportedLocalesArray = supportedLocales.split(",");
     JSONArray supportedLocalesJSONArray = new JSONArray();
     for (String localeString: supportedLocalesArray) {

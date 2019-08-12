@@ -72,7 +72,7 @@ import org.wise.vle.utils.FileManager;
 public class VLEGetSpecialExport {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private VLEService vleService;
@@ -142,7 +142,7 @@ public class VLEGetSpecialExport {
   {
     try {
       vleProperties = new Properties();
-      vleProperties.load(getClass().getClassLoader().getResourceAsStream("wise.properties"));
+      vleProperties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
     } catch (Exception e) {
       System.err.println("VLEGetSpecialExport could not read in vleProperties file");
       e.printStackTrace();
@@ -266,7 +266,7 @@ public class VLEGetSpecialExport {
     ProjectMetadata metadata = projectObj.getMetadata();
     String projectMetaDataJSONString = metadata.toJSONString();
 
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String rawProjectUrl = run.getProject().getModulePath();
     String projectPath = curriculumBaseDir + rawProjectUrl;
     String projectFolderName = "";

@@ -72,6 +72,14 @@ var GraphAuthoringController = function (_GraphController) {
       text: _this.$translate('graph.diamond')
     }];
 
+    _this.availableSeriesTypes = [{
+      value: 'line',
+      text: _this.$translate('graph.line')
+    }, {
+      value: 'scatter',
+      text: _this.$translate('graph.point')
+    }];
+
     _this.availableLineTypes = [{
       value: 'Solid',
       text: _this.$translate('graph.solid')
@@ -154,6 +162,12 @@ var GraphAuthoringController = function (_GraphController) {
     key: 'authoringAddSeriesClicked',
     value: function authoringAddSeriesClicked() {
       var newSeries = this.createNewSeries();
+      if (this.authoringComponentContent.graphType === 'line') {
+        newSeries.type = 'line';
+        newSeries.dashStyle = 'Solid';
+      } else if (this.authoringComponentContent.graphType === 'scatter') {
+        newSeries.type = 'scatter';
+      }
       this.authoringComponentContent.series.push(newSeries);
       this.authoringViewComponentChanged();
     }
@@ -332,7 +346,7 @@ var GraphAuthoringController = function (_GraphController) {
         this.authoringComponentContent.connectedComponents = [];
       }
       this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-      if (this.authoringComponentContent.connectedComponents.length > 1) {
+      if (this.authoringComponentContent.connectedComponents.length > 1 || this.authoringComponentContent.series.length > 0) {
         /*
          * there is more than one connected component so we will enable
          * trials so that each connected component can put work in a

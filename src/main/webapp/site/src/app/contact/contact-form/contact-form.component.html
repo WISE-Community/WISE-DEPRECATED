@@ -79,7 +79,7 @@
                    id="summary"
                    name="summary"
                    formControlName="summary" />
-            <mat-error *ngIf="contactFormGroup.controls['summary'].hasError('required')" i18n>City required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['summary'].hasError('required')" i18n>Summary required</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -92,7 +92,7 @@
                       rows="10"
                       cols="10">
             </textarea>
-            <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')" i18n>State required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')" i18n>Description required</mat-error>
           </mat-form-field>
         </p>
         <p *ngIf="isRecaptchaEnabled"

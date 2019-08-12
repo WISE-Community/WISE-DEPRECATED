@@ -627,7 +627,7 @@ class ComponentController {
         if (componentState != null) {
           componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
         }
-        if (connectedComponent.type == 'showWork') {
+        if (connectedComponent.type === 'showWork') {
           this.isDisabled = true;
         }
       }
@@ -645,6 +645,20 @@ class ComponentController {
 
   handleConnectedComponentsPostProcess() {
     // overridden by children
+  }
+
+  getConnectedComponentsAndTheirComponentStates() {
+    const connectedComponentsAndTheirComponentStates = [];
+    for (const connectedComponent of this.componentContent.connectedComponents) {
+      const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+        connectedComponent.nodeId, connectedComponent.componentId);
+      const connectedComponentsAndComponentState = {
+        connectedComponent: connectedComponent,
+        componentState: this.UtilService.makeCopyOfJSONObject(componentState)
+      };
+      connectedComponentsAndTheirComponentStates.push(connectedComponentsAndComponentState);
+    }
+    return connectedComponentsAndTheirComponentStates;
   }
 
   showCopyPublicNotebookItemButton() {
@@ -782,6 +796,11 @@ class ComponentController {
     if (connectedComponent.componentId != null) {
       connectedComponent.type = 'importWork';
     }
+    this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+  }
+
+  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+
   }
 
   /**
@@ -860,11 +879,11 @@ class ComponentController {
 
     if (connectedComponent != null) {
 
-      if (connectedComponent.type == 'importWork') {
+      if (connectedComponent.type === 'importWork') {
         /*
          * the type has changed to import work
          */
-      } else if (connectedComponent.type == 'showWork') {
+      } else if (connectedComponent.type === 'showWork') {
         /*
          * the type has changed to show work
          */

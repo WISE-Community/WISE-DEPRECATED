@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -26,6 +26,7 @@ package org.wise.portal.service.run.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
@@ -56,13 +57,23 @@ import org.wise.portal.service.run.DuplicateRunCodeException;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Services for WISE Run
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  */
+@Service
 public class RunServiceImpl implements RunService {
 
   private String DEFAULT_RUNCODE_PREFIXES = "Tiger,Lion,Fox,Owl,Panda,Hawk,Mole,"+
@@ -92,7 +103,7 @@ public class RunServiceImpl implements RunService {
   private UserDao<User> userDao;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   protected AclService<Persistable> aclService;
@@ -150,9 +161,9 @@ public class RunServiceImpl implements RunService {
     }
     String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
     String runcodePrefixesStr =
-        wiseProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
-    if (wiseProperties.containsKey("runcode_prefixes_"+language)) {
-      runcodePrefixesStr = wiseProperties.getProperty("runcode_prefixes_" + language);
+        appProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
+    if (appProperties.containsKey("runcode_prefixes_"+language)) {
+      runcodePrefixesStr = appProperties.getProperty("runcode_prefixes_" + language);
     }
     String[] runcodePrefixes = runcodePrefixesStr.split(",");
     String word = runcodePrefixes[rand.nextInt(runcodePrefixes.length)];
@@ -170,6 +181,7 @@ public class RunServiceImpl implements RunService {
   public Run createRun(RunParameters runParameters) {
     Project project = runParameters.getProject();
     Run run = new RunImpl();
+    run.setId((Long) project.getId());
     run.setEndtime(runParameters.getEndTime());
     run.setStarttime(runParameters.getStartTime());
     run.setRuncode(generateUniqueRunCode(runParameters.getLocale()));

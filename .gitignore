@@ -3,6 +3,8 @@
 *.DS_Store
 build
 .classpath
+.factoryPath
+.vscode
 .jspm
 .m2
 .npm
@@ -12,6 +14,7 @@ target
 src/main/webapp/wise5/jspm_packages
 src/main/webapp/wise5/node_modules
 src/main/resources/wise.properties
+src/main/resources/application.properties
 *.bak
 .idea
 !.idea/compiler.xml

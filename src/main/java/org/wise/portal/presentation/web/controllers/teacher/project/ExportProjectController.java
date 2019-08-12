@@ -36,6 +36,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,7 +60,7 @@ public class ExportProjectController {
   private ProjectService projectService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   private String projectJSONFilename;
 
@@ -69,7 +70,7 @@ public class ExportProjectController {
    * @param response response stream for communicating with clients
    * @throws Exception when there was an error while exporting the project
    */
-  @RequestMapping(method = RequestMethod.GET)
+  @GetMapping
   protected void exportProject(@PathVariable String projectId, HttpServletResponse response)
       throws Exception {
     User signedInUser = ControllerUtil.getSignedInUser();
@@ -83,7 +84,7 @@ public class ExportProjectController {
       return;
     }
 
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String sep = "/";
     String rawProjectUrl = project.getModulePath();
     projectJSONFilename = rawProjectUrl.substring(rawProjectUrl.lastIndexOf(sep) + 1);

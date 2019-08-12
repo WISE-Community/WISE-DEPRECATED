@@ -105,7 +105,6 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   @After
   public void tearDown() {
-    EasyMock.verify(userService);
     validator = null;
     params = null;
     errors = null;

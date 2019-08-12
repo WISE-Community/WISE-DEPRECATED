@@ -24,7 +24,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           console.error(this.i18n('Backend returned code {{status}}, body was: {{error}}', {status: err.status, error: err.error}));
         }
 
-        this.snackBar.open(this.i18n(`An error occurred. Please check your connection and try again.`));
+        this.snackBar.open(this.i18n(`An error occurred. Please refresh this page and try again.`));
 
         // return an observable with an empty result
         return throwError('');

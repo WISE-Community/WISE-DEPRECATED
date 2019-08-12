@@ -40,7 +40,8 @@ import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithProjectException;
 import org.wise.portal.presentation.web.response.SharedOwner;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -298,6 +299,8 @@ public interface ProjectService {
    * @throws ObjectNotFoundException
    */
   Long identifyRootProjectId(Project project) throws ObjectNotFoundException;
+
+  long getNextAvailableProjectId();
 
   Project copyProject(Integer projectId, User user) throws Exception;
 

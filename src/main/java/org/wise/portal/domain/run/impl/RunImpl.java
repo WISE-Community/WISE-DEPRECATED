@@ -133,7 +133,6 @@ public class RunImpl implements Run {
   private static final String COLUMN_NAME_SURVEY = "survey";
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   @Getter
   @Setter
   private Long id = null;

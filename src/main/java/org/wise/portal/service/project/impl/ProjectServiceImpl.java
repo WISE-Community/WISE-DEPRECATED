@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -30,19 +30,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -73,13 +73,17 @@ import java.util.*;
 /**
  * @author Patrick Lawler
  */
+@Service
 public class ProjectServiceImpl implements ProjectService {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private ProjectDao<Project> projectDao;
+
+  @Autowired
+  private RunDao<Run> runDao;
 
   @Autowired
   private AclService<Project> aclService;
@@ -171,6 +175,7 @@ public class ProjectServiceImpl implements ProjectService {
     Project project = projectDao.createEmptyProject();
     User owner = projectParameters.getOwner();
     String modulePath = projectParameters.getModulePath();
+    project.setId(projectParameters.getProjectId());
     project.setModulePath(modulePath);
     project.setName(projectParameters.getProjectname());
     project.setOwner(owner);
@@ -337,7 +342,7 @@ public class ProjectServiceImpl implements ProjectService {
     String vleurl = contextPath + "/vle/vle.html";
     modelAndView.addObject("vleurl", vleurl);
     modelAndView.addObject("vleConfigUrl", vleConfigUrl);
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     String rawProjectUrl = project.getModulePath();
     String contentUrl = curriculumBaseWWW + rawProjectUrl;
     modelAndView.addObject("contentUrl", contentUrl);
@@ -408,7 +413,6 @@ public class ProjectServiceImpl implements ProjectService {
         aclService.hasPermission(project, BasePermission.READ, user);
   }
 
-  @CacheEvict(value = "project", allEntries = true)
   public Integer addTagToProject(String tagString, Long projectId) {
     Tag tag = tagService.createOrGetTag(tagString);
     Project project = null;
@@ -427,7 +431,6 @@ public class ProjectServiceImpl implements ProjectService {
     return (Integer) tag.getId();
   }
 
-  @CacheEvict(value = "project", allEntries = true)
   @Transactional
   public void removeTagFromProject(Integer tagId, Long projectId) {
     Tag tag = tagService.getTagById(tagId);
@@ -480,7 +483,6 @@ public class ProjectServiceImpl implements ProjectService {
     return getProjectListByTagNames(tagNames);
   }
 
-  @Cacheable("project")
   @Transactional
   public List<Project> getPublicLibraryProjectList() {
     Set<String> tagNames = new TreeSet<String>();
@@ -526,20 +528,36 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
+  public long getNextAvailableProjectId() {
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
+    File curriculumBaseDirFile = new File(curriculumBaseDir);
+    long nextId = Math.max(projectDao.getMaxProjectId(), runDao.getMaxRunId()) + 1;
+    while (true) {
+      File nextFolder = new File(curriculumBaseDirFile, String.valueOf(nextId));
+      if (nextFolder.exists()) {
+        nextId++;
+      } else {
+        break;
+      }
+    }
+    return nextId;
+  }
+
   public Project copyProject(Integer projectId, User user) throws Exception {
     Project parentProject = getById(projectId);
-    String projectFolderPath = FileManager.getProjectFolderPath(parentProject);
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-    String newProjectDirname = FileManager.copyProject(curriculumBaseDir, projectFolderPath);
+    long newProjectId = getNextAvailableProjectId();
+    File parentProjectDir = new File(FileManager.getProjectFolderPath(parentProject));
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
+    File newProjectDir = new File(curriculumBaseDir, String.valueOf(newProjectId));
+    FileManager.copy(parentProjectDir, newProjectDir);
     String projectModulePath = parentProject.getModulePath();
     String projectJSONFilename = projectModulePath.substring(projectModulePath.lastIndexOf("/") + 1);
-    String newProjectPath = "/" + newProjectDirname + "/" + projectJSONFilename;
-    String newProjectName = parentProject.getName();
     Long parentProjectId = (Long) parentProject.getId();
     ProjectParameters pParams = new ProjectParameters();
-    pParams.setModulePath(newProjectPath);
+    pParams.setProjectId(newProjectId);
+    pParams.setModulePath("/" + newProjectId + "/" + projectJSONFilename);
     pParams.setOwner(user);
-    pParams.setProjectname(newProjectName);
+    pParams.setProjectname(parentProject.getName());
     pParams.setProjectType(ProjectType.LD);
     pParams.setWiseVersion(parentProject.getWiseVersion());
     pParams.setParentProjectId(parentProjectId);
@@ -658,7 +676,7 @@ public class ProjectServiceImpl implements ProjectService {
     if (project.getWiseVersion().equals(4)) {
       previewPath = "/previewproject.html?projectId=";
     }
-    return wiseProperties.getProperty("wise.hostname") + previewPath + project.getId();
+    return appProperties.getProperty("wise.hostname") + previewPath + project.getId();
   }
 
   private String getAuthorsString(JSONArray authors) {

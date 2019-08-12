@@ -110,7 +110,6 @@ export class CreateRunDialogComponent {
           this.run = new Run(newRun);
           this.dialogRef.afterClosed().subscribe(result => {
             this.teacherService.addNewRun(this.run);
-            this.teacherService.setTabIndex(0);
           });
           this.isCreated = true;
         });

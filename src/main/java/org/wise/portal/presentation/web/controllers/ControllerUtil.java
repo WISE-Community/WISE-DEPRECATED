@@ -20,6 +20,23 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,26 +56,16 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
-import org.wise.vle.utils.FileManager;
-
-import javax.annotation.PostConstruct;
-import javax.net.ssl.HttpsURLConnection;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
 
 /**
  * A utility class for use by all controllers
  *
  * @author Laurel Williams
+ * @author Geoffrey Kwan
  */
 @Component
 public class ControllerUtil {
@@ -71,7 +78,7 @@ public class ControllerUtil {
   private static PortalService portalService;
 
   @Autowired
-  private static Properties wiseProperties;
+  private static Properties appProperties;
 
   @Autowired
   private static ProjectService projectService;
@@ -84,8 +91,8 @@ public class ControllerUtil {
   private static final String LICENSE_PATH = "/license.txt";
 
   @Autowired
-  public void setWiseProperties(Properties wiseProperties){
-    ControllerUtil.wiseProperties = wiseProperties;
+  public void setAppProperties(Properties appProperties){
+    ControllerUtil.appProperties = appProperties;
   }
 
   @Autowired
@@ -319,8 +326,8 @@ public class ControllerUtil {
     String modulePath = project.getModulePath();
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
     if (lastIndexOfSlash != -1) {
-      String hostname = ControllerUtil.wiseProperties.getProperty("wise.hostname");
-      String curriculumBaseWWW = ControllerUtil.wiseProperties.getProperty("curriculum_base_www");
+      String hostname = ControllerUtil.appProperties.getProperty("wise.hostname");
+      String curriculumBaseWWW = ControllerUtil.appProperties.getProperty("curriculum_base_www");
       return hostname + curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
     }
     return "";
@@ -330,7 +337,7 @@ public class ControllerUtil {
     String modulePath = project.getModulePath();
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
     if (lastIndexOfSlash != -1) {
-      String curriculumBaseWWW = ControllerUtil.wiseProperties.getProperty("curriculum_base_dir");
+      String curriculumBaseWWW = ControllerUtil.appProperties.getProperty("curriculum_base_dir");
       return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
     }
     return "";
@@ -382,19 +389,6 @@ public class ControllerUtil {
     return Long.valueOf(minutes) * 60 * 1000;
   }
 
-  public static void addNewSessionToAllLoggedInUsers(HttpServletRequest request, User user) {
-    HttpSession session = request.getSession();
-    String sessionId = session.getId();
-    HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) session
-        .getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-    if (allLoggedInUsers == null) {
-      allLoggedInUsers = new HashMap<String, User>();
-      session.getServletContext()
-          .setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
-    }
-    allLoggedInUsers.put(sessionId, user);
-  }
-
   public static boolean isRecentNumberOfFailedLoginAttemptsOverLimit(User user) {
     MutableUserDetails mutableUserDetails = user.getUserDetails();
     if (mutableUserDetails != null) {
@@ -413,8 +407,8 @@ public class ControllerUtil {
 
   @PostConstruct
   public static void checkReCaptchaEnabled() {
-    String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    String reCaptchaPublicKey = appProperties.getProperty("recaptcha_public_key");
+    String reCaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
     isReCaptchaEnabled = reCaptchaPublicKey != null && reCaptchaPrivateKey != null;
   }
 
@@ -424,7 +418,7 @@ public class ControllerUtil {
    * @return whether the user answered the ReCaptcha successfully
    */
   public static boolean isReCaptchaResponseValid(String gRecaptchaResponse) {
-    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    String reCaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
     boolean isValid = false;
     if (isReCaptchaEnabled &&
         gRecaptchaResponse != null &&
@@ -463,5 +457,41 @@ public class ControllerUtil {
       }
     }
     return isValid;
+  }
+
+  public static JSONObject createSuccessResponse() {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "success");
+    } catch(JSONException e) {
+    }
+    return response;
+  }
+
+  public static JSONObject createSuccessResponse(String messageCode) {
+    JSONObject response = createSuccessResponse();
+    try {
+      response.put("messageCode", messageCode);
+    } catch(JSONException e) {
+    }
+    return response;
+  }
+
+  public static JSONObject createErrorResponse() {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "error");
+    } catch(JSONException e) {
+    }
+    return response;
+  }
+
+  public static JSONObject createErrorResponse(String messageCode) {
+    JSONObject response = createErrorResponse();
+    try {
+      response.put("messageCode", messageCode);
+    } catch(JSONException e) {
+    }
+    return response;
   }
 }

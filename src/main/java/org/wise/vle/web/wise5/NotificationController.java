@@ -1,16 +1,15 @@
 package org.wise.vle.web.wise5;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.run.Run;
@@ -20,9 +19,8 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
-import org.wise.vle.domain.WebSocketMessage;
+import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.notification.Notification;
-import org.wise.vle.domain.work.StudentWork;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -45,13 +43,15 @@ public class NotificationController {
   private WorkgroupService workgroupService;
 
   @Autowired
-  private SimpMessagingTemplate simpMessagingTemplate;
+  private MessagePublisher redisPublisher;
 
-  public void broadcastNotification(Notification notification) {
+  public void broadcastNotification(Notification notification) throws JSONException {
     notification.convertToClientNotification();
-    WebSocketMessage message = new WebSocketMessage("notification", notification);
-    simpMessagingTemplate.convertAndSend(String.format("/topic/workgroup/%s",
-        notification.getToWorkgroupId()), message);
+    JSONObject message = new JSONObject();
+    message.put("type", "notification");
+    message.put("topic", String.format("/topic/workgroup/%s", notification.getToWorkgroupId()));
+    message.put("notification", notification.toJSON());
+    redisPublisher.publish(message.toString());
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/notification/{runId}")
@@ -161,7 +161,7 @@ public class NotificationController {
       @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
       @RequestParam(value = "groupId", required = false) String groupId,
       @RequestParam(value = "timeDismissed", required = false) String timeDismissed,
-      HttpServletResponse response) throws IOException, ObjectNotFoundException {
+      HttpServletResponse response) throws IOException, ObjectNotFoundException, JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
     Notification notification = vleService.getNotificationById(notificationId);
     Run run = runService.retrieveById(new Long(runId));

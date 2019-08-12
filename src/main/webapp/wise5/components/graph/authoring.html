@@ -607,7 +607,19 @@
             </md-select>
           </md-input-container>
           <md-input-container style='margin-right: 20; width: 120; height: 60;'
-                              ng-if='graphController.authoringComponentContent.graphType == "line"'>
+                              ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
+            <label>{{ 'graph.type' | translate }}</label>
+            <md-select ng-model='series.type'
+                       ng-change='graphController.authoringViewComponentChanged()'
+                       style='width: 120'>
+              <md-option ng-repeat='availableSeriesType in graphController.availableSeriesTypes'
+                         value='{{availableSeriesType.value}}'>
+                {{availableSeriesType.text}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container style='margin-right: 20; width: 120; height: 60;'
+                              ng-if='series.type == "line" || (series.type == null && graphController.authoringComponentContent.graphType == "line")'>
             <label>{{ 'graph.lineType' | translate }}</label>
             <md-select ng-model='series.dashStyle'
                        ng-change='graphController.authoringViewComponentChanged()'

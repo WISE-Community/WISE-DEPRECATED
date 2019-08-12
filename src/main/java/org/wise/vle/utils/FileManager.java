@@ -84,15 +84,15 @@ public class FileManager {
 
   private boolean modeRetrieved = false;
 
-  private static Properties wiseProperties = null;
+  private static Properties appProperties = null;
 
   static {
     try {
-      wiseProperties = new Properties();
-      wiseProperties.load(
-          FileManager.class.getClassLoader().getResourceAsStream("wise.properties"));
+      appProperties = new Properties();
+      appProperties.load(
+          FileManager.class.getClassLoader().getResourceAsStream("application.properties"));
     } catch (Exception e) {
-      System.err.println("FileManager could not read in wiseProperties file");
+      System.err.println("FileManager could not read in appProperties file");
       e.printStackTrace();
     }
   }
@@ -300,12 +300,13 @@ public class FileManager {
    * @throws JSONException
    * @throws ServletException
    */
-  public static String createProject(String curriculumBaseDir, String projectName)
-      throws IOException {
+  public static String createProject(String curriculumBaseDir, String folderName, 
+      String projectName) throws IOException {
     String result = "";
     File parent = new File(curriculumBaseDir);
     ensureDir(parent);
-    File newProjectPath = createNewprojectPath(parent);
+    File newProjectPath = new File(curriculumBaseDir, folderName);
+    newProjectPath.mkdir();
     File newProjectAssetsDir = new File(newProjectPath, "assets");
     newProjectAssetsDir.mkdir();
     File newFile = new File(newProjectPath, "wise4.project.json");
@@ -332,11 +333,12 @@ public class FileManager {
    * @throws JSONException
    * @throws ServletException
    */
-  public static String createWISE5Project(String curriculumBaseDir) {
+  public static String createWISE5Project(String curriculumBaseDir, String folderName) {
     String result = "";
     File parent = new File(curriculumBaseDir);
     ensureDir(parent);
-    File newProjectPath = createNewprojectPath(parent);
+    File newProjectPath = new File(curriculumBaseDir, folderName);
+    newProjectPath.mkdir();
     File newProjectAssetsDir = new File(newProjectPath, "assets");
     newProjectAssetsDir.mkdir();
     File newFile = new File(newProjectPath, "project.json");
@@ -672,16 +674,16 @@ public class FileManager {
    * @return the path to the new project
    * @throws IOException
    */
-  public static String copyProject(String curriculumBaseDir, String projectFolderPath)
-      throws IOException {
+  public static String copyProject(String curriculumBaseDir, String projectFolderPath,
+      String newProjectDir) throws IOException {
     String result = "";
     File srcDir = new File(projectFolderPath);
     if (srcDir.exists() && srcDir.isDirectory()) {
       File destDir;
       if (curriculumBaseDir != null && curriculumBaseDir != "") {
-        destDir = createNewprojectPath(new File(curriculumBaseDir));
+        destDir = new File(curriculumBaseDir, newProjectDir);
       } else {
-        destDir = createNewprojectPath(srcDir.getParentFile());
+        destDir = new File(srcDir.getParentFile(), newProjectDir);
       }
       copy(srcDir, destDir);
       result = destDir.getName();
@@ -2046,7 +2048,7 @@ public class FileManager {
       projectMaxTotalAssetsSizeString = projectMaxTotalAssetsSizeLong.toString();
     } else {
       projectMaxTotalAssetsSizeString =
-          wiseProperties.getProperty("project_max_total_assets_size", "15728640");
+          appProperties.getProperty("project_max_total_assets_size", "15728640");
     }
     String usageString = sizeUsed + "/" + projectMaxTotalAssetsSizeString;
     result = usageString;
@@ -2084,7 +2086,7 @@ public class FileManager {
    * e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
    */
   public static String getProjectFilePath(Project project) {
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String projectModulePath = project.getModulePath();
     return curriculumBaseDir + projectModulePath;
   }

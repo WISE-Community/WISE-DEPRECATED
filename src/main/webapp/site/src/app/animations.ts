@@ -202,3 +202,22 @@ export const jackInTheBox =
       ]))
     ], {params: { duration: '1s', delay: '0s'}})
   ]);
+
+  export const flash =
+  trigger('flash', [
+    state('void', style({
+      opacity: 0
+    })),
+    state('*', style({
+      opacity: 1
+    })),
+    transition('void => *', [
+      animate('{{ duration }} {{ delay }}', keyframes([
+        style({ opacity: 1 }),
+        style({ opacity: 0 }),
+        style({ opacity: 1 }),
+        style({ opacity: 0 }),
+        style({ opacity: 1 })
+      ]))
+    ], {params: { duration: '2s', delay: '0s'}})
+  ]);

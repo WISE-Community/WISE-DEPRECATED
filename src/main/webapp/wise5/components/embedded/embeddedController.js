@@ -586,7 +586,10 @@ var EmbeddedController = function (_ComponentController) {
       var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
       if (connectedComponentState != null) {
         var fields = connectedComponent.fields;
-        mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+        var when = connectedComponent.when;
+        if (when == null || when === 'firstTime' && firstTime) {
+          mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+        }
       }
       return mergedComponentState;
     }
@@ -605,7 +608,7 @@ var EmbeddedController = function (_ComponentController) {
     value: function mergeComponentState(toComponentState, fromComponentState, mergeFields, firstTime) {
       if (mergeFields == null) {
         // there are no merge fields specified so we will get all of the fields
-        if (fromComponentState.componentType == 'Embedded') {
+        if (fromComponentState.componentType === 'Embedded') {
           toComponentState.studentData = this.UtilService.makeCopyOfJSONObject(fromComponentState.studentData);
         }
       } else {

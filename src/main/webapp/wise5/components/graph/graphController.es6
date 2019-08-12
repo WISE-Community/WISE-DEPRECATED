@@ -2523,6 +2523,8 @@ class GraphController extends ComponentController {
           connectedComponentBackgroundImage = promiseResult;
         }
       }
+      activeTrialIndex =
+          this.addTrialFromThisComponentIfNecessary(mergedTrials, trialCount, activeTrialIndex);
       let newComponentState = this.NodeService.createNewComponentState();
       newComponentState.studentData = {
         trials: mergedTrials,
@@ -2540,6 +2542,19 @@ class GraphController extends ComponentController {
       this.setStudentWork(newComponentState);
       this.studentDataChanged();
     };
+  }
+
+  addTrialFromThisComponentIfNecessary(mergedTrials, trialCount, activeTrialIndex) {
+    if (this.componentContent.series.length > 0) {
+      const trial = this.createNewTrial(this.UtilService.generateKey(10));
+      trial.name = this.$translate('graph.trial') + ' ' + trialCount;
+      trial.series = this.UtilService.makeCopyOfJSONObject(this.componentContent.series);
+      mergedTrials.push(trial);
+      if (this.canEditTrial(trial)) {
+        activeTrialIndex = trialCount;
+      }
+    }
+    return activeTrialIndex;
   }
 
   /**

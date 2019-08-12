@@ -6,8 +6,8 @@
 
 PWD=`pwd`
 TODAY=`/bin/date +\%Y\%m\%d`
-PROPERTIES_FILE="src/main/resources/wise.properties"
-SAMPLE_PROPERTIES_FILE="src/main/resources/wise_sample_embedded_tomcat.properties"
+PROPERTIES_FILE="src/main/resources/application.properties"
+SAMPLE_PROPERTIES_FILE="src/main/resources/application_sample.properties"
 
 if [ $# -ne 1 ] || !([ $1 == "reset" ] || [ $1 == "package" ] || [ $1 == "dev" ] || [ $1 == "run" ]); then
   echo "Usage: ./wise.sh {reset|package|dev|run}"
@@ -27,7 +27,8 @@ if [ $1 = "reset" ]; then
 fi
 
 if [ $1 = "package" ]; then
-  ng build --configuration=production --stats-json
+  npm install
+  node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --configuration=production --stats-json
   ./mvnw clean -Dmaven.test.skip=true package
   exit 0
 fi

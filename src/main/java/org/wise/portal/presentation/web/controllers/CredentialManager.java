@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
@@ -57,7 +57,7 @@ public final class CredentialManager {
 
   private static ProjectService projectService;
 
-  private static Properties wiseProperties;
+  private static Properties appProperties;
 
   @Autowired
   public void setProjectService(ProjectService projectService) {
@@ -65,11 +65,9 @@ public final class CredentialManager {
   }
 
   @Autowired
-  public void setWiseProperties(Properties wiseProperties) {
-    CredentialManager.wiseProperties = wiseProperties;
+  public void setAppProperties(Properties appProperties) {
+    CredentialManager.appProperties = appProperties;
   }
-
-  private static final String AUTHENTICATE = "authenticate";
 
   private static final String PROJECTID = "projectId";
 
@@ -89,9 +87,9 @@ public final class CredentialManager {
       request.setAttribute("credentials", Base64.encodeObject(user.getUserDetails().getUsername(),
           Base64.URL_SAFE) + "~" + key);
       setAllowedPathAccess(request);
-      if (request.getClass().getName().endsWith("DefaultMultipartHttpServletRequest")) {
-        DefaultMultipartHttpServletRequest multiRequest =
-            (DefaultMultipartHttpServletRequest) request;
+      if (request.getClass().getName().endsWith("StandardMultipartHttpServletRequest")) {
+        StandardMultipartHttpServletRequest multiRequest =
+            (StandardMultipartHttpServletRequest) request;
         List<String> filenames = new ArrayList<String>();
         Map<String,byte[]> fileMap = new TreeMap<String,byte[]>();
         Iterator<String> iter = multiRequest.getFileNames();
@@ -110,10 +108,10 @@ public final class CredentialManager {
 
   public static String getAllowedPathAccess(HttpServletRequest request) {
     String idStr = request.getParameter(PROJECTID);
-    String accessPath = wiseProperties.getProperty("curriculum_base_dir");
+    String accessPath = appProperties.getProperty("curriculum_base_dir");
     if ("studentAssetUpload".equals(request.getParameter("cmd")) ||
         "studentAssetCopyForReference".equals(request.getParameter("command"))) {
-      accessPath = wiseProperties.getProperty("studentuploads_base_dir");
+      accessPath = appProperties.getProperty("studentuploads_base_dir");
     }
     if (idStr != null && !idStr.equals("") && !idStr.equals("none")) {
       try {

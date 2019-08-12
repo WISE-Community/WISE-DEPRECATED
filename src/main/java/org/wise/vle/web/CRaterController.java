@@ -37,16 +37,16 @@ import java.util.Properties;
 public class CRaterController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @RequestMapping("/c-rater/score")
   protected String scoreCRaterItem(
       @RequestParam(value = "itemId") String itemId,
       @RequestParam(value = "responseId") String responseId,
       @RequestParam(value = "studentData") String studentData) {
-    String cRaterClientId = wiseProperties.getProperty("cRater_client_id");
-    String cRaterScoringUrl = wiseProperties.getProperty("cRater_scoring_url");
-    String cRaterPassword = wiseProperties.getProperty("cRater_password");
+    String cRaterClientId = appProperties.getProperty("cRater_client_id");
+    String cRaterScoringUrl = appProperties.getProperty("cRater_scoring_url");
+    String cRaterPassword = appProperties.getProperty("cRater_password");
     String responseString = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl,
       cRaterPassword, cRaterClientId, itemId, responseId, studentData);
     JSONObject cRaterResponseJSONObj = new JSONObject();
@@ -66,9 +66,9 @@ public class CRaterController {
   @RequestMapping("/c-rater/verify")
   protected String verityCRaterItem(
       @RequestParam(value = "itemId") String itemId) throws JSONException {
-    String cRaterClientId = wiseProperties.getProperty("cRater_client_id");
-    String cRaterVerificationUrl = wiseProperties.getProperty("cRater_verification_url");
-    String cRaterPassword = wiseProperties.getProperty("cRater_password");
+    String cRaterClientId = appProperties.getProperty("cRater_client_id");
+    String cRaterVerificationUrl = appProperties.getProperty("cRater_verification_url");
+    String cRaterPassword = appProperties.getProperty("cRater_password");
     String verificationResponse = CRaterHttpClient.getCRaterVerificationResponse(
         cRaterVerificationUrl, cRaterPassword, cRaterClientId, itemId);
     JSONObject response = new JSONObject();

@@ -23,14 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -40,15 +32,20 @@ import org.wise.portal.domain.admin.DailyAdminJob;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.session.SessionService;
 import org.wise.portal.service.user.UserService;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Sally Ahn
  */
 @Controller
-@RequestMapping("/admin/account/manageusers.html")
+@RequestMapping("/admin/account/manageusers")
 public class ViewAllUsersController{
 
   @Autowired
@@ -56,6 +53,9 @@ public class ViewAllUsersController{
 
   @Autowired
   private UserDetailsService userDetailsService;
+
+  @Autowired
+  private SessionService sessionService;
 
   @Autowired
   private DailyAdminJob adminJob;
@@ -84,36 +84,8 @@ public class ViewAllUsersController{
     String onlyShowLoggedInUser = request.getParameter("onlyShowLoggedInUser");
     String onlyShowUsersWhoLoggedIn = request.getParameter("onlyShowUsersWhoLoggedIn");
     if (onlyShowLoggedInUser != null && onlyShowLoggedInUser.equals("true")) {
-      HashMap<String, User> allLoggedInUsers =
-          (HashMap<String, User>) request.getSession()
-          .getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-
-      HashMap<String, Long> studentsToRunIds =
-          (HashMap<String, Long>) request.getSession()
-          .getServletContext().getAttribute("studentsToRunIds");
-
-      ArrayList<Object> loggedInStudent = new ArrayList<Object>();
-      ArrayList<Object> loggedInTeacher = new ArrayList<Object>();
-      if (allLoggedInUsers != null) {
-        for (String sessionId : allLoggedInUsers.keySet()) {
-          User loggedInUser = allLoggedInUsers.get(sessionId);
-          if (loggedInUser.getUserDetails() instanceof StudentUserDetails) {
-            Object[] loggedInStudentArray = new Object[2];
-            loggedInStudentArray[0] = loggedInUser;
-            // since this is a student, look in the studentToRuns session variable
-            // and see if this student is running any projects
-            if (studentsToRunIds != null && studentsToRunIds.containsKey(sessionId)) {
-              Long runId = studentsToRunIds.get(sessionId);
-              loggedInStudentArray[1] = runId;
-            }
-            loggedInStudent.add(loggedInStudentArray);
-          } else {
-            loggedInTeacher.add(loggedInUser);
-          }
-        }
-      }
-      modelMap.put(LOGGED_IN_STUDENT_USERNAMES, loggedInStudent);
-      modelMap.put(LOGGED_IN_TEACHER_USERNAMES, loggedInTeacher);
+      modelMap.put(LOGGED_IN_STUDENT_USERNAMES, sessionService.getLoggedInStudents());
+      modelMap.put(LOGGED_IN_TEACHER_USERNAMES, sessionService.getLoggedInTeachers());
     } else if (onlyShowUsersWhoLoggedIn != null) {
       Date dateMin = null, dateMax = null;
       Calendar now = Calendar.getInstance();

@@ -48,10 +48,10 @@ public class GoogleClassroomAPIController {
   private UserDetailsService userDetailsService;
 
   @Value("${google.clientId:}")
-  private String clientId;
+  private String googleClientId;
 
   @Value("${google.clientSecret:}")
-  private String clientSecret;
+  private String googleClientSecret;
 
   @Value("${wise.name:}")
   private String applicationName;
@@ -78,8 +78,8 @@ public class GoogleClassroomAPIController {
     String username = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
     NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     GoogleClientSecrets.Details credentials = new GoogleClientSecrets.Details();
-    credentials.setClientId(clientId);
-    credentials.setClientSecret(clientSecret);
+    credentials.setClientId(googleClientId);
+    credentials.setClientSecret(googleClientSecret);
     GoogleClientSecrets clientSecrets = new GoogleClientSecrets();
     clientSecrets.setInstalled(credentials);
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
@@ -93,8 +93,8 @@ public class GoogleClassroomAPIController {
   private ImmutablePair<String, Credential> authorize(String username) throws Exception {
     NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     GoogleClientSecrets.Details credentials = new GoogleClientSecrets.Details();
-    credentials.setClientId(clientId);
-    credentials.setClientSecret(clientSecret);
+    credentials.setClientId(googleClientId);
+    credentials.setClientSecret(googleClientSecret);
     GoogleClientSecrets clientSecrets = new GoogleClientSecrets();
     clientSecrets.setInstalled(credentials);
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,

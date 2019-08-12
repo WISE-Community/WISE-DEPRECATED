@@ -50,15 +50,15 @@ import org.wise.portal.presentation.util.http.Base64;
 public class DiscourseSSOController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @RequestMapping("/sso/discourse.html")
   protected ModelAndView handleRequestInternal(
     HttpServletRequest request,
     HttpServletResponse response) throws Exception {
     // make sure this WISE instance supports discourse SSO.
-    String secretKey = wiseProperties.getProperty("discourse_sso_secret_key");
-    String discourseURL = wiseProperties.getProperty("discourse_url");
+    String secretKey = appProperties.getProperty("discourse_sso_secret_key");
+    String discourseURL = appProperties.getProperty("discourse_url");
     if (secretKey == null || secretKey.isEmpty() || discourseURL == null || discourseURL.isEmpty()) {
       return null;
     }

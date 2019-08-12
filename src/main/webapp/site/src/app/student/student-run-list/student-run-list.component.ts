@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DateFormatPipe } from 'ngx-moment';
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
-import {ConfigService} from "../../services/config.service";
+import { ConfigService } from '../../services/config.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dialog.component';
@@ -34,8 +34,8 @@ export class StudentRunListComponent implements OnInit {
         }
       }
       setTimeout(() => {
-        document.getElementById(`run${run.id}`).scrollIntoView({behavior: "smooth"})
-      }, 1500);
+        document.getElementById(`run${run.id}`).scrollIntoView()
+      }, 1000);
     });
   }
 
@@ -167,7 +167,7 @@ export class StudentRunListComponent implements OnInit {
     for (const run of this.runs) {
       if (accessCode.toLowerCase() === run.runCode.toLowerCase()) {
         return setTimeout(() => {
-          document.getElementById(`run${run.id}`).scrollIntoView({ behavior: "smooth" })
+          document.getElementById(`run${run.id}`).scrollIntoView();
         }, 1500);
       }
     }

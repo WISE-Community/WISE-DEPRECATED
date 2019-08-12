@@ -30,17 +30,11 @@ export class LoginHomeComponent implements OnInit {
   ngOnInit(): void {
     this.configService.getConfig().subscribe((config) => {
       if (config != null) {
-        this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+        this.isGoogleAuthenticationEnabled = config.googleClientId != '';
         this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
       }
       if (this.userService.isSignedIn()) {
-        this.userService.getUser().subscribe(({ isGoogleUser }) => {
-          if (isGoogleUser) {
-            this.socialSignIn('google');
-          } else {
-            this.router.navigateByUrl(this.getRedirectUrl(''));
-          }
-        });
+        this.router.navigateByUrl(this.getRedirectUrl(''));
       }
     });
     this.route.params.subscribe(params => {

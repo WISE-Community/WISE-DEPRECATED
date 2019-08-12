@@ -8,11 +8,13 @@ import { TeamSignInDialogComponent } from "../team-sign-in-dialog/team-sign-in-d
 import { Student } from "../../domain/student";
 import { StudentService } from "../student.service";
 import { UserService } from "../../services/user.service";
+import { flash } from '../../animations';
 
 @Component({
   selector: 'app-student-run-list-item',
   templateUrl: './student-run-list-item.component.html',
-  styleUrls: ['./student-run-list-item.component.scss']
+  styleUrls: ['./student-run-list-item.component.scss'],
+  animations: [ flash ]
 })
 export class StudentRunListItemComponent implements OnInit {
 
@@ -21,6 +23,8 @@ export class StudentRunListItemComponent implements OnInit {
 
   problemLink: string = '';
   thumbStyle: SafeStyle;
+  animateDuration: string = '0s';
+  animateDelay: string = '0s';
 
   constructor(private sanitizer: DomSanitizer,
               private configService: ConfigService,
@@ -41,9 +45,11 @@ export class StudentRunListItemComponent implements OnInit {
     this.thumbStyle = this.getThumbStyle();
     this.problemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
     if (this.run.isHighlighted) {
+      this.animateDuration = '2s';
+      this.animateDelay = '1s';
       setTimeout(() => {
         this.run.isHighlighted = false;
-      }, 5000)
+      }, 7000)
     }
   }
 

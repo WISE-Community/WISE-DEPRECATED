@@ -111,5 +111,6 @@ export class LibraryProjectDetailsComponent implements OnInit {
         disableClose: true
       });
     }
+    this.dialogRef.close();
   }
 }
