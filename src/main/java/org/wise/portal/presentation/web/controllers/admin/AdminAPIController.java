@@ -8,15 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.service.admin.AdminService;
-import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WorkgroupService;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Controller for Admin REST API
@@ -48,11 +43,11 @@ public class AdminAPIController {
     userId = checkAndNullLongSearchField(userIdString);
     runId = checkAndNullLongSearchField(runIdString);
     workgroupId = checkAndNullLongSearchField(workgroupIdString);
-    List<User> students = userService.searchStudents(firstName, lastName, username, userId, runId,
+    List<StudentUserDetails> students = userService.searchStudents(firstName, lastName, username, userId, runId,
       workgroupId, teacherUsername);
 
     JSONArray searchResults = new JSONArray();
-    for (User student: students) {
+    for (StudentUserDetails student: students) {
       searchResults.put(studentToJSONObject(student));
     }
     return searchResults.toString();
@@ -72,13 +67,13 @@ public class AdminAPIController {
     return Long.parseLong(searchField);
   }
 
-  private JSONObject studentToJSONObject(User student) {
+  private JSONObject studentToJSONObject(StudentUserDetails student) {
     JSONObject studentObject = new JSONObject();
     try {
       studentObject.put("userId", student.getId());
-      studentObject.put("firstName", student.getUserDetails().getFirstname());
-      studentObject.put("lastName", student.getUserDetails().getLastname());
-      studentObject.put("username", student.getUserDetails().getUsername());
+      studentObject.put("firstName", student.getFirstname());
+      studentObject.put("lastName", student.getLastname());
+      studentObject.put("username", student.getUsername());
     } catch (JSONException je) {
       // ignore the exception for now
     }

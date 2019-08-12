@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.dao.SimpleDao;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.user.User;
 
 /**
@@ -109,8 +110,8 @@ public interface UserDao<T extends User> extends SimpleDao<T> {
    */
   List<T> retrieveByFields(String[] fields, String[] values, String classVar);
 
-  List<T> searchStudents(String firstName, String lastName, String username, Long userId,
-                         Long runId, Long workgroupId, String teacherUsername);
+  List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, Long userId,
+                                          Long runId, Long workgroupId, String teacherUsername);
 
   /**
    * Given a reset password key retrieve a corresponding user.

@@ -20,6 +20,7 @@
  */
 package org.wise.portal.dao.user.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.user.UserDao;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
@@ -40,6 +42,7 @@ import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
@@ -229,24 +232,38 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return result;
   }
 
-  public List<User> searchStudents(String firstName, String lastName, String username, Long userId,
+  public List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, Long userId,
                                    Long runId, Long workgroupId, String teacherUsername) {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
     CriteriaBuilder cb = session.getCriteriaBuilder();
-    CriteriaQuery<Tuple> cr = cb.createQuery(Tuple.class);
-    Root<UserImpl> userRoot = cr.from(UserImpl.class);
-    Root<RunImpl> runRoot = cr.from(RunImpl.class);
+    CriteriaQuery<Tuple> cr = cb.createTupleQuery();
+    Root<StudentUserDetails> userRoot = cr.from(StudentUserDetails.class);
+//    Root<RunImpl> runRoot = cr.from(RunImpl.class);
     Root<WorkgroupImpl> workgroupRoot = cr.from(WorkgroupImpl.class);
-    cr.select(cb.tuple(userRoot, runRoot, workgroupRoot)).where(
-      cb.and(
-        cb.like(userRoot.get("firstname"),firstName),
-        cb.like(userRoot.get("lastname"), lastName),
-        cb.like(userRoot.get("username"), username),
-        cb.equal(userRoot.get("id"), userId),
-        cb.equal(runRoot.get("id"), runId),
-        cb.equal(workgroupRoot.get("id"), workgroupId)
-      )
-    );
+    //
+    List<Predicate> predicates = new ArrayList<>();
+    if (firstName != null) {
+      predicates.add(cb.like(userRoot.get("firstname"), "%" + firstName + "%"));
+    }
+    if (lastName != null) {
+      predicates.add(cb.like(userRoot.get("lastname"), "%" + lastName + "%"));
+    }
+    if (username != null) {
+      predicates.add(cb.equal(userRoot.get("username"), username));
+    }
+    if (userId != null) {
+      predicates.add(cb.equal(userRoot.get("id"), userId));
+    }
+//    if (runId != null) {
+//      predicates.add(cb.equal(runRoot.get("id"), runId));
+//    }
+    if (workgroupId != null) {
+      predicates.add(cb.equal(workgroupRoot.get("id"), workgroupId));
+    }
+    Predicate finalPredicate = cb.and(predicates.toArray(new Predicate[predicates.size()]));
+    cr.select(cb.tuple(userRoot, workgroupRoot)).where(finalPredicate);
+//    cr.select(userRoot).where(finalPredicate);
+
     javax.persistence.Query query = session.createQuery(cr);
     return query.getResultList();
   }

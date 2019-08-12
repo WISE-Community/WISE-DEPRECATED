@@ -23,6 +23,7 @@ package org.wise.portal.service.user;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
@@ -151,8 +152,8 @@ public interface UserService {
    */
   List<User> retrieveByFields(String[] fields, String[] values, String classVar);
 
-  List<User> searchStudents(String firstName, String lastName, String username, Long userId,
-                         Long runId, Long workgroupId, String teacherUsername);
+  List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, Long userId,
+                                          Long runId, Long workgroupId, String teacherUsername);
 
   /**
    * Get the User object given the reset password key

@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
     return userDao.retrieveByFields(fields, types, classVar);
   }
 
-  public List<User> searchStudents(String firstName, String lastName, String username, Long userId,
+  public List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, Long userId,
                                      Long runId, Long workgroupId, String teacherUsername) {
     return userDao.searchStudents(firstName, lastName, username, userId, runId, workgroupId, teacherUsername);
   }
