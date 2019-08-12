@@ -2446,6 +2446,31 @@ class StudentDataService {
     });
   }
 
+  getClassmateScores(nodeId, componentId, periodId) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      nodeId: nodeId,
+      componentId: componentId,
+      getStudentWork: false,
+      getEvents: false,
+      getAnnotations: true,
+      onlyGetLatest: false,
+      periodId: periodId
+    };
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getConfigParam('studentDataURL'),
+      params: params
+    };
+    return this.$http(httpParams).then((result) => {
+      const resultData = result.data;
+      if (resultData != null) {
+        return resultData.annotations;
+      }
+      return [];
+    });
+  }
+
   /**
    * Get a student work from any student.
    * @param id The student work id.

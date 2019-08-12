@@ -29,6 +29,8 @@ class SummaryAuthoringController extends SummaryController {
         StudentDataService,
         SummaryService,
         UtilService);
+    this.isResponsesOptionAvailable = false;
+    this.updateStudentDataTypeOptionsIfNecessary();
   }
 
   authoringSummaryNodeIdChanged() {
@@ -45,12 +47,7 @@ class SummaryAuthoringController extends SummaryController {
     if (numberOfAllowedComponents === 1) {
       this.authoringComponentContent.summaryComponentId = allowedComponent.id;
     }
-    this.updateOtherPrompt();
-    this.authoringViewComponentChanged();
-  }
-
-  authoringSummaryComponentIdChanged() {
-    this.updateOtherPrompt();
+    this.performUpdatesIfNecessary();
     this.authoringViewComponentChanged();
   }
 
@@ -58,9 +55,57 @@ class SummaryAuthoringController extends SummaryController {
     return this.SummaryService.isComponentTypeAllowed(componentType);
   }
 
+  authoringSummaryComponentIdChanged() {
+    this.performUpdatesIfNecessary();
+    this.authoringViewComponentChanged();
+  }
+
+  performUpdatesIfNecessary() {
+    this.updateOtherPrompt();
+    this.updateStudentDataTypeOptionsIfNecessary();
+    this.updateStudentDataTypeIfNecessary(); 
+  }
+
   updateOtherPrompt() {
     this.otherPrompt = this.getOtherPrompt(this.authoringComponentContent.summaryNodeId,
-      this.authoringComponentContent.summaryComponentId); 
+      this.authoringComponentContent.summaryComponentId);
+  }
+
+  updateStudentDataTypeOptionsIfNecessary() {
+    const nodeId = this.authoringComponentContent.summaryNodeId;
+    const componentId = this.authoringComponentContent.summaryComponentId;
+    this.isResponsesOptionAvailable = 
+        this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'responses');
+  }
+
+  updateStudentDataTypeIfNecessary() {
+    const nodeId = this.authoringComponentContent.summaryNodeId;
+    const componentId = this.authoringComponentContent.summaryComponentId;
+    const studentDataType = this.authoringComponentContent.summaryStudentDataType;
+    if (!this.isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType)) {
+      if (this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'scores')) {
+        this.authoringComponentContent.summaryStudentDataType = 'scores';
+      } else {
+        this.authoringComponentContent.summaryStudentDataType = null;
+      }
+    }
+  }
+
+  isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    if (component != null) {
+      if (studentDataType === 'scores') {
+        return this.SummaryService.isScoresSummaryAvailableForComponentType(component.type);
+      } else if (studentDataType === 'responses') {
+        return this.SummaryService.isResponsesSummaryAvailableForComponentType(component.type);
+      }
+    }
+    return false;
+  }
+
+  showPromptFromOtherComponentChanged() {
+    this.updateOtherPrompt();
+    this.authoringViewComponentChanged();
   }
 }
 

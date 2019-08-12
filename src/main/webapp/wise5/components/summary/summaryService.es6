@@ -3,6 +3,21 @@ import ComponentService from '../componentService';
 class SummaryService extends ComponentService {
   constructor($filter, ConfigService, UtilService) {
     super($filter, ConfigService, UtilService);
+    this.componentsWithScoresSummary = [
+      'Animation',
+      'AudioOscillator',
+      'ConceptMap',
+      'Discussion',
+      'Draw',
+      'Embedded',
+      'Graph',
+      'Label',
+      'Match',
+      'MultipleChoice',
+      'OpenResponse',
+      'Table'
+    ];
+    this.componentsWithResponsesSummary = ['MultipleChoice'];
   }
 
   getComponentTypeLabel() {
@@ -15,6 +30,7 @@ class SummaryService extends ComponentService {
     component.summaryNodeId = null;
     component.summaryComponentId = null;
     component.summarySource = 'period';
+    component.summaryStudentDataType = null;
     component.chartType = 'column';
     return component;
   }
@@ -24,7 +40,15 @@ class SummaryService extends ComponentService {
   }
 
   isComponentTypeAllowed(componentType) {
-    return componentType === 'MultipleChoice';
+    return componentType !== 'HTML' && componentType !== 'OutsideURL';
+  }
+
+  isScoresSummaryAvailableForComponentType(componentType) {
+    return this.componentsWithScoresSummary.indexOf(componentType) != -1;
+  }
+
+  isResponsesSummaryAvailableForComponentType(componentType) {
+    return this.componentsWithResponsesSummary.indexOf(componentType) != -1;
   }
 }
 

@@ -1,10 +1,11 @@
 'use strict';
 
 class ConfigService {
-  constructor($filter, $http, $location) {
+  constructor($filter, $http, $location, UtilService) {
     this.$filter = $filter;
     this.$http = $http;
     this.$location = $location;
+    this.UtilService = UtilService;
     this.config = null;
     this.$translate = this.$filter('translate');
   }
@@ -414,19 +415,15 @@ class ConfigService {
   getWorkgroupsByPeriod(periodId) {
     const workgroupsInPeriod = [];
     const myUserInfo = this.getMyUserInfo();
-    if (this.isStudent() && (this.isAllPeriods(periodId) || myUserInfo.periodId === periodId)) {
+    if (this.isStudent() && this.UtilService.isMatchingPeriods(myUserInfo.periodId, periodId)) {
       workgroupsInPeriod.push(myUserInfo);
     }
     for (const classmateUserInfo of this.getClassmateUserInfos()) {
-      if (this.isAllPeriods(periodId) || classmateUserInfo.periodId === periodId) {
+      if (this.UtilService.isMatchingPeriods(classmateUserInfo.periodId, periodId)) {
         workgroupsInPeriod.push(classmateUserInfo);
       }
     }
     return workgroupsInPeriod;
-  }
-
-  isAllPeriods(periodId) {
-    return periodId == null || periodId === -1;
   }
 
   getNumberOfWorkgroupsInPeriod(periodId) {
@@ -556,8 +553,19 @@ class ConfigService {
   }
 
   isPreview() {
-    const mode = this.getMode();
-    return mode != null && mode === 'preview';
+    return this.getMode() === 'preview';
+  }
+
+  isAuthoring() {
+    return this.getMode() === 'author';
+  }
+
+  isStudentRun() {
+    return this.getMode() === 'studentRun';
+  }
+  
+  isClassroomMonitor() {
+    return this.getMode() === 'classroomMonitor';
   }
 
   /**
@@ -908,7 +916,8 @@ class ConfigService {
 ConfigService.$inject = [
   '$filter',
   '$http',
-  '$location'
+  '$location',
+  'UtilService'
 ];
 
 export default ConfigService;

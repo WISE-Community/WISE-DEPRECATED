@@ -1013,6 +1013,21 @@ function () {
       }
     }
   }, {
+    key: "getAnnotationsByNodeIdAndPeriodId",
+    value: function getAnnotationsByNodeIdAndPeriodId(nodeId, periodId) {
+      var _this4 = this;
+
+      var annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
+
+      if (annotationsByNodeId != null) {
+        return annotationsByNodeId.filter(function (annotation) {
+          return _this4.UtilService.isMatchingPeriods(annotation.periodId, periodId);
+        });
+      } else {
+        return [];
+      }
+    }
+  }, {
     key: "getAnnotationsToWorkgroupIdAndNodeId",
     value: function getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId) {
       var annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
@@ -1419,14 +1434,14 @@ function () {
   }, {
     key: "pauseScreensChanged",
     value: function pauseScreensChanged(periodId, isPaused) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.updatePausedRunStatusValue(periodId, isPaused);
       this.sendRunStatus().then(function () {
         if (isPaused) {
-          _this4.TeacherWebSocketService.pauseScreens(periodId);
+          _this5.TeacherWebSocketService.pauseScreens(periodId);
         } else {
-          _this4.TeacherWebSocketService.unPauseScreens(periodId);
+          _this5.TeacherWebSocketService.unPauseScreens(periodId);
         }
       });
       var context = "ClassroomMonitor",

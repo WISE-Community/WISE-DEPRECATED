@@ -169,6 +169,20 @@
       </md-select>
     </md-input-container>
     <md-input-container style='margin-right: 20; width: 200;'>
+      <label>{{ 'summary.studentDataType' | translate }}</label>
+      <md-select ng-model='summaryController.authoringComponentContent.summaryStudentDataType'
+          ng-change='summaryController.authoringViewComponentChanged()'
+          style='width: 200'>
+        <md-option value='scores'>
+          {{ 'summary.scores' | translate }}
+        </md-option>
+        <md-option value='responses'
+            ng-if='summaryController.isResponsesOptionAvailable'>
+          {{ 'summary.responses' | translate }}
+        </md-option>
+      </md-select>
+    </md-input-container>
+    <md-input-container style='margin-right: 20; width: 200;'>
       <label>{{ 'source' | translate }}</label>
       <md-select ng-model='summaryController.authoringComponentContent.summarySource'
           ng-change='summaryController.authoringViewComponentChanged()'
@@ -199,7 +213,7 @@
     <md-input-container>
       <md-checkbox class='md-primary'
           ng-model='summaryController.authoringComponentContent.showPromptFromOtherComponent'
-          ng-change='summaryController.authoringViewComponentChanged()'>
+          ng-change='summaryController.showPromptFromOtherComponentChanged()'>
         {{ 'summary.showPromptFromOtherComponent' | translate }}
       </md-checkbox>
     </md-input-container>
@@ -216,6 +230,7 @@
       </div>
       <summary-display node-id='summaryController.authoringComponentContent.summaryNodeId'
           component-id='summaryController.authoringComponentContent.summaryComponentId'
+          student-data-type='summaryController.authoringComponentContent.summaryStudentDataType'
           period-id='summaryController.authoringComponentContent.periodId'
           chart-type='summaryController.authoringComponentContent.chartType'>
       </summary-display>

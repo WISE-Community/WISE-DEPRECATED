@@ -31,21 +31,18 @@ class SummaryController extends ComponentController {
     this.SummaryService = SummaryService;
     this.summaryNodeId = this.componentContent.summaryNodeId;
     this.summaryComponentId = this.componentContent.summaryComponentId;
+    this.summaryStudentDataType = this.componentContent.summaryStudentDataType;
     this.chartType = this.componentContent.chartType;
     this.prompt = this.componentContent.prompt;
     if (this.componentContent.showPromptFromOtherComponent) {
       this.otherPrompt = this.getOtherPrompt(this.summaryNodeId, this.summaryComponentId);
     }
-    if (this.ConfigService.getMode() === 'studentRun') {
-      if (this.componentContent.summarySource === 'period') {
-        this.periodId = this.ConfigService.getPeriodId();
-      } else if (this.componentContent.summarySource === 'allPeriods') {
-        this.periodId = null;
-      }
-    } else if (this.ConfigService.getMode() === 'classroomMonitor') {
-      const studentWorkgroupId = this.workgroupId;
-      this.periodId = this.ConfigService.getPeriodIdByWorkgroupId(studentWorkgroupId);
+    this.isStudent = this.ConfigService.isPreview() || this.ConfigService.isStudentRun();
+    if (this.isStudent) {
+      this.otherStepTitle = this.getOtherStepTitle();
+      this.studentHasWork = this.isStudentHasWork();
     }
+    this.setPeriodIdIfNecessary();
   }
 
   getOtherPrompt(nodeId, componentId) {
@@ -55,6 +52,26 @@ class SummaryController extends ComponentController {
       return otherComponent.prompt;
     }
     return null;
+  }
+
+  isStudentHasWork() {
+    const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+        this.summaryNodeId, this.summaryComponentId);
+    return componentStates.length > 0;
+  }
+
+  getOtherStepTitle() {
+    return this.ProjectService.getNodePositionAndTitleByNodeId(this.summaryNodeId);
+  }
+
+  setPeriodIdIfNecessary() {
+    if (this.ConfigService.isStudentRun()) {
+      if (this.componentContent.summarySource === 'period') {
+        this.periodId = this.ConfigService.getPeriodId();
+      } else if (this.componentContent.summarySource === 'allPeriods') {
+        this.periodId = null;
+      }
+    }
   }
 }
 

@@ -755,6 +755,17 @@ class TeacherDataService {
     }
   }
 
+  getAnnotationsByNodeIdAndPeriodId(nodeId, periodId) {
+    const annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
+    if (annotationsByNodeId != null) {
+      return annotationsByNodeId.filter((annotation) => {
+        return this.UtilService.isMatchingPeriods(annotation.periodId, periodId);
+      });
+    } else {
+      return [];
+    }
+  } 
+
   getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId) {
     const annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
     const annotationsByNodeId = this.getAnnotationsByNodeId(nodeId);

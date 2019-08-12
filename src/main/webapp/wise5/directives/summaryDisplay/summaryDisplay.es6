@@ -1,41 +1,75 @@
 'use strict';
 
 class SummaryDisplayController {
-  constructor($filter, $injector, $q, ConfigService, ProjectService) {
+  constructor($filter, $injector, $q, AnnotationService, ConfigService, ProjectService) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$q = $q;
+    this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.$translate = this.$filter('translate');
+    this.numDummySamples = 20;
+    this.defaultMaxScore = 5;
+    this.maxScore = this.defaultMaxScore;
     this.dataService = null;
     if (this.chartType == null) {
       this.chartType = 'column';
     }
-    const mode = this.ConfigService.getMode();
-    if (this.ConfigService.isPreview() || mode === 'studentRun') {
+    if (this.isVLEPreview() || this.isStudentRun()) {
       this.dataService = this.$injector.get('StudentDataService');
-    } else if (mode === 'classroomMonitor' || mode === 'author') {
+    } else if (this.isClassroomMonitor() || this.isAuthoringPreview()) {
       this.dataService = this.$injector.get('TeacherDataService'); 
     }
     this.renderDisplay();
-    if (mode === 'author') {
+    if (this.isAuthoringPreview()) {
       this.$onChanges = (changes) => {
         this.renderDisplay();
       }
     }
   }
 
+  isVLEPreview() {
+    return this.ConfigService.isPreview();
+  }
+
+  isAuthoringPreview() {
+    return this.ConfigService.isAuthoring();
+  }
+
+  isStudentRun() {
+    return this.ConfigService.isStudentRun();
+  }
+
+  isClassroomMonitor() {
+    return this.ConfigService.isClassroomMonitor();
+  }
+
   renderDisplay() {
     const summaryComponent = 
         this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
     if (summaryComponent != null) {
-      this.getComponentStates(this.nodeId, this.componentId, this.periodId)
-          .then((componentStates = []) => {
-        this.processComponentStates(componentStates);
-      });
+      if (this.studentDataType === 'responses') {
+        this.getComponentStates(this.nodeId, this.componentId, this.periodId)
+            .then((componentStates = []) => {
+          this.processComponentStates(componentStates);
+        });
+      } else if (this.studentDataType === 'scores') {
+        this.setMaxScore(summaryComponent);
+        this.getScores(this.nodeId, this.componentId, this.periodId).then((annotations) => {
+          this.processScoreAnnotations(annotations);
+        });
+      }
     } else {
       this.clearChartConfig();
+    }
+  }
+
+  setMaxScore(component) {
+    if (component.maxScore != null) {
+      this.maxScore = component.maxScore;
+    } else {
+      this.maxScore = this.defaultMaxScore;
     }
   }
 
@@ -68,52 +102,89 @@ class SummaryDisplayController {
     }
   }
 
-  isVLEPreview() {
-    return this.ConfigService.isPreview();
+  getScores(nodeId, componentId, periodId) {
+    if (this.isVLEPreview()) {
+      return this.getDummyStudentScoresForVLEPreview(nodeId, componentId);
+    } else if (this.isAuthoringPreview()) {
+      return this.getDummyStudentScoresForAuthoringPreview(nodeId, componentId);
+    } else if (this.isStudentRun()) {
+      return this.dataService.getClassmateScores(nodeId, componentId, periodId
+          ).then((annotations) => {
+        return this.filterLatestScoreAnnotations(annotations);
+      });
+    } else if (this.isClassroomMonitor()) {
+      const annotations = this.dataService.getAnnotationsByNodeIdAndPeriodId(nodeId, periodId);
+      return this.resolveData(this.filterLatestScoreAnnotations(annotations));
+    }
   }
 
-  isAuthoringPreview() {
-    return this.ConfigService.getMode() === 'author';
+  filterLatestScoreAnnotations(annotations) {
+    const latestAnnotations = {};
+    for (const annotation of annotations) {
+      if (annotation.type === 'score' || annotation.type === 'autoScore') {
+        this.setLatestAnnotationIfNewer(latestAnnotations, annotation);
+      }
+    }
+    return this.convertObjectToArray(latestAnnotations);
   }
 
-  isStudentRun() {
-    return this.ConfigService.getMode() === 'studentRun';
+  setLatestAnnotationIfNewer(latestAnnotations, annotation) {
+    const workgroupId = annotation.toWorkgroupId;
+    const latestAnnotation = latestAnnotations[workgroupId];
+    if (latestAnnotation == null || annotation.serverSaveTime > latestAnnotation.serverSaveTime) {
+      latestAnnotations[workgroupId] = annotation;
+    }
   }
 
-  isClassroomMonitor() {
-    return this.ConfigService.getMode() === 'classroomMonitor';
+  convertObjectToArray(obj) {
+    return Object.keys(obj).map((key) => {
+      return obj[key]
+    }) 
   }
 
   getDummyStudentWorkForVLEPreview(nodeId, componentId) {
-    const componentStates = this.createDummyClassmateStudentWork();
+    const componentStates = this.createDummyComponentStates();
     const componentState = this.dataService
         .getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
     if (componentState != null) {
       componentStates.push(componentState);
     }
-    return this.resolveComponentStates(componentStates);
+    return this.resolveData(componentStates);
+  }
+
+  getDummyStudentScoresForVLEPreview(nodeId, componentId) {
+    const annotations = this.createDummyScoreAnnotations();
+    const annotation = this.AnnotationService.getLatestScoreAnnotation(
+        nodeId, componentId, this.ConfigService.getWorkgroupId());
+    if (annotation != null) {
+      annotations.push(annotation);
+    }
+    return this.resolveData(annotations);
   }
 
   getDummyStudentWorkForAuthoringPreview() {
-    const componentStates = this.createDummyClassmateStudentWork();
-    return this.resolveComponentStates(componentStates);
+    return this.resolveData(this.createDummyComponentStates());
   }
 
-  resolveComponentStates(componentStates) {
+  getDummyStudentScoresForAuthoringPreview() {
+    return this.resolveData(this.createDummyScoreAnnotations());
+  }
+
+  resolveData(data) {
     const deferred = this.$q.defer();
     // We need to set a delay otherwise the graph won't render properly
     setTimeout(() => {
-      deferred.resolve(componentStates);
+      deferred.resolve(data);
     }, 1);
     return deferred.promise;
   }
 
-  createDummyClassmateStudentWork() {
+  createDummyComponentStates() {
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(
         this.nodeId, this.componentId);
     const choices = component.choices;
     const dummyComponentStates = [];
-    for (let dummyCounter = 0; dummyCounter < 20; dummyCounter++) {
+    for (let dummyCounter = 0; dummyCounter < this.numDummySamples; dummyCounter++) {
       dummyComponentStates.push(this.createDummyComponentState(choices));
     }
     return dummyComponentStates;
@@ -133,36 +204,58 @@ class SummaryDisplayController {
     return choices[Math.floor(Math.random() * choices.length)];
   }
 
+  createDummyScoreAnnotations() {
+    const dummyScoreAnnotations = [];
+    for (let dummyCounter = 0; dummyCounter < this.numDummySamples; dummyCounter++) {
+      dummyScoreAnnotations.push(this.createDummyScoreAnnotation());
+    }
+    return dummyScoreAnnotations;
+  }
+
+  createDummyScoreAnnotation() {
+    return {
+      data: {
+        value: this.getRandomScore()
+      },
+      type: 'score'
+    }; 
+  }
+
+  getRandomScore() {
+    return Math.ceil(Math.random() * this.maxScore);
+  }
+
   processComponentStates(componentStates) {
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(
         this.nodeId, this.componentId);
-    const summaryData = this.createSummaryData(component, componentStates);
-    const { data, total } = this.createSeriesData(component, summaryData);
-    const series = this.createSeries(data);
-    const chartType = this.chartType;
-    const title = this.$translate('CLASS_RESULTS');
-    const xAxisType = 'category';
-    this.chartConfig =  this.createChartConfig(chartType, title, xAxisType, total, series);
-    this.numResponses = componentStates.length;
-    this.totalWorkgroups = this.getTotalWorkgroups(componentStates);
-    this.percentResponded = this.getPercentResponded(this.numResponses, this.totalWorkgroups);
+    const summaryData = this.createChoicesSummaryData(component, componentStates);
+    const { data, total } = this.createChoicesSeriesData(component, summaryData);
+    this.renderGraph(data, total);
+    this.calculateCountsAndPercentage(componentStates.length);
   }
 
-  getTotalWorkgroups(componentStates) {
-    const numComponentStates = componentStates.length;
-    if (this.ConfigService.isPreview() || this.ConfigService.getMode() === 'author') {
-      return numComponentStates;
-    } else {
-      const numWorkgroups = this.ConfigService.getNumberOfWorkgroupsInPeriod(this.periodId);
-      return Math.max(numWorkgroups, numComponentStates);
+  processScoreAnnotations(annotations) {
+    this.updateMaxScoreIfNecessary(annotations);
+    const summaryData = this.createScoresSummaryData(annotations);
+    const { data, total } = this.createScoresSeriesData(summaryData);
+    this.renderGraph(data, total);
+    this.calculateCountsAndPercentage(annotations.length);
+  }
+  
+  updateMaxScoreIfNecessary(annotations) {
+    this.maxScore = this.calculateMaxScore(annotations);
+  }
+
+  calculateMaxScore(annotations) {
+    let maxScoreSoFar = this.maxScore;
+    for (const annotation of annotations) {
+      const score = this.getScoreFromAnnotation(annotation);
+      maxScoreSoFar = Math.max(this.maxScore, score);
     }
+    return maxScoreSoFar;
   }
 
-  getPercentResponded(numResponses, totalWorkgroups) {
-    return Math.floor(100 * numResponses / totalWorkgroups);
-  }
-
-  createSummaryData(component, componentStates) {
+  createChoicesSummaryData(component, componentStates) {
     const summaryData = {};
     for (const choice of component.choices) {
       summaryData[choice.id] = this.createChoiceSummaryData(
@@ -189,12 +282,127 @@ class SummaryDisplayController {
     }
   }
 
+  createChoicesSeriesData(component, summaryData) {
+    const data = [];
+    let total = 0;
+    const hasCorrectness = this.hasCorrectAnswer(component);
+    for (const choice of component.choices) {
+      const count = this.getSummaryDataCount(summaryData, choice.id);
+      const color = this.getDataPointColor(choice, hasCorrectness);
+      const dataPoint = this.createDataPoint(choice.text, count, color);
+      data.push(dataPoint);
+      total += count;
+    }
+    return { data: data, total: total };
+  }
+
+  hasCorrectAnswer(component) {
+    for (const choice of component.choices) {
+      if (choice.isCorrect) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getDataPointColor(choice, hasCorrectness) {
+    let color = null;
+    if (hasCorrectness) {
+      if (choice.isCorrect) {
+        color = 'green';
+      } else {
+        color = 'red';
+      }
+    }
+    return color;
+  }
+  
+  createDataPoint(name, y, color) {
+    return {
+      name: name,
+      y: y,
+      color: color
+    };
+  }
+
+  createScoresSummaryData(annotations) {
+    const summaryData = {};
+    for (let scoreValue = 0; scoreValue <= this.maxScore; scoreValue++) {
+      summaryData[scoreValue] = this.createScoreSummaryData(scoreValue);
+    }
+    for (const annotation of annotations) {
+      this.addAnnotationDataToSummaryData(summaryData, annotation);
+    }
+    return summaryData;
+  }
+
+  createScoreSummaryData(score) {
+    return {
+      score: score,
+      count: 0
+    };
+  }
+
+  addAnnotationDataToSummaryData(summaryData, annotation) {
+    const score = this.getScoreFromAnnotation(annotation);
+    this.incrementSummaryData(summaryData, score);
+  }
+
+  getScoreFromAnnotation(annotation) {
+    return annotation.data.value;
+  }
+
   incrementSummaryData(summaryData, id) {
     summaryData[id].count += 1;
   }
 
-  getSummaryDataCount(summaryData, id) {
-    return summaryData[id].count;
+  createScoresSeriesData(summaryData) {
+    const data = [];
+    let total = 0;
+    for (let scoreValue = 1; scoreValue <= this.maxScore; scoreValue++) {
+      const count = this.getSummaryDataCount(summaryData, scoreValue);
+      const dataPoint = this.createDataPoint(scoreValue, count);
+      data.push(dataPoint);
+      total += count;
+    }
+    return { data: data, total: total }; 
+  }
+
+  renderGraph(data, total) {
+    const chartType = this.chartType;
+    const title = this.getGraphTitle();
+    const xAxisType = 'category';
+    const series = this.createSeries(data);
+    this.chartConfig =  this.createChartConfig(chartType, title, xAxisType, total, series);
+  }
+
+  createSeries(data) {
+    return [{
+      data: data,
+      dataLabels: {
+        enabled: true
+      }
+    }];
+  }
+
+  getGraphTitle() {
+    if (this.isStudentDataTypeResponses()) {
+      return this.$translate('CLASS_CHOICE_RESULTS');
+    } else if (this.isStudentDataTypeScores()) {
+      return this.$translate('CLASS_SCORE_RESULTS');
+    }
+  }
+
+  isStudentDataTypeResponses() {
+    return this.isStudentDataType('responses');
+  }
+
+  isStudentDataTypeScores() {
+    return this.isStudentDataType('scores');
+  }
+  
+  isStudentDataType(studentDataType) {
+    return this.studentDataType === studentDataType;
   }
 
   createChartConfig(chartType, title, xAxisType, total, series) {
@@ -244,56 +452,27 @@ class SummaryDisplayController {
     return chartConfig;
   }
 
-  hasCorrectAnswer(component) {
-    for (const choice of component.choices) {
-      if (choice.isCorrect) {
-        return true;
-      }
-    }
-    return false;
+  calculateCountsAndPercentage(dataCount) {
+    this.numResponses = dataCount;
+    this.totalWorkgroups = this.getTotalWorkgroups(dataCount);
+    this.percentResponded = this.getPercentResponded(dataCount, this.totalWorkgroups); 
   }
 
-  createSeriesData(component, summaryData) {
-    const data = [];
-    let total = 0;
-    const hasCorrectness = this.hasCorrectAnswer(component);
-    for (const choice of component.choices) {
-      const count = this.getSummaryDataCount(summaryData, choice.id);
-      total += count;
-      const color = this.getDataPointColor(choice, hasCorrectness);
-      const dataPoint = this.createDataPoint(choice.text, count, color);
-      data.push(dataPoint);
+  getTotalWorkgroups(dataCount) {
+    if (this.isVLEPreview() || this.isAuthoringPreview()) {
+      return dataCount;
+    } else {
+      const numWorkgroups = this.ConfigService.getNumberOfWorkgroupsInPeriod(this.periodId);
+      return Math.max(numWorkgroups, dataCount);
     }
-    return { data: data, total: total };
   }
 
-  getDataPointColor(choice, hasCorrectness) {
-    let color = null;
-    if (hasCorrectness) {
-      if (choice.isCorrect) {
-        color = 'green';
-      } else {
-        color = 'red';
-      }
-    }
-    return color;
-  }
-  
-  createDataPoint(name, y, color) {
-    return {
-      name: name,
-      y: y,
-      color: color
-    };
+  getPercentResponded(numResponses, totalWorkgroups) {
+    return Math.floor(100 * numResponses / totalWorkgroups);
   }
 
-  createSeries(data) {
-    return [{
-      data: data,
-      dataLabels: {
-        enabled: true
-      }
-    }];
+  getSummaryDataCount(summaryData, id) {
+    return summaryData[id].count;
   }
 }
 
@@ -301,6 +480,7 @@ SummaryDisplayController.$inject = [
   '$filter',
   '$injector',
   '$q',
+  'AnnotationService',
   'ConfigService',
   'ProjectService',
   'StudentDataService'
@@ -310,6 +490,7 @@ const SummaryDisplay = {
   bindings: {
     nodeId: '<',
     componentId: '<',
+    studentDataType: '<',
     periodId: '<',
     chartType: '<'
   },

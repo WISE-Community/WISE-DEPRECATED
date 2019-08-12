@@ -4,8 +4,16 @@
     <br/>
     <compile data='summaryController.otherPrompt'></compile>
   </div>
-  <summary-display node-id='summaryController.summaryNodeId'
+  <div ng-if='summaryController.isStudent && !summaryController.studentHasWork'>
+    <br/>
+    <span style='color: red'>
+      {{ 'summary.youMustSubmitWork' | translate : { stepTitle: summaryController.otherStepTitle } }}
+    </span>
+  </div>
+  <summary-display ng-if='!summaryController.isStudent || summaryController.studentHasWork'
+      node-id='summaryController.summaryNodeId'
       component-id='summaryController.summaryComponentId'
+      student-data-type='summaryController.summaryStudentDataType'
       period-id='summaryController.periodId'
       chart-type='summaryController.chartType'>
   </summary-display>

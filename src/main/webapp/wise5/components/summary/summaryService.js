@@ -37,9 +37,14 @@ function (_ComponentService) {
   _inherits(SummaryService, _ComponentService);
 
   function SummaryService($filter, ConfigService, UtilService) {
+    var _this;
+
     _classCallCheck(this, SummaryService);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(SummaryService).call(this, $filter, ConfigService, UtilService));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(SummaryService).call(this, $filter, ConfigService, UtilService));
+    _this.componentsWithScoresSummary = ['Animation', 'AudioOscillator', 'ConceptMap', 'Discussion', 'Draw', 'Embedded', 'Graph', 'Label', 'Match', 'MultipleChoice', 'OpenResponse', 'Table'];
+    _this.componentsWithResponsesSummary = ['MultipleChoice'];
+    return _this;
   }
 
   _createClass(SummaryService, [{
@@ -56,6 +61,7 @@ function (_ComponentService) {
       component.summaryNodeId = null;
       component.summaryComponentId = null;
       component.summarySource = 'period';
+      component.summaryStudentDataType = null;
       component.chartType = 'column';
       return component;
     }
@@ -67,7 +73,17 @@ function (_ComponentService) {
   }, {
     key: "isComponentTypeAllowed",
     value: function isComponentTypeAllowed(componentType) {
-      return componentType === 'MultipleChoice';
+      return componentType !== 'HTML' && componentType !== 'OutsideURL';
+    }
+  }, {
+    key: "isScoresSummaryAvailableForComponentType",
+    value: function isScoresSummaryAvailableForComponentType(componentType) {
+      return this.componentsWithScoresSummary.indexOf(componentType) != -1;
+    }
+  }, {
+    key: "isResponsesSummaryAvailableForComponentType",
+    value: function isResponsesSummaryAvailableForComponentType(componentType) {
+      return this.componentsWithResponsesSummary.indexOf(componentType) != -1;
     }
   }]);
 

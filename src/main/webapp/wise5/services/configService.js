@@ -16,12 +16,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var ConfigService =
 /*#__PURE__*/
 function () {
-  function ConfigService($filter, $http, $location) {
+  function ConfigService($filter, $http, $location, UtilService) {
     _classCallCheck(this, ConfigService);
 
     this.$filter = $filter;
     this.$http = $http;
     this.$location = $location;
+    this.UtilService = UtilService;
     this.config = null;
     this.$translate = this.$filter('translate');
   }
@@ -606,7 +607,7 @@ function () {
       var workgroupsInPeriod = [];
       var myUserInfo = this.getMyUserInfo();
 
-      if (this.isStudent() && (this.isAllPeriods(periodId) || myUserInfo.periodId === periodId)) {
+      if (this.isStudent() && this.UtilService.isMatchingPeriods(myUserInfo.periodId, periodId)) {
         workgroupsInPeriod.push(myUserInfo);
       }
 
@@ -618,7 +619,7 @@ function () {
         for (var _iterator5 = this.getClassmateUserInfos()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
           var classmateUserInfo = _step5.value;
 
-          if (this.isAllPeriods(periodId) || classmateUserInfo.periodId === periodId) {
+          if (this.UtilService.isMatchingPeriods(classmateUserInfo.periodId, periodId)) {
             workgroupsInPeriod.push(classmateUserInfo);
           }
         }
@@ -638,11 +639,6 @@ function () {
       }
 
       return workgroupsInPeriod;
-    }
-  }, {
-    key: "isAllPeriods",
-    value: function isAllPeriods(periodId) {
-      return periodId == null || periodId === -1;
     }
   }, {
     key: "getNumberOfWorkgroupsInPeriod",
@@ -845,8 +841,22 @@ function () {
   }, {
     key: "isPreview",
     value: function isPreview() {
-      var mode = this.getMode();
-      return mode != null && mode === 'preview';
+      return this.getMode() === 'preview';
+    }
+  }, {
+    key: "isAuthoring",
+    value: function isAuthoring() {
+      return this.getMode() === 'author';
+    }
+  }, {
+    key: "isStudentRun",
+    value: function isStudentRun() {
+      return this.getMode() === 'studentRun';
+    }
+  }, {
+    key: "isClassroomMonitor",
+    value: function isClassroomMonitor() {
+      return this.getMode() === 'classroomMonitor';
     }
     /**
      * Convert a client timestamp to a server timestamp. This is required
@@ -1296,7 +1306,7 @@ function () {
   return ConfigService;
 }();
 
-ConfigService.$inject = ['$filter', '$http', '$location'];
+ConfigService.$inject = ['$filter', '$http', '$location', 'UtilService'];
 var _default = ConfigService;
 exports["default"] = _default;
 //# sourceMappingURL=configService.js.map

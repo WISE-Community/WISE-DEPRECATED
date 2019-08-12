@@ -3595,6 +3595,34 @@ function () {
         return [];
       });
     }
+  }, {
+    key: "getClassmateScores",
+    value: function getClassmateScores(nodeId, componentId, periodId) {
+      var params = {
+        runId: this.ConfigService.getRunId(),
+        nodeId: nodeId,
+        componentId: componentId,
+        getStudentWork: false,
+        getEvents: false,
+        getAnnotations: true,
+        onlyGetLatest: false,
+        periodId: periodId
+      };
+      var httpParams = {
+        method: 'GET',
+        url: this.ConfigService.getConfigParam('studentDataURL'),
+        params: params
+      };
+      return this.$http(httpParams).then(function (result) {
+        var resultData = result.data;
+
+        if (resultData != null) {
+          return resultData.annotations;
+        }
+
+        return [];
+      });
+    }
     /**
      * Get a student work from any student.
      * @param id The student work id.

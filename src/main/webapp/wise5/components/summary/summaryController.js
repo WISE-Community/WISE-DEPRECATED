@@ -41,6 +41,7 @@ function (_ComponentController) {
     _this.SummaryService = SummaryService;
     _this.summaryNodeId = _this.componentContent.summaryNodeId;
     _this.summaryComponentId = _this.componentContent.summaryComponentId;
+    _this.summaryStudentDataType = _this.componentContent.summaryStudentDataType;
     _this.chartType = _this.componentContent.chartType;
     _this.prompt = _this.componentContent.prompt;
 
@@ -48,16 +49,14 @@ function (_ComponentController) {
       _this.otherPrompt = _this.getOtherPrompt(_this.summaryNodeId, _this.summaryComponentId);
     }
 
-    if (_this.ConfigService.getMode() === 'studentRun') {
-      if (_this.componentContent.summarySource === 'period') {
-        _this.periodId = _this.ConfigService.getPeriodId();
-      } else if (_this.componentContent.summarySource === 'allPeriods') {
-        _this.periodId = null;
-      }
-    } else if (_this.ConfigService.getMode() === 'classroomMonitor') {
-      var studentWorkgroupId = _this.workgroupId;
-      _this.periodId = _this.ConfigService.getPeriodIdByWorkgroupId(studentWorkgroupId);
+    _this.isStudent = _this.ConfigService.isPreview() || _this.ConfigService.isStudentRun();
+
+    if (_this.isStudent) {
+      _this.otherStepTitle = _this.getOtherStepTitle();
+      _this.studentHasWork = _this.isStudentHasWork();
     }
+
+    _this.setPeriodIdIfNecessary();
 
     return _this;
   }
@@ -72,6 +71,28 @@ function (_ComponentController) {
       }
 
       return null;
+    }
+  }, {
+    key: "isStudentHasWork",
+    value: function isStudentHasWork() {
+      var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.summaryNodeId, this.summaryComponentId);
+      return componentStates.length > 0;
+    }
+  }, {
+    key: "getOtherStepTitle",
+    value: function getOtherStepTitle() {
+      return this.ProjectService.getNodePositionAndTitleByNodeId(this.summaryNodeId);
+    }
+  }, {
+    key: "setPeriodIdIfNecessary",
+    value: function setPeriodIdIfNecessary() {
+      if (this.ConfigService.isStudentRun()) {
+        if (this.componentContent.summarySource === 'period') {
+          this.periodId = this.ConfigService.getPeriodId();
+        } else if (this.componentContent.summarySource === 'allPeriods') {
+          this.periodId = null;
+        }
+      }
     }
   }]);
 

@@ -33,9 +33,16 @@ function (_SummaryController) {
   _inherits(SummaryAuthoringController, _SummaryController);
 
   function SummaryAuthoringController($filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService) {
+    var _this;
+
     _classCallCheck(this, SummaryAuthoringController);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(SummaryAuthoringController).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(SummaryAuthoringController).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService));
+    _this.isResponsesOptionAvailable = false;
+
+    _this.updateStudentDataTypeOptionsIfNecessary();
+
+    return _this;
   }
 
   _createClass(SummaryAuthoringController, [{
@@ -77,13 +84,7 @@ function (_SummaryController) {
         this.authoringComponentContent.summaryComponentId = allowedComponent.id;
       }
 
-      this.updateOtherPrompt();
-      this.authoringViewComponentChanged();
-    }
-  }, {
-    key: "authoringSummaryComponentIdChanged",
-    value: function authoringSummaryComponentIdChanged() {
-      this.updateOtherPrompt();
+      this.performUpdatesIfNecessary();
       this.authoringViewComponentChanged();
     }
   }, {
@@ -92,9 +93,65 @@ function (_SummaryController) {
       return this.SummaryService.isComponentTypeAllowed(componentType);
     }
   }, {
+    key: "authoringSummaryComponentIdChanged",
+    value: function authoringSummaryComponentIdChanged() {
+      this.performUpdatesIfNecessary();
+      this.authoringViewComponentChanged();
+    }
+  }, {
+    key: "performUpdatesIfNecessary",
+    value: function performUpdatesIfNecessary() {
+      this.updateOtherPrompt();
+      this.updateStudentDataTypeOptionsIfNecessary();
+      this.updateStudentDataTypeIfNecessary();
+    }
+  }, {
     key: "updateOtherPrompt",
     value: function updateOtherPrompt() {
       this.otherPrompt = this.getOtherPrompt(this.authoringComponentContent.summaryNodeId, this.authoringComponentContent.summaryComponentId);
+    }
+  }, {
+    key: "updateStudentDataTypeOptionsIfNecessary",
+    value: function updateStudentDataTypeOptionsIfNecessary() {
+      var nodeId = this.authoringComponentContent.summaryNodeId;
+      var componentId = this.authoringComponentContent.summaryComponentId;
+      this.isResponsesOptionAvailable = this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'responses');
+    }
+  }, {
+    key: "updateStudentDataTypeIfNecessary",
+    value: function updateStudentDataTypeIfNecessary() {
+      var nodeId = this.authoringComponentContent.summaryNodeId;
+      var componentId = this.authoringComponentContent.summaryComponentId;
+      var studentDataType = this.authoringComponentContent.summaryStudentDataType;
+
+      if (!this.isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType)) {
+        if (this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'scores')) {
+          this.authoringComponentContent.summaryStudentDataType = 'scores';
+        } else {
+          this.authoringComponentContent.summaryStudentDataType = null;
+        }
+      }
+    }
+  }, {
+    key: "isStudentDataTypeAvailableForComponent",
+    value: function isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType) {
+      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+      if (component != null) {
+        if (studentDataType === 'scores') {
+          return this.SummaryService.isScoresSummaryAvailableForComponentType(component.type);
+        } else if (studentDataType === 'responses') {
+          return this.SummaryService.isResponsesSummaryAvailableForComponentType(component.type);
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "showPromptFromOtherComponentChanged",
+    value: function showPromptFromOtherComponentChanged() {
+      this.updateOtherPrompt();
+      this.authoringViewComponentChanged();
     }
   }]);
 
