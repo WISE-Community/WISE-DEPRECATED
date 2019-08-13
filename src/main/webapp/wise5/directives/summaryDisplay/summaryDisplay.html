@@ -1,4 +1,5 @@
-<div style='width: 95%;'>
+<div style='width: 95%;' ng-if='summaryDisplayCtrl.nodeId != null && 
+    summaryDisplayCtrl.componentId != null'>
   <highchart config='summaryDisplayCtrl.chartConfig'></highchart>
   <br/>
   <div style='display: flex; justify-content: center'>

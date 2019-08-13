@@ -60,9 +60,11 @@ function (_ComponentService) {
       component.type = 'Summary';
       component.summaryNodeId = null;
       component.summaryComponentId = null;
-      component.summarySource = 'period';
-      component.summaryStudentDataType = null;
+      component.source = 'period';
+      component.studentDataType = null;
       component.chartType = 'column';
+      component.requirementToSeeSummary = 'submitWork';
+      component.highlightCorrectAnswer = false;
       return component;
     }
   }, {
@@ -73,7 +75,7 @@ function (_ComponentService) {
   }, {
     key: "isComponentTypeAllowed",
     value: function isComponentTypeAllowed(componentType) {
-      return componentType !== 'HTML' && componentType !== 'OutsideURL';
+      return componentType !== 'HTML' && componentType !== 'OutsideURL' && componentType != 'Summary';
     }
   }, {
     key: "isScoresSummaryAvailableForComponentType",

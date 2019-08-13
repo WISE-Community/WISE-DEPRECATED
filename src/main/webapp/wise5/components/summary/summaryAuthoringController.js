@@ -32,15 +32,19 @@ var SummaryAuthoringController =
 function (_SummaryController) {
   _inherits(SummaryAuthoringController, _SummaryController);
 
-  function SummaryAuthoringController($filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService) {
+  function SummaryAuthoringController($filter, $injector, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService) {
     var _this;
 
     _classCallCheck(this, SummaryAuthoringController);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(SummaryAuthoringController).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, SummaryService, UtilService));
+    _this.$injector = $injector;
     _this.isResponsesOptionAvailable = false;
+    _this.isHighlightCorrectAnswerAvailable = false;
 
     _this.updateStudentDataTypeOptionsIfNecessary();
+
+    _this.updateHasCorrectAnswerIfNecessary();
 
     return _this;
   }
@@ -99,11 +103,18 @@ function (_SummaryController) {
       this.authoringViewComponentChanged();
     }
   }, {
+    key: "studentDataTypeChanged",
+    value: function studentDataTypeChanged() {
+      this.updateHasCorrectAnswerIfNecessary();
+      this.authoringViewComponentChanged();
+    }
+  }, {
     key: "performUpdatesIfNecessary",
     value: function performUpdatesIfNecessary() {
       this.updateOtherPrompt();
       this.updateStudentDataTypeOptionsIfNecessary();
       this.updateStudentDataTypeIfNecessary();
+      this.updateHasCorrectAnswerIfNecessary();
     }
   }, {
     key: "updateOtherPrompt",
@@ -122,14 +133,23 @@ function (_SummaryController) {
     value: function updateStudentDataTypeIfNecessary() {
       var nodeId = this.authoringComponentContent.summaryNodeId;
       var componentId = this.authoringComponentContent.summaryComponentId;
-      var studentDataType = this.authoringComponentContent.summaryStudentDataType;
+      var studentDataType = this.authoringComponentContent.studentDataType;
 
       if (!this.isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType)) {
         if (this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'scores')) {
-          this.authoringComponentContent.summaryStudentDataType = 'scores';
+          this.authoringComponentContent.studentDataType = 'scores';
         } else {
-          this.authoringComponentContent.summaryStudentDataType = null;
+          this.authoringComponentContent.studentDataType = null;
         }
+      }
+    }
+  }, {
+    key: "updateHasCorrectAnswerIfNecessary",
+    value: function updateHasCorrectAnswerIfNecessary() {
+      this.isHighlightCorrectAnswerAvailable = this.componentHasCorrectAnswer() && this.authoringComponentContent.studentDataType === 'responses';
+
+      if (!this.isHighlightCorrectAnswerAvailable) {
+        this.authoringComponentContent.highlightCorrectAnswer = false;
       }
     }
   }, {
@@ -153,12 +173,27 @@ function (_SummaryController) {
       this.updateOtherPrompt();
       this.authoringViewComponentChanged();
     }
+  }, {
+    key: "componentHasCorrectAnswer",
+    value: function componentHasCorrectAnswer() {
+      var nodeId = this.authoringComponentContent.summaryNodeId;
+      var componentId = this.authoringComponentContent.summaryComponentId;
+
+      if (nodeId != null && componentId != null) {
+        var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+        if (component != null) {
+          var componentService = this.$injector.get(component.type + 'Service');
+          return componentService.componentHasCorrectAnswer(component);
+        }
+      }
+    }
   }]);
 
   return SummaryAuthoringController;
 }(_summaryController["default"]);
 
-SummaryAuthoringController.$inject = ['$filter', '$mdDialog', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'SummaryService', 'UtilService'];
+SummaryAuthoringController.$inject = ['$filter', '$injector', '$mdDialog', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'SummaryService', 'UtilService'];
 var _default = SummaryAuthoringController;
 exports["default"] = _default;
 //# sourceMappingURL=summaryAuthoringController.js.map

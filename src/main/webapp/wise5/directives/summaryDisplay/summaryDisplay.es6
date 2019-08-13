@@ -307,7 +307,7 @@ class SummaryDisplayController {
 
   getDataPointColor(choice, hasCorrectness) {
     let color = null;
-    if (hasCorrectness) {
+    if (this.highlightCorrectAnswer && hasCorrectness) {
       if (choice.isCorrect) {
         color = 'green';
       } else {
@@ -490,6 +490,7 @@ const SummaryDisplay = {
   bindings: {
     nodeId: '<',
     componentId: '<',
+    highlightCorrectAnswer: '<',
     studentDataType: '<',
     periodId: '<',
     chartType: '<'

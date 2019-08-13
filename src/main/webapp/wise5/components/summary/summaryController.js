@@ -41,9 +41,11 @@ function (_ComponentController) {
     _this.SummaryService = SummaryService;
     _this.summaryNodeId = _this.componentContent.summaryNodeId;
     _this.summaryComponentId = _this.componentContent.summaryComponentId;
-    _this.summaryStudentDataType = _this.componentContent.summaryStudentDataType;
+    _this.studentDataType = _this.componentContent.studentDataType;
     _this.chartType = _this.componentContent.chartType;
     _this.prompt = _this.componentContent.prompt;
+    _this.highlightCorrectAnswer = _this.componentContent.highlightCorrectAnswer;
+    _this.warningMessage = '';
 
     if (_this.componentContent.showPromptFromOtherComponent) {
       _this.otherPrompt = _this.getOtherPrompt(_this.summaryNodeId, _this.summaryComponentId);
@@ -53,7 +55,13 @@ function (_ComponentController) {
 
     if (_this.isStudent) {
       _this.otherStepTitle = _this.getOtherStepTitle();
-      _this.studentHasWork = _this.isStudentHasWork();
+      _this.isShowDisplay = _this.calculateIsShowDisplay();
+    } else {
+      _this.isShowDisplay = true;
+    }
+
+    if (!_this.isShowDisplay) {
+      _this.warningMessage = _this.getWarningMessage();
     }
 
     _this.setPeriodIdIfNecessary();
@@ -79,6 +87,80 @@ function (_ComponentController) {
       return componentStates.length > 0;
     }
   }, {
+    key: "calculateIsShowDisplay",
+    value: function calculateIsShowDisplay() {
+      if (this.componentContent.requirementToSeeSummary === 'submitWork') {
+        return this.studentHasSubmittedWork();
+      } else if (this.componentContent.requirementToSeeSummary === 'saveWork') {
+        return this.studentHasSavedWork();
+      } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
+        return this.studentHasCompletedComponent();
+      } else if (this.componentContent.requirementToSeeSummary === 'none') {
+        return true;
+      }
+    }
+  }, {
+    key: "getWarningMessage",
+    value: function getWarningMessage() {
+      var messageTranslationKey = '';
+
+      if (this.componentContent.requirementToSeeSummary === 'submitWork') {
+        messageTranslationKey = 'summary.youMustSubmitWork';
+      } else if (this.componentContent.requirementToSeeSummary === 'saveWork') {
+        messageTranslationKey = 'summary.youMustSaveWork';
+      } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
+        messageTranslationKey = 'summary.youMustComplete';
+      }
+
+      return this.$translate(messageTranslationKey, {
+        stepTitle: this.otherStepTitle
+      });
+    }
+  }, {
+    key: "studentHasSubmittedWork",
+    value: function studentHasSubmittedWork() {
+      var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.summaryNodeId, this.summaryComponentId);
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var componentState = _step.value;
+
+          if (componentState.isSubmit) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "studentHasSavedWork",
+    value: function studentHasSavedWork() {
+      var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.summaryNodeId, this.summaryComponentId);
+      return componentStates.length > 0;
+    }
+  }, {
+    key: "studentHasCompletedComponent",
+    value: function studentHasCompletedComponent() {
+      return this.StudentDataService.isCompleted(this.summaryNodeId, this.summaryComponentId);
+    }
+  }, {
     key: "getOtherStepTitle",
     value: function getOtherStepTitle() {
       return this.ProjectService.getNodePositionAndTitleByNodeId(this.summaryNodeId);
@@ -87,11 +169,18 @@ function (_ComponentController) {
     key: "setPeriodIdIfNecessary",
     value: function setPeriodIdIfNecessary() {
       if (this.ConfigService.isStudentRun()) {
-        if (this.componentContent.summarySource === 'period') {
+        if (this.componentContent.source === 'period') {
           this.periodId = this.ConfigService.getPeriodId();
-        } else if (this.componentContent.summarySource === 'allPeriods') {
+        } else if (this.componentContent.source === 'allPeriods') {
           this.periodId = null;
         }
+      }
+    }
+  }, {
+    key: "handleStudentWorkSavedToServerAdditionalProcessing",
+    value: function handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
+      if (this.isStudent) {
+        this.isShowDisplay = this.calculateIsShowDisplay();
       }
     }
   }]);

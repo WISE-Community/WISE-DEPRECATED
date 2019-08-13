@@ -4,6 +4,7 @@ import SummaryController from './summaryController';
 
 class SummaryAuthoringController extends SummaryController {
   constructor($filter,
+      $injector,
       $mdDialog,
       $rootScope,
       $scope,
@@ -29,8 +30,11 @@ class SummaryAuthoringController extends SummaryController {
         StudentDataService,
         SummaryService,
         UtilService);
+    this.$injector = $injector;
     this.isResponsesOptionAvailable = false;
+    this.isHighlightCorrectAnswerAvailable = false;
     this.updateStudentDataTypeOptionsIfNecessary();
+    this.updateHasCorrectAnswerIfNecessary();
   }
 
   authoringSummaryNodeIdChanged() {
@@ -60,10 +64,16 @@ class SummaryAuthoringController extends SummaryController {
     this.authoringViewComponentChanged();
   }
 
+  studentDataTypeChanged() {
+    this.updateHasCorrectAnswerIfNecessary();
+    this.authoringViewComponentChanged();
+  }
+
   performUpdatesIfNecessary() {
     this.updateOtherPrompt();
     this.updateStudentDataTypeOptionsIfNecessary();
-    this.updateStudentDataTypeIfNecessary(); 
+    this.updateStudentDataTypeIfNecessary();
+    this.updateHasCorrectAnswerIfNecessary();
   }
 
   updateOtherPrompt() {
@@ -81,13 +91,21 @@ class SummaryAuthoringController extends SummaryController {
   updateStudentDataTypeIfNecessary() {
     const nodeId = this.authoringComponentContent.summaryNodeId;
     const componentId = this.authoringComponentContent.summaryComponentId;
-    const studentDataType = this.authoringComponentContent.summaryStudentDataType;
+    const studentDataType = this.authoringComponentContent.studentDataType;
     if (!this.isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType)) {
       if (this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'scores')) {
-        this.authoringComponentContent.summaryStudentDataType = 'scores';
+        this.authoringComponentContent.studentDataType = 'scores';
       } else {
-        this.authoringComponentContent.summaryStudentDataType = null;
+        this.authoringComponentContent.studentDataType = null;
       }
+    }
+  }
+
+  updateHasCorrectAnswerIfNecessary() {
+    this.isHighlightCorrectAnswerAvailable = this.componentHasCorrectAnswer() &&
+        this.authoringComponentContent.studentDataType === 'responses';
+    if (!this.isHighlightCorrectAnswerAvailable) {
+      this.authoringComponentContent.highlightCorrectAnswer = false;
     }
   }
 
@@ -107,10 +125,23 @@ class SummaryAuthoringController extends SummaryController {
     this.updateOtherPrompt();
     this.authoringViewComponentChanged();
   }
+
+  componentHasCorrectAnswer() {
+    const nodeId = this.authoringComponentContent.summaryNodeId;
+    const componentId = this.authoringComponentContent.summaryComponentId;
+    if (nodeId != null && componentId != null) {
+      const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+      if (component != null) {
+        const componentService = this.$injector.get(component.type + 'Service');
+        return componentService.componentHasCorrectAnswer(component);
+      }
+    }
+  }
 }
 
 SummaryAuthoringController.$inject = [
   '$filter',
+  '$injector',
   '$mdDialog',
   '$rootScope',
   '$scope',

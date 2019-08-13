@@ -529,7 +529,7 @@ function () {
     value: function getDataPointColor(choice, hasCorrectness) {
       var color = null;
 
-      if (hasCorrectness) {
+      if (this.highlightCorrectAnswer && hasCorrectness) {
         if (choice.isCorrect) {
           color = 'green';
         } else {
@@ -755,6 +755,7 @@ var SummaryDisplay = {
   bindings: {
     nodeId: '<',
     componentId: '<',
+    highlightCorrectAnswer: '<',
     studentDataType: '<',
     periodId: '<',
     chartType: '<'

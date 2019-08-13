@@ -4,17 +4,18 @@
     <br/>
     <compile data='summaryController.otherPrompt'></compile>
   </div>
-  <div ng-if='summaryController.isStudent && !summaryController.studentHasWork'>
+  <div ng-if='summaryController.warningMessage != ""'>
     <br/>
     <span style='color: red'>
-      {{ 'summary.youMustSubmitWork' | translate : { stepTitle: summaryController.otherStepTitle } }}
+      {{ summaryController.warningMessage }}
     </span>
   </div>
-  <summary-display ng-if='!summaryController.isStudent || summaryController.studentHasWork'
+  <summary-display ng-if='summaryController.isShowDisplay'
       node-id='summaryController.summaryNodeId'
       component-id='summaryController.summaryComponentId'
-      student-data-type='summaryController.summaryStudentDataType'
+      student-data-type='summaryController.studentDataType'
       period-id='summaryController.periodId'
-      chart-type='summaryController.chartType'>
+      chart-type='summaryController.chartType'
+      highlight-correct-answer='summaryController.highlightCorrectAnswer'>
   </summary-display>
 </div>
