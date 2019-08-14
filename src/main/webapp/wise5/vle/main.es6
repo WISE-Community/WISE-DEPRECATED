@@ -10,9 +10,8 @@ import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularOnload from 'ng-onload';
 import angularSanitize from 'angular-sanitize';
-import angularSock from 'angular-sockjs';
 import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
-import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
+import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularUIRouter from 'angular-ui-router';
@@ -30,6 +29,7 @@ import ComponentService from '../components/componentService';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
+import Fabric from 'fabric';
 import Filters from '../filters/filters';
 import Highcharts from '../lib/highcharts@4.2.1';
 import HighchartsExporting from '../lib/highcharts-exporting@4.2.1';
@@ -61,7 +61,8 @@ import VLEController from './vleController';
 import VLEProjectService from './vleProjectService';
 import ocLazyLoad from 'oclazyload';
 import moment from 'moment';
-import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.min';
+import angularSummernote from '../lib/angular-summernote/dist/angular-summernote.min';
+import theme from '../themes/default/theme';
 
 const vleModule = angular.module('vle', [
     angularDragula(angular),
@@ -86,7 +87,6 @@ const vleModule = angular.module('vle', [
     'ngMaterial',
     'ngOnload',
     'ngSanitize',
-    'bd.sockjs',
     'ngStomp',
     'ngWebSocket',
     'oc.lazyLoad',
@@ -96,6 +96,7 @@ const vleModule = angular.module('vle', [
     'studentAsset',
     'summernote',
     'tableComponentModule',
+    'theme',
     'ui.router',
     'ui.scrollpoint'])
   .service(AchievementService.name, AchievementService)
@@ -189,11 +190,12 @@ const vleModule = angular.module('vle', [
               let locale = ConfigService.getLocale();  // defaults to "en"
               $translate.use(locale);
             },
+            /*
             theme: (ProjectService, config, project, $ocLazyLoad, $q) => {
               let theme = ProjectService.getThemePath() + '/theme.js';
               let def = $q.defer();
 
-              System.import(theme).then(m => {
+              System.import('theme').then(m => {
                 let themeModule = m.default;
                 if (!m.default.name) {
                   let key = Object.keys(m.default);
@@ -209,6 +211,7 @@ const vleModule = angular.module('vle', [
 
               return def.promise;
             }
+            */
           }
         })
         .state('root.vle', {
@@ -344,4 +347,7 @@ const vleModule = angular.module('vle', [
       });
     }
   ]);
+  angular.element(document).ready(() => {
+    angular.bootstrap(document.getElementsByTagName('body')[0], [vleModule.name], { strictDi: true});
+  });
 export default vleModule;

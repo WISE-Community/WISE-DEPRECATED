@@ -7,7 +7,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jspm', 'jasmine'],
+    frameworks: ['jasmine'],
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
@@ -34,24 +34,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      {pattern: '!(lib|jspm_packages)/**/*.js', served: true, included: false, noncache: false, watched: true  },
+      {pattern: '!(lib)/**/*.js', served: true, included: false, noncache: false, watched: true  },
       {pattern: '**/**', served: true, included: false, noncache: false, watched: false  }
     ],
-
-
-    jspm: {
-        config: 'config.js',
-        beforeFiles: ['../../../../node_modules/babel-polyfill/dist/polyfill.js'],
-        loadFiles: [
-          'test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project.json',
-          'test-unit/sampleData/curriculum/DemoProject/project.json',
-          'test-unit/sampleData/config/config1.json',
-          'test-unit/sampleData/config/config2.json',
-          'test-unit/**/*.spec.js'
-        ],
-        serveFiles: [
-        ]
-    },
 
     proxies: {
       '/wise5': '/base'

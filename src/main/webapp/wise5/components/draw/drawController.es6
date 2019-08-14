@@ -1,8 +1,8 @@
 'use strict';
 
-import ComponentController from "../componentController";
-import drawingTool from 'lib/drawingTool/drawing-tool';
-import drawingToolVendor from 'lib/drawingTool/vendor.min';
+import ComponentController from '../componentController';
+import drawingTool from '../../lib/drawingTool/drawing-tool';
+import drawingToolVendor from '../../lib/drawingTool/vendor.min';
 import html2canvas from 'html2canvas';
 
 class DrawController extends ComponentController {
