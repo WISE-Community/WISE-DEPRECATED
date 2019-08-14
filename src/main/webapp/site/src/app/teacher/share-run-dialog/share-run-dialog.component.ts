@@ -21,7 +21,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   isTransfer: boolean = false;
   transferUnitWarning: boolean = false;
   newOwnerUsername: string = '';
-  isOwner: boolean;
+  // isOwner: boolean;
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -31,7 +31,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
               i18n: I18n) {
     super(dialogRef, data, teacherService, snackBar, i18n);
     this.runId = data.run.id;
-    this.isOwner = data.run.owner.id === userService.getUserId();
+    // this.isOwner = data.run.owner.id === userService.getUserId();
     this.teacherService.getRun(this.runId).subscribe((run: TeacherRun) => {
       this.run = run;
       this.project = run.project;
@@ -138,17 +138,27 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
           this.setDefaultProjectPermissions(newSharedOwner);
           this.addSharedOwner(newSharedOwner);
         } else if (newSharedOwner != null && this.isTransfer) {
-          this.data.run.owner.runPermissions = { 1: true, 2: true, 3: true, 16: false };
-          this.data.run.owner.projectPermissions = { 1: true, 2: true, 16: false };
-          this.transferUnitOwnership(sharedOwnerUsername, this.data.run.owner);
-          this.data.run.owner = newSharedOwner;
-          this.data.run.shared = true;
-          this.isOwner = false;
+          this.updateRunAndProjectPermissions(newSharedOwner);
           this.closeTransferUnitDialog();
         }
         this.teacherSearchControl.setValue('');
       });
     document.getElementById("share-run-dialog-search").blur();
+  }
+
+  updateRunAndProjectPermissions(newOwner) {
+    const sharedOwner = this.data.run.owner;
+    sharedOwner.runPermissions = { 1: true, 2: true, 3: true, 16: false };
+    sharedOwner.projectPermissions = { 1: true, 2: true, 16: false };
+    this.data.run.owner = newOwner;
+    this.data.run.shared = true;
+    this.run = this.data.run;
+    // this.isOwner = false;
+    this.transferUnitOwnership(newOwner, sharedOwner);
+  }
+
+  isOwner() {
+    return this.data.run.owner.id === this.userService.getUserId();
   }
 
   unshareRun(sharedOwner) {
