@@ -21,7 +21,6 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   isTransfer: boolean = false;
   transferUnitWarning: boolean = false;
   newOwnerUsername: string = '';
-  // isOwner: boolean;
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -31,7 +30,6 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
               i18n: I18n) {
     super(dialogRef, data, teacherService, snackBar, i18n);
     this.runId = data.run.id;
-    // this.isOwner = data.run.owner.id === userService.getUserId();
     this.teacherService.getRun(this.runId).subscribe((run: TeacherRun) => {
       this.run = run;
       this.project = run.project;
@@ -153,7 +151,6 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     this.data.run.owner = newOwner;
     this.data.run.shared = true;
     this.run = this.data.run;
-    // this.isOwner = false;
     this.transferUnitOwnership(newOwner, sharedOwner);
   }
 
