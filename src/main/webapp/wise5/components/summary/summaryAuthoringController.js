@@ -187,6 +187,8 @@ function (_SummaryController) {
           return componentService.componentHasCorrectAnswer(component);
         }
       }
+
+      return false;
     }
   }]);
 

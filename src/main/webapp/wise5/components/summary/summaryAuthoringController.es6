@@ -136,6 +136,7 @@ class SummaryAuthoringController extends SummaryController {
         return componentService.componentHasCorrectAnswer(component);
       }
     }
+    return false;
   }
 }
 
