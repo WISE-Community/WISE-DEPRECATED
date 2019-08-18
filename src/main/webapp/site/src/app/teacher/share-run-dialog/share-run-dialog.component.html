@@ -77,14 +77,14 @@
     </table>
   </ng-container>
   <ng-container *ngIf="transferUnitWarning">
-    <p class="warning" i18n>You will no longer be able to share or edit this unit after the transfer. Are you sure you want to make {{newOwnerUsername}} the new owner?</p>
+    <p class="warning" i18n>Are you sure you want to make {{teacherSearchControl.value}} the new owner? You will still be able to access the unit but the new owner will have the ability to take away your access</p>
   </ng-container>
 </div>
 <div mat-dialog-actions
      fxLayoutAlign="end"
      fxLayoutGap="8px">
   <button mat-button color="accent" (click)="openTransferUnitDialog()" *ngIf="isOwner() && !isTransfer" i18n>Transfer Ownership</button>
-  <button mat-flat-button color="accent" (click)="completeShareOrTransferUnit(newOwnerUsername)" *ngIf="transferUnitWarning" i18n>Proceed with Transfer</button>
+  <button mat-flat-button color="accent" (click)="completeUnitOwnershipTransfer()" *ngIf="transferUnitWarning" i18n>Proceed with Transfer</button>
   <button mat-flat-button color="primary" (click)="closeTransferUnitDialog()" *ngIf="isTransfer" i18n>Cancel</button>
   <button mat-flat-button color="primary" mat-dialog-close *ngIf="!isTransfer" i18n>Done</button>
 </div>

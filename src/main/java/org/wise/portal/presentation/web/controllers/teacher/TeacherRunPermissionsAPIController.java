@@ -3,6 +3,7 @@ package org.wise.portal.presentation.web.controllers.teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
 import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.run.RunService;
@@ -20,17 +21,24 @@ public class TeacherRunPermissionsAPIController {
   @Autowired
   private RunService runService;
 
-  @RequestMapping(value = "/{runId}/{teacherUsername}/{isTransfer}", method = RequestMethod.POST)
+  @RequestMapping(value = "/{runId}/{teacherUsername}", method = RequestMethod.PUT)
   protected SharedOwner addSharedOwner(@PathVariable Long runId,
-                                       @PathVariable String teacherUsername,
-                                       @PathVariable Boolean isTransfer) {
+                                       @PathVariable String teacherUsername) {
     try {
-      if (isTransfer) {
-        return runService.transferRunOwnership(runId, teacherUsername);
-      } else {
-        return runService.addSharedTeacher(runId, teacherUsername);
-      }
-    } catch (Exception e) {
+      return runService.addSharedTeacher(runId, teacherUsername);
+    } catch (ObjectNotFoundException nfe) {
+      return null;
+    } catch (TeacherAlreadySharedWithRunException e) {
+      return null;
+    }
+  }
+
+  @RequestMapping(value = "/transfer/{runId}/{teacherUsername}", method = RequestMethod.PUT)
+  protected SharedOwner transferUnitOwnership(@PathVariable Long runId,
+                                              @PathVariable String teacherUsername) {
+    try {
+      return runService.transferRunOwnership(runId, teacherUsername);
+    } catch (ObjectNotFoundException nfe) {
       return null;
     }
   }

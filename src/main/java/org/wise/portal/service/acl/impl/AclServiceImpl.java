@@ -67,7 +67,7 @@ public class AclServiceImpl<T extends Persistable>
     if (object != null) {
       MutableAcl acl = null;
       ObjectIdentity objectIdentity = new ObjectIdentityImpl(
-        HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
+          HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
 
       try {
         acl = (MutableAcl) this.readAclById(objectIdentity);
@@ -87,7 +87,7 @@ public class AclServiceImpl<T extends Persistable>
     if (object != null) {
       MutableAcl acl = null;
       ObjectIdentity objectIdentity = new ObjectIdentityImpl(
-        HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
+          HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
 
       try {
         acl = (MutableAcl) readAclById(objectIdentity);

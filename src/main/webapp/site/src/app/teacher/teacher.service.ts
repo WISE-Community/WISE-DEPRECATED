@@ -14,6 +14,7 @@ export class TeacherService {
   private registerUrl = 'api/teacher/register';
   private runPermissionUrl = 'api/teacher/run/permission';
   private projectPermissionUrl = 'api/teacher/project/permission';
+  private transferUnitOwnershipUrl = '/api/teacher/run/permission/transfer';
   private usernamesUrl = 'api/teacher/usernames';
   private createRunUrl = 'api/teacher/run/create';
   private runUrl = 'api/teacher/run';
@@ -86,10 +87,16 @@ export class TeacherService {
     return this.http.get<string[]>(this.usernamesUrl, { headers: headers })
   }
 
-  addSharedOwner(runId: number, teacherUsername: string, isTransfer: boolean) {
-    const url = `${this.runPermissionUrl}/${runId}/${teacherUsername}/${isTransfer}`;
+  addSharedOwner(runId: number, teacherUsername: string) {
+    const url = `${this.runPermissionUrl}/${runId}/${teacherUsername}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.post<Object>(url, null, { headers });
+    return this.http.put<Object>(url, null, { headers: headers });
+  }
+
+  transferUnitOwnership(runId: number, teacherUsername: string) {
+    const url = `${this.transferUnitOwnershipUrl}/${runId}/${teacherUsername}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.put(url, null, { headers: headers });
   }
 
   removeSharedOwner(runId: number, username: string) {
