@@ -138,7 +138,7 @@ class ThemeController {
         .cancel(this.$translate('no'));
 
       this.$mdDialog.show(alert).then(() => {
-        this.SessionService.renewSession();
+        this.SessionService.closeWarningAndRenewSession();
         alert = undefined;
       }, () => {
         this.SessionService.forceLogOut();
