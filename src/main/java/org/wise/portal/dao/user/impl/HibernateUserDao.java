@@ -24,8 +24,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
@@ -33,17 +43,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.user.UserDao;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
-
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 /**
  * @author Cynick Young
@@ -52,6 +58,9 @@ import javax.persistence.criteria.Root;
 public class HibernateUserDao extends AbstractHibernateDao<User> implements UserDao<User> {
 
   private static final String FIND_ALL_QUERY = "from UserImpl";
+  
+  @PersistenceContext
+  private EntityManager entityManager;
 
   /**
    * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
@@ -232,40 +241,141 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return result;
   }
 
-  public List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, Long userId,
-                                   Long runId, Long workgroupId, String teacherUsername) {
+  public List<StudentUserDetails> searchStudents(String firstName, String lastName, String username,
+      Long userId, Long runId, Long workgroupId, String teacherUsername) {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
     CriteriaBuilder cb = session.getCriteriaBuilder();
-    CriteriaQuery<Tuple> cr = cb.createTupleQuery();
-    Root<StudentUserDetails> userRoot = cr.from(StudentUserDetails.class);
-//    Root<RunImpl> runRoot = cr.from(RunImpl.class);
-    Root<WorkgroupImpl> workgroupRoot = cr.from(WorkgroupImpl.class);
-    //
+    CriteriaQuery<StudentUserDetails> cq = cb.createQuery(StudentUserDetails.class);
+    Root<StudentUserDetails> studentUserDetailsRoot = cq.from(StudentUserDetails.class);
+    List<Predicate> predicates = getSearchStudentsPredicates(cb, cq, studentUserDetailsRoot, 
+        firstName, lastName, username, userId, runId, workgroupId, teacherUsername);
+    cq.select(studentUserDetailsRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    cq.distinct(true);
+    EntityManager em = entityManager;
+    TypedQuery<StudentUserDetails> query = em.createQuery(cq);
+    List<StudentUserDetails> studentUserDetailsResultList = query.getResultList();
+    return studentUserDetailsResultList;
+  }
+
+  List<Predicate> getSearchStudentsPredicates(CriteriaBuilder cb, 
+      CriteriaQuery<StudentUserDetails> cq, Root<StudentUserDetails> studentUserDetailsRoot,
+      String firstName, String lastName, String username, Long userId, Long runId, Long workgroupId,
+      String teacherUsername) {
     List<Predicate> predicates = new ArrayList<>();
+    Root<PersistentUserDetails> persistentUserDetailsRoot = null;
+    Root<UserImpl> userImplRoot = null;
+    Root<WorkgroupImpl> workgroupImplRoot = null;
+    Root<PersistentGroup> persistentGroupRoot = null;
+    Root<RunImpl> runImplRoot = null;
     if (firstName != null) {
-      predicates.add(cb.like(userRoot.get("firstname"), "%" + firstName + "%"));
+      persistentUserDetailsRoot = getPersistentUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(studentUserDetailsRoot.get("firstname"), firstName));
+      predicates.add(cb.equal(studentUserDetailsRoot.get("id"), 
+          persistentUserDetailsRoot.get("id")));
     }
     if (lastName != null) {
-      predicates.add(cb.like(userRoot.get("lastname"), "%" + lastName + "%"));
+      persistentUserDetailsRoot = getPersistentUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(studentUserDetailsRoot.get("lastname"), lastName));
+      predicates.add(cb.equal(studentUserDetailsRoot.get("id"), 
+          persistentUserDetailsRoot.get("id")));
     }
     if (username != null) {
-      predicates.add(cb.equal(userRoot.get("username"), username));
+      persistentUserDetailsRoot = getPersistentUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(persistentUserDetailsRoot.get("username"), username));
+      predicates.add(cb.equal(studentUserDetailsRoot.get("id"), 
+          persistentUserDetailsRoot.get("id")));
     }
     if (userId != null) {
-      predicates.add(cb.equal(userRoot.get("id"), userId));
+      userImplRoot = getUserImplRoot(cq, userImplRoot);
+      predicates.add(cb.equal(userImplRoot.get("id"), userId));
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"), 
+          studentUserDetailsRoot.get("id")));
     }
-//    if (runId != null) {
-//      predicates.add(cb.equal(runRoot.get("id"), runId));
-//    }
     if (workgroupId != null) {
-      predicates.add(cb.equal(workgroupRoot.get("id"), workgroupId));
+      workgroupImplRoot = getWorkgroupImplRoot(cq, workgroupImplRoot);
+      persistentGroupRoot = getPersistentGroupRoot(cq, persistentGroupRoot);
+      userImplRoot = getUserImplRoot(cq, userImplRoot);
+      predicates.add(cb.equal(workgroupImplRoot.get("id"), workgroupId));
+      predicates.add(cb.equal(workgroupImplRoot.get("group"), persistentGroupRoot.get("id")));
+      predicates.add(cb.isMember(userImplRoot.get("id"), 
+          persistentGroupRoot.<Set<User>>get("members")));
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"), 
+          studentUserDetailsRoot.get("id")));
     }
-    Predicate finalPredicate = cb.and(predicates.toArray(new Predicate[predicates.size()]));
-    cr.select(cb.tuple(userRoot, workgroupRoot)).where(finalPredicate);
-//    cr.select(userRoot).where(finalPredicate);
+    if (runId != null) {
+      runImplRoot = getRunImplRoot(cq, runImplRoot);
+      workgroupImplRoot = getWorkgroupImplRoot(cq, workgroupImplRoot);
+      persistentGroupRoot = getPersistentGroupRoot(cq, persistentGroupRoot);
+      userImplRoot = getUserImplRoot(cq, userImplRoot);
+      predicates.add(cb.equal(runImplRoot.get("id"), runId));
+      predicates.add(cb.equal(runImplRoot.get("id"), workgroupImplRoot.get("run")));
+      predicates.add(cb.equal(workgroupImplRoot.get("teacherWorkgroup"), false));
+      predicates.add(cb.equal(workgroupImplRoot.get("group"), persistentGroupRoot.get("id")));
+      predicates.add(cb.isMember(userImplRoot.get("id"), 
+          persistentGroupRoot.<Set<User>>get("members")));
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"), 
+          studentUserDetailsRoot.get("id")));
+    }
+    if (teacherUsername != null) {
+      Root<UserImpl> userImplForTeacher = cq.from(UserImpl.class);
+      Root<PersistentUserDetails> persistentUserDetailsForTeacher = 
+          cq.from(PersistentUserDetails.class);
+      runImplRoot = getRunImplRoot(cq, runImplRoot);
+      workgroupImplRoot = getWorkgroupImplRoot(cq, workgroupImplRoot);
+      persistentGroupRoot = getPersistentGroupRoot(cq, persistentGroupRoot);
+      userImplRoot = getUserImplRoot(cq, userImplRoot);
+      predicates.add(cb.equal(runImplRoot.get("owner").get("id"), userImplForTeacher.get("id")));
+      predicates.add(cb.equal(persistentUserDetailsForTeacher.get("id"), 
+          userImplForTeacher.get("id")));
+      predicates.add(cb.equal(persistentUserDetailsForTeacher.get("username"), teacherUsername));
+      predicates.add(cb.equal(runImplRoot.get("id"), workgroupImplRoot.get("run")));
+      predicates.add(cb.equal(workgroupImplRoot.get("teacherWorkgroup"), false));
+      predicates.add(cb.equal(workgroupImplRoot.get("group"), persistentGroupRoot.get("id")));
+      predicates.add(cb.isMember(userImplRoot.get("id"), 
+          persistentGroupRoot.<Set<User>>get("members")));
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"), 
+          studentUserDetailsRoot.get("id")));
+    }
+    return predicates;
+  }
 
-    javax.persistence.Query query = session.createQuery(cr);
-    return query.getResultList();
+  Root<PersistentUserDetails> getPersistentUserDetailsRoot(CriteriaQuery<StudentUserDetails> cq, 
+      Root<PersistentUserDetails> persistentUserDetailsRoot) {
+    if (persistentUserDetailsRoot == null) {
+      persistentUserDetailsRoot = cq.from(PersistentUserDetails.class);
+    }
+    return persistentUserDetailsRoot;
+  }
+
+  Root<UserImpl> getUserImplRoot(CriteriaQuery<StudentUserDetails> cq,
+      Root<UserImpl> userImplRoot) {
+    if (userImplRoot == null) {
+      userImplRoot = cq.from(UserImpl.class);
+    }
+    return userImplRoot;
+  }
+
+  Root<WorkgroupImpl> getWorkgroupImplRoot(CriteriaQuery<StudentUserDetails> cq, 
+      Root<WorkgroupImpl> workgroupImplRoot) {
+    if (workgroupImplRoot == null) {
+      workgroupImplRoot = cq.from(WorkgroupImpl.class);
+    }
+    return workgroupImplRoot;
+  }
+
+  Root<PersistentGroup> getPersistentGroupRoot(CriteriaQuery<StudentUserDetails> cq, 
+      Root<PersistentGroup> persistentGroupRoot) {
+    if (persistentGroupRoot == null) {
+      persistentGroupRoot = cq.from(PersistentGroup.class);
+    }
+    return persistentGroupRoot;
+  }
+
+  Root<RunImpl> getRunImplRoot(CriteriaQuery<StudentUserDetails> cq, Root<RunImpl> runImplRoot) {
+    if (runImplRoot == null) {
+      runImplRoot = cq.from(RunImpl.class);
+    }
+    return runImplRoot;
   }
 
   /**
