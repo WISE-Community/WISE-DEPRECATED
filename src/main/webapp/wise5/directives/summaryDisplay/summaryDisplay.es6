@@ -230,16 +230,16 @@ class SummaryDisplayController {
         this.nodeId, this.componentId);
     const summaryData = this.createChoicesSummaryData(component, componentStates);
     const { data, total } = this.createChoicesSeriesData(component, summaryData);
-    this.renderGraph(data, total);
     this.calculateCountsAndPercentage(componentStates.length);
+    this.renderGraph(data, total);
   }
 
   processScoreAnnotations(annotations) {
     this.updateMaxScoreIfNecessary(annotations);
     const summaryData = this.createScoresSummaryData(annotations);
     const { data, total } = this.createScoresSeriesData(summaryData);
-    this.renderGraph(data, total);
     this.calculateCountsAndPercentage(annotations.length);
+    this.renderGraph(data, total);
   }
   
   updateMaxScoreIfNecessary(annotations) {
@@ -309,20 +309,27 @@ class SummaryDisplayController {
     let color = null;
     if (this.highlightCorrectAnswer && hasCorrectness) {
       if (choice.isCorrect) {
-        color = 'green';
+        color = '#00C853';
       } else {
-        color = 'red';
+        color = '#c62828';
       }
     }
     return color;
   }
   
   createDataPoint(name, y, color) {
-    return {
-      name: name,
-      y: y,
-      color: color
-    };
+    if (color) {
+      return {
+        name: name,
+        y: y,
+        color: color
+      };
+    } else {
+      return {
+        name: name,
+        y: y
+      };
+    }
   }
 
   createScoresSummaryData(annotations) {
@@ -387,9 +394,19 @@ class SummaryDisplayController {
 
   getGraphTitle() {
     if (this.isStudentDataTypeResponses()) {
-      return this.$translate('CLASS_CHOICE_RESULTS');
+      return this.$translate('CLASS_RESPONSES') + ' | ' + 
+        this.$translate('PERCENT_OF_CLASS_RESPONDED', { 
+          totalResponses: this.numResponses, 
+          totalTeams: this.totalWorkgroups,
+          percentResponded: this.percentResponded
+      });
     } else if (this.isStudentDataTypeScores()) {
-      return this.$translate('CLASS_SCORE_RESULTS');
+      return this.$translate('CLASS_SCORES') + ' | ' + 
+        this.$translate('PERCENT_OF_CLASS_RESPONDED', { 
+          totalResponses: this.numResponses, 
+          totalTeams: this.totalWorkgroups,
+          percentResponded: this.percentResponded
+      });
     }
   }
 
@@ -409,14 +426,22 @@ class SummaryDisplayController {
     const chartConfig = {
       options: {
         chart: {
-          type: chartType
+          type: chartType,
+          style: {
+            fontFamily: 'Roboto,Helvetica Neue,sans-serif'
+          }
         },
         legend: {
           enabled: false
         },
         tooltip: {
           formatter: function(s, point) {
-            return this.key + ': ' + Math.round(100 * this.y / total) + '%';
+            if (chartType === 'pie') {
+              return '<b>' + this.key + '</b>: ' + this.y;
+            } else {
+              const pct = this.y / total * 100;
+              return '<b>' + this.key + '</b>: ' + Highcharts.numberFormat(pct, 0) + '%';
+            }
           }
         },
         exporting: {
@@ -424,31 +449,42 @@ class SummaryDisplayController {
         },
         credits: {
           enabled: false
+        },
+        plotOptions: {
+          series: {
+            colorByPoint: true,
+            dataLabels: {
+              formatter: function() {
+                if (chartType === 'pie') {
+                  const pct = this.y / total * 100;
+                  return this.key + ': ' + Highcharts.numberFormat(pct, 0) + '%';
+                } else {
+                  return this.y;
+                }
+              },
+              style: {'fontSize': '12px'}
+            }
+          }
         }
       },
       title: {
-        text: title
+        text: title,
+        style: {'fontSize': '16px', 'fontWeight': '500'}
       },
       xAxis: {
-        type: xAxisType
+        type: xAxisType,
+        labels: {
+          style: {'fontSize': '14px'}
+        }
       },
       yAxis: {
         title: {
-          text: this.$translate('COUNT')
+          text: this.$translate('COUNT'),
+          style: {'fontSize': '14px'}
         }
       },
       series: series
     };
-    if (chartType === 'pie') {
-      chartConfig.options.plotOptions = {
-        pie: {
-          dataLabels: {
-            enabled: true,
-            format: '<br>{point.name}</b>: {point.y}'
-          }
-        }
-      };
-    }
     return chartConfig;
   }
 
@@ -493,7 +529,9 @@ const SummaryDisplay = {
     highlightCorrectAnswer: '<',
     studentDataType: '<',
     periodId: '<',
-    chartType: '<'
+    chartType: '<',
+    hasWarning: '<',
+    warningMessage: '<'
   },
   templateUrl: 'wise5/directives/summaryDisplay/summaryDisplay.html',
   controller: SummaryDisplayController,

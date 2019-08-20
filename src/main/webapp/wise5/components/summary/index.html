@@ -4,18 +4,13 @@
     <br/>
     <compile data='summaryController.otherPrompt'></compile>
   </div>
-  <div ng-if='summaryController.warningMessage != ""'>
-    <br/>
-    <span style='color: red'>
-      {{ summaryController.warningMessage }}
-    </span>
-  </div>
-  <summary-display ng-if='summaryController.isShowDisplay'
-      node-id='summaryController.summaryNodeId'
+  <summary-display node-id='summaryController.summaryNodeId'
       component-id='summaryController.summaryComponentId'
       student-data-type='summaryController.studentDataType'
       period-id='summaryController.periodId'
       chart-type='summaryController.chartType'
-      highlight-correct-answer='summaryController.highlightCorrectAnswer'>
+      highlight-correct-answer='summaryController.highlightCorrectAnswer'
+      has-warning='!summaryController.isShowDisplay'
+      warning-message='summaryController.warningMessage'>
   </summary-display>
 </div>

@@ -1,29 +1,11 @@
-<div style='width: 95%;' ng-if='summaryDisplayCtrl.nodeId != null && 
-    summaryDisplayCtrl.componentId != null'>
-  <highchart config='summaryDisplayCtrl.chartConfig'></highchart>
-  <br/>
-  <div style='display: flex; justify-content: center'>
-    <b>
-    <span ng-if='summaryDisplayCtrl.studentDataType === "responses"'>
-        {{ 'RESPONSES' | translate }} / {{ 'TOTAL_WORKGROUPS' | translate }}:
-    </span>
-    <span ng-if='summaryDisplayCtrl.studentDataType === "scores"'>
-        {{ 'SCORES' | translate }} / {{ 'TOTAL_WORKGROUPS' | translate }}:
-    </span>
-    <span>{{summaryDisplayCtrl.numResponses}}</span> /
-    <span>{{summaryDisplayCtrl.totalWorkgroups}}</span>
-    </b>
-  </div>
-  <div style='display: flex; justify-content: center'>
-    <b>
-    <span ng-if='summaryDisplayCtrl.studentDataType === "responses"'>
-        {{ 'PERCENT_OF_CLASS_RESPONDED' | translate }}:
-    </span>
-    <span ng-if='summaryDisplayCtrl.studentDataType === "scores"'>
-        {{ 'PERCENT_OF_CLASS_SCORED' | translate }}:
-    </span>
-    <span>{{summaryDisplayCtrl.percentResponded}}%</span>
-    </b>
-  </div>
-  <br/>
-</div>
+<md-card style="margin: 16px 8px 8px;" 
+         ng-if="summaryDisplayCtrl.nodeId != null && summaryDisplayCtrl.componentId != null">
+  <md-card-content style="width: 99%;">
+    <div ng-if="!summaryDisplayCtrl.hasWarning">
+      <highchart config="summaryDisplayCtrl.chartConfig"></highchart>
+    </div>
+    <p ng-if="summaryDisplayCtrl.hasWarning" class="warn center">
+      {{summaryDisplayCtrl.warningMessage}}
+    </p>
+  </md-card-content>
+</md-card>
