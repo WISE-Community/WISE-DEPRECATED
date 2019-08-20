@@ -91,8 +91,6 @@ function (_ComponentController) {
     value: function calculateIsShowDisplay() {
       if (this.componentContent.requirementToSeeSummary === 'submitWork') {
         return this.studentHasSubmittedWork();
-      } else if (this.componentContent.requirementToSeeSummary === 'saveWork') {
-        return this.studentHasSavedWork();
       } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
         return this.studentHasCompletedComponent();
       } else if (this.componentContent.requirementToSeeSummary === 'none') {
@@ -106,8 +104,6 @@ function (_ComponentController) {
 
       if (this.componentContent.requirementToSeeSummary === 'submitWork') {
         messageTranslationKey = 'summary.youMustSubmitWork';
-      } else if (this.componentContent.requirementToSeeSummary === 'saveWork') {
-        messageTranslationKey = 'summary.youMustSaveWork';
       } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
         messageTranslationKey = 'summary.youMustComplete';
       }

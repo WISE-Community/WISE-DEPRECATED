@@ -70,8 +70,6 @@ class SummaryController extends ComponentController {
   calculateIsShowDisplay() {
     if (this.componentContent.requirementToSeeSummary === 'submitWork') {
       return this.studentHasSubmittedWork();
-    } else if (this.componentContent.requirementToSeeSummary === 'saveWork') {
-      return this.studentHasSavedWork();
     } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
       return this.studentHasCompletedComponent();
     } else if (this.componentContent.requirementToSeeSummary === 'none') {
@@ -83,8 +81,6 @@ class SummaryController extends ComponentController {
     let messageTranslationKey = '';
     if (this.componentContent.requirementToSeeSummary === 'submitWork') {
       messageTranslationKey = 'summary.youMustSubmitWork';
-    } else if (this.componentContent.requirementToSeeSummary === 'saveWork') {
-      messageTranslationKey = 'summary.youMustSaveWork';
     } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
       messageTranslationKey = 'summary.youMustComplete';
     }

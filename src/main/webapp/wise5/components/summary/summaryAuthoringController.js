@@ -41,10 +41,13 @@ function (_SummaryController) {
     _this.$injector = $injector;
     _this.isResponsesOptionAvailable = false;
     _this.isHighlightCorrectAnswerAvailable = false;
+    _this.isPieChartAllowed = true;
 
     _this.updateStudentDataTypeOptionsIfNecessary();
 
     _this.updateHasCorrectAnswerIfNecessary();
+
+    _this.updateChartTypeOptionsIfNecessary();
 
     return _this;
   }
@@ -106,6 +109,7 @@ function (_SummaryController) {
     key: "studentDataTypeChanged",
     value: function studentDataTypeChanged() {
       this.updateHasCorrectAnswerIfNecessary();
+      this.updateChartTypeOptionsIfNecessary();
       this.authoringViewComponentChanged();
     }
   }, {
@@ -115,6 +119,7 @@ function (_SummaryController) {
       this.updateStudentDataTypeOptionsIfNecessary();
       this.updateStudentDataTypeIfNecessary();
       this.updateHasCorrectAnswerIfNecessary();
+      this.updateChartTypeOptionsIfNecessary();
     }
   }, {
     key: "updateOtherPrompt",
@@ -153,6 +158,15 @@ function (_SummaryController) {
       }
     }
   }, {
+    key: "updateChartTypeOptionsIfNecessary",
+    value: function updateChartTypeOptionsIfNecessary() {
+      this.isPieChartAllowed = this.authoringComponentContent.studentDataType === 'scores' || !this.componentAllowsMultipleResponses();
+
+      if (!this.isPieChartAllowed && this.authoringComponentContent.chartType === 'pie') {
+        this.authoringComponentContent.chartType = 'column';
+      }
+    }
+  }, {
     key: "isStudentDataTypeAvailableForComponent",
     value: function isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType) {
       var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
@@ -185,6 +199,22 @@ function (_SummaryController) {
         if (component != null) {
           var componentService = this.$injector.get(component.type + 'Service');
           return componentService.componentHasCorrectAnswer(component);
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "componentAllowsMultipleResponses",
+    value: function componentAllowsMultipleResponses() {
+      var nodeId = this.authoringComponentContent.summaryNodeId;
+      var componentId = this.authoringComponentContent.summaryComponentId;
+
+      if (nodeId != null && componentId != null) {
+        var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+        if (component != null) {
+          return component.choiceType === 'checkbox';
         }
       }
 

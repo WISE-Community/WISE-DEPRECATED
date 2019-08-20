@@ -33,8 +33,10 @@ class SummaryAuthoringController extends SummaryController {
     this.$injector = $injector;
     this.isResponsesOptionAvailable = false;
     this.isHighlightCorrectAnswerAvailable = false;
+    this.isPieChartAllowed = true;
     this.updateStudentDataTypeOptionsIfNecessary();
     this.updateHasCorrectAnswerIfNecessary();
+    this.updateChartTypeOptionsIfNecessary();
   }
 
   authoringSummaryNodeIdChanged() {
@@ -66,6 +68,7 @@ class SummaryAuthoringController extends SummaryController {
 
   studentDataTypeChanged() {
     this.updateHasCorrectAnswerIfNecessary();
+    this.updateChartTypeOptionsIfNecessary();
     this.authoringViewComponentChanged();
   }
 
@@ -74,6 +77,7 @@ class SummaryAuthoringController extends SummaryController {
     this.updateStudentDataTypeOptionsIfNecessary();
     this.updateStudentDataTypeIfNecessary();
     this.updateHasCorrectAnswerIfNecessary();
+    this.updateChartTypeOptionsIfNecessary();
   }
 
   updateOtherPrompt() {
@@ -109,6 +113,14 @@ class SummaryAuthoringController extends SummaryController {
     }
   }
 
+  updateChartTypeOptionsIfNecessary() {
+    this.isPieChartAllowed = this.authoringComponentContent.studentDataType === 'scores' || 
+        !this.componentAllowsMultipleResponses();
+    if (!this.isPieChartAllowed && this.authoringComponentContent.chartType === 'pie') {
+      this.authoringComponentContent.chartType = 'column';
+    }
+  }
+
   isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType) {
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
     if (component != null) {
@@ -134,6 +146,18 @@ class SummaryAuthoringController extends SummaryController {
       if (component != null) {
         const componentService = this.$injector.get(component.type + 'Service');
         return componentService.componentHasCorrectAnswer(component);
+      }
+    }
+    return false;
+  }
+
+  componentAllowsMultipleResponses() {
+    const nodeId = this.authoringComponentContent.summaryNodeId;
+    const componentId = this.authoringComponentContent.summaryComponentId;
+    if (nodeId != null && componentId != null) {
+      const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+      if (component != null) {
+        return component.choiceType === 'checkbox';
       }
     }
     return false;
