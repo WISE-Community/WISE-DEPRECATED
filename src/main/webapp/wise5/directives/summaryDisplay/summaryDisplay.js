@@ -311,13 +311,9 @@ function () {
     value: function processComponentStates(componentStates) {
       var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
       var summaryData = this.createChoicesSummaryData(component, componentStates);
-
-      var _this$createChoicesSe = this.createChoicesSeriesData(component, summaryData),
-          data = _this$createChoicesSe.data,
-          total = _this$createChoicesSe.total;
-
+      var data = this.createChoicesSeriesData(component, summaryData);
       this.calculateCountsAndPercentage(componentStates.length);
-      this.renderGraph(data, total);
+      this.renderGraph(data, componentStates.length);
     }
   }, {
     key: "processScoreAnnotations",
@@ -463,7 +459,6 @@ function () {
     key: "createChoicesSeriesData",
     value: function createChoicesSeriesData(component, summaryData) {
       var data = [];
-      var total = 0;
       var hasCorrectness = this.hasCorrectAnswer(component);
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
@@ -476,7 +471,6 @@ function () {
           var color = this.getDataPointColor(choice, hasCorrectness);
           var dataPoint = this.createDataPoint(choice.text, count, color);
           data.push(dataPoint);
-          total += count;
         }
       } catch (err) {
         _didIteratorError6 = true;
@@ -493,10 +487,7 @@ function () {
         }
       }
 
-      return {
-        data: data,
-        total: total
-      };
+      return data;
     }
   }, {
     key: "hasCorrectAnswer",

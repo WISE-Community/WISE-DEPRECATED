@@ -236,9 +236,9 @@ class SummaryDisplayController {
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(
         this.nodeId, this.componentId);
     const summaryData = this.createChoicesSummaryData(component, componentStates);
-    const { data, total } = this.createChoicesSeriesData(component, summaryData);
+    const data = this.createChoicesSeriesData(component, summaryData);
     this.calculateCountsAndPercentage(componentStates.length);
-    this.renderGraph(data, total);
+    this.renderGraph(data, componentStates.length);
   }
 
   processScoreAnnotations(annotations) {
@@ -291,16 +291,14 @@ class SummaryDisplayController {
 
   createChoicesSeriesData(component, summaryData) {
     const data = [];
-    let total = 0;
     const hasCorrectness = this.hasCorrectAnswer(component);
     for (const choice of component.choices) {
       const count = this.getSummaryDataCount(summaryData, choice.id);
       const color = this.getDataPointColor(choice, hasCorrectness);
       const dataPoint = this.createDataPoint(choice.text, count, color);
       data.push(dataPoint);
-      total += count;
     }
-    return { data: data, total: total };
+    return data;
   }
 
   hasCorrectAnswer(component) {
