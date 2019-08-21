@@ -350,7 +350,7 @@ public class WISE5AuthorProjectController {
 
   @GetMapping("/authorConfig")
   @ResponseBody
-  protected String getAuthorProjectConfigChooser(HttpServletRequest request)
+  protected String getAuthorProjectConfigChooser(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     JSONObject config = getDefaultAuthoringConfigJsonObject(request);
     return config.toString();

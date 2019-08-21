@@ -18,14 +18,20 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
-      fabric: ['fabric', 'fabric']
+      fabric: ['fabric', 'fabric'],
+      hopscotch: 'hopscotch',
+      summernote: 'summernote'
     })
   ],
   devServer: {
     proxy: {
+      '/achievement': 'http://localhost:8080',
       '/config': 'http://localhost:8080',
-      '/wise5': 'http://localhost:8080',
-      '/curriculum': 'http://localhost:8080'
+      '/curriculum': 'http://localhost:8080',
+      '/notification': 'http://localhost:8080',
+      '/runStatus': 'http://localhost:8080',
+      '/student': 'http://localhost:8080',
+      '/wise5': 'http://localhost:8080'
     }
   },
   output: {
@@ -63,7 +69,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.es6$/,
+        test: /\.js$/,
         loader: 'babel-loader',
         exclude: [
           '/node_modules/'

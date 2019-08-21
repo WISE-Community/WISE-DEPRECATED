@@ -1,281 +1,218 @@
-'use strict';
+import ComponentService from '../componentService';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _componentService = require('../componentService');
-
-var _componentService2 = _interopRequireDefault(_componentService);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var MultipleChoiceService = function (_ComponentService) {
-  _inherits(MultipleChoiceService, _ComponentService);
-
-  function MultipleChoiceService($filter, StudentDataService, UtilService) {
-    _classCallCheck(this, MultipleChoiceService);
-
-    return _possibleConstructorReturn(this, (MultipleChoiceService.__proto__ || Object.getPrototypeOf(MultipleChoiceService)).call(this, $filter, StudentDataService, UtilService));
+class MultipleChoiceService extends ComponentService {
+  constructor($filter, StudentDataService, UtilService) {
+    super($filter, StudentDataService, UtilService);
   }
 
-  _createClass(MultipleChoiceService, [{
-    key: 'getComponentTypeLabel',
-    value: function getComponentTypeLabel() {
-      return this.$translate('multipleChoice.componentTypeLabel');
-    }
-  }, {
-    key: 'createComponent',
-    value: function createComponent() {
-      var component = _get(MultipleChoiceService.prototype.__proto__ || Object.getPrototypeOf(MultipleChoiceService.prototype), 'createComponent', this).call(this);
-      component.type = 'MultipleChoice';
-      component.choiceType = 'radio';
-      component.choices = [];
-      component.showFeedback = true;
-      return component;
-    }
+  getComponentTypeLabel() {
+    return this.$translate('multipleChoice.componentTypeLabel');
+  }
 
-    /**
-     * Returns all possible criteria for this component.
-     * @param component a MultipleChoice component
-     */
+  createComponent() {
+    const component = super.createComponent();
+    component.type = 'MultipleChoice';
+    component.choiceType = 'radio';
+    component.choices = [];
+    component.showFeedback = true;
+    return component;
+  }
 
-  }, {
-    key: 'getPossibleTransitionCriteria',
-    value: function getPossibleTransitionCriteria(nodeId, componentId, component) {
-      var allPossibleTransitionCriteria = [];
-      if (component.choiceType === 'radio') {
-        // Go through all the choices
-        for (var c = 0; c < component.choices.length; c++) {
-          var choice = component.choices[c];
-          var possibleTransitionCriteria = {
-            'name': 'choiceChosen',
-            'id': 'choiceChosen_' + choice.id,
-            'params': {
-              'nodeId': nodeId,
-              'componentId': componentId,
-              'choiceIds': [choice.id]
-            },
-            'userFriendlyDescription': this.$translate('multipleChoice.userChose', { choiceText: choice.text, choiceId: choice.id })
-          };
-          allPossibleTransitionCriteria.push(possibleTransitionCriteria);
-        }
-      } else if (component.choiceType === 'checkbox') {
-        // TODO: implement meeee!
+  /**
+   * Returns all possible criteria for this component.
+   * @param component a MultipleChoice component
+   */
+  getPossibleTransitionCriteria(nodeId, componentId, component) {
+    let allPossibleTransitionCriteria = [];
+    if (component.choiceType === 'radio') {
+      // Go through all the choices
+      for (var c = 0; c < component.choices.length; c++) {
+        let choice = component.choices[c];
+        let possibleTransitionCriteria = {
+          'name': 'choiceChosen',
+          'id': 'choiceChosen_' + choice.id,
+          'params': {
+            'nodeId': nodeId,
+            'componentId': componentId,
+            'choiceIds': [choice.id]
+          },
+          'userFriendlyDescription': this.$translate('multipleChoice.userChose', {choiceText: choice.text, choiceId: choice.id})
+        };
+        allPossibleTransitionCriteria.push(possibleTransitionCriteria);
       }
-      return allPossibleTransitionCriteria;
+    } else if (component.choiceType === 'checkbox') {
+      // TODO: implement meeee!
     }
+    return allPossibleTransitionCriteria;
+  }
 
-    /**
-     * Check if the student chose a specific choice
-     * @param criteria the criteria object
-     * @returns a boolean value whether the student chose the choice specified in the
-     * criteria object
-     */
-
-  }, {
-    key: 'choiceChosen',
-    value: function choiceChosen(criteria) {
-      var nodeId = criteria.params.nodeId;
-      var componentId = criteria.params.componentId;
-      var constraintChoiceIds = criteria.params.choiceIds;
-      var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-      if (latestComponentState != null) {
-        var studentChoices = latestComponentState.studentData.studentChoices;
-        var studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
-        return this.isChoicesSelected(studentChoiceIds, constraintChoiceIds);
-      }
-      return false;
+  /**
+   * Check if the student chose a specific choice
+   * @param criteria the criteria object
+   * @returns a boolean value whether the student chose the choice specified in the
+   * criteria object
+   */
+  choiceChosen(criteria) {
+    const nodeId = criteria.params.nodeId;
+    const componentId = criteria.params.componentId;
+    const constraintChoiceIds = criteria.params.choiceIds;
+    const latestComponentState =
+        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    if (latestComponentState != null) {
+      const studentChoices = latestComponentState.studentData.studentChoices;
+      const studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
+      return this.isChoicesSelected(studentChoiceIds, constraintChoiceIds);
     }
-  }, {
-    key: 'isChoicesSelected',
-    value: function isChoicesSelected(studentChoiceIds, constraintChoiceIds) {
-      if (typeof constraintChoiceIds === 'string') {
-        return studentChoiceIds.length === 1 && studentChoiceIds[0] === constraintChoiceIds;
-      } else if (Array.isArray(constraintChoiceIds)) {
-        if (studentChoiceIds.length === constraintChoiceIds.length) {
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+    return false;
+  }
 
-          try {
-            for (var _iterator = constraintChoiceIds[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var constraintChoiceId = _step.value;
-
-              if (studentChoiceIds.indexOf(constraintChoiceId) === -1) {
-                return false;
-              }
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
-          }
-
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Get the student choice ids from the student choice objects
-     * @param studentChoices an array of student choice objects. these objects contain
-     * an id and text fields
-     * @returns an array of choice id strings
-     */
-
-  }, {
-    key: 'getStudentChoiceIdsFromStudentChoiceObjects',
-    value: function getStudentChoiceIdsFromStudentChoiceObjects(studentChoices) {
-      var choiceIds = [];
-
-      if (studentChoices != null) {
-
-        // loop through all the student choice objects
-        for (var c = 0; c < studentChoices.length; c++) {
-
-          // get a student choice object
-          var studentChoice = studentChoices[c];
-
-          if (studentChoice != null) {
-
-            // get the student choice id
-            var studentChoiceId = studentChoice.id;
-
-            choiceIds.push(studentChoiceId);
+  isChoicesSelected(studentChoiceIds, constraintChoiceIds) {
+    if (typeof constraintChoiceIds === 'string') {
+      return studentChoiceIds.length === 1 && studentChoiceIds[0] === constraintChoiceIds;
+    } else if (Array.isArray(constraintChoiceIds)) {
+      if (studentChoiceIds.length === constraintChoiceIds.length) {
+        for (let constraintChoiceId of constraintChoiceIds) {
+          if (studentChoiceIds.indexOf(constraintChoiceId) === -1) {
+            return false;
           }
         }
+        return true;
       }
-
-      return choiceIds;
     }
-  }, {
-    key: 'isCompleted',
-    value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-      var result = false;
+    return false;
+  }
 
-      if (componentStates && componentStates.length) {
-        var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
+  /**
+   * Get the student choice ids from the student choice objects
+   * @param studentChoices an array of student choice objects. these objects contain
+   * an id and text fields
+   * @returns an array of choice id strings
+   */
+  getStudentChoiceIdsFromStudentChoiceObjects(studentChoices) {
+    let choiceIds = [];
 
-        // loop through all the component states
-        for (var c = 0, l = componentStates.length; c < l; c++) {
+    if (studentChoices != null) {
 
-          // the component state
-          var componentState = componentStates[c];
+      // loop through all the student choice objects
+      for (let c = 0; c < studentChoices.length; c++) {
 
-          // get the student data from the component state
-          var studentData = componentState.studentData;
+        // get a student choice object
+        let studentChoice = studentChoices[c];
 
-          if (studentData != null) {
-            var studentChoices = studentData.studentChoices;
+        if (studentChoice != null) {
 
-            if (studentChoices != null) {
-              // there is a student choice so the component has saved work
-              if (submitRequired) {
-                // completion requires a submission, so check for isSubmit
-                if (componentState.isSubmit) {
-                  result = true;
-                  break;
-                }
-              } else {
+          // get the student choice id
+          let studentChoiceId = studentChoice.id;
+
+          choiceIds.push(studentChoiceId);
+        }
+      }
+    }
+
+    return choiceIds;
+  };
+
+  isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+    let result = false;
+
+    if (componentStates && componentStates.length) {
+      let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
+
+      // loop through all the component states
+      for (let c = 0, l = componentStates.length; c < l; c++) {
+
+        // the component state
+        let componentState = componentStates[c];
+
+        // get the student data from the component state
+        let studentData = componentState.studentData;
+
+        if (studentData != null) {
+          let studentChoices = studentData.studentChoices;
+
+          if (studentChoices != null) {
+            // there is a student choice so the component has saved work
+            if (submitRequired) {
+              // completion requires a submission, so check for isSubmit
+              if (componentState.isSubmit) {
                 result = true;
                 break;
               }
+            } else {
+              result = true;
+              break;
             }
           }
         }
       }
-
-      return result;
     }
-  }, {
-    key: 'getStudentDataString',
 
+    return result;
+  };
 
-    /**
-     * Get the human readable student data string
-     * @param componentState the component state
-     * @return a human readable student data string
-     */
-    value: function getStudentDataString(componentState) {
+  /**
+   * Get the human readable student data string
+   * @param componentState the component state
+   * @return a human readable student data string
+   */
+  getStudentDataString(componentState) {
 
-      var studentDataString = '';
+    var studentDataString = '';
 
-      if (componentState != null) {
-        var studentData = componentState.studentData;
+    if (componentState != null) {
+      var studentData = componentState.studentData;
 
-        if (studentData != null) {
+      if (studentData != null) {
 
-          // get the choices the student chose
-          var studentChoices = studentData.studentChoices;
+        // get the choices the student chose
+        var studentChoices = studentData.studentChoices;
 
-          if (studentChoices != null) {
+        if (studentChoices != null) {
 
-            // loop through all the choices the student chose
-            for (var c = 0; c < studentChoices.length; c++) {
-              var studentChoice = studentChoices[c];
+          // loop through all the choices the student chose
+          for (var c = 0; c < studentChoices.length; c++) {
+            var studentChoice = studentChoices[c];
 
-              if (studentChoice != null) {
+            if (studentChoice != null) {
 
-                // get the choice text
-                var text = studentChoice.text;
+              // get the choice text
+              var text = studentChoice.text;
 
-                if (text != null) {
-                  if (studentDataString != '') {
-                    // separate the choices with a comma
-                    studentDataString += ', ';
-                  }
-
-                  // append the choice text
-                  studentDataString += text;
+              if (text != null) {
+                if (studentDataString != '') {
+                  // separate the choices with a comma
+                  studentDataString += ', ';
                 }
+
+                // append the choice text
+                studentDataString += text;
               }
             }
           }
         }
       }
-      return studentDataString;
     }
-  }, {
-    key: 'componentStateHasStudentWork',
-    value: function componentStateHasStudentWork(componentState, componentContent) {
-      if (componentState != null) {
-        var studentData = componentState.studentData;
-        if (studentData != null) {
-          var studentChoices = studentData.studentChoices;
-          if (studentChoices != null && studentChoices.length > 0) {
-            return true;
-          }
+    return studentDataString;
+  }
+
+  componentStateHasStudentWork(componentState, componentContent) {
+    if (componentState != null) {
+      let studentData = componentState.studentData;
+      if (studentData != null) {
+        let studentChoices = studentData.studentChoices;
+        if (studentChoices != null && studentChoices.length > 0) {
+          return true;
         }
       }
-      return false;
     }
-  }]);
+    return false;
+  }
+}
 
-  return MultipleChoiceService;
-}(_componentService2.default);
+MultipleChoiceService.$inject = [
+  '$filter',
+  'StudentDataService',
+  'UtilService'
+];
 
-MultipleChoiceService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
-
-exports.default = MultipleChoiceService;
-//# sourceMappingURL=multipleChoiceService.js.map
+export default MultipleChoiceService;

@@ -1,26 +1,21 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
+exports["default"] = void 0;
 
-var _themeController = require('./themeController');
+var _themeController = _interopRequireDefault(require("./themeController"));
 
-var _themeController2 = _interopRequireDefault(_themeController);
+var _themeComponents = _interopRequireDefault(require("./themeComponents"));
 
-var _themeComponents = require('./themeComponents');
+var _notebookComponents = _interopRequireDefault(require("./notebook/notebookComponents"));
 
-var _themeComponents2 = _interopRequireDefault(_themeComponents);
+require("./js/webfonts");
 
-var _notebookComponents = require('./notebook/notebookComponents');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _notebookComponents2 = _interopRequireDefault(_notebookComponents);
-
-require('./js/webfonts');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var themeModule = angular.module('theme', ['theme.components', 'theme.notebook']).controller(_themeController2.default.name, _themeController2.default);
-
-exports.default = themeModule;
+var themeModule = angular.module('theme', ['theme.components', 'theme.notebook']).controller('ThemeController', _themeController["default"]);
+var _default = themeModule;
+exports["default"] = _default;
 //# sourceMappingURL=theme.js.map

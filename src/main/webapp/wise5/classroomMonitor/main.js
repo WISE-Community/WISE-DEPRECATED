@@ -1,452 +1,344 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-require('../themes/default/js/webfonts');
-
-var _jquery = require('jquery');
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _achievementService = require('../services/achievementService');
-
-var _achievementService2 = _interopRequireDefault(_achievementService);
-
-var _angular = require('angular');
-
-var _angular2 = _interopRequireDefault(_angular);
-
-var _angularDragula = require('angular-dragula');
-
-var _angularDragula2 = _interopRequireDefault(_angularDragula);
-
-var _angularFileSaver = require('angular-file-saver');
-
-var _angularFileSaver2 = _interopRequireDefault(_angularFileSaver);
-
-var _angularInview = require('angular-inview');
-
-var _angularInview2 = _interopRequireDefault(_angularInview);
-
-var _angularMoment = require('angular-moment');
-
-var _angularMoment2 = _interopRequireDefault(_angularMoment);
-
-var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
-
-var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
-
-var _angularUiRouter = require('angular-ui-router');
-
-var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
-
-var _ngFileUpload = require('ng-file-upload');
-
-var _ngFileUpload2 = _interopRequireDefault(_ngFileUpload);
-
-var _angularMaterial = require('angular-material');
-
-var _angularMaterial2 = _interopRequireDefault(_angularMaterial);
-
-var _angularSanitize = require('angular-sanitize');
-
-var _angularSanitize2 = _interopRequireDefault(_angularSanitize);
-
-var _angularSockjs = require('angular-sockjs');
-
-var _angularSockjs2 = _interopRequireDefault(_angularSockjs);
-
-var _ngStompStandalone = require('../lib/stomp/ng-stomp.standalone.min');
-
-var _ngStompStandalone2 = _interopRequireDefault(_ngStompStandalone);
-
-var _angularTranslate = require('angular-translate');
-
-var _angularTranslate2 = _interopRequireDefault(_angularTranslate);
-
-var _angularTranslateLoaderPartial = require('angular-translate-loader-partial');
-
-var _angularTranslateLoaderPartial2 = _interopRequireDefault(_angularTranslateLoaderPartial);
-
-var _angularWebsocket = require('angular-websocket');
-
-var _angularWebsocket2 = _interopRequireDefault(_angularWebsocket);
-
-var _animationComponentModule = require('../components/animation/animationComponentModule');
-
-var _animationComponentModule2 = _interopRequireDefault(_animationComponentModule);
-
-var _annotationService = require('../services/annotationService');
-
-var _annotationService2 = _interopRequireDefault(_annotationService);
-
-var _audioOscillatorComponentModule = require('../components/audioOscillator/audioOscillatorComponentModule');
-
-var _audioOscillatorComponentModule2 = _interopRequireDefault(_audioOscillatorComponentModule);
-
-var _classroomMonitorComponents = require('./classroomMonitorComponents');
-
-var _classroomMonitorComponents2 = _interopRequireDefault(_classroomMonitorComponents);
-
-var _classroomMonitorController = require('./classroomMonitorController');
-
-var _classroomMonitorController2 = _interopRequireDefault(_classroomMonitorController);
-
-var _classroomMonitorProjectService = require('./classroomMonitorProjectService');
-
-var _classroomMonitorProjectService2 = _interopRequireDefault(_classroomMonitorProjectService);
-
-var _conceptMapComponentModule = require('../components/conceptMap/conceptMapComponentModule');
-
-var _conceptMapComponentModule2 = _interopRequireDefault(_conceptMapComponentModule);
-
-var _configService = require('../services/configService');
-
-var _configService2 = _interopRequireDefault(_configService);
-
-var _cRaterService = require('../services/cRaterService');
-
-var _cRaterService2 = _interopRequireDefault(_cRaterService);
-
-var _components = require('../directives/components');
-
-var _components2 = _interopRequireDefault(_components);
-
-var _componentService = require('../components/componentService');
-
-var _componentService2 = _interopRequireDefault(_componentService);
-
-var _dashboardController = require('./dashboard/dashboardController');
-
-var _dashboardController2 = _interopRequireDefault(_dashboardController);
-
-var _dataExportController = require('./dataExport/dataExportController');
-
-var _dataExportController2 = _interopRequireDefault(_dataExportController);
-
-var _discussionComponentModule = require('../components/discussion/discussionComponentModule');
-
-var _discussionComponentModule2 = _interopRequireDefault(_discussionComponentModule);
-
-var _drawComponentModule = require('../components/draw/drawComponentModule');
-
-var _drawComponentModule2 = _interopRequireDefault(_drawComponentModule);
-
-var _embeddedComponentModule = require('../components/embedded/embeddedComponentModule');
-
-var _embeddedComponentModule2 = _interopRequireDefault(_embeddedComponentModule);
-
-var _graphComponentModule = require('../components/graph/graphComponentModule');
-
-var _graphComponentModule2 = _interopRequireDefault(_graphComponentModule);
-
-var _highcharts = require('../lib/highcharts@4.2.1');
-
-var _highcharts2 = _interopRequireDefault(_highcharts);
-
-var _highchartsNg = require('highcharts-ng');
-
-var _highchartsNg2 = _interopRequireDefault(_highchartsNg);
-
-var _htmlComponentModule = require('../components/html/htmlComponentModule');
-
-var _htmlComponentModule2 = _interopRequireDefault(_htmlComponentModule);
-
-var _httpInterceptor = require('../services/httpInterceptor');
-
-var _httpInterceptor2 = _interopRequireDefault(_httpInterceptor);
-
-var _labelComponentModule = require('../components/label/labelComponentModule');
-
-var _labelComponentModule2 = _interopRequireDefault(_labelComponentModule);
-
-var _matchComponentModule = require('../components/match/matchComponentModule');
-
-var _matchComponentModule2 = _interopRequireDefault(_matchComponentModule);
-
-var _manageStudentsController = require('./manageStudents/manageStudentsController');
-
-var _manageStudentsController2 = _interopRequireDefault(_manageStudentsController);
-
-var _milestonesController = require('./milestones/milestonesController');
-
-var _milestonesController2 = _interopRequireDefault(_milestonesController);
-
-var _multipleChoiceComponentModule = require('../components/multipleChoice/multipleChoiceComponentModule');
-
-var _multipleChoiceComponentModule2 = _interopRequireDefault(_multipleChoiceComponentModule);
-
-var _nodeGradingController = require('./nodeGrading/nodeGradingController');
-
-var _nodeGradingController2 = _interopRequireDefault(_nodeGradingController);
-
-var _nodeProgressController = require('./nodeProgress/nodeProgressController');
-
-var _nodeProgressController2 = _interopRequireDefault(_nodeProgressController);
-
-var _nodeService = require('../services/nodeService');
-
-var _nodeService2 = _interopRequireDefault(_nodeService);
-
-var _notebookComponents = require('../themes/default/notebook/notebookComponents');
-
-var _notebookComponents2 = _interopRequireDefault(_notebookComponents);
-
-var _notebookGradingController = require('./notebook/notebookGradingController');
-
-var _notebookGradingController2 = _interopRequireDefault(_notebookGradingController);
-
-var _notebookItemGrading = require('./notebook/notebookItemGrading/notebookItemGrading');
-
-var _notebookItemGrading2 = _interopRequireDefault(_notebookItemGrading);
-
-var _notebookService = require('../services/notebookService');
-
-var _notebookService2 = _interopRequireDefault(_notebookService);
-
-var _notificationService = require('../services/notificationService');
-
-var _notificationService2 = _interopRequireDefault(_notificationService);
-
-var _openResponseComponentModule = require('../components/openResponse/openResponseComponentModule');
-
-var _openResponseComponentModule2 = _interopRequireDefault(_openResponseComponentModule);
-
-var _outsideURLComponentModule = require('../components/outsideURL/outsideURLComponentModule');
-
-var _outsideURLComponentModule2 = _interopRequireDefault(_outsideURLComponentModule);
-
-var _planningService = require('../services/planningService');
-
-var _planningService2 = _interopRequireDefault(_planningService);
-
-var _projectService = require('../services/projectService');
-
-var _projectService2 = _interopRequireDefault(_projectService);
-
-var _sessionService = require('../services/sessionService');
-
-var _sessionService2 = _interopRequireDefault(_sessionService);
-
-var _studentAssetService = require('../services/studentAssetService');
-
-var _studentAssetService2 = _interopRequireDefault(_studentAssetService);
-
-var _studentDataService = require('../services/studentDataService');
-
-var _studentDataService2 = _interopRequireDefault(_studentDataService);
-
-var _studentGradingController = require('./studentGrading/studentGradingController');
-
-var _studentGradingController2 = _interopRequireDefault(_studentGradingController);
-
-var _studentProgressController = require('./studentProgress/studentProgressController');
-
-var _studentProgressController2 = _interopRequireDefault(_studentProgressController);
-
-var _studentStatusService = require('../services/studentStatusService');
-
-var _studentStatusService2 = _interopRequireDefault(_studentStatusService);
-
-var _studentWebSocketService = require('../services/studentWebSocketService');
-
-var _studentWebSocketService2 = _interopRequireDefault(_studentWebSocketService);
-
-var _tableComponentModule = require('../components/table/tableComponentModule');
-
-var _tableComponentModule2 = _interopRequireDefault(_tableComponentModule);
-
-var _teacherDataService = require('../services/teacherDataService');
-
-var _teacherDataService2 = _interopRequireDefault(_teacherDataService);
-
-var _teacherWebSocketService = require('../services/teacherWebSocketService');
-
-var _teacherWebSocketService2 = _interopRequireDefault(_teacherWebSocketService);
-
-var _utilService = require('../services/utilService');
-
-var _utilService2 = _interopRequireDefault(_utilService);
-
-require('lib/angular-summernote/dist/angular-summernote.min');
-
-var _moment = require('moment');
-
-var _moment2 = _interopRequireDefault(_moment);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-inview', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'classroomMonitor.components', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileSaver', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'bd.sockjs', 'ngStomp', 'ngWebSocket', 'theme.notebook', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'summernote', 'tableComponentModule', 'ui.router']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_componentService2.default.name, _componentService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_planningService2.default.name, _planningService2.default).service(_projectService2.default.name, _classroomMonitorProjectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_dataExportController2.default.name, _dataExportController2.default).controller(_manageStudentsController2.default.name, _manageStudentsController2.default).controller(_milestonesController2.default.name, _milestonesController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_notebookGradingController2.default.name, _notebookGradingController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).component('notebookItemGrading', _notebookItemGrading2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider) {
-
-    $urlRouterProvider.otherwise('/project/');
-
-    $stateProvider.state('root', {
-        url: '',
-        abstract: true,
-        templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
-        controller: 'ClassroomMonitorController',
-        controllerAs: 'classroomMonitorController',
-        resolve: {
-            config: function config(ConfigService) {
-                var configURL = window.configURL;
-
-                return ConfigService.retrieveConfig(configURL);
-            },
-            project: function project(ProjectService, config) {
-                return ProjectService.retrieveProject();
-            },
-            runStatus: function runStatus(TeacherDataService, config) {
-                return TeacherDataService.retrieveRunStatus();
-            },
-            studentStatuses: function studentStatuses(StudentStatusService, config) {
-                return StudentStatusService.retrieveStudentStatuses();
-            },
-            achievements: function achievements(AchievementService, studentStatuses, config, project) {
-                return AchievementService.retrieveStudentAchievements();
-            },
-            notifications: function notifications(NotificationService, ConfigService, studentStatuses, config, project) {
-                return NotificationService.retrieveNotifications();
-            },
-            webSocket: function webSocket(TeacherWebSocketService, config) {
-                return TeacherWebSocketService.initialize();
-            },
-            language: function language($translate, ConfigService, config) {
-                var locale = ConfigService.getLocale(); // defaults to "en"
-                $translate.use(locale);
-            },
-            annotations: function annotations(TeacherDataService, config) {
-                return TeacherDataService.retrieveAnnotations();
-            },
-            notebook: function notebook(NotebookService, ConfigService, config, project) {
-                if (NotebookService.isNotebookEnabled() || NotebookService.isTeacherNotebookEnabled()) {
-                    return NotebookService.retrieveNotebookItems().then(function (notebook) {
-                        return notebook;
-                    });
-                } else {
-                    return NotebookService.notebook;
+import '../themes/default/js/webfonts';
+import $ from 'jquery';
+import AchievementService from '../services/achievementService';
+import angular from 'angular';
+import angularDragula from 'angular-dragula';
+import angularFileSaver from 'angular-file-saver';
+import angularInview from 'angular-inview';
+import angularMoment from 'angular-moment';
+import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
+import angularUIRouter from 'angular-ui-router';
+import ngFileUpload from 'ng-file-upload';
+import ngMaterial from 'angular-material';
+import angularSanitize from 'angular-sanitize';
+//import angularSock from 'angular-sockjs';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
+import angularTranslate from 'angular-translate';
+import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
+import ngWebSocket from 'angular-websocket';
+import AnimationComponentModule from '../components/animation/animationComponentModule';
+import AnnotationService from '../services/annotationService';
+import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
+import ClassroomMonitorComponents from './classroomMonitorComponents';
+import ClassroomMonitorController from './classroomMonitorController';
+import ClassroomMonitorProjectService from './classroomMonitorProjectService';
+import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
+import ConfigService from '../services/configService';
+import CRaterService from '../services/cRaterService';
+import Components from '../directives/components';
+import ComponentService from '../components/componentService';
+import DashboardController from './dashboard/dashboardController';
+import DataExportController from './dataExport/dataExportController';
+import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
+import DrawComponentModule from '../components/draw/drawComponentModule';
+import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
+import GraphComponentModule from '../components/graph/graphComponentModule';
+import Highcharts from '../lib/highcharts@4.2.1';
+import highchartsng from 'highcharts-ng';
+import HTMLComponentModule from '../components/html/htmlComponentModule';
+import HttpInterceptor from '../services/httpInterceptor';
+import LabelComponentModule from '../components/label/labelComponentModule';
+import MatchComponentModule from '../components/match/matchComponentModule';
+import ManageStudentsController from './manageStudents/manageStudentsController';
+import MilestonesController from './milestones/milestonesController';
+import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
+import NodeGradingController from './nodeGrading/nodeGradingController';
+import NodeProgressController from './nodeProgress/nodeProgressController';
+import NodeService from '../services/nodeService';
+import NotebookComponents from '../themes/default/notebook/notebookComponents';
+import NotebookGradingController from './notebook/notebookGradingController';
+import NotebookItemGrading from './notebook/notebookItemGrading/notebookItemGrading';
+import NotebookService from '../services/notebookService';
+import NotificationService from '../services/notificationService';
+import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
+import OutsideURLComponentModule from '../components/outsideURL/outsideURLComponentModule';
+import PlanningService from '../services/planningService';
+import ProjectService from '../services/projectService';
+import SessionService from '../services/sessionService';
+import StudentAssetService from '../services/studentAssetService';
+import StudentDataService from '../services/studentDataService';
+import StudentGradingController from './studentGrading/studentGradingController';
+import StudentProgressController from './studentProgress/studentProgressController';
+import StudentStatusService from '../services/studentStatusService';
+import StudentWebSocketService from '../services/studentWebSocketService';
+import TableComponentModule from '../components/table/tableComponentModule';
+import TeacherDataService from '../services/teacherDataService';
+import TeacherWebSocketService from '../services/teacherWebSocketService';
+import UtilService from '../services/utilService';
+
+import '../lib/angular-summernote/dist/angular-summernote.min';
+import moment from 'moment';
+
+const classroomMonitorModule = angular.module('classroomMonitor', [
+        angularDragula(angular),
+        'angularMoment',
+        'angular-inview',
+        'angular-toArrayFilter',
+        'animationComponentModule',
+        'audioOscillatorComponentModule',
+        'components',
+        'conceptMapComponentModule',
+        'classroomMonitor.components',
+        'discussionComponentModule',
+        'drawComponentModule',
+        'embeddedComponentModule',
+        'graphComponentModule',
+        'highcharts-ng',
+        'htmlComponentModule',
+        'labelComponentModule',
+        'matchComponentModule',
+        'multipleChoiceComponentModule',
+        'ngAnimate',
+        'ngAria',
+        'ngFileSaver',
+        'ngFileUpload',
+        'ngMaterial',
+        'ngSanitize',
+        //'bd.sockjs',
+        'ngStomp',
+        'ngWebSocket',
+        'theme.notebook',
+        'openResponseComponentModule',
+        'outsideURLComponentModule',
+        'pascalprecht.translate',
+        'summernote',
+        'tableComponentModule',
+        'ui.router'
+    ])
+    .service(AchievementService.name, AchievementService)
+    .service(AnnotationService.name, AnnotationService)
+    .service(ComponentService.name, ComponentService)
+    .service(ConfigService.name, ConfigService)
+    .service(CRaterService.name, CRaterService)
+    .service(HttpInterceptor.name, HttpInterceptor)
+    .service(NodeService.name, NodeService)
+    .service(NotebookService.name, NotebookService)
+    .service(NotificationService.name, NotificationService)
+    .service(PlanningService.name, PlanningService)
+    .service(ProjectService.name, ClassroomMonitorProjectService)
+    .service(SessionService.name, SessionService)
+    .service(StudentAssetService.name, StudentAssetService)
+    .service(StudentDataService.name, StudentDataService)
+    .service(StudentStatusService.name, StudentStatusService)
+    .service(StudentWebSocketService.name, StudentWebSocketService)
+    .service(TeacherDataService.name, TeacherDataService)
+    .service(TeacherWebSocketService.name, TeacherWebSocketService)
+    .service(UtilService.name, UtilService)
+    .controller(ClassroomMonitorController.name, ClassroomMonitorController)
+    .controller(DataExportController.name, DataExportController)
+    .controller(ManageStudentsController.name, ManageStudentsController)
+    .controller(MilestonesController.name, MilestonesController)
+    .controller(NodeGradingController.name, NodeGradingController)
+    .controller(NodeProgressController.name, NodeProgressController)
+    .controller(NotebookGradingController.name, NotebookGradingController)
+    .controller(StudentGradingController.name, StudentGradingController)
+    .controller(StudentProgressController.name, StudentProgressController)
+    .component('notebookItemGrading', NotebookItemGrading)
+    .config([
+        '$urlRouterProvider',
+        '$stateProvider',
+        '$translateProvider',
+        '$translatePartialLoaderProvider',
+        '$controllerProvider',
+        '$mdThemingProvider',
+        '$httpProvider',
+        ($urlRouterProvider,
+         $stateProvider,
+         $translateProvider,
+         $translatePartialLoaderProvider,
+         $controllerProvider,
+         $mdThemingProvider,
+         $httpProvider) => {
+
+            $urlRouterProvider.otherwise('/project/');
+
+            $stateProvider
+                .state('root', {
+                    url: '',
+                    abstract: true,
+                    templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
+                    controller: 'ClassroomMonitorController',
+                    controllerAs: 'classroomMonitorController',
+                    resolve: {
+                        config: function(ConfigService) {
+                            var configURL = window.configURL;
+
+                            return ConfigService.retrieveConfig(configURL);
+                        },
+                        project: function(ProjectService, config) {
+                            return ProjectService.retrieveProject();
+                        },
+                        runStatus: function(TeacherDataService, config) {
+                            return TeacherDataService.retrieveRunStatus();
+                        },
+                        studentStatuses: function(StudentStatusService, config) {
+                            return StudentStatusService.retrieveStudentStatuses();
+                        },
+                        achievements: function (AchievementService, studentStatuses, config, project) {
+                            return AchievementService.retrieveStudentAchievements();
+                        },
+                        notifications: function (NotificationService, ConfigService, studentStatuses, config, project) {
+                            return NotificationService.retrieveNotifications();
+                        },
+                        webSocket: function(TeacherWebSocketService, config) {
+                            return TeacherWebSocketService.initialize();
+                        },
+                        language: ($translate, ConfigService, config) => {
+                            let locale = ConfigService.getLocale();  // defaults to "en"
+                            $translate.use(locale);
+                        },
+                        annotations: function(TeacherDataService, config) {
+                            return TeacherDataService.retrieveAnnotations();
+                        },
+                        notebook: function (NotebookService, ConfigService, config, project) {
+                          if (NotebookService.isNotebookEnabled() || NotebookService.isTeacherNotebookEnabled()) {
+                            return NotebookService.retrieveNotebookItems().then((notebook) => {
+                              return notebook;
+                            });
+                          } else {
+                            return NotebookService.notebook;
+                          }
+                        }
+                    }
+                })
+                .state('root.teamLanding', {
+                    url: '/team',
+                    templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
+                    controller: 'StudentProgressController',
+                    controllerAs: 'studentProgressController'
+                })
+                .state('root.team', {
+                    url: '/team/:workgroupId',
+                    templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
+                    controller: 'StudentGradingController',
+                    controllerAs: 'studentGradingController',
+                    resolve: {
+                        studentData: function($stateParams, TeacherDataService, config) {
+                            return TeacherDataService.retrieveStudentDataByWorkgroupId($stateParams.workgroupId);
+                        }
+                    }
+                })
+                .state('root.project', {
+                    url: '/project/:nodeId?periodId&workgroupId',
+                    views: {
+                        'nodeView': {
+                            templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
+                            controller: 'NodeGradingController',
+                            controllerAs: 'nodeGradingController'
+                        }
+                    }
+                })
+                .state('root.manageStudents', {
+                    url: '/manageStudents',
+                    templateUrl: 'wise5/classroomMonitor/manageStudents/manageStudents.html',
+                    controller: 'ManageStudentsController',
+                    controllerAs: 'manageStudentsController'
+                })
+                .state('root.dashboard', {
+                    url: '/dashboard',
+                    templateUrl: 'wise5/classroomMonitor/dashboard/dashboard.html',
+                    controller: 'DashboardController',
+                    controllerAs: 'dashboardController'
+                })
+                .state('root.export', {
+                    url: '/export',
+                    templateUrl: 'wise5/classroomMonitor/dataExport/dataExport.html',
+                    controller: 'DataExportController',
+                    controllerAs: 'dataExportController'
+                })
+                .state('root.milestones', {
+                    url: '/milestones',
+                    templateUrl: 'wise5/classroomMonitor/milestones/milestones.html',
+                    controller: 'MilestonesController',
+                    controllerAs: 'milestonesController'
+                })
+                .state('root.notebooks', {
+                    url: '/notebook',
+                    templateUrl: 'wise5/classroomMonitor/notebook/notebookGrading.html',
+                    controller: 'NotebookGradingController',
+                    controllerAs: 'notebookGradingController'
+                });
+
+            $httpProvider.interceptors.push('HttpInterceptor');
+
+            // Set up Translations
+            $translatePartialLoaderProvider.addPart('i18n');
+            $translatePartialLoaderProvider.addPart('classroomMonitor/i18n');
+            $translateProvider.useLoader('$translatePartialLoader', {
+                    urlTemplate: 'wise5/{part}/i18n_{lang}.json'
+            })
+            .fallbackLanguage(['en'])
+            .registerAvailableLanguageKeys(['ar','el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
+                'en_US': 'en',
+                'en_UK': 'en'
+            })
+            .determinePreferredLanguage()
+            .useSanitizeValueStrategy('sanitizeParameters', 'escape');
+
+            $mdThemingProvider.definePalette('accent', {
+                '50': 'fde9e6',
+                '100': 'fbcbc4',
+                '200': 'f8aca1',
+                '300': 'f4897b',
+                '400': 'f2705f',
+                '500': 'f05843',
+                '600': 'da503c',
+                '700': 'c34736',
+                '800': 'aa3e2f',
+                '900': '7d2e23',
+                'A100': 'ff897d',
+                'A200': 'ff7061',
+                'A400': 'ff3829',
+                'A700': 'cc1705',
+                'contrastDefaultColor': 'light',
+                'contrastDarkColors': ['50', '100',
+                    '200', '300', 'A100'],
+                'contrastLightColors': undefined
+            });
+
+            $mdThemingProvider.theme('default')
+                .primaryPalette('blue', {
+                    'default': '800'
+                })
+                .accentPalette('accent',  {
+                    'default': '500'
+                })
+                .warnPalette('red', {
+                    'default': '800'
+                });
+
+            var lightMap = $mdThemingProvider.extendPalette('grey', {
+                'A100': 'ffffff'
+            });
+            $mdThemingProvider.definePalette('light', lightMap);
+
+            $mdThemingProvider.theme('light')
+                .primaryPalette('light', {
+                    'default': 'A100'
+                })
+                .accentPalette('blue', {
+                    'default': '900'
+                });
+
+            $mdThemingProvider.setDefaultTheme('default');
+            $mdThemingProvider.enableBrowserColor();
+
+            // moment.js default overrides
+            // TODO: add i18n support
+            moment.updateLocale('en', {
+                calendar: {
+                    lastDay : '[Yesterday at] LT',
+                    sameDay : '[Today at] LT',
+                    nextDay : '[Tomorrow at] LT',
+                    lastWeek : '[last] dddd [at] LT',
+                    nextWeek : 'dddd [at] LT',
+                    sameElse : 'll'
                 }
-            }
-        }
-    }).state('root.teamLanding', {
-        url: '/team',
-        templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
-        controller: 'StudentProgressController',
-        controllerAs: 'studentProgressController'
-    }).state('root.team', {
-        url: '/team/:workgroupId',
-        templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
-        controller: 'StudentGradingController',
-        controllerAs: 'studentGradingController',
-        resolve: {
-            studentData: function studentData($stateParams, TeacherDataService, config) {
-                return TeacherDataService.retrieveStudentDataByWorkgroupId($stateParams.workgroupId);
-            }
-        }
-    }).state('root.project', {
-        url: '/project/:nodeId?periodId&workgroupId',
-        views: {
-            'nodeView': {
-                templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
-                controller: 'NodeGradingController',
-                controllerAs: 'nodeGradingController'
-            }
-        }
-    }).state('root.manageStudents', {
-        url: '/manageStudents',
-        templateUrl: 'wise5/classroomMonitor/manageStudents/manageStudents.html',
-        controller: 'ManageStudentsController',
-        controllerAs: 'manageStudentsController'
-    }).state('root.dashboard', {
-        url: '/dashboard',
-        templateUrl: 'wise5/classroomMonitor/dashboard/dashboard.html',
-        controller: 'DashboardController',
-        controllerAs: 'dashboardController'
-    }).state('root.export', {
-        url: '/export',
-        templateUrl: 'wise5/classroomMonitor/dataExport/dataExport.html',
-        controller: 'DataExportController',
-        controllerAs: 'dataExportController'
-    }).state('root.milestones', {
-        url: '/milestones',
-        templateUrl: 'wise5/classroomMonitor/milestones/milestones.html',
-        controller: 'MilestonesController',
-        controllerAs: 'milestonesController'
-    }).state('root.notebooks', {
-        url: '/notebook',
-        templateUrl: 'wise5/classroomMonitor/notebook/notebookGrading.html',
-        controller: 'NotebookGradingController',
-        controllerAs: 'notebookGradingController'
-    });
-
-    $httpProvider.interceptors.push('HttpInterceptor');
-
-    // Set up Translations
-    $translatePartialLoaderProvider.addPart('i18n');
-    $translatePartialLoaderProvider.addPart('classroomMonitor/i18n');
-    $translateProvider.useLoader('$translatePartialLoader', {
-        urlTemplate: 'wise5/{part}/i18n_{lang}.json'
-    }).fallbackLanguage(['en']).registerAvailableLanguageKeys(['ar', 'el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'], {
-        'en_US': 'en',
-        'en_UK': 'en'
-    }).determinePreferredLanguage().useSanitizeValueStrategy('sanitizeParameters', 'escape');
-
-    $mdThemingProvider.definePalette('accent', {
-        '50': 'fde9e6',
-        '100': 'fbcbc4',
-        '200': 'f8aca1',
-        '300': 'f4897b',
-        '400': 'f2705f',
-        '500': 'f05843',
-        '600': 'da503c',
-        '700': 'c34736',
-        '800': 'aa3e2f',
-        '900': '7d2e23',
-        'A100': 'ff897d',
-        'A200': 'ff7061',
-        'A400': 'ff3829',
-        'A700': 'cc1705',
-        'contrastDefaultColor': 'light',
-        'contrastDarkColors': ['50', '100', '200', '300', 'A100'],
-        'contrastLightColors': undefined
-    });
-
-    $mdThemingProvider.theme('default').primaryPalette('blue', {
-        'default': '800'
-    }).accentPalette('accent', {
-        'default': '500'
-    }).warnPalette('red', {
-        'default': '800'
-    });
-
-    var lightMap = $mdThemingProvider.extendPalette('grey', {
-        'A100': 'ffffff'
-    });
-    $mdThemingProvider.definePalette('light', lightMap);
-
-    $mdThemingProvider.theme('light').primaryPalette('light', {
-        'default': 'A100'
-    }).accentPalette('blue', {
-        'default': '900'
-    });
-
-    $mdThemingProvider.setDefaultTheme('default');
-    $mdThemingProvider.enableBrowserColor();
-
-    // moment.js default overrides
-    // TODO: add i18n support
-    _moment2.default.updateLocale('en', {
-        calendar: {
-            lastDay: '[Yesterday at] LT',
-            sameDay: '[Today at] LT',
-            nextDay: '[Tomorrow at] LT',
-            lastWeek: '[last] dddd [at] LT',
-            nextWeek: 'dddd [at] LT',
-            sameElse: 'll'
-        }
-    });
-}]);
-
-exports.default = classroomMonitorModule;
-//# sourceMappingURL=main.js.map
+            });
+        }]);
+        angular.element(document).ready(() => {
+          angular.bootstrap(document, [classroomMonitorModule.name], { strictDi: true});
+      });
+export default classroomMonitorModule;

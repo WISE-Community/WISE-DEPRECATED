@@ -1,4 +1,3 @@
-<%@ include file="include.jsp"%>
 <!--[if lt IE 7]>      <html lang="en" dir="${textDirection}" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" dir="${textDirection}" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" dir="${textDirection}" class="no-js lt-ie9"> <![endif]-->
@@ -10,22 +9,21 @@
         <base href="${contextPath}/" target="_blank">
         <meta name="description" content="WISE Student Virtual Learning Environment (VLE)">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <%@ include file="favicon.jsp"%>
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <script src="${contextPath}/wise5/lib/sockjs/sockjs.min.js"></script>
-        <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
-        <script src="${contextPath}/wise5/config.js?v=5.7.8"></script>
-        <script src="${contextPath}/wise5/cacheBuster.js?v=5.7.8"></script>
-        <script>
-            System.import('${contextPath}/wise5/vle/bootstrap');
-        </script>
     </head>
     <body class="vle">
+            <script>
+                    if (global === undefined) {
+                      var global = window;
+                    }
+                  </script>
+                <app></app>
         <div ng-view>
             <div ui-view></div>
         </div>
         <script>
             var configURL = '${configURL}';
         </script>
+        <script src="${contextPath}/wise5/vle/dist/app.bundle.js"></script>
     </body>
 </html>

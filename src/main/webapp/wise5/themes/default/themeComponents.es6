@@ -35,9 +35,9 @@ const StepTools = {
 
 let ThemeComponents = angular.module('theme.components', []);
 
-ThemeComponents.controller(NavItemController.name, NavItemController)
-    .controller(StepToolsCtrl.name, StepToolsCtrl)
-    .controller(NodeStatusIconCtrl.name, NodeStatusIconCtrl)
+ThemeComponents.controller('NavItemController', NavItemController)
+    .controller('StepToolsCtrl', StepToolsCtrl)
+    .controller('NodeStatusIconCtrl', NodeStatusIconCtrl)
     .component('helpIcon', HelpIcon)
     .component('navItem', NavItem)
     .component('nodeIcon', NodeIcon)

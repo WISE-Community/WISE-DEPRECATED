@@ -7,6 +7,6 @@ import NotebookComponents from './notebook/notebookComponents';
 import './js/webfonts';
 
 const themeModule = angular.module('theme', ['theme.components', 'theme.notebook'])
-    .controller(ThemeController.name, ThemeController);
+    .controller('ThemeController', ThemeController);
 
 export default themeModule;

@@ -1,11 +1,11 @@
 class TeacherWebSocketService {
   constructor(
       $rootScope,
-      $stomp,
+      //$stomp,
       ConfigService,
       StudentStatusService) {
     this.$rootScope = $rootScope;
-    this.$stomp = $stomp;
+    //this.$stomp = $stomp;
     this.ConfigService = ConfigService;
     this.StudentStatusService = StudentStatusService;
     this.studentsOnlineArray = [];
@@ -13,6 +13,7 @@ class TeacherWebSocketService {
 
   initialize() {
     this.runId = this.ConfigService.getRunId();
+    /*
     try {
       this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
         this.subscribeToTeacherTopic();
@@ -21,6 +22,7 @@ class TeacherWebSocketService {
     } catch(e) {
       console.log(e);
     }
+    */
   }
 
   subscribeToTeacherTopic() {
@@ -79,7 +81,7 @@ class TeacherWebSocketService {
 
 TeacherWebSocketService.$inject = [
   '$rootScope',
-  '$stomp',
+  //'$stomp',
   'ConfigService',
   'StudentStatusService'
 ];

@@ -1,19 +1,14 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var StudentAssetController = function () {
-  function StudentAssetController($filter, $injector, $rootScope, $scope, ConfigService, ProjectService, StudentAssetService) {
-    var _this = this;
-
-    _classCallCheck(this, StudentAssetController);
-
+class StudentAssetController {
+  constructor(
+      $filter,
+      $injector,
+      $rootScope,
+      $scope,
+      ConfigService,
+      ProjectService,
+      StudentAssetService) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$rootScope = $rootScope;
@@ -27,9 +22,9 @@ var StudentAssetController = function () {
     this.itemId = null;
     this.item = null;
 
-    this.logOutListener = $scope.$on('logOut', function (event, args) {
-      _this.logOutListener();
-      _this.$rootScope.$broadcast('componentDoneUnloading');
+    this.logOutListener = $scope.$on('logOut', (event, args) => {
+      this.logOutListener();
+      this.$rootScope.$broadcast('componentDoneUnloading');
     });
 
     if (!this.ConfigService.isPreview()) {
@@ -37,84 +32,55 @@ var StudentAssetController = function () {
     }
   }
 
-  _createClass(StudentAssetController, [{
-    key: 'getTemplateUrl',
-    value: function getTemplateUrl() {
-      return this.templateUrl;
-    }
-  }, {
-    key: 'retrieveStudentAssets',
-    value: function retrieveStudentAssets() {
-      var _this2 = this;
+  getTemplateUrl() {
+    return this.templateUrl;
+  }
 
-      this.StudentAssetService.retrieveAssets().then(function (studentAssets) {
-        _this2.studentAssets = studentAssets;
-      });
-    }
+  retrieveStudentAssets() {
+    this.StudentAssetService.retrieveAssets().then((studentAssets) => {
+      this.studentAssets = studentAssets;
+    });
+  }
 
-    // TODO can we ensure files is not null?
-
-  }, {
-    key: 'uploadStudentAssets',
-    value: function uploadStudentAssets(files) {
-      var _this3 = this;
-
-      if (files != null) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var file = _step.value;
-
-            this.StudentAssetService.uploadAsset(file).then(function (studentAsset) {
-              if (_this3.componentController != null) {
-                // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
-                // Also attach the file(s) to the componentstate's attachments
-                _this3.componentController.attachStudentAsset(studentAsset);
-              }
-              _this3.studentAssets = _this3.StudentAssetService.allAssets;
-            });
+  // TODO can we ensure files is not null?
+  uploadStudentAssets(files) {
+    if (files != null) {
+      for (const file of files) {
+        this.StudentAssetService.uploadAsset(file).then((studentAsset) => {
+          if (this.componentController != null) {
+            // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
+            // Also attach the file(s) to the componentstate's attachments
+            this.componentController.attachStudentAsset(studentAsset);
           }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
+          this.studentAssets = this.StudentAssetService.allAssets;
+        });
       }
     }
-  }, {
-    key: 'deleteStudentAsset',
-    value: function deleteStudentAsset(studentAsset) {
-      alert(this.$translate('deleteStudentAssetNotImplementedYet'));
+  }
+
+  deleteStudentAsset(studentAsset) {
+    alert(this.$translate('deleteStudentAssetNotImplementedYet'));
+  }
+
+  attachStudentAssetToComponent($event, studentAsset) {
+    if (this.componentController != null) {
+      // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
+      // Also attach the file(s) to the componentstate's attachments
+      this.componentController.attachStudentAsset(studentAsset);
+      // TODO: add some kind of unobtrusive confirmation to let student know that the student asset has been added to current component
+      $event.stopPropagation();  // prevents parent student asset list item from getting the onclick event so this item won't be re-selected.
     }
-  }, {
-    key: 'attachStudentAssetToComponent',
-    value: function attachStudentAssetToComponent($event, studentAsset) {
-      if (this.componentController != null) {
-        // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
-        // Also attach the file(s) to the componentstate's attachments
-        this.componentController.attachStudentAsset(studentAsset);
-        // TODO: add some kind of unobtrusive confirmation to let student know that the student asset has been added to current component
-        $event.stopPropagation(); // prevents parent student asset list item from getting the onclick event so this item won't be re-selected.
-      }
-    }
-  }]);
+  }
+}
 
-  return StudentAssetController;
-}();
+StudentAssetController.$inject = [
+  '$filter',
+  '$injector',
+  '$rootScope',
+  '$scope',
+  'ConfigService',
+  'ProjectService',
+  'StudentAssetService'
+];
 
-StudentAssetController.$inject = ['$filter', '$injector', '$rootScope', '$scope', 'ConfigService', 'ProjectService', 'StudentAssetService'];
-
-exports.default = StudentAssetController;
-//# sourceMappingURL=studentAssetController.js.map
+export default StudentAssetController;
