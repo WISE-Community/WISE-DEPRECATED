@@ -1,13 +1,15 @@
 'use strict';
 
 class SummaryDisplayController {
-  constructor($filter, $injector, $q, AnnotationService, ConfigService, ProjectService) {
+  constructor($filter, $injector, $q, AnnotationService, ConfigService, ProjectService, 
+        UtilService) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$q = $q;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
     this.numDummySamples = 20;
     this.defaultMaxScore = 5;
@@ -26,6 +28,11 @@ class SummaryDisplayController {
       this.$onChanges = (changes) => {
         this.renderDisplay();
       }
+    }
+    this.colors = {
+      palette: ['#1a237e','#701e82','#aa187b','#d72c6c','#f65158','#ff7d43','#ffab32','#fdd835',
+          '#ffee58','#ade563','#50d67f','#00c29d','#00aab3','#0090bc','#0074b4','#01579b'],
+      singleHue: 'rgb(170, 24, 123)'
     }
   }
 
@@ -380,7 +387,8 @@ class SummaryDisplayController {
     const title = this.getGraphTitle();
     const xAxisType = 'category';
     const series = this.createSeries(data);
-    this.chartConfig =  this.createChartConfig(chartType, title, xAxisType, total, series);
+    const colors = this.getChartColors();
+    this.chartConfig =  this.createChartConfig(chartType, title, xAxisType, total, series, colors);
   }
 
   createSeries(data) {
@@ -410,6 +418,22 @@ class SummaryDisplayController {
     }
   }
 
+  getChartColors() {
+    if (this.studentDataType === 'responses') {
+      return this.colors.palette;
+    } else {
+      let colors = [];
+      const step = 100/this.maxScore/100*.9;
+      let opacity = .1;
+      for (let i = 0; i < this.maxScore; i++) {
+        opacity = opacity + step;
+        const color = this.UtilService.rgbToHex(this.colors.singleHue, opacity);
+        colors.push(color);
+      }
+      return colors;
+    }
+  }
+
   isStudentDataTypeResponses() {
     return this.isStudentDataType('responses');
   }
@@ -422,9 +446,10 @@ class SummaryDisplayController {
     return this.studentDataType === studentDataType;
   }
 
-  createChartConfig(chartType, title, xAxisType, total, series) {
+  createChartConfig(chartType, title, xAxisType, total, series, colors) {
     const chartConfig = {
       options: {
+        colors: colors,
         chart: {
           type: chartType,
           style: {
@@ -439,8 +464,8 @@ class SummaryDisplayController {
             if (chartType === 'pie') {
               return '<b>' + this.key + '</b>: ' + this.y;
             } else {
-              const pct = this.y / total * 100;
-              return '<b>' + this.key + '</b>: ' + Highcharts.numberFormat(pct, 0) + '%';
+              const pct = Math.round(this.y / total * 100);
+              return '<b>' + this.key + '</b>: ' + pct + '%';
             }
           }
         },
@@ -456,14 +481,17 @@ class SummaryDisplayController {
             dataLabels: {
               formatter: function() {
                 if (chartType === 'pie') {
-                  const pct = this.y / total * 100;
-                  return this.key + ': ' + Highcharts.numberFormat(pct, 0) + '%';
+                  const pct = Math.round(this.y / total * 100);
+                  return this.key + ': ' + pct + '%';
                 } else {
                   return this.y;
                 }
               },
               style: {'fontSize': '12px'}
             }
+          },
+          column: {
+            maxPointWidth: 80
           }
         }
       },
@@ -519,7 +547,7 @@ SummaryDisplayController.$inject = [
   'AnnotationService',
   'ConfigService',
   'ProjectService',
-  'StudentDataService'
+  'UtilService'
 ];
 
 const SummaryDisplay = {

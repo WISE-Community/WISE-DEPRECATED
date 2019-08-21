@@ -14,7 +14,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var SummaryDisplayController =
 /*#__PURE__*/
 function () {
-  function SummaryDisplayController($filter, $injector, $q, AnnotationService, ConfigService, ProjectService) {
+  function SummaryDisplayController($filter, $injector, $q, AnnotationService, ConfigService, ProjectService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, SummaryDisplayController);
@@ -25,6 +25,7 @@ function () {
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
     this.numDummySamples = 20;
     this.defaultMaxScore = 5;
@@ -48,6 +49,11 @@ function () {
         _this.renderDisplay();
       };
     }
+
+    this.colors = {
+      palette: ['#1a237e', '#701e82', '#aa187b', '#d72c6c', '#f65158', '#ff7d43', '#ffab32', '#fdd835', '#ffee58', '#ade563', '#50d67f', '#00c29d', '#00aab3', '#0090bc', '#0074b4', '#01579b'],
+      singleHue: 'rgb(170, 24, 123)'
+    };
   }
 
   _createClass(SummaryDisplayController, [{
@@ -639,7 +645,8 @@ function () {
       var title = this.getGraphTitle();
       var xAxisType = 'category';
       var series = this.createSeries(data);
-      this.chartConfig = this.createChartConfig(chartType, title, xAxisType, total, series);
+      var colors = this.getChartColors();
+      this.chartConfig = this.createChartConfig(chartType, title, xAxisType, total, series, colors);
     }
   }, {
     key: "createSeries",
@@ -669,6 +676,25 @@ function () {
       }
     }
   }, {
+    key: "getChartColors",
+    value: function getChartColors() {
+      if (this.studentDataType === 'responses') {
+        return this.colors.palette;
+      } else {
+        var colors = [];
+        var step = 100 / this.maxScore / 100 * .9;
+        var opacity = .1;
+
+        for (var i = 0; i < this.maxScore; i++) {
+          opacity = opacity + step;
+          var color = this.UtilService.rgbToHex(this.colors.singleHue, opacity);
+          colors.push(color);
+        }
+
+        return colors;
+      }
+    }
+  }, {
     key: "isStudentDataTypeResponses",
     value: function isStudentDataTypeResponses() {
       return this.isStudentDataType('responses');
@@ -685,9 +711,10 @@ function () {
     }
   }, {
     key: "createChartConfig",
-    value: function createChartConfig(chartType, title, xAxisType, total, series) {
+    value: function createChartConfig(chartType, title, xAxisType, total, series, colors) {
       var chartConfig = {
         options: {
+          colors: colors,
           chart: {
             type: chartType,
             style: {
@@ -702,8 +729,8 @@ function () {
               if (chartType === 'pie') {
                 return '<b>' + this.key + '</b>: ' + this.y;
               } else {
-                var pct = this.y / total * 100;
-                return '<b>' + this.key + '</b>: ' + Highcharts.numberFormat(pct, 0) + '%';
+                var pct = Math.round(this.y / total * 100);
+                return '<b>' + this.key + '</b>: ' + pct + '%';
               }
             }
           },
@@ -719,8 +746,8 @@ function () {
               dataLabels: {
                 formatter: function formatter() {
                   if (chartType === 'pie') {
-                    var pct = this.y / total * 100;
-                    return this.key + ': ' + Highcharts.numberFormat(pct, 0) + '%';
+                    var pct = Math.round(this.y / total * 100);
+                    return this.key + ': ' + pct + '%';
                   } else {
                     return this.y;
                   }
@@ -729,6 +756,9 @@ function () {
                   'fontSize': '12px'
                 }
               }
+            },
+            column: {
+              maxPointWidth: 80
             }
           }
         },
@@ -791,7 +821,7 @@ function () {
   return SummaryDisplayController;
 }();
 
-SummaryDisplayController.$inject = ['$filter', '$injector', '$q', 'AnnotationService', 'ConfigService', 'ProjectService', 'StudentDataService'];
+SummaryDisplayController.$inject = ['$filter', '$injector', '$q', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];
 var SummaryDisplay = {
   bindings: {
     nodeId: '<',
