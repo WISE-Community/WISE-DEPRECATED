@@ -1,0 +1,8 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/build/WISE
+hooks:
+  BeforeInstall:
+    - location: /home/ubuntu/scripts/updateWISE.sh
