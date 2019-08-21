@@ -1,5 +1,6 @@
 package org.wise.portal.presentation.web.controllers.teacher;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -34,10 +35,10 @@ public class TeacherRunPermissionsAPIController {
   }
 
   @RequestMapping(value = "/transfer/{runId}/{teacherUsername}", method = RequestMethod.PUT)
-  protected SharedOwner transferUnitOwnership(@PathVariable Long runId,
-                                              @PathVariable String teacherUsername) {
+  protected String transferUnitOwnership(@PathVariable Long runId,
+                                             @PathVariable String teacherUsername) {
     try {
-      return runService.transferRunOwnership(runId, teacherUsername);
+      return runService.transferRunOwnership(runId, teacherUsername).toString();
     } catch (ObjectNotFoundException nfe) {
       return null;
     }

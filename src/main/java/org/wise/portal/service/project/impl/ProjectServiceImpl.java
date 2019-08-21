@@ -617,10 +617,10 @@ public class ProjectServiceImpl implements ProjectService {
       User newOwner = userService.retrieveUserByUsername(teacherUsername);
       removeSharedTeacherFromProject(newOwner.getUserDetails().getUsername(), project);
       project.setOwner(newOwner);
-      aclService.removePermission(project, BasePermission.ADMINISTRATION, oldOwner);
       aclService.addPermission(project, BasePermission.ADMINISTRATION, newOwner);
       addSharedTeacher(projectId, oldOwner.getUserDetails().getUsername());
       aclService.addPermission(project, ProjectPermission.EDIT_PROJECT, oldOwner);
+      aclService.removePermission(project, BasePermission.ADMINISTRATION, oldOwner);
       projectDao.save(project);
     } catch (TeacherAlreadySharedWithProjectException e) {
       // ignore

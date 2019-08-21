@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.json.JSONObject;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
@@ -439,5 +440,5 @@ public interface RunService {
 
   boolean isAllowedToViewStudentNames(Run run, User user);
 
-  SharedOwner transferRunOwnership(Long runId, String teacherUsername) throws ObjectNotFoundException;
+  JSONObject transferRunOwnership(Long runId, String teacherUsername) throws ObjectNotFoundException;
 }

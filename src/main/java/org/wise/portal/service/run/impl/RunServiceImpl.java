@@ -23,6 +23,8 @@
  */
 package org.wise.portal.service.run.impl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.security.acls.domain.BasePermission;
@@ -48,6 +50,7 @@ import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.run.impl.RunPermission;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
 import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.service.acl.AclService;
@@ -330,7 +333,7 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public SharedOwner transferRunOwnership(Long runId, String teacherUsername) throws ObjectNotFoundException {
+  public JSONObject transferRunOwnership(Long runId, String teacherUsername) throws ObjectNotFoundException {
     try {
       Run run = retrieveById(runId);
       Long projectId = (Long) run.getProject().getId();
@@ -339,17 +342,18 @@ public class RunServiceImpl implements RunService {
       User newOwner = userDao.retrieveByUsername(teacherUsername);
       removeSharedTeacher(newOwner.getUserDetails().getUsername(), runId);
       run.setOwner(newOwner);
-      aclService.removePermission(run, BasePermission.ADMINISTRATION, oldOwner);
       aclService.addPermission(run, BasePermission.ADMINISTRATION, newOwner);
       addSharedTeacher(runId, oldOwner.getUserDetails().getUsername());
       aclService.addPermission(run, RunPermission.VIEW_STUDENT_NAMES, oldOwner);
       aclService.addPermission(run, RunPermission.GRADE_AND_MANAGE, oldOwner);
+      aclService.removePermission(run, BasePermission.ADMINISTRATION, oldOwner);
       runDao.save(run);
       List<Integer> newProjectOwnerPermissions = new ArrayList<>();
       newProjectOwnerPermissions.add(BasePermission.ADMINISTRATION.getMask());
-      return new SharedOwner(newOwner.getId(), newOwner.getUserDetails().getUsername(),
-        newOwner.getUserDetails().getFirstname(), newOwner.getUserDetails().getLastname(), newProjectOwnerPermissions);
+      return ControllerUtil.getRunJSON(run);
     } catch (TeacherAlreadySharedWithRunException e) {
+      return null;
+    } catch (JSONException e) {
       return null;
     }
   }

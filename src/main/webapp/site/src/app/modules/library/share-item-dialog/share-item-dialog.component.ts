@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
 import { map, debounceTime } from 'rxjs/operators';
 import { Project } from "../../../domain/project";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import {TeacherRun} from '../../../teacher/teacher-run';
 
 export abstract class ShareItemDialogComponent implements OnInit {
 
@@ -143,10 +144,14 @@ export abstract class ShareItemDialogComponent implements OnInit {
     }
   }
 
-  transferUnitOwnership(newOwner, sharedOwner) {
-    this.removeSharedOwner(newOwner);
-    this.sharedOwners.push(sharedOwner);
-    this.sharedOwners$.next(this.sharedOwners);
-    this.snackBar.open(this.i18n(`Transferred classroom unit ownership to: ${newOwner.username}`));
+  transferUnitOwnership(run: TeacherRun) {
+    this.removeSharedOwner(run.owner);
+    // this.sharedOwners = run.sharedOwners;
+    this.project = run.project;
+    this.populateSharedOwners(run.sharedOwners);
+    // this.sharedOwners.push(sharedOwner);
+    this.sharedOwners$.next(run.sharedOwners);
+    this.snackBar.open(this.i18n(`Transferred classroom unit ownership to: ${run.owner.username}`));
+    return this.sharedOwners;
   }
 }
