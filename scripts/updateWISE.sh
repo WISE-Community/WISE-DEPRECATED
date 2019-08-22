@@ -1,4 +1,4 @@
-source /home/ubuntu/.bashrc
+source /home/ubuntu/.profile
 
 export HOME=/home/ubuntu
 export CATALINA_HOME=/opt/tomcat
