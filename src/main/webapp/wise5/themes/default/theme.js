@@ -1,21 +1,12 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
+import ThemeController from './themeController';
+import ThemeComponents from './themeComponents';
+import NotebookComponents from './notebook/notebookComponents';
 
-var _themeController = _interopRequireDefault(require("./themeController"));
+import './js/webfonts';
 
-var _themeComponents = _interopRequireDefault(require("./themeComponents"));
+const themeModule = angular.module('theme', ['theme.components', 'theme.notebook'])
+    .controller('ThemeController', ThemeController);
 
-var _notebookComponents = _interopRequireDefault(require("./notebook/notebookComponents"));
-
-require("./js/webfonts");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var themeModule = angular.module('theme', ['theme.components', 'theme.notebook']).controller('ThemeController', _themeController["default"]);
-var _default = themeModule;
-exports["default"] = _default;
-//# sourceMappingURL=theme.js.map
+export default themeModule;

@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
     </head>
-    <body class="vle">
+    <body>
         <script>
             if (global === undefined) {
               var global = window;
@@ -18,9 +18,6 @@
         <div ng-view>
             <div ui-view></div>
         </div>
-        <script>
-            var configURL = '/authorConfig';
-        </script>
-        <script src="bundle.js"></script>
+        <script src="app.bundle.js"></script>
     </body>
 </html>

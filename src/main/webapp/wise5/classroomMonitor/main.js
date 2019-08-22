@@ -21,6 +21,7 @@ import ngWebSocket from 'angular-websocket';
 import AnimationComponentModule from '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
+import bootstrap from 'bootstrap';
 import ClassroomMonitorComponents from './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
 import ClassroomMonitorProjectService from './classroomMonitorProjectService';
@@ -67,8 +68,8 @@ import TableComponentModule from '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
-
-import '../lib/angular-summernote/dist/angular-summernote.min';
+import summernote from 'summernote';
+import angularSummernote from '../lib/angular-summernote/dist/angular-summernote';
 import moment from 'moment';
 
 const classroomMonitorModule = angular.module('classroomMonitor', [
@@ -107,34 +108,34 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
         'tableComponentModule',
         'ui.router'
     ])
-    .service(AchievementService.name, AchievementService)
-    .service(AnnotationService.name, AnnotationService)
-    .service(ComponentService.name, ComponentService)
-    .service(ConfigService.name, ConfigService)
-    .service(CRaterService.name, CRaterService)
-    .service(HttpInterceptor.name, HttpInterceptor)
-    .service(NodeService.name, NodeService)
-    .service(NotebookService.name, NotebookService)
-    .service(NotificationService.name, NotificationService)
-    .service(PlanningService.name, PlanningService)
-    .service(ProjectService.name, ClassroomMonitorProjectService)
-    .service(SessionService.name, SessionService)
-    .service(StudentAssetService.name, StudentAssetService)
-    .service(StudentDataService.name, StudentDataService)
-    .service(StudentStatusService.name, StudentStatusService)
-    .service(StudentWebSocketService.name, StudentWebSocketService)
-    .service(TeacherDataService.name, TeacherDataService)
-    .service(TeacherWebSocketService.name, TeacherWebSocketService)
-    .service(UtilService.name, UtilService)
-    .controller(ClassroomMonitorController.name, ClassroomMonitorController)
-    .controller(DataExportController.name, DataExportController)
-    .controller(ManageStudentsController.name, ManageStudentsController)
-    .controller(MilestonesController.name, MilestonesController)
-    .controller(NodeGradingController.name, NodeGradingController)
-    .controller(NodeProgressController.name, NodeProgressController)
-    .controller(NotebookGradingController.name, NotebookGradingController)
-    .controller(StudentGradingController.name, StudentGradingController)
-    .controller(StudentProgressController.name, StudentProgressController)
+    .service('AchievementService', AchievementService)
+    .service('AnnotationService', AnnotationService)
+    .service('ComponentService', ComponentService)
+    .service('ConfigService', ConfigService)
+    .service('CRaterService', CRaterService)
+    .service('HttpInterceptor', HttpInterceptor)
+    .service('NodeService', NodeService)
+    .service('NotebookService', NotebookService)
+    .service('NotificationService', NotificationService)
+    .service('PlanningService', PlanningService)
+    .service('ProjectService', ClassroomMonitorProjectService)
+    .service('SessionService', SessionService)
+    .service('StudentAssetService', StudentAssetService)
+    .service('StudentDataService', StudentDataService)
+    .service('StudentStatusService', StudentStatusService)
+    .service('StudentWebSocketService', StudentWebSocketService)
+    .service('TeacherDataService', TeacherDataService)
+    .service('TeacherWebSocketService', TeacherWebSocketService)
+    .service('UtilService', UtilService)
+    .controller('ClassroomMonitorController', ClassroomMonitorController)
+    .controller('DataExportController', DataExportController)
+    .controller('ManageStudentsController', ManageStudentsController)
+    .controller('MilestonesController', MilestonesController)
+    .controller('NodeGradingController', NodeGradingController)
+    .controller('NodeProgressController', NodeProgressController)
+    .controller('NotebookGradingController', NotebookGradingController)
+    .controller('StudentGradingController', StudentGradingController)
+    .controller('StudentProgressController', StudentProgressController)
     .component('notebookItemGrading', NotebookItemGrading)
     .config([
         '$urlRouterProvider',
@@ -162,37 +163,45 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                     controller: 'ClassroomMonitorController',
                     controllerAs: 'classroomMonitorController',
                     resolve: {
-                        config: function(ConfigService) {
-                            var configURL = window.configURL;
-
-                            return ConfigService.retrieveConfig(configURL);
-                        },
-                        project: function(ProjectService, config) {
-                            return ProjectService.retrieveProject();
-                        },
-                        runStatus: function(TeacherDataService, config) {
-                            return TeacherDataService.retrieveRunStatus();
-                        },
-                        studentStatuses: function(StudentStatusService, config) {
-                            return StudentStatusService.retrieveStudentStatuses();
-                        },
-                        achievements: function (AchievementService, studentStatuses, config, project) {
-                            return AchievementService.retrieveStudentAchievements();
-                        },
-                        notifications: function (NotificationService, ConfigService, studentStatuses, config, project) {
-                            return NotificationService.retrieveNotifications();
-                        },
-                        webSocket: function(TeacherWebSocketService, config) {
-                            return TeacherWebSocketService.initialize();
-                        },
-                        language: ($translate, ConfigService, config) => {
-                            let locale = ConfigService.getLocale();  // defaults to "en"
-                            $translate.use(locale);
-                        },
-                        annotations: function(TeacherDataService, config) {
-                            return TeacherDataService.retrieveAnnotations();
-                        },
-                        notebook: function (NotebookService, ConfigService, config, project) {
+                        config: ['ConfigService', (ConfigService) => {
+                          let configURL = window.configURL;
+                          if (configURL == null) {
+                            configURL = prompt('Please enter configURL', '/config/classroomMonitor/24673');
+                          }
+                          return ConfigService.retrieveConfig(configURL);
+                        }],
+                        project: ['ProjectService', 'config', (ProjectService, config) => {
+                          return ProjectService.retrieveProject();
+                        }],
+                        runStatus: ['TeacherDataService', 'config', (TeacherDataService, config) => {
+                          return TeacherDataService.retrieveRunStatus();
+                        }],
+                        studentStatuses: ['StudentStatusService', 'config', (StudentStatusService, config) => {
+                          return StudentStatusService.retrieveStudentStatuses();
+                        }],
+                        achievements: ['AchievementService', 'studentStatuses', 'config', 'project',
+                            (AchievementService, studentStatuses, config, project) => {
+                          return AchievementService.retrieveStudentAchievements();
+                        }],
+                        notifications: ['NotificationService', 'ConfigService', 'studentStatuses', 'config', 'project',
+                            (NotificationService, ConfigService, studentStatuses, config, project) => {
+                          return NotificationService.retrieveNotifications();
+                        }],
+                        webSocket: ['TeacherWebSocketService', 'config',
+                            (TeacherWebSocketService, config) => {
+                          return TeacherWebSocketService.initialize();
+                        }],
+                        language: ['$translate', 'ConfigService', 'config',
+                            ($translate, ConfigService, config) => {
+                          let locale = ConfigService.getLocale();  // defaults to "en"
+                          $translate.use(locale);
+                        }],
+                        annotations: ['TeacherDataService', 'config',
+                            (TeacherDataService, config) => {
+                          return TeacherDataService.retrieveAnnotations();
+                        }],
+                        notebook: ['NotebookService', 'ConfigService', 'config', 'project',
+                            (NotebookService, ConfigService, config, project) => {
                           if (NotebookService.isNotebookEnabled() || NotebookService.isTeacherNotebookEnabled()) {
                             return NotebookService.retrieveNotebookItems().then((notebook) => {
                               return notebook;
@@ -200,7 +209,7 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                           } else {
                             return NotebookService.notebook;
                           }
-                        }
+                        }]
                     }
                 })
                 .state('root.teamLanding', {
@@ -215,9 +224,9 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                     controller: 'StudentGradingController',
                     controllerAs: 'studentGradingController',
                     resolve: {
-                        studentData: function($stateParams, TeacherDataService, config) {
+                        studentData: ['$stateParams', 'TeacherDataService', 'config', ($stateParams, TeacherDataService, config) => {
                             return TeacherDataService.retrieveStudentDataByWorkgroupId($stateParams.workgroupId);
-                        }
+                        }]
                     }
                 })
                 .state('root.project', {

@@ -44,7 +44,7 @@
     style="color:red">({{ 'unusedFiles' | translate }} {{projectAssetController.totalUnusedFilesSize | appropriateSizeText}} ({{projectAssetController.unusedFilesPercentage | roundToDecimal:0}}%))
   </span>
 <span id="assetMessage">{{projectAssetController.assetMessage}}</span><br/>
-<span translate="sortAssets" />: <select ng-model="projectAssetController.assetSortBy">
+<span translate="sortAssets"></span>: <select ng-model="projectAssetController.assetSortBy">
   <option value="aToZ" translate="fileNameAToZ"></option>
   <option value="zToA" translate="fileNameZToA"></option>
   <option value="smallToLarge" translate="fileSizeSmallToLarge"></option>

@@ -1,12 +1,5 @@
-'use strict';
+import authoringModule from './main';
 
-var _main = require('./main');
-
-var _main2 = _interopRequireDefault(_main);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-angular.element(document).ready(function () {
-  angular.bootstrap(document, [_main2.default.name], { strictDi: true });
+angular.element(document).ready(() => {
+  angular.bootstrap(document, [authoringModule.name], { strictDi: true});
 });
-//# sourceMappingURL=bootstrap.js.map

@@ -1,33 +1,19 @@
-'use strict';
+import {browser, element} from 'protractor';
+import * as common from '../../common.js';
+import VLEPage from '../../vlePage.js';
+import OpenResponsePage from './openResponsePage.js'
 
-var _protractor = require('protractor');
-
-var _common = require('../../common.js');
-
-var common = _interopRequireWildcard(_common);
-
-var _vlePage = require('../../vlePage.js');
-
-var _vlePage2 = _interopRequireDefault(_vlePage);
-
-var _openResponsePage = require('./openResponsePage.js');
-
-var _openResponsePage2 = _interopRequireDefault(_openResponsePage);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-describe('WISE5 Open Response Component', function () {
+describe('WISE5 Open Response Component', () => {
   function shouldDisplayDefaultElements(vle, or) {
     vle.nodeSelectMenuShouldSay('1.2: Open Response Step');
     common.shouldBePresent(or.textarea, or.saveButton, or.submitButton);
     common.shouldBeAbsent(or.saveMessage);
     common.shouldBeDisabled(or.saveButton, or.submitButton);
 
-    var prompt = or.getPrompt();
+    const prompt = or.getPrompt();
     common.shouldBePresent(prompt);
-    expect(prompt.getText()).toEqual('This is a step where students enter text.');
+    expect(prompt.getText())
+        .toEqual('This is a step where students enter text.');
   }
 
   function save(or) {
@@ -47,20 +33,20 @@ describe('WISE5 Open Response Component', function () {
     expect(or.textarea.getAttribute('value')).toEqual(expectedTextareaText);
   }
 
-  beforeEach(function () {
-    var vle = new _vlePage2.default();
-    _protractor.browser.get('http://localhost:8080/wise/project/demo#/vle/node2');
-    _protractor.browser.wait(function () {
-      return vle.nodeDropDownMenu.isPresent();
-    }, 5000, 'VLE didn\'t load properly').then(function () {
-      var or = new _openResponsePage2.default();
+  beforeEach(() => {
+    const vle = new VLEPage();
+    browser.get('http://localhost:8080/wise/project/demo#/vle/node2');
+    browser.wait(function() {
+      return vle.nodeDropDownMenu.isPresent()
+    }, 5000, 'VLE didn\'t load properly').then(() => {
+      const or = new OpenResponsePage();
       shouldDisplayDefaultElements(vle, or);
     });
   });
 
-  it('should allow students to type text and edit', function () {
-    var or = new _openResponsePage2.default();
-    var firstSentence = 'Here is my first sentence. ';
+  it('should allow students to type text and edit', () => {
+    const or = new OpenResponsePage();
+    const firstSentence = 'Here is my first sentence. ';
     or.typeResponse(firstSentence);
     textareaShouldSay(or, firstSentence);
     common.shouldBeEnabled(or.saveButton, or.submitButton);
@@ -70,7 +56,7 @@ describe('WISE5 Open Response Component', function () {
     common.shouldBeEnabled(or.submitButton);
 
     // should be able to continue editing response text even after saving
-    var secondSentence = 'Here is my second sentence. ';
+    const secondSentence = 'Here is my second sentence. ';
     or.typeResponse(secondSentence);
     textareaShouldSay(or, firstSentence + secondSentence);
 
@@ -78,19 +64,20 @@ describe('WISE5 Open Response Component', function () {
     common.shouldBeDisabled(or.saveButton, or.submitButton);
 
     // should be able to continue editing response text even after submitting
-    var thirdSentence = 'Here is my third sentence.';
+    const thirdSentence = 'Here is my third sentence.';
     or.typeResponse(thirdSentence);
     textareaShouldSay(or, firstSentence + secondSentence + thirdSentence);
   });
 
-  it('should auto-save on exit and show previously-entered response on revisit', function () {
-    var or = new _openResponsePage2.default();
-    var seaShellsSentence = 'She sells seashells by the seashore.';
+  it('should auto-save on exit and show previously-entered response on revisit',
+      () => {
+    const or = new OpenResponsePage();
+    const seaShellsSentence = 'She sells seashells by the seashore.';
     or.typeResponse(seaShellsSentence);
     textareaShouldSay(or, seaShellsSentence);
     common.shouldBeEnabled(or.saveButton, or.submitButton);
 
-    var vle = new _vlePage2.default();
+    const vle = new VLEPage();
     vle.goToPreviousStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node1');
     vle.nodeSelectMenuShouldSay('1.1: HTML Step');
@@ -105,4 +92,3 @@ describe('WISE5 Open Response Component', function () {
     common.shouldBeEnabled(or.submitButton);
   });
 });
-//# sourceMappingURL=openResponse.spec.js.map

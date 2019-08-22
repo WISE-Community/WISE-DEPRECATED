@@ -1,0 +1,17 @@
+const merge = require('webpack-merge');
+const common = require('./webpack.common.js');
+
+module.exports = merge(common, {
+  mode: 'development',
+  devtool: 'inline-source-map',
+  devServer: {
+    proxy: {
+      '/config': 'http://localhost:8080',
+      '/authorConfig': 'http://localhost:8080',
+      '/teacher': 'http://localhost:8080',
+      '/project': 'http://localhost:8080',
+      '/wise5': 'http://localhost:8080',
+      '/curriculum': 'http://localhost:8080',
+    }
+  }
+});

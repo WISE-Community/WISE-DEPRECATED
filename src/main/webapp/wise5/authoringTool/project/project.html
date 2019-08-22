@@ -91,6 +91,7 @@
             float:left;
           }
         </style>
+        <div ui-view></div>  <!-- this ui-view shows the node authoring view -->
         <div ng-if="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
           <div style='background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;'>
             <md-button id='projectBackButton' class='topButton md-raised md-primary'
@@ -595,7 +596,6 @@
             </div>
           </div>
         </div>
-        <div ui-view></div>  <!-- this ui-view shows the node authoring view -->
         <div id="bottom"></div>
       </div>
     </md-content>

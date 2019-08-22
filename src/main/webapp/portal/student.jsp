@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>WISE</title>
+        <title>WISE Student</title>
         <base href="${contextPath}/" target="_blank">
         <meta name="description" content="WISE Student Virtual Learning Environment (VLE)">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,7 +17,6 @@
                       var global = window;
                     }
                   </script>
-                <app></app>
         <div ng-view>
             <div ui-view></div>
         </div>

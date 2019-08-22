@@ -7,9 +7,9 @@ import TableAuthoringController from './tableAuthoringController';
 let tableAuthoringComponentModule = angular.module('tableAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
-  .service(TableService.name, TableService)
-  .controller(TableController.name, TableController)
-  .controller(TableAuthoringController.name, TableAuthoringController)
+  .service('TableService', TableService)
+  .controller('TableController', TableController)
+  .controller('TableAuthoringController', TableAuthoringController)
   .config([
     '$translatePartialLoaderProvider',
     ($translatePartialLoaderProvider) => {
