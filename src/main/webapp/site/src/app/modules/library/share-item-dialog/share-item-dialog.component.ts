@@ -6,7 +6,6 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
 import { map, debounceTime } from 'rxjs/operators';
 import { Project } from "../../../domain/project";
 import { I18n } from '@ngx-translate/i18n-polyfill';
-import {TeacherRun} from '../../../teacher/teacher-run';
 
 export abstract class ShareItemDialogComponent implements OnInit {
 
@@ -52,7 +51,6 @@ export abstract class ShareItemDialogComponent implements OnInit {
     for (let sharedOwner of sharedOwners) {
       const localSharedOwner = JSON.parse(JSON.stringify(sharedOwner));
       this.populatePermissions(localSharedOwner);
-      delete localSharedOwner.permissions;
       this.sharedOwners.push(localSharedOwner);
     }
     this.sharedOwners$.next(this.sharedOwners);

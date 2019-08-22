@@ -1,8 +1,8 @@
 <h2 *ngIf="!isTransfer" class="mat-dialog-title" i18n>Share Classroom Unit</h2>
-<h2 *ngIf="isTransfer && !transferUnitWarning" class="mat-dialog-title" i18n>Transfer Classroom Unit</h2>
-<h2 *ngIf="transferUnitWarning" class="mat-dialog-title" i18n>Transfer Classroom Unit Warning</h2>
+<h2 *ngIf="isTransfer && !transferRunWarning" class="mat-dialog-title" i18n>Transfer Classroom Unit</h2>
+<h2 *ngIf="transferRunWarning" class="mat-dialog-title" i18n>Transfer Classroom Unit Warning</h2>
 <div mat-dialog-content class="mat-dialog-content--scroll">
-  <ng-container *ngIf="!transferUnitWarning">
+  <ng-container *ngIf="!transferRunWarning">
     <p class="mat-subheading-1 accent-1">
       {{ run.name }} <span class="mat-caption" i18n>(Run ID: {{ run.id }})</span>
     </p>
@@ -76,7 +76,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   </ng-container>
-  <ng-container *ngIf="transferUnitWarning">
+  <ng-container *ngIf="transferRunWarning">
     <p class="warning" i18n>Are you sure you want to make {{teacherSearchControl.value}} the new owner? You will still be able to access the unit but the new owner will have the ability to take away your access</p>
   </ng-container>
 </div>
@@ -84,7 +84,7 @@
      fxLayoutAlign="end"
      fxLayoutGap="8px">
   <button mat-button color="accent" (click)="openTransferRunDialog()" *ngIf="isOwner() && !isTransfer" i18n>Transfer Ownership</button>
-  <button mat-flat-button color="accent" (click)="completeRunOwnershipTransfer()" *ngIf="transferUnitWarning" i18n>Proceed with Transfer</button>
+  <button mat-flat-button color="accent" (click)="completeRunOwnershipTransfer()" *ngIf="transferRunWarning" i18n>Proceed with Transfer</button>
   <button mat-flat-button color="primary" (click)="closeTransferRunDialog()" *ngIf="isTransfer" i18n>Cancel</button>
   <button mat-flat-button color="primary" mat-dialog-close *ngIf="!isTransfer" i18n>Done</button>
 </div>

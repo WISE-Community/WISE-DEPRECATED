@@ -19,7 +19,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   displayedColumns: string[] = ['name', 'permissions'];
   duplicate: boolean = false;
   isTransfer: boolean = false;
-  transferUnitWarning: boolean = false;
+  transferRunWarning: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -119,13 +119,14 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     if (this.run.owner.username !== sharedOwnerUsername &&
         (!this.isSharedOwner(sharedOwnerUsername) || this.isTransfer)) {
       if (this.isTransfer) {
-        this.transferUnitWarning = true;
+        this.transferRunWarning = true;
       } else {
         this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername)
             .subscribe(newSharedOwner => {
           this.setDefaultRunPermissions(newSharedOwner);
           this.setDefaultProjectPermissions(newSharedOwner);
           this.addSharedOwner(newSharedOwner);
+          this.data.run.sharedOwners = this.sharedOwners;
           this.teacherSearchControl.setValue('');
         });
         document.getElementById("share-run-dialog-search").blur();
@@ -150,12 +151,13 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   updateRunAndProjectPermissions(run) {
     this.run = new TeacherRun(run);
     this.transferRunOwnership(this.run);
-    this.data.run = this.run;
+    this.data.run.shared = true;
+    this.data.run.owner = run.owner;
+    this.data.run.sharedOwners = run.sharedOwners;
   }
 
   transferRunOwnership(run: TeacherRun) {
     this.removeSharedOwner(run.owner);
-    // this.sharedOwners = run.sharedOwners;
     this.project = run.project;
     this.populateSharedOwners(run.sharedOwners);
     run.sharedOwners = this.sharedOwners;
@@ -171,6 +173,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     this.teacherService.removeSharedOwner(this.runId, sharedOwner.username)
         .subscribe((response) => {
       this.removeSharedOwner(sharedOwner);
+      this.data.run.sharedOwners = this.sharedOwners;
     });
   }
 
@@ -180,6 +183,6 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
 
   closeTransferRunDialog() {
     this.isTransfer = false;
-    this.transferUnitWarning = false;
+    this.transferRunWarning = false;
   }
 }
