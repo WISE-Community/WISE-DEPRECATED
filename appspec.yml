@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /build/WISE
+    destination: /home/ubuntu/build/WISE
 permissions:
   - object: /
     pattern: "**"
