@@ -1,3 +1,5 @@
+source /home/ubuntu/.bashrc
+
 export HOME=/home/ubuntu
 export CATALINA_HOME=/opt/tomcat
 export CATALINA_BASE=$CATALINA_HOME

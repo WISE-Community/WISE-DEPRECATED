@@ -3,6 +3,11 @@ os: linux
 files:
   - source: /
     destination: /build/WISE
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
 hooks:
-  BeforeInstall:
+  AfterInstall:
     - location: scripts/updateWISE.sh
