@@ -4,6 +4,10 @@
 # If this is the first time running, it will initialize the data before starting.
 # if arg1="reset", it wipes out any existing data in database/curriculum/studentupload
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 PWD=`pwd`
 TODAY=`/bin/date +\%Y\%m\%d`
 PROPERTIES_FILE="src/main/resources/application.properties"
