@@ -5,7 +5,7 @@
         (submit)="saveChanges()"
         [formGroup]="adminChangePasswordFormGroup">
     <div fxLayout="column">
-      <p>
+      <p *ngIf="!user.isGoogleUser">
         <mat-form-field fxFlex appearance="fill">
           <mat-label i18n>Current Admin Password</mat-label>
           <input matInput
@@ -18,7 +18,7 @@
           <mat-error *ngIf="adminChangePasswordFormGroup.controls['oldPassword'].hasError('incorrectPassword')" i18n>Current Admin Password is incorrect</mat-error>
         </mat-form-field>
       </p>
-      <div formGroupName="newPasswordFormGroup">
+      <div formGroupName="newPasswordFormGroup" *ngIf="!user.isGoogleUser">
         <p>
           <mat-form-field fxFlex appearance="fill">
             <mat-label i18n>New Password for {{user.username}}</mat-label>
@@ -45,6 +45,9 @@
           </mat-form-field>
         </p>
       </div>
+      <p class="notice" *ngIf="user.isGoogleUser" i18n>
+        This account was created using Google and doesn't use a WISE password.
+      </p>
       <div mat-dialog-actions
            fxLayout="row"
            fxLayout.xs="column"
@@ -55,7 +58,8 @@
                 type="submit"
                 [disabled]="!adminChangePasswordFormGroup.valid || isSaving"
                 fxFlex
-                fxFlex.gt-xs="0 0 auto">
+                fxFlex.gt-xs="0 0 auto"
+                *ngIf="!user.isGoogleUser">
           <ng-container i18n>Change Password</ng-container>
           <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
         </button>
@@ -65,7 +69,7 @@
   </form>
 </ng-container>
 <ng-container *ngIf="isViewUserInfo">
-  <h2 class="mat-dialog-title" i18n>User Info</h2>
+  <h2 class="mat-dialog-title" i18n>User Information</h2>
   <table mat-table [dataSource]="userInfoDataSource" class="standalone__content">
     <ng-container matColumnDef="label">
       <th mat-header-cell *matHeaderCellDef i18n>Label</th>

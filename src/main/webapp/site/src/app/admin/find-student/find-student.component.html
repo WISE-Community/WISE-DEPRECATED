@@ -1,7 +1,6 @@
 <mat-card class="standalone__content mat-elevation-z2">
   <form #searchStudentFieldsForm="ngForm"
         role="form"
-        (submit)="search()"
         [formGroup]="searchStudentFieldsFormGroup">
     <mat-card-content>
       <h2 class="center" i18n>Search for WISE Students</h2>
@@ -49,12 +48,16 @@
       </p>
     </mat-card-content>
     <mat-card-actions fxLayoutAlign="center" fxLayoutGap="8px">
-      <button mat-flat-button color="primary" type="submit" i18n>Search</button>
+      <button mat-flat-button color="primary" (click)="search()" i18n>Search</button>
       <button mat-flat-button color="accent" (click)="clearFormFields()" i18n>Reset</button>
     </mat-card-actions>
   </form>
 </mat-card>
-<table mat-table [dataSource]="dataSource" class="standalone__content mat-elevation-z2" *ngIf="searchResultsAvailable">
+<table mat-table
+       [dataSource]="dataSource"
+       id="student-search-results"
+       class="standalone__content mat-elevation-z2"
+       *ngIf="searchResultsAvailable && dataSource.length > 0">
   <ng-container matColumnDef="username">
     <th mat-header-cell *matHeaderCellDef i18n>Username</th>
     <td mat-cell *matCellDef="let student">{{student.username}}</td>
@@ -62,21 +65,24 @@
   <ng-container matColumnDef="changePassword">
     <th mat-header-cell *matHeaderCellDef i18n></th>
     <td mat-cell *matCellDef="let student">
-      <button mat-button (click)="openAdminActions(student.id, 'changePassword')">Change Password</button>
+      <button mat-button (click)="openAdminActions(student.username, 'changePassword')">Change Password</button>
     </td>
   </ng-container>
   <ng-container matColumnDef="loginAsUser">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let student">
-      <button mat-flat-button (click)="loginAsUser(student.id)">Login As This User</button>
+      <button mat-flat-button (click)="loginAsUser(student.username)">Login As This User</button>
     </td>
   </ng-container>
   <ng-container matColumnDef="userInfo">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let student">
-      <button mat-flat-button (click)="openAdminActions(student.id, 'viewUserInfo')">User Info</button>
+      <button mat-flat-button (click)="openAdminActions(student.username, 'viewUserInfo')">User Info</button>
     </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+<p class="center" *ngIf="searchResultsAvailable && dataSource.length === 0">
+  No results found
+</p>

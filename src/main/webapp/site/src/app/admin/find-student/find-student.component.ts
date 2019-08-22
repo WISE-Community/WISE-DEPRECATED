@@ -38,34 +38,49 @@ export class FindStudentComponent implements OnInit {
   }
 
   search() {
-    const firstName = this.getControlFieldName('firstName');
-    const lastName = this.getControlFieldName('lastName');
-    const username = this.getControlFieldName('username');
-    const userId = this.getControlFieldName('userId');
-    const runId = this.getControlFieldName('runId');
-    const workgroupId = this.getControlFieldName('workgroupId');
-    const teacherUsername = this.getControlFieldName('teacherUsername');
+    const firstName = this.getControlFieldValue('firstName');
+    const lastName = this.getControlFieldValue('lastName');
+    const username = this.getControlFieldValue('username');
+    const userId = this.getControlFieldValue('userId');
+    const runId = this.getControlFieldValue('runId');
+    const workgroupId = this.getControlFieldValue('workgroupId');
+    const teacherUsername = this.getControlFieldValue('teacherUsername');
     if (!firstName && !lastName && !username && !userId && !runId && !workgroupId && !teacherUsername) {
       alert('You must enter at least one field.');
     } else {
       this.adminService.searchStudents(firstName, lastName, username, userId, runId, workgroupId, teacherUsername).subscribe(students => {
           this.dataSource = students;
           this.searchResultsAvailable = true;
+          setTimeout(() => {
+            document.querySelector('#student-search-results').scrollIntoView(
+              { behavior: 'smooth' }
+            );
+          }, 600);
       });
     }
   }
 
-  getControlFieldName(fieldName: string) {
+  setControlFieldValue(fieldName: string, value: string) {
+    this.searchStudentFieldsFormGroup.controls[fieldName].setValue(value);
+  }
+
+  getControlFieldValue(fieldName: string) {
     return this.searchStudentFieldsFormGroup.get(fieldName).value;
   }
 
   clearFormFields() {
-    // TODO
-    this.searchResultsAvailable = !this.searchResultsAvailable;
+    this.setControlFieldValue('firstName', '');
+    this.setControlFieldValue('lastName', '');
+    this.setControlFieldValue('username', '');
+    this.setControlFieldValue('userId', '');
+    this.setControlFieldValue('runId', '');
+    this.setControlFieldValue('workgroupId', '');
+    this.setControlFieldValue('teacherUsername', '');
+    this.searchResultsAvailable = false;
   }
 
-  openAdminActions(userId: string, action: string) {
-    this.userService.getUserById(userId).subscribe(user => {
+  openAdminActions(username: string, action: string) {
+    this.userService.getUserByUsername(username).subscribe(user => {
       this.dialog.open(AdminActionsComponent, {
         data: { user, action },
         panelClass: 'mat-dialog--md',
@@ -74,7 +89,7 @@ export class FindStudentComponent implements OnInit {
     });
   }
 
-  loginAsUser(userId: string) {
+  loginAsUser(username: string) {
 
   }
 }

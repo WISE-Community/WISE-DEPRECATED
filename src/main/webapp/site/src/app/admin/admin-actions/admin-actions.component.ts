@@ -44,7 +44,6 @@ export class AdminActionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isGoogleUser = this.user.isGoogleUser;
     this.updateDataSource();
     this.transposeRunsData();
     this.fillRunLabels();

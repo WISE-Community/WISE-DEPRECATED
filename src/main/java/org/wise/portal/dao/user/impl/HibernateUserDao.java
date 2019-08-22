@@ -58,7 +58,7 @@ import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 public class HibernateUserDao extends AbstractHibernateDao<User> implements UserDao<User> {
 
   private static final String FIND_ALL_QUERY = "from UserImpl";
-  
+
   @PersistenceContext
   private EntityManager entityManager;
 
@@ -237,7 +237,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     }
 
     // run the query and return the results
-    List<User> result = queryObject.list();
+    List<User> result = queryObject.getResultList();
     return result;
   }
 
@@ -247,7 +247,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<StudentUserDetails> cq = cb.createQuery(StudentUserDetails.class);
     Root<StudentUserDetails> studentUserDetailsRoot = cq.from(StudentUserDetails.class);
-    List<Predicate> predicates = getSearchStudentsPredicates(cb, cq, studentUserDetailsRoot, 
+    List<Predicate> predicates = getSearchStudentsPredicates(cb, cq, studentUserDetailsRoot,
         firstName, lastName, username, userId, runId, workgroupId, teacherUsername);
     cq.select(studentUserDetailsRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     cq.distinct(true);
@@ -257,7 +257,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return studentUserDetailsResultList;
   }
 
-  List<Predicate> getSearchStudentsPredicates(CriteriaBuilder cb, 
+  List<Predicate> getSearchStudentsPredicates(CriteriaBuilder cb,
       CriteriaQuery<StudentUserDetails> cq, Root<StudentUserDetails> studentUserDetailsRoot,
       String firstName, String lastName, String username, Long userId, Long runId, Long workgroupId,
       String teacherUsername) {
@@ -270,25 +270,25 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     if (firstName != null) {
       persistentUserDetailsRoot = getPersistentUserDetailsRoot(cq, persistentUserDetailsRoot);
       predicates.add(cb.equal(studentUserDetailsRoot.get("firstname"), firstName));
-      predicates.add(cb.equal(studentUserDetailsRoot.get("id"), 
+      predicates.add(cb.equal(studentUserDetailsRoot.get("id"),
           persistentUserDetailsRoot.get("id")));
     }
     if (lastName != null) {
       persistentUserDetailsRoot = getPersistentUserDetailsRoot(cq, persistentUserDetailsRoot);
       predicates.add(cb.equal(studentUserDetailsRoot.get("lastname"), lastName));
-      predicates.add(cb.equal(studentUserDetailsRoot.get("id"), 
+      predicates.add(cb.equal(studentUserDetailsRoot.get("id"),
           persistentUserDetailsRoot.get("id")));
     }
     if (username != null) {
       persistentUserDetailsRoot = getPersistentUserDetailsRoot(cq, persistentUserDetailsRoot);
       predicates.add(cb.equal(persistentUserDetailsRoot.get("username"), username));
-      predicates.add(cb.equal(studentUserDetailsRoot.get("id"), 
+      predicates.add(cb.equal(studentUserDetailsRoot.get("id"),
           persistentUserDetailsRoot.get("id")));
     }
     if (userId != null) {
       userImplRoot = getUserImplRoot(cq, userImplRoot);
       predicates.add(cb.equal(userImplRoot.get("id"), userId));
-      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"), 
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"),
           studentUserDetailsRoot.get("id")));
     }
     if (workgroupId != null) {
@@ -297,9 +297,9 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
       userImplRoot = getUserImplRoot(cq, userImplRoot);
       predicates.add(cb.equal(workgroupImplRoot.get("id"), workgroupId));
       predicates.add(cb.equal(workgroupImplRoot.get("group"), persistentGroupRoot.get("id")));
-      predicates.add(cb.isMember(userImplRoot.get("id"), 
+      predicates.add(cb.isMember(userImplRoot.get("id"),
           persistentGroupRoot.<Set<User>>get("members")));
-      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"), 
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"),
           studentUserDetailsRoot.get("id")));
     }
     if (runId != null) {
@@ -311,35 +311,35 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
       predicates.add(cb.equal(runImplRoot.get("id"), workgroupImplRoot.get("run")));
       predicates.add(cb.equal(workgroupImplRoot.get("teacherWorkgroup"), false));
       predicates.add(cb.equal(workgroupImplRoot.get("group"), persistentGroupRoot.get("id")));
-      predicates.add(cb.isMember(userImplRoot.get("id"), 
+      predicates.add(cb.isMember(userImplRoot.get("id"),
           persistentGroupRoot.<Set<User>>get("members")));
-      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"), 
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"),
           studentUserDetailsRoot.get("id")));
     }
     if (teacherUsername != null) {
       Root<UserImpl> userImplForTeacher = cq.from(UserImpl.class);
-      Root<PersistentUserDetails> persistentUserDetailsForTeacher = 
+      Root<PersistentUserDetails> persistentUserDetailsForTeacher =
           cq.from(PersistentUserDetails.class);
       runImplRoot = getRunImplRoot(cq, runImplRoot);
       workgroupImplRoot = getWorkgroupImplRoot(cq, workgroupImplRoot);
       persistentGroupRoot = getPersistentGroupRoot(cq, persistentGroupRoot);
       userImplRoot = getUserImplRoot(cq, userImplRoot);
       predicates.add(cb.equal(runImplRoot.get("owner").get("id"), userImplForTeacher.get("id")));
-      predicates.add(cb.equal(persistentUserDetailsForTeacher.get("id"), 
+      predicates.add(cb.equal(persistentUserDetailsForTeacher.get("id"),
           userImplForTeacher.get("id")));
       predicates.add(cb.equal(persistentUserDetailsForTeacher.get("username"), teacherUsername));
       predicates.add(cb.equal(runImplRoot.get("id"), workgroupImplRoot.get("run")));
       predicates.add(cb.equal(workgroupImplRoot.get("teacherWorkgroup"), false));
       predicates.add(cb.equal(workgroupImplRoot.get("group"), persistentGroupRoot.get("id")));
-      predicates.add(cb.isMember(userImplRoot.get("id"), 
+      predicates.add(cb.isMember(userImplRoot.get("id"),
           persistentGroupRoot.<Set<User>>get("members")));
-      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"), 
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"),
           studentUserDetailsRoot.get("id")));
     }
     return predicates;
   }
 
-  Root<PersistentUserDetails> getPersistentUserDetailsRoot(CriteriaQuery<StudentUserDetails> cq, 
+  Root<PersistentUserDetails> getPersistentUserDetailsRoot(CriteriaQuery<StudentUserDetails> cq,
       Root<PersistentUserDetails> persistentUserDetailsRoot) {
     if (persistentUserDetailsRoot == null) {
       persistentUserDetailsRoot = cq.from(PersistentUserDetails.class);
@@ -355,7 +355,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return userImplRoot;
   }
 
-  Root<WorkgroupImpl> getWorkgroupImplRoot(CriteriaQuery<StudentUserDetails> cq, 
+  Root<WorkgroupImpl> getWorkgroupImplRoot(CriteriaQuery<StudentUserDetails> cq,
       Root<WorkgroupImpl> workgroupImplRoot) {
     if (workgroupImplRoot == null) {
       workgroupImplRoot = cq.from(WorkgroupImpl.class);
@@ -363,7 +363,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return workgroupImplRoot;
   }
 
-  Root<PersistentGroup> getPersistentGroupRoot(CriteriaQuery<StudentUserDetails> cq, 
+  Root<PersistentGroup> getPersistentGroupRoot(CriteriaQuery<StudentUserDetails> cq,
       Root<PersistentGroup> persistentGroupRoot) {
     if (persistentGroupRoot == null) {
       persistentGroupRoot = cq.from(PersistentGroup.class);

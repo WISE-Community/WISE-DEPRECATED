@@ -217,25 +217,22 @@ public class UserAPIController {
     return response.toString();
   }
 
-  @RequestMapping(value = "/by-id", method = RequestMethod.GET)
-  protected String getUserById(@RequestParam String userId) throws JSONException {
+  @RequestMapping(value = "/by-username", method = RequestMethod.GET)
+  protected String getUserByUsername(@RequestParam String username) throws JSONException {
     JSONObject response = new JSONObject();
     JSONArray runsArray = new JSONArray();
-    try {
-      User user = userService.retrieveById(Long.parseLong(userId));
-      response.put("userId", user.getId());
-      response.put("username", user.getUserDetails().getUsername());
-      response.put("firstName", user.getUserDetails().getFirstname());
-      response.put("lastName", user.getUserDetails().getLastname());
-      response.put("numberOfLogins", user.getUserDetails().getNumberOfLogins());
-      List<Run> runs = runService.getRunList(user);
-      for (Run run: runs) {
-        runsArray.put(runToJSON(run));
-      }
-      response.put("runs", runsArray);
-    } catch (ObjectNotFoundException nfe) {
-      response.put("error", "User not found.");
+    User user = userService.retrieveUserByUsername(username);
+    response.put("userId", user.getId());
+    response.put("username", user.getUserDetails().getUsername());
+    response.put("firstName", user.getUserDetails().getFirstname());
+    response.put("lastName", user.getUserDetails().getLastname());
+    response.put("numberOfLogins", user.getUserDetails().getNumberOfLogins());
+    response.put("isGoogleUser", user.getUserDetails().isGoogleUser());
+    List<Run> runs = runService.getRunList(user);
+    for (Run run: runs) {
+      runsArray.put(runToJSON(run));
     }
+    response.put("runs", runsArray);
     return response.toString();
   }
 

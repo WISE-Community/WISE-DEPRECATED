@@ -16,7 +16,7 @@ export class UserService {
   private checkGoogleUserExistsUrl = 'api/user/check-google-user-exists';
   private checkGoogleUserMatchesUrl = 'api/user/check-google-user-matches';
   private googleUserUrl = 'api/user/google-user';
-  private userByIdUrl = 'api/user/by-id';
+  private userByUsernameUrl = 'api/user/by-username';
   private checkAuthenticationUrl = 'api/user/check-authentication';
   private changePasswordUrl = 'api/user/password';
   private languagesUrl = 'api/user/languages';
@@ -140,10 +140,10 @@ export class UserService {
     return this.http.get<any>(this.googleUserUrl, { params: params });
   }
 
-  getUserById(userId: string) {
+  getUserByUsername(username: string) {
     let params = new HttpParams();
-    params = params.set('userId', userId);
-    return this.http.get<any>(this.userByIdUrl, { params });
+    params = params.set('username', username);
+    return this.http.get<any>(this.userByUsernameUrl, { params: params });
   }
 
   changePassword(username, oldPassword, newPassword) {
