@@ -42,7 +42,8 @@ const runObj = {
       lastName: "Squarepants",
       permissions: [2]
     }]
-  }
+  },
+  isOwner: () => true
 };
 
 export class MockTeacherService {

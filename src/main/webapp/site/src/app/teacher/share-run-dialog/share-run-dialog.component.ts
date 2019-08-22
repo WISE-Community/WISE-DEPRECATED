@@ -29,7 +29,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
               i18n: I18n) {
     super(dialogRef, data, teacherService, snackBar, i18n);
     this.runId = data.run.id;
-    this.run = new TeacherRun(data.run);
+    this.run = data.run;
     this.project = data.run.project;
     this.projectId = data.run.project.id;
     this.populateSharedOwners(data.run.sharedOwners);
@@ -135,35 +135,32 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     }
   }
 
-  completeUnitOwnershipTransfer() {
+  completeRunOwnershipTransfer() {
     const newOwnerUsername = this.teacherSearchControl.value;
-    this.teacherService.transferUnitOwnership(this.runId, newOwnerUsername)
+    this.teacherService.transferRunOwnership(this.runId, newOwnerUsername)
         .subscribe(run => {
       if (run != null) {
         this.updateRunAndProjectPermissions(run);
-        this.closeTransferUnitDialog();
+        this.closeTransferRunDialog();
       }
       this.teacherSearchControl.setValue('');
     });
   }
 
   updateRunAndProjectPermissions(run) {
-    // const oldOwner = this.data.run.owner;
-    // newOwner.runPermissions = { 1: true, 2: true, 3: true, 16: true };
-    // newOwner.projectPermissions = { 1: true, 2: true, 16: true };
-    // newOwner.isOwner = true;
-    // oldOwner.runPermissions = { 1: true, 2: true, 3: true, 16: false };
-    // oldOwner.projectPermissions = { 1: true, 2: true, 16: false };
-    // oldOwner.isOwner = false;
-    // this.data.run = new TeacherRun(run);
-    // this.data.run.shared = true;
     this.run = new TeacherRun(run);
+    this.transferRunOwnership(this.run);
     this.data.run = this.run;
-    this.transferUnitOwnership(this.run);
-    // this.data.run.sharedOwners = sharedOwners;
+  }
 
-    // console.log(sharedOwners);
-    this.updateSharedOwners(this.run.sharedOwners);
+  transferRunOwnership(run: TeacherRun) {
+    this.removeSharedOwner(run.owner);
+    // this.sharedOwners = run.sharedOwners;
+    this.project = run.project;
+    this.populateSharedOwners(run.sharedOwners);
+    run.sharedOwners = this.sharedOwners;
+    run.shared = true;
+    this.snackBar.open(this.i18n(`Transferred classroom unit ownership to: ${run.owner.username}`));
   }
 
   isOwner() {
@@ -177,11 +174,11 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     });
   }
 
-  openTransferUnitDialog() {
+  openTransferRunDialog() {
     this.isTransfer = true;
   }
 
-  closeTransferUnitDialog() {
+  closeTransferRunDialog() {
     this.isTransfer = false;
     this.transferUnitWarning = false;
   }
