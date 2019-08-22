@@ -623,7 +623,7 @@ public class ProjectServiceImpl implements ProjectService {
       aclService.removePermission(project, BasePermission.ADMINISTRATION, oldOwner);
       projectDao.save(project);
     } catch (TeacherAlreadySharedWithProjectException e) {
-      // ignore
+      return;
     }
   }
 

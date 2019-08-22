@@ -5,7 +5,6 @@ import { ShareItemDialogComponent } from "../../modules/library/share-item-dialo
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { UserService } from '../../services/user.service';
 import { TeacherRun } from '../teacher-run';
-import { Run } from '../../domain/run';
 
 @Component({
   selector: 'app-share-run-dialog',

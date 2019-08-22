@@ -348,8 +348,6 @@ public class RunServiceImpl implements RunService {
       aclService.addPermission(run, RunPermission.GRADE_AND_MANAGE, oldOwner);
       aclService.removePermission(run, BasePermission.ADMINISTRATION, oldOwner);
       runDao.save(run);
-      List<Integer> newProjectOwnerPermissions = new ArrayList<>();
-      newProjectOwnerPermissions.add(BasePermission.ADMINISTRATION.getMask());
       return ControllerUtil.getRunJSON(run);
     } catch (TeacherAlreadySharedWithRunException e) {
       return null;
