@@ -149,17 +149,6 @@ describe('SummaryController', () => {
     expect(summaryController.calculateIsShowDisplay()).toBeTruthy();
   });
 
-  it('should calculate if the display should be shown when the requirement is save work', () => {
-    summaryController.summaryNodeId = 'node1';
-    summaryController.summaryComponentId = '1111111111';
-    summaryController.componentContent.requirementToSeeSummary = 'saveWork';
-    expect(summaryController.calculateIsShowDisplay()).toBeFalsy();
-    summaryController.summaryNodeId = 'node1';
-    summaryController.summaryComponentId = '4j4en745m7';
-    summaryController.componentContent.requirementToSeeSummary = 'saveWork';
-    expect(summaryController.calculateIsShowDisplay()).toBeTruthy();
-  });
-
   it('should calculate if the display should be shown when the requirement is complete component', 
       () => {
     summaryController.summaryNodeId = 'node1';
@@ -170,7 +159,6 @@ describe('SummaryController', () => {
     summaryController.summaryComponentId = '4j4en745m7';
     summaryController.componentContent.requirementToSeeSummary = 'completeComponent';
     expect(summaryController.calculateIsShowDisplay()).toBeTruthy();
-    summaryController.componentContent.requirementToSeeSummary = 'saveWork';
   });
 
   it('should calculate if the display should be shown when the requirement is none', () => {
