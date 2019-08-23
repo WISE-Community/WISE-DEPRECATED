@@ -1,12 +1,18 @@
-<h2 *ngIf="!isTransfer" class="mat-dialog-title" i18n>Share Classroom Unit</h2>
-<h2 *ngIf="isTransfer && !transferRunWarning" class="mat-dialog-title" i18n>Transfer Classroom Unit</h2>
-<h2 *ngIf="transferRunWarning" class="mat-dialog-title" i18n>Transfer Classroom Unit Warning</h2>
-<div mat-dialog-content class="mat-dialog-content--scroll">
-  <ng-container *ngIf="!transferRunWarning">
+<h2 *ngIf="!isTransfer" mat-dialog-title i18n>Share Classroom Unit</h2>
+<h2 *ngIf="isTransfer" 
+    mat-dialog-title 
+    fxLayoutAlign="start center" 
+    [class.warn]="transferRunWarning">
+  <span i18n>Transfer Classroom Unit</span>
+  <span fxFlex></span>
+  <mat-icon *ngIf="transferRunWarning" color="warn">warning</mat-icon>
+</h2>
+<div mat-dialog-content [class.mat-dialog-content--scroll]="!transferRunWarning">
+  <div [class.info-block]="transferRunWarning">
     <p class="mat-subheading-1 accent-1">
       {{ run.name }} <span class="mat-caption" i18n>(Run ID: {{ run.id }})</span>
     </p>
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" *ngIf="!transferRunWarning">
       <mat-label i18n>Enter teacher username</mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input id="share-run-dialog-search"
@@ -75,17 +81,18 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-  </ng-container>
-  <ng-container *ngIf="transferRunWarning">
-    <p class="warning" i18n>Are you sure you want to make {{teacherSearchControl.value}} the new owner? You will still be able to access the unit but the new owner will have the ability to take away your access</p>
-  </ng-container>
+    <ng-container *ngIf="transferRunWarning">
+      <p class="warning" i18n>Are you sure you want to make {{teacherSearchControl.value}} the new owner of this unit?</p>
+      <p i18n>You will still be able to access the unit but the new owner will have the ability to take away or change your access permissions.</p>
+    </ng-container>
+  </div>
 </div>
 <div mat-dialog-actions
      fxLayoutAlign="end"
      fxLayoutGap="8px">
   <button mat-button color="accent" (click)="openTransferRunDialog()" *ngIf="isOwner() && !isTransfer" i18n>Transfer Ownership</button>
-  <button mat-flat-button color="accent" (click)="completeRunOwnershipTransfer()" *ngIf="transferRunWarning" i18n>Proceed with Transfer</button>
   <button mat-flat-button color="primary" (click)="closeTransferRunDialog()" *ngIf="isTransfer" i18n>Cancel</button>
+  <button mat-button color="warn" (click)="completeRunOwnershipTransfer()" *ngIf="transferRunWarning" i18n>Proceed</button>
   <button mat-flat-button color="primary" mat-dialog-close *ngIf="!isTransfer" i18n>Done</button>
 </div>
 

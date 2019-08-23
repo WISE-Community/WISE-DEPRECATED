@@ -103,13 +103,13 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   addRunPermissionToSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = true;
-    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
+    this.snackBar.open(this.i18n(`Sharing permissions updated for ${sharedOwner.firstName} ${sharedOwner.lastName}.`));
   }
 
   removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = false;
-    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
+    this.snackBar.open(this.i18n(`Sharing permissions updated for ${sharedOwner.firstName} ${sharedOwner.lastName}.`));
   }
 
   shareRun() {
@@ -128,7 +128,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
           this.data.run.sharedOwners = this.sharedOwners;
           this.teacherSearchControl.setValue('');
         });
-        document.getElementById("share-run-dialog-search").blur();
+        document.getElementById('share-run-dialog-search').blur();
       }
     } else {
       this.duplicate = true;
@@ -161,7 +161,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     this.populateSharedOwners(run.sharedOwners);
     run.sharedOwners = this.sharedOwners;
     run.shared = true;
-    this.snackBar.open(this.i18n(`Transferred classroom unit ownership to: ${run.owner.username}`));
+    this.snackBar.open(this.i18n(`Transferred classroom unit ownership to: ${run.owner.firstName} ${run.owner.lastName}`));
   }
 
   isOwner() {
@@ -183,5 +183,6 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   closeTransferRunDialog() {
     this.isTransfer = false;
     this.transferRunWarning = false;
+    this.teacherSearchControl.setValue('');
   }
 }
