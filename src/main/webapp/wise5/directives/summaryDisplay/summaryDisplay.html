@@ -1,6 +1,6 @@
 <md-card style="margin: 16px 8px 8px;" 
          ng-if="summaryDisplayCtrl.nodeId != null && summaryDisplayCtrl.componentId != null">
-  <md-card-content style="width: 99%;">
+  <md-card-content>
     <div ng-if="!summaryDisplayCtrl.hasWarning">
       <highchart config="summaryDisplayCtrl.chartConfig"></highchart>
     </div>

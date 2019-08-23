@@ -31,6 +31,7 @@ function () {
     this.defaultMaxScore = 5;
     this.maxScore = this.defaultMaxScore;
     this.dataService = null;
+    this.hasCorrectness = false;
 
     if (this.chartType == null) {
       this.chartType = 'column';
@@ -52,7 +53,9 @@ function () {
 
     this.colors = {
       palette: ['#1a237e', '#701e82', '#aa187b', '#d72c6c', '#f65158', '#ff7d43', '#ffab32', '#fdd835', '#ffee58', '#ade563', '#50d67f', '#00c29d', '#00aab3', '#0090bc', '#0074b4', '#01579b'],
-      singleHue: 'rgb(170, 24, 123)'
+      singleHue: 'rgb(170, 24, 123)',
+      correct: '#00C853',
+      incorrect: '#c62828'
     };
   }
 
@@ -459,7 +462,7 @@ function () {
     key: "createChoicesSeriesData",
     value: function createChoicesSeriesData(component, summaryData) {
       var data = [];
-      var hasCorrectness = this.hasCorrectAnswer(component);
+      this.hasCorrectness = this.hasCorrectAnswer(component);
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
       var _iteratorError6 = undefined;
@@ -468,8 +471,14 @@ function () {
         for (var _iterator6 = component.choices[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
           var choice = _step6.value;
           var count = this.getSummaryDataCount(summaryData, choice.id);
-          var color = this.getDataPointColor(choice, hasCorrectness);
-          var dataPoint = this.createDataPoint(choice.text, count, color);
+          var color = this.getDataPointColor(choice);
+          var text = choice.text;
+
+          if (this.highlightCorrectAnswer && this.chartType === 'pie') {
+            text = text + ' (' + (choice.isCorrect ? this.$translate('CORRECT') : this.$translate('INCORRECT')) + ')';
+          }
+
+          var dataPoint = this.createDataPoint(text, count, color);
           data.push(dataPoint);
         }
       } catch (err) {
@@ -523,14 +532,14 @@ function () {
     }
   }, {
     key: "getDataPointColor",
-    value: function getDataPointColor(choice, hasCorrectness) {
+    value: function getDataPointColor(choice) {
       var color = null;
 
-      if (this.highlightCorrectAnswer && hasCorrectness) {
+      if (this.highlightCorrectAnswer) {
         if (choice.isCorrect) {
-          color = '#00C853';
+          color = this.colors.correct;
         } else {
-          color = '#c62828';
+          color = this.colors.incorrect;
         }
       }
 
@@ -642,12 +651,28 @@ function () {
   }, {
     key: "createSeries",
     value: function createSeries(data) {
-      return [{
-        data: data,
-        dataLabels: {
-          enabled: true
-        }
-      }];
+      if (this.highlightCorrectAnswer && this.chartType === 'column') {
+        return [{
+          data: data,
+          dataLabels: {
+            enabled: true
+          },
+          showInLegend: false
+        }, {
+          name: this.$translate('CORRECT'),
+          color: this.colors.correct
+        }, {
+          name: this.$translate('INCORRECT'),
+          color: this.colors.incorrect
+        }];
+      } else {
+        return [{
+          data: data,
+          dataLabels: {
+            enabled: true
+          }
+        }];
+      }
     }
   }, {
     key: "getGraphTitle",
@@ -778,6 +803,18 @@ function () {
         },
         series: series
       };
+
+      if (this.highlightCorrectAnswer) {
+        chartConfig.options.legend.enabled = true;
+        chartConfig.options.plotOptions.series.colorByPoint = false;
+        chartConfig.options.plotOptions.series.grouping = false;
+        chartConfig.options.plotOptions.series.events = {
+          legendItemClick: function legendItemClick() {
+            return false;
+          }
+        };
+      }
+
       return chartConfig;
     }
   }, {
