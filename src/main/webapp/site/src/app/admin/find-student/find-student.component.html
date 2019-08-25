@@ -1,7 +1,7 @@
 <mat-card class="standalone__content mat-elevation-z2">
-  <form #searchStudentFieldsForm="ngForm"
+  <form #searchStudentsForm="ngForm"
         role="form"
-        [formGroup]="searchStudentFieldsFormGroup">
+        [formGroup]="searchStudentsFormGroup">
     <mat-card-content>
       <h2 class="center" i18n>Search for WISE Students</h2>
       <p>
@@ -65,7 +65,7 @@
   <ng-container matColumnDef="changePassword">
     <th mat-header-cell *matHeaderCellDef i18n></th>
     <td mat-cell *matCellDef="let student">
-      <button mat-button (click)="openAdminActions(student.username, 'changePassword')">Change Password</button>
+      <button mat-button (click)="openAdminActions(student.username, changePasswordAdminAction)">Change Password</button>
     </td>
   </ng-container>
   <ng-container matColumnDef="loginAsUser">
@@ -77,7 +77,7 @@
   <ng-container matColumnDef="userInfo">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let student">
-      <button mat-flat-button (click)="openAdminActions(student.username, 'viewUserInfo')">User Info</button>
+      <button mat-flat-button (click)="openAdminActions(student.username, viewUserInfoAdminAction)">User Info</button>
     </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

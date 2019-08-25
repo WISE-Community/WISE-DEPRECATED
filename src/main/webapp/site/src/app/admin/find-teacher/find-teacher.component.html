@@ -1,3 +1,130 @@
-<p>
-  find-teacher works!
+<mat-card class="standalone__content mat-elevation-z2">
+  <form #searchTeachersForm="ngForm"
+        role="form"
+        [formGroup]="searchTeachersFormGroup">
+    <mat-card-content>
+      <h2 class="center" i18n>Search for WISE Teachers</h2>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>First Name</mat-label>
+          <input matInput id="firstName" name="firstName" formControlName="firstName" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Last Name</mat-label>
+          <input matInput id="lastName" name="lastName" formControlName="lastName" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Username</mat-label>
+          <input matInput id="username" name="username" formControlName="username" />
+        </mat-form-field>
+      </p>
+      <p *ngIf="showSearchById">
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>ID</mat-label>
+          <input matInput id="userId" name="userId" formControlName="userId" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Display Name</mat-label>
+          <input matInput id="displayName" name="displayName" formControlName="displayName" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>City</mat-label>
+          <input matInput id="city" name="city" formControlName="city" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>State</mat-label>
+          <input matInput id="state" name="state" formControlName="state" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Country</mat-label>
+          <input matInput id="country" name="country" formControlName="country" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>School Name</mat-label>
+          <input matInput id="schoolName" name="schoolName" formControlName="schoolName" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>School Level</mat-label>
+          <input matInput id="schoolLevel" name="schoolLevel" formControlName="schoolLevel" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Curriculum Subjects</mat-label>
+          <input matInput id="curriculumSubjects" name="curriculumSubjects" formControlName="curriculumSubjects" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Email</mat-label>
+          <input matInput id="email" name="email" formControlName="email" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Run ID</mat-label>
+          <input matInput id="runId" name="runId" formControlName="runId" />
+        </mat-form-field>
+      </p>
+    </mat-card-content>
+    <mat-card-actions fxLayoutAlign="center" fxLayoutGap="8px">
+      <button mat-flat-button color="primary" (click)="searchTeachers()" i18n>Search</button>
+      <button mat-flat-button color="accent" (click)="clearFormFields()" i18n>Reset</button>
+    </mat-card-actions>
+  </form>
+</mat-card>
+<table mat-table
+       [dataSource]="dataSource"
+       id="teacher-search-results"
+       class="standalone__content mat-elevation-z2"
+       *ngIf="searchResultsAvailable && dataSource.length > 0">
+  <ng-container matColumnDef="username">
+    <th mat-header-cell *matHeaderCellDef i18n>Username</th>
+    <td mat-cell *matCellDef="let teacher">{{teacher.username}}</td>
+  </ng-container>
+  <ng-container matColumnDef="changePassword">
+    <th mat-header-cell *matHeaderCellDef i18n></th>
+    <td mat-cell *matCellDef="let teacher">
+      <button mat-button (click)="openAdminActions(teacher.username, changePasswordAdminAction)">Change Password</button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="loginAsUser">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let teacher">
+      <button mat-flat-button (click)="loginAsUser(teacher.username)">Login As This User</button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="userInfo">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let teacher">
+      <button mat-flat-button (click)="openAdminActions(teacher.username, viewUserInfoAdminAction)">User Info</button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="manageRoles">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let teacher">
+      <button mat-flat-button (click)="openAdminActions(teacher.username, manageRolesAdminAction)">Manage Roles</button>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<p class="center" *ngIf="searchResultsAvailable && dataSource.length === 0">
+  No results found
 </p>

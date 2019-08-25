@@ -45,6 +45,7 @@ import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
@@ -268,33 +269,33 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     Root<PersistentGroup> persistentGroupRoot = null;
     Root<RunImpl> runImplRoot = null;
     if (firstName != null) {
-      persistentUserDetailsRoot = getPersistentUserDetailsRoot(cq, persistentUserDetailsRoot);
+      persistentUserDetailsRoot = getPersistentStudentUserDetailsRoot(cq, persistentUserDetailsRoot);
       predicates.add(cb.equal(studentUserDetailsRoot.get("firstname"), firstName));
       predicates.add(cb.equal(studentUserDetailsRoot.get("id"),
           persistentUserDetailsRoot.get("id")));
     }
     if (lastName != null) {
-      persistentUserDetailsRoot = getPersistentUserDetailsRoot(cq, persistentUserDetailsRoot);
+      persistentUserDetailsRoot = getPersistentStudentUserDetailsRoot(cq, persistentUserDetailsRoot);
       predicates.add(cb.equal(studentUserDetailsRoot.get("lastname"), lastName));
       predicates.add(cb.equal(studentUserDetailsRoot.get("id"),
           persistentUserDetailsRoot.get("id")));
     }
     if (username != null) {
-      persistentUserDetailsRoot = getPersistentUserDetailsRoot(cq, persistentUserDetailsRoot);
+      persistentUserDetailsRoot = getPersistentStudentUserDetailsRoot(cq, persistentUserDetailsRoot);
       predicates.add(cb.equal(persistentUserDetailsRoot.get("username"), username));
       predicates.add(cb.equal(studentUserDetailsRoot.get("id"),
           persistentUserDetailsRoot.get("id")));
     }
     if (userId != null) {
-      userImplRoot = getUserImplRoot(cq, userImplRoot);
+      userImplRoot = getStudentUserImplRoot(cq, userImplRoot);
       predicates.add(cb.equal(userImplRoot.get("id"), userId));
       predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"),
           studentUserDetailsRoot.get("id")));
     }
     if (workgroupId != null) {
-      workgroupImplRoot = getWorkgroupImplRoot(cq, workgroupImplRoot);
-      persistentGroupRoot = getPersistentGroupRoot(cq, persistentGroupRoot);
-      userImplRoot = getUserImplRoot(cq, userImplRoot);
+      workgroupImplRoot = getStudentWorkgroupImplRoot(cq, workgroupImplRoot);
+      persistentGroupRoot = getStudentPersistentGroupRoot(cq, persistentGroupRoot);
+      userImplRoot = getStudentUserImplRoot(cq, userImplRoot);
       predicates.add(cb.equal(workgroupImplRoot.get("id"), workgroupId));
       predicates.add(cb.equal(workgroupImplRoot.get("group"), persistentGroupRoot.get("id")));
       predicates.add(cb.isMember(userImplRoot.get("id"),
@@ -303,10 +304,10 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
           studentUserDetailsRoot.get("id")));
     }
     if (runId != null) {
-      runImplRoot = getRunImplRoot(cq, runImplRoot);
-      workgroupImplRoot = getWorkgroupImplRoot(cq, workgroupImplRoot);
-      persistentGroupRoot = getPersistentGroupRoot(cq, persistentGroupRoot);
-      userImplRoot = getUserImplRoot(cq, userImplRoot);
+      runImplRoot = getStudentRunImplRoot(cq, runImplRoot);
+      workgroupImplRoot = getStudentWorkgroupImplRoot(cq, workgroupImplRoot);
+      persistentGroupRoot = getStudentPersistentGroupRoot(cq, persistentGroupRoot);
+      userImplRoot = getStudentUserImplRoot(cq, userImplRoot);
       predicates.add(cb.equal(runImplRoot.get("id"), runId));
       predicates.add(cb.equal(runImplRoot.get("id"), workgroupImplRoot.get("run")));
       predicates.add(cb.equal(workgroupImplRoot.get("teacherWorkgroup"), false));
@@ -320,10 +321,10 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
       Root<UserImpl> userImplForTeacher = cq.from(UserImpl.class);
       Root<PersistentUserDetails> persistentUserDetailsForTeacher =
           cq.from(PersistentUserDetails.class);
-      runImplRoot = getRunImplRoot(cq, runImplRoot);
-      workgroupImplRoot = getWorkgroupImplRoot(cq, workgroupImplRoot);
-      persistentGroupRoot = getPersistentGroupRoot(cq, persistentGroupRoot);
-      userImplRoot = getUserImplRoot(cq, userImplRoot);
+      runImplRoot = getStudentRunImplRoot(cq, runImplRoot);
+      workgroupImplRoot = getStudentWorkgroupImplRoot(cq, workgroupImplRoot);
+      persistentGroupRoot = getStudentPersistentGroupRoot(cq, persistentGroupRoot);
+      userImplRoot = getStudentUserImplRoot(cq, userImplRoot);
       predicates.add(cb.equal(runImplRoot.get("owner").get("id"), userImplForTeacher.get("id")));
       predicates.add(cb.equal(persistentUserDetailsForTeacher.get("id"),
           userImplForTeacher.get("id")));
@@ -339,7 +340,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return predicates;
   }
 
-  Root<PersistentUserDetails> getPersistentUserDetailsRoot(CriteriaQuery<StudentUserDetails> cq,
+  Root<PersistentUserDetails> getPersistentStudentUserDetailsRoot(CriteriaQuery<StudentUserDetails> cq,
       Root<PersistentUserDetails> persistentUserDetailsRoot) {
     if (persistentUserDetailsRoot == null) {
       persistentUserDetailsRoot = cq.from(PersistentUserDetails.class);
@@ -347,7 +348,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return persistentUserDetailsRoot;
   }
 
-  Root<UserImpl> getUserImplRoot(CriteriaQuery<StudentUserDetails> cq,
+  Root<UserImpl> getStudentUserImplRoot(CriteriaQuery<StudentUserDetails> cq,
       Root<UserImpl> userImplRoot) {
     if (userImplRoot == null) {
       userImplRoot = cq.from(UserImpl.class);
@@ -355,7 +356,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return userImplRoot;
   }
 
-  Root<WorkgroupImpl> getWorkgroupImplRoot(CriteriaQuery<StudentUserDetails> cq,
+  Root<WorkgroupImpl> getStudentWorkgroupImplRoot(CriteriaQuery<StudentUserDetails> cq,
       Root<WorkgroupImpl> workgroupImplRoot) {
     if (workgroupImplRoot == null) {
       workgroupImplRoot = cq.from(WorkgroupImpl.class);
@@ -363,7 +364,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return workgroupImplRoot;
   }
 
-  Root<PersistentGroup> getPersistentGroupRoot(CriteriaQuery<StudentUserDetails> cq,
+  Root<PersistentGroup> getStudentPersistentGroupRoot(CriteriaQuery<StudentUserDetails> cq,
       Root<PersistentGroup> persistentGroupRoot) {
     if (persistentGroupRoot == null) {
       persistentGroupRoot = cq.from(PersistentGroup.class);
@@ -371,7 +372,170 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return persistentGroupRoot;
   }
 
-  Root<RunImpl> getRunImplRoot(CriteriaQuery<StudentUserDetails> cq, Root<RunImpl> runImplRoot) {
+  Root<RunImpl> getStudentRunImplRoot(CriteriaQuery<StudentUserDetails> cq, Root<RunImpl> runImplRoot) {
+    if (runImplRoot == null) {
+      runImplRoot = cq.from(RunImpl.class);
+    }
+    return runImplRoot;
+  }
+
+  public List<TeacherUserDetails> searchTeachers(String firstName, String lastName, String username, Long userId,
+                                          String displayName, String city, String state, String country,
+                                          String schoolName, String schoolLevel, String curriculumSubjects,
+                                          String email, Long runId) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<TeacherUserDetails> cq = cb.createQuery(TeacherUserDetails.class);
+    Root<TeacherUserDetails> teacherUserDetailsRoot = cq.from(TeacherUserDetails.class);
+    List<Predicate> predicates = getSearchTeachersPredicates(cb, cq, teacherUserDetailsRoot, firstName, lastName, username,
+      userId, displayName, city, state, country, schoolName, schoolLevel, curriculumSubjects, email, runId);
+    cq.select(teacherUserDetailsRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    cq.distinct(true);
+    EntityManager em = entityManager;
+    TypedQuery<TeacherUserDetails> query = em.createQuery(cq);
+    List<TeacherUserDetails> teacherUserDetailsResultList = query.getResultList();
+    return teacherUserDetailsResultList;
+  }
+
+  private List<Predicate> getSearchTeachersPredicates(CriteriaBuilder cb,
+              CriteriaQuery<TeacherUserDetails> cq, Root<TeacherUserDetails> teacherUserDetailsRoot,
+              String firstName, String lastName, String username, Long userId, String displayName,
+              String city, String state, String country, String schoolName, String schoolLevel,
+              String curriculumSubjects, String email, Long runId) {
+    List<Predicate> predicates = new ArrayList<>();
+    Root<PersistentUserDetails> persistentUserDetailsRoot = null;
+    Root<UserImpl> userImplRoot = null;
+    Root<WorkgroupImpl> workgroupImplRoot = null;
+    Root<PersistentGroup> persistentGroupRoot = null;
+    Root<RunImpl> runImplRoot = null;
+    if (firstName != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("firstname"), firstName));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (lastName != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("lastname"), lastName));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (username != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(persistentUserDetailsRoot.get("username"), username));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (userId != null) {
+      userImplRoot = getTeacherUserImplRoot(cq, userImplRoot);
+      predicates.add(cb.equal(userImplRoot.get("id"), userId));
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"),
+        teacherUserDetailsRoot.get("id")));
+    }
+    if (userId != null) {
+      userImplRoot = getTeacherUserImplRoot(cq, userImplRoot);
+      predicates.add(cb.equal(userImplRoot.get("id"), userId));
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"),
+        teacherUserDetailsRoot.get("id")));
+    }
+    if (displayName != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("displayname"), displayName));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (city != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("city"), city));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (state != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("state"), state));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (country != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("country"), country));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (schoolName != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("schoolname"), schoolName));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (schoolLevel != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("schoollevel"), schoolLevel));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (curriculumSubjects != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("curriculumsubjects"), curriculumSubjects));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (email != null) {
+      persistentUserDetailsRoot = getPersistentTeacherUserDetailsRoot(cq, persistentUserDetailsRoot);
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("email_address"), email));
+      predicates.add(cb.equal(teacherUserDetailsRoot.get("id"),
+        persistentUserDetailsRoot.get("id")));
+    }
+    if (runId != null) {
+      runImplRoot = getTeacherRunImplRoot(cq, runImplRoot);
+      workgroupImplRoot = getTeacherWorkgroupImplRoot(cq, workgroupImplRoot);
+      persistentGroupRoot = getTeacherPersistentGroupRoot(cq, persistentGroupRoot);
+      userImplRoot = getTeacherUserImplRoot(cq, userImplRoot);
+      predicates.add(cb.equal(runImplRoot.get("id"), runId));
+      predicates.add(cb.equal(runImplRoot.get("id"), workgroupImplRoot.get("run")));
+      predicates.add(cb.equal(workgroupImplRoot.get("teacherWorkgroup"), false));
+      predicates.add(cb.equal(workgroupImplRoot.get("group"), persistentGroupRoot.get("id")));
+      predicates.add(cb.isMember(userImplRoot.get("id"),
+        persistentGroupRoot.<Set<User>>get("members")));
+      predicates.add(cb.equal(userImplRoot.get("userDetails").get("id"),
+        teacherUserDetailsRoot.get("id")));
+    }
+    return predicates;
+  }
+
+  private Root<PersistentUserDetails> getPersistentTeacherUserDetailsRoot(CriteriaQuery<TeacherUserDetails> cq,
+                                                                  Root<PersistentUserDetails> persistentUserDetailsRoot) {
+    if (persistentUserDetailsRoot == null) {
+      persistentUserDetailsRoot = cq.from(PersistentUserDetails.class);
+    }
+    return persistentUserDetailsRoot;
+  }
+
+  private Root<UserImpl> getTeacherUserImplRoot(CriteriaQuery<TeacherUserDetails> cq,
+                                        Root<UserImpl> userImplRoot) {
+    if (userImplRoot == null) {
+      userImplRoot = cq.from(UserImpl.class);
+    }
+    return userImplRoot;
+  }
+
+  private Root<WorkgroupImpl> getTeacherWorkgroupImplRoot(CriteriaQuery<TeacherUserDetails> cq,
+                                                   Root<WorkgroupImpl> workgroupImplRoot) {
+    if (workgroupImplRoot == null) {
+      workgroupImplRoot = cq.from(WorkgroupImpl.class);
+    }
+    return workgroupImplRoot;
+  }
+
+  private Root<PersistentGroup> getTeacherPersistentGroupRoot(CriteriaQuery<TeacherUserDetails> cq,
+                                                       Root<PersistentGroup> persistentGroupRoot) {
+    if (persistentGroupRoot == null) {
+      persistentGroupRoot = cq.from(PersistentGroup.class);
+    }
+    return persistentGroupRoot;
+  }
+
+  private Root<RunImpl> getTeacherRunImplRoot(CriteriaQuery<TeacherUserDetails> cq, Root<RunImpl> runImplRoot) {
     if (runImplRoot == null) {
       runImplRoot = cq.from(RunImpl.class);
     }

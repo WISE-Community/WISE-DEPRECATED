@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatTableDataSource } from '@angular/material';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AdminActions } from '../admin-actions';
 
 @Component({
   selector: 'app-admin-actions',
@@ -12,8 +13,11 @@ export class AdminActionsComponent implements OnInit {
   @ViewChild('adminChangePasswordForm', { static: false }) adminChangePasswordForm;
   user: any;
   isGoogleUser: boolean;
+  isStudent: boolean;
+  isTeacher: boolean;
   isChangePassword: boolean;
   isViewUserInfo: boolean;
+  isManageRoles: boolean;
   isSaving: boolean = false;
   userInfoDataSource: any[] = [];
   userInfoDisplayedColumns = ['label', 'value'];
@@ -38,9 +42,13 @@ export class AdminActionsComponent implements OnInit {
               private fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) private data: any) {
     this.user = data.user;
+    this.isGoogleUser = this.user.isGoogleUser;
+    this.isStudent = data.isStudent;
+    this.isTeacher = data.isTeacher;
+    this.isChangePassword = data.action === AdminActions.CHANGE_PASSWORD;
+    this.isViewUserInfo = data.action === AdminActions.VIEW_USER_INFO;
+    this.isManageRoles = data.action === AdminActions.MANAGE_ROLES;
     this.runs = this.user.runs;
-    this.isChangePassword = data.action === 'changePassword';
-    this.isViewUserInfo = data.action === 'viewUserInfo';
   }
 
   ngOnInit() {

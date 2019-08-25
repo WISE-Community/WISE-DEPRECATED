@@ -26,9 +26,25 @@ export class AdminService {
     return this.http.get<any[]>(this.searchStudentsUrl, { headers, params });
   }
 
-  searchTeachers(): Observable<any []> {
+  searchTeachers(firstName: string, lastName: string, username: string, userId: string,
+                 displayName: string, city: string, state: string, country: string, schoolName: string,
+                 schoolLevel: string, curriculumSubjects: string,
+                 email: string, runId: string): Observable<any []> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    const params = new HttpParams();
+    const params = new HttpParams()
+      .set('firstName', firstName)
+      .set('lastName', lastName)
+      .set('username', username)
+      .set('userId', userId)
+      .set('displayName', displayName)
+      .set('city', city)
+      .set('state', state)
+      .set('country', country)
+      .set('schoolName', schoolName)
+      .set('schoolLevel', schoolLevel)
+      .set('curriculumSubjects', curriculumSubjects)
+      .set('email', email)
+      .set('runId', runId);
     return this.http.get<any[]>(this.searchTeachersUrl, { headers, params });
   }
 }

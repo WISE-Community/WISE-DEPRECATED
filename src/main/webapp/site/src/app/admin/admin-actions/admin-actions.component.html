@@ -5,7 +5,7 @@
         (submit)="saveChanges()"
         [formGroup]="adminChangePasswordFormGroup">
     <div fxLayout="column">
-      <p *ngIf="!user.isGoogleUser">
+      <p *ngIf="!isGoogleUser">
         <mat-form-field fxFlex appearance="fill">
           <mat-label i18n>Current Admin Password</mat-label>
           <input matInput
@@ -18,7 +18,7 @@
           <mat-error *ngIf="adminChangePasswordFormGroup.controls['oldPassword'].hasError('incorrectPassword')" i18n>Current Admin Password is incorrect</mat-error>
         </mat-form-field>
       </p>
-      <div formGroupName="newPasswordFormGroup" *ngIf="!user.isGoogleUser">
+      <div formGroupName="newPasswordFormGroup" *ngIf="!isGoogleUser">
         <p>
           <mat-form-field fxFlex appearance="fill">
             <mat-label i18n>New Password for {{user.username}}</mat-label>
@@ -45,7 +45,7 @@
           </mat-form-field>
         </p>
       </div>
-      <p class="notice" *ngIf="user.isGoogleUser" i18n>
+      <p class="notice" *ngIf="isGoogleUser" i18n>
         This account was created using Google and doesn't use a WISE password.
       </p>
       <div mat-dialog-actions
@@ -59,7 +59,7 @@
                 [disabled]="!adminChangePasswordFormGroup.valid || isSaving"
                 fxFlex
                 fxFlex.gt-xs="0 0 auto"
-                *ngIf="!user.isGoogleUser">
+                *ngIf="!isGoogleUser">
           <ng-container i18n>Change Password</ng-container>
           <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
         </button>
@@ -82,8 +82,8 @@
     <tr mat-header-row *matHeaderRowDef="userInfoDisplayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: userInfoDisplayedColumns;"></tr>
   </table>
-  <p fxLayoutAlign="center">User Runs</p>
-  <table mat-table [dataSource]="runsDataSource" class="standalone__content">
+  <p fxLayoutAlign="center" *ngIf="isStudent">User Runs</p>
+  <table mat-table [dataSource]="runsDataSource" class="standalone__content" *ngIf="isStudent">
     <ng-container matColumnDef="label">
       <td mat-cell *matCellDef="let row">{{row.label}}</td>
     </ng-container>
