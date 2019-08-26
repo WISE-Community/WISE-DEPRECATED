@@ -12,7 +12,7 @@ class ProjectController {
       $scope,
       $state,
       $stateParams,
-      //$stomp,
+      $stomp,
       $timeout,
       $window,
       ConfigService,
@@ -29,7 +29,7 @@ class ProjectController {
     this.$scope = $scope;
     this.$state = $state;
     this.$stateParams = $stateParams;
-    //this.$stomp = $stomp;
+    this.$stomp = $stomp;
     this.$timeout = $timeout;
     this.$translate = this.$filter('translate');
     this.$window = $window;
@@ -80,11 +80,11 @@ class ProjectController {
     this.TeacherDataService.setCurrentNode(null);
 
     this.metadata = this.ProjectService.getProjectMetadata();
-    /*
+
     this.subscribeToCurrentAuthors(this.projectId).then(() => {
       this.ProjectService.notifyAuthorProjectBegin(this.projectId);
     });
-    */
+
     this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
     this.summernoteRubricHTML = this.ProjectService
         .replaceAssetPaths(this.ProjectService.getProjectRubric());
@@ -203,11 +203,11 @@ class ProjectController {
     this.$mdDialog.hide();
 
     this.$scope.$on('$destroy', () => {
-      //this.endProjectAuthoringSession();
+      this.endProjectAuthoringSession();
     });
 
     this.$window.onbeforeunload = (event) => {
-      //this.endProjectAuthoringSession();
+      this.endProjectAuthoringSession();
     };
   }
 
@@ -1724,7 +1724,7 @@ ProjectController.$inject = [
     '$scope',
     '$state',
     '$stateParams',
-    //'$stomp',
+    '$stomp',
     '$timeout',
     '$window',
     'ConfigService',

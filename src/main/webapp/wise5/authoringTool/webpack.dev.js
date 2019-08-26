@@ -12,6 +12,10 @@ module.exports = merge(common, {
       '/project': 'http://localhost:8080',
       '/wise5': 'http://localhost:8080',
       '/curriculum': 'http://localhost:8080',
+      '/websocket': {
+        target: 'http://localhost:8080',
+        ws: true
+     },
     }
   }
 });

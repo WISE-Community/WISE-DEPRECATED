@@ -13,11 +13,9 @@ import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularSanitize from 'angular-sanitize';
-//import angularSock from 'angular-sockjs';
-import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
+import angularStomp from 'ng-stomp';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
-import ngWebSocket from 'angular-websocket';
 import AnimationComponentModule from '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
@@ -58,6 +56,8 @@ import OutsideURLComponentModule from '../components/outsideURL/outsideURLCompon
 import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
+import SockJS from 'sockjs-client';
+import Stomp from "@stomp/stompjs"
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentGradingController from './studentGrading/studentGradingController';
@@ -97,9 +97,7 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
         'ngFileUpload',
         'ngMaterial',
         'ngSanitize',
-        //'bd.sockjs',
         'ngStomp',
-        'ngWebSocket',
         'theme.notebook',
         'openResponseComponentModule',
         'outsideURLComponentModule',

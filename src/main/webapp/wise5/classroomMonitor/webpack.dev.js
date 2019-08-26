@@ -17,7 +17,11 @@ module.exports = merge(common, {
       '/runStatus': 'http://localhost:8080',
       '/studentStatus': 'http://localhost:8080',
       '/portal': 'http://localhost:8080',
-      '/vle': 'http://localhost:8080'
+      '/vle': 'http://localhost:8080',
+      '/websocket': {
+        target: 'http://localhost:8080',
+        ws: true
+     },
     }
   }
 });

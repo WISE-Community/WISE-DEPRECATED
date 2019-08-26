@@ -10,12 +10,10 @@ import 'angular-ui-router';
 import 'angular-material';
 import 'angular-moment';
 import 'angular-sanitize';
-//import angularSock from 'angular-sockjs';
-//import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
+import angularStomp from 'ng-stomp';
 import '../lib/angular-toArrayFilter/toArrayFilter';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
-import 'angular-websocket';
 import '../components/animation/animationAuthoringComponentModule';
 import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorAuthoringComponentModule';
@@ -55,6 +53,8 @@ import ProjectInfoController from './info/projectInfoController';
 import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
+import SockJS from 'sockjs-client';
+import Stomp from "@stomp/stompjs"
 import SpaceService from '../services/spaceService';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
@@ -93,9 +93,7 @@ const authoringModule = angular.module('authoring', [
     'ngFileUpload',
     'ngMaterial',
     'ngSanitize',
-    //'bd.sockjs',
-    //'ngStomp',
-    'ngWebSocket',
+    'ngStomp',
     'openResponseAuthoringComponentModule',
     'outsideURLAuthoringComponentModule',
     'pascalprecht.translate',

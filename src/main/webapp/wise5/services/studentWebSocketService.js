@@ -2,21 +2,24 @@
 
 class StudentWebSocketService {
   constructor(
+      $log,
       $rootScope,
-      //$stomp,
+      $stomp,
       AnnotationService,
       ConfigService) {
     this.$rootScope = $rootScope;
-    //this.$stomp = $stomp;
+    this.$stomp = $stomp;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
+    this.$stomp.setDebug(function (args) {
+      $log.debug(args)
+    });
   }
 
   initialize() {
     this.runId = this.ConfigService.getRunId();
     this.periodId = this.ConfigService.getPeriodId();
     this.workgroupId = this.ConfigService.getWorkgroupId();
-    /*
     try {
       this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
         this.subscribeToClassroomTopic();
@@ -25,7 +28,6 @@ class StudentWebSocketService {
     } catch(e) {
       console.log(e);
     }
-    */
   }
 
   subscribeToClassroomTopic() {
@@ -56,8 +58,9 @@ class StudentWebSocketService {
 }
 
 StudentWebSocketService.$inject = [
+  '$log',
   '$rootScope',
-  //'$stomp',
+  '$stomp',
   'AnnotationService',
   'ConfigService'
 ];

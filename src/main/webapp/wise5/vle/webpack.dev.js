@@ -12,7 +12,11 @@ module.exports = merge(common, {
       '/notification': 'http://localhost:8080',
       '/runStatus': 'http://localhost:8080',
       '/student': 'http://localhost:8080',
-      '/wise5': 'http://localhost:8080'
+      '/wise5': 'http://localhost:8080',
+      '/websocket': {
+        target: 'http://localhost:8080',
+        ws: true
+     },
     }
   }
 });

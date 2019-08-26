@@ -10,13 +10,12 @@ import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularOnload from 'ng-onload';
 import angularSanitize from 'angular-sanitize';
-import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
+import angularStomp from 'ng-stomp';
 import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularUIRouter from 'angular-ui-router';
 import angularUIScrollpoint from 'angular-ui-scrollpoint';
-import angularWebSocket from 'angular-websocket';
 import AnimationComponentModule from '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
@@ -63,6 +62,8 @@ import UtilService from '../services/utilService';
 import VLEController from './vleController';
 import VLEProjectService from './vleProjectService';
 import moment from 'moment';
+import SockJS from 'sockjs-client';
+import Stomp from "@stomp/stompjs";
 import summernote from 'summernote';
 import angularSummernote from '../lib/angular-summernote/dist/angular-summernote';
 import theme from '../themes/default/theme';
@@ -91,7 +92,6 @@ const vleModule = angular.module('vle', [
     'ngOnload',
     'ngSanitize',
     'ngStomp',
-    'ngWebSocket',
     'openResponseComponentModule',
     'outsideURLComponentModule',
     'pascalprecht.translate',
