@@ -17,7 +17,7 @@ export class FindTeacherComponent implements OnInit {
   showSearchById: boolean = false;
   searchResultsAvailable: boolean = false;
   dataSource: any[] = [];
-  displayedColumns: string[] = ['username', 'changePassword', 'loginAsUser', 'userInfo'];
+  displayedColumns: string[] = ['username', 'changePassword', 'loginAsUser', 'userInfo', 'manageRoles'];
   changePasswordAdminAction: string = AdminActions.CHANGE_PASSWORD;
   viewUserInfoAdminAction: string = AdminActions.VIEW_USER_INFO;
   manageRolesAdminAction: string = AdminActions.MANAGE_ROLES;
@@ -116,6 +116,6 @@ export class FindTeacherComponent implements OnInit {
   }
 
   loginAsUser(username: string) {
-
+    window.location.href = `/login/impersonate?username=${username}`;
   }
 }

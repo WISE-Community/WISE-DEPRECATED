@@ -228,11 +228,16 @@ public class UserAPIController {
     response.put("lastName", user.getUserDetails().getLastname());
     response.put("numberOfLogins", user.getUserDetails().getNumberOfLogins());
     response.put("isGoogleUser", user.getUserDetails().isGoogleUser());
-    List<Run> runs = runService.getRunList(user);
-    for (Run run: runs) {
-      runsArray.put(runToJSON(run));
+    if (user.isStudent()) {
+      List<Run> runs = runService.getRunList(user);
+      for (Run run: runs) {
+        runsArray.put(runToJSON(run));
+      }
+      response.put("runs", runsArray);
     }
-    response.put("runs", runsArray);
+    if (user.isTeacher()) {
+//      response.put("permissions", userService.)
+    }
     return response.toString();
   }
 

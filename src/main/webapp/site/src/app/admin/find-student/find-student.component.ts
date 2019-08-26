@@ -95,6 +95,6 @@ export class FindStudentComponent implements OnInit {
   }
 
   loginAsUser(username: string) {
-
+    window.location.href = `/login/impersonate?username=${username}`;
   }
 }

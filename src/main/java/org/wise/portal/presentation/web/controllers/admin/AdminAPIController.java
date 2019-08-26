@@ -5,13 +5,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.user.UserService;
 import java.util.List;
 
@@ -118,5 +119,32 @@ public class AdminAPIController {
       return null;
     }
     return searchField;
+  }
+
+  @RequestMapping(value = "/change-user-password", method = RequestMethod.POST)
+  protected SimpleResponse changeUserPassword(
+    @RequestParam("username") String username,
+    @RequestParam("adminPassword") String adminPassword,
+    @RequestParam("newPassword") String newPassword) throws NotAuthorizedException {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    if (signedInUser != null
+        && signedInUser.getUserDetails().getUsername().equals("admin")
+        && userService.isPasswordCorrect(signedInUser, adminPassword)) {
+      User user = userService.retrieveUserByUsername(username);
+      if (user != null) {
+        if (isPasswordBlank(newPassword)) {
+          return new SimpleResponse("message", "invalid password");
+        }
+        userService.updateUserPassword(user, newPassword);
+        return new SimpleResponse("message", "success");
+      } else {
+        return new SimpleResponse("message", "username not found");
+      }
+    }
+    return new SimpleResponse("message", "incorrect admin password");
+  }
+
+  private boolean isPasswordBlank(String password) {
+    return password == null || password.equals("");
   }
 }

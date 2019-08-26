@@ -25,21 +25,13 @@
       <mat-icon>home</mat-icon>
       <span i18n>Student Home</span>
     </a>
-    <a *ngIf="role === 'teacher' || role === 'researcher'"
+    <a *ngIf="role != 'student'"
        mat-menu-item
        routerLink="/teacher"
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>home</mat-icon>
       <span i18n>Teacher Home</span>
-    </a>
-    <a *ngIf="role === 'admin'"
-       mat-menu-item
-       routerLink="/admin"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact: true}">
-      <mat-icon>home</mat-icon>
-      <span i18n>Admin Home</span>
     </a>
     <a *ngIf="role === 'student'"
        mat-menu-item
@@ -49,17 +41,9 @@
       <mat-icon>edit</mat-icon>
       <span i18n>Edit Profile</span>
     </a>
-    <a *ngIf="role === 'teacher' || role === 'researcher'"
+    <a *ngIf="role !== 'student'"
        mat-menu-item
        routerLink="/teacher/profile/edit"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact: true}">
-      <mat-icon>edit</mat-icon>
-      <span i18n>Edit Profile</span>
-    </a>
-    <a *ngIf="role === 'admin'"
-       mat-menu-item
-       routerLink="/admin/profile/edit"
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>edit</mat-icon>
@@ -71,13 +55,23 @@
       <mat-icon>settings</mat-icon>
       <span i18n>Researcher Tools</span>
     </a>
-    <a *ngIf="role !== ''"
+    <a *ngIf="role === 'admin'"
        mat-menu-item
-       href="admin">
+       routerLink="/admin"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>settings</mat-icon>
       <span i18n>Admin Tools</span>
     </a>
     <a *ngIf="role === 'student'"
+       mat-menu-item
+       routerLink="/help"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}">
+      <mat-icon>help</mat-icon>
+      <span i18n>Help</span>
+    </a>
+    <a *ngIf="role !== 'student'"
        mat-menu-item
        routerLink="/help"
        routerLinkActive="active"

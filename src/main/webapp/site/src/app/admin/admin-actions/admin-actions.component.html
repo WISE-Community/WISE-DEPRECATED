@@ -9,13 +9,13 @@
         <mat-form-field fxFlex appearance="fill">
           <mat-label i18n>Current Admin Password</mat-label>
           <input matInput
-                 id="oldPassword"
+                 id="adminPassword"
                  type="password"
-                 name="oldPassword"
-                 formControlName="oldPassword"
+                 name="adminPassword"
+                 formControlName="adminPassword"
                  required />
-          <mat-error *ngIf="adminChangePasswordFormGroup.controls['oldPassword'].hasError('required')" i18n>Current Admin Password required</mat-error>
-          <mat-error *ngIf="adminChangePasswordFormGroup.controls['oldPassword'].hasError('incorrectPassword')" i18n>Current Admin Password is incorrect</mat-error>
+          <mat-error *ngIf="adminChangePasswordFormGroup.controls['adminPassword'].hasError('required')" i18n>Current Admin Password required</mat-error>
+          <mat-error *ngIf="adminChangePasswordFormGroup.controls['adminPassword'].hasError('incorrectPassword')" i18n>Current Admin Password is incorrect</mat-error>
         </mat-form-field>
       </p>
       <div formGroupName="newPasswordFormGroup" *ngIf="!isGoogleUser">
@@ -63,7 +63,7 @@
           <ng-container i18n>Change Password</ng-container>
           <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
         </button>
-        <button mat-flat-button color="primary" mat-dialog-close i18n>Cancel</button>
+        <button mat-flat-button color="primary" mat-dialog-close i18n>Done</button>
       </div>
     </div>
   </form>
@@ -94,6 +94,23 @@
   </table>
   <div fxLayoutAlign="end">
     <button mat-flat-button color="primary" mat-dialog-close i18n>Close</button>
+  </div>
+</ng-container>
+<ng-container *ngIf="isManageRoles">
+  <h2 class="mat-dialog-title" i18n>Manage Teacher Roles</h2>
+  <div fxLayout="row wrap">
+    <mat-checkbox disabled>
+      <ng-container i18n>View Student Work</ng-container>
+    </mat-checkbox>
+    <mat-checkbox i18n>
+      <ng-container i18n>View Student Names</ng-container>
+    </mat-checkbox>
+    <mat-checkbox>
+      <ng-container i18n>Grade and Manage</ng-container>
+    </mat-checkbox>
+    <mat-checkbox>
+      <ng-container i18n>Edit Unit Content</ng-container>
+    </mat-checkbox>
   </div>
 </ng-container>
 

@@ -9,6 +9,7 @@ export class AdminService {
 
   private searchStudentsUrl = 'api/admin/search-students';
   private searchTeachersUrl = 'api/admin/search-teachers';
+  private changePasswordUrl = '/api/admin/change-user-password';
 
   constructor(private http: HttpClient) { }
 
@@ -46,5 +47,14 @@ export class AdminService {
       .set('email', email)
       .set('runId', runId);
     return this.http.get<any[]>(this.searchTeachersUrl, { headers, params });
+  }
+
+  changeUserPassword(username: string, adminPassword: string, newPassword: string) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    const params = new HttpParams()
+      .set('username', username)
+      .set('adminPassword', adminPassword)
+      .set('newPassword', newPassword);
+    return this.http.post<any>(this.changePasswordUrl, params, { headers: headers });
   }
 }

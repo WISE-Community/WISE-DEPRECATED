@@ -48,11 +48,12 @@ export class UserService {
   isTeacher(): boolean {
     const role = this.user$.getValue().role;
     return this.isSignedIn() &&
-      (role === 'teacher' || role === 'researcher');
+      (role === 'teacher' || role === 'admin' || role === 'researcher');
   }
 
   isAdmin(): boolean {
-    return this.isSignedIn() && this.user$.getValue().role === 'admin';
+    return this.isSignedIn() &&
+      this.user$.getValue().role === 'admin';
   }
 
   isGoogleUser(): boolean {
