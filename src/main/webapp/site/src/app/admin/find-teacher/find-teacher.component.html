@@ -119,7 +119,7 @@
   <ng-container matColumnDef="manageRoles">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let teacher">
-      <button mat-flat-button (click)="openManageUserRoles(teacher.username, manageRolesAdminAction)">Manage Roles</button>
+      <button mat-flat-button (click)="openAdminActions(teacher.username, manageRolesAdminAction)">Manage Roles</button>
     </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

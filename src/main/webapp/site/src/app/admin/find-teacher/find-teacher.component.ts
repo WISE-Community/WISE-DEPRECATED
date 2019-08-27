@@ -109,16 +109,6 @@ export class FindTeacherComponent implements OnInit {
     this.userService.getUserByUsername(username).subscribe(user => {
       this.dialog.open(AdminActionsComponent, {
         data: { user: user, action: action, isTeacher: true },
-        panelClass: 'mat-dialog--md',
-        disableClose: true
-      });
-    });
-  }
-
-  openManageUserRoles(username: string, action: string) {
-    this.userService.getUserByUsername(username).subscribe(user => {
-      this.dialog.open(AdminActionsComponent, {
-        data: { user: user, action: action, isTeacher: true },
         panelClass: 'mat-dialog--sm',
         disableClose: true
       });
