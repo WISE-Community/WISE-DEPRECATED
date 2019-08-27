@@ -156,7 +156,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   }
 
   transferRunOwnership(run: TeacherRun) {
-    this.removeSharedOwner(run.owner);
+    this.sharedOwners = [];
     this.project = run.project;
     this.populateSharedOwners(run.sharedOwners);
     run.sharedOwners = this.sharedOwners;
