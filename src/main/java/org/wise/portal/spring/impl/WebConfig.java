@@ -77,6 +77,7 @@ public class WebConfig implements WebMvcConfigurer {
     registry.addResourceHandler("/index.html").addResourceLocations("/site/dist/");
     registry.addResourceHandler("/assets/**").addResourceLocations("/site/dist/assets/");
     registry.addResourceHandler("/*.js").addResourceLocations("/site/dist/");
+    registry.addResourceHandler("/*.js.map").addResourceLocations("/site/dist/");
     registry.addResourceHandler("/*.css").addResourceLocations("/site/dist/");
     registry.addResourceHandler("/*.ico").addResourceLocations("/site/dist/");
   }
