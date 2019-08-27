@@ -1584,10 +1584,6 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
       </trans-unit><trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
         <source>Add</source>
         <context-group purpose="location">
@@ -1631,6 +1627,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">110</context>
         </context-group>
       </trans-unit><trans-unit id="053c99466a9288207400b49f2ca907192b5bd44d" datatype="html">
         <source>Use with Class</source>
@@ -4612,25 +4616,15 @@
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-      </trans-unit><trans-unit id="176d53680cfef5c256c44149bf75fb60eacf1415" datatype="html">
-        <source>Admin Home</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
       </trans-unit><trans-unit id="d3781ad331fdd0bc9055c45a41664ac467de63af" datatype="html">
         <source>Edit Profile</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">50</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">66</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit/edit.component.html</context>
@@ -4644,25 +4638,29 @@
         <source>Researcher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit><trans-unit id="593d1ae1c4b71457eda8476df2bb52624a3c6e74" datatype="html">
         <source>Admin Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit><trans-unit id="85b79c9064aed1ead31ace985f31aa1363f6bdaf" datatype="html">
         <source>Help</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit><trans-unit id="640eec093c685babaa3265137215e3cc92ad704d" datatype="html">
         <source>Sign Out</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit><trans-unit id="36a606470097ddf0c32a250c8a902441729ca8ca" datatype="html">
         <source>Add Unit</source>
@@ -5156,6 +5154,18 @@
           <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
+      </trans-unit><trans-unit id="e989899332d92e92546f24e997b2f273c8fb78e9" datatype="html">
+        <source>Manage Teacher Roles</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+      </trans-unit><trans-unit id="36e1e453adec0a13b8f3f85114b4b12544b65fad" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{authorityName}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/admin-actions/admin-actions.component.html</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
       </trans-unit><trans-unit id="1c08e3855b676651845a3e3b748f498733d22ad4" datatype="html">
         <source>Search for WISE Students</source>
         <context-group purpose="location">
@@ -5205,6 +5215,31 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-teacher/find-teacher.component.html</context>
           <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
+        <source>Password changed.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/edit-password/edit-password.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="20ee322c79a293a7147b858cc32aeeaa868c9e85" datatype="html">
+        <source>Successfully updated user roles</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8873bb0d22af11338ca7499c5bf51f6b8c07b495" datatype="html">
+        <source>Could not update user roles</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="de4fdef260a86fc9c409a2d4562e8910d93e2b6d" datatype="html">
@@ -5673,13 +5708,6 @@
         <source>Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
-        <source>Password changed.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/edit-password/edit-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

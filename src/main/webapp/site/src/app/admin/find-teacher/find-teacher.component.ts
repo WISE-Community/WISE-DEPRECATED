@@ -115,6 +115,16 @@ export class FindTeacherComponent implements OnInit {
     });
   }
 
+  openManageUserRoles(username: string, action: string) {
+    this.userService.getUserByUsername(username).subscribe(user => {
+      this.dialog.open(AdminActionsComponent, {
+        data: { user: user, action: action, isTeacher: true },
+        panelClass: 'mat-dialog--sm',
+        disableClose: true
+      });
+    });
+  }
+
   loginAsUser(username: string) {
     window.location.href = `/login/impersonate?username=${username}`;
   }

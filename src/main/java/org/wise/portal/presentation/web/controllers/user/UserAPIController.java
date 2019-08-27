@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.MutableGrantedAuthority;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.run.Run;
@@ -17,6 +17,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
+import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
@@ -46,6 +47,9 @@ public class UserAPIController {
 
   @Autowired
   protected IMailFacade mailService;
+
+  @Autowired
+  private UserDetailsService userDetailsService;
 
   @Value("${google.clientId:}")
   private String googleClientId;
@@ -236,7 +240,16 @@ public class UserAPIController {
       response.put("runs", runsArray);
     }
     if (user.isTeacher()) {
-//      response.put("permissions", userService.)
+      JSONArray allAuthorities = new JSONArray();
+      JSONArray userAuthorities = new JSONArray();
+      for (MutableGrantedAuthority authority: userDetailsService.retrieveAllAuthorities()) {
+        if (user.getUserDetails().hasGrantedAuthority(authority.getAuthority())) {
+          userAuthorities.put(authority.getAuthority());
+        }
+        allAuthorities.put(authority.getAuthority());
+      }
+      response.put("allAuthorities", allAuthorities);
+      response.put("userAuthorities", userAuthorities);
     }
     return response.toString();
   }

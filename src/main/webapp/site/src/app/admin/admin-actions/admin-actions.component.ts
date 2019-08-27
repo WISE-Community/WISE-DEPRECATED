@@ -30,6 +30,8 @@ export class AdminActionsComponent implements OnInit {
   runsDataSource: MatTableDataSource<any>;
   runDisplayedColumns = [];
   runs = [];
+  allAuthorities = [];
+  userAuthorities;
 
   newPasswordFormGroup: FormGroup = this.fb.group({
     newPassword: new FormControl('', [Validators.required]),
@@ -56,10 +58,18 @@ export class AdminActionsComponent implements OnInit {
     this.isChangePassword = data.action === AdminActions.CHANGE_PASSWORD;
     this.isViewUserInfo = data.action === AdminActions.VIEW_USER_INFO;
     this.isManageRoles = data.action === AdminActions.MANAGE_ROLES;
-    this.runs = this.user.runs;
+    if (this.user.runs) {
+      this.runs = this.user.runs;
+    }
+    this.userAuthorities = new Set();
+    if (this.user.userAuthorities) {
+      this.allAuthorities = this.user.allAuthorities;
+      this.userAuthorities = new Set(this.user.userAuthorities);
+    }
   }
 
   ngOnInit() {
+
     this.updateDataSource();
     this.transposeRunsData();
     this.fillRunLabels();
@@ -109,9 +119,12 @@ export class AdminActionsComponent implements OnInit {
       const error = { 'incorrectPassword': true };
       const adminPasswordControl = this.adminChangePasswordFormGroup.get('adminPassword');
       adminPasswordControl.setErrors(error);
-    } else if (response.message === 'invalid password') {
+    } else {
       const error = { 'incorrectPassword': true };
-      const oldPasswordControl = this.adminChangePasswordFormGroup
+      const newPasswordControl = this.adminChangePasswordFormGroup.get('newPassword');
+      const confirmNewPasswordControl = this.adminChangePasswordFormGroup.get('confirmNewPassword');
+      newPasswordControl.setErrors(error);
+      confirmNewPasswordControl.setErrors(error);
     }
   }
 
@@ -142,5 +155,26 @@ export class AdminActionsComponent implements OnInit {
     for (let i = 0; i < this.runs.length; i++) {
       this.runDisplayedColumns.push(`column${i}`);
     }
+  }
+
+  userAuthorityChanged(authorityName: string) {
+    let action;
+    if (this.userAuthorities.has(authorityName)) {
+      action = 'revoke';
+    } else {
+      action = 'grant';
+    }
+    this.adminService.updateUserAuthorities(this.user.username, action, authorityName).subscribe(response => {
+      if (response.message === 'success') {
+        if (action === 'revoke') {
+          this.userAuthorities.delete(authorityName);
+        } else if (action === 'grant') {
+          this.userAuthorities.add(authorityName);
+        }
+        this.snackBar.open(this.i18n('Successfully updated user roles'));
+      } else {
+        this.snackBar.open(this.i18n('Could not update user roles'));
+      }
+    });
   }
 }

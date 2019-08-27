@@ -98,19 +98,16 @@
 </ng-container>
 <ng-container *ngIf="isManageRoles">
   <h2 class="mat-dialog-title" i18n>Manage Teacher Roles</h2>
-  <div fxLayout="row wrap">
-    <mat-checkbox disabled>
-      <ng-container i18n>View Student Work</ng-container>
-    </mat-checkbox>
-    <mat-checkbox i18n>
-      <ng-container i18n>View Student Names</ng-container>
-    </mat-checkbox>
-    <mat-checkbox>
-      <ng-container i18n>Grade and Manage</ng-container>
-    </mat-checkbox>
-    <mat-checkbox>
-      <ng-container i18n>Edit Unit Content</ng-container>
-    </mat-checkbox>
+  <div fxLayout="column wrap">
+    <ng-container *ngFor="let authorityName of allAuthorities">
+      <mat-checkbox [checked]="userAuthorities.has(authorityName)"
+                    (change)="userAuthorityChanged(authorityName)">
+        <ng-container i18n>{{authorityName}}</ng-container>
+      </mat-checkbox>
+    </ng-container>
+  </div>
+  <div fxLayoutAlign="end">
+    <button mat-flat-button color="primary" mat-dialog-close i18n>Done</button>
   </div>
 </ng-container>
 

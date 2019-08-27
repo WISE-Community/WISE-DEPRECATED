@@ -10,6 +10,7 @@ export class AdminService {
   private searchStudentsUrl = 'api/admin/search-students';
   private searchTeachersUrl = 'api/admin/search-teachers';
   private changePasswordUrl = '/api/admin/change-user-password';
+  private updateUserAuthoritiesUrl = '/api/admin/update-authorities';
 
   constructor(private http: HttpClient) { }
 
@@ -56,5 +57,14 @@ export class AdminService {
       .set('adminPassword', adminPassword)
       .set('newPassword', newPassword);
     return this.http.post<any>(this.changePasswordUrl, params, { headers: headers });
+  }
+
+  updateUserAuthorities(username: string, action: string, authorityName: string) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    const params = new HttpParams()
+      .set('username', username)
+      .set('action', action)
+      .set('authorityName', authorityName);
+    return this.http.post<any>(this.updateUserAuthoritiesUrl, params, { headers: headers });
   }
 }

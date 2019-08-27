@@ -1,18 +1,19 @@
 package org.wise.portal.presentation.web.controllers.admin;
 
-import org.bouncycastle.cert.ocsp.Req;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
+import org.wise.portal.service.authentication.AuthorityNotFoundException;
+import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.user.UserService;
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class AdminAPIController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private UserDetailsService userDetailsService;
 
   @RequestMapping(value = "/search-students", method = RequestMethod.GET)
   protected String searchStudents(
@@ -146,5 +150,31 @@ public class AdminAPIController {
 
   private boolean isPasswordBlank(String password) {
     return password == null || password.equals("");
+  }
+
+  @RequestMapping(value = "/update-authorities", method = RequestMethod.POST)
+  protected SimpleResponse updateUserAuthorities(
+    @RequestParam("username") String username,
+    @RequestParam("action") String action,
+    @RequestParam("authorityName") String authorityName
+  ) {
+    User user = userService.retrieveUserByUsername(username);
+    if (user != null) {
+      try {
+        GrantedAuthority authority = userDetailsService.loadAuthorityByName(authorityName);
+        if ("grant".equals(action)) {
+          user.getUserDetails().addAuthority(authority);
+        } else if ("revoke".equals(action)) {
+          user.getUserDetails().removeAuthority(authority);
+        } else {
+          return new SimpleResponse("message", "invalid action");
+        }
+        userService.updateUser(user);
+        return new SimpleResponse("message", "success");
+      } catch (AuthorityNotFoundException e) {
+        return new SimpleResponse("message", "authority not found");
+      }
+    }
+    return new SimpleResponse("message", "user not found");
   }
 }
