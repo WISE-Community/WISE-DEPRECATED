@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007 Regents of the University of California (Regents). Created
+ * Copyright (c) 2007-2019 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -29,10 +29,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runners.JUnit4;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.wise.portal.junit.AbstractSpringTests;
@@ -73,10 +71,6 @@ import org.wise.portal.service.mail.MailService;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {
-  "classpath:configurations/dispatcherServletContexts.xml",
-  "classpath:configurations/applicationContexts.xml"
-})
 public class JavaMailTest extends AbstractSpringTests {
 
   @Autowired

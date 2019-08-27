@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -24,9 +24,6 @@
 package org.wise.portal.presentation.web.filters;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -37,19 +34,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.session.SessionService;
 import org.wise.portal.service.user.UserService;
-import redis.clients.jedis.Jedis;
 
 /**
  * Custom AuthenticationProcessingFilter that subclasses Acegi Security. This
@@ -66,9 +58,6 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
 
   @Autowired
   protected SessionService sessionService;
-
-  @Autowired
-  private Properties appProperties;
 
   public static final String STUDENT_DEFAULT_TARGET_PATH = "/legacy/student";
   public static final String TEACHER_DEFAULT_TARGET_PATH = "/legacy/teacher";

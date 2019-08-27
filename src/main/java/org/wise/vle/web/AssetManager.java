@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -40,7 +40,6 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -55,7 +54,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
@@ -237,7 +236,7 @@ public class AssetManager {
         String path = appProperties.getProperty("studentuploads_base_dir");
         Long studentMaxTotalAssetsSize = new Long(appProperties.getProperty("student_max_total_assets_size", "5242880"));
         String pathToCheckSize = path + "/" + dirName;
-        DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
+        StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
         Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
         String result = uploadAsset(fileMap, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
         response.getWriter().write(result);

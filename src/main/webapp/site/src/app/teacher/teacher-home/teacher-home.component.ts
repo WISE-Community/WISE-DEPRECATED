@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
-import { TeacherService } from "../teacher.service";
 import { ConfigService } from "../../services/config.service";
-import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material';
+import { MatTabGroup } from '@angular/material';
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { LibraryService } from '../../services/library.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-teacher-home',
@@ -15,17 +16,17 @@ export class TeacherHomeComponent implements OnInit {
   @ViewChild('tabs', { static: true }) tabs: MatTabGroup;
 
   user: User = new User();
-  selectedTabIndex: number = 0;
   authoringToolLink: string = '';
+  tabLinks: any[] = [
+    { path: 'schedule', label: this.i18n('Class Schedule') },
+    { path: 'library', label: this.i18n('Browse WISE Units') }
+  ]
 
   constructor(private userService: UserService,
-              private teacherService: TeacherService,
               private configService: ConfigService,
+              private libraryService: LibraryService,
               private router: Router,
-              private activatedRoute: ActivatedRoute) {
-    teacherService.tabIndexSource$.subscribe((tabIndex) => {
-      this.selectedTabIndex = tabIndex;
-    });
+              private i18n: I18n) {
   }
 
   ngOnInit() {
@@ -35,12 +36,10 @@ export class TeacherHomeComponent implements OnInit {
         this.authoringToolLink = `${this.configService.getContextPath()}/author`;
       }
     });
-    this.activatedRoute.data.subscribe(({ selectedTabIndex }) => {
-      this.teacherService.setTabIndex(selectedTabIndex);
-    });
-    // Workaround for intercepting mat-tab change events
-    // https://stackoverflow.com/questions/51354135/how-to-conditionally-prevent-user-from-navigating-to-other-tab-in-mat-tab-group/51354403#51354403
-    this.tabs._handleClick = this.interceptTabChange.bind(this);
+  }
+
+  ngOnDestroy() {
+    this.libraryService.clearAll();
   }
 
   getUser() {
@@ -50,20 +49,7 @@ export class TeacherHomeComponent implements OnInit {
       });
   }
 
-  interceptTabChange(tab: MatTab, tabHeader: MatTabHeader, idx: number) {
-    if (idx === 2) {
-      window.location.href = this.authoringToolLink;
-      return false;
-    }
-    MatTabGroup.prototype._handleClick.apply(this.tabs, arguments);
-  }
-
-  tabClicked(event) {
-    const tabIndex = event.index;
-    if (tabIndex === 0) {
-      this.router.navigate(['../schedule'], { relativeTo: this.activatedRoute });
-    } else if (tabIndex === 1) {
-      this.router.navigate(['../library'], { relativeTo: this.activatedRoute });
-    }
+  isRunListRoute(): boolean {
+    return this.router.url === '/teacher/home/schedule';
   }
 }

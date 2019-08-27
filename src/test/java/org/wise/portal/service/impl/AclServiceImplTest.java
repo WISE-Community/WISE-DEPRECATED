@@ -59,15 +59,15 @@ public class AclServiceImplTest extends TestCase {
     super.setUp();
 
     authority = new TestingAuthenticationToken("admin",
-        new GrantedAuthority[] { new SimpleGrantedAuthority("ROLE_ADMINISTRATOR") });
+      new GrantedAuthority[] { new SimpleGrantedAuthority("ROLE_ADMINISTRATOR") });
     authority.setAuthenticated(true);
     securityContext = new SecurityContextImpl();
     securityContext.setAuthentication(authority);
     SecurityContextHolder.setContext(securityContext);
 
-    groupAclService = new AclServiceImpl<Group>();
+//    groupAclService = new AclServiceImpl<Group>();
     mutableAclService = EasyMock.createMock(MutableAclService.class);
-    groupAclService.setMutableAclService(mutableAclService);
+//    groupAclService.setMutableAclService(mutableAclService);
 
     group = EasyMock.createMock(Group.class);
     EasyMock.expect(group.getId()).andReturn(new Long(1)).anyTimes();
@@ -94,7 +94,7 @@ public class AclServiceImplTest extends TestCase {
     // here, test that acl doesn't exist yet, so a new acl will be created and a new ace will
     // be added to that
     EasyMock.expect(mutableAclService.readAclById(objectIdentity))
-        .andThrow(new NotFoundException("acl not found"));
+      .andThrow(new NotFoundException("acl not found"));
     EasyMock.expect(mutableAclService.createAcl(objectIdentity)).andStubReturn(mockMutableAcl);
     EasyMock.expect(mockMutableAcl.getEntries()).andStubReturn(Collections.emptyList());
     EasyMock.expect(mutableAclService.updateAcl(mockMutableAcl)).andReturn(mockMutableAcl);

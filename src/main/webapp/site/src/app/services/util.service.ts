@@ -51,4 +51,24 @@ export class UtilService {
     }
     return days;
   }
+
+  removeObjectArrayDuplicatesByProperty(array: any[], prop: string): any[] {
+    return array.filter((obj, pos, arr) => {
+      return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
+    });
+  }
+
+  sortObjectArrayByProperty(array: any[], prop: string): void {
+    array.sort( (a: any, b: any) => {
+      const valA = a[prop].toLocaleLowerCase();
+      const valB = b[prop].toLocaleLowerCase();
+      if (valA < valB) {
+        return -1;
+      }
+      if (valA > valB) {
+        return 1;
+      }
+      return 0;
+    });
+  }
 }

@@ -3,67 +3,85 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _drawController = _interopRequireDefault(require("./drawController"));
 
-var _drawController = require('./drawController');
+var _drawingTool = _interopRequireDefault(require("lib/drawingTool/drawing-tool"));
 
-var _drawController2 = _interopRequireDefault(_drawController);
+var _vendor = _interopRequireDefault(require("lib/drawingTool/vendor.min"));
 
-var _drawingTool = require('lib/drawingTool/drawing-tool');
+var _html2canvas = _interopRequireDefault(require("html2canvas"));
 
-var _drawingTool2 = _interopRequireDefault(_drawingTool);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _vendor = require('lib/drawingTool/vendor.min');
-
-var _vendor2 = _interopRequireDefault(_vendor);
-
-var _html2canvas = require('html2canvas');
-
-var _html2canvas2 = _interopRequireDefault(_html2canvas);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var DrawAuthoringController = function (_DrawController) {
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var DrawAuthoringController =
+/*#__PURE__*/
+function (_DrawController) {
   _inherits(DrawAuthoringController, _DrawController);
 
   function DrawAuthoringController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, DrawService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    var _this;
+
     _classCallCheck(this, DrawAuthoringController);
 
-    var _this = _possibleConstructorReturn(this, (DrawAuthoringController.__proto__ || Object.getPrototypeOf(DrawAuthoringController)).call(this, $filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, DrawService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
-
-    _this.allowedConnectedComponentTypes = [{ type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(DrawAuthoringController).call(this, $filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, DrawService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
+    _this.allowedConnectedComponentTypes = [{
+      type: 'ConceptMap'
+    }, {
+      type: 'Draw'
+    }, {
+      type: 'Embedded'
+    }, {
+      type: 'Graph'
+    }, {
+      type: 'Label'
+    }, {
+      type: 'Table'
+    }];
     _this.isResetButtonVisible = true;
     _this.drawingToolId = 'drawingtool_' + _this.nodeId + '_' + _this.componentId;
-
     $scope.$watch(function () {
       return this.authoringComponentContent;
-    }.bind(_this), function (newValue, oldValue) {
+    }.bind(_assertThisInitialized(_this)), function (newValue, oldValue) {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.submitCounter = 0;
       this.initializeDrawingTool();
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    }.bind(_this), true);
+    }.bind(_assertThisInitialized(_this)), true);
     return _this;
   }
 
   _createClass(DrawAuthoringController, [{
-    key: 'assetSelected',
+    key: "assetSelected",
     value: function assetSelected(event, args) {
       if (this.isEventTargetThisComponent(args)) {
         var fileName = args.assetItem.fileName;
+
         if (args.target === 'rubric') {
           var summernoteId = this.getSummernoteId(args);
           this.restoreSummernoteCursorPosition(summernoteId);
           var fullAssetPath = this.getFullAssetPath(fileName);
+
           if (this.UtilService.isImage(fileName)) {
             this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
           } else if (this.UtilService.isVideo(fileName)) {
@@ -78,39 +96,41 @@ var DrawAuthoringController = function (_DrawController) {
           this.authoringViewBackgroundChanged();
         }
       }
+
       this.$mdDialog.hide();
     }
   }, {
-    key: 'authoringAddStampButtonClicked',
+    key: "authoringAddStampButtonClicked",
     value: function authoringAddStampButtonClicked() {
       this.initializeAuthoringComponentContentStampsIfNecessary();
       /*
        * create the stamp as an empty string that the author will replace
        * with a file name or url
        */
+
       this.authoringComponentContent.stamps.Stamps.push('');
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'initializeAuthoringComponentContentStampsIfNecessary',
+    key: "initializeAuthoringComponentContentStampsIfNecessary",
     value: function initializeAuthoringComponentContentStampsIfNecessary() {
       if (this.authoringComponentContent != null) {
         if (this.authoringComponentContent.stamps == null) {
           this.authoringComponentContent.stamps = {};
         }
+
         if (this.authoringComponentContent.stamps.Stamps == null) {
           this.authoringComponentContent.stamps.Stamps = [];
         }
       }
     }
-
     /**
      * Move a stamp up in the authoring view
      * @param index the index of the stamp to move
      */
 
   }, {
-    key: 'authoringMoveStampUp',
+    key: "authoringMoveStampUp",
     value: function authoringMoveStampUp(index) {
       if (index != 0) {
         var stamp = this.authoringComponentContent.stamps.Stamps[index];
@@ -119,14 +139,13 @@ var DrawAuthoringController = function (_DrawController) {
         this.authoringViewComponentChanged();
       }
     }
-
     /**
      * Move the stamp down in the authoring view
      * @param index the index of the stamp to move
      */
 
   }, {
-    key: 'authoringMoveStampDown',
+    key: "authoringMoveStampDown",
     value: function authoringMoveStampDown(index) {
       if (index != this.authoringComponentContent.stamps.Stamps.length - 1) {
         var stamp = this.authoringComponentContent.stamps.Stamps[index];
@@ -135,14 +154,13 @@ var DrawAuthoringController = function (_DrawController) {
         this.authoringViewComponentChanged();
       }
     }
-
     /**
      * Delete a stamp from the authoring view
      * @param index the index of the stamp
      */
 
   }, {
-    key: 'authoringDeleteStampClicked',
+    key: "authoringDeleteStampClicked",
     value: function authoringDeleteStampClicked(index) {
       if (confirm(this.$translate('draw.areYouSureYouWantToDeleteThisStamp') + '\n\n' + this.authoringComponentContent.stamps.Stamps[index])) {
         this.authoringComponentContent.stamps.Stamps.splice(index, 1);
@@ -150,11 +168,12 @@ var DrawAuthoringController = function (_DrawController) {
       }
     }
   }, {
-    key: 'authoringEnableAllToolsButtonClicked',
+    key: "authoringEnableAllToolsButtonClicked",
     value: function authoringEnableAllToolsButtonClicked() {
       if (this.authoringComponentContent.tools == null) {
         this.authoringComponentContent.tools = {};
       }
+
       this.authoringComponentContent.tools.select = true;
       this.authoringComponentContent.tools.line = true;
       this.authoringComponentContent.tools.shape = true;
@@ -169,15 +188,16 @@ var DrawAuthoringController = function (_DrawController) {
       this.authoringComponentContent.tools.sendForward = true;
       this.authoringComponentContent.tools.undo = true;
       this.authoringComponentContent.tools.redo = true;
-      this.authoringComponentContent.tools.delete = true;
+      this.authoringComponentContent.tools["delete"] = true;
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringDisableAllToolsButtonClicked',
+    key: "authoringDisableAllToolsButtonClicked",
     value: function authoringDisableAllToolsButtonClicked() {
       if (this.authoringComponentContent.tools == null) {
         this.authoringComponentContent.tools = {};
       }
+
       this.authoringComponentContent.tools.select = false;
       this.authoringComponentContent.tools.line = false;
       this.authoringComponentContent.tools.shape = false;
@@ -192,11 +212,11 @@ var DrawAuthoringController = function (_DrawController) {
       this.authoringComponentContent.tools.sendForward = false;
       this.authoringComponentContent.tools.undo = false;
       this.authoringComponentContent.tools.redo = false;
-      this.authoringComponentContent.tools.delete = false;
+      this.authoringComponentContent.tools["delete"] = false;
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringSaveStarterDrawData',
+    key: "authoringSaveStarterDrawData",
     value: function authoringSaveStarterDrawData() {
       if (confirm(this.$translate('draw.areYouSureYouWantToSaveTheStarterDrawing'))) {
         var drawData = this.getDrawData();
@@ -205,7 +225,7 @@ var DrawAuthoringController = function (_DrawController) {
       }
     }
   }, {
-    key: 'authoringDeleteStarterDrawData',
+    key: "authoringDeleteStarterDrawData",
     value: function authoringDeleteStarterDrawData() {
       if (confirm(this.$translate('draw.areYouSureYouWantToDeleteTheStarterDrawing'))) {
         this.authoringComponentContent.starterDrawData = null;
@@ -214,7 +234,7 @@ var DrawAuthoringController = function (_DrawController) {
       }
     }
   }, {
-    key: 'authoringViewWidthChanged',
+    key: "authoringViewWidthChanged",
     value: function authoringViewWidthChanged() {
       this.width = this.authoringComponentContent.width;
       this.updateStarterDrawDataWidth();
@@ -222,10 +242,11 @@ var DrawAuthoringController = function (_DrawController) {
       this.authoringInitializeDrawingToolAfterTimeout();
     }
   }, {
-    key: 'updateStarterDrawDataWidth',
+    key: "updateStarterDrawDataWidth",
     value: function updateStarterDrawDataWidth() {
       if (this.authoringComponentContent.starterDrawData != null) {
         var starterDrawDataJSONObject = angular.fromJson(this.authoringComponentContent.starterDrawData);
+
         if (starterDrawDataJSONObject != null && starterDrawDataJSONObject.dt != null) {
           starterDrawDataJSONObject.dt.width = this.width;
           this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSONObject);
@@ -233,7 +254,7 @@ var DrawAuthoringController = function (_DrawController) {
       }
     }
   }, {
-    key: 'authoringViewHeightChanged',
+    key: "authoringViewHeightChanged",
     value: function authoringViewHeightChanged() {
       this.height = this.authoringComponentContent.height;
       this.updateStarterDrawDataHeight();
@@ -241,10 +262,11 @@ var DrawAuthoringController = function (_DrawController) {
       this.authoringInitializeDrawingToolAfterTimeout();
     }
   }, {
-    key: 'updateStarterDrawDataHeight',
+    key: "updateStarterDrawDataHeight",
     value: function updateStarterDrawDataHeight() {
       if (this.authoringComponentContent.starterDrawData != null) {
         var starterDrawDataJSONObject = angular.fromJson(this.authoringComponentContent.starterDrawData);
+
         if (starterDrawDataJSONObject != null && starterDrawDataJSONObject.dt != null) {
           starterDrawDataJSONObject.dt.height = this.height;
           this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSONObject);
@@ -252,18 +274,17 @@ var DrawAuthoringController = function (_DrawController) {
       }
     }
   }, {
-    key: 'authoringViewToolClicked',
+    key: "authoringViewToolClicked",
     value: function authoringViewToolClicked() {
       this.authoringViewComponentChanged();
       this.authoringInitializeDrawingToolAfterTimeout();
     }
-
     /**
      * Show the asset popup to allow the author to choose the background image
      */
 
   }, {
-    key: 'chooseBackgroundImage',
+    key: "chooseBackgroundImage",
     value: function chooseBackgroundImage() {
       var params = {
         isPopup: true,
@@ -274,17 +295,19 @@ var DrawAuthoringController = function (_DrawController) {
       this.$rootScope.$broadcast('openAssetChooser', params);
     }
   }, {
-    key: 'authoringViewBackgroundChanged',
+    key: "authoringViewBackgroundChanged",
     value: function authoringViewBackgroundChanged() {
       this.updateStarterDrawDataBackground();
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'updateStarterDrawDataBackground',
+    key: "updateStarterDrawDataBackground",
     value: function updateStarterDrawDataBackground() {
       var starterDrawData = this.authoringComponentContent.starterDrawData;
+
       if (starterDrawData != null) {
         var starterDrawDataJSON = angular.fromJson(starterDrawData);
+
         if (starterDrawDataJSON != null && starterDrawDataJSON.canvas != null && starterDrawDataJSON.canvas.backgroundImage != null && starterDrawDataJSON.canvas.backgroundImage.src != null) {
           /*
            * get the project assets directory path
@@ -296,31 +319,30 @@ var DrawAuthoringController = function (_DrawController) {
            * generate the absolute path to the background image
            * e.g. https://www.berkeley.edu/curriculum/25/assets/earth.png
            */
+
           var newSrc = projectAssetsDirectoryPath + '/' + background;
           starterDrawDataJSON.canvas.backgroundImage.src = newSrc;
           this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSON);
         }
       }
     }
-
     /**
      * Open the asset chooser to select an image for the stamp
      * @param index the index of the stamp
      */
 
   }, {
-    key: 'chooseStampImage',
+    key: "chooseStampImage",
     value: function chooseStampImage(index) {
       var params = {
         isPopup: true,
         nodeId: this.nodeId,
         componentId: this.componentId,
-        target: 'target',
+        target: 'stamp',
         targetObject: index
       };
       this.$rootScope.$broadcast('openAssetChooser', params);
     }
-
     /**
      * Set the stamp image
      * @param index the index of the stamp
@@ -328,18 +350,17 @@ var DrawAuthoringController = function (_DrawController) {
      */
 
   }, {
-    key: 'setStampImage',
+    key: "setStampImage",
     value: function setStampImage(index, fileName) {
       this.authoringComponentContent.stamps.Stamps[index] = fileName;
     }
   }, {
-    key: 'handleConnectedComponentsPostProcess',
+    key: "handleConnectedComponentsPostProcess",
     value: function handleConnectedComponentsPostProcess() {
       if (this.componentContent != null && this.componentContent.background != null) {
         this.drawingTool.setBackgroundImage(this.componentContent.background);
       }
     }
-
     /**
      * Automatically set the component id for the connected component if there
      * is only one viable option.
@@ -347,9 +368,10 @@ var DrawAuthoringController = function (_DrawController) {
      */
 
   }, {
-    key: 'authoringAutomaticallySetConnectedComponentComponentIdIfPossible',
+    key: "authoringAutomaticallySetConnectedComponentComponentIdIfPossible",
     value: function authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
       var components = this.getComponentsByNodeId(connectedComponent.nodeId);
+
       if (components != null) {
         var numberOfAllowedComponents = 0;
         var allowedComponent = null;
@@ -374,8 +396,8 @@ var DrawAuthoringController = function (_DrawController) {
           _iteratorError = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
             }
           } finally {
             if (_didIteratorError) {
@@ -395,21 +417,19 @@ var DrawAuthoringController = function (_DrawController) {
         }
       }
     }
-
     /**
      * The connected component component id has changed
      * @param connectedComponent the connected component that has changed
      */
 
   }, {
-    key: 'authoringConnectedComponentComponentIdChanged',
+    key: "authoringConnectedComponentComponentIdChanged",
     value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
       // default the type to import work
       connectedComponent.type = 'importWork';
       this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
       this.authoringViewComponentChanged();
     }
-
     /**
      * If the component type is a certain type, we will set the importWorkAsBackground
      * field to true.
@@ -417,40 +437,41 @@ var DrawAuthoringController = function (_DrawController) {
      */
 
   }, {
-    key: 'authoringSetImportWorkAsBackgroundIfApplicable',
+    key: "authoringSetImportWorkAsBackgroundIfApplicable",
     value: function authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
       var componentType = this.authoringGetConnectedComponentType(connectedComponent);
+
       if (componentType === 'ConceptMap' || componentType === 'Embedded' || componentType === 'Graph' || componentType === 'Label' || componentType === 'Table') {
         connectedComponent.importWorkAsBackground = true;
       } else {
         delete connectedComponent.importWorkAsBackground;
       }
     }
-
     /**
      * The "Import Work As Background" checkbox was clicked.
      * @param connectedComponent The connected component associated with the checkbox.
      */
 
   }, {
-    key: 'authoringImportWorkAsBackgroundClicked',
+    key: "authoringImportWorkAsBackgroundClicked",
     value: function authoringImportWorkAsBackgroundClicked(connectedComponent) {
       if (!connectedComponent.importWorkAsBackground) {
         delete connectedComponent.importWorkAsBackground;
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringInitializeDrawingToolAfterTimeout',
+    key: "authoringInitializeDrawingToolAfterTimeout",
     value: function authoringInitializeDrawingToolAfterTimeout() {
       this.$timeout(angular.bind(this, this.initializeDrawingTool));
     }
   }]);
 
   return DrawAuthoringController;
-}(_drawController2.default);
+}(_drawController["default"]);
 
 DrawAuthoringController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'DrawService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-exports.default = DrawAuthoringController;
+var _default = DrawAuthoringController;
+exports["default"] = _default;
 //# sourceMappingURL=drawAuthoringController.js.map

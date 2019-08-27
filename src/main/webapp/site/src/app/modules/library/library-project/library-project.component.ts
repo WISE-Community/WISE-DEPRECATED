@@ -1,28 +1,41 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog} from '@angular/material';
-import { LibraryProject } from "../libraryProject";
-import { LibraryProjectDetailsComponent } from "../library-project-details/library-project-details.component";
+import { LibraryProject } from '../libraryProject';
+import { LibraryProjectDetailsComponent } from '../library-project-details/library-project-details.component';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { flash } from '../../../animations';
 
 @Component({
   selector: 'app-library-project',
   templateUrl: './library-project.component.html',
   styleUrls: ['./library-project.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: [ flash ]
 })
 export class LibraryProjectComponent implements OnInit {
 
   @Input()
   project: LibraryProject = new LibraryProject();
 
+  animateDuration: string = '0s';
+  animateDelay: string = '0s';
+
   constructor(public dialog: MatDialog, 
               private sanitizer: DomSanitizer,
-              private i18n: I18n) {
+              private i18n: I18n,
+              private elRef: ElementRef) {
   }
 
   ngOnInit() {
     this.project.thumbStyle = this.getThumbStyle(this.project.projectThumb);
+    if (this.project.isHighlighted) {
+      this.animateDuration = '2s';
+      this.animateDelay = '1s';
+      setTimeout(() => {
+        this.project.isHighlighted = false;
+      }, 7000);
+    }
   }
 
   /**

@@ -13,15 +13,11 @@
 .inactive {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 250ms;
+  transition: opacity 250ms, visibilty 250ms;
 }
 
 .active {
   opacity: 1;
   visibility: visible;
-  transition: opacity 250ms;
-}
-
-.sticky {
-  position: sticky;
+  transition: opacity 250ms, visibilty 250ms;
 }

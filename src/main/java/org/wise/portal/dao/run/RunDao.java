@@ -136,4 +136,6 @@ public interface RunDao<T extends Run> extends SimpleDao<T> {
    * @return a Set of Workgroups that belong in the <code>Run</code>
    */
   Set<Workgroup> getWorkgroupsForRun(Long runId);
+
+  long getMaxRunId();
 }

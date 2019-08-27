@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -30,19 +30,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -73,6 +73,7 @@ import java.util.*;
 /**
  * @author Patrick Lawler
  */
+@Service
 public class ProjectServiceImpl implements ProjectService {
 
   @Autowired
@@ -80,6 +81,9 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Autowired
   private ProjectDao<Project> projectDao;
+
+  @Autowired
+  private RunDao<Run> runDao;
 
   @Autowired
   private AclService<Project> aclService;
@@ -409,7 +413,6 @@ public class ProjectServiceImpl implements ProjectService {
         aclService.hasPermission(project, BasePermission.READ, user);
   }
 
-  @CacheEvict(value = "project", allEntries = true)
   public Integer addTagToProject(String tagString, Long projectId) {
     Tag tag = tagService.createOrGetTag(tagString);
     Project project = null;
@@ -428,7 +431,6 @@ public class ProjectServiceImpl implements ProjectService {
     return (Integer) tag.getId();
   }
 
-  @CacheEvict(value = "project", allEntries = true)
   @Transactional
   public void removeTagFromProject(Integer tagId, Long projectId) {
     Tag tag = tagService.getTagById(tagId);
@@ -481,7 +483,6 @@ public class ProjectServiceImpl implements ProjectService {
     return getProjectListByTagNames(tagNames);
   }
 
-  @Cacheable("project")
   @Transactional
   public List<Project> getPublicLibraryProjectList() {
     Set<String> tagNames = new TreeSet<String>();
@@ -526,11 +527,11 @@ public class ProjectServiceImpl implements ProjectService {
       }
     }
   }
-  
+
   public long getNextAvailableProjectId() {
     String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     File curriculumBaseDirFile = new File(curriculumBaseDir);
-    long nextId = projectDao.getMaxProjectId() + 1;
+    long nextId = Math.max(projectDao.getMaxProjectId(), runDao.getMaxRunId()) + 1;
     while (true) {
       File nextFolder = new File(curriculumBaseDirFile, String.valueOf(nextId));
       if (nextFolder.exists()) {
@@ -646,7 +647,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
-  private JSONArray addToParentProjects(JSONObject parentProjectJSON, ProjectMetadata metadata) 
+  private JSONArray addToParentProjects(JSONObject parentProjectJSON, ProjectMetadata metadata)
       throws JSONException {
     JSONArray parentProjects = getParentProjects(metadata);
     parentProjects.put(parentProjectJSON);
@@ -716,7 +717,7 @@ public class ProjectServiceImpl implements ProjectService {
       if (!parentAuthors.isEmpty()) {
         parentLicense += WordUtils.wrap("\nby " + parentAuthors, 72);
       }
-      parentLicense += "\n[used under CC BY-SA, copied " + 
+      parentLicense += "\n[used under CC BY-SA, copied " +
           parentProjectJSON.getString("dateCopied") + "].\n";
       license += parentLicense;
       if (i == 0) {

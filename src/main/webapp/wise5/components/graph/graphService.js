@@ -90,7 +90,8 @@ var GraphService = function (_ComponentService) {
         marker: {
           symbol: 'circle'
         },
-        canEdit: true
+        canEdit: true,
+        type: 'line'
       }];
       return component;
     }

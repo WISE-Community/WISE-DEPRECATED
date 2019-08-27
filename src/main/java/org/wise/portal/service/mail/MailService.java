@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -23,13 +23,11 @@
  */
 package org.wise.portal.service.mail;
 
-import java.util.Properties;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +39,7 @@ import org.springframework.stereotype.Service;
 public class MailService implements IMailFacade {
 
   @Autowired
-  private Properties appProperties;
-
-  @Autowired
-  private JavaMailSenderImpl javaMailSender;
+  private JavaMailSender javaMailSender;
 
   public void postMail(String[] recipients, String subject, String message, String from)
       throws MessagingException {
@@ -53,13 +48,6 @@ public class MailService implements IMailFacade {
 
   public void postMail(String[] recipients, String subject, String message,
       String from, String[] cc) throws MessagingException {
-    javaMailSender.setUsername(appProperties.getProperty("mail.user"));
-    javaMailSender.setPassword(appProperties.getProperty("mail.password"));
-    javaMailSender.setHost(appProperties.getProperty("mail.smtp.host"));
-    String portString = appProperties.getProperty("mail.smtp.port");
-    javaMailSender.setPort(Integer.valueOf(portString));
-    javaMailSender.setProtocol(appProperties.getProperty("mail.transport.protocol"));
-    javaMailSender.setJavaMailProperties(appProperties);
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
     helper.setFrom(from);

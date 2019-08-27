@@ -4,20 +4,21 @@ import { fakeAsyncResponse } from "../../../student/student-run-list/student-run
 import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LibraryGroup } from "../libraryGroup";
+import { MatDialog } from '@angular/material';
+import { BehaviorSubject } from 'rxjs';
 
 export class MockLibraryService {
   libraryGroupsSource$ = fakeAsyncResponse({});
   officialLibraryProjectsSource$ = fakeAsyncResponse([]);
-  projectFilterOptionsSource$ = fakeAsyncResponse({
+  projectFilterValuesSource$ = fakeAsyncResponse({
     searchValue: "",
     disciplineValue: [],
     dciArrangementValue: [],
     peValue: []
   });
   implementationModelOptions: LibraryGroup[] = [];
-  getOfficialLibraryProjects() {
-
-  }
+  numberOfOfficialProjectsVisible = new BehaviorSubject<number>(0);
+  getOfficialLibraryProjects() {}
 }
 
 describe('OfficialLibraryComponent', () => {
@@ -28,7 +29,8 @@ describe('OfficialLibraryComponent', () => {
       imports: [],
       declarations: [ OfficialLibraryComponent ],
       providers: [
-        { provide: LibraryService, useClass: MockLibraryService }
+        { provide: LibraryService, useClass: MockLibraryService },
+        { provide: MatDialog }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

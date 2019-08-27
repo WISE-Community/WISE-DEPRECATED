@@ -1681,6 +1681,7 @@ View.prototype.convertGrapher = function(node, nodeContent) {
     component.xAxis.title = {};
     component.xAxis.title.text = nodeContent.graphParams.xLabel;
     component.xAxis.locked = true;
+    component.xAxis.type = 'limits';
 
     if (nodeContent.graphParams.xmin != null) {
         component.xAxis.min = parseFloat(nodeContent.graphParams.xmin);
@@ -1709,13 +1710,15 @@ View.prototype.convertGrapher = function(node, nodeContent) {
             "data": [
             ],
             "color": "blue",
+            "dashStyle": "Solid",
             "marker": {
                 "symbol": "square"
             },
             "regression": false,
             "regressionSettings": {
             },
-            "canEdit": true
+            "canEdit": true,
+            "type": "line"
         }
     ];
 
@@ -2446,22 +2449,19 @@ View.prototype.convertWebApp = function(node, nodeContent) {
  */
 View.prototype.convertBox2dModel = function(node, nodeContent) {
     var wise5Node = this.createWISE5Node();
-
     wise5Node.title = node.title;
-
     wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
     var component = {};
-
     component.id = this.createRandomId();
-    component.type = 'HTML';
-    component.html = nodeContent.prompt;
+    component.type = 'Embedded';
+    component.url = 'Box-2D-Model/box2dModel.html';
+    component.height = 1600;
+    component.parameters = nodeContent;
 
     wise5Node.components.push(component);
-
-    // add the WISE5 node to the project
     this.addWISE5Node(wise5Node);
 
     return wise5Node;

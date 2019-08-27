@@ -295,7 +295,7 @@ class DrawAuthoringController extends DrawController {
       isPopup: true,
       nodeId: this.nodeId,
       componentId: this.componentId,
-      target: 'target',
+      target: 'stamp',
       targetObject: index
     };
     this.$rootScope.$broadcast('openAssetChooser', params);

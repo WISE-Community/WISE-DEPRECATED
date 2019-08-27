@@ -23,11 +23,14 @@
  */
 package org.wise.portal.service.run;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.run.Run;
@@ -36,10 +39,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
 import org.wise.portal.presentation.web.response.SharedOwner;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * A service for working with <code>Run</code> objects

@@ -29,9 +29,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
@@ -211,5 +213,14 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
         this.getDataObjectClass(), runId);
     }
     return result;
+  }
+
+  @Override
+  public long getMaxRunId() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    Criteria crit = session.createCriteria(RunImpl.class);
+    crit.setProjection(Projections.max("id"));
+    List<Long> results = crit.list();
+    return results.get(0);
   }
 }

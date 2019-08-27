@@ -146,6 +146,20 @@
                   </md-option>
                 </md-select>
               </md-input-container>
+              <md-input-container style='margin-right: 20; width: 200;'
+                                  ng-if='connectedComponent.type == "importWork"'>
+                <label>{{ 'action' | translate }}</label>
+                <md-select ng-model='connectedComponent.action'
+                           ng-change='tableController.authoringViewComponentChanged()'
+                           style='width: 200'>
+                  <md-option value='merge'>
+                    {{ 'merge' | translate }}
+                  </md-option>
+                  <md-option value='append'>
+                    {{ 'append' | translate }}
+                  </md-option>
+                </md-select>
+              </md-input-container>
               <span flex></span>
               <md-input-container style='margin-left: 20;'>
                 <md-button class='topButton md-raised md-primary'

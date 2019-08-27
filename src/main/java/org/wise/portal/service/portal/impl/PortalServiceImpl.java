@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -26,8 +26,6 @@ package org.wise.portal.service.portal.impl;
 import java.io.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -48,13 +46,11 @@ public class PortalServiceImpl implements PortalService {
 
   private String defaultProjectLibraryGroups = "[{\"name\":\"Integrated\",\"id\":\"integrated\",\"type\":\"group\",\"children\":[{\"name\":\"Grade6\",\"id\":\"grade6\",\"type\":\"group\",\"children\":[]},{\"name\":\"Grade7\",\"id\":\"grade7\",\"type\":\"group\",\"children\":[]},{\"name\":\"Grade8\",\"id\":\"grade8\",\"type\":\"group\",\"children\":[]}]},{\"name\":\"DisciplineSpecific\",\"id\":\"disciplineSpecific\",\"type\":\"group\",\"children\":[]},{\"name\":\"Grade7\",\"id\":\"grade7\",\"type\":\"group\",\"children\":[]},{\"name\":\"Grade8\",\"id\":\"grade8\",\"type\":\"group\",\"children\":[]}]";
 
-  @Cacheable("portal")
   public Portal getById(Serializable id) throws ObjectNotFoundException {
     return portalDao.getById(id);
   }
 
   @Transactional()
-  @CacheEvict(value = "portal", allEntries = true)
   public void updatePortal(Portal portal) {
     portalDao.save(portal);
   }
