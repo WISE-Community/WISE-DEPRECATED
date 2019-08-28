@@ -398,32 +398,23 @@ class SummaryDisplayController {
   }
 
   createSeries(data) {
+    const series = [{
+      data: data,
+      dataLabels: {
+        enabled: true
+      }
+    }]
     if (this.highlightCorrectAnswer && this.chartType === 'column') {
-      return [
-        {
-          data: data,
-          dataLabels: {
-            enabled: true
-          },
-          showInLegend: false
-        },
-        {
-          name: this.$translate('CORRECT'),
-          color: this.colors.correct
-        },
-        {
-          name: this.$translate('INCORRECT'),
-          color: this.colors.incorrect
-        }
-      ];
-    } else {
-      return [{
-        data: data,
-        dataLabels: {
-          enabled: true
-        }
-      }];
+      series[0].showInLegend = false;
+      series.push({
+        name: this.$translate('CORRECT'),
+        color: this.colors.correct
+      }, {
+        name: this.$translate('INCORRECT'),
+        color: this.colors.incorrect
+      });
     }
+    return series;
   }
 
   getGraphTitle() {
