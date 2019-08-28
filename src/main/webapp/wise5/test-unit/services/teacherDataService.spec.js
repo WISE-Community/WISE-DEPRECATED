@@ -1,10 +1,8 @@
-import angular from 'angular';
-import mainModule from 'classroomMonitor/main';
-import 'angular-mocks';
+import classroomMonitorModule from '../../classroomMonitor/classroomMonitor';
 
 describe('TeacherDataService', () => {
 
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(classroomMonitorModule.name));
 
   let ConfigService, ProjectService, TeacherDataService, $rootScope, $httpBackend;
   const initializeIdToNode = () => {

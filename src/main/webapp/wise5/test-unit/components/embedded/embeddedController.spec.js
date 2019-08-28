@@ -1,6 +1,4 @@
-import angular from 'angular';
-import mainModule from 'vle/main';
-import 'angular-mocks';
+import vleModule from '../../../vle/vle';
 
 describe('EmbeddedController', () => {
 
@@ -22,7 +20,7 @@ describe('EmbeddedController', () => {
     };
   };
 
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(vleModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_, _$httpBackend_) => {
     $controller = _$controller_;

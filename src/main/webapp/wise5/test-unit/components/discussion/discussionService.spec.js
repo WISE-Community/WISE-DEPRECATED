@@ -1,6 +1,4 @@
-import angular from 'angular';
-import mainModule from 'vle/main';
-import 'angular-mocks';
+import vleModule from '../../../vle/vle';
 
 class MockTeacherDataService {
   constructor() {
@@ -30,7 +28,7 @@ describe('DiscussionService', () => {
     };
   };
 
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(vleModule.name));
 
   beforeEach(inject((_DiscussionService_) => {
     DiscussionService = _DiscussionService_;

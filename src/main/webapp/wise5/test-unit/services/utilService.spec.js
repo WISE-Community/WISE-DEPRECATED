@@ -1,10 +1,8 @@
-import angular from 'angular';
-import mainModule from 'vle/main';
-import 'angular-mocks';
+import vleModule from '../../vle/vle';
 
 describe('UtilService', () => {
 
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(vleModule.name));
 
   let UtilService;
 

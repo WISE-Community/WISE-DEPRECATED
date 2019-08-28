@@ -1,12 +1,10 @@
-import angular from 'angular';
-import mainModule from 'vle/main';
-import 'angular-mocks';
+import vleModule from '../../../vle/vle';
 
 describe('ConceptMapService', () => {
 
   let ConceptMapService;
 
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(vleModule.name));
 
   beforeEach(inject((_ConceptMapService_) => {
     ConceptMapService = _ConceptMapService_;

@@ -1,6 +1,4 @@
-import angular from 'angular';
-import mainModule from 'authoringTool/main';
-import 'angular-mocks';
+import authoringToolModule from '../../../authoringTool/authoringTool';
 
 describe('DrawAuthoringController', () => {
 
@@ -10,7 +8,7 @@ describe('DrawAuthoringController', () => {
   let drawAuthoringController;
   let component;
 
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(authoringToolModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;

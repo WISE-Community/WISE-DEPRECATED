@@ -1,6 +1,4 @@
-import angular from 'angular';
-import mainModule from 'vle/main';
-import 'angular-mocks';
+import vleModule from '../../../vle/vle';
 
 describe('AnimationController', () => {
 
@@ -10,7 +8,7 @@ describe('AnimationController', () => {
   let animationController;
   let component;
 
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(vleModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;

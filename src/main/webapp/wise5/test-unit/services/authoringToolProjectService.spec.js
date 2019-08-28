@@ -1,10 +1,8 @@
-import angular from 'angular';
-import mainModule from 'authoringTool/main';
-import 'angular-mocks';
+import authoringToolModule from '../../authoringTool/authoringTool';
 
 describe('AuthoringToolProjectService Unit Test', () => {
 
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(authoringToolModule.name));
 
   const demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
   const scootersProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];

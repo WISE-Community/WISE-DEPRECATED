@@ -1,3 +1,5 @@
+const webpack = require('./vle/webpack.test');
+
 module.exports = function(config) {
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -34,8 +36,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      {pattern: '!(lib)/**/*.js', served: true, included: false, noncache: false, watched: true  },
-      {pattern: '**/**', served: true, included: false, noncache: false, watched: false  }
+      'test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project.json',
+      'test-unit/sampleData/curriculum/DemoProject/project.json',
+      'test-unit/sampleData/config/config1.json',
+      'test-unit/sampleData/config/config2.json',
+      'vle/index.tests.js',
     ],
 
     proxies: {
@@ -55,7 +60,14 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test-unit/sampleData/**/*.json': ['json_fixtures']
+      'vle/index.tests.js': ['webpack'],
+      '**/*.json': ['json_fixtures']
+    },
+
+    webpack,
+    webpackMiddleware: {
+      noInfo: true,
+      stats: 'errors-only'
     },
 
     'babelPreprocessor': {
