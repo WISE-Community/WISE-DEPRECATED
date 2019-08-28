@@ -239,7 +239,7 @@ describe('MultipleChoiceController', () => {
     selectMultipleAnswerChoice('37krqrcvxs');
     selectMultipleAnswerChoice('gbttermlrq');
     checkAnswer();
-    expect(multipleChoiceController.isCorrect).toBeFalsy(); // <- TODO why did I have to make this falsy?
+    expect(multipleChoiceController.isCorrect).toBeTruthy();
   });
 
 });

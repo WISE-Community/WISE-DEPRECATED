@@ -535,20 +535,20 @@ class MultipleChoiceController extends ComponentController {
   }
 
   checkMultipleAnswer() {
-    let isCorrect = null;
+    let isAllCorrect = true;
     const choices = this.getChoices();
-    for (let choice of choices) {
+    for (const choice of choices) {
       if (this.componentHasCorrectAnswer) {
-        if (this.isStudentChoiceValueCorrect(choice) && isCorrect === null) {
-          isCorrect = true;
+        if (this.isStudentChoiceValueCorrect(choice)) {
+          isAllCorrect &= true;
         } else {
-          isCorrect = false;
+          isAllCorrect = false;
         }
       }
       this.displayFeedbackOnChoiceIfNecessary(choice);
     }
     if (this.componentHasCorrectAnswer) {
-      this.isCorrect = isCorrect;
+      this.isCorrect = isAllCorrect;
     }
   }
 
