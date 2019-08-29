@@ -3,218 +3,149 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-require('../themes/default/js/webfonts');
+require("../themes/default/js/webfonts");
 
-require('jquery');
+require("jquery");
 
-var _angular = require('angular');
+var _angular = _interopRequireDefault(require("angular"));
 
-var _angular2 = _interopRequireDefault(_angular);
+var _angularDragula = _interopRequireDefault(require("angular-dragula"));
 
-var _angularDragula = require('angular-dragula');
+require("ng-file-upload");
 
-var _angularDragula2 = _interopRequireDefault(_angularDragula);
+require("highcharts-ng");
 
-require('ng-file-upload');
+require("angular-ui-router");
 
-require('highcharts-ng');
+require("angular-material");
 
-require('angular-ui-router');
+require("angular-moment");
 
-require('angular-material');
+require("angular-sanitize");
 
-require('angular-moment');
+var _angularSockjs = _interopRequireDefault(require("angular-sockjs"));
 
-require('angular-sanitize');
+var _ngStompStandalone = _interopRequireDefault(require("../lib/stomp/ng-stomp.standalone.min"));
 
-var _angularSockjs = require('angular-sockjs');
+require("lib/angular-toArrayFilter/toArrayFilter");
 
-var _angularSockjs2 = _interopRequireDefault(_angularSockjs);
+require("angular-translate");
 
-var _ngStompStandalone = require('../lib/stomp/ng-stomp.standalone.min');
+require("angular-translate-loader-partial");
 
-var _ngStompStandalone2 = _interopRequireDefault(_ngStompStandalone);
+require("angular-websocket");
 
-require('lib/angular-toArrayFilter/toArrayFilter');
+require("../components/animation/animationAuthoringComponentModule");
 
-require('angular-translate');
+var _annotationService = _interopRequireDefault(require("../services/annotationService"));
 
-require('angular-translate-loader-partial');
+require("../components/audioOscillator/audioOscillatorAuthoringComponentModule");
 
-require('angular-websocket');
+require("./components/authoringToolComponents");
 
-require('../components/animation/animationAuthoringComponentModule');
+var _authoringToolController = _interopRequireDefault(require("./authoringToolController"));
 
-var _annotationService = require('../services/annotationService');
+var _authoringToolMainController = _interopRequireDefault(require("./main/authoringToolMainController"));
 
-var _annotationService2 = _interopRequireDefault(_annotationService);
+var _authoringToolNewProjectController = _interopRequireDefault(require("./main/authoringToolNewProjectController"));
 
-require('../components/audioOscillator/audioOscillatorAuthoringComponentModule');
+var _authoringToolProjectService = _interopRequireDefault(require("./authoringToolProjectService"));
 
-require('./components/authoringToolComponents');
+var _authorNotebookController = _interopRequireDefault(require("./notebook/authorNotebookController"));
 
-var _authoringToolController = require('./authoringToolController');
+require("../components/conceptMap/conceptMapAuthoringComponentModule");
 
-var _authoringToolController2 = _interopRequireDefault(_authoringToolController);
+var _configService = _interopRequireDefault(require("../services/configService"));
 
-var _authoringToolMainController = require('./main/authoringToolMainController');
+var _cRaterService = _interopRequireDefault(require("../services/cRaterService"));
 
-var _authoringToolMainController2 = _interopRequireDefault(_authoringToolMainController);
+require("../directives/components");
 
-var _authoringToolNewProjectController = require('./main/authoringToolNewProjectController');
+var _componentService = _interopRequireDefault(require("../components/componentService"));
 
-var _authoringToolNewProjectController2 = _interopRequireDefault(_authoringToolNewProjectController);
+require("../components/discussion/discussionAuthoringComponentModule");
 
-var _authoringToolProjectService = require('./authoringToolProjectService');
+require("../components/draw/drawAuthoringComponentModule");
 
-var _authoringToolProjectService2 = _interopRequireDefault(_authoringToolProjectService);
+require("../components/embedded/embeddedAuthoringComponentModule");
 
-var _authorNotebookController = require('./notebook/authorNotebookController');
+require("../filters/filters");
 
-var _authorNotebookController2 = _interopRequireDefault(_authorNotebookController);
+require("../lib/highcharts@4.2.1");
 
-require('../components/conceptMap/conceptMapAuthoringComponentModule');
+require("../components/graph/graphAuthoringComponentModule");
 
-var _configService = require('../services/configService');
+require("../components/html/htmlAuthoringComponentModule");
 
-var _configService2 = _interopRequireDefault(_configService);
+require("../components/label/labelAuthoringComponentModule");
 
-var _cRaterService = require('../services/cRaterService');
+require("../components/match/matchAuthoringComponentModule");
 
-var _cRaterService2 = _interopRequireDefault(_cRaterService);
+require("../components/multipleChoice/multipleChoiceAuthoringComponentModule");
 
-require('../directives/components');
+var _nodeAuthoringController = _interopRequireDefault(require("./node/nodeAuthoringController"));
 
-var _componentService = require('../components/componentService');
+var _nodeService = _interopRequireDefault(require("../services/nodeService"));
 
-var _componentService2 = _interopRequireDefault(_componentService);
+var _notebookService = _interopRequireDefault(require("../services/notebookService"));
 
-require('../components/discussion/discussionAuthoringComponentModule');
+var _notificationService = _interopRequireDefault(require("../services/notificationService"));
 
-require('../components/draw/drawAuthoringComponentModule');
+require("../components/openResponse/openResponseAuthoringComponentModule");
 
-require('../components/embedded/embeddedAuthoringComponentModule');
+require("../components/outsideURL/outsideURLAuthoringComponentModule");
 
-require('../filters/filters');
+var _projectAssetController = _interopRequireDefault(require("./asset/projectAssetController"));
 
-require('../lib/highcharts@4.2.1');
+var _projectAssetService = _interopRequireDefault(require("../services/projectAssetService"));
 
-require('../components/graph/graphAuthoringComponentModule');
+var _projectController = _interopRequireDefault(require("./project/projectController"));
 
-require('../components/html/htmlAuthoringComponentModule');
+var _projectHistoryController = _interopRequireDefault(require("./history/projectHistoryController"));
 
-require('../components/label/labelAuthoringComponentModule');
+var _projectInfoController = _interopRequireDefault(require("./info/projectInfoController"));
 
-require('../components/match/matchAuthoringComponentModule');
+var _planningService = _interopRequireDefault(require("../services/planningService"));
 
-require('../components/multipleChoice/multipleChoiceAuthoringComponentModule');
+var _projectService = _interopRequireDefault(require("../services/projectService"));
 
-var _nodeAuthoringController = require('./node/nodeAuthoringController');
+var _sessionService = _interopRequireDefault(require("../services/sessionService"));
 
-var _nodeAuthoringController2 = _interopRequireDefault(_nodeAuthoringController);
+var _spaceService = _interopRequireDefault(require("../services/spaceService"));
 
-var _nodeService = require('../services/nodeService');
+var _studentAssetService = _interopRequireDefault(require("../services/studentAssetService"));
 
-var _nodeService2 = _interopRequireDefault(_nodeService);
+var _studentDataService = _interopRequireDefault(require("../services/studentDataService"));
 
-var _notebookService = require('../services/notebookService');
+var _studentStatusService = _interopRequireDefault(require("../services/studentStatusService"));
 
-var _notebookService2 = _interopRequireDefault(_notebookService);
+var _studentWebSocketService = _interopRequireDefault(require("../services/studentWebSocketService"));
 
-var _notificationService = require('../services/notificationService');
+var _summaryAuthoringComponentModule = _interopRequireDefault(require("../components/summary/summaryAuthoringComponentModule"));
 
-var _notificationService2 = _interopRequireDefault(_notificationService);
+require("../components/table/tableAuthoringComponentModule");
 
-require('../components/openResponse/openResponseAuthoringComponentModule');
+var _teacherDataService = _interopRequireDefault(require("../services/teacherDataService"));
 
-require('../components/outsideURL/outsideURLAuthoringComponentModule');
+var _teacherWebSocketService = _interopRequireDefault(require("../services/teacherWebSocketService"));
 
-var _projectAssetController = require('./asset/projectAssetController');
+var _utilService = _interopRequireDefault(require("../services/utilService"));
 
-var _projectAssetController2 = _interopRequireDefault(_projectAssetController);
+var _wiseLinkAuthoringController = _interopRequireDefault(require("./wiseLink/wiseLinkAuthoringController"));
 
-var _projectAssetService = require('../services/projectAssetService');
+require("lib/angular-summernote/dist/angular-summernote.min");
 
-var _projectAssetService2 = _interopRequireDefault(_projectAssetService);
+var _moment = _interopRequireDefault(require("moment"));
 
-var _projectController = require('./project/projectController');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _projectController2 = _interopRequireDefault(_projectController);
-
-var _projectHistoryController = require('./history/projectHistoryController');
-
-var _projectHistoryController2 = _interopRequireDefault(_projectHistoryController);
-
-var _projectInfoController = require('./info/projectInfoController');
-
-var _projectInfoController2 = _interopRequireDefault(_projectInfoController);
-
-var _planningService = require('../services/planningService');
-
-var _planningService2 = _interopRequireDefault(_planningService);
-
-var _projectService = require('../services/projectService');
-
-var _projectService2 = _interopRequireDefault(_projectService);
-
-var _sessionService = require('../services/sessionService');
-
-var _sessionService2 = _interopRequireDefault(_sessionService);
-
-var _spaceService = require('../services/spaceService');
-
-var _spaceService2 = _interopRequireDefault(_spaceService);
-
-var _studentAssetService = require('../services/studentAssetService');
-
-var _studentAssetService2 = _interopRequireDefault(_studentAssetService);
-
-var _studentDataService = require('../services/studentDataService');
-
-var _studentDataService2 = _interopRequireDefault(_studentDataService);
-
-var _studentStatusService = require('../services/studentStatusService');
-
-var _studentStatusService2 = _interopRequireDefault(_studentStatusService);
-
-var _studentWebSocketService = require('../services/studentWebSocketService');
-
-var _studentWebSocketService2 = _interopRequireDefault(_studentWebSocketService);
-
-require('../components/table/tableAuthoringComponentModule');
-
-var _teacherDataService = require('../services/teacherDataService');
-
-var _teacherDataService2 = _interopRequireDefault(_teacherDataService);
-
-var _teacherWebSocketService = require('../services/teacherWebSocketService');
-
-var _teacherWebSocketService2 = _interopRequireDefault(_teacherWebSocketService);
-
-var _utilService = require('../services/utilService');
-
-var _utilService2 = _interopRequireDefault(_utilService);
-
-var _wiseLinkAuthoringController = require('./wiseLink/wiseLinkAuthoringController');
-
-var _wiseLinkAuthoringController2 = _interopRequireDefault(_wiseLinkAuthoringController);
-
-require('lib/angular-summernote/dist/angular-summernote.min');
-
-var _moment = require('moment');
-
-var _moment2 = _interopRequireDefault(_moment);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationAuthoringComponentModule', 'audioOscillatorAuthoringComponentModule', 'authoringTool.components', 'components', 'conceptMapAuthoringComponentModule', 'discussionAuthoringComponentModule', 'drawAuthoringComponentModule', 'embeddedAuthoringComponentModule', 'filters', 'graphAuthoringComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelAuthoringComponentModule', 'matchAuthoringComponentModule', 'multipleChoiceAuthoringComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'bd.sockjs', 'ngStomp', 'ngWebSocket', 'openResponseAuthoringComponentModule', 'outsideURLAuthoringComponentModule', 'pascalprecht.translate', 'summernote', 'tableAuthoringComponentModule', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_componentService2.default.name, _componentService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_planningService2.default.name, _planningService2.default).service(_projectService2.default.name, _authoringToolProjectService2.default).service(_projectAssetService2.default.name, _projectAssetService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_spaceService2.default.name, _spaceService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_authoringToolMainController2.default.name, _authoringToolMainController2.default).controller(_authoringToolNewProjectController2.default.name, _authoringToolNewProjectController2.default).controller(_authorNotebookController2.default.name, _authorNotebookController2.default).controller(_nodeAuthoringController2.default.name, _nodeAuthoringController2.default).controller(_projectAssetController2.default.name, _projectAssetController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_projectHistoryController2.default.name, _projectHistoryController2.default).controller(_projectInfoController2.default.name, _projectInfoController2.default).controller(_wiseLinkAuthoringController2.default.name, _wiseLinkAuthoringController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
-
+var authoringModule = _angular["default"].module('authoring', [(0, _angularDragula["default"])(_angular["default"]), 'angularMoment', 'angular-toArrayFilter', 'summaryAuthoringComponentModule', 'animationAuthoringComponentModule', 'audioOscillatorAuthoringComponentModule', 'authoringTool.components', 'components', 'conceptMapAuthoringComponentModule', 'discussionAuthoringComponentModule', 'drawAuthoringComponentModule', 'embeddedAuthoringComponentModule', 'filters', 'graphAuthoringComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelAuthoringComponentModule', 'matchAuthoringComponentModule', 'multipleChoiceAuthoringComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'bd.sockjs', 'ngStomp', 'ngWebSocket', 'openResponseAuthoringComponentModule', 'outsideURLAuthoringComponentModule', 'pascalprecht.translate', 'summernote', 'tableAuthoringComponentModule', 'ui.router']).service(_annotationService["default"].name, _annotationService["default"]).service(_componentService["default"].name, _componentService["default"]).service(_configService["default"].name, _configService["default"]).service(_cRaterService["default"].name, _cRaterService["default"]).service(_nodeService["default"].name, _nodeService["default"]).service(_notebookService["default"].name, _notebookService["default"]).service(_notificationService["default"].name, _notificationService["default"]).service(_planningService["default"].name, _planningService["default"]).service(_projectService["default"].name, _authoringToolProjectService["default"]).service(_projectAssetService["default"].name, _projectAssetService["default"]).service(_sessionService["default"].name, _sessionService["default"]).service(_spaceService["default"].name, _spaceService["default"]).service(_studentAssetService["default"].name, _studentAssetService["default"]).service(_studentDataService["default"].name, _studentDataService["default"]).service(_studentStatusService["default"].name, _studentStatusService["default"]).service(_studentWebSocketService["default"].name, _studentWebSocketService["default"]).service(_teacherDataService["default"].name, _teacherDataService["default"]).service(_teacherWebSocketService["default"].name, _teacherWebSocketService["default"]).service(_utilService["default"].name, _utilService["default"]).controller(_authoringToolController["default"].name, _authoringToolController["default"]).controller(_authoringToolMainController["default"].name, _authoringToolMainController["default"]).controller(_authoringToolNewProjectController["default"].name, _authoringToolNewProjectController["default"]).controller(_authorNotebookController["default"].name, _authorNotebookController["default"]).controller(_nodeAuthoringController["default"].name, _nodeAuthoringController["default"]).controller(_projectAssetController["default"].name, _projectAssetController["default"]).controller(_projectController["default"].name, _projectController["default"]).controller(_projectHistoryController["default"].name, _projectHistoryController["default"]).controller(_projectInfoController["default"].name, _projectInfoController["default"]).controller(_wiseLinkAuthoringController["default"].name, _wiseLinkAuthoringController["default"]).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
   $urlRouterProvider.otherwise('/');
-
   $stateProvider.state('root', {
     url: '',
-    abstract: true,
+    "abstract": true,
     templateUrl: 'wise5/authoringTool/authoringTool.html',
     controller: 'AuthoringToolController',
     controllerAs: 'authoringToolController',
@@ -308,7 +239,6 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     controllerAs: 'authorNotebookController',
     resolve: {}
   });
-
   $translatePartialLoaderProvider.addPart('i18n');
   $translatePartialLoaderProvider.addPart('authoringTool/i18n');
   $translateProvider.useLoader('$translatePartialLoader', {
@@ -317,7 +247,6 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     'en_US': 'en',
     'en_UK': 'en'
   }).determinePreferredLanguage().fallbackLanguage(['en']).useSanitizeValueStrategy('sanitizeParameters', 'escape');
-
   $mdThemingProvider.definePalette('accent', {
     '50': 'fde9e6',
     '100': 'fbcbc4',
@@ -337,18 +266,27 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     'contrastDarkColors': ['50', '100', '200', '300', 'A100'],
     'contrastLightColors': undefined
   });
-  $mdThemingProvider.theme('default').primaryPalette('deep-purple', { 'default': '400' }).accentPalette('accent', { 'default': '500' }).warnPalette('red', { 'default': '800' });
+  $mdThemingProvider.theme('default').primaryPalette('deep-purple', {
+    'default': '400'
+  }).accentPalette('accent', {
+    'default': '500'
+  }).warnPalette('red', {
+    'default': '800'
+  });
   var lightMap = $mdThemingProvider.extendPalette('grey', {
     'A100': 'ffffff'
   });
   $mdThemingProvider.definePalette('light', lightMap);
-  $mdThemingProvider.theme('light').primaryPalette('light', { 'default': 'A100' }).accentPalette('pink', { 'default': '900' });
+  $mdThemingProvider.theme('light').primaryPalette('light', {
+    'default': 'A100'
+  }).accentPalette('pink', {
+    'default': '900'
+  });
   $mdThemingProvider.setDefaultTheme('default');
-  $mdThemingProvider.enableBrowserColor();
-
-  // moment.js default overrides
+  $mdThemingProvider.enableBrowserColor(); // moment.js default overrides
   // TODO: add i18n support
-  _moment2.default.updateLocale('en', {
+
+  _moment["default"].updateLocale('en', {
     calendar: {
       lastDay: '[Yesterday at] LT',
       sameDay: '[Today at] LT',
@@ -360,5 +298,6 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
   });
 }]);
 
-exports.default = authoringModule;
+var _default = authoringModule;
+exports["default"] = _default;
 //# sourceMappingURL=main.js.map

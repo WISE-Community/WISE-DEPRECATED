@@ -3,12 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var TeacherDataService = function () {
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var TeacherDataService =
+/*#__PURE__*/
+function () {
   function TeacherDataService($http, $filter, $q, $rootScope, AnnotationService, ConfigService, NotificationService, ProjectService, TeacherWebSocketService, UtilService) {
     var _this = this;
 
@@ -25,13 +30,11 @@ var TeacherDataService = function () {
     this.TeacherWebSocketService = TeacherWebSocketService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
-
     this.studentData = {
       componentStatesByWorkgroupId: {},
       componentStatesByNodeId: {},
       componentStatesByComponentId: {}
     };
-
     this.currentPeriod = null;
     this.currentWorkgroup = null;
     this.currentStep = null;
@@ -42,69 +45,78 @@ var TeacherDataService = function () {
     this.nodeGradingSort = 'team';
     this.studentGradingSort = 'step';
     this.studentProgressSort = 'team';
-
     /**
      * Listen for the 'annotationSavedToServer' event which is fired when
      * we receive the response from saving an annotation to the server
      */
+
     this.$rootScope.$on('annotationSavedToServer', function (event, args) {
       if (args) {
         var annotation = args.annotation;
+
         _this.handleAnnotationReceived(annotation);
       }
     });
-
     /**
      * Listen for the 'newAnnotationReceived' event which is fired when
      * teacher receives a new annotation (usually on a student work) from the server
      */
+
     this.$rootScope.$on('newAnnotationReceived', function (event, args) {
       if (args) {
         var annotation = args.annotation;
+
         _this.handleAnnotationReceived(annotation);
       }
     });
-
     /**
      * Listen for the 'newStudentWorkReceived' event which is fired when
      * teacher receives a new student work from the server
      */
+
     this.$rootScope.$on('newStudentWorkReceived', function (event, args) {
       if (args) {
         var studentWork = args.studentWork;
+
         _this.addOrUpdateComponentState(studentWork);
-        _this.$rootScope.$broadcast('studentWorkReceived', { studentWork: studentWork });
+
+        _this.$rootScope.$broadcast('studentWorkReceived', {
+          studentWork: studentWork
+        });
       }
     });
   }
 
   _createClass(TeacherDataService, [{
-    key: 'handleAnnotationReceived',
+    key: "handleAnnotationReceived",
     value: function handleAnnotationReceived(annotation) {
       this.studentData.annotations.push(annotation);
-
       var toWorkgroupId = annotation.toWorkgroupId;
+
       if (this.studentData.annotationsToWorkgroupId[toWorkgroupId] == null) {
         this.studentData.annotationsToWorkgroupId[toWorkgroupId] = new Array();
       }
-      this.studentData.annotationsToWorkgroupId[toWorkgroupId].push(annotation);
 
+      this.studentData.annotationsToWorkgroupId[toWorkgroupId].push(annotation);
       var nodeId = annotation.nodeId;
+
       if (this.studentData.annotationsByNodeId[nodeId] == null) {
         this.studentData.annotationsByNodeId[nodeId] = new Array();
       }
+
       this.studentData.annotationsByNodeId[nodeId].push(annotation);
       this.AnnotationService.setAnnotations(this.studentData.annotations);
-      this.$rootScope.$broadcast('annotationReceived', { annotation: annotation });
+      this.$rootScope.$broadcast('annotationReceived', {
+        annotation: annotation
+      });
     }
-
     /**
      * Get the data for the export and generate the csv file that will be downloaded
      * @param exportType the type of export
      */
 
   }, {
-    key: 'getExport',
+    key: "getExport",
     value: function getExport(exportType, selectedNodes) {
       var exportURL = this.ConfigService.getConfigParam('runDataExportURL');
       var runId = this.ConfigService.getRunId();
@@ -117,7 +129,6 @@ var TeacherDataService = function () {
         params.getAnnotations = true;
         params.getEvents = false;
         params.components = selectedNodes;
-
         return this.retrieveStudentData(params);
       } else if (exportType === "events") {
         var _params = {};
@@ -126,7 +137,6 @@ var TeacherDataService = function () {
         _params.getAnnotations = false;
         _params.getEvents = true;
         _params.components = selectedNodes;
-
         return this.retrieveStudentData(_params);
       } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {
         var httpParams = {
@@ -134,7 +144,6 @@ var TeacherDataService = function () {
           url: exportURL,
           params: {}
         };
-
         return this.$http(httpParams).then(function (result) {
           return result.data;
         });
@@ -144,7 +153,6 @@ var TeacherDataService = function () {
           url: exportURL,
           params: {}
         };
-
         return this.$http(_httpParams).then(function (result) {
           return result.data;
         });
@@ -172,7 +180,6 @@ var TeacherDataService = function () {
         return this.retrieveStudentData(_params3);
       }
     }
-
     /**
      * Save events that occur in the Classroom Monitor to the server
      * @param event the event object
@@ -180,7 +187,7 @@ var TeacherDataService = function () {
      */
 
   }, {
-    key: 'saveEvent',
+    key: "saveEvent",
     value: function saveEvent(context, nodeId, componentId, componentType, category, event, data, projectId) {
       var newEvent = {
         projectId: this.ConfigService.getProjectId(),
@@ -201,7 +208,6 @@ var TeacherDataService = function () {
       }
 
       var events = [newEvent];
-
       var params = {
         projectId: this.ConfigService.getProjectId(),
         runId: this.ConfigService.getRunId(),
@@ -216,24 +222,27 @@ var TeacherDataService = function () {
       var httpParams = {};
       httpParams.method = 'POST';
       httpParams.url = this.ConfigService.getConfigParam('teacherDataURL');
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+      httpParams.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      };
       httpParams.data = $.param(params);
-
       return this.$http(httpParams).then(function (result) {
         var savedEvents = null;
+
         if (result != null && result.data != null) {
           var _data = result.data;
+
           if (_data != null) {
             // get the saved events
             savedEvents = _data.events;
           }
         }
+
         return savedEvents;
       });
     }
   }, {
-    key: 'retrieveStudentDataByNodeId',
-
+    key: "retrieveStudentDataByNodeId",
 
     /**
      * Retrieve the student data for a node id
@@ -247,18 +256,17 @@ var TeacherDataService = function () {
       params.components = this.getAllRelatedComponents(nodeId);
       params.getAnnotations = false;
       params.getEvents = false;
-
       return this.retrieveStudentData(params);
     }
   }, {
-    key: 'getAllRelatedComponents',
+    key: "getAllRelatedComponents",
     value: function getAllRelatedComponents(nodeId) {
       var components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
       components = components.concat(this.getConnectedComponentsIfNecessary(components));
       return components;
     }
   }, {
-    key: 'getConnectedComponentsIfNecessary',
+    key: "getConnectedComponentsIfNecessary",
     value: function getConnectedComponentsIfNecessary(components) {
       var connectedComponents = [];
       var _iteratorNormalCompletion = true;
@@ -268,8 +276,8 @@ var TeacherDataService = function () {
       try {
         for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var component = _step.value;
-
           var componentContent = this.ProjectService.getComponentByNodeIdAndComponentId(component.nodeId, component.componentId);
+
           if (this.isConnectedComponentStudentDataRequired(componentContent)) {
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
@@ -278,7 +286,6 @@ var TeacherDataService = function () {
             try {
               for (var _iterator2 = componentContent.connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                 var connectedComponent = _step2.value;
-
                 connectedComponents.push(connectedComponent);
               }
             } catch (err) {
@@ -286,8 +293,8 @@ var TeacherDataService = function () {
               _iteratorError2 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                  _iterator2.return();
+                if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+                  _iterator2["return"]();
                 }
               } finally {
                 if (_didIteratorError2) {
@@ -302,8 +309,8 @@ var TeacherDataService = function () {
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
           }
         } finally {
           if (_didIteratorError) {
@@ -315,11 +322,10 @@ var TeacherDataService = function () {
       return connectedComponents;
     }
   }, {
-    key: 'isConnectedComponentStudentDataRequired',
+    key: "isConnectedComponentStudentDataRequired",
     value: function isConnectedComponentStudentDataRequired(componentContent) {
       return componentContent.type === 'Discussion' && componentContent.connectedComponents != null && componentContent.connectedComponents.length !== 0;
     }
-
     /**
      * Retrieve the student data for the workgroup id
      * @param workgroupId the workgroup id
@@ -327,7 +333,7 @@ var TeacherDataService = function () {
      */
 
   }, {
-    key: 'retrieveStudentDataByWorkgroupId',
+    key: "retrieveStudentDataByWorkgroupId",
     value: function retrieveStudentDataByWorkgroupId(workgroupId) {
       var params = {};
       params.periodId = null;
@@ -338,8 +344,7 @@ var TeacherDataService = function () {
       return this.retrieveStudentData(params);
     }
   }, {
-    key: 'retrieveAnnotations',
-
+    key: "retrieveAnnotations",
 
     /**
      * Retrieve the annotations for the run
@@ -357,14 +362,30 @@ var TeacherDataService = function () {
       return this.retrieveStudentData(params);
     }
   }, {
-    key: 'retrieveStudentData',
-
-
+    key: "retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId",
+    value: function retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
+      var params = {
+        runId: this.ConfigService.getRunId(),
+        nodeId: nodeId,
+        componentId: componentId,
+        periodId: periodId,
+        getStudentWork: true,
+        getEvents: false,
+        getAnnotations: false,
+        onlyGetLatest: true
+      };
+      return this.retrieveStudentData(params).then(function (result) {
+        return result.studentWorkList;
+      });
+    }
     /**
      * Retrieve the student data
      * @param params the params that specify what student data we want
      * @returns a promise
      */
+
+  }, {
+    key: "retrieveStudentData",
     value: function retrieveStudentData(params) {
       var _this2 = this;
 
@@ -388,14 +409,13 @@ var TeacherDataService = function () {
         "url": studentDataURL,
         "params": params
       };
-
       return this.$http(httpParams).then(function (result) {
         var resultData = result.data;
+
         if (resultData != null) {
           if (resultData.studentWorkList != null) {
-            var componentStates = resultData.studentWorkList;
+            var componentStates = resultData.studentWorkList; // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId objects
 
-            // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId objects
             var _iteratorNormalCompletion3 = true;
             var _didIteratorError3 = false;
             var _iteratorError3 = undefined;
@@ -411,8 +431,8 @@ var TeacherDataService = function () {
               _iteratorError3 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                  _iterator3.return();
+                if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+                  _iterator3["return"]();
                 }
               } finally {
                 if (_didIteratorError3) {
@@ -424,10 +444,8 @@ var TeacherDataService = function () {
 
           if (resultData.events != null) {
             // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
-
             // sort the events by server save time
             resultData.events.sort(_this2.UtilService.sortByServerSaveTime);
-
             _this2.studentData.allEvents = resultData.events;
             _this2.studentData.eventsByWorkgroupId = {};
             _this2.studentData.eventsByNodeId = {};
@@ -438,16 +456,20 @@ var TeacherDataService = function () {
             try {
               for (var _iterator4 = resultData.events[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
                 var event = _step4.value;
-
                 var eventWorkgroupId = event.workgroupId;
+
                 if (_this2.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
                   _this2.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
                 }
+
                 _this2.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
+
                 var eventNodeId = event.nodeId;
+
                 if (_this2.studentData.eventsByNodeId[eventNodeId] == null) {
                   _this2.studentData.eventsByNodeId[eventNodeId] = new Array();
                 }
+
                 _this2.studentData.eventsByNodeId[eventNodeId].push(event);
               }
             } catch (err) {
@@ -455,8 +477,8 @@ var TeacherDataService = function () {
               _iteratorError4 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                  _iterator4.return();
+                if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+                  _iterator4["return"]();
                 }
               } finally {
                 if (_didIteratorError4) {
@@ -478,16 +500,20 @@ var TeacherDataService = function () {
             try {
               for (var _iterator5 = resultData.annotations[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
                 var annotation = _step5.value;
-
                 var annotationWorkgroupId = annotation.toWorkgroupId;
+
                 if (!_this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
                   _this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
                 }
+
                 _this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
+
                 var annotationNodeId = annotation.nodeId;
+
                 if (!_this2.studentData.annotationsByNodeId[annotationNodeId]) {
                   _this2.studentData.annotationsByNodeId[annotationNodeId] = new Array();
                 }
+
                 _this2.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
               }
             } catch (err) {
@@ -495,8 +521,8 @@ var TeacherDataService = function () {
               _iteratorError5 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                  _iterator5.return();
+                if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+                  _iterator5["return"]();
                 }
               } finally {
                 if (_didIteratorError5) {
@@ -505,14 +531,15 @@ var TeacherDataService = function () {
               }
             }
           }
+
           _this2.AnnotationService.setAnnotations(_this2.studentData.annotations);
         }
+
         return resultData;
       });
     }
   }, {
-    key: 'addOrUpdateComponentState',
-
+    key: "addOrUpdateComponentState",
 
     /**
      * Add ComponentState to local bookkeeping
@@ -520,62 +547,79 @@ var TeacherDataService = function () {
      */
     value: function addOrUpdateComponentState(componentState) {
       var componentStateWorkgroupId = componentState.workgroupId;
+
       if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
         this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
       }
+
       var found = false;
+
       for (var w = 0; w < this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].length; w++) {
         var cs = this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId][w];
+
         if (cs.id != null && cs.id === componentState.id) {
           // found the same component id, so just update it in place.
           this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId][w] = componentState;
           found = true; // remember this so we don't insert later.
+
           break;
         }
       }
+
       if (!found) {
         this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
       }
 
       var componentStateNodeId = componentState.nodeId;
+
       if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
         this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
       }
+
       found = false; // reset
+
       for (var n = 0; n < this.studentData.componentStatesByNodeId[componentStateNodeId].length; n++) {
         var _cs = this.studentData.componentStatesByNodeId[componentStateNodeId][n];
+
         if (_cs.id != null && _cs.id === componentState.id) {
           // found the same component id, so just update it in place.
           this.studentData.componentStatesByNodeId[componentStateNodeId][n] = componentState;
           found = true; // remember this so we don't insert later.
+
           break;
         }
       }
+
       if (!found) {
         this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
       }
 
       var componentId = componentState.componentId;
+
       if (this.studentData.componentStatesByComponentId[componentId] == null) {
         this.studentData.componentStatesByComponentId[componentId] = new Array();
       }
+
       found = false; // reset
+
       for (var c = 0; c < this.studentData.componentStatesByComponentId[componentId].length; c++) {
         var _cs2 = this.studentData.componentStatesByComponentId[componentId][c];
+
         if (_cs2.id != null && _cs2.id === componentState.id) {
           // found the same component id, so just update it in place.
           this.studentData.componentStatesByComponentId[componentId][c] = componentState;
           found = true; // remember this so we don't insert later.
+
           break;
         }
       }
+
       if (!found) {
         this.studentData.componentStatesByComponentId[componentId].push(componentState);
       }
     }
   }, {
-    key: 'retrieveRunStatus',
-
+    key: "retrieveRunStatus",
 
     /**
      * Retrieve the run status from the server
@@ -585,31 +629,33 @@ var TeacherDataService = function () {
 
       var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
       var runId = this.ConfigService.getConfigParam('runId');
-
       var params = {
         runId: runId
       };
-
       var httpParams = {};
       httpParams.method = 'GET';
       httpParams.url = runStatusURL;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+      httpParams.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      };
       httpParams.params = params;
-
       return this.$http(httpParams).then(function (result) {
         if (result != null) {
           var data = result.data;
+
           if (data != null) {
             _this3.runStatus = data;
+
             _this3.initializePeriods();
           }
         }
       });
     }
   }, {
-    key: 'getComponentStatesByWorkgroupId',
+    key: "getComponentStatesByWorkgroupId",
     value: function getComponentStatesByWorkgroupId(workgroupId) {
       var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
+
       if (componentStatesByWorkgroupId != null) {
         return componentStatesByWorkgroupId;
       } else {
@@ -617,16 +663,16 @@ var TeacherDataService = function () {
       }
     }
   }, {
-    key: 'getComponentStatesByNodeId',
+    key: "getComponentStatesByNodeId",
     value: function getComponentStatesByNodeId(nodeId) {
       var componentStatesByNodeId = this.studentData.componentStatesByNodeId[nodeId];
+
       if (componentStatesByNodeId != null) {
         return componentStatesByNodeId;
       } else {
         return [];
       }
     }
-
     /**
      * Get the component stats for a component id
      * @param componentId the component id
@@ -634,16 +680,18 @@ var TeacherDataService = function () {
      */
 
   }, {
-    key: 'getComponentStatesByComponentId',
+    key: "getComponentStatesByComponentId",
     value: function getComponentStatesByComponentId(componentId) {
       var componentStatesByComponentId = this.studentData.componentStatesByComponentId[componentId];
+
       if (componentStatesByComponentId != null) {
         return componentStatesByComponentId;
       }
+
       return [];
     }
   }, {
-    key: 'getComponentStatesByComponentIds',
+    key: "getComponentStatesByComponentIds",
     value: function getComponentStatesByComponentIds(componentIds) {
       var componentStatesByComponentId = [];
       var _iteratorNormalCompletion6 = true;
@@ -653,7 +701,6 @@ var TeacherDataService = function () {
       try {
         for (var _iterator6 = componentIds[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
           var componentId = _step6.value;
-
           componentStatesByComponentId = componentStatesByComponentId.concat(this.studentData.componentStatesByComponentId[componentId]);
         }
       } catch (err) {
@@ -661,8 +708,8 @@ var TeacherDataService = function () {
         _iteratorError6 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+            _iterator6["return"]();
           }
         } finally {
           if (_didIteratorError6) {
@@ -674,16 +721,19 @@ var TeacherDataService = function () {
       return componentStatesByComponentId;
     }
   }, {
-    key: 'getLatestComponentStateByWorkgroupIdNodeIdAndComponentId',
+    key: "getLatestComponentStateByWorkgroupIdNodeIdAndComponentId",
     value: function getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId) {
       var latestComponentState = null;
       var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
+
       if (componentStates != null) {
         for (var c = componentStates.length - 1; c >= 0; c--) {
           var componentState = componentStates[c];
+
           if (componentState != null) {
             var componentStateNodeId = componentState.nodeId;
             var componentStateComponentId = componentState.componentId;
+
             if (nodeId === componentStateNodeId && componentId === componentStateComponentId) {
               latestComponentState = componentState;
               break;
@@ -691,26 +741,30 @@ var TeacherDataService = function () {
           }
         }
       }
+
       return latestComponentState;
     }
   }, {
-    key: 'getLatestComponentStateByWorkgroupIdNodeId',
+    key: "getLatestComponentStateByWorkgroupIdNodeId",
     value: function getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
       var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
+
       if (componentStates != null) {
         for (var c = componentStates.length - 1; c >= 0; c--) {
           var componentState = componentStates[c];
+
           if (componentState != null) {
             var componentStateNodeId = componentState.nodeId;
+
             if (nodeId == componentStateNodeId) {
               return componentState;
             }
           }
         }
       }
+
       return null;
     }
-
     /**
      * Get the latest component states for a workgroup. Each component state
      * will be the latest component state for a component.
@@ -719,19 +773,21 @@ var TeacherDataService = function () {
      */
 
   }, {
-    key: 'getLatestComponentStatesByWorkgroupId',
+    key: "getLatestComponentStatesByWorkgroupId",
     value: function getLatestComponentStatesByWorkgroupId(workgroupId) {
       var componentStates = [];
+
       if (workgroupId != null) {
         var componentStatesForWorkgroup = this.getComponentStatesByWorkgroupId(workgroupId);
+
         if (componentStatesForWorkgroup != null) {
           // mapping of component to revision counter
           var componentRevisionCounter = {};
-
           /*
            * used to keep track of the components we have found component
            * states for already
            */
+
           var componentsFound = {};
           var _iteratorNormalCompletion7 = true;
           var _didIteratorError7 = false;
@@ -744,9 +800,8 @@ var TeacherDataService = function () {
               if (_componentState != null) {
                 // get the node id and component id of the component state
                 var _nodeId = _componentState.nodeId;
-                var _componentId = _componentState.componentId;
+                var _componentId = _componentState.componentId; // generate the component key e.g. "node2_bb83hs0sd8"
 
-                // generate the component key e.g. "node2_bb83hs0sd8"
                 var _key = _nodeId + "-" + _componentId;
 
                 if (componentRevisionCounter[_key] == null) {
@@ -754,12 +809,10 @@ var TeacherDataService = function () {
                   componentRevisionCounter[_key] = 1;
                 }
 
-                var revisionCounter = componentRevisionCounter[_key];
+                var revisionCounter = componentRevisionCounter[_key]; // set the revision counter into the component state
 
-                // set the revision counter into the component state
-                _componentState.revisionCounter = revisionCounter;
+                _componentState.revisionCounter = revisionCounter; // increment the revision counter for the component
 
-                // increment the revision counter for the component
                 componentRevisionCounter[_key] = revisionCounter + 1;
               }
             }
@@ -768,8 +821,8 @@ var TeacherDataService = function () {
             _iteratorError7 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                _iterator7.return();
+              if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+                _iterator7["return"]();
               }
             } finally {
               if (_didIteratorError7) {
@@ -784,9 +837,8 @@ var TeacherDataService = function () {
             if (componentState != null) {
               // get the node id and component id of the component state
               var nodeId = componentState.nodeId;
-              var componentId = componentState.componentId;
+              var componentId = componentState.componentId; // generate the component key e.g. "node2_bb83hs0sd8"
 
-              // generate the component key e.g. "node2_bb83hs0sd8"
               var key = nodeId + "-" + componentId;
 
               if (componentsFound[key] == null) {
@@ -796,39 +848,39 @@ var TeacherDataService = function () {
                  * of component states
                  */
                 componentStates.push(componentState);
-
                 /*
                  * add an entry into the components found so that
                  * don't add any more component states from this
                  * component
                  */
+
                 componentsFound[key] = true;
               }
             }
           }
-
           /*
            * reverse the component states array since we have been adding
            * component states from newest to oldest order but we want them
            * in oldest to newest order
            */
+
+
           componentStates.reverse();
         }
       }
+
       return componentStates;
     }
   }, {
-    key: 'getComponentStatesByWorkgroupIdAndNodeId',
+    key: "getComponentStatesByWorkgroupIdAndNodeId",
     value: function getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
       var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
-      var componentStatesByNodeId = this.getComponentStatesByNodeId(nodeId);
+      var componentStatesByNodeId = this.getComponentStatesByNodeId(nodeId); // find the intersect and return it
 
-      // find the intersect and return it
       return componentStatesByWorkgroupId.filter(function (n) {
         return componentStatesByNodeId.indexOf(n) != -1;
       });
     }
-
     /**
      * Get component states for a workgroup id and component id
      * @param workgroupId the workgroup id
@@ -837,7 +889,7 @@ var TeacherDataService = function () {
      */
 
   }, {
-    key: 'getComponentStatesByWorkgroupIdAndComponentId',
+    key: "getComponentStatesByWorkgroupIdAndComponentId",
     value: function getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId) {
       var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
       var componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
@@ -846,7 +898,7 @@ var TeacherDataService = function () {
       });
     }
   }, {
-    key: 'getComponentStatesByWorkgroupIdAndComponentIds',
+    key: "getComponentStatesByWorkgroupIdAndComponentIds",
     value: function getComponentStatesByWorkgroupIdAndComponentIds(workgroupId, componentIds) {
       var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
       var componentStatesByComponentId = [];
@@ -857,7 +909,6 @@ var TeacherDataService = function () {
       try {
         for (var _iterator8 = componentIds[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
           var componentId = _step8.value;
-
           componentStatesByComponentId = componentStatesByComponentId.concat(this.getComponentStatesByComponentId(componentId));
         }
       } catch (err) {
@@ -865,8 +916,8 @@ var TeacherDataService = function () {
         _iteratorError8 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion8 && _iterator8.return) {
-            _iterator8.return();
+          if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
+            _iterator8["return"]();
           }
         } finally {
           if (_didIteratorError8) {
@@ -880,9 +931,10 @@ var TeacherDataService = function () {
       });
     }
   }, {
-    key: 'getEventsByWorkgroupId',
+    key: "getEventsByWorkgroupId",
     value: function getEventsByWorkgroupId(workgroupId) {
       var eventsByWorkgroupId = this.studentData.eventsByWorkgroupId[workgroupId];
+
       if (eventsByWorkgroupId != null) {
         return eventsByWorkgroupId;
       } else {
@@ -890,9 +942,10 @@ var TeacherDataService = function () {
       }
     }
   }, {
-    key: 'getEventsByNodeId',
+    key: "getEventsByNodeId",
     value: function getEventsByNodeId(nodeId) {
       var eventsByNodeId = this.studentData.eventsByNodeId[nodeId];
+
       if (eventsByNodeId != null) {
         return eventsByNodeId;
       } else {
@@ -900,19 +953,17 @@ var TeacherDataService = function () {
       }
     }
   }, {
-    key: 'getEventsByWorkgroupIdAndNodeId',
+    key: "getEventsByWorkgroupIdAndNodeId",
     value: function getEventsByWorkgroupIdAndNodeId(workgroupId, nodeId) {
       var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
-      var eventsByNodeId = this.getEventsByNodeId(nodeId);
+      var eventsByNodeId = this.getEventsByNodeId(nodeId); // find the intersect and return it
 
-      // find the intersect and return it
       return eventsByWorkgroupId.filter(function (n) {
         return eventsByNodeId.indexOf(n) != -1;
       });
     }
   }, {
-    key: 'getLatestEventByWorkgroupIdAndNodeIdAndType',
-
+    key: "getLatestEventByWorkgroupIdAndNodeIdAndType",
 
     /**
      * Get the latest event by workgroup id, node id, and event type
@@ -924,9 +975,11 @@ var TeacherDataService = function () {
      */
     value: function getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType) {
       var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
+
       if (eventsByWorkgroupId != null) {
         for (var e = eventsByWorkgroupId.length - 1; e >= 0; e--) {
           var event = eventsByWorkgroupId[e];
+
           if (event != null) {
             if (event.nodeId == nodeId && event.event == eventType) {
               return event;
@@ -934,12 +987,14 @@ var TeacherDataService = function () {
           }
         }
       }
+
       return null;
     }
   }, {
-    key: 'getAnnotationsToWorkgroupId',
+    key: "getAnnotationsToWorkgroupId",
     value: function getAnnotationsToWorkgroupId(workgroupId) {
       var annotationsToWorkgroupId = this.studentData.annotationsToWorkgroupId[workgroupId];
+
       if (annotationsToWorkgroupId != null) {
         return annotationsToWorkgroupId;
       } else {
@@ -947,9 +1002,10 @@ var TeacherDataService = function () {
       }
     }
   }, {
-    key: 'getAnnotationsByNodeId',
+    key: "getAnnotationsByNodeId",
     value: function getAnnotationsByNodeId(nodeId) {
       var annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
+
       if (annotationsByNodeId != null) {
         return annotationsByNodeId;
       } else {
@@ -957,23 +1013,36 @@ var TeacherDataService = function () {
       }
     }
   }, {
-    key: 'getAnnotationsToWorkgroupIdAndNodeId',
+    key: "getAnnotationsByNodeIdAndPeriodId",
+    value: function getAnnotationsByNodeIdAndPeriodId(nodeId, periodId) {
+      var _this4 = this;
+
+      var annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
+
+      if (annotationsByNodeId != null) {
+        return annotationsByNodeId.filter(function (annotation) {
+          return _this4.UtilService.isMatchingPeriods(annotation.periodId, periodId);
+        });
+      } else {
+        return [];
+      }
+    }
+  }, {
+    key: "getAnnotationsToWorkgroupIdAndNodeId",
     value: function getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId) {
       var annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
-      var annotationsByNodeId = this.getAnnotationsByNodeId(nodeId);
+      var annotationsByNodeId = this.getAnnotationsByNodeId(nodeId); // find the intersect and return it
 
-      // find the intersect and return it
       return annotationsToWorkgroupId.filter(function (n) {
         return annotationsByNodeId.indexOf(n) != -1;
       });
     }
-
     /**
      * Initialize the periods
      */
 
   }, {
-    key: 'initializePeriods',
+    key: "initializePeriods",
     value: function initializePeriods() {
       var periods = this.ConfigService.getPeriods();
       var currentPeriod = null;
@@ -983,7 +1052,6 @@ var TeacherDataService = function () {
           periodId: -1,
           periodName: this.$translate('allPeriods')
         };
-
         periods.unshift(allPeriodsOption);
         currentPeriod = periods[1];
       } else if (periods.length == 1) {
@@ -991,13 +1059,12 @@ var TeacherDataService = function () {
       }
 
       var mergedPeriods = [];
-
       /*
        * Get the periods from the run status. These periods may not be up to
        * date so we need to compare them with the periods from the config.
        */
-      var runStatusPeriods = this.runStatus.periods;
 
+      var runStatusPeriods = this.runStatus.periods;
       var _iteratorNormalCompletion9 = true;
       var _didIteratorError9 = false;
       var _iteratorError9 = undefined;
@@ -1008,6 +1075,7 @@ var TeacherDataService = function () {
 
           if (period != null) {
             var runStatusPeriod = null;
+
             if (runStatusPeriods != null) {
               var _iteratorNormalCompletion10 = true;
               var _didIteratorError10 = false;
@@ -1028,8 +1096,8 @@ var TeacherDataService = function () {
                 _iteratorError10 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                    _iterator10.return();
+                  if (!_iteratorNormalCompletion10 && _iterator10["return"] != null) {
+                    _iterator10["return"]();
                   }
                 } finally {
                   if (_didIteratorError10) {
@@ -1055,8 +1123,8 @@ var TeacherDataService = function () {
         _iteratorError9 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion9 && _iterator9.return) {
-            _iterator9.return();
+          if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
+            _iterator9["return"]();
           }
         } finally {
           if (_didIteratorError9) {
@@ -1073,147 +1141,157 @@ var TeacherDataService = function () {
       }
     }
   }, {
-    key: 'setCurrentPeriod',
+    key: "setCurrentPeriod",
     value: function setCurrentPeriod(period) {
       var previousPeriod = this.currentPeriod;
       this.currentPeriod = period;
       var periodId = this.currentPeriod.periodId;
-
       /*
        * if currently selected workgroup is in a different period, clear the
        * currently selected workgroup
        */
+
       var currentWorkgroup = this.getCurrentWorkgroup();
+
       if (currentWorkgroup) {
         var workgroupPeriod = currentWorkgroup.periodId;
+
         if (periodId !== -1 && workgroupPeriod !== periodId) {
           this.setCurrentWorkgroup(null);
         }
       }
 
-      this.$rootScope.$broadcast('currentPeriodChanged', { previousPeriod: previousPeriod, currentPeriod: this.currentPeriod });
+      this.$rootScope.$broadcast('currentPeriodChanged', {
+        previousPeriod: previousPeriod,
+        currentPeriod: this.currentPeriod
+      });
     }
   }, {
-    key: 'getCurrentPeriod',
+    key: "getCurrentPeriod",
     value: function getCurrentPeriod() {
       return this.currentPeriod;
     }
   }, {
-    key: 'getPeriods',
+    key: "getPeriods",
     value: function getPeriods() {
       return this.periods;
     }
   }, {
-    key: 'getRunStatus',
+    key: "getRunStatus",
     value: function getRunStatus() {
       return this.runStatus;
     }
   }, {
-    key: 'setCurrentWorkgroup',
+    key: "setCurrentWorkgroup",
     value: function setCurrentWorkgroup(workgroup) {
       this.currentWorkgroup = workgroup;
-      this.$rootScope.$broadcast('currentWorkgroupChanged', { currentWorkgroup: this.currentWorkgroup });
+      this.$rootScope.$broadcast('currentWorkgroupChanged', {
+        currentWorkgroup: this.currentWorkgroup
+      });
     }
   }, {
-    key: 'getCurrentWorkgroup',
+    key: "getCurrentWorkgroup",
     value: function getCurrentWorkgroup() {
       return this.currentWorkgroup;
     }
   }, {
-    key: 'setCurrentStep',
+    key: "setCurrentStep",
     value: function setCurrentStep(step) {
       this.currentStep = step;
-      this.$rootScope.$broadcast('currentStepChanged', { currentStep: this.currentStep });
+      this.$rootScope.$broadcast('currentStepChanged', {
+        currentStep: this.currentStep
+      });
     }
   }, {
-    key: 'getCurrentStep',
+    key: "getCurrentStep",
     value: function getCurrentStep() {
       return this.currentStep;
     }
-
     /**
      * Get the current node
      * @returns the current node object
      */
 
   }, {
-    key: 'getCurrentNode',
+    key: "getCurrentNode",
     value: function getCurrentNode() {
       return this.currentNode;
     }
-
     /**
      * Get the current node id
      * @returns the current node id
      */
 
   }, {
-    key: 'getCurrentNodeId',
+    key: "getCurrentNodeId",
     value: function getCurrentNodeId() {
       if (this.currentNode != null) {
         return this.currentNode.id;
       }
+
       return null;
     }
-
     /**
      * Set the current node
      * @param nodeId the node id
      */
 
   }, {
-    key: 'setCurrentNodeByNodeId',
+    key: "setCurrentNodeByNodeId",
     value: function setCurrentNodeByNodeId(nodeId) {
       if (nodeId != null) {
         var node = this.ProjectService.getNodeById(nodeId);
         this.setCurrentNode(node);
       }
     }
-
     /**
      * Set the current node
      * @param node the node object
      */
 
   }, {
-    key: 'setCurrentNode',
+    key: "setCurrentNode",
     value: function setCurrentNode(node) {
       var previousCurrentNode = this.currentNode;
+
       if (previousCurrentNode !== node) {
         if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
           this.previousStep = previousCurrentNode;
         }
 
         this.currentNode = node;
-        this.$rootScope.$broadcast('currentNodeChanged', { previousNode: previousCurrentNode, currentNode: this.currentNode });
+        this.$rootScope.$broadcast('currentNodeChanged', {
+          previousNode: previousCurrentNode,
+          currentNode: this.currentNode
+        });
       }
     }
-
     /**
      * End the current node
      */
 
   }, {
-    key: 'endCurrentNode',
+    key: "endCurrentNode",
     value: function endCurrentNode() {
       var previousCurrentNode = this.currentNode;
+
       if (previousCurrentNode != null) {
-        this.$rootScope.$broadcast('exitNode', { nodeToExit: previousCurrentNode });
+        this.$rootScope.$broadcast('exitNode', {
+          nodeToExit: previousCurrentNode
+        });
       }
     }
-
     /**
      * End the current node and set the current node
      * @param nodeId the node id of the new current node
      */
 
   }, {
-    key: 'endCurrentNodeAndSetCurrentNodeByNodeId',
+    key: "endCurrentNodeAndSetCurrentNodeByNodeId",
     value: function endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
       this.endCurrentNode();
       this.setCurrentNodeByNodeId(nodeId);
     }
-
     /**
      * Get the total score for a workgroup
      * @param workgroupId the workgroup id
@@ -1221,33 +1299,32 @@ var TeacherDataService = function () {
      */
 
   }, {
-    key: 'getTotalScoreByWorkgroupId',
+    key: "getTotalScoreByWorkgroupId",
     value: function getTotalScoreByWorkgroupId(workgroupId) {
       if (this.studentData.annotationsToWorkgroupId != null) {
         var annotations = this.studentData.annotationsToWorkgroupId[workgroupId];
         return this.AnnotationService.getTotalScore(annotations, workgroupId);
       }
+
       return null;
     }
-
     /**
      * Get the run status
      * @returns the run status object
      */
 
   }, {
-    key: 'getRunStatus',
+    key: "getRunStatus",
     value: function getRunStatus() {
       return this.runStatus;
     }
-
     /**
      * Check if any period in the run is paused
      * @returns Boolean whether any periods are paused
      */
 
   }, {
-    key: 'isAnyPeriodPaused',
+    key: "isAnyPeriodPaused",
     value: function isAnyPeriodPaused(periodId) {
       var runStatus = this.runStatus;
 
@@ -1274,8 +1351,8 @@ var TeacherDataService = function () {
           _iteratorError11 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion11 && _iterator11.return) {
-              _iterator11.return();
+            if (!_iteratorNormalCompletion11 && _iterator11["return"] != null) {
+              _iterator11["return"]();
             }
           } finally {
             if (_didIteratorError11) {
@@ -1284,9 +1361,9 @@ var TeacherDataService = function () {
           }
         }
       }
+
       return false;
     }
-
     /**
      * Check if the given period is paused
      * @param periodId the id for a period
@@ -1294,7 +1371,7 @@ var TeacherDataService = function () {
      */
 
   }, {
-    key: 'isPeriodPaused',
+    key: "isPeriodPaused",
     value: function isPeriodPaused(periodId) {
       var isPaused = false;
       var runStatus = this.runStatus;
@@ -1303,7 +1380,6 @@ var TeacherDataService = function () {
         var periods = runStatus.periods;
         var nPeriods = periods.length;
         var nPeriodsPaused = 0;
-
         var _iteratorNormalCompletion12 = true;
         var _didIteratorError12 = false;
         var _iteratorError12 = undefined;
@@ -1314,6 +1390,7 @@ var TeacherDataService = function () {
 
             if (period != null) {
               isPaused = period.paused;
+
               if (periodId == period.periodId) {
                 // we have found the period we are looking for
                 break;
@@ -1331,8 +1408,8 @@ var TeacherDataService = function () {
           _iteratorError12 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion12 && _iterator12.return) {
-              _iterator12.return();
+            if (!_iteratorNormalCompletion12 && _iterator12["return"] != null) {
+              _iterator12["return"]();
             }
           } finally {
             if (_didIteratorError12) {
@@ -1345,9 +1422,9 @@ var TeacherDataService = function () {
           isPaused = true;
         }
       }
+
       return isPaused;
     }
-
     /**
      * The pause screen status was changed for the given periodId. Update period accordingly.
      * @param periodId the id of the period to toggle
@@ -1355,16 +1432,16 @@ var TeacherDataService = function () {
      */
 
   }, {
-    key: 'pauseScreensChanged',
+    key: "pauseScreensChanged",
     value: function pauseScreensChanged(periodId, isPaused) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.updatePausedRunStatusValue(periodId, isPaused);
       this.sendRunStatus().then(function () {
         if (isPaused) {
-          _this4.TeacherWebSocketService.pauseScreens(periodId);
+          _this5.TeacherWebSocketService.pauseScreens(periodId);
         } else {
-          _this4.TeacherWebSocketService.unPauseScreens(periodId);
+          _this5.TeacherWebSocketService.unPauseScreens(periodId);
         }
       });
       var context = "ClassroomMonitor",
@@ -1372,21 +1449,29 @@ var TeacherDataService = function () {
           componentId = null,
           componentType = null,
           category = "TeacherAction",
-          data = { periodId: periodId };
+          data = {
+        periodId: periodId
+      };
       var event = "pauseScreen";
+
       if (!isPaused) {
         event = "unPauseScreen";
       }
+
       this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-      this.$rootScope.$broadcast('pauseScreensChanged', { periods: this.runStatus.periods });
+      this.$rootScope.$broadcast('pauseScreensChanged', {
+        periods: this.runStatus.periods
+      });
     }
   }, {
-    key: 'sendRunStatus',
+    key: "sendRunStatus",
     value: function sendRunStatus() {
       var httpParams = {
         method: 'POST',
         url: this.ConfigService.getConfigParam('runStatusURL'),
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
         data: $.param({
           runId: this.ConfigService.getConfigParam('runId'),
           status: angular.toJson(this.runStatus)
@@ -1394,14 +1479,13 @@ var TeacherDataService = function () {
       };
       return this.$http(httpParams);
     }
-
     /**
      * Create a local run status object to keep track of the run status
      * @returns the run status object
      */
 
   }, {
-    key: 'createRunStatus',
+    key: "createRunStatus",
     value: function createRunStatus() {
       var runStatus = {};
       runStatus.runId = this.ConfigService.getConfigParam('runId');
@@ -1413,7 +1497,6 @@ var TeacherDataService = function () {
       try {
         for (var _iterator13 = periods[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
           var period = _step13.value;
-
           period.paused = false;
         }
       } catch (err) {
@@ -1421,8 +1504,8 @@ var TeacherDataService = function () {
         _iteratorError13 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion13 && _iterator13.return) {
-            _iterator13.return();
+          if (!_iteratorNormalCompletion13 && _iterator13["return"] != null) {
+            _iterator13["return"]();
           }
         } finally {
           if (_didIteratorError13) {
@@ -1435,7 +1518,6 @@ var TeacherDataService = function () {
       this.runStatus = runStatus;
       return this.runStatus;
     }
-
     /**
      * Update the paused value for a period in our run status
      * @param periodId the period id
@@ -1443,7 +1525,7 @@ var TeacherDataService = function () {
      */
 
   }, {
-    key: 'updatePausedRunStatusValue',
+    key: "updatePausedRunStatusValue",
     value: function updatePausedRunStatusValue(periodId, value) {
       if (this.runStatus == null) {
         this.createRunStatus();
@@ -1456,11 +1538,11 @@ var TeacherDataService = function () {
       if (periods) {
         var l = periods.length,
             x = l - 1;
+
         for (; x > -1; x--) {
           var tempPeriod = periods[x];
-          var tempPeriodId = tempPeriod.periodId;
+          var tempPeriodId = tempPeriod.periodId; //check if the period id matches the one we need to update or if all periods has been selected
 
-          //check if the period id matches the one we need to update or if all periods has been selected
           if (periodId === tempPeriodId || periodId === -1) {
             tempPeriod.paused = value;
           }
@@ -1481,6 +1563,6 @@ var TeacherDataService = function () {
 }();
 
 TeacherDataService.$inject = ['$http', '$filter', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'TeacherWebSocketService', 'UtilService'];
-
-exports.default = TeacherDataService;
+var _default = TeacherDataService;
+exports["default"] = _default;
 //# sourceMappingURL=teacherDataService.js.map

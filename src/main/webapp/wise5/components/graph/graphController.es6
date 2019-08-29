@@ -1422,9 +1422,10 @@ class GraphController extends ComponentController {
    * are "period" or "class".
    * @return a promise that will return all the trials from the classmates
    */
-  getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource) {
+  getTrialsFromClassmates(nodeId, componentId, periodId) {
     const deferred = this.$q.defer();
-    this.StudentDataService.getClassmateStudentWork(nodeId, componentId, showClassmateWorkSource).then((componentStates) => {
+    this.StudentDataService.getClassmateStudentWork(nodeId, componentId, periodId)
+        .then((componentStates) => {
       const promises = [];
       for (const componentState of componentStates) {
         promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
@@ -2454,8 +2455,11 @@ class GraphController extends ComponentController {
         }
       }
     } else {
-      const showClassmateWorkSource = connectedComponent.showClassmateWorkSource;
-      promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
+      let periodId = null;
+      if (connectedComponent.showClassmateWorkSource === 'period') {
+        periodId = this.ConfigService.getPeriodId();
+      }
+      promises.push(this.getTrialsFromClassmates(nodeId, componentId, periodId));
       let component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
       component = this.ProjectService.injectAssetPaths(component);
       connectedComponentBackgroundImage = component.backgroundImage;

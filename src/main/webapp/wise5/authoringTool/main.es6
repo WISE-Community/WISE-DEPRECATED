@@ -59,6 +59,7 @@ import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
+import SummaryAuthoringComponentModule from '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
@@ -72,6 +73,7 @@ const authoringModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
+    'summaryAuthoringComponentModule',
     'animationAuthoringComponentModule',
     'audioOscillatorAuthoringComponentModule',
     'authoringTool.components',

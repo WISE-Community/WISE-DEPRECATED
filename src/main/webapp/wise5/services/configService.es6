@@ -1,10 +1,11 @@
 'use strict';
 
 class ConfigService {
-  constructor($filter, $http, $location) {
+  constructor($filter, $http, $location, UtilService) {
     this.$filter = $filter;
     this.$http = $http;
     this.$location = $location;
+    this.UtilService = UtilService;
     this.config = null;
     this.$translate = this.$filter('translate');
   }
@@ -393,7 +394,6 @@ class ConfigService {
           userInfo = myUserInfo;
         }
       }
-
       if (userInfo == null) {
         const classmateUserInfos = this.getClassmateUserInfos();
         if (classmateUserInfos != null) {
@@ -410,6 +410,24 @@ class ConfigService {
       }
     }
     return userInfo;
+  }
+
+  getWorkgroupsByPeriod(periodId) {
+    const workgroupsInPeriod = [];
+    const myUserInfo = this.getMyUserInfo();
+    if (this.isStudent() && this.UtilService.isMatchingPeriods(myUserInfo.periodId, periodId)) {
+      workgroupsInPeriod.push(myUserInfo);
+    }
+    for (const classmateUserInfo of this.getClassmateUserInfos()) {
+      if (this.UtilService.isMatchingPeriods(classmateUserInfo.periodId, periodId)) {
+        workgroupsInPeriod.push(classmateUserInfo);
+      }
+    }
+    return workgroupsInPeriod;
+  }
+
+  getNumberOfWorkgroupsInPeriod(periodId) {
+    return this.getWorkgroupsByPeriod(periodId).length;
   }
 
   /**
@@ -535,8 +553,19 @@ class ConfigService {
   }
 
   isPreview() {
-    const mode = this.getMode();
-    return mode != null && mode === 'preview';
+    return this.getMode() === 'preview';
+  }
+
+  isAuthoring() {
+    return this.getMode() === 'author';
+  }
+
+  isStudentRun() {
+    return this.getMode() === 'studentRun';
+  }
+  
+  isClassroomMonitor() {
+    return this.getMode() === 'classroomMonitor';
   }
 
   /**
@@ -559,6 +588,10 @@ class ConfigService {
     const timestampDiff = this.getConfigParam('timestampDiff');
     const clientTimestamp = serverTimestamp + timestampDiff;
     return clientTimestamp;
+  }
+
+  isStudent(workgroupId) {
+    return !this.isRunOwner(workgroupId) && !this.isRunSharedTeacher();
   }
 
   /**
@@ -883,7 +916,8 @@ class ConfigService {
 ConfigService.$inject = [
   '$filter',
   '$http',
-  '$location'
+  '$location',
+  'UtilService'
 ];
 
 export default ConfigService;

@@ -207,6 +207,15 @@ class MultipleChoiceService extends ComponentService {
     }
     return false;
   }
+
+  componentHasCorrectAnswer(component) {
+    for (const choice of component.choices) {
+      if (choice.isCorrect) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 MultipleChoiceService.$inject = [

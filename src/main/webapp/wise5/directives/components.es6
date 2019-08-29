@@ -11,6 +11,7 @@ import GlobalAnnotationsList from './globalAnnotationsList/globalAnnotationsList
 import ListenForDeleteKeypress from './listenForDeleteKeypress/listenForDeleteKeypress';
 import MilestoneReportGraph from './milestoneReportGraph/milestoneReportGraph';
 import PossibleScore from './possibleScore/possibleScore';
+import SummaryDisplay from './summaryDisplay/summaryDisplay';
 import Wiselink from './wiselink/wiselink';
 import Sticky from './sticky/sticky';
 
@@ -27,6 +28,7 @@ Components.component('globalAnnotationsList', GlobalAnnotationsList);
 Components.component('listenForDeleteKeypress', ListenForDeleteKeypress);
 Components.component('milestoneReportGraph', MilestoneReportGraph);
 Components.component('possibleScore', PossibleScore);
+Components.component('summaryDisplay', SummaryDisplay);
 Components.component('wiselink', Wiselink);
 Components.directive('sticky', Sticky);
 

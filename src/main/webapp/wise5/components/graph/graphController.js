@@ -1911,11 +1911,11 @@ function (_ComponentController) {
 
   }, {
     key: "getTrialsFromClassmates",
-    value: function getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource) {
+    value: function getTrialsFromClassmates(nodeId, componentId, periodId) {
       var _this10 = this;
 
       var deferred = this.$q.defer();
-      this.StudentDataService.getClassmateStudentWork(nodeId, componentId, showClassmateWorkSource).then(function (componentStates) {
+      this.StudentDataService.getClassmateStudentWork(nodeId, componentId, periodId).then(function (componentStates) {
         var promises = [];
         var _iteratorNormalCompletion10 = true;
         var _didIteratorError10 = false;
@@ -3592,8 +3592,13 @@ function (_ComponentController) {
           }
         }
       } else {
-        var showClassmateWorkSource = connectedComponent.showClassmateWorkSource;
-        promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
+        var periodId = null;
+
+        if (connectedComponent.showClassmateWorkSource === 'period') {
+          periodId = this.ConfigService.getPeriodId();
+        }
+
+        promises.push(this.getTrialsFromClassmates(nodeId, componentId, periodId));
         var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
         component = this.ProjectService.injectAssetPaths(component);
         connectedComponentBackgroundImage = component.backgroundImage;
