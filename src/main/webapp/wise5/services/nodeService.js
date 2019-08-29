@@ -20,8 +20,8 @@ class NodeService {
       this.$translate = this.$filter('translate');
     }
     if (this.ConfigService != null &&
-        (this.ConfigService.getMode() == "classroomMonitor" ||
-        this.ConfigService.getMode() == "author")) {
+        (this.ConfigService.getMode() === 'classroomMonitor' ||
+        this.ConfigService.getMode() === 'author')) {
       // in the classroom monitor, we need access to the TeacherDataService
       this.TeacherDataService = this.$injector.get('TeacherDataService');
     }
@@ -780,8 +780,8 @@ class NodeService {
     const nodeId = fromNodeId;
     const componentId = null;
     const componentType = null;
-    const category = "Navigation";
-    const event = "branchPathTaken";
+    const category = 'Navigation';
+    const event = 'branchPathTaken';
     const eventData = {};
     eventData.fromNodeId = fromNodeId;
     eventData.toNodeId = toNodeId;

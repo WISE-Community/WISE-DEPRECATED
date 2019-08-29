@@ -12,7 +12,14 @@ class EditNotebookItemController {
               ProjectService,
               StudentAssetService,
               StudentDataService,
-              UtilService) {
+              UtilService,
+              note,
+              isEditMode,
+              file,
+              text,
+              studentWorkIds,
+              isEditTextEnabled,
+              isFileUploadEnabled) {
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
     this.$q = $q;
@@ -27,7 +34,16 @@ class EditNotebookItemController {
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
     this.showUpload = false;
+    this.note = note;
+    this.isEditMode = isEditMode;
+    this.file = file;
+    this.text = text;
+    this.studentWorkIds = studentWorkIds;
+    this.isEditTextEnabled = isEditTextEnabled;
+    this.isFileUploadEnabled = isFileUploadEnabled;
+  }
 
+  $onInit() {
     if (this.note == null) {
       const currentNodeId = this.StudentDataService.getCurrentNodeId();
       const currentNodeTitle = this.ProjectService.getNodeTitleByNodeId(currentNodeId);
@@ -35,11 +51,11 @@ class EditNotebookItemController {
       this.item = {
         id: null, // null id means we're creating a new notebook item.
         localNotebookItemId: this.UtilService.generateKey(10), // Id that is common across the same notebook item revisions.
-        type: "note", // the notebook item type, TODO: once questions are enabled, don't hard code
+        type: 'note', // the notebook item type, TODO: once questions are enabled, don't hard code
         nodeId: currentNodeId, // Id of the node this note was created on
         title: this.$translate('noteFrom', { currentNodeTitle: currentNodeTitle }),  // Title of the node this note was created on
         content: {
-          text: "",
+          text: '',
           attachments: []
         }
       };
@@ -90,18 +106,18 @@ class EditNotebookItemController {
   }
 
   isSharedWithClass() {
-    return this.item.groups != null && this.item.groups.includes("public");
+    return this.item.groups != null && this.item.groups.includes('public');
   }
 
   toggleMakeNotePublic() {
     if (this.item.groups == null) {
       this.item.groups = [];
     }
-    if (!this.item.groups.includes("public")) {
-      this.item.groups.push("public");
+    if (!this.item.groups.includes('public')) {
+      this.item.groups.push('public');
     } else {
       for (let i = 0; i < this.item.groups.length; i++) {
-        if (this.item.groups[i] === "public") {
+        if (this.item.groups[i] === 'public') {
           this.item.groups.splice(i, 1);
           break;
         }
@@ -120,7 +136,7 @@ class EditNotebookItemController {
     for (let file of files) {
       const attachment = {
         studentAssetId: null,
-        iconURL: "",
+        iconURL: '',
         file: file
       };
 
@@ -149,7 +165,7 @@ class EditNotebookItemController {
 
   getItemNodeLink() {
     if (this.item == null) {
-      return "";
+      return '';
     } else {
       return this.ProjectService.getNodePositionAndTitleByNodeId(this.item.nodeId);
     }
@@ -157,7 +173,7 @@ class EditNotebookItemController {
 
   getItemNodePosition() {
     if (this.item == null) {
-      return "";
+      return '';
     } else {
       return this.ProjectService.getNodePositionById(this.item.nodeId);
     }
@@ -248,11 +264,11 @@ class EditNotebookItemController {
   }
 
   canShareWithClass() {
-    return this.ProjectService.isSpaceExists("public");
+    return this.ProjectService.isSpaceExists('public');
   }
 
   canCopyPublicNotebookItem() {
-    return this.ProjectService.isSpaceExists("public") &&
+    return this.ProjectService.isSpaceExists('public') &&
       !this.isMyNotebookItem();
   }
 
@@ -263,17 +279,24 @@ class EditNotebookItemController {
 
 EditNotebookItemController.$inject = [
   '$filter',
-  "$mdDialog",
-  "$q",
-  "$injector",
-  "$rootScope",
-  "$scope",
-  "ConfigService",
-  "NotebookService",
-  "ProjectService",
-  "StudentAssetService",
-  "StudentDataService",
-  "UtilService"
+  '$mdDialog',
+  '$q',
+  '$injector',
+  '$rootScope',
+  '$scope',
+  'ConfigService',
+  'NotebookService',
+  'ProjectService',
+  'StudentAssetService',
+  'StudentDataService',
+  'UtilService',
+  'note',
+  'isEditMode',
+  'file',
+  'text',
+  'studentWorkIds',
+  'isEditTextEnabled',
+  'isFileUploadEnabled'
 ];
 
 export default EditNotebookItemController;

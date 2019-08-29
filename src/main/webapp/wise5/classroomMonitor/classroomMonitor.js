@@ -70,6 +70,8 @@ import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 import summernote from 'summernote';
 import angularSummernote from '../lib/angular-summernote/dist/angular-summernote';
+import '../lib/summernoteExtensions/summernote-ext-addNote.js';
+import '../lib/summernoteExtensions/summernote-ext-print.js'
 import moment from 'moment';
 
 const classroomMonitorModule = angular.module('classroomMonitor', [
