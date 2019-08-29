@@ -78,7 +78,7 @@ describe('SummaryAuthoringController', () => {
   });
 
   it(`should check that the component id is not automatically set when the node id is changed if 
-      there are mutiple allowed components`, () => {
+      there are multiple allowed components`, () => {
     spyOn(summaryAuthoringController, 'authoringViewComponentChanged');
     const components = [
       { id: '34j45u9w4j', type: 'OpenResponse' },

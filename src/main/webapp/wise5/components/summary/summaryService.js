@@ -75,7 +75,7 @@ function (_ComponentService) {
   }, {
     key: "isComponentTypeAllowed",
     value: function isComponentTypeAllowed(componentType) {
-      return componentType !== 'HTML' && componentType !== 'OutsideURL' && componentType != 'Summary';
+      return ['HTML', 'OutsideURL', 'Summary'].indexOf(componentType) === -1;
     }
   }, {
     key: "isScoresSummaryAvailableForComponentType",

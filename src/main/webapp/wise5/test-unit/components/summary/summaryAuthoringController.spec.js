@@ -76,7 +76,7 @@ describe('SummaryAuthoringController', function () {
     summaryAuthoringController.authoringSummaryNodeIdChanged();
     expect(summaryAuthoringController.authoringComponentContent.summaryComponentId).toBe(null);
   });
-  it("should check that the component id is not automatically set when the node id is changed if \n      there are mutiple allowed components", function () {
+  it("should check that the component id is not automatically set when the node id is changed if \n      there are multiple allowed components", function () {
     spyOn(summaryAuthoringController, 'authoringViewComponentChanged');
     var components = [{
       id: '34j45u9w4j',

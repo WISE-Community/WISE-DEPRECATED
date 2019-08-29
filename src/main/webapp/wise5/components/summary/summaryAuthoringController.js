@@ -57,8 +57,7 @@ function (_SummaryController) {
     value: function authoringSummaryNodeIdChanged() {
       this.authoringComponentContent.summaryComponentId = null;
       var components = this.getComponentsByNodeId(this.authoringComponentContent.summaryNodeId);
-      var numberOfAllowedComponents = 0;
-      var allowedComponent = null;
+      var allowedComponents = [];
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -68,8 +67,7 @@ function (_SummaryController) {
           var component = _step.value;
 
           if (this.isComponentTypeAllowed(component.type) && component.id != this.componentId) {
-            numberOfAllowedComponents += 1;
-            allowedComponent = component;
+            allowedComponents.push(component);
           }
         }
       } catch (err) {
@@ -87,8 +85,8 @@ function (_SummaryController) {
         }
       }
 
-      if (numberOfAllowedComponents === 1) {
-        this.authoringComponentContent.summaryComponentId = allowedComponent.id;
+      if (allowedComponents.length === 1) {
+        this.authoringComponentContent.summaryComponentId = allowedComponents[0].id;
       }
 
       this.performUpdatesIfNecessary();

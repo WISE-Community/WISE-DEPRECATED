@@ -42,7 +42,7 @@ class SummaryService extends ComponentService {
   }
 
   isComponentTypeAllowed(componentType) {
-    return componentType !== 'HTML' && componentType !== 'OutsideURL' && componentType != 'Summary';
+    return ['HTML', 'OutsideURL', 'Summary'].indexOf(componentType) === -1;
   }
 
   isScoresSummaryAvailableForComponentType(componentType) {

@@ -42,16 +42,14 @@ class SummaryAuthoringController extends SummaryController {
   authoringSummaryNodeIdChanged() {
     this.authoringComponentContent.summaryComponentId = null;
     const components = this.getComponentsByNodeId(this.authoringComponentContent.summaryNodeId);
-    let numberOfAllowedComponents = 0;
-    let allowedComponent = null;
+    const allowedComponents = [];
     for (const component of components) {
       if (this.isComponentTypeAllowed(component.type) && component.id != this.componentId) {
-        numberOfAllowedComponents += 1;
-        allowedComponent = component;
+        allowedComponents.push(component);
       }
     }
-    if (numberOfAllowedComponents === 1) {
-      this.authoringComponentContent.summaryComponentId = allowedComponent.id;
+    if (allowedComponents.length === 1) {
+      this.authoringComponentContent.summaryComponentId = allowedComponents[0].id;
     }
     this.performUpdatesIfNecessary();
     this.authoringViewComponentChanged();
@@ -82,7 +80,7 @@ class SummaryAuthoringController extends SummaryController {
 
   updateOtherPrompt() {
     this.otherPrompt = this.getOtherPrompt(this.authoringComponentContent.summaryNodeId,
-      this.authoringComponentContent.summaryComponentId);
+        this.authoringComponentContent.summaryComponentId);
   }
 
   updateStudentDataTypeOptionsIfNecessary() {

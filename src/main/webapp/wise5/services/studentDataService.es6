@@ -2463,11 +2463,7 @@ class StudentDataService {
       params: params
     };
     return this.$http(httpParams).then((result) => {
-      const resultData = result.data;
-      if (resultData != null) {
-        return resultData.annotations;
-      }
-      return [];
+      return result.data.annotations;
     });
   }
 

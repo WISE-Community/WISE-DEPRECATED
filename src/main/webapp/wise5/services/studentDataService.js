@@ -3614,13 +3614,7 @@ function () {
         params: params
       };
       return this.$http(httpParams).then(function (result) {
-        var resultData = result.data;
-
-        if (resultData != null) {
-          return resultData.annotations;
-        }
-
-        return [];
+        return result.data.annotations;
       });
     }
     /**
