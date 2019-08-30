@@ -6,8 +6,10 @@ import { MatDialog, MatTableModule} from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AdminService } from '../admin.service';
 import { UserService } from '../../services/user.service';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { LOCALE_ID, NO_ERRORS_SCHEMA, TRANSLATIONS, TRANSLATIONS_FORMAT } from '@angular/core';
 import { Teacher } from '../../domain/teacher';
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { translationsFactory } from '../../app.module';
 
 export class MockAdminService {
   searchTeachers(): Observable<Teacher []> {
@@ -36,7 +38,14 @@ describe('FindTeacherComponent', () => {
       providers: [
         { provide: AdminService, useClass: MockAdminService },
         { provide: UserService, useClass: MockUserService },
-        { provide: MatDialog, useValue: { open: () => {} }}
+        { provide: MatDialog, useValue: { open: () => {} }},
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

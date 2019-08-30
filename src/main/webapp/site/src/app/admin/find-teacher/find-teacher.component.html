@@ -22,16 +22,16 @@
           <input matInput id="username" name="username" formControlName="username" />
         </mat-form-field>
       </p>
-      <p *ngIf="showSearchById">
-        <mat-form-field appearance="fill" fxFlex>
-          <mat-label i18n>ID</mat-label>
-          <input matInput id="userId" name="userId" formControlName="userId" />
-        </mat-form-field>
-      </p>
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>Display Name</mat-label>
           <input matInput id="displayName" name="displayName" formControlName="displayName" />
+        </mat-form-field>
+      </p>
+      <p *ngIf="showSearchById">
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>ID</mat-label>
+          <input matInput id="userId" name="userId" formControlName="userId" />
         </mat-form-field>
       </p>
       <p>
@@ -61,13 +61,13 @@
       <p>
         <mat-form-field appearance="fill" fxFlex>
           <mat-label i18n>School Level</mat-label>
-          <input matInput id="schoolLevel" name="schoolLevel" formControlName="schoolLevel" />
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field appearance="fill" fxFlex>
-          <mat-label i18n>Curriculum Subjects</mat-label>
-          <input matInput id="curriculumSubjects" name="curriculumSubjects" formControlName="curriculumSubjects" />
+          <mat-select placeholder="School Level"
+                      formControlName="schoolLevel"
+                      ngDefaultControl>
+            <mat-option *ngFor="let schoolLevel of schoolLevels" [value]="schoolLevel.code">
+              {{schoolLevel.label}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </p>
       <p>

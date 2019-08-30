@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 import { MatDialog } from '@angular/material';
 import { AdminActionsComponent } from '../admin-actions/admin-actions.component';
 import { AdminActions } from '../admin-actions';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-find-teacher',
@@ -17,10 +18,19 @@ export class FindTeacherComponent implements OnInit {
   showSearchById: boolean = false;
   searchResultsAvailable: boolean = false;
   dataSource: any[] = [];
-  displayedColumns: string[] = ['username', 'changePassword', 'loginAsUser', 'userInfo', 'manageRoles'];
+  displayedColumns: string[] =
+      ['username', 'changePassword', 'loginAsUser', 'userInfo', 'manageRoles'];
   changePasswordAdminAction: string = AdminActions.CHANGE_PASSWORD;
   viewUserInfoAdminAction: string = AdminActions.VIEW_USER_INFO;
   manageRolesAdminAction: string = AdminActions.MANAGE_ROLES;
+  schoolLevels: any[] = [
+    { code: '', label: this.i18n('None') },
+    { code: 'ELEMENTARY_SCHOOL', label: this.i18n('Elementary School') },
+    { code: 'MIDDLE_SCHOOL', label: this.i18n('Middle School') },
+    { code: 'HIGH_SCHOOL', label: this.i18n('High School') },
+    { code: 'COLLEGE', label: this.i18n('College') },
+    { code: 'OTHER', label: this.i18n('Other') }
+  ];
 
   searchTeachersFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl(''),
@@ -33,7 +43,6 @@ export class FindTeacherComponent implements OnInit {
     country: new FormControl(''),
     schoolName: new FormControl(''),
     schoolLevel: new FormControl(''),
-    curriculumSubjects: new FormControl(''),
     email: new FormControl(''),
     runId: new FormControl('')
   });
@@ -41,7 +50,8 @@ export class FindTeacherComponent implements OnInit {
   constructor(private adminService: AdminService,
               private userService: UserService,
               private dialog: MatDialog,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private i18n: I18n) { }
 
   ngOnInit() {
     this.showSearchById = this.userService.isAdmin();
@@ -58,15 +68,14 @@ export class FindTeacherComponent implements OnInit {
     const country = this.getControlFieldValue('country');
     const schoolName = this.getControlFieldValue('schoolName');
     const schoolLevel = this.getControlFieldValue('schoolLevel');
-    const curriculumSubjects = this.getControlFieldValue('curriculumSubjects');
     const email = this.getControlFieldValue('email');
     const runId = this.getControlFieldValue('runId');
     if (!firstName && !lastName && !username && !userId && !displayName && !city && !state &&
-        !country && !schoolName && !schoolLevel && !curriculumSubjects && !email && !runId) {
+        !country && !schoolName && !schoolLevel && !email && !runId) {
       alert('You must enter at least one field.');
     } else {
       this.adminService.searchTeachers(firstName, lastName, username, userId, displayName, city,
-        state, country, schoolName, schoolLevel, curriculumSubjects, email, runId).subscribe(teachers => {
+        state, country, schoolName, schoolLevel, email, runId).subscribe(teachers => {
         this.dataSource = teachers;
         this.searchResultsAvailable = true;
         if (this.dataSource.length > 0) {
@@ -89,19 +98,18 @@ export class FindTeacherComponent implements OnInit {
   }
 
   clearFormFields() {
-    this.setControlFieldValue('firstName', null);
-    this.setControlFieldValue('lastName', null);
-    this.setControlFieldValue('username', null);
-    this.setControlFieldValue('userId', null);
-    this.setControlFieldValue('displayName', null);
-    this.setControlFieldValue('city', null);
-    this.setControlFieldValue('state', null);
-    this.setControlFieldValue('country', null);
-    this.setControlFieldValue('schoolName', null);
-    this.setControlFieldValue('schoolLevel', null);
-    this.setControlFieldValue('curriculumSubjects', null);
-    this.setControlFieldValue('email', null);
-    this.setControlFieldValue('runId', null);
+    this.setControlFieldValue('firstName', '');
+    this.setControlFieldValue('lastName', '');
+    this.setControlFieldValue('username', '');
+    this.setControlFieldValue('userId', '');
+    this.setControlFieldValue('displayName', '');
+    this.setControlFieldValue('city', '');
+    this.setControlFieldValue('state', '');
+    this.setControlFieldValue('country', '');
+    this.setControlFieldValue('schoolName', '');
+    this.setControlFieldValue('schoolLevel', '');
+    this.setControlFieldValue('email', '');
+    this.setControlFieldValue('runId', '');
     this.searchResultsAvailable = false;
   }
 

@@ -153,13 +153,12 @@ public interface UserService {
    */
   List<User> retrieveByFields(String[] fields, String[] values, String classVar);
 
-  List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, Long userId,
-                                          Long runId, Long workgroupId, String teacherUsername);
+  List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, 
+      Long userId, Long runId, Long workgroupId, String teacherUsername);
 
-  List<TeacherUserDetails> searchTeachers(String firstName, String lastName, String username, Long userId,
-                                          String displayName, String city, String state, String country,
-                                          String schoolName, String schoolLevel, String curriculumSubjects,
-                                          String email, Long runId);
+  List<TeacherUserDetails> searchTeachers(String firstName, String lastName, String username,
+      Long userId, String displayName, String city, String state, String country, String schoolName,
+      String schoolLevel, String email, Long runId);
 
   /**
    * Get the User object given the reset password key

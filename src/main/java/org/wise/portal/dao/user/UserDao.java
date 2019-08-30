@@ -111,13 +111,12 @@ public interface UserDao<T extends User> extends SimpleDao<T> {
    */
   List<T> retrieveByFields(String[] fields, String[] values, String classVar);
 
-  List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, Long userId,
-                                          Long runId, Long workgroupId, String teacherUsername);
+  List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, 
+      Long userId, Long runId, Long workgroupId, String teacherUsername);
 
-  List<TeacherUserDetails> searchTeachers(String firstName, String lastName, String username, Long userId,
-                                          String displayName, String city, String state, String country,
-                                          String schoolName, String schoolLevel, String curriculumSubjects,
-                                          String email, Long runId);
+  List<TeacherUserDetails> searchTeachers(String firstName, String lastName, String username,
+      Long userId, String displayName, String city, String state, String country, String schoolName,
+      String schoolLevel, String email, Long runId);
 
   /**
    * Given a reset password key retrieve a corresponding user.

@@ -15,7 +15,7 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   searchStudents(firstName: string, lastName: string, username: string, userId: string,
-                 runId: string, workgroupId: string, teacherUsername: string): Observable<any []> {
+      runId: string, workgroupId: string, teacherUsername: string): Observable<any []> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     const params = new HttpParams()
       .set('firstName', firstName)
@@ -29,9 +29,8 @@ export class AdminService {
   }
 
   searchTeachers(firstName: string, lastName: string, username: string, userId: string,
-                 displayName: string, city: string, state: string, country: string, schoolName: string,
-                 schoolLevel: string, curriculumSubjects: string,
-                 email: string, runId: string): Observable<any []> {
+      displayName: string, city: string, state: string, country: string, schoolName: string,
+      schoolLevel: string, email: string, runId: string): Observable<any []> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     const params = new HttpParams()
       .set('firstName', firstName)
@@ -44,7 +43,6 @@ export class AdminService {
       .set('country', country)
       .set('schoolName', schoolName)
       .set('schoolLevel', schoolLevel)
-      .set('curriculumSubjects', curriculumSubjects)
       .set('email', email)
       .set('runId', runId);
     return this.http.get<any[]>(this.searchTeachersUrl, { headers, params });

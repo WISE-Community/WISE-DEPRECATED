@@ -71,20 +71,18 @@ public class AdminAPIController {
 
   @RequestMapping(value = "/search-teachers", method = RequestMethod.GET)
   protected String searchTeachers(
-    @RequestParam("firstName") String firstName,
-    @RequestParam("lastName") String lastName,
-    @RequestParam("username") String username,
-    @RequestParam("userId") Long userId,
-    @RequestParam("displayName") String displayName,
-    @RequestParam("city") String city,
-    @RequestParam("state") String state,
-    @RequestParam("country") String country,
-    @RequestParam("schoolName") String schoolName,
-    @RequestParam("schoolLevel") String schoolLevel,
-    @RequestParam("curriculumSubjects") String curriculumSubjects,
-    @RequestParam("email") String email,
-    @RequestParam("runId") Long runId
-  ) {
+      @RequestParam("firstName") String firstName,
+      @RequestParam("lastName") String lastName,
+      @RequestParam("username") String username,
+      @RequestParam("userId") Long userId,
+      @RequestParam("displayName") String displayName,
+      @RequestParam("city") String city,
+      @RequestParam("state") String state,
+      @RequestParam("country") String country,
+      @RequestParam("schoolName") String schoolName,
+      @RequestParam("schoolLevel") String schoolLevel,
+      @RequestParam("email") String email,
+      @RequestParam("runId") Long runId) {
     firstName = nullIfEmptyString(firstName);
     lastName = nullIfEmptyString(lastName);
     username = nullIfEmptyString(username);
@@ -94,10 +92,9 @@ public class AdminAPIController {
     country = nullIfEmptyString(country);
     schoolName = nullIfEmptyString(schoolName);
     schoolLevel = nullIfEmptyString(schoolLevel);
-    curriculumSubjects = nullIfEmptyString(curriculumSubjects);
     email = nullIfEmptyString(email);
-    List<TeacherUserDetails> teacherUserDetails = userService.searchTeachers(firstName, lastName, username, userId,
-      displayName, city, state, country, schoolName, schoolLevel, curriculumSubjects, email, runId);
+    List<TeacherUserDetails> teacherUserDetails = userService.searchTeachers(firstName, lastName, 
+      username, userId, displayName, city, state, country, schoolName, schoolLevel, email, runId);
     JSONArray searchResults = new JSONArray();
     for (TeacherUserDetails teacherUserDetail: teacherUserDetails) {
       searchResults.put(getTeacherJSONObject(teacherUserDetail));
@@ -154,10 +151,9 @@ public class AdminAPIController {
 
   @RequestMapping(value = "/update-authorities", method = RequestMethod.POST)
   protected SimpleResponse updateUserAuthorities(
-    @RequestParam("username") String username,
-    @RequestParam("action") String action,
-    @RequestParam("authorityName") String authorityName
-  ) {
+      @RequestParam("username") String username,
+      @RequestParam("action") String action,
+      @RequestParam("authorityName") String authorityName) {
     User user = userService.retrieveUserByUsername(username);
     if (user != null) {
       try {

@@ -5030,7 +5030,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-teacher/find-teacher.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="a46da4e5dedf077f8ee26fa4af926df0fc909e0c" datatype="html">
         <source>This is the name your students will see.</source>
@@ -5162,7 +5162,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/admin/find-teacher/find-teacher.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit><trans-unit id="dc834df3c90c7b9021cfa37b2be737c2134249a5" datatype="html">
         <source>Run ID</source>
@@ -5192,12 +5192,6 @@
           <context context-type="sourcefile">app/admin/find-teacher/find-teacher.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-      </trans-unit><trans-unit id="7c314efaaede2ebc7472687b49eecddc9839927a" datatype="html">
-        <source>Curriculum Subjects</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/admin/find-teacher/find-teacher.component.html</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
         <source>Password changed.</source>
@@ -5221,6 +5215,96 @@
         <source>Could not update user roles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="a2f14a73f7a6e94479f67423cc51102da8d6f524" datatype="html">
+        <source>None</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/find-teacher/find-teacher.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="a318c6afca84af8f01f017d075ff1c3f6257e4f3" datatype="html">
+        <source>Elementary School</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/find-teacher/find-teacher.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="09637ca64b2d5d3a393bd1ab2713c0bd4edbcc95" datatype="html">
+        <source>Middle School</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/find-teacher/find-teacher.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="883888e9073880687bd969a402dff0b136f09023" datatype="html">
+        <source>High School</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/find-teacher/find-teacher.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="687134b5f01a5de70837d9773ae0aaf9f005a205" datatype="html">
+        <source>College</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/find-teacher/find-teacher.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c2a9de3714f5767b174d0424bc8abe2dc37acc41" datatype="html">
+        <source>Other</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/find-teacher/find-teacher.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5265,25 +5349,6 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c2a9de3714f5767b174d0424bc8abe2dc37acc41" datatype="html">
-        <source>Other</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5718,50 +5783,6 @@
         <source>No Answer/Other</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="a318c6afca84af8f01f017d075ff1c3f6257e4f3" datatype="html">
-        <source>Elementary School</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="09637ca64b2d5d3a393bd1ab2713c0bd4edbcc95" datatype="html">
-        <source>Middle School</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="883888e9073880687bd969a402dff0b136f09023" datatype="html">
-        <source>High School</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="687134b5f01a5de70837d9773ae0aaf9f005a205" datatype="html">
-        <source>College</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
