@@ -1058,6 +1058,14 @@ class UtilService {
       ("0" + g.toString(16)).slice(-2) +
       ("0" + b.toString(16)).slice(-2);
   }
+
+  isMatchingPeriods(periodId1, periodId2) {
+    return this.isAllPeriods(periodId1) || this.isAllPeriods(periodId2) || periodId1 == periodId2;
+  }
+
+  isAllPeriods(periodId) {
+    return periodId == null || periodId === -1;
+  }
 }
 
 // Get the last element of the array

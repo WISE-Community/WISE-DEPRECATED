@@ -295,6 +295,22 @@ class TeacherDataService {
     return this.retrieveStudentData(params);
   };
 
+  retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      nodeId: nodeId,
+      componentId: componentId,
+      periodId: periodId,
+      getStudentWork: true,
+      getEvents: false,
+      getAnnotations: false,
+      onlyGetLatest: true
+    };
+    return this.retrieveStudentData(params).then((result) => {
+      return result.studentWorkList;
+    });
+  }
+
   /**
    * Retrieve the student data
    * @param params the params that specify what student data we want
@@ -734,6 +750,17 @@ class TeacherDataService {
     const annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
     if (annotationsByNodeId != null) {
       return annotationsByNodeId;
+    } else {
+      return [];
+    }
+  }
+
+  getAnnotationsByNodeIdAndPeriodId(nodeId, periodId) {
+    const annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
+    if (annotationsByNodeId != null) {
+      return annotationsByNodeId.filter((annotation) => {
+        return this.UtilService.isMatchingPeriods(annotation.periodId, periodId);
+      });
     } else {
       return [];
     }

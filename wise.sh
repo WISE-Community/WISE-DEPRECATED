@@ -4,6 +4,10 @@
 # If this is the first time running, it will initialize the data before starting.
 # if arg1="reset", it wipes out any existing data in database/curriculum/studentupload
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 PWD=`pwd`
 TODAY=`/bin/date +\%Y\%m\%d`
 PROPERTIES_FILE="src/main/resources/application.properties"
@@ -35,11 +39,6 @@ fi
 
 if [ ! -f $PROPERTIES_FILE ]; then
   # properties file does not exist so assume this is a fresh install
-  # install npm dependencies and jspm depedencies (happens in postinstall)
-  if [ $1 = "dev" ]; then
-    # if in dev mode, make sure github token is registered so we don't run into rate limit
-    jspm registry config github
-  fi
   npm install
   # copy sample property file and set paths automatically
   cp $SAMPLE_PROPERTIES_FILE $PROPERTIES_FILE

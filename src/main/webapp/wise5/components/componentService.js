@@ -101,6 +101,10 @@ class ComponentService {
   componentUsesSubmitButton() {
     return true;
   }
+
+  componentHasCorrectAnswer() {
+    return false;
+  }
 }
 
 ComponentService.$inject = [];

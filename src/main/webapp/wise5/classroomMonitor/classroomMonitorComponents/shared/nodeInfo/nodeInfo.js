@@ -1,11 +1,17 @@
 "use strict";
 
 class NodeInfoController {
-    constructor(ProjectService,
+    constructor(AnnotationService,
+                ProjectService,
+                SummaryService,
+                TeacherDataService,
                 UtilService) {
+        this.AnnotationService = AnnotationService;
         this.ProjectService = ProjectService;
+        this.SummaryService = SummaryService;
+        this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
-
+        this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
         this.$onInit = () => {
             this.nodeContent = this.getNodeContent();
             this.components = this.getComponents();
@@ -76,10 +82,26 @@ class NodeInfoController {
     getComponentTypeLabel(componentType) {
         return this.UtilService.getComponentTypeLabel(componentType);
     }
+
+    isResponsesSummaryAvailableForComponentType(componentType) {
+        return this.SummaryService.isResponsesSummaryAvailableForComponentType(componentType);
+    }
+
+    isScoresSummaryAvailableForComponentType(componentType) {
+        return this.SummaryService.isScoresSummaryAvailableForComponentType(componentType);
+    }
+
+    componentHasScoreAnnotation(componentId) {
+        return this.AnnotationService.isThereAnyScoreAnnotation(
+                this.nodeId, componentId, this.periodId);
+    }
 }
 
 NodeInfoController.$inject = [
+    'AnnotationService',
     'ProjectService',
+    'SummaryService',
+    'TeacherDataService',
     'UtilService'
 ];
 
@@ -127,6 +149,18 @@ const NodeInfo = {
                            <div ng-bind-html="$ctrl.getRubricWithAssetPaths(component.rubric)"></div>
                        </md-card-content>
                     </md-card>
+                    <div ng-if='$ctrl.isResponsesSummaryAvailableForComponentType(component.type)'>
+                        <summary-display ng-if='component.type === "MultipleChoice"'
+                                node-id='$ctrl.nodeId' component-id='component.id'
+                                period-id='$ctrl.periodId' student-data-type='"responses"'>
+                        </summary-display>
+                    </div>
+                    <div ng-if='$ctrl.isScoresSummaryAvailableForComponentType(component.type) &&
+                            $ctrl.componentHasScoreAnnotation(component.id)'>
+                        <summary-display node-id='$ctrl.nodeId' component-id='component.id'
+                                period-id='$ctrl.periodId' student-data-type='"scores"'>
+                        </summary-display>
+                    </div>
                 </div>
             </md-card-content>
         </md-card>`

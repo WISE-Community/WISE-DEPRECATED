@@ -124,7 +124,7 @@ class AuthoringToolController {
           .ok(this.$translate('yes'))
           .cancel(this.$translate('no'));
       this.$mdDialog.show(confirm).then(() => {
-        this.SessionService.renewSession();
+        this.SessionService.closeWarningAndRenewSession();
       }, () => {
         this.SessionService.forceLogOut();
       });

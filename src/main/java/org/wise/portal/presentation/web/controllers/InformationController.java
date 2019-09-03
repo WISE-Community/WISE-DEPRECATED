@@ -23,12 +23,21 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
-import org.springframework.security.acls.model.Permission;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,11 +62,6 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.web.SecurityUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Handles requests for User information and VLE config
@@ -729,12 +733,12 @@ public class InformationController {
     config.put("contextPath", contextPath);
     config.put("mainHomePageURL", contextPath);
     config.put("renewSessionURL", contextPath + "/session/renew");
+    config.put("sessionTimeout", request.getSession().getMaxInactiveInterval());
     config.put("sessionLogOutURL", contextPath + "/logout");
 
     User signedInUser = ControllerUtil.getSignedInUser();
     setUserLocale(request, signedInUser, config);
     addUserTypeAndHomeURL(request, signedInUser, config);
-    addSessionTimeoutInterval(request, config);
     addStudentMaxTotalAssetSize(config);
     addRetrievalTimestamp(config);
   }

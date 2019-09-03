@@ -606,6 +606,18 @@ class AnnotationService {
     return annotation;
   }
 
+  isThereAnyScoreAnnotation(nodeId, componentId, periodId) {
+    const annotations = this.getAnnotations();
+    for (const annotation of annotations) {
+      if (annotation.nodeId === nodeId && annotation.componentId === componentId &&
+          (this.UtilService.isMatchingPeriods(annotation.periodId, periodId)) &&
+          (annotation.type === 'score' || annotation.type === 'autoScore')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
    * Get the latest comment annotation
    * @param nodeId the node id

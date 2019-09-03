@@ -373,6 +373,7 @@ class NodeAuthoringController {
       {componentType: 'MultipleChoice', componentName: this.UtilService.getComponentTypeLabel('MultipleChoice')},
       {componentType: 'OpenResponse', componentName: this.UtilService.getComponentTypeLabel('OpenResponse')},
       {componentType: 'OutsideURL', componentName: this.UtilService.getComponentTypeLabel('OutsideURL')},
+      {componentType: 'Summary', componentName: this.UtilService.getComponentTypeLabel('Summary')},
       {componentType: 'Table', componentName: this.UtilService.getComponentTypeLabel('Table')}
     ];
 
