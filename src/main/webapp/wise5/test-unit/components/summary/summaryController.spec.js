@@ -1,6 +1,4 @@
-import angular from 'angular';
-import mainModule from 'vle/main';
-import 'angular-mocks';
+import vleModule from '../../../vle/vle';
 
 const multipleChoiceComponent = {
   id: '87df23g4l7',
@@ -113,7 +111,7 @@ describe('SummaryController', () => {
     summaryController.nodeId = 'node1';
   };
 
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(vleModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;

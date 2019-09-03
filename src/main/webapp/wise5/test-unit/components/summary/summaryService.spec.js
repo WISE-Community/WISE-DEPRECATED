@@ -1,9 +1,7 @@
-import angular from 'angular';
-import mainModule from 'vle/main';
-import 'angular-mocks';
+import vleModule from '../../../vle/vle';
 
 describe('SummaryService', () => {
-  beforeEach(angular.mock.module(mainModule.name));
+  beforeEach(angular.mock.module(vleModule.name));
 
   let SummaryService;
   beforeEach(inject((_SummaryService_) => {
