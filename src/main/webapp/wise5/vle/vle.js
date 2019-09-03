@@ -160,11 +160,12 @@ const vleModule = angular.module('vle', [
         controllerAs: 'vleController',
         resolve: {
           config: ['ConfigService', (ConfigService) => {
-            let configURL = window.configURL;
-            if (configURL == null) {
-              configURL = prompt('Please enter configURL', '/config/studentRun/24673');
+            if (window.configURL != null) {
+              return ConfigService.retrieveConfig(window.configURL);
+            } else {
+              const runId = prompt('Please enter Run ID:');
+              return ConfigService.retrieveConfig(`/config/studentRun/${runId}`);
             }
-            return ConfigService.retrieveConfig(configURL);
           }],
           project: ['ProjectService', 'config', (ProjectService, config) => {
             return ProjectService.retrieveProject();

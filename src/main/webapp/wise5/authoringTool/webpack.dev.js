@@ -5,6 +5,7 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
+    port: 8083,
     proxy: {
       '/config': 'http://localhost:8080',
       '/authorConfig': 'http://localhost:8080',

@@ -164,11 +164,12 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                     controllerAs: 'classroomMonitorController',
                     resolve: {
                         config: ['ConfigService', (ConfigService) => {
-                          let configURL = window.configURL;
-                          if (configURL == null) {
-                            configURL = prompt('Please enter configURL', '/config/classroomMonitor/24673');
+                          if (window.configURL != null) {
+                            return ConfigService.retrieveConfig(window.configURL);
+                          } else {
+                            const runId = prompt('Please enter Run ID:');
+                            return ConfigService.retrieveConfig(`/config/classroomMonitor/${runId}`);
                           }
-                          return ConfigService.retrieveConfig(configURL);
                         }],
                         project: ['ProjectService', 'config', (ProjectService, config) => {
                           return ProjectService.retrieveProject();

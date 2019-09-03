@@ -163,11 +163,12 @@ const authoringModule = angular.module('authoring', [
         controllerAs: 'authoringToolMainController',
         resolve: {
           config: ['ConfigService', (ConfigService) => {
-            let configURL = window.configURL;
-            if (configURL == null) {
-              configURL = prompt('Please enter configURL', '/authorConfig/24678');
+            if (window.configURL != null) {
+              return ConfigService.retrieveConfig(window.configURL);
+            } else {
+              const projectId = prompt('Please enter Project ID:');
+              return ConfigService.retrieveConfig(`/authorConfig/${projectId}`);
             }
-            return ConfigService.retrieveConfig(configURL);
           }],
           language: ['$translate', 'ConfigService', 'config', ($translate, ConfigService, config) => {
             $translate.use(ConfigService.getLocale());
