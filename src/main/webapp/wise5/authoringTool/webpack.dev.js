@@ -7,16 +7,17 @@ module.exports = merge(common, {
   devServer: {
     port: 8083,
     proxy: {
-      '/config': 'http://localhost:8080',
       '/authorConfig': 'http://localhost:8080',
-      '/teacher': 'http://localhost:8080',
-      '/project': 'http://localhost:8080',
-      '/wise5': 'http://localhost:8080',
+      '/config': 'http://localhost:8080',
       '/curriculum': 'http://localhost:8080',
+      '/project': 'http://localhost:8080',
+      '/session': 'http://localhost:8080',
+      '/teacher': 'http://localhost:8080',
       '/websocket': {
         target: 'http://localhost:8080',
         ws: true
-     },
+      },
+      '/wise5': 'http://localhost:8080'
     }
   }
 });

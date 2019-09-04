@@ -994,7 +994,6 @@
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "insertAfter" | translate }}</md-tooltip>
     </md-button>
   </div>
-  nodeId: {{nodeAuthoringController.nodeId}}
   <component ng-if='nodeAuthoringController.showComponentAuthoringViews' node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}' mode='authoring'></component>
   <md-divider ng-if='nodeAuthoringController.showComponentAuthoringViews && !$last'></md-divider>
 </div>
