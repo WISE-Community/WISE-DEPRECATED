@@ -168,8 +168,7 @@ const authoringModule = angular.module('authoring', [
             if (window.configURL != null) {
               return ConfigService.retrieveConfig(window.configURL);
             } else {
-              const projectId = prompt('Please enter Project ID:');
-              return ConfigService.retrieveConfig(`/authorConfig/${projectId}`);
+              return ConfigService.retrieveConfig(`/authorConfig`);
             }
           }],
           language: ['$translate', 'ConfigService', 'config', ($translate, ConfigService, config) => {
