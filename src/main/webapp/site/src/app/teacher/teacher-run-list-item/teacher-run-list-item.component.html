@@ -36,6 +36,13 @@
       <div fxLayout="column">
         <mat-card-title [class.secondary-text]="isRunCompleted(run)" class="mat-body-2">
           {{run.project.name}}
+          <span *ngIf="run.project.wiseVersion === 4"
+                class="warn mat-caption more-info" 
+                tabindex="0"
+                i18n-matTooltip
+                matTooltip="This unit is from an old version of WISE that is no longer supported. Please find an alternate unit to use in the future or contact us for upgrade options."
+                [matTooltipPosition]="'after'"
+                i18n>(Legacy Unit)</span>
         </mat-card-title>
         <mat-card-subtitle fxHide fxShow.gt-xs>
           <ng-container *ngTemplateOutlet="runInfo"></ng-container>
