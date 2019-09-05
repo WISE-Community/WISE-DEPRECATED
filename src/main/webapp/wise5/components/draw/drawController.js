@@ -538,7 +538,7 @@ class DrawController extends ComponentController {
    * @param $event the click event
    */
   snipDrawing($event, studentWorkId) {
-    let canvas = angular.element('#drawingtool_' + this.nodeId + '_' + this.componentId + ' canvas');
+    let canvas = angular.element(document.querySelector('#drawingtool_' + this.nodeId + '_' + this.componentId + ' canvas'));
     if (canvas != null && canvas.length > 0) {
       canvas = canvas[0];
       const canvasBase64Image = canvas.toDataURL('image/png');
