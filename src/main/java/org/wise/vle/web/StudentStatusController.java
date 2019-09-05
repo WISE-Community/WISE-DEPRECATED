@@ -23,16 +23,6 @@
  */
 package org.wise.vle.web;
 
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,14 +31,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.VLEService;
-import org.wise.portal.service.websocket.WISEWebSocketHandler;
+import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.status.StudentStatus;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 @Controller
 @RequestMapping("/studentStatus")
@@ -61,7 +59,7 @@ public class StudentStatusController {
   private RunService runService;
 
   @Autowired
-  private WebSocketHandler webSocketHandler;
+  private MessagePublisher redisPublisher;
 
   /**
    * Handles GET requests from the teacher when a teacher requests for all the student
@@ -70,7 +68,7 @@ public class StudentStatusController {
    * @throws IOException
    */
   @RequestMapping(method = RequestMethod.GET)
-  public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response)
+  public ModelAndView getStudentStatus(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     String runIdString = request.getParameter("runId");
@@ -144,7 +142,7 @@ public class StudentStatusController {
    * @throws IOException
    */
   @RequestMapping(method = RequestMethod.POST)
-  public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response)
+  public ModelAndView saveStudentStatus(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     String runIdString = request.getParameter("runId");
@@ -205,29 +203,20 @@ public class StudentStatusController {
       Run run = runService.retrieveById(runId);
       Integer wiseVersion = run.getProject().getWiseVersion();
       if (wiseVersion.equals(5)) {
-        if (webSocketHandler != null) {
-          WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-          if (wiseWebSocketHandler != null) {
-            JSONObject webSocketMessageJSON = new JSONObject();
-            JSONObject studentStatusJSON = new JSONObject(status);
-            webSocketMessageJSON.put("messageType", "studentStatus");
-            webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-            if (studentStatusJSON.has("currentNodeId")) {
-              webSocketMessageJSON.put("currentNodeId", studentStatusJSON.get("currentNodeId"));
-            }
-            if (studentStatusJSON.has("nodeStatuses")) {
-              webSocketMessageJSON.put("nodeStatuses", studentStatusJSON.get("nodeStatuses"));
-            }
-            if (studentStatusJSON.has("projectCompletion")) {
-              webSocketMessageJSON.put("projectCompletion", studentStatusJSON.get("projectCompletion"));
-            }
-            wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-          }
-        }
+        this.broadcastStudentStatusToTeacher(studentStatus);
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
     return null;
   }
+
+  public void broadcastStudentStatusToTeacher(StudentStatus studentStatus) throws Exception {
+    JSONObject message = new JSONObject();
+    message.put("type", "studentStatusToTeacher");
+    message.put("topic", String.format("/topic/teacher/%s", studentStatus.getRunId()));
+    message.put("studentStatus", studentStatus.getStatus());
+    redisPublisher.publish(message.toString());
+  }
+
 }

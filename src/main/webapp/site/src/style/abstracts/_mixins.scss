@@ -46,7 +46,7 @@
   }
 
   a {
-    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button) {
+    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button):not(.mat-tab-link) {
       color: map-get($colors, primary);
 
       // Set classes for each named color in the $colors map
@@ -120,13 +120,40 @@
     background-color: map-get($background, card);
   }
 
+  .can-highlight {
+    transition: 1s background-color;
+  }
+
   .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
     min-width: 0;
   }
 
-  .mat-raised-button {
+  .mat-raised-button, .mat-fab, .mat-mini-fab {
+    &:not(.mat-icon-button) {
+      &:not([class*=mat-elevation-z]) {
+        @include mat-elevation(3);
+      }
+    }
+
     &[disabled] {
       box-shadow: none;
+    }
+  }
+
+  .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
+    &.mat-secondary-text {
+      background-color: map-get($colors, secondary-text);
+      color: white;
+    }
+
+    &.mat-success {
+      background-color: map-get($colors, success);
+      color: map-get($colors, success-contrast);
+    }
+
+    &.mat-info {
+      background-color: map-get($colors, info);
+      color: map-get($colors, info-contrast);
     }
   }
 
@@ -141,6 +168,17 @@
 
     >.mat-card-actions:last-child {
       margin-bottom: 0;
+    }
+  }
+
+  .mat-card--button {
+    cursor: pointer;
+    border-radius: $button-border-radius;
+    @include mat-elevation(3);
+  
+    &:hover, &:focus {
+      outline: none;
+      @include mat-elevation(4);
     }
   }
 
@@ -160,12 +198,20 @@
     margin-bottom: 0;
   }
 
-  .mat-expansion-panel {
+  .mat-accordion .mat-expansion-panel {
     @include mat-elevation(3);
     @include mat-elevation-transition;
 
     &.mat-expanded {
       @include mat-elevation(6);
+    }
+
+    &:not(.mat-expanded) {
+      border-radius: $button-border-radius;
+      
+      .mat-expansion-panel-header {
+        border-radius: $button-border-radius;
+      }
     }
   }
 

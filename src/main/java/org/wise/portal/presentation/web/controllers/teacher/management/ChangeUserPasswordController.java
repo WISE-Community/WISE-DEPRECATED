@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.authentication.impl.ChangeStudentPasswordParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.ChangePasswordParametersValidator;
@@ -51,7 +52,7 @@ import org.wise.portal.service.user.UserService;
 @RequestMapping(value = {
   "/student/changestudentpassword.html",
   "/**/changepassword.html",
-  "/teacher/management/changestudentpassword.html"})
+  "/teacher/management/changestudentpassword"})
 public class ChangeUserPasswordController {
 
   @Autowired
@@ -63,7 +64,7 @@ public class ChangeUserPasswordController {
   @Autowired
   protected ChangePasswordParametersValidator changePasswordParametersValidator;
 
-  private final static String USER_NAME = "userName";
+  private final static String USER_NAME = "username";
 
   /**
    * Called before the page is loaded to initialize values
@@ -72,14 +73,14 @@ public class ChangeUserPasswordController {
    * @return the path of the view to display
    */
   @RequestMapping(method = RequestMethod.GET)
-  public String initializeForm(ModelMap model, HttpServletRequest request) {
+  public ModelAndView initializeForm(HttpServletRequest request) {
     User signedInUser = ControllerUtil.getSignedInUser();
-    String userName = request.getParameter(USER_NAME);
+    String username = request.getParameter(USER_NAME);
     User userToChange;
     User teacherUser = null;
-    if (userName != null) {
+    if (username != null) {
       // the username is provided which means a teacher is changing the password for a student
-      userToChange = userService.retrieveUserByUsername(userName);
+      userToChange = userService.retrieveUserByUsername(username);
       teacherUser = ControllerUtil.getSignedInUser();
     } else {
       // if username is not specified, assume that logged-in user wants to change his/her own password.
@@ -87,13 +88,16 @@ public class ChangeUserPasswordController {
     }
 
     if (canChangePassword(signedInUser, userToChange)) {
+      ModelAndView modelAndView = new ModelAndView();
       ChangeStudentPasswordParameters params = new ChangeStudentPasswordParameters();
       params.setUser(userToChange);
       params.setTeacherUser(teacherUser);
-      model.addAttribute("changeStudentPasswordParameters", params);
-      return getServletPath(request);
+      modelAndView.addObject("changeStudentPasswordParameters", params);
+      return modelAndView;
     } else {
-      return "errors/accessdenied";
+      ModelAndView modelAndView = new ModelAndView();
+      modelAndView.setViewName("errors/accessdenied");
+      return modelAndView;
     }
   }
 
@@ -129,25 +133,22 @@ public class ChangeUserPasswordController {
    *
    */
   @RequestMapping(method = RequestMethod.POST)
-  protected String onSubmit(
+  protected ModelAndView onSubmit(
       @ModelAttribute("changeStudentPasswordParameters") ChangeStudentPasswordParameters params,
       HttpServletRequest request,
       BindingResult bindingResult,
       SessionStatus sessionStatus) {
-    String view = "";
     changePasswordParametersValidator.validate(params, bindingResult);
-
-    String requestPath = getServletPath(request);
     if (bindingResult.hasErrors()) {
-      view = requestPath;
+      return new ModelAndView();
     } else {
       userService.updateUserPassword(params.getUser(), params.getPasswd1());
-
-      String successView = requestPath + "success";
-      view = successView;
       sessionStatus.setComplete();
+      ModelAndView modelAndView = new ModelAndView();
+      String requestPath = getServletPath(request);
+      modelAndView.setViewName(requestPath + "success");
+      return modelAndView;
     }
-    return view;
   }
 
   /**
@@ -158,15 +159,13 @@ public class ChangeUserPasswordController {
    * /teacher/management/changestudentpassword
    */
   protected String getServletPath(HttpServletRequest request) {
-    String servletPath = "";
-    if (request != null) {
-      servletPath = request.getServletPath();
-      if (servletPath != null) {
-        int indexOfDotHTML = servletPath.indexOf(".html");
-        if (indexOfDotHTML != -1) {
-          servletPath = servletPath.substring(0, indexOfDotHTML);
-        }
-      }
+    String servletPath = request.getServletPath();
+    int indexOfDotHTML = servletPath.indexOf(".html");
+    if (indexOfDotHTML != -1) {
+      servletPath = servletPath.substring(0, indexOfDotHTML);
+    }
+    if (servletPath.indexOf("/") == 0) {
+      servletPath = servletPath.substring(1);
     }
     return servletPath;
   }

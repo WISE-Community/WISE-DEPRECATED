@@ -3,6 +3,7 @@ import { HeaderLinksComponent } from './header-links.component';
 import { User } from "../../../domain/user";
 import { Component } from "@angular/core";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { configureTestSuite } from 'ng-bullet';
 
 @Component({selector: 'app-header-signin', template: ''})
 class HeaderSignInStubComponent {}
@@ -11,14 +12,13 @@ describe('HeaderLinksComponent', () => {
   let component: HeaderLinksComponent;
   let fixture: ComponentFixture<HeaderLinksComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ HeaderLinksComponent ],
       imports: [ ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HeaderLinksComponent);
@@ -28,7 +28,7 @@ describe('HeaderLinksComponent', () => {
     user.firstName = "Amanda";
     user.lastName = "Panda";
     user.role = "student";
-    user.userName = "AmandaP0101";
+    user.username = "AmandaP0101";
     component.user = user;
     component.location = 'student';
     fixture.detectChanges();

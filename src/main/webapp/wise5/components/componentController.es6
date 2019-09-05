@@ -41,10 +41,8 @@ class ComponentController {
     this.parentStudentWorkIds = null;
     this.attachments = [];
 
-    // whether the student work has changed since last submit
     this.isSubmitDirty = false;
 
-    // whether the student work is for a submit
     this.isSubmit = false;
 
     this.saveMessage = {
@@ -72,6 +70,9 @@ class ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      if (!this.ConfigService.isRunActive()) {
+        this.isDisabled = true;
+      }
     } else if (this.isGradingMode()) {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
@@ -321,7 +322,7 @@ class ComponentController {
     const componentState = args.studentWork;
     if (this.isForThisComponent(componentState)) {
       this.setIsDirty(false);
-      this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: this.getIsDirty()});
+      this.emitComponentDirty(this.getIsDirty());
       const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
       if (componentState.isSubmit) {
         this.setSubmittedMessage(clientSaveTime);
@@ -450,26 +451,47 @@ class ComponentController {
     return this.componentContent.lockAfterSubmit;
   }
 
-  studentDataChanged() {
-    this.setIsDirty(true);
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
-
-    this.setIsSubmitDirty(true);
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+  studentDataChanged(isCompleted = false) {
+    this.setIsDirtyAndBroadcast();
+    this.setIsSubmitDirtyAndBroadcast();
     this.clearSaveText();
-
-    /*
-     * the student work in this component has changed so we will tell
-     * the parent node that the student data will need to be saved.
-     * this will also notify connected parts that this component's student
-     * data has changed.
-     */
     const action = 'change';
+    this.createComponentStateAndBroadcast(action);
+  }
 
-    // create a component state populated with the student data
+  setIsDirtyAndBroadcast() {
+    this.setIsDirty(true);
+    this.emitComponentDirty(true);
+  }
+
+  setIsSubmitDirtyAndBroadcast() {
+    this.setIsSubmitDirty(true);
+    this.emitComponentSubmitDirty(true);
+  }
+
+  /*
+   * the student work in this component has changed so we will tell
+   * the parent node that the student data will need to be saved.
+   * this will also notify connected parts that this component's student
+   * data has changed.
+   */
+  createComponentStateAndBroadcast(action) {
     this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+      this.emitComponentStudentDataChanged(componentState);
+      if (componentState.isCompleted) {
+        this.emitComponentCompleted(componentState);
+      }
     });
+  }
+
+  emitComponentStudentDataChanged(componentState) {
+    this.$scope.$emit('componentStudentDataChanged',
+        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+  }
+
+  emitComponentCompleted(componentState) {
+    this.$scope.$emit('componentCompleted',
+        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
   }
 
   processLatestStudentWork() {
@@ -605,7 +627,7 @@ class ComponentController {
         if (componentState != null) {
           componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
         }
-        if (connectedComponent.type == 'showWork') {
+        if (connectedComponent.type === 'showWork') {
           this.isDisabled = true;
         }
       }
@@ -623,6 +645,20 @@ class ComponentController {
 
   handleConnectedComponentsPostProcess() {
     // overridden by children
+  }
+
+  getConnectedComponentsAndTheirComponentStates() {
+    const connectedComponentsAndTheirComponentStates = [];
+    for (const connectedComponent of this.componentContent.connectedComponents) {
+      const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+        connectedComponent.nodeId, connectedComponent.componentId);
+      const connectedComponentsAndComponentState = {
+        connectedComponent: connectedComponent,
+        componentState: this.UtilService.makeCopyOfJSONObject(componentState)
+      };
+      connectedComponentsAndTheirComponentStates.push(connectedComponentsAndComponentState);
+    }
+    return connectedComponentsAndTheirComponentStates;
   }
 
   showCopyPublicNotebookItemButton() {
@@ -652,8 +688,12 @@ class ComponentController {
     return this.NotebookService.isNotebookEnabled();
   }
 
+  isStudentNoteClippingEnabled() {
+    return this.NotebookService.isStudentNoteClippingEnabled();
+  }
+
   isAddToNotebookEnabled() {
-    return this.isNotebookEnabled() && this.showAddToNotebookButton;
+    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled();
   }
 
   /**
@@ -695,31 +735,26 @@ class ComponentController {
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Add a connected component
-   */
   authoringAddConnectedComponent() {
+    const connectedComponent = this.createConnectedComponent();
+    this.addConnectedComponent(connectedComponent);
+    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
 
-    /*
-     * create the new connected component object that will contain a
-     * node id and component id
-     */
-    var newConnectedComponent = {};
-    newConnectedComponent.nodeId = this.nodeId;
-    newConnectedComponent.componentId = null;
-    newConnectedComponent.type = null;
-    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
-
-    // initialize the array of connected components if it does not exist yet
+  addConnectedComponent(connectedComponent) {
     if (this.authoringComponentContent.connectedComponents == null) {
       this.authoringComponentContent.connectedComponents = [];
     }
+    this.authoringComponentContent.connectedComponents.push(connectedComponent);
+  }
 
-    // add the connected component
-    this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
+  createConnectedComponent() {
+    return {
+      nodeId: this.nodeId,
+      componentId: null,
+      type: null
+    };
   }
 
   /**
@@ -754,6 +789,18 @@ class ComponentController {
         }
       }
     }
+    this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+  }
+
+  authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
+    if (connectedComponent.componentId != null) {
+      connectedComponent.type = 'importWork';
+    }
+    this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+  }
+
+  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+
   }
 
   /**
@@ -819,20 +866,9 @@ class ComponentController {
     }
   }
 
-  /**
-   * The connected component component id has changed
-   * @param connectedComponent the connected component that has changed
-   */
   authoringConnectedComponentComponentIdChanged(connectedComponent) {
-
-    if (connectedComponent != null) {
-
-      // default the type to import work
-      connectedComponent.type = 'importWork';
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
+    this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
   }
 
   /**
@@ -843,11 +879,11 @@ class ComponentController {
 
     if (connectedComponent != null) {
 
-      if (connectedComponent.type == 'importWork') {
+      if (connectedComponent.type === 'importWork') {
         /*
          * the type has changed to import work
          */
-      } else if (connectedComponent.type == 'showWork') {
+      } else if (connectedComponent.type === 'showWork') {
         /*
          * the type has changed to show work
          */
@@ -971,14 +1007,14 @@ class ComponentController {
      * the project to the server
      */
     this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-  };
+  }
 
   /**
    * Update the component JSON string that will be displayed in the advanced authoring view textarea
    */
   updateAdvancedAuthoringView() {
     this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-  };
+  }
 
   /**
    * The component has changed in the advanced authoring view so we will update
@@ -1126,30 +1162,25 @@ class ComponentController {
   }
 
   removeAttachment(attachment) {
-    if (this.attachments.indexOf(attachment) != -1) {
+    if (this.attachments.indexOf(attachment) !== -1) {
       this.attachments.splice(this.attachments.indexOf(attachment), 1);
       this.studentDataChanged();
     }
   }
 
   attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
-        if (copiedAsset != null) {
-          const attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.attachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
+    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+      const attachment = {
+        studentAssetId: copiedAsset.id,
+        iconURL: copiedAsset.iconURL
+      };
+      this.attachments.push(attachment);
+      this.studentDataChanged();
+    });
   }
 
   hasMaxScore() {
-    return this.componentContent.maxScore != null && this.componentContent.maxScore != '';
+    return this.componentContent.maxScore != null && this.componentContent.maxScore !== '';
   }
 
   getMaxScore() {

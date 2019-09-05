@@ -328,8 +328,8 @@ class ProjectService {
        */
       this.calculateNodeNumbers();
 
-      if (this.project.achievements != null) {
-        this.achievements = this.project.achievements;
+      if (this.project.projectAchievements != null) {
+        this.achievements = this.project.projectAchievements;
       }
     }
 
@@ -1227,6 +1227,21 @@ class ProjectService {
     if (projectId == null || saveProjectURL == null) {
       return null;
     }
+
+    const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
+    const userInfo = this.ConfigService.getMyUserInfo();
+    let exists = false;
+    for (let [index, author] of authors.entries()) {
+      if (author.id === userInfo.id) {
+        author = userInfo;
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      authors.push(userInfo);
+    }
+    this.project.metadata.authors = authors;
 
     const httpParams = {
       method: 'POST',
@@ -5539,21 +5554,18 @@ class ProjectService {
   }
 
   /**
-   * Get all the achievements object in the project. The achievements object
+   * Get all the projectAchievements object in the project. The projectAchievements object
    * contains the isEnabled field and an array of items.
    * @return the achievement object
    */
   getAchievements() {
-    if (this.project != null) {
-      if (this.project.achievements == null) {
-        this.project.achievements = {
-          isEnabled: true,
-          items: []
-        };
-      }
-      return this.project.achievements;
+    if (this.project.achievements == null) {
+      this.project.achievements = {
+        isEnabled: false,
+        items: []
+      };
     }
-    return null;
+    return this.project.achievements;
   }
 
   /**
@@ -5562,13 +5574,10 @@ class ProjectService {
    */
   getAchievementItems() {
     const achievements = this.getAchievements();
-    if (achievements != null) {
-      if (achievements.items == null) {
-        achievements.items = [];
-      }
-      return achievements.items;
+    if (achievements.items == null) {
+      achievements.items = [];
     }
-    return null;
+    return achievements.items;
   }
 
   /**

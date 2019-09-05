@@ -23,11 +23,14 @@
  */
 package org.wise.portal.service.run;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.run.Run;
@@ -36,10 +39,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
 import org.wise.portal.presentation.web.response.SharedOwner;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * A service for working with <code>Run</code> objects
@@ -56,7 +55,7 @@ public interface RunService {
   Run createRun(RunParameters runParameters) throws ObjectNotFoundException;
 
   Run createRun(Integer projectId, User user, Set<String> periodNames, Integer maxStudentsPerTeam,
-      Long startDate, Locale locale) throws Exception;
+      Long startDate, Long endDate, Locale locale) throws Exception;
 
   /**
    * Ends this run. The side effect is that the run's endtime gets set.
@@ -430,7 +429,9 @@ public interface RunService {
 
   void setMaxWorkgroupSize(Long runId, Integer maxStudentsPerTeam);
 
-  void setStartTime(Long runId, String startTime);
+  void setStartTime(Long runId, Long startTime);
+
+  void setEndTime(Long runId, Long endTime);
 
   boolean isAllowedToViewStudentWork(Run run, User user);
 

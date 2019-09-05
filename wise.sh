@@ -4,10 +4,14 @@
 # If this is the first time running, it will initialize the data before starting.
 # if arg1="reset", it wipes out any existing data in database/curriculum/studentupload
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 PWD=`pwd`
 TODAY=`/bin/date +\%Y\%m\%d`
-PROPERTIES_FILE="src/main/resources/wise.properties"
-SAMPLE_PROPERTIES_FILE="src/main/resources/wise_sample_embedded_tomcat.properties"
+PROPERTIES_FILE="src/main/resources/application.properties"
+SAMPLE_PROPERTIES_FILE="src/main/resources/application_sample.properties"
 
 if [ $# -ne 1 ] || !([ $1 == "reset" ] || [ $1 == "package" ] || [ $1 == "dev" ] || [ $1 == "run" ]); then
   echo "Usage: ./wise.sh {reset|package|dev|run}"
@@ -27,7 +31,8 @@ if [ $1 = "reset" ]; then
 fi
 
 if [ $1 = "package" ]; then
-  ng build --configuration=production
+  npm install
+  node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --configuration=production --stats-json
   ./mvnw clean -Dmaven.test.skip=true package
   exit 0
 fi
@@ -59,7 +64,7 @@ else
 fi
 
 if [ $1 = "dev" ]; then
-  # starts npm watch-all in background, which transpiles es6 to js and watches changes to sass files
+  npm run watch-all-wise5&
   npm run watch-all-site&
 fi
 

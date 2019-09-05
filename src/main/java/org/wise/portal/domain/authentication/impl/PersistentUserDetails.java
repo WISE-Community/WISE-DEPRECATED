@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2019 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -122,7 +122,7 @@ public class PersistentUserDetails implements MutableUserDetails {
   // EJB3 spec annotations require the use of a java <code>Collection</code>.
   // However, Acegi Security deals with an array. There are internal methods
   // to convert to and from the different data structures.
-  @ManyToMany(targetEntity = PersistentGrantedAuthority.class, fetch = FetchType.LAZY)
+  @ManyToMany(targetEntity = PersistentGrantedAuthority.class, fetch = FetchType.EAGER)
   @JoinTable(name = PersistentUserDetails.GRANTED_AUTHORITY_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = USER_DETAILS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = GRANTED_AUTHORITY_JOIN_COLUMN_NAME, nullable = false))
   private Set<GrantedAuthority> grantedAuthorities = null;
 

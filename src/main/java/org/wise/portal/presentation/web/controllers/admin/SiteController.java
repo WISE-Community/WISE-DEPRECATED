@@ -23,46 +23,39 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
-
-import javax.servlet.http.HttpServletRequest;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.portal.Portal;
+import org.wise.portal.service.portal.PortalService;
 
 /**
  * Controller for single-page site app built with Angular
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
+ * @author Jonathan Lim-Breitbart
  */
 @Controller
 @RequestMapping("/")
 public class SiteController {
 
-  @RequestMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news", "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"},
-      method = RequestMethod.GET)
+  @Autowired
+  PortalService portalService;
+
+  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", 
+      "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news",
+      "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"})
   protected String showSite() {
     return "forward:/index.html";
   }
 
   @ResponseBody
-  @RequestMapping(value = "/user", method = RequestMethod.GET)
-  protected String user(HttpServletRequest request) {
-    User signedInUser = ControllerUtil.getSignedInUser();
-    if (signedInUser != null) {
-      String username = signedInUser.getUserDetails().getUsername();
-      JSONObject user = new JSONObject();
-      try {
-        user.put("username", username);
-        return user.toString();
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    }
-    return null;
+  @GetMapping("/announcement")
+  protected String getAnnouncement() throws ObjectNotFoundException {
+    Portal portal = portalService.getById(new Integer(1));
+    return portal.getAnnouncement();
   }
 }

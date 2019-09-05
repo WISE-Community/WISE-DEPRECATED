@@ -1,29 +1,26 @@
 package org.wise.portal.presentation.web.controllers.project;
 
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.ProjectMetadata;
-import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
-import org.wise.portal.domain.project.impl.ProjectParameters;
-import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.controllers.author.project.WISE5AuthorProjectController;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
+import org.wise.vle.web.SecurityUtils;
 
 /**
  * Project REST API
@@ -42,12 +39,7 @@ public class ProjectAPIController {
   @Autowired
   ProjectService projectService;
 
-  @Autowired
-  private Properties wiseProperties;
-
-  private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
-
-  @RequestMapping(value = "/library", method = RequestMethod.GET)
+  @GetMapping("/library")
   protected String getLibraryProjects(ModelMap modelMap) throws ObjectNotFoundException,
       JSONException {
     Portal portal = portalService.getById(new Integer(1));
@@ -87,30 +79,30 @@ public class ProjectAPIController {
     }
   }
 
-  @RequestMapping(value = "/community", method = RequestMethod.GET)
-  protected String getCommunityLibrayProjects(ModelMap modelMap) throws JSONException {
+  @GetMapping("/community")
+  protected String getCommunityLibraryProjects(ModelMap modelMap) throws JSONException {
     List<Project> teacherSharedProjects = projectService.getTeacherSharedProjectList();
     JSONArray projectsJSON = getProjectsJSON(teacherSharedProjects);
     return projectsJSON.toString();
   }
 
-  @RequestMapping(value = "/personal", method = RequestMethod.GET)
-  protected String getPersonalLibrayProjects(ModelMap modelMap) throws JSONException {
+  @GetMapping("/personal")
+  protected String getPersonalLibraryProjects(ModelMap modelMap) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
     List<Project> projectsWithoutRuns = projectService.getProjectsWithoutRuns(signedInUser);
     JSONArray projectsJSON = getProjectsJSON(projectsWithoutRuns);
     return projectsJSON.toString();
   }
 
-  @RequestMapping(value = "/shared", method = RequestMethod.GET)
-  protected String getSharedLibrayProjects(ModelMap modelMap) throws JSONException {
+  @GetMapping("/shared")
+  protected String getSharedLibraryProjects(ModelMap modelMap) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
     List<Project> sharedProjectList = projectService.getSharedProjectList(signedInUser);
     JSONArray projectsJSON = getProjectsJSON(sharedProjectList);
     return projectsJSON.toString();
   }
 
-  @RequestMapping(value = "/info/{projectId}", method = RequestMethod.GET)
+  @GetMapping("/info/{projectId}")
   protected String getProjectInfo(@PathVariable Long projectId) throws ObjectNotFoundException,
       JSONException {
     Project project = projectService.getById(projectId);
@@ -126,13 +118,13 @@ public class ProjectAPIController {
     return projectsJSON;
   }
 
-  private void populateProjectMetadata(JSONObject projectLibraryGroup) throws JSONException {
+  private JSONObject populateProjectMetadata(JSONObject projectLibraryGroup) throws JSONException {
     if (projectLibraryGroup.getString("type").equals("group")) {
       JSONArray children = projectLibraryGroup.getJSONArray("children");
       for (int c = 0; c < children.length(); c++) {
-        JSONObject child = children.getJSONObject(c);
-        if (canAccess(child)) {
-          populateProjectMetadata(child);
+        JSONObject childJSON = children.getJSONObject(c);
+        if (canAccess(childJSON)) {
+          children.put(c, populateProjectMetadata(childJSON));
         } else {
           children.remove(c--);
         }
@@ -141,50 +133,27 @@ public class ProjectAPIController {
       Integer projectId = projectLibraryGroup.getInt("id");
       try {
         Project project = projectService.getById(projectId);
-        ProjectMetadata metadata = project.getMetadata();
-        projectLibraryGroup.put("metadata", metadata.toJSONObject());
-        projectLibraryGroup.put("projectThumb", getProjectThumb(project));
-        projectLibraryGroup.put("name", project.getName());
-        projectLibraryGroup.put("owner", ControllerUtil.getOwnerJSON(project.getOwner()));
-        projectLibraryGroup.put("sharedOwners", ControllerUtil.getProjectSharedOwnersJSON(project));
-        projectLibraryGroup.put("dateCreated", project.getDateCreated());
-        projectLibraryGroup.put("wiseVersion", project.getWiseVersion());
+        JSONObject projectJSON = ControllerUtil.getProjectJSON(project);
+        projectJSON.put("type", "project");
+        return projectJSON;
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
     }
+    return projectLibraryGroup;
   }
 
-  private String getProjectThumb(Project project) {
-    String projectThumb = "";
-    String modulePath = project.getModulePath();
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-    int lastIndexOfSlash = modulePath.lastIndexOf("/");
-    if (lastIndexOfSlash != -1) {
-      /*
-       * The project thumb url by default is the same (/assets/project_thumb.png)
-       * for all projects, but this could be overwritten in the future
-       * e.g. /253/assets/projectThumb.png
-       */
-      projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
-    }
-    return projectThumb;
-  }
-
-  @RequestMapping(value = "/copy", method = RequestMethod.POST)
-  protected String copyProject(HttpServletRequest request,
-      @RequestParam("projectId") String projectId) throws Exception {
+  @PostMapping("/copy")
+  protected String copyProject(@RequestParam("projectId") String projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-    if (!WISE5AuthorProjectController.hasAuthorPermissions(user)) {
-      return "";
+    if (SecurityUtils.isTeacher(user)) {
+      Project project = projectService.getById(Long.parseLong(projectId));
+      if (this.projectService.canReadProject(project, user) ||
+          project.isOfficialProject() || project.isCommunityProject()) {
+        Project newProject = projectService.copyProject(Integer.parseInt(projectId), user);
+        return ControllerUtil.getProjectJSON(newProject).toString();
+      }
     }
-    Project parentProject = projectService.getById(Long.parseLong(projectId));
-    if (parentProject != null && (this.projectService.canReadProject(parentProject, user) ||
-          parentProject.isOfficialProject() ||
-          parentProject.isCommunityProject())) {
-      Project project = projectService.copyProject(Integer.parseInt(projectId), user);
-      return ControllerUtil.getProjectJSON(project).toString();
-    }
-    return "";
+    return ControllerUtil.createErrorResponse("copyProjectError").toString();
   }
 }

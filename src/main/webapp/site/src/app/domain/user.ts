@@ -1,6 +1,6 @@
 export class User {
   id: number;
-  userName: string;
+  username: string;
   firstName: string;
   lastName: string;
   displayName: string;
@@ -8,6 +8,7 @@ export class User {
   language: string;
   permissions: number[];
   isRecaptchaRequired: boolean;
+  isGoogleUser: boolean = false;
 
   constructor(jsonObject: any = {}) {
     for (let key of Object.keys(jsonObject)) {

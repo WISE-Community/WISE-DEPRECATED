@@ -7,7 +7,6 @@ import { ConfigService } from "../../services/config.service";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Config } from "../../domain/config";
 import { AuthService } from "angularx-social-login";
-import { MatDialog } from "@angular/material";
 import { MAT_DIALOG_DATA } from "../../../../../../../../node_modules/@angular/material/dialog";
 import { User } from "../../domain/user";
 import { StudentService } from '../student.service';
@@ -19,7 +18,7 @@ export class MockUserService {
     const user: User = new User();
     user.firstName = 'Demo';
     user.lastName = 'User';
-    user.userName = 'DemoUser';
+    user.username = 'DemoUser';
     const userBehaviorSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     userBehaviorSubject.next(user);
     return userBehaviorSubject;
@@ -27,7 +26,7 @@ export class MockUserService {
 }
 
 export class MockStudentService {
-  launchRun(runId: string, workgroupId: string, presentUserIds: string[], absentUserIds: string[]): Observable<any> {
+  launchRun(runId: string, workgroupId: string, presentUserIds: number[], absentUserIds: number[]): Observable<any> {
     return Observable.create(observer => {
       observer.next({
         status: 'success',
@@ -47,7 +46,7 @@ export class MockConfigService {
     const config: Config = {
       contextPath: "/wise",
       logOutURL: "/logout",
-      currentTime: "2018-10-17 00:00:00.0"
+      currentTime: new Date("2018-10-17T00:00:00.0").getTime()
     };
     return Observable.create(observer => {
       observer.next(config);
@@ -70,13 +69,13 @@ describe('TeamSignInDialogComponent', () => {
         "id": 123,
         "firstName": "Spongebob",
         "lastName": "Squarepants",
-        "userName": "SpongebobS0123"
+        "username": "SpongebobS0123"
       },
       {
         "id": 154,
         "firstName": "Patrick",
         "lastName": "Starr",
-        "userName": "PatrickS0619"
+        "username": "PatrickS0619"
       }
     ]
   };

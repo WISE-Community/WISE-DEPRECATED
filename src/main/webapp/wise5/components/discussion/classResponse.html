@@ -9,7 +9,7 @@
         </md-icon>
       </div>
       <div flex>
-        <div class='discussion-post__user'>{{ classResponseCtrl.response.userNames }}</div>
+        <div class='discussion-post__user'>{{ classResponseCtrl.response.usernames }}</div>
         <div class='md-body-1 discussion-post__date'>
           <span class='component__actions__more'>
             <md-tooltip md-direction='right'>
@@ -79,7 +79,7 @@
           <div class='md-list-item-text discusstion-reply__details'>
             <h3 class='discussion-post__user discussion-post__user--reply'
                 flex>
-              {{ reply.userNames }}
+              {{ reply.usernames }}
               <span class='md-caption discussion-post__date discussion-post__date--reply component__actions__more'>
                 <md-tooltip md-direction='right'>
                   {{ classResponseCtrl.adjustClientSaveTime(reply.serverSaveTime) | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}

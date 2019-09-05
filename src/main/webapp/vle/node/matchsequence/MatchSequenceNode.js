@@ -586,7 +586,7 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 	var node = project.getNodeById(nodeId);
 	var runId = view.getConfig().getConfigParam('runId');
 	var stepNumberAndTitle = project.getStepNumberAndTitle(nodeId);
-	var teacherUserName = view.userAndClassInfo.getTeacherUserInfo().userName;
+	var teacherUsername = view.userAndClassInfo.getTeacherUserInfo().username;
 	var projectId = view.config.getConfigParam('projectId');
 	var parentProjectId = view.config.getConfigParam('parentProjectId');
 	var projectName = project.getTitle();
@@ -873,7 +873,7 @@ MatchSequenceNode.prototype.generateSpecialExportCSVRow = function(
 	var node = project.getNodeById(nodeId);
 	var runId = view.getConfig().getConfigParam('runId');
 	var stepNumberAndTitle = project.getStepNumberAndTitle(nodeId);
-	var teacherUserName = view.userAndClassInfo.getTeacherUserInfo().userName;
+	var teacherUsername = view.userAndClassInfo.getTeacherUserInfo().username;
 	var projectId = view.config.getConfigParam('projectId');
 	var parentProjectId = view.config.getConfigParam('parentProjectId');
 	var projectName = project.getTitle();
@@ -908,7 +908,7 @@ MatchSequenceNode.prototype.generateSpecialExportCSVRow = function(
 		row.push(view.wrapInQuotesForCSVIfNecessary(periodName));
 
 		// add the teacher name
-		row.push(view.wrapInQuotesForCSVIfNecessary(teacherUserName));
+		row.push(view.wrapInQuotesForCSVIfNecessary(teacherUsername));
 
 		// add the project id
 		row.push(projectId);

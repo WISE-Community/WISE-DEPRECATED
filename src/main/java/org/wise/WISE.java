@@ -117,12 +117,12 @@ public class WISE {
     IOException {
     ConfigurableApplicationContext applicationContext = null;
     try {
-      File wisePropertiesFile = new File("target/classes/wise.properties");
-      String wisePropertiesString = FileUtils.readFileToString( wisePropertiesFile );
-      wisePropertiesString = wisePropertiesString.replaceAll("#hibernate.hbm2ddl.auto=create", "");
-      wisePropertiesString = wisePropertiesString.replaceAll("hibernate.hbm2ddl.auto=create", "");
-      wisePropertiesString = "hibernate.hbm2ddl.auto=create\n\n" + wisePropertiesString;
-      FileUtils.writeStringToFile(wisePropertiesFile, wisePropertiesString, "UTF-8");
+      File appPropertiesFile = new File("target/classes/application.properties");
+      String appPropertiesString = FileUtils.readFileToString( appPropertiesFile );
+      appPropertiesString = appPropertiesString.replaceAll("#hibernate.hbm2ddl.auto=create", "");
+      appPropertiesString = appPropertiesString.replaceAll("hibernate.hbm2ddl.auto=create", "");
+      appPropertiesString = "hibernate.hbm2ddl.auto=create\n\n" + appPropertiesString;
+      FileUtils.writeStringToFile(appPropertiesFile, appPropertiesString, "UTF-8");
 
       try {
         Thread.sleep(5000);  // give it time to save the file

@@ -44,7 +44,7 @@ class ThemeController {
     this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
 
     this.workgroupId = this.ConfigService.getWorkgroupId();
-    this.workgroupUserNames = this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
+    this.workgroupUsernames = this.ConfigService.getUsernamesByWorkgroupId(this.workgroupId);
 
     this.notebookOpen = false;
     this.notebookConfig = this.NotebookService.getNotebookConfig();
@@ -138,7 +138,7 @@ class ThemeController {
         .cancel(this.$translate('no'));
 
       this.$mdDialog.show(alert).then(() => {
-        this.SessionService.renewSession();
+        this.SessionService.closeWarningAndRenewSession();
         alert = undefined;
       }, () => {
         this.SessionService.forceLogOut();

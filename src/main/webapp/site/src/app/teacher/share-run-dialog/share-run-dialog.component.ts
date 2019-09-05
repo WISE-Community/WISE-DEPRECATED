@@ -110,7 +110,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   shareRun() {
     this.duplicate = false;
     const sharedOwnerUsername = this.teacherSearchControl.value;
-    if (this.run.owner.userName !== sharedOwnerUsername &&
+    if (this.run.owner.username !== sharedOwnerUsername &&
       !this.isSharedOwner(sharedOwnerUsername)) {
       this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername)
           .subscribe((newSharedOwner) => {

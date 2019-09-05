@@ -1,14 +1,19 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ComponentService = function () {
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ComponentService =
+/*#__PURE__*/
+function () {
   function ComponentService($filter, StudentDataService, UtilService) {
     _classCallCheck(this, ComponentService);
 
@@ -17,7 +22,6 @@ var ComponentService = function () {
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
   }
-
   /**
    * Get the component type label. For example "Open Response".
    * @returns {string}
@@ -25,18 +29,17 @@ var ComponentService = function () {
 
 
   _createClass(ComponentService, [{
-    key: 'getComponentTypeLabel',
+    key: "getComponentTypeLabel",
     value: function getComponentTypeLabel() {
       return '';
     }
-
     /**
      * Create a component object
      * @returns {object} a component object
      */
 
   }, {
-    key: 'createComponent',
+    key: "createComponent",
     value: function createComponent() {
       return {
         id: this.UtilService.generateKey(),
@@ -46,7 +49,6 @@ var ComponentService = function () {
         showSubmitButton: false
       };
     }
-
     /**
      * Check if the component was completed
      * @param component the component object
@@ -58,11 +60,10 @@ var ComponentService = function () {
      */
 
   }, {
-    key: 'isCompleted',
+    key: "isCompleted",
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
       return true;
     }
-
     /**
      * Check if we need to display the annotation to the student
      * @param componentContent the component content
@@ -71,11 +72,10 @@ var ComponentService = function () {
      */
 
   }, {
-    key: 'displayAnnotation',
+    key: "displayAnnotation",
     value: function displayAnnotation(componentContent, annotation) {
       return true;
     }
-
     /**
      * Whether this component generates student work
      * @param component (optional) the component object. if the component object
@@ -85,11 +85,10 @@ var ComponentService = function () {
      */
 
   }, {
-    key: 'componentHasWork',
+    key: "componentHasWork",
     value: function componentHasWork(component) {
       return true;
     }
-
     /**
      * Check if the component state has student work. Sometimes a component
      * state may be created if the student visits a component but doesn't
@@ -101,11 +100,10 @@ var ComponentService = function () {
      */
 
   }, {
-    key: 'componentStateHasStudentWork',
+    key: "componentStateHasStudentWork",
     value: function componentStateHasStudentWork(componentState, componentContent) {
       return false;
     }
-
     /**
      * Get the human readable student data string
      * @param componentState the component state
@@ -113,31 +111,34 @@ var ComponentService = function () {
      */
 
   }, {
-    key: 'getStudentDataString',
+    key: "getStudentDataString",
     value: function getStudentDataString(componentState) {
       return '';
     }
-
     /**
      * Whether this component uses a save button
      * @return {boolean} whether this component uses a save button
      */
 
   }, {
-    key: 'componentUsesSaveButton',
+    key: "componentUsesSaveButton",
     value: function componentUsesSaveButton() {
       return true;
     }
-
     /**
      * Whether this component uses a submit button
      * @return {boolean} whether this component uses a submit button
      */
 
   }, {
-    key: 'componentUsesSubmitButton',
+    key: "componentUsesSubmitButton",
     value: function componentUsesSubmitButton() {
       return true;
+    }
+  }, {
+    key: "componentHasCorrectAnswer",
+    value: function componentHasCorrectAnswer() {
+      return false;
     }
   }]);
 
@@ -145,6 +146,6 @@ var ComponentService = function () {
 }();
 
 ComponentService.$inject = [];
-
-exports.default = ComponentService;
+var _default = ComponentService;
+exports["default"] = _default;
 //# sourceMappingURL=componentService.js.map

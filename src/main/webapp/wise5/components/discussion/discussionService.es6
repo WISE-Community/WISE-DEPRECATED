@@ -37,13 +37,12 @@ class DiscussionService extends ComponentService {
     return component;
   }
 
-  getClassmateResponses(runId, periodId, nodeId, componentId) {
+  getClassmateResponses(runId, periodId, components) {
     return this.$q((resolve, reject) => {
       const params = {
         runId: runId,
         periodId: periodId,
-        nodeId: nodeId,
-        componentId: componentId,
+        components: components,
         getStudentWork: true,
         getAnnotations: true
       };
@@ -77,7 +76,7 @@ class DiscussionService extends ComponentService {
     const connectedComponents = componentContent.connectedComponents;
     if (connectedComponents != null) {
       for (let connectedComponent of connectedComponents) {
-        if (connectedComponent.type == 'showWork') {
+        if (connectedComponent.type === 'showWork') {
           const componentStates =
               this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
               connectedComponent.nodeId, connectedComponent.componentId);
@@ -99,29 +98,26 @@ class DiscussionService extends ComponentService {
     return false;
   }
 
-  /**
-   * Get all the posts associated with a workgroup id. This will get all the posts and replies that
-   * the workgroup posted or replied to as well as all the other replies classmates made.
-   * @param componentId the component id
-   * @param workgroupId the workgroup id
-   * @returns an array containing all the component states for top level posts and replies that are
-   * associated with the workgroup
-   */
-  getPostsAssociatedWithWorkgroupId(componentId, workgroupId) {
+  workgroupHasWorkForComponent(workgroupId, componentId) {
+    return this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId,
+        componentId).length > 0;
+  }
+
+  getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, workgroupId) {
     let allPosts = [];
     const topLevelComponentStateIdsFound = [];
-    const componentStates =
-        this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId);
+    const componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentIds(
+        workgroupId, componentIds);
     for (let componentState of componentStates) {
       const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
       if (this.isTopLevelPost(componentState)) {
         if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentState.id)) {
-          allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, componentState.id));
+          allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentState.id));
           topLevelComponentStateIdsFound.push(componentState.id);
         }
       } else {
         if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateIdReplyingTo)) {
-          allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, componentStateIdReplyingTo));
+          allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentStateIdReplyingTo));
           topLevelComponentStateIdsFound.push(componentStateIdReplyingTo);
         }
       }
@@ -134,24 +130,18 @@ class DiscussionService extends ComponentService {
   }
 
   isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateId) {
-    return topLevelComponentStateIdsFound.indexOf(componentStateId) != -1;
+    return topLevelComponentStateIdsFound.indexOf(componentStateId) !== -1;
   }
 
-  /**
-   * Get the top level post and all the replies to it
-   * @param componentId the component id
-   * @param componentStateId the component state id
-   * @returns an array containing the top level post and all the replies
-   */
-  getPostAndAllReplies(componentId, componentStateId) {
+  getPostAndAllRepliesByComponentIds(componentIds, componentStateId) {
     const postAndAllReplies = [];
-    const componentStatesForNodeId = this.TeacherDataService.getComponentStatesByComponentId(componentId);
-    for (let componentState of componentStatesForNodeId) {
-      if (componentStateId === componentState.id) {
+    const componentStatesForComponentIds = this.TeacherDataService.getComponentStatesByComponentIds(componentIds);
+    for (const componentState of componentStatesForComponentIds) {
+      if (componentState.id === componentStateId) {
         postAndAllReplies.push(componentState);
       } else {
         const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
-        if (componentStateId === componentStateIdReplyingTo) {
+        if (componentStateIdReplyingTo === componentStateId) {
           postAndAllReplies.push(componentState);
         }
       }
@@ -168,27 +158,36 @@ class DiscussionService extends ComponentService {
   }
 
   componentStateHasStudentWork(componentState, componentContent) {
-    if (componentState != null) {
-      const response = componentState.studentData.response;
-      if (componentContent == null) {
-        if (response != null && response !== '') {
-          return true;
-        }
-      } else {
-        const starterSentence = componentContent.starterSentence;
-        if (starterSentence == null || starterSentence === '') {
-          if (response != null && response !== '') {
-            return true;
-          }
-        } else {
-          if (response != null && response !== '' && response !== starterSentence) {
-            return true;
-          }
-        }
-      }
+    if (this.isStudentWorkHasAttachment(componentState)) {
+      return true;
     }
+    if (this.isComponentHasStarterSentence(componentContent)) {
+      return this.isStudentWorkHasText(componentState) &&
+          this.isStudentResponseDifferentFromStarterSentence(componentState, componentContent);
+    } else {
+      return this.isStudentWorkHasText(componentState);
+    }
+  }
 
-    return false;
+  isComponentHasStarterSentence(componentContent) {
+    const starterSentence = componentContent.starterSentence;
+    return starterSentence != null && starterSentence !== '';
+  }
+
+  isStudentResponseDifferentFromStarterSentence(componentState, componentContent) {
+    const response = componentState.studentData.response;
+    const starterSentence = componentContent.starterSentence;
+    return response !== starterSentence;
+  }
+
+  isStudentWorkHasText(componentState) {
+    const response = componentState.studentData.response;
+    return response != null && response !== '';
+  }
+
+  isStudentWorkHasAttachment(componentState) {
+    const attachments = componentState.studentData.attachments;
+    return attachments != null && attachments.length > 0;
   }
 }
 

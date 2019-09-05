@@ -22,7 +22,7 @@ export class EditProfileComponent implements OnInit {
   editProfileFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl({ value: '', disabled: true }, [Validators.required]),
     lastName: new FormControl({ value: '', disabled: true }, [Validators.required]),
-    userName: new FormControl({ value: '', disabled: true }, [Validators.required]),
+    username: new FormControl({ value: '', disabled: true }, [Validators.required]),
     language: new FormControl('', [Validators.required])
   });
 
@@ -34,7 +34,7 @@ export class EditProfileComponent implements OnInit {
     this.user = <Student>this.getUser().getValue();
     this.setControlFieldValue('firstName', this.user.firstName);
     this.setControlFieldValue('lastName', this.user.lastName);
-    this.setControlFieldValue('userName', this.user.userName);
+    this.setControlFieldValue('username', this.user.username);
     this.setControlFieldValue('language', this.user.language);
     this.userService.getLanguages().subscribe((response) => {
       this.languages = <object[]>response;
@@ -58,7 +58,7 @@ export class EditProfileComponent implements OnInit {
 
   saveChanges() {
     this.isSaving = true;
-    const username = this.user.userName;
+    const username = this.user.username;
     const language = this.getControlFieldValue('language');
     this.studentService.updateProfile(username, language)
         .pipe(

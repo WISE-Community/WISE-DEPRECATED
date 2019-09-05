@@ -9,7 +9,8 @@ import {
   MatIconModule,
   MatInputModule,
   MatFormFieldModule,
-  MatSelectModule
+  MatSelectModule,
+  MatProgressBarModule
 } from '@angular/material';
 
 const materialModules = [
@@ -18,7 +19,8 @@ const materialModules = [
   MatIconModule,
   MatInputModule,
   MatFormFieldModule,
-  MatSelectModule
+  MatSelectModule,
+  MatProgressBarModule
 ];
 
 import { BlurbComponent } from './blurb/blurb.component';
@@ -26,7 +28,7 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
 import { HeroSectionComponent } from './hero-section/hero-section.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SelectMenuComponent } from './select-menu/select-menu.component';
-import { ShareItemDialogComponent } from "../library/share-item-dialog/share-item-dialog.component";
+import { EditPasswordComponent } from './edit-password/edit-password.component';
 
 @NgModule({
   imports: [
@@ -44,14 +46,16 @@ import { ShareItemDialogComponent } from "../library/share-item-dialog/share-ite
     CallToActionComponent,
     HeroSectionComponent,
     SearchBarComponent,
-    SelectMenuComponent
+    SelectMenuComponent,
+    EditPasswordComponent
   ],
   declarations: [
     BlurbComponent,
     CallToActionComponent,
     HeroSectionComponent,
     SearchBarComponent,
-    SelectMenuComponent
+    SelectMenuComponent,
+    EditPasswordComponent
   ]
 })
 export class SharedModule { }

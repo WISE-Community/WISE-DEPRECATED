@@ -13,7 +13,7 @@ export class MockConfigService {
     const config: Config = {
       contextPath: "/wise",
       logOutURL: "/logout",
-      currentTime: "2018-10-17 00:00:00.0"
+      currentTime: new Date("2018-10-17T00:00:00.0").getTime()
     };
     return Observable.create(observer => {
       observer.next(config);
@@ -49,7 +49,7 @@ describe('HeaderAccountMenuComponent', () => {
     user.firstName = "Amanda";
     user.lastName = "Panda";
     user.role = "student";
-    user.userName = "AmandaP0101";
+    user.username = "AmandaP0101";
     component.user = user;
     fixture.detectChanges();
   });

@@ -10,6 +10,8 @@ import 'angular-ui-router';
 import 'angular-material';
 import 'angular-moment';
 import 'angular-sanitize';
+import angularSock from 'angular-sockjs';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
 import 'lib/angular-toArrayFilter/toArrayFilter';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
@@ -23,7 +25,6 @@ import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
 import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
-import AuthorWebSocketService from '../services/authorWebSocketService';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
@@ -58,6 +59,7 @@ import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
+import SummaryAuthoringComponentModule from '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
@@ -71,6 +73,7 @@ const authoringModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
+    'summaryAuthoringComponentModule',
     'animationAuthoringComponentModule',
     'audioOscillatorAuthoringComponentModule',
     'authoringTool.components',
@@ -91,6 +94,8 @@ const authoringModule = angular.module('authoring', [
     'ngFileUpload',
     'ngMaterial',
     'ngSanitize',
+    'bd.sockjs',
+    'ngStomp',
     'ngWebSocket',
     'openResponseAuthoringComponentModule',
     'outsideURLAuthoringComponentModule',
@@ -100,7 +105,6 @@ const authoringModule = angular.module('authoring', [
     'ui.router'
     ])
     .service(AnnotationService.name, AnnotationService)
-    .service(AuthorWebSocketService.name, AuthorWebSocketService)
     .service(ComponentService.name, ComponentService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
@@ -165,9 +169,6 @@ const authoringModule = angular.module('authoring', [
               },
               language: ($translate, ConfigService, config) => {
                 $translate.use(ConfigService.getLocale());
-              },
-              sessionTimers: (SessionService, config) => {
-                return SessionService.initializeSession();
               }
             }
           })
@@ -182,9 +183,6 @@ const authoringModule = angular.module('authoring', [
               },
               language: ($translate, ConfigService, config) => {
                 $translate.use(ConfigService.getLocale());
-              },
-              sessionTimers: (SessionService, config) => {
-                return SessionService.initializeSession();
               }
             }
           })
@@ -206,12 +204,6 @@ const authoringModule = angular.module('authoring', [
               },
               language: ($translate, ConfigService, projectConfig) => {
                 $translate.use(ConfigService.getLocale());
-              },
-              sessionTimers: (SessionService, projectConfig) => {
-                return SessionService.initializeSession();
-              },
-              webSocket: (AuthorWebSocketService, projectConfig) => {
-                return AuthorWebSocketService.initialize();
               }
             }
           })

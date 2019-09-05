@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2019 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -24,15 +24,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
+
+import javax.sql.DataSource;
 
 import org.hibernate.proxy.HibernateProxyHelper;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
+import org.springframework.security.acls.jdbc.JdbcMutableAclService;
+import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.AccessControlEntry;
+import org.springframework.security.acls.model.AclCache;
 import org.springframework.security.acls.model.MutableAcl;
-import org.springframework.security.acls.model.MutableAclService;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.acls.model.Permission;
@@ -50,13 +54,19 @@ import org.wise.portal.service.acl.AclService;
  *
  * @author Laurel Williams
  */
-public class AclServiceImpl<T extends Persistable> implements AclService<T> {
+public class AclServiceImpl<T extends Persistable>
+    extends JdbcMutableAclService implements AclService<T> {
 
-  private MutableAclService mutableAclService;
-
-  @Required
-  public void setMutableAclService(MutableAclService mutableAclService) {
-    this.mutableAclService = mutableAclService;
+  public AclServiceImpl(DataSource dataSource, LookupStrategy lookupStrategy,
+      AclCache aclCache, Properties appProperties) {
+    super(dataSource, lookupStrategy, aclCache);
+    if (appProperties.containsKey("spring.datasource.driver-class-name")) {
+      String driverClass = (String) appProperties.get("spring.datasource.driver-class-name");
+      if ("com.mysql.jdbc.Driver".equals(driverClass)) {
+        setClassIdentityQuery("SELECT @@IDENTITY");
+        setSidIdentityQuery("SELECT @@IDENTITY");
+      }
+    }
   }
 
   public void addPermission(T object, Permission permission) {
@@ -65,14 +75,14 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object.getId());
 
       try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity);
+        acl = (MutableAcl) this.readAclById(objectIdentity);
       } catch (NotFoundException nfe) {
-        acl = mutableAclService.createAcl(objectIdentity);
+        acl = createAcl(objectIdentity);
       }
       // add this new ace at the end of the acl.
       acl.insertAce(acl.getEntries().size(), permission, new PrincipalSid(getAuthentication()),
           true);
-      mutableAclService.updateAcl(acl);
+      updateAcl(acl);
     } else {
       throw new IllegalArgumentException("Cannot create ACL. Object not set.");
     }
@@ -84,14 +94,14 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object.getId());
 
       try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity);
+        acl = (MutableAcl) readAclById(objectIdentity);
       } catch (NotFoundException nfe) {
-        acl = mutableAclService.createAcl(objectIdentity);
+        acl = createAcl(objectIdentity);
       }
       // add this new ace at the end of the acl.
       acl.insertAce(acl.getEntries().size(), permission,
           new PrincipalSid(user.getUserDetails().getUsername()), true);
-      mutableAclService.updateAcl(acl);
+      updateAcl(acl);
     } else {
       throw new IllegalArgumentException("Cannot create ACL. Object not set.");
     }
@@ -100,12 +110,13 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
   public void removePermission(T object, Permission permission, User user) {
     if (object != null) {
       MutableAcl acl = null;
-      ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object.getId());
+      ObjectIdentity objectIdentity = new ObjectIdentityImpl(
+          HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
       List<Sid> sid = new ArrayList<Sid>();
       sid.add(new PrincipalSid(user.getUserDetails().getUsername()));
 
       try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity, sid);
+        acl = (MutableAcl) this.readAclById(objectIdentity, sid);
       } catch (NotFoundException nfe) {
         return;
       }
@@ -116,7 +127,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
           acl.deleteAce(i);
         }
       }
-      mutableAclService.updateAcl(acl);
+      updateAcl(acl);
     } else {
       throw new IllegalArgumentException("Cannot delete ACL. Object not set.");
     }
@@ -136,7 +147,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       sid.add(new PrincipalSid(user.getUserDetails().getUsername()));
 
       try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity, sid);
+        acl = (MutableAcl) this.readAclById(objectIdentity, sid);
       } catch (NotFoundException nfe) {
         return permissions;
       }
@@ -163,7 +174,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       sid.add(new PrincipalSid(userDetails.getUsername()));
 
       try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity, sid);
+        acl = (MutableAcl) this.readAclById(objectIdentity, sid);
       } catch (NotFoundException nfe) {
         return permissions;
       }

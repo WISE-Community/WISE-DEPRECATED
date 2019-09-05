@@ -28,7 +28,7 @@
 				<div class="panelHeader"><spring:message code="forgotaccount.teacher.index.lostUsernameOrPassword"/></div>
 				<div class="infoContentBox">
 
-					<form id="forgotAccountForm" method="post" action="${contextPath}/legacy/forgotaccount/teacher" commandName="userDetails" autocomplete='off'>
+					<form id="forgotAccountForm" method="post" action="${contextPath}/legacy/forgotaccount/teacher" modelAttribute="userDetails" autocomplete='off'>
 						<div>
 						 <h4><spring:message code="forgotaccount.teacher.index.rememberUsernameButForgotPassword"/></h4>
 						 <div><spring:message code="forgotaccount.teacher.index.enterYourUsername"/><br/><spring:message code="forgotaccount.teacher.index.aLinkToChangePasswordWillBeSentToEmail"/></div>

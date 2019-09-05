@@ -10,6 +10,6 @@ export class TrackScrollDirective {
 
   @HostListener('scroll', ['$event'])
   track(event:any) {
-    this.yPositionChange.emit(this.el.nativeElement.scrollTop);
+    this.yPositionChange.emit(this.el.nativeElement);
   }
 }

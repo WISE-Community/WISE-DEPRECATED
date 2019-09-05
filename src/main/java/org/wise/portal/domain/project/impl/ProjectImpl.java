@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -183,7 +183,6 @@ public class ProjectImpl implements Project {
   private Long rootProjectId = null;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   @Getter
   @Setter
   public Long id = null;
@@ -274,23 +273,11 @@ public class ProjectImpl implements Project {
     this.familytag = projectInfo.getFamilyTag();
   }
 
-  /**
-   * Get the shared owners in alphabetical order
-   * @return the shared owners list in alphabetical order
-   */
   public List<User> getSharedOwnersOrderedAlphabetically() {
-
     List<User> sharedOwnersList = new ArrayList<User>();
-
-    // add the shared owners for this project
     sharedOwnersList.addAll(sharedowners);
-
-    // get the comparator that will order the list alphabetically
     UserAlphabeticalComparator userAlphabeticalComparator = new UserAlphabeticalComparator();
-
-    // sort the list alphabetically
     Collections.sort(sharedOwnersList, userAlphabeticalComparator);
-
     return sharedOwnersList;
   }
 
@@ -335,10 +322,6 @@ public class ProjectImpl implements Project {
     }
   }
 
-  /**
-   * Visitor Pattern
-   * @param visitor
-   */
   public Object accept(ProjectVisitor visitor) {
     return visitor.visit(this);
   }
@@ -382,9 +365,6 @@ public class ProjectImpl implements Project {
     this.wiseVersion = wiseVersion;
   }
 
-  /**
-   * Comparator used to order user names alphabetically
-   */
   public static class UserAlphabeticalComparator implements Comparator<User> {
 
     /**
@@ -405,13 +385,13 @@ public class ProjectImpl implements Project {
         MutableUserDetails userDetails2 = user2.getUserDetails();
 
         if (userDetails1 != null && userDetails2 != null) {
-          String userName1 = userDetails1.getUsername();
-          String userName2 = userDetails2.getUsername();
+          String username1 = userDetails1.getUsername();
+          String username2 = userDetails2.getUsername();
 
-          if (userName1 != null && userName2 != null) {
-            String userName1LowerCase = userName1.toLowerCase();
-            String userName2LowerCase = userName2.toLowerCase();
-            result = userName1LowerCase.compareTo(userName2LowerCase);
+          if (username1 != null && username2 != null) {
+            String username1LowerCase = username1.toLowerCase();
+            String username2LowerCase = username2.toLowerCase();
+            result = username1LowerCase.compareTo(username2LowerCase);
           }
         }
       }
@@ -420,11 +400,11 @@ public class ProjectImpl implements Project {
   }
 
   public boolean isOfficialProject() {
-    return hasTag("library");
+    return hasTag("official");
   }
 
   public boolean isCommunityProject() {
-    return hasTag("teachershared");
+    return hasTag("community");
   }
 
   public boolean hasTag(String tag) {

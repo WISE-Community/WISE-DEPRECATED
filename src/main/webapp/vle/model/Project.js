@@ -340,7 +340,7 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 			if (cbu.lastIndexOf('\\') != -1) {
 				return cbu + '\\' + filename;
 			} else if (cbu) {
-				return cbu + '/' + filename;
+				return cbu + filename;
 			} else {
 				return filename;
 			}

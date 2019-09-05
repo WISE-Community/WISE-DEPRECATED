@@ -135,11 +135,11 @@ function checkForExistingAccountsAndCreateAccount() {
 		//loop through all the existing accounts
 		for(var x=0; x<existingAccountsArray.length; x++) {
 			//get a user name
-			var userName = existingAccountsArray[x];
+			var username = existingAccountsArray[x];
 
 			//make the user name a link to the login page that will pre-populate the user name field
-			existingAccountsHtml += "<a href='../login?userName=" + userName + "'>";
-			existingAccountsHtml += userName;
+			existingAccountsHtml += "<a href='../login?username=" + username + "'>";
+			existingAccountsHtml += username;
 			existingAccountsHtml += "</a>";
 
 			existingAccountsHtml += "<br><br>";
@@ -383,7 +383,7 @@ function checkRunCode() {
 						</spring:bind>
 					</div>
 
-					<form:form id="studentRegForm" commandName="studentAccountForm" method="post" action="join" autocomplete='off'>
+					<form:form id="studentRegForm" modelAttribute="studentAccountForm" method="post" action="join" autocomplete='off'>
 
 					  <table class="regTable">
 					  	<tr>

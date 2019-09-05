@@ -17,12 +17,18 @@ export class RunSettingsDialogComponent implements OnInit {
   run: Run;
   newPeriodName: string;
   maxStudentsPerTeam: string;
-  startDate: any;
-  previousStartDate: any;
+  startDate: Date;
+  previousStartDate: Date;
+  endDate: Date;
+  previousEndDate: Date;
   deletePeriodMessage: string = '';
   addPeriodMessage: string = '';
   maxStudentsPerTeamMessage: string = '';
   startDateMessage: string = '';
+  endDateMessage: string = '';
+  maxStartDate: Date;
+  minEndDate: Date;
+  targetEndDate: Date;
 
   periodNameAlreadyExists = this.i18n('There is already a period with that name.');
   noPermissionToAddPeriod = this.i18n('You do not have permission to add periods to this unit.');
@@ -30,7 +36,9 @@ export class RunSettingsDialogComponent implements OnInit {
   noPermissionToDeletePeriod = this.i18n('You do not have permission to delete periods from this unit.');
   noPermissionToChangeMaxStudentsPerTeam = this.i18n('You do not have permission to change the number of students per team for this unit.');
   notAllowedToDecreaseMaxStudentsPerTeam = this.i18n('You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.');
-  noPermissionToChangeStartDate = this.i18n('You do not have permission to change the start date for this unit.');
+  noPermissionToChangeDate = this.i18n('You do not have permission to change the dates for this unit.');
+  endDateBeforeStartDate = this.i18n(`End date can't be before start date.`);
+  startDateAfterEndDate = this.i18n(`Start date can't be after end date.`);
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
@@ -41,11 +49,14 @@ export class RunSettingsDialogComponent implements OnInit {
     this.run = data.run;
     this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
     this.startDate = new Date(this.run.startTime);
+    this.endDate = new Date(this.run.endTime);
     this.rememberPreviousStartDate();
+    this.rememberPreviousEndDate();
+    this.setDateRange();
   }
 
   ngOnInit() {
-    
+
   }
 
   newPeriodNameKeyUp(event) {
@@ -128,13 +139,14 @@ export class RunSettingsDialogComponent implements OnInit {
       const startDate = this.startDate;
       const formattedStartDate = moment(startDate).format('ddd MMM DD YYYY');
       if (confirm(this.i18n('Are you sure you want to change the start date to {{date}}?', {date: formattedStartDate}))) {
-        this.teacherService.updateRunStartTime(this.run.id, startDate).subscribe((response: any) => {
+        this.teacherService.updateRunStartTime(this.run.id, startDate.getTime()).subscribe((response: any) => {
           if (response.status == 'success') {
             this.run = response.run;
             this.updateDataRun(this.run);
             this.rememberPreviousStartDate();
             this.clearErrorMessages();
             this.showConfirmMessage();
+            this.setDateRange();
           } else {
             this.startDateMessage = this.translateMessageCode(response.messageCode);
           }
@@ -147,16 +159,60 @@ export class RunSettingsDialogComponent implements OnInit {
     }
   }
 
+  updateEndTime() {
+    this.clearErrorMessages();
+    if (this.endDate) {
+      const endDate = this.endDate;
+      endDate.setHours(23, 59, 59);
+      const formattedEndDate = moment(endDate).format('ddd MMM DD YYYY');
+      if (confirm(this.i18n('Are you sure you want to change the end date to {{date}}?', {date: formattedEndDate}))) {
+        this.teacherService.updateRunEndTime(this.run.id, endDate.getTime()).subscribe((response: any) => {
+          if (response.status == 'success') {
+            this.run = response.run;
+            this.updateDataRun(this.run);
+            this.rememberPreviousEndDate();
+            this.clearErrorMessages();
+            this.showConfirmMessage();
+            this.setDateRange();
+          } else {
+            this.endDateMessage = this.translateMessageCode(response.messageCode);
+          }
+        });
+      } else {
+        this.rollbackEndDate();
+      }
+    } else {
+      this.rollbackEndDate();
+    }
+  }
+
+  setDateRange() {
+    this.minEndDate = this.startDate;
+    this.maxStartDate = this.endDate;
+    this.targetEndDate = null;
+    if (this.run.lastRun && !this.run.endTime) {
+      this.targetEndDate = new Date(this.run.lastRun);
+    }
+  }
+
   rollbackMaxStudentsPerTeam() {
     this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
   }
-  
+
   rollbackStartDate() {
     this.startDate = this.previousStartDate;
   }
 
+  rollbackEndDate() {
+    this.endDate = this.previousEndDate;
+  }
+
   rememberPreviousStartDate() {
     this.previousStartDate = new Date(this.run.startTime);
+  }
+
+  rememberPreviousEndDate() {
+    this.previousEndDate = new Date(this.run.endTime);
   }
 
   clearNewPeriodInput() {
@@ -185,10 +241,14 @@ export class RunSettingsDialogComponent implements OnInit {
       return this.noPermissionToDeletePeriod;
     } else if (messageCode == 'noPermissionToChangeMaxStudentsPerTeam') {
       return this.noPermissionToChangeMaxStudentsPerTeam;
-    } else if (messageCode = 'notAllowedToDecreaseMaxStudentsPerTeam') {
+    } else if (messageCode == 'notAllowedToDecreaseMaxStudentsPerTeam') {
       return this.notAllowedToDecreaseMaxStudentsPerTeam;
-    } else if (messageCode == 'noPermissionToChangeStartDate') {
-      return this.noPermissionToChangeStartDate;
+    } else if (messageCode == 'noPermissionToChangeDate') {
+      return this.noPermissionToChangeDate;
+    } else if (messageCode == 'endDateBeforeStartDate') {
+      return this.endDateBeforeStartDate;
+    } else if (messageCode == 'startDateAfterEndDate') {
+      return this.startDateAfterEndDate;
     }
   }
 
@@ -196,5 +256,7 @@ export class RunSettingsDialogComponent implements OnInit {
     this.data.run.periods = run.periods;
     this.data.run.maxStudentsPerTeam = run.maxStudentsPerTeam;
     this.data.run.startTime = run.startTime;
+    this.data.run.endTime = run.endTime;
+    this.data.run.lastRun = run.lastRun;
   }
 }

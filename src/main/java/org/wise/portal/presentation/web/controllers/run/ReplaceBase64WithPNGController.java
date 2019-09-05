@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +36,7 @@ import java.util.regex.Pattern;
 public class ReplaceBase64WithPNGController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private VLEService vleService;
@@ -77,14 +78,14 @@ public class ReplaceBase64WithPNGController {
      * example
      * /wise/studentuploads
      */
-    String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
+    String studentUploadsBaseWWW = appProperties.getProperty("studentuploads_base_www");
 
     /*
      * get the student uploads base directory
      * example
      * /src/main/webapp/studentuploads
      */
-    String studentUploadsBaseDir = wiseProperties.getProperty("studentuploads_base_dir");
+    String studentUploadsBaseDir = appProperties.getProperty("studentuploads_base_dir");
 
     // get the current time in milliseconds from the epoch
     long currentTimeMillis = System.currentTimeMillis();
@@ -349,10 +350,9 @@ public class ReplaceBase64WithPNGController {
     return truncatedString;
   }
 
-  @RequestMapping(method=RequestMethod.GET)
+  @GetMapping
   public ModelAndView initializeForm(ModelMap model) {
     ModelAndView mav = new ModelAndView();
-
     return mav;
   }
 

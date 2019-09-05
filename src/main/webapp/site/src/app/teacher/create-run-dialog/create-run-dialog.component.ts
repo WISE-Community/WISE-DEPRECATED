@@ -5,6 +5,9 @@ import { finalize } from 'rxjs/operators';
 import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
+import { UserService } from '../../services/user.service';
+import { ConfigService } from '../../services/config.service';
+import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 
 @Component({
   selector: 'create-run-dialog',
@@ -19,7 +22,8 @@ export class CreateRunDialogComponent {
   periodsGroup: FormArray;
   customPeriods: FormControl;
   maxStudentsPerTeam: number;
-  startDate: any;
+  maxStartDate: Date;
+  minEndDate: Date;
   periodOptions: string[] = [];
   isCreating: boolean = false;
   isCreated: boolean = false;
@@ -29,10 +33,11 @@ export class CreateRunDialogComponent {
               public dialogRef: MatDialogRef<CreateRunDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
+              private userService: UserService,
+              private configService: ConfigService,
               private fb: FormBuilder) {
     this.project = data.project;
     this.maxStudentsPerTeam = 3;
-    this.startDate = new Date();
   }
 
   ngOnInit() {
@@ -54,8 +59,18 @@ export class CreateRunDialogComponent {
       customPeriods: this.customPeriods,
       periods: hiddenControl,
       maxStudentsPerTeam: new FormControl('3', Validators.required),
-      startDate: new FormControl(new Date(), Validators.required)
+      startDate: new FormControl(new Date(), Validators.required),
+      endDate: new FormControl()
     });
+    this.setDateRange();
+  }
+
+  isGoogleUser() {
+    return this.userService.isGoogleUser();
+  }
+
+  isGoogleClassroomEnabled() {
+    return this.configService.isGoogleClassroomEnabled();
   }
 
   setPeriodOptions() {
@@ -77,9 +92,15 @@ export class CreateRunDialogComponent {
     this.isCreating = true;
     const combinedPeriods = this.getPeriodsString();
     const startDate = this.form.controls['startDate'].value.getTime();
+    let endDateValue = this.form.controls['endDate'].value;
+    let endDate = null;
+    if (endDateValue) {
+      endDateValue.setHours(23, 59, 59);
+      endDate = endDateValue.getTime();
+    }
     const maxStudentsPerTeam = this.form.controls['maxStudentsPerTeam'].value;
     this.teacherService.createRun(
-        this.project.id, combinedPeriods, maxStudentsPerTeam, startDate)
+        this.project.id, combinedPeriods, maxStudentsPerTeam, startDate, endDate)
         .pipe(
           finalize(() => {
             this.isCreating = false;
@@ -89,7 +110,6 @@ export class CreateRunDialogComponent {
           this.run = new Run(newRun);
           this.dialogRef.afterClosed().subscribe(result => {
             this.teacherService.addNewRun(this.run);
-            this.teacherService.setTabIndex(0);
           });
           this.isCreated = true;
         });
@@ -108,7 +128,37 @@ export class CreateRunDialogComponent {
     }
   }
 
+  setDateRange() {
+    this.minEndDate = this.form.controls['startDate'].value;
+    this.maxStartDate = this.form.controls['endDate'].value;
+  }
+
   closeAll() {
     this.dialog.closeAll();
+  }
+
+  checkClassroomAuthorization() {
+    this.teacherService.getClassroomAuthorizationUrl(this.userService.getUser().getValue().username).subscribe(({ authorizationUrl }) => {
+      if (authorizationUrl == null) {
+        this.getClassroomCourses();
+      } else {
+        const authWindow = window.open(authorizationUrl, "authorize", "width=600,height=800");
+        const timer = setInterval(() => {
+          if (authWindow.closed) {
+            clearInterval(timer);
+            this.checkClassroomAuthorization();
+          }
+        }, 1000);
+      }
+    });
+  }
+
+  getClassroomCourses() {
+    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(courses => {
+      this.dialog.open(ListClassroomCoursesDialogComponent, {
+        data: { run: this.run, courses },
+        panelClass: 'mat-dialog-md'
+      });
+    });
   }
 }

@@ -39,7 +39,7 @@
 		</spring:bind>
 	</div>
 
-	<form:form method="post" action="removestudentfromrun.html" commandName="removeStudentFromRunParameters" id="removeStudentFromRun" autocomplete='off'>
+	<form:form method="post" action="removestudentfromrun.html" modelAttribute="removeStudentFromRunParameters" id="removeStudentFromRun" autocomplete='off'>
 		 <div style="display:none;"><label for="runId">Run ID:</label>
 		     <form:input disabled="true" path="runId" id="runId"/>
 		     <form:errors path="runId" />

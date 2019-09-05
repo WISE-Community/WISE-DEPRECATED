@@ -40,7 +40,7 @@
           </div>
 
           <div>
-            <form:form method="post" action="${contextPath}/legacy/teacher/account" commandName="teacherAccountForm" id="teacherRegForm" autocomplete='off'>
+            <form:form method="post" action="${contextPath}/legacy/teacher/account" modelAttribute="teacherAccountForm" id="teacherRegForm" autocomplete='off'>
               <table class="regTable">
                 <tr>
                   <td><label for="firstname" id="firstname1"><spring:message code="teacher.registerteacher.firstName" /></label></td>
@@ -166,41 +166,43 @@
             </form:form>
           </div>
           <hr/>
-          <div class="panelHeader"><spring:message code="teacher.management.updatemyaccount.changePassword" /></div>
-          <form:form method="post" action="${contextPath}/legacy/teacher/account/password"
-              commandName="changePasswordParameters" id="changepassword"
-              autocomplete='off'>
-            <table style="margin:0 auto;">
-              <tr>
-                <td><label><spring:message code="changePassword_current" /></label></td>
-                <td><form:password path="passwd0" /></td>
-              </tr>
-              <tr>
-                <td><label><spring:message code="changePassword_new" /></label></td>
-                <td><form:password path="passwd1" /></td>
-              </tr>
-              <tr>
-                <td><label for="changestudentpassword"><spring:message code="changePassword_confirm" /></label></td>
-                <td><form:password path="passwd2" /></td>
-              </tr>
-            </table>
+          <c:if test="${!teacherAccountForm.userDetails.isGoogleUser()}">
+            <div class="panelHeader"><spring:message code="teacher.management.updatemyaccount.changePassword" /></div>
+            <form:form method="post" action="${contextPath}/legacy/teacher/account/password"
+                       modelAttribute="changePasswordParameters" id="changepassword"
+                       autocomplete='off'>
+              <table style="margin:0 auto;">
+                <tr>
+                  <td><label><spring:message code="changePassword_current" /></label></td>
+                  <td><form:password path="passwd0" /></td>
+                </tr>
+                <tr>
+                  <td><label><spring:message code="changePassword_new" /></label></td>
+                  <td><form:password path="passwd1" /></td>
+                </tr>
+                <tr>
+                  <td><label for="changestudentpassword"><spring:message code="changePassword_confirm" /></label></td>
+                  <td><form:password path="passwd2" /></td>
+                </tr>
+              </table>
 
-            <div class="errorMsgNoBg">
-              <spring:bind path="changePasswordParameters.*">
-                <c:forEach var="error" items="${status.errorMessages}">
-                  <p>
-                    <c:out value="${error}" />
-                  </p>
-                </c:forEach>
-              </spring:bind>
-            </div>
+              <div class="errorMsgNoBg">
+                <spring:bind path="changePasswordParameters.*">
+                  <c:forEach var="error" items="${status.errorMessages}">
+                    <p>
+                      <c:out value="${error}" />
+                    </p>
+                  </c:forEach>
+                </spring:bind>
+              </div>
 
-            <div style="text-align:center">
-              <input type="submit" value="<spring:message code="saveChanges"/>"/>
-              <span style="font-style:italic; font-weight: bold; color: gray"><c:out value="${passwordSavedMessage}"></c:out></span>
-            </div>
+              <div style="text-align:center">
+                <input type="submit" value="<spring:message code="saveChanges"/>"/>
+                <span style="font-style:italic; font-weight: bold; color: gray"><c:out value="${passwordSavedMessage}"></c:out></span>
+              </div>
 
-          </form:form>
+            </form:form>
+          </c:if>
           <sec:authorize access="!hasAnyRole('ROLE_TRANSLATOR,ROLE_ADMINISTRATOR')">
             <div id="translateWISEMessage" class="panelFooter" style="text-align:left; padding:10px; color:#745A33">
               <span>Interested in helping us translate WISE in another language? Please <a href="${contextPath}/contact/contactwise.html">contact us</a>.</span>

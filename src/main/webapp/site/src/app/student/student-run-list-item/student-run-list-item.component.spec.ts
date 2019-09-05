@@ -9,13 +9,17 @@ import { Project } from "../../domain/project";
 import { User } from "../../domain/user";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { MatDialog } from "@angular/material";
+import { StudentService } from "../student.service";
+import { UserService } from "../../services/user.service";
+import { configureTestSuite } from 'ng-bullet';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export class MockConfigService {
   getConfig(): Observable<Config> {
     const config : Config = {
       "contextPath":"vle",
       "logOutURL":"/logout",
-      "currentTime":"2018-10-17 00:00:00.0"
+      "currentTime": new Date("2018-10-17T00:00:00.0").getTime()
     };
     return Observable.create( observer => {
       observer.next(config);
@@ -25,24 +29,36 @@ export class MockConfigService {
   getContextPath(): string {
     return '/wise';
   }
+  getCurrentServerTime(): number {
+    return new Date('2018-10-17T00:00:00.0').getTime();
+  }
+}
+
+export class MockStudentService {
+
+}
+
+export class MockUserService {
+
 }
 
 describe('StudentRunListItemComponent', () => {
   let component: StudentRunListItemComponent;
   let fixture: ComponentFixture<StudentRunListItemComponent>;
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
-      imports: [ MomentModule ],
+      imports: [ MomentModule, BrowserAnimationsModule ],
       declarations: [ StudentRunListItemComponent ],
       providers: [
         { provide: ConfigService, useClass: MockConfigService },
+        { provide: StudentService, useClass: MockStudentService },
+        { provide: UserService, useClass: MockUserService },
         { provide: MatDialog }
         ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StudentRunListItemComponent);
@@ -54,7 +70,7 @@ describe('StudentRunListItemComponent', () => {
     owner.displayName = "Mr. Happy";
     run.owner = owner;
     run.projectThumb = "Happy.png";
-    run.startTime = '2018-10-17 00:00:00.0';
+    run.startTime = new Date('2018-10-17T00:00:00.0').getTime();
     const project: Project = new Project();
     project.id = 1;
     project.name = "Test Project";
@@ -71,13 +87,13 @@ describe('StudentRunListItemComponent', () => {
     }
   });
 
-  it('should say a run is available', () => {
-    expect(component.isAvailable).toBeTruthy();
+  it('should say a run is active', () => {
+    expect(component.isRunActive(component.run)).toBeTruthy();
   });
 
-  it('should say a run is not available yet', () => {
-    component.run.startTime = '2100-10-17 00:00:00.0';
+  it('should say a run is not active yet', () => {
+    component.run.startTime = new Date('2100-10-17T00:00:00.0').getTime();
     component.ngOnInit();
-    expect(component.isAvailable).toBeFalsy();
+    expect(component.isRunActive(component.run)).toBeFalsy();
   });
 });

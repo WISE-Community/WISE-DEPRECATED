@@ -46,7 +46,7 @@ View.prototype.displayNodeVisitInStream = function(workgroupId, nodeVisit) {
 	 * the teacher has received work from the student so we will
 	 * display it in the student work stream
 	 */
-	var workgroupName = this.userAndClassInfo.getUserNameByUserId(workgroupId);
+	var workgroupName = this.userAndClassInfo.getUsernameByUserId(workgroupId);
 	var nodeId = nodeVisit.nodeId;
 	var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
 	var node = this.getProject().getNodeById(nodeId);

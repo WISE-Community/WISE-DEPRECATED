@@ -3,13 +3,18 @@ import { StudentRun } from '../student-run';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser';
 import { ConfigService } from "../../services/config.service";
-import { MatDialog } from "../../../../../../../../node_modules/@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
 import { TeamSignInDialogComponent } from "../team-sign-in-dialog/team-sign-in-dialog.component";
+import { Student } from "../../domain/student";
+import { StudentService } from "../student.service";
+import { UserService } from "../../services/user.service";
+import { flash } from '../../animations';
 
 @Component({
   selector: 'app-student-run-list-item',
   templateUrl: './student-run-list-item.component.html',
-  styleUrls: ['./student-run-list-item.component.scss']
+  styleUrls: ['./student-run-list-item.component.scss'],
+  animations: [ flash ]
 })
 export class StudentRunListItemComponent implements OnInit {
 
@@ -18,11 +23,14 @@ export class StudentRunListItemComponent implements OnInit {
 
   problemLink: string = '';
   thumbStyle: SafeStyle;
-  isAvailable: boolean = true;
+  animateDuration: string = '0s';
+  animateDelay: string = '0s';
 
   constructor(private sanitizer: DomSanitizer,
               private configService: ConfigService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private studentService: StudentService,
+              private userService: UserService) {
     this.sanitizer = sanitizer;
     this.configService = configService;
   }
@@ -36,28 +44,45 @@ export class StudentRunListItemComponent implements OnInit {
   ngOnInit() {
     this.thumbStyle = this.getThumbStyle();
     this.problemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
-    this.configService.getConfig().subscribe(config => {
-      if (config != null) {
-        if (new Date(this.run.startTime) > new Date(config.currentTime)) {
-          this.isAvailable = false;
-        }
-      }
-    });
     if (this.run.isHighlighted) {
+      this.animateDuration = '2s';
+      this.animateDelay = '1s';
       setTimeout(() => {
         this.run.isHighlighted = false;
-      }, 5000)
+      }, 7000)
     }
   }
 
-launchRun() {
-    if (this.run.maxStudentsPerTeam === 1 || this.run.endTime) {
-      window.location.href = `${this.configService.getContextPath()}/student/startproject.html?runId=${this.run.id}`;
+  launchRun() {
+    if (this.run.maxStudentsPerTeam === 1) {
+      this.skipTeamSignIn();
     } else {
       this.dialog.open(TeamSignInDialogComponent, {
         data: { run: this.run },
         panelClass: 'mat-dialog--sm'
       });
     }
+  }
+
+  reviewRun() {
+    this.skipTeamSignIn();
+  }
+
+  skipTeamSignIn() {
+    const user = <Student>this.userService.getUser().getValue();
+    const presentUserIds = [user.id];
+    const absentUserIds = [];
+    this.studentService.launchRun(this.run.id, this.run.workgroupId, presentUserIds, absentUserIds)
+        .subscribe((response: any) => {
+      window.location.href = response.startProjectUrl;
+    });
+  }
+
+  isRunActive(run) {
+    return run.isActive(this.configService.getCurrentServerTime());
+  }
+
+  isRunCompleted(run) {
+    return run.isCompleted(this.configService.getCurrentServerTime());
   }
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LibraryService } from '../../../services/library.service';
 
 @Component({
   selector: 'app-home-page-project-library',
@@ -10,6 +11,11 @@ import { Component } from '@angular/core';
 })
 export class HomePageProjectLibraryComponent {
 
-  constructor() {
+  constructor(private libraryService: LibraryService) {
+    libraryService.getOfficialLibraryProjects();
+  }
+
+  ngOnDestroy() {
+    this.libraryService.clearAll();
   }
 }

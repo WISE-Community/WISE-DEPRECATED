@@ -96,6 +96,9 @@
               <md-select ng-model='connectedComponent.type'
                          ng-change='discussionController.authoringConnectedComponentTypeChanged(connectedComponent)'
                          style='width: 200'>
+                <md-option value='importWork'>
+                  {{ 'importWork' | translate }}
+                </md-option>
                 <md-option value='showWork'>
                   {{ 'showWork' | translate }}
                 </md-option>
@@ -279,7 +282,7 @@
             <div class='discussion-posts' flex>
               <md-card class='discussion-new discussion-post'
                        ng-if='!discussionController.isDisabled'
-                       ng-class='{"discussion-new--focused md-whiteframe-z3": discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}'>
+                       ng-class='{"discussion-new--focused md-whiteframe-z3": discussionController.focus || discussionController.newResponse || discussionController.attachments.length}'>
                 <md-input-container class='input--placeholder-only discussion-new__input-container input-container'
                                     md-no-float>
                   <textarea ng-if='discussionController.isRichTextEnabled && !discussionController.isDisabled'
@@ -308,9 +311,9 @@
                   </textarea>
                 </md-input-container>
                 <div class='discussion-new__actions'
-                     ng-if='!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled && discussionController.newAttachments.length'>
+                     ng-if='!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled && discussionController.attachments.length'>
                   <div class='component__attachment discussion-new__attachment'
-                       ng-repeat='attachment in discussionController.newAttachments'>
+                       ng-repeat='attachment in discussionController.attachments'>
                     <img ng-src='{{attachment.iconURL}}'
                          alt='Image'
                          class='discussion-post__attachment discussion-new__attachment__content' />
@@ -337,7 +340,7 @@
                          ng-if='discussionController.showSaveButton()'>Save Draft</md-button>-->
                   <md-button class='md-raised md-primary'
                              ng-click='discussionController.submitButtonClicked()'
-                             ng-disabled='discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0)'>
+                             ng-disabled='discussionController.isDisabled || (!discussionController.newResponse && discussionController.attachments.length == 0)'>
                     {{ 'discussion.post' | translate }}
                   </md-button>
                 </div>

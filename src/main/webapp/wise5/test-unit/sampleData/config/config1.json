@@ -9,13 +9,13 @@
           "workgroupId": 3,
           "userIds": [6],
           "periodName": "1",
-          "userName": "t t (tt0101)"
+          "username": "t t (tt0101)"
         }, {
           "periodId": 1,
           "workgroupId": 8,
           "userIds": [8],
           "periodName": "1",
-          "userName": "k t (kt0101)"
+          "username": "k t (kt0101)"
         }],
         "sharedTeacherUserInfos": [],
         "periods": [{
@@ -30,12 +30,12 @@
         }],
         "teacherUserInfo": {
           "workgroupId": 1,
-          "userName": "ht"
+          "username": "ht"
         }
       },
       "userIds": [4],
       "periodName": "1",
-      "userName": "h t (ht0101)"
+      "username": "h t (ht0101)"
     }
   },
   "projectURL": "/wise/curriculum/1/project.json",

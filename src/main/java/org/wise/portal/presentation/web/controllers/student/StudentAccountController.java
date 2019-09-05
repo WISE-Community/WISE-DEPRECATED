@@ -82,7 +82,7 @@ public class StudentAccountController {
   protected UserService userService;
 
   @Autowired
-  protected Properties wiseProperties;
+  protected Properties appProperties;
 
   @Autowired
   private StudentAccountFormValidator studentAccountFormValidator;
@@ -116,7 +116,7 @@ public class StudentAccountController {
     birthday.set(Calendar.MONTH, birthmonth - 1);  // month is 0-based
     birthday.set(Calendar.DATE, birthdate);
     userDetails.setBirthday(birthday.getTime());
-    userDetails.setLanguage(wiseProperties.getProperty("defaultLocale", "en"));
+    userDetails.setLanguage(appProperties.getProperty("defaultLocale", "en"));
 
     studentAccountFormValidator.validate(accountForm, result);
     if (result.hasErrors()) {
@@ -249,7 +249,7 @@ public class StudentAccountController {
   public String initializeFormNewStudent(ModelMap model) {
     model.put("genders", Gender.values());
     model.put("accountQuestions",AccountQuestion.values());
-    String supportedLocales = wiseProperties.getProperty(
+    String supportedLocales = appProperties.getProperty(
         "supportedLocales", "en,zh_TW,zh_CN,nl,he,ja,ko,es,pt,tr");
     model.put("languages", supportedLocales.split(","));
     model.addAttribute("studentAccountForm", new StudentAccountForm());
@@ -261,7 +261,7 @@ public class StudentAccountController {
     User user = ControllerUtil.getSignedInUser();
     model.put("genders", Gender.values());
     model.put("accountQuestions",AccountQuestion.values());
-    String supportedLocales = wiseProperties.getProperty(
+    String supportedLocales = appProperties.getProperty(
         "supportedLocales", "en,zh_TW,zh_CN,nl,he,ja,ko,es,pt,tr");
     model.put("languages", supportedLocales.split(","));
     model.addAttribute("studentAccountForm",

@@ -3,28 +3,19 @@
     <app-library-filters></app-library-filters>
   </div>
   <div class="library__content library-teacher__content">
-    <mat-tab-group [selectedIndex]="selectedTabIndex"
-                   i18n-aria-label
-                   aria-label="Select unit library view"
-                   mat-stretch-tabs>
-      <mat-tab i18n-label label="WISE Tested ({{numberOfOfficialProjectsVisible}})">
-        <div class="content-block library-teacher__official">
-          <p ngClass.xs="center">
-            <a class="info mat-caption" [routerLink]="" (click)="showInfo()" i18n>What is WISE Tested?</a>
-          </p>
-          <app-official-library (update)="updateNumberOfOfficialProjectsVisible($event)"></app-official-library>
-        </div>
-      </mat-tab>
-      <mat-tab i18n-label label="Community Built ({{numberOfCommunityProjectsVisible}})">
-        <div class="content-block library-teacher__paginate">
-          <app-community-library (update)="updateNumberOfCommunityProjectsVisible($event)"></app-community-library>
-        </div>
-      </mat-tab>
-      <mat-tab i18n-label label="My Units ({{numberOfPersonalProjectsVisible}})">
-        <div class="content-block library-teacher__paginate">
-          <app-personal-library (update)="updateNumberOfPersonalProjectsVisible($event)"></app-personal-library>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
+    <nav mat-tab-nav-bar
+         i18n-aria-label 
+         aria-label="Teacher unit library navigation">
+      <a mat-tab-link *ngFor="let tab of tabs; index as i"
+          [routerLink]="[tab.path]"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [active]="rla.isActive">
+        {{tab.label}} ({{tab.numVisible}})
+      </a>
+    </nav>
+    <app-official-library [hidden]="!isOfficialRoute()"></app-official-library>
+    <app-community-library [hidden]="!isCommunityRoute()"></app-community-library>
+    <app-personal-library [hidden]="!isPersonalRoute()"></app-personal-library>
   </div>
 </div>

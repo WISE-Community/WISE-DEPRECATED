@@ -57,9 +57,12 @@ public class ChangePasswordParametersValidator implements Validator {
   public void validate(Object paramsIn, Errors errors) {
     ChangePasswordParameters params = (ChangePasswordParameters) paramsIn;
 
-    validatePasswd0(errors,params);
-    if (errors.getErrorCount() != 0) {
-      return;
+    if (params.getUser() != null && !params.getUser().getUserDetails().isGoogleUser() ||
+        params.getTeacherUser() != null && !params.getTeacherUser().getUserDetails().isGoogleUser()) {
+      validatePasswd0(errors,params);
+      if (errors.getErrorCount() != 0) {
+        return;
+      }
     }
 
     validatePasswd1(errors,params);

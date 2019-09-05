@@ -8,20 +8,19 @@
   </h1>
 </header>
 <section>
-  <mat-tab-group [(selectedIndex)]="selectedTabIndex" #tabs>
-    <mat-tab i18n-label label="Class Schedule">
-      <app-teacher-run-list></app-teacher-run-list>
-    </mat-tab>
-    <mat-tab i18n-label label="Browse WISE Units">
-        <app-teacher-project-library></app-teacher-project-library>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <span fxLayout="row" fxLayoutAlign="center center">
-          <ng-container i18n>Authoring Tool</ng-container>
-          &nbsp;<mat-icon>open_in_browser</mat-icon>
-        </span>
-      </ng-template>
-    </mat-tab>
-  </mat-tab-group>
+  <nav mat-tab-nav-bar i18n-aria-label aria-label="Teacher home navigation">
+    <a mat-tab-link *ngFor="let tab of tabLinks"
+       [routerLink]="[tab.path]"
+       routerLinkActive
+       #rla="routerLinkActive"
+       [active]="rla.isActive">
+      {{tab.label}}
+    </a>
+    <a mat-tab-link [href]="authoringToolLink">
+      <ng-container i18n>Authoring Tool</ng-container>
+      &nbsp;<mat-icon class="text">open_in_browser</mat-icon>
+    </a>
+  </nav>
+  <app-teacher-run-list [hidden]="!isRunListRoute()"></app-teacher-run-list>
+  <app-teacher-project-library [hidden]="isRunListRoute()"></app-teacher-project-library>
 </section>

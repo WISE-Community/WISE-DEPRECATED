@@ -1,40 +1,24 @@
 package org.wise.portal.presentation.web.controllers.user;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-import org.wise.portal.domain.general.contactwise.IssueType;
-import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
-import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.mail.IMailFacade;
-import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
 import java.util.*;
 
 /**
@@ -49,13 +33,19 @@ import java.util.*;
 public class UserAPIController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   protected UserService userService;
 
   @Autowired
   protected IMailFacade mailService;
+
+  @Value("${google.clientId:}")
+  private String googleClientId;
+
+  @Value("${google.clientSecret:}")
+  private String googleClientSecret;
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   protected String getUserInfo(ModelMap modelMap,
@@ -88,7 +78,8 @@ public class UserAPIController {
       userJSON.put("id", user.getId());
       userJSON.put("firstName", userDetails.getFirstname());
       userJSON.put("lastName", userDetails.getLastname());
-      userJSON.put("userName", userDetails.getUsername());
+      userJSON.put("username", userDetails.getUsername());
+      userJSON.put("isGoogleUser", userDetails.isGoogleUser());
 
       if (isStudent) {
         userJSON.put("role", "student");
@@ -120,7 +111,7 @@ public class UserAPIController {
       return userJSON.toString();
     } else {
       JSONObject userJSON = new JSONObject();
-      userJSON.put("userName", username);
+      userJSON.put("username", username);
       return userJSON.toString();
     }
   }
@@ -130,10 +121,15 @@ public class UserAPIController {
     JSONObject configJSON = new JSONObject();
     String contextPath = request.getContextPath();
     configJSON.put("contextPath", contextPath);
-    configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
-    configJSON.put("recaptchaPublicKey", wiseProperties.get("recaptcha_public_key"));
+    configJSON.put("googleClientId", googleClientId);
+    configJSON.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
+    configJSON.put("recaptchaPublicKey", appProperties.get("recaptcha_public_key"));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
+  }
+
+  private boolean isGoogleClassroomEnabled() {
+    return !googleClientId.equals("") && !googleClientSecret.equals("");
   }
 
   @RequestMapping(value = "/check-authentication", method = RequestMethod.POST)
@@ -141,11 +137,17 @@ public class UserAPIController {
                                        @RequestParam("password") String password) throws JSONException {
     User user = userService.retrieveUserByUsername(username);
     JSONObject response = new JSONObject();
-    response.put("isValid", userService.isPasswordCorrect(user, password));
-    response.put("userId", user.getId());
-    response.put("userName", user.getUserDetails().getUsername());
-    response.put("firstName", user.getUserDetails().getFirstname());
-    response.put("lastName", user.getUserDetails().getLastname());
+    if (user == null) {
+      response.put("isUsernameValid", false);
+      response.put("isPasswordValid", false);
+    } else {
+      response.put("isUsernameValid", true);
+      response.put("isPasswordValid", userService.isPasswordCorrect(user, password));
+      response.put("userId", user.getId());
+      response.put("username", user.getUserDetails().getUsername());
+      response.put("firstName", user.getUserDetails().getFirstname());
+      response.put("lastName", user.getUserDetails().getLastname());
+    }
     return response.toString();
   }
 
@@ -168,7 +170,7 @@ public class UserAPIController {
 
   @RequestMapping(value = "/languages", method = RequestMethod.GET)
   protected String getSupportedLanguages() throws JSONException {
-    String supportedLocales = wiseProperties.getProperty("supportedLocales");
+    String supportedLocales = appProperties.getProperty("supportedLocales");
     String[] supportedLocalesArray = supportedLocales.split(",");
     JSONArray supportedLocalesJSONArray = new JSONArray();
     for (String localeString: supportedLocalesArray) {
@@ -202,7 +204,7 @@ public class UserAPIController {
     } else {
       response.put("status", "success");
       response.put("userId", user.getId());
-      response.put("userName", user.getUserDetails().getUsername());
+      response.put("username", user.getUserDetails().getUsername());
       response.put("firstName", user.getUserDetails().getFirstname());
       response.put("lastName", user.getUserDetails().getLastname());
     }

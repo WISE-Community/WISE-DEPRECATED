@@ -7,10 +7,6 @@
     text-decoration: none;
   }
 
-  &:not(.mat-icon-button) {
-    border-radius: $card-border-radius;
-  }
-
   mat-progress-bar {
     position: absolute;
     left: 0;
@@ -25,6 +21,17 @@
     &:not([class*=mat-elevation-z]) {
       @include mat-elevation(3);
     }
+  }
+}
+
+.mat-fab.mat-fab--extended {
+  border-radius: 24px;
+  padding: 0px 16px;
+  width: auto;
+  height: 48px;
+
+  .mat-button-wrapper {
+    padding: 8px 0;
   }
 }
 

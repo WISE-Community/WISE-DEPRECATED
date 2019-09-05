@@ -23,6 +23,12 @@
  */
 package org.wise.portal.service.project;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
+
+import org.json.JSONException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.user.User;
@@ -37,11 +44,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithProjectException;
 import org.wise.portal.presentation.web.response.SharedOwner;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
 
 /**
  * A Service for Projects
@@ -298,6 +300,8 @@ public interface ProjectService {
    */
   Long identifyRootProjectId(Project project) throws ObjectNotFoundException;
 
+  long getNextAvailableProjectId();
+
   Project copyProject(Integer projectId, User user) throws Exception;
 
   List<Permission> getSharedTeacherPermissions(Project project, User sharedTeacher);
@@ -314,4 +318,10 @@ public interface ProjectService {
   List<Project> getProjectsWithoutRuns(User user);
 
   List<Project> getAllSharedProjects();
+
+  String getProjectURI(Project project);
+
+  void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException;
+
+  void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata) throws IOException, JSONException;
 }

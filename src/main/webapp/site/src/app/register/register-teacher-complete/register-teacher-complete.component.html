@@ -5,7 +5,6 @@
       Your username is: <span class="mat-title">{{username}}</span>.
     </p>
     <p i18n>You should receive an email with your account details shortly.</p>
-    <p i18n>You should also receive an email with your account details.</p>
     <mat-card-actions>
       <a *ngIf="!isUsingGoogleId" mat-flat-button color="primary" (click)="login()" i18n>Sign In to Get Started</a>
       <a *ngIf="isUsingGoogleId" class="button--social-login button--google"

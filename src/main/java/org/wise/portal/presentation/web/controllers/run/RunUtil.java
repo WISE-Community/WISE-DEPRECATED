@@ -60,9 +60,9 @@ public class RunUtil {
     } else {
       Workgroup workgroup = workgroupListByRunAndUser.get(0);
       Long workgroupId = workgroup.getId();
-      String userNamesFromWorkgroup = getUserNamesFromWorkgroup(workgroup);
+      String usernamesFromWorkgroup = getUsernamesFromWorkgroup(workgroup);
       try {
-        myUserInfoJSONObject.put("userName", userNamesFromWorkgroup);
+        myUserInfoJSONObject.put("username", usernamesFromWorkgroup);
         myUserInfoJSONObject.put("workgroupId", workgroupId);
       } catch (JSONException e) {
         e.printStackTrace();
@@ -160,7 +160,7 @@ public class RunUtil {
 
       try {
         teacherUserInfo.put("workgroupId", teacherWorkgroup.getId());
-        teacherUserInfo.put("userName", teacherWorkgroup.generateWorkgroupName());
+        teacherUserInfo.put("username", teacherWorkgroup.generateWorkgroupName());
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -189,7 +189,7 @@ public class RunUtil {
 
           try {
             sharedTeacherUserInfo.put("workgroupId", sharedTeacherWorkgroup.getId());
-            sharedTeacherUserInfo.put("userName", sharedTeacherWorkgroup.generateWorkgroupName());
+            sharedTeacherUserInfo.put("username", sharedTeacherWorkgroup.generateWorkgroupName());
           } catch (JSONException e) {
             e.printStackTrace();
           }
@@ -216,23 +216,13 @@ public class RunUtil {
     }
 
     try {
-      Date startTime = run.getStarttime();
-      if (startTime != null) {
-        runInfo.put("startTime", startTime.getTime());
-      } else {
-        runInfo.put("startTime", JSONObject.NULL);
-      }
+      runInfo.put("startTime", run.getStartTimeMilliseconds());
     } catch (JSONException e) {
       e.printStackTrace();
     }
 
     try {
-      Date endTime = run.getEndtime();
-      if (endTime != null) {
-        runInfo.put("endTime", endTime.getTime());
-      } else {
-        runInfo.put("endTime", JSONObject.NULL);
-      }
+      runInfo.put("endTime", run.getEndTimeMilliseconds());
     } catch (JSONException e) {
       e.printStackTrace();
     }
@@ -248,14 +238,14 @@ public class RunUtil {
   public static String getFirstNameLastNameLogin(User user) {
     String firstName = "";
     String lastName = "";
-    String userName = "";
+    String username = "";
     MutableUserDetails userDetails = user.getUserDetails();
     if (userDetails != null) {
-      userName = userDetails.getUsername();
+      username = userDetails.getUsername();
       firstName = userDetails.getFirstname();
       lastName = userDetails.getLastname();
     }
-    return firstName + " " + lastName + " (" + userName + ")";
+    return firstName + " " + lastName + " (" + username + ")";
   }
 
   /**
@@ -265,19 +255,19 @@ public class RunUtil {
    * e.g.
    * "Jennifer Chiu (JenniferC829):helen zhang (helenz1115a)"
    */
-  public static String getUserNamesFromWorkgroup(Workgroup workgroup) {
-    StringBuffer userNames = new StringBuffer();
+  public static String getUsernamesFromWorkgroup(Workgroup workgroup) {
+    StringBuffer usernames = new StringBuffer();
     Set<User> members = workgroup.getMembers();
     Iterator<User> iterator = members.iterator();
     while (iterator.hasNext()) {
       User user = iterator.next();
       String firstNameLastNameLogin = getFirstNameLastNameLogin(user);
-      if (userNames.length() != 0) {
-        userNames.append(":");
+      if (usernames.length() != 0) {
+        usernames.append(":");
       }
-      userNames.append(firstNameLastNameLogin);
+      usernames.append(firstNameLastNameLogin);
     }
-    return userNames.toString();
+    return usernames.toString();
   }
 
   /**

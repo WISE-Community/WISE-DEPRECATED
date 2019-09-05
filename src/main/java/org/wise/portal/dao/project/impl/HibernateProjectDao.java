@@ -23,9 +23,12 @@
  */
 package org.wise.portal.dao.project.impl;
 
+import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -269,5 +272,14 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
         + "order by id desc");
     sqlQuery.addEntity("project", ProjectImpl.class);
     return sqlQuery.list();
+  }
+
+  @Override
+  public long getMaxProjectId() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    Criteria crit = session.createCriteria(ProjectImpl.class);
+    crit.setProjection(Projections.max("id"));
+    List<Long> results = crit.list();
+    return results.get(0);
   }
 }

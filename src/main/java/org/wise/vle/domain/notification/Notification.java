@@ -23,6 +23,7 @@
  */
 package org.wise.vle.domain.notification;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -58,18 +59,22 @@ public class Notification extends PersistableDomain {
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
+  @JsonIgnore
   private Run run;
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId", nullable = false)
+  @JsonIgnore
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "toWorkgroupId")
+  @JsonIgnore
   private Workgroup toWorkgroup;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "fromWorkgroupId")
+  @JsonIgnore
   private Workgroup fromWorkgroup;
 
   @Column(name = "groupId", length = 30)
@@ -102,16 +107,30 @@ public class Notification extends PersistableDomain {
   @Column(name = "serverSaveTime", nullable = false)
   private Timestamp serverSaveTime;
 
+  @Transient
+  private long runId;
+
+  @Transient
+  private long periodId;
+
+  @Transient
+  private long toWorkgroupId;
+
+  @Transient
+  private long fromWorkgroupId;
+
   @Override
   protected Class<?> getObjectClass() {
     return Notification.class;
   }
 
-  /**
-   * Get the JSON representation of the StudentWork
-   *
-   * @return a JSONObject with the values from the StudentWork
-   */
+  public void convertToClientNotification() {
+    this.setRunId(this.getRun().getId());
+    this.setPeriodId(this.getPeriod().getId());
+    this.setToWorkgroupId(this.getToWorkgroup().getId());
+    this.setFromWorkgroupId(this.getFromWorkgroup().getId());
+  }
+
   public JSONObject toJSON() {
     JSONObject notificationJSONObject = new JSONObject();
     try {

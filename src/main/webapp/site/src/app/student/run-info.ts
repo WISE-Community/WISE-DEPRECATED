@@ -3,7 +3,8 @@ export class RunInfo {
   runCode: string;
   runId: number;
   runTitle: string;
-  startTime: string;
+  startTime: number;
   teacherName: string;
   error: string;
+  name: string;
 }

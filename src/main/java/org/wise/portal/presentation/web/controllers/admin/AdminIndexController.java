@@ -23,18 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -44,15 +32,24 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.admin.DailyAdminJob;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.service.session.SessionService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Controller for Admin index page
@@ -70,13 +67,16 @@ public class AdminIndexController {
   private PortalService portalService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private DailyAdminJob adminJob;
 
-  @RequestMapping(value = "/admin", method = RequestMethod.GET)
-  protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
+  @Autowired
+  protected SessionService sessionService;
+
+  @GetMapping("/admin")
+  protected ModelAndView showAdminHome(HttpServletRequest request) throws Exception {
     ModelAndView modelAndView = new ModelAndView("admin/index");
 
     String thisWISEVersion;
@@ -93,17 +93,8 @@ public class AdminIndexController {
     modelAndView.addObject("portal", portal);
     modelAndView.addObject("updateWISEURL", WISE_UPDATE_URL);
     modelAndView.addObject("isBatchCreateUserAccountsEnabled",
-        Boolean.valueOf(wiseProperties.getProperty("isBatchCreateUserAccountsEnabled", "false")));
-
-    HashMap<String, User> allLoggedInUsers =
-        (HashMap<String, User>) request.getSession()
-        .getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-
-    if (allLoggedInUsers != null) {
-      modelAndView.addObject("numCurrentlyLoggedInUsers", allLoggedInUsers.size());
-    } else {
-      modelAndView.addObject("numCurrentlyLoggedInUsers", 0);
-    }
+        Boolean.valueOf(appProperties.getProperty("isBatchCreateUserAccountsEnabled", "false")));
+    modelAndView.addObject("numCurrentlyLoggedInUsers", sessionService.getNumberSignedInUsers());
 
     Calendar todayZeroHour = Calendar.getInstance();
     todayZeroHour.set(Calendar.HOUR_OF_DAY, 0);
@@ -133,7 +124,7 @@ public class AdminIndexController {
    * Gets the latest global WISE version from master location and writes it in the response.
    * If there was an error retrieving the latest version, write the error message in the response.
    */
-  @RequestMapping(value = "/admin/latestWISEVersion", method = RequestMethod.GET)
+  @GetMapping("/admin/latestWISEVersion")
   public void getLatestGlobalWISEVersion(HttpServletResponse response) throws IOException {
     String latestWISEVersion = null;
     String wiseInstanceName = "";
@@ -147,7 +138,7 @@ public class AdminIndexController {
     }
 
     if (wiseInstanceName == null || wiseInstanceName.isEmpty()) {
-      wiseInstanceName = wiseProperties.getProperty("wise.name", "noName");
+      wiseInstanceName = appProperties.getProperty("wise.name", "noName");
     }
 
     String wiseInstanceVersion = ControllerUtil.getWISEVersion();
@@ -172,7 +163,7 @@ public class AdminIndexController {
    * @param response
    * @throws IOException
    */
-  @RequestMapping(value = "/admin/recentCommitHistory", method = RequestMethod.GET)
+  @GetMapping("/admin/recentCommitHistory")
   public void getRecentCommitHistory(HttpServletResponse response) throws IOException {
     String recentCommitHistoryJSONString = retrieveString(WISE_COMMIT_HISTORY_URL);
     try {

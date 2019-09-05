@@ -19,7 +19,8 @@ export class LoginHomeComponent implements OnInit {
   isShowGoogleLogin: boolean = true;
   recaptchaPublicKey: string = "";
   isRecaptchaRequired: boolean = false;
-  @ViewChild('recaptchaRef') recaptchaRef: any;
+  accessCode: string = "";
+  @ViewChild('recaptchaRef', { static: false }) recaptchaRef: any;
 
   constructor(private userService: UserService, private http: HttpClient,
       private router: Router, private route: ActivatedRoute,
@@ -29,8 +30,11 @@ export class LoginHomeComponent implements OnInit {
   ngOnInit(): void {
     this.configService.getConfig().subscribe((config) => {
       if (config != null) {
-        this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+        this.isGoogleAuthenticationEnabled = config.googleClientId != '';
         this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
+      }
+      if (this.userService.isSignedIn()) {
+        this.router.navigateByUrl(this.getRedirectUrl(''));
       }
     });
     this.route.params.subscribe(params => {
@@ -46,6 +50,9 @@ export class LoginHomeComponent implements OnInit {
       if (params['is-recaptcha-required'] != null) {
         this.isRecaptchaRequired = JSON.parse(params['is-recaptcha-required']);
       }
+      if (params['accessCode'] != null) {
+        this.accessCode = params['accessCode'];
+      }
     });
   }
   
@@ -54,7 +61,7 @@ export class LoginHomeComponent implements OnInit {
     this.passwordError = false;
     this.userService.authenticate(this.credentials, (response) => {
       if (this.userService.isAuthenticated) {
-        this.router.navigateByUrl(this.userService.getRedirectUrl());
+        this.router.navigateByUrl(this.getRedirectUrl(''));
       } else {
         this.processing = false;
         this.isRecaptchaRequired = response.isRecaptchaRequired;
@@ -89,10 +96,23 @@ export class LoginHomeComponent implements OnInit {
   }
 
   public socialSignIn(socialPlatform : string) {
-    window.location.href = `${this.configService.getContextPath()}/google-login`;
+    window.location.href = this.getRedirectUrl(socialPlatform);
   }
 
   recaptchaResolved(recaptchaResponse) {
     this.credentials.recaptchaResponse = recaptchaResponse;
+  }
+
+  getRedirectUrl(social: string): string {
+    let redirectUrl = '';
+    if (social === 'google') {
+      redirectUrl = `${this.configService.getContextPath()}/google-login`;
+    } else {
+      redirectUrl = this.userService.getRedirectUrl();
+    }
+    if (this.accessCode !== '') {
+      redirectUrl = `${redirectUrl}?accessCode=${this.accessCode}`;
+    }
+    return redirectUrl;
   }
 }

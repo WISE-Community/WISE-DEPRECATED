@@ -9,7 +9,7 @@
       <mat-icon>settings</mat-icon>
       <span>Edit Settings</span>
     </a>
-    <a mat-menu-item href="{{ previewLink }}" target="_blank">
+    <a mat-menu-item href="{{ run.project.uri }}" target="_blank">
       <mat-icon>tv</mat-icon>
       <span i18n>Preview</span>
     </a>
@@ -17,7 +17,7 @@
       <mat-icon>info</mat-icon>
       <span i18n>Unit Info</span>
     </a>
-    <a mat-menu-item href="{{ editLink }}" *ngIf="canEdit()">
+    <a mat-menu-item (click)="editContent()" *ngIf="canEdit()">
       <mat-icon>edit</mat-icon>
       <span i18n>Edit Content</span>
     </a>
@@ -25,23 +25,14 @@
       <mat-icon>share</mat-icon>
       <span i18n>Share</span>
     </a>
+    <a mat-menu-item (click)="checkClassroomAuthorization()"
+       *ngIf="isGoogleUser() && isGoogleClassroomEnabled() && !isRunCompleted()">
+      <mat-icon svgIcon="google-classroom"></mat-icon>
+      <span i18n>Add to Google Classroom</span>
+    </a>
     <a mat-menu-item href="{{ reportProblemLink }}">
       <mat-icon>report_problem</mat-icon>
       <span i18n>Report Problem</span>
-    </a>
-    <!-- TODO: put back once restart, and cancel run are implemented
-    <mat-divider></mat-divider>
-    <a mat-menu-item *ngIf="isScheduled()">
-      <mat-icon color="warn">cancel</mat-icon>
-      <span i18n>Cancel Unit</span>
-    </a-->
-    <a mat-menu-item *ngIf="run.endTime" (click)="restartRun()">
-      <mat-icon color="success" class="success">play_arrow</mat-icon>
-      <span i18n>Restart</span>
-    </a>
-    <a mat-menu-item *ngIf="run.startTime && !run.endTime && !isScheduled()" (click)="showEndRunDialog()">
-      <mat-icon color="warn">stop</mat-icon>
-      <span i18n>End Unit</span>
     </a>
   </div>
 </mat-menu>

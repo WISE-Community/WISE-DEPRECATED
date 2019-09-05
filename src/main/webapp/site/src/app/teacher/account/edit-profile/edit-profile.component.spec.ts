@@ -14,6 +14,7 @@ import { By } from '@angular/platform-browser';
 import { User } from "../../../domain/user";
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserService {
 
@@ -24,7 +25,7 @@ export class MockUserService {
     user.firstName = 'Demo';
     user.lastName = 'Teacher';
     user.role = 'teacher';
-    user.userName = 'DemoTeacher';
+    user.username = 'DemoTeacher';
     user.id = 123456;
     user.displayName = 'Demo Teacher';
     user.email = 'test@test.com';
@@ -85,7 +86,7 @@ describe('EditProfileComponent', () => {
     form.triggerEventHandler('submit', null);
   };
 
-  beforeEach(async(() => {
+  configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ EditProfileComponent ],
       imports: [
@@ -107,9 +108,8 @@ describe('EditProfileComponent', () => {
         I18n
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
-  }));
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EditProfileComponent);

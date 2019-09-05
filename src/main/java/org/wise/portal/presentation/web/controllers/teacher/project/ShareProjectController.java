@@ -88,7 +88,7 @@ public class ShareProjectController {
   private IMailFacade mailService;
 
   @Autowired
-  protected Properties wiseProperties;
+  protected Properties appProperties;
 
   @Autowired
   private MessageSource messageSource;
@@ -112,7 +112,7 @@ public class ShareProjectController {
    * @param request the http request object
    * @return the path of the view to display
    */
-  @RequestMapping(method = RequestMethod.GET, value = "/teacher/projects/customized/shareproject.html")
+  @GetMapping("/teacher/projects/customized/shareproject.html")
   public String initializeForm(ModelMap modelMap, HttpServletRequest request) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(Long.parseLong(request.getParameter("projectId")));
@@ -143,13 +143,13 @@ public class ShareProjectController {
 
       for (User sharedowner : sharedowners) {
         String sharedTeacherRole = projectService.getSharedTeacherRole(project, sharedowner);
-        String userName = sharedowner.getUserDetails().getUsername();
-        allTeacherUsernames.remove(userName);
+        String username = sharedowner.getUserDetails().getUsername();
+        allTeacherUsernames.remove(username);
         AddSharedTeacherParameters addSharedTeacherParameters = new AddSharedTeacherParameters();
         addSharedTeacherParameters.setPermission(sharedTeacherRole);
         addSharedTeacherParameters.setProject(project);
-        addSharedTeacherParameters.setSharedOwnerUsername(userName);
-        modelMap.put(userName, addSharedTeacherParameters);
+        addSharedTeacherParameters.setSharedOwnerUsername(username);
+        modelMap.put(username, addSharedTeacherParameters);
       }
 
       modelMap.put("project", project);
@@ -175,7 +175,7 @@ public class ShareProjectController {
    * @param model the model object that contains values for the page to use when rendering the view
    * @return the path of the view to display
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/teacher/projects/customized/shareproject.html")
+  @PostMapping("/teacher/projects/customized/shareproject.html")
   protected String onSubmit(
       @ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params,
       HttpServletRequest request,
@@ -265,7 +265,7 @@ public class ShareProjectController {
    * @return modelAndView
    * @throws Exception
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/teacher/projects/customized/unshareproject")
+  @PostMapping("/teacher/projects/customized/unshareproject")
   protected void unshareSelfFromProject(
       @RequestParam("projectId") String projectIdStr,
       HttpServletResponse response) throws Exception {
@@ -316,7 +316,7 @@ public class ShareProjectController {
 
       String previewProjectUrl = this.portalBaseUrlString + this.contextPath + "/previewproject.html?projectId="+project.getId();
 
-      String[] recipients = (String[]) ArrayUtils.addAll(shareeEmailAddress, wiseProperties.getProperty("uber_admin").split(","));
+      String[] recipients = (String[]) ArrayUtils.addAll(shareeEmailAddress, appProperties.getProperty("uber_admin").split(","));
 
       String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.project.customized.ShareProjectController.shareProjectConfirmationEmailSubject",
         new Object[] {sharerName}, Locale.US);
@@ -327,8 +327,8 @@ public class ShareProjectController {
       String message = messageSource.getMessage("presentation.web.controllers.teacher.project.customized.ShareProjectController.shareProjectConfirmationEmailBody",
         new Object[] {sharerName,project.getName(),project.getId(),shareeDetails.getUsername(),sdf.format(date), previewProjectUrl}, defaultMessage, this.locale);
 
-      if (wiseProperties.containsKey("discourse_url")) {
-        String discourseURL = wiseProperties.getProperty("discourse_url");
+      if (appProperties.containsKey("discourse_url")) {
+        String discourseURL = appProperties.getProperty("discourse_url");
         if (discourseURL != null && !discourseURL.isEmpty()) {
           // if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
           String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);

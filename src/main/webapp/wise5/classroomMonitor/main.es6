@@ -13,6 +13,8 @@ import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularSanitize from 'angular-sanitize';
+import angularSock from 'angular-sockjs';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import ngWebSocket from 'angular-websocket';
@@ -61,6 +63,7 @@ import StudentGradingController from './studentGrading/studentGradingController'
 import StudentProgressController from './studentProgress/studentProgressController';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
+import SummaryComponentModule from '../components/summary/summaryComponentModule';
 import TableComponentModule from '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
@@ -71,6 +74,7 @@ import moment from 'moment';
 
 const classroomMonitorModule = angular.module('classroomMonitor', [
         angularDragula(angular),
+        'summaryComponentModule',
         'angularMoment',
         'angular-inview',
         'angular-toArrayFilter',
@@ -94,6 +98,8 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
         'ngFileUpload',
         'ngMaterial',
         'ngSanitize',
+        'bd.sockjs',
+        'ngStomp',
         'ngWebSocket',
         'theme.notebook',
         'openResponseComponentModule',
@@ -173,10 +179,9 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                             return StudentStatusService.retrieveStudentStatuses();
                         },
                         achievements: function (AchievementService, studentStatuses, config, project) {
-                            return AchievementService.retrieveAchievements();
+                            return AchievementService.retrieveStudentAchievements();
                         },
                         notifications: function (NotificationService, ConfigService, studentStatuses, config, project) {
-                            //return NotificationService.retrieveNotifications(ConfigService.getWorkgroupId());
                             return NotificationService.retrieveNotifications();
                         },
                         webSocket: function(TeacherWebSocketService, config) {
@@ -185,9 +190,6 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                         language: ($translate, ConfigService, config) => {
                             let locale = ConfigService.getLocale();  // defaults to "en"
                             $translate.use(locale);
-                        },
-                        sessionTimers: (SessionService, config) => {
-                            return SessionService.initializeSession();
                         },
                         annotations: function(TeacherDataService, config) {
                             return TeacherDataService.retrieveAnnotations();

@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
-import { MatDialog, MatDialogRef } from "@angular/material";
 import { Subscription } from 'rxjs';
-import { MediaChange, ObservableMedia } from '@angular/flex-layout';
+import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { UtilService } from "./services/util.service";
 import { ConfigService } from "./services/config.service";
+import { Announcement } from './domain/announcement';
 
 @Component({
   selector: 'app-root',
@@ -17,18 +17,19 @@ export class AppComponent {
   title = 'app';
   showMobileMenu: boolean = false;
   mediaWatcher: Subscription;
-  hasAnnouncement: boolean = true;
+  hasAnnouncement: boolean = false;
   popstate: boolean = false;
   pageY: number = 0;
   prevPageY: number = 0;
   scroll: boolean = false;
+  announcement: Announcement = new Announcement();
 
   constructor(private router: Router,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer,
               utilService: UtilService,
-              media: ObservableMedia,
-              public dialog: MatDialog) {
+              media: MediaObserver,
+              private configService: ConfigService) {
     iconRegistry.addSvgIcon(
       'ki-elicit',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/ki-elicit.svg')
@@ -69,11 +70,15 @@ export class AppComponent {
       'github-ffffff',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/github-ffffff.svg')
     );
+    iconRegistry.addSvgIcon(
+      'google-classroom',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/google-classroom.svg')
+    );
     utilService.getMobileMenuState()
       .subscribe(state => {
         this.showMobileMenu = state;
       });
-    this.mediaWatcher = media.subscribe((change: MediaChange) => {
+    this.mediaWatcher = media.asObservable().subscribe((change: MediaChange[]) => {
       if (media.isActive('gt-sm')) {
         utilService.showMobileMenu(false);
       }
@@ -89,22 +94,22 @@ export class AppComponent {
      * TODO: remove when https://github.com/angular/material2/issues/4280 is resolved
      */
     this.router.events.subscribe((ev: any) => {
-      const sidenavContentElement = document.querySelector(
-        '.mat-sidenav-content',
-      );
-      if (!sidenavContentElement) {
+      const topElement = document.querySelector('.top-content',);
+      if (!topElement) {
         return;
       }
       if (ev instanceof NavigationStart) {
         this.popstate = ev.navigationTrigger === 'popstate';
       } else if (ev instanceof NavigationEnd) {
         if (!this.popstate) {
-          sidenavContentElement.scroll({
-            left: 0,
-            top: 0
-          });
+          topElement.scrollIntoView();
         }
       }
+    });
+
+    this.configService.getAnnouncement().subscribe((announcement: Announcement) => {
+      this.announcement = announcement;
+      this.hasAnnouncement = announcement.visible;
     });
   }
 
@@ -115,39 +120,18 @@ export class AppComponent {
       !this.router.url.includes('/forgot');
   }
 
-  showAnnouncementDetails() {
-    this.dialog.open(AnnouncementDialogComponent, {
-      panelClass: 'mat-dialog--md'
-    });
-  }
-
   dismissAnnouncement() {
     this.hasAnnouncement = false;
   }
 
-  onYPositionChange(pageY:number) {
-    this.pageY = pageY;
-    this.scroll = this.pageY > 120 && this.pageY > this.prevPageY;
-    this.prevPageY = pageY;
-  }
-}
-
-@Component({
-  selector: 'announcement-dialog',
-  templateUrl: 'announcement-dialog.component.html',
-})
-export class AnnouncementDialogComponent {
-  constructor(public dialogRef: MatDialogRef<AnnouncementDialogComponent>,
-              private router: Router,
-              public configService: ConfigService) {
+  onYPositionChange(el:HTMLElement) {
+    this.pageY = el.scrollTop;
+    const isAtBottom = this.pageY >= el.scrollHeight - el.offsetHeight - 2;
+    this.scroll = isAtBottom || (this.pageY > 360 && this.pageY < this.prevPageY);
+    this.prevPageY = this.pageY;
   }
 
-  contact() {
-    this.dialogRef.close();
-    this.router.navigate(['/contact']);
-  }
-
-  visitLegacy() {
-    document.location.href = this.configService.getContextPath() + '/legacy';
+  scrollToTop() {
+    document.querySelector('.top-content').scrollIntoView();
   }
 }

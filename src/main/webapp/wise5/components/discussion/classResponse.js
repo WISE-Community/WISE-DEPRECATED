@@ -27,7 +27,6 @@ var ClassResponseController = function () {
     }, function (oldValue, newValue) {
       if (newValue !== oldValue) {
         _this.toggleExpanded(true);
-        _this.response.replyText = '';
       }
     });
   }

@@ -2,10 +2,12 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Inject
 } from '@angular/core';
+import { Announcement } from '../domain/announcement';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-announcement',
@@ -13,12 +15,9 @@ import {
   styleUrls: ['./announcement.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AnnouncementComponent implements OnInit {
+export class AnnouncementComponent {
   @Input()
-  message: string = '';
-
-  @Input()
-  action: string = '';
+  announcement: Announcement = new Announcement();
 
   @Output('callback')
   doCallback: EventEmitter<any> = new EventEmitter<any>();
@@ -26,19 +25,27 @@ export class AnnouncementComponent implements OnInit {
   @Output('dismiss')
   doDismiss: EventEmitter<any> = new EventEmitter<any>();
 
-  show: boolean = true;
-
-  constructor() { }
-
-  ngOnInit() {
-  }
+  constructor(public dialog: MatDialog) { }
 
   dismiss() {
     this.doDismiss.emit();
-    this.show = false;
   }
 
-  callback() {
-    this.doCallback.emit();
+  showAnnouncementDetails() {
+    this.dialog.open(AnnouncementDialogComponent, {
+      data: this.announcement,
+      panelClass: 'mat-dialog--md'
+    });
   }
 }
+
+@Component({
+  selector: 'announcement-dialog',
+  templateUrl: 'announcement-dialog.component.html',
+})
+export class AnnouncementDialogComponent {
+  constructor(public dialogRef: MatDialogRef<AnnouncementDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: Announcement) {
+  }
+}
+

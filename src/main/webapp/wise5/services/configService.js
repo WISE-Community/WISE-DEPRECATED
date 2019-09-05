@@ -3,26 +3,32 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ConfigService = function () {
-  function ConfigService($filter, $http, $location) {
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ConfigService =
+/*#__PURE__*/
+function () {
+  function ConfigService($filter, $http, $location, UtilService) {
     _classCallCheck(this, ConfigService);
 
     this.$filter = $filter;
     this.$http = $http;
     this.$location = $location;
+    this.UtilService = UtilService;
     this.config = null;
     this.$translate = this.$filter('translate');
   }
 
   _createClass(ConfigService, [{
-    key: 'setConfig',
+    key: "setConfig",
     value: function setConfig(config) {
       this.config = config;
       this.sortClassmateUserInfosAlphabeticallyByName();
@@ -30,26 +36,20 @@ var ConfigService = function () {
       this.setClassmateDisplayNames();
     }
   }, {
-    key: 'retrieveConfig',
+    key: "retrieveConfig",
     value: function retrieveConfig(configURL) {
       var _this = this;
 
       return this.$http.get(configURL).then(function (result) {
         var configJSON = result.data;
-        if (configJSON.retrievalTimestamp != null) {
-          var clientTimestamp = new Date().getTime();
-          var serverTimestamp = configJSON.retrievalTimestamp;
-          var timestampDiff = clientTimestamp - serverTimestamp;
-          configJSON.timestampDiff = timestampDiff;
-        }
+
+        _this.setTimestampDiff(configJSON);
 
         var constraints = true;
-
         var absURL = _this.$location.$$absUrl;
 
-        if (configJSON.mode == 'preview') {
+        if (configJSON.mode === 'preview') {
           // constraints can only be disabled using the url in preview mode
-
           // regex to match constraints=false in the url
           var constraintsRegEx = new RegExp("constraints=false", 'gi');
 
@@ -57,12 +57,11 @@ var ConfigService = function () {
             // the url contains constraints=false
             constraints = false;
           }
-        }
+        } // set the constraints value into the config so we can access it later
 
-        // set the constraints value into the config so we can access it later
-        configJSON.constraints = constraints;
 
-        // regex to match showProjectPath=true in the url
+        configJSON.constraints = constraints; // regex to match showProjectPath=true in the url
+
         var showProjectPathRegEx = new RegExp("showProjectPath=true", 'gi');
 
         if (absURL != null && absURL.match(showProjectPathRegEx)) {
@@ -73,10 +72,13 @@ var ConfigService = function () {
           console.log(projectPath);
         }
 
+        configJSON.isRunActive = _this.calculateIsRunActive(configJSON);
+
         _this.setConfig(configJSON);
 
         if (_this.isPreview()) {
           var myUserInfo = _this.getMyUserInfo();
+
           if (myUserInfo != null) {
             // set the workgroup id to a random integer between 1 and 100
             myUserInfo.workgroupId = Math.floor(100 * Math.random()) + 1;
@@ -87,7 +89,19 @@ var ConfigService = function () {
       });
     }
   }, {
-    key: 'getConfigParam',
+    key: "setTimestampDiff",
+    value: function setTimestampDiff(configJSON) {
+      if (configJSON.retrievalTimestamp != null) {
+        var clientTimestamp = new Date().getTime();
+        var serverTimestamp = configJSON.retrievalTimestamp;
+        var timestampDiff = clientTimestamp - serverTimestamp;
+        configJSON.timestampDiff = timestampDiff;
+      } else {
+        configJSON.timestampDiff = 0;
+      }
+    }
+  }, {
+    key: "getConfigParam",
     value: function getConfigParam(paramName) {
       if (this.config !== null) {
         return this.config[paramName];
@@ -96,193 +110,201 @@ var ConfigService = function () {
       }
     }
   }, {
-    key: 'getAchievementsURL',
+    key: "getAchievementsURL",
     value: function getAchievementsURL() {
       return this.getConfigParam('achievementURL');
     }
   }, {
-    key: 'getCRaterRequestURL',
+    key: "getCRaterRequestURL",
     value: function getCRaterRequestURL() {
       return this.getConfigParam('cRaterRequestURL');
     }
   }, {
-    key: 'getMainHomePageURL',
+    key: "getMainHomePageURL",
     value: function getMainHomePageURL() {
       return this.getConfigParam('mainHomePageURL');
     }
   }, {
-    key: 'getNotificationURL',
+    key: "getNotificationURL",
     value: function getNotificationURL() {
       return this.getConfigParam('notificationURL');
     }
   }, {
-    key: 'getRunId',
+    key: "getRunId",
     value: function getRunId() {
       return this.getConfigParam('runId');
     }
   }, {
-    key: 'getProjectId',
+    key: "getProjectId",
     value: function getProjectId() {
       return this.getConfigParam('projectId');
     }
   }, {
-    key: 'getSessionLogOutURL',
+    key: "getSessionLogOutURL",
     value: function getSessionLogOutURL() {
       return this.getConfigParam('sessionLogOutURL');
     }
   }, {
-    key: 'getStudentAssetsURL',
+    key: "getStudentAssetsURL",
     value: function getStudentAssetsURL() {
       return this.getConfigParam('studentAssetsURL');
     }
   }, {
-    key: 'getStudentStatusURL',
+    key: "getStudentStatusURL",
     value: function getStudentStatusURL() {
       return this.getConfigParam('studentStatusURL');
     }
   }, {
-    key: 'getStudentMaxTotalAssetsSize',
+    key: "getStudentMaxTotalAssetsSize",
     value: function getStudentMaxTotalAssetsSize() {
       return this.getConfigParam('studentMaxTotalAssetsSize');
     }
   }, {
-    key: 'getStudentNotebookURL',
+    key: "getStudentNotebookURL",
     value: function getStudentNotebookURL() {
       return this.getConfigParam('studentNotebookURL');
     }
   }, {
-    key: 'getStudentUploadsBaseURL',
+    key: "getStudentUploadsBaseURL",
     value: function getStudentUploadsBaseURL() {
       return this.getConfigParam('studentUploadsBaseURL');
     }
   }, {
-    key: 'getUserInfo',
+    key: "getUserInfo",
     value: function getUserInfo() {
       return this.getConfigParam('userInfo');
     }
   }, {
-    key: 'getWebSocketURL',
+    key: "getWebSocketURL",
     value: function getWebSocketURL() {
-      return window.location.protocol.replace("http", "ws") + "//" + window.location.host + this.getContextPath() + "/websocket";
+      return window.location.protocol + "//" + window.location.host + this.getContextPath() + "/websocket";
     }
   }, {
-    key: 'getWISEBaseURL',
+    key: "getWISEBaseURL",
     value: function getWISEBaseURL() {
       return this.getConfigParam('wiseBaseURL');
     }
   }, {
-    key: 'getLocale',
+    key: "getLocale",
     value: function getLocale() {
       return this.getConfigParam('locale') || 'en';
     }
   }, {
-    key: 'getMode',
+    key: "getMode",
     value: function getMode() {
       return this.getConfigParam('mode');
     }
   }, {
-    key: 'getContextPath',
+    key: "getContextPath",
     value: function getContextPath() {
       return this.getConfigParam('contextPath');
     }
-
     /**
      * Returns the period id of the logged-in user.
      */
 
   }, {
-    key: 'getPeriodId',
+    key: "getPeriodId",
     value: function getPeriodId() {
       var myUserInfo = this.getMyUserInfo();
+
       if (myUserInfo != null) {
         return myUserInfo.periodId;
       }
+
       return null;
     }
-  }, {
-    key: 'getPeriods',
-
-
     /**
      * Get the periods
      * @returns an array of period objects
      */
+
+  }, {
+    key: "getPeriods",
     value: function getPeriods() {
       var myUserInfo = this.getMyUserInfo();
+
       if (myUserInfo != null) {
         var myClassInfo = myUserInfo.myClassInfo;
+
         if (myClassInfo != null) {
           if (myClassInfo.periods != null) {
             return myClassInfo.periods;
           }
         }
       }
+
       return [];
     }
   }, {
-    key: 'getWorkgroupId',
+    key: "getWorkgroupId",
     value: function getWorkgroupId() {
       var myUserInfo = this.getMyUserInfo();
+
       if (myUserInfo != null) {
         return myUserInfo.workgroupId;
       }
+
       return null;
     }
-  }, {
-    key: 'getUserId',
-
-
     /**
      * Get the user id (aka WISE ID)
      * @return the user id
      */
+
+  }, {
+    key: "getUserId",
     value: function getUserId() {
       var myUserInfo = this.getMyUserInfo();
+
       if (myUserInfo != null) {
         return myUserInfo.id;
       }
+
       return null;
     }
   }, {
-    key: 'getMyUserInfo',
+    key: "getMyUserInfo",
     value: function getMyUserInfo() {
       var userInfo = this.getUserInfo();
+
       if (userInfo != null) {
         return userInfo.myUserInfo;
       }
+
       return null;
     }
   }, {
-    key: 'getMyUserName',
-
-
-    /**
-     * Get the user name of the signed in user
-     * @return the user name of the signed in user
-     */
-    value: function getMyUserName() {
+    key: "getMyUsername",
+    value: function getMyUsername() {
       var myUserInfo = this.getMyUserInfo();
+
       if (myUserInfo != null) {
-        return myUserInfo.userName;
+        return myUserInfo.username;
       }
+
       return null;
     }
   }, {
-    key: 'getClassmateUserInfos',
+    key: "getClassmateUserInfos",
     value: function getClassmateUserInfos() {
       var myUserInfo = this.getMyUserInfo();
+
       if (myUserInfo != null) {
         var myClassInfo = myUserInfo.myClassInfo;
+
         if (myClassInfo != null) {
           return myClassInfo.classmateUserInfos;
         }
       }
+
       return null;
     }
   }, {
-    key: 'setClassmateDisplayNames',
+    key: "setClassmateDisplayNames",
     value: function setClassmateDisplayNames() {
       var classmateUserInfos = this.getClassmateUserInfos();
+
       if (classmateUserInfos) {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -291,16 +313,15 @@ var ConfigService = function () {
         try {
           for (var _iterator = classmateUserInfos[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var workgroup = _step.value;
-
-            workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+            workgroup.displayNames = this.getDisplayUsernamesByWorkgroupId(workgroup.workgroupId);
           }
         } catch (err) {
           _didIteratorError = true;
           _iteratorError = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
             }
           } finally {
             if (_didIteratorError) {
@@ -310,7 +331,6 @@ var ConfigService = function () {
         }
       }
     }
-
     /**
      * Get the classmate user infos sorted by ascending workgroup id
      * @return an array of classmate user info objects sorted by ascending
@@ -318,10 +338,11 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'getClassmateUserInfosSortedByWorkgroupId',
+    key: "getClassmateUserInfosSortedByWorkgroupId",
     value: function getClassmateUserInfosSortedByWorkgroupId() {
       var sortedClassmateUserInfos = [];
       var classmateUserInfos = this.getClassmateUserInfos();
+
       if (classmateUserInfos != null) {
         var _iteratorNormalCompletion2 = true;
         var _didIteratorError2 = false;
@@ -330,7 +351,6 @@ var ConfigService = function () {
         try {
           for (var _iterator2 = classmateUserInfos[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
             var classmateUserInfo = _step2.value;
-
             sortedClassmateUserInfos.push(classmateUserInfo);
           }
         } catch (err) {
@@ -338,8 +358,8 @@ var ConfigService = function () {
           _iteratorError2 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
             }
           } finally {
             if (_didIteratorError2) {
@@ -347,12 +367,12 @@ var ConfigService = function () {
             }
           }
         }
-      }
-      // sort the new classmate user infos array by ascending workgroup id
+      } // sort the new classmate user infos array by ascending workgroup id
+
+
       sortedClassmateUserInfos.sort(this.compareClassmateUserInfosByWorkgroupId);
       return sortedClassmateUserInfos;
     }
-
     /**
      * Used to sort the classmate user infos by ascending workgroup id.
      * Use by calling myArray.sort(compareClassmateUserInfosByWorkgroupId)
@@ -364,7 +384,7 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'compareClassmateUserInfosByWorkgroupId',
+    key: "compareClassmateUserInfosByWorkgroupId",
     value: function compareClassmateUserInfosByWorkgroupId(a, b) {
       if (a.workgroupId < b.workgroupId) {
         return -1;
@@ -375,51 +395,61 @@ var ConfigService = function () {
       }
     }
   }, {
-    key: 'getTeacherWorkgroupId',
+    key: "getTeacherWorkgroupId",
     value: function getTeacherWorkgroupId() {
       var teacherUserInfo = this.getTeacherUserInfo();
+
       if (teacherUserInfo != null) {
         return teacherUserInfo.workgroupId;
       }
+
       return null;
     }
   }, {
-    key: 'getTeacherUserInfo',
+    key: "getTeacherUserInfo",
     value: function getTeacherUserInfo() {
       var myUserInfo = this.getMyUserInfo();
+
       if (myUserInfo != null) {
         var myClassInfo = myUserInfo.myClassInfo;
+
         if (myClassInfo != null) {
           return myClassInfo.teacherUserInfo;
         }
       }
+
       return null;
     }
-  }, {
-    key: 'getSharedTeacherUserInfos',
-
-
     /**
      * Get the shared teacher user infos for the run
      */
+
+  }, {
+    key: "getSharedTeacherUserInfos",
     value: function getSharedTeacherUserInfos() {
       var myUserInfo = this.getMyUserInfo();
+
       if (myUserInfo != null) {
         var myClassInfo = myUserInfo.myClassInfo;
+
         if (myClassInfo != null) {
           return myClassInfo.sharedTeacherUserInfos;
         }
       }
+
       return null;
     }
   }, {
-    key: 'getClassmateWorkgroupIds',
+    key: "getClassmateWorkgroupIds",
     value: function getClassmateWorkgroupIds(includeSelf) {
       var workgroupIds = [];
+
       if (includeSelf) {
         workgroupIds.push(this.getWorkgroupId());
       }
+
       var classmateUserInfos = this.getClassmateUserInfos();
+
       if (classmateUserInfos != null) {
         var _iteratorNormalCompletion3 = true;
         var _didIteratorError3 = false;
@@ -442,8 +472,8 @@ var ConfigService = function () {
           _iteratorError3 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-              _iterator3.return();
+            if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+              _iterator3["return"]();
             }
           } finally {
             if (_didIteratorError3) {
@@ -452,35 +482,41 @@ var ConfigService = function () {
           }
         }
       }
+
       return workgroupIds;
     }
   }, {
-    key: 'sortClassmateUserInfosAlphabeticallyByName',
+    key: "sortClassmateUserInfosAlphabeticallyByName",
     value: function sortClassmateUserInfosAlphabeticallyByName() {
       var classmateUserInfos = this.getClassmateUserInfos();
+
       if (classmateUserInfos != null) {
         classmateUserInfos.sort(this.sortClassmateUserInfosAlphabeticallyByNameHelper);
       }
+
       return classmateUserInfos;
     }
   }, {
-    key: 'sortClassmateUserInfosAlphabeticallyByNameHelper',
+    key: "sortClassmateUserInfosAlphabeticallyByNameHelper",
     value: function sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-      if (a != null && a.userName != null && b != null && b.userName != null) {
-        var aUserName = a.userName.toLowerCase();
-        var bUserName = b.userName.toLowerCase();
-        if (aUserName < bUserName) {
+      if (a != null && a.username != null && b != null && b.username != null) {
+        var aUsername = a.username.toLowerCase();
+        var bUsername = b.username.toLowerCase();
+
+        if (aUsername < bUsername) {
           return -1;
-        } else if (aUserName > bUserName) {
+        } else if (aUsername > bUsername) {
           return 1;
         }
       }
+
       return 0;
     }
   }, {
-    key: 'setPermissions',
+    key: "setPermissions",
     value: function setPermissions() {
       var role = this.getTeacherRole(this.getWorkgroupId());
+
       if (role === 'owner') {
         // the teacher is the owner of the run and has full access
         this.config.canViewStudentNames = true;
@@ -500,7 +536,7 @@ var ConfigService = function () {
       }
     }
   }, {
-    key: 'getPermissions',
+    key: "getPermissions",
     value: function getPermissions() {
       // a switched user (admin/researcher user impersonating a teacher) should not be able to view/grade
       return {
@@ -509,13 +545,16 @@ var ConfigService = function () {
       };
     }
   }, {
-    key: 'getUserInfoByWorkgroupId',
+    key: "getUserInfoByWorkgroupId",
     value: function getUserInfoByWorkgroupId(workgroupId) {
       var userInfo = null;
+
       if (workgroupId != null) {
         var myUserInfo = this.getMyUserInfo();
+
         if (myUserInfo != null) {
           var tempWorkgroupId = myUserInfo.workgroupId;
+
           if (workgroupId === tempWorkgroupId) {
             userInfo = myUserInfo;
           }
@@ -523,6 +562,7 @@ var ConfigService = function () {
 
         if (userInfo == null) {
           var classmateUserInfos = this.getClassmateUserInfos();
+
           if (classmateUserInfos != null) {
             var _iteratorNormalCompletion4 = true;
             var _didIteratorError4 = false;
@@ -534,6 +574,7 @@ var ConfigService = function () {
 
                 if (classmateUserInfo != null) {
                   var _tempWorkgroupId = classmateUserInfo.workgroupId;
+
                   if (workgroupId == _tempWorkgroupId) {
                     userInfo = classmateUserInfo;
                     break;
@@ -545,8 +586,8 @@ var ConfigService = function () {
               _iteratorError4 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                  _iterator4.return();
+                if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+                  _iterator4["return"]();
                 }
               } finally {
                 if (_didIteratorError4) {
@@ -557,142 +598,107 @@ var ConfigService = function () {
           }
         }
       }
+
       return userInfo;
     }
   }, {
-    key: 'getPeriodIdByWorkgroupId',
+    key: "getWorkgroupsByPeriod",
+    value: function getWorkgroupsByPeriod(periodId) {
+      var workgroupsInPeriod = [];
+      var myUserInfo = this.getMyUserInfo();
 
+      if (this.isStudent() && this.UtilService.isMatchingPeriods(myUserInfo.periodId, periodId)) {
+        workgroupsInPeriod.push(myUserInfo);
+      }
 
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = this.getClassmateUserInfos()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var classmateUserInfo = _step5.value;
+
+          if (this.UtilService.isMatchingPeriods(classmateUserInfo.periodId, periodId)) {
+            workgroupsInPeriod.push(classmateUserInfo);
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+            _iterator5["return"]();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
+      }
+
+      return workgroupsInPeriod;
+    }
+  }, {
+    key: "getNumberOfWorkgroupsInPeriod",
+    value: function getNumberOfWorkgroupsInPeriod(periodId) {
+      return this.getWorkgroupsByPeriod(periodId).length;
+    }
     /**
      * Get the period id for a workgroup id
      * @param workgroupId the workgroup id
      * @returns the period id the workgroup id is in
      */
+
+  }, {
+    key: "getPeriodIdByWorkgroupId",
     value: function getPeriodIdByWorkgroupId(workgroupId) {
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
         if (userInfo != null) {
           return userInfo.periodId;
         }
       }
+
       return null;
     }
-  }, {
-    key: 'getStudentFirstNamesByWorkgroupId',
-
-
     /**
      * Get the student names
      * @param workgroupId the workgroup id
      * @return an array containing the student names
      */
+
+  }, {
+    key: "getStudentFirstNamesByWorkgroupId",
     value: function getStudentFirstNamesByWorkgroupId(workgroupId) {
       var studentNames = [];
-      var userNames = this.getUserNameByWorkgroupId(workgroupId);
+      var usernames = this.getUsernameByWorkgroupId(workgroupId);
 
-      if (userNames != null) {
+      if (usernames != null) {
         // split the user names string by ':'
-        var userNamesSplit = userNames.split(':');
+        var usernamesSplit = usernames.split(':');
 
-        if (userNamesSplit != null) {
-          var _iteratorNormalCompletion5 = true;
-          var _didIteratorError5 = false;
-          var _iteratorError5 = undefined;
-
-          try {
-            for (var _iterator5 = userNamesSplit[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-              var userName = _step5.value;
-
-              var indexOfSpace = userName.indexOf(' ');
-              var studentFirstName = userName.substring(0, indexOfSpace);
-              studentNames.push(studentFirstName);
-            }
-          } catch (err) {
-            _didIteratorError5 = true;
-            _iteratorError5 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                _iterator5.return();
-              }
-            } finally {
-              if (_didIteratorError5) {
-                throw _iteratorError5;
-              }
-            }
-          }
-        }
-      }
-      return studentNames;
-    }
-  }, {
-    key: 'getUserIdsByWorkgroupId',
-    value: function getUserIdsByWorkgroupId(workgroupId) {
-      if (workgroupId != null) {
-        var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-        if (userInfo != null) {
-          return userInfo.userIds;
-        }
-      }
-      return [];
-    }
-  }, {
-    key: 'getUserNameByWorkgroupId',
-    value: function getUserNameByWorkgroupId(workgroupId) {
-      if (workgroupId != null) {
-        var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-        if (userInfo != null) {
-          return userInfo.userName;
-        }
-      }
-      return null;
-    }
-  }, {
-    key: 'getDisplayNamesByWorkgroupId',
-    value: function getDisplayNamesByWorkgroupId(workgroupId) {
-      if (workgroupId != null) {
-        var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-        if (userInfo != null) {
-          return userInfo.displayNames;
-        }
-      }
-      return null;
-    }
-  }, {
-    key: 'getUserNamesByWorkgroupId',
-    value: function getUserNamesByWorkgroupId(workgroupId) {
-      var userNamesObjects = [];
-      if (workgroupId != null) {
-        var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-        if (userInfo != null && userInfo.userName != null) {
-          var userNames = userInfo.userName.split(':');
+        if (usernamesSplit != null) {
           var _iteratorNormalCompletion6 = true;
           var _didIteratorError6 = false;
           var _iteratorError6 = undefined;
 
           try {
-            for (var _iterator6 = userNames[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-              var name = _step6.value;
-
-              var id = "";
-              var regex = /(.+) \((.+)\)/g;
-              var matches = regex.exec(name);
-              if (matches) {
-                name = matches[1];
-                id = matches[2];
-              }
-              userNamesObjects.push({
-                name: name,
-                id: id
-              });
+            for (var _iterator6 = usernamesSplit[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+              var username = _step6.value;
+              var indexOfSpace = username.indexOf(' ');
+              var studentFirstName = username.substring(0, indexOfSpace);
+              studentNames.push(studentFirstName);
             }
           } catch (err) {
             _didIteratorError6 = true;
             _iteratorError6 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                _iterator6.return();
+              if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+                _iterator6["return"]();
               }
             } finally {
               if (_didIteratorError6) {
@@ -702,16 +708,108 @@ var ConfigService = function () {
           }
         }
       }
-      return userNamesObjects;
+
+      return studentNames;
     }
   }, {
-    key: 'getDisplayUserNamesByWorkgroupId',
-    value: function getDisplayUserNamesByWorkgroupId(workgroupId) {
+    key: "getUserIdsByWorkgroupId",
+    value: function getUserIdsByWorkgroupId(workgroupId) {
+      if (workgroupId != null) {
+        var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+        if (userInfo != null) {
+          return userInfo.userIds;
+        }
+      }
+
+      return [];
+    }
+  }, {
+    key: "getUsernameByWorkgroupId",
+    value: function getUsernameByWorkgroupId(workgroupId) {
+      if (workgroupId != null) {
+        var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+        if (userInfo != null) {
+          return userInfo.username;
+        }
+      }
+
+      return null;
+    }
+  }, {
+    key: "getDisplayNamesByWorkgroupId",
+    value: function getDisplayNamesByWorkgroupId(workgroupId) {
+      if (workgroupId != null) {
+        var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+        if (userInfo != null) {
+          return userInfo.displayNames;
+        }
+      }
+
+      return null;
+    }
+  }, {
+    key: "getUsernamesByWorkgroupId",
+    value: function getUsernamesByWorkgroupId(workgroupId) {
+      var usernamesObjects = [];
+
+      if (workgroupId != null) {
+        var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+        if (userInfo != null && userInfo.username != null) {
+          var usernames = userInfo.username.split(':');
+          var _iteratorNormalCompletion7 = true;
+          var _didIteratorError7 = false;
+          var _iteratorError7 = undefined;
+
+          try {
+            for (var _iterator7 = usernames[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+              var name = _step7.value;
+              var id = "";
+              var regex = /(.+) \((.+)\)/g;
+              var matches = regex.exec(name);
+
+              if (matches) {
+                name = matches[1];
+                id = matches[2];
+              }
+
+              usernamesObjects.push({
+                name: name,
+                id: id
+              });
+            }
+          } catch (err) {
+            _didIteratorError7 = true;
+            _iteratorError7 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+                _iterator7["return"]();
+              }
+            } finally {
+              if (_didIteratorError7) {
+                throw _iteratorError7;
+              }
+            }
+          }
+        }
+      }
+
+      return usernamesObjects;
+    }
+  }, {
+    key: "getDisplayUsernamesByWorkgroupId",
+    value: function getDisplayUsernamesByWorkgroupId(workgroupId) {
       var usernames = '';
+
       if (workgroupId != null) {
         if (this.getPermissions().canViewStudentNames) {
-          var names = this.getUserNamesByWorkgroupId(workgroupId);
+          var names = this.getUsernamesByWorkgroupId(workgroupId);
           var l = names.length;
+
           for (var i = 0; i < l; i++) {
             var name = names[i].name;
             usernames += name;
@@ -723,38 +821,56 @@ var ConfigService = function () {
         } else {
           // current user is not allowed to view student names, so return string with student ids
           var userIds = this.getUserIdsByWorkgroupId(workgroupId);
+
           for (var _i = 0; _i < userIds.length; _i++) {
             var id = userIds[_i];
+
             if (_i !== 0) {
               usernames += ', ';
             }
-            usernames += this.$translate('studentId', { id: id });
+
+            usernames += this.$translate('studentId', {
+              id: id
+            });
           }
         }
       }
+
       return usernames;
     }
   }, {
-    key: 'isPreview',
+    key: "isPreview",
     value: function isPreview() {
-      var mode = this.getMode();
-      return mode != null && mode === 'preview';
+      return this.getMode() === 'preview';
     }
   }, {
-    key: 'convertToServerTimestamp',
-
-
+    key: "isAuthoring",
+    value: function isAuthoring() {
+      return this.getMode() === 'author';
+    }
+  }, {
+    key: "isStudentRun",
+    value: function isStudentRun() {
+      return this.getMode() === 'studentRun';
+    }
+  }, {
+    key: "isClassroomMonitor",
+    value: function isClassroomMonitor() {
+      return this.getMode() === 'classroomMonitor';
+    }
     /**
      * Convert a client timestamp to a server timestamp. This is required
      * in case the client and server clocks are not synchronized.
      * @param clientTimestamp the client timestamp
      */
+
+  }, {
+    key: "convertToServerTimestamp",
     value: function convertToServerTimestamp(clientTimestamp) {
       var timestampDiff = this.getConfigParam('timestampDiff');
       var serverTimestamp = clientTimestamp - timestampDiff;
       return serverTimestamp;
     }
-
     /**
      * Convert a server timestamp to a client timestamp. This is required
      * in case the client and server clocks are not synchronized.
@@ -762,13 +878,17 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'convertToClientTimestamp',
+    key: "convertToClientTimestamp",
     value: function convertToClientTimestamp(serverTimestamp) {
       var timestampDiff = this.getConfigParam('timestampDiff');
       var clientTimestamp = serverTimestamp + timestampDiff;
       return clientTimestamp;
     }
-
+  }, {
+    key: "isStudent",
+    value: function isStudent(workgroupId) {
+      return !this.isRunOwner(workgroupId) && !this.isRunSharedTeacher();
+    }
     /**
      * Check if the workgroup is the owner of the run
      * @param workgroupId the workgroup id
@@ -776,21 +896,22 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'isRunOwner',
+    key: "isRunOwner",
     value: function isRunOwner() {
       var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getWorkgroupId();
 
       if (workgroupId != null) {
         var teacherUserInfo = this.getTeacherUserInfo();
+
         if (teacherUserInfo != null) {
           if (workgroupId == teacherUserInfo.workgroupId) {
             return true;
           }
         }
       }
+
       return false;
     }
-
     /**
      * Check if the workgroup is a shared teacher for the run
      * @param workgroupId the workgroup id
@@ -798,76 +919,13 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'isRunSharedTeacher',
+    key: "isRunSharedTeacher",
     value: function isRunSharedTeacher() {
       var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getWorkgroupId();
 
       if (workgroupId != null) {
         var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
-        if (sharedTeacherUserInfos != null) {
-          var _iteratorNormalCompletion7 = true;
-          var _didIteratorError7 = false;
-          var _iteratorError7 = undefined;
 
-          try {
-            for (var _iterator7 = sharedTeacherUserInfos[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-              var sharedTeacherUserInfo = _step7.value;
-
-              if (sharedTeacherUserInfo != null) {
-                if (workgroupId == sharedTeacherUserInfo.workgroupId) {
-                  return true;
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError7 = true;
-            _iteratorError7 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                _iterator7.return();
-              }
-            } finally {
-              if (_didIteratorError7) {
-                throw _iteratorError7;
-              }
-            }
-          }
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Get the teacher role for the run
-     * @param workgroupId the workgroup id
-     * @returns the role of the teacher for the run. the possible values are
-     * 'owner', 'write', 'read'
-     */
-
-  }, {
-    key: 'getTeacherRole',
-    value: function getTeacherRole(workgroupId) {
-      if (this.isRunOwner(workgroupId)) {
-        return 'owner';
-      } else if (this.isRunSharedTeacher(workgroupId)) {
-        return this.getSharedTeacherRole(workgroupId);
-      }
-      return null;
-    }
-
-    /**
-     * Get the shared teacher role for the run
-     * @param workgroupId the workgroup id
-     * @returns the shared teacher role for the run. the possible values are
-     * 'write' or 'read'
-     */
-
-  }, {
-    key: 'getSharedTeacherRole',
-    value: function getSharedTeacherRole(workgroupId) {
-      if (workgroupId != null) {
-        var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
         if (sharedTeacherUserInfos != null) {
           var _iteratorNormalCompletion8 = true;
           var _didIteratorError8 = false;
@@ -879,7 +937,7 @@ var ConfigService = function () {
 
               if (sharedTeacherUserInfo != null) {
                 if (workgroupId == sharedTeacherUserInfo.workgroupId) {
-                  return sharedTeacherUserInfo.role;
+                  return true;
                 }
               }
             }
@@ -888,8 +946,8 @@ var ConfigService = function () {
             _iteratorError8 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                _iterator8.return();
+              if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
+                _iterator8["return"]();
               }
             } finally {
               if (_didIteratorError8) {
@@ -899,9 +957,74 @@ var ConfigService = function () {
           }
         }
       }
+
+      return false;
+    }
+    /**
+     * Get the teacher role for the run
+     * @param workgroupId the workgroup id
+     * @returns the role of the teacher for the run. the possible values are
+     * 'owner', 'write', 'read'
+     */
+
+  }, {
+    key: "getTeacherRole",
+    value: function getTeacherRole(workgroupId) {
+      if (this.isRunOwner(workgroupId)) {
+        return 'owner';
+      } else if (this.isRunSharedTeacher(workgroupId)) {
+        return this.getSharedTeacherRole(workgroupId);
+      }
+
       return null;
     }
+    /**
+     * Get the shared teacher role for the run
+     * @param workgroupId the workgroup id
+     * @returns the shared teacher role for the run. the possible values are
+     * 'write' or 'read'
+     */
 
+  }, {
+    key: "getSharedTeacherRole",
+    value: function getSharedTeacherRole(workgroupId) {
+      if (workgroupId != null) {
+        var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
+
+        if (sharedTeacherUserInfos != null) {
+          var _iteratorNormalCompletion9 = true;
+          var _didIteratorError9 = false;
+          var _iteratorError9 = undefined;
+
+          try {
+            for (var _iterator9 = sharedTeacherUserInfos[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+              var sharedTeacherUserInfo = _step9.value;
+
+              if (sharedTeacherUserInfo != null) {
+                if (workgroupId == sharedTeacherUserInfo.workgroupId) {
+                  return sharedTeacherUserInfo.role;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError9 = true;
+            _iteratorError9 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
+                _iterator9["return"]();
+              }
+            } finally {
+              if (_didIteratorError9) {
+                throw _iteratorError9;
+              }
+            }
+          }
+        }
+      }
+
+      return null;
+    }
     /**
      * Replace student names in the content.
      * For example, we will replace instances of {{firstStudentFirstName}}
@@ -911,13 +1034,15 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'replaceStudentNames',
+    key: "replaceStudentNames",
     value: function replaceStudentNames(content) {
       if (content != null) {
         var contentString = content;
-        if ((typeof content === 'undefined' ? 'undefined' : _typeof(content)) === 'object') {
+
+        if (_typeof(content) === 'object') {
           contentString = JSON.stringify(content);
         }
+
         if (contentString != null) {
           var workgroupId = this.getWorkgroupId();
           var firstNames = this.getStudentFirstNamesByWorkgroupId(workgroupId);
@@ -929,11 +1054,11 @@ var ConfigService = function () {
              * name
              */
             contentString = contentString.replace(new RegExp('{{firstStudentFirstName}}', 'gi'), firstNames[0]);
-
             /*
              * there are 1 or more students in the workgroup so we can
              * replace the student first names with the actual names
              */
+
             contentString = contentString.replace(new RegExp('{{studentFirstNames}}', 'gi'), firstNames.join(", "));
           }
 
@@ -956,7 +1081,7 @@ var ConfigService = function () {
           }
         }
 
-        if ((typeof content === 'undefined' ? 'undefined' : _typeof(content)) === 'object') {
+        if (_typeof(content) === 'object') {
           // convert the content string back into an object
           content = JSON.parse(contentString);
         } else if (typeof content === 'string') {
@@ -964,22 +1089,22 @@ var ConfigService = function () {
           content = contentString;
         }
       }
+
       return content;
     }
   }, {
-    key: 'getAvatarColorForWorkgroupId',
+    key: "getAvatarColorForWorkgroupId",
     value: function getAvatarColorForWorkgroupId(workgroupId) {
       var avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
       var modulo = workgroupId % 10;
       return avatarColors[modulo];
     }
-
     /**
      * Get the library projects
      */
 
   }, {
-    key: 'getLibraryProjects',
+    key: "getLibraryProjects",
     value: function getLibraryProjects() {
       var getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
 
@@ -987,15 +1112,16 @@ var ConfigService = function () {
         // request the list of library projects
         return this.$http.get(getLibraryProjectsURL).then(function (result) {
           var data = result.data;
+
           if (data != null) {
             // reverse the list so that it is ordered newest to oldest
             data.reverse();
           }
+
           return data;
         });
       }
     }
-
     /**
      * Get the project assets folder path
      * @param includeHost whether to include the host in the URL
@@ -1008,17 +1134,18 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'getProjectAssetsDirectoryPath',
+    key: "getProjectAssetsDirectoryPath",
     value: function getProjectAssetsDirectoryPath(includeHost) {
       var projectBaseURL = this.getConfigParam('projectBaseURL');
+
       if (projectBaseURL != null) {
         if (includeHost) {
           var host = window.location.origin;
-
           /*
            * get the full path including the host
            * e.g. http://wise.berkeley.edu/wise/curriculum/3/assets
            */
+
           return host + projectBaseURL + 'assets';
         } else {
           /*
@@ -1028,9 +1155,9 @@ var ConfigService = function () {
           return projectBaseURL + 'assets';
         }
       }
+
       return null;
     }
-
     /**
      * Remove the absolute asset paths
      * e.g.
@@ -1042,7 +1169,7 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'removeAbsoluteAssetPaths',
+    key: "removeAbsoluteAssetPaths",
     value: function removeAbsoluteAssetPaths(html) {
       /*
        * get the assets directory path with the host
@@ -1052,15 +1179,14 @@ var ConfigService = function () {
       var includeHost = true;
       var assetsDirectoryPathIncludingHost = this.getProjectAssetsDirectoryPath(includeHost);
       var assetsDirectoryPathIncludingHostRegEx = new RegExp(assetsDirectoryPathIncludingHost, 'g');
-
       /*
        * get the assets directory path without the host
        * e.g.
        * /wise/curriculum/3/assets/
        */
+
       var assetsDirectoryPathNotIncludingHost = this.getProjectAssetsDirectoryPath() + '/';
       var assetsDirectoryPathNotIncludingHostRegEx = new RegExp(assetsDirectoryPathNotIncludingHost, 'g');
-
       /*
        * remove the directory path from the html so that only the file name
        * remains in asset references
@@ -1069,11 +1195,11 @@ var ConfigService = function () {
        * will be changed to
        * <img src='sun.png'/>
        */
+
       html = html.replace(assetsDirectoryPathIncludingHostRegEx, '');
       html = html.replace(assetsDirectoryPathNotIncludingHostRegEx, '');
       return html;
     }
-
     /**
      * Get the WISE IDs for a workgroup
      * @param workgroupId get the WISE IDs for this workgroup
@@ -1081,57 +1207,59 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'getWISEIds',
+    key: "getWISEIds",
     value: function getWISEIds(workgroupId) {
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
         if (userInfo != null) {
           return userInfo.userIds;
         }
       }
+
       return [];
     }
-
     /**
      * Get all the authorable projects
      */
 
   }, {
-    key: 'getAuthorableProjects',
+    key: "getAuthorableProjects",
     value: function getAuthorableProjects() {
       var ownedProjects = this.getConfigParam('projects');
       var sharedProjects = this.getConfigParam('sharedProjects');
       var authorableProjects = [];
+
       if (ownedProjects != null) {
         authorableProjects = authorableProjects.concat(ownedProjects);
       }
 
       if (sharedProjects != null) {
         authorableProjects = authorableProjects.concat(sharedProjects);
-      }
+      } // sort the projects by descending id
 
-      // sort the projects by descending id
+
       authorableProjects.sort(this.sortByProjectId);
       return authorableProjects;
     }
-
     /**
      * Determines whether the current user is logged in as somebody else
      * @return true iff the user is a switched user
      */
 
   }, {
-    key: 'isSwitchedUser',
+    key: "isSwitchedUser",
     value: function isSwitchedUser() {
       var myUserInfo = this.getMyUserInfo();
+
       if (myUserInfo != null) {
         if (myUserInfo.isSwitchedUser) {
           return true;
         }
       }
+
       return false;
     }
-
     /**
      * Sort the objects by descending id.
      * @param projectA an object with an id field
@@ -1142,10 +1270,11 @@ var ConfigService = function () {
      */
 
   }, {
-    key: 'sortByProjectId',
+    key: "sortByProjectId",
     value: function sortByProjectId(projectA, projectB) {
       var projectIdA = projectA.id;
       var projectIdB = projectB.id;
+
       if (projectIdA < projectIdB) {
         return 1;
       } else if (projectIdA > projectIdB) {
@@ -1154,12 +1283,30 @@ var ConfigService = function () {
         return 0;
       }
     }
+  }, {
+    key: "calculateIsRunActive",
+    value: function calculateIsRunActive(configJSON) {
+      var currentTime = new Date().getTime();
+
+      if (currentTime < this.convertToClientTimestamp(configJSON.startTime)) {
+        return false;
+      } else if (configJSON.endTime != null && currentTime > this.convertToClientTimestamp(configJSON.endTime)) {
+        return false;
+      }
+
+      return true;
+    }
+  }, {
+    key: "isRunActive",
+    value: function isRunActive() {
+      return this.config.isRunActive;
+    }
   }]);
 
   return ConfigService;
 }();
 
-ConfigService.$inject = ['$filter', '$http', '$location'];
-
-exports.default = ConfigService;
+ConfigService.$inject = ['$filter', '$http', '$location', 'UtilService'];
+var _default = ConfigService;
+exports["default"] = _default;
 //# sourceMappingURL=configService.js.map

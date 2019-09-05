@@ -75,34 +75,42 @@ export class TeamSignInDialogComponent implements OnInit {
   }
 
   signIn(teamMember: any) {
-    this.userService.checkAuthentication(teamMember.userName, teamMember.password).subscribe((response) => {
-      if (response.isValid === true) {
+    this.userService.checkAuthentication(teamMember.username, teamMember.password).subscribe((response) => {
+      if (response.isUsernameValid === true && response.isPasswordValid === true) {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
           if (canBeAddedToWorkgroupResponse.isTeacher) {
             alert(this.i18n('A teacher cannot be added as a team member.'));
-            teamMember.userName = null;
+            teamMember.username = null;
           } else if (canBeAddedToWorkgroupResponse.status && this.allowSignIn(teamMember, 1)) {
-            teamMember.id = response.userId;
-            teamMember.userName = response.userName;
-            teamMember.firstName = response.firstName;
-            teamMember.lastName = response.lastName;
-            this.markAsSignedIn(teamMember);
-          } else if (!this.allowSignIn(teamMember, 1)) {
-            if (!this.isExistingStudent(teamMember)) {
-              teamMember.userName = null;
+            for (const member of canBeAddedToWorkgroupResponse.workgroupMembers) {
+              if (!this.isLoggedInUser(member.username)) {
+                const currentMember = this.getTeamMemberByUsernameOrAvailableSlot(member.username);
+                this.updateTeamMember(this.teamMembers.indexOf(currentMember), member);
+              }
             }
-            alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
+            this.markAsSignedIn(teamMember);
+            if (canBeAddedToWorkgroupResponse.addUserToWorkgroup) {
+              this.run.workgroupId = canBeAddedToWorkgroupResponse.workgroupId;
+            }
+          } else if (canBeAddedToWorkgroupResponse.workgroupMembers.length === this.run.maxStudentsPerTeam) {
+            alert(this.i18n(`${this.getNameDisplay(response)} is already in a team that is full`));
+            teamMember.username = null;
+          } else if (!this.allowSignIn(teamMember, 1)) {
+            alert(this.i18n(`${this.getNameDisplay(response)} is already in the team`));
+            if (!this.isExistingStudent(teamMember)) {
+              teamMember.username = null;
+            }
           } else {
-            alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
-            teamMember.userName = null;
+            alert(this.i18n(`${this.getNameDisplay(response)} is already on another team`));
+            teamMember.username = null;
           }
         });
-      } else {
-        alert(this.i18n('Invalid username or password. Please try again.'));
-        if (!this.isExistingStudent(teamMember)) {
-          teamMember.userName = null;
-        }
+      } else if (response.isUsernameValid !== true) {
+        alert(this.i18n('Invalid username. Please try again.'));
+        teamMember.username = null;
+      } else if (response.isPasswordValid !== true) {
+        alert(this.i18n('Invalid password. Please try again.'));
       }
       teamMember.password = null;
     });
@@ -133,17 +141,23 @@ export class TeamSignInDialogComponent implements OnInit {
                   if (canBeAddedToWorkgroupResponse.isTeacher) {
                     alert(this.i18n('A teacher cannot be added as a team member.'));
                   } else if (canBeAddedToWorkgroupResponse.status && this.allowSignIn(response, 0)) {
-                    teamMember.id = response.userId;
-                    teamMember.userName = response.userName;
-                    teamMember.firstName = response.firstName;
-                    teamMember.lastName = response.lastName;
+                    for (const member of canBeAddedToWorkgroupResponse.workgroupMembers) {
+                      if (!this.isLoggedInUser(member.username)) {
+                        const currentMember = this.getTeamMemberByUsernameOrAvailableSlot(member.username);
+                        this.updateTeamMember(this.teamMembers.indexOf(currentMember), member);
+                      }
+                    }
                     this.markAsSignedIn(teamMember);
+                  } else if (canBeAddedToWorkgroupResponse.workgroupMembers.length === this.run.maxStudentsPerTeam) {
+                    alert(this.i18n(`${this.getNameDisplay(response)} is already in a team that is full`));
                   } else if (!this.allowSignIn(response, 0)) {
-                    alert(this.i18n('{{firstName}} {{lastName}} is already in the team.', {firstName: response.firstName, lastName: response.lastName}));
+                    alert(this.i18n(`${this.getNameDisplay(response)} is already in the team`));
                   } else {
-                    alert(this.i18n('{{firstName}} {{lastName}} is already on another team.', {firstName: response.firstName, lastName: response.lastName}));
+                    alert(this.i18n(`${this.getNameDisplay(response)} is already on another team`));
                   }
                 });
+            } else if (response.status === 'error') {
+              alert(this.i18n('No WISE user with this Google ID found.'));
             }
           });
         }
@@ -183,6 +197,10 @@ export class TeamSignInDialogComponent implements OnInit {
     return teamMember.id != null;
   }
 
+  isLoggedInUser(username: string): boolean {
+    return this.user.username === username;
+  }
+
   isCanLaunch() {
     for (let teamMember of this.teamMembers) {
       if (this.isExistingStudent(teamMember) && this.isNotSignedIn(teamMember)) {
@@ -192,22 +210,33 @@ export class TeamSignInDialogComponent implements OnInit {
     return true;
   }
 
+  getTeamMemberByUsernameOrAvailableSlot(username: string) {
+    for (const teamMember of this.teamMembers) {
+      if (teamMember.username === username) {
+        return teamMember;
+      }
+    }
+    for (const teamMember of this.teamMembers) {
+      if (!teamMember.username) {
+        return teamMember;
+      }
+    }
+  }
 
   allowSignIn(teamMember: any, numMembersExpected: number) {
-    if (teamMember.userName === this.user.userName) {
+    if (teamMember.username === this.user.username) {
       return false;
     }
-    const membersWithSameUsername = this.teamMembers.filter(({ userName }) => {
-      return userName !== undefined && userName === teamMember.userName;
+    const membersWithSameUsername = this.teamMembers.filter(({ username }) => {
+      return username !== undefined && username === teamMember.username;
     });
     return membersWithSameUsername.length === numMembersExpected;
   }
 
   launchRun() {
-    const presentUserIds = [];
-    presentUserIds.push(this.user.id);
+    const presentUserIds = [this.user.id];
     const absentUserIds = [];
-    for (let member of this.teamMembers) {
+    for (const member of this.teamMembers) {
       if (member.id != null) {
         if (member.status === 'signedIn') {
           presentUserIds.push(member.id);
@@ -218,7 +247,107 @@ export class TeamSignInDialogComponent implements OnInit {
     }
     this.studentService.launchRun(this.run.id, this.run.workgroupId, presentUserIds, absentUserIds)
         .subscribe((response: any) => {
-          window.location.href = response.startProjectUrl;
+          if (response.status === 'error') {
+            let targetMember;
+            if (this.isLoggedInUserInWorkgroup(response.workgroupMembers)) {
+              this.updateTeamMembers(response.workgroupMembers);
+              targetMember = this.user;
+            } else {
+              targetMember = this.removeTeamMembersAlreadyInAWorkgroup(response.workgroupMembers);
+            }
+            const teamMatesDisplay = this.getWorkgroupTeammatesDisplay(response.workgroupMembers, targetMember.username);
+            setTimeout(() => {
+              alert(this.i18n(`${this.getNameDisplay(targetMember)} is already in a team with ${teamMatesDisplay}`));
+            }, 100);
+          } else {
+            window.location.href = response.startProjectUrl;
+          }
         });
+  }
+
+  getNameDisplay(user: any) {
+    return `${user.firstName} ${user.lastName} (${user.username})`;
+  }
+
+  getWorkgroupTeammatesDisplay(workgroupMembers: any[], targetUsername: string) {
+    const teamMateNameDisplays = [];
+    for (const workgroupMember of workgroupMembers) {
+      if (workgroupMember.username !== targetUsername) {
+        teamMateNameDisplays.push(this.getNameDisplay(workgroupMember));
+      }
+    }
+    if (teamMateNameDisplays.length <= 1) {
+      return teamMateNameDisplays.join();
+    }
+    const lastNameDisplay = teamMateNameDisplays.pop();
+    return `${teamMateNameDisplays.join(', ')} and ${lastNameDisplay}`;
+  }
+
+  isLoggedInUserInWorkgroup(workgroupMembers: any[]) {
+    for (const member of workgroupMembers) {
+      if (this.isLoggedInUser(member.username)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  updateTeamMembers(workgroupMembers: any[]) {
+    const existingWorkgroupMembersNotSignedIn = this.getExistingWorkgroupMembersNotSignedIn(workgroupMembers);
+    const existingWorkgroupMembersUsernames = workgroupMembers.map(member => {
+      return member.username;
+    });
+    let existingWorkgroupMemberIndex = 0;
+    this.teamMembers.forEach((teamMember, index) => {
+      if (!existingWorkgroupMembersUsernames.includes(teamMember.username)) {
+        this.clearTeamMember(index);
+        if (existingWorkgroupMemberIndex < existingWorkgroupMembersNotSignedIn.length) {
+          this.updateTeamMember(index, existingWorkgroupMembersNotSignedIn[existingWorkgroupMemberIndex]);
+          existingWorkgroupMemberIndex++;
+        }
+      }
+    });
+  }
+
+  updateTeamMember(index: number, workgroupMember: any) {
+    this.teamMembers[index].username = workgroupMember.username;
+    this.teamMembers[index].firstName = workgroupMember.firstName;
+    this.teamMembers[index].lastName = workgroupMember.lastName;
+    this.teamMembers[index].id = workgroupMember.id;
+    this.teamMembers[index].isGoogleUser = workgroupMember.isGoogleUser;
+    this.hiddenMembers[index] = false;
+  }
+  
+  getExistingWorkgroupMembersNotSignedIn(workgroupMembers: any[]): any[] {
+    const teamMembersUsernames = this.teamMembers.map(member => {
+      return member.username;
+    });
+    const existingWorkgroupMembersNotSignedIn = [];
+    for (const workgroupMember of workgroupMembers) {
+      if (!this.isLoggedInUser(workgroupMember.username) && !teamMembersUsernames.includes(workgroupMember.username)) {
+        existingWorkgroupMembersNotSignedIn.push(workgroupMember);
+      }
+    }
+    return existingWorkgroupMembersNotSignedIn;
+  }
+
+  removeTeamMembersAlreadyInAWorkgroup(workgroupMembers: any[]): any {
+    const workgroupMembersUsernames = workgroupMembers.map(member => {
+      return member.username;
+    });
+    let removedMember = null;
+    this.teamMembers.forEach((teamMember, index) => {
+      if (workgroupMembersUsernames.includes(teamMember.username)) {
+        this.clearTeamMember(index);
+        removedMember = teamMember;
+      }
+    });
+    return removedMember;
+  }
+  
+  clearTeamMember(index: number) {
+    this.teamMembers[index] = new Student();
+    this.markAsNotSignedIn(this.teamMembers[index]);
+    this.hiddenMembers[index] = true;
   }
 }

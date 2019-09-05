@@ -133,7 +133,6 @@ public class RunImpl implements Run {
   private static final String COLUMN_NAME_SURVEY = "survey";
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   @Getter
   @Setter
   private Long id = null;
@@ -262,7 +261,7 @@ public class RunImpl implements Run {
   }
 
   public boolean isEnded() {
-    return this.endtime != null;
+    return this.endtime != null && this.endtime.before(Calendar.getInstance().getTime());
   }
 
   public boolean isStudentAssociatedToThisRun(User studentUser) {
@@ -459,6 +458,18 @@ public class RunImpl implements Run {
     }
   }
 
+  public Long getStartTimeMilliseconds() {
+    return this.starttime.getTime();
+  }
+
+  public Long getEndTimeMilliseconds() {
+    if (this.endtime == null) {
+      return null;
+    } else {
+      return this.endtime.getTime();
+    }
+  }
+
   /**
    * Comparator used to order user names alphabetically
    */
@@ -484,20 +495,31 @@ public class RunImpl implements Run {
 
         if(userDetails1 != null && userDetails2 != null) {
           //get the user names
-          String userName1 = userDetails1.getUsername();
-          String userName2 = userDetails2.getUsername();
+          String username1 = userDetails1.getUsername();
+          String username2 = userDetails2.getUsername();
 
-          if(userName1 != null && userName2 != null) {
+          if(username1 != null && username2 != null) {
             //get the user names in lower case
-            String userName1LowerCase = userName1.toLowerCase();
-            String userName2LowerCase = userName2.toLowerCase();
+            String username1LowerCase = username1.toLowerCase();
+            String username2LowerCase = username2.toLowerCase();
 
             //compare the user names
-            result = userName1LowerCase.compareTo(userName2LowerCase);
+            result = username1LowerCase.compareTo(username2LowerCase);
           }
         }
       }
       return result;
+    }
+  }
+
+  public Boolean isActive() {
+    Date currentDate = new Date();
+    if (currentDate.before(this.starttime)) {
+      return false;
+    } else if (this.endtime != null && currentDate.after(this.endtime)) {
+      return false;
+    } else {
+      return true;
     }
   }
 }

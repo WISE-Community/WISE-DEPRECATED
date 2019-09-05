@@ -74,7 +74,7 @@ public class VLEAnnotationController {
   private VLEService vleService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private RunService runService;
@@ -107,9 +107,9 @@ public class VLEAnnotationController {
     String nodeStateIdStr = request.getParameter("nodeStateId");
     String periodIdStr = request.getParameter("periodId");
     String nodeId = request.getParameter("nodeId");
-    String cRaterScoringUrl = wiseProperties.getProperty("cRater_scoring_url");
-    String cRaterClientId = wiseProperties.getProperty("cRater_client_id");
-    String cRaterPassword = wiseProperties.getProperty("cRater_password");
+    String cRaterScoringUrl = appProperties.getProperty("cRater_scoring_url");
+    String cRaterClientId = appProperties.getProperty("cRater_client_id");
+    String cRaterPassword = appProperties.getProperty("cRater_password");
     Vector<JSONObject> flaggedAnnotationsList = new Vector<JSONObject>();
     HashMap<Long, Long> classmateWorkgroupIdToPeriodIdMap = new HashMap<Long, Long>();
 

@@ -3,20 +3,12 @@ package org.wise.vle.utils;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.wise.portal.domain.project.impl.ProjectImpl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(locations = {
-  "classpath:configurations/dispatcherServletContexts.xml",
-  "classpath:configurations/applicationContexts.xml"
-})
+@RunWith(SpringRunner.class)
 public class FileManagerTest {
 
   @Test

@@ -2915,7 +2915,7 @@ var DataExportController = function () {
     }, {
         key: 'removeNamesFromWorkgroup',
         value: function removeNamesFromWorkgroup(workgroup) {
-            delete workgroup.userName;
+            delete workgroup.username;
             delete workgroup.displayNames;
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;

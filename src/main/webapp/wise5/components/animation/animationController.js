@@ -23,7 +23,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var AnimationController = function (_ComponentController) {
   _inherits(AnimationController, _ComponentController);
 
-  function AnimationController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnimationService, AnnotationService, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+  function AnimationController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnimationService, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, AnimationController);
 
     var _this = _possibleConstructorReturn(this, (AnimationController.__proto__ || Object.getPrototypeOf(AnimationController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
@@ -31,7 +31,6 @@ var AnimationController = function (_ComponentController) {
     _this.$q = $q;
     _this.$timeout = $timeout;
     _this.AnimationService = AnimationService;
-    _this.NotificationService = NotificationService;
 
     _this.width = 800;
     _this.height = 600;
@@ -1390,7 +1389,7 @@ var AnimationController = function (_ComponentController) {
 
 ;
 
-AnimationController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnimationService', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+AnimationController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnimationService', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = AnimationController;
 //# sourceMappingURL=animationController.js.map

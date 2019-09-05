@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.ChangePasswordParameters;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -72,6 +73,19 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
   @Mock
   private UserServiceImpl userService;
 
+  @Mock
+  private MutableUserDetails mutableUserDetails;
+
+  private void updateUserDetails(boolean isGoogle) {
+    EasyMock.reset(teacherUser);
+    EasyMock.expect(teacherUser.getUserDetails()).andReturn(mutableUserDetails);
+    EasyMock.replay(teacherUser);
+    EasyMock.reset(mutableUserDetails);
+    EasyMock.expect(mutableUserDetails.isGoogleUser()).andReturn(isGoogle);
+    EasyMock.replay(mutableUserDetails);
+    errors = new BeanPropertyBindingResult(params, "");
+  }
+
   @Before
   public void setUp() {
     params = new ChangePasswordParameters();
@@ -83,11 +97,14 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
     errors = new BeanPropertyBindingResult(params, "");
     EasyMock.expect(userService.isPasswordCorrect(teacherUser, LEGAL_PASSWORD1)).andReturn(true);
     EasyMock.replay(userService);
+    EasyMock.expect(teacherUser.getUserDetails()).andReturn(mutableUserDetails);
+    EasyMock.replay(teacherUser);
+    EasyMock.expect(mutableUserDetails.isGoogleUser()).andReturn(false);
+    EasyMock.replay(mutableUserDetails);
   }
 
   @After
   public void tearDown() {
-    EasyMock.verify(userService);
     validator = null;
     params = null;
     errors = null;
@@ -95,12 +112,27 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   @Test
   public void validate_allCorrectFieldsTeacher_OK() {
+    updateUserDetails(true);
+    validator.validate(params, errors);
+    assertTrue(!errors.hasErrors());
+
+    updateUserDetails(false);
     validator.validate(params, errors);
     assertTrue(!errors.hasErrors());
   }
 
   @Test
   public void validate_emptyPassword0_error() {
+    updateUserDetails(true);
+    params.setPasswd0(null);
+    EasyMock.reset(userService);
+    EasyMock.replay(userService);
+    validator.validate(params, errors);
+    assertFalse(errors.hasErrors());
+    assertEquals(0, errors.getErrorCount());
+    assertNull(errors.getFieldError("passwd0"));
+
+    updateUserDetails(false);
     params.setPasswd0(null);
     EasyMock.reset(userService);
     EasyMock.replay(userService);
@@ -112,6 +144,16 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   @Test
   public void validate_incorrectPassword0_error() {
+    updateUserDetails(true);
+    EasyMock.reset(userService);
+    EasyMock.expect(userService.isPasswordCorrect(teacherUser, LEGAL_PASSWORD1)).andReturn(false);
+    EasyMock.replay(userService);
+    validator.validate(params, errors);
+    assertFalse(errors.hasErrors());
+    assertEquals(0, errors.getErrorCount());
+    assertNull(errors.getFieldError("passwd0"));
+
+    updateUserDetails(false);
     EasyMock.reset(userService);
     EasyMock.expect(userService.isPasswordCorrect(teacherUser, LEGAL_PASSWORD1)).andReturn(false);
     EasyMock.replay(userService);
@@ -123,6 +165,14 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   @Test
   public void validate_emptyPassword1_error() {
+    updateUserDetails(true);
+    params.setPasswd1(EMPTY_PASSWORD);
+    validator.validate(params, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+
+    updateUserDetails(false);
     params.setPasswd1(EMPTY_PASSWORD);
     validator.validate(params, errors);
     assertTrue(errors.hasErrors());
@@ -132,6 +182,14 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   @Test
   public void validate_emptyPassword2_error() {
+    updateUserDetails(true);
+    params.setPasswd2(EMPTY_PASSWORD);
+    validator.validate(params, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd2"));
+
+    updateUserDetails(false);
     params.setPasswd2(EMPTY_PASSWORD);
     validator.validate(params, errors);
     assertTrue(errors.hasErrors());
@@ -141,6 +199,15 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   @Test
   public void validate_emptyPassword1Password2_error() {
+    updateUserDetails(true);
+    params.setPasswd1(EMPTY_PASSWORD);
+    params.setPasswd2(EMPTY_PASSWORD);
+    validator.validate(params, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+
+    updateUserDetails(false);
     params.setPasswd1(EMPTY_PASSWORD);
     params.setPasswd2(EMPTY_PASSWORD);
     validator.validate(params, errors);
@@ -151,6 +218,14 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   @Test
   public void validate_passwordTooLong_error() {
+    updateUserDetails(true);
+    params.setPasswd1(PASSWORD_TOO_LONG);
+    validator.validate(params, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(2, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+
+    updateUserDetails(false);
     params.setPasswd1(PASSWORD_TOO_LONG);
     validator.validate(params, errors);
     assertTrue(errors.hasErrors());
@@ -160,6 +235,14 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   @Test
   public void validate_illegalPassword_error() {
+    updateUserDetails(true);
+    params.setPasswd1(ILLEGAL_PASSWORD);
+    validator.validate(params, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+
+    updateUserDetails(false);
     params.setPasswd1(ILLEGAL_PASSWORD);
     validator.validate(params, errors);
     assertTrue(errors.hasErrors());
@@ -169,6 +252,15 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   @Test
   public void validate_mismatchedPasswords_error() {
+    updateUserDetails(true);
+    params.setPasswd1(LEGAL_PASSWORD1);
+    params.setPasswd2(LEGAL_PASSWORD2);
+    validator.validate(params, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+
+    updateUserDetails(false);
     params.setPasswd1(LEGAL_PASSWORD1);
     params.setPasswd2(LEGAL_PASSWORD2);
     validator.validate(params, errors);

@@ -20,6 +20,23 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +48,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -42,21 +61,11 @@ import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
-import javax.annotation.PostConstruct;
-import javax.net.ssl.HttpsURLConnection;
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-
 /**
  * A utility class for use by all controllers
  *
  * @author Laurel Williams
+ * @author Geoffrey Kwan
  */
 @Component
 public class ControllerUtil {
@@ -69,7 +78,7 @@ public class ControllerUtil {
   private static PortalService portalService;
 
   @Autowired
-  private static Properties wiseProperties;
+  private static Properties appProperties;
 
   @Autowired
   private static ProjectService projectService;
@@ -78,10 +87,12 @@ public class ControllerUtil {
   private static RunService runService;
 
   private static boolean isReCaptchaEnabled = false;
+  private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
+  private static final String LICENSE_PATH = "/license.txt";
 
   @Autowired
-  public void setWiseProperties(Properties wiseProperties){
-    ControllerUtil.wiseProperties = wiseProperties;
+  public void setAppProperties(Properties appProperties){
+    ControllerUtil.appProperties = appProperties;
   }
 
   @Autowired
@@ -158,6 +169,15 @@ public class ControllerUtil {
   public static String getPortalUrlString(HttpServletRequest request) {
     return getBaseUrlString(request) + request.getContextPath();
   }
+  public static String getBaseUrlString() {
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    return getBaseUrlString(request);
+  }
+
+  public static String getPortalUrlString() {
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    return getBaseUrlString(request) + request.getContextPath();
+  }
 
   /**
    * Returns the version of this WISE instance
@@ -178,10 +198,10 @@ public class ControllerUtil {
    */
   public static String getWebSocketURL(HttpServletRequest request, String contextPath) {
     if (contextPath.contains("http")) {
-      return contextPath.replace("http", "ws") + "/websocket";
+      return contextPath + "/websocket";
     } else {
       String portalContextPath = ControllerUtil.getPortalUrlString(request);
-      return portalContextPath.replace("http", "ws") + "/websocket";
+      return portalContextPath + "/websocket";
     }
   }
 
@@ -190,8 +210,8 @@ public class ControllerUtil {
     runJSON.put("id", run.getId());
     runJSON.put("name", run.getName());
     runJSON.put("runCode", run.getRuncode());
-    runJSON.put("startTime", run.getStarttime());
-    runJSON.put("endTime", run.getEndtime());
+    runJSON.put("startTime", run.getStartTimeMilliseconds());
+    runJSON.put("endTime", run.getEndTimeMilliseconds());
     Set<Group> periods = run.getPeriods();
     JSONArray periodsArray = new JSONArray();
     for (Group period : periods) {
@@ -222,11 +242,13 @@ public class ControllerUtil {
     projectJSON.put("metadata", project.getMetadata().toJSONObject());
     projectJSON.put("dateCreated", project.getDateCreated());
     projectJSON.put("dateArchived", project.getDateDeleted());
-    projectJSON.put("projectThumb", getProjectThumbIconPath(project));
+    projectJSON.put("projectThumb", getProjectPath(project) + PROJECT_THUMB_PATH);
     projectJSON.put("owner", getOwnerJSON(project.getOwner()));
     projectJSON.put("sharedOwners", getProjectSharedOwnersJSON(project));
     projectJSON.put("parentId", project.getParentProjectId());
     projectJSON.put("wiseVersion", project.getWiseVersion());
+    projectJSON.put("uri", projectService.getProjectURI(project));
+    projectJSON.put("license", getLicensePath(project));
     return projectJSON;
   }
 
@@ -245,7 +267,7 @@ public class ControllerUtil {
       ownerJSON.put("id", owner.getId());
       TeacherUserDetails ownerUserDetails = (TeacherUserDetails) owner.getUserDetails();
       ownerJSON.put("displayName", ownerUserDetails.getDisplayname());
-      ownerJSON.put("userName", ownerUserDetails.getUsername());
+      ownerJSON.put("username", ownerUserDetails.getUsername());
       ownerJSON.put("firstName", ownerUserDetails.getFirstname());
       ownerJSON.put("lastName", ownerUserDetails.getLastname());
     } catch(org.hibernate.ObjectNotFoundException e) {
@@ -300,14 +322,35 @@ public class ControllerUtil {
     return sharedOwnerPermissions;
   }
 
-  public static String getProjectThumbIconPath(Project project) {
+  public static String getProjectPath(Project project) {
     String modulePath = project.getModulePath();
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
     if (lastIndexOfSlash != -1) {
-      String curriculumBaseWWW = ControllerUtil.wiseProperties.getProperty("curriculum_base_www");
-      return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + "/assets/project_thumb.png";
+      String hostname = ControllerUtil.appProperties.getProperty("wise.hostname");
+      String curriculumBaseWWW = ControllerUtil.appProperties.getProperty("curriculum_base_www");
+      return hostname + curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
     }
     return "";
+  }
+
+  public static String getProjectLocalPath(Project project) {
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      String curriculumBaseWWW = ControllerUtil.appProperties.getProperty("curriculum_base_dir");
+      return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
+    }
+    return "";
+  }
+
+  public static String getLicensePath(Project project) {
+    String licensePath = getProjectLocalPath(project) + LICENSE_PATH;
+    File licenseFile = new File(licensePath);
+    if (licenseFile.isFile()) {
+      return getProjectPath(project) + LICENSE_PATH;
+    } else {
+      return "";
+    }
   }
 
   /**
@@ -317,8 +360,8 @@ public class ControllerUtil {
    */
   public static boolean isReCaptchaRequired(HttpServletRequest request) {
     if (isReCaptchaEnabled()) {
-      String userName = request.getParameter("username");
-      User user = userService.retrieveUserByUsername(userName);
+      String username = request.getParameter("username");
+      User user = userService.retrieveUserByUsername(username);
       if (user != null && isRecentFailedLoginWithinTimeLimit(user) &&
           isRecentNumberOfFailedLoginAttemptsOverLimit(user)) {
         return true;
@@ -364,8 +407,8 @@ public class ControllerUtil {
 
   @PostConstruct
   public static void checkReCaptchaEnabled() {
-    String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    String reCaptchaPublicKey = appProperties.getProperty("recaptcha_public_key");
+    String reCaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
     isReCaptchaEnabled = reCaptchaPublicKey != null && reCaptchaPrivateKey != null;
   }
 
@@ -375,7 +418,7 @@ public class ControllerUtil {
    * @return whether the user answered the ReCaptcha successfully
    */
   public static boolean isReCaptchaResponseValid(String gRecaptchaResponse) {
-    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    String reCaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
     boolean isValid = false;
     if (isReCaptchaEnabled &&
         gRecaptchaResponse != null &&
@@ -414,5 +457,41 @@ public class ControllerUtil {
       }
     }
     return isValid;
+  }
+
+  public static JSONObject createSuccessResponse() {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "success");
+    } catch(JSONException e) {
+    }
+    return response;
+  }
+
+  public static JSONObject createSuccessResponse(String messageCode) {
+    JSONObject response = createSuccessResponse();
+    try {
+      response.put("messageCode", messageCode);
+    } catch(JSONException e) {
+    }
+    return response;
+  }
+
+  public static JSONObject createErrorResponse() {
+    JSONObject response = new JSONObject();
+    try {
+      response.put("status", "error");
+    } catch(JSONException e) {
+    }
+    return response;
+  }
+
+  public static JSONObject createErrorResponse(String messageCode) {
+    JSONObject response = createErrorResponse();
+    try {
+      response.put("messageCode", messageCode);
+    } catch(JSONException e) {
+    }
+    return response;
   }
 }

@@ -35,7 +35,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,7 +46,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -55,7 +53,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.VLEService;
-import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
@@ -80,10 +77,7 @@ public class StudentDataController {
   private RunService runService;
 
   @Autowired
-  private Properties wiseProperties;
-
-  @Autowired
-  private WebSocketHandler webSocketHandler;
+  private Properties appProperties;
 
   private static boolean DEBUG = false;
 
@@ -279,7 +273,7 @@ public class StudentDataController {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "get data node list is empty for aggregrate type");
         return null;
       }
-      String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+      String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
       String rawProjectUrl = run.getProject().getModulePath();
       String projectPath = curriculumBaseDir + rawProjectUrl;
       File projectFile = new File(projectPath);
@@ -340,10 +334,10 @@ public class StudentDataController {
               nodeVisitsJSON = getNodeVisitsForStudent(nodeList, nodeTypesList, userInfo, run, getAllWork, getRevisions);
             } else {
               /*
-               * the user does not have any work so we will just set the userName and
+               * the user does not have any work so we will just set the username and
                * userId and an empty visitedNodes array in the JSON for the user
                */
-              nodeVisitsJSON.put("userName", new Long(userId));
+              nodeVisitsJSON.put("username", new Long(userId));
               nodeVisitsJSON.put("userId", new Long(userId));
               String nodeVisitKeyName = "visitedNodes";  // used in WISE4
               if (run != null) {
@@ -388,7 +382,7 @@ public class StudentDataController {
   private JSONObject getNodeVisitsForStudent(List<Node> nodeList, List<String> nodeTypesList,
       UserInfo userInfo, Run run, boolean getAllWork, boolean getRevisions) throws JSONException {
     JSONObject nodeVisitsJSON = new JSONObject();
-    nodeVisitsJSON.put("userName", userInfo.getWorkgroupId());
+    nodeVisitsJSON.put("username", userInfo.getWorkgroupId());
     nodeVisitsJSON.put("userId", userInfo.getWorkgroupId());
     List<StepWork> stepWorkList = null;
     if (nodeList != null && nodeList.size() > 0) {
@@ -508,7 +502,7 @@ public class StudentDataController {
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    studentMaxWorkSize = Integer.valueOf(wiseProperties.getProperty("student_max_work_size", "512000"));
+    studentMaxWorkSize = Integer.valueOf(appProperties.getProperty("student_max_work_size", "512000"));
     User signedInUser = ControllerUtil.getSignedInUser();
     String runId = request.getParameter("runId");
     String userId = request.getParameter("userId");
@@ -728,12 +722,6 @@ public class StudentDataController {
         response.getWriter().print(jsonResponse.toString());
         if (isSendToWebSockets(nodeVisitJSON)) {
           nodeVisitJSON.put("id", newStepWorkId);
-          if (webSocketHandler != null) {
-            WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-            if (wiseWebSocketHandler != null) {
-              wiseWebSocketHandler.handleMessage(signedInUser, nodeVisitJSON.toString());
-            }
-          }
         }
       } else {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error saving: " + nodeVisitJSON.toString());

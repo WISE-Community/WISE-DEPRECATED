@@ -32,9 +32,7 @@ var TopBarController = function () {
     // get the avatar color for the teacher
     this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
 
-    // get the teacher name and user name
-    this.userName = this.ConfigService.getMyUserName();
-
+    this.userInfo = this.ConfigService.getMyUserInfo();
     this.themePath = this.ProjectService.getThemePath();
     this.contextPath = this.ConfigService.getContextPath();
   }

@@ -14,22 +14,27 @@
     <mat-sidenav-content fxLayout="column" 
                          track-scroll 
                          (yPositionChange)="onYPositionChange($event)">
-      <app-announcement *ngIf="showHeaderAndFooter() && hasAnnouncement"
-                        class="sticky"
-                        i18n-message
-                        message="Welcome to our new site!"
-                        i18n-action
-                        action="Learn More"
-                        (callback)="showAnnouncementDetails()"
+      <app-announcement *ngIf="hasAnnouncement"
+                        class="top-content"
+                        [announcement]="announcement"
                         (dismiss)="dismissAnnouncement()"></app-announcement>
-      <app-header class="dark-theme sticky" 
-                  [ngClass]="{ 'invisible': scroll }"></app-header>
+      <app-header class="dark-theme top-content"></app-header>
       <div fxFlex>
         <router-outlet></router-outlet>
       </div>
       <app-footer></app-footer>
+      <div class="to-top dark-theme" 
+           [ngClass]="{'active': scroll, 'inactive': !scroll}">
+        <button mat-fab
+                class="mat-fab--extended"
+                color="default"
+                (click)="scrollToTop()">
+          <mat-icon>arrow_upward</mat-icon>
+          &nbsp;<ng-container i18n>Back to Top</ng-container>
+        </button>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </ng-template>
 
-<ng-container *ngTemplateOutlet="showHeaderAndFooter() ? default: standalone"></ng-container>
+<ng-container *ngTemplateOutlet="showHeaderAndFooter() ? default : standalone"></ng-container>

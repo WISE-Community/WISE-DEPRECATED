@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -23,10 +23,21 @@
  */
 package org.wise.portal.service.run.impl;
 
-import org.hibernate.Hibernate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
@@ -57,13 +68,12 @@ import org.wise.portal.service.run.DuplicateRunCodeException;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
-import java.util.*;
-
 /**
  * Services for WISE Run
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  */
+@Service
 public class RunServiceImpl implements RunService {
 
   private String DEFAULT_RUNCODE_PREFIXES = "Tiger,Lion,Fox,Owl,Panda,Hawk,Mole,"+
@@ -93,7 +103,7 @@ public class RunServiceImpl implements RunService {
   private UserDao<User> userDao;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   protected AclService<Persistable> aclService;
@@ -151,9 +161,9 @@ public class RunServiceImpl implements RunService {
     }
     String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
     String runcodePrefixesStr =
-        wiseProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
-    if (wiseProperties.containsKey("runcode_prefixes_"+language)) {
-      runcodePrefixesStr = wiseProperties.getProperty("runcode_prefixes_" + language);
+        appProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
+    if (appProperties.containsKey("runcode_prefixes_"+language)) {
+      runcodePrefixesStr = appProperties.getProperty("runcode_prefixes_" + language);
     }
     String[] runcodePrefixes = runcodePrefixesStr.split(",");
     String word = runcodePrefixes[rand.nextInt(runcodePrefixes.length)];
@@ -171,7 +181,8 @@ public class RunServiceImpl implements RunService {
   public Run createRun(RunParameters runParameters) {
     Project project = runParameters.getProject();
     Run run = new RunImpl();
-    run.setEndtime(null);
+    run.setId((Long) project.getId());
+    run.setEndtime(runParameters.getEndTime());
     run.setStarttime(runParameters.getStartTime());
     run.setRuncode(generateUniqueRunCode(runParameters.getLocale()));
     run.setOwner(runParameters.getOwner());
@@ -215,17 +226,17 @@ public class RunServiceImpl implements RunService {
   }
 
   public Run createRun(Integer projectId, User user, Set<String> periodNames,
-        Integer maxStudentsPerTeam, Long startDate, Locale locale) throws Exception {
+        Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) throws Exception {
     Project project = projectService.copyProject(projectId, user);
     RunParameters runParameters = createRunParameters(project, user, periodNames,
-        maxStudentsPerTeam, startDate, locale);
+        maxStudentsPerTeam, startDate, endDate, locale);
     Run run = createRun(runParameters);
     createTeacherWorkgroup(run, user);
     return run;
   }
 
   public RunParameters createRunParameters(Project project, User user, Set<String> periodNames,
-        Integer maxStudentsPerTeam, Long startDate, Locale locale) {
+        Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) {
     RunParameters runParameters = new RunParameters();
     runParameters.setOwner(user);
     runParameters.setName(project.getName());
@@ -235,6 +246,11 @@ public class RunServiceImpl implements RunService {
     runParameters.setPeriodNames(periodNames);
     runParameters.setMaxWorkgroupSize(maxStudentsPerTeam);
     runParameters.setStartTime(new Date(startDate));
+    if (endDate == null || endDate <= startDate) {
+      runParameters.setEndTime(null);
+    } else {
+      runParameters.setEndTime(new Date(endDate));
+    }
     return runParameters;
   }
 
@@ -346,8 +362,7 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public void removeSharedTeacher(String username, Long runId)
-    throws ObjectNotFoundException {
+  public void removeSharedTeacher(String username, Long runId) throws ObjectNotFoundException {
     Run run = retrieveById(runId);
     User user = userDao.retrieveByUsername(username);
     if (run == null || user == null) {
@@ -357,7 +372,6 @@ public class RunServiceImpl implements RunService {
     if (run.getSharedowners().contains(user)) {
       run.getSharedowners().remove(user);
       runDao.save(run);
-      // call unProxy when we upgrade to hibernate 5.2
       Project runProject = (Project) run.getProject();
       runProject.getSharedowners().remove(user);
       projectDao.save(runProject);
@@ -370,7 +384,7 @@ public class RunServiceImpl implements RunService {
         }
         List<Permission> projectPermissions = aclService.getPermissions(runProject, user);
         for (Permission projectPermission : projectPermissions) {
-          this.aclService.removePermission(run, projectPermission, user);
+          this.aclService.removePermission(runProject, projectPermission, user);
         }
       } catch (Exception e) {
         // do nothing. permissions might get be deleted if
@@ -629,10 +643,21 @@ public class RunServiceImpl implements RunService {
   }
 
   @Transactional()
-  public void setStartTime(Long runId, String startTime) {
+  public void setStartTime(Long runId, Long startTime) {
     try {
       Run run = this.retrieveById(runId);
       run.setStarttime(new Date(startTime));
+      this.runDao.save(run);
+    } catch(ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Transactional()
+  public void setEndTime(Long runId, Long endTime) {
+    try {
+      Run run = this.retrieveById(runId);
+      run.setEndtime(new Date(endTime));
       this.runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();

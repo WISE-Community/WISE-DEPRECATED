@@ -51,7 +51,7 @@
 		<sec:authorize access="hasRole('ROLE_USER')">
 			<div id="userInfoBlock" class="userInfo">
                 <a id="signOut" class="wisebutton minibutton" href="${contextPath}/logout" title="<spring:message code="signOutTitle"/>"><spring:message code="signOut" /></a>
-				<div id="userName">
+				<div id="username">
 					<c:set var="firstName">
 						<sec:authentication property="principal.firstname" htmlEscape="false" />
 					</c:set>

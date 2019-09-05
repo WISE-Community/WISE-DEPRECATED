@@ -1,0 +1,16 @@
+<div class='summary' ng-controller='SummaryController as summaryController' flex>
+  <compile data='summaryController.prompt'></compile>
+  <div ng-if='summaryController.componentContent.showPromptFromOtherComponent'>
+    <br/>
+    <compile data='summaryController.otherPrompt'></compile>
+  </div>
+  <summary-display node-id='summaryController.summaryNodeId'
+      component-id='summaryController.summaryComponentId'
+      student-data-type='summaryController.studentDataType'
+      period-id='summaryController.periodId'
+      chart-type='summaryController.chartType'
+      highlight-correct-answer='summaryController.highlightCorrectAnswer'
+      has-warning='!summaryController.isShowDisplay'
+      warning-message='summaryController.warningMessage'>
+  </summary-display>
+</div>

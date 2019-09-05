@@ -4,13 +4,13 @@
  */
 function VLE_STATE() {
 	this.visitedNodes = [];  // array of NODE_VISIT objects
-	this.userName = null; //lets put this here for now, sssssh
+	this.username = null; //lets put this here for now, sssssh
 	this.workgroupId = null;  // sneak this in there too, ssssssh
 	this.dataId = null;
 }
 
-VLE_STATE.prototype.setUserName = function(userName) {
-	this.userName = userName;
+VLE_STATE.prototype.setUsername = function(username) {
+	this.username = username;
 };
 
 VLE_STATE.prototype.setDataId = function(dataId) {
@@ -199,7 +199,7 @@ VLE_STATE.prototype.parseDataJSONObj = function(vleStateJSONObj) {
 	var vleState = new VLE_STATE();
 	
 	//populate the attributes
-	vleState.userName = vleStateJSONObj.userName;
+	vleState.username = vleStateJSONObj.username;
 	vleState.workgroupId =  vleStateJSONObj.userId;
 	vleState.dataId = vleStateJSONObj.userId;
 	

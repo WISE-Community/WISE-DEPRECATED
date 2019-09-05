@@ -1,17 +1,19 @@
 <div class="library-project-details" mat-dialog-content>
   <div fxLayout="row">
     <div fxLayout="row">
-      <div class="mat-card-avatar" [style.background-image]="data.project.thumbStyle"></div>
+      <div class="mat-card-avatar" [style.background-image]="project.thumbStyle"></div>
       <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
         <div fxLayout="column">
-          <div class="mat-card-title mat-body-2">{{ data.project.metadata.title }}</div>
+          <div class="mat-card-title mat-body-2">{{ project.metadata.title }}</div>
           <div class="mat-card-subtitle">
+            <div *ngIf="project.metadata.grades.length || project.metadata.totalTime">
+              <ng-container *ngIf="project.metadata.grades.length" i18n>Grade level:</ng-container>
+              <span *ngFor="let g of project.metadata.grades; let isLast=last"> {{ g }}{{ isLast ? '' : ', ' }}</span>
+              <ng-container *ngIf="project.metadata.grades.length && project.metadata.totalTime">&nbsp;|&nbsp;</ng-container>
+              <ng-container *ngIf="project.metadata.totalTime" i18n>Duration: {{ project.metadata.totalTime }}</ng-container>
+            </div>
             <div>
-              <ng-container *ngIf="data.project.metadata.grades.length" i18n>Grade level:</ng-container>
-              <span *ngFor="let g of data.project.metadata.grades; let isLast=last"> {{ g }}{{ isLast ? '' : ', ' }}</span>
-              <ng-container *ngIf="data.project.metadata.grades.length && data.project.metadata.totalTime">&nbsp;|&nbsp;</ng-container>
-              <ng-container *ngIf="data.project.metadata.totalTime" i18n>Duration: {{ data.project.metadata.totalTime }}</ng-container><br />
-              <ng-container i18n>Unit ID: {{ data.project.id }}</ng-container>
+              <ng-container i18n>Unit ID: {{ project.id }}</ng-container>
             </div>
           </div>
         </div>
@@ -20,39 +22,61 @@
     </div>
     <span fxFlex></span>
     <app-library-project-menu *ngIf="isTeacher && !isRunProject"
-                              [project]="data.project"></app-library-project-menu>
+                              [project]="project"></app-library-project-menu>
   </div>
-  <div class="library-project-details__info info-block">
-    <p *ngIf="data.project.wiseVersion === 4"
-       class="warn" 
-       fxLayout="row" 
-       fxLayoutAlign="start center">
-      <mat-icon color="warn">warning</mat-icon>&nbsp;
-      <strong class="more-info"
-              i18n-matTooltip
-              matTooltip="This unit is from an old version of WISE and will eventually be phased out."
-              [matTooltipPosition]="'after'"
-              i18n>Legacy Unit</strong>
-    </p>
-    <div class="library-project-details__summary" [innerHTML]="data.project.metadata.summary"></div>
-    <p *ngIf="ngss.disciplines.length">
-      <strong i18n>Discipline:</strong>
-      <ng-container *ngFor="let discipline of ngss.disciplines; let isLast=last">
-        {{ discipline.name }}{{ isLast ? '' : ' / ' }}
-      </ng-container>
-    </p>
-    <p *ngIf="data.project.metadata.features"><strong i18n>Features:</strong> {{ data.project.metadata.features }}</p>
-    <p *ngIf="ngss.dciArrangements.length">
-      <strong i18n>NGSS Performance Expectations: </strong>
-      <ng-container *ngFor="let dcia of ngss.dciArrangements; let isLast=last">
-        <a href="{{ ngssWebUrl }}{{ dcia.id }}" target="_blank">{{ dcia.id }} {{ dcia.name }}</a>
-        <ng-container *ngIf="dcia.children.length">
-          (<ng-container *ngFor="let pe of dcia.children; let isLastChild=last"><a class="library-project-details__pe" href="{{ ngssWebUrl }}{{ pe.id }}"
-                                                                                   target="_blank" matTooltip="{{ pe.name }}"
-                                                                                   [matTooltipPosition]="'above'">{{ pe.id }}</a>{{ isLastChild ? '' : ', ' }}</ng-container>)
-        </ng-container>{{ isLast ? '' : ' / ' }}
-      </ng-container>
-    </p>
+  <div class="info-block">
+    <div class="library-project-details__info">
+      <p *ngIf="project.wiseVersion === 4"
+         class="warn"
+         fxLayout="row"
+         fxLayoutAlign="start center">
+        <mat-icon color="warn">warning</mat-icon>&nbsp;
+        <strong class="more-info"
+                tabindex="0"
+                i18n-matTooltip
+                matTooltip="This unit is from an old version of WISE that is no longer supported. Please find an alternate unit to use in the future or contact us for upgrade options."
+                [matTooltipPosition]="'after'"
+                i18n>Legacy Unit</strong>
+      </p>
+      <div *ngIf="project.metadata.summary" [innerHTML]="project.metadata.summary"></div>
+      <p *ngIf="ngss.disciplines.length">
+        <strong i18n>Discipline:</strong>
+        <ng-container *ngFor="let discipline of ngss.disciplines; let isLast=last">
+          {{ discipline.name }}{{ isLast ? '' : ' / ' }}
+        </ng-container>
+      </p>
+      <p *ngIf="project.metadata.features"><strong i18n>Features:</strong> {{ project.metadata.features }}</p>
+      <p *ngIf="ngss.dciArrangements.length">
+        <strong i18n>NGSS Performance Expectations: </strong>
+        <ng-container *ngFor="let dcia of ngss.dciArrangements; let isLast=last">
+          <a href="{{ ngssWebUrl }}{{ dcia.id }}" target="_blank">{{ dcia.id }} {{ dcia.name }}</a>
+          <ng-container *ngIf="dcia.children.length">
+            (<ng-container *ngFor="let pe of dcia.children; let isLastChild=last"><a class="library-project-details__pe" href="{{ ngssWebUrl }}{{ pe.id }}"
+                                                                                     target="_blank" matTooltip="{{ pe.name }}"
+                                                                                     [matTooltipPosition]="'above'">{{ pe.id }}</a>{{ isLastChild ? '' : ', ' }}</ng-container>)
+          </ng-container>{{ isLast ? '' : ' / ' }}
+        </ng-container>
+      </p>
+    </div>
+    <div class="library-project-details__license notice-bg-bg mat-caption secondary-text">
+      <img src="../../../../assets/img/by-sa.png" alt="CC BY-SA"/>&nbsp;
+      <span *ngIf="!isCopy" [ngSwitch]="authorsString.length">
+        <ng-container *ngSwitchCase="0" i18n><a href="{{project.uri}}" target="_blank">This unit</a> is licensed under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a>.</ng-container>
+        <ng-container *ngSwitchDefault i18n><a href="{{project.uri}}" target="_blank">This unit</a> is licensed under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a> by {{authorsString}}.</ng-container>
+      </span>
+      <span *ngIf="isCopy" [ngSwitch]="parentAuthorsString.length">
+        <ng-container *ngSwitchCase="0" i18n><a href="{{project.uri}}" target="_blank">This unit</a> is a copy of <a href="{{parentProject.uri}}" target="_blank">{{parentProject.title}}</a> (used under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a>).</ng-container>
+        <ng-container *ngSwitchDefault i18n><a href="{{project.uri}}" target="_blank">This unit</a> is a copy of <a href="{{parentProject.uri}}" target="_blank">{{parentProject.title}}</a> by {{parentAuthorsString}} (used under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a>).</ng-container>
+      </span> / 
+      <span *ngIf="!project.license"
+            class="more-info" 
+            [matTooltip]="licenseInfo" 
+            matTooltipPosition="above" 
+            tabindex="0" i18n>More</span>
+      <a *ngIf="project.license"
+          href="{{project.license}}"
+          target="_blank" i18n>View License</a>
+    </div>
   </div>
 </div>
 <div mat-dialog-actions
@@ -69,7 +93,7 @@
   </button>
   <a mat-flat-button
      color="primary"
-     href="{{previewLink}}"
+     href="{{project.uri}}"
      target="_blank">
     <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Preview</ng-container>
   </a>

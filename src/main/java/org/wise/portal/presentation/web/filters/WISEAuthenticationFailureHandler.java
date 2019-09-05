@@ -63,9 +63,9 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
   @Transactional
   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
       AuthenticationException exception) throws IOException, ServletException {
-    String userName = request.getParameter("username");
-    if (userName != null) {
-      User user = userService.retrieveUserByUsername(userName);
+    String username = request.getParameter("username");
+    if (username != null) {
+      User user = userService.retrieveUserByUsername(username);
       if (user != null) {
         MutableUserDetails userDetails = user.getUserDetails();
         Integer numberOfRecentFailedLoginAttempts = 1;
@@ -85,9 +85,8 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
     }
 
     if (this.isNewSite(request)) {
-      JSONObject responseJSON = new JSONObject();
       try {
-        responseJSON.put("status", "failure");
+        JSONObject responseJSON = ControllerUtil.createErrorResponse();
         responseJSON.put("isRecaptchaRequired", ControllerUtil.isReCaptchaRequired(request));
         response.getWriter().write(responseJSON.toString());
       } catch (JSONException e) {

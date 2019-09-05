@@ -3,12 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var UtilService = function () {
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var UtilService =
+/*#__PURE__*/
+function () {
   function UtilService($filter, $injector, $mdDialog, $q, $rootScope, $timeout) {
     _classCallCheck(this, UtilService);
 
@@ -21,7 +26,6 @@ var UtilService = function () {
     this.componentTypeToLabel = {};
     this.$translate = this.$filter('translate');
   }
-
   /**
    * Generates and returns a random key of the given length if
    * specified. If length is not specified, returns a key 10
@@ -30,7 +34,7 @@ var UtilService = function () {
 
 
   _createClass(UtilService, [{
-    key: 'generateKey',
+    key: "generateKey",
     value: function generateKey(length) {
       this.CHARS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
@@ -39,6 +43,7 @@ var UtilService = function () {
       }
 
       var key = '';
+
       for (var a = 0; a < length; a++) {
         key += this.CHARS[Math.floor(Math.random() * (this.CHARS.length - 1))];
       }
@@ -46,8 +51,7 @@ var UtilService = function () {
       return key;
     }
   }, {
-    key: 'convertStringToNumber',
-
+    key: "convertStringToNumber",
 
     /**
      * Try to convert a string to a number
@@ -59,11 +63,11 @@ var UtilService = function () {
       if (str != null && str != '' && !isNaN(Number(str))) {
         return Number(str);
       }
+
       return str;
     }
   }, {
-    key: 'makeCopyOfJSONObject',
-
+    key: "makeCopyOfJSONObject",
 
     /**
      * Create a copy of a JSON object
@@ -75,11 +79,11 @@ var UtilService = function () {
         var jsonObjectString = angular.toJson(jsonObject);
         return angular.fromJson(jsonObjectString);
       }
+
       return null;
     }
   }, {
-    key: 'getImageObjectFromBase64String',
-
+    key: "getImageObjectFromBase64String",
 
     /**
      * Get the image object
@@ -89,16 +93,16 @@ var UtilService = function () {
     value: function getImageObjectFromBase64String(img_b64) {
       // create a blob from the base64 image string
       var blob = this.dataURItoBlob(img_b64);
-
       var now = new Date().getTime();
       var filename = encodeURIComponent('picture_' + now + '.png');
       var pngFile = new File([blob], filename, {
-        lastModified: now, // optional - default = now
+        lastModified: now,
+        // optional - default = now
         type: 'image/png' // optional - default = ''
+
       });
       return pngFile;
     }
-
     /**
      * Convert base64/URLEncoded data component to raw binary data held in a string
      * @param dataURI base64/URLEncoded data
@@ -106,24 +110,25 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'dataURItoBlob',
+    key: "dataURItoBlob",
     value: function dataURItoBlob(dataURI) {
-      var byteString = void 0;
-      if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);else byteString = unescape(dataURI.split(',')[1]);
+      var byteString;
+      if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);else byteString = unescape(dataURI.split(',')[1]); // separate out the mime component
 
-      // separate out the mime component
-      var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]; // write the bytes of the string to a typed array
 
-      // write the bytes of the string to a typed array
       var ia = new Uint8Array(byteString.length);
+
       for (var i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
       }
-      return new Blob([ia], { type: mimeString });
+
+      return new Blob([ia], {
+        type: mimeString
+      });
     }
   }, {
-    key: 'getImageObjectFromImageElement',
-
+    key: "getImageObjectFromImageElement",
 
     /**
      * Get an image object from an image element
@@ -132,24 +137,22 @@ var UtilService = function () {
      */
     value: function getImageObjectFromImageElement(imageElement) {
       var imageObject = null;
+
       if (imageElement != null) {
         // create a canvas element that we will use to generate a base64 string
-        var canvas = document.createElement("canvas");
+        var canvas = document.createElement("canvas"); // set the width and height of the canvas to match the image dimensions
 
-        // set the width and height of the canvas to match the image dimensions
         canvas.width = imageElement.naturalWidth;
-        canvas.height = imageElement.naturalHeight;
+        canvas.height = imageElement.naturalHeight; // draw the image onto the canvas
 
-        // draw the image onto the canvas
         var ctx = canvas.getContext("2d");
         ctx.drawImage(imageElement, 0, 0);
-
         var dataURL = canvas.toDataURL("image/png");
         imageObject = this.getImageObjectFromBase64String(dataURL);
       }
+
       return imageObject;
     }
-
     /**
      * Check if the asset is an image
      * @param fileName the file name of the asset
@@ -157,7 +160,7 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'isImage',
+    key: "isImage",
     value: function isImage(fileName) {
       if (fileName != null) {
         var imageExtensionsRegEx = new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
@@ -168,9 +171,9 @@ var UtilService = function () {
           return true;
         }
       }
+
       return false;
     }
-
     /**
      * Check if the asset is a video
      * @param fileName the file name of the asset
@@ -178,7 +181,7 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'isVideo',
+    key: "isVideo",
     value: function isVideo(fileName) {
       if (fileName != null) {
         var videoExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
@@ -189,9 +192,9 @@ var UtilService = function () {
           return true;
         }
       }
+
       return false;
     }
-
     /**
      * Replace <a> and <button> elements with <wiselink> elements where
      * applicable
@@ -200,13 +203,12 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'insertWISELinks',
+    key: "insertWISELinks",
     value: function insertWISELinks(html) {
       html = this.insertWISELinkAnchors(html);
       html = this.insertWISELinkButtons(html);
       return html;
     }
-
     /**
      * Replace <a> elements that have the parameter wiselink=true with
      * <wiselink> elements
@@ -216,20 +218,17 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'insertWISELinkAnchors',
+    key: "insertWISELinkAnchors",
     value: function insertWISELinkAnchors(html) {
       var wiseLinkRegEx = new RegExp(/<a.*?wiselink="true".*?>(.*?)<\/a>/);
-      var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+      var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html); // loop until we have replaced all the matches
 
-      // loop until we have replaced all the matches
       while (wiseLinkRegExMatchResult != null) {
         // get the whole <a> element
-        var anchorHTML = wiseLinkRegExMatchResult[0];
+        var anchorHTML = wiseLinkRegExMatchResult[0]; // get the inner html of the <a> element
 
-        // get the inner html of the <a> element
-        var anchorText = wiseLinkRegExMatchResult[1];
+        var anchorText = wiseLinkRegExMatchResult[1]; // get the node id parameter of the <a> element
 
-        // get the node id parameter of the <a> element
         var nodeId = this.getWISELinkNodeId(anchorHTML);
 
         if (nodeId == null) {
@@ -238,22 +237,21 @@ var UtilService = function () {
 
         var componentIdAttr = "";
         var componentId = this.getWISELinkComponentId(anchorHTML);
+
         if (componentId != null) {
           componentIdAttr = "component-id='" + componentId + "'";
-        }
+        } // create the <wiselink> element
 
-        // create the <wiselink> element
-        var wiselinkHtml = "<wiselink type='link' link-text='" + anchorText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
 
-        // replace the <a> element with the <wiselink> element
-        html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
+        var wiselinkHtml = "<wiselink type='link' link-text='" + anchorText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>"; // replace the <a> element with the <wiselink> element
 
-        // search for the next <a> element with the parameter wiselink=true
+        html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml); // search for the next <a> element with the parameter wiselink=true
+
         wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
       }
+
       return html;
     }
-
     /**
      * Replace <button> elements that have the parameter wiselink=true
      * with <wiselink> elements
@@ -263,20 +261,17 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'insertWISELinkButtons',
+    key: "insertWISELinkButtons",
     value: function insertWISELinkButtons(html) {
       var wiseLinkRegEx = new RegExp(/<button.*?wiselink="true".*?>(.*?)<\/button>/);
-      var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+      var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html); // loop until we have replaced all the matches
 
-      // loop until we have replaced all the matches
       while (wiseLinkRegExMatchResult != null) {
         // get the whole <button> element
-        var buttonHTML = wiseLinkRegExMatchResult[0];
+        var buttonHTML = wiseLinkRegExMatchResult[0]; // get the inner html of the <button> element
 
-        // get the inner html of the <button> element
-        var buttonText = wiseLinkRegExMatchResult[1];
+        var buttonText = wiseLinkRegExMatchResult[1]; // get the node id parameter of the <button> element
 
-        // get the node id parameter of the <button> element
         var nodeId = this.getWISELinkNodeId(buttonHTML);
 
         if (nodeId == null) {
@@ -285,22 +280,21 @@ var UtilService = function () {
 
         var componentIdAttr = "";
         var componentId = this.getWISELinkComponentId(buttonHTML);
+
         if (componentId != null) {
           componentIdAttr = "component-id='" + componentId + "'";
-        }
+        } // create the <wiselink> element
 
-        // create the <wiselink> element
-        var wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
 
-        // replace the <button> element with the <wiselink> element
-        html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
+        var wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>"; // replace the <button> element with the <wiselink> element
 
-        // search for the next <button> element with the parameter wiselink=true
+        html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml); // search for the next <button> element with the parameter wiselink=true
+
         wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
       }
+
       return html;
     }
-
     /**
      * Get the node id from the wiselink element
      * e.g.
@@ -311,18 +305,19 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'getWISELinkNodeId',
+    key: "getWISELinkNodeId",
     value: function getWISELinkNodeId(html) {
       if (html != null) {
         var nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
         var nodeIdRegExResult = nodeIdRegEx.exec(html);
+
         if (nodeIdRegExResult != null) {
           return nodeIdRegExResult[1];
         }
       }
+
       return null;
     }
-
     /**
      * Get the component id from the wiselink element
      * e.g.
@@ -333,18 +328,19 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'getWISELinkComponentId',
+    key: "getWISELinkComponentId",
     value: function getWISELinkComponentId(html) {
       if (html != null) {
         var componentIdRegEx = new RegExp(/component-id=["'b](.*?)["']/, 'g');
         var componentIdRegExResult = componentIdRegEx.exec(html);
+
         if (componentIdRegExResult != null) {
           return componentIdRegExResult[1];
         }
       }
+
       return null;
     }
-
     /**
      * Get the link type from the wiselink element
      * e.g.
@@ -355,18 +351,19 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'getWISELinkType',
+    key: "getWISELinkType",
     value: function getWISELinkType(html) {
       if (html != null) {
         var typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
         var typeRegExResult = typeRegEx.exec(html);
+
         if (typeRegExResult != null) {
           return typeRegExResult[1];
         }
       }
+
       return null;
     }
-
     /**
      * Get the link text from the wiselink element
      * <wiselink link-text='Go to here'/>
@@ -376,18 +373,19 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'getWISELinkLinkText',
+    key: "getWISELinkLinkText",
     value: function getWISELinkLinkText(html) {
       if (html != null) {
         var linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
         var linkTextRegExResult = linkTextRegEx.exec(html);
+
         if (linkTextRegExResult != null) {
           return linkTextRegExResult[1];
         }
       }
+
       return null;
     }
-
     /**
      * Replace <wiselink> elements with <a> and <button> elements
      * @param html the html
@@ -395,13 +393,12 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'replaceWISELinks',
+    key: "replaceWISELinks",
     value: function replaceWISELinks(html) {
       html = this.replaceWISELinksHelper(html, '<wiselink.*?\/>');
       html = this.replaceWISELinksHelper(html, '<wiselink.*?>.*?<\/wiselink>');
       return html;
     }
-
     /**
      * Helper function for replacing <wiselink> elements with <a> and <button>
      * elements
@@ -411,29 +408,28 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'replaceWISELinksHelper',
+    key: "replaceWISELinksHelper",
     value: function replaceWISELinksHelper(html, regex) {
       var wiseLinkRegEx = new RegExp(regex);
-      var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+      var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html); // loop until we have replaced all the matches
 
-      // loop until we have replaced all the matches
       while (wiseLinkRegExMatchResult != null) {
         /*
          * get the whole match
          * e.g. <wiselink type='link' node-id='node5' link-text='Go to here'/>
          */
-        var wiseLinkHTML = wiseLinkRegExMatchResult[0];
+        var wiseLinkHTML = wiseLinkRegExMatchResult[0]; // get the node id, component id (if exists), type and link text from the match
 
-        // get the node id, component id (if exists), type and link text from the match
         var nodeId = this.getWISELinkNodeId(wiseLinkHTML);
         var componentId = this.getWISELinkComponentId(wiseLinkHTML);
         var componentHTML = '';
+
         if (componentId != null && componentId != '') {
           componentHTML = "component-id='" + componentId + "'";
         }
+
         var type = this.getWISELinkType(wiseLinkHTML);
         var linkText = this.getWISELinkLinkText(wiseLinkHTML);
-
         var newElement = null;
 
         if (type == 'link') {
@@ -450,14 +446,14 @@ var UtilService = function () {
         if (newElement != null) {
           // replace the wiselink with the new element
           html = html.replace(wiseLinkHTML, newElement);
-        }
+        } // find the next match
 
-        // find the next match
+
         wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
       }
+
       return html;
     }
-
     /**
      * Create a custom summernote button that inserts a WISE asset into
      * summernote
@@ -472,21 +468,19 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'createInsertAssetButton',
+    key: "createInsertAssetButton",
     value: function createInsertAssetButton(controller, projectId, nodeId, componentId, target, tooltip) {
       var thisRootScope = this.$rootScope;
 
       var InsertAssetButton = function InsertAssetButton(context) {
         var ui = $.summernote.ui;
-
         var button = ui.button({
           contents: '<i class="note-icon-picture"></i>',
           tooltip: tooltip,
           click: function click() {
             // remember the position of the cursor
-            context.invoke('editor.saveRange');
+            context.invoke('editor.saveRange'); // create the params for opening the asset chooser
 
-            // create the params for opening the asset chooser
             var params = {};
             params.isPopup = true;
 
@@ -502,17 +496,16 @@ var UtilService = function () {
               params.componentId = componentId;
             }
 
-            params.target = target;
+            params.target = target; // display the asset chooser
 
-            // display the asset chooser
             thisRootScope.$broadcast('openAssetChooser', params);
           }
         });
         return button.render(); // return button as jquery object
       };
+
       return InsertAssetButton;
     }
-
     /**
      * Create a custom summernote button that inserts a WISE link into
      * summernote
@@ -527,21 +520,19 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'createInsertWISELinkButton',
+    key: "createInsertWISELinkButton",
     value: function createInsertWISELinkButton(controller, projectId, nodeId, componentId, target, tooltip) {
       var thisRootScope = this.$rootScope;
 
       var InsertWISELinkButton = function InsertWISELinkButton(context) {
         var ui = $.summernote.ui;
-
         var button = ui.button({
           contents: '<i class="note-icon-link"></i>',
           tooltip: tooltip,
           click: function click() {
             // remember the position of the cursor
-            context.invoke('editor.saveRange');
+            context.invoke('editor.saveRange'); // create the params for opening the WISE Link chooser
 
-            // create the params for opening the WISE Link chooser
             var params = {};
 
             if (projectId != null) {
@@ -556,17 +547,16 @@ var UtilService = function () {
               params.componentId = componentId;
             }
 
-            params.target = target;
+            params.target = target; // display the WISE Link authoring popup
 
-            // display the WISE Link authoring popup
             thisRootScope.$broadcast('openWISELinkChooser', params);
           }
         });
         return button.render(); // return button as jquery object
       };
+
       return InsertWISELinkButton;
     }
-
     /**
      * Remove html tags from the string. Also remove new lines.
      * @param html an html string
@@ -574,18 +564,19 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'removeHTMLTags',
+    key: "removeHTMLTags",
     value: function removeHTMLTags(html) {
       var text = '';
+
       if (html != null) {
         // remove tags
         text = html.replace(/<\/?[^>]+(>|$)/g, " ");
         text = text.replace(/\n/g, " ");
         text = text.replace(/\r/g, " ");
       }
+
       return text;
     }
-
     /**
      * Check if a string ends with a specific string
      * @param subjectString the main string
@@ -595,16 +586,16 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'endsWith',
+    key: "endsWith",
     value: function endsWith(subjectString, searchString, position) {
       if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
         position = subjectString.length;
       }
+
       position -= searchString.length;
       var lastIndex = subjectString.lastIndexOf(searchString, position);
       return lastIndex !== -1 && lastIndex === position;
     }
-
     /**
      * Sort the objects by server save time
      * @param object1 an object
@@ -615,7 +606,7 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'sortByServerSaveTime',
+    key: "sortByServerSaveTime",
     value: function sortByServerSaveTime(object1, object2) {
       if (object1.serverSaveTime < object2.serverSaveTime) {
         return -1;
@@ -625,7 +616,6 @@ var UtilService = function () {
         return 0;
       }
     }
-
     /**
      * Convert milliseconds since the epoch to a pretty printed date time
      * @param milliseconds the milliseconds since the epoch
@@ -635,15 +625,16 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'convertMillisecondsToFormattedDateTime',
+    key: "convertMillisecondsToFormattedDateTime",
     value: function convertMillisecondsToFormattedDateTime(milliseconds) {
       var date = new Date(milliseconds);
+
       if (date != null) {
         return date.toDateString() + " " + date.toLocaleTimeString();
       }
+
       return "";
     }
-
     /**
      * Get the label for the given component type
      * @param componentType string
@@ -651,7 +642,7 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'getComponentTypeLabel',
+    key: "getComponentTypeLabel",
     value: function getComponentTypeLabel(componentType) {
       /*
        * check if we have already obtained the label for this component type
@@ -661,6 +652,7 @@ var UtilService = function () {
 
       if (label == null) {
         var componentService = this.$injector.get(componentType + 'Service');
+
         if (componentService != null && componentService.getComponentTypeLabel != null) {
           label = componentService.getComponentTypeLabel();
           this.componentTypeToLabel[componentType] = label;
@@ -674,9 +666,9 @@ var UtilService = function () {
          */
         label = componentType;
       }
+
       return label;
     }
-
     /**
      * Check if two arrays contain the same values. This is commonly used to
      * check if two arrays of ids contain the same values. The order of the
@@ -695,12 +687,11 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'arraysContainSameValues',
+    key: "arraysContainSameValues",
     value: function arraysContainSameValues(array1, array2) {
       if (array1 != null && array2 != null) {
         var array1Copy = this.makeCopyOfJSONObject(array1);
         array1Copy.sort();
-
         var array2Copy = this.makeCopyOfJSONObject(array2);
         array2Copy.sort();
 
@@ -708,9 +699,9 @@ var UtilService = function () {
           return true;
         }
       }
+
       return false;
     }
-
     /**
      * Whether there are any connected components
      * @param componentContent the component content
@@ -718,17 +709,18 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'hasConnectedComponent',
+    key: "hasConnectedComponent",
     value: function hasConnectedComponent(componentContent) {
       if (componentContent != null) {
         var connectedComponents = componentContent.connectedComponents;
+
         if (connectedComponents != null && connectedComponents.length > 0) {
           return true;
         }
       }
+
       return false;
     }
-
     /**
      * @param componentContent The component content.
      * @return Whether there are any connected components with a field we always
@@ -736,10 +728,11 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'hasConnectedComponentAlwaysField',
+    key: "hasConnectedComponentAlwaysField",
     value: function hasConnectedComponentAlwaysField(componentContent) {
       if (componentContent != null) {
         var connectedComponents = componentContent.connectedComponents;
+
         if (connectedComponents != null && connectedComponents.length > 0) {
           var _iteratorNormalCompletion = true;
           var _didIteratorError = false;
@@ -767,8 +760,8 @@ var UtilService = function () {
                   _iteratorError2 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                      _iterator2.return();
+                    if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+                      _iterator2["return"]();
                     }
                   } finally {
                     if (_didIteratorError2) {
@@ -783,8 +776,8 @@ var UtilService = function () {
             _iteratorError = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+                _iterator["return"]();
               }
             } finally {
               if (_didIteratorError) {
@@ -794,9 +787,9 @@ var UtilService = function () {
           }
         }
       }
+
       return false;
     }
-
     /**
      * Whether this component shows work from a connected component
      * @param componentContent the component content
@@ -804,10 +797,11 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'hasShowWorkConnectedComponent',
+    key: "hasShowWorkConnectedComponent",
     value: function hasShowWorkConnectedComponent(componentContent) {
       if (componentContent != null) {
         var connectedComponents = componentContent.connectedComponents;
+
         if (connectedComponents != null) {
           var _iteratorNormalCompletion3 = true;
           var _didIteratorError3 = false;
@@ -828,8 +822,8 @@ var UtilService = function () {
             _iteratorError3 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+              if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+                _iterator3["return"]();
               }
             } finally {
               if (_didIteratorError3) {
@@ -839,9 +833,9 @@ var UtilService = function () {
           }
         }
       }
+
       return false;
     }
-
     /**
      * Whether this component imports work from a connected component
      * @param componentContent the component content
@@ -849,10 +843,11 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'hasImportWorkConnectedComponent',
+    key: "hasImportWorkConnectedComponent",
     value: function hasImportWorkConnectedComponent(componentContent) {
       if (componentContent != null) {
         var connectedComponents = componentContent.connectedComponents;
+
         if (connectedComponents != null) {
           var _iteratorNormalCompletion4 = true;
           var _didIteratorError4 = false;
@@ -873,8 +868,8 @@ var UtilService = function () {
             _iteratorError4 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                _iterator4.return();
+              if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+                _iterator4["return"]();
               }
             } finally {
               if (_didIteratorError4) {
@@ -884,9 +879,9 @@ var UtilService = function () {
           }
         }
       }
+
       return false;
     }
-
     /**
      * Check if an array has any non null elements.
      * @param arrayToCheck An array which may have null and non null elements.
@@ -895,7 +890,7 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'arrayHasNonNullElement',
+    key: "arrayHasNonNullElement",
     value: function arrayHasNonNullElement(arrayToCheck) {
       var _iteratorNormalCompletion5 = true;
       var _didIteratorError5 = false;
@@ -914,8 +909,8 @@ var UtilService = function () {
         _iteratorError5 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+            _iterator5["return"]();
           }
         } finally {
           if (_didIteratorError5) {
@@ -926,7 +921,6 @@ var UtilService = function () {
 
       return false;
     }
-
     /**
      * Takes a string and breaks it up into multiple lines so that the length of
      * each line does not exceed a certain number of characters. This code was
@@ -938,17 +932,19 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'wordWrap',
+    key: "wordWrap",
     value: function wordWrap(str, maxWidth) {
       if (str.length <= maxWidth) {
         return str;
       }
+
       var newLineStr = "\n";
       var done = false;
       var res = '';
+
       do {
-        var found = false;
-        // Inserts new line at first whitespace of the line
+        var found = false; // Inserts new line at first whitespace of the line
+
         for (var i = maxWidth - 1; i >= 0; i--) {
           if (this.testWhite(str.charAt(i))) {
             res = res + [str.slice(0, i), newLineStr].join('');
@@ -956,8 +952,9 @@ var UtilService = function () {
             found = true;
             break;
           }
-        }
-        // Inserts new line at maxWidth position, the word is too long to wrap
+        } // Inserts new line at maxWidth position, the word is too long to wrap
+
+
         if (!found) {
           res += [str.slice(0, maxWidth), newLineStr].join('');
           str = str.slice(maxWidth);
@@ -968,7 +965,6 @@ var UtilService = function () {
 
       return res + str;
     }
-
     /**
      * Helper function for wordWrap().
      * @param x A single character string.
@@ -976,14 +972,13 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'testWhite',
+    key: "testWhite",
     value: function testWhite(x) {
       var white = new RegExp(/^\s$/);
       return white.test(x.charAt(0));
     }
   }, {
-    key: 'wordCount',
-
+    key: "wordCount",
 
     /**
      * Get the number of words in the string.
@@ -993,7 +988,6 @@ var UtilService = function () {
     value: function wordCount(str) {
       return str.trim().split(/\s+/).length;
     }
-
     /**
      * Check if there is a 'nodeEntered' event in the array of events.
      * @param events An array of events.
@@ -1001,7 +995,7 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'hasNodeEnteredEvent',
+    key: "hasNodeEnteredEvent",
     value: function hasNodeEnteredEvent(events) {
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
@@ -1020,8 +1014,8 @@ var UtilService = function () {
         _iteratorError6 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+            _iterator6["return"]();
           }
         } finally {
           if (_didIteratorError6) {
@@ -1032,7 +1026,6 @@ var UtilService = function () {
 
       return false;
     }
-
     /**
      * Determine whether the component has been authored to import work.
      * @param componentContent The component content.
@@ -1040,11 +1033,10 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'hasImportWorkConnectedComponent',
+    key: "hasImportWorkConnectedComponent",
     value: function hasImportWorkConnectedComponent(componentContent) {
       return this.hasXConnectedComponent(componentContent, 'importWork');
     }
-
     /**
      * Determine whether the component has been authored to show work.
      * @param componentContent The component content.
@@ -1052,11 +1044,10 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'hasShowWorkConnectedComponent',
+    key: "hasShowWorkConnectedComponent",
     value: function hasShowWorkConnectedComponent(componentContent) {
       return this.hasXConnectedComponent(componentContent, 'showWork');
     }
-
     /**
      * Determine whether the component has been authored to show classmate work.
      * @param componentContent The component content.
@@ -1064,11 +1055,10 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'hasShowClassmateWorkConnectedComponent',
+    key: "hasShowClassmateWorkConnectedComponent",
     value: function hasShowClassmateWorkConnectedComponent(componentContent) {
       return this.hasXConnectedComponent(componentContent, 'showClassmateWork');
     }
-
     /**
      * Determine whether the component has a connected component of the given type.
      * @param componentContent The component content.
@@ -1077,11 +1067,11 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'hasXConnectedComponent',
+    key: "hasXConnectedComponent",
     value: function hasXConnectedComponent(componentContent, connectedComponentType) {
       if (componentContent.connectedComponents != null) {
-        var connectedComponents = componentContent.connectedComponents;
-        // loop through all the connected components
+        var connectedComponents = componentContent.connectedComponents; // loop through all the connected components
+
         var _iteratorNormalCompletion7 = true;
         var _didIteratorError7 = false;
         var _iteratorError7 = undefined;
@@ -1100,8 +1090,8 @@ var UtilService = function () {
           _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-              _iterator7.return();
+            if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+              _iterator7["return"]();
             }
           } finally {
             if (_didIteratorError7) {
@@ -1110,9 +1100,9 @@ var UtilService = function () {
           }
         }
       }
+
       return false;
     }
-
     /**
      * Temporarily highlight an element in the DOM.
      * @param id The id of the element.
@@ -1120,34 +1110,33 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'temporarilyHighlightElement',
+    key: "temporarilyHighlightElement",
     value: function temporarilyHighlightElement(id) {
       var _this = this;
 
       var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
-
       var element = $('#' + id);
       var originalBackgroundColor = element.css('backgroundColor');
       element.css('background-color', '#FFFF9C');
-
       /*
        * Use a timeout before starting to transition back to
        * the original background color. For some reason the
        * element won't get highlighted in the first place
        * unless this timeout is used.
        */
+
       this.$timeout(function () {
         // slowly fade back to the original background color
         element.css({
           'transition': 'background-color 2s ease-in-out',
           'background-color': originalBackgroundColor
         });
-
         /*
          * remove these styling fields after we perform
          * the fade otherwise the regular mouseover
          * background color change will not work
          */
+
         _this.$timeout(function () {
           element.css({
             'transition': '',
@@ -1156,7 +1145,6 @@ var UtilService = function () {
         }, 2000);
       }, duration);
     }
-
     /**
      * Render the component state and then generate an image from it.
      * @param componentState The component state to render.
@@ -1164,13 +1152,13 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'generateImageFromComponentState',
+    key: "generateImageFromComponentState",
     value: function generateImageFromComponentState(componentState) {
       var _this2 = this;
 
       var deferred = this.$q.defer();
       this.$mdDialog.show({
-        template: '\n        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>\n        <div align="center" style="position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;">\n          <span>{{ "importingWork" | translate }}...</span>\n          <br/>\n          <br/>\n          <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n        </div>\n        <component node-id="{{nodeId}}"\n                   component-id="{{componentId}}"\n                   component-state="{{componentState}}"\n                   mode="student"></component>\n      ',
+        template: "\n        <div style=\"position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;\"></div>\n        <div align=\"center\" style=\"position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;\">\n          <span>{{ \"importingWork\" | translate }}...</span>\n          <br/>\n          <br/>\n          <md-progress-circular md-mode=\"indeterminate\"></md-progress-circular>\n        </div>\n        <component node-id=\"{{nodeId}}\"\n                   component-id=\"{{componentId}}\"\n                   component-state=\"{{componentState}}\"\n                   mode=\"student\"></component>\n      ",
         locals: {
           nodeId: componentState.nodeId,
           componentId: componentState.componentId,
@@ -1178,16 +1166,19 @@ var UtilService = function () {
         },
         controller: DialogController
       });
+
       function DialogController($scope, $mdDialog, nodeId, componentId, componentState) {
         $scope.nodeId = nodeId;
         $scope.componentId = componentId;
         $scope.componentState = componentState;
+
         $scope.closeDialog = function () {
           $mdDialog.hide();
         };
       }
-      DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
-      // wait for the component in the dialog to finish rendering
+
+      DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState']; // wait for the component in the dialog to finish rendering
+
       var doneRenderingComponentListener = this.$rootScope.$on('doneRenderingComponent', function (event, args) {
         if (componentState.nodeId == args.nodeId && componentState.componentId == args.componentId) {
           _this2.$timeout(function () {
@@ -1197,7 +1188,9 @@ var UtilService = function () {
                * doneRenderingComponent is fired in the future.
                */
               doneRenderingComponentListener();
+
               _this2.$timeout.cancel(destroyDoneRenderingComponentListenerTimeout);
+
               deferred.resolve(image);
             });
           }, 1000);
@@ -1207,13 +1200,13 @@ var UtilService = function () {
        * Set a timeout to destroy the listener in case there is an error creating the image and
        * we don't get to destroying it above.
        */
+
       var destroyDoneRenderingComponentListenerTimeout = this.$timeout(function () {
         // destroy the listener
         doneRenderingComponentListener();
       }, 10000);
       return deferred.promise;
     }
-
     /**
      * The component state has been rendered in the DOM and now we want to create an image
      * from it.
@@ -1222,7 +1215,7 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'generateImageFromComponentStateHelper',
+    key: "generateImageFromComponentStateHelper",
     value: function generateImageFromComponentStateHelper(componentState) {
       var _this3 = this;
 
@@ -1230,11 +1223,11 @@ var UtilService = function () {
       var componentService = this.$injector.get(componentState.componentType + 'Service');
       componentService.generateImageFromRenderedComponentState(componentState).then(function (image) {
         deferred.resolve(image);
+
         _this3.$mdDialog.hide();
       });
       return deferred.promise;
     }
-
     /**
      * Get the connected component associated with the component state.
      * @param componentContent The component content.
@@ -1243,7 +1236,7 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'getConnectedComponentByComponentState',
+    key: "getConnectedComponentByComponentState",
     value: function getConnectedComponentByComponentState(componentContent, componentState) {
       var nodeId = componentState.nodeId;
       var componentId = componentState.componentId;
@@ -1265,8 +1258,8 @@ var UtilService = function () {
         _iteratorError8 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion8 && _iterator8.return) {
-            _iterator8.return();
+          if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
+            _iterator8["return"]();
           }
         } finally {
           if (_didIteratorError8) {
@@ -1278,21 +1271,20 @@ var UtilService = function () {
       return null;
     }
   }, {
-    key: 'showJSONValidMessage',
+    key: "showJSONValidMessage",
     value: function showJSONValidMessage() {
       this.setIsJSONValidMessage(true);
     }
   }, {
-    key: 'showJSONInvalidMessage',
+    key: "showJSONInvalidMessage",
     value: function showJSONInvalidMessage() {
       this.setIsJSONValidMessage(false);
     }
   }, {
-    key: 'hideJSONValidMessage',
+    key: "hideJSONValidMessage",
     value: function hideJSONValidMessage() {
       this.setIsJSONValidMessage(null);
     }
-
     /**
      * Show the message in the toolbar that says "JSON Valid" or "JSON Invalid".
      * @param isJSONValid
@@ -1302,12 +1294,14 @@ var UtilService = function () {
      */
 
   }, {
-    key: 'setIsJSONValidMessage',
+    key: "setIsJSONValidMessage",
     value: function setIsJSONValidMessage(isJSONValid) {
-      this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
+      this.$rootScope.$broadcast('setIsJSONValid', {
+        isJSONValid: isJSONValid
+      });
     }
   }, {
-    key: 'moveObjectUp',
+    key: "moveObjectUp",
     value: function moveObjectUp(objects, index) {
       if (index !== 0) {
         var object = objects[index];
@@ -1316,7 +1310,7 @@ var UtilService = function () {
       }
     }
   }, {
-    key: 'moveObjectDown',
+    key: "moveObjectDown",
     value: function moveObjectDown(objects, index) {
       if (index !== objects.length - 1) {
         var object = objects[index];
@@ -1325,30 +1319,48 @@ var UtilService = function () {
       }
     }
   }, {
-    key: 'restoreSummernoteCursorPosition',
+    key: "restoreSummernoteCursorPosition",
     value: function restoreSummernoteCursorPosition(summernoteId) {
       $('#' + summernoteId).summernote('editor.restoreRange');
       $('#' + summernoteId).summernote('editor.focus');
     }
   }, {
-    key: 'insertImageIntoSummernote',
+    key: "insertImageIntoSummernote",
     value: function insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
       $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
     }
   }, {
-    key: 'insertVideoIntoSummernote',
+    key: "insertVideoIntoSummernote",
     value: function insertVideoIntoSummernote(summernoteId, fullAssetPath) {
       var videoElement = document.createElement('video');
       videoElement.controls = 'true';
       videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
       $('#' + summernoteId).summernote('insertNode', videoElement);
     }
+  }, {
+    key: "rgbToHex",
+    value: function rgbToHex(color, opacity) {
+      var values = color.replace(/rgb?\(/, '').replace(/\)/, '').replace(/[\s+]/g, '').split(',');
+      var a = parseFloat(opacity || 1),
+          r = Math.floor(a * parseInt(values[0]) + (1 - a) * 255),
+          g = Math.floor(a * parseInt(values[1]) + (1 - a) * 255),
+          b = Math.floor(a * parseInt(values[2]) + (1 - a) * 255);
+      return "#" + ("0" + r.toString(16)).slice(-2) + ("0" + g.toString(16)).slice(-2) + ("0" + b.toString(16)).slice(-2);
+    }
+  }, {
+    key: "isMatchingPeriods",
+    value: function isMatchingPeriods(periodId1, periodId2) {
+      return this.isAllPeriods(periodId1) || this.isAllPeriods(periodId2) || periodId1 == periodId2;
+    }
+  }, {
+    key: "isAllPeriods",
+    value: function isAllPeriods(periodId) {
+      return periodId == null || periodId === -1;
+    }
   }]);
 
   return UtilService;
-}();
-
-// Get the last element of the array
+}(); // Get the last element of the array
 
 
 if (!Array.prototype.last) {
@@ -1358,6 +1370,6 @@ if (!Array.prototype.last) {
 }
 
 UtilService.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$timeout'];
-
-exports.default = UtilService;
+var _default = UtilService;
+exports["default"] = _default;
 //# sourceMappingURL=utilService.js.map

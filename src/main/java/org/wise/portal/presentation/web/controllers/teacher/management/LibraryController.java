@@ -61,7 +61,7 @@ public class LibraryController {
   private RunService runService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   /**
    * Handles request for teacher's project library, which includes both public projects
@@ -122,7 +122,7 @@ public class LibraryController {
     Map<Long,Date> projectRunDateMap = new HashMap<Long,Date>(); //a map to contain projectId to run date
     Map<Long,Long> projectRunIdMap = new HashMap<Long,Long>(); //a map to contain projectId to run id
 
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
 
     int totalActiveProjects = 0;
     int totalArchivedProjects = 0;
@@ -188,8 +188,8 @@ public class LibraryController {
       String projectMetadataSettings = portal.getProjectMetadataSettings();
       modelMap.put("projectMetadataSettings", projectMetadataSettings);
     } catch (ObjectNotFoundException e) {
-      // if this fails, get the default project metada settings from wiseProperties
-      modelMap.put("projectMetadataSettings", wiseProperties.getProperty("defaultProjectMetadataSettings", ""));
+      // if this fails, get the default project metada settings from appProperties
+      modelMap.put("projectMetadataSettings", appProperties.getProperty("defaultProjectMetadataSettings", ""));
     }
     return "teacher/management/library";
   }
@@ -201,7 +201,7 @@ public class LibraryController {
   protected String handleGETPublicProjectLibrary(ModelMap modelMap) throws Exception {
     List<Project> projectList = projectService.getLibraryProjectList();
     Map<Long, String> projectThumbMap = new TreeMap<Long, String>();
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     List<Project> currentProjectList = new ArrayList<Project>();
     for (Project p : projectList) {
       if (p.isCurrent()) {

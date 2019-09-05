@@ -48,6 +48,8 @@ public interface Run extends Persistable {
    */
   Long getId();
 
+  void setId(Long id);
+
   /**
    * @return the endtime
    */
@@ -378,4 +380,10 @@ public interface Run extends Persistable {
    * @return String survey for this run
    */
   void setSurvey(String survey);
+
+  Long getStartTimeMilliseconds();
+
+  Long getEndTimeMilliseconds();
+
+  Boolean isActive();
 }

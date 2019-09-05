@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -43,6 +43,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.opencsv.CSVWriter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -77,8 +78,6 @@ import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.utils.FileManager;
 
-import au.com.bytecode.opencsv.CSVWriter;
-
 /**
  * Handles student work export in XLS format
  * @author Geoffrey Kwan
@@ -87,7 +86,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 public class VLEGetXLS {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private VLEService vleService;
@@ -273,7 +272,7 @@ public class VLEGetXLS {
       projectMetaDataJSONString = metadata.toJSONString();
     }
 
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String rawProjectUrl = run.getProject().getModulePath();
     String projectPath = curriculumBaseDir + rawProjectUrl;
 
@@ -5117,7 +5116,7 @@ public class VLEGetXLS {
     if (includeMetaDataCells) {
       String teacherLogin = "";
       try {
-        teacherLogin = teacherUserInfoJSONObject.getString("userName");
+        teacherLogin = teacherUserInfoJSONObject.getString("username");
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -5695,7 +5694,7 @@ public class VLEGetXLS {
     String teacherLogin = "";
 
     try {
-      teacherLogin = teacherUserInfoJSONObject.getString("userName");
+      teacherLogin = teacherUserInfoJSONObject.getString("username");
     } catch (JSONException e1) {
       e1.printStackTrace();
     }

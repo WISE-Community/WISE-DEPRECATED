@@ -8,6 +8,7 @@
 
 const gulp = require('gulp');
 const babel = require('gulp-babel');
+const exec = require('child_process').exec;
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
@@ -27,6 +28,9 @@ const sass = require('gulp-sass');
 const sassOptions = { style: 'compact' };
 const paths = ['./src/main/webapp/wise5/style/**/*.scss',
   './src/main/webapp/wise5/themes/*/style/**/*.scss'];
+const sitePaths = ['./src/main/webapp/site/src/**/*.ts',
+  './src/main/webapp/site/src/**/*.html'
+];
 const autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions',
     'Firefox ESR', 'not ie <= 10'] };
 
@@ -72,6 +76,19 @@ gulp.task('watch-sass', gulp.series('set-watch', function(done) {
     });
 }));
 
+gulp.task('site-i18n', (cb) => {
+  console.log('[ng xi18n] Generating messages start...');
+  exec('ng xi18n', (err, stdout, stderr) => {
+    console.log('[ng xi18n] Generating messages complete!');
+    console.log('[npm run ngx-extractor] Generating messages start...');
+    exec('npm run ngx-extractor', (err, stdout, stderr) => {
+      console.log('[npm run ngx-extractor] Generating messages complete!');
+      cb(err);
+    });
+    cb(err);
+  });
+});
+
 gulp.task('transpile', gulp.series(() => {
   return gulp.watch(['./src/main/webapp/wise5/**/*.es6'])
     .on('change', (changedFilePath, stats) => {
@@ -87,7 +104,7 @@ gulp.task('transpile', gulp.series(() => {
 
     gulp.src(changedFilePath)
       .pipe(sourcemaps.init())
-      .pipe(babel({ presets: ['es2015'] }))
+      .pipe(babel({ presets: ['@babel/preset-env'] }))
       .on('error', console.error.bind(console))
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(changedFileDir));

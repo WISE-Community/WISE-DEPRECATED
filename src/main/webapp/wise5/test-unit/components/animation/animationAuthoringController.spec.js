@@ -12,6 +12,12 @@ require('angular-mocks');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var mockUtilService = {
+  generateKey: function generateKey(length) {
+    return '1234567890';
+  }
+};
+
 describe('AnimationAuthoringController', function () {
 
   var $controller = void 0;
@@ -45,7 +51,7 @@ describe('AnimationAuthoringController', function () {
     $scope.componentContent = JSON.parse(JSON.stringify(component));
     $scope.authoringComponentContent = JSON.parse(JSON.stringify(component));
 
-    animationAuthoringController = $controller('AnimationAuthoringController', { $scope: $scope });
+    animationAuthoringController = $controller('AnimationAuthoringController', { $scope: $scope, UtilService: mockUtilService });
   }));
 
   it('should add an animation object', function () {

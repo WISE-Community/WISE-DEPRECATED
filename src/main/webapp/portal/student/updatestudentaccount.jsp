@@ -33,7 +33,7 @@
 					</spring:bind>
 				</div>
 				<form:form method="post" action="updatestudentaccount.html"
-					commandName="studentAccountForm" id="studentRegForm"
+					modelAttribute="studentAccountForm" id="studentRegForm"
 					autocomplete='off'>
 						<table>
 							<tr>

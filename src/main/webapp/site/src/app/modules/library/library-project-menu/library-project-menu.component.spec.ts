@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import { LibraryProjectMenuComponent } from "./library-project-menu.component";
 import { TeacherService } from "../../../teacher/teacher.service";
 import { Project } from "../../../domain/project";
@@ -15,7 +15,7 @@ export class MockUserService {
     user.firstName = 'Demo';
     user.lastName = 'Teacher';
     user.role = 'teacher';
-    user.userName = 'DemoTeacher';
+    user.username = 'DemoTeacher';
     user.id = 123456;
     return Observable.create( observer => {
       observer.next(user);
@@ -28,7 +28,12 @@ export class MockUserService {
 }
 
 export class MockTeacherService {
-
+  getProjectUsage(projectId: number): Observable<number> {
+    return Observable.create(observer => {
+      observer.next(projectId);
+      observer.complete();
+    });
+  }
 }
 
 export class MockConfigService {
@@ -65,7 +70,7 @@ describe('LibraryProjectMenuComponent', () => {
     project.name = "Photosynthesis";
     const user = new User();
     user.id = 123456;
-    user.userName = "Spongebob Squarepants";
+    user.username = "Spongebob Squarepants";
     user.displayName = "Spongebob Squarepants";
     project.owner = user;
     component.project = project;

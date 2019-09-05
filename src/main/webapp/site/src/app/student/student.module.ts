@@ -6,12 +6,12 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
   MatDividerModule, MatIconModule, MatProgressBarModule, 
-  MatTabsModule } from '@angular/material';
+  MatTabsModule, MatTooltipModule } from '@angular/material';
 
 const materialModules = [
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
   MatDividerModule, MatIconModule, MatProgressBarModule, 
-  MatTabsModule
+  MatTabsModule, MatTooltipModule
 ];
 
 import { SharedModule } from "../modules/shared/shared.module";
@@ -24,7 +24,6 @@ import { AuthGuard } from "./auth.guard";
 import { AddProjectDialogComponent } from "./add-project-dialog/add-project-dialog.component";
 import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
-import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 import { TimelineModule } from "../modules/timeline/timeline.module";
 import { TeamSignInDialogComponent } from './team-sign-in-dialog/team-sign-in-dialog.component';
 
@@ -48,7 +47,6 @@ import { TeamSignInDialogComponent } from './team-sign-in-dialog/team-sign-in-di
     StudentRunListItemComponent,
     EditComponent,
     EditProfileComponent,
-    EditPasswordComponent,
     TeamSignInDialogComponent
   ],
   entryComponents: [

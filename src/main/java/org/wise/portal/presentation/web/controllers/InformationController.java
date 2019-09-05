@@ -23,12 +23,21 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
-import org.springframework.security.acls.model.Permission;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,11 +63,6 @@ import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.web.SecurityUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
-
 /**
  * Handles requests for User information and VLE config
  * @author Patrick Lawler
@@ -69,7 +73,7 @@ import java.util.*;
 public class InformationController {
 
   @Autowired
-  Properties wiseProperties;
+  Properties appProperties;
 
   @Autowired
   ProjectService projectService;
@@ -286,16 +290,21 @@ public class InformationController {
     }
 
     try {
-      String userNames = "";
+      String usernames = "";
+      String firstName = "";
+      String lastName = "";
       JSONArray userIds = new JSONArray();
-      if (loggedInUser.isAdmin()) {
-        userNames = loggedInUser.getUserDetails().getCoreUsername();
+      if (loggedInUser.isTeacher()) {
+        MutableUserDetails userDetails = loggedInUser.getUserDetails();
+        firstName = userDetails.getFirstname();
+        lastName = userDetails.getLastname();
+        usernames = userDetails.getUsername();
         userIds.put(loggedInUser.getId());
       } else {
-        userNames = getUserNamesFromWorkgroup(workgroup);
+        usernames = getUsernamesFromWorkgroup(workgroup);
         userIds = getStudentIdsFromWorkgroup(workgroup);
       }
-      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, userNames);
+      JSONObject myUserInfo = getMyUserInfoJSONObject(periodId, periodName, userIds, workgroupId, usernames, firstName, lastName);
       myUserInfo.put("myClassInfo", getMyClassInfoJSONObject(run, workgroup, loggedInUser));
       JSONObject userInfo = new JSONObject();
       userInfo.put("myUserInfo", myUserInfo);
@@ -331,7 +340,7 @@ public class InformationController {
         JSONObject sharedTeacherUserInfo = new JSONObject();
         try {
           sharedTeacherUserInfo.put("workgroupId", sharedTeacherWorkgroup.getId());
-          sharedTeacherUserInfo.put("userName", sharedTeacherWorkgroup.generateWorkgroupName());
+          sharedTeacherUserInfo.put("username", sharedTeacherWorkgroup.generateWorkgroupName());
 
           String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
           if (sharedTeacherRole == null) {
@@ -361,7 +370,7 @@ public class InformationController {
       Workgroup runOwnerWorkgroup = workgroupsForRunOwner.get(0);
 
       teacherUserInfo.put("workgroupId", runOwnerWorkgroup.getId());
-      teacherUserInfo.put("userName", runOwner.getUserDetails().getUsername());
+      teacherUserInfo.put("username", runOwner.getUserDetails().getUsername());
     } catch (JSONException e1) {
       e1.printStackTrace();
     }
@@ -399,12 +408,19 @@ public class InformationController {
   }
 
   private JSONObject getMyUserInfoJSONObject(String periodId, String periodName,
-      JSONArray userIds, Long workgroupId, String userNames) {
+      JSONArray userIds, Long workgroupId, String usernames, String firstName,
+      String lastName) {
     JSONObject myUserInfo = new JSONObject();
     try {
       myUserInfo.put("workgroupId", workgroupId);
-      myUserInfo.put("userName", userNames);
+      myUserInfo.put("username", usernames);
       myUserInfo.put("isSwitchedUser", ControllerUtil.isUserPreviousAdministrator());
+      if (!firstName.isEmpty()) {
+        myUserInfo.put("firstName", firstName);
+      }
+      if (!lastName.isEmpty()) {
+        myUserInfo.put("lastName", lastName);
+      }
 
       try {
         myUserInfo.put("periodId", Long.parseLong(periodId));
@@ -519,14 +535,14 @@ public class InformationController {
       config.put("contextPath", contextPath);
       config.put("mode", mode);
       config.put("projectMetadataURL", contextPath + "/metadata.html");
-      String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+      String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
       String rawProjectUrl = project.getModulePath();
       String projectURL = curriculumBaseWWW + rawProjectUrl;
       config.put("projectId", project.getId());
       config.put("parentProjectId", project.getParentProjectId());
       config.put("projectURL", projectURL);
       addProjectBaseURL(config, projectURL);
-      config.put("studentUploadsBaseURL",  wiseProperties.getProperty("studentuploads_base_www"));
+      config.put("studentUploadsBaseURL",  appProperties.getProperty("studentuploads_base_www"));
       config.put("theme", "WISE");
       config.put("cRaterRequestURL", contextPath + "/c-rater");
       config.put("mainHomePageURL", contextPath);
@@ -583,7 +599,7 @@ public class InformationController {
 
   private void addStudentMaxTotalAssetSize(JSONObject config) throws JSONException {
     Long studentMaxTotalAssetsSizeBytes =
-      new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
+      new Long(appProperties.getProperty("student_max_total_assets_size", "5242880"));
     config.put("studentMaxTotalAssetsSize", studentMaxTotalAssetsSizeBytes);
   }
 
@@ -645,24 +661,22 @@ public class InformationController {
       throws JSONException, ObjectNotFoundException {
     String contextPath = request.getContextPath();
     Long runId = run.getId();
-    String annotationsURL = contextPath + "/annotation?type=annotation&runId=" + runId;
-    String studentStatusURL = contextPath + "/studentStatus";
-    String runStatusURL = contextPath + "/runStatus";
-
     config.put("runName", run.getName());
     config.put("runId", runId);
-    config.put("annotationsURL", annotationsURL);
+    config.put("annotationsURL", contextPath + "/annotation?type=annotation&runId=" + runId);
     config.put("runInfo", run.getInfo());
     config.put("isRealTimeEnabled", run.isRealTimeEnabled());
     config.put("webSocketURL", ControllerUtil.getWebSocketURL(request, contextPath));
-    config.put("studentStatusURL", studentStatusURL);
-    config.put("runStatusURL", runStatusURL);
+    config.put("studentStatusURL", contextPath + "/studentStatus");
+    config.put("runStatusURL", contextPath + "/runStatus");
     config.put("userInfo", getUserInfo(run));
     config.put("studentDataURL", contextPath + "/student/data");  // the url to get/post student data
     config.put("studentAssetsURL", contextPath + "/student/asset/" + runId);
     config.put("studentNotebookURL", contextPath + "/student/notebook/" + runId);
     config.put("achievementURL", contextPath + "/achievement/" + runId);
     config.put("notificationURL", contextPath + "/notification/" + runId);
+    config.put("startTime", run.getStartTimeMilliseconds());
+    config.put("endTime", run.getEndTimeMilliseconds());
   }
 
   private void printConfigToResponse(HttpServletResponse response, JSONObject config)
@@ -703,7 +717,7 @@ public class InformationController {
       HttpServletRequest request, JSONObject config, Project project,
       String rawProjectUrl) throws JSONException {
     assert project != null;
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     String projectURL = curriculumBaseWWW + rawProjectUrl;
 
     String contextPath = request.getContextPath();
@@ -714,17 +728,17 @@ public class InformationController {
     config.put("theme", "WISE");
     config.put("projectURL", projectURL);
     addProjectBaseURL(config, projectURL);
-    config.put("studentUploadsBaseURL", wiseProperties.getProperty("studentuploads_base_www"));
+    config.put("studentUploadsBaseURL", appProperties.getProperty("studentuploads_base_www"));
     config.put("cRaterRequestURL", contextPath + "/c-rater");
     config.put("contextPath", contextPath);
     config.put("mainHomePageURL", contextPath);
     config.put("renewSessionURL", contextPath + "/session/renew");
+    config.put("sessionTimeout", request.getSession().getMaxInactiveInterval());
     config.put("sessionLogOutURL", contextPath + "/logout");
 
     User signedInUser = ControllerUtil.getSignedInUser();
     setUserLocale(request, signedInUser, config);
     addUserTypeAndHomeURL(request, signedInUser, config);
-    addSessionTimeoutInterval(request, config);
     addStudentMaxTotalAssetSize(config);
     addRetrievalTimestamp(config);
   }
@@ -756,12 +770,12 @@ public class InformationController {
           "}],"+
           "\"teacherUserInfo\": {"+
           "\"workgroupId\": 1,"+
-          "\"userName\": \"Preview Teacher\""+
+          "\"username\": \"Preview Teacher\""+
           "}"+
           "},"+
           "\"userIds\": [1],"+
           "\"periodName\": \"1\","+
-          "\"userName\": \"Preview Team\""+
+          "\"username\": \"Preview Team\""+
           "}"+
           "}";
       JSONObject userInfoJSONObject = new JSONObject(dummyUserInfoJSONString);
@@ -805,16 +819,16 @@ public class InformationController {
    * e.g.
    * "Jennifer Chiu (JenniferC829):helen zhang (helenz1115a)"
    */
-  private String getUserNamesFromWorkgroup(Workgroup workgroup) {
-    StringBuffer userNames = new StringBuffer();
+  private String getUsernamesFromWorkgroup(Workgroup workgroup) {
+    StringBuffer usernames = new StringBuffer();
     for (User user : workgroup.getMembers()) {
       String firstNameLastNameLogin = getFirstNameLastNameLogin(user);
-      if (userNames.length() != 0) {
-        userNames.append(":");
+      if (usernames.length() != 0) {
+        usernames.append(":");
       }
-      userNames.append(firstNameLastNameLogin);
+      usernames.append(firstNameLastNameLogin);
     }
-    return userNames.toString();
+    return usernames.toString();
   }
 
   /**
@@ -826,10 +840,10 @@ public class InformationController {
   private String getFirstNameLastNameLogin(User user) {
     MutableUserDetails userDetails = user.getUserDetails();
     if (userDetails != null) {
-      String userName = userDetails.getUsername();
+      String username = userDetails.getUsername();
       String firstName = userDetails.getFirstname();
       String lastName = userDetails.getLastname();
-      return firstName + " " + lastName + " (" + userName + ")";
+      return firstName + " " + lastName + " (" + username + ")";
     }
     return "";
   }
@@ -857,8 +871,8 @@ public class InformationController {
     try {
       classmateUserInfo.put("workgroupId", classmateWorkgroup.getId());
       if (isAllowedToViewStudentNames(run, loggedInUser)) {
-        String userNames = getUserNamesFromWorkgroup(classmateWorkgroup);
-        classmateUserInfo.put("userName", userNames);
+        String usernames = getUsernamesFromWorkgroup(classmateWorkgroup);
+        classmateUserInfo.put("username", usernames);
       }
       if (classmateWorkgroup.getPeriod() != null) {
         classmateUserInfo.put("periodId", classmateWorkgroup.getPeriod().getId());
@@ -919,21 +933,5 @@ public class InformationController {
       }
     }
     return users;
-  }
-
-  private boolean isUserOwnerOfRun(Run run, User user) {
-    return run.getOwner().getId() == user.getId();
-  }
-
-  private boolean isSharedOwnerWithGradePermissionOfRun(Run run, User user) {
-    for (User sharedOwner : run.getSharedowners()) {
-      if (user.getId() == sharedOwner.getId()) {
-        String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
-        if (sharedTeacherRole != null && sharedTeacherRole.equals(UserDetailsService.RUN_GRADE_ROLE)) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }
