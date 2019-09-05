@@ -23,10 +23,8 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,8 +53,8 @@ public class SiteController {
   }
 
   @ResponseBody
-  @GetMapping(value = "/announcement")
-  protected String getAnnouncement(ModelMap modelMap) throws JSONException, ObjectNotFoundException {
+  @GetMapping("/announcement")
+  protected String getAnnouncement() throws ObjectNotFoundException {
     Portal portal = portalService.getById(new Integer(1));
     return portal.getAnnouncement();
   }

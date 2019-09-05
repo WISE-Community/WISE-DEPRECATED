@@ -98,7 +98,7 @@ public class ManagePortalController {
         portal.setAnnouncement(val);
         portalService.updatePortal(portal);
         modelMap.put("msg", "success");
-      }else {
+      } else {
         modelMap.put("msg", "error: permission denied");
       }
     } catch (Exception e) {
