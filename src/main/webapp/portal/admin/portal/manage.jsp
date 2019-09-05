@@ -37,6 +37,7 @@
         $(document).ready(function() {
             var portalId = $("#portalId").html();
             // pretty-print the JSON settings
+            $("#announcement").val(JSON.stringify(JSON.parse($("#announcement").val()), null, 4));
             $("#projectMetadataSettings").val(JSON.stringify(JSON.parse($("#projectMetadataSettings").val()), null, 4));
             $("#projectLibraryGroups").val(JSON.stringify(JSON.parse($("#projectLibraryGroups").val()), null, 4));
             $("#defaultSurveyTemplate").val(JSON.stringify(JSON.parse($("#defaultSurveyTemplate").val()), null, 4));
@@ -68,6 +69,16 @@
                             alert('Save Successful!');
                         }
                     });
+            });
+            $("#revertToDefaultAnnouncement").on("click", function() {
+                if (confirm("You will lose any changes to your current announcement. Continue?")) {
+                    var defaultAnnouncement = ${defaultAnnouncement};
+                    $("#announcement").val(JSON.stringify(defaultAnnouncement, null, 4));
+                }
+            });
+            $("#saveAnnouncementButton").on("click", function() {
+                var announcementStr = $("#announcement").val();
+                saveToServer("announcement", announcementStr);
             });
             $("#revertToDefaultProjectMetadataSettings").on("click", function() {
                 if (confirm("You will lose any changes to your project metadata settings. Continue?")) {
@@ -154,6 +165,10 @@ Send WISE statistics to WISE5.org (for research purpose only, no personal data w
         </c:otherwise>
     </c:choose>
 </select>
+<br/><br/>
+Site Announcement (must be a valid JSON object) | <button id="revertToDefaultAnnouncement">Revert to Default</button><br/>
+<textarea id="announcement" rows="20" cols="100">${portal.announcement}</textarea><br/>
+<input id="saveAnnouncementButton" type="button" value="Save" />
 <br/><br/>
 Project Metadata Settings (must be a valid JSON object) | <button id="revertToDefaultProjectMetadataSettings">Revert to Default</button><br/>
 <textarea id="projectMetadataSettings" rows="20" cols="100">${portal.projectMetadataSettings}</textarea><br/>

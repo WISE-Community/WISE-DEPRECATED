@@ -84,6 +84,9 @@ public class PortalImpl implements Portal {
   @Column(name = "projectMetadataSettings", length = 32768, columnDefinition = "text")
   private String projectMetadataSettings;  // text (blob) 2^15
 
+  @Column(name = "announcement", length = 32768, columnDefinition = "text")
+  private String announcement;
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", columnDefinition = "tinyint")
