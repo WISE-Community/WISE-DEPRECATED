@@ -6,8 +6,8 @@ import TableController from './tableController';
 let tableComponentModule = angular.module('tableComponentModule', [
     'pascalprecht.translate'
   ])
-  .service(TableService.name, TableService)
-  .controller(TableController.name, TableController)
+  .service('TableService', TableService)
+  .controller('TableController', TableController)
   .config([
     '$translatePartialLoaderProvider',
     ($translatePartialLoaderProvider) => {

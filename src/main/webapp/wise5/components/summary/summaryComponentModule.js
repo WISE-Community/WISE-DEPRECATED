@@ -6,8 +6,8 @@ import SummaryController from './summaryController';
 const summaryComponentModule = angular.module('summaryComponentModule', [
     'pascalprecht.translate'
   ])
-  .service(SummaryService.name, SummaryService)
-  .controller(SummaryController.name, SummaryController)
+  .service('SummaryService', SummaryService)
+  .controller('SummaryController', SummaryController)
   .config([
     '$translatePartialLoaderProvider',
     ($translatePartialLoaderProvider) => {

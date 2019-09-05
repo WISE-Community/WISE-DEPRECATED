@@ -7,9 +7,9 @@ import SummaryAuthoringController from './summaryAuthoringController';
 const summaryAuthoringComponentModule = angular.module('summaryAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
-  .service(SummaryService.name, SummaryService)
-  .controller(SummaryController.name, SummaryController)
-  .controller(SummaryAuthoringController.name, SummaryAuthoringController)
+  .service('SummaryService', SummaryService)
+  .controller('SummaryController', SummaryController)
+  .controller('SummaryAuthoringController', SummaryAuthoringController)
   .config([
     '$translatePartialLoaderProvider',
     ($translatePartialLoaderProvider) => {
