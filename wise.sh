@@ -32,7 +32,7 @@ fi
 
 if [ $1 = "package" ]; then
   npm install
-  node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build --configuration=production --stats-json
+  npm run build-all
   ./mvnw clean -Dmaven.test.skip=true package
   exit 0
 fi

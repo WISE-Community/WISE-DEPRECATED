@@ -116,9 +116,11 @@
   },
   "scripts": {
     "browser-sync": "./node_modules/browser-sync/bin/browser-sync.js start --config bs-config.js",
-    "build-vle": "cd ./src/main/webapp/wise5/vle; webpack --config webpack.prod.js",
-    "build-cm": "cd ./src/main/webapp/wise5/classroomMonitor; webpack --config webpack.prod.js",
+    "build-all": "npm run build-at; npm run build-cm; npm run build-vle; npm run build-site",
     "build-at": "cd ./src/main/webapp/wise5/authoringTool; webpack --config webpack.prod.js",
+    "build-cm": "cd ./src/main/webapp/wise5/classroomMonitor; webpack --config webpack.prod.js",
+    "build-site": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build --configuration=production",
+    "build-vle": "cd ./src/main/webapp/wise5/vle; webpack --config webpack.prod.js",
     "bundle-report": "node ./node_modules/webpack-bundle-analyzer/lib/bin/analyzer.js src/main/webapp/site/dist/stats.json",
     "watch-all-wise5": "node node_modules/concurrently/bin/concurrently.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-wise5-watch\"",
     "watch-all-site": "node node_modules/concurrently/bin/concurrently.js \"ng build --watch\" \"ng test --source-map=false --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox\"",
