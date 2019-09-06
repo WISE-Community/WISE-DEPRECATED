@@ -811,7 +811,7 @@ public class WISE5AuthorProjectController {
   private ModelAndView authorProjectEnd(@PathVariable String projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
-    if (projectService.canAuthorProject(project, user)) {
+    if (user != null && projectService.canAuthorProject(project, user)) {
       sessionService.removeCurrentAuthor(project.getId(), user.getUserDetails());
       notifyCurrentAuthors(projectId);
       return null;

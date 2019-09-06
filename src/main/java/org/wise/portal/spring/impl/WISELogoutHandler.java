@@ -38,14 +38,18 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.session.Session;
 import org.wise.portal.service.session.SessionService;
 
-public class WISELogoutHandler<S extends Session> implements LogoutHandler, ApplicationListener<SessionDestroyedEvent> {
+public class WISELogoutHandler<S extends Session> implements LogoutHandler,
+    ApplicationListener<SessionDestroyedEvent> {
 
   @Autowired
   protected SessionService sessionService;
 
   @Override
-  public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-    sessionService.removeUser((UserDetails) authentication.getPrincipal());
+  public void logout(HttpServletRequest request, HttpServletResponse response,
+      Authentication authentication) {
+    if (authentication != null) {
+      sessionService.removeUser((UserDetails) authentication.getPrincipal());
+    }
   }
 
   @Override
