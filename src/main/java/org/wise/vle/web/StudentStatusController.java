@@ -174,12 +174,9 @@ public class StudentStatusController {
 
     boolean allowedAccess = false;
 
-    /*
-     * teachers can not make a request
-     * students can make a request if they are in the run and in the workgroup
-     */
-    if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) &&
-      SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
+    if (signedInUser != null && SecurityUtils.isStudent(signedInUser) &&
+        SecurityUtils.isUserInRun(signedInUser, runId) &&
+        SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
       allowedAccess = true;
     }
 
