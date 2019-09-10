@@ -354,11 +354,11 @@ class ThemeController {
     } else {
       this.notebookNavOpen = false;
       if (this.ConfigService.isPreview()) {
-        this.$state.go('root.node',
+        this.$state.go('root.preview-node',
             {projectId: this.ConfigService.getProjectId(),
              nodeId: this.currentNode.id});
       } else {
-        this.$state.go('root.run',
+        this.$state.go('root.run-node',
             {runId: this.ConfigService.getRunId(),
              nodeId: this.currentNode.id});
       }
