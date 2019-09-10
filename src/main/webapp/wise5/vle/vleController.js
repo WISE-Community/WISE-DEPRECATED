@@ -81,8 +81,6 @@ class VLEController {
       this.StudentDataService.updateStackHistory(currentNodeId);
       this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
 
-      this.$state.go('root.vle', {nodeId:currentNodeId});
-
       let componentId, componentType, category, eventName, eventData, eventNodeId;
       if (previousNode != null && this.ProjectService.isGroupNode(previousNode.id)) {
         // going from group to node or group to group

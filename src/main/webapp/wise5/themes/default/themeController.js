@@ -353,7 +353,15 @@ class ThemeController {
       this.$state.go('root.notebook', {nodeId: this.currentNode.id});
     } else {
       this.notebookNavOpen = false;
-      this.$state.go('root.vle', {nodeId: this.currentNode.id});
+      if (this.ConfigService.isPreview()) {
+        this.$state.go('root.node',
+            {projectId: this.ConfigService.getProjectId(),
+             nodeId: this.currentNode.id});
+      } else {
+        this.$state.go('root.run',
+            {runId: this.ConfigService.getRunId(),
+             nodeId: this.currentNode.id});
+      }
     }
 
     this.layoutState = layoutState;

@@ -151,6 +151,11 @@ const vleModule = angular.module('vle', [
       .state('root', {
         url: '',
         abstract: true,
+        resolve: {
+          config: ['ConfigService', (ConfigService) => {
+            return ConfigService.retrieveConfig(`/config/vle`);
+          }]
+        },
         templateProvider: ['$http', 'ProjectService', ($http, ProjectService) => {
           let themePath = ProjectService.getThemePath();
           return $http.get(themePath + '/vle.html').then(
@@ -160,14 +165,70 @@ const vleModule = angular.module('vle', [
         }],
         controller: 'VLEController',
         controllerAs: 'vleController',
+      })
+      .state('root.run', {
+        url: '/run/:runId',
         resolve: {
-          config: ['ConfigService', (ConfigService) => {
-            if (window.configURL != null) {
-              return ConfigService.retrieveConfig(window.configURL);
-            } else {
-              const runId = prompt('Please enter Run ID:');
-              return ConfigService.retrieveConfig(`/config/studentRun/${runId}`);
+          config: ['ConfigService', '$stateParams', (ConfigService, $stateParams) => {
+            return ConfigService.retrieveConfig(`/config/studentRun/${$stateParams.runId}`);
+          }],
+          project: ['ProjectService', 'config', (ProjectService, config) => {
+            return ProjectService.retrieveProject();
+          }],
+          studentData: ['StudentDataService', 'config', 'project', (StudentDataService, config, project) => {
+            return StudentDataService.retrieveStudentData();
+          }],
+          notebook: ['NotebookService', 'ConfigService', 'StudentAssetService', 'studentData', 'config', 'project',
+              (NotebookService, ConfigService, StudentAssetService, studentData, config, project) => {
+            return StudentAssetService.retrieveAssets().then((studentAssets) => {
+              return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
+                return notebook;
+              });
+            });
+          }],
+          achievements: ['AchievementService', 'studentData', 'config', 'project',
+              (AchievementService, studentData, config, project) => {
+            return AchievementService.retrieveStudentAchievements();
+          }],
+          notifications: ['NotificationService', 'studentData', 'config', 'project',
+              (NotificationService, studentData, config, project) => {
+            return NotificationService.retrieveNotifications();
+          }],
+          runStatus: ['StudentDataService', 'config', (StudentDataService, config) => {
+            return StudentDataService.retrieveRunStatus();
+          }],
+          webSocket: ['StudentWebSocketService', 'ConfigService', 'config', 'project',
+              (StudentWebSocketService, ConfigService, config, project) => {
+            if (!ConfigService.isPreview()) {
+              return StudentWebSocketService.initialize();
             }
+          }],
+          language: ['$translate', 'ConfigService', 'config',
+              ($translate, ConfigService, config) => {
+            let locale = ConfigService.getLocale();  // defaults to "en"
+            $translate.use(locale);
+          }]
+        },
+        views: {
+          'nodeView': {
+            templateProvider: ['$http', 'ConfigService', ($http, ConfigService) => {
+              let wiseBaseURL = ConfigService.getWISEBaseURL();
+              return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(
+                response => {
+                  return response.data;
+                }
+              );
+            }],
+            controller: 'NodeController',
+            controllerAs: 'nodeController'
+          }
+        }
+      })
+      .state('root.project', {
+        url: '/project/:projectId',
+        resolve: {
+          config: ['ConfigService', '$stateParams', (ConfigService, $stateParams) => {
+            return ConfigService.retrieveConfig(`/config/preview/${$stateParams.projectId}`);
           }],
           project: ['ProjectService', 'config', (ProjectService, config) => {
             return ProjectService.retrieveProject();
@@ -207,8 +268,49 @@ const vleModule = angular.module('vle', [
           }]
         }
       })
-      .state('root.vle', {
-        url: '/vle/:nodeId',
+      .state('root.node', {
+        url: '/project/:projectId/:nodeId',
+        resolve: {
+          config: ['ConfigService', '$stateParams', (ConfigService, $stateParams) => {
+            return ConfigService.retrieveConfig(`/config/preview/${$stateParams.projectId}`);
+          }],
+          project: ['ProjectService', 'config', (ProjectService, config) => {
+            return ProjectService.retrieveProject();
+          }],
+          studentData: ['StudentDataService', 'config', 'project', (StudentDataService, config, project) => {
+            return StudentDataService.retrieveStudentData();
+          }],
+          notebook: ['NotebookService', 'ConfigService', 'StudentAssetService', 'studentData', 'config', 'project',
+              (NotebookService, ConfigService, StudentAssetService, studentData, config, project) => {
+            return StudentAssetService.retrieveAssets().then((studentAssets) => {
+              return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
+                return notebook;
+              });
+            });
+          }],
+          achievements: ['AchievementService', 'studentData', 'config', 'project',
+              (AchievementService, studentData, config, project) => {
+            return AchievementService.retrieveStudentAchievements();
+          }],
+          notifications: ['NotificationService', 'studentData', 'config', 'project',
+              (NotificationService, studentData, config, project) => {
+            return NotificationService.retrieveNotifications();
+          }],
+          runStatus: ['StudentDataService', 'config', (StudentDataService, config) => {
+            return StudentDataService.retrieveRunStatus();
+          }],
+          webSocket: ['StudentWebSocketService', 'ConfigService', 'config', 'project',
+              (StudentWebSocketService, ConfigService, config, project) => {
+            if (!ConfigService.isPreview()) {
+              return StudentWebSocketService.initialize();
+            }
+          }],
+          language: ['$translate', 'ConfigService', 'config',
+              ($translate, ConfigService, config) => {
+            let locale = ConfigService.getLocale();  // defaults to "en"
+            $translate.use(locale);
+          }]
+        },
         views: {
           'nodeView': {
             templateProvider: ['$http', 'ConfigService', ($http, ConfigService) => {
@@ -223,28 +325,6 @@ const vleModule = angular.module('vle', [
             controllerAs: 'nodeController'
           }
         }
-      })
-      .state('root.component', {
-        url: '/vle/:nodeId/:componentId',
-        views: {
-          'nodeView': {
-            templateProvider: ['$http', 'ConfigService', ($http, ConfigService) => {
-              let wiseBaseURL = ConfigService.getWISEBaseURL();
-              return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(
-                response => {
-                  return response.data;
-                }
-              );
-            }],
-            controller: 'NodeController',
-            controllerAs: 'nodeController'
-          }
-        }
-      });
-
-      $urlRouterProvider.otherwise(($injector, $location) => {
-        var $state = $injector.get('$state');
-        $state.go('root.vle', {});
       });
 
       $httpProvider.interceptors.push('HttpInterceptor');
