@@ -174,7 +174,7 @@ public class StudentStatusController {
 
     boolean allowedAccess = false;
 
-    if (signedInUser != null && SecurityUtils.isStudent(signedInUser) &&
+    if (SecurityUtils.isStudent(signedInUser) &&
         SecurityUtils.isUserInRun(signedInUser, runId) &&
         SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
       allowedAccess = true;
