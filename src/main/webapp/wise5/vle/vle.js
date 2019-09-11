@@ -385,6 +385,11 @@ const vleModule = angular.module('vle', [
         }
       });
 
+      $urlRouterProvider.otherwise(($injector, $location) => {
+        var $state = $injector.get('$state');
+        $state.go('root.run', {});
+      });
+
       $httpProvider.interceptors.push('HttpInterceptor');
 
       // Set up Translations
