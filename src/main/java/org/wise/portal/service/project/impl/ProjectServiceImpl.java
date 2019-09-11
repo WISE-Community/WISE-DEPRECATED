@@ -659,7 +659,7 @@ public class ProjectServiceImpl implements ProjectService {
     if (project.getWiseVersion().equals(4)) {
       previewPath = "/previewproject.html?projectId=";
     }
-    return appProperties.getProperty("wise.hostname") + previewPath + project.getId();
+    return appProperties.getProperty("wise.hostname") + previewPath + project.getId() + "#/project/" + project.getId();
   }
 
   private String getAuthorsString(JSONArray authors) {
