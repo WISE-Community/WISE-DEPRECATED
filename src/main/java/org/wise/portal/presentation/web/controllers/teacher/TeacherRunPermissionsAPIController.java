@@ -27,7 +27,7 @@ public class TeacherRunPermissionsAPIController {
                                        @PathVariable String teacherUsername) {
     try {
       return runService.addSharedTeacher(runId, teacherUsername);
-    } catch (ObjectNotFoundException nfe) {
+    } catch (ObjectNotFoundException e) {
       return null;
     } catch (TeacherAlreadySharedWithRunException e) {
       return null;
@@ -36,10 +36,10 @@ public class TeacherRunPermissionsAPIController {
 
   @RequestMapping(value = "/transfer/{runId}/{teacherUsername}", method = RequestMethod.PUT)
   protected String transferRunOwnership(@PathVariable Long runId,
-                                             @PathVariable String teacherUsername) {
+                                        @PathVariable String teacherUsername) {
     try {
       return runService.transferRunOwnership(runId, teacherUsername).toString();
-    } catch (ObjectNotFoundException nfe) {
+    } catch (ObjectNotFoundException e) {
       return null;
     }
   }

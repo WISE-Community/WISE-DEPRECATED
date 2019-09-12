@@ -310,9 +310,69 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public SharedOwner addSharedTeacher(Long runId, String teacherUsername)
+  @Transactional
+  public JSONObject transferRunOwnership(Long runId, String teacherUsername)
+      throws ObjectNotFoundException {
+    Run run = retrieveById(runId);
+    Project project = run.getProject();
+    User oldOwner = run.getOwner();
+    User newOwner = userDao.retrieveByUsername(teacherUsername);
+    projectService.transferProjectOwnership(project, newOwner);
+    if (isSharedTeacher(run, newOwner)) {
+      removeSharedTeacherAndPermissions(run, newOwner);
+    }
+    setOwner(run, newOwner);
+    addSharedTeacherWithViewAndGradePermissions(run, oldOwner);
+    removeAministrationPermission(run, oldOwner);
+    createSharedTeacherWorkgroupIfNecessary(run, newOwner);
+    runDao.save(run);
+    try {
+      return ControllerUtil.getRunJSON(run);
+    }  catch (JSONException e) {
+      return null;
+    }
+  }
+
+  private boolean isSharedTeacher(Run run, User user) {
+    return run.getSharedowners().contains(user);
+  }
+
+  private void removeSharedTeacherAndPermissions(Run run, User user) {
+    removeSharedTeacher(run, user);
+    removePermissions(run, user);
+  }
+
+  private void removeSharedTeacher(Run run, User user) {
+    run.getSharedowners().remove(user);
+  }
+
+  private void removePermissions(Run run, User user) {
+    List<Permission> permissions = aclService.getPermissions(run, user);
+    for (Permission permission : permissions) {
+      aclService.removePermission(run, permission, user);
+    }
+  }
+
+  private void setOwner(Run run, User user) {
+    run.setOwner(user);
+    aclService.addPermission(run, BasePermission.ADMINISTRATION, user);
+  }
+
+  private void addSharedTeacherWithViewAndGradePermissions(Run run, User user) {
+    if (!isSharedTeacher(run, user)) {
+      run.getSharedowners().add(user);
+    }
+    aclService.addPermission(run, RunPermission.VIEW_STUDENT_NAMES, user);
+    aclService.addPermission(run, RunPermission.GRADE_AND_MANAGE, user);
+  }
+
+  private void removeAministrationPermission(Run run, User user) {
+    aclService.removePermission(run, BasePermission.ADMINISTRATION, user);
+  }
+
+  public SharedOwner addSharedTeacher(Long runId, String username)
       throws ObjectNotFoundException, TeacherAlreadySharedWithRunException {
-    User user = userDao.retrieveByUsername(teacherUsername);
+    User user = userDao.retrieveByUsername(username);
     Run run = this.retrieveById(runId);
     if (!run.getSharedowners().contains(user)) {
       run.getSharedowners().add(user);
@@ -329,34 +389,13 @@ public class RunServiceImpl implements RunService {
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
         user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
     } else {
-      throw new TeacherAlreadySharedWithRunException(teacherUsername + " is already shared with this run");
+      throw new TeacherAlreadySharedWithRunException(user.getUserDetails().getUsername()
+          + " is already shared with this run");
     }
   }
 
-  public JSONObject transferRunOwnership(Long runId, String teacherUsername) throws ObjectNotFoundException {
-    try {
-      Run run = retrieveById(runId);
-      Long projectId = (Long) run.getProject().getId();
-      projectService.transferProjectOwnership(projectId, teacherUsername);
-      User oldOwner = run.getOwner();
-      User newOwner = userDao.retrieveByUsername(teacherUsername);
-      removeSharedTeacher(newOwner.getUserDetails().getUsername(), runId);
-      run.setOwner(newOwner);
-      aclService.addPermission(run, BasePermission.ADMINISTRATION, newOwner);
-      addSharedTeacher(runId, oldOwner.getUserDetails().getUsername());
-      aclService.addPermission(run, RunPermission.VIEW_STUDENT_NAMES, oldOwner);
-      aclService.addPermission(run, RunPermission.GRADE_AND_MANAGE, oldOwner);
-      aclService.removePermission(run, BasePermission.ADMINISTRATION, oldOwner);
-      runDao.save(run);
-      return ControllerUtil.getRunJSON(run);
-    } catch (TeacherAlreadySharedWithRunException e) {
-      return null;
-    } catch (JSONException e) {
-      return null;
-    }
-  }
-
-  private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user) throws ObjectNotFoundException {
+  private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user)
+      throws ObjectNotFoundException {
     if (workgroupService.getWorkgroupListByRunAndUser(run, user).size() == 0) {
       return createSharedTeacherWorkgroup(run, user);
     }

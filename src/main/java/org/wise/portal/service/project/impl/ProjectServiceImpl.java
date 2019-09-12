@@ -131,11 +131,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
-  public SharedOwner addSharedTeacher(Long projectId, String teacherUsername)
+  public SharedOwner addSharedTeacher(Long projectId, String username)
       throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
-    User user = userDao.retrieveByUsername(teacherUsername);
     Project project = this.getById(projectId);
-    if (!project.getSharedowners().contains(user)) {
+    User user = userService.retrieveUserByUsername(username);
+    if (!isSharedTeacher(project, user)) {
       project.getSharedowners().add(user);
       this.projectDao.save(project);
       this.aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
@@ -144,27 +144,29 @@ public class ProjectServiceImpl implements ProjectService {
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
         user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
     } else {
-      throw new TeacherAlreadySharedWithProjectException(teacherUsername + " is already shared with this project");
+      throw new TeacherAlreadySharedWithProjectException(user.getUserDetails().getUsername()
+          + " is already shared with this project");
     }
   }
 
-  public void removeSharedTeacherFromProject(String username, Project project) {
-    User user = userService.retrieveUserByUsername(username);
-    if (project == null || user == null) {
-      return;
-    }
+  public void removeSharedTeacherFromProject(Project project, User user) {
+    removeSharedTeacherAndPermissions(project, user);
+    projectDao.save(project);
+  }
 
-    if (project.getSharedowners().contains(user)) {
-      project.getSharedowners().remove(user);
-      projectDao.save(project);
-      try {
-        List<Permission> permissions = aclService.getPermissions(project, user);
-        for (Permission permission : permissions) {
-          aclService.removePermission(project, permission, user);
-        }
-      } catch (Exception e) {
-        // do nothing. permissions might get be deleted if user requesting the deletion is not the owner of the project.
-      }
+  private void removeSharedTeacherAndPermissions(Project project, User user) {
+    removeSharedTeacher(project, user);
+    removePermissions(project, user);
+  }
+
+  private void removeSharedTeacher(Project project, User user) {
+    project.getSharedowners().remove(user);
+  }
+
+  private void removePermissions(Project project, User user) {
+    List<Permission> permissions = aclService.getPermissions(project, user);
+    for (Permission permission : permissions) {
+      aclService.removePermission(project, permission, user);
     }
   }
 
@@ -589,7 +591,8 @@ public class ProjectServiceImpl implements ProjectService {
 
   public void removeSharedTeacher(Long projectId, String username)
       throws ObjectNotFoundException {
-    removeSharedTeacherFromProject(username, getById(projectId));
+    removeSharedTeacherFromProject(getById(projectId),
+        userService.retrieveUserByUsername(username));
   }
 
   public void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId)
@@ -610,21 +613,38 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
-  public void transferProjectOwnership(Long projectId, String teacherUsername) throws ObjectNotFoundException {
-    try {
-      Project project = projectDao.getById(projectId);
-      User oldOwner = project.getOwner();
-      User newOwner = userService.retrieveUserByUsername(teacherUsername);
-      removeSharedTeacherFromProject(newOwner.getUserDetails().getUsername(), project);
-      project.setOwner(newOwner);
-      aclService.addPermission(project, BasePermission.ADMINISTRATION, newOwner);
-      addSharedTeacher(projectId, oldOwner.getUserDetails().getUsername());
-      aclService.addPermission(project, ProjectPermission.EDIT_PROJECT, oldOwner);
-      aclService.removePermission(project, BasePermission.ADMINISTRATION, oldOwner);
-      projectDao.save(project);
-    } catch (TeacherAlreadySharedWithProjectException e) {
-      return;
+  @Transactional
+  public void transferProjectOwnership(Project project, User newOwner)
+      throws ObjectNotFoundException {
+    User oldOwner = project.getOwner();
+    if (isSharedTeacher(project, newOwner)) {
+      removeSharedTeacherAndPermissions(project, newOwner);
     }
+    setOwner(project, newOwner);
+    addSharedTeacherWithViewAndEditPermissions(project, oldOwner);
+    removeAdministrationPermission(project, oldOwner);
+    projectDao.save(project);
+  }
+
+  private boolean isSharedTeacher(Project project, User user) {
+    return project.getSharedowners().contains(user);
+  }
+  
+  private void setOwner(Project project, User user) {
+    project.setOwner(user);
+    aclService.addPermission(project, BasePermission.ADMINISTRATION, user);
+  }
+
+  private void addSharedTeacherWithViewAndEditPermissions(Project project, User user) {
+    if (!this.isSharedTeacher(project, user)) {
+      project.getSharedowners().add(user);
+    }
+    aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
+    aclService.addPermission(project, ProjectPermission.EDIT_PROJECT, user);
+  }
+
+  private void removeAdministrationPermission(Project project, User user) {
+    aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
   }
 
   public List<Project> getProjectsWithoutRuns(User user) {

@@ -162,7 +162,7 @@ public interface RunService {
 
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  SharedOwner addSharedTeacher(Long runId, String teacherUsername)
+  SharedOwner addSharedTeacher(Long runId, String username)
       throws ObjectNotFoundException, TeacherAlreadySharedWithRunException;
 
   @Secured( {"ROLE_TEACHER"} )
@@ -440,5 +440,6 @@ public interface RunService {
 
   boolean isAllowedToViewStudentNames(Run run, User user);
 
-  JSONObject transferRunOwnership(Long runId, String teacherUsername) throws ObjectNotFoundException;
+  JSONObject transferRunOwnership(Long runId, String teacherUsername)
+      throws ObjectNotFoundException;
 }

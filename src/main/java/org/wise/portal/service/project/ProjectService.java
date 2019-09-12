@@ -112,16 +112,9 @@ public interface ProjectService {
   void addSharedTeacherToProject(AddSharedTeacherParameters addSharedTeacherParameters)
       throws ObjectNotFoundException;
 
-  /**
-   * Removes shared user from project. If user or project does not exist, ignore.
-   * @param username username of teacher to remove from shared status
-   * @param project project to remove shared teacher from
-   * @throws ObjectNotFoundException
-   */
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  void removeSharedTeacherFromProject(String username, Project project)
-      throws ObjectNotFoundException;
+  void removeSharedTeacherFromProject(Project project, User user) throws ObjectNotFoundException;
 
   /**
    * Creates a new <code>Project</code>.
@@ -311,11 +304,13 @@ public interface ProjectService {
 
   void removeSharedTeacher(Long projectId, String username) throws ObjectNotFoundException;
 
-  void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
+  void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException;
 
-  void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
+  void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException;
 
-  void transferProjectOwnership(Long projectId, String teacherUsername) throws ObjectNotFoundException;
+  void transferProjectOwnership(Project project, User newOwner) throws ObjectNotFoundException;
 
   List<Project> getProjectsWithoutRuns(User user);
 
@@ -325,5 +320,6 @@ public interface ProjectService {
 
   void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException;
 
-  void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata) throws IOException, JSONException;
+  void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata)
+      throws IOException, JSONException;
 }
