@@ -7,6 +7,15 @@
           <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
         </div>
         <div>
+          <md-input-container style='width: 600px;'>
+            <label>{{ 'graph.subtitle' | translate }}</label>
+            <input type='text'
+                ng-model='graphController.authoringComponentContent.subtitle'
+                ng-model-options='{ debounce: 1000 }'
+                ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+        </div>
+        <div>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.showMouseXPlotLine'
                        ng-change='graphController.authoringViewComponentChanged()'>
@@ -92,6 +101,84 @@
                       ng-model-options='{ debounce: 1000 }'>
             </textarea>
           </md-input-container>
+        </div>
+        <div>
+          <label class='node__label--vertical-alignment'>{{ 'graph.xAxisPlotLine' | translate }}</label>
+          <md-button class='topButton md-raised md-primary'
+              ng-click='graphController.authoringAddXAxisPlotLine()'>
+            <md-icon>add</md-icon>
+            <md-tooltip>{{ 'graph.addXAxisPlotLine' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+        <div ng-repeat='plotLine in graphController.authoringComponentContent.xAxis.plotLines track by $index'>
+          <div flex>
+            <md-input-container style='width: 400px;'>
+              <label>{{ 'graph.text' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.label.text'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <label>{{ 'graph.xValue' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.value'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <label>{{ 'graph.color' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.color'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <span flex></span>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='graphController.authoringDeleteXAxisPlotLine($index)'>
+              <md-icon>delete</md-icon>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+            </md-button>
+          </div>
+        </div>
+        <div>
+          <label class='node__label--vertical-alignment'>{{ 'graph.yAxisPlotLine' | translate }}</label>
+          <md-button class='topButton md-raised md-primary'
+              ng-click='graphController.authoringAddYAxisPlotLine()'>
+            <md-icon>add</md-icon>
+            <md-tooltip>{{ 'graph.addYAxisPlotLine' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+        <div ng-repeat='plotLine in graphController.authoringComponentContent.yAxis.plotLines track by $index'>
+          <div flex>
+            <md-input-container style='width: 400px;'>
+              <label>{{ 'graph.text' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.label.text'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <label>{{ 'graph.yValue' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.value'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <label>{{ 'graph.color' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.color'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <span flex></span>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='graphController.authoringDeleteYAxisPlotLine($index)'>
+              <md-icon>delete</md-icon>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+            </md-button>
+          </div>
         </div>
         <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>

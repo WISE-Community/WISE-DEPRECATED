@@ -35,7 +35,8 @@ class GraphService extends ComponentService {
     component.graphType = 'line';
     component.xAxis = {
       title: {
-        text: this.$translate('graph.timeSeconds')
+        text: this.$translate('graph.timeSeconds'),
+        useHTML: true
       },
       min: 0,
       max: 100,
@@ -45,7 +46,8 @@ class GraphService extends ComponentService {
     };
     component.yAxis = {
       title: {
-        text: this.$translate('graph.positionMeters')
+        text: this.$translate('graph.positionMeters'),
+        useHTML: true
       },
       min: 0,
       max: 100,
