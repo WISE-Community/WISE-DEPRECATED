@@ -65,7 +65,7 @@ import VLEProjectService from './vleProjectService';
 import moment from 'moment';
 import SockJS from 'sockjs-client';
 import Stomp from "@stomp/stompjs";
-import summernote from 'summernote';
+import * as summernote from 'summernote';
 import angularSummernote from '../lib/angular-summernote/dist/angular-summernote';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js';

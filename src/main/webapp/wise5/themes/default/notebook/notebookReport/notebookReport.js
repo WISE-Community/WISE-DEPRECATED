@@ -68,7 +68,7 @@ class NotebookReportController {
       disableDragAndDrop: true,
       toolbarContainer: '#' + this.reportId + '-toolbar',
       callbacks: {
-        onBlur: function () {
+        onBlur: function (args, args2) {
           $(this).summernote('saveRange');
         }
       }

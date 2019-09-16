@@ -1,5 +1,5 @@
 import classroomMonitorModule from './classroomMonitor';
 
 angular.element(document).ready(() => {
-  angular.bootstrap(document, [classroomMonitorModule.name], { strictDi: true});
+  angular.bootstrap(document.body, ['classroomMonitor'], { strictDi: true });
 });

@@ -6,7 +6,7 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: {
-    app: './main.js'
+    app: './src/main.ts'
   },
   plugins: [
     new webpack.IgnorePlugin(/^codemirror$/),
@@ -24,6 +24,11 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      },
+      {
         test: /\.scss$/,
         loader: 'style!css!sass',
         exclude: [
@@ -31,6 +36,9 @@ module.exports = {
         ]
       }
     ]
+  },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ]
   },
   output: {
     filename: '[name].bundle.js',

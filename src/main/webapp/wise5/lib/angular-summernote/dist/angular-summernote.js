@@ -194,12 +194,12 @@ angular.module('summernote', [])
               // to prevent binding to angular scope (It require `tranclude: 'element'`)
               element.append(clone.html());
             });
-            summernoteController.activate(scope, $(element), ngModel);
+            summernoteController.activate(scope, element, ngModel);
           } else {
             var clearWatch = scope.$watch(function() { return ngModel.$viewValue; }, function(value) {
               clearWatch();
               element.append(value);
-              summernoteController.activate(scope, $(element), ngModel);
+              summernoteController.activate(scope, element, ngModel);
             }, true);
           }
       }
