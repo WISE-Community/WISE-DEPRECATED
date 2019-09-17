@@ -499,6 +499,55 @@ class GraphAuthoringController extends GraphController {
     }
     this.authoringViewComponentChanged();
   }
+
+  authoringAddXAxisPlotLine() {
+    if (this.authoringComponentContent.xAxis.plotLines == null) {
+      this.authoringComponentContent.xAxis.plotLines = [];
+    }
+    const plotLine = {
+      color: 'gray',
+      width: 1,
+      value: null,
+      label: {
+        text: '',
+        verticalAlign: 'bottom',
+        textAlign: 'right',
+        y: -10,
+        style: {
+          fontWeight: 'bold'
+        }
+      }
+    };
+    this.authoringComponentContent.xAxis.plotLines.push(plotLine);
+  }
+
+  authoringDeleteXAxisPlotLine(index) {
+    this.authoringComponentContent.xAxis.plotLines.splice(index, 1);
+    this.authoringViewComponentChanged();
+  }
+
+  authoringAddYAxisPlotLine() {
+    if (this.authoringComponentContent.yAxis.plotLines == null) {
+      this.authoringComponentContent.yAxis.plotLines = [];
+    }
+    const plotLine = {
+      color: 'gray',
+      width: 1,
+      value: null,
+      label: {
+        text: '',
+        style: {
+          fontWeight: 'bold'
+        }
+      }
+    };
+    this.authoringComponentContent.yAxis.plotLines.push(plotLine);
+  }
+
+  authoringDeleteYAxisPlotLine(index) {
+    this.authoringComponentContent.yAxis.plotLines.splice(index, 1);
+    this.authoringViewComponentChanged();
+  }
 }
 
 
