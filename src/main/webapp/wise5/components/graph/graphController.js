@@ -1022,7 +1022,7 @@ function (_ComponentController) {
   }, {
     key: "isLimitXAxisType",
     value: function isLimitXAxisType(xAxis) {
-      return xAxis.type === 'limits';
+      return xAxis.type === 'limits' || xAxis.type == null;
     }
   }, {
     key: "isCategoriesXAxisType",
