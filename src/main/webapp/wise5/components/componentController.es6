@@ -693,7 +693,7 @@ class ComponentController {
   }
 
   isAddToNotebookEnabled() {
-    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled();
+    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled() && this.showAddToNotebookButton;
   }
 
   /**
