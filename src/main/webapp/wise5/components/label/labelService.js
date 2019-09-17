@@ -386,7 +386,7 @@ class LabelService extends ComponentService {
    */
   generateImageFromRenderedComponentState(componentState) {
     let deferred = this.$q.defer();
-    let canvas = angular.element('#canvas_' + componentState.nodeId + '_' + componentState.componentId);
+    let canvas = angular.element(document.querySelector('#canvas_' + componentState.nodeId + '_' + componentState.componentId));
     if (canvas != null && canvas.length > 0) {
       canvas = canvas[0];
 

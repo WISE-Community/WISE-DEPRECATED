@@ -378,7 +378,7 @@ public class WISE5AuthorProjectController {
     config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
     config.put("projectAssetURL", contextPath + "/project/asset/" + projectId);
     config.put("projectBaseURL", projectBaseURL);
-    config.put("previewProjectURL", contextPath + "/project/" + projectId + "#/project/" + projectId);
+    config.put("previewProjectURL", contextPath + "/project/" + projectId);
     config.put("cRaterRequestURL", contextPath + "/c-rater");
     config.put("importStepsURL", contextPath + "/project/importSteps/" + projectId);
     config.put("featuredProjectIcons", contextPath + "/project/featured/icons");

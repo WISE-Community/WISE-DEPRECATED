@@ -133,7 +133,7 @@ class DrawService extends ComponentService {
    */
   generateImageFromRenderedComponentState(componentState) {
     const deferred = this.$q.defer();
-    let canvas = angular.element('#drawingtool_' + componentState.nodeId + '_' + componentState.componentId + ' canvas');
+    let canvas = angular.element(document.querySelector('#drawingtool_' + componentState.nodeId + '_' + componentState.componentId + ' canvas'));
     if (canvas != null && canvas.length > 0) {
       canvas = canvas[0];
       const canvasBase64String = canvas.toDataURL('image/png');

@@ -182,8 +182,8 @@ class ConceptMapService extends ComponentService {
       return [[""],[""]];
     }
 
-    var start = new this.coord(startx, starty),
-    tip = new this.coord(endx, endy),
+    var start = this.coord(startx, starty),
+    tip = this.coord(endx, endy),
     pathData   = [],
     arrowHeadData = [];
 
@@ -195,15 +195,15 @@ class ConceptMapService extends ComponentService {
     endUp = endCurveUp ? 1 : -1;
     startYCurveDistance = (startYCurveDistance * startUp > 0) ? startYCurveDistance : startYCurveDistance * -1;
     endYCurveDistance = (endYCurveDistance * endUp > 0) ? endYCurveDistance : endYCurveDistance * -1;
-    var c2 = new this.coord(start.x+(curveDistance/2), start.y-startYCurveDistance),
-    c3 = new this.coord(tip.x-(curveDistance/2), tip.y-endYCurveDistance),
+    var c2 = this.coord(start.x+(curveDistance/2), start.y-startYCurveDistance),
+    c3 = this.coord(tip.x-(curveDistance/2), tip.y-endYCurveDistance),
     cDistance = Math.sqrt(Math.pow((curveDistance/2),2) + Math.pow(startYCurveDistance,2)),
     perimX = nodeRadius*(curveDistance/2)/cDistance,
     perimYstart = nodeRadius*startYCurveDistance/cDistance,
     perimYend = nodeRadius*endYCurveDistance/cDistance;
 
     // update tip
-    tip = new this.coord(tip.x - perimX, tip.y - perimYend);
+    tip = this.coord(tip.x - perimX, tip.y - perimYend);
 
     // draw arrow path
 
@@ -216,8 +216,8 @@ class ConceptMapService extends ComponentService {
     theta  = Math.atan2((tip.y-centerBaseOfHead.y),(tip.x-centerBaseOfHead.x)),
     baseAngleA = theta + angle * Math.PI/180,
     baseAngleB = theta - angle * Math.PI/180,
-    baseA    = new this.coord(tip.x - len * Math.cos(baseAngleA), tip.y - len * Math.sin(baseAngleA)),
-    baseB    = new this.coord(tip.x - len * Math.cos(baseAngleB), tip.y - len * Math.sin(baseAngleB));
+    baseA    = this.coord(tip.x - len * Math.cos(baseAngleA), tip.y - len * Math.sin(baseAngleA)),
+    baseB    = this.coord(tip.x - len * Math.cos(baseAngleB), tip.y - len * Math.sin(baseAngleB));
 
     arrowHeadData.push("M", tip.x, tip.y);
     arrowHeadData.push("L", baseA.x, baseA.y);  // line to baseA
@@ -283,7 +283,7 @@ class ConceptMapService extends ComponentService {
   getPointOnCubicBezier(percent,C1,C2,C3,C4) {
     if (percent < 0) percent = 0;
     if (percent > 1) percent = 1;
-    var pos = new this.coord();
+    var pos = this.coord();
     pos.x = C1.x*this.B1(percent) + C2.x*this.B2(percent) + C3.x*this.B3(percent) + C4.x*this.B4(percent);
     pos.y = C1.y*this.B1(percent) + C2.y*this.B2(percent) + C3.y*this.B3(percent) + C4.y*this.B4(percent);
     return pos;
@@ -1381,7 +1381,7 @@ class ConceptMapService extends ComponentService {
     let deferred = this.$q.defer();
 
     // get the svg element. this will obtain an array.
-    let svgElement = angular.element('#svg_' + componentState.nodeId + '_' + componentState.componentId);
+    let svgElement = angular.element(document.querySelector('#svg_' + componentState.nodeId + '_' + componentState.componentId));
 
     if (svgElement != null && svgElement.length > 0) {
       // get the svg element

@@ -76,7 +76,7 @@ class HTMLController extends ComponentController {
 
     // get the image elements in the scope
     let componentId = this.componentId;
-    let imageElements = angular.element('#' + componentId + ' img');
+    let imageElements = angular.element(document.querySelector('#' + componentId + ' img'));
 
     if (imageElements != null) {
 
