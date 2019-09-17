@@ -791,7 +791,7 @@ class GraphController extends ComponentController {
   }
 
   isLimitXAxisType(xAxis) {
-    return xAxis.type === 'limits';
+    return xAxis.type === 'limits' || xAxis.type == null;
   }
 
   isCategoriesXAxisType(xAxis) {
