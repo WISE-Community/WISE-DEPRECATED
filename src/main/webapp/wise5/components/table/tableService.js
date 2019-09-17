@@ -241,7 +241,7 @@ class TableService extends ComponentService {
    */
   generateImageFromRenderedComponentState(componentState) {
     let deferred = this.$q.defer();
-    let tableElement = angular.element('#table_' + componentState.nodeId + '_' + componentState.componentId);
+    let tableElement = angular.element(document.querySelector('#table_' + componentState.nodeId + '_' + componentState.componentId));
     if (tableElement != null && tableElement.length > 0) {
       tableElement = tableElement[0];
       // convert the table element to a canvas element

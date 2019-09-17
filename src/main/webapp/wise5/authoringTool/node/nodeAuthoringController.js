@@ -726,24 +726,18 @@ class NodeAuthoringController {
    * Launch VLE with this current step as the initial step
    */
   previewStepInNewWindow() {
-    let data = { "constraints": true };
+    const data = { 'constraints': true };
     this.saveEvent('stepPreviewed', 'Navigation', data);
-
-    let previewProjectURL = this.ConfigService.getConfigParam('previewProjectURL');
-    let previewStepURL  = previewProjectURL + '#/vle/' + this.nodeId;
-    window.open(previewStepURL);
+    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#/project/${this.projectId}/${this.nodeId}`);
   };
 
   /**
    * Launch VLE with this current step as the initial step without constraints
    */
   previewStepWithoutConstraintsInNewWindow() {
-    let data = { "constraints": false };
+    const data = { 'constraints': false };
     this.saveEvent('stepPreviewed', 'Navigation', data);
-
-    let previewProjectURL = this.ConfigService.getConfigParam('previewProjectURL');
-    let previewStepURL  = previewProjectURL + '?constraints=false' + '#/vle/' + this.nodeId;
-    window.open(previewStepURL);
+    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}?contraints=false#/project/${this.projectId}/${this.nodeId}`);
   };
 
   /**
@@ -3257,7 +3251,7 @@ class NodeAuthoringController {
    */
   previewImportProject() {
     if (this.importProject != null) {
-      window.open(this.importProject.previewProjectURL);
+      window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}`);
     }
   }
 
@@ -3267,10 +3261,7 @@ class NodeAuthoringController {
    */
   previewImportNode(node) {
     if (node != null) {
-      let nodeId = node.id;
-      let previewProjectURL = this.importProject.previewProjectURL;
-      let previewStepURL  = previewProjectURL + '#/vle/' + nodeId;
-      window.open(previewStepURL);
+      window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}/${node.id}`);
     }
   }
 
@@ -3280,12 +3271,7 @@ class NodeAuthoringController {
    * @param componentId the component id
    */
   previewImportComponent(node, componentId) {
-    if (node != null) {
-      let nodeId = node.id;
-      let previewProjectURL = this.importProject.previewProjectURL;
-      let previewStepURL  = previewProjectURL + '#/vle/' + nodeId + '/' + componentId;
-      window.open(previewStepURL);
-    }
+    this.previewImportNode(node);
   }
 
   /**

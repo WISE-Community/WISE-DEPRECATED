@@ -22,7 +22,7 @@ class NotificationsMenuController {
      */
     confirmDismissAllNotifications(ev) {
         let confirm = this.$mdDialog.confirm()
-            .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
+            .parent(angular.element(document.querySelector('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
             .ariaLabel(this.$translate('dismissNotificationsTitle'))
             .textContent(this.$translate('dismissNotificationsMessage'))
             .targetEvent(ev)

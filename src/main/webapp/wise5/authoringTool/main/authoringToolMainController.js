@@ -31,7 +31,7 @@ class AuthoringToolMainController {
     this.inProcessOfCreatingProject = false;
     this.showCreatingProjectMessage = false;
     this.showErrorCreatingProjectMessage = false;
-    
+
     this.is_rtl = ($('html').attr('dir')=='rtl');
     this.icons = {prev: 'arrow_back', next: 'arrow_forward'};
     if (this.is_rtl) {
@@ -260,7 +260,7 @@ class AuthoringToolMainController {
   previewProject(projectId) {
     let data = { constraints: true };
     this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
-    window.open(this.ConfigService.getWISEBaseURL() + '/project/' + projectId);
+    window.open(`${this.ConfigService.getWISEBaseURL()}/project/${projectId}#/project/${projectId}`);
   }
 
   /**

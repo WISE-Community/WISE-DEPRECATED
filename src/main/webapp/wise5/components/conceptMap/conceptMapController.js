@@ -700,7 +700,7 @@ class ConceptMapController extends ComponentController {
   }
 
   addDragOverListenerIfNecessary() {
-    const svg = angular.element('#' + this.svgId);
+    const svg = angular.element(document.querySelector('#' + this.svgId));
     /*
      * check if we have already added the dragover listener so we don't
      * add multiple listeners for the same event. adding multiple listeners
@@ -725,7 +725,7 @@ class ConceptMapController extends ComponentController {
   }
 
   addDropListenerIfNecessary() {
-    const svg = angular.element('#' + this.svgId);
+    const svg = angular.element(document.querySelector('#' + this.svgId));
     /*
      * check if we have already added the drop listener so we don't
      * add multiple listeners for the same event. adding multiple listeners
@@ -766,8 +766,8 @@ class ConceptMapController extends ComponentController {
   setLinkTypeChooserOverlayStyle() {
     this.modalWidth = this.getModalWidth();
     const overlayWidth = this.modalWidth;
-    const conceptMapContainer = angular.element('#' + this.conceptMapContainerId);
-    const height = conceptMapContainer.height();
+    const conceptMapContainer = angular.element(document.querySelector('#' + this.conceptMapContainerId));
+    const height = conceptMapContainer[0].offsetHeight;
     this.linkTypeChooserModalOverlayStyle = {
       'position': 'absolute',
       'z-index': 9999,
@@ -1605,7 +1605,7 @@ class ConceptMapController extends ComponentController {
    */
   snip($event) {
     // get the svg element. this will obtain an array.
-    let svgElement = angular.element('#svg_' + this.nodeId + '_' + this.componentId);
+    let svgElement = angular.element(document.querySelector('#svg_' + this.nodeId + '_' + this.componentId));
     if (svgElement != null && svgElement.length > 0) {
       svgElement = svgElement[0];
 

@@ -1370,7 +1370,7 @@ class LabelController extends ComponentController {
          */
         if (editLabelTextInputTop > 100) {
           // the input is in view so we will give it focus.
-          angular.element('#editLabelTextInput').focus();
+          angular.element(document.querySelector('#editLabelTextInput')).focus();
         }
       }
     });
@@ -1395,7 +1395,7 @@ class LabelController extends ComponentController {
     }
 
     // set the wrapped text into the text object
-    textObject.setText(wrappedText);
+    textObject.text = wrappedText;
     this.studentDataChanged();
 
     // refresh the canvas
@@ -1457,7 +1457,7 @@ class LabelController extends ComponentController {
   snipImage($event) {
 
     // get the canvas element
-    var canvas = angular.element('#' + this.canvasId);
+    var canvas = angular.element(document.querySelector('#' + this.canvasId));
 
     if (canvas != null && canvas.length > 0) {
 

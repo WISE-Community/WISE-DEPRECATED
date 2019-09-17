@@ -264,7 +264,7 @@ class GraphService extends ComponentService {
   generateImageFromRenderedComponentState(componentState) {
     const deferred = this.$q.defer();
     const componentId = componentState.componentId;
-    let highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
+    let highchartsDiv = angular.element(document.querySelector('#chart_' + componentId).find('.highcharts-container'));
     if (highchartsDiv != null && highchartsDiv.length > 0) {
       highchartsDiv = highchartsDiv[0];
       html2canvas(highchartsDiv).then((canvas) => {
