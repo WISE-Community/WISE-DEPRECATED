@@ -858,6 +858,7 @@ function (_ComponentController) {
   }, {
     key: "setAllSeriesFields",
     value: function setAllSeriesFields(series) {
+      var canAllSeriesMouseTrack = this.getNumberOfEditableSeries(series) == 0;
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
       var _iteratorError3 = undefined;
@@ -865,7 +866,7 @@ function (_ComponentController) {
       try {
         for (var _iterator3 = series[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var singleSeries = _step3.value;
-          this.setSingleSeriesFields(singleSeries);
+          this.setSingleSeriesFields(singleSeries, canAllSeriesMouseTrack);
         }
       } catch (err) {
         _didIteratorError3 = true;
@@ -883,8 +884,41 @@ function (_ComponentController) {
       }
     }
   }, {
+    key: "getNumberOfEditableSeries",
+    value: function getNumberOfEditableSeries(series) {
+      var numberOfEditableSeries = 0;
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = series[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var singleSeries = _step4.value;
+
+          if (singleSeries.canEdit) {
+            numberOfEditableSeries++;
+          }
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+            _iterator4["return"]();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+
+      return numberOfEditableSeries;
+    }
+  }, {
     key: "setSingleSeriesFields",
-    value: function setSingleSeriesFields(singleSeries) {
+    value: function setSingleSeriesFields(singleSeries, canAllSeriesMouseTrack) {
       if (singleSeries.canEdit && this.isActiveSeries(singleSeries)) {
         if (this.graphType === 'line' || this.graphType === 'scatter') {
           singleSeries.draggableX = true;
@@ -905,7 +939,7 @@ function (_ComponentController) {
         singleSeries.stickyTracking = false;
         singleSeries.shared = false;
         singleSeries.allowPointSelect = false;
-        singleSeries.enableMouseTracking = false;
+        singleSeries.enableMouseTracking = canAllSeriesMouseTrack;
       }
 
       if (singleSeries.allowPointMouseOver === true) {
@@ -1156,13 +1190,13 @@ function (_ComponentController) {
 
         if (activeSeries != null && this.canEdit(activeSeries)) {
           var activeSeriesId = activeSeries.id;
-          var _iteratorNormalCompletion4 = true;
-          var _didIteratorError4 = false;
-          var _iteratorError4 = undefined;
+          var _iteratorNormalCompletion5 = true;
+          var _didIteratorError5 = false;
+          var _iteratorError5 = undefined;
 
           try {
-            for (var _iterator4 = series[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-              var singleSeries = _step4.value;
+            for (var _iterator5 = series[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+              var singleSeries = _step5.value;
 
               if (activeSeriesId === singleSeries.options.id && !singleSeries.visible) {
                 // the series is not visible so we will not add the point
@@ -1171,16 +1205,16 @@ function (_ComponentController) {
               }
             }
           } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
-                _iterator4["return"]();
+              if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+                _iterator5["return"]();
               }
             } finally {
-              if (_didIteratorError4) {
-                throw _iteratorError4;
+              if (_didIteratorError5) {
+                throw _iteratorError5;
               }
             }
           }
@@ -1210,13 +1244,13 @@ function (_ComponentController) {
            * Update the show field in all the series depending on whether each line is active
            * in the legend.
            */
-          var _iteratorNormalCompletion5 = true;
-          var _didIteratorError5 = false;
-          var _iteratorError5 = undefined;
+          var _iteratorNormalCompletion6 = true;
+          var _didIteratorError6 = false;
+          var _iteratorError6 = undefined;
 
           try {
-            for (var _iterator5 = this.yAxis.series[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-              var yAxisSeries = _step5.value;
+            for (var _iterator6 = this.yAxis.series[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+              var yAxisSeries = _step6.value;
               var series = thisGraphController.getSeriesById(yAxisSeries.userOptions.id);
 
               if (this.userOptions.id === series.id) {
@@ -1226,16 +1260,16 @@ function (_ComponentController) {
               }
             }
           } catch (err) {
-            _didIteratorError5 = true;
-            _iteratorError5 = err;
+            _didIteratorError6 = true;
+            _iteratorError6 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
-                _iterator5["return"]();
+              if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+                _iterator6["return"]();
               }
             } finally {
-              if (_didIteratorError5) {
-                throw _iteratorError5;
+              if (_didIteratorError6) {
+                throw _iteratorError6;
               }
             }
           }
@@ -1456,29 +1490,29 @@ function (_ComponentController) {
     key: "canEditTrial",
     value: function canEditTrial(trial) {
       var series = trial.series;
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
       try {
-        for (var _iterator6 = series[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var singleSeries = _step6.value;
+        for (var _iterator7 = series[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var singleSeries = _step7.value;
 
           if (singleSeries.canEdit) {
             return true;
           }
         }
       } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
-            _iterator6["return"]();
+          if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+            _iterator7["return"]();
           }
         } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
+          if (_didIteratorError7) {
+            throw _iteratorError7;
           }
         }
       }
@@ -1494,13 +1528,13 @@ function (_ComponentController) {
     key: "showSelectActiveTrials",
     value: function showSelectActiveTrials() {
       var editableTrials = 0;
-      var _iteratorNormalCompletion7 = true;
-      var _didIteratorError7 = false;
-      var _iteratorError7 = undefined;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator7 = this.trials[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-          var trial = _step7.value;
+        for (var _iterator8 = this.trials[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var trial = _step8.value;
 
           if (this.canEditTrial(trial) && trial.show) {
             editableTrials++;
@@ -1511,16 +1545,16 @@ function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError7 = true;
-        _iteratorError7 = err;
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
-            _iterator7["return"]();
+          if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
+            _iterator8["return"]();
           }
         } finally {
-          if (_didIteratorError7) {
-            throw _iteratorError7;
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
@@ -1821,29 +1855,29 @@ function (_ComponentController) {
       if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
         var additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(this.nodeId, this.componentId);
         var allPromises = [];
-        var _iteratorNormalCompletion8 = true;
-        var _didIteratorError8 = false;
-        var _iteratorError8 = undefined;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
 
         try {
-          for (var _iterator8 = additionalProcessingFunctions[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-            var additionalProcessingFunction = _step8.value;
+          for (var _iterator9 = additionalProcessingFunctions[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            var additionalProcessingFunction = _step9.value;
             var defer = this.$q.defer();
             var promise = defer.promise;
             allPromises.push(promise);
             additionalProcessingFunction(defer, componentState, action);
           }
         } catch (err) {
-          _didIteratorError8 = true;
-          _iteratorError8 = err;
+          _didIteratorError9 = true;
+          _iteratorError9 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
-              _iterator8["return"]();
+            if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
+              _iterator9["return"]();
             }
           } finally {
-            if (_didIteratorError8) {
-              throw _iteratorError8;
+            if (_didIteratorError9) {
+              throw _iteratorError9;
             }
           }
         }
@@ -1894,29 +1928,29 @@ function (_ComponentController) {
   }, {
     key: "getSeriesById",
     value: function getSeriesById(id) {
-      var _iteratorNormalCompletion9 = true;
-      var _didIteratorError9 = false;
-      var _iteratorError9 = undefined;
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
 
       try {
-        for (var _iterator9 = this.getSeries()[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-          var singleSeries = _step9.value;
+        for (var _iterator10 = this.getSeries()[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var singleSeries = _step10.value;
 
           if (singleSeries.id === id) {
             return singleSeries;
           }
         }
       } catch (err) {
-        _didIteratorError9 = true;
-        _iteratorError9 = err;
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
-            _iterator9["return"]();
+          if (!_iteratorNormalCompletion10 && _iterator10["return"] != null) {
+            _iterator10["return"]();
           }
         } finally {
-          if (_didIteratorError9) {
-            throw _iteratorError9;
+          if (_didIteratorError10) {
+            throw _iteratorError10;
           }
         }
       }
@@ -1941,74 +1975,74 @@ function (_ComponentController) {
       var deferred = this.$q.defer();
       this.StudentDataService.getClassmateStudentWork(nodeId, componentId, periodId).then(function (componentStates) {
         var promises = [];
-        var _iteratorNormalCompletion10 = true;
-        var _didIteratorError10 = false;
-        var _iteratorError10 = undefined;
+        var _iteratorNormalCompletion11 = true;
+        var _didIteratorError11 = false;
+        var _iteratorError11 = undefined;
 
         try {
-          for (var _iterator10 = componentStates[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-            var componentState = _step10.value;
+          for (var _iterator11 = componentStates[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            var componentState = _step11.value;
             promises.push(_this10.getTrialsFromComponentState(nodeId, componentId, componentState));
           }
         } catch (err) {
-          _didIteratorError10 = true;
-          _iteratorError10 = err;
+          _didIteratorError11 = true;
+          _iteratorError11 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion10 && _iterator10["return"] != null) {
-              _iterator10["return"]();
+            if (!_iteratorNormalCompletion11 && _iterator11["return"] != null) {
+              _iterator11["return"]();
             }
           } finally {
-            if (_didIteratorError10) {
-              throw _iteratorError10;
+            if (_didIteratorError11) {
+              throw _iteratorError11;
             }
           }
         }
 
         _this10.$q.all(promises).then(function (promiseResults) {
           var mergedTrials = [];
-          var _iteratorNormalCompletion11 = true;
-          var _didIteratorError11 = false;
-          var _iteratorError11 = undefined;
+          var _iteratorNormalCompletion12 = true;
+          var _didIteratorError12 = false;
+          var _iteratorError12 = undefined;
 
           try {
-            for (var _iterator11 = promiseResults[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-              var trials = _step11.value;
-              var _iteratorNormalCompletion12 = true;
-              var _didIteratorError12 = false;
-              var _iteratorError12 = undefined;
+            for (var _iterator12 = promiseResults[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+              var trials = _step12.value;
+              var _iteratorNormalCompletion13 = true;
+              var _didIteratorError13 = false;
+              var _iteratorError13 = undefined;
 
               try {
-                for (var _iterator12 = trials[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-                  var trial = _step12.value;
+                for (var _iterator13 = trials[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+                  var trial = _step13.value;
                   mergedTrials.push(trial);
                 }
               } catch (err) {
-                _didIteratorError12 = true;
-                _iteratorError12 = err;
+                _didIteratorError13 = true;
+                _iteratorError13 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion12 && _iterator12["return"] != null) {
-                    _iterator12["return"]();
+                  if (!_iteratorNormalCompletion13 && _iterator13["return"] != null) {
+                    _iterator13["return"]();
                   }
                 } finally {
-                  if (_didIteratorError12) {
-                    throw _iteratorError12;
+                  if (_didIteratorError13) {
+                    throw _iteratorError13;
                   }
                 }
               }
             }
           } catch (err) {
-            _didIteratorError11 = true;
-            _iteratorError11 = err;
+            _didIteratorError12 = true;
+            _iteratorError12 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion11 && _iterator11["return"] != null) {
-                _iterator11["return"]();
+              if (!_iteratorNormalCompletion12 && _iterator12["return"] != null) {
+                _iterator12["return"]();
               }
             } finally {
-              if (_didIteratorError11) {
-                throw _iteratorError11;
+              if (_didIteratorError12) {
+                throw _iteratorError12;
               }
             }
           }
@@ -2051,13 +2085,13 @@ function (_ComponentController) {
         var trials = studentData.trials;
 
         if (trials != null) {
-          var _iteratorNormalCompletion13 = true;
-          var _didIteratorError13 = false;
-          var _iteratorError13 = undefined;
+          var _iteratorNormalCompletion14 = true;
+          var _didIteratorError14 = false;
+          var _iteratorError14 = undefined;
 
           try {
-            for (var _iterator13 = trials[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-              var trial = _step13.value;
+            for (var _iterator14 = trials[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+              var trial = _step14.value;
 
               var _newTrial = this.UtilService.makeCopyOfJSONObject(trial);
 
@@ -2066,16 +2100,16 @@ function (_ComponentController) {
               mergedTrials.push(_newTrial);
             }
           } catch (err) {
-            _didIteratorError13 = true;
-            _iteratorError13 = err;
+            _didIteratorError14 = true;
+            _iteratorError14 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion13 && _iterator13["return"] != null) {
-                _iterator13["return"]();
+              if (!_iteratorNormalCompletion14 && _iterator14["return"] != null) {
+                _iterator14["return"]();
               }
             } finally {
-              if (_didIteratorError13) {
-                throw _iteratorError13;
+              if (_didIteratorError14) {
+                throw _iteratorError14;
               }
             }
           }
@@ -2213,39 +2247,6 @@ function (_ComponentController) {
     key: "setSeriesIds",
     value: function setSeriesIds(allSeries) {
       var usedSeriesIds = this.getAllUsedSeriesIds(allSeries);
-      var _iteratorNormalCompletion14 = true;
-      var _didIteratorError14 = false;
-      var _iteratorError14 = undefined;
-
-      try {
-        for (var _iterator14 = allSeries[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-          var singleSeries = _step14.value;
-
-          if (singleSeries.id == null) {
-            var nextSeriesId = this.getNextSeriesId(usedSeriesIds);
-            singleSeries.id = nextSeriesId;
-            usedSeriesIds.push(nextSeriesId);
-          }
-        }
-      } catch (err) {
-        _didIteratorError14 = true;
-        _iteratorError14 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion14 && _iterator14["return"] != null) {
-            _iterator14["return"]();
-          }
-        } finally {
-          if (_didIteratorError14) {
-            throw _iteratorError14;
-          }
-        }
-      }
-    }
-  }, {
-    key: "getAllUsedSeriesIds",
-    value: function getAllUsedSeriesIds(allSeries) {
-      var usedSeriesIds = [];
       var _iteratorNormalCompletion15 = true;
       var _didIteratorError15 = false;
       var _iteratorError15 = undefined;
@@ -2253,7 +2254,12 @@ function (_ComponentController) {
       try {
         for (var _iterator15 = allSeries[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
           var singleSeries = _step15.value;
-          usedSeriesIds.push(singleSeries.id);
+
+          if (singleSeries.id == null) {
+            var nextSeriesId = this.getNextSeriesId(usedSeriesIds);
+            singleSeries.id = nextSeriesId;
+            usedSeriesIds.push(nextSeriesId);
+          }
         }
       } catch (err) {
         _didIteratorError15 = true;
@@ -2266,6 +2272,34 @@ function (_ComponentController) {
         } finally {
           if (_didIteratorError15) {
             throw _iteratorError15;
+          }
+        }
+      }
+    }
+  }, {
+    key: "getAllUsedSeriesIds",
+    value: function getAllUsedSeriesIds(allSeries) {
+      var usedSeriesIds = [];
+      var _iteratorNormalCompletion16 = true;
+      var _didIteratorError16 = false;
+      var _iteratorError16 = undefined;
+
+      try {
+        for (var _iterator16 = allSeries[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+          var singleSeries = _step16.value;
+          usedSeriesIds.push(singleSeries.id);
+        }
+      } catch (err) {
+        _didIteratorError16 = true;
+        _iteratorError16 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion16 && _iterator16["return"] != null) {
+            _iterator16["return"]();
+          }
+        } finally {
+          if (_didIteratorError16) {
+            throw _iteratorError16;
           }
         }
       }
@@ -2311,13 +2345,13 @@ function (_ComponentController) {
         if (selectedPoints != null) {
           var indexesToDelete = [];
           var data = series.data;
-          var _iteratorNormalCompletion16 = true;
-          var _didIteratorError16 = false;
-          var _iteratorError16 = undefined;
+          var _iteratorNormalCompletion17 = true;
+          var _didIteratorError17 = false;
+          var _iteratorError17 = undefined;
 
           try {
-            for (var _iterator16 = selectedPoints[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-              var selectedPoint = _step16.value;
+            for (var _iterator17 = selectedPoints[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+              var selectedPoint = _step17.value;
               index = selectedPoint.index;
               var dataPoint = data[index];
 
@@ -2339,16 +2373,16 @@ function (_ComponentController) {
              */
 
           } catch (err) {
-            _didIteratorError16 = true;
-            _iteratorError16 = err;
+            _didIteratorError17 = true;
+            _iteratorError17 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion16 && _iterator16["return"] != null) {
-                _iterator16["return"]();
+              if (!_iteratorNormalCompletion17 && _iterator17["return"] != null) {
+                _iterator17["return"]();
               }
             } finally {
-              if (_didIteratorError16) {
-                throw _iteratorError16;
+              if (_didIteratorError17) {
+                throw _iteratorError17;
               }
             }
           }
@@ -2411,26 +2445,26 @@ function (_ComponentController) {
       }
 
       if (this.hideAllTrialsOnNewTrial) {
-        var _iteratorNormalCompletion17 = true;
-        var _didIteratorError17 = false;
-        var _iteratorError17 = undefined;
+        var _iteratorNormalCompletion18 = true;
+        var _didIteratorError18 = false;
+        var _iteratorError18 = undefined;
 
         try {
-          for (var _iterator17 = this.trials[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-            var _trial = _step17.value;
+          for (var _iterator18 = this.trials[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+            var _trial = _step18.value;
             _trial.show = false;
           }
         } catch (err) {
-          _didIteratorError17 = true;
-          _iteratorError17 = err;
+          _didIteratorError18 = true;
+          _iteratorError18 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion17 && _iterator17["return"] != null) {
-              _iterator17["return"]();
+            if (!_iteratorNormalCompletion18 && _iterator18["return"] != null) {
+              _iterator18["return"]();
             }
           } finally {
-            if (_didIteratorError17) {
-              throw _iteratorError17;
+            if (_didIteratorError18) {
+              throw _iteratorError18;
             }
           }
         }
@@ -2460,13 +2494,13 @@ function (_ComponentController) {
     value: function getTrialNumbers() {
       var trialNumbers = [];
       var trialNumberRegex = /Trial (\d*)/;
-      var _iteratorNormalCompletion18 = true;
-      var _didIteratorError18 = false;
-      var _iteratorError18 = undefined;
+      var _iteratorNormalCompletion19 = true;
+      var _didIteratorError19 = false;
+      var _iteratorError19 = undefined;
 
       try {
-        for (var _iterator18 = this.trials[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-          var trial = _step18.value;
+        for (var _iterator19 = this.trials[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+          var trial = _step19.value;
           var tempTrialName = trial.name;
           var match = trialNumberRegex.exec(tempTrialName);
 
@@ -2476,16 +2510,16 @@ function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError18 = true;
-        _iteratorError18 = err;
+        _didIteratorError19 = true;
+        _iteratorError19 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion18 && _iterator18["return"] != null) {
-            _iterator18["return"]();
+          if (!_iteratorNormalCompletion19 && _iterator19["return"] != null) {
+            _iterator19["return"]();
           }
         } finally {
-          if (_didIteratorError18) {
-            throw _iteratorError18;
+          if (_didIteratorError19) {
+            throw _iteratorError19;
           }
         }
       }
@@ -2545,13 +2579,13 @@ function (_ComponentController) {
     value: function getHighestTrial() {
       var highestTrialIndex = null;
       var highestTrial = null;
-      var _iteratorNormalCompletion19 = true;
-      var _didIteratorError19 = false;
-      var _iteratorError19 = undefined;
+      var _iteratorNormalCompletion20 = true;
+      var _didIteratorError20 = false;
+      var _iteratorError20 = undefined;
 
       try {
-        for (var _iterator19 = this.trialIdsToShow[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-          var trialId = _step19.value;
+        for (var _iterator20 = this.trialIdsToShow[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+          var trialId = _step20.value;
           var trial = this.getTrialById(trialId);
           var trialIndex = this.getTrialIndex(trial);
 
@@ -2561,16 +2595,16 @@ function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError19 = true;
-        _iteratorError19 = err;
+        _didIteratorError20 = true;
+        _iteratorError20 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion19 && _iterator19["return"] != null) {
-            _iterator19["return"]();
+          if (!_iteratorNormalCompletion20 && _iterator20["return"] != null) {
+            _iterator20["return"]();
           }
         } finally {
-          if (_didIteratorError19) {
-            throw _iteratorError19;
+          if (_didIteratorError20) {
+            throw _iteratorError20;
           }
         }
       }
@@ -2630,13 +2664,13 @@ function (_ComponentController) {
   }, {
     key: "showOrHideTrials",
     value: function showOrHideTrials(trialIdsToShow) {
-      var _iteratorNormalCompletion20 = true;
-      var _didIteratorError20 = false;
-      var _iteratorError20 = undefined;
+      var _iteratorNormalCompletion21 = true;
+      var _didIteratorError21 = false;
+      var _iteratorError21 = undefined;
 
       try {
-        for (var _iterator20 = this.trials[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-          var trial = _step20.value;
+        for (var _iterator21 = this.trials[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+          var trial = _step21.value;
 
           if (trialIdsToShow.indexOf(trial.id) !== -1) {
             trial.show = true;
@@ -2651,16 +2685,16 @@ function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError20 = true;
-        _iteratorError20 = err;
+        _didIteratorError21 = true;
+        _iteratorError21 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion20 && _iterator20["return"] != null) {
-            _iterator20["return"]();
+          if (!_iteratorNormalCompletion21 && _iterator21["return"] != null) {
+            _iterator21["return"]();
           }
         } finally {
-          if (_didIteratorError20) {
-            throw _iteratorError20;
+          if (_didIteratorError21) {
+            throw _iteratorError21;
           }
         }
       }
@@ -2712,29 +2746,29 @@ function (_ComponentController) {
     key: "setTrialIdsToShow",
     value: function setTrialIdsToShow() {
       var idsToShow = [];
-      var _iteratorNormalCompletion21 = true;
-      var _didIteratorError21 = false;
-      var _iteratorError21 = undefined;
+      var _iteratorNormalCompletion22 = true;
+      var _didIteratorError22 = false;
+      var _iteratorError22 = undefined;
 
       try {
-        for (var _iterator21 = this.trials[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-          var trial = _step21.value;
+        for (var _iterator22 = this.trials[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+          var trial = _step22.value;
 
           if (trial.show) {
             idsToShow.push(trial.id);
           }
         }
       } catch (err) {
-        _didIteratorError21 = true;
-        _iteratorError21 = err;
+        _didIteratorError22 = true;
+        _iteratorError22 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion21 && _iterator21["return"] != null) {
-            _iterator21["return"]();
+          if (!_iteratorNormalCompletion22 && _iterator22["return"] != null) {
+            _iterator22["return"]();
           }
         } finally {
-          if (_didIteratorError21) {
-            throw _iteratorError21;
+          if (_didIteratorError22) {
+            throw _iteratorError22;
           }
         }
       }
@@ -2770,13 +2804,13 @@ function (_ComponentController) {
         this.parseLatestTrial(studentData, params);
       } else {
         // we need to process specific fields in the student data
-        var _iteratorNormalCompletion22 = true;
-        var _didIteratorError22 = false;
-        var _iteratorError22 = undefined;
+        var _iteratorNormalCompletion23 = true;
+        var _didIteratorError23 = false;
+        var _iteratorError23 = undefined;
 
         try {
-          for (var _iterator22 = params.fields[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-            var field = _step22.value;
+          for (var _iterator23 = params.fields[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+            var field = _step23.value;
             var name = field.name;
             var when = field.when;
             var action = field.action;
@@ -2794,16 +2828,16 @@ function (_ComponentController) {
             }
           }
         } catch (err) {
-          _didIteratorError22 = true;
-          _iteratorError22 = err;
+          _didIteratorError23 = true;
+          _iteratorError23 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion22 && _iterator22["return"] != null) {
-              _iterator22["return"]();
+            if (!_iteratorNormalCompletion23 && _iterator23["return"] != null) {
+              _iterator23["return"]();
             }
           } finally {
-            if (_didIteratorError22) {
-              throw _iteratorError22;
+            if (_didIteratorError23) {
+              throw _iteratorError23;
             }
           }
         }
@@ -2826,13 +2860,13 @@ function (_ComponentController) {
 
         if (selectedCells != null) {
           var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
-          var _iteratorNormalCompletion23 = true;
-          var _didIteratorError23 = false;
-          var _iteratorError23 = undefined;
+          var _iteratorNormalCompletion24 = true;
+          var _didIteratorError24 = false;
+          var _iteratorError24 = undefined;
 
           try {
-            for (var _iterator23 = this.trials[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-              var trial = _step23.value;
+            for (var _iterator24 = this.trials[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+              var trial = _step24.value;
 
               if (selectedTrialIds.includes(trial.id)) {
                 trial.show = true;
@@ -2841,16 +2875,16 @@ function (_ComponentController) {
               }
             }
           } catch (err) {
-            _didIteratorError23 = true;
-            _iteratorError23 = err;
+            _didIteratorError24 = true;
+            _iteratorError24 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion23 && _iterator23["return"] != null) {
-                _iterator23["return"]();
+              if (!_iteratorNormalCompletion24 && _iterator24["return"] != null) {
+                _iterator24["return"]();
               }
             } finally {
-              if (_didIteratorError23) {
-                throw _iteratorError23;
+              if (_didIteratorError24) {
+                throw _iteratorError24;
               }
             }
           }
@@ -2870,26 +2904,26 @@ function (_ComponentController) {
     key: "deleteTrialsByTrialId",
     value: function deleteTrialsByTrialId(trialIdsToDelete) {
       if (trialIdsToDelete != null) {
-        var _iteratorNormalCompletion24 = true;
-        var _didIteratorError24 = false;
-        var _iteratorError24 = undefined;
+        var _iteratorNormalCompletion25 = true;
+        var _didIteratorError25 = false;
+        var _iteratorError25 = undefined;
 
         try {
-          for (var _iterator24 = trialIdsToDelete[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-            var trialIdToDelete = _step24.value;
+          for (var _iterator25 = trialIdsToDelete[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+            var trialIdToDelete = _step25.value;
             this.deleteTrialId(trialIdToDelete);
           }
         } catch (err) {
-          _didIteratorError24 = true;
-          _iteratorError24 = err;
+          _didIteratorError25 = true;
+          _iteratorError25 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion24 && _iterator24["return"] != null) {
-              _iterator24["return"]();
+            if (!_iteratorNormalCompletion25 && _iterator25["return"] != null) {
+              _iterator25["return"]();
             }
           } finally {
-            if (_didIteratorError24) {
-              throw _iteratorError24;
+            if (_didIteratorError25) {
+              throw _iteratorError25;
             }
           }
         }
@@ -2956,26 +2990,26 @@ function (_ComponentController) {
   }, {
     key: "hideAllTrials",
     value: function hideAllTrials() {
-      var _iteratorNormalCompletion25 = true;
-      var _didIteratorError25 = false;
-      var _iteratorError25 = undefined;
+      var _iteratorNormalCompletion26 = true;
+      var _didIteratorError26 = false;
+      var _iteratorError26 = undefined;
 
       try {
-        for (var _iterator25 = this.trials[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
-          var trial = _step25.value;
+        for (var _iterator26 = this.trials[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
+          var trial = _step26.value;
           trial.show = false;
         }
       } catch (err) {
-        _didIteratorError25 = true;
-        _iteratorError25 = err;
+        _didIteratorError26 = true;
+        _iteratorError26 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion25 && _iterator25["return"] != null) {
-            _iterator25["return"]();
+          if (!_iteratorNormalCompletion26 && _iterator26["return"] != null) {
+            _iterator26["return"]();
           }
         } finally {
-          if (_didIteratorError25) {
-            throw _iteratorError25;
+          if (_didIteratorError26) {
+            throw _iteratorError26;
           }
         }
       }
@@ -3126,49 +3160,16 @@ function (_ComponentController) {
   }, {
     key: "getTrialById",
     value: function getTrialById(id) {
-      var _iteratorNormalCompletion26 = true;
-      var _didIteratorError26 = false;
-      var _iteratorError26 = undefined;
-
-      try {
-        for (var _iterator26 = this.trials[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
-          var trial = _step26.value;
-
-          if (trial.id === id) {
-            return trial;
-          }
-        }
-      } catch (err) {
-        _didIteratorError26 = true;
-        _iteratorError26 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion26 && _iterator26["return"] != null) {
-            _iterator26["return"]();
-          }
-        } finally {
-          if (_didIteratorError26) {
-            throw _iteratorError26;
-          }
-        }
-      }
-
-      return null;
-    }
-  }, {
-    key: "hasEditableSeries",
-    value: function hasEditableSeries() {
-      var series = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getSeries();
       var _iteratorNormalCompletion27 = true;
       var _didIteratorError27 = false;
       var _iteratorError27 = undefined;
 
       try {
-        for (var _iterator27 = series[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
-          var singleSeries = _step27.value;
+        for (var _iterator27 = this.trials[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+          var trial = _step27.value;
 
-          if (singleSeries.canEdit) {
-            return true;
+          if (trial.id === id) {
+            return trial;
           }
         }
       } catch (err) {
@@ -3182,6 +3183,39 @@ function (_ComponentController) {
         } finally {
           if (_didIteratorError27) {
             throw _iteratorError27;
+          }
+        }
+      }
+
+      return null;
+    }
+  }, {
+    key: "hasEditableSeries",
+    value: function hasEditableSeries() {
+      var series = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getSeries();
+      var _iteratorNormalCompletion28 = true;
+      var _didIteratorError28 = false;
+      var _iteratorError28 = undefined;
+
+      try {
+        for (var _iterator28 = series[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+          var singleSeries = _step28.value;
+
+          if (singleSeries.canEdit) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError28 = true;
+        _iteratorError28 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion28 && _iterator28["return"] != null) {
+            _iterator28["return"]();
+          }
+        } finally {
+          if (_didIteratorError28) {
+            throw _iteratorError28;
           }
         }
       }
@@ -3244,21 +3278,21 @@ function (_ComponentController) {
       var xMax = 0;
       var yMin = 0;
       var yMax = 0;
-      var _iteratorNormalCompletion28 = true;
-      var _didIteratorError28 = false;
-      var _iteratorError28 = undefined;
+      var _iteratorNormalCompletion29 = true;
+      var _didIteratorError29 = false;
+      var _iteratorError29 = undefined;
 
       try {
-        for (var _iterator28 = series[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
-          var singleSeries = _step28.value;
+        for (var _iterator29 = series[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+          var singleSeries = _step29.value;
           var data = singleSeries.data;
-          var _iteratorNormalCompletion29 = true;
-          var _didIteratorError29 = false;
-          var _iteratorError29 = undefined;
+          var _iteratorNormalCompletion30 = true;
+          var _didIteratorError30 = false;
+          var _iteratorError30 = undefined;
 
           try {
-            for (var _iterator29 = data[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
-              var dataPoint = _step29.value;
+            for (var _iterator30 = data[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+              var dataPoint = _step30.value;
 
               if (dataPoint != null) {
                 var tempX = null;
@@ -3292,31 +3326,31 @@ function (_ComponentController) {
               }
             }
           } catch (err) {
-            _didIteratorError29 = true;
-            _iteratorError29 = err;
+            _didIteratorError30 = true;
+            _iteratorError30 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion29 && _iterator29["return"] != null) {
-                _iterator29["return"]();
+              if (!_iteratorNormalCompletion30 && _iterator30["return"] != null) {
+                _iterator30["return"]();
               }
             } finally {
-              if (_didIteratorError29) {
-                throw _iteratorError29;
+              if (_didIteratorError30) {
+                throw _iteratorError30;
               }
             }
           }
         }
       } catch (err) {
-        _didIteratorError28 = true;
-        _iteratorError28 = err;
+        _didIteratorError29 = true;
+        _iteratorError29 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion28 && _iterator28["return"] != null) {
-            _iterator28["return"]();
+          if (!_iteratorNormalCompletion29 && _iterator29["return"] != null) {
+            _iterator29["return"]();
           }
         } finally {
-          if (_didIteratorError28) {
-            throw _iteratorError28;
+          if (_didIteratorError29) {
+            throw _iteratorError29;
           }
         }
       }
@@ -3332,26 +3366,26 @@ function (_ComponentController) {
   }, {
     key: "clearSeriesIds",
     value: function clearSeriesIds(series) {
-      var _iteratorNormalCompletion30 = true;
-      var _didIteratorError30 = false;
-      var _iteratorError30 = undefined;
+      var _iteratorNormalCompletion31 = true;
+      var _didIteratorError31 = false;
+      var _iteratorError31 = undefined;
 
       try {
-        for (var _iterator30 = series[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
-          var singleSeries = _step30.value;
+        for (var _iterator31 = series[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+          var singleSeries = _step31.value;
           singleSeries.id = null;
         }
       } catch (err) {
-        _didIteratorError30 = true;
-        _iteratorError30 = err;
+        _didIteratorError31 = true;
+        _iteratorError31 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion30 && _iterator30["return"] != null) {
-            _iterator30["return"]();
+          if (!_iteratorNormalCompletion31 && _iterator31["return"] != null) {
+            _iterator31["return"]();
           }
         } finally {
-          if (_didIteratorError30) {
-            throw _iteratorError30;
+          if (_didIteratorError31) {
+            throw _iteratorError31;
           }
         }
       }
@@ -3379,13 +3413,13 @@ function (_ComponentController) {
     value: function readCSVIntoActiveSeries(csvString) {
       var lines = csvString.split(/\r\n|\n/);
       this.activeSeries.data = [];
-      var _iteratorNormalCompletion31 = true;
-      var _didIteratorError31 = false;
-      var _iteratorError31 = undefined;
+      var _iteratorNormalCompletion32 = true;
+      var _didIteratorError32 = false;
+      var _iteratorError32 = undefined;
 
       try {
-        for (var _iterator31 = lines[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
-          var line = _step31.value;
+        for (var _iterator32 = lines[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+          var line = _step32.value;
           var values = line.split(',');
           var x = parseFloat(values[0]);
           var y = parseFloat(values[1]);
@@ -3396,16 +3430,16 @@ function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError31 = true;
-        _iteratorError31 = err;
+        _didIteratorError32 = true;
+        _iteratorError32 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion31 && _iterator31["return"] != null) {
-            _iterator31["return"]();
+          if (!_iteratorNormalCompletion32 && _iterator32["return"] != null) {
+            _iterator32["return"]();
           }
         } finally {
-          if (_didIteratorError31) {
-            throw _iteratorError31;
+          if (_didIteratorError32) {
+            throw _iteratorError32;
           }
         }
       }
@@ -3560,13 +3594,13 @@ function (_ComponentController) {
        */
 
       var connectedComponentBackgroundImage = null;
-      var _iteratorNormalCompletion32 = true;
-      var _didIteratorError32 = false;
-      var _iteratorError32 = undefined;
+      var _iteratorNormalCompletion33 = true;
+      var _didIteratorError33 = false;
+      var _iteratorError33 = undefined;
 
       try {
-        for (var _iterator32 = this.componentContent.connectedComponents[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
-          var connectedComponent = _step32.value;
+        for (var _iterator33 = this.componentContent.connectedComponents[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+          var connectedComponent = _step33.value;
           var type = connectedComponent.type;
 
           if (type === 'showClassmateWork') {
@@ -3581,16 +3615,16 @@ function (_ComponentController) {
          */
 
       } catch (err) {
-        _didIteratorError32 = true;
-        _iteratorError32 = err;
+        _didIteratorError33 = true;
+        _iteratorError33 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion32 && _iterator32["return"] != null) {
-            _iterator32["return"]();
+          if (!_iteratorNormalCompletion33 && _iterator33["return"] != null) {
+            _iterator33["return"]();
           }
         } finally {
-          if (_didIteratorError32) {
-            throw _iteratorError32;
+          if (_didIteratorError33) {
+            throw _iteratorError33;
           }
         }
       }
@@ -3681,23 +3715,23 @@ function (_ComponentController) {
         var trialCount = 0;
         var activeTrialIndex = 0;
         var activeSeriesIndex = 0;
-        var _iteratorNormalCompletion33 = true;
-        var _didIteratorError33 = false;
-        var _iteratorError33 = undefined;
+        var _iteratorNormalCompletion34 = true;
+        var _didIteratorError34 = false;
+        var _iteratorError34 = undefined;
 
         try {
-          for (var _iterator33 = promiseResults[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
-            var promiseResult = _step33.value;
+          for (var _iterator34 = promiseResults[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+            var promiseResult = _step34.value;
 
             if (promiseResult instanceof Array) {
               var trials = promiseResult;
-              var _iteratorNormalCompletion34 = true;
-              var _didIteratorError34 = false;
-              var _iteratorError34 = undefined;
+              var _iteratorNormalCompletion35 = true;
+              var _didIteratorError35 = false;
+              var _iteratorError35 = undefined;
 
               try {
-                for (var _iterator34 = trials[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
-                  var trial = _step34.value;
+                for (var _iterator35 = trials[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+                  var trial = _step35.value;
 
                   if (_this15.canEditTrial(trial)) {
                     activeTrialIndex = trialCount;
@@ -3707,16 +3741,16 @@ function (_ComponentController) {
                   trialCount++;
                 }
               } catch (err) {
-                _didIteratorError34 = true;
-                _iteratorError34 = err;
+                _didIteratorError35 = true;
+                _iteratorError35 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion34 && _iterator34["return"] != null) {
-                    _iterator34["return"]();
+                  if (!_iteratorNormalCompletion35 && _iterator35["return"] != null) {
+                    _iterator35["return"]();
                   }
                 } finally {
-                  if (_didIteratorError34) {
-                    throw _iteratorError34;
+                  if (_didIteratorError35) {
+                    throw _iteratorError35;
                   }
                 }
               }
@@ -3725,16 +3759,16 @@ function (_ComponentController) {
             }
           }
         } catch (err) {
-          _didIteratorError33 = true;
-          _iteratorError33 = err;
+          _didIteratorError34 = true;
+          _iteratorError34 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion33 && _iterator33["return"] != null) {
-              _iterator33["return"]();
+            if (!_iteratorNormalCompletion34 && _iterator34["return"] != null) {
+              _iterator34["return"]();
             }
           } finally {
-            if (_didIteratorError33) {
-              throw _iteratorError33;
+            if (_didIteratorError34) {
+              throw _iteratorError34;
             }
           }
         }
@@ -3814,13 +3848,13 @@ function (_ComponentController) {
         firstTime = false;
       }
 
-      var _iteratorNormalCompletion35 = true;
-      var _didIteratorError35 = false;
-      var _iteratorError35 = undefined;
+      var _iteratorNormalCompletion36 = true;
+      var _didIteratorError36 = false;
+      var _iteratorError36 = undefined;
 
       try {
-        for (var _iterator35 = this.componentContent.connectedComponents[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
-          var connectedComponent = _step35.value;
+        for (var _iterator36 = this.componentContent.connectedComponents[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+          var connectedComponent = _step36.value;
           var nodeId = connectedComponent.nodeId;
           var componentId = connectedComponent.componentId;
           var type = connectedComponent.type;
@@ -3841,16 +3875,16 @@ function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError35 = true;
-        _iteratorError35 = err;
+        _didIteratorError36 = true;
+        _iteratorError36 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion35 && _iterator35["return"] != null) {
-            _iterator35["return"]();
+          if (!_iteratorNormalCompletion36 && _iterator36["return"] != null) {
+            _iterator36["return"]();
           }
         } finally {
-          if (_didIteratorError35) {
-            throw _iteratorError35;
+          if (_didIteratorError36) {
+            throw _iteratorError36;
           }
         }
       }
@@ -3898,13 +3932,13 @@ function (_ComponentController) {
         }
       } else {
         // we will merge specific fields
-        var _iteratorNormalCompletion36 = true;
-        var _didIteratorError36 = false;
-        var _iteratorError36 = undefined;
+        var _iteratorNormalCompletion37 = true;
+        var _didIteratorError37 = false;
+        var _iteratorError37 = undefined;
 
         try {
-          for (var _iterator36 = mergeFields[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
-            var mergeField = _step36.value;
+          for (var _iterator37 = mergeFields[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
+            var mergeField = _step37.value;
             var name = mergeField.name;
             var when = mergeField.when;
             var action = mergeField.action;
@@ -3923,16 +3957,16 @@ function (_ComponentController) {
             }
           }
         } catch (err) {
-          _didIteratorError36 = true;
-          _iteratorError36 = err;
+          _didIteratorError37 = true;
+          _iteratorError37 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion36 && _iterator36["return"] != null) {
-              _iterator36["return"]();
+            if (!_iteratorNormalCompletion37 && _iterator37["return"] != null) {
+              _iterator37["return"]();
             }
           } finally {
-            if (_didIteratorError36) {
-              throw _iteratorError36;
+            if (_didIteratorError37) {
+              throw _iteratorError37;
             }
           }
         }
@@ -3957,13 +3991,13 @@ function (_ComponentController) {
     value: function mergeNullComponentState(baseComponentState, mergeFields, firstTime) {
       if (mergeFields == null) {// TODO
       } else {
-        var _iteratorNormalCompletion37 = true;
-        var _didIteratorError37 = false;
-        var _iteratorError37 = undefined;
+        var _iteratorNormalCompletion38 = true;
+        var _didIteratorError38 = false;
+        var _iteratorError38 = undefined;
 
         try {
-          for (var _iterator37 = mergeFields[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
-            var mergeField = _step37.value;
+          for (var _iterator38 = mergeFields[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
+            var mergeField = _step38.value;
             var name = mergeField.name;
             var when = mergeField.when;
             var action = mergeField.action;
@@ -3981,16 +4015,16 @@ function (_ComponentController) {
             }
           }
         } catch (err) {
-          _didIteratorError37 = true;
-          _iteratorError37 = err;
+          _didIteratorError38 = true;
+          _iteratorError38 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion37 && _iterator37["return"] != null) {
-              _iterator37["return"]();
+            if (!_iteratorNormalCompletion38 && _iterator38["return"] != null) {
+              _iterator38["return"]();
             }
           } finally {
-            if (_didIteratorError37) {
-              throw _iteratorError37;
+            if (_didIteratorError38) {
+              throw _iteratorError38;
             }
           }
         }
@@ -4012,47 +4046,14 @@ function (_ComponentController) {
       if (field === 'selectedCells') {
         if (connectedComponentState == null) {
           // we will default to hide all the trials
-          var _iteratorNormalCompletion38 = true;
-          var _didIteratorError38 = false;
-          var _iteratorError38 = undefined;
-
-          try {
-            for (var _iterator38 = baseComponentState.studentData.trials[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
-              var trial = _step38.value;
-              trial.show = false;
-            }
-          } catch (err) {
-            _didIteratorError38 = true;
-            _iteratorError38 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion38 && _iterator38["return"] != null) {
-                _iterator38["return"]();
-              }
-            } finally {
-              if (_didIteratorError38) {
-                throw _iteratorError38;
-              }
-            }
-          }
-        } else {
-          // loop through all the trials and show the ones that are in the selected cells array
-          var studentData = connectedComponentState.studentData;
-          var selectedCells = studentData[field];
-          var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
           var _iteratorNormalCompletion39 = true;
           var _didIteratorError39 = false;
           var _iteratorError39 = undefined;
 
           try {
             for (var _iterator39 = baseComponentState.studentData.trials[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
-              var _trial2 = _step39.value;
-
-              if (selectedTrialIds.includes(_trial2.id)) {
-                _trial2.show = true;
-              } else {
-                _trial2.show = false;
-              }
+              var trial = _step39.value;
+              trial.show = false;
             }
           } catch (err) {
             _didIteratorError39 = true;
@@ -4068,6 +4069,39 @@ function (_ComponentController) {
               }
             }
           }
+        } else {
+          // loop through all the trials and show the ones that are in the selected cells array
+          var studentData = connectedComponentState.studentData;
+          var selectedCells = studentData[field];
+          var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
+          var _iteratorNormalCompletion40 = true;
+          var _didIteratorError40 = false;
+          var _iteratorError40 = undefined;
+
+          try {
+            for (var _iterator40 = baseComponentState.studentData.trials[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
+              var _trial2 = _step40.value;
+
+              if (selectedTrialIds.includes(_trial2.id)) {
+                _trial2.show = true;
+              } else {
+                _trial2.show = false;
+              }
+            }
+          } catch (err) {
+            _didIteratorError40 = true;
+            _iteratorError40 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion40 && _iterator40["return"] != null) {
+                _iterator40["return"]();
+              }
+            } finally {
+              if (_didIteratorError40) {
+                throw _iteratorError40;
+              }
+            }
+          }
         }
       } else if (field === 'trial') {// TODO
       }
@@ -4075,41 +4109,14 @@ function (_ComponentController) {
   }, {
     key: "setCanEditForAllSeriesInComponentState",
     value: function setCanEditForAllSeriesInComponentState(componentState, canEdit) {
-      var _iteratorNormalCompletion40 = true;
-      var _didIteratorError40 = false;
-      var _iteratorError40 = undefined;
-
-      try {
-        for (var _iterator40 = componentState.studentData.trials[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
-          var trial = _step40.value;
-          this.setCanEditForAllSeries(trial.series, canEdit);
-        }
-      } catch (err) {
-        _didIteratorError40 = true;
-        _iteratorError40 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion40 && _iterator40["return"] != null) {
-            _iterator40["return"]();
-          }
-        } finally {
-          if (_didIteratorError40) {
-            throw _iteratorError40;
-          }
-        }
-      }
-    }
-  }, {
-    key: "setCanEditForAllSeries",
-    value: function setCanEditForAllSeries(series, canEdit) {
       var _iteratorNormalCompletion41 = true;
       var _didIteratorError41 = false;
       var _iteratorError41 = undefined;
 
       try {
-        for (var _iterator41 = series[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
-          var singleSeries = _step41.value;
-          singleSeries.canEdit = canEdit;
+        for (var _iterator41 = componentState.studentData.trials[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+          var trial = _step41.value;
+          this.setCanEditForAllSeries(trial.series, canEdit);
         }
       } catch (err) {
         _didIteratorError41 = true;
@@ -4122,6 +4129,33 @@ function (_ComponentController) {
         } finally {
           if (_didIteratorError41) {
             throw _iteratorError41;
+          }
+        }
+      }
+    }
+  }, {
+    key: "setCanEditForAllSeries",
+    value: function setCanEditForAllSeries(series, canEdit) {
+      var _iteratorNormalCompletion42 = true;
+      var _didIteratorError42 = false;
+      var _iteratorError42 = undefined;
+
+      try {
+        for (var _iterator42 = series[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
+          var singleSeries = _step42.value;
+          singleSeries.canEdit = canEdit;
+        }
+      } catch (err) {
+        _didIteratorError42 = true;
+        _iteratorError42 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion42 && _iterator42["return"] != null) {
+            _iterator42["return"]();
+          }
+        } finally {
+          if (_didIteratorError42) {
+            throw _iteratorError42;
           }
         }
       }
@@ -4257,58 +4291,58 @@ function (_ComponentController) {
         if (seriesId == null) {
           series = chart.series[chart.series.length - 1];
         } else {
-          var _iteratorNormalCompletion42 = true;
-          var _didIteratorError42 = false;
-          var _iteratorError42 = undefined;
+          var _iteratorNormalCompletion43 = true;
+          var _didIteratorError43 = false;
+          var _iteratorError43 = undefined;
 
           try {
-            for (var _iterator42 = chart.series[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
-              var singleSeries = _step42.value;
+            for (var _iterator43 = chart.series[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
+              var singleSeries = _step43.value;
 
               if (singleSeries.userOptions.name === seriesId) {
                 series = singleSeries;
               }
             }
           } catch (err) {
-            _didIteratorError42 = true;
-            _iteratorError42 = err;
+            _didIteratorError43 = true;
+            _iteratorError43 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion42 && _iterator42["return"] != null) {
-                _iterator42["return"]();
+              if (!_iteratorNormalCompletion43 && _iterator43["return"] != null) {
+                _iterator43["return"]();
               }
             } finally {
-              if (_didIteratorError42) {
-                throw _iteratorError42;
+              if (_didIteratorError43) {
+                throw _iteratorError43;
               }
             }
           }
         }
 
         var points = series.points;
-        var _iteratorNormalCompletion43 = true;
-        var _didIteratorError43 = false;
-        var _iteratorError43 = undefined;
+        var _iteratorNormalCompletion44 = true;
+        var _didIteratorError44 = false;
+        var _iteratorError44 = undefined;
 
         try {
-          for (var _iterator43 = points[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
-            var point = _step43.value;
+          for (var _iterator44 = points[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
+            var point = _step44.value;
 
             if (point.x === x) {
               chart.tooltip.refresh(point);
             }
           }
         } catch (err) {
-          _didIteratorError43 = true;
-          _iteratorError43 = err;
+          _didIteratorError44 = true;
+          _iteratorError44 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion43 && _iterator43["return"] != null) {
-              _iterator43["return"]();
+            if (!_iteratorNormalCompletion44 && _iterator44["return"] != null) {
+              _iterator44["return"]();
             }
           } finally {
-            if (_didIteratorError43) {
-              throw _iteratorError43;
+            if (_didIteratorError44) {
+              throw _iteratorError44;
             }
           }
         }
@@ -4325,13 +4359,13 @@ function (_ComponentController) {
         if (seriesId == null) {
           series = chart.series[chart.series.length - 1];
         } else {
-          var _iteratorNormalCompletion44 = true;
-          var _didIteratorError44 = false;
-          var _iteratorError44 = undefined;
+          var _iteratorNormalCompletion45 = true;
+          var _didIteratorError45 = false;
+          var _iteratorError45 = undefined;
 
           try {
-            for (var _iterator44 = chart.series[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
-              var singleSeries = _step44.value;
+            for (var _iterator45 = chart.series[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
+              var singleSeries = _step45.value;
 
               if (singleSeries.userOptions.name === seriesId) {
                 series = singleSeries;
@@ -4340,16 +4374,16 @@ function (_ComponentController) {
               this.removeHoverStateFromPoints(singleSeries.points);
             }
           } catch (err) {
-            _didIteratorError44 = true;
-            _iteratorError44 = err;
+            _didIteratorError45 = true;
+            _iteratorError45 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion44 && _iterator44["return"] != null) {
-                _iterator44["return"]();
+              if (!_iteratorNormalCompletion45 && _iterator45["return"] != null) {
+                _iterator45["return"]();
               }
             } finally {
-              if (_didIteratorError44) {
-                throw _iteratorError44;
+              if (_didIteratorError45) {
+                throw _iteratorError45;
               }
             }
           }
@@ -4361,33 +4395,6 @@ function (_ComponentController) {
   }, {
     key: "removeHoverStateFromPoints",
     value: function removeHoverStateFromPoints(points) {
-      var _iteratorNormalCompletion45 = true;
-      var _didIteratorError45 = false;
-      var _iteratorError45 = undefined;
-
-      try {
-        for (var _iterator45 = points[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
-          var point = _step45.value;
-          point.setState('');
-        }
-      } catch (err) {
-        _didIteratorError45 = true;
-        _iteratorError45 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion45 && _iterator45["return"] != null) {
-            _iterator45["return"]();
-          }
-        } finally {
-          if (_didIteratorError45) {
-            throw _iteratorError45;
-          }
-        }
-      }
-    }
-  }, {
-    key: "setHoverStateOnPoint",
-    value: function setHoverStateOnPoint(points, x) {
       var _iteratorNormalCompletion46 = true;
       var _didIteratorError46 = false;
       var _iteratorError46 = undefined;
@@ -4395,10 +4402,7 @@ function (_ComponentController) {
       try {
         for (var _iterator46 = points[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
           var point = _step46.value;
-
-          if (point.x === x) {
-            point.setState('hover');
-          }
+          point.setState('');
         }
       } catch (err) {
         _didIteratorError46 = true;
@@ -4411,6 +4415,36 @@ function (_ComponentController) {
         } finally {
           if (_didIteratorError46) {
             throw _iteratorError46;
+          }
+        }
+      }
+    }
+  }, {
+    key: "setHoverStateOnPoint",
+    value: function setHoverStateOnPoint(points, x) {
+      var _iteratorNormalCompletion47 = true;
+      var _didIteratorError47 = false;
+      var _iteratorError47 = undefined;
+
+      try {
+        for (var _iterator47 = points[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
+          var point = _step47.value;
+
+          if (point.x === x) {
+            point.setState('hover');
+          }
+        }
+      } catch (err) {
+        _didIteratorError47 = true;
+        _iteratorError47 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion47 && _iterator47["return"] != null) {
+            _iterator47["return"]();
+          }
+        } finally {
+          if (_didIteratorError47) {
+            throw _iteratorError47;
           }
         }
       }
@@ -4436,13 +4470,13 @@ function (_ComponentController) {
       var selectedTrialIds = [];
 
       if (selectedCells != null) {
-        var _iteratorNormalCompletion47 = true;
-        var _didIteratorError47 = false;
-        var _iteratorError47 = undefined;
+        var _iteratorNormalCompletion48 = true;
+        var _didIteratorError48 = false;
+        var _iteratorError48 = undefined;
 
         try {
-          for (var _iterator47 = selectedCells[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
-            var selectedCell = _step47.value;
+          for (var _iterator48 = selectedCells[Symbol.iterator](), _step48; !(_iteratorNormalCompletion48 = (_step48 = _iterator48.next()).done); _iteratorNormalCompletion48 = true) {
+            var selectedCell = _step48.value;
             var material = selectedCell.material;
             var bevTemp = selectedCell.bevTemp;
             var airTemp = selectedCell.airTemp;
@@ -4450,16 +4484,16 @@ function (_ComponentController) {
             selectedTrialIds.push(selectedTrialId);
           }
         } catch (err) {
-          _didIteratorError47 = true;
-          _iteratorError47 = err;
+          _didIteratorError48 = true;
+          _iteratorError48 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion47 && _iterator47["return"] != null) {
-              _iterator47["return"]();
+            if (!_iteratorNormalCompletion48 && _iterator48["return"] != null) {
+              _iterator48["return"]();
             }
           } finally {
-            if (_didIteratorError47) {
-              throw _iteratorError47;
+            if (_didIteratorError48) {
+              throw _iteratorError48;
             }
           }
         }
