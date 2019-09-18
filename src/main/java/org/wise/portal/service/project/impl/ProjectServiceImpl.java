@@ -276,6 +276,10 @@ public class ProjectServiceImpl implements ProjectService {
     return projectDao.getProjectListByUAR(user, "sharedowner");
   }
 
+  public List<Project> getSharedProjectsWithoutRun(User user) {
+    return projectDao.getSharedProjectsWithoutRun(user);
+  }
+
   public String getSharedTeacherRole(Project project, User user) {
     List<Permission> permissions = aclService.getPermissions(project, user);
     // for projects, a user can have at most one permission per project

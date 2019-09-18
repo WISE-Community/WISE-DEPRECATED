@@ -66,6 +66,10 @@ public interface ProjectService {
   @Transactional
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
   List<Project> getSharedProjectList(User user);
+  
+  @Transactional
+  @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
+  List<Project> getSharedProjectsWithoutRun(User user);
 
   /**
    * Retrieves a <code>List</code> of <code>Project</code> that  has been bookmarked

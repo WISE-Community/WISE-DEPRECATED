@@ -97,7 +97,7 @@ public class ProjectAPIController {
   @GetMapping("/shared")
   protected String getSharedLibraryProjects(ModelMap modelMap) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
-    List<Project> sharedProjectList = projectService.getSharedProjectList(signedInUser);
+    List<Project> sharedProjectList = projectService.getSharedProjectsWithoutRun(signedInUser);
     JSONArray projectsJSON = getProjectsJSON(sharedProjectList);
     return projectsJSON.toString();
   }
