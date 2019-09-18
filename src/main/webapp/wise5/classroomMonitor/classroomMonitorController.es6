@@ -120,7 +120,7 @@ class ClassroomMonitorController {
                 .ok(this.$translate('YES'))
                 .cancel(this.$translate('NO'));
             $mdDialog.show(confirm).then(() => {
-                this.SessionService.renewSession();
+                this.SessionService.closeWarningAndRenewSession();
             }, () => {
                 this.SessionService.forceLogOut();
             });

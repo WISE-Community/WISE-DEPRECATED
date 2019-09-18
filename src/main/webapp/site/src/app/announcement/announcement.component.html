@@ -1,13 +1,13 @@
-<div *ngIf="show" class="announcement mat-caption dark-theme center primary-bg">
+<div class="announcement mat-caption dark-theme center primary-bg">
   <span class="announcement__content"
        fxLayoutGap="4px"
        fxLayoutAlign="center center">
-    <span>{{ message }}</span>
-    <button *ngIf="action"
+    <span>{{ announcement.bannerText }}</span>
+    <button *ngIf="announcement.bannerButton"
             mat-button
             color="primary"
-            (click)="callback()">
-      {{ action }}
+            (click)="showAnnouncementDetails()">
+      {{ announcement.bannerButton }}
     </button>
   </span>
   <button class="announcement__dismiss"

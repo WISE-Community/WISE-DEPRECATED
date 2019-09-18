@@ -3,33 +3,43 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _graphController = _interopRequireDefault(require("./graphController"));
 
-var _graphController = require('./graphController');
+var _html2canvas = _interopRequireDefault(require("html2canvas"));
 
-var _graphController2 = _interopRequireDefault(_graphController);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _html2canvas = require('html2canvas');
-
-var _html2canvas2 = _interopRequireDefault(_html2canvas);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var GraphAuthoringController = function (_GraphController) {
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var GraphAuthoringController =
+/*#__PURE__*/
+function (_GraphController) {
   _inherits(GraphAuthoringController, _GraphController);
 
   function GraphAuthoringController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, GraphService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    var _this;
+
     _classCallCheck(this, GraphAuthoringController);
 
-    var _this = _possibleConstructorReturn(this, (GraphAuthoringController.__proto__ || Object.getPrototypeOf(GraphAuthoringController)).call(this, $filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, GraphService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(GraphAuthoringController).call(this, $filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, GraphService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
     _this.availableGraphTypes = [{
       value: 'line',
       text: _this.$translate('graph.linePlot')
@@ -40,7 +50,6 @@ var GraphAuthoringController = function (_GraphController) {
       value: 'scatter',
       text: _this.$translate('graph.scatterPlot')
     }];
-
     _this.availableRoundingOptions = [{
       value: null,
       text: _this.$translate('graph.noRounding')
@@ -54,7 +63,6 @@ var GraphAuthoringController = function (_GraphController) {
       value: 'hundredth',
       text: _this.$translate('graph.roundToHundredth')
     }];
-
     _this.availableSymbols = [{
       value: 'circle',
       text: _this.$translate('graph.circle')
@@ -71,7 +79,6 @@ var GraphAuthoringController = function (_GraphController) {
       value: 'diamond',
       text: _this.$translate('graph.diamond')
     }];
-
     _this.availableSeriesTypes = [{
       value: 'line',
       text: _this.$translate('graph.line')
@@ -79,7 +86,6 @@ var GraphAuthoringController = function (_GraphController) {
       value: 'scatter',
       text: _this.$translate('graph.point')
     }];
-
     _this.availableLineTypes = [{
       value: 'Solid',
       text: _this.$translate('graph.solid')
@@ -96,7 +102,6 @@ var GraphAuthoringController = function (_GraphController) {
       value: 'ShortDot',
       text: _this.$translate('graph.shortDot')
     }];
-
     _this.availableXAxisTypes = [{
       value: 'limits',
       text: 'Limits'
@@ -104,13 +109,24 @@ var GraphAuthoringController = function (_GraphController) {
       value: 'categories',
       text: 'Categories'
     }];
-
-    _this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
-
+    _this.allowedConnectedComponentTypes = [{
+      type: 'Animation'
+    }, {
+      type: 'ConceptMap'
+    }, {
+      type: 'Draw'
+    }, {
+      type: 'Embedded'
+    }, {
+      type: 'Graph'
+    }, {
+      type: 'Label'
+    }, {
+      type: 'Table'
+    }];
     _this.isResetSeriesButtonVisible = true;
     _this.isSelectSeriesVisible = true;
     _this.backgroundImage = _this.componentContent.backgroundImage;
-
     $scope.$watch(function () {
       return _this.authoringComponentContent;
     }, function (newValue, oldValue) {
@@ -127,25 +143,33 @@ var GraphAuthoringController = function (_GraphController) {
       _this.isSelectSeriesVisible = true;
       _this.legendEnabled = !_this.componentContent.hideLegend;
       _this.showTrialSelect = !_this.componentContent.hideTrialSelect;
+
       _this.setSeries(_this.UtilService.makeCopyOfJSONObject(_this.componentContent.series));
+
       _this.setDefaultActiveSeries();
+
       _this.trials = [];
+
       _this.newTrial();
+
       _this.clearPlotLines();
+
       _this.drawGraph();
     }, true);
     return _this;
   }
 
   _createClass(GraphAuthoringController, [{
-    key: 'assetSelected',
+    key: "assetSelected",
     value: function assetSelected(event, args) {
       if (this.isEventTargetThisComponent(args)) {
         var fileName = args.assetItem.fileName;
+
         if (args.target === 'rubric') {
           var summernoteId = this.getSummernoteId(args);
           this.restoreSummernoteCursorPosition(summernoteId);
           var fullAssetPath = this.getFullAssetPath(fileName);
+
           if (this.UtilService.isImage(fileName)) {
             this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
           } else if (this.UtilService.isVideo(fileName)) {
@@ -156,44 +180,53 @@ var GraphAuthoringController = function (_GraphController) {
           this.authoringViewComponentChanged();
         }
       }
+
       this.$mdDialog.hide();
     }
   }, {
-    key: 'authoringAddSeriesClicked',
+    key: "authoringAddSeriesClicked",
     value: function authoringAddSeriesClicked() {
       var newSeries = this.createNewSeries();
+
       if (this.authoringComponentContent.graphType === 'line') {
         newSeries.type = 'line';
         newSeries.dashStyle = 'Solid';
       } else if (this.authoringComponentContent.graphType === 'scatter') {
         newSeries.type = 'scatter';
       }
+
       this.authoringComponentContent.series.push(newSeries);
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringDeleteSeriesClicked',
+    key: "authoringDeleteSeriesClicked",
     value: function authoringDeleteSeriesClicked(index) {
       var message = '';
       var seriesName = '';
+
       if (this.authoringComponentContent.series != null) {
         var series = this.authoringComponentContent.series[index];
+
         if (series != null && series.name != null) {
           seriesName = series.name;
         }
       }
+
       if (seriesName == null || seriesName === '') {
         message = this.$translate('graph.areYouSureYouWantToDeleteTheSeries');
       } else {
-        message = this.$translate('graph.areYouSureYouWantToDeleteTheNamedSeries', { seriesName: seriesName });
+        message = this.$translate('graph.areYouSureYouWantToDeleteTheNamedSeries', {
+          seriesName: seriesName
+        });
       }
+
       if (confirm(message)) {
         this.authoringComponentContent.series.splice(index, 1);
         this.authoringViewComponentChanged();
       }
     }
   }, {
-    key: 'authoringViewEnableTrialsClicked',
+    key: "authoringViewEnableTrialsClicked",
     value: function authoringViewEnableTrialsClicked() {
       if (this.authoringComponentContent.enableTrials) {
         this.authoringComponentContent.canCreateNewTrials = true;
@@ -203,10 +236,11 @@ var GraphAuthoringController = function (_GraphController) {
         this.authoringComponentContent.canDeleteTrials = false;
         this.authoringComponentContent.hideAllTrialsOnNewTrial = true;
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'showChooseBackgroundImagePopup',
+    key: "showChooseBackgroundImagePopup",
     value: function showChooseBackgroundImagePopup() {
       var params = {
         isPopup: true,
@@ -217,31 +251,36 @@ var GraphAuthoringController = function (_GraphController) {
       this.$rootScope.$broadcast('openAssetChooser', params);
     }
   }, {
-    key: 'authoringAddXAxisCategory',
+    key: "authoringAddXAxisCategory",
     value: function authoringAddXAxisCategory() {
       this.authoringComponentContent.xAxis.categories.push('');
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringDeleteXAxisCategory',
+    key: "authoringDeleteXAxisCategory",
     value: function authoringDeleteXAxisCategory(index) {
       var confirmMessage = '';
       var categoryName = '';
+
       if (this.authoringComponentContent.xAxis != null && this.authoringComponentContent.xAxis.categories != null) {
         categoryName = this.authoringComponentContent.xAxis.categories[index];
       }
+
       if (categoryName == null || categoryName === '') {
         confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheCategory');
       } else {
-        confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', { categoryName: categoryName });
+        confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', {
+          categoryName: categoryName
+        });
       }
+
       if (confirm(confirmMessage)) {
         this.authoringComponentContent.xAxis.categories.splice(index, 1);
         this.authoringViewComponentChanged();
       }
     }
   }, {
-    key: 'authoringAddSeriesDataPoint',
+    key: "authoringAddSeriesDataPoint",
     value: function authoringAddSeriesDataPoint(series) {
       if (series != null && series.data != null) {
         if (this.authoringComponentContent.xAxis.type == null || this.authoringComponentContent.xAxis.type === 'limits') {
@@ -250,10 +289,11 @@ var GraphAuthoringController = function (_GraphController) {
           series.data.push(null);
         }
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringDeleteSeriesDataPoint',
+    key: "authoringDeleteSeriesDataPoint",
     value: function authoringDeleteSeriesDataPoint(series, index) {
       if (series != null && series.data != null) {
         if (confirm(this.$translate('graph.areYouSureYouWantToDeleteTheDataPoint'))) {
@@ -263,27 +303,29 @@ var GraphAuthoringController = function (_GraphController) {
       }
     }
   }, {
-    key: 'authoringMoveSeriesDataPointUp',
+    key: "authoringMoveSeriesDataPointUp",
     value: function authoringMoveSeriesDataPointUp(series, index) {
       if (index > 0) {
         var dataPoint = series.data[index];
         series.data.splice(index, 1);
         series.data.splice(index - 1, 0, dataPoint);
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringMoveSeriesDataPointDown',
+    key: "authoringMoveSeriesDataPointDown",
     value: function authoringMoveSeriesDataPointDown(series, index) {
       if (index < series.data.length - 1) {
         var dataPoint = series.data[index];
         series.data.splice(index, 1);
         series.data.splice(index + 1, 0, dataPoint);
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringViewXAxisTypeChanged',
+    key: "authoringViewXAxisTypeChanged",
     value: function authoringViewXAxisTypeChanged(newValue, oldValue) {
       if (confirm(this.$translate('graph.areYouSureYouWantToChangeTheXAxisType'))) {
         if (oldValue === 'categories' && newValue === 'limits') {
@@ -302,10 +344,11 @@ var GraphAuthoringController = function (_GraphController) {
       } else {
         this.authoringComponentContent.xAxis.type = oldValue;
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringConvertAllSeriesDataPoints',
+    key: "authoringConvertAllSeriesDataPoints",
     value: function authoringConvertAllSeriesDataPoints(xAxisType) {
       var series = this.authoringComponentContent.series;
       var _iteratorNormalCompletion = true;
@@ -315,7 +358,6 @@ var GraphAuthoringController = function (_GraphController) {
       try {
         for (var _iterator = series[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var singleSeries = _step.value;
-
           this.convertSeriesDataPoints(singleSeries, xAxisType);
         }
       } catch (err) {
@@ -323,8 +365,8 @@ var GraphAuthoringController = function (_GraphController) {
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
           }
         } finally {
           if (_didIteratorError) {
@@ -334,7 +376,7 @@ var GraphAuthoringController = function (_GraphController) {
       }
     }
   }, {
-    key: 'authoringAddConnectedComponent',
+    key: "authoringAddConnectedComponent",
     value: function authoringAddConnectedComponent() {
       var newConnectedComponent = {
         nodeId: this.nodeId,
@@ -342,10 +384,13 @@ var GraphAuthoringController = function (_GraphController) {
         type: null
       };
       this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
+
       if (this.authoringComponentContent.connectedComponents == null) {
         this.authoringComponentContent.connectedComponents = [];
       }
+
       this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
+
       if (this.authoringComponentContent.connectedComponents.length > 1 || this.authoringComponentContent.series.length > 0) {
         /*
          * there is more than one connected component so we will enable
@@ -354,12 +399,14 @@ var GraphAuthoringController = function (_GraphController) {
          */
         this.authoringComponentContent.enableTrials = true;
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringAutomaticallySetConnectedComponentComponentIdIfPossible',
+    key: "authoringAutomaticallySetConnectedComponentComponentIdIfPossible",
     value: function authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
       var components = this.getComponentsByNodeId(connectedComponent.nodeId);
+
       if (components != null) {
         var numberOfAllowedComponents = 0;
         var allowedComponent = null;
@@ -381,8 +428,8 @@ var GraphAuthoringController = function (_GraphController) {
           _iteratorError2 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
             }
           } finally {
             if (_didIteratorError2) {
@@ -400,38 +447,43 @@ var GraphAuthoringController = function (_GraphController) {
       }
     }
   }, {
-    key: 'authoringAddConnectedComponentSeriesNumber',
+    key: "authoringAddConnectedComponentSeriesNumber",
     value: function authoringAddConnectedComponentSeriesNumber(connectedComponent) {
       if (connectedComponent.seriesNumbers == null) {
         connectedComponent.seriesNumbers = [];
       }
+
       connectedComponent.seriesNumbers.push(null);
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringDeleteConnectedComponentSeriesNumber',
+    key: "authoringDeleteConnectedComponentSeriesNumber",
     value: function authoringDeleteConnectedComponentSeriesNumber(connectedComponent, seriesNumberIndex) {
       if (connectedComponent.seriesNumbers == null) {
         connectedComponent.seriesNumbers = [];
       }
+
       connectedComponent.seriesNumbers.splice(seriesNumberIndex, 1);
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringConnectedComponentSeriesNumberChanged',
+    key: "authoringConnectedComponentSeriesNumberChanged",
     value: function authoringConnectedComponentSeriesNumberChanged(connectedComponent, seriesNumberIndex, value) {
       if (connectedComponent.seriesNumbers == null) {
         connectedComponent.seriesNumbers = [];
       }
+
       if (seriesNumberIndex < connectedComponent.seriesNumbers.length) {
         connectedComponent.seriesNumbers[seriesNumberIndex] = value;
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringConnectedComponentComponentIdChanged',
+    key: "authoringConnectedComponentComponentIdChanged",
     value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
       var connectedComponentType = this.authoringGetConnectedComponentType(connectedComponent);
+
       if (connectedComponentType !== 'Embedded') {
         /*
          * the component type is not Embedded so we will remove the
@@ -439,6 +491,7 @@ var GraphAuthoringController = function (_GraphController) {
          */
         delete connectedComponent.seriesNumbers;
       }
+
       if (connectedComponentType !== 'Table') {
         /*
          * the component type is not Table so we will remove the
@@ -448,6 +501,7 @@ var GraphAuthoringController = function (_GraphController) {
         delete connectedComponent.xColumn;
         delete connectedComponent.yColumn;
       }
+
       if (connectedComponentType !== 'Graph') {
         /*
          * the component type is not Graph so we will remove the
@@ -455,18 +509,20 @@ var GraphAuthoringController = function (_GraphController) {
          */
         delete connectedComponent.showClassmateWorkSource;
       }
+
       if (connectedComponentType === 'Table') {
         // set default values for the connected component params
         connectedComponent.skipFirstRow = true;
         connectedComponent.xColumn = 0;
         connectedComponent.yColumn = 1;
       }
+
       connectedComponent.type = 'importWork';
       this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'connectedComponentShowClassmateWorkChanged',
+    key: "connectedComponentShowClassmateWorkChanged",
     value: function connectedComponentShowClassmateWorkChanged(connectedComponent) {
       if (connectedComponent.showClassmateWork) {
         /*
@@ -482,12 +538,14 @@ var GraphAuthoringController = function (_GraphController) {
         delete connectedComponent.showClassmateWork;
         delete connectedComponent.showClassmateWorkSource;
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringSetImportWorkAsBackgroundIfApplicable',
+    key: "authoringSetImportWorkAsBackgroundIfApplicable",
     value: function authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
       var componentType = this.authoringGetConnectedComponentType(connectedComponent);
+
       if (componentType === 'ConceptMap' || componentType === 'Draw' || componentType === 'Label') {
         connectedComponent.importWorkAsBackground = true;
       } else {
@@ -495,7 +553,7 @@ var GraphAuthoringController = function (_GraphController) {
       }
     }
   }, {
-    key: 'authoringConnectedComponentTypeChanged',
+    key: "authoringConnectedComponentTypeChanged",
     value: function authoringConnectedComponentTypeChanged(connectedComponent) {
       if (connectedComponent.type === 'importWork') {
         delete connectedComponent.showClassmateWorkSource;
@@ -508,26 +566,84 @@ var GraphAuthoringController = function (_GraphController) {
          * different trial
          */
         this.authoringComponentContent.enableTrials = true;
+
         if (connectedComponent.showClassmateWorkSource == null) {
           connectedComponent.showClassmateWorkSource = 'period';
         }
       }
+
       this.authoringViewComponentChanged();
     }
   }, {
-    key: 'authoringImportWorkAsBackgroundClicked',
+    key: "authoringImportWorkAsBackgroundClicked",
     value: function authoringImportWorkAsBackgroundClicked(connectedComponent) {
       if (!connectedComponent.importWorkAsBackground) {
         delete connectedComponent.importWorkAsBackground;
       }
+
+      this.authoringViewComponentChanged();
+    }
+  }, {
+    key: "authoringAddXAxisPlotLine",
+    value: function authoringAddXAxisPlotLine() {
+      if (this.authoringComponentContent.xAxis.plotLines == null) {
+        this.authoringComponentContent.xAxis.plotLines = [];
+      }
+
+      var plotLine = {
+        color: 'gray',
+        width: 1,
+        value: null,
+        label: {
+          text: '',
+          verticalAlign: 'bottom',
+          textAlign: 'right',
+          y: -10,
+          style: {
+            fontWeight: 'bold'
+          }
+        }
+      };
+      this.authoringComponentContent.xAxis.plotLines.push(plotLine);
+    }
+  }, {
+    key: "authoringDeleteXAxisPlotLine",
+    value: function authoringDeleteXAxisPlotLine(index) {
+      this.authoringComponentContent.xAxis.plotLines.splice(index, 1);
+      this.authoringViewComponentChanged();
+    }
+  }, {
+    key: "authoringAddYAxisPlotLine",
+    value: function authoringAddYAxisPlotLine() {
+      if (this.authoringComponentContent.yAxis.plotLines == null) {
+        this.authoringComponentContent.yAxis.plotLines = [];
+      }
+
+      var plotLine = {
+        color: 'gray',
+        width: 1,
+        value: null,
+        label: {
+          text: '',
+          style: {
+            fontWeight: 'bold'
+          }
+        }
+      };
+      this.authoringComponentContent.yAxis.plotLines.push(plotLine);
+    }
+  }, {
+    key: "authoringDeleteYAxisPlotLine",
+    value: function authoringDeleteYAxisPlotLine(index) {
+      this.authoringComponentContent.yAxis.plotLines.splice(index, 1);
       this.authoringViewComponentChanged();
     }
   }]);
 
   return GraphAuthoringController;
-}(_graphController2.default);
+}(_graphController["default"]);
 
 GraphAuthoringController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'GraphService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-exports.default = GraphAuthoringController;
+var _default = GraphAuthoringController;
+exports["default"] = _default;
 //# sourceMappingURL=graphAuthoringController.js.map

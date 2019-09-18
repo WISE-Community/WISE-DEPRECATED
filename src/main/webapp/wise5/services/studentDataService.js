@@ -3,12 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var StudentDataService = function () {
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var StudentDataService =
+/*#__PURE__*/
+function () {
   function StudentDataService($filter, $http, $injector, $q, $rootScope, AnnotationService, ConfigService, PlanningService, ProjectService, UtilService) {
     var _this = this;
 
@@ -29,40 +34,41 @@ var StudentDataService = function () {
     this.previousStep = null;
     this.studentData = null;
     this.stackHistory = []; // array of node id's
+
     this.visitedNodesHistory = [];
     this.nodeStatuses = {};
     this.runStatus = null;
     this.maxScore = null;
-
     this.maxPlanningNodeNumber = 0;
-
     /*
      * A counter to keep track of how many saveToServer requests we have
      * made that we haven't received a response for yet. When this value
      * goes back down to 0, we will send update the student status and then
      * save it to the server.
      */
-    this.saveToServerRequestCount = 0;
 
+    this.saveToServerRequestCount = 0;
     /*
      * A dummy student work id that is used in preview mode when we simulate
      * saving of student data.
      */
-    this.dummyStudentWorkId = 1;
 
-    // listen for node status changes
+    this.dummyStudentWorkId = 1; // listen for node status changes
+
     this.$rootScope.$on('nodeStatusesChanged', function (event, args) {
       // calculate active global annotations and group them by group name as needed
-      _this.AnnotationService.calculateActiveGlobalAnnotationGroups();
+      _this.AnnotationService.calculateActiveGlobalAnnotationGroups(); // go through the global annotations and see if they can be un-globalized by checking if their criterias have been met.
 
-      // go through the global annotations and see if they can be un-globalized by checking if their criterias have been met.
+
       var globalAnnotationGroups = _this.AnnotationService.getActiveGlobalAnnotationGroups();
+
       globalAnnotationGroups.map(function (globalAnnotationGroup) {
         var globalAnnotations = globalAnnotationGroup.annotations;
         globalAnnotations.map(function (globalAnnotation) {
           if (globalAnnotation.data != null && globalAnnotation.data.isGlobal) {
             var unGlobalizeConditional = globalAnnotation.data.unGlobalizeConditional;
             var unGlobalizeCriteriaArray = globalAnnotation.data.unGlobalizeCriteria;
+
             if (unGlobalizeCriteriaArray != null) {
               if (unGlobalizeConditional === "any") {
                 // at least one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
@@ -76,6 +82,7 @@ var StudentDataService = function () {
                     var unGlobalizeCriteria = _step.value;
 
                     var unGlobalizeCriteriaResult = _this.evaluateCriteria(unGlobalizeCriteria);
+
                     anySatified = anySatified || unGlobalizeCriteriaResult;
                   }
                 } catch (err) {
@@ -83,8 +90,8 @@ var StudentDataService = function () {
                   _iteratorError = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                      _iterator.return();
+                    if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+                      _iterator["return"]();
                     }
                   } finally {
                     if (_didIteratorError) {
@@ -95,7 +102,9 @@ var StudentDataService = function () {
 
                 if (anySatified) {
                   globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date()); // save when criteria was satisfied
+
                   _this.saveAnnotations([globalAnnotation]); // save changes to server
+
                 }
               } else if (unGlobalizeConditional === "all") {
                 // all criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
@@ -109,6 +118,7 @@ var StudentDataService = function () {
                     var _unGlobalizeCriteria = _step2.value;
 
                     var _unGlobalizeCriteriaResult = _this.evaluateCriteria(_unGlobalizeCriteria);
+
                     allSatisfied = allSatisfied && _unGlobalizeCriteriaResult;
                   }
                 } catch (err) {
@@ -116,8 +126,8 @@ var StudentDataService = function () {
                   _iteratorError2 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                      _iterator2.return();
+                    if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+                      _iterator2["return"]();
                     }
                   } finally {
                     if (_didIteratorError2) {
@@ -128,7 +138,9 @@ var StudentDataService = function () {
 
                 if (allSatisfied) {
                   globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date()); // save when criteria was satisfied
+
                   _this.saveAnnotations([globalAnnotation]); // save changes to server
+
                 }
               }
             }
@@ -136,21 +148,22 @@ var StudentDataService = function () {
         });
       });
     });
-
     /**
      * Listen for the 'newAnnotationReceived' event which is fired when
      * student receives a new annotation from the server
      */
+
     this.$rootScope.$on('newAnnotationReceived', function (event, args) {
       if (args) {
         // get the annotation that was saved to the server
         var annotation = args.annotation;
+
         _this.handleAnnotationReceived(annotation);
       }
     });
-
     this.$rootScope.$on('notebookUpdated', function (event, args) {
       var mode = _this.ConfigService.getMode();
+
       if (mode === 'student' || mode === 'preview') {
         _this.updateNodeStatuses();
       }
@@ -158,7 +171,7 @@ var StudentDataService = function () {
   }
 
   _createClass(StudentDataService, [{
-    key: 'retrieveStudentData',
+    key: "retrieveStudentData",
     value: function retrieveStudentData() {
       var _this2 = this;
 
@@ -170,23 +183,18 @@ var StudentDataService = function () {
         this.studentData.events = [];
         this.studentData.annotations = [];
         this.studentData.username = this.$translate('PREVIEW_STUDENT');
-        this.studentData.userId = '0';
+        this.studentData.userId = '0'; // set the annotations into the annotation service
 
-        // set the annotations into the annotation service
-        this.AnnotationService.setAnnotations(this.studentData.annotations);
+        this.AnnotationService.setAnnotations(this.studentData.annotations); // populate the student history
 
-        // populate the student history
-        this.populateHistories(this.studentData.events);
+        this.populateHistories(this.studentData.events); // update the node statuses
 
-        // update the node statuses
         this.updateNodeStatuses();
       } else {
         var studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
-
         var httpParams = {};
         httpParams.method = 'GET';
         httpParams.url = studentDataURL;
-
         var params = {};
         params.workgroupId = this.ConfigService.getWorkgroupId();
         params.runId = this.ConfigService.getRunId();
@@ -194,15 +202,14 @@ var StudentDataService = function () {
         params.getEvents = true;
         params.getAnnotations = true;
         params.toWorkgroupId = this.ConfigService.getWorkgroupId();
-        httpParams.params = params;
+        httpParams.params = params; // make the request for the student data
 
-        // make the request for the student data
         return this.$http(httpParams).then(function (result) {
           var resultData = result.data;
-          if (resultData != null) {
-            _this2.studentData = {};
 
-            // get student work
+          if (resultData != null) {
+            _this2.studentData = {}; // get student work
+
             _this2.studentData.componentStates = [];
             _this2.studentData.nodeStates = [];
             var studentWorkList = resultData.studentWorkList;
@@ -219,16 +226,15 @@ var StudentDataService = function () {
                 } else {
                   _this2.studentData.nodeStates.push(studentWork);
                 }
-              }
+              } // Check to see if this Project contains any Planning activities
 
-              // Check to see if this Project contains any Planning activities
             } catch (err) {
               _didIteratorError3 = true;
               _iteratorError3 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                  _iterator3.return();
+                if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+                  _iterator3["return"]();
                 }
               } finally {
                 if (_didIteratorError3) {
@@ -249,8 +255,10 @@ var StudentDataService = function () {
 
                   if (planningGroupNode.planning) {
                     var lastestNodeStateForPlanningGroupNode = _this2.getLatestNodeStateByNodeId(planningGroupNode.id);
+
                     if (lastestNodeStateForPlanningGroupNode != null) {
                       var studentModifiedNodes = lastestNodeStateForPlanningGroupNode.studentData.nodes;
+
                       if (studentModifiedNodes != null) {
                         var _iteratorNormalCompletion5 = true;
                         var _didIteratorError5 = false;
@@ -259,8 +267,8 @@ var StudentDataService = function () {
                         try {
                           for (var _iterator5 = studentModifiedNodes[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
                             var studentModifiedNode = _step5.value;
-
                             var studentModifiedNodeId = studentModifiedNode.id;
+
                             if (studentModifiedNode.planning) {
                               // If this is a Planning Node that exists in the project, replace the one in the original project with this one.
                               for (var n = 0; n < _this2.ProjectService.project.nodes.length; n++) {
@@ -279,8 +287,8 @@ var StudentDataService = function () {
                           _iteratorError5 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                              _iterator5.return();
+                            if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+                              _iterator5["return"]();
                             }
                           } finally {
                             if (_didIteratorError5) {
@@ -291,15 +299,15 @@ var StudentDataService = function () {
                       }
                     }
                   }
-                }
-                // Re-parse the project with the modified changes
+                } // Re-parse the project with the modified changes
+
               } catch (err) {
                 _didIteratorError4 = true;
                 _iteratorError4 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                    _iterator4.return();
+                  if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+                    _iterator4["return"]();
                   }
                 } finally {
                   if (_didIteratorError4) {
@@ -313,8 +321,11 @@ var StudentDataService = function () {
 
             _this2.studentData.events = resultData.events;
             _this2.studentData.annotations = resultData.annotations;
+
             _this2.AnnotationService.setAnnotations(_this2.studentData.annotations);
+
             _this2.populateHistories(_this2.studentData.events);
+
             _this2.updateNodeStatuses();
           }
 
@@ -323,8 +334,7 @@ var StudentDataService = function () {
       }
     }
   }, {
-    key: 'retrieveRunStatus',
-
+    key: "retrieveRunStatus",
 
     /**
      * Retrieve the run status
@@ -337,20 +347,20 @@ var StudentDataService = function () {
       } else {
         var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
         var runId = this.ConfigService.getConfigParam('runId');
-
         var params = {
           runId: runId
         };
-
         var httpParams = {};
         httpParams.method = 'GET';
-        httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+        httpParams.headers = {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        };
         httpParams.url = runStatusURL;
         httpParams.params = params;
-
         return this.$http(httpParams).then(function (result) {
           if (result != null) {
             var data = result.data;
+
             if (data != null) {
               _this3.runStatus = data;
             }
@@ -359,31 +369,34 @@ var StudentDataService = function () {
       }
     }
   }, {
-    key: 'getNodeStatuses',
+    key: "getNodeStatuses",
     value: function getNodeStatuses() {
       return this.nodeStatuses;
     }
   }, {
-    key: 'setNodeStatusByNodeId',
+    key: "setNodeStatusByNodeId",
     value: function setNodeStatusByNodeId(nodeId, nodeStatus) {
       if (nodeId != null && nodeStatus != null) {
         var nodeStatuses = this.nodeStatuses;
+
         if (nodeStatuses != null) {
           nodeStatuses[nodeId] = nodeStatus;
         }
       }
     }
   }, {
-    key: 'getNodeStatusByNodeId',
+    key: "getNodeStatusByNodeId",
     value: function getNodeStatusByNodeId(nodeId) {
       var nodeStatuses = this.nodeStatuses;
+
       if (nodeId != null && nodeStatuses != null) {
         return nodeStatuses[nodeId];
       }
+
       return null;
     }
   }, {
-    key: 'updateNodeStatuses',
+    key: "updateNodeStatuses",
     value: function updateNodeStatuses() {
       var nodes = this.ProjectService.getNodes();
       var planningNodes = this.PlanningService.getPlanningNodes();
@@ -393,6 +406,7 @@ var StudentDataService = function () {
         if (planningNodes != null) {
           nodes = nodes.concat(planningNodes);
         }
+
         var _iteratorNormalCompletion6 = true;
         var _didIteratorError6 = false;
         var _iteratorError6 = undefined;
@@ -410,8 +424,8 @@ var StudentDataService = function () {
           _iteratorError6 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+              _iterator6["return"]();
             }
           } finally {
             if (_didIteratorError6) {
@@ -421,7 +435,8 @@ var StudentDataService = function () {
         }
       }
 
-      var group = void 0;
+      var group;
+
       if (groups != null) {
         var _iteratorNormalCompletion7 = true;
         var _didIteratorError7 = false;
@@ -430,18 +445,16 @@ var StudentDataService = function () {
         try {
           for (var _iterator7 = groups[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
             var _group = _step7.value;
-
             _group.depth = this.ProjectService.getNodeDepth(_group.id);
-          }
+          } // sort by descending depth order (need to calculate completion for lowest level groups first)
 
-          // sort by descending depth order (need to calculate completion for lowest level groups first)
         } catch (err) {
           _didIteratorError7 = true;
           _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-              _iterator7.return();
+            if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+              _iterator7["return"]();
             }
           } finally {
             if (_didIteratorError7) {
@@ -453,7 +466,6 @@ var StudentDataService = function () {
         groups.sort(function (a, b) {
           return b.depth - a.depth;
         });
-
         var _iteratorNormalCompletion8 = true;
         var _didIteratorError8 = false;
         var _iteratorError8 = undefined;
@@ -461,7 +473,6 @@ var StudentDataService = function () {
         try {
           for (var _iterator8 = groups[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
             var _group2 = _step8.value;
-
             this.updateNodeStatusByNode(_group2);
           }
         } catch (err) {
@@ -469,8 +480,8 @@ var StudentDataService = function () {
           _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-              _iterator8.return();
+            if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
+              _iterator8["return"]();
             }
           } finally {
             if (_didIteratorError8) {
@@ -478,15 +489,14 @@ var StudentDataService = function () {
             }
           }
         }
-      }
+      } // update max score
 
-      // update max score
+
       this.maxScore = this.getMaxScore();
       this.$rootScope.$broadcast('nodeStatusesChanged');
     }
   }, {
-    key: 'updateNodeStatusByNode',
-
+    key: "updateNodeStatusByNode",
 
     /**
      * Update the node status for a node
@@ -498,9 +508,8 @@ var StudentDataService = function () {
         var tempNodeStatus = {};
         tempNodeStatus.nodeId = nodeId;
         tempNodeStatus.isVisitable = true;
-        tempNodeStatus.isCompleted = true;
+        tempNodeStatus.isCompleted = true; // get the constraints that affect this node
 
-        // get the constraints that affect this node
         var constraintsForNode = this.ProjectService.getConstraintsForNode(node);
 
         if (this.ConfigService.getConfigParam('constraints') == false) {
@@ -524,10 +533,8 @@ var StudentDataService = function () {
         } else {
           var isVisibleResults = [];
           var isVisitableResults = [];
-
           var result = false;
           var firstResult = true;
-
           var _iteratorNormalCompletion9 = true;
           var _didIteratorError9 = false;
           var _iteratorError9 = undefined;
@@ -539,7 +546,6 @@ var StudentDataService = function () {
               if (constraintForNode != null) {
                 // evaluate the constraint to see if the node can be visited
                 var tempResult = this.evaluateConstraint(node, constraintForNode);
-
                 var action = constraintForNode.action;
 
                 if (action != null) {
@@ -564,8 +570,8 @@ var StudentDataService = function () {
             _iteratorError9 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                _iterator9.return();
+              if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
+                _iterator9["return"]();
               }
             } finally {
               if (_didIteratorError9) {
@@ -577,54 +583,14 @@ var StudentDataService = function () {
           var isVisible = true;
           var isVisitable = true;
 
-          var _iteratorNormalCompletion10 = true;
-          var _didIteratorError10 = false;
-          var _iteratorError10 = undefined;
-
-          try {
-            for (var _iterator10 = isVisibleResults[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-              var isVisibleResult = _step10.value;
-
-              isVisible = isVisible && isVisibleResult;
-            }
-          } catch (err) {
-            _didIteratorError10 = true;
-            _iteratorError10 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                _iterator10.return();
-              }
-            } finally {
-              if (_didIteratorError10) {
-                throw _iteratorError10;
-              }
-            }
+          for (var _i = 0, _isVisibleResults = isVisibleResults; _i < _isVisibleResults.length; _i++) {
+            var isVisibleResult = _isVisibleResults[_i];
+            isVisible = isVisible && isVisibleResult;
           }
 
-          var _iteratorNormalCompletion11 = true;
-          var _didIteratorError11 = false;
-          var _iteratorError11 = undefined;
-
-          try {
-            for (var _iterator11 = isVisitableResults[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-              var isVisitableResult = _step11.value;
-
-              isVisitable = isVisitable && isVisitableResult;
-            }
-          } catch (err) {
-            _didIteratorError11 = true;
-            _iteratorError11 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                _iterator11.return();
-              }
-            } finally {
-              if (_didIteratorError11) {
-                throw _iteratorError11;
-              }
-            }
+          for (var _i2 = 0, _isVisitableResults = isVisitableResults; _i2 < _isVisitableResults.length; _i2++) {
+            var isVisitableResult = _isVisitableResults[_i2];
+            isVisitable = isVisitable && isVisitableResult;
           }
 
           tempNodeStatus.isVisible = isVisible;
@@ -633,7 +599,6 @@ var StudentDataService = function () {
 
         tempNodeStatus.isCompleted = this.isCompleted(nodeId);
         tempNodeStatus.isVisited = this.isNodeVisited(nodeId);
-
         var nodeStatus = this.getNodeStatusByNodeId(nodeId);
 
         if (nodeStatus == null) {
@@ -644,7 +609,6 @@ var StudentDataService = function () {
            * if it has changed
            */
           var previousIsCompletedValue = this.nodeStatuses[nodeId].isCompleted;
-
           this.nodeStatuses[nodeId].isVisited = tempNodeStatus.isVisited;
           this.nodeStatuses[nodeId].isVisible = tempNodeStatus.isVisible;
           this.nodeStatuses[nodeId].isVisitable = tempNodeStatus.isVisitable;
@@ -655,15 +619,17 @@ var StudentDataService = function () {
              * the node status just changed from false to true so we
              * will fire an event
              */
-            this.$rootScope.$broadcast('nodeCompleted', { nodeId: nodeId });
+            this.$rootScope.$broadcast('nodeCompleted', {
+              nodeId: nodeId
+            });
           }
         }
 
         this.nodeStatuses[nodeId].progress = this.getNodeProgressById(nodeId);
-        this.nodeStatuses[nodeId].icon = this.ProjectService.getNodeIconByNodeId(nodeId);
+        this.nodeStatuses[nodeId].icon = this.ProjectService.getNodeIconByNodeId(nodeId); // get the latest component state for the node
 
-        // get the latest component state for the node
         var latestComponentStatesForNode = this.getLatestComponentStateByNodeId(nodeId);
+
         if (latestComponentStatesForNode != null) {
           // set the latest component state timestamp into the node status
           this.nodeStatuses[nodeId].latestComponentStateClientSaveTime = latestComponentStatesForNode.clientSaveTime;
@@ -672,8 +638,7 @@ var StudentDataService = function () {
       }
     }
   }, {
-    key: 'evaluateConstraint',
-
+    key: "evaluateConstraint",
 
     /**
      * Evaluate the constraint
@@ -684,15 +649,16 @@ var StudentDataService = function () {
     value: function evaluateConstraint(node, constraintForNode) {
       if (constraintForNode != null) {
         var removalCriteria = constraintForNode.removalCriteria;
+
         if (removalCriteria != null) {
           return this.evaluateNodeConstraint(node, constraintForNode);
         }
       }
+
       return false;
     }
   }, {
-    key: 'evaluateNodeConstraint',
-
+    key: "evaluateNodeConstraint",
 
     /**
      * Evaluate the node constraint
@@ -706,17 +672,18 @@ var StudentDataService = function () {
       if (constraintForNode != null) {
         var removalCriteria = constraintForNode.removalCriteria;
         var removalConditional = constraintForNode.removalConditional;
+
         if (removalCriteria == null) {
           result = true;
         } else {
           var firstResult = true;
-          var _iteratorNormalCompletion12 = true;
-          var _didIteratorError12 = false;
-          var _iteratorError12 = undefined;
+          var _iteratorNormalCompletion10 = true;
+          var _didIteratorError10 = false;
+          var _iteratorError10 = undefined;
 
           try {
-            for (var _iterator12 = removalCriteria[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-              var tempCriteria = _step12.value;
+            for (var _iterator10 = removalCriteria[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+              var tempCriteria = _step10.value;
 
               if (tempCriteria != null) {
                 // evaluate the criteria
@@ -728,7 +695,6 @@ var StudentDataService = function () {
                   firstResult = false;
                 } else {
                   // this is not the first criteria
-
                   if (removalConditional === 'any') {
                     // any of the criteria can be true to remove the constraint
                     result = result || tempResult;
@@ -740,26 +706,26 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError12 = true;
-            _iteratorError12 = err;
+            _didIteratorError10 = true;
+            _iteratorError10 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                _iterator12.return();
+              if (!_iteratorNormalCompletion10 && _iterator10["return"] != null) {
+                _iterator10["return"]();
               }
             } finally {
-              if (_didIteratorError12) {
-                throw _iteratorError12;
+              if (_didIteratorError10) {
+                throw _iteratorError10;
               }
             }
           }
         }
       }
+
       return result;
     }
   }, {
-    key: 'evaluateCriteria',
-
+    key: "evaluateCriteria",
 
     /**
      * Evaluate the criteria
@@ -768,8 +734,10 @@ var StudentDataService = function () {
      */
     value: function evaluateCriteria(criteria) {
       var result = false;
+
       if (criteria != null) {
         var functionName = criteria.name;
+
         if (functionName == null) {} else if (functionName === 'branchPathTaken') {
           result = this.evaluateBranchPathTakenCriteria(criteria);
         } else if (functionName === 'isVisible') {} else if (functionName === 'isVisitable') {} else if (functionName === 'isVisited') {
@@ -800,11 +768,11 @@ var StudentDataService = function () {
           result = this.evaluateFillXNumberOfRowsCriteria(criteria);
         } else if (functionName === '') {}
       }
+
       return result;
     }
   }, {
-    key: 'evaluateIsCompletedCriteria',
-
+    key: "evaluateIsCompletedCriteria",
 
     /**
      * Check if the isCompleted criteria was satisfied
@@ -817,9 +785,9 @@ var StudentDataService = function () {
         var nodeId = params.nodeId;
         return this.isCompleted(nodeId);
       }
+
       return false;
     }
-
     /**
      * Check if the isCorrect criteria was satisfied
      * @param criteria an isCorrect criteria
@@ -827,7 +795,7 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'evaluateIsCorrectCriteria',
+    key: "evaluateIsCorrectCriteria",
     value: function evaluateIsCorrectCriteria(criteria) {
       if (criteria != null && criteria.params != null) {
         var params = criteria.params;
@@ -836,17 +804,19 @@ var StudentDataService = function () {
 
         if (nodeId != null && componentId != null) {
           var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+
           if (componentStates != null) {
-            var _iteratorNormalCompletion13 = true;
-            var _didIteratorError13 = false;
-            var _iteratorError13 = undefined;
+            var _iteratorNormalCompletion11 = true;
+            var _didIteratorError11 = false;
+            var _iteratorError11 = undefined;
 
             try {
-              for (var _iterator13 = componentStates[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-                var componentState = _step13.value;
+              for (var _iterator11 = componentStates[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                var componentState = _step11.value;
 
                 if (componentState != null) {
                   var studentData = componentState.studentData;
+
                   if (studentData != null) {
                     if (studentData.isCorrect) {
                       return true;
@@ -855,25 +825,25 @@ var StudentDataService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError13 = true;
-              _iteratorError13 = err;
+              _didIteratorError11 = true;
+              _iteratorError11 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion13 && _iterator13.return) {
-                  _iterator13.return();
+                if (!_iteratorNormalCompletion11 && _iterator11["return"] != null) {
+                  _iterator11["return"]();
                 }
               } finally {
-                if (_didIteratorError13) {
-                  throw _iteratorError13;
+                if (_didIteratorError11) {
+                  throw _iteratorError11;
                 }
               }
             }
           }
         }
       }
+
       return false;
     }
-
     /**
      * Check if the isPlanningActivityCompleted criteria was satisfied
      * @param criteria a isPlanningActivityCompleted criteria
@@ -881,24 +851,20 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'evaluateIsPlanningActivityCompletedCriteria',
+    key: "evaluateIsPlanningActivityCompletedCriteria",
     value: function evaluateIsPlanningActivityCompletedCriteria(criteria) {
       var result = false;
+
       if (criteria != null && criteria.params != null) {
-        var params = criteria.params;
+        var params = criteria.params; // get the group id
 
-        // get the group id
-        var nodeId = params.nodeId;
+        var nodeId = params.nodeId; // get the number of planning steps the student needs to create
 
-        // get the number of planning steps the student needs to create
-        var planningStepsCreated = params.planningStepsCreated;
+        var planningStepsCreated = params.planningStepsCreated; // get whether the student needs to complete all the steps in the activity
 
-        // get whether the student needs to complete all the steps in the activity
         var planningStepsCompleted = params.planningStepsCompleted;
-
         var planningStepsCreatedSatisfied = false;
         var planningStepsCompletedSatisfied = false;
-
         var planningNodes = [];
 
         if (planningStepsCreated == null) {
@@ -909,7 +875,6 @@ var StudentDataService = function () {
            * there is a value for number of planning steps that need to be created
            * so we will check if the student created enough planning steps
            */
-
           // get the node states for the activity
           var nodeStates = this.getNodeStatesByNodeId(nodeId);
 
@@ -917,18 +882,21 @@ var StudentDataService = function () {
             for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
               var planningStepCount = 0;
               var nodeState = nodeStates[ns];
+
               if (nodeState != null) {
                 var studentData = nodeState.studentData;
+
                 if (studentData != null) {
                   var nodes = studentData.nodes;
+
                   if (nodes != null) {
-                    var _iteratorNormalCompletion14 = true;
-                    var _didIteratorError14 = false;
-                    var _iteratorError14 = undefined;
+                    var _iteratorNormalCompletion12 = true;
+                    var _didIteratorError12 = false;
+                    var _iteratorError12 = undefined;
 
                     try {
-                      for (var _iterator14 = nodes[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-                        var node = _step14.value;
+                      for (var _iterator12 = nodes[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+                        var node = _step12.value;
 
                         if (node != null) {
                           if (node.type === 'node' && node.planningNodeTemplateId != null) {
@@ -938,16 +906,16 @@ var StudentDataService = function () {
                         }
                       }
                     } catch (err) {
-                      _didIteratorError14 = true;
-                      _iteratorError14 = err;
+                      _didIteratorError12 = true;
+                      _iteratorError12 = err;
                     } finally {
                       try {
-                        if (!_iteratorNormalCompletion14 && _iterator14.return) {
-                          _iterator14.return();
+                        if (!_iteratorNormalCompletion12 && _iterator12["return"] != null) {
+                          _iterator12["return"]();
                         }
                       } finally {
-                        if (_didIteratorError14) {
-                          throw _iteratorError14;
+                        if (_didIteratorError12) {
+                          throw _iteratorError12;
                         }
                       }
                     }
@@ -981,9 +949,9 @@ var StudentDataService = function () {
           result = true;
         }
       }
+
       return result;
     }
-
     /**
      * Check if this branchPathTaken criteria was satisfied
      * @param criteria a branchPathTaken criteria
@@ -991,31 +959,32 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'evaluateBranchPathTakenCriteria',
+    key: "evaluateBranchPathTakenCriteria",
     value: function evaluateBranchPathTakenCriteria(criteria) {
       if (criteria != null && criteria.params != null) {
         // get the expected from and to node ids
         var expectedFromNodeId = criteria.params.fromNodeId;
-        var expectedToNodeId = criteria.params.toNodeId;
+        var expectedToNodeId = criteria.params.toNodeId; // get all the branchPathTaken events from the from node id
 
-        // get all the branchPathTaken events from the from node id
         var branchPathTakenEvents = this.getBranchPathTakenEventsByNodeId(expectedFromNodeId);
 
         if (branchPathTakenEvents != null) {
-          var _iteratorNormalCompletion15 = true;
-          var _didIteratorError15 = false;
-          var _iteratorError15 = undefined;
+          var _iteratorNormalCompletion13 = true;
+          var _didIteratorError13 = false;
+          var _iteratorError13 = undefined;
 
           try {
-            for (var _iterator15 = branchPathTakenEvents[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-              var branchPathTakenEvent = _step15.value;
+            for (var _iterator13 = branchPathTakenEvents[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+              var branchPathTakenEvent = _step13.value;
 
               if (branchPathTakenEvent != null) {
                 var data = branchPathTakenEvent.data;
+
                 if (data != null) {
                   // get the from and to node ids of the event
                   var fromNodeId = data.fromNodeId;
                   var toNodeId = data.toNodeId;
+
                   if (expectedFromNodeId === fromNodeId && expectedToNodeId === toNodeId) {
                     // the from and to node ids match the ones we are looking for
                     return true;
@@ -1024,26 +993,26 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError15 = true;
-            _iteratorError15 = err;
+            _didIteratorError13 = true;
+            _iteratorError13 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion15 && _iterator15.return) {
-                _iterator15.return();
+              if (!_iteratorNormalCompletion13 && _iterator13["return"] != null) {
+                _iterator13["return"]();
               }
             } finally {
-              if (_didIteratorError15) {
-                throw _iteratorError15;
+              if (_didIteratorError13) {
+                throw _iteratorError13;
               }
             }
           }
         }
       }
+
       return false;
     }
   }, {
-    key: 'evaluateIsVisitedCriteria',
-
+    key: "evaluateIsVisitedCriteria",
 
     /**
      * Check if the isVisited criteria was satisfied
@@ -1054,6 +1023,130 @@ var StudentDataService = function () {
       if (criteria != null && criteria.params != null) {
         var nodeId = criteria.params.nodeId;
         var events = this.studentData.events;
+
+        if (events != null) {
+          var _iteratorNormalCompletion14 = true;
+          var _didIteratorError14 = false;
+          var _iteratorError14 = undefined;
+
+          try {
+            for (var _iterator14 = events[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+              var event = _step14.value;
+
+              if (event != null) {
+                if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
+                  return true;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError14 = true;
+            _iteratorError14 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion14 && _iterator14["return"] != null) {
+                _iterator14["return"]();
+              }
+            } finally {
+              if (_didIteratorError14) {
+                throw _iteratorError14;
+              }
+            }
+          }
+        }
+      }
+
+      return false;
+    }
+    /**
+     * Check if the isVisitedAfter criteria was satisfied
+     * @param criteria the isVisitedAfter criteria
+     * @returns whether the node id is visited after the criteriaCreatedTimestamp
+     */
+
+  }, {
+    key: "evaluateIsVisitedAfterCriteria",
+    value: function evaluateIsVisitedAfterCriteria(criteria) {
+      if (criteria != null && criteria.params != null) {
+        var isVisitedAfterNodeId = criteria.params.isVisitedAfterNodeId;
+        var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
+        var events = this.studentData.events;
+
+        if (events != null) {
+          var _iteratorNormalCompletion15 = true;
+          var _didIteratorError15 = false;
+          var _iteratorError15 = undefined;
+
+          try {
+            for (var _iterator15 = events[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+              var event = _step15.value;
+
+              if (event != null) {
+                if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
+                  return true;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError15 = true;
+            _iteratorError15 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion15 && _iterator15["return"] != null) {
+                _iterator15["return"]();
+              }
+            } finally {
+              if (_didIteratorError15) {
+                throw _iteratorError15;
+              }
+            }
+          }
+        }
+      }
+
+      return false;
+    }
+    /**
+     * Check if the isRevisedAfter criteria was satisfied
+     * @param criteria the isRevisedAfter criteria
+     * @returns whether the specified node&component was revisted after the criteriaCreatedTimestamp
+     */
+
+  }, {
+    key: "evaluateIsRevisedAfterCriteria",
+    value: function evaluateIsRevisedAfterCriteria(criteria) {
+      if (criteria != null && criteria.params != null) {
+        var isRevisedAfterNodeId = criteria.params.isRevisedAfterNodeId;
+        var isRevisedAfterComponentId = criteria.params.isRevisedAfterComponentId;
+        var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp; // the student has entered the node after the criteriaCreatedTimestamp.
+        // now check if student has revised the work after this event
+
+        var latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
+
+        if (latestComponentStateForRevisedComponent.clientSaveTime > criteriaCreatedTimestamp) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+    /**
+     * Check if the isVisitedAndRevisedAfter criteria was satisfied
+     * @param criteria the isVisitedAndRevisedAfter criteria
+     * @returns whether the specified nodes were visited and specified node&component was revisted after the criteriaCreatedTimestamp
+     */
+
+  }, {
+    key: "evaluateIsVisitedAndRevisedAfterCriteria",
+    value: function evaluateIsVisitedAndRevisedAfterCriteria(criteria) {
+      if (criteria != null && criteria.params != null) {
+        // get the node id we want to check if was visited
+        var isVisitedAfterNodeId = criteria.params.isVisitedAfterNodeId;
+        var isRevisedAfterNodeId = criteria.params.isRevisedAfterNodeId;
+        var isRevisedAfterComponentId = criteria.params.isRevisedAfterComponentId;
+        var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
+        var events = this.studentData.events;
+
         if (events != null) {
           var _iteratorNormalCompletion16 = true;
           var _didIteratorError16 = false;
@@ -1064,8 +1157,14 @@ var StudentDataService = function () {
               var event = _step16.value;
 
               if (event != null) {
-                if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
-                  return true;
+                if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
+                  // the student has entered the node after the criteriaCreatedTimestamp.
+                  // now check if student has revised the work after this event
+                  var latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
+
+                  if (latestComponentStateForRevisedComponent.clientSaveTime > event.clientSaveTime) {
+                    return true;
+                  }
                 }
               }
             }
@@ -1074,8 +1173,8 @@ var StudentDataService = function () {
             _iteratorError16 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion16 && _iterator16.return) {
-                _iterator16.return();
+              if (!_iteratorNormalCompletion16 && _iterator16["return"] != null) {
+                _iterator16["return"]();
               }
             } finally {
               if (_didIteratorError16) {
@@ -1085,137 +1184,9 @@ var StudentDataService = function () {
           }
         }
       }
+
       return false;
     }
-
-    /**
-     * Check if the isVisitedAfter criteria was satisfied
-     * @param criteria the isVisitedAfter criteria
-     * @returns whether the node id is visited after the criteriaCreatedTimestamp
-     */
-
-  }, {
-    key: 'evaluateIsVisitedAfterCriteria',
-    value: function evaluateIsVisitedAfterCriteria(criteria) {
-      if (criteria != null && criteria.params != null) {
-        var isVisitedAfterNodeId = criteria.params.isVisitedAfterNodeId;
-        var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
-
-        var events = this.studentData.events;
-        if (events != null) {
-          var _iteratorNormalCompletion17 = true;
-          var _didIteratorError17 = false;
-          var _iteratorError17 = undefined;
-
-          try {
-            for (var _iterator17 = events[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-              var event = _step17.value;
-
-              if (event != null) {
-                if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
-                  return true;
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError17 = true;
-            _iteratorError17 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion17 && _iterator17.return) {
-                _iterator17.return();
-              }
-            } finally {
-              if (_didIteratorError17) {
-                throw _iteratorError17;
-              }
-            }
-          }
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Check if the isRevisedAfter criteria was satisfied
-     * @param criteria the isRevisedAfter criteria
-     * @returns whether the specified node&component was revisted after the criteriaCreatedTimestamp
-     */
-
-  }, {
-    key: 'evaluateIsRevisedAfterCriteria',
-    value: function evaluateIsRevisedAfterCriteria(criteria) {
-      if (criteria != null && criteria.params != null) {
-        var isRevisedAfterNodeId = criteria.params.isRevisedAfterNodeId;
-        var isRevisedAfterComponentId = criteria.params.isRevisedAfterComponentId;
-        var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
-
-        // the student has entered the node after the criteriaCreatedTimestamp.
-        // now check if student has revised the work after this event
-        var latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
-        if (latestComponentStateForRevisedComponent.clientSaveTime > criteriaCreatedTimestamp) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Check if the isVisitedAndRevisedAfter criteria was satisfied
-     * @param criteria the isVisitedAndRevisedAfter criteria
-     * @returns whether the specified nodes were visited and specified node&component was revisted after the criteriaCreatedTimestamp
-     */
-
-  }, {
-    key: 'evaluateIsVisitedAndRevisedAfterCriteria',
-    value: function evaluateIsVisitedAndRevisedAfterCriteria(criteria) {
-      if (criteria != null && criteria.params != null) {
-        // get the node id we want to check if was visited
-        var isVisitedAfterNodeId = criteria.params.isVisitedAfterNodeId;
-        var isRevisedAfterNodeId = criteria.params.isRevisedAfterNodeId;
-        var isRevisedAfterComponentId = criteria.params.isRevisedAfterComponentId;
-        var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
-
-        var events = this.studentData.events;
-        if (events != null) {
-          var _iteratorNormalCompletion18 = true;
-          var _didIteratorError18 = false;
-          var _iteratorError18 = undefined;
-
-          try {
-            for (var _iterator18 = events[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-              var event = _step18.value;
-
-              if (event != null) {
-                if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
-                  // the student has entered the node after the criteriaCreatedTimestamp.
-                  // now check if student has revised the work after this event
-                  var latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
-                  if (latestComponentStateForRevisedComponent.clientSaveTime > event.clientSaveTime) {
-                    return true;
-                  }
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError18 = true;
-            _iteratorError18 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion18 && _iterator18.return) {
-                _iterator18.return();
-              }
-            } finally {
-              if (_didIteratorError18) {
-                throw _iteratorError18;
-              }
-            }
-          }
-        }
-      }
-      return false;
-    }
-
     /**
      * Get all the branchPathTaken events by node id
      * @params fromNodeId the from node id
@@ -1223,18 +1194,19 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'getBranchPathTakenEventsByNodeId',
+    key: "getBranchPathTakenEventsByNodeId",
     value: function getBranchPathTakenEventsByNodeId(fromNodeId) {
       var branchPathTakenEvents = [];
       var events = this.studentData.events;
+
       if (events != null) {
-        var _iteratorNormalCompletion19 = true;
-        var _didIteratorError19 = false;
-        var _iteratorError19 = undefined;
+        var _iteratorNormalCompletion17 = true;
+        var _didIteratorError17 = false;
+        var _iteratorError17 = undefined;
 
         try {
-          for (var _iterator19 = events[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-            var event = _step19.value;
+          for (var _iterator17 = events[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+            var event = _step17.value;
 
             if (event != null) {
               if (fromNodeId === event.nodeId && 'branchPathTaken' === event.event) {
@@ -1244,23 +1216,23 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError19 = true;
-          _iteratorError19 = err;
+          _didIteratorError17 = true;
+          _iteratorError17 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion19 && _iterator19.return) {
-              _iterator19.return();
+            if (!_iteratorNormalCompletion17 && _iterator17["return"] != null) {
+              _iterator17["return"]();
             }
           } finally {
-            if (_didIteratorError19) {
-              throw _iteratorError19;
+            if (_didIteratorError17) {
+              throw _iteratorError17;
             }
           }
         }
       }
+
       return branchPathTakenEvents;
     }
-
     /**
      * Evaluate the choice chosen criteria
      * @param criteria the criteria to evaluate
@@ -1268,18 +1240,19 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'evaluateChoiceChosenCriteria',
+    key: "evaluateChoiceChosenCriteria",
     value: function evaluateChoiceChosenCriteria(criteria) {
       var serviceName = 'MultipleChoiceService'; // Assume MC component.
+
       if (this.$injector.has(serviceName)) {
         var service = this.$injector.get(serviceName);
         return service.choiceChosen(criteria);
       }
+
       return false;
     }
   }, {
-    key: 'evaluateScoreCriteria',
-
+    key: "evaluateScoreCriteria",
 
     /**
      * Evaluate the score criteria
@@ -1288,18 +1261,20 @@ var StudentDataService = function () {
      */
     value: function evaluateScoreCriteria(criteria) {
       var params = criteria.params;
+
       if (params != null) {
         var nodeId = params.nodeId;
         var componentId = params.componentId;
         var scores = params.scores;
         var workgroupId = this.ConfigService.getWorkgroupId();
         var scoreType = 'any';
+
         if (nodeId != null && componentId != null && scores != null) {
           var latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType);
-          if (latestScoreAnnotation != null) {
-            var scoreValue = this.AnnotationService.getScoreValueFromScoreAnnotation(latestScoreAnnotation);
 
-            // check if the score value matches what the criteria is looking for. works when scores is array of integers or integer strings
+          if (latestScoreAnnotation != null) {
+            var scoreValue = this.AnnotationService.getScoreValueFromScoreAnnotation(latestScoreAnnotation); // check if the score value matches what the criteria is looking for. works when scores is array of integers or integer strings
+
             if (scores.indexOf(scoreValue) != -1 || scoreValue != null && scores.indexOf(scoreValue.toString()) != -1) {
               /*
                * the student has received a score that matches a score
@@ -1310,11 +1285,11 @@ var StudentDataService = function () {
           }
         }
       }
+
       return false;
     }
   }, {
-    key: 'evaluateUsedXSubmitsCriteria',
-
+    key: "evaluateUsedXSubmitsCriteria",
 
     /**
      * Evaluate the used x submits criteria which requires the student to submit
@@ -1325,6 +1300,7 @@ var StudentDataService = function () {
      */
     value: function evaluateUsedXSubmitsCriteria(criteria) {
       var params = criteria.params;
+
       if (params != null) {
         var nodeId = params.nodeId;
         var componentId = params.componentId;
@@ -1332,32 +1308,33 @@ var StudentDataService = function () {
 
         if (nodeId != null && componentId != null) {
           var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+
           if (componentStates != null) {
             // counter for manually counting the component states with isSubmit=true
-            var manualSubmitCounter = 0;
+            var manualSubmitCounter = 0; // counter for remembering the highest submitCounter value found in studentData objects
 
-            // counter for remembering the highest submitCounter value found in studentData objects
             var highestSubmitCounter = 0;
-
             /*
              * We are counting with two submit counters for backwards compatibility.
              * Some componentStates only have isSubmit=true and do not keep an
              * updated submitCounter for the number of submits.
              */
 
-            var _iteratorNormalCompletion20 = true;
-            var _didIteratorError20 = false;
-            var _iteratorError20 = undefined;
+            var _iteratorNormalCompletion18 = true;
+            var _didIteratorError18 = false;
+            var _iteratorError18 = undefined;
 
             try {
-              for (var _iterator20 = componentStates[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-                var componentState = _step20.value;
+              for (var _iterator18 = componentStates[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+                var componentState = _step18.value;
 
                 if (componentState != null) {
                   if (componentState.isSubmit) {
                     manualSubmitCounter++;
                   }
+
                   var studentData = componentState.studentData;
+
                   if (studentData != null) {
                     if (studentData.submitCounter != null) {
                       if (studentData.submitCounter > highestSubmitCounter) {
@@ -1372,16 +1349,16 @@ var StudentDataService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError20 = true;
-              _iteratorError20 = err;
+              _didIteratorError18 = true;
+              _iteratorError18 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion20 && _iterator20.return) {
-                  _iterator20.return();
+                if (!_iteratorNormalCompletion18 && _iterator18["return"] != null) {
+                  _iterator18["return"]();
                 }
               } finally {
-                if (_didIteratorError20) {
-                  throw _iteratorError20;
+                if (_didIteratorError18) {
+                  throw _iteratorError18;
                 }
               }
             }
@@ -1393,9 +1370,9 @@ var StudentDataService = function () {
           }
         }
       }
+
       return false;
     }
-
     /**
      * Evaluate the number of words written criteria.
      * @param criteria The criteria to evaluate.
@@ -1404,7 +1381,7 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'evaluateNumberOfWordsWrittenCriteria',
+    key: "evaluateNumberOfWordsWrittenCriteria",
     value: function evaluateNumberOfWordsWrittenCriteria(criteria) {
       if (criteria != null && criteria.params != null) {
         var params = criteria.params;
@@ -1414,34 +1391,39 @@ var StudentDataService = function () {
 
         if (nodeId != null && componentId != null) {
           var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
           if (componentState != null) {
             var studentData = componentState.studentData;
             var response = studentData.response;
             var numberOfWords = this.UtilService.wordCount(response);
+
             if (numberOfWords >= requiredNumberOfWords) {
               return true;
             }
           }
         }
       }
+
       return false;
     }
   }, {
-    key: 'evaluateAddXNumberOfNotesOnThisStepCriteria',
+    key: "evaluateAddXNumberOfNotesOnThisStepCriteria",
     value: function evaluateAddXNumberOfNotesOnThisStepCriteria(criteria) {
       var params = criteria.params;
       var nodeId = params.nodeId;
       var requiredNumberOfNotes = params.requiredNumberOfNotes;
       var notebookService = this.$injector.get('NotebookService');
+
       try {
         var notebook = notebookService.getNotebookByWorkgroup();
         var notebookItemsByNodeId = this.getNotebookItemsByNodeId(notebook, nodeId);
         return notebookItemsByNodeId.length >= requiredNumberOfNotes;
       } catch (e) {}
+
       return false;
     }
   }, {
-    key: 'evaluateFillXNumberOfRowsCriteria',
+    key: "evaluateFillXNumberOfRowsCriteria",
     value: function evaluateFillXNumberOfRowsCriteria(criteria) {
       var params = criteria.params;
       var nodeId = params.nodeId;
@@ -1454,58 +1436,57 @@ var StudentDataService = function () {
       return componentState != null && tableService.hasRequiredNumberOfFilledRows(componentState, requiredNumberOfFilledRows, tableHasHeaderRow, requireAllCellsInARowToBeFilled);
     }
   }, {
-    key: 'getNotebookItemsByNodeId',
+    key: "getNotebookItemsByNodeId",
     value: function getNotebookItemsByNodeId(notebook, nodeId) {
       var notebookItemsByNodeId = [];
-      var _iteratorNormalCompletion21 = true;
-      var _didIteratorError21 = false;
-      var _iteratorError21 = undefined;
+      var _iteratorNormalCompletion19 = true;
+      var _didIteratorError19 = false;
+      var _iteratorError19 = undefined;
 
       try {
-        for (var _iterator21 = notebook.allItems[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-          var notebookItem = _step21.value;
+        for (var _iterator19 = notebook.allItems[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+          var notebookItem = _step19.value;
 
           if (notebookItem.nodeId === nodeId) {
             notebookItemsByNodeId.push(notebookItem);
           }
         }
       } catch (err) {
-        _didIteratorError21 = true;
-        _iteratorError21 = err;
+        _didIteratorError19 = true;
+        _iteratorError19 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion21 && _iterator21.return) {
-            _iterator21.return();
+          if (!_iteratorNormalCompletion19 && _iterator19["return"] != null) {
+            _iterator19["return"]();
           }
         } finally {
-          if (_didIteratorError21) {
-            throw _iteratorError21;
+          if (_didIteratorError19) {
+            throw _iteratorError19;
           }
         }
       }
 
       return notebookItemsByNodeId;
     }
-
     /**
      * Populate the stack history and visited nodes history
      * @param events the events
      */
 
   }, {
-    key: 'populateHistories',
+    key: "populateHistories",
     value: function populateHistories(events) {
       this.stackHistory = [];
       this.visitedNodesHistory = [];
 
       if (events != null) {
-        var _iteratorNormalCompletion22 = true;
-        var _didIteratorError22 = false;
-        var _iteratorError22 = undefined;
+        var _iteratorNormalCompletion20 = true;
+        var _didIteratorError20 = false;
+        var _iteratorError20 = undefined;
 
         try {
-          for (var _iterator22 = events[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-            var event = _step22.value;
+          for (var _iterator20 = events[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+            var event = _step20.value;
 
             if (event != null && event.event === 'nodeEntered') {
               this.updateStackHistory(event.nodeId);
@@ -1513,41 +1494,44 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError22 = true;
-          _iteratorError22 = err;
+          _didIteratorError20 = true;
+          _iteratorError20 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion22 && _iterator22.return) {
-              _iterator22.return();
+            if (!_iteratorNormalCompletion20 && _iterator20["return"] != null) {
+              _iterator20["return"]();
             }
           } finally {
-            if (_didIteratorError22) {
-              throw _iteratorError22;
+            if (_didIteratorError20) {
+              throw _iteratorError20;
             }
           }
         }
       }
     }
   }, {
-    key: 'getStackHistoryAtIndex',
+    key: "getStackHistoryAtIndex",
     value: function getStackHistoryAtIndex(index) {
       if (index < 0) {
         index = this.stackHistory.length + index;
       }
+
       if (this.stackHistory != null && this.stackHistory.length > 0) {
         return this.stackHistory[index];
       }
+
       return null;
     }
   }, {
-    key: 'getStackHistory',
+    key: "getStackHistory",
     value: function getStackHistory() {
       return this.stackHistory;
     }
   }, {
-    key: 'updateStackHistory',
+    key: "updateStackHistory",
     value: function updateStackHistory(nodeId) {
       var indexOfNodeId = this.stackHistory.indexOf(nodeId);
+
       if (indexOfNodeId === -1) {
         this.stackHistory.push(nodeId);
       } else {
@@ -1555,54 +1539,57 @@ var StudentDataService = function () {
       }
     }
   }, {
-    key: 'updateVisitedNodesHistory',
+    key: "updateVisitedNodesHistory",
     value: function updateVisitedNodesHistory(nodeId) {
       var indexOfNodeId = this.visitedNodesHistory.indexOf(nodeId);
+
       if (indexOfNodeId === -1) {
         this.visitedNodesHistory.push(nodeId);
       }
     }
   }, {
-    key: 'getVisitedNodesHistory',
+    key: "getVisitedNodesHistory",
     value: function getVisitedNodesHistory() {
       return this.visitedNodesHistory;
     }
   }, {
-    key: 'isNodeVisited',
+    key: "isNodeVisited",
     value: function isNodeVisited(nodeId) {
       var visitedNodesHistory = this.visitedNodesHistory;
+
       if (visitedNodesHistory != null) {
         var indexOfNodeId = visitedNodesHistory.indexOf(nodeId);
+
         if (indexOfNodeId !== -1) {
           return true;
         }
       }
+
       return false;
     }
   }, {
-    key: 'createComponentState',
+    key: "createComponentState",
     value: function createComponentState() {
       var componentState = {};
       componentState.timestamp = Date.parse(new Date());
       return componentState;
     }
   }, {
-    key: 'addComponentState',
+    key: "addComponentState",
     value: function addComponentState(componentState) {
       if (this.studentData != null && this.studentData.componentStates != null) {
         this.studentData.componentStates.push(componentState);
       }
     }
   }, {
-    key: 'addNodeState',
+    key: "addNodeState",
     value: function addNodeState(nodeState) {
       if (this.studentData != null && this.studentData.nodeStates != null) {
         this.studentData.nodeStates.push(nodeState);
       }
     }
   }, {
-    key: 'getNodeStates',
-
+    key: "getNodeStates",
 
     /**
      * Returns all NodeStates
@@ -1612,11 +1599,11 @@ var StudentDataService = function () {
       if (this.studentData != null && this.studentData.nodeStates != null) {
         return this.studentData.nodeStates;
       }
+
       return [];
     }
   }, {
-    key: 'getNodeStatesByNodeId',
-
+    key: "getNodeStatesByNodeId",
 
     /**
      * Get all NodeStates for a specific node
@@ -1625,93 +1612,105 @@ var StudentDataService = function () {
      */
     value: function getNodeStatesByNodeId(nodeId) {
       var nodeStatesByNodeId = [];
+
       if (this.studentData != null && this.studentData.nodeStates != null) {
         var nodeStates = this.studentData.nodeStates;
-        var _iteratorNormalCompletion23 = true;
-        var _didIteratorError23 = false;
-        var _iteratorError23 = undefined;
+        var _iteratorNormalCompletion21 = true;
+        var _didIteratorError21 = false;
+        var _iteratorError21 = undefined;
 
         try {
-          for (var _iterator23 = nodeStates[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-            var nodeState = _step23.value;
+          for (var _iterator21 = nodeStates[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+            var nodeState = _step21.value;
 
             if (nodeState != null) {
               var tempNodeId = nodeState.nodeId;
+
               if (nodeId === tempNodeId) {
                 nodeStatesByNodeId.push(nodeState);
               }
             }
           }
         } catch (err) {
-          _didIteratorError23 = true;
-          _iteratorError23 = err;
+          _didIteratorError21 = true;
+          _iteratorError21 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion23 && _iterator23.return) {
-              _iterator23.return();
+            if (!_iteratorNormalCompletion21 && _iterator21["return"] != null) {
+              _iterator21["return"]();
             }
           } finally {
-            if (_didIteratorError23) {
-              throw _iteratorError23;
+            if (_didIteratorError21) {
+              throw _iteratorError21;
             }
           }
         }
       }
+
       return nodeStatesByNodeId;
     }
   }, {
-    key: 'addEvent',
+    key: "addEvent",
     value: function addEvent(event) {
       if (this.studentData != null && this.studentData.events != null) {
         this.studentData.events.push(event);
       }
     }
   }, {
-    key: 'addAnnotation',
+    key: "addAnnotation",
     value: function addAnnotation(annotation) {
       if (this.studentData != null && this.studentData.annotations != null) {
         this.studentData.annotations.push(annotation);
       }
     }
   }, {
-    key: 'handleAnnotationReceived',
+    key: "handleAnnotationReceived",
     value: function handleAnnotationReceived(annotation) {
       this.studentData.annotations.push(annotation);
+
       if (annotation.notebookItemId) {
-        this.$rootScope.$broadcast('notebookItemAnnotationReceived', { annotation: annotation });
+        this.$rootScope.$broadcast('notebookItemAnnotationReceived', {
+          annotation: annotation
+        });
       } else {
-        this.$rootScope.$broadcast('annotationReceived', { annotation: annotation });
+        this.$rootScope.$broadcast('annotationReceived', {
+          annotation: annotation
+        });
       }
     }
   }, {
-    key: 'saveComponentEvent',
+    key: "saveComponentEvent",
     value: function saveComponentEvent(component, category, event, data) {
       if (component == null || category == null || event == null) {
         alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_COMPONENT_CATEGORY_EVENT_ERROR'));
         return;
       }
+
       var context = "Component";
       var nodeId = component.nodeId;
       var componentId = component.componentId;
       var componentType = component.componentType;
+
       if (nodeId == null || componentId == null || componentType == null) {
         alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_NODE_ID_COMPONENT_ID_COMPONENT_TYPE_ERROR'));
         return;
       }
+
       this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
   }, {
-    key: 'saveVLEEvent',
+    key: "saveVLEEvent",
     value: function saveVLEEvent(nodeId, componentId, componentType, category, event, data) {
       if (category == null || event == null) {
         alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_VLE_EVENT_CATEGORY_EVENT_ERROR'));
         return;
       }
+
       var context = "VLE";
       this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
   }, {
-    key: 'saveEvent',
+    key: "saveEvent",
     value: function saveEvent(context, nodeId, componentId, componentType, category, event, data) {
       var events = [];
       var newEvent = this.createNewEvent();
@@ -1729,8 +1728,7 @@ var StudentDataService = function () {
       this.saveToServer(componentStates, nodeStates, events, annotations);
     }
   }, {
-    key: 'createNewEvent',
-
+    key: "createNewEvent",
 
     /**
      * Create a new empty event
@@ -1746,7 +1744,7 @@ var StudentDataService = function () {
       return event;
     }
   }, {
-    key: 'saveNodeStates',
+    key: "saveNodeStates",
     value: function saveNodeStates(nodeStates) {
       var componentStates = null;
       var events = null;
@@ -1754,7 +1752,7 @@ var StudentDataService = function () {
       this.saveToServer(componentStates, nodeStates, events, annotations);
     }
   }, {
-    key: 'saveAnnotations',
+    key: "saveAnnotations",
     value: function saveAnnotations(annotations) {
       var componentStates = null;
       var nodeStates = null;
@@ -1762,7 +1760,7 @@ var StudentDataService = function () {
       this.saveToServer(componentStates, nodeStates, events, annotations);
     }
   }, {
-    key: 'saveToServer',
+    key: "saveToServer",
     value: function saveToServer(componentStates, nodeStates, events, annotations) {
       var _this4 = this;
 
@@ -1770,23 +1768,87 @@ var StudentDataService = function () {
        * increment the request count since we are about to save data
        * to the server
        */
-      this.saveToServerRequestCount += 1;
+      this.saveToServerRequestCount += 1; // merge componentStates and nodeStates into StudentWork before posting
 
-      // merge componentStates and nodeStates into StudentWork before posting
       var studentWorkList = [];
+
       if (componentStates != null && componentStates.length > 0) {
+        var _iteratorNormalCompletion22 = true;
+        var _didIteratorError22 = false;
+        var _iteratorError22 = undefined;
+
+        try {
+          for (var _iterator22 = componentStates[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+            var componentState = _step22.value;
+
+            if (componentState != null) {
+              componentState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
+
+              this.addComponentState(componentState);
+              studentWorkList.push(componentState);
+            }
+          }
+        } catch (err) {
+          _didIteratorError22 = true;
+          _iteratorError22 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion22 && _iterator22["return"] != null) {
+              _iterator22["return"]();
+            }
+          } finally {
+            if (_didIteratorError22) {
+              throw _iteratorError22;
+            }
+          }
+        }
+      }
+
+      if (nodeStates != null && nodeStates.length > 0) {
+        var _iteratorNormalCompletion23 = true;
+        var _didIteratorError23 = false;
+        var _iteratorError23 = undefined;
+
+        try {
+          for (var _iterator23 = nodeStates[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+            var nodeState = _step23.value;
+
+            if (nodeState != null) {
+              nodeState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
+
+              this.addNodeState(nodeState);
+              studentWorkList.push(nodeState);
+            }
+          }
+        } catch (err) {
+          _didIteratorError23 = true;
+          _iteratorError23 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion23 && _iterator23["return"] != null) {
+              _iterator23["return"]();
+            }
+          } finally {
+            if (_didIteratorError23) {
+              throw _iteratorError23;
+            }
+          }
+        }
+      }
+
+      if (events != null && events.length > 0) {
         var _iteratorNormalCompletion24 = true;
         var _didIteratorError24 = false;
         var _iteratorError24 = undefined;
 
         try {
-          for (var _iterator24 = componentStates[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-            var componentState = _step24.value;
+          for (var _iterator24 = events[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+            var event = _step24.value;
 
-            if (componentState != null) {
-              componentState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
-              this.addComponentState(componentState);
-              studentWorkList.push(componentState);
+            if (event != null) {
+              event.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved events.
+
+              this.addEvent(event);
             }
           }
         } catch (err) {
@@ -1794,73 +1856,12 @@ var StudentDataService = function () {
           _iteratorError24 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion24 && _iterator24.return) {
-              _iterator24.return();
+            if (!_iteratorNormalCompletion24 && _iterator24["return"] != null) {
+              _iterator24["return"]();
             }
           } finally {
             if (_didIteratorError24) {
               throw _iteratorError24;
-            }
-          }
-        }
-      }
-
-      if (nodeStates != null && nodeStates.length > 0) {
-        var _iteratorNormalCompletion25 = true;
-        var _didIteratorError25 = false;
-        var _iteratorError25 = undefined;
-
-        try {
-          for (var _iterator25 = nodeStates[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
-            var nodeState = _step25.value;
-
-            if (nodeState != null) {
-              nodeState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
-              this.addNodeState(nodeState);
-              studentWorkList.push(nodeState);
-            }
-          }
-        } catch (err) {
-          _didIteratorError25 = true;
-          _iteratorError25 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion25 && _iterator25.return) {
-              _iterator25.return();
-            }
-          } finally {
-            if (_didIteratorError25) {
-              throw _iteratorError25;
-            }
-          }
-        }
-      }
-
-      if (events != null && events.length > 0) {
-        var _iteratorNormalCompletion26 = true;
-        var _didIteratorError26 = false;
-        var _iteratorError26 = undefined;
-
-        try {
-          for (var _iterator26 = events[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
-            var event = _step26.value;
-
-            if (event != null) {
-              event.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved events.
-              this.addEvent(event);
-            }
-          }
-        } catch (err) {
-          _didIteratorError26 = true;
-          _iteratorError26 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion26 && _iterator26.return) {
-              _iterator26.return();
-            }
-          } finally {
-            if (_didIteratorError26) {
-              throw _iteratorError26;
             }
           }
         }
@@ -1869,16 +1870,17 @@ var StudentDataService = function () {
       }
 
       if (annotations != null && annotations.length > 0) {
-        var _iteratorNormalCompletion27 = true;
-        var _didIteratorError27 = false;
-        var _iteratorError27 = undefined;
+        var _iteratorNormalCompletion25 = true;
+        var _didIteratorError25 = false;
+        var _iteratorError25 = undefined;
 
         try {
-          for (var _iterator27 = annotations[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
-            var annotation = _step27.value;
+          for (var _iterator25 = annotations[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+            var annotation = _step25.value;
 
             if (annotation != null) {
               annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
+
               if (annotation.id == null) {
                 // add to local annotation array if this annotation has not been saved to the server before.
                 this.addAnnotation(annotation);
@@ -1886,16 +1888,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError27 = true;
-          _iteratorError27 = err;
+          _didIteratorError25 = true;
+          _iteratorError25 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion27 && _iterator27.return) {
-              _iterator27.return();
+            if (!_iteratorNormalCompletion25 && _iterator25["return"] != null) {
+              _iterator25["return"]();
             }
           } finally {
-            if (_didIteratorError27) {
-              throw _iteratorError27;
+            if (_didIteratorError25) {
+              throw _iteratorError25;
             }
           }
         }
@@ -1908,9 +1910,8 @@ var StudentDataService = function () {
           studentWorkList: studentWorkList,
           events: events,
           annotations: annotations
-        };
+        }; // if we're in preview, don't make any request to the server but pretend we did
 
-        // if we're in preview, don't make any request to the server but pretend we did
         this.saveToServerSuccess(savedStudentDataResponse);
         var deferred = this.$q.defer();
         deferred.resolve(savedStudentDataResponse);
@@ -1925,16 +1926,16 @@ var StudentDataService = function () {
         params.workgroupId = this.ConfigService.getWorkgroupId();
         params.studentWorkList = angular.toJson(studentWorkList);
         params.events = angular.toJson(events);
-        params.annotations = angular.toJson(annotations);
+        params.annotations = angular.toJson(annotations); // get the url to POST the student data
 
-        // get the url to POST the student data
         var httpParams = {};
         httpParams.method = 'POST';
         httpParams.url = this.ConfigService.getConfigParam('studentDataURL');
-        httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-        httpParams.data = $.param(params);
+        httpParams.headers = {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        };
+        httpParams.data = $.param(params); // make the request to post the student data
 
-        // make the request to post the student data
         return this.$http(httpParams).then(function (result) {
           // get the local references to the component states that were posted and set their id and serverSaveTime
           if (result != null && result.data != null) {
@@ -1952,33 +1953,32 @@ var StudentDataService = function () {
            * but is now completed
            */
           _this4.saveToServerRequestCount -= 1;
-
           return null;
         });
       }
     }
   }, {
-    key: 'saveToServerSuccess',
+    key: "saveToServerSuccess",
     value: function saveToServerSuccess(savedStudentDataResponse) {
       // set dummy serverSaveTime for use if we're in preview mode
-      var serverSaveTime = Date.parse(new Date());
+      var serverSaveTime = Date.parse(new Date()); // handle saved studentWork
 
-      // handle saved studentWork
       if (savedStudentDataResponse.studentWorkList) {
         var savedStudentWorkList = savedStudentDataResponse.studentWorkList;
         var localStudentWorkList = this.studentData.componentStates;
+
         if (this.studentData.nodeStates) {
           localStudentWorkList = localStudentWorkList.concat(this.studentData.nodeStates);
-        }
+        } // set the id and serverSaveTime in the local studentWorkList
 
-        // set the id and serverSaveTime in the local studentWorkList
-        var _iteratorNormalCompletion28 = true;
-        var _didIteratorError28 = false;
-        var _iteratorError28 = undefined;
+
+        var _iteratorNormalCompletion26 = true;
+        var _didIteratorError26 = false;
+        var _iteratorError26 = undefined;
 
         try {
-          for (var _iterator28 = savedStudentWorkList[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
-            var savedStudentWork = _step28.value;
+          for (var _iterator26 = savedStudentWorkList[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
+            var savedStudentWork = _step26.value;
 
             /*
              * loop through all the student work that were posted
@@ -1986,6 +1986,7 @@ var StudentDataService = function () {
              */
             for (var l = localStudentWorkList.length - 1; l >= 0; l--) {
               var localStudentWork = localStudentWorkList[l];
+
               if (localStudentWork.requestToken && localStudentWork.requestToken === savedStudentWork.requestToken) {
                 localStudentWork.id = savedStudentWork.id;
                 localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime ? savedStudentWork.serverSaveTime : serverSaveTime;
@@ -1997,15 +1998,113 @@ var StudentDataService = function () {
                    * student work id into the student work
                    */
                   localStudentWork.id = this.dummyStudentWorkId;
-
                   /*
                    * increment the dummy student work id for the next
                    * student work
                    */
+
                   this.dummyStudentWorkId++;
                 }
 
-                this.$rootScope.$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
+                this.$rootScope.$broadcast('studentWorkSavedToServer', {
+                  studentWork: localStudentWork
+                });
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError26 = true;
+          _iteratorError26 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion26 && _iterator26["return"] != null) {
+              _iterator26["return"]();
+            }
+          } finally {
+            if (_didIteratorError26) {
+              throw _iteratorError26;
+            }
+          }
+        }
+      } // handle saved events
+
+
+      if (savedStudentDataResponse.events) {
+        var savedEvents = savedStudentDataResponse.events;
+        var localEvents = this.studentData.events; // set the id and serverSaveTime in the local event
+
+        var _iteratorNormalCompletion27 = true;
+        var _didIteratorError27 = false;
+        var _iteratorError27 = undefined;
+
+        try {
+          for (var _iterator27 = savedEvents[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+            var savedEvent = _step27.value;
+
+            /*
+             * loop through all the events that were posted
+             * to find the one with the matching request token
+             */
+            for (var _l = localEvents.length - 1; _l >= 0; _l--) {
+              var localEvent = localEvents[_l];
+
+              if (localEvent.requestToken && localEvent.requestToken === savedEvent.requestToken) {
+                localEvent.id = savedEvent.id;
+                localEvent.serverSaveTime = savedEvent.serverSaveTime ? savedEvent.serverSaveTime : serverSaveTime;
+                localEvent.requestToken = null; // requestToken is no longer needed.
+
+                this.$rootScope.$broadcast('eventSavedToServer', {
+                  event: localEvent
+                });
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError27 = true;
+          _iteratorError27 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion27 && _iterator27["return"] != null) {
+              _iterator27["return"]();
+            }
+          } finally {
+            if (_didIteratorError27) {
+              throw _iteratorError27;
+            }
+          }
+        }
+      } // handle saved annotations
+
+
+      if (savedStudentDataResponse.annotations) {
+        var savedAnnotations = savedStudentDataResponse.annotations;
+        var localAnnotations = this.studentData.annotations; // set the id and serverSaveTime in the local annotation
+
+        var _iteratorNormalCompletion28 = true;
+        var _didIteratorError28 = false;
+        var _iteratorError28 = undefined;
+
+        try {
+          for (var _iterator28 = savedAnnotations[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+            var savedAnnotation = _step28.value;
+
+            /*
+             * loop through all the events that were posted
+             * to find the one with the matching request token
+             */
+            for (var _l2 = localAnnotations.length - 1; _l2 >= 0; _l2--) {
+              var localAnnotation = localAnnotations[_l2];
+
+              if (localAnnotation.requestToken && localAnnotation.requestToken === savedAnnotation.requestToken) {
+                localAnnotation.id = savedAnnotation.id;
+                localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime ? savedAnnotation.serverSaveTime : serverSaveTime;
+                localAnnotation.requestToken = null; // requestToken is no longer needed.
+
+                this.$rootScope.$broadcast('annotationSavedToServer', {
+                  annotation: localAnnotation
+                });
                 break;
               }
             }
@@ -2015,8 +2114,8 @@ var StudentDataService = function () {
           _iteratorError28 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion28 && _iterator28.return) {
-              _iterator28.return();
+            if (!_iteratorNormalCompletion28 && _iterator28["return"] != null) {
+              _iterator28["return"]();
             }
           } finally {
             if (_didIteratorError28) {
@@ -2025,103 +2124,12 @@ var StudentDataService = function () {
           }
         }
       }
-      // handle saved events
-      if (savedStudentDataResponse.events) {
-        var savedEvents = savedStudentDataResponse.events;
-
-        var localEvents = this.studentData.events;
-
-        // set the id and serverSaveTime in the local event
-        var _iteratorNormalCompletion29 = true;
-        var _didIteratorError29 = false;
-        var _iteratorError29 = undefined;
-
-        try {
-          for (var _iterator29 = savedEvents[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
-            var savedEvent = _step29.value;
-
-            /*
-             * loop through all the events that were posted
-             * to find the one with the matching request token
-             */
-            for (var _l = localEvents.length - 1; _l >= 0; _l--) {
-              var localEvent = localEvents[_l];
-              if (localEvent.requestToken && localEvent.requestToken === savedEvent.requestToken) {
-                localEvent.id = savedEvent.id;
-                localEvent.serverSaveTime = savedEvent.serverSaveTime ? savedEvent.serverSaveTime : serverSaveTime;
-                localEvent.requestToken = null; // requestToken is no longer needed.
-
-                this.$rootScope.$broadcast('eventSavedToServer', { event: localEvent });
-                break;
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError29 = true;
-          _iteratorError29 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion29 && _iterator29.return) {
-              _iterator29.return();
-            }
-          } finally {
-            if (_didIteratorError29) {
-              throw _iteratorError29;
-            }
-          }
-        }
-      }
-
-      // handle saved annotations
-      if (savedStudentDataResponse.annotations) {
-        var savedAnnotations = savedStudentDataResponse.annotations;
-        var localAnnotations = this.studentData.annotations;
-
-        // set the id and serverSaveTime in the local annotation
-        var _iteratorNormalCompletion30 = true;
-        var _didIteratorError30 = false;
-        var _iteratorError30 = undefined;
-
-        try {
-          for (var _iterator30 = savedAnnotations[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
-            var savedAnnotation = _step30.value;
-
-            /*
-             * loop through all the events that were posted
-             * to find the one with the matching request token
-             */
-            for (var _l2 = localAnnotations.length - 1; _l2 >= 0; _l2--) {
-              var localAnnotation = localAnnotations[_l2];
-              if (localAnnotation.requestToken && localAnnotation.requestToken === savedAnnotation.requestToken) {
-                localAnnotation.id = savedAnnotation.id;
-                localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime ? savedAnnotation.serverSaveTime : serverSaveTime;
-                localAnnotation.requestToken = null; // requestToken is no longer needed.
-
-                this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
-                break;
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError30 = true;
-          _iteratorError30 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion30 && _iterator30.return) {
-              _iterator30.return();
-            }
-          } finally {
-            if (_didIteratorError30) {
-              throw _iteratorError30;
-            }
-          }
-        }
-      }
-
       /*
        * decrement the request count since we have received a response to
        * one of our save requests
        */
+
+
       this.saveToServerRequestCount -= 1;
 
       if (this.saveToServerRequestCount == 0) {
@@ -2135,8 +2143,7 @@ var StudentDataService = function () {
       }
     }
   }, {
-    key: 'saveStudentStatus',
-
+    key: "saveStudentStatus",
 
     /**
      * POSTs student status to server
@@ -2145,15 +2152,15 @@ var StudentDataService = function () {
     value: function saveStudentStatus() {
       if (!this.ConfigService.isPreview() && this.ConfigService.isRunActive()) {
         var studentStatusURL = this.ConfigService.getStudentStatusURL();
+
         if (studentStatusURL != null) {
           var runId = this.ConfigService.getRunId();
           var periodId = this.ConfigService.getPeriodId();
           var workgroupId = this.ConfigService.getWorkgroupId();
           var currentNodeId = this.getCurrentNodeId();
           var nodeStatuses = this.getNodeStatuses();
-          var projectCompletion = this.getProjectCompletion();
+          var projectCompletion = this.getProjectCompletion(); // create the JSON that will be saved to the database
 
-          // create the JSON that will be saved to the database
           var studentStatusJSON = {};
           studentStatusJSON.runId = runId;
           studentStatusJSON.periodId = periodId;
@@ -2161,20 +2168,19 @@ var StudentDataService = function () {
           studentStatusJSON.currentNodeId = currentNodeId;
           studentStatusJSON.nodeStatuses = nodeStatuses;
           studentStatusJSON.projectCompletion = projectCompletion;
-
           var status = angular.toJson(studentStatusJSON);
           var studentStatusParams = {};
           studentStatusParams.runId = runId;
           studentStatusParams.periodId = periodId;
           studentStatusParams.workgroupId = workgroupId;
           studentStatusParams.status = status;
-
           var httpParams = {};
           httpParams.method = 'POST';
           httpParams.url = studentStatusURL;
-          httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+          httpParams.headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          };
           httpParams.data = $.param(studentStatusParams);
-
           return this.$http(httpParams).then(function (result) {
             return true;
           }, function (result) {
@@ -2184,23 +2190,25 @@ var StudentDataService = function () {
       }
     }
   }, {
-    key: 'retrieveComponentStates',
+    key: "retrieveComponentStates",
     value: function retrieveComponentStates(runId, periodId, workgroupId) {}
   }, {
-    key: 'getLatestComponentState',
+    key: "getLatestComponentState",
     value: function getLatestComponentState() {
       var studentData = this.studentData;
+
       if (studentData != null) {
         var componentStates = studentData.componentStates;
+
         if (componentStates != null) {
           return componentStates[componentStates.length - 1];
         }
       }
+
       return null;
     }
   }, {
-    key: 'isComponentSubmitDirty',
-
+    key: "isComponentSubmitDirty",
 
     /**
      * Check whether the component has unsubmitted work
@@ -2208,14 +2216,15 @@ var StudentDataService = function () {
      */
     value: function isComponentSubmitDirty() {
       var latestComponentState = this.getLatestComponentState();
+
       if (latestComponentState && !latestComponentState.isSubmit) {
         return true;
       }
+
       return false;
     }
   }, {
-    key: 'getLatestNodeStateByNodeId',
-
+    key: "getLatestNodeStateByNodeId",
 
     /**
      * Get the latest NodeState for the specified node id
@@ -2224,14 +2233,15 @@ var StudentDataService = function () {
      */
     value: function getLatestNodeStateByNodeId(nodeId) {
       var allNodeStatesByNodeId = this.getNodeStatesByNodeId(nodeId);
+
       if (allNodeStatesByNodeId != null && allNodeStatesByNodeId.length > 0) {
         return allNodeStatesByNodeId[allNodeStatesByNodeId.length - 1];
       }
+
       return null;
     }
   }, {
-    key: 'getLatestComponentStateByNodeIdAndComponentId',
-
+    key: "getLatestComponentStateByNodeIdAndComponentId",
 
     /**
      * Get the latest component state for the given node id and component
@@ -2244,17 +2254,22 @@ var StudentDataService = function () {
     value: function getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId) {
       if (nodeId) {
         var studentData = this.studentData;
+
         if (studentData) {
           // get the component states
           var componentStates = studentData.componentStates;
+
           if (componentStates) {
             for (var c = componentStates.length - 1; c >= 0; c--) {
               var componentState = componentStates[c];
+
               if (componentState) {
                 var componentStateNodeId = componentState.nodeId;
+
                 if (nodeId === componentStateNodeId) {
                   if (componentId) {
                     var componentStateComponentId = componentState.componentId;
+
                     if (componentId === componentStateComponentId) {
                       return componentState;
                     }
@@ -2267,11 +2282,11 @@ var StudentDataService = function () {
           }
         }
       }
+
       return null;
     }
   }, {
-    key: 'getLatestSubmitComponentState',
-
+    key: "getLatestSubmitComponentState",
 
     /**
      * Get the latest component state that was a submit
@@ -2283,15 +2298,17 @@ var StudentDataService = function () {
      */
     value: function getLatestSubmitComponentState(nodeId, componentId) {
       var componentStates = this.studentData.componentStates;
+
       for (var c = componentStates.length - 1; c >= 0; c--) {
         var componentState = componentStates[c];
+
         if (componentState.nodeId === nodeId && componentState.componentId === componentId && componentState.isSubmit) {
           return componentState;
         }
       }
+
       return null;
     }
-
     /**
      * Get the student work by specified student work id, which can be a ComponentState or NodeState
      * @param studentWorkId the student work id
@@ -2299,74 +2316,76 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'getStudentWorkByStudentWorkId',
+    key: "getStudentWorkByStudentWorkId",
     value: function getStudentWorkByStudentWorkId(studentWorkId) {
       if (studentWorkId != null) {
         var componentStates = this.studentData.componentStates;
+
         if (componentStates != null) {
-          var _iteratorNormalCompletion31 = true;
-          var _didIteratorError31 = false;
-          var _iteratorError31 = undefined;
+          var _iteratorNormalCompletion29 = true;
+          var _didIteratorError29 = false;
+          var _iteratorError29 = undefined;
 
           try {
-            for (var _iterator31 = componentStates[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
-              var componentState = _step31.value;
+            for (var _iterator29 = componentStates[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+              var componentState = _step29.value;
 
               if (componentState != null && componentState.id === studentWorkId) {
                 return componentState;
               }
             }
           } catch (err) {
-            _didIteratorError31 = true;
-            _iteratorError31 = err;
+            _didIteratorError29 = true;
+            _iteratorError29 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion31 && _iterator31.return) {
-                _iterator31.return();
+              if (!_iteratorNormalCompletion29 && _iterator29["return"] != null) {
+                _iterator29["return"]();
               }
             } finally {
-              if (_didIteratorError31) {
-                throw _iteratorError31;
+              if (_didIteratorError29) {
+                throw _iteratorError29;
               }
             }
           }
         }
 
         var nodeStates = this.studentData.nodeStates;
+
         if (nodeStates != null) {
-          var _iteratorNormalCompletion32 = true;
-          var _didIteratorError32 = false;
-          var _iteratorError32 = undefined;
+          var _iteratorNormalCompletion30 = true;
+          var _didIteratorError30 = false;
+          var _iteratorError30 = undefined;
 
           try {
-            for (var _iterator32 = nodeStates[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
-              var nodeState = _step32.value;
+            for (var _iterator30 = nodeStates[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+              var nodeState = _step30.value;
 
               if (nodeState != null && nodeState.id === studentWorkId) {
                 return nodeState;
               }
             }
           } catch (err) {
-            _didIteratorError32 = true;
-            _iteratorError32 = err;
+            _didIteratorError30 = true;
+            _iteratorError30 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion32 && _iterator32.return) {
-                _iterator32.return();
+              if (!_iteratorNormalCompletion30 && _iterator30["return"] != null) {
+                _iterator30["return"]();
               }
             } finally {
-              if (_didIteratorError32) {
-                throw _iteratorError32;
+              if (_didIteratorError30) {
+                throw _iteratorError30;
               }
             }
           }
         }
       }
+
       return null;
     }
   }, {
-    key: 'getComponentStates',
-
+    key: "getComponentStates",
 
     /**
      * Returns all the component states for this workgroup
@@ -2375,8 +2394,7 @@ var StudentDataService = function () {
       return this.studentData.componentStates;
     }
   }, {
-    key: 'getComponentStatesByNodeId',
-
+    key: "getComponentStatesByNodeId",
 
     /**
      * Get the component states for the given node id
@@ -2385,48 +2403,52 @@ var StudentDataService = function () {
      */
     value: function getComponentStatesByNodeId(nodeId) {
       var componentStatesByNodeId = [];
+
       if (nodeId != null) {
         var studentData = this.studentData;
+
         if (studentData != null) {
           var componentStates = studentData.componentStates;
+
           if (componentStates != null) {
-            var _iteratorNormalCompletion33 = true;
-            var _didIteratorError33 = false;
-            var _iteratorError33 = undefined;
+            var _iteratorNormalCompletion31 = true;
+            var _didIteratorError31 = false;
+            var _iteratorError31 = undefined;
 
             try {
-              for (var _iterator33 = componentStates[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
-                var componentState = _step33.value;
+              for (var _iterator31 = componentStates[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+                var componentState = _step31.value;
 
                 if (componentState != null) {
                   var componentStateNodeId = componentState.nodeId;
+
                   if (nodeId == componentStateNodeId) {
                     componentStatesByNodeId.push(componentState);
                   }
                 }
               }
             } catch (err) {
-              _didIteratorError33 = true;
-              _iteratorError33 = err;
+              _didIteratorError31 = true;
+              _iteratorError31 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion33 && _iterator33.return) {
-                  _iterator33.return();
+                if (!_iteratorNormalCompletion31 && _iterator31["return"] != null) {
+                  _iterator31["return"]();
                 }
               } finally {
-                if (_didIteratorError33) {
-                  throw _iteratorError33;
+                if (_didIteratorError31) {
+                  throw _iteratorError31;
                 }
               }
             }
           }
         }
       }
+
       return componentStatesByNodeId;
     }
   }, {
-    key: 'getComponentStatesByNodeIdAndComponentId',
-
+    key: "getComponentStatesByNodeIdAndComponentId",
 
     /**
      * Get the component states for the given node id and component id
@@ -2437,38 +2459,42 @@ var StudentDataService = function () {
      */
     value: function getComponentStatesByNodeIdAndComponentId(nodeId, componentId) {
       var componentStatesByNodeIdAndComponentId = [];
+
       if (nodeId != null && componentId != null) {
         var studentData = this.studentData;
+
         if (studentData != null) {
           var componentStates = studentData.componentStates;
+
           if (componentStates != null) {
-            var _iteratorNormalCompletion34 = true;
-            var _didIteratorError34 = false;
-            var _iteratorError34 = undefined;
+            var _iteratorNormalCompletion32 = true;
+            var _didIteratorError32 = false;
+            var _iteratorError32 = undefined;
 
             try {
-              for (var _iterator34 = componentStates[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
-                var componentState = _step34.value;
+              for (var _iterator32 = componentStates[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+                var componentState = _step32.value;
 
                 if (componentState != null) {
                   var componentStateNodeId = componentState.nodeId;
                   var componentStateComponentId = componentState.componentId;
+
                   if (nodeId == componentStateNodeId && componentId == componentStateComponentId) {
                     componentStatesByNodeIdAndComponentId.push(componentState);
                   }
                 }
               }
             } catch (err) {
-              _didIteratorError34 = true;
-              _iteratorError34 = err;
+              _didIteratorError32 = true;
+              _iteratorError32 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion34 && _iterator34.return) {
-                  _iterator34.return();
+                if (!_iteratorNormalCompletion32 && _iterator32["return"] != null) {
+                  _iterator32["return"]();
                 }
               } finally {
-                if (_didIteratorError34) {
-                  throw _iteratorError34;
+                if (_didIteratorError32) {
+                  throw _iteratorError32;
                 }
               }
             }
@@ -2479,8 +2505,7 @@ var StudentDataService = function () {
       return componentStatesByNodeIdAndComponentId;
     }
   }, {
-    key: 'getEvents',
-
+    key: "getEvents",
 
     /**
      * Get all events
@@ -2494,8 +2519,7 @@ var StudentDataService = function () {
       }
     }
   }, {
-    key: 'getEventsByNodeId',
-
+    key: "getEventsByNodeId",
 
     /**
      * Get the events for a node id
@@ -2504,45 +2528,47 @@ var StudentDataService = function () {
      */
     value: function getEventsByNodeId(nodeId) {
       var eventsByNodeId = [];
+
       if (nodeId != null) {
         if (this.studentData != null && this.studentData.events != null) {
           var events = this.studentData.events;
-          var _iteratorNormalCompletion35 = true;
-          var _didIteratorError35 = false;
-          var _iteratorError35 = undefined;
+          var _iteratorNormalCompletion33 = true;
+          var _didIteratorError33 = false;
+          var _iteratorError33 = undefined;
 
           try {
-            for (var _iterator35 = events[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
-              var event = _step35.value;
+            for (var _iterator33 = events[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+              var event = _step33.value;
 
               if (event != null) {
                 var eventNodeId = event.nodeId;
+
                 if (nodeId === eventNodeId) {
                   eventsByNodeId.push(event);
                 }
               }
             }
           } catch (err) {
-            _didIteratorError35 = true;
-            _iteratorError35 = err;
+            _didIteratorError33 = true;
+            _iteratorError33 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion35 && _iterator35.return) {
-                _iterator35.return();
+              if (!_iteratorNormalCompletion33 && _iterator33["return"] != null) {
+                _iterator33["return"]();
               }
             } finally {
-              if (_didIteratorError35) {
-                throw _iteratorError35;
+              if (_didIteratorError33) {
+                throw _iteratorError33;
               }
             }
           }
         }
       }
+
       return eventsByNodeId;
     }
   }, {
-    key: 'getEventsByNodeIdAndComponentId',
-
+    key: "getEventsByNodeIdAndComponentId",
 
     /**
      * Get the events for a component id
@@ -2552,46 +2578,48 @@ var StudentDataService = function () {
      */
     value: function getEventsByNodeIdAndComponentId(nodeId, componentId) {
       var eventsByNodeId = [];
+
       if (nodeId != null) {
         if (this.studentData != null && this.studentData.events != null) {
           var events = this.studentData.events;
-          var _iteratorNormalCompletion36 = true;
-          var _didIteratorError36 = false;
-          var _iteratorError36 = undefined;
+          var _iteratorNormalCompletion34 = true;
+          var _didIteratorError34 = false;
+          var _iteratorError34 = undefined;
 
           try {
-            for (var _iterator36 = events[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
-              var event = _step36.value;
+            for (var _iterator34 = events[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+              var event = _step34.value;
 
               if (event != null) {
                 var eventNodeId = event.nodeId;
                 var eventComponentId = event.componentId;
+
                 if (nodeId === eventNodeId && componentId === eventComponentId) {
                   eventsByNodeId.push(event);
                 }
               }
             }
           } catch (err) {
-            _didIteratorError36 = true;
-            _iteratorError36 = err;
+            _didIteratorError34 = true;
+            _iteratorError34 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion36 && _iterator36.return) {
-                _iterator36.return();
+              if (!_iteratorNormalCompletion34 && _iterator34["return"] != null) {
+                _iterator34["return"]();
               }
             } finally {
-              if (_didIteratorError36) {
-                throw _iteratorError36;
+              if (_didIteratorError34) {
+                throw _iteratorError34;
               }
             }
           }
         }
       }
+
       return eventsByNodeId;
     }
   }, {
-    key: 'getLatestNodeEnteredEventNodeIdWithExistingNode',
-
+    key: "getLatestNodeEnteredEventNodeIdWithExistingNode",
 
     /**
      * Get the node id of the latest node entered event for an active node that
@@ -2604,13 +2632,17 @@ var StudentDataService = function () {
      */
     value: function getLatestNodeEnteredEventNodeIdWithExistingNode() {
       var events = this.studentData.events;
+
       for (var e = events.length - 1; e >= 0; e--) {
         var event = events[e];
+
         if (event != null) {
           var eventName = event.event;
+
           if (eventName == 'nodeEntered') {
             var nodeId = event.nodeId;
             var node = this.ProjectService.getNodeById(nodeId);
+
             if (node != null) {
               if (this.ProjectService.isActive(nodeId)) {
                 return nodeId;
@@ -2619,9 +2651,9 @@ var StudentDataService = function () {
           }
         }
       }
+
       return null;
     }
-
     /**
      * Check if the student can visit the node
      * @param nodeId the node id
@@ -2629,22 +2661,23 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'canVisitNode',
+    key: "canVisitNode",
     value: function canVisitNode(nodeId) {
       if (nodeId != null) {
         // get the node status for the node
         var nodeStatus = this.getNodeStatusByNodeId(nodeId);
+
         if (nodeStatus != null) {
           if (nodeStatus.isVisitable) {
             return true;
           }
         }
       }
+
       return false;
     }
   }, {
-    key: 'getNodeStatusByNodeId',
-
+    key: "getNodeStatusByNodeId",
 
     /**
      * Get the node status by node id
@@ -2655,11 +2688,11 @@ var StudentDataService = function () {
       if (nodeId != null) {
         return this.nodeStatuses[nodeId];
       }
+
       return null;
     }
   }, {
-    key: 'getNodeProgressById',
-
+    key: "getNodeProgressById",
 
     /**
      * Get progress information for a given node
@@ -2677,15 +2710,15 @@ var StudentDataService = function () {
 
       if (this.ProjectService.isGroupNode(nodeId)) {
         var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
-        var _iteratorNormalCompletion37 = true;
-        var _didIteratorError37 = false;
-        var _iteratorError37 = undefined;
+        var _iteratorNormalCompletion35 = true;
+        var _didIteratorError35 = false;
+        var _iteratorError35 = undefined;
 
         try {
-          for (var _iterator37 = nodeIds[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
-            var id = _step37.value;
-
+          for (var _iterator35 = nodeIds[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+            var id = _step35.value;
             var status = this.nodeStatuses[id];
+
             if (this.ProjectService.isGroupNode(id)) {
               if (status.progress.totalItemsWithWork > -1) {
                 completedItems += status.progress.completedItems;
@@ -2703,8 +2736,8 @@ var StudentDataService = function () {
             } else {
               if (status.isVisible) {
                 totalItems++;
-
                 var hasWork = this.ProjectService.nodeHasWork(id);
+
                 if (hasWork) {
                   totalItemsWithWork++;
                 }
@@ -2720,23 +2753,22 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError37 = true;
-          _iteratorError37 = err;
+          _didIteratorError35 = true;
+          _iteratorError35 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion37 && _iterator37.return) {
-              _iterator37.return();
+            if (!_iteratorNormalCompletion35 && _iterator35["return"] != null) {
+              _iterator35["return"]();
             }
           } finally {
-            if (_didIteratorError37) {
-              throw _iteratorError37;
+            if (_didIteratorError35) {
+              throw _iteratorError35;
             }
           }
         }
 
         var completionPct = totalItems ? Math.round(completedItems / totalItems * 100) : 0;
         var completionPctWithWork = totalItemsWithWork ? Math.round(completedItemsWithWork / totalItemsWithWork * 100) : 0;
-
         progress = {
           "completedItems": completedItems,
           "completedItemsWithWork": completedItemsWithWork,
@@ -2745,15 +2777,13 @@ var StudentDataService = function () {
           "completionPct": completionPct,
           "completionPctWithWork": completionPctWithWork
         };
-      }
+      } // TODO: implement for steps (using components instead of child nodes)?
 
-      // TODO: implement for steps (using components instead of child nodes)?
 
       return progress;
     }
   }, {
-    key: 'isCompleted',
-
+    key: "isCompleted",
 
     /**
      * Check if the given node or component is completed
@@ -2763,31 +2793,27 @@ var StudentDataService = function () {
      */
     value: function isCompleted(nodeId, componentId) {
       var result = false;
+
       if (nodeId && componentId) {
         // check that the component is completed
-
         // get the component states for the component
-        var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+        var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId); // get the component events
 
-        // get the component events
-        var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
+        var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId); // get the node events
 
-        // get the node events
-        var nodeEvents = this.getEventsByNodeId(nodeId);
+        var nodeEvents = this.getEventsByNodeId(nodeId); // get the component object
 
-        // get the component object
         var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
         var node = this.ProjectService.getNodeById(nodeId);
+
         if (component != null) {
           // get the component type
           var componentType = component.type;
 
           if (componentType != null) {
             // get the service for the component type
-            var service = this.$injector.get(componentType + 'Service');
+            var service = this.$injector.get(componentType + 'Service'); // check if the component is completed
 
-            // check if the component is completed
             if (service.isCompleted(component, componentStates, componentEvents, nodeEvents, node)) {
               result = true;
             }
@@ -2801,19 +2827,18 @@ var StudentDataService = function () {
 
         if (isGroup) {
           // node is a group
-          var tempResult = true;
+          var tempResult = true; // check that all the nodes in the group are visible and completed
 
-          // check that all the nodes in the group are visible and completed
           var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
 
           if (nodeIds.length) {
-            var _iteratorNormalCompletion38 = true;
-            var _didIteratorError38 = false;
-            var _iteratorError38 = undefined;
+            var _iteratorNormalCompletion36 = true;
+            var _didIteratorError36 = false;
+            var _iteratorError36 = undefined;
 
             try {
-              for (var _iterator38 = nodeIds[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
-                var id = _step38.value;
+              for (var _iterator36 = nodeIds[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+                var id = _step36.value;
 
                 if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
                   // the child is not visible or not completed so the group is not completed
@@ -2822,16 +2847,16 @@ var StudentDataService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError38 = true;
-              _iteratorError38 = err;
+              _didIteratorError36 = true;
+              _iteratorError36 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion38 && _iterator38.return) {
-                  _iterator38.return();
+                if (!_iteratorNormalCompletion36 && _iterator36["return"] != null) {
+                  _iterator36["return"]();
                 }
               } finally {
-                if (_didIteratorError38) {
-                  throw _iteratorError38;
+                if (_didIteratorError36) {
+                  throw _iteratorError36;
                 }
               }
             }
@@ -2839,33 +2864,31 @@ var StudentDataService = function () {
             // there are no nodes in the group (could be a planning activity, for example), so set isCompleted to false
             tempResult = false;
           }
+
           result = tempResult;
         } else {
           // check that all the components in the node are completed
-
           // get all the components in the node
-          var components = this.ProjectService.getComponentsByNodeId(nodeId);
+          var components = this.ProjectService.getComponentsByNodeId(nodeId); // we will default to is completed true
 
-          // we will default to is completed true
           var _tempResult = true;
-
           /*
            * All components must be completed in order for the node to be completed
            * so we will loop through all the components and check if they are
            * completed
            */
-          var _iteratorNormalCompletion39 = true;
-          var _didIteratorError39 = false;
-          var _iteratorError39 = undefined;
+
+          var _iteratorNormalCompletion37 = true;
+          var _didIteratorError37 = false;
+          var _iteratorError37 = undefined;
 
           try {
-            for (var _iterator39 = components[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
-              var _component = _step39.value;
+            for (var _iterator37 = components[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
+              var _component = _step37.value;
 
               if (_component != null) {
                 var _componentId = _component.id;
                 var _componentType = _component.type;
-
                 var tempNodeId = nodeId;
                 var tempNode = _node;
                 var tempComponentId = _componentId;
@@ -2878,18 +2901,18 @@ var StudentDataService = function () {
 
                     if (this.$injector.has(serviceName)) {
                       // get the service for the component type
-                      var _service = this.$injector.get(serviceName);
+                      var _service = this.$injector.get(serviceName); // get the component states for the component
 
-                      // get the component states for the component
-                      var _componentStates = this.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
 
-                      // get the component events
-                      var _componentEvents = this.getEventsByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                      var _componentStates = this.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId); // get the component events
 
-                      // get the node events
-                      var _nodeEvents = this.getEventsByNodeId(tempNodeId);
 
-                      // check if the component is completed
+                      var _componentEvents = this.getEventsByNodeIdAndComponentId(tempNodeId, tempComponentId); // get the node events
+
+
+                      var _nodeEvents = this.getEventsByNodeId(tempNodeId); // check if the component is completed
+
+
                       var isComponentCompleted = _service.isCompleted(tempComponent, _componentStates, _componentEvents, _nodeEvents, tempNode);
 
                       _tempResult = _tempResult && isComponentCompleted;
@@ -2901,16 +2924,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError39 = true;
-            _iteratorError39 = err;
+            _didIteratorError37 = true;
+            _iteratorError37 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion39 && _iterator39.return) {
-                _iterator39.return();
+              if (!_iteratorNormalCompletion37 && _iterator37["return"] != null) {
+                _iterator37["return"]();
               }
             } finally {
-              if (_didIteratorError39) {
-                throw _iteratorError39;
+              if (_didIteratorError37) {
+                throw _iteratorError37;
               }
             }
           }
@@ -2918,11 +2941,11 @@ var StudentDataService = function () {
           result = _tempResult;
         }
       }
+
       return result;
     }
   }, {
-    key: 'getCurrentNode',
-
+    key: "getCurrentNode",
 
     /**
      * Get the current node
@@ -2932,8 +2955,7 @@ var StudentDataService = function () {
       return this.currentNode;
     }
   }, {
-    key: 'getCurrentNodeId',
-
+    key: "getCurrentNodeId",
 
     /**
      * Get the current node id
@@ -2943,11 +2965,11 @@ var StudentDataService = function () {
       if (this.currentNode != null) {
         return this.currentNode.id;
       }
+
       return null;
     }
   }, {
-    key: 'setCurrentNodeByNodeId',
-
+    key: "setCurrentNodeByNodeId",
 
     /**
      * Set the current node
@@ -2960,8 +2982,7 @@ var StudentDataService = function () {
       }
     }
   }, {
-    key: 'setCurrentNode',
-
+    key: "setCurrentNode",
 
     /**
      * Set the current node
@@ -2969,30 +2990,36 @@ var StudentDataService = function () {
      */
     value: function setCurrentNode(node) {
       var previousCurrentNode = this.currentNode;
+
       if (previousCurrentNode !== node) {
         if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
           this.previousStep = previousCurrentNode;
         }
+
         this.currentNode = node;
-        this.$rootScope.$broadcast('currentNodeChanged', { previousNode: previousCurrentNode, currentNode: this.currentNode });
+        this.$rootScope.$broadcast('currentNodeChanged', {
+          previousNode: previousCurrentNode,
+          currentNode: this.currentNode
+        });
       }
     }
   }, {
-    key: 'endCurrentNode',
-
+    key: "endCurrentNode",
 
     /**
      * End the current node
      */
     value: function endCurrentNode() {
       var previousCurrentNode = this.currentNode;
+
       if (previousCurrentNode != null) {
-        this.$rootScope.$broadcast('exitNode', { nodeToExit: previousCurrentNode });
+        this.$rootScope.$broadcast('exitNode', {
+          nodeToExit: previousCurrentNode
+        });
       }
     }
   }, {
-    key: 'endCurrentNodeAndSetCurrentNodeByNodeId',
-
+    key: "endCurrentNodeAndSetCurrentNodeByNodeId",
 
     /**
      * End the current node and set the current node
@@ -3007,19 +3034,19 @@ var StudentDataService = function () {
       }
     }
   }, {
-    key: 'nodeClickLocked',
-
+    key: "nodeClickLocked",
 
     /**
      * Broadcast a listenable event that a locked node has been clicked (attempted to be opened)
      * @param nodeId
      */
     value: function nodeClickLocked(nodeId) {
-      this.$rootScope.$broadcast('nodeClickLocked', { nodeId: nodeId });
+      this.$rootScope.$broadcast('nodeClickLocked', {
+        nodeId: nodeId
+      });
     }
   }, {
-    key: 'CSVToArray',
-
+    key: "CSVToArray",
 
     /**
      * This will parse a delimited string into an array of
@@ -3030,73 +3057,62 @@ var StudentDataService = function () {
     value: function CSVToArray(strData, strDelimiter) {
       // Check to see if the delimiter is defined. If not,
       // then default to comma.
-      strDelimiter = strDelimiter || ",";
+      strDelimiter = strDelimiter || ","; // Create a regular expression to parse the CSV values.
 
-      // Create a regular expression to parse the CSV values.
-      var objPattern = new RegExp(
-      // Delimiters.
-      "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-
-      // Quoted fields.
-      "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-
-      // Standard fields.
-      "([^\"\\" + strDelimiter + "\\r\\n]*))", "gi");
-
-      // Create an array to hold our data. Give the array
+      var objPattern = new RegExp( // Delimiters.
+      "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" + // Quoted fields.
+      "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" + // Standard fields.
+      "([^\"\\" + strDelimiter + "\\r\\n]*))", "gi"); // Create an array to hold our data. Give the array
       // a default empty first row.
-      var arrData = [[]];
 
-      // Create an array to hold our individual pattern
+      var arrData = [[]]; // Create an array to hold our individual pattern
       // matching groups.
-      var arrMatches = null;
 
-      // Keep looping over the regular expression matches
+      var arrMatches = null; // Keep looping over the regular expression matches
       // until we can no longer find a match.
+
       while (arrMatches = objPattern.exec(strData)) {
-
         // Get the delimiter that was found.
-        var strMatchedDelimiter = arrMatches[1];
-
-        // Check to see if the given delimiter has a length
+        var strMatchedDelimiter = arrMatches[1]; // Check to see if the given delimiter has a length
         // (is not the start of string) and if it matches
         // field delimiter. If id does not, then we know
         // that this delimiter is a row delimiter.
-        if (strMatchedDelimiter.length && strMatchedDelimiter != strDelimiter) {
 
+        if (strMatchedDelimiter.length && strMatchedDelimiter != strDelimiter) {
           // Since we have reached a new row of data,
           // add an empty row to our data array.
           arrData.push([]);
-        }
-
-        // Now that we have our delimiter out of the way,
+        } // Now that we have our delimiter out of the way,
         // let's check to see which kind of value we
         // captured (quoted or unquoted).
-        if (arrMatches[2]) {
 
+
+        if (arrMatches[2]) {
           // We found a quoted value. When we capture
           // this value, unescape any double quotes.
           var _strMatchedValue = arrMatches[2].replace(new RegExp("\"\"", "g"), "\"");
         } else {
           // We found a non-quoted value.
           var _strMatchedValue2 = arrMatches[3];
-        }
-
-        // Now that we have our value string, let's add
+        } // Now that we have our value string, let's add
         // it to the data array.
+
+
         var finalValue = strMatchedValue;
         var floatVal = parseFloat(strMatchedValue);
+
         if (!isNaN(floatVal)) {
           finalValue = floatVal;
         }
+
         arrData[arrData.length - 1].push(finalValue);
-      }
-      // Return the parsed data.
+      } // Return the parsed data.
+
+
       return arrData;
     }
   }, {
-    key: 'getTotalScore',
-
+    key: "getTotalScore",
 
     /**
      * Get the total score for the workgroup
@@ -3107,72 +3123,66 @@ var StudentDataService = function () {
       var workgroupId = this.ConfigService.getWorkgroupId();
       return this.AnnotationService.getTotalScore(annotations, workgroupId);
     }
-
     /**
      * Get the project completion for the signed in student
      * @returns the project completion percentage for the signed in student
      */
 
   }, {
-    key: 'getProjectCompletion',
+    key: "getProjectCompletion",
     value: function getProjectCompletion() {
       // group0 is always the root node of the whole project
-      var nodeId = 'group0';
+      var nodeId = 'group0'; // get the progress including all of the children nodes
 
-      // get the progress including all of the children nodes
       var progress = this.getNodeProgressById(nodeId);
-
       return progress;
     }
-
     /**
      * Get the run status
      */
 
   }, {
-    key: 'getRunStatus',
+    key: "getRunStatus",
     value: function getRunStatus() {
       return this.runStatus;
     }
-
     /**
      * Get the next available planning node instance node id
      * @returns the next available planning node instance node id
      */
 
   }, {
-    key: 'getNextAvailablePlanningNodeId',
+    key: "getNextAvailablePlanningNodeId",
     value: function getNextAvailablePlanningNodeId() {
       // used to keep track of the highest planning node number we have found, which is 1-based
       var currentMaxPlanningNodeNumber = 1;
-
       var nodeStates = this.getNodeStates();
+
       if (nodeStates != null) {
-        var _iteratorNormalCompletion40 = true;
-        var _didIteratorError40 = false;
-        var _iteratorError40 = undefined;
+        var _iteratorNormalCompletion38 = true;
+        var _didIteratorError38 = false;
+        var _iteratorError38 = undefined;
 
         try {
-          for (var _iterator40 = nodeStates[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
-            var nodeState = _step40.value;
+          for (var _iterator38 = nodeStates[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
+            var nodeState = _step38.value;
 
             if (nodeState != null) {
               var nodeStateNodeId = nodeState.nodeId;
+
               if (this.PlanningService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
                 var nodes = nodeState.studentData.nodes;
-                var _iteratorNormalCompletion41 = true;
-                var _didIteratorError41 = false;
-                var _iteratorError41 = undefined;
+                var _iteratorNormalCompletion39 = true;
+                var _didIteratorError39 = false;
+                var _iteratorError39 = undefined;
 
                 try {
-                  for (var _iterator41 = nodes[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
-                    var node = _step41.value;
+                  for (var _iterator39 = nodes[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
+                    var node = _step39.value;
+                    var nodeId = node.id; // regex to match the planning node id e.g. planningNode2
 
-                    var nodeId = node.id;
-                    // regex to match the planning node id e.g. planningNode2
-                    var planningNodeIdRegEx = /planningNode(.*)/;
+                    var planningNodeIdRegEx = /planningNode(.*)/; // run the regex on the node id
 
-                    // run the regex on the node id
                     var result = nodeId.match(planningNodeIdRegEx);
 
                     if (result != null) {
@@ -3195,16 +3205,16 @@ var StudentDataService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError41 = true;
-                  _iteratorError41 = err;
+                  _didIteratorError39 = true;
+                  _iteratorError39 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion41 && _iterator41.return) {
-                      _iterator41.return();
+                    if (!_iteratorNormalCompletion39 && _iterator39["return"] != null) {
+                      _iterator39["return"]();
                     }
                   } finally {
-                    if (_didIteratorError41) {
-                      throw _iteratorError41;
+                    if (_didIteratorError39) {
+                      throw _iteratorError39;
                     }
                   }
                 }
@@ -3212,16 +3222,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError40 = true;
-          _iteratorError40 = err;
+          _didIteratorError38 = true;
+          _iteratorError38 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion40 && _iterator40.return) {
-              _iterator40.return();
+            if (!_iteratorNormalCompletion38 && _iterator38["return"] != null) {
+              _iterator38["return"]();
             }
           } finally {
-            if (_didIteratorError40) {
-              throw _iteratorError40;
+            if (_didIteratorError38) {
+              throw _iteratorError38;
             }
           }
         }
@@ -3230,29 +3240,27 @@ var StudentDataService = function () {
       if (this.maxPlanningNodeNumber < currentMaxPlanningNodeNumber) {
         // Update maxPlanningNodeNumber if we find a bigger number in the NodeStates
         this.maxPlanningNodeNumber = currentMaxPlanningNodeNumber;
-      }
+      } // Increment maxPlanningNodeNumber each time this function is called.
 
-      // Increment maxPlanningNodeNumber each time this function is called.
-      this.maxPlanningNodeNumber++;
 
-      // return the next available planning node instance node id
+      this.maxPlanningNodeNumber++; // return the next available planning node instance node id
+
       return 'planningNode' + this.maxPlanningNodeNumber;
     }
-
     /**
      * Get the annotations
      * @returns the annotations
      */
 
   }, {
-    key: 'getAnnotations',
+    key: "getAnnotations",
     value: function getAnnotations() {
       if (this.studentData != null && this.studentData.annotations != null) {
         return this.studentData.annotations;
       }
+
       return null;
     }
-
     /**
      * Get the latest component states for a node
      * @param nodeId get the component states for the node
@@ -3260,27 +3268,32 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'getLatestComponentStatesByNodeId',
+    key: "getLatestComponentStatesByNodeId",
     value: function getLatestComponentStatesByNodeId(nodeId) {
       var latestComponentStates = [];
+
       if (nodeId) {
         var studentData = this.studentData;
+
         if (studentData) {
           var node = this.ProjectService.getNodeById(nodeId);
+
           if (node != null) {
             var components = node.components;
+
             if (components != null) {
-              var _iteratorNormalCompletion42 = true;
-              var _didIteratorError42 = false;
-              var _iteratorError42 = undefined;
+              var _iteratorNormalCompletion40 = true;
+              var _didIteratorError40 = false;
+              var _iteratorError40 = undefined;
 
               try {
-                for (var _iterator42 = components[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
-                  var component = _step42.value;
+                for (var _iterator40 = components[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
+                  var component = _step40.value;
 
                   if (component != null) {
                     var componentId = component.id;
                     var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
                     if (componentState == null) {
                       /*
                        * there is no component state for the component so we will
@@ -3291,20 +3304,21 @@ var StudentDataService = function () {
                       componentState.nodeId = nodeId;
                       componentState.componentId = componentId;
                     }
+
                     latestComponentStates.push(componentState);
                   }
                 }
               } catch (err) {
-                _didIteratorError42 = true;
-                _iteratorError42 = err;
+                _didIteratorError40 = true;
+                _iteratorError40 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion42 && _iterator42.return) {
-                    _iterator42.return();
+                  if (!_iteratorNormalCompletion40 && _iterator40["return"] != null) {
+                    _iterator40["return"]();
                   }
                 } finally {
-                  if (_didIteratorError42) {
-                    throw _iteratorError42;
+                  if (_didIteratorError40) {
+                    throw _iteratorError40;
                   }
                 }
               }
@@ -3312,9 +3326,9 @@ var StudentDataService = function () {
           }
         }
       }
+
       return latestComponentStates;
     }
-
     /**
      * Get the latest component state for a node
      * @param nodeId get the latest component state for the node
@@ -3322,18 +3336,19 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'getLatestComponentStateByNodeId',
+    key: "getLatestComponentStateByNodeId",
     value: function getLatestComponentStateByNodeId(nodeId) {
       if (nodeId != null) {
         var studentData = this.studentData;
+
         if (studentData) {
           var componentStates = this.getComponentStatesByNodeId(nodeId);
           return componentStates[componentStates.length - 1];
         }
       }
+
       return null;
     }
-
     /**
      * Check if the completion criteria is satisfied
      * @param completionCriteria the completion criteria
@@ -3341,33 +3356,32 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'isCompletionCriteriaSatisfied',
+    key: "isCompletionCriteriaSatisfied",
     value: function isCompletionCriteriaSatisfied(completionCriteria) {
       var result = true;
+
       if (completionCriteria != null) {
         if (completionCriteria.inOrder) {
           // the criteria need to be satisfied in order
-
           var tempTimestamp = 0;
           var criteria = completionCriteria.criteria;
-          var _iteratorNormalCompletion43 = true;
-          var _didIteratorError43 = false;
-          var _iteratorError43 = undefined;
+          var _iteratorNormalCompletion41 = true;
+          var _didIteratorError41 = false;
+          var _iteratorError41 = undefined;
 
           try {
-            for (var _iterator43 = criteria[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
-              var completionCriterion = _step43.value;
-
+            for (var _iterator41 = criteria[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+              var completionCriterion = _step41.value;
               var tempResult = true;
+
               if (completionCriterion != null) {
                 // get the function name e.g. 'isVisited', 'isSaved', 'isSubmitted'
                 var functionName = completionCriterion.name;
 
                 if (functionName == 'isSubmitted') {
                   var nodeId = completionCriterion.nodeId;
-                  var componentId = completionCriterion.componentId;
+                  var componentId = completionCriterion.componentId; // get the first submit component state after the timestamp
 
-                  // get the first submit component state after the timestamp
                   var tempComponentState = this.getComponentStateSubmittedAfter(nodeId, componentId, tempTimestamp);
 
                   if (tempComponentState == null) {
@@ -3380,9 +3394,8 @@ var StudentDataService = function () {
                   }
                 } else if (functionName == 'isSaved') {
                   var _nodeId = completionCriterion.nodeId;
-                  var _componentId2 = completionCriterion.componentId;
+                  var _componentId2 = completionCriterion.componentId; // get the first save component state after the timestamp
 
-                  // get the first save component state after the timestamp
                   var _tempComponentState = this.getComponentStateSavedAfter(_nodeId, _componentId2, tempTimestamp);
 
                   if (_tempComponentState == null) {
@@ -3394,9 +3407,8 @@ var StudentDataService = function () {
                     tempTimestamp = _tempComponentState.serverSaveTime;
                   }
                 } else if (functionName == 'isVisited') {
-                  var _nodeId2 = completionCriterion.nodeId;
+                  var _nodeId2 = completionCriterion.nodeId; // get the first visit event after the timestamp
 
-                  // get the first visit event after the timestamp
                   var tempEvent = this.getVisitEventAfter(_nodeId2, tempTimestamp);
 
                   if (tempEvent == null) {
@@ -3411,24 +3423,24 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError43 = true;
-            _iteratorError43 = err;
+            _didIteratorError41 = true;
+            _iteratorError41 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion43 && _iterator43.return) {
-                _iterator43.return();
+              if (!_iteratorNormalCompletion41 && _iterator41["return"] != null) {
+                _iterator41["return"]();
               }
             } finally {
-              if (_didIteratorError43) {
-                throw _iteratorError43;
+              if (_didIteratorError41) {
+                throw _iteratorError41;
               }
             }
           }
         }
       }
+
       return result;
     }
-
     /**
      * Get the first save component state after the given timestamp
      * @param nodeId the node id of the component state
@@ -3437,40 +3449,41 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'getComponentStateSavedAfter',
+    key: "getComponentStateSavedAfter",
     value: function getComponentStateSavedAfter(nodeId, componentId, timestamp) {
       var componentStates = this.studentData.componentStates;
+
       if (componentStates != null) {
-        var _iteratorNormalCompletion44 = true;
-        var _didIteratorError44 = false;
-        var _iteratorError44 = undefined;
+        var _iteratorNormalCompletion42 = true;
+        var _didIteratorError42 = false;
+        var _iteratorError42 = undefined;
 
         try {
-          for (var _iterator44 = componentStates[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
-            var tempComponentState = _step44.value;
+          for (var _iterator42 = componentStates[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
+            var tempComponentState = _step42.value;
 
             if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId) {
               return tempComponentState;
             }
           }
         } catch (err) {
-          _didIteratorError44 = true;
-          _iteratorError44 = err;
+          _didIteratorError42 = true;
+          _iteratorError42 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion44 && _iterator44.return) {
-              _iterator44.return();
+            if (!_iteratorNormalCompletion42 && _iterator42["return"] != null) {
+              _iterator42["return"]();
             }
           } finally {
-            if (_didIteratorError44) {
-              throw _iteratorError44;
+            if (_didIteratorError42) {
+              throw _iteratorError42;
             }
           }
         }
       }
+
       return null;
     }
-
     /**
      * Get the first submit component state after the given timestamp
      * @param nodeId the node id of the component state
@@ -3479,129 +3492,138 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'getComponentStateSubmittedAfter',
+    key: "getComponentStateSubmittedAfter",
     value: function getComponentStateSubmittedAfter(nodeId, componentId, timestamp) {
       var componentStates = this.studentData.componentStates;
+
       if (componentStates != null) {
-        var _iteratorNormalCompletion45 = true;
-        var _didIteratorError45 = false;
-        var _iteratorError45 = undefined;
+        var _iteratorNormalCompletion43 = true;
+        var _didIteratorError43 = false;
+        var _iteratorError43 = undefined;
 
         try {
-          for (var _iterator45 = componentStates[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
-            var tempComponentState = _step45.value;
+          for (var _iterator43 = componentStates[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
+            var tempComponentState = _step43.value;
 
             if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId && tempComponentState.isSubmit) {
               return tempComponentState;
             }
           }
         } catch (err) {
-          _didIteratorError45 = true;
-          _iteratorError45 = err;
+          _didIteratorError43 = true;
+          _iteratorError43 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion45 && _iterator45.return) {
-              _iterator45.return();
+            if (!_iteratorNormalCompletion43 && _iterator43["return"] != null) {
+              _iterator43["return"]();
             }
           } finally {
-            if (_didIteratorError45) {
-              throw _iteratorError45;
+            if (_didIteratorError43) {
+              throw _iteratorError43;
             }
           }
         }
       }
+
       return null;
     }
-
     /**
      * Get the first visit event after the timestamp
      */
 
   }, {
-    key: 'getVisitEventAfter',
+    key: "getVisitEventAfter",
     value: function getVisitEventAfter(nodeId, timestamp) {
       var events = this.studentData.events;
+
       if (events != null) {
-        var _iteratorNormalCompletion46 = true;
-        var _didIteratorError46 = false;
-        var _iteratorError46 = undefined;
+        var _iteratorNormalCompletion44 = true;
+        var _didIteratorError44 = false;
+        var _iteratorError44 = undefined;
 
         try {
-          for (var _iterator46 = events[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
-            var tempEvent = _step46.value;
+          for (var _iterator44 = events[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
+            var tempEvent = _step44.value;
 
             if (tempEvent != null && tempEvent.serverSaveTime > timestamp && tempEvent.nodeId === nodeId && tempEvent.event === 'nodeEntered') {
               return tempEvent;
             }
           }
         } catch (err) {
-          _didIteratorError46 = true;
-          _iteratorError46 = err;
+          _didIteratorError44 = true;
+          _iteratorError44 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion46 && _iterator46.return) {
-              _iterator46.return();
+            if (!_iteratorNormalCompletion44 && _iterator44["return"] != null) {
+              _iterator44["return"]();
             }
           } finally {
-            if (_didIteratorError46) {
-              throw _iteratorError46;
+            if (_didIteratorError44) {
+              throw _iteratorError44;
             }
           }
         }
       }
+
       return null;
     }
-
-    /**
-     * Get classmate student work
-     * @param nodeId the node id
-     * @param componentId the component id
-     * @param showClassmateWorkSource Where to get the work from.
-     * 'period' will get the classmate work only from the period the student is in.
-     * null will get work from the whole class (all periods).
-     *
-     * @return a promise that will return the component states from classmates
-     */
-
   }, {
-    key: 'getClassmateStudentWork',
-    value: function getClassmateStudentWork(nodeId, componentId, showClassmateWorkSource) {
-      var studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
-      var httpParams = {};
-      httpParams.method = 'GET';
-      httpParams.url = studentDataURL;
-
-      var params = {};
-      params.runId = this.ConfigService.getRunId();
-      params.nodeId = nodeId;
-      params.componentId = componentId;
-      params.getStudentWork = true;
-      params.getEvents = false;
-      params.getAnnotations = false;
-      params.onlyGetLatest = true;
-
-      if (showClassmateWorkSource == 'period') {
-        params.periodId = this.ConfigService.getPeriodId();
-      }
-
-      httpParams.params = params;
-
+    key: "getClassmateStudentWork",
+    value: function getClassmateStudentWork(nodeId, componentId, periodId) {
+      var params = {
+        runId: this.ConfigService.getRunId(),
+        nodeId: nodeId,
+        componentId: componentId,
+        getStudentWork: true,
+        getEvents: false,
+        getAnnotations: false,
+        onlyGetLatest: true,
+        periodId: periodId
+      };
+      var httpParams = {
+        method: 'GET',
+        url: this.ConfigService.getConfigParam('studentDataURL'),
+        params: params
+      };
       return this.$http(httpParams).then(function (result) {
         var resultData = result.data;
+
         if (resultData != null) {
           return resultData.studentWorkList;
         }
+
         return [];
       });
     }
-
+  }, {
+    key: "getClassmateScores",
+    value: function getClassmateScores(nodeId, componentId, periodId) {
+      var params = {
+        runId: this.ConfigService.getRunId(),
+        nodeId: nodeId,
+        componentId: componentId,
+        getStudentWork: false,
+        getEvents: false,
+        getAnnotations: true,
+        onlyGetLatest: false,
+        periodId: periodId
+      };
+      var httpParams = {
+        method: 'GET',
+        url: this.ConfigService.getConfigParam('studentDataURL'),
+        params: params
+      };
+      return this.$http(httpParams).then(function (result) {
+        return result.data.annotations;
+      });
+    }
     /**
      * Get a student work from any student.
      * @param id The student work id.
      */
 
   }, {
-    key: 'getStudentWorkById',
+    key: "getStudentWorkById",
     value: function getStudentWorkById(id) {
       var studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
       var httpParams = {};
@@ -3617,13 +3639,14 @@ var StudentDataService = function () {
       httpParams.params = params;
       return this.$http(httpParams).then(function (result) {
         var resultData = result.data;
+
         if (resultData != null && resultData.studentWorkList.length > 0) {
           return resultData.studentWorkList[0];
         }
+
         return null;
       });
     }
-
     /**
      * Get the max possible score for the project
      * @returns the sum of the max scores for all the nodes in the project visible
@@ -3631,9 +3654,10 @@ var StudentDataService = function () {
      */
 
   }, {
-    key: 'getMaxScore',
+    key: "getMaxScore",
     value: function getMaxScore() {
       var maxScore = null;
+
       for (var p in this.nodeStatuses) {
         if (this.nodeStatuses.hasOwnProperty(p)) {
           var nodeStatus = this.nodeStatuses[p];
@@ -3652,6 +3676,7 @@ var StudentDataService = function () {
           }
         }
       }
+
       return maxScore;
     }
   }]);
@@ -3660,6 +3685,6 @@ var StudentDataService = function () {
 }();
 
 StudentDataService.$inject = ['$filter', '$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'PlanningService', 'ProjectService', 'UtilService'];
-
-exports.default = StudentDataService;
+var _default = StudentDataService;
+exports["default"] = _default;
 //# sourceMappingURL=studentDataService.js.map

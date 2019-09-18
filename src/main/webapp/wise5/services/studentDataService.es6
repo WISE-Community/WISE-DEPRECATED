@@ -1,3 +1,5 @@
+'use strict';
+
 class StudentDataService {
   constructor(
       $filter,
@@ -2419,43 +2421,49 @@ class StudentDataService {
     return null;
   }
 
-  /**
-   * Get classmate student work
-   * @param nodeId the node id
-   * @param componentId the component id
-   * @param showClassmateWorkSource Where to get the work from.
-   * 'period' will get the classmate work only from the period the student is in.
-   * null will get work from the whole class (all periods).
-   *
-   * @return a promise that will return the component states from classmates
-   */
-  getClassmateStudentWork(nodeId, componentId, showClassmateWorkSource) {
-    const studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
-    const httpParams = {};
-    httpParams.method = 'GET';
-    httpParams.url = studentDataURL;
-
-    const params = {};
-    params.runId = this.ConfigService.getRunId();
-    params.nodeId = nodeId;
-    params.componentId = componentId;
-    params.getStudentWork = true;
-    params.getEvents = false;
-    params.getAnnotations = false;
-    params.onlyGetLatest = true;
-
-    if (showClassmateWorkSource == 'period') {
-      params.periodId = this.ConfigService.getPeriodId();
-    }
-
-    httpParams.params = params;
-
+  getClassmateStudentWork(nodeId, componentId, periodId) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      nodeId: nodeId,
+      componentId: componentId,
+      getStudentWork: true,
+      getEvents: false,
+      getAnnotations: false,
+      onlyGetLatest: true,
+      periodId: periodId
+    };
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getConfigParam('studentDataURL'),
+      params: params
+    };
     return this.$http(httpParams).then((result) => {
       const resultData = result.data;
       if (resultData != null) {
         return resultData.studentWorkList;
       }
       return [];
+    });
+  }
+
+  getClassmateScores(nodeId, componentId, periodId) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      nodeId: nodeId,
+      componentId: componentId,
+      getStudentWork: false,
+      getEvents: false,
+      getAnnotations: true,
+      onlyGetLatest: false,
+      periodId: periodId
+    };
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getConfigParam('studentDataURL'),
+      params: params
+    };
+    return this.$http(httpParams).then((result) => {
+      return result.data.annotations;
     });
   }
 

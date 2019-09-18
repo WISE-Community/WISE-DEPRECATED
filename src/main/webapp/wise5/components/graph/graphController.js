@@ -88,6 +88,8 @@ function (_ComponentController) {
     _this.chartId = 'chart_' + _this.componentId;
     _this.hiddenCanvasId = 'hiddenCanvas_' + _this.componentId;
 
+    _this.applyHighchartsPlotLinesLabelFix();
+
     _this.initializeComponentContentParams();
 
     var componentState = _this.$scope.componentState;
@@ -129,6 +131,19 @@ function (_ComponentController) {
   }
 
   _createClass(GraphController, [{
+    key: "applyHighchartsPlotLinesLabelFix",
+    value: function applyHighchartsPlotLinesLabelFix() {
+      Highcharts.wrap(Highcharts.Axis.prototype, 'getPlotLinePath', function (proceed) {
+        var path = proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+        if (path) {
+          path.flat = false;
+        }
+
+        return path;
+      });
+    }
+  }, {
     key: "initializeComponentContentParams",
     value: function initializeComponentContentParams() {
       this.graphType = this.componentContent.graphType;
@@ -569,10 +584,13 @@ function (_ComponentController) {
     key: "clearPlotLines",
     value: function clearPlotLines() {
       var chart = Highcharts.charts[0];
-      var chartXAxis = chart.xAxis[0];
-      chartXAxis.removePlotLine('plot-line-x');
-      var chartYAxis = chart.yAxis[0];
-      chartYAxis.removePlotLine('plot-line-y');
+
+      if (chart != null) {
+        var chartXAxis = chart.xAxis[0];
+        chartXAxis.removePlotLine('plot-line-x');
+        var chartYAxis = chart.yAxis[0];
+        chartYAxis.removePlotLine('plot-line-y');
+      }
     }
     /**
      * If the x value is not within the x min and max limits, we will modify the x value to be at the
@@ -667,6 +685,7 @@ function (_ComponentController) {
       var _this8 = this;
 
       var title = this.componentContent.title;
+      var subtitle = this.componentContent.subtitle;
       var xAxis = this.setupXAxis();
       var yAxis = this.setupYAxis();
       this.setupWidth();
@@ -699,7 +718,7 @@ function (_ComponentController) {
       }
 
       var zoomType = this.getZoomType();
-      this.chartConfig = this.createChartConfig(deferred, title, xAxis, yAxis, series, zoomType);
+      this.chartConfig = this.createChartConfig(deferred, title, subtitle, xAxis, yAxis, series, zoomType);
 
       if (this.componentContent.useCustomLegend) {
         // use a timeout so the graph has a chance to render before we set the custom legend
@@ -916,7 +935,7 @@ function (_ComponentController) {
     }
   }, {
     key: "createChartConfig",
-    value: function createChartConfig(deferred, title, xAxis, yAxis, series, zoomType) {
+    value: function createChartConfig(deferred, title, subtitle, xAxis, yAxis, series, zoomType) {
       var chartConfig = {
         options: {
           legend: {
@@ -963,7 +982,12 @@ function (_ComponentController) {
         },
         series: series,
         title: {
-          text: title
+          text: title,
+          useHTML: true
+        },
+        subtitle: {
+          text: subtitle,
+          useHTML: true
         },
         xAxis: xAxis,
         yAxis: yAxis,
@@ -1022,7 +1046,7 @@ function (_ComponentController) {
   }, {
     key: "isLimitXAxisType",
     value: function isLimitXAxisType(xAxis) {
-      return xAxis.type === 'limits';
+      return xAxis.type === 'limits' || xAxis.type == null;
     }
   }, {
     key: "isCategoriesXAxisType",
@@ -1911,11 +1935,11 @@ function (_ComponentController) {
 
   }, {
     key: "getTrialsFromClassmates",
-    value: function getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource) {
+    value: function getTrialsFromClassmates(nodeId, componentId, periodId) {
       var _this10 = this;
 
       var deferred = this.$q.defer();
-      this.StudentDataService.getClassmateStudentWork(nodeId, componentId, showClassmateWorkSource).then(function (componentStates) {
+      this.StudentDataService.getClassmateStudentWork(nodeId, componentId, periodId).then(function (componentStates) {
         var promises = [];
         var _iteratorNormalCompletion10 = true;
         var _didIteratorError10 = false;
@@ -3592,8 +3616,13 @@ function (_ComponentController) {
           }
         }
       } else {
-        var showClassmateWorkSource = connectedComponent.showClassmateWorkSource;
-        promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
+        var periodId = null;
+
+        if (connectedComponent.showClassmateWorkSource === 'period') {
+          periodId = this.ConfigService.getPeriodId();
+        }
+
+        promises.push(this.getTrialsFromClassmates(nodeId, componentId, periodId));
         var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
         component = this.ProjectService.injectAssetPaths(component);
         connectedComponentBackgroundImage = component.backgroundImage;

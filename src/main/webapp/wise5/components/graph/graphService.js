@@ -1,57 +1,69 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _componentService = _interopRequireDefault(require("../componentService"));
 
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+var _html2canvas = _interopRequireDefault(require("html2canvas"));
 
-var _componentService = require('../componentService');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _componentService2 = _interopRequireDefault(_componentService);
-
-var _html2canvas = require('html2canvas');
-
-var _html2canvas2 = _interopRequireDefault(_html2canvas);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var GraphService = function (_ComponentService) {
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var GraphService =
+/*#__PURE__*/
+function (_ComponentService) {
   _inherits(GraphService, _ComponentService);
 
   function GraphService($filter, $q, StudentAssetService, StudentDataService, UtilService) {
+    var _this;
+
     _classCallCheck(this, GraphService);
 
-    var _this = _possibleConstructorReturn(this, (GraphService.__proto__ || Object.getPrototypeOf(GraphService)).call(this, $filter, StudentDataService, UtilService));
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(GraphService).call(this, $filter, StudentDataService, UtilService));
     _this.$q = $q;
     _this.StudentAssetService = StudentAssetService;
     return _this;
   }
 
   _createClass(GraphService, [{
-    key: 'getComponentTypeLabel',
+    key: "getComponentTypeLabel",
     value: function getComponentTypeLabel() {
       return this.$translate('graph.componentTypeLabel');
     }
-
     /**
      * Create a Graph component object
      * @returns a new Graph component object
      */
 
   }, {
-    key: 'createComponent',
+    key: "createComponent",
     value: function createComponent() {
-      var component = _get(GraphService.prototype.__proto__ || Object.getPrototypeOf(GraphService.prototype), 'createComponent', this).call(this);
+      var component = _get(_getPrototypeOf(GraphService.prototype), "createComponent", this).call(this);
+
       component.type = 'Graph';
       component.title = '';
       component.width = 800;
@@ -65,7 +77,8 @@ var GraphService = function (_ComponentService) {
       component.graphType = 'line';
       component.xAxis = {
         title: {
-          text: this.$translate('graph.timeSeconds')
+          text: this.$translate('graph.timeSeconds'),
+          useHTML: true
         },
         min: 0,
         max: 100,
@@ -75,7 +88,8 @@ var GraphService = function (_ComponentService) {
       };
       component.yAxis = {
         title: {
-          text: this.$translate('graph.positionMeters')
+          text: this.$translate('graph.positionMeters'),
+          useHTML: true
         },
         min: 0,
         max: 100,
@@ -96,7 +110,7 @@ var GraphService = function (_ComponentService) {
       return component;
     }
   }, {
-    key: 'isCompleted',
+    key: "isCompleted",
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
       if (this.canEdit(component)) {
         if (this.hasComponentStates(componentStates)) {
@@ -110,20 +124,21 @@ var GraphService = function (_ComponentService) {
       } else {
         return this.UtilService.hasNodeEnteredEvent(nodeEvents);
       }
+
       return false;
     }
   }, {
-    key: 'hasComponentStates',
+    key: "hasComponentStates",
     value: function hasComponentStates(componentStates) {
       return componentStates != null && componentStates.length > 0;
     }
   }, {
-    key: 'isSubmitRequired',
+    key: "isSubmitRequired",
     value: function isSubmitRequired(node, component) {
       return node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
     }
   }, {
-    key: 'hasSubmitComponentState',
+    key: "hasSubmitComponentState",
     value: function hasSubmitComponentState(componentStates) {
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
@@ -142,8 +157,8 @@ var GraphService = function (_ComponentService) {
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
           }
         } finally {
           if (_didIteratorError) {
@@ -154,7 +169,6 @@ var GraphService = function (_ComponentService) {
 
       return false;
     }
-
     /**
      * Determine if the student can perform any work on this component.
      * @param component The component content.
@@ -162,7 +176,7 @@ var GraphService = function (_ComponentService) {
      */
 
   }, {
-    key: 'canEdit',
+    key: "canEdit",
     value: function canEdit(component) {
       var series = component.series;
       var _iteratorNormalCompletion2 = true;
@@ -182,8 +196,8 @@ var GraphService = function (_ComponentService) {
         _iteratorError2 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+            _iterator2["return"]();
           }
         } finally {
           if (_didIteratorError2) {
@@ -195,12 +209,14 @@ var GraphService = function (_ComponentService) {
       if (this.UtilService.hasImportWorkConnectedComponent(component)) {
         return true;
       }
+
       return false;
     }
   }, {
-    key: 'hasSeriesData',
+    key: "hasSeriesData",
     value: function hasSeriesData(studentData) {
       var series = studentData.series;
+
       if (series != null) {
         var _iteratorNormalCompletion3 = true;
         var _didIteratorError3 = false;
@@ -219,8 +235,8 @@ var GraphService = function (_ComponentService) {
           _iteratorError3 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-              _iterator3.return();
+            if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+              _iterator3["return"]();
             }
           } finally {
             if (_didIteratorError3) {
@@ -229,12 +245,14 @@ var GraphService = function (_ComponentService) {
           }
         }
       }
+
       return false;
     }
   }, {
-    key: 'hasTrialData',
+    key: "hasTrialData",
     value: function hasTrialData(studentData) {
       var trials = studentData.trials;
+
       if (trials != null) {
         var _iteratorNormalCompletion4 = true;
         var _didIteratorError4 = false;
@@ -250,8 +268,8 @@ var GraphService = function (_ComponentService) {
             try {
               for (var _iterator5 = trial.series[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
                 var singleSeries = _step5.value;
-
                 var seriesData = singleSeries.data;
+
                 if (seriesData.length > 0) {
                   return true;
                 }
@@ -261,8 +279,8 @@ var GraphService = function (_ComponentService) {
               _iteratorError5 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                  _iterator5.return();
+                if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+                  _iterator5["return"]();
                 }
               } finally {
                 if (_didIteratorError5) {
@@ -276,8 +294,8 @@ var GraphService = function (_ComponentService) {
           _iteratorError4 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
+            if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+              _iterator4["return"]();
             }
           } finally {
             if (_didIteratorError4) {
@@ -286,13 +304,15 @@ var GraphService = function (_ComponentService) {
           }
         }
       }
+
       return false;
     }
   }, {
-    key: 'componentStateHasStudentWork',
+    key: "componentStateHasStudentWork",
     value: function componentStateHasStudentWork(componentState, componentContent) {
       if (componentState != null) {
         var studentData = componentState.studentData;
+
         if (studentData != null) {
           if (studentData.version == 1) {
             /*
@@ -313,13 +333,14 @@ var GraphService = function (_ComponentService) {
             }
           }
         }
+
         if (this.isStudentChangedAxisLimit(componentState, componentContent)) {
           return true;
         }
       }
+
       return false;
     }
-
     /**
      * Check if the student has changed any of the axis limits
      * @param componentState the component state
@@ -328,7 +349,7 @@ var GraphService = function (_ComponentService) {
      */
 
   }, {
-    key: 'isStudentChangedAxisLimit',
+    key: "isStudentChangedAxisLimit",
     value: function isStudentChangedAxisLimit(componentState, componentContent) {
       if (componentState != null && componentState.studentData != null && componentContent != null) {
         if (componentState.studentData.xAxis != null && componentContent.xAxis != null) {
@@ -338,6 +359,7 @@ var GraphService = function (_ComponentService) {
             return true;
           }
         }
+
         if (componentState.studentData.yAxis != null && componentContent.yAxis != null) {
           if (componentState.studentData.yAxis.min != componentContent.yAxis.min) {
             return true;
@@ -346,9 +368,9 @@ var GraphService = function (_ComponentService) {
           }
         }
       }
+
       return false;
     }
-
     /**
      * Check if any of the trials contains a data point
      * @param trials an array of trials
@@ -356,7 +378,7 @@ var GraphService = function (_ComponentService) {
      */
 
   }, {
-    key: 'anyTrialHasDataPoint',
+    key: "anyTrialHasDataPoint",
     value: function anyTrialHasDataPoint(trials) {
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
@@ -375,8 +397,8 @@ var GraphService = function (_ComponentService) {
         _iteratorError6 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+            _iterator6["return"]();
           }
         } finally {
           if (_didIteratorError6) {
@@ -387,7 +409,6 @@ var GraphService = function (_ComponentService) {
 
       return false;
     }
-
     /**
      * Check if a trial has a data point
      * @param trial a trial object which can contain multiple series
@@ -395,7 +416,7 @@ var GraphService = function (_ComponentService) {
      */
 
   }, {
-    key: 'trialHasDataPoint',
+    key: "trialHasDataPoint",
     value: function trialHasDataPoint(trial) {
       var _iteratorNormalCompletion7 = true;
       var _didIteratorError7 = false;
@@ -414,8 +435,8 @@ var GraphService = function (_ComponentService) {
         _iteratorError7 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion7 && _iterator7.return) {
-            _iterator7.return();
+          if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+            _iterator7["return"]();
           }
         } finally {
           if (_didIteratorError7) {
@@ -426,7 +447,6 @@ var GraphService = function (_ComponentService) {
 
       return false;
     }
-
     /**
      * Check if an array of series has any data point
      * @param multipleSeries an array of series
@@ -434,7 +454,7 @@ var GraphService = function (_ComponentService) {
      */
 
   }, {
-    key: 'anySeriesHasDataPoint',
+    key: "anySeriesHasDataPoint",
     value: function anySeriesHasDataPoint(multipleSeries) {
       if (multipleSeries != null) {
         var _iteratorNormalCompletion8 = true;
@@ -454,8 +474,8 @@ var GraphService = function (_ComponentService) {
           _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-              _iterator8.return();
+            if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
+              _iterator8["return"]();
             }
           } finally {
             if (_didIteratorError8) {
@@ -464,9 +484,9 @@ var GraphService = function (_ComponentService) {
           }
         }
       }
+
       return false;
     }
-
     /**
      * Check if a series has a data point
      * @param singleSeries a series object
@@ -474,11 +494,10 @@ var GraphService = function (_ComponentService) {
      */
 
   }, {
-    key: 'seriesHasDataPoint',
+    key: "seriesHasDataPoint",
     value: function seriesHasDataPoint(singleSeries) {
       return singleSeries.data.length > 0;
     }
-
     /**
      * The component state has been rendered in a <component></component> element
      * and now we want to take a snapshot of the work.
@@ -487,31 +506,35 @@ var GraphService = function (_ComponentService) {
      */
 
   }, {
-    key: 'generateImageFromRenderedComponentState',
+    key: "generateImageFromRenderedComponentState",
     value: function generateImageFromRenderedComponentState(componentState) {
       var _this2 = this;
 
       var deferred = this.$q.defer();
       var componentId = componentState.componentId;
       var highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
+
       if (highchartsDiv != null && highchartsDiv.length > 0) {
         highchartsDiv = highchartsDiv[0];
-        (0, _html2canvas2.default)(highchartsDiv).then(function (canvas) {
+        (0, _html2canvas["default"])(highchartsDiv).then(function (canvas) {
           var base64Image = canvas.toDataURL('image/png');
+
           var imageObject = _this2.UtilService.getImageObjectFromBase64String(base64Image);
+
           _this2.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
             deferred.resolve(asset);
           });
         });
       }
+
       return deferred.promise;
     }
   }]);
 
   return GraphService;
-}(_componentService2.default);
+}(_componentService["default"]);
 
 GraphService.$inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-exports.default = GraphService;
+var _default = GraphService;
+exports["default"] = _default;
 //# sourceMappingURL=graphService.js.map

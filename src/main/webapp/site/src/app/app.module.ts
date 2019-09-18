@@ -32,7 +32,7 @@ import { MobileMenuModule } from "./modules/mobile-menu/mobile-menu.module";
 import { HelpModule } from "./help/help.module";
 import { FeaturesModule } from "./features/features.module";
 import { AnnouncementComponent } from './announcement/announcement.component';
-import { AnnouncementDialogComponent } from './app.component';
+import { AnnouncementDialogComponent } from './announcement/announcement.component';
 import { AboutModule } from "./about/about.module";
 import { TrackScrollDirective } from './track-scroll.directive';
 import { AdminModule } from './admin/admin.module';

@@ -4,12 +4,24 @@ class SessionService {
     this.$rootScope = $rootScope;
     this.ConfigService = ConfigService;
     this.warningVisible = false;
-    this.checkMouseEventInMinutesInterval = 1;
-    this.showWarningInMinutesInterval = 25;
-    this.forceLogoutAfterWarningInMinutesInterval = 5;
-    this.lastActivityTimestamp = new Date();
+    this.defaultForceLogoutAfterWarningInterval = this.convertMinutesToSeconds(5);
+    const intervals = this.calculateIntervals(this.ConfigService.getConfigParam('sessionTimeout'));
+    this.showWarningInterval = intervals.showWarningInterval;
+    this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
+    this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
+    this.updateLastActivityTimestamp();
     this.initializeListeners();
     this.initializeSession();
+  }
+
+  calculateIntervals(sessionTimeout) {
+    const forceLogoutAfterWarningInterval = 
+        Math.min(sessionTimeout * 0.1, this.defaultForceLogoutAfterWarningInterval);
+    const showWarningInterval = sessionTimeout - forceLogoutAfterWarningInterval;
+    return {
+      showWarningInterval: showWarningInterval,
+      forceLogoutAfterWarningInterval: forceLogoutAfterWarningInterval
+    };
   }
 
   initializeListeners() {
@@ -46,8 +58,11 @@ class SessionService {
   }
 
   startCheckMouseEvent() {
-    setInterval(() => { this.checkMouseEvent(); },
-        this.convertMinutesToMilliseconds(this.checkMouseEventInMinutesInterval));
+    setInterval(() => { this.checkMouseEvent(); }, this.checkMouseEventInterval);
+  }
+
+  convertMinutesToSeconds(minutes) {
+    return minutes * 60;
   }
 
   convertMinutesToMilliseconds(minutes) {
@@ -58,32 +73,42 @@ class SessionService {
    * Note: This does not get called when the warning popup is being shown.
    */
   mouseMoved() {
+    this.updateLastActivityTimestamp();
+  }
+  
+  updateLastActivityTimestamp() {
     this.lastActivityTimestamp = new Date();
   }
 
   checkMouseEvent() {
-    if (this.isInactiveLongEnoughToForceLogout()) {
+    if (this.isActiveWithinLastMinute()) {
+      this.renewSession();
+    } else if (this.isInactiveLongEnoughToForceLogout()) {
       this.forceLogOut();
     } else if (this.isInactiveLongEnoughToWarn() && !this.isShowingWarning()) {
       this.showWarning();
     }
   }
 
+  isActiveWithinLastMinute() {
+    return (new Date() - this.lastActivityTimestamp) < this.convertMinutesToMilliseconds(1);
+  }
+
   isInactiveLongEnoughToForceLogout() {
-    return this.getInactiveTimeInMinutes() >=
-        (this.showWarningInMinutesInterval + this.forceLogoutAfterWarningInMinutesInterval);
+    return this.getInactiveTimeInSeconds() >=
+        (this.showWarningInterval + this.forceLogoutAfterWarningInterval);
   }
 
   isInactiveLongEnoughToWarn() {
-    return this.getInactiveTimeInMinutes() >= this.showWarningInMinutesInterval;
+    return this.getInactiveTimeInSeconds() >= this.showWarningInterval;
   }
 
   isShowingWarning() {
     return this.warningVisible;
   }
 
-  getInactiveTimeInMinutes() {
-    return Math.floor(this.getInactiveTimeInMilliseconds() / 1000 / 60);
+  getInactiveTimeInSeconds() {
+    return Math.floor(this.getInactiveTimeInMilliseconds() / 1000);
   }
 
   getInactiveTimeInMilliseconds() {
@@ -99,9 +124,17 @@ class SessionService {
     this.$rootScope.$broadcast('showSessionWarning');
   }
 
-  renewSession() {
-    this.lastActivityTimestamp = new Date();
+  closeWarningAndRenewSession() {
     this.warningVisible = false;
+    this.updateLastActivityTimestamp();
+    this.renewSession();
+  }
+
+  renewSession() {
+    const renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
+    this.$http.get(renewSessionURL).then((result) => {
+
+    });
   }
 }
 
