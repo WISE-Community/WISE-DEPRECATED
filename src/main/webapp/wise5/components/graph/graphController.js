@@ -858,7 +858,7 @@ function (_ComponentController) {
   }, {
     key: "setAllSeriesFields",
     value: function setAllSeriesFields(series) {
-      var canAllSeriesMouseTrack = this.getNumberOfEditableSeries(series) == 0;
+      var canAllSeriesMouseTrack = this.getNumberOfEditableSeries(series) === 0;
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
       var _iteratorError3 = undefined;

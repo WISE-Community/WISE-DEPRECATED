@@ -658,7 +658,7 @@ class GraphController extends ComponentController {
   }
 
   setAllSeriesFields(series) {
-    const canAllSeriesMouseTrack = this.getNumberOfEditableSeries(series) == 0;
+    const canAllSeriesMouseTrack = this.getNumberOfEditableSeries(series) === 0;
     for (const singleSeries of series) {
       this.setSingleSeriesFields(singleSeries, canAllSeriesMouseTrack);
     }
