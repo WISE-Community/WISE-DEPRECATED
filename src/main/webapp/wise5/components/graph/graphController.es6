@@ -658,12 +658,23 @@ class GraphController extends ComponentController {
   }
 
   setAllSeriesFields(series) {
+    const canAllSeriesMouseTrack = this.getNumberOfEditableSeries(series) === 0;
     for (const singleSeries of series) {
-      this.setSingleSeriesFields(singleSeries);
+      this.setSingleSeriesFields(singleSeries, canAllSeriesMouseTrack);
     }
   }
 
-  setSingleSeriesFields(singleSeries) {
+  getNumberOfEditableSeries(series) {
+    let numberOfEditableSeries = 0;
+    for (const singleSeries of series) {
+      if (singleSeries.canEdit) {
+        numberOfEditableSeries++;
+      }
+    }
+    return numberOfEditableSeries;
+  }
+
+  setSingleSeriesFields(singleSeries, canAllSeriesMouseTrack) {
     if (singleSeries.canEdit && this.isActiveSeries(singleSeries)) {
       if (this.graphType === 'line' || this.graphType === 'scatter') {
         singleSeries.draggableX = true;
@@ -683,7 +694,7 @@ class GraphController extends ComponentController {
       singleSeries.stickyTracking = false;
       singleSeries.shared = false;
       singleSeries.allowPointSelect = false;
-      singleSeries.enableMouseTracking = false;
+      singleSeries.enableMouseTracking = canAllSeriesMouseTrack;
     }
     if (singleSeries.allowPointMouseOver === true) {
       singleSeries.allowPointSelect = true;
