@@ -244,7 +244,7 @@ public interface RunService {
    * @return set of Workgroups for that are in this run
    * @throws ObjectNotFoundException when runId cannot be used to find an existing run
    */
-  Set<Workgroup> getWorkgroups(Long runId) throws ObjectNotFoundException;
+  List<Workgroup> getWorkgroups(Long runId) throws ObjectNotFoundException;
 
   /**
    * Gets all of the Workgroups that are associated with this run
@@ -253,7 +253,7 @@ public interface RunService {
    * @param runId runId to use for lookup
    * @param periodId periodId to which all returned workgroups belong
    */
-  Set<Workgroup> getWorkgroups(Long runId, Long periodId) throws ObjectNotFoundException;
+  List<Workgroup> getWorkgroups(Long runId, Long periodId) throws ObjectNotFoundException;
 
   /**
    * Adds an Announcement to this run
@@ -385,7 +385,7 @@ public interface RunService {
    * @param period
    * @return List<Run> - run list
    */
-  List<Run> getRunsRunWithinPeriod(String period);
+  List<Run> getRunsRunWithinTimePeriod(String period);
 
   /**
    * Returns a <code>List<Run></code> list of runs ordered descending by how

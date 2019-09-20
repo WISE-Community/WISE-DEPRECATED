@@ -141,7 +141,7 @@ public class RunServiceImpl implements RunService {
   }
 
   public List<Run> getRunList(User user) {
-    return runDao.getRunListByUserInPeriod(user);
+    return runDao.getRunListByUser(user);
   }
 
   /**
@@ -477,11 +477,11 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public Set<Workgroup> getWorkgroups(Long runId) {
+  public List<Workgroup> getWorkgroups(Long runId) {
     return runDao.getWorkgroupsForRun(runId);
   }
 
-  public Set<Workgroup> getWorkgroups(Long runId, Long periodId) {
+  public List<Workgroup> getWorkgroups(Long runId, Long periodId) {
     return runDao.getWorkgroupsForRunAndPeriod(runId, periodId);
   }
 
@@ -551,7 +551,7 @@ public class RunServiceImpl implements RunService {
   }
 
   public boolean canDecreaseMaxStudentsPerTeam(Long runId) {
-    Set<Workgroup> workgroups = this.getWorkgroups(runId);
+    List<Workgroup> workgroups = this.getWorkgroups(runId);
     if (workgroups != null) {
       for (Workgroup workgroup : workgroups) {
         if (workgroup.isStudentWorkgroup() && workgroup.getMembers().size() > 1) {
@@ -562,8 +562,8 @@ public class RunServiceImpl implements RunService {
     return true;
   }
 
-  public List<Run> getRunsRunWithinPeriod(String period) {
-    return runDao.getRunsRunWithinPeriod(period);
+  public List<Run> getRunsRunWithinTimePeriod(String period) {
+    return runDao.getRunsRunWithinTimePeriod(period);
   }
 
   public List<Run> getRunsByActivity() {
