@@ -168,9 +168,6 @@
             "styles": [
             ],
             "scripts": [
-              "./node_modules/jquery/dist/jquery.min.js",
-              "./node_modules/fabric/dist/fabric.min.js",
-              "./node_modules/summernote/dist/summernote.js"
             ]
           },
           "configurations": {

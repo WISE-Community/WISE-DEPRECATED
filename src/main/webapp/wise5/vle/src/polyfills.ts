@@ -44,18 +44,12 @@ import * as StompJS from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 
 import * as hopscotch from 'hopscotch';
+import * as EventEmitter2 from 'EventEmitter2';
 
-window['jQuery'] = jQuery;
 window['$'] = jQuery;
+window['jQuery'] = jQuery;
 window['fabric'] = fabric.fabric;
 window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
-import * as summernote from 'summernote';
-import * as angularSummernote from '../../lib/angular-summernote/dist/angular-summernote';
-window['summernote'] = summernote;
 window['hopscotch'] = hopscotch;
-//window['EventEmitter2'] = EventEmitter2;
-
-//EventEmitter2: 'EventEmitter2',
-//      hopscotch: 'hopscotch',
-//Stomp: ['@stomp/stompjs', 'Stomp'],
+window['EventEmitter2'] = EventEmitter2;
