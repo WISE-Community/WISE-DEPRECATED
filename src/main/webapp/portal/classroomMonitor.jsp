@@ -11,12 +11,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
+        <script>
+            if (global === undefined) {
+              var global = window;
+            }
+        </script>
+        <app-root></app-root>
         <div ng-view>
             <div ui-view></div>
         </div>
         <script>
             var configURL = '${configURL}';
         </script>
-        <script src="${contextPath}/wise5/classroomMonitor/dist/app.bundle.js"></script>
+        <script src="${contextPath}/wise5/classroomMonitor/dist/runtime.js"></script>
+        <script src="${contextPath}/wise5/classroomMonitor/dist/polyfills-es5.js" nomodule></script>
+        <script src="${contextPath}/wise5/classroomMonitor/dist/polyfills.js"></script>
+        <script src="${contextPath}/wise5/classroomMonitor/dist/vendor.js"></script>
+        <script src="${contextPath}/wise5/classroomMonitor/dist/main.js"></script>
     </body>
 </html>

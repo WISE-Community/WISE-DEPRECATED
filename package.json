@@ -139,9 +139,9 @@
     "build-prod-cm": "cd ./src/main/webapp/wise5/classroomMonitor; webpack --config webpack.prod.js",
     "build-prod-vle": "cd ./src/main/webapp/wise5/vle; webpack --config webpack.prod.js",
     "build-dev-all": "node node_modules/concurrently/bin/concurrently.js \"npm run watch-all-site\" \"npm run build-dev-at\" \"npm run build-dev-cm\" \"npm run build-dev-vle\"",
-    "build-dev-at": "cd ./src/main/webapp/wise5/authoringTool; webpack --config webpack.dev-build.js",
-    "build-dev-cm": "cd ./src/main/webapp/wise5/classroomMonitor; webpack --config webpack.dev-build.js",
-    "build-dev-vle": "cd ./src/main/webapp/wise5/vle; webpack --config webpack.dev-build.js",
+    "build-dev-at": "ng build at --watch",
+    "build-dev-cm": "ng build cm --watch",
+    "build-dev-vle": "ng build vle --watch",
     "standalone-server-at": "cd ./src/main/webapp/wise5/authoringTool; webpack-dev-server --open --config webpack.dev.js --history-api-fallback --inline --progress",
     "standalone-server-cm": "cd ./src/main/webapp/wise5/classroomMonitor; webpack-dev-server --open --config webpack.dev.js --history-api-fallback --inline --progress",
     "standalone-server-vle": "cd ./src/main/webapp/wise5/vle; webpack-dev-server --open --config webpack.dev.js --history-api-fallback --inline --progress"

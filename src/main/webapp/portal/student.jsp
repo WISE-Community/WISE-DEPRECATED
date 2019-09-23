@@ -12,11 +12,11 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="vle">
-        <script>
-                if (global === undefined) {
-                  var global = window;
-                }
-              </script>
+    <script>
+        if (global === undefined) {
+          var global = window;
+        }
+    </script>
     <app-root></app-root>
     <div ng-view>
         <div ui-view></div>
