@@ -213,17 +213,17 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/main/webapp/site/src/test.ts",
+            "main": "src/main/webapp/wise5/vle/src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/main/webapp/site/src/polyfills.ts",
-            "tsConfig": "src/main/webapp/site/src/tsconfig.spec.json",
+            "polyfills": "src/main/webapp/wise5/vle/src/polyfills.ts",
+            "tsConfig": "src/main/webapp/wise5/vle/src/tsconfig.spec.json",
             "scripts": [],
             "styles": [
-              "src/main/webapp/site/src/style/styles.scss"
+              "src/main/webapp/wise5/vle/src/style/styles.scss"
             ],
             "assets": [
-              "src/main/webapp/site/src/assets",
-              "src/main/webapp/site/src/favicon.ico"
+              "src/main/webapp/wise5/vle/src/assets",
+              "src/main/webapp/wise5/vle/src/favicon.ico"
             ]
           }
         },
@@ -305,17 +305,17 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/main/webapp/site/src/test.ts",
+            "main": "src/main/webapp/wise5/authoringTool/src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/main/webapp/site/src/polyfills.ts",
-            "tsConfig": "src/main/webapp/site/src/tsconfig.spec.json",
+            "polyfills": "src/main/webapp/wise5/authoringTool/src/polyfills.ts",
+            "tsConfig": "src/main/webapp/wise5/authoringTool/src/tsconfig.spec.json",
             "scripts": [],
             "styles": [
-              "src/main/webapp/site/src/style/styles.scss"
+              "src/main/webapp/wise5/authoringTool/src/style/styles.scss"
             ],
             "assets": [
-              "src/main/webapp/site/src/assets",
-              "src/main/webapp/site/src/favicon.ico"
+              "src/main/webapp/wise5/authoringTool/src/assets",
+              "src/main/webapp/wise5/authoringTool/src/favicon.ico"
             ]
           }
         },
@@ -397,17 +397,17 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/main/webapp/site/src/test.ts",
+            "main": "src/main/webapp/wise5/classroomMonitor/src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/main/webapp/site/src/polyfills.ts",
-            "tsConfig": "src/main/webapp/site/src/tsconfig.spec.json",
+            "polyfills": "src/main/webapp/wise5/classroomMonitor/src/polyfills.ts",
+            "tsConfig": "src/main/webapp/wise5/classroomMonitor/src/tsconfig.spec.json",
             "scripts": [],
             "styles": [
-              "src/main/webapp/site/src/style/styles.scss"
+              "src/main/webapp/wise5/classroomMonitor/src/style/styles.scss"
             ],
             "assets": [
-              "src/main/webapp/site/src/assets",
-              "src/main/webapp/site/src/favicon.ico"
+              "src/main/webapp/wise5/classroomMonitor/src/assets",
+              "src/main/webapp/wise5/classroomMonitor/src/favicon.ico"
             ]
           }
         },
