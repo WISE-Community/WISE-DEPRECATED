@@ -30,7 +30,7 @@
         <div fxLayout="column">
           <mat-card-title [class.secondary-text]="isRunCompleted(run)"
                           class="mat-body-2">
-            {{ run.name }}
+            {{ run.project.name }}
           </mat-card-title>
           <mat-card-subtitle fxHide fxShow.gt-xs>
             <ng-container *ngTemplateOutlet="runInfo"></ng-container>
