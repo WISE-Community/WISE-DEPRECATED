@@ -255,7 +255,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public List<Project> getBookmarkerProjectList(User bookmarker) {
-    return projectDao.getProjectListByUAR(bookmarker, "bookmarker");
+    return projectDao.getProjectListByUAR(bookmarker, "bookmarkers");
   }
 
   @Transactional(readOnly = true)
@@ -271,7 +271,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public List<Project> getSharedProjectList(User user) {
-    return projectDao.getProjectListByUAR(user, "sharedowner");
+    return projectDao.getProjectListByUAR(user, "sharedowners");
   }
 
   public String getSharedTeacherRole(Project project, User user) {

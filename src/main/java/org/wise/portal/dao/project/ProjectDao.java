@@ -45,39 +45,6 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
   T createEmptyProject();
 
   /**
-   * Given an input string retrieve a list of corresponding records from data store.
-   *
-   * @param family
-   *            <code>FamilyTag</code> representing the familytag of the data in
-   *            the data store.
-   * @return A list of project objects.
-   * @throws ObjectNotFoundException if list is not found.
-   */
-  List<T> retrieveListByTag(FamilyTag familytag) throws ObjectNotFoundException;
-
-  /**
-   * Given an input string retrieve a list of corresponding records from data store.
-   *
-   * @param family
-   *            <code>String</code> representing the projectinfotag of the data in
-   *            the data store.
-   * @return A list of project objects.
-   * @throws ObjectNotFoundException if list is not found.
-   */
-  List<T> retrieveListByTag(String projectinfotag) throws ObjectNotFoundException;
-
-  /**
-   * Given some ProjectInfo retrieve a list of corresponding records from data store.
-   *
-   * @param family
-   *            <code>ProjectInfo</code> representing the info of the data in
-   *            the data store.
-   * @return A list of project objects.
-   * @throws ObjectNotFoundException if list is not found.
-   */
-  List<T> retrieveListByInfo(ProjectInfo projectinfo) throws ObjectNotFoundException;
-
-  /**
    * Returns a <code>List</code> of <code>Project</code> from the data store that
    * is associated with the given <code>User</code> user and <code>String</code>
    * role. For instance role='bookmarker', 'sharedowner' or 'owner'
@@ -86,15 +53,6 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
    * @return <code>List<T></code>
    */
   List<T> getProjectListByUAR(User user, String role);
-
-  /**
-   * Returns a <code>List</code> of <code>Project</code> from the data store that
-   * satisifies the given <code>String</code> query.
-   *
-   * @param <code>String</code> query
-   * @return <code>List<Project></code>
-   */
-  List<T> getProjectList(String query);
 
   /**
    * Returns a list of Projects that is owned by the specified user
@@ -127,16 +85,6 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
    * @return List<Project> - list of projects
    */
   List<Project> getProjectListByTitle(String title);
-
-  /**
-   * Retrieves and returns a <code>Project</code> from the data store without
-   * populating its metadata. This method should only be called when the use of
-   * the project will not require metadata.
-   *
-   * @param Long - id
-   * @return Project - project
-   */
-  Project getProjectWithoutMetadata(Long projectId);
 
   /**
    * Retrieves and returns a list of projects that are copies of the
