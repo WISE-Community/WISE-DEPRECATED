@@ -34,7 +34,7 @@ public class TeacherRunPermissionsAPIController {
     }
   }
 
-  @RequestMapping(value = "/transfer/{runId}/{teacherUsername}", method = RequestMethod.PUT)
+  @PutMapping("/transfer/{runId}/{teacherUsername}")
   protected String transferRunOwnership(@PathVariable Long runId,
                                         @PathVariable String teacherUsername) {
     try {

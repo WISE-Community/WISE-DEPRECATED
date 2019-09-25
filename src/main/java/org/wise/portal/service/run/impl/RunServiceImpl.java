@@ -318,7 +318,7 @@ public class RunServiceImpl implements RunService {
     User oldOwner = run.getOwner();
     User newOwner = userDao.retrieveByUsername(teacherUsername);
     projectService.transferProjectOwnership(project, newOwner);
-    if (isSharedTeacher(run, newOwner)) {
+    if (run.isSharedTeacher(newOwner)) {
       removeSharedTeacherAndPermissions(run, newOwner);
     }
     setOwner(run, newOwner);
@@ -331,10 +331,6 @@ public class RunServiceImpl implements RunService {
     }  catch (JSONException e) {
       return null;
     }
-  }
-
-  private boolean isSharedTeacher(Run run, User user) {
-    return run.getSharedowners().contains(user);
   }
 
   private void removeSharedTeacherAndPermissions(Run run, User user) {
@@ -359,7 +355,7 @@ public class RunServiceImpl implements RunService {
   }
 
   private void addSharedTeacherWithViewAndGradePermissions(Run run, User user) {
-    if (!isSharedTeacher(run, user)) {
+    if (!run.isSharedTeacher(user)) {
       run.getSharedowners().add(user);
     }
     aclService.addPermission(run, RunPermission.VIEW_STUDENT_NAMES, user);

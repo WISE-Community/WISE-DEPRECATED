@@ -416,4 +416,8 @@ public class ProjectImpl implements Project {
     }
     return false;
   }
+
+  public boolean isSharedTeacher(User user) {
+    return this.getSharedowners().contains(user);
+  }
 }

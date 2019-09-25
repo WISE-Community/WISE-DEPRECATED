@@ -135,7 +135,7 @@ public class ProjectServiceImpl implements ProjectService {
       throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
     Project project = this.getById(projectId);
     User user = userService.retrieveUserByUsername(username);
-    if (!isSharedTeacher(project, user)) {
+    if (!project.isSharedTeacher(user)) {
       project.getSharedowners().add(user);
       this.projectDao.save(project);
       this.aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
@@ -621,7 +621,7 @@ public class ProjectServiceImpl implements ProjectService {
   public void transferProjectOwnership(Project project, User newOwner)
       throws ObjectNotFoundException {
     User oldOwner = project.getOwner();
-    if (isSharedTeacher(project, newOwner)) {
+    if (project.isSharedTeacher(newOwner)) {
       removeSharedTeacherAndPermissions(project, newOwner);
     }
     setOwner(project, newOwner);
@@ -630,17 +630,13 @@ public class ProjectServiceImpl implements ProjectService {
     projectDao.save(project);
   }
 
-  private boolean isSharedTeacher(Project project, User user) {
-    return project.getSharedowners().contains(user);
-  }
-  
   private void setOwner(Project project, User user) {
     project.setOwner(user);
     aclService.addPermission(project, BasePermission.ADMINISTRATION, user);
   }
 
   private void addSharedTeacherWithViewAndEditPermissions(Project project, User user) {
-    if (!this.isSharedTeacher(project, user)) {
+    if (!project.isSharedTeacher(user)) {
       project.getSharedowners().add(user);
     }
     aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);

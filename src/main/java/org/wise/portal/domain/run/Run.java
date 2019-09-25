@@ -386,4 +386,6 @@ public interface Run extends Persistable {
   Long getEndTimeMilliseconds();
 
   Boolean isActive();
+
+  boolean isSharedTeacher(User user);
 }

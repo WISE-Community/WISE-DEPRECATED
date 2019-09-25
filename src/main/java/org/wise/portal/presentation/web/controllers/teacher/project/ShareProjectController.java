@@ -197,7 +197,7 @@ public class ShareProjectController {
     if (user == null) {
       model.addAttribute("message", "Username not recognized. Make sure to use the exact spelling of the username.");
       view = formView;
-    }  else if (!user.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE)) {
+    }  else if (!user.isTeacher()) {
       model.addAttribute("message", "The user is not a teacher and thus cannot be added as a shared teacher.");
       view = formView;
     }  else {
