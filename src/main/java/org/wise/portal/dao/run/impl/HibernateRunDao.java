@@ -221,10 +221,6 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     Criteria crit = session.createCriteria(RunImpl.class);
     crit.setProjection(Projections.max("id"));
     List<Long> results = crit.list();
-    try {
-      return results.get(0);
-    } catch (NullPointerException npe) {
-      return 1;
-    }
+    return results.get(0);
   }
 }
