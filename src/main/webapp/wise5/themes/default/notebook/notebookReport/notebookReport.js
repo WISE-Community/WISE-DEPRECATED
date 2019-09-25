@@ -30,6 +30,9 @@ class NotebookReportController {
 
   $onInit() {
     this.reportId = this.config.itemTypes.report.notes[0].reportId;
+    if (this.workgroupId == null) {
+      this.workgroupId = this.ConfigService.getWorkgroupId();
+    }
     this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId, this.workgroupId);
     if (this.reportItem) {
       const serverSaveTime = this.reportItem.serverSaveTime;
@@ -68,8 +71,8 @@ class NotebookReportController {
       disableDragAndDrop: true,
       toolbarContainer: '#' + this.reportId + '-toolbar',
       callbacks: {
-        onBlur: function (args, args2) {
-          $(this).summernote('saveRange');
+        onBlur: (args, args2) => {
+          angular.element(document.querySelector(`#${this.reportId}`)).summernote('saveRange');
         }
       }
     };
@@ -81,9 +84,9 @@ class NotebookReportController {
     this.$onChanges = (changes) => {
       if (changes.insertContent && !changes.insertContent.isFirstChange() && changes.insertContent.currentValue) {
         const item = angular.copy(changes.insertContent.currentValue);
-        const reportElement = $('#' + this.reportId);
-        reportElement.summernote('focus');
+        const reportElement = angular.element(document.querySelector(`#${this.reportId}`));
         reportElement.summernote('restoreRange');
+        reportElement.summernote('focus');
         const $item = $(`<p notebook-item-id="${item.id}" workgroup-id="${item.workgroupId}">`);
         if (item.groups != null && item.groups.length > 0) {
           $item.attr('group', item.groups);

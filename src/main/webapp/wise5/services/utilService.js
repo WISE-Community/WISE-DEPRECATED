@@ -1028,19 +1028,19 @@ class UtilService {
   }
 
   restoreSummernoteCursorPosition(summernoteId) {
-    $('#' + summernoteId).summernote('editor.restoreRange');
-    $('#' + summernoteId).summernote('editor.focus');
+    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
   }
 
   insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
-    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
   }
 
   insertVideoIntoSummernote(summernoteId, fullAssetPath) {
     const videoElement = document.createElement('video');
     videoElement.controls = 'true';
     videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-    $('#' + summernoteId).summernote('insertNode', videoElement);
+    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
   }
 
   rgbToHex(color, opacity) {

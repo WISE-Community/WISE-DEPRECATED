@@ -54,3 +54,5 @@ window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
 window['hopscotch'] = hopscotch;
 window['EventEmitter2'] = EventEmitter2;
+import * as summernote from 'summernote';
+window['summernote'] = summernote;

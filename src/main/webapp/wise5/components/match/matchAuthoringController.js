@@ -75,16 +75,16 @@ class MatchAuthoringController extends MatchController {
              * move the cursor back to its position when the asset chooser
              * popup was clicked
              */
-            $('#' + summernoteId).summernote('editor.restoreRange');
-            $('#' + summernoteId).summernote('editor.focus');
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
 
             if (this.UtilService.isImage(fileName)) {
-              $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+              angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
             } else if (this.UtilService.isVideo(fileName)) {
               const videoElement = document.createElement('video');
               videoElement.controls = 'true';
               videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-              $('#' + summernoteId).summernote('insertNode', videoElement);
+              angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
             }
           }
         } else if (args.target == 'choice') {

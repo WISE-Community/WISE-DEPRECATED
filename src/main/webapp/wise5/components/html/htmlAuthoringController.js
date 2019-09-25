@@ -34,9 +34,6 @@ class HTMLAuthoringController extends HTMLController {
       StudentDataService,
       UtilService);
 
-    // the summernote prompt element id
-    this.summernotePromptId = '';
-
     // the summernote prompt html
     this.summernotePromptHTML = '';
 
@@ -91,6 +88,9 @@ class HTMLAuthoringController extends HTMLController {
     }.bind(this), function(newValue, oldValue) {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
     }.bind(this), true);
+  }
+
+  $onInit() {
 
     /*
      * Listen for the assetSelected event which occurs when the user
@@ -133,24 +133,24 @@ class HTMLAuthoringController extends HTMLController {
                    * move the cursor back to its position when the asset chooser
                    * popup was clicked
                    */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
+                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
 
                   // add the image html
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
                 } else if (this.UtilService.isVideo(fileName)) {
                   /*
                    * move the cursor back to its position when the asset chooser
                    * popup was clicked
                    */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
+                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
 
                   // insert the video element
                   let videoElement = document.createElement('video');
                   videoElement.controls = 'true';
                   videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
+                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
                 }
               }
             }
@@ -219,16 +219,16 @@ class HTMLAuthoringController extends HTMLController {
              * popup was clicked so that the element gets inserted in the
              * correct location
              */
-            $('#' + summernoteId).summernote('editor.restoreRange');
-            $('#' + summernoteId).summernote('editor.focus');
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
 
             if (wiseLinkElement != null) {
               // insert the element
-              $('#' + summernoteId).summernote('insertNode', wiseLinkElement);
+              angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', wiseLinkElement);
 
               // add a new line after the element we have just inserted
               let br = document.createElement('br');
-              $('#' + summernoteId).summernote('insertNode', br);
+              angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', br);
             }
           }
         }

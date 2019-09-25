@@ -477,25 +477,25 @@ class NodeAuthoringController {
                  * move the cursor back to its position when the asset chooser
                  * popup was clicked
                  */
-                $('#' + summernoteId).summernote('editor.restoreRange');
-                $('#' + summernoteId).summernote('editor.focus');
+                angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+                angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
 
                 // add the image html
-                $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+                angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
               } else if (this.UtilService.isVideo(fileName)) {
                 /*
                  * move the cursor back to its position when the asset chooser
                  * popup was clicked
                  */
-                $('#' + summernoteId).summernote('editor.restoreRange');
-                $('#' + summernoteId).summernote('editor.focus');
+                angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+                angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
 
                 // insert the video element
                 let videoElement = document.createElement('video');
                 videoElement.controls = 'true';
                 videoElement.innerHTML =
                     '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                $('#' + summernoteId).summernote('insertNode', videoElement);
+                angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
               }
             }
           }

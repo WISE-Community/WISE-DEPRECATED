@@ -126,7 +126,7 @@ class ProjectController {
           args.assetItem != null && args.assetItem.fileName != null) {
         let assetFileName = args.assetItem.fileName;
         if (args.target === 'rubric') {
-          let summernoteElement = $('#summernoteRubric_' + this.projectId);
+          const summernoteElement = angular.element(document.querySelector(`#summernoteRubric_${this.projectId}`));
           let fullAssetPath =
               this.ConfigService.getProjectAssetsDirectoryPath() +
                   '/' + assetFileName;
