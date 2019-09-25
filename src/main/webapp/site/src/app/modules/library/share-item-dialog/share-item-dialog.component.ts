@@ -107,13 +107,18 @@ export abstract class ShareItemDialogComponent implements OnInit {
   addProjectPermissionToSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.projectPermissions[permissionId] = true;
-    this.snackBar.open(this.i18n(`Sharing permissions updated for ${sharedOwner.firstName} ${sharedOwner.lastName}.`));
+    this.notifyRunPermissionChange(sharedOwner);
   }
 
   removeProjectPermissionFromSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.projectPermissions[permissionId] = false;
-    this.snackBar.open(this.i18n(`Sharing permissions updated for ${sharedOwner.firstName} ${sharedOwner.lastName}.`));
+    this.notifyRunPermissionChange(sharedOwner);
+  }
+
+  notifyRunPermissionChange(sharedOwner) {
+    this.snackBar.open(this.i18n('Sharing permissions updated for {{firstName}} {{lastName}}.', 
+      {firstName: sharedOwner.firstName, lastName: sharedOwner.lastName}));
   }
 
   isSharedOwner(username) {
@@ -128,7 +133,8 @@ export abstract class ShareItemDialogComponent implements OnInit {
   addSharedOwner(sharedOwner) {
     this.sharedOwners.push(sharedOwner);
     this.sharedOwners$.next(this.sharedOwners);
-    this.snackBar.open(this.i18n(`Added shared teacher: ${sharedOwner.firstName} ${sharedOwner.lastName}.`));
+    this.snackBar.open(this.i18n('Added shared teacher: {{firstName}} {{lastName}}.', 
+      {firstName: sharedOwner.firstName, lastName: sharedOwner.lastName}));
   }
 
   removeSharedOwner(sharedOwner) {
@@ -136,7 +142,8 @@ export abstract class ShareItemDialogComponent implements OnInit {
       if (this.sharedOwners[i].id == sharedOwner.id) {
         this.sharedOwners.splice(i, 1);
         this.sharedOwners$.next(this.sharedOwners);
-        this.snackBar.open(this.i18n(`Removed shared teacher: ${sharedOwner.firstName} ${sharedOwner.lastName}.`));
+        this.snackBar.open(this.i18n('Removed shared teacher: {{firstName}} {{lastName}}.', 
+          {firstName: sharedOwner.firstName, lastName: sharedOwner.lastName}));
         return;
       }
     }

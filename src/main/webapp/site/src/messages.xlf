@@ -5409,6 +5409,27 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="87e83ba367d61f39003bd653b2be6b8deb0a4077" datatype="html">
+        <source>Sharing permissions updated for <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="21e1f17b31c2539755f91af0891b3d45eb535b41" datatype="html">
+        <source>Added shared teacher: <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="918997618ef46e7aafddf9ab28e6a59ed4aa6d4e" datatype="html">
+        <source>Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
         <source>Password changed.</source>
         <context-group purpose="location">
@@ -5668,6 +5689,13 @@
         <source>Unit settings updated.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="13a4ce63135573625f668e8ccf5fda16933a846e" datatype="html">
+        <source>Transferred classroom unit ownership to <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/share-run-dialog/share-run-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

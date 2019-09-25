@@ -103,13 +103,13 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   addRunPermissionToSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = true;
-    this.snackBar.open(this.i18n(`Sharing permissions updated for ${sharedOwner.firstName} ${sharedOwner.lastName}.`));
+    this.notifyRunPermissionChange(sharedOwner);
   }
 
   removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = false;
-    this.snackBar.open(this.i18n(`Sharing permissions updated for ${sharedOwner.firstName} ${sharedOwner.lastName}.`));
+    this.notifyRunPermissionChange(sharedOwner);
   }
 
   shareRun() {
@@ -161,7 +161,8 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     this.populateSharedOwners(run.sharedOwners);
     run.sharedOwners = this.sharedOwners;
     run.shared = true;
-    this.snackBar.open(this.i18n(`Transferred classroom unit ownership to: ${run.owner.firstName} ${run.owner.lastName}`));
+    this.snackBar.open(this.i18n('Transferred classroom unit ownership to {{firstName}} {{lastName}}.', 
+      {firstName: run.owner.firstName, lastName: run.owner.lastName}));
   }
 
   isOwner() {
