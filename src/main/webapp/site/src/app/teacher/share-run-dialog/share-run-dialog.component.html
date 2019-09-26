@@ -7,7 +7,8 @@
   <span fxFlex></span>
   <mat-icon *ngIf="transferRunWarning" color="warn">warning</mat-icon>
 </h2>
-<div mat-dialog-content [class.mat-dialog-content--scroll]="!transferRunWarning">
+<div mat-dialog-content [class.mat-dialog-content--scroll]="!transferRunWarning"
+    *ngIf="run != null">
   <div [class.info-block]="transferRunWarning">
     <p class="mat-subheading-1 accent-1">
       {{ run.name }} <span class="mat-caption" i18n>(Run ID: {{ run.id }})</span>
@@ -90,7 +91,7 @@
 <div mat-dialog-actions
      fxLayoutAlign="end"
      fxLayoutGap="8px">
-  <button mat-button color="accent" (click)="openTransferRunDialog()" *ngIf="isOwner() && !isTransfer" i18n>Transfer Ownership</button>
+  <button mat-button color="accent" (click)="openTransferRunDialog()" *ngIf="isOwner && !isTransfer" i18n>Transfer Ownership</button>
   <button mat-flat-button color="primary" (click)="closeTransferRunDialog()" *ngIf="isTransfer" i18n>Cancel</button>
   <button mat-button color="warn" (click)="completeRunOwnershipTransfer()" *ngIf="transferRunWarning" i18n>Proceed</button>
   <button mat-flat-button color="primary" mat-dialog-close *ngIf="!isTransfer" i18n>Done</button>

@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatTableDataSource } from "
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { UserService } from '../../services/user.service';
+import { UtilService } from '../../services/util.service';
 import { TeacherRun } from '../teacher-run';
 
 @Component({
@@ -17,6 +18,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   dataSource: MatTableDataSource<any[]> = new MatTableDataSource<any[]>();
   displayedColumns: string[] = ['name', 'permissions'];
   duplicate: boolean = false;
+  isOwner: boolean = false;
   isTransfer: boolean = false;
   transferRunWarning: boolean = false;
 
@@ -24,23 +26,26 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
               @Inject(MAT_DIALOG_DATA) public data: any,
               public teacherService: TeacherService,
               private userService: UserService,
+              private utilService: UtilService,
               public snackBar: MatSnackBar,
               i18n: I18n) {
     super(dialogRef, data, teacherService, snackBar, i18n);
-    this.runId = data.run.id;
-    this.run = data.run;
-    this.project = data.run.project;
-    this.projectId = data.run.project.id;
-    this.populateSharedOwners(data.run.sharedOwners);
+    this.teacherService.getRun(this.data.run.id).subscribe((run: TeacherRun) => {
+      this.run = new TeacherRun(run);
+      this.runId = this.run.id;
+      this.project = this.run.project;
+      this.projectId = this.run.project.id;
+      this.isOwner = this.run.isOwner(this.userService.getUserId());
+      this.populateSharedOwners(run.sharedOwners);
+      this.getSharedOwners().subscribe(sharedOwners => {
+        sharedOwners = sharedOwners.sort(this.utilService.sortByUsername);
+        this.updateSharedOwners(sharedOwners);
+      });
+    });
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.getSharedOwners().subscribe(sharedOwners => {
-      let owners = [...sharedOwners];
-      owners.reverse();
-      this.updateSharedOwners(owners);
-    });
   }
 
   updateSharedOwners(owners: any[]) {
@@ -163,10 +168,6 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     run.shared = true;
     this.snackBar.open(this.i18n('Transferred classroom unit ownership to {{firstName}} {{lastName}}.', 
       {firstName: run.owner.firstName, lastName: run.owner.lastName}));
-  }
-
-  isOwner() {
-    return this.run.isOwner(this.userService.getUserId());
   }
 
   unshareRun(sharedOwner) {
