@@ -25,16 +25,12 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
   private FindByIndexNameSessionRepository<S> sessionRepository;
 
   public void addSignedInUser(UserDetails userDetails) {
-    System.out.println("addSignedInUser");
     stringRedisTemplate.opsForSet().add("signedInUsers", userDetails.getUsername());
     if (userDetails instanceof StudentUserDetails) {
       stringRedisTemplate.opsForSet().add("signedInStudents", userDetails.getUsername());
     } else if (userDetails instanceof TeacherUserDetails) {
       stringRedisTemplate.opsForSet().add("signedInTeachers", userDetails.getUsername());
     }
-    outputSignedInUsers();
-    outputSignedInStudents();
-    outputSignedInTeachers();
   }
 
   @Override
@@ -48,7 +44,6 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
   }
 
   public void removeSignedInUser(UserDetails userDetails) {
-    System.out.println("removeSignedInUser");
     String username = userDetails.getUsername();
     Map<String, S> sessions = sessionRepository.findByPrincipalName(username);
     if (sessions.size() <= 1) {
@@ -59,9 +54,6 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
         stringRedisTemplate.opsForSet().remove("signedInTeachers", userDetails.getUsername());
       }
     }
-    outputSignedInUsers();
-    outputSignedInStudents();
-    outputSignedInTeachers();
   }
 
   @Override
@@ -74,16 +66,12 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
   }
 
   public void addCurrentAuthor(Project project, UserDetails author) {
-    System.out.println("addCurrentAuthor");
     stringRedisTemplate.opsForSet().add("currentlyAuthoredProjects", project.getId().toString());
     stringRedisTemplate.opsForSet().add("currentAuthors:" + project.getId(), author.getUsername());
-    outputCurrentlyAuthoredProjects();
-    outputAllCurrentAuthors();
   }
 
   @Override
   public void removeCurrentAuthor(UserDetails author) {
-    System.out.println("removeCurrentAuthor");
     Set<String> currentlyAuthoredProjects = stringRedisTemplate.opsForSet().members("currentlyAuthoredProjects");
     for (String projectId : currentlyAuthoredProjects) {
       removeCurrentAuthor(projectId, author);
@@ -91,14 +79,11 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
   }
 
   public void removeCurrentAuthor(Serializable projectId, UserDetails author) {
-    System.out.println("removeCurrentAuthor");
     stringRedisTemplate.opsForSet().remove("currentAuthors:" + projectId, author.getUsername());
     Long numCurrentAuthorsForProject = stringRedisTemplate.opsForSet().size("currentAuthors:" + projectId);
     if (numCurrentAuthorsForProject == 0) {
       stringRedisTemplate.opsForSet().remove("currentlyAuthoredProjects", projectId.toString());
     }
-    outputCurrentlyAuthoredProjects();
-    outputAllCurrentAuthors();
   }
 
   @Override
@@ -110,39 +95,6 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
   }
 
   public Set<String> getCurrentAuthors(String projectId) {
-    System.out.println("getCurrentAuthors");
     return stringRedisTemplate.opsForSet().members("currentAuthors:" + projectId);
-  }
-
-  private void outputSignedInUsers() {
-    Set<String> signedInUsers = stringRedisTemplate.opsForSet().members("signedInUsers");
-    System.out.println("signedInUsers=" + signedInUsers);
-  }
-
-  private void outputSignedInStudents() {
-    Set<String> signedInStudents = stringRedisTemplate.opsForSet().members("signedInStudents");
-    System.out.println("signedInStudents=" + signedInStudents);
-  }
-
-  private void outputSignedInTeachers() {
-    Set<String> signedInTeachers = stringRedisTemplate.opsForSet().members("signedInTeachers");
-    System.out.println("signedInTeachers=" + signedInTeachers);
-  }
-
-  private void outputCurrentlyAuthoredProjects() {
-    Set<String> currentlyAuthoredProjects = stringRedisTemplate.opsForSet().members("currentlyAuthoredProjects");
-    System.out.println("currentlyAuthoredProjects=" + currentlyAuthoredProjects);
-  }
-
-  private void outputAllCurrentAuthors() {
-    Set<String> currentlyAuthoredProjects = stringRedisTemplate.opsForSet().members("currentlyAuthoredProjects");
-    for (String currentlyAuthoredProject : currentlyAuthoredProjects) {
-      outputCurrentAuthors(currentlyAuthoredProject);
-    }
-  }
-
-  private void outputCurrentAuthors(String projectId) {
-    Set<String> currentAuthors = stringRedisTemplate.opsForSet().members("currentAuthors:" + projectId);
-    System.out.println("currentAuthors:" + projectId + "=" + currentAuthors);
   }
 }
