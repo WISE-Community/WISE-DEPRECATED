@@ -7,7 +7,7 @@
          ng-if='openResponseController.showAdvancedAuthoring'>
       <div>
         <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
-      </div
+      </div>
       <p>{{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):</p>
       <textarea ng-model='openResponseController.authoringComponentContent.starterSentence'
                 ng-change='openResponseController.authoringViewComponentChanged()'
@@ -15,21 +15,21 @@
                 rows='2'
                 cols='100'></textarea>
       <br/>
+      <md-input-container style='width: 310px; margin-top: 30px;'>
+        <label>{{ 'openResponse.textareaHeightNumberOfRows' | translate }}</label>
+        <input type='number'
+               min="1"
+               placeholder="3"
+               ng-model='openResponseController.authoringComponentContent.numRows'
+               ng-model-options='{ debounce: 1000 }'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
+      </md-input-container>
+      <br/>
       <span>{{ 'openResponse.enableCRater' | translate }}:</span>
       <input type='checkbox'
              ng-model='openResponseController.authoringComponentContent.enableCRater'
              ng-change='openResponseController.authoringViewEnableCRaterClicked()'/>
       <div ng-if='openResponseController.authoringComponentContent.enableCRater'>
-        <span>{{ 'openResponse.type' | translate }}:</span>
-        <input type='radio'
-               ng-model='openResponseController.authoringComponentContent.cRater.itemType'
-               value='CRATER'
-               ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.cRater' | translate }}</span>
-        <input type='radio'
-               ng-model='openResponseController.authoringComponentContent.cRater.itemType'
-               value='HENRY'
-               ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.henry' | translate }}</span>
-        <br/>
         <span>{{ 'openResponse.itemId' | translate }}:</span>
         <input type='text'
                ng-model='openResponseController.authoringComponentContent.cRater.itemId'
@@ -436,7 +436,7 @@
           <md-icon>code</md-icon>
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
         </md-button>
-        <span ng-if='openResponseController.jsonStringChanged'>
+        <span ng-if='openResponseController.isJSONStringChanged'>
           {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
         </span>
         <div ng-if='openResponseController.showJSONAuthoring'>

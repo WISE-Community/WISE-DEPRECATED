@@ -3,249 +3,142 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _jquery = require('jquery');
+var _jquery = _interopRequireDefault(require("jquery"));
 
-var _jquery2 = _interopRequireDefault(_jquery);
+var _achievementService = _interopRequireDefault(require("../services/achievementService"));
 
-var _achievementService = require('../services/achievementService');
+var _angular = _interopRequireDefault(require("angular"));
 
-var _achievementService2 = _interopRequireDefault(_achievementService);
+var _angularDragula = _interopRequireDefault(require("angular-dragula"));
 
-var _angular = require('angular');
+var _ngFileUpload = _interopRequireDefault(require("ng-file-upload"));
 
-var _angular2 = _interopRequireDefault(_angular);
+var _highchartsNg = _interopRequireDefault(require("highcharts-ng"));
 
-var _angularDragula = require('angular-dragula');
+var _angularMaterial = _interopRequireDefault(require("angular-material"));
 
-var _angularDragula2 = _interopRequireDefault(_angularDragula);
+var _angularMoment = _interopRequireDefault(require("angular-moment"));
 
-var _ngFileUpload = require('ng-file-upload');
+var _ngOnload = _interopRequireDefault(require("ng-onload"));
 
-var _ngFileUpload2 = _interopRequireDefault(_ngFileUpload);
+var _angularSanitize = _interopRequireDefault(require("angular-sanitize"));
 
-var _highchartsNg = require('highcharts-ng');
+var _angularSockjs = _interopRequireDefault(require("angular-sockjs"));
 
-var _highchartsNg2 = _interopRequireDefault(_highchartsNg);
+var _ngStompStandalone = _interopRequireDefault(require("../lib/stomp/ng-stomp.standalone.min"));
 
-var _angularMaterial = require('angular-material');
+var _toArrayFilter = _interopRequireDefault(require("lib/angular-toArrayFilter/toArrayFilter"));
 
-var _angularMaterial2 = _interopRequireDefault(_angularMaterial);
+var _angularTranslate = _interopRequireDefault(require("angular-translate"));
 
-var _angularMoment = require('angular-moment');
+var _angularTranslateLoaderPartial = _interopRequireDefault(require("angular-translate-loader-partial"));
 
-var _angularMoment2 = _interopRequireDefault(_angularMoment);
+var _angularUiRouter = _interopRequireDefault(require("angular-ui-router"));
 
-var _ngOnload = require('ng-onload');
+var _angularUiScrollpoint = _interopRequireDefault(require("angular-ui-scrollpoint"));
 
-var _ngOnload2 = _interopRequireDefault(_ngOnload);
+var _angularWebsocket = _interopRequireDefault(require("angular-websocket"));
 
-var _angularSanitize = require('angular-sanitize');
+var _animationComponentModule = _interopRequireDefault(require("../components/animation/animationComponentModule"));
 
-var _angularSanitize2 = _interopRequireDefault(_angularSanitize);
+var _annotationService = _interopRequireDefault(require("../services/annotationService"));
 
-var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
+var _audioOscillatorComponentModule = _interopRequireDefault(require("../components/audioOscillator/audioOscillatorComponentModule"));
 
-var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
+var _canvg = _interopRequireDefault(require("canvg"));
 
-var _angularTranslate = require('angular-translate');
+var _conceptMapComponentModule = _interopRequireDefault(require("../components/conceptMap/conceptMapComponentModule"));
 
-var _angularTranslate2 = _interopRequireDefault(_angularTranslate);
+var _configService = _interopRequireDefault(require("../services/configService"));
 
-var _angularTranslateLoaderPartial = require('angular-translate-loader-partial');
+var _cRaterService = _interopRequireDefault(require("../services/cRaterService"));
 
-var _angularTranslateLoaderPartial2 = _interopRequireDefault(_angularTranslateLoaderPartial);
+var _components = _interopRequireDefault(require("../directives/components"));
 
-var _angularUiRouter = require('angular-ui-router');
+var _componentService = _interopRequireDefault(require("../components/componentService"));
 
-var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
+var _discussionComponentModule = _interopRequireDefault(require("../components/discussion/discussionComponentModule"));
 
-var _angularUiScrollpoint = require('angular-ui-scrollpoint');
+var _drawComponentModule = _interopRequireDefault(require("../components/draw/drawComponentModule"));
 
-var _angularUiScrollpoint2 = _interopRequireDefault(_angularUiScrollpoint);
+var _embeddedComponentModule = _interopRequireDefault(require("../components/embedded/embeddedComponentModule"));
 
-var _angularWebsocket = require('angular-websocket');
+var _filters = _interopRequireDefault(require("../filters/filters"));
 
-var _angularWebsocket2 = _interopRequireDefault(_angularWebsocket);
+var _highcharts = _interopRequireDefault(require("../lib/highcharts@4.2.1"));
 
-var _animationComponentModule = require('../components/animation/animationComponentModule');
+var _highchartsExporting = _interopRequireDefault(require("../lib/highcharts-exporting@4.2.1"));
 
-var _animationComponentModule2 = _interopRequireDefault(_animationComponentModule);
+var _draggablePoints = _interopRequireDefault(require("../lib/draggable-points/draggable-points"));
 
-var _annotationService = require('../services/annotationService');
+var _graphComponentModule = _interopRequireDefault(require("../components/graph/graphComponentModule"));
 
-var _annotationService2 = _interopRequireDefault(_annotationService);
+var _htmlComponentModule = _interopRequireDefault(require("../components/html/htmlComponentModule"));
 
-var _audioOscillatorComponentModule = require('../components/audioOscillator/audioOscillatorComponentModule');
+var _httpInterceptor = _interopRequireDefault(require("../services/httpInterceptor"));
 
-var _audioOscillatorComponentModule2 = _interopRequireDefault(_audioOscillatorComponentModule);
+var _labelComponentModule = _interopRequireDefault(require("../components/label/labelComponentModule"));
 
-var _conceptMapComponentModule = require('../components/conceptMap/conceptMapComponentModule');
+var _matchComponentModule = _interopRequireDefault(require("../components/match/matchComponentModule"));
 
-var _conceptMapComponentModule2 = _interopRequireDefault(_conceptMapComponentModule);
+var _multipleChoiceComponentModule = _interopRequireDefault(require("../components/multipleChoice/multipleChoiceComponentModule"));
 
-var _configService = require('../services/configService');
+var _navigationController = _interopRequireDefault(require("./navigation/navigationController"));
 
-var _configService2 = _interopRequireDefault(_configService);
+var _nodeController = _interopRequireDefault(require("./node/nodeController"));
 
-var _cRaterService = require('../services/cRaterService');
+var _nodeService = _interopRequireDefault(require("../services/nodeService"));
 
-var _cRaterService2 = _interopRequireDefault(_cRaterService);
+var _notebookService = _interopRequireDefault(require("../services/notebookService"));
 
-var _components = require('../directives/components');
+var _notificationService = _interopRequireDefault(require("../services/notificationService"));
 
-var _components2 = _interopRequireDefault(_components);
+var _openResponseComponentModule = _interopRequireDefault(require("../components/openResponse/openResponseComponentModule"));
 
-var _componentService = require('../components/componentService');
+var _outsideURLComponentModule = _interopRequireDefault(require("../components/outsideURL/outsideURLComponentModule"));
 
-var _componentService2 = _interopRequireDefault(_componentService);
+var _planningService = _interopRequireDefault(require("../services/planningService"));
 
-var _discussionComponentModule = require('../components/discussion/discussionComponentModule');
+var _projectService = _interopRequireDefault(require("../services/projectService"));
 
-var _discussionComponentModule2 = _interopRequireDefault(_discussionComponentModule);
+var _sessionService = _interopRequireDefault(require("../services/sessionService"));
 
-var _drawComponentModule = require('../components/draw/drawComponentModule');
+var _studentAsset = _interopRequireDefault(require("./studentAsset/studentAsset"));
 
-var _drawComponentModule2 = _interopRequireDefault(_drawComponentModule);
+var _studentAssetService = _interopRequireDefault(require("../services/studentAssetService"));
 
-var _embeddedComponentModule = require('../components/embedded/embeddedComponentModule');
+var _studentDataService = _interopRequireDefault(require("../services/studentDataService"));
 
-var _embeddedComponentModule2 = _interopRequireDefault(_embeddedComponentModule);
+var _studentStatusService = _interopRequireDefault(require("../services/studentStatusService"));
 
-var _filters = require('../filters/filters');
+var _studentWebSocketService = _interopRequireDefault(require("../services/studentWebSocketService"));
 
-var _filters2 = _interopRequireDefault(_filters);
+var _summaryComponentModule = _interopRequireDefault(require("../components/summary/summaryComponentModule"));
 
-var _highcharts = require('../lib/highcharts@4.2.1');
+var _tableComponentModule = _interopRequireDefault(require("../components/table/tableComponentModule"));
 
-var _highcharts2 = _interopRequireDefault(_highcharts);
+var _utilService = _interopRequireDefault(require("../services/utilService"));
 
-var _draggablePoints = require('../lib/draggable-points/draggable-points');
+var _vleController = _interopRequireDefault(require("./vleController"));
 
-var _draggablePoints2 = _interopRequireDefault(_draggablePoints);
+var _vleProjectService = _interopRequireDefault(require("./vleProjectService"));
 
-var _graphComponentModule = require('../components/graph/graphComponentModule');
+var _oclazyload = _interopRequireDefault(require("oclazyload"));
 
-var _graphComponentModule2 = _interopRequireDefault(_graphComponentModule);
+var _moment = _interopRequireDefault(require("moment"));
 
-var _htmlComponentModule = require('../components/html/htmlComponentModule');
+var _angularSummernote = _interopRequireDefault(require("lib/angular-summernote/dist/angular-summernote.min"));
 
-var _htmlComponentModule2 = _interopRequireDefault(_htmlComponentModule);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _httpInterceptor = require('../services/httpInterceptor');
-
-var _httpInterceptor2 = _interopRequireDefault(_httpInterceptor);
-
-var _labelComponentModule = require('../components/label/labelComponentModule');
-
-var _labelComponentModule2 = _interopRequireDefault(_labelComponentModule);
-
-var _matchComponentModule = require('../components/match/matchComponentModule');
-
-var _matchComponentModule2 = _interopRequireDefault(_matchComponentModule);
-
-var _multipleChoiceComponentModule = require('../components/multipleChoice/multipleChoiceComponentModule');
-
-var _multipleChoiceComponentModule2 = _interopRequireDefault(_multipleChoiceComponentModule);
-
-var _navigationController = require('./navigation/navigationController');
-
-var _navigationController2 = _interopRequireDefault(_navigationController);
-
-var _nodeController = require('./node/nodeController');
-
-var _nodeController2 = _interopRequireDefault(_nodeController);
-
-var _nodeService = require('../services/nodeService');
-
-var _nodeService2 = _interopRequireDefault(_nodeService);
-
-var _notebookService = require('../services/notebookService');
-
-var _notebookService2 = _interopRequireDefault(_notebookService);
-
-var _notificationService = require('../services/notificationService');
-
-var _notificationService2 = _interopRequireDefault(_notificationService);
-
-var _openResponseComponentModule = require('../components/openResponse/openResponseComponentModule');
-
-var _openResponseComponentModule2 = _interopRequireDefault(_openResponseComponentModule);
-
-var _outsideURLComponentModule = require('../components/outsideURL/outsideURLComponentModule');
-
-var _outsideURLComponentModule2 = _interopRequireDefault(_outsideURLComponentModule);
-
-var _planningService = require('../services/planningService');
-
-var _planningService2 = _interopRequireDefault(_planningService);
-
-var _projectService = require('../services/projectService');
-
-var _projectService2 = _interopRequireDefault(_projectService);
-
-var _sessionService = require('../services/sessionService');
-
-var _sessionService2 = _interopRequireDefault(_sessionService);
-
-var _studentAsset = require('./studentAsset/studentAsset');
-
-var _studentAsset2 = _interopRequireDefault(_studentAsset);
-
-var _studentAssetService = require('../services/studentAssetService');
-
-var _studentAssetService2 = _interopRequireDefault(_studentAssetService);
-
-var _studentDataService = require('../services/studentDataService');
-
-var _studentDataService2 = _interopRequireDefault(_studentDataService);
-
-var _studentStatusService = require('../services/studentStatusService');
-
-var _studentStatusService2 = _interopRequireDefault(_studentStatusService);
-
-var _studentWebSocketService = require('../services/studentWebSocketService');
-
-var _studentWebSocketService2 = _interopRequireDefault(_studentWebSocketService);
-
-var _tableComponentModule = require('../components/table/tableComponentModule');
-
-var _tableComponentModule2 = _interopRequireDefault(_tableComponentModule);
-
-var _utilService = require('../services/utilService');
-
-var _utilService2 = _interopRequireDefault(_utilService);
-
-var _vleController = require('./vleController');
-
-var _vleController2 = _interopRequireDefault(_vleController);
-
-var _vleProjectService = require('./vleProjectService');
-
-var _vleProjectService2 = _interopRequireDefault(_vleProjectService);
-
-var _oclazyload = require('oclazyload');
-
-var _oclazyload2 = _interopRequireDefault(_oclazyload);
-
-var _moment = require('moment');
-
-var _moment2 = _interopRequireDefault(_moment);
-
-var _angularSummernote = require('lib/angular-summernote/dist/angular-summernote.min');
-
-var _angularSummernote2 = _interopRequireDefault(_angularSummernote);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngOnload', 'ngSanitize', 'ngWebSocket', 'oc.lazyLoad', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'studentAsset', 'summernote', 'tableComponentModule', 'ui.router', 'ui.scrollpoint']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_componentService2.default.name, _componentService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_planningService2.default.name, _planningService2.default).service(_projectService2.default.name, _vleProjectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_navigationController2.default.name, _navigationController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_vleController2.default.name, _vleController2.default).filter(_filters2.default.name, _filters2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
+var vleModule = _angular["default"].module('vle', [(0, _angularDragula["default"])(_angular["default"]), 'summaryComponentModule', 'angularMoment', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngOnload', 'ngSanitize', 'bd.sockjs', 'ngStomp', 'ngWebSocket', 'oc.lazyLoad', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'studentAsset', 'summernote', 'tableComponentModule', 'ui.router', 'ui.scrollpoint']).service(_achievementService["default"].name, _achievementService["default"]).service(_annotationService["default"].name, _annotationService["default"]).service(_configService["default"].name, _configService["default"]).service(_componentService["default"].name, _componentService["default"]).service(_cRaterService["default"].name, _cRaterService["default"]).service(_httpInterceptor["default"].name, _httpInterceptor["default"]).service(_nodeService["default"].name, _nodeService["default"]).service(_notebookService["default"].name, _notebookService["default"]).service(_notificationService["default"].name, _notificationService["default"]).service(_planningService["default"].name, _planningService["default"]).service(_projectService["default"].name, _vleProjectService["default"]).service(_sessionService["default"].name, _sessionService["default"]).service(_studentAssetService["default"].name, _studentAssetService["default"]).service(_studentDataService["default"].name, _studentDataService["default"]).service(_studentStatusService["default"].name, _studentStatusService["default"]).service(_studentWebSocketService["default"].name, _studentWebSocketService["default"]).service(_utilService["default"].name, _utilService["default"]).controller(_navigationController["default"].name, _navigationController["default"]).controller(_nodeController["default"].name, _nodeController["default"]).controller(_vleController["default"].name, _vleController["default"]).filter(_filters["default"].name, _filters["default"]).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
   $urlRouterProvider.otherwise('/vle/');
-
-  _angular2.default.module('vle').$controllerProvider = $controllerProvider;
-
+  _angular["default"].module('vle').$controllerProvider = $controllerProvider;
   $stateProvider.state('root', {
     url: '',
-    abstract: true,
+    "abstract": true,
     templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
       var themePath = ProjectService.getThemePath();
       return $http.get(themePath + '/vle.html').then(function (response) {
@@ -273,7 +166,7 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
         });
       },
       achievements: function achievements(AchievementService, studentData, config, project) {
-        return AchievementService.retrieveAchievements();
+        return AchievementService.retrieveStudentAchievements();
       },
       notifications: function notifications(NotificationService, studentData, config, project) {
         return NotificationService.retrieveNotifications();
@@ -281,25 +174,25 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
       runStatus: function runStatus(StudentDataService, config) {
         return StudentDataService.retrieveRunStatus();
       },
-      sessionTimers: function sessionTimers(SessionService, config, project, studentData) {
-        return SessionService.initializeSession();
-      },
-      webSocket: function webSocket(StudentWebSocketService, config, project) {
-        return StudentWebSocketService.initialize();
+      webSocket: function webSocket(StudentWebSocketService, ConfigService, config, project) {
+        if (!ConfigService.isPreview()) {
+          return StudentWebSocketService.initialize();
+        }
       },
       language: function language($translate, ConfigService, config) {
         var locale = ConfigService.getLocale(); // defaults to "en"
+
         $translate.use(locale);
       },
       theme: function theme(ProjectService, config, project, $ocLazyLoad, $q) {
         var theme = ProjectService.getThemePath() + '/theme.js';
         var def = $q.defer();
+        System["import"](theme).then(function (m) {
+          var themeModule = m["default"];
 
-        System.import(theme).then(function (m) {
-          var themeModule = m.default;
-          if (!m.default.name) {
-            var key = Object.keys(m.default);
-            themeModule = m.default[key[0]];
+          if (!m["default"].name) {
+            var key = Object.keys(m["default"]);
+            themeModule = m["default"][key[0]];
           }
 
           $ocLazyLoad.load(themeModule).then(function () {
@@ -308,7 +201,6 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
             throw err;
           });
         });
-
         return def.promise;
       }
     }
@@ -341,21 +233,18 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
       }
     }
   });
+  $httpProvider.interceptors.push('HttpInterceptor'); // Set up Translations
 
-  $httpProvider.interceptors.push('HttpInterceptor');
-
-  // Set up Translations
   $translatePartialLoaderProvider.addPart('i18n');
   $translatePartialLoaderProvider.addPart('vle/i18n');
   $translateProvider.useLoader('$translatePartialLoader', {
     urlTemplate: 'wise5/{part}/i18n_{lang}.json'
-  }).fallbackLanguage(['en']).registerAvailableLanguageKeys(['el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'], {
+  }).fallbackLanguage(['en']).registerAvailableLanguageKeys(['ar', 'el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'], {
     'en_US': 'en',
     'en_UK': 'en'
-  }).determinePreferredLanguage().useSanitizeValueStrategy('sanitizeParameters', 'escape');
-
-  // ngMaterial default theme configuration
+  }).determinePreferredLanguage().useSanitizeValueStrategy('sanitizeParameters', 'escape'); // ngMaterial default theme configuration
   // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
+
   $mdThemingProvider.definePalette('primary', {
     '50': 'e1f0f4',
     '100': 'b8dbe4',
@@ -371,13 +260,14 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
     'A200': '66e2ff',
     'A400': '17bee5',
     'A700': '00A1C6',
-    'contrastDefaultColor': 'light', // whether, by default, text (contrast)
+    'contrastDefaultColor': 'light',
+    // whether, by default, text (contrast)
     // on this palette should be dark or light
     'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
     '200', '300', 'A100'],
     'contrastLightColors': undefined // could also specify this if default was 'dark'
-  });
 
+  });
   $mdThemingProvider.definePalette('accent', {
     '50': 'fde9e6',
     '100': 'fbcbc4',
@@ -397,28 +287,23 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
     'contrastDarkColors': ['50', '100', '200', '300', 'A100'],
     'contrastLightColors': undefined
   });
-
   $mdThemingProvider.theme('default').primaryPalette('primary').accentPalette('accent', {
     'default': '500'
   }).warnPalette('red', {
     'default': '800'
   });
-
   var lightMap = $mdThemingProvider.extendPalette('grey', {
     'A100': 'ffffff'
   });
   $mdThemingProvider.definePalette('light', lightMap);
-
   $mdThemingProvider.theme('light').primaryPalette('light', {
     'default': 'A100'
   }).accentPalette('primary');
-
   $mdThemingProvider.setDefaultTheme('default');
-  $mdThemingProvider.enableBrowserColor();
-
-  // moment.js default overrides
+  $mdThemingProvider.enableBrowserColor(); // moment.js default overrides
   // TODO: add i18n support
-  _moment2.default.updateLocale('en', {
+
+  _moment["default"].updateLocale('en', {
     calendar: {
       lastDay: '[Yesterday at] LT',
       sameDay: '[Today at] LT',
@@ -429,5 +314,7 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
     }
   });
 }]);
-exports.default = vleModule;
+
+var _default = vleModule;
+exports["default"] = _default;
 //# sourceMappingURL=main.js.map

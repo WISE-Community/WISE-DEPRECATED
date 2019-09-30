@@ -1,0 +1,40 @@
+<ng-template #standalone>
+  <router-outlet></router-outlet>
+</ng-template>
+
+<ng-template #default>
+  <mat-sidenav-container fullscreen [class.has-announcement]="hasAnnouncement" 
+                         class="app-background">
+    <mat-sidenav #mobileMenu
+                 class="primary-bg"
+                 [(opened)]="showMobileMenu"
+                 position="end">
+      <app-mobile-menu></app-mobile-menu>
+    </mat-sidenav>
+    <mat-sidenav-content fxLayout="column" 
+                         track-scroll 
+                         (yPositionChange)="onYPositionChange($event)">
+      <app-announcement *ngIf="hasAnnouncement"
+                        class="top-content"
+                        [announcement]="announcement"
+                        (dismiss)="dismissAnnouncement()"></app-announcement>
+      <app-header class="dark-theme top-content"></app-header>
+      <div fxFlex>
+        <router-outlet></router-outlet>
+      </div>
+      <app-footer></app-footer>
+      <div class="to-top dark-theme" 
+           [ngClass]="{'active': scroll, 'inactive': !scroll}">
+        <button mat-fab
+                class="mat-fab--extended"
+                color="default"
+                (click)="scrollToTop()">
+          <mat-icon>arrow_upward</mat-icon>
+          &nbsp;<ng-container i18n>Back to Top</ng-container>
+        </button>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="showHeaderAndFooter() ? default : standalone"></ng-container>

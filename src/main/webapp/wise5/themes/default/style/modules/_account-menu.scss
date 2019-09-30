@@ -54,6 +54,21 @@
     right: 132px;
 }
 
+[dir=rtl] {
+  .account-menu__caret {
+    right: auto;
+    left: 28px;
+  }
+  .account-menu__caret--pause, .account-menu__caret--notification {
+    left:80px;
+    right:auto;
+  }
+  .account-menu__caret--notification--with-pause {
+      left: 132px;
+      right:auto;
+  }
+}
+
 .account-menu__info {
     padding: 8px 12px;
 }

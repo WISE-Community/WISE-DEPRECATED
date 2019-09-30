@@ -58,9 +58,9 @@ var StudentGradingController = function () {
             _this.updateNodeMaxScores();
         });
 
-        this.$scope.$on('notificationAdded', function (event, notification) {
+        this.$scope.$on('notificationChanged', function (event, notification) {
             if (notification.type === 'CRaterResult') {
-                // there is a new CRaterResult notification
+                // a CRaterResult notification has changed
                 // TODO: expand to encompass other notification types that should be shown to teacher
                 var workgroupId = notification.toWorkgroupId;
                 var _nodeId = notification.nodeId;
@@ -70,27 +70,15 @@ var StudentGradingController = function () {
             }
         });
 
-        this.$scope.$on('notificationChanged', function (event, notification) {
-            if (notification.type === 'CRaterResult') {
-                // a CRaterResult notification has changed
-                // TODO: expand to encompass other notification types that should be shown to teacher
-                var workgroupId = notification.toWorkgroupId;
-                var _nodeId2 = notification.nodeId;
-                if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId2]) {
-                    _this.updateNode(_nodeId2);
-                }
-            }
-        });
-
         this.$scope.$on('annotationReceived', function (event, args) {
             // a new annotation has been received, so update corresponding node
             var annotation = args.annotation;
             if (annotation) {
                 var workgroupId = annotation.toWorkgroupId;
-                var _nodeId3 = annotation.nodeId;
-                if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId3]) {
+                var _nodeId2 = annotation.nodeId;
+                if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId2]) {
                     _this.totalScore = _this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
-                    _this.updateNode(_nodeId3);
+                    _this.updateNode(_nodeId2);
                 }
             }
         });
@@ -100,9 +88,9 @@ var StudentGradingController = function () {
             var studentWork = args.studentWork;
             if (studentWork != null) {
                 var workgroupId = studentWork.workgroupId;
-                var _nodeId4 = studentWork.nodeId;
-                if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId4]) {
-                    _this.updateNode(_nodeId4);
+                var _nodeId3 = studentWork.nodeId;
+                if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId3]) {
+                    _this.updateNode(_nodeId3);
                 }
             }
         });
@@ -212,9 +200,10 @@ var StudentGradingController = function () {
     }, {
         key: 'getAlertNotificationsByNodeId',
         value: function getAlertNotificationsByNodeId(nodeId) {
-            var args = {};
-            args.nodeId = nodeId;
-            args.toWorkgroupId = this.workgroupId;
+            var args = {
+                nodeId: nodeId,
+                toWorkgroupId: this.workgroupId
+            };
             return this.NotificationService.getAlertNotifications(args);
         }
     }, {

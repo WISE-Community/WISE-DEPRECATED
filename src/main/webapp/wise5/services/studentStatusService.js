@@ -43,9 +43,6 @@ var StudentStatusService = function () {
     value: function getStudentStatuses() {
       return this.studentStatuses;
     }
-  }, {
-    key: 'getCurrentNodePositionAndNodeTitleForWorkgroupId',
-
 
     /**
      * Get the current node position and title for a workgroup
@@ -53,6 +50,9 @@ var StudentStatusService = function () {
      * @param workgroupId the workgroup id
      * @returns the node position and title
      */
+
+  }, {
+    key: 'getCurrentNodePositionAndNodeTitleForWorkgroupId',
     value: function getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId) {
       var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
       if (studentStatus != null) {
@@ -75,7 +75,7 @@ var StudentStatusService = function () {
 
           if (tempStudentStatus != null) {
             var tempWorkgroupId = tempStudentStatus.workgroupId;
-            if (workgroupId == tempWorkgroupId) {
+            if (workgroupId === tempWorkgroupId) {
               return tempStudentStatus;
             }
           }
@@ -98,23 +98,17 @@ var StudentStatusService = function () {
       return null;
     }
   }, {
-    key: 'setStudentStatusForWorkgroupId',
-    value: function setStudentStatusForWorkgroupId(workgroupId, studentStatus) {
+    key: 'setStudentStatus',
+    value: function setStudentStatus(studentStatus) {
       var studentStatuses = this.getStudentStatuses();
       for (var x = 0; x < studentStatuses.length; x++) {
-        var tempStudentStatus = studentStatuses[x];
-        if (tempStudentStatus != null) {
-          var tempWorkgroupId = tempStudentStatus.workgroupId;
-          if (workgroupId === tempWorkgroupId) {
-            studentStatuses.splice(x, 1, studentStatus);
-            break;
-          }
+        var aStudentStatus = studentStatuses[x];
+        if (aStudentStatus.workgroupId === studentStatus.workgroupId) {
+          studentStatuses.splice(x, 1, studentStatus);
+          break;
         }
       }
     }
-  }, {
-    key: 'getStudentProjectCompletion',
-
 
     /**
      * Get the student project completion data by workgroup id
@@ -123,6 +117,9 @@ var StudentStatusService = function () {
      * @returns object with completed, total, and percent completed (integer
      * between 0 and 100)
      */
+
+  }, {
+    key: 'getStudentProjectCompletion',
     value: function getStudentProjectCompletion(workgroupId, excludeNonWorkNodes) {
       var completion = {
         totalItems: 0,
@@ -181,7 +178,7 @@ var StudentStatusService = function () {
           var studentStatus = _step2.value;
 
           if (studentStatus != null) {
-            if (periodId == -1 || periodId == studentStatus.periodId) {
+            if (periodId === -1 || periodId === studentStatus.periodId) {
               var currentNodeId = studentStatus.currentNodeId;
               if (nodeId === currentNodeId) {
                 workgroupIds.push(studentStatus.workgroupId);
@@ -242,7 +239,7 @@ var StudentStatusService = function () {
           var studentStatus = _step3.value;
 
           if (studentStatus) {
-            if (periodId == -1 || periodId == studentStatus.periodId) {
+            if (periodId === -1 || periodId === studentStatus.periodId) {
               if (!workgroupId || workgroupId === studentStatus.workgroupId) {
                 var nodeStatuses = studentStatus.nodeStatuses;
                 if (nodeStatuses) {
@@ -388,7 +385,7 @@ var StudentStatusService = function () {
           var studentStatus = this.getStudentStatusForWorkgroupId(workgroup);
           if (studentStatus) {
             var pId = studentStatus.periodId;
-            if (periodId == -1 || pId == periodId) {
+            if (periodId === -1 || pId === periodId) {
               workgroupsOnlineInPeriod.push(workgroup);
             }
           }
@@ -443,7 +440,7 @@ var StudentStatusService = function () {
           var studentStatus = _step6.value;
 
           if (studentStatus != null) {
-            if (periodId == -1 || periodId == studentStatus.periodId) {
+            if (periodId === -1 || periodId === studentStatus.periodId) {
               // the period matches the one we are looking for
               var workgroupId = studentStatus.workgroupId;
 
@@ -477,7 +474,7 @@ var StudentStatusService = function () {
 
       var averageScore = null;
 
-      if (numStudentsWithScore != 0) {
+      if (numStudentsWithScore !== 0) {
         // calculate the average score for this node rounded down to the nearest hundredth
         averageScore = Math.floor(100 * studentScoreSum / numStudentsWithScore) / 100;
       }
@@ -504,11 +501,8 @@ var StudentStatusService = function () {
             if (nodeStatuses.hasOwnProperty(p)) {
               var nodeStatus = nodeStatuses[p];
               var nodeId = nodeStatus.nodeId;
-              if (nodeStatus.isVisible && !this.ProjectService.isGroupNode(nodeId)) {
-                // node is visible and is not a group
-                // get node max score
+              if (nodeStatus.isVisible && this.ProjectService.isApplicationNode(nodeId)) {
                 var nodeMaxScore = this.ProjectService.getMaxScoreForNode(nodeId);
-
                 if (nodeMaxScore) {
                   // there is a max score for the node, so add to total
                   // TODO geoffreykwan: trying to add to null?

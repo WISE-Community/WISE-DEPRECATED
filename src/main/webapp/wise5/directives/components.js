@@ -3,79 +3,53 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _annotation = require('./annotation/annotation');
+var _annotation = _interopRequireDefault(require("./annotation/annotation"));
 
-var _annotation2 = _interopRequireDefault(_annotation);
+var _compile = _interopRequireDefault(require("./compile/compile"));
 
-var _compile = require('./compile/compile');
+var _component = _interopRequireDefault(require("./component/component"));
 
-var _compile2 = _interopRequireDefault(_compile);
+var _componentAnnotations = _interopRequireDefault(require("./componentAnnotations/componentAnnotations"));
 
-var _component = require('./component/component');
+var _disableDeleteKeypress = _interopRequireDefault(require("./disableDeleteKeypress/disableDeleteKeypress"));
 
-var _component2 = _interopRequireDefault(_component);
+var _draggable = _interopRequireDefault(require("./draggable/draggable"));
 
-var _componentAnnotations = require('./componentAnnotations/componentAnnotations');
+var _globalAnnotations = _interopRequireDefault(require("./globalAnnotations/globalAnnotations"));
 
-var _componentAnnotations2 = _interopRequireDefault(_componentAnnotations);
+var _globalAnnotationsList = _interopRequireDefault(require("./globalAnnotationsList/globalAnnotationsList"));
 
-var _disableDeleteKeypress = require('./disableDeleteKeypress/disableDeleteKeypress');
+var _listenForDeleteKeypress = _interopRequireDefault(require("./listenForDeleteKeypress/listenForDeleteKeypress"));
 
-var _disableDeleteKeypress2 = _interopRequireDefault(_disableDeleteKeypress);
+var _milestoneReportGraph = _interopRequireDefault(require("./milestoneReportGraph/milestoneReportGraph"));
 
-var _draggable = require('./draggable/draggable');
+var _possibleScore = _interopRequireDefault(require("./possibleScore/possibleScore"));
 
-var _draggable2 = _interopRequireDefault(_draggable);
+var _summaryDisplay = _interopRequireDefault(require("./summaryDisplay/summaryDisplay"));
 
-var _globalAnnotations = require('./globalAnnotations/globalAnnotations');
+var _wiselink = _interopRequireDefault(require("./wiselink/wiselink"));
 
-var _globalAnnotations2 = _interopRequireDefault(_globalAnnotations);
+var _sticky = _interopRequireDefault(require("./sticky/sticky"));
 
-var _globalAnnotationsList = require('./globalAnnotationsList/globalAnnotationsList');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _globalAnnotationsList2 = _interopRequireDefault(_globalAnnotationsList);
-
-var _listenForDeleteKeypress = require('./listenForDeleteKeypress/listenForDeleteKeypress');
-
-var _listenForDeleteKeypress2 = _interopRequireDefault(_listenForDeleteKeypress);
-
-var _notebookItemGrading = require('./notebookItemGrading/notebookItemGrading');
-
-var _notebookItemGrading2 = _interopRequireDefault(_notebookItemGrading);
-
-var _possibleScore = require('./possibleScore/possibleScore');
-
-var _possibleScore2 = _interopRequireDefault(_possibleScore);
-
-var _wiselink = require('./wiselink/wiselink');
-
-var _wiselink2 = _interopRequireDefault(_wiselink);
-
-var _sticky = require('./sticky/sticky');
-
-var _sticky2 = _interopRequireDefault(_sticky);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//import Notebook from './notebook/notebook';
-//import NotebookItemAnnotations from './notebookItemAnnotations/notebookItemAnnotations';
-var Components = angular.module('components', [/*'notebook'*/]);
-
-Components.component('annotation', _annotation2.default);
-Components.component('compile', _compile2.default);
-Components.component('component', _component2.default);
-Components.component('componentAnnotations', _componentAnnotations2.default);
-Components.component('disableDeleteKeypress', _disableDeleteKeypress2.default);
-Components.component('draggable', _draggable2.default);
-Components.component('globalAnnotations', _globalAnnotations2.default);
-Components.component('globalAnnotationsList', _globalAnnotationsList2.default);
-Components.component('listenForDeleteKeypress', _listenForDeleteKeypress2.default);
-//Components.component('notebookItemAnnotations', NotebookItemAnnotations);
-Components.component('notebookItemGrading', _notebookItemGrading2.default);
-Components.component('possibleScore', _possibleScore2.default);
-Components.component('wiselink', _wiselink2.default);
-Components.directive('sticky', _sticky2.default);
-
-exports.default = Components;
+var Components = angular.module('components', []);
+Components.component('annotation', _annotation["default"]);
+Components.component('compile', _compile["default"]);
+Components.component('component', _component["default"]);
+Components.component('componentAnnotations', _componentAnnotations["default"]);
+Components.component('disableDeleteKeypress', _disableDeleteKeypress["default"]);
+Components.component('draggable', _draggable["default"]);
+Components.component('globalAnnotations', _globalAnnotations["default"]);
+Components.component('globalAnnotationsList', _globalAnnotationsList["default"]);
+Components.component('listenForDeleteKeypress', _listenForDeleteKeypress["default"]);
+Components.component('milestoneReportGraph', _milestoneReportGraph["default"]);
+Components.component('possibleScore', _possibleScore["default"]);
+Components.component('summaryDisplay', _summaryDisplay["default"]);
+Components.component('wiselink', _wiselink["default"]);
+Components.directive('sticky', _sticky["default"]);
+var _default = Components;
+exports["default"] = _default;
 //# sourceMappingURL=components.js.map

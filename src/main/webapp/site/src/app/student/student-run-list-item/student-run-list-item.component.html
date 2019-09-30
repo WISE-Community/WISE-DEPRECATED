@@ -1,0 +1,83 @@
+<ng-template #runInfo>
+  <div fxShow fxHide.xs>
+    <ng-container i18n>Teacher:</ng-container> {{ run.owner.displayName }} |
+    <ng-container i18n>Period:</ng-container> {{ run.periodName }} |
+    <ng-container i18n>Code:</ng-container> {{ run.runCode }}
+  </div>
+  <div fxHide fxShow.xs>
+    <ng-container i18n>Teacher:</ng-container> {{ run.owner.displayName }}<br />
+    <ng-container i18n>Period:</ng-container> {{ run.periodName }}<br />
+    <ng-container i18n>Code:</ng-container> {{ run.runCode }}<br />
+  </div>
+  <div *ngIf="run.workgroupMembers"><ng-container i18n>Team:</ng-container>
+    <span *ngFor="let user of run.workgroupMembers; let isLast=last">
+      {{ user.firstName }}{{ isLast ? '' : ', '}}
+    </span>
+  </div>
+</ng-template>
+
+<mat-card class="mat-elevation-z3 can-highlight"
+          [ngClass]="{ 'highlighted-bg': run.isHighlighted }"
+          [@flash]="{value: '*', params: {duration: animateDuration, delay: animateDelay}}">
+  <mat-card-content fxLayout="row" fxLayoutGap="12px">
+    <div mat-card-avatar
+         [style.background-image]="thumbStyle"
+         [class.disabled]="isRunCompleted(run)"
+         i18n-matTooltip
+         matTooltip="Run ID: {{run.id}}"
+         matTooltipPosition="above"></div>
+    <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
+        <div fxLayout="column">
+          <mat-card-title [class.secondary-text]="isRunCompleted(run)"
+                          class="mat-body-2">
+            {{ run.project.name }}
+          </mat-card-title>
+          <mat-card-subtitle fxHide fxShow.gt-xs>
+            <ng-container *ngTemplateOutlet="runInfo"></ng-container>
+          </mat-card-subtitle>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-content fxHide fxShow.xs>
+      <div class="info-block" [class.secondary-text]="isRunCompleted(run)">
+        <ng-container *ngTemplateOutlet="runInfo"></ng-container>
+      </div>
+    </mat-card-content>
+  <mat-card-actions>
+    <div fxLayout="row wrap"
+         fxLayout.xs="column"
+         fxLayoutAlign.gt-xs="start center"
+         fxLayoutGap="8px">
+      <span fxFlex="1 1 auto" fxShow fxHide.xs></span>
+      <a mat-button
+         href="{{problemLink}}"
+         fxFlex="0 0 auto"
+         fxFlex.xs="100">
+        <ng-container i18n>Report Problem</ng-container>
+      </a>
+      <button *ngIf="!isRunActive(run) && !isRunCompleted(run)"
+              mat-flat-button
+              disabled
+              fxFlex="0 0 auto"
+              fxFlex.xs="100">
+        <ng-container i18n>Starts {{run.startTime | amTimeAgo}}</ng-container>
+      </button>
+      <button mat-flat-button
+             *ngIf="isRunActive(run)"
+             (click)="launchRun()"
+             color="primary"
+             fxFlex="0 0 auto"
+             fxFlex.xs="100">
+        <mat-icon>play_circle_filled</mat-icon>&nbsp;<ng-container i18n>Launch</ng-container>
+      </button>
+      <button mat-flat-button
+             *ngIf="isRunCompleted(run)"
+             (click)="reviewRun()"
+             color="primary"
+             fxFlex="0 0 auto"
+             fxFlex.xs="100">
+        <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Review Work</ng-container>
+    </button>
+    </div>
+  </mat-card-actions>
+</mat-card>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -56,31 +56,23 @@ public class AnalyzeProjectController {
   private ProjectService projectService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
-  //mapping between node id and step content as a string
   private HashMap<String, String> nodeIdToNodeContent = new HashMap<String, String>();
 
-  //mapping between node id and node object
   private HashMap<String, JSONObject> nodeIdToNode = new HashMap<String, JSONObject>();
 
-  //mapping between node id and step title with position number e.g. Step 1.1: What is sunlight?
   private HashMap<String, String> nodeIdToNodeTitlesWithPosition = new HashMap<String, String>();
 
-  //the paths to the project file and folder
   private String projectFileLocalPath = "";
   private String projectFolderLocalPath = "";
   private String projectFileWebPath = "";
   private String projectFolderWebPath = "";
 
-  //vectors to store the node ids
   private Vector<String> allNodeIds = new Vector<String>();
   private Vector<String> activeNodeIds = new Vector<String>();
   private Vector<String> inactiveNodeIds = new Vector<String>();
 
-  /**
-   * Clear the variables
-   */
   private void clearVariables() {
     nodeIdToNodeContent = new HashMap<String, String>();
     nodeIdToNode = new HashMap<String, JSONObject>();
@@ -97,33 +89,30 @@ public class AnalyzeProjectController {
   }
 
   @RequestMapping("/teacher/projects/analyzeproject.html")
-  protected ModelAndView handleRequestInternal(
-    HttpServletRequest request,
-    HttpServletResponse response) throws Exception {
+  protected ModelAndView handleRequestInternal(HttpServletRequest request,
+      HttpServletResponse response) throws Exception {
     String results = "";
 
     //get the analyze type e.g. "findBrokenLinks" or "findUnusedAssets"
     String analyzeType = request.getParameter("analyzeType");
 
-    if(analyzeType == null) {
+    if (analyzeType == null) {
       //there was no analyzeType passed in so we will do nothing
-    } else if(analyzeType.equals("findBrokenLinks")) {
+    } else if (analyzeType.equals("findBrokenLinks")) {
       //find the broken links in the project
       results = analyze(request, response);
-    } else if(analyzeType.equals("findUnusedAssets")) {
+    } else if (analyzeType.equals("findUnusedAssets")) {
       //find the unused assets in the project
       results = analyze(request, response);
     }
 
     try {
-      //write the results to the response
       response.getWriter().write(results);
     } catch (IOException e) {
       e.printStackTrace();
     }
 
     clearVariables();
-
     return null;
   }
 
@@ -135,7 +124,6 @@ public class AnalyzeProjectController {
    * @return a JSONArray string containing the results
    */
   private String analyze(HttpServletRequest request, HttpServletResponse response) {
-    //the string we will return
     String results = "";
 
     //get the analyze type e.g. "findBrokenLinks" or "findUnusedAssets"
@@ -144,44 +132,28 @@ public class AnalyzeProjectController {
     //get whether to return the results as html
     String html = request.getParameter("html");
 
-    //the JSONArray that will contain all the project results
     JSONArray projectResultsJSONArray = new JSONArray();
-
-    //get the project ids we want to find broken links for
     String projectIds = request.getParameter("projectIds");
-
-    //get the project id we want to find broken links for
     String projectId = request.getParameter("projectId");
 
-    if(projectIds != null) {
-      //an array of project ids was passed in
-
+    if (projectIds != null) {
       try {
-        //create an array from the project ids
         JSONArray projectIdsArray = new JSONArray(projectIds);
-
-        if(projectIdsArray != null) {
-          //loop through all the project ids
-          for(int x=0; x<projectIdsArray.length(); x++) {
-            //get a project id
+        if (projectIdsArray != null) {
+          for (int x = 0; x < projectIdsArray.length(); x++) {
             String projectIdStr = projectIdsArray.getString(x);
             Long projectIdLong = Long.parseLong(projectIdStr);
-
-            //will hold the results for the current project
             JSONObject projectResults = null;
 
-            if(analyzeType == null) {
+            if (analyzeType == null) {
 
-            } else if(analyzeType.equals("findBrokenLinks")) {
-              //find the broken links for the project id
+            } else if (analyzeType.equals("findBrokenLinks")) {
               projectResults = findBrokenLinksForProject(projectIdLong);
-            } else if(analyzeType.equals("findUnusedAssets")) {
-              //find the unused assets for the project id
+            } else if (analyzeType.equals("findUnusedAssets")) {
               projectResults = findUnusedAssetsForProject(projectIdLong);
             }
 
-            if(projectResults != null) {
-              //put the project results into the array
+            if (projectResults != null) {
               projectResultsJSONArray.put(projectResults);
             }
           }
@@ -189,38 +161,35 @@ public class AnalyzeProjectController {
       } catch (JSONException e) {
         e.printStackTrace();
       }
-    } else if(projectId != null) {
-      //a single project id was passed in
-
-      //will hold the results for the project
+    } else if (projectId != null) {
       JSONObject projectResults = null;
 
-      if(analyzeType == null) {
+      if (analyzeType == null) {
 
-      } else if(analyzeType.equals("findBrokenLinks")) {
+      } else if (analyzeType.equals("findBrokenLinks")) {
         //find the broken links for the project id
         projectResults = findBrokenLinksForProject(Long.parseLong(projectId));
-      } else if(analyzeType.equals("findUnusedAssets")) {
+      } else if (analyzeType.equals("findUnusedAssets")) {
         //find the unused assets for the project id
         projectResults = findUnusedAssetsForProject(Long.parseLong(projectId));
       }
 
-      if(projectResults != null) {
+      if (projectResults != null) {
         //put the project results into the array
         projectResultsJSONArray.put(projectResults);
       }
     }
 
     try {
-      if(html != null && html.equals("true")) {
+      if (html != null && html.equals("true")) {
         //we will return the html representation of the results
 
-        if(analyzeType == null) {
+        if (analyzeType == null) {
 
-        } else if(analyzeType.equals("findBrokenLinks")) {
+        } else if (analyzeType.equals("findBrokenLinks")) {
           //get the html representation of the JSONArray
           results = getFindBrokenLinksHtmlView(projectResultsJSONArray);
-        } else if(analyzeType.equals("findUnusedAssets")) {
+        } else if (analyzeType.equals("findUnusedAssets")) {
           //get the html representation of the JSONArray
           results = getFindUnusedAssetsHtmlView(projectResultsJSONArray);
         }
@@ -265,7 +234,6 @@ public class AnalyzeProjectController {
    * }
    */
   private JSONObject findBrokenLinksForProject(Long projectId) {
-    //the object that will contain all the results
     JSONObject resultsJSON = new JSONObject();
 
     /*
@@ -275,33 +243,22 @@ public class AnalyzeProjectController {
     parseProject(projectId);
 
     try {
-      //get the project
       Project project = projectService.getById(projectId);
-
-      //get the project name
       String projectName = project.getName();
 
-      //put the project name and id into the results
       resultsJSON.put("projectName", projectName);
       resultsJSON.put("projectId", projectId);
 
       JSONArray activeStepResults = new JSONArray();
 
-      //analyze the active steps
-      if(activeNodeIds != null) {
-        for(int x=0; x<activeNodeIds.size(); x++) {
+      if (activeNodeIds != null) {
+        for (int x = 0; x < activeNodeIds.size(); x++) {
           String nodeId = activeNodeIds.get(x);
-
-          //get the step content as a string
           String nodeContent = nodeIdToNodeContent.get(nodeId);
-
-          //get the step title
           String title = nodeIdToNodeTitlesWithPosition.get(nodeId);
-
-          //find any broken links in the step
           JSONArray brokenLinksForStep = findBrokenLinksForStep(nodeContent);
 
-          if(brokenLinksForStep != null && brokenLinksForStep.length() != 0) {
+          if (brokenLinksForStep != null && brokenLinksForStep.length() != 0) {
             /*
              * there was at least one broken link so we will create an object
              * to contain the information for this step and the links that
@@ -310,30 +267,20 @@ public class AnalyzeProjectController {
             JSONObject stepResult = new JSONObject();
             stepResult.put("stepTitle", title);
             stepResult.put("brokenLinks", brokenLinksForStep);
-
-            //add the object to our results array
             activeStepResults.put(stepResult);
           }
         }
       }
 
       JSONArray inactiveStepResults = new JSONArray();
-
-      //analyze the inactive steps
-      if(inactiveNodeIds != null) {
-        for(int x=0; x<inactiveNodeIds.size(); x++) {
+      if (inactiveNodeIds != null) {
+        for (int x = 0; x < inactiveNodeIds.size(); x++) {
           String nodeId = inactiveNodeIds.get(x);
-
-          //get the step content as a string
           String nodeContent = nodeIdToNodeContent.get(nodeId);
-
-          //get the step title
           String title = nodeIdToNodeTitlesWithPosition.get(nodeId);
-
-          //find any broken links in the step
           JSONArray brokenLinksForStep = findBrokenLinksForStep(nodeContent);
 
-          if(brokenLinksForStep != null && brokenLinksForStep.length() != 0) {
+          if (brokenLinksForStep != null && brokenLinksForStep.length() != 0) {
             /*
              * there was at least one broken link so we will create an object
              * to contain the information for this step and the links that
@@ -342,14 +289,10 @@ public class AnalyzeProjectController {
             JSONObject stepResult = new JSONObject();
             stepResult.put("stepTitle", title);
             stepResult.put("brokenLinks", brokenLinksForStep);
-
-            //add the object to our results array
             inactiveStepResults.put(stepResult);
           }
         }
       }
-
-      //put the step results into the results
       resultsJSON.put("activeStepResults", activeStepResults);
       resultsJSON.put("inactiveStepResults", inactiveStepResults);
     } catch (ObjectNotFoundException e) {
@@ -357,10 +300,8 @@ public class AnalyzeProjectController {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return resultsJSON;
   }
-
 
   /**
    * Find the unused assets for a project
@@ -395,127 +336,68 @@ public class AnalyzeProjectController {
    * }
    */
   private JSONObject findUnusedAssetsForProject(Long projectId) {
-
-    //the object that will contain all the results
     JSONObject resultsJSON = new JSONObject();
-
-    /*
-     * parse the project to gather all the active steps,
-     * inactive steps, and step content strings
-     */
     parseProject(projectId);
 
     try {
-      //get the project
       Project project = projectService.getById(projectId);
-
-      //get the project name
       String projectName = project.getName();
-
-      //put the project name and id into the results
       resultsJSON.put("projectName", projectName);
       resultsJSON.put("projectId", projectId);
 
       JSONArray assets = new JSONArray();
-
-      //get the asset folder
       File assetFolder = new File(projectFolderLocalPath + "/assets");
 
-      if(assetFolder.exists() && assetFolder.isDirectory()) {
+      if (assetFolder.exists() && assetFolder.isDirectory()) {
         File[] assetFiles = assetFolder.listFiles();
-
-        //loop through all the asset files
-        for(int x=0; x<assetFiles.length; x++) {
-          //get an asset file
+        for (int x = 0; x < assetFiles.length; x++) {
           File assetFile = assetFiles[x];
-
-          //get the asset file name
           String assetFileName = assetFile.getName();
-
-          //create the object to hold the results for this asset
           JSONObject assetFileResult = new JSONObject();
-
-          //add the asset file name
           assetFileResult.put("assetFileName", assetFileName);
 
           JSONArray activeStepsUsedIn = new JSONArray();
 
-          /*
-           * loop through all the active node ids to see if this
-           * asset is used in any of them
-           */
-          for(int y=0; y<activeNodeIds.size(); y++) {
-            //get a node id
+          for (int y = 0; y < activeNodeIds.size(); y++) {
             String activeNodeId = activeNodeIds.get(y);
-
-            //get the content for the step as a string
             String nodeContent = nodeIdToNodeContent.get(activeNodeId);
-
-            //check if the file name exists in the content
-            if(nodeContent != null && nodeContent.contains(assetFileName)) {
-              //the file name exists in the content
-
-              //get the step title
+            if (nodeContent != null && nodeContent.contains(assetFileName)) {
               String title = nodeIdToNodeTitlesWithPosition.get(activeNodeId);
-
-              //add the step title to the array
               activeStepsUsedIn.put(title);
             }
           }
 
           JSONArray inactiveStepsUsedIn = new JSONArray();
 
-          /*
-           * loop through all the inactive node ids to see if this
-           * asset is used in any of them
-           */
-          for(int z=0; z<inactiveNodeIds.size(); z++) {
-            //get a node id
+          for (int z = 0; z < inactiveNodeIds.size(); z++) {
             String inactiveNodeId = inactiveNodeIds.get(z);
-
-            //get the content for the step as a string
             String nodeContent = nodeIdToNodeContent.get(inactiveNodeId);
-
-            //check if the file name exists in the content
-            if(nodeContent != null && nodeContent.contains(assetFileName)) {
-              //the file name exists in the content
-
-              //get the step title
+            if (nodeContent != null && nodeContent.contains(assetFileName)) {
               String title = nodeIdToNodeTitlesWithPosition.get(inactiveNodeId);
-
-              //add teh step title to the array
               inactiveStepsUsedIn.put(title);
             }
           }
 
-          //add the arrays to the asset file result
           assetFileResult.put("activeStepsUsedIn", activeStepsUsedIn);
           assetFileResult.put("inactiveStepsUsedIn", inactiveStepsUsedIn);
-
-          //add the asset file result to the assets
           assets.put(assetFileResult);
         }
       }
-
-      //add the assets to the results
       resultsJSON.put("assets", assets);
     } catch (JSONException e) {
       e.printStackTrace();
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
-
     return resultsJSON;
   }
 
   /**
    * Parse the project to populate our hashmaps that contain mappings
    * from node id to node content and node id to node titles
-   * @param projectJSON the project JSON
    */
   private void parseProject(Long projectId) {
     try {
-      //get the project
       Project project = projectService.getById(projectId);
 
       /*
@@ -542,122 +424,60 @@ public class AnalyzeProjectController {
        */
       projectFolderWebPath = getProjectFolderWebPath(project);
 
-      //get the project file
       File projectFile = new File(projectFileLocalPath);
-
-      //get the contents of the project file
       String projectFileString = FileUtils.readFileToString(projectFile);
-
-      //get the JSONObject representation of the project
       JSONObject projectJSON = new JSONObject(projectFileString);
-
-      //get the nodes (aka steps) in the project
       JSONArray nodes = projectJSON.getJSONArray("nodes");
-
-      //loop through all the nodes (aka steps) in the project
-      for(int x=0; x<nodes.length(); x++) {
-        //get a node
+      for (int x = 0; x < nodes.length(); x++) {
         JSONObject node = nodes.getJSONObject(x);
-        if(node != null) {
-          //get the node id
+        if (node != null) {
           String nodeId = node.getString("identifier");
-
-          //add the node id to the all node ids vector
           allNodeIds.add(nodeId);
-
-          //get the step file name
           String ref = node.getString("ref");
-
-          //get a handle to the file
           File file = new File(projectFolderLocalPath + "/" + ref);
-
           try {
-            //get the contents of the file
             String fileContent = FileUtils.readFileToString(file);
-
-            //get the node type
             String nodeType = node.getString("type");
-
-            if(nodeType != null && nodeType.equals("HtmlNode")) {
-              //this is an html step so we need to get the html file
-
-              //create a JSONObject from the content
+            if (nodeType != null && nodeType.equals("HtmlNode")) {
               JSONObject nodeJSON = new JSONObject(fileContent);
-
-              //find the name of the html file
               String htmlSrc = nodeJSON.getString("src");
-
-              //create the local path to the html file
               String htmlSrcPath = projectFolderLocalPath + "/" + htmlSrc;
-
-              //create a handle to the html file
               File htmlSrcFile = new File(htmlSrcPath);
 
               try {
-                //get the contents of the html file
                 fileContent = FileUtils.readFileToString(htmlSrcFile);
               } catch (IOException e) {
                 e.printStackTrace();
               }
             }
 
-            //put the contents into our hashmap
             nodeIdToNodeContent.put(nodeId, fileContent);
           } catch (IOException e) {
             e.printStackTrace();
           }
-
-          //put the node into our hashmap
           nodeIdToNode.put(nodeId, node);
         }
       }
 
-      //get the sequences (aka activites) in the project
       JSONArray sequences = projectJSON.getJSONArray("sequences");
-
-      //loop through all the sequences (aka activities) in the project
-      for(int y=0; y<sequences.length(); y++) {
-        //get a sequence
+      for (int y = 0; y < sequences.length(); y++) {
         JSONObject sequence = sequences.getJSONObject(y);
-
-        if(sequence != null) {
-          //get the seuqnce id
+        if (sequence != null) {
           String sequenceId = sequence.getString("identifier");
-
-          //put the sequence into our hashmap (note that sequences are sometimes also referred to as nodes)
           nodeIdToNode.put(sequenceId, sequence);
         }
       }
 
-      /*
-       * traverse through the project to find the active steps
-       * and also to obtain the step numbers and titles
-       */
       traverseProject(projectJSON);
 
-      //find the inactive node ids
-      for(int x=0; x<allNodeIds.size(); x++) {
-        //get a node id
+      for (int x = 0; x < allNodeIds.size(); x++) {
         String nodeId = allNodeIds.get(x);
-
-        //check if the node id is in the active node ids vector
-        if(!activeNodeIds.contains(nodeId)) {
-          //node id is not in the active vector so it must be inactive
+        if (!activeNodeIds.contains(nodeId)) {
           inactiveNodeIds.add(nodeId);
-
-          //get the node
           JSONObject node = nodeIdToNode.get(nodeId);
-
-          //get the step title
           String title = node.getString("title");
-
-          //get the step type
           String nodeType = node.getString("type");
-
-          //get the step title e.g. Inactive Step: What is oxygen? (HtmlNode)
           title = "Inactive Step: " + title + " (" + nodeType + ")";
-
-          //add the mapping of node id to node title
           nodeIdToNodeTitlesWithPosition.put(nodeId, title);
         }
       }
@@ -676,10 +496,7 @@ public class AnalyzeProjectController {
    */
   private void traverseProject(JSONObject projectJSON) {
     try {
-      //get the start point of the project
       String startPoint = projectJSON.getString("startPoint");
-
-      //recursively loop through the project
       traverseProjectHelper(startPoint, "");
     } catch (JSONException e) {
       e.printStackTrace();
@@ -694,54 +511,30 @@ public class AnalyzeProjectController {
    * e.g. if we are on activity 2, the position so far would be 2
    */
   private void traverseProjectHelper(String nodeId, String positionSoFar) {
-    //get the current node we are on
     JSONObject node = nodeIdToNode.get(nodeId);
-
-    if(node != null) {
+    if (node != null) {
       try {
-        if(node.has("type")) {
-          //get the node type
+        if (node.has("type")) {
           String type = node.getString("type");
 
-          if(type != null && type.equals("sequence")) {
-            //node is an activity
-
+          if (type != null && type.equals("sequence")) {
             try {
-              if(node != null) {
-                //get the activity title
+              if (node != null) {
                 String title = node.getString("title");
-
-                //get the steps in the activity
                 JSONArray refs = node.getJSONArray("refs");
-
-                //create the activity title with activity number e.g. Activity 1: What is light?
                 title = "Activity " + positionSoFar + ": " + title;
-
-                //add the mapping of node id to node title
                 nodeIdToNodeTitlesWithPosition.put(nodeId, title);
-
-                //loop through all the child nodes
-                for(int x=0; x<refs.length(); x++) {
-                  //get the node id of a child node
+                for (int x = 0; x < refs.length(); x++) {
                   String ref = refs.getString(x);
-
-                  //get the child node
                   JSONObject childNode = nodeIdToNode.get(ref);
-
-                  //get the child node id
                   String childNodeId = childNode.getString("identifier");
-
                   String newPositonSoFar = "";
 
-                  if(positionSoFar == null || positionSoFar.equals("")) {
-                    //position so far is empty so we will just append the number
+                  if (positionSoFar == null || positionSoFar.equals("")) {
                     newPositonSoFar = positionSoFar + (x + 1);
                   } else {
-                    //position so far is not empty so we will append . and then the number
                     newPositonSoFar = positionSoFar + "." + (x + 1);
                   }
-
-                  //recursively call this function to handle the child node
                   traverseProjectHelper(childNodeId, newPositonSoFar);
                 }
               }
@@ -749,22 +542,11 @@ public class AnalyzeProjectController {
               e.printStackTrace();
             }
           } else {
-            //node is a step
-
             try {
-              //get the step title
               String title = node.getString("title");
-
-              //get the step type
               String nodeType = node.getString("type");
-
-              //get the step title with step number e.g. Step 1.2: What is oxygen? (HtmlNode)
               title = "Step " + positionSoFar + ": " + title + " (" + nodeType + ")";
-
-              //add the mapping of node id to node title
               nodeIdToNodeTitlesWithPosition.put(nodeId, title);
-
-              //add this node id to the active node ids
               activeNodeIds.add(nodeId);
             } catch (JSONException e) {
               e.printStackTrace();
@@ -779,14 +561,12 @@ public class AnalyzeProjectController {
 
   /**
    * Find broken links in the step content
-   * @param nodeContent the step content as a JSONObject
    * @return a JSONArray of broken link strings
    */
   private JSONArray findBrokenLinksForStep(String nodeContentString) {
-    //the array that will hold all the broken links if any
     JSONArray brokenLinks = new JSONArray();
 
-    if(nodeContentString != null) {
+    if (nodeContentString != null) {
       /*
        * create the regex to match strings like these below
        *
@@ -802,18 +582,10 @@ public class AnalyzeProjectController {
        */
       String regexString = "(src|href)=\\\\?\"(.*?)\\\\?\"";
 
-      //compile the regex string
       Pattern pattern = Pattern.compile(regexString);
-
-      //run the regex on the step content
       Matcher matcher = pattern.matcher(nodeContentString);
-
-      //loop through the content to find matches
-      while(matcher.find()) {
-        //used for project assets to remember the relative path reference e.g. assets/sunlight.jpg
+      while (matcher.find()) {
         String originalAssetPath = null;
-
-        //will contain the path to the asset that is referenced in the step
         String assetPath = null;
 
         /*
@@ -833,20 +605,15 @@ public class AnalyzeProjectController {
          * but I've looped through all the groups for the sake of easier debugging.
          * since group 2 is the last group, we will end up with group 2 in our assetPath.
          */
-        for(int x=0; x<=matcher.groupCount(); x++) {
-          //get a group
+        for (int x = 0; x <= matcher.groupCount(); x++) {
           String group = matcher.group(x);
-
-          if(group != null) {
-            //get the asset path
+          if (group != null) {
             originalAssetPath = group;
           }
         }
 
-        if(originalAssetPath == null) {
-          //nothing was captured in the regular expression
-        } else if(originalAssetPath.startsWith("http")) {
-          //this is a reference to an asset on the web
+        if (originalAssetPath == null) {
+        } else if (originalAssetPath.startsWith("http")) {
           assetPath = originalAssetPath;
         } else {
           /*
@@ -862,23 +629,18 @@ public class AnalyzeProjectController {
           assetPath = projectFolderWebPath + "/" + originalAssetPath;
         }
 
-        //the default initialization value for the response code
         int responseCode = -1;
 
         try {
-          //try to access the path and get the response code
           responseCode = getResponseCode(assetPath);
-
-          if(responseCode == 301) {
+          if (responseCode == 301) {
             /*
              * path responded with a redirect so we will retrieve
              * the redirect path and try accessing that path
              */
             String redirectLocation = getRedirectLocation(assetPath);
-
-            //get the response code for the redirect path
             responseCode = getResponseCode(redirectLocation);
-          } else if(responseCode == 505) {
+          } else if (responseCode == 505) {
             /*
              * sometimes a 505 is caused by a space in the url so we will
              * try to make the request with " " replaced with "%20" because
@@ -887,8 +649,6 @@ public class AnalyzeProjectController {
              * does not do this automatically.
              */
             assetPath = assetPath.replaceAll(" " , "%20");
-
-            //get the response code for the redirect path
             responseCode = getResponseCode(assetPath);
           }
         } catch (MalformedURLException e) {
@@ -899,7 +659,7 @@ public class AnalyzeProjectController {
           e.printStackTrace();
         }
 
-        if(responseCode != 200) {
+        if (responseCode != 200) {
           /*
            * the response code is not 200 so we were unable to retrieve the path.
            * we will add it to our array of broken links
@@ -908,7 +668,6 @@ public class AnalyzeProjectController {
         }
       }
     }
-
     return brokenLinks;
   }
 
@@ -920,17 +679,11 @@ public class AnalyzeProjectController {
    * @throws IOException
    */
   private static int getResponseCode(String urlString) throws MalformedURLException, IOException {
-    //create the URL object
     URL url = new URL(urlString);
-
-    //create a connection to the url
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
     conn.connect();
-
-    //get the response code
     int responseCode = conn.getResponseCode();
-
     return responseCode;
   }
 
@@ -942,17 +695,11 @@ public class AnalyzeProjectController {
    * @throws IOException
    */
   private static String getRedirectLocation(String urlString) throws MalformedURLException, IOException {
-    //create the URL object
     URL url = new URL(urlString);
-
-    //create a connection to the url
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
     conn.connect();
-
-    //get the redirect location
     String redirectLocation = conn.getHeaderField("Location");
-
     return redirectLocation;
   }
 
@@ -964,7 +711,7 @@ public class AnalyzeProjectController {
    * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
    */
   private String getProjectFileLocalPath(Project project) {
-    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
     String projectUrl = project.getModulePath();
     String projectFilePath = curriculumBaseDir + projectUrl;
     return projectFilePath;
@@ -978,7 +725,7 @@ public class AnalyzeProjectController {
    * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
    */
   private String getProjectFileWebPath(Project project) {
-    String curriculumBaseWebDir = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWebDir = appProperties.getProperty("curriculum_base_www");
     String projectUrl = project.getModulePath();
     String projectFilePath = curriculumBaseWebDir + projectUrl;
     return projectFilePath;
@@ -1016,95 +763,55 @@ public class AnalyzeProjectController {
    * @return a string containing the html view of the project results
    */
   private String getFindBrokenLinksHtmlView(JSONArray projectResults) {
-    //the stringbuffer to gather the html
     StringBuffer html = new StringBuffer();
-
-    //add the html tags
     html.append("<html><head></head><body>");
-
-    //loop through each project result
-    for(int x=0; x<projectResults.length(); x++) {
+    for (int x = 0; x < projectResults.length(); x++) {
       try {
-        //get a project result
         JSONObject projectResult = projectResults.getJSONObject(x);
-
-        if(x != 0) {
-          //add a horizontal line if this is not the first project result
+        if (x != 0) {
           html.append("<hr>");
         }
 
-        //get the project name and id
         String projectName = projectResult.getString("projectName");
         long projectId = projectResult.getLong("projectId");
 
-        //display the project name and id
         html.append("Project Name: " + projectName + "<br>");
         html.append("Project Id: " + projectId + "<br><br>");
 
-        //get the steps in the project that have broken links
         JSONArray activeStepsResults = projectResult.getJSONArray("activeStepResults");
-
-        if(activeStepsResults.length() != 0) {
-          //loop through all the steps that have broken links
-          for(int y=0; y<activeStepsResults.length(); y++) {
-            //get a step
+        if (activeStepsResults.length() != 0) {
+          for (int y = 0; y < activeStepsResults.length(); y++) {
             JSONObject step = activeStepsResults.getJSONObject(y);
-
-            //add the step title
             String stepTitle = step.getString("stepTitle");
             html.append(stepTitle + "<br>");
-
-            //get the broken links
             JSONArray brokenLinks = step.getJSONArray("brokenLinks");
-
-            //loop through all the broken links
-            for(int z=0; z<brokenLinks.length(); z++) {
-              //add the broken link
+            for (int z = 0; z < brokenLinks.length(); z++) {
               String brokenLink = brokenLinks.getString(z);
-
-              //make a link out of the url
               brokenLink = makeLinkFromUrl(brokenLink, brokenLink);
-
               html.append(brokenLink + "<br>");
             }
-
             html.append("<br>");
           }
         }
 
-        //get the steps in the project that have broken links
         JSONArray inactiveStepResults = projectResult.getJSONArray("inactiveStepResults");
-
-        if(inactiveStepResults.length() != 0) {
-          //loop through all the steps that have broken links
-          for(int y=0; y<inactiveStepResults.length(); y++) {
-            //get a step
+        if (inactiveStepResults.length() != 0) {
+          for (int y = 0; y < inactiveStepResults.length(); y++) {
             JSONObject step = inactiveStepResults.getJSONObject(y);
-
-            //add the step title
             String stepTitle = step.getString("stepTitle");
             html.append(stepTitle + "<br>");
-
-            //get the broken links
             JSONArray brokenLinks = step.getJSONArray("brokenLinks");
 
-            //loop through all the broken links
-            for(int z=0; z<brokenLinks.length(); z++) {
-              //add the broken link
+            for (int z = 0; z < brokenLinks.length(); z++) {
               String brokenLink = brokenLinks.getString(z);
-
-              //make a link out of the url
               brokenLink = makeLinkFromUrl(brokenLink, brokenLink);
-
               html.append(brokenLink + "<br>");
             }
-
             html.append("<br>");
           }
         }
 
-        if(activeStepsResults.length() == 0 && inactiveStepResults.length() == 0) {
-          //there were no broken links
+        if (activeStepsResults.length() == 0 && inactiveStepResults.length() == 0) {
           html.append("There are no broken links");
         }
 
@@ -1113,9 +820,7 @@ public class AnalyzeProjectController {
       }
     }
 
-    //close the html tags
     html.append("</body></html>");
-
     return html.toString();
   }
 
@@ -1125,94 +830,60 @@ public class AnalyzeProjectController {
    * @return a string containing the html view of the project results
    */
   private String getFindUnusedAssetsHtmlView(JSONArray projectResults) {
-    //the stringbuffer to gather the html
     StringBuffer html = new StringBuffer();
-
-    //add the html tags
     html.append("<html><head></head><body>");
-
-    //loop through each project result
-    for(int x=0; x<projectResults.length(); x++) {
+    for (int x = 0; x < projectResults.length(); x++) {
       try {
-        //get a project result
         JSONObject projectResult = projectResults.getJSONObject(x);
-
-        if(x != 0) {
+        if (x != 0) {
           //add a horizontal line if this is not the first project result
           html.append("<hr>");
         }
 
-        //get the project name and id
         String projectName = projectResult.getString("projectName");
         long projectId = projectResult.getLong("projectId");
-
-        //boolean value to check if all assets are being used
         boolean allAssetsUsed = true;
 
-        //display the project name and id
         html.append("Project Name: " + projectName + "<br>");
         html.append("Project Id: " + projectId + "<br><br>");
 
-        //get the assets array for the project
         JSONArray assets = projectResult.getJSONArray("assets");
-
-        //loop through all the assets
-        for(int y=0; y<assets.length(); y++) {
-          //get an assets object
+        for (int y = 0; y < assets.length(); y++) {
           JSONObject asset = assets.getJSONObject(y);
-
-          //get the asset file name
           String assetFileName = asset.getString("assetFileName");
-
-          //get the array of active steps that this asset is used in
           JSONArray activeStepsUsedIn = asset.getJSONArray("activeStepsUsedIn");
-
-          //get the array of inactive steps that this asset is used in
           JSONArray inactiveStepsUsedIn = asset.getJSONArray("inactiveStepsUsedIn");
 
-          if(activeStepsUsedIn.length() > 0) {
-            //this asset was used in an active step
+          if (activeStepsUsedIn.length() > 0) {
             html.append("<font color='green'>" + assetFileName + "</font>");
-          } else if(inactiveStepsUsedIn.length() > 0) {
-            //this asset was used in an inactive step and not any active steps
+          } else if (inactiveStepsUsedIn.length() > 0) {
             html.append("<font color='blue'>" + assetFileName + "</font>");
           } else {
-            //this asset was not used in any step
             html.append("<font color='red'>" + assetFileName + "</font>");
           }
 
-          //display a link to view the asset
           String link = makeLinkFromUrl("assets/" + assetFileName, "view asset");
           html.append(" (" + link + ")");
           html.append("<br>");
 
-          //loop through all the active steps this asset was used in
-          for(int a=0; a<activeStepsUsedIn.length(); a++) {
-            //display the step name
+          for (int a = 0; a < activeStepsUsedIn.length(); a++) {
             String activeStepUsedIn = activeStepsUsedIn.getString(a);
             html.append(activeStepUsedIn + "<br>");
           }
 
-          //loop through all the inactive steps this asset was used in
-          for(int a=0; a<inactiveStepsUsedIn.length(); a++) {
-            //display the step name
+          for (int a = 0; a < inactiveStepsUsedIn.length(); a++) {
             String inactiveStepUsedIn = inactiveStepsUsedIn.getString(a);
             html.append(inactiveStepUsedIn + "<br>");
           }
 
-          if(activeStepsUsedIn.length() == 0 && inactiveStepsUsedIn.length() == 0) {
-            //this asset was not used in any steps
+          if (activeStepsUsedIn.length() == 0 && inactiveStepsUsedIn.length() == 0) {
             html.append("Not Used<br>");
-
-            //this asset was not used so there is at least one asset that is not used
             allAssetsUsed = false;
           }
-
           html.append("<br>");
         }
 
-        if(allAssetsUsed) {
-          //all the assets are being used
+        if (allAssetsUsed) {
           html.append("All Assets Used<br>");
         }
       } catch (JSONException e) {
@@ -1220,9 +891,7 @@ public class AnalyzeProjectController {
       }
     }
 
-    //close the html tags
     html.append("</body></html>");
-
     return html.toString();
   }
 
@@ -1233,23 +902,16 @@ public class AnalyzeProjectController {
    * @return a string containing the <a href=''></a> html
    */
   private String makeLinkFromUrl(String url, String text) {
-    //the result link
     String link = "";
-
-    //the href value
     String href = "";
 
-    if(url.startsWith("assets")) {
-      //the url is a project asset so we will prepend the project folder web path
+    if (url.startsWith("assets")) {
       href = projectFolderWebPath + "/" + url;
     } else {
-      //the url is an absolute web link so we do not need to modify it
       href = url;
     }
 
-    //create the link
     link = "<a href='" + href + "' target='_blank'>" + text + "</a>";
-
     return link;
   }
 }

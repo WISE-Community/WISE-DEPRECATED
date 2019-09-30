@@ -8,6 +8,7 @@
 
 const gulp = require('gulp');
 const babel = require('gulp-babel');
+const exec = require('child_process').exec;
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
@@ -27,13 +28,16 @@ const sass = require('gulp-sass');
 const sassOptions = { style: 'compact' };
 const paths = ['./src/main/webapp/wise5/style/**/*.scss',
   './src/main/webapp/wise5/themes/*/style/**/*.scss'];
+const sitePaths = ['./src/main/webapp/site/src/**/*.ts',
+  './src/main/webapp/site/src/**/*.html'
+];
 const autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions',
-  'Firefox ESR', 'not ie <= 10'] };
+    'Firefox ESR', 'not ie <= 10'] };
 
 // -----------------------------------------------------------------------------
 // Sass compilation
 // -----------------------------------------------------------------------------
-gulp.task('compile-sass', function() {
+gulp.task('compile-sass', gulp.series(function() {
   return gulp
     .src(paths, {base: './'})
     .pipe(gulpif(global.isWatching,
@@ -51,53 +55,68 @@ gulp.task('compile-sass', function() {
   //.pipe(gulp.dest(function(file) {
   //return file.base;
   //}));
-});
+}));
 
 // -----------------------------------------------------------------------------
 // Watchers
 // -----------------------------------------------------------------------------
-gulp.task('set-watch', function() {
+gulp.task('set-watch', gulp.series(function(done) {
   global.isWatching = true;
-});
+  done();
+}));
 
-gulp.task('watch-sass', ['set-watch'], function() {
+gulp.task('watch-sass', gulp.series('set-watch', function(done) {
+  done();
   return gulp
   // Watch folders for *.scss changes in the specified paths,
   // and run `compile-sass` task on change
-    .watch(paths, ['compile-sass'])
-    .on('change', function(event) {
-      console.log('File ' + event.path + ' was ' + event.type);
+    .watch(paths, gulp.series('compile-sass'))
+    .on('change', function(path, stat) {
+      console.log('File ' + path + ' was changed');
     });
+}));
+
+gulp.task('site-i18n', (cb) => {
+  console.log('[ng xi18n] Generating messages start...');
+  exec('ng xi18n', (err, stdout, stderr) => {
+    console.log('[ng xi18n] Generating messages complete!');
+    console.log('[npm run ngx-extractor] Generating messages start...');
+    exec('npm run ngx-extractor', (err, stdout, stderr) => {
+      console.log('[npm run ngx-extractor] Generating messages complete!');
+      cb(err);
+    });
+    cb(err);
+  });
 });
 
-gulp.task('transpile', () => {
+gulp.task('transpile', gulp.series(() => {
   return gulp.watch(['./src/main/webapp/wise5/**/*.es6'])
-    .on('change', (event) => {
-      const changedFilePath = event.path;
-      let changedFileDir = '';
-      const lastIndexOfForwardSlash = changedFilePath.lastIndexOf('/');
-      if (lastIndexOfForwardSlash > 0) {
-        changedFileDir = changedFilePath.substr(0, lastIndexOfForwardSlash);
-      } else {
-        changedFileDir =
-          changedFilePath.substr(0, changedFilePath.lastIndexOf('\\'));
-      }
+    .on('change', (changedFilePath, stats) => {
+    let changedFileDir = '';
+    console.log('changedfilepath:' + changedFilePath);
+    const lastIndexOfForwardSlash = changedFilePath.lastIndexOf('/');
+    if (lastIndexOfForwardSlash > 0) {
+      changedFileDir = changedFilePath.substr(0, lastIndexOfForwardSlash);
+    } else {
+      changedFileDir =
+        changedFilePath.substr(0, changedFilePath.lastIndexOf('\\'));
+    }
 
-      gulp.src(changedFilePath)
-        .pipe(sourcemaps.init())
-        .pipe(babel({ presets: ['es2015'] }))
-        .on('error', console.error.bind(console))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(changedFileDir));
-      console.log('transpiled: ' + changedFilePath);
-    });
-});
+    gulp.src(changedFilePath)
+      .pipe(sourcemaps.init())
+      .pipe(babel({ presets: ['@babel/preset-env'] }))
+      .on('error', console.error.bind(console))
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest(changedFileDir));
+    console.log('transpiled: ' + changedFilePath);
+  });
+}));
 
 // -----------------------------------------------------------------------------
 // merge i18n json files
 // Removes extra keys from foreignLocale
 // -----------------------------------------------------------------------------
-gulp.task('update-i18n', function() {
+gulp.task('update-i18n', gulp.series(function() {
   const supportedLocales = ['ar','es','fr','de','el','iw','ja','ko',
     'nl','pt','tr','zh_CN','zh_TW'];
 
@@ -166,14 +185,15 @@ gulp.task('update-i18n', function() {
       'running gulp update-i18n task.');
     process.exit(1);
   }
-});
+  done();
+}));
 
 
 // -----------------------------------------------------------------------------
 // Default task
 // -----------------------------------------------------------------------------
 
-gulp.task('default', ['watch-sass', 'transpile']);
+gulp.task('default', gulp.series('watch-sass', 'transpile'));
 
 
 // http://stackoverflow.com/questions/27859691/gulp-handling-multiple-themes-and-folders

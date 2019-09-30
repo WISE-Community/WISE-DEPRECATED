@@ -9,6 +9,9 @@
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 </head>
 <body>
@@ -62,7 +65,7 @@
 					<div>
 						<c:forEach var="user" items="${users}">
 				    		<p style="font-size:1.2em; font-weight: bold">
-								<a href="${contextPath}/login?userName=${user.userDetails.username}">${user.userDetails.username}</a>
+								<a href="${contextPath}/login?username=${user.userDetails.username}">${user.userDetails.username}</a>
 							</p>
 				  		</c:forEach>
 					</div>

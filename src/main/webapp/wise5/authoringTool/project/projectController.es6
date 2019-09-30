@@ -12,8 +12,9 @@ class ProjectController {
       $scope,
       $state,
       $stateParams,
+      $stomp,
       $timeout,
-      AuthorWebSocketService,
+      $window,
       ConfigService,
       ProjectAssetService,
       ProjectService,
@@ -28,9 +29,10 @@ class ProjectController {
     this.$scope = $scope;
     this.$state = $state;
     this.$stateParams = $stateParams;
+    this.$stomp = $stomp;
     this.$timeout = $timeout;
     this.$translate = this.$filter('translate');
-    this.AuthorWebSocketService = AuthorWebSocketService;
+    this.$window = $window;
     this.ConfigService = ConfigService;
     this.ProjectAssetService = ProjectAssetService;
     this.ProjectService = ProjectService;
@@ -78,7 +80,9 @@ class ProjectController {
     this.TeacherDataService.setCurrentNode(null);
 
     this.metadata = this.ProjectService.getProjectMetadata();
-    this.ProjectService.notifyAuthorProjectBegin(this.projectId);
+    this.subscribeToCurrentAuthors(this.projectId).then(() => {
+      this.ProjectService.notifyAuthorProjectBegin(this.projectId);
+    });
     this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
     this.summernoteRubricHTML = this.ProjectService
         .replaceAssetPaths(this.ProjectService.getProjectRubric());
@@ -109,23 +113,6 @@ class ProjectController {
     };
 
     this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
-
-    this.$scope.$on('currentAuthorsReceived', (event, args) => {
-      let currentAuthorsUsernames = args.currentAuthorsUsernames;
-      let myUserName = this.ConfigService.getMyUserName();
-      currentAuthorsUsernames
-          .splice(currentAuthorsUsernames.indexOf(myUserName), 1);
-      if (currentAuthorsUsernames.length > 0) {
-        this.currentAuthorsMessage = this.$translate('concurrentAuthorsWarning',
-            { currentAuthors: currentAuthorsUsernames.join(', ') });
-      } else {
-        this.currentAuthorsMessage = '';
-      }
-    });
-
-    this.$scope.$on('$destroy', () => {
-      this.ProjectService.notifyAuthorProjectEnd(this.projectId);
-    });
 
     /*
      * Listen for the assetSelected event which occurs when the author
@@ -212,7 +199,21 @@ class ProjectController {
      * has loaded, we will hide the message.
      */
     this.$mdDialog.hide();
-  };
+
+    this.$scope.$on('$destroy', () => {
+      this.endProjectAuthoringSession();
+    });
+
+    this.$window.onbeforeunload = (event) => {
+      this.endProjectAuthoringSession();
+    };
+  }
+
+  endProjectAuthoringSession() {
+    this.unSubscribeFromCurrentAuthors(this.projectId).then(() => {
+      this.ProjectService.notifyAuthorProjectEnd(this.projectId);
+    });
+  }
 
   /**
    * Launch the project in preview mode in a new tab
@@ -221,7 +222,7 @@ class ProjectController {
     let previewProjectEventData = { constraints: true };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(this.ConfigService.getConfigParam('previewProjectURL'));
-  };
+  }
 
   /**
    * Launch the project in preview mode without constraints in a new tab
@@ -231,18 +232,29 @@ class ProjectController {
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(this.ConfigService.getConfigParam('previewProjectURL') +
         '?constraints=false');
-  };
+  }
 
   viewProjectAssets() {
     this.$state.go('root.project.asset', {projectId: this.projectId});
-  };
+  }
 
   viewProjectHistory() {
     this.$state.go('root.project.history', {projectId: this.projectId});
-  };
+  }
 
   viewNotebookSettings() {
     this.$state.go('root.project.notebook', {projectId: this.projectId});
+  }
+
+  showOtherConcurrentAuthors(authors) {
+    const myUsername = this.ConfigService.getMyUsername();
+    authors.splice(authors.indexOf(myUsername), 1);
+    if (authors.length > 0) {
+      this.currentAuthorsMessage = this.$translate('concurrentAuthorsWarning',
+        { currentAuthors: authors.join(', ') });
+    } else {
+      this.currentAuthorsMessage = '';
+    }
   }
 
   saveProject() {
@@ -260,7 +272,7 @@ class ProjectController {
       alert('Invalid JSON. Please check syntax. Aborting save.');
       return;
     }
-  };
+  }
 
   /**
    * Make a request to download this project as a zip file
@@ -275,7 +287,7 @@ class ProjectController {
    */
   closeProject() {
     this.$state.go('root.main');
-  };
+  }
 
   /**
    * Get the node position
@@ -284,7 +296,7 @@ class ProjectController {
    */
   getNodePositionById(nodeId) {
     return this.ProjectService.getNodePositionById(nodeId);
-  };
+  }
 
   /**
    * Get the components that are in the specified node id.
@@ -312,7 +324,7 @@ class ProjectController {
    */
   getNodeTitleByNodeId(nodeId) {
     return this.ProjectService.getNodeTitleByNodeId(nodeId);
-  };
+  }
 
   /**
    * Check if a node id is for a group
@@ -321,7 +333,7 @@ class ProjectController {
    */
   isGroupNode(nodeId) {
     return this.ProjectService.isGroupNode(nodeId);
-  };
+  }
 
   /**
    * A node was clicked so we will go to the node authoring view
@@ -333,7 +345,7 @@ class ProjectController {
         .endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
     this.$state
         .go('root.project.node', {projectId: this.projectId, nodeId: nodeId});
-  };
+  }
 
   /**
    * The constraint icon on a step in the project view was clicked.
@@ -1686,6 +1698,18 @@ class ProjectController {
   nodeHasRubric(nodeId) {
     return this.ProjectService.nodeHasRubric(nodeId);
   }
+
+  subscribeToCurrentAuthors(projectId) {
+    return this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
+      this.$stomp.subscribe(`/topic/current-authors/${projectId}`, (authors, headers, res) => {
+        this.showOtherConcurrentAuthors(authors);
+      }, {});
+    });
+  }
+
+  unSubscribeFromCurrentAuthors(projectId) {
+    return this.$stomp.disconnect();
+  }
 }
 
 ProjectController.$inject = [
@@ -1698,8 +1722,9 @@ ProjectController.$inject = [
     '$scope',
     '$state',
     '$stateParams',
+    '$stomp',
     '$timeout',
-    'AuthorWebSocketService',
+    '$window',
     'ConfigService',
     'ProjectAssetService',
     'ProjectService',

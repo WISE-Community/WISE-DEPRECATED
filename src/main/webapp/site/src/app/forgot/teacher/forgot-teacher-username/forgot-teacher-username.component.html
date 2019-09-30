@@ -1,0 +1,40 @@
+<mat-card class="standalone__content mat-elevation-z4 center">
+  <mat-card-content>
+    <form role="form"
+          fxLayout="column"
+          (submit)="submit()"
+          [formGroup]="forgotTeacherUsernameFormGroup">
+      <h2 class="standalone__title accent" i18n>Forgot Teacher Username</h2>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Email</mat-label>
+          <input matInput
+                 id="email"
+                 name="email"
+                 formControlName="email"
+                 autofocus
+                 required />
+          <mat-error *ngIf="forgotTeacherUsernameFormGroup.controls['email'].hasError('required')" i18n>Email required</mat-error>
+        </mat-form-field>
+      </p>
+      <button mat-flat-button
+              color="primary"
+              [disabled]="!forgotTeacherUsernameFormGroup.valid || processing"
+              type="submit">
+        <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
+        <span i18n>Submit</span>
+      </button>
+    </form>
+    <br/>
+    <div *ngIf="message" class="warn">{{message}}</div>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions class="center">
+    <p>
+      <a routerLink="/contact" i18n>Contact WISE</a>
+    </p>
+    <p>
+      <a routerLink="/join" i18n>Create New Account</a>
+    </p>
+  </mat-card-actions>
+</mat-card>

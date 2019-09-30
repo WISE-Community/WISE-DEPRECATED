@@ -1,3 +1,5 @@
+'use strict';
+
 class StudentDataService {
   constructor(
       $filter,
@@ -100,6 +102,13 @@ class StudentDataService {
         this.handleAnnotationReceived(annotation);
       }
     });
+
+    this.$rootScope.$on('notebookUpdated', (event, args) => {
+      const mode = this.ConfigService.getMode();
+      if (mode === 'student' || mode === 'preview') {
+        this.updateNodeStatuses();
+      }
+    });
   }
 
   retrieveStudentData() {
@@ -110,7 +119,7 @@ class StudentDataService {
       this.studentData.nodeStates = [];
       this.studentData.events = [];
       this.studentData.annotations = [];
-      this.studentData.userName = this.$translate('PREVIEW_STUDENT');
+      this.studentData.username = this.$translate('PREVIEW_STUDENT');
       this.studentData.userId = '0';
 
       // set the annotations into the annotation service
@@ -509,6 +518,10 @@ class StudentDataService {
         result = this.evaluateUsedXSubmitsCriteria(criteria);
       } else if (functionName === 'wroteXNumberOfWords') {
         result = this.evaluateNumberOfWordsWrittenCriteria(criteria);
+      } else if (functionName === 'addXNumberOfNotesOnThisStep') {
+        result = this.evaluateAddXNumberOfNotesOnThisStepCriteria(criteria);
+      } else if (functionName === 'fillXNumberOfRows') {
+        result = this.evaluateFillXNumberOfRowsCriteria(criteria);
       } else if (functionName === '') {
 
       }
@@ -935,6 +948,45 @@ class StudentDataService {
     return false;
   }
 
+  evaluateAddXNumberOfNotesOnThisStepCriteria(criteria) {
+    const params = criteria.params;
+    const nodeId = params.nodeId;
+    const requiredNumberOfNotes = params.requiredNumberOfNotes;
+    const notebookService = this.$injector.get('NotebookService');
+    try {
+      const notebook = notebookService.getNotebookByWorkgroup();
+      const notebookItemsByNodeId = this.getNotebookItemsByNodeId(notebook, nodeId);
+      return notebookItemsByNodeId.length >= requiredNumberOfNotes;
+    } catch (e) {
+
+    }
+    return false;
+  }
+
+  evaluateFillXNumberOfRowsCriteria(criteria) {
+    const params = criteria.params;
+    const nodeId = params.nodeId;
+    const componentId = params.componentId;
+    const requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
+    const tableHasHeaderRow = params.tableHasHeaderRow;
+    const requireAllCellsInARowToBeFilled = params.requireAllCellsInARowToBeFilled;
+    const tableService = this.$injector.get('TableService');
+    const componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    return componentState != null &&
+        tableService.hasRequiredNumberOfFilledRows(componentState, requiredNumberOfFilledRows,
+        tableHasHeaderRow, requireAllCellsInARowToBeFilled);
+  }
+
+  getNotebookItemsByNodeId(notebook, nodeId) {
+    const notebookItemsByNodeId = [];
+    for (let notebookItem of notebook.allItems) {
+      if (notebookItem.nodeId === nodeId) {
+        notebookItemsByNodeId.push(notebookItem);
+      }
+    }
+    return notebookItemsByNodeId;
+  }
+
   /**
    * Populate the stack history and visited nodes history
    * @param events the events
@@ -1206,6 +1258,8 @@ class StudentDataService {
       let deferred = this.$q.defer();
       deferred.resolve(savedStudentDataResponse);
       return deferred.promise;
+    } else if (!this.ConfigService.isRunActive()) {
+      return this.$q.defer().promise;
     } else {
       // set the workgroup id and run id
       const params = {};
@@ -1370,7 +1424,7 @@ class StudentDataService {
    * Returns a promise of the POST request
    */
   saveStudentStatus() {
-    if (!this.ConfigService.isPreview()) {
+    if (!this.ConfigService.isPreview() && this.ConfigService.isRunActive()) {
       const studentStatusURL = this.ConfigService.getStudentStatusURL();
       if (studentStatusURL != null) {
         const runId = this.ConfigService.getRunId();
@@ -2367,43 +2421,49 @@ class StudentDataService {
     return null;
   }
 
-  /**
-   * Get classmate student work
-   * @param nodeId the node id
-   * @param componentId the component id
-   * @param showClassmateWorkSource Where to get the work from.
-   * 'period' will get the classmate work only from the period the student is in.
-   * null will get work from the whole class (all periods).
-   *
-   * @return a promise that will return the component states from classmates
-   */
-  getClassmateStudentWork(nodeId, componentId, showClassmateWorkSource) {
-    const studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
-    const httpParams = {};
-    httpParams.method = 'GET';
-    httpParams.url = studentDataURL;
-
-    const params = {};
-    params.runId = this.ConfigService.getRunId();
-    params.nodeId = nodeId;
-    params.componentId = componentId;
-    params.getStudentWork = true;
-    params.getEvents = false;
-    params.getAnnotations = false;
-    params.onlyGetLatest = true;
-
-    if (showClassmateWorkSource == 'period') {
-      params.periodId = this.ConfigService.getPeriodId();
-    }
-
-    httpParams.params = params;
-
+  getClassmateStudentWork(nodeId, componentId, periodId) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      nodeId: nodeId,
+      componentId: componentId,
+      getStudentWork: true,
+      getEvents: false,
+      getAnnotations: false,
+      onlyGetLatest: true,
+      periodId: periodId
+    };
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getConfigParam('studentDataURL'),
+      params: params
+    };
     return this.$http(httpParams).then((result) => {
       const resultData = result.data;
       if (resultData != null) {
         return resultData.studentWorkList;
       }
       return [];
+    });
+  }
+
+  getClassmateScores(nodeId, componentId, periodId) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      nodeId: nodeId,
+      componentId: componentId,
+      getStudentWork: false,
+      getEvents: false,
+      getAnnotations: true,
+      onlyGetLatest: false,
+      periodId: periodId
+    };
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getConfigParam('studentDataURL'),
+      params: params
+    };
+    return this.$http(httpParams).then((result) => {
+      return result.data.annotations;
     });
   }
 

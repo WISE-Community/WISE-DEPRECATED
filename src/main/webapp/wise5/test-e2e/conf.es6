@@ -32,6 +32,8 @@ exports.config = {
     multiCapabilities: [
         {
             'browserName': 'chrome',
+            'username': process.env.SAUCE_USERNAME,
+            'accessKey': process.env.SAUCE_ACCESS_KEY, 
             'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
             'build': process.env.TRAVIS_BUILD_NUMBER
         }

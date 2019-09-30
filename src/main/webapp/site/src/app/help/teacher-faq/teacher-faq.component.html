@@ -1,0 +1,247 @@
+<div class="content-block">
+  <h1 fxLayoutAlign="left center">
+    <mat-icon class="title-icon">school</mat-icon><span i18n>Teacher Frequently Asked Questions</span>
+  </h1>
+  <hr/>
+    <h2 i18n>Table of Contents</h2>
+    <p class="indented-text"><a (click)="scrollTo('generalQuestions')" class="link" i18n>General Questions</a></p>
+    <p class="indented-text"><a (click)="scrollTo('studentManagement')" class="link" i18n>Student Management</a></p>
+    <p class="indented-text"><a (click)="scrollTo('projectManagement')" class="link" i18n>Project Management</a></p>
+    <p class="indented-text" id="generalQuestions"><a (click)="scrollTo('assessmentOfStudentWork')" class="link" i18n>Assessment of Student Work</a></p>
+    <p class="indented-text"><a (click)="scrollTo('realTimeClassroomMonitor')" class="link" i18n>Real Time Classroom Monitor</a></p>
+    <p class="indented-text"><a (click)="scrollTo('technicalQuestions')" class="link" i18n>Technical Questions</a></p>
+  <hr/>
+  <h2 i18n>General Questions</h2>
+  <h3 i18n>How do I create an account?</h3>
+  <ol>
+    <li i18n>Go to the <a href="{{contextPath}}/join" target="_blank">Register</a> page.</li>
+    <li i18n>Click on "Teacher".</li>
+    <li i18n>Choose to sign up with your email or with your Google Account.</li>
+    <li i18n>Fill out the form and submit it.</li>
+    <li i18n>If you created an account using your email, you will be given a username that you will need to remember. Your username will be your first name and your last name with no space inbetween. There may be a number added at the end of your username if someone has the same name as you.</li>
+  </ol>
+  <h3 i18n>How do I use a unit with my class?</h3>
+  <ol>
+    <li i18n>Sign in to WISE with your teacher account.</li>
+    <li i18n>Click the "Browse WISE Units" tab.</li>
+    <li i18n>Find a project that you would like to use with your class.</li>
+    <li i18n>Click on the project to open the information for the project.</li>
+    <li i18n>Click the "Use With Class" button.</li>
+    <li i18n>Choose the periods you will use the project in.</li>
+    <li i18n>Choose the number of students per team. Choosing 1-3 will allow students to work together in a team.</li>
+    <li id="studentManagement" i18n>Choose the start date. Students will not be able to use the project until this date.</li>
+    <li i18n>Click "Create Run".</li>
+    <li i18n>The run will be created and added to your Teacher Home.</li>
+    <li i18n>Copy the "Access Code" for the new run and write it down somewhere like on the white board. Students will need to use this access code to work on the run you created.</li>
+  </ol>
+  <hr/>
+  <h2 i18n>Student Management</h2>
+  <h3 i18n>Should I register my students for WISE or have them do it themselves?</h3>
+  <p class="indented-text" i18n>WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the "Register" link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their username/password on their first day in the project run.</p>
+  <ul>
+    <li i18n>Once a student has created a WISE account they should never need to create another one.</li>
+    <li i18n>Some teachers that pre-register prefer to give all students the same initial password, to decrease problems with students signing in. This is ok, but for security purposes, we advise that you have the students change their passwords once they log in.</li>
+  </ul>
+  <h3 i18n>A student has forgotten his/her username or password. What should I do?</h3>
+  <ul>
+    <li i18n>First, we recommend always having students WRITE DOWN their username/password when they first register.</li>
+    <li i18n>Second, encourage the students to solve the problem themselves. Tell them to go to the WISE home page, click the Lost username/password link, and click the Student button. If the student can answer their security question (created at registration) they can change their password.</li>
+    <li i18n>Third, if the student can't solve the problem directly, you can change their password for them using the instructions below.</li>
+  </ul>
+  <h3 i18n>How do I change a student's password?</h3>
+  <ol>
+    <li i18n>Sign into WISE with your teacher account.</li>
+    <li i18n>Find the run in your Teacher Home Page.</li>
+    <li i18n>Click the "Teacher Tools" button on the run.</li>
+    <li i18n>Click on the "Manage Students" icon on the left side bar.</li>
+    <li i18n>Find the period the student is in.</li>
+    <li i18n>Find the student and click "Change Password".</li>
+    <li i18n>Alternatively, you can change the password for ALL students in the current period (the new password will be applied to all the students in the period).</li>
+  </ol>
+  <h3 i18n>How do I change a student team after they've started a project run?</h3>
+  <ol>
+    <li i18n>Sign into WISE with your teacher account.</li>
+    <li i18n>Find the run in your Teacher Home Page.</li>
+    <li i18n>Click the "Teacher Tools" button on the run.</li>
+    <li i18n>Click on the "Manage Students" icon on the left side bar.</li>
+    <li i18n>Find the period the student is in.</li>
+    <li i18n>Drag-and-drop student names to move them from one team to another. Make sure to save your changes before leaving this window.</li>
+    <li i18n>If you want to move students into a brand new team, click New Team, then drag 1 or more students into the new team. Save your changes.</li>
+    <li><span class="warning" i18n>Warning 1</span>: <span i18n>If you move Student A into an established team, student A loses all of their current work and inherits the current work of the established team.</span></li>
+    <li><span class="warning" i18n>Warning 2</span>: <span i18n>If you move Student A into a newly created (blank) team, student A will lose all of their work.</span></li>
+  </ol>
+  <h3 i18n>How do I change the period for a student?</h3>
+  <ol>
+    <li i18n>Sign into WISE with your teacher account.</li>
+    <li i18n>Find the run in your Teacher Home Page.</li>
+    <li i18n>Click the "Teacher Tools" button on the run.</li>
+    <li i18n>Click on the "Manage Students" icon on the left side bar.</li>
+    <li i18n>Find the period the student is in.</li>
+    <li i18n>Find the student.</li>
+    <li i18n>Click the "Period" link.</li>
+    <li i18n>A popup will show up that will allow you to choose a different period for the student.</li>
+    <li i18n>Choose a different period.</li>
+    <li i18n>Click "Save Changes".</li>
+    <li><span class="warning" i18n>Warning</span>: <span i18n>If you move a student to a different period, they will lose all of their work.</span></li>
+  </ol>
+  <h3 id="projectManagement" i18n>I do not remember my teacher access code that students need to create their account for my new students.</h3>
+  <ul>
+    <li i18n>Sign into WISE with your teacher account.</li>
+    <li i18n>Find the run in your Teacher Home Page.</li>
+    <li i18n>The Access Code will be displayed below the run title.</li>
+  </ul>
+  <hr/>
+  <h2 i18n>Project Management</h2>
+  <h3 i18n>When should I set up my project run?</h3>
+  <ul>
+    <li i18n>You need to set up your project run anytime before the students can start working on the project. They will need the Access Code for the run in order to start working.</li>
+  </ul>
+  <h3 i18n>How long does it take to run a project?</h3>
+  <ul>
+    <li i18n>Project durations vary from about 3 days to 10 days. Some projects may display an estimation of the number of hours it will take for students to complete the project.</li>
+  </ul>
+  <h3 i18n>Can I shorten a project run to 1 or 2 days?</h3>
+  <ul>
+    <li i18n>It is not recommended to shorten a project. Each project has been carefully designed to lead the student through an inquiry process and cutting it short will result in a less satisfactory educational student experience. Nevertheless, if you are under a time constraint and knowledgeable of the project topic, you could customize the project and shorten it to your specific needs.</li>
+  </ul>
+  <h3 i18n>Where do I find out about lesson plans and standards for WISE projects?</h3>
+  <ul>
+    <li i18n>Sign into WISE with your teacher account.</li>
+    <li i18n>Click the "Browse WISE Units" tab.</li>
+    <li i18n>Find a project you would like to learn about.</li>
+    <li i18n>Click on the project.</li>
+    <li i18n>This will display a popup that displays information about the project.</li>
+    <li i18n>Note: Some projects may not have much information because it is dependent on the author to provide the lesson plan and standards.</li>
+  </ul>
+  <h3 i18n>How do I fit a WISE project into my curriculum?</h3>
+  <ul>
+    <li i18n>In general students will benefit from some pre-teaching of the topic covered in the project. It is really up to the teacher to decide where it best fits to support student learning. Many teachers use a WISE project as a capstone activity while others integrate it into their curriculum at a midpoint. Some teachers elect to use WISE projects an introductory activity for a unit, or as a summation activity for a unit.</li>
+  </ul>
+  <h3 i18n>How do I add a period after creating a run?</h3>
+  <ol>
+    <li i18n>Sign into WISE with your teacher account.</li>
+    <li i18n>Find the run in your Teacher Home Page.</li>
+    <li i18n>On the run, click the three vertical dots to view the run options.</li>
+    <li i18n>Click "Edit Settings".</li>
+    <li i18n>Enter a period name in the "Add New Period" field.</li>
+    <li i18n>Click "Add Period".</li>
+  </ol>
+  <h3 i18n>How do I delete a period after creating a run?</h3>
+  <ol>
+    <li i18n>Sign into WISE with your teacher account.</li>
+    <li i18n>Find the run in your Teacher Home Page.</li>
+    <li i18n>On the run, click the three vertical dots to view the run options.</li>
+    <li i18n>Click "Edit Settings".</li>
+    <li i18n>Find the period you want to delete and click the "Delete" button next to it.</li>
+    <li i18n>Note: You are not allowed to delete a period that has students in it.</li>
+  </ol>
+  <h3 id="assessmentOfStudentWork" i18n>What if I run out of computer lab time but some of my students are not finished with the project?</h3>
+  <ul>
+    <li i18n>WISE is a web-based learning environments, so students can sign in from a computer at school or at home. This means that students can complete the project from any home or community based computer, per the teacher's discretion.</li>
+  </ul>
+  <hr/>
+  <h2 i18n>Assessment of Student Work</h2>
+  <h3 i18n>How do I review and grade student work?</h3>
+  <ul>
+    <li i18n>Sign into WISE with your teacher account.</li>
+    <li i18n>Find the run in your Teacher Home Page.</li>
+    <li i18n>Click the "Teacher Tools" button on the run.</li>
+    <li i18n>Here you will be able to look at your students' work.</li>
+    <li i18n>On the left sidebar you can choose to look at the work by step by clicking "Grade By Step" or you can choose to look at the work by team by clicking "Grade By Team".</li>
+    <li i18n>Next to each student's work, you will be able to give them a score and comment.</li>
+  </ul>
+  <h3 i18n>How do students see my comments and scores for their work?</h3>
+  <ul>
+    <li i18n>The student must sign into WISE with their student account.</li>
+    <li i18n>Open the project.</li>
+    <li i18n>Go to the step that the teacher graded.</li>
+    <li i18n>The comment and score will be displayed under the piece of work that was graded.</li>
+  </ul>
+  <h3 i18n>What should I look for in my student's answers?</h3>
+  <ul>
+    <li i18n>The following link will give you a sample rubric for grading a step in the Mitosis and Cell Processes project. The rubric is based on our TELS Center research on how students integrate their knowledge of complex science concepts. We hope that it can give you a start in developing your own rubrics for the notes and steps you plan to grade.</li>
+    <li><a href="https://wise.berkeley.edu/portal/themes/default/images/SampleRubric.png" target="_blank" i18n>Sample rubric for assessing student work</a></li>
+  </ul>
+  <h3 i18n>How can I encourage my students to review the graded notes and comments I have made?</h3>
+  <ul>
+    <li i18n>Many teachers find it advantageous to grade the first step or two at the end of the first day of the project run. At the beginning of class the next day they share with the whole class some sample responses and have the class critique the work.</li>
+  </ul>
+  <h3 id="realTimeClassroomMonitor" i18n>How do I find time to grade all of the student work?</h3>
+  <ul>
+    <li i18n>We recommend that you go through the project and select a few steps that you think best demonstrate the students' understanding of the complex concepts covered in the module and grade those steps. Then tell your students they must complete all questions but should concentrate their efforts on the key steps. We recognize that critically grading each step is very time consuming and unpractical.</li>
+  </ul>
+  <hr/>
+  <h2 i18n>Real Time Classroom Monitor</h2>
+  <h3 i18n>What is the Real Time Classroom Monitor?</h3>
+  <ul>
+    <li i18n>The Real Time Classroom Monitor allows teachers to view student progress in real time. Teachers will be able to see what step a student is on, how much time the student has spent on that step, and how much of the project the student has completed. All of this information will be updated immediately in real time as students work on the project.</li>
+  </ul>
+  <h3 i18n>Does the Real Time Classroom Monitor work on a tablet like the iPad?</h3>
+  <ul>
+    <li id="technicalQuestions" i18n>Yes it does.</li>
+  </ul>
+  <h3 i18n>Can I use the Real Time Classroom Monitor to pause student screens?</h3>
+  <ul>
+    <li i18n>Yes you can! This can be useful if you need to grab their attention in order to have a class discussion or to make an announcement.</li>
+  </ul>
+  <hr/>
+  <h2 i18n>Technical Questions</h2>
+  <h3 i18n>The WISE web site won't load on my web browser. What do I do?</h3>
+  <ul>
+    <li i18n>You can try <a href="http://www.wikihow.com/Clear-Your-Browser's-Cache" target="_blank">clearing your browser cache</a> and then reloading the WISE web site.</li>
+    <li i18n>You can try using a different web browser. We recommend using Chrome or Firefox.</li>
+  </ul>
+  <h3 i18n>How many computers do I need to run WISE?</h3>
+  <ul>
+    <li i18n>We strongly recommend one computer for every two students. Research shows that students benefit from working together as a team of two.</li>
+    <li></li>
+  </ul>
+  <h3 i18n>What if I have trouble logging in?</h3>
+  <ul>
+    <li i18n>If you do not remember your username or password click the Lost Username or Password link and follow the instructions. </li>
+  </ul>
+  <h3 i18n>Can I use WISE in another language?</h3>
+  <span class="indented-text" i18n>Yes!</span>
+  <ol>
+    <li i18n>Sign into WISE with your teacher account.</li>
+    <li i18n>Click on your account icon at the top right of the page. This should open a drop down with options.</li>
+    <li i18n>Click the <a href="{{contextPath}}/teacher/profile/edit" target="_blank">"Edit Profile"</a> option.</li>
+    <li i18n>Near the bottom there will be a "Language" setting.</li>
+    <li i18n>Change the language to the language of your choice.</li>
+    <li i18n>Note 1: If your language is not listed as an option, or you'd like to help us improve the translation, please contact us and we'll help you get started!</li>
+    <li i18n>Note 2: Changing the language will change the language of the website but will not change the language of the projects. Projects must be independently translated which means that if you want to use a project in another language, you must translate it yourself or find a version of the project that has been translated by someone else.</li>
+  </ol>
+  <h3 i18n>Who do I contact when I have a problem I can't solve?</h3>
+  <ul>
+    <li i18n>The <a href="{{contextPath}}/contact" target="_blank">Contact WISE form</a> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</li>
+  </ul>
+</div>
+<br/>
+<div class="content">
+  <div fxLayout="row"
+       fxLayout.xs="column"
+       fxLayoutAlign="center stretch"
+       fxLayoutAlign.xs="center center"
+       fxLayoutGap="32px"
+       fxLayoutGap.sm="24px"
+       fxLayoutGap.gt-sm="32px">
+    <app-call-to-action fxFlex
+                        fxFlex.gt-xs="33"
+                        icon="info"
+                        iconColor="accent-2"
+                        i18n-headline
+                        headline="Getting Started"
+                        i18n-content
+                        content="Information for new users."
+                        destination="../getting-started"></app-call-to-action>
+    <app-call-to-action fxFlex
+                        fxFlex.gt-xs="33"
+                        icon="face"
+                        iconColor="accent"
+                        i18n-headline
+                        headline="Student FAQ"
+                        i18n-content
+                        content="Questions from students."
+                        destination="../student-faq"></app-call-to-action>
+  </div>
+</div>

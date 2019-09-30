@@ -7,6 +7,9 @@
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <title><spring:message code="teacher.management.changestudentperiod.header"/></title>
 
@@ -17,7 +20,7 @@
 
 	<div class="sectionHead"><spring:message code="teacher.management.changestudentperiod.header"/></div>
 
-	<form:form method="post" action="changestudentperiod.html" commandName="changePeriodParameters" id="changestudentperiod" autocomplete='off'>
+	<form:form method="post" action="changestudentperiod.html" modelAttribute="changePeriodParameters" id="changestudentperiod" autocomplete='off'>
 		<div class="sectionContent">
 			<span style="color:#ff0000;"><spring:message code="teacher.management.changestudentperiod.warning"/></span>
 		</div>

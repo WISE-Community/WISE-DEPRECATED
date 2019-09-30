@@ -1,3 +1,31 @@
+<p>{{ 'projectIcon' | translate }} <button ng-click="projectInfoController.toggleEditProjectIconMode()">{{ 'edit' | translate }}</button></p>
+<br/>
+<div style="width: 200px; height: 200px; display: flex; align-items: center; justify-content: center;">
+  <div ng-if="projectInfoController.isShowProjectIcon">
+    <img ng-src="{{projectInfoController.projectIcon}}"
+         style="width: 200px;"/>
+  </div>
+  <div ng-if="projectInfoController.isShowProjectIconError"
+       style="width: 200px; height: 200px; border: 1px solid black; padding: 20px;">
+    <p style="color: red;">{{ 'thisProjectDoesNotHaveAProjectIcon' | translate }}</p>
+    <br/>
+    <p style="color: red;">{{ 'clickTheEditButtonToSetOne' | translate }}</p>
+  </div>
+  <div ng-if="projectInfoController.isShowProjectIconLoading">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </div>
+</div>
+<div ng-if="projectInfoController.isEditingProjectIcon">
+  <br/>
+  <span>{{ 'chooseANewProjectIcon' | translate }}</span> <button ng-click="projectInfoController.chooseCustomProjectIcon()">{{ 'upload' | translate }}</button>
+  <br/>
+  <br/>
+  <img ng-repeat="projectIcon in projectInfoController.projectIcons"
+       src="wise5/authoringTool/projectIcons/{{projectIcon}}"
+       ng-click="projectInfoController.setFeaturedProjectIcon(projectIcon)"/>
+  <br/>
+</div>
+<br/>
 <div ng-repeat='metadataField in projectInfoController.metadataAuthoring.fields'>
   <span style='font-weight:bold'>{{ metadataField.name }}: </span>
   <textarea ng-if='metadataField.type == "textarea"' rows='3', cols='100'

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2016 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2019 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -27,14 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.user.User;
@@ -50,24 +46,20 @@ import org.wise.portal.service.portal.PortalService;
 public class LoginController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   PortalService portalService;
 
-  @RequestMapping(value = "/login", method = RequestMethod.GET)
+  @GetMapping("/legacy/login")
   public String handleLogIn(HttpServletRequest request, ModelMap modelMap) throws Exception {
     String failed = request.getParameter("failed");
     String redirectUrl = request.getParameter("redirect");
     String requireCaptcha = request.getParameter("requireCaptcha");
     String reCaptchaFailed = request.getParameter("reCaptchaFailed");
-
-    // get the user name that we will use to pre-populate the Username field
-    String userName = request.getParameter("userName");
-
-    // get the public and private keys from the wise.properties
-    String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-    String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+    String username = request.getParameter("username");
+    String reCaptchaPublicKey = appProperties.getProperty("recaptcha_public_key");
+    String reCaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
 
     if (StringUtils.hasText(failed)) {
       modelMap.put("failed", Boolean.TRUE);
@@ -77,28 +69,21 @@ public class LoginController {
       modelMap.put("redirect",redirectUrl);
     }
 
-    if (userName != null) {
-      // make the userName available to the jsp page
-      modelMap.put("userName", userName);
+    if (username != null) {
+      modelMap.put("username", username);
     }
 
-    /*
-     * all three variables must be available in order for captcha to work
-     */
     if (requireCaptcha != null && reCaptchaPublicKey != null && reCaptchaPrivateKey != null) {
       if (StringUtils.hasText(requireCaptcha)) {
-        // make the page require captcha
         modelMap.put("requireCaptcha", Boolean.TRUE);
         modelMap.put("reCaptchaPublicKey", reCaptchaPublicKey);
         modelMap.put("reCaptchaPrivateKey", reCaptchaPrivateKey);
 
         if (StringUtils.hasText(reCaptchaFailed)) {
-          // the user has entered the ReCaptcha text incorrectly
           modelMap.put("reCaptchaFailed", Boolean.TRUE);
         }
       }
     }
-
     return "login";
   }
 
@@ -109,25 +94,20 @@ public class LoginController {
    * @param response
    * @throws IOException
    */
-  @RequestMapping(value = "/session/renew", method = RequestMethod.GET)
-  public void handleLogIn(HttpServletResponse response) throws IOException {
+  @GetMapping("/session/renew")
+  public void renewSession(HttpServletResponse response) throws IOException {
     User loggedInUser = ControllerUtil.getSignedInUser();
     if (loggedInUser != null) {
-      // user is logged in.
-      // if login is disallowed (by admin), ask the user (student, teacher, author) to log out soon
       try {
         Portal portal = portalService.getById(new Integer(1));
         if (!portal.isLoginAllowed()) {
           response.getWriter().print("requestLogout");
         } else {
-          // otherwise, user can continue their session
           response.getWriter().print("true");
         }
       } catch (ObjectNotFoundException e) {
-        // do nothing
       }
     } else {
-      // user is not logged in.
       response.getWriter().print("false");
     }
   }

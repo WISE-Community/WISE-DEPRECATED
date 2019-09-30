@@ -1,0 +1,16 @@
+<h2 class="mat-dialog-title" i18n>Legacy Unit Warning</h2>
+<div mat-dialog-content>
+  <div class="info-block">
+    <p class="mat-subheading-2 accent-1">{{ project.metadata.title }} <span class="mat-caption" i18n>(Unit ID: {{ project.id }})</span></p>
+    <p class="warn" i18n>WARNING: this is a legacy unit from a version of WISE that is many years old.</p>
+    <p i18n>We recommend finding a newer version in the library, as support for classroom implementations of legacy units will end on October 1, 2019. If you cannot find a newer version, <a routerLink="/contact" target="_blank">contact us</a> if you're interested in upgrading the unit. Thanks!</p>
+  </div>
+</div>
+<div mat-dialog-actions
+     fxLayout="row"
+     fxLayout.xs="column"
+     fxLayoutAlign="end"
+     fxLayoutGap="8px">
+  <button mat-button (click)="proceedAnyway()" i18n>Proceed Anyway</button>
+  <button mat-flat-button color="primary" mat-dialog-close i18n>Cancel</button>
+</div>

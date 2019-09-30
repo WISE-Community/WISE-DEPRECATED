@@ -46,24 +46,23 @@ public class TaggerController {
   private ProjectService projectService;
 
   @RequestMapping("/admin/project/tagger.html")
-  public ModelAndView handleRequestInternal(
-    HttpServletRequest request,
-    HttpServletResponse response) throws Exception {
+  public ModelAndView handleRequestInternal(HttpServletRequest request,
+      HttpServletResponse response) throws Exception {
     String command = request.getParameter("command");
-
     if (command.equals("createTag")) {
       String projectId = request.getParameter("projectId");
-      Project project = this.projectService.getById(Long.parseLong(projectId));
+      Project project = projectService.getById(Long.parseLong(projectId));
       String tag = request.getParameter("tag");
 
       if (projectId == null || tag == null || projectId.equals("") || tag.equals("")) {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameters provided, cannot complete the request.");
-      } else if (this.projectService.projectContainsTag(project, tag)) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "Invalid parameters provided, cannot complete the request.");
+      } else if (projectService.projectContainsTag(project, tag)) {
         response.getWriter().write("duplicate");
-      } else if (!this.projectService.isAuthorizedToCreateTag(ControllerUtil.getSignedInUser(), tag)) {
+      } else if (!projectService.isAuthorizedToCreateTag(ControllerUtil.getSignedInUser(), tag)) {
         response.getWriter().write("not-authorized");
       } else {
-        Integer tagId = this.projectService.addTagToProject(tag, Long.parseLong(projectId));
+        Integer tagId = projectService.addTagToProject(tag, Long.parseLong(projectId));
         response.getWriter().write(String.valueOf(tagId));
       }
     } else if (command.equals("removeTag")) {
@@ -71,51 +70,51 @@ public class TaggerController {
       String tagId = request.getParameter("tagId");
 
       if (projectId == null || tagId == null || projectId.equals("") || tagId.equals("")) {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameters provided, cannot complete the request.");
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "Invalid parameters provided, cannot complete the request.");
       } else {
-        this.projectService.removeTagFromProject(Integer.parseInt(tagId), Long.parseLong(projectId));
+        projectService.removeTagFromProject(Integer.parseInt(tagId), Long.parseLong(projectId));
         response.getWriter().write("success");
       }
     } else if (command.equals("updateTag")) {
       String projectId = request.getParameter("projectId");
-      Project project = this.projectService.getById(Long.parseLong(projectId));
+      Project project = projectService.getById(Long.parseLong(projectId));
       String tagId = request.getParameter("tagId");
       String name = request.getParameter("name");
 
-      if (projectId == null || tagId == null || name == null || projectId.equals("") || tagId.equals("") || name.equals("")) {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameters provided, cannot complete the request.");
-      } else if (this.projectService.projectContainsTag(project, name)) {
+      if (projectId == null || tagId == null || name == null || projectId.equals("")
+          || tagId.equals("") || name.equals("")) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "Invalid parameters provided, cannot complete the request.");
+      } else if (projectService.projectContainsTag(project, name)) {
         response.getWriter().write("duplicate");
-      } else if (!this.projectService.isAuthorizedToCreateTag(ControllerUtil.getSignedInUser(), name)) {
+      } else if (!projectService.isAuthorizedToCreateTag(ControllerUtil.getSignedInUser(), name)) {
         response.getWriter().write("not-authorized");
       } else {
-        Integer id = this.projectService.updateTag(Integer.parseInt(tagId), Long.parseLong(projectId), name);
+        Integer id =
+            projectService.updateTag(Integer.parseInt(tagId), Long.parseLong(projectId), name);
         response.getWriter().write(String.valueOf(id));
       }
     } else if (command.equals("retrieveProjectTags")) {
       String projectId = request.getParameter("projectId");
 
       if (projectId != null) {
-        Project p = this.projectService.getById(Long.parseLong(projectId));
+        Project p = projectService.getById(Long.parseLong(projectId));
         if (p != null) {
           String tagString = "";
-          for(Tag t : p.getTags()) {
+          for (Tag t : p.getTags()) {
             tagString += t.getId() + "~" + t.getName() + ",";
           }
-
-          // remove trailing comma
           tagString = tagString.substring(0,tagString.length() - 1);
-
           response.getWriter().write(tagString);
           return null;
         }
       }
-
       response.getWriter().write("Invalid project parameter, cannot retrieve tags.");
     } else {
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, "I do not understand the command: " + command);
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+          "I do not understand the command: " + command);
     }
-
     return null;
   }
 }

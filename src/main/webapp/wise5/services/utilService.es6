@@ -1010,6 +1010,62 @@ class UtilService {
   setIsJSONValidMessage(isJSONValid) {
     this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
   }
+
+  moveObjectUp(objects, index) {
+    if (index !== 0) {
+      const object = objects[index];
+      objects.splice(index, 1);
+      objects.splice(index - 1, 0, object);
+    }
+  }
+
+  moveObjectDown(objects, index) {
+    if (index !== objects.length - 1) {
+      const object = objects[index];
+      objects.splice(index, 1);
+      objects.splice(index + 1, 0, object);
+    }
+  }
+
+  restoreSummernoteCursorPosition(summernoteId) {
+    $('#' + summernoteId).summernote('editor.restoreRange');
+    $('#' + summernoteId).summernote('editor.focus');
+  }
+
+  insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
+    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+  }
+
+  insertVideoIntoSummernote(summernoteId, fullAssetPath) {
+    const videoElement = document.createElement('video');
+    videoElement.controls = 'true';
+    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+    $('#' + summernoteId).summernote('insertNode', videoElement);
+  }
+
+  rgbToHex(color, opacity) {
+    let values = color
+      .replace(/rgb?\(/, '')
+      .replace(/\)/, '')
+      .replace(/[\s+]/g, '')
+      .split(',');
+    let a = parseFloat(opacity || 1),
+      r = Math.floor(a * parseInt(values[0]) + (1 - a) * 255),
+      g = Math.floor(a * parseInt(values[1]) + (1 - a) * 255),
+      b = Math.floor(a * parseInt(values[2]) + (1 - a) * 255);
+    return "#" +
+      ("0" + r.toString(16)).slice(-2) +
+      ("0" + g.toString(16)).slice(-2) +
+      ("0" + b.toString(16)).slice(-2);
+  }
+  
+  isMatchingPeriods(periodId1, periodId2) {
+    return this.isAllPeriods(periodId1) || this.isAllPeriods(periodId2) || periodId1 == periodId2;
+  }
+
+  isAllPeriods(periodId) {
+    return periodId == null || periodId === -1;
+  }
 }
 
 // Get the last element of the array

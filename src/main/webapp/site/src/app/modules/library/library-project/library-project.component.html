@@ -1,0 +1,25 @@
+<mat-card *ngIf="project.visible" 
+          class="library-project mat-card--button"
+          (click)="showDetails()"
+          (keyup.enter)="showDetails()"
+          [@flash]="{value: '*', params: {duration: animateDuration, delay: animateDelay}}"
+          role="button"
+          tabindex="0"
+          i18n-aria-label
+          aria-label="Show project details">
+  <div class="library-project__cover" [style.background-image]="project.thumbStyle"></div>
+  <app-library-project-disciplines [project]="project"></app-library-project-disciplines>
+  <div class="library-project__details can-highlight"
+       [ngClass]="{'highlighted-bg': project.isHighlighted}">
+    <p class="library-project__title">
+      {{ project.metadata.title }}&nbsp;
+      <span class="mat-caption secondary-text" i18n>(ID: {{ project.id }})</span>&nbsp;
+      <mat-icon *ngIf="project.wiseVersion === 4"
+                color="warn"
+                i18n-matTooltip
+                matTooltip="Legacy Unit"
+                [matTooltipPosition]="'above'">warning</mat-icon>
+    </p>
+    <p *ngIf="project.shared" class="info mat-caption" i18n>Shared by {{ project.owner.displayName }}</p>
+  </div>
+</mat-card>

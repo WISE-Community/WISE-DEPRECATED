@@ -11,6 +11,9 @@
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
@@ -57,13 +60,13 @@ $(document).ready(function() {
 
 						<table id="teacherQuickLinks">
 							<tr>
-								<td><a href="${contextPath}/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
+								<td><a href="${contextPath}/legacy/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
 							</tr>
 							<tr>
-								<td><a id="projectLibraryLink" href="${contextPath}/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
+								<td><a id="projectLibraryLink" href="${contextPath}/legacy/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
 							</tr>
 							<tr>
-								<td><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
+								<td><a href="${contextPath}/legacy/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
 							</tr>
 							<c:if test="${discourseSSOLoginURL != null}">
 							   <tr>

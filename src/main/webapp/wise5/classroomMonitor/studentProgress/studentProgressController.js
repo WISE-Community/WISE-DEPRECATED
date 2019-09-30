@@ -140,9 +140,9 @@ var StudentProgressController = function () {
         value: function isWorkgroupShown(workgroup) {
             var show = false;
 
-            var currentPeriod = this.getCurrentPeriod().periodId;
+            var currentPeriod = this.TeacherDataService.getCurrentPeriod().periodId;
 
-            if (currentPeriod === -1 || workgroup.periodId === this.getCurrentPeriod().periodId) {
+            if (currentPeriod === -1 || workgroup.periodId === currentPeriod) {
                 if (this.currentWorkgroup) {
                     if (workgroup.workgroupId === this.currentWorkgroup.workgroupId) {
                         show = true;
@@ -153,16 +153,6 @@ var StudentProgressController = function () {
             }
 
             return show;
-        }
-
-        /**
-         * Get the current period
-         */
-
-    }, {
-        key: 'getCurrentPeriod',
-        value: function getCurrentPeriod() {
-            return this.TeacherDataService.getCurrentPeriod();
         }
     }, {
         key: 'getStudentTotalScore',
@@ -328,13 +318,13 @@ var StudentProgressController = function () {
 
                 if (workgroup != null) {
                     var workgroupId = workgroup.workgroupId;
-                    var userName = workgroup.userName;
-                    var displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId);
+                    var username = workgroup.username;
+                    var displayNames = this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
                     var team = {
                         periodId: workgroup.periodId,
                         periodName: workgroup.periodName,
                         workgroupId: workgroupId,
-                        userName: displayNames
+                        username: displayNames
                     };
                     this.teams.push(team);
                     this.updateTeam(workgroupId);
@@ -396,46 +386,46 @@ var StudentProgressController = function () {
 
             switch (this.sort) {
                 case 'team':
-                    orderBy = ['workgroupId', 'userName'];
+                    orderBy = ['workgroupId', 'username'];
                     break;
                 case '-team':
-                    orderBy = ['-workgroupId', 'userName'];
+                    orderBy = ['-workgroupId', 'username'];
                     break;
                 case 'student':
-                    orderBy = ['userName', 'workgroupId'];
+                    orderBy = ['username', 'workgroupId'];
                     break;
                 case '-student':
-                    orderBy = ['-userName', 'workgroupId'];
+                    orderBy = ['-username', 'workgroupId'];
                     break;
                 case 'score':
-                    orderBy = ['scorePct', 'userName'];
+                    orderBy = ['scorePct', 'username'];
                     break;
                 case '-score':
-                    orderBy = ['-scorePct', 'userName'];
+                    orderBy = ['-scorePct', 'username'];
                     break;
                 case 'completion':
-                    orderBy = ['completion.completionPct', 'userName'];
+                    orderBy = ['completion.completionPct', 'username'];
                     break;
                 case '-completion':
-                    orderBy = ['-completion.completionPct', 'userName'];
+                    orderBy = ['-completion.completionPct', 'username'];
                     break;
                 case 'location':
-                    orderBy = ['location', 'userName'];
+                    orderBy = ['location', 'username'];
                     break;
                 case '-location':
-                    orderBy = ['-location', 'userName'];
+                    orderBy = ['-location', 'username'];
                     break;
                 case 'time':
-                    orderBy = ['-online', '-timeSpent', 'userName'];
+                    orderBy = ['-online', '-timeSpent', 'username'];
                     break;
                 case '-time':
-                    orderBy = ['-online', 'timeSpent', 'userName'];
+                    orderBy = ['-online', 'timeSpent', 'username'];
                     break;
                 case 'online':
-                    orderBy = ['online', 'userName'];
+                    orderBy = ['online', 'username'];
                     break;
                 case '-online':
-                    orderBy = ['-online', 'userName'];
+                    orderBy = ['-online', 'username'];
                     break;
             }
 

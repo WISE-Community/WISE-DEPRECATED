@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -45,7 +45,7 @@ public class Connector {
    * @return
    * @throws IOException
    */
-  public static String request(String urlStr, String params) throws IOException{
+  public static String request(String urlStr, String params) throws IOException {
     URL url = new URL(urlStr);
     URLConnection conn = url.openConnection();
     conn.setDoOutput(true);
@@ -58,7 +58,6 @@ public class Connector {
    * and returns the <code>String</code> response string.
    *
    * @param urlStr
-   * @param params
    * @return
    * @throws IOException
    */
@@ -73,7 +72,7 @@ public class Connector {
    * Given a <code>URLConnection</code> and the <code>String</code> parameters, writes the
    * parameters to the connection.
    */
-  private static void writeParameters(URLConnection conn, String params) throws IOException{
+  private static void writeParameters(URLConnection conn, String params) throws IOException {
     conn.setDoOutput(true);
     OutputStreamWriter paramWriter = new OutputStreamWriter(conn.getOutputStream());
     paramWriter.write(params);
@@ -88,7 +87,7 @@ public class Connector {
    * @return
    * @throws IOException
    */
-  private static String getResponseString(URLConnection conn) throws IOException{
+  private static String getResponseString(URLConnection conn) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
     String line;
     String response = "";

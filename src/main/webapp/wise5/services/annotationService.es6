@@ -251,43 +251,33 @@ class AnnotationService {
     return localAnnotation;
   }
 
-  /**
-   * Add or update the annotation to our local collection
-   * @param annotation the annotation object
-   */
   addOrUpdateAnnotation(annotation) {
-    if (annotation != null) {
-      let updated = false;
-      const annotations = this.annotations;
-      if (annotations != null) {
-        for (let a = annotations.length - 1; a >= 0; a--) {
-          const tempAnnotation = annotations[a];
-          if (tempAnnotation != null) {
-            if (annotation.id == tempAnnotation.id &&
-              annotation.nodeId == tempAnnotation.nodeId &&
-              annotation.componentId == tempAnnotation.componentId &&
-              annotation.fromWorkgroupId == tempAnnotation.fromWorkgroupId &&
-              annotation.toWorkgroupId == tempAnnotation.toWorkgroupId &&
-              annotation.type == tempAnnotation.type &&
-              annotation.studentWorkId == tempAnnotation.studentWorkId &&
-              annotation.runId == tempAnnotation.runId &&
-              annotation.periodId == tempAnnotation.periodId) {
-
-              // the annotation matches so we will update it
-              tempAnnotation.data = annotation.data;
-              tempAnnotation.clientSaveTime = annotation.clientSaveTime;
-              tempAnnotation.serverSaveTime = annotation.serverSaveTime;
-              updated = true;
-            }
-          }
-        }
-      }
-      if (!updated) {
-        // we did not find a match so we will add it
-        annotations.push(annotation);
+    let isAnnotationFound = false;
+    for (let a = this.annotations.length - 1; a >= 0; a--) {
+      const localAnnotation = this.annotations[a];
+      if (this.isAnnotationMatch(annotation, localAnnotation)) {
+        isAnnotationFound = true;
+        localAnnotation.data = annotation.data;
+        localAnnotation.clientSaveTime = annotation.clientSaveTime;
+        localAnnotation.serverSaveTime = annotation.serverSaveTime;
       }
     }
-  };
+    if (!isAnnotationFound) {
+      this.annotations.push(annotation);
+    }
+  }
+
+  isAnnotationMatch(annotation1, annotation2) {
+    return annotation1.id === annotation2.id &&
+      annotation1.nodeId === annotation2.nodeId &&
+      annotation1.componentId === annotation2.componentId &&
+      annotation1.fromWorkgroupId === annotation2.fromWorkgroupId &&
+      annotation1.toWorkgroupId === annotation2.toWorkgroupId &&
+      annotation1.type === annotation2.type &&
+      annotation1.studentWorkId === annotation2.studentWorkId &&
+      annotation1.runId === annotation2.runId &&
+      annotation1.periodId === annotation2.periodId;
+  }
 
   /**
    * Set the annotations
@@ -367,25 +357,27 @@ class AnnotationService {
           if (annotation.type === 'score' || annotation.type === 'autoScore') {
             const tempNodeId = annotation.nodeId;
             if (nodeId == tempNodeId) {
-              const componentId = annotation.componentId;
-              const data = annotation.data;
-              const scoreFound = tempNodeId + '-' + componentId;
-              if (scoresFound.indexOf(scoreFound) == -1) {
-                if (data != null) {
-                  const value = data.value;
-                  if (!isNaN(value)) {
-                    if (score == null) {
-                      score = value;
-                    } else {
-                      score += value;
-                    }
+              const tempComponentId = annotation.componentId;
+              if (this.componentExists(tempNodeId, tempComponentId)) {
+                const data = annotation.data;
+                const scoreFound = tempNodeId + '-' + tempComponentId;
+                if (scoresFound.indexOf(scoreFound) == -1) {
+                  if (data != null) {
+                    const value = data.value;
+                    if (!isNaN(value)) {
+                      if (score == null) {
+                        score = value;
+                      } else {
+                        score += value;
+                      }
 
-                    /*
-                     * remember that we have found a score for this component
-                     * so that we don't double count it if the teacher scored
-                     * the component more than once
-                     */
-                    scoresFound.push(scoreFound);
+                      /*
+                       * remember that we have found a score for this component
+                       * so that we don't double count it if the teacher scored
+                       * the component more than once
+                       */
+                      scoresFound.push(scoreFound);
+                    }
                   }
                 }
               }
@@ -396,6 +388,10 @@ class AnnotationService {
     }
 
     return score;
+  }
+
+  componentExists(nodeId, componentId) {
+    return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId) != null;
   }
 
   /**
@@ -608,6 +604,18 @@ class AnnotationService {
       }
     }
     return annotation;
+  }
+
+  isThereAnyScoreAnnotation(nodeId, componentId, periodId) {
+    const annotations = this.getAnnotations();
+    for (const annotation of annotations) {
+      if (annotation.nodeId === nodeId && annotation.componentId === componentId &&
+          (this.UtilService.isMatchingPeriods(annotation.periodId, periodId)) && 
+          (annotation.type === 'score' || annotation.type === 'autoScore')) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -893,6 +901,59 @@ class AnnotationService {
       }
     }
     return annotations;
+  }
+
+  getAverageAutoScore(nodeId, componentId, periodId = -1, type = null) {
+    let totalScoreSoFar = 0;
+    let annotationsCounted = 0;
+    for (let annotation of this.getAllLatestScoreAnnotations(nodeId, componentId, periodId)) {
+      if (annotation.nodeId === nodeId &&
+          annotation.componentId === componentId &&
+          (periodId === -1 || annotation.periodId === periodId)) {
+        let score = null;
+        if (type != null) {
+          score = this.getSubScore(annotation, type);
+        } else {
+          score = this.getScoreFromAnnotation(annotation);
+        }
+        if (score != null) {
+          totalScoreSoFar += score;
+          annotationsCounted++;
+        }
+      }
+    }
+    return totalScoreSoFar / annotationsCounted;
+  }
+
+  getAllLatestScoreAnnotations(nodeId, componentId, periodId) {
+    const workgroupIdsFound = {};
+    const latestScoreAnnotations = [];
+    for (let a = this.annotations.length - 1; a >= 0; a--) {
+      const annotation = this.annotations[a];
+      const workgroupId = annotation.toWorkgroupId;
+      if (workgroupIdsFound[workgroupId] == null &&
+          nodeId === annotation.nodeId &&
+          componentId === annotation.componentId &&
+          (periodId === -1 || periodId === annotation.periodId) &&
+          ('score' === annotation.type || 'autoScore' === annotation.type)) {
+        workgroupIdsFound[workgroupId] = annotation;
+        latestScoreAnnotations.push(annotation);
+      }
+    }
+    return latestScoreAnnotations;
+  }
+
+  getScoreFromAnnotation(annotation) {
+    return annotation.data.value;
+  }
+
+  getSubScore(annotation, type) {
+    for (let score of annotation.data.scores) {
+      if (score.id === type) {
+        return score.score;
+      }
+    }
+    return null;
   }
 }
 

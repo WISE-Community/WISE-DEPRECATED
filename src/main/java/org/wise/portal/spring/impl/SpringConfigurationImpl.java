@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2019 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -19,32 +19,46 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package org.wise.portal.spring.impl;
+
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.intercept.RunAsImplAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.wise.portal.spring.SpringConfiguration;
 
 /**
- * Implementation of <code>SpringConfiguration</code> specifically for the
- * WISE portal.
+ * Implementation of <code>SpringConfiguration</code> for the WISE portal.
  *
  * @author Cynick Young
  * @author Hiroki Terashima
  */
-public final class SpringConfigurationImpl implements SpringConfiguration {
+@Configuration
+public class SpringConfigurationImpl implements SpringConfiguration {
 
-  /**
-   * @see org.wise.portal.spring.SpringConfiguration#getDispatcherServletContextConfigLocations()
-   */
-  public String[] getDispatcherServletContextConfigLocations() {
-    return new String[] {
-      "classpath:configurations/dispatcherServletContexts.xml"
-    };
+  @Autowired
+  DaoAuthenticationProvider daoAuthenticationProvider;
+
+  @Autowired
+  RunAsImplAuthenticationProvider runAsAuthenticationProvider;
+
+  @Bean
+  public ProviderManager authenticationManager() {
+    ArrayList<AuthenticationProvider> providers = new ArrayList<>();
+    providers.add(daoAuthenticationProvider);
+    providers.add(runAsAuthenticationProvider);
+    return new ProviderManager(providers);
   }
 
-  /**
-   * @see org.wise.portal.spring.SpringConfiguration#getRootApplicationContextConfigLocations()
-   */
+  public String[] getDispatcherServletContextConfigLocations() {
+    return new String[]{};
+  }
+
   public String[] getRootApplicationContextConfigLocations() {
-    return new String[] {
-      "classpath:configurations/applicationContexts.xml"
-    };
+    return new String[]{};
   }
 }

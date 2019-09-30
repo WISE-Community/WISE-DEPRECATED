@@ -33,6 +33,7 @@
   "openResponse.promptTip": "If you want to use rich visuals (images, videos, links, bullets, etc.) in your prompt, use an HTML component above this",
   "openResponse.scoreOn": "Score On",
   "openResponse.starterSentence": "Starter Sentence",
+  "openResponse.textareaHeightNumberOfRows": "Textarea Height (Number of Rows | Default 3)",
   "openResponse.tip": "Tip",
   "openResponse.type": "Type",
   "openResponse.valid": "Valid",
@@ -40,6 +41,6 @@
   "openResponse.verifying": "Verifying",
   "openResponse.youGotAScoreOf": "you got a score of",
   "openResponse.youHaveNoMoreChances": "You do not have any more chances to receive feedback on your answer.",
-  "openResponse.youHaveOneChance": "You have {{numberOfSubmitsLeft}} chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?",
-  "openResponse.youHaveMultipleChances": "You have {{numberOfSubmitsLeft}} chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?"
+  "openResponse.youHaveOneChance": "You have {{numberOfSubmitsLeft}} chance to receive feedback on your answer so this should be your best work.\n\nAre you ready to receive feedback on this answer?",
+  "openResponse.youHaveMultipleChances": "You have {{numberOfSubmitsLeft}} chances to receive feedback on your answer so this should be your best work.\n\nAre you ready to receive feedback on this answer?"
 }

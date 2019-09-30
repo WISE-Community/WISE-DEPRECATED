@@ -74,8 +74,8 @@ public class PreviewProjectController {
   private RunService runService;
 
   @RequestMapping(value = "/previewproject.html", method = RequestMethod.GET)
-  protected ModelAndView handleRequestInternal(HttpServletRequest request,
-      HttpServletResponse response) throws Exception {
+  protected ModelAndView getPreviewPage(HttpServletRequest request, HttpServletResponse response)
+      throws Exception {
     String projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME);
     if (projectIdStr == null) {
       projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME_LOWERCASE);
@@ -111,7 +111,7 @@ public class PreviewProjectController {
     User user = ControllerUtil.getSignedInUser();
     if (project.hasTags(tagNames) ||
       project.getFamilytag().equals(FamilyTag.TELS) ||
-      this.projectService.canReadProject(project, user)) {
+      projectService.canReadProject(project, user)) {
       PreviewProjectParameters params = new PreviewProjectParameters();
       params.setUser(user);
       params.setProject(project);
@@ -123,12 +123,10 @@ public class PreviewProjectController {
       if (lang != null) {
         params.setLang(lang);
       }
-
       String isConstraintsDisabledStr = request.getParameter(IS_CONSTRAINTS_DISABLED);
       if (isConstraintsDisabledStr != null) {
         params.setConstraintsDisabled(Boolean.parseBoolean(isConstraintsDisabledStr));
       }
-
       return (ModelAndView) projectService.previewProject(params);
     } else {
       return new ModelAndView("errors/accessdenied");

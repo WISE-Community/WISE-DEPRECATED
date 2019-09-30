@@ -12,6 +12,9 @@
 <link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
@@ -34,7 +37,7 @@
 					<div><spring:message code="contact.contactwiseconfirm.messageSuccessfullySent" /></div>
 					<div><spring:message code="contact.contactwiseconfirm.weWillRespondQuicklyAsPossible" /></div>
 				</div>
-				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/legacy" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 		<div style="clear: both;"></div>

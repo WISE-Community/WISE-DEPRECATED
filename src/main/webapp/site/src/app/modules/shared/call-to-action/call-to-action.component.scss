@@ -1,0 +1,53 @@
+@import
+  '~style/abstracts/mixins',
+  '~style/abstracts/variables';
+
+.cta {
+  padding: 0;
+  display: block;
+  overflow: hidden;
+  text-align: center;
+  text-transform: none;
+  white-space: normal;
+
+  &:hover, &:focus {
+    .cta__headline .mat-icon {
+      transform: rotate(360deg);
+      transition: all 0.5s ease-in-out;
+    }
+  }
+}
+
+.cta__wrap {
+  padding: 16px;
+  display: block !important;
+}
+
+.cta__headline {
+  margin: -16px -16px 16px;
+  padding: 4px 12px;
+  border-bottom: 1px solid;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  font-size: 1.1em;
+
+  .mat-icon {
+    transition: all 0s;
+  }
+}
+
+.cta__icon {
+  @include mat-icon-size(48px);
+  margin: 8px 0 16px;
+}
+
+.cta__tagline {
+  line-height: 1.4em;
+}
+
+.cta__divider {
+  margin: 0;
+  border: 0 none;
+  height: 8px;
+}
+

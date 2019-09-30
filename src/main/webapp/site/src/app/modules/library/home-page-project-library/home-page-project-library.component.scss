@@ -1,0 +1,20 @@
+@import
+  '~@angular/material/theming',
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
+
+.library-home {
+  margin-bottom: 32px;
+}
+
+.library-home__content {
+  .notice {
+    margin-top: 0;
+  }
+}
+
+.notice {
+  max-width: none; 
+}
+

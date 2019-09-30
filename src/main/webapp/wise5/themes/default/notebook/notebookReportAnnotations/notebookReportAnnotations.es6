@@ -6,7 +6,6 @@ class NotebookReportAnnotationsController {
               ConfigService,
               ProjectService,
               StudentDataService) {
-
     this.$scope = $scope;
     this.$filter = $filter;
     this.ConfigService = ConfigService;
@@ -26,7 +25,7 @@ class NotebookReportAnnotationsController {
         this.annotations = angular.copy(changes.annotations.currentValue);
         this.processAnnotations();
       }
-    }
+    };
   }
 
   /**
@@ -34,53 +33,53 @@ class NotebookReportAnnotationsController {
    * @return Object (latest annotation)
    */
   getLatestAnnotation() {
-    let latest = null;
+    let latestAnnotation = null;
     if (this.annotations.comment || this.annotations.score) {
-      let commentSaveTime = this.annotations.comment ? this.annotations.comment.serverSaveTime : 0;
-      let scoreSaveTime = this.annotations.score ? this.annotations.score.serverSaveTime : 0;
+      const commentSaveTime = this.annotations.comment ? this.annotations.comment.serverSaveTime : 0;
+      const scoreSaveTime = this.annotations.score ? this.annotations.score.serverSaveTime : 0;
       if (commentSaveTime >= scoreSaveTime) {
-        latest = this.annotations.comment;
+        latestAnnotation = this.annotations.comment;
       } else if (scoreSaveTime > commentSaveTime) {
-        latest = this.annotations.score;
+        latestAnnotation = this.annotations.score;
       }
     }
-    return latest;
-  };
+    return latestAnnotation;
+  }
 
   /**
    * Calculate the save time of the latest annotation
    * @return Number (latest annotation post time)
    */
   getLatestAnnotationTime() {
-    let latest = this.getLatestAnnotation();
-    let time = null;
-    if (latest) {
-      let serverSaveTime = latest.serverSaveTime;
-      time = this.ConfigService.convertToClientTimestamp(serverSaveTime)
+    const latestAnnotation = this.getLatestAnnotation();
+    if (latestAnnotation) {
+      return this.ConfigService.convertToClientTimestamp(latestAnnotation.serverSaveTime);
     }
-    return time;
-  };
+    return null;
+  }
 
   /**
    * Set the label based on whether this is an automated or teacher annotation
    **/
   setLabelAndIcon() {
-    let latest = this.getLatestAnnotation();
-    if (latest) {
-      if (latest.type === 'autoComment' || latest.type === 'autoScore') {
+    const latestAnnotation = this.getLatestAnnotation();
+    if (latestAnnotation) {
+      if (latestAnnotation.type === 'autoComment' || latestAnnotation.type === 'autoScore') {
         this.label = this.$translate('automatedFeedbackLabel');
         this.icon = 'keyboard';
       } else {
         this.label = this.$translate('teacherFeedbackLabel');
-        this.icon = "person";
+        this.icon = 'person';
       }
     }
-  };
+  }
 
   processAnnotations() {
     if (this.annotations.comment || this.annotations.score) {
-      this.nodeId = this.annotations.comment ? this.annotations.comment.nodeId : this.annotations.score.nodeId;
-      this.componentId = this.annotations.comment ? this.annotations.comment.componentId : this.annotations.score.nodeId;
+      this.nodeId = this.annotations.comment ?
+          this.annotations.comment.nodeId : this.annotations.score.nodeId;
+      this.componentId = this.annotations.comment ?
+          this.annotations.comment.componentId : this.annotations.score.nodeId;
 
       if (!this.ProjectService.displayAnnotation(this.annotations.score)) {
         this.showScore = false;
@@ -94,7 +93,7 @@ class NotebookReportAnnotationsController {
       this.latestAnnotationTime = this.getLatestAnnotationTime();
       this.show = (this.showScore && this.annotations.score) || (this.showComment && this.annotations.comment);
     }
-  };
+  }
 }
 
 NotebookReportAnnotationsController.$inject = [

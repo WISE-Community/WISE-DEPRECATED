@@ -1,0 +1,32 @@
+<h2 i18n>Add Unit</h2>
+<form [formGroup]="addProjectForm">
+  <mat-dialog-content fxLayout="column">
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label i18n>Access Code</mat-label>
+        <input formControlName="runCode" matInput value="{{ accessCode }}" (keyup)="checkRunCode()">
+        <mat-error *ngIf="runCodeFormControl.hasError('invalidRunCodeSyntax') || runCodeFormControl.hasError('invalidRunCode')" i18n>Invalid Access Code</mat-error>
+        <mat-error *ngIf="runCodeFormControl.hasError('alreadyAddedRun')" i18n>You have already added this unit.</mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label i18n>Choose Period</mat-label>
+        <mat-select formControlName="period" [(value)]="selectedPeriod">
+          <mat-option *ngFor="let period of registerRunPeriods" value="{{ period }}">{{ period }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end">
+    <button mat-button mat-dialog-close [disabled]="isAdding" i18n>Cancel</button>
+    <button mat-button
+            mat-flat-button
+            color="primary"
+            (click)="submit()"
+            [disabled]="addProjectForm.invalid || isAdding">
+      <mat-progress-bar *ngIf="isAdding" mode="indeterminate"></mat-progress-bar>
+      <ng-container i18n>Add</ng-container>
+    </button>
+  </mat-dialog-actions>
+</form>

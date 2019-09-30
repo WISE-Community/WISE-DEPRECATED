@@ -173,6 +173,10 @@
     line-height: 1.2;
     font-weight: 400;
 }
+[dir=rtl] .nav-item__title {
+    padding-left: auto;
+    padding-right: 16px;
+}
 
 .nav-item__info {
     padding: 0 8px;

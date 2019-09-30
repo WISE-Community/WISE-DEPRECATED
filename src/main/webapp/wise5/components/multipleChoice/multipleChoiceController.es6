@@ -33,11 +33,8 @@ class MultipleChoiceController extends ComponentController {
     // whether to show the feedback or not
     this.showFeedback = true;
 
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // whether this component has been authored with a correct answer
-    this.hasCorrectAnswer = false;
+    this.componentHasCorrectAnswer = false;
 
     // whether the latest component state was a submit
     this.isLatestComponentStateSubmit = false;
@@ -46,9 +43,6 @@ class MultipleChoiceController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-      // get the latest annotations
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
@@ -66,7 +60,7 @@ class MultipleChoiceController extends ComponentController {
     }
 
     // check if there is a correct answer
-    this.hasCorrectAnswer = this.hasCorrectChoices();
+    this.componentHasCorrectAnswer = this.hasCorrectChoices();
 
     this.showFeedback = this.componentContent.showFeedback;
 
@@ -116,11 +110,6 @@ class MultipleChoiceController extends ComponentController {
     }
 
     this.disableComponentIfNecessary();
-
-    if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
 
     /**
      * Get the component state from this component. The parent node will
@@ -218,30 +207,7 @@ class MultipleChoiceController extends ComponentController {
           this.submitCounter = submitCounter;
         }
 
-        this.processLatestSubmit();
-      }
-    }
-  };
-
-  /**
-   * Check if latest component state is a submission and set isSubmitDirty accordingly
-   */
-  processLatestSubmit() {
-    let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-    if (latestState) {
-      let serverSaveTime = latestState.serverSaveTime;
-      let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      if (latestState.isSubmit) {
-        // latest state is a submission, so set isSubmitDirty to false and notify node
-        this.isSubmitDirty = false;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        this.setSubmittedMessage(clientSaveTime);
-      } else {
-        // latest state is not a submission, so set isSubmitDirty to true and notify node
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        this.setSavedMessage(clientSaveTime);
+        this.processLatestStudentWork();
       }
     }
   };
@@ -272,7 +238,6 @@ class MultipleChoiceController extends ComponentController {
 
     // get the choices the student chose
     var studentChoices = this.studentChoices;
-
     if (studentChoices != null) {
       if (this.isRadio()) {
         // this is a radio button step
@@ -543,61 +508,66 @@ class MultipleChoiceController extends ComponentController {
         choice.showFeedback = false;
       }
     }
-  };
+  }
 
-  /**
-   * Check the answer the student has submitted and display feedback
-   * for the choices the student has checked
-   */
   checkAnswer() {
-    var isCorrect = false;
+    if (this.getChoiceType() === 'radio') {
+      this.checkSingleAnswer();
+    } else if (this.getChoiceType() === 'checkbox') {
+      this.checkMultipleAnswer();
+    }
+  }
 
-    // check if any correct choices have been authored
-    if (this.hasFeedback() || this.hasCorrectAnswer) {
-
-      var isCorrectSoFar = true;
-
-      // get all the authored choices
-      var choices = this.getChoices();
-
-      // loop through all the choices and check if each should be checked or not
-
-      for (var c = 0; c < choices.length; c++) {
-        var choice = choices[c];
-
-        if (choice != null) {
-          var choiceId = choice.id;
-
-          // whether the choice is correct
-          var isChoiceCorrect = choice.isCorrect;
-
-          if (isChoiceCorrect == null) {
-            isChoiceCorrect = false;
-          }
-
-          // whether the student checked the choice
-          var isChoiceChecked = this.isChecked(choiceId);
-
-          if (isChoiceCorrect != isChoiceChecked) {
-            // the student answered this choice incorrectly
-            isCorrectSoFar = false;
-          }
-
-          // show the feedback if it exists and the student checked it
-          if (this.showFeedback && isChoiceChecked && choice.feedback != null && choice.feedback !== '') {
-            choice.showFeedback = true;
-            choice.feedbackToShow = choice.feedback;
-          }
+  checkSingleAnswer() {
+    let isCorrect = false;
+    const choices = this.getChoices();
+    for (let choice of choices) {
+      if (this.componentHasCorrectAnswer) {
+        if (choice.isCorrect && this.isChecked(choice.id)) {
+          isCorrect = true;
         }
       }
-
-      isCorrect = isCorrectSoFar;
+      this.displayFeedbackOnChoiceIfNecessary(choice);
     }
-
-    if (this.hasCorrectAnswer) {
+    if (this.componentHasCorrectAnswer) {
       this.isCorrect = isCorrect;
     }
-  };
+  }
+
+  checkMultipleAnswer() {
+    let isCorrect = null;
+    const choices = this.getChoices();
+    for (let choice of choices) {
+      if (this.componentHasCorrectAnswer) {
+        if (this.isStudentChoiceValueCorrect(choice) && isCorrect === null) {
+          isCorrect = true;
+        } else {
+          isCorrect = false;
+        }
+      }
+      this.displayFeedbackOnChoiceIfNecessary(choice);
+    }
+    if (this.componentHasCorrectAnswer) {
+      this.isCorrect = isCorrect;
+    }
+  }
+
+  displayFeedbackOnChoiceIfNecessary(choice) {
+    if (this.showFeedback && this.isChecked(choice.id)) {
+      choice.showFeedback = true;
+      choice.feedbackToShow = choice.feedback;
+    }
+  }
+
+  isStudentChoiceValueCorrect(choice) {
+    if (choice.isCorrect && this.isChecked(choice.id)) {
+      return true;
+    } else if (!choice.isCorrect && !this.isChecked(choice.id)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   /**
    * Get the correct choice for a radio button component
@@ -640,7 +610,6 @@ class MultipleChoiceController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-
     // create a new component state
     var componentState = this.NodeService.createNewComponentState();
 

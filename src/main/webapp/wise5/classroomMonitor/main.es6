@@ -13,6 +13,8 @@ import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularSanitize from 'angular-sanitize';
+import angularSock from 'angular-sockjs';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import ngWebSocket from 'angular-websocket';
@@ -39,13 +41,15 @@ import HTMLComponentModule from '../components/html/htmlComponentModule';
 import HttpInterceptor from '../services/httpInterceptor';
 import LabelComponentModule from '../components/label/labelComponentModule';
 import MatchComponentModule from '../components/match/matchComponentModule';
+import ManageStudentsController from './manageStudents/manageStudentsController';
 import MilestonesController from './milestones/milestonesController';
 import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeGradingController from './nodeGrading/nodeGradingController';
 import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeService from '../services/nodeService';
-import Notebook from '../directives/notebook/notebook';
+import NotebookComponents from '../themes/default/notebook/notebookComponents';
 import NotebookGradingController from './notebook/notebookGradingController';
+import NotebookItemGrading from './notebook/notebookItemGrading/notebookItemGrading';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
@@ -59,15 +63,18 @@ import StudentGradingController from './studentGrading/studentGradingController'
 import StudentProgressController from './studentProgress/studentProgressController';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
+import SummaryComponentModule from '../components/summary/summaryComponentModule';
 import TableComponentModule from '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 
+import 'lib/angular-summernote/dist/angular-summernote.min';
 import moment from 'moment';
 
-let classroomMonitorModule = angular.module('classroomMonitor', [
+const classroomMonitorModule = angular.module('classroomMonitor', [
         angularDragula(angular),
+        'summaryComponentModule',
         'angularMoment',
         'angular-inview',
         'angular-toArrayFilter',
@@ -91,11 +98,14 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         'ngFileUpload',
         'ngMaterial',
         'ngSanitize',
+        'bd.sockjs',
+        'ngStomp',
         'ngWebSocket',
-        'notebook',
+        'theme.notebook',
         'openResponseComponentModule',
         'outsideURLComponentModule',
         'pascalprecht.translate',
+        'summernote',
         'tableComponentModule',
         'ui.router'
     ])
@@ -120,12 +130,14 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
     .service(UtilService.name, UtilService)
     .controller(ClassroomMonitorController.name, ClassroomMonitorController)
     .controller(DataExportController.name, DataExportController)
+    .controller(ManageStudentsController.name, ManageStudentsController)
     .controller(MilestonesController.name, MilestonesController)
     .controller(NodeGradingController.name, NodeGradingController)
     .controller(NodeProgressController.name, NodeProgressController)
     .controller(NotebookGradingController.name, NotebookGradingController)
     .controller(StudentGradingController.name, StudentGradingController)
     .controller(StudentProgressController.name, StudentProgressController)
+    .component('notebookItemGrading', NotebookItemGrading)
     .config([
         '$urlRouterProvider',
         '$stateProvider',
@@ -167,10 +179,9 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                             return StudentStatusService.retrieveStudentStatuses();
                         },
                         achievements: function (AchievementService, studentStatuses, config, project) {
-                            return AchievementService.retrieveAchievements();
+                            return AchievementService.retrieveStudentAchievements();
                         },
                         notifications: function (NotificationService, ConfigService, studentStatuses, config, project) {
-                            //return NotificationService.retrieveNotifications(ConfigService.getWorkgroupId());
                             return NotificationService.retrieveNotifications();
                         },
                         webSocket: function(TeacherWebSocketService, config) {
@@ -180,14 +191,11 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                             let locale = ConfigService.getLocale();  // defaults to "en"
                             $translate.use(locale);
                         },
-                        sessionTimers: (SessionService, config) => {
-                            return SessionService.initializeSession();
-                        },
                         annotations: function(TeacherDataService, config) {
                             return TeacherDataService.retrieveAnnotations();
                         },
                         notebook: function (NotebookService, ConfigService, config, project) {
-                          if (NotebookService.isNotebookEnabled()) {
+                          if (NotebookService.isNotebookEnabled() || NotebookService.isTeacherNotebookEnabled()) {
                             return NotebookService.retrieveNotebookItems().then((notebook) => {
                               return notebook;
                             });
@@ -224,6 +232,12 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                         }
                     }
                 })
+                .state('root.manageStudents', {
+                    url: '/manageStudents',
+                    templateUrl: 'wise5/classroomMonitor/manageStudents/manageStudents.html',
+                    controller: 'ManageStudentsController',
+                    controllerAs: 'manageStudentsController'
+                })
                 .state('root.dashboard', {
                     url: '/dashboard',
                     templateUrl: 'wise5/classroomMonitor/dashboard/dashboard.html',
@@ -244,7 +258,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                 })
                 .state('root.notebooks', {
                     url: '/notebook',
-                    templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
+                    templateUrl: 'wise5/classroomMonitor/notebook/notebookGrading.html',
                     controller: 'NotebookGradingController',
                     controllerAs: 'notebookGradingController'
                 });
@@ -258,7 +272,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     urlTemplate: 'wise5/{part}/i18n_{lang}.json'
             })
             .fallbackLanguage(['en'])
-            .registerAvailableLanguageKeys(['el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
+            .registerAvailableLanguageKeys(['ar','el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
                 'en_US': 'en',
                 'en_UK': 'en'
             })

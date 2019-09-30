@@ -9,14 +9,13 @@ import Draggable from './draggable/draggable';
 import GlobalAnnotations from './globalAnnotations/globalAnnotations';
 import GlobalAnnotationsList from './globalAnnotationsList/globalAnnotationsList';
 import ListenForDeleteKeypress from './listenForDeleteKeypress/listenForDeleteKeypress';
-//import Notebook from './notebook/notebook';
-//import NotebookItemAnnotations from './notebookItemAnnotations/notebookItemAnnotations';
-import NotebookItemGrading from './notebookItemGrading/notebookItemGrading';
+import MilestoneReportGraph from './milestoneReportGraph/milestoneReportGraph';
 import PossibleScore from './possibleScore/possibleScore';
+import SummaryDisplay from './summaryDisplay/summaryDisplay';
 import Wiselink from './wiselink/wiselink';
 import Sticky from './sticky/sticky';
 
-let Components = angular.module('components', [/*'notebook'*/]);
+const Components = angular.module('components', []);
 
 Components.component('annotation', Annotation);
 Components.component('compile', Compile);
@@ -27,9 +26,9 @@ Components.component('draggable', Draggable);
 Components.component('globalAnnotations', GlobalAnnotations);
 Components.component('globalAnnotationsList', GlobalAnnotationsList);
 Components.component('listenForDeleteKeypress', ListenForDeleteKeypress);
-//Components.component('notebookItemAnnotations', NotebookItemAnnotations);
-Components.component('notebookItemGrading', NotebookItemGrading);
+Components.component('milestoneReportGraph', MilestoneReportGraph);
 Components.component('possibleScore', PossibleScore);
+Components.component('summaryDisplay', SummaryDisplay);
 Components.component('wiselink', Wiselink);
 Components.directive('sticky', Sticky);
 

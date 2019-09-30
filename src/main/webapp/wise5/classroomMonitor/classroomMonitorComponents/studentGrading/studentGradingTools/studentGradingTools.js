@@ -22,6 +22,12 @@ var StudentGradingToolsController = function () {
     this.TeacherDataService = TeacherDataService;
     this.$translate = this.$filter('translate');
 
+    this.is_rtl = $('html').attr('dir') == 'rtl';
+    this.icons = { prev: 'chevron_left', next: 'chevron_right' };
+    if (this.is_rtl) {
+      this.icons = { prev: 'chevron_right', next: 'chevron_left' };
+    }
+
     this.$onInit = function () {
       _this.selectTeamPlaceholder = _this.$translate('selectATeam');
     };
@@ -129,7 +135,7 @@ var StudentGradingTools = {
   bindings: {
     workgroupId: '<'
   },
-  template: '<div layout="row" layout-align="center center">\n      <md-button aria-label="{{ \'previousTeam\' | translate }}"\n                 class="md-icon-button toolbar__nav"\n                 ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevTeam()">\n        <md-icon> chevron_left </md-icon>\n        <md-tooltip md-direction="bottom">{{ \'previousTeam\' | translate }}</md-tooltip>\n      </md-button>\n      <md-icon class="md-30" hide-xs\n               style="color: {{ $ctrl.avatarColor }};"> account_circle </md-icon>&nbsp;\n      <workgroup-select custom-class="\'md-button md-no-underline\n                          toolbar__select toolbar__select--fixedwidth\'"\n                        custom-placeholder="$ctrl.selectTeamPlaceholder"></workgroup-select>\n      <md-button aria-label="{{ \'nextTeam\' | translate }}"\n                 class="md-icon-button toolbar__nav"\n                 ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextTeam()">\n        <md-icon> chevron_right </md-icon>\n        <md-tooltip md-direction="bottom">{{ \'nextTeam\' | translate }}</md-tooltip>\n      </md-button>\n    </div>',
+  template: '<div layout="row" layout-align="center center">\n      <md-button aria-label="{{ \'previousTeam\' | translate }}"\n                 class="md-icon-button toolbar__nav"\n                 ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevTeam()">\n        <md-icon> {{ $ctrl.icons.prev }} </md-icon>\n        <md-tooltip md-direction="bottom">{{ \'previousTeam\' | translate }}</md-tooltip>\n      </md-button>\n      <md-icon class="md-30" hide-xs\n               style="color: {{ $ctrl.avatarColor }};"> account_circle </md-icon>&nbsp;\n      <workgroup-select custom-class="\'md-button md-no-underline\n                          toolbar__select toolbar__select--fixedwidth\'"\n                        custom-placeholder="$ctrl.selectTeamPlaceholder"></workgroup-select>\n      <md-button aria-label="{{ \'nextTeam\' | translate }}"\n                 class="md-icon-button toolbar__nav"\n                 ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextTeam()">\n        <md-icon> {{ $ctrl.icons.next }} </md-icon>\n        <md-tooltip md-direction="bottom">{{ \'nextTeam\' | translate }}</md-tooltip>\n      </md-button>\n    </div>',
   controller: StudentGradingToolsController
 };
 

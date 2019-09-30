@@ -84,6 +84,12 @@
             height: auto !important;
             white-space: pre-line;
           }
+          .preview-toolbar {
+            float:right;
+          }
+          [dir=rtl] .preview-toolbar {
+            float:left;
+          }
         </style>
         <div ng-if="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
           <div style='background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;'>
@@ -181,7 +187,7 @@
               <md-icon>build</md-icon>
               <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADVANCED' | translate }}</md-tooltip>
             </md-button>
-            <div style='float:right'>
+            <div class='preview-toolbar'>
               <md-button id='previewProjectButton' class='topButton md-raised md-primary' ng-click='projectController.previewProject()'
                   ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
                 <md-icon>visibility</md-icon>

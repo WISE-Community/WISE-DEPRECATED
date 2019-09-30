@@ -15,8 +15,11 @@ class DiscussionService extends ComponentService {
     this.$q = $q;
     this.$injector = $injector;
     this.ConfigService = ConfigService;
-    if (this.ConfigService != null && this.ConfigService.getMode() == 'classroomMonitor') {
-      // in the classroom monitor, we need access to the TeacherDataService so it can retrieve posts and replies for all students
+    if (this.ConfigService.getMode() === 'classroomMonitor') {
+      /*
+       * In the Classroom Monitor, we need access to the TeacherDataService so we can retrieve posts
+       * for all students.
+       */
       this.TeacherDataService = this.$injector.get('TeacherDataService');
     }
   }
@@ -34,48 +37,25 @@ class DiscussionService extends ComponentService {
     return component;
   }
 
-  populateComponentState(componentStateFromOtherComponent, otherComponentType) {
-    var componentState = null;
-
-    if (componentStateFromOtherComponent != null && otherComponentType != null) {
-      componentState = StudentDataService.createComponentState();
-
-      if (otherComponentType === 'OpenResponse') {
-        componentState.studentData = componentStateFromOtherComponent.studentData;
-      }
-    }
-
-    return componentState;
-  };
-
-  getClassmateResponses(runId, periodId, nodeId, componentId) {
-
-    if (runId != null && periodId != null && nodeId != null && componentId != null) {
-      return this.$q(angular.bind(this, function(resolve, reject) {
-
-        var httpParams = {};
-        httpParams.method = 'GET';
-        httpParams.url = this.ConfigService.getConfigParam('studentDataURL');
-
-        var params = {};
-        params.runId = runId;
-        params.periodId = periodId;
-        params.nodeId = nodeId;
-        params.componentId = componentId;
-        params.getStudentWork = true;
-        params.getAnnotations = true;
-        httpParams.params = params;
-
-        this.$http(httpParams).then(angular.bind(this, function(result) {
-          var classmateData = result.data;
-
-          //console.log(classmateData);
-
-          resolve(classmateData);
-        }));
-      }));
-    }
-  };
+  getClassmateResponses(runId, periodId, components) {
+    return this.$q((resolve, reject) => {
+      const params = {
+        runId: runId,
+        periodId: periodId,
+        components: components,
+        getStudentWork: true,
+        getAnnotations: true
+      };
+      const httpParams = {
+        method: 'GET',
+        url: this.ConfigService.getConfigParam('studentDataURL'),
+        params: params
+      };
+      this.$http(httpParams).then((result) => {
+        resolve(result.data);
+      });
+    });
+  }
 
   isCompleted(component, componentStates, componentEvents, nodeEvents) {
     if (this.hasShowWorkConnectedComponentThatHasWork(component)) {
@@ -90,13 +70,13 @@ class DiscussionService extends ComponentService {
       }
     }
     return false;
-  };
+  }
 
   hasShowWorkConnectedComponentThatHasWork(componentContent) {
     const connectedComponents = componentContent.connectedComponents;
     if (connectedComponents != null) {
       for (let connectedComponent of connectedComponents) {
-        if (connectedComponent.type == 'showWork') {
+        if (connectedComponent.type === 'showWork') {
           const componentStates =
               this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
               connectedComponent.nodeId, connectedComponent.componentId);
@@ -111,118 +91,63 @@ class DiscussionService extends ComponentService {
 
   hasNodeEnteredEvent(nodeEvents) {
     for (let nodeEvent of nodeEvents) {
-      if (nodeEvent.event == 'nodeEntered') {
+      if (nodeEvent.event === 'nodeEntered') {
         return true;
       }
     }
     return false;
   }
 
-  /**
-   * Get all the posts associated with a workgroup id. This will
-   * get all the posts and replies that the workgroup posted
-   * or replied to as well as all the other replies classmates made.
-   * @param componentId the component id
-   * @param workgroupId the workgroup id
-   * @returns an array containing all the component states for
-   * top level posts and replies that are associated with the
-   * workgroup
-   */
-  getPostsAssociatedWithWorkgroupId(componentId, workgroupId) {
-    var allPosts = [];
+  workgroupHasWorkForComponent(workgroupId, componentId) {
+    return this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId,
+        componentId).length > 0;
+  }
 
-    var topLevelComponentIdsFound = [];
-
-    // get all the component states for the workgroup id
-    var componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId);
-
-    if (componentStates != null) {
-
-      // loop through all the component states
-      for (var c = 0; c < componentStates.length; c++) {
-
-        var componentState = componentStates[c];
-
-        if (componentState != null) {
-          var studentData = componentState.studentData;
-
-          if (studentData != null) {
-            if (studentData.componentStateIdReplyingTo == null) {
-
-              // check if we have already added the top level post
-              if (topLevelComponentIdsFound.indexOf(componentState.id) == -1) {
-                // we haven't found the top level post yet so
-
-                /*
-                 * the component state is a top level post so we will
-                 * get the post and all the replies to the post
-                 */
-                allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, componentState.id));
-
-                topLevelComponentIdsFound.push(componentState.id);
-              }
-            } else {
-
-              // check if we have already added the top level post
-              if (topLevelComponentIdsFound.indexOf(studentData.componentStateIdReplyingTo) == -1) {
-                // we haven't found the top level post yet so
-
-                /*
-                 * the component state is a reply so we will get the
-                 * top level post and all the replies to it
-                 */
-                allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, studentData.componentStateIdReplyingTo));
-
-                topLevelComponentIdsFound.push(studentData.componentStateIdReplyingTo);
-              }
-            }
-          }
+  getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, workgroupId) {
+    let allPosts = [];
+    const topLevelComponentStateIdsFound = [];
+    const componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentIds(
+        workgroupId, componentIds);
+    for (let componentState of componentStates) {
+      const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
+      if (this.isTopLevelPost(componentState)) {
+        if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentState.id)) {
+          allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentState.id));
+          topLevelComponentStateIdsFound.push(componentState.id);
+        }
+      } else {
+        if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateIdReplyingTo)) {
+          allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentStateIdReplyingTo));
+          topLevelComponentStateIdsFound.push(componentStateIdReplyingTo);
         }
       }
     }
-
     return allPosts;
   }
 
-  /**
-   * Get the top level post and all the replies to it
-   * @param componentId the component id
-   * @param componentStateId the component state id
-   * @returns an array containing the top level post and all the replies
-   */
-  getPostAndAllReplies(componentId, componentStateId) {
-    var postAndAllReplies = [];
+  isTopLevelPost(componentState) {
+    return componentState.studentData.componentStateIdReplyingTo == null;
+  }
 
-    // get all the component states for the node
-    var componentStatesForNodeId = this.TeacherDataService.getComponentStatesByComponentId(componentId);
+  isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateId) {
+    return topLevelComponentStateIdsFound.indexOf(componentStateId) !== -1;
+  }
 
-    for (var c = 0; c < componentStatesForNodeId.length; c++) {
-      var tempComponentState = componentStatesForNodeId[c];
-
-      if (tempComponentState != null) {
-        if (componentStateId === tempComponentState.id) {
-          // we have found the top level post
-          postAndAllReplies.push(tempComponentState);
-        } else {
-          // check if the component state is a reply to the post we are looking for
-          var studentData = tempComponentState.studentData;
-
-          if (studentData != null) {
-            var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-
-            if (componentStateIdReplyingTo != null) {
-              if (componentStateId === componentStateIdReplyingTo) {
-                // this is a reply to the post we are looking for
-                postAndAllReplies.push(tempComponentState);
-              }
-            }
-          }
+  getPostAndAllRepliesByComponentIds(componentIds, componentStateId) {
+    const postAndAllReplies = [];
+    const componentStatesForComponentIds = this.TeacherDataService.getComponentStatesByComponentIds(componentIds);
+    for (const componentState of componentStatesForComponentIds) {
+      if (componentState.id === componentStateId) {
+        postAndAllReplies.push(componentState);
+      } else {
+        const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
+        if (componentStateIdReplyingTo === componentStateId) {
+          postAndAllReplies.push(componentState);
         }
       }
     }
-
     return postAndAllReplies;
-  };
+  }
 
   componentUsesSaveButton() {
     return false;
@@ -233,54 +158,36 @@ class DiscussionService extends ComponentService {
   }
 
   componentStateHasStudentWork(componentState, componentContent) {
-
-    if (componentState != null) {
-
-      let studentData = componentState.studentData;
-
-      if (studentData != null) {
-
-        // get the response from the student data
-        let response = studentData.response;
-
-        if (componentContent == null) {
-          // the component content was not provided
-
-          if (response != null && response !== '') {
-            // the student has work
-            return true;
-          }
-        } else {
-          // the component content was provided
-
-          let starterSentence = componentContent.starterSentence;
-
-          if (starterSentence == null || starterSentence === '') {
-            // there is no starter sentence
-
-            if (response != null && response !== '') {
-              // the student has work
-              return true;
-            }
-          } else {
-            /*
-             * there is a starter sentence so we will compare it
-             * with the student response
-             */
-
-            if (response != null && response !== '' && response !== starterSentence) {
-              /*
-               * the student has a response that is different than
-               * the starter sentence
-               */
-              return true;
-            }
-          }
-        }
-      }
+    if (this.isStudentWorkHasAttachment(componentState)) {
+      return true;
     }
+    if (this.isComponentHasStarterSentence(componentContent)) {
+      return this.isStudentWorkHasText(componentState) &&
+          this.isStudentResponseDifferentFromStarterSentence(componentState, componentContent);
+    } else {
+      return this.isStudentWorkHasText(componentState);
+    }
+  }
 
-    return false;
+  isComponentHasStarterSentence(componentContent) {
+    const starterSentence = componentContent.starterSentence;
+    return starterSentence != null && starterSentence !== '';
+  }
+
+  isStudentResponseDifferentFromStarterSentence(componentState, componentContent) {
+    const response = componentState.studentData.response;
+    const starterSentence = componentContent.starterSentence;
+    return response !== starterSentence;
+  }
+
+  isStudentWorkHasText(componentState) {
+    const response = componentState.studentData.response;
+    return response != null && response !== '';
+  }
+
+  isStudentWorkHasAttachment(componentState) {
+    const attachments = componentState.studentData.attachments;
+    return attachments != null && attachments.length > 0;
   }
 }
 

@@ -11,6 +11,11 @@ class StepToolsCtrl {
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.is_rtl = ($('html').attr('dir') == 'rtl');
+        this.icons = { prev: 'chevron_left', next: 'chevron_right' };
+        if (this.is_rtl) {
+          this.icons = { prev: 'chevron_right', next: 'chevron_left' };
+        }
         //this.$mdSidenav = $mdSidenav;
 
         this.nodeStatuses = this.StudentDataService.nodeStatuses;

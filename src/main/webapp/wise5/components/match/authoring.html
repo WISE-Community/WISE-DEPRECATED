@@ -7,6 +7,13 @@
       </div>
       <div>
         <md-checkbox class='md-primary'
+                     ng-model='matchController.authoringComponentContent.canCreateChoices'
+                     ng-change='matchController.authoringViewComponentChanged()'>
+          {{ 'match.studentCanCreateChoices' | translate }}
+        </md-checkbox>
+      </div>
+      <div>
+        <md-checkbox class='md-primary'
                      ng-model='matchController.authoringComponentContent.horizontal'
                      ng-change='matchController.authoringViewComponentChanged()'>
           {{ 'match.showSourceBucketOnTheLeftAndTargetBucketsOnTheRight' | translate }}
@@ -218,7 +225,7 @@
             {{ 'SHOW_JSON' | translate }}
           </md-tooltip>
         </md-button>
-        <span ng-if='matchController.jsonStringChanged'>
+        <span ng-if='matchController.isJSONStringChanged'>
           {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
         </span>
         <div ng-if='matchController.showJSONAuthoring'>

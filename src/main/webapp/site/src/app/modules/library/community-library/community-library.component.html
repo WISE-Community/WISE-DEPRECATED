@@ -1,0 +1,28 @@
+<div class="content-block library-teacher__paginate">
+  <div fxLayoutAlign="center center" fxLayout.xs="column">
+    <a class="info mat-caption" [routerLink]="" (click)="showInfo()" i18n>What is Community Built?</a>
+    <span fxFlex fxHide.xs></span>
+    <mat-paginator [length]="filteredProjects.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="pageChange($event)">
+    </mat-paginator>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="library__list" fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="start">
+    <ng-container *ngFor="let project of filteredProjects; let i = index">
+        <app-library-project *ngIf="isOnPage(i)"
+                             [project]="project"
+                             fxFlex.sm="50"
+                             fxFlex.md="33"
+                             fxFlex.gt-md="25"></app-library-project>
+    </ng-container>
+    <div *ngIf="filteredProjects.length === 0" class="notice" i18n>No community designed units found.</div>
+  </div>
+  <mat-divider></mat-divider>
+  <mat-paginator [length]="filteredProjects.length"
+                 [pageSize]="pageSize"
+                 [pageSizeOptions]="pageSizeOptions"
+                 (page)="pageChange($event, true)">
+  </mat-paginator>
+</div>

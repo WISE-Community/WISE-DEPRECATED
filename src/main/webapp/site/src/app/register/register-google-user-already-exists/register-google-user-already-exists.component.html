@@ -1,0 +1,14 @@
+<mat-card class="standalone__content standalone__content--sm mat-elevation-z4 center">
+  <mat-card-content>
+    <h2 class="standalone__title accent" i18n>Create Account</h2>
+    <p class="mat-body-2" i18n>Hi! There is already a WISE user with this Google account.</p>
+    <mat-card-actions>
+      <button class="button--social-login button--google"
+              color="accent"
+              mat-flat-button
+              (click)="socialSignIn('google')">
+        <img src="assets/img/icons/g-logo.png" i18n-alt alt="Google logo" /><ng-container i18n>Sign in with Google</ng-container>
+      </button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>

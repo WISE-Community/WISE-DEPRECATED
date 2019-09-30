@@ -235,6 +235,7 @@ View.prototype.createClassroomMonitorDisplays = function() {
     this.createPremadeCommentsDiv();
     this.createShowClassroomDisplay();
     this.createSummaryReportDisplay();
+    this.createManageStudentsDisplay();
     // set the default view
     this.setClassroomMonitorView(this.currentMonitorView);
 };
@@ -252,6 +253,8 @@ View.prototype.setClassroomMonitorView = function(monitorView){
             break;
         case 'exportWork':
         case 'manageStudents':
+            this.showManageStudentsDisplay();
+            break;
         case 'gradebook':
         case 'announcements':
         case 'notes':
@@ -472,7 +475,7 @@ View.prototype.showStudentAssets = function() {
         for (var i = 0; i < workgroupAssetLists.length; i++) {
             var workgroupAssetList = workgroupAssetLists[i];
             var currWorkgroupId = workgroupAssetList.workgroupId;
-            //var htmlForWorkgroup = "<div><h3>" + view.userAndClassInfo.getUserNameByUserId(currWorkgroupId) + "</h3>";
+            //var htmlForWorkgroup = "<div><h3>" + view.userAndClassInfo.getUsernameByUserId(currWorkgroupId) + "</h3>";
             var htmlForWorkgroup = "<div><h3>" + this.getUsernamesForWorkgroup(currWorkgroupId) + "</h3>";
             if (workgroupAssetList.assets != null) {
                 var workgroupAssetsArr = workgroupAssetList.assets;
@@ -1889,25 +1892,27 @@ View.prototype.getIdeaAttributeValue = function(idea, attributeId) {
         //get the attributes from the idea
         var attributes = idea.attributes;
 
-        //loop through all the attributes
-        for(var x=0; x<attributes.length; x++) {
+        if (attributes != null) {
+          //loop through all the attributes
+          for(var x=0; x<attributes.length; x++) {
             //get an attribute
             var attribute = attributes[x];
 
             if(attribute != null) {
-                //get an attribute id
-                var tempAttributeId = attribute.id;
+              //get an attribute id
+              var tempAttributeId = attribute.id;
 
-                //check if this is the attribute id we want
-                if(attributeId == tempAttributeId) {
-                    /*
-                     * we have found the attribute id we want so we will obtain the
-                     * attribute value
-                     */
-                    value = attribute.value;
-                    break;
-                }
+              //check if this is the attribute id we want
+              if(attributeId == tempAttributeId) {
+                /*
+                 * we have found the attribute id we want so we will obtain the
+                 * attribute value
+                 */
+                value = attribute.value;
+                break;
+              }
             }
+          }
         }
     }
 
@@ -6485,7 +6490,7 @@ View.prototype.getStudentsOnStep = function(nodeId, periodId) {
  */
 View.prototype.studentConnected = function(data) {
     if(data != null) {
-        var userName = data.userName;
+        var username = data.username;
         var workgroupId = data.workgroupId;
 
         //add the student to our list of online students
@@ -6506,7 +6511,7 @@ View.prototype.studentConnected = function(data) {
  */
 View.prototype.studentDisconnected = function(data) {
     if(data != null) {
-        var userName = data.userName;
+        var username = data.username;
         var workgroupId = data.workgroupId;
 
         //remove the student from our list of online students
@@ -10674,12 +10679,12 @@ View.prototype.showWorkgroupCompletionDetailedDiv = function() {
 
             if (workgroup != null) {
                 var workgroupId = workgroup.workgroupId;
-                var userName = this.getUsernamesForWorkgroup(workgroupId);
+                var username = this.getUsernamesForWorkgroup(workgroupId);
                 var studentCompletion = workgroup.completion;
 
                 var $workgroupRow = $('<tr>');
                 $workgroupRow.append('<td>' + studentCompletion + '%</td>');
-                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + userName + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
+                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + username + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
 
                 $completionTableBody.append($workgroupRow);
             }
@@ -10734,7 +10739,7 @@ View.prototype.showWorkgroupTotalScoreDetailedDiv = function() {
 
             if (workgroup != null) {
                 var workgroupId = workgroup.workgroupId;
-                var userName = this.getUsernamesForWorkgroup(workgroupId);
+                var username = this.getUsernamesForWorkgroup(workgroupId);
                 var totalScore = null;
 
                 if (workgroup.totalScore != null) {
@@ -10765,7 +10770,7 @@ View.prototype.showWorkgroupTotalScoreDetailedDiv = function() {
                 var $workgroupRow = $('<tr>');
                 $workgroupRow.append('<td>' + totalScoreDisplay + '</td>');
                 $workgroupRow.append('<td>' + scorePercentage + '%</td>');
-                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + userName + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
+                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + username + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
                 totalScore = isNaN(totalScore) ? 0 : totalScore;
                 $workgroupRow.append('<td>' + totalScore + '</td>');
 
@@ -10909,14 +10914,14 @@ View.prototype.showWorkgroupVisitsDetailedDiv = function(nodeId) {
             for (var w = workgroupsSortedByVisitCount.length - 1; w >= 0 ; w--) {
                 var workgroup = workgroupsSortedByVisitCount[w];
                 var workgroupId = workgroup.workgroupId;
-                var userName = this.getUsernamesForWorkgroup(workgroupId);
+                var username = this.getUsernamesForWorkgroup(workgroupId);
 
                 var visitCount = workgroup.visitCount;
 
-                userName = userName.replace(/\:/g, ', ');
+                username = username.replace(/\:/g, ', ');
                 var $workgroupRow = $('<tr>');
                 $workgroupRow.append('<td>' + visitCount + '</td>');
-                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + userName + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
+                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + username + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
 
                 $workgroupVisitsTableBody.append($workgroupRow);
             }
@@ -11060,14 +11065,14 @@ View.prototype.showWorkgroupTimeSpentDetailedDiv = function(nodeId) {
             for (var w = workgroupsSortedByTimeSpent.length - 1; w >= 0 ; w--) {
                 var workgroup = workgroupsSortedByTimeSpent[w];
                 var workgroupId = workgroup.workgroupId;
-                var userName = this.getUsernamesForWorkgroup(workgroupId);
+                var username = this.getUsernamesForWorkgroup(workgroupId);
 
                 var timeSpent = workgroup.timeSpent;
 
-                userName = userName.replace(/\:/g, ', ');
+                username = username.replace(/\:/g, ', ');
                 var $workgroupRow = $('<tr>');
                 $workgroupRow.append('<td>' + this.secondsToMinutesAndSeconds(timeSpent) + '</td>');
-                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + userName + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
+                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + username + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
                 $workgroupRow.append('<td>' + timeSpent + '</td>');
 
                 $workgroupTimeSpentTableBody.append($workgroupRow);
@@ -11213,14 +11218,14 @@ View.prototype.showWorkgroupSubmissionsDetailedDiv = function(nodeId) {
                 for (var w = workgroupsSortedByRevisionCount.length - 1; w >= 0; w--) {
                     var workgroup = workgroupsSortedByRevisionCount[w];
                     var workgroupId = workgroup.workgroupId;
-                    var userName = this.getUsernamesForWorkgroup(workgroupId);
+                    var username = this.getUsernamesForWorkgroup(workgroupId);
 
                     var revisionCount = workgroup.revisionCount;
 
-                    userName = userName.replace(/\:/g, ', ');
+                    username = username.replace(/\:/g, ', ');
                     var $workgroupRow = $('<tr>');
                     $workgroupRow.append('<td>' + revisionCount + '</td>');
-                    $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + userName + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
+                    $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + username + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
 
                     $workgroupSubmissionsTableBody.append($workgroupRow);
                 }
@@ -11376,7 +11381,7 @@ View.prototype.showWorkgroupAutoScoreDetailedDiv = function(nodeId) {
             for (var w = workgroupsSortedByAutoScore.length - 1; w >= 0 ; w--) {
                 var workgroup = workgroupsSortedByAutoScore[w];
                 var workgroupId = workgroup.workgroupId;
-                var userName = this.getUsernamesForWorkgroup(workgroupId);
+                var username = this.getUsernamesForWorkgroup(workgroupId);
 
                 var autoScore = workgroup.autoScore;
 
@@ -11384,10 +11389,10 @@ View.prototype.showWorkgroupAutoScoreDetailedDiv = function(nodeId) {
                     autoScore = 'N/A';
                 }
 
-                userName = userName.replace(/\:/g, ', ');
+                username = username.replace(/\:/g, ', ');
                 var $workgroupRow = $('<tr>');
                 $workgroupRow.append('<td>' + autoScore + '</td>');
-                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + userName + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
+                $workgroupRow.append('<td class="viewSummaryWork"><a class="workgroupRow" href="javascript:void(0);" data-workgroupid="' + workgroupId + '" title="View Student Work">' + username + '<span class="fa fa-search-plus fa-flip-horizontal"></span></a></td>');
 
                 $workgroupAutoScoreTableBody.append($workgroupRow);
             }
@@ -11533,7 +11538,7 @@ View.prototype.showMainSummaryReportDiv = function() {
             if (workgroup != null) {
                 var workgroupId = workgroup.workgroupId;
 
-                var userName = this.getUsernamesForWorkgroup(workgroupId);
+                var username = this.getUsernamesForWorkgroup(workgroupId);
                 var completion = workgroup.completion;
                 periodCompletion += completion;
                 numWorkgroups++;
@@ -11543,7 +11548,7 @@ View.prototype.showMainSummaryReportDiv = function() {
                         $('#workgroupCompletionDiv').append('<br>');
                     }
 
-                    $('#workgroupCompletionDiv').append(completion + '% - ' + userName);
+                    $('#workgroupCompletionDiv').append(completion + '% - ' + username);
                 }
             }
         }
@@ -11562,7 +11567,7 @@ View.prototype.showMainSummaryReportDiv = function() {
             if (workgroup != null) {
                 var workgroupId = workgroup.workgroupId;
 
-                var userName = this.getUsernamesForWorkgroup(workgroupId);
+                var username = this.getUsernamesForWorkgroup(workgroupId);
                 var totalScore = null;
 
                 if (workgroup.totalScore != null) {
@@ -11594,7 +11599,7 @@ View.prototype.showMainSummaryReportDiv = function() {
                         totalScoreDisplay += '/0';
                     }
 
-                    $('#workgroupTotalScoreDiv').append(totalScoreDisplay + ' - ' + userName);
+                    $('#workgroupTotalScoreDiv').append(totalScoreDisplay + ' - ' + username);
                 }
             }
         }
@@ -12541,6 +12546,15 @@ View.prototype.getUsernamesForWorkgroup = function(workgroupId){
     usernames = students.join(', ');
 
     return usernames;
+};
+
+View.prototype.createManageStudentsDisplay = function() {
+    $('#manageStudentsIfrm').attr('src', this.config.getConfigParam('contextPath') + '/teacher/management/viewmystudents?runId=' + this.config.getConfigParam('runId'));
+};
+
+View.prototype.showManageStudentsDisplay = function() {
+    this.hideAllDisplays();
+    $('#manageStudents').show();
 };
 
 //used to notify scriptloader that this script has finished loading

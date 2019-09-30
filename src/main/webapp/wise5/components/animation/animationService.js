@@ -52,76 +52,13 @@ var AnimationService = function (_ComponentService) {
   }, {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-      var result = false;
-
-      if (componentStates && componentStates.length) {
-        var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
-
-        if (submitRequired) {
-          // completion requires a submission, so check for isSubmit in any component states
-          for (var i = 0, l = componentStates.length; i < l; i++) {
-            var state = componentStates[i];
-            if (state.isSubmit && state.studentData) {
-              // component state is a submission
-              if (state.studentData.response) {
-                // there is a response so the component is completed
-                result = true;
-                break;
-              }
-            }
-          }
-        } else {
-          // get the last component state
-          var _l = componentStates.length - 1;
-          var componentState = componentStates[_l];
-
-          var studentData = componentState.studentData;
-
-          if (studentData != null) {
-            if (studentData.response) {
-              // there is a response so the component is completed
-              result = true;
-            }
-          }
-        }
-      }
-
-      if (component.completionCriteria != null) {
-        /*
-         * there is a special completion criteria authored in this component
-         * so we will evaluate the completion criteria to see if the student
-         * has completed this component
-         */
-        result = this.StudentDataService.isCompletionCriteriaSatisfied(component.completionCriteria);
-      }
-
-      return result;
-    }
-  }, {
-    key: 'getStudentDataString',
-    value: function getStudentDataString(componentState) {
-
-      var studentDataString = '';
-
-      if (componentState != null) {
-        var studentData = componentState.studentData;
-
-        if (studentData != null) {
-          // get the response the student typed
-          studentDataString = studentData.response;
-        }
-      }
-
-      return studentDataString;
+      return componentStates.length > 0;
     }
   }, {
     key: 'componentStateHasStudentWork',
     value: function componentStateHasStudentWork(componentState, componentContent) {
       if (componentState != null) {
-        var studentData = componentState.studentData;
-        if (studentData != null) {
-          return true;
-        }
+        return componentState.studentData != null;
       }
       return false;
     }

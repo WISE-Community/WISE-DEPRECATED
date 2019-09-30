@@ -1,0 +1,33 @@
+@import
+  '~style/abstracts/variables';
+
+.blurb {
+  text-align: center;
+  overflow: hidden;
+  border-radius: $feature-border-radius;
+}
+
+.blurb__image {
+  width: 100%;
+  height: auto;
+  margin-bottom: -6px;
+}
+
+.blurb__divider {
+  margin: 0;
+  border: 0 none;
+  height: 8px;
+}
+
+.blurb__content {
+  padding: 16px;
+}
+
+h2 {
+  margin-bottom: 12px;
+}
+
+p {
+  line-height: 1.4em;
+  margin-bottom: 0;
+}

@@ -1,0 +1,45 @@
+<ng-template #library>
+  <mat-accordion multi="true">
+    <ng-container *ngFor="let group of libraryGroups; let i = index">
+      <mat-expansion-panel *ngIf="group.type === 'group'"
+                          class="library-group"
+                          (opened)="expandedGroups[group.id] = true"
+                          (closed)="expandedGroups[group.id] = false"
+                          [expanded]="expandedGroups[group.id] && countVisibleProjects(group.children) > 0"
+                          [disabled]="countVisibleProjects(group.children) < 1">
+        <mat-expansion-panel-header class="mat-expansion-panel-header--lg">
+          <div fxLayout="column" class="library-group__title">
+            <div>{{ group.name }}</div>
+            <div class="mat-caption">
+              {{ countVisibleProjects(group.children) }} <ng-container i18n>unit(s)</ng-container>
+            </div>
+          </div>
+          <app-library-group-thumbs [group]="group"
+                                    [ngClass]="{ 'hide': expandedGroups[group.id] }">
+          </app-library-group-thumbs>
+        </mat-expansion-panel-header>
+        <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="start">
+          <ng-container *ngFor="let project of group.children">
+            <div *ngIf="project.visible"
+                fxFlex.sm="50"
+                fxFlex.md="{{ isSplitScreen ? 50 : 33 }}"
+                fxFlex.gt-md="{{ isSplitScreen ? 33 : 25 }}">
+              <app-library-project [project]="project" ></app-library-project>
+            </div>
+          </ng-container>
+        </div>
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion>
+</ng-template>
+
+<div *ngIf="!isSplitScreen" class="content-block library-teacher__official">
+  <p ngClass.xs="center">
+    <a class="info mat-caption" [routerLink]="" (click)="showInfo()" i18n>What is WISE Tested?</a>
+  </p>
+  <ng-container *ngTemplateOutlet="library"></ng-container>
+</div>
+
+<div *ngIf="isSplitScreen">
+  <ng-container *ngTemplateOutlet="library"></ng-container>
+</div>

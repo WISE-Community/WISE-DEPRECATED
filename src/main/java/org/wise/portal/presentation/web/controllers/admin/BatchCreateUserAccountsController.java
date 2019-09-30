@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -65,35 +65,28 @@ public class BatchCreateUserAccountsController {
   @Autowired
   private StudentService studentService;
 
-  @RequestMapping(method=RequestMethod.POST)
-  protected ModelAndView onSubmit(@ModelAttribute("csvFile") BatchCreateUserAccountsUpload csvUpload,
-                                  BindingResult result) throws Exception {
-
-    // array of newly-created Usernames
+  @RequestMapping(method = RequestMethod.POST)
+  protected ModelAndView onSubmit(
+      @ModelAttribute("csvFile") BatchCreateUserAccountsUpload csvUpload,
+      BindingResult result) throws Exception {
     ArrayList<String> newUsernames = new ArrayList<String>();
-
-    // uploaded file must be a csv file and have a .csv extension
     MultipartFile csvFile = csvUpload.getFile();
     InputStreamReader inputStreamReader = new InputStreamReader(csvFile.getInputStream());
     Gender[] genderArray = {Gender.MALE,Gender.FEMALE,Gender.UNSPECIFIED};
-    AccountQuestion[] accountQuestionArray = {AccountQuestion.QUESTION_FOUR,AccountQuestion.QUESTION_TWO, AccountQuestion.QUESTION_THREE};
+    AccountQuestion[] accountQuestionArray =
+        { AccountQuestion.QUESTION_FOUR, AccountQuestion.QUESTION_TWO,
+        AccountQuestion.QUESTION_THREE };
     BufferedReader br = null;
     String line = "";
     String cvsSplitBy = ",";
 
     try {
-
       br = new BufferedReader(inputStreamReader);
       while ((line = br.readLine()) != null) {
-        // use comma as separator
         String[] userInfo = line.split(cvsSplitBy);
-
-        // ignore first row (heading line) if it starts with "Firstname" and "Lastname" fields
         if ("Firstname".equals(userInfo[0]) && "Lastname".equals(userInfo[1])) {
           continue;
         }
-
-        // grab fields from the read-in line, create StudentUserDetails object
         String firstname = userInfo[0];
         String lastname = userInfo[1];
         Gender gender = genderArray[Integer.valueOf(userInfo[2])];
@@ -110,24 +103,17 @@ public class BatchCreateUserAccountsController {
         studentUserDetails.setSignupdate(Calendar.getInstance().getTime());
         int birthmonth = Integer.parseInt(userInfo[3]);
         int birthdate = Integer.parseInt(userInfo[4]);
-        Calendar birthday       = Calendar.getInstance();
-        birthday.set(Calendar.MONTH, birthmonth-1);  // month is 0-based
+        Calendar birthday = Calendar.getInstance();
+        birthday.set(Calendar.MONTH, birthmonth - 1);  // month is 0-based
         birthday.set(Calendar.DATE, birthdate);
         studentUserDetails.setBirthday(birthday.getTime());
-
-        // create user
         User user = userService.createUser(studentUserDetails);
-
-        // add user to the run
         String accessCode = userInfo[8];
         String period = userInfo[9];
         Projectcode projectcode = new Projectcode(accessCode,period);
         studentService.addStudentToRun(user, projectcode);
-
-        // keep track to newly created username
         newUsernames.add(studentUserDetails.getUsername());
       }
-
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
@@ -152,8 +138,7 @@ public class BatchCreateUserAccountsController {
     return modelAndView;
   }
 
-
-  @RequestMapping(method=RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   public ModelAndView initializeForm(ModelMap model) {
     ModelAndView mav = new ModelAndView();
     mav.addObject("csvFile", new BatchCreateUserAccountsUpload());

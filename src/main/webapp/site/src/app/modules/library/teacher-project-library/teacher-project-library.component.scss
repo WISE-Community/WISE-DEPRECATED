@@ -1,0 +1,38 @@
+@import
+  '~@angular/material/theming',
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
+
+.library-teacher {
+  margin-top: 24px;
+
+  .mat-tab-link {
+    flex-grow: 1;
+  }
+}
+
+.library-teacher__header {
+  h3 {
+    font-weight: 500;
+  }
+}
+
+.library-teacher__paginate {
+  padding-bottom: 0;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding-top: 0;
+  }
+}
+
+.library-teacher__official {
+  @media (min-width: breakpoint('sm.min')) {
+    padding-top: 20px;
+  }
+}
+
+.mat-tab-links {
+  background-color: white;
+  margin: 0 1px;
+}

@@ -45,6 +45,7 @@ class ClassroomMonitorController {
         this.showToolbar = true; // boolean to indicate whether to show the monitor toolbar
         this.showGradeByStepTools = false; // boolean to indicate whether to show the step toolbar
         this.showPeriodSelect = false; // boolean to indicate whether to show the period select
+        this.enableProjectAchievements = this.ProjectService.getAchievements().isEnabled;
 
         // ui-views and their corresponding names and icons
         this.views = {
@@ -53,6 +54,12 @@ class ClassroomMonitorController {
                 icon: 'dashboard',
                 type: 'primary',
                 active: false
+            },
+            'root.milestones': {
+                name: this.$translate('milestones'),
+                icon: 'flag',
+                type: 'primary',
+                active: this.enableProjectAchievements
             },
             'root.project': {
                 name: this.$translate('gradeByStep'),
@@ -73,6 +80,12 @@ class ClassroomMonitorController {
                 type: 'primary',
                 active: true
             },
+            'root.manageStudents': {
+                name: this.$translate('manageStudents'),
+                icon: 'face',
+                type: 'primary',
+                active: true
+            },
             'root.notebooks': {
                 name: this.$translate('studentNotebooks'),
                 icon: 'chrome_reader_mode',
@@ -84,12 +97,6 @@ class ClassroomMonitorController {
                 icon: 'file_download',
                 type: 'secondary',
                 active: true
-            },
-            'root.milestones': {
-                name: this.$translate('milestones'),
-                icon: 'flag',
-                type: 'primary',
-                active: false
             }
         };
 
@@ -113,7 +120,7 @@ class ClassroomMonitorController {
                 .ok(this.$translate('YES'))
                 .cancel(this.$translate('NO'));
             $mdDialog.show(confirm).then(() => {
-                this.SessionService.renewSession();
+                this.SessionService.closeWarningAndRenewSession();
             }, () => {
                 this.SessionService.forceLogOut();
             });
@@ -170,25 +177,16 @@ class ClassroomMonitorController {
 
         // perform cleanup before the clasroom monitor tab closes
         this.$window.onbeforeunload = () => {
-
-            // unpause all the periods that are currently paused
-
-            // get all the periods
-            var periods = this.TeacherDataService.getRunStatus().periods;
-
+            const periods = this.TeacherDataService.getRunStatus().periods;
             if (periods != null) {
-
-                // loop through all the periods
                 for (var p = 0; p < periods.length; p++) {
-                    var period = periods[p];
-
-                    if (period != null && period.paused) {
-                        // the period is paused so we will unpause it
+                    const period = periods[p];
+                    if (period != null && period.periodId !== -1 && period.paused) {
                         this.TeacherDataService.pauseScreensChanged(period.periodId, false);
                     }
                 }
             }
-        }
+        };
     }
 
     /**

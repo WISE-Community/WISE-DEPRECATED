@@ -1,0 +1,65 @@
+<div class="content-block">
+  <h1 fxLayoutAlign="left center">
+    <mat-icon class="title-icon">info</mat-icon><span i18n>Getting Started</span>
+  </h1>
+  <hr/>
+  <h3 i18n>Creating an Account</h3>
+  <p class="indented-text" i18n>
+    All users must create their own account. Teachers must create a teacher account and students must create a student account. Users can create an account by going to the <a href="{{contextPath}}" target="_blank">WISE Home Page</a> and clicking on the <a href="{{contextPath}}/join" target="_blank">Register</a> link at the upper right of the screen.
+  </p>
+  <p class="indented-text" i18n>Here are instructions on how to create a teacher account.</p>
+  <ol>
+    <li i18n>Go to the <a href="{{contextPath}}" target="_blank">WISE Home Page</a>.</li>
+    <li i18n>Click the <a href="{{contextPath}}/join" target="_blank">Register</a> link at the upper right of the screen.</li>
+    <li i18n>Click on <a href="{{contextPath}}/join/teacher" target="_blank">Teacher</a>.</li>
+    <li i18n>Choose to sign up with your email or with your Google Account.</li>
+    <li i18n>Fill out the form and submit it.</li>
+    <li i18n>If you created an account using your email, you will be given a username that you will need to remember. Your username will be your first name and your last name with no space inbetween. There may be a number added at the end of your username if someone has the same name as you.</li>
+  </ol>
+  <hr/>
+  <h3 i18n>Using a WISE Unit</h3>
+  <p class="indented-text" i18n>To use a WISE unit with your class, you must first choose a unit to use and then set up a "Run" of that unit.</p>
+  <p class="indented-text" i18n>Here are instructions on how to set up a Run.</p>
+  <ol>
+    <li i18n>Sign in to WISE with your teacher account.</li>
+    <li i18n>Click the "Browse WISE Units" tab.</li>
+    <li i18n>Find a project that you would like to use with your class.</li>
+    <li i18n>Click on the project to open the information for the project.</li>
+    <li i18n>Click the "Use With Class" button.</li>
+    <li i18n>Choose the periods you will use the project in.</li>
+    <li i18n>Choose the number of students per team. Choosing 1-3 will allow students to work together in a team.</li>
+    <li i18n>Choose the start date. Students will not be able to use the project until this date.</li>
+    <li i18n>Click "Create Run".</li>
+    <li i18n>The run will be created and added to your Teacher Home.</li>
+    <li i18n>Copy the "Access Code" for the new run and write it down somewhere like on the white board. Students will need to use this access code to work on the run you created.</li>
+  </ol>
+</div>
+<br/>
+<div class="content">
+  <div fxLayout="row"
+       fxLayout.xs="column"
+       fxLayoutAlign="center stretch"
+       fxLayoutAlign.xs="center center"
+       fxLayoutGap="32px"
+       fxLayoutGap.sm="24px"
+       fxLayoutGap.gt-sm="32px">
+    <app-call-to-action fxFlex
+                        fxFlex.gt-xs="33"
+                        icon="school"
+                        iconColor="accent"
+                        i18n-headline
+                        headline="Teacher FAQ"
+                        i18n-content
+                        content="Questions from teachers."
+                        destination="../teacher-faq"></app-call-to-action>
+    <app-call-to-action fxFlex
+                        fxFlex.gt-xs="33"
+                        icon="face"
+                        iconColor="accent"
+                        i18n-headline
+                        headline="Student FAQ"
+                        i18n-content
+                        content="Questions from students."
+                        destination="../student-faq"></app-call-to-action>
+  </div>
+</div>

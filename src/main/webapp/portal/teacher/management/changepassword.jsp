@@ -8,6 +8,9 @@
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
@@ -26,7 +29,7 @@
 				<div class="infoContentBox">
 
 					<div>
-						<form:form method="post" action="changepassword.html" commandName="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
+						<form:form method="post" action="changepassword.html" modelAttribute="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
 						<table style="margin:0 auto;">
 							<tr>
 								<td><label for="changestudentpassword">
@@ -61,7 +64,6 @@
 							<td><form:password path="passwd2" /></td>
 							</tr>
 						</table>
-
 								<div class="errorMsgNoBg">
 									<!-- Support for Spring errors object -->
 									<spring:bind path="changeStudentPasswordParameters.*">

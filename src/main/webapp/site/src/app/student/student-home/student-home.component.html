@@ -1,0 +1,25 @@
+<header class="content__header">
+  <h1 class="accent"
+      fxLayout="row wrap"
+      fxLayoutAlign="start center"
+      fxLayoutAlign.xs="start"
+      fxLayoutGap="8px"
+      ngClass="mat-display-1"
+      [ngClass.xs]="{ 'mat-display-1': false }">
+    <div fxLayoutAlign="start center" fxLayoutGap="8px">
+        <mat-icon>home</mat-icon><span i18n>Student Home</span>
+    </div>
+    <span fxFlex fxHide.xs fxShow></span>
+    <button mat-raised-button
+            (click)="showAddRun()"
+            i18n-aria-label
+            aria-label="Add unit"
+            color="accent">
+      <mat-icon>add</mat-icon>
+      <ng-container i18n>Add Unit</ng-container>
+    </button>
+  </h1>
+</header>
+<section>
+  <app-student-run-list></app-student-run-list>
+</section>

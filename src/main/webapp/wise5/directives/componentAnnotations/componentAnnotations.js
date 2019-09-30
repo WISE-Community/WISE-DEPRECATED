@@ -111,14 +111,14 @@ var ComponentAnnotationsController = function () {
 
             return latest;
         }
-    }, {
-        key: 'getLatestAnnotationTime',
-
 
         /**
          * Calculate the save time of the latest annotation
          * @return Number (latest annotation post time)
          */
+
+    }, {
+        key: 'getLatestAnnotationTime',
         value: function getLatestAnnotationTime() {
             var latest = this.getLatestAnnotation();
             var time = null;
@@ -130,14 +130,14 @@ var ComponentAnnotationsController = function () {
 
             return time;
         }
-    }, {
-        key: 'getLatestVisitTime',
-
 
         /**
          * Find nodeExited time of the latest node visit for this component
          * @return Number (latest node exit time)
          */
+
+    }, {
+        key: 'getLatestVisitTime',
         value: function getLatestVisitTime() {
             var nodeEvents = this.StudentDataService.getEventsByNodeId(this.nodeId);
             var n = nodeEvents.length - 1;
@@ -153,14 +153,14 @@ var ComponentAnnotationsController = function () {
 
             return visitTime;
         }
-    }, {
-        key: 'getLatestSaveTime',
-
 
         /**
          * Find and the latest save time for this component
          * @return Number (latest save time)
          */
+
+    }, {
+        key: 'getLatestSaveTime',
         value: function getLatestSaveTime() {
             var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
             var saveTime = null;
@@ -171,9 +171,6 @@ var ComponentAnnotationsController = function () {
 
             return saveTime;
         }
-    }, {
-        key: 'isNewAnnotation',
-
 
         /**
          * Check whether the current annotation for this component is new to the
@@ -181,6 +178,9 @@ var ComponentAnnotationsController = function () {
          * node visit and the latest annotation came after the latest component state)
          * @return Boolean (true or false)
          */
+
+    }, {
+        key: 'isNewAnnotation',
         value: function isNewAnnotation() {
             var latestVisitTime = this.getLatestVisitTime();
             var latestSaveTime = this.getLatestSaveTime();
@@ -197,13 +197,13 @@ var ComponentAnnotationsController = function () {
 
             return isNew;
         }
-    }, {
-        key: 'setLabelAndIcon',
-
 
         /**
          * Set the label based on whether this is an automated or teacher annotation
          **/
+
+    }, {
+        key: 'setLabelAndIcon',
         value: function setLabelAndIcon() {
             var latest = this.getLatestAnnotation();
 
@@ -224,22 +224,8 @@ var ComponentAnnotationsController = function () {
                 if (this.annotations.comment || this.annotations.score) {
                     this.nodeId = this.annotations.comment ? this.annotations.comment.nodeId : this.annotations.score.nodeId;
                     this.componentId = this.annotations.comment ? this.annotations.comment.componentId : this.annotations.score.nodeId;
-
-                    if (!this.ProjectService.displayAnnotation(this.annotations.score)) {
-                        // we do not want to show the score
-                        this.showScore = false;
-                    } else {
-                        this.showScore = true;
-                    }
-
-                    if (!this.ProjectService.displayAnnotation(this.annotations.comment)) {
-                        // we do not want to show the comment
-                        this.showComment = false;
-                    } else {
-                        this.showComment = true;
-                    }
-
-                    // set the annotation label and icon
+                    this.showScore = this.annotations.score != null && this.ProjectService.displayAnnotation(this.annotations.score);
+                    this.showComment = this.annotations.comment != null && this.ProjectService.displayAnnotation(this.annotations.comment);
                     this.setLabelAndIcon();
                 }
             }

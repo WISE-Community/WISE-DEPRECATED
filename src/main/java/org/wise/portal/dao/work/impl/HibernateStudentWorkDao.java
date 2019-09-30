@@ -124,36 +124,18 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork>
       sessionCriteria.add(Restrictions.eq("componentType", componentType));
     }
     if (components != null) {
-
-      // create the criteria to accept any of the components by using an 'or' conditional
       Disjunction disjunction = Restrictions.disjunction();
-
-      // loop through all the components
       for (int c = 0; c < components.size(); c++) {
         JSONObject component = components.get(c);
-
-        if (component != null) {
-          try {
-            // get the node id and component id of the component
-            String tempNodeId = component.getString("nodeId");
-            String tempComponentId = component.getString("componentId");
-
-            // create restrictions to match the node id and component id
-            SimpleExpression nodeIdRestriction = Restrictions.eq("nodeId", tempNodeId);
-            SimpleExpression componentIdRestriction = Restrictions.eq("componentId", tempComponentId);
-
-            // require the node id and component id to match by using an 'and' conditional
-            Conjunction conjunction = Restrictions.conjunction(nodeIdRestriction, componentIdRestriction);
-
-            // add the restriction to the 'or' conditional
-            disjunction.add(conjunction);
-          } catch (JSONException e) {
-            e.printStackTrace();
-          }
+        try {
+          SimpleExpression nodeIdRestriction = Restrictions.eq("nodeId", component.getString("nodeId"));
+          SimpleExpression componentIdRestriction = Restrictions.eq("componentId", component.getString("componentId"));
+          Conjunction conjunction = Restrictions.conjunction(nodeIdRestriction, componentIdRestriction);
+          disjunction.add(conjunction);
+        } catch (JSONException e) {
+          e.printStackTrace();
         }
       }
-
-      // add the restriction to the main criteria
       sessionCriteria.add(disjunction);
     }
 

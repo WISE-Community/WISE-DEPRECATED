@@ -48,6 +48,8 @@ public interface Run extends Persistable {
    */
   Long getId();
 
+  void setId(Long id);
+
   /**
    * @return the endtime
    */
@@ -142,6 +144,8 @@ public interface Run extends Persistable {
    *     <code>Run</code> in any of the periods.
    */
   boolean isStudentAssociatedToThisRun(User studentUser);
+
+  boolean isOwner(User user);
 
   /**
    * @param teacherUser A user object.
@@ -376,4 +380,10 @@ public interface Run extends Persistable {
    * @return String survey for this run
    */
   void setSurvey(String survey);
+
+  Long getStartTimeMilliseconds();
+
+  Long getEndTimeMilliseconds();
+
+  Boolean isActive();
 }

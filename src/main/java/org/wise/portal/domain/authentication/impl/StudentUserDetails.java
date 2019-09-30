@@ -116,12 +116,12 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
   @Setter
   private Date lastLoginTime;
 
-  @Column(name = StudentUserDetails.COLUMN_NAME_ACCOUNTQUESTION, nullable = false)
+  @Column(name = StudentUserDetails.COLUMN_NAME_ACCOUNTQUESTION, nullable = true)
   @Getter
   @Setter
   private String accountQuestion;
 
-  @Column(name = StudentUserDetails.COLUMN_NAME_ACCOUNTANSWER, nullable = false)
+  @Column(name = StudentUserDetails.COLUMN_NAME_ACCOUNTANSWER, nullable = true)
   @Getter
   @Setter
   private String accountAnswer;

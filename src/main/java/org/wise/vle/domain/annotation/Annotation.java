@@ -95,41 +95,6 @@ public class Annotation extends PersistableDomain {
     return Annotation.class;
   }
 
-  /**
-   * populates the data of the annotation
-   */
-  public void setData(String data) {
-    // to be overridden by subclass.
-    this.data = data;
-  }
-
-  /**
-   * Returns the data associated with this stepWork
-   * @return
-   */
-  public String getData() {
-    return this.data;
-  }
-
-  /**
-   * Returns the node id
-   * @return
-   */
-  public String getNodeId() {
-    return nodeId;
-  }
-
-  /**
-   * Sets the node id
-   * @param nodeId
-   */
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
-
-  /**
-   * The default constructor for Annotation
-   */
   public Annotation() {
   }
 
@@ -151,7 +116,8 @@ public class Annotation extends PersistableDomain {
    * @param type
    * @param data
    */
-  public Annotation(StepWork stepWork, UserInfo fromUser, UserInfo toUser, Long runId, Timestamp postTime, String type, String data, String nodeId) {
+  public Annotation(StepWork stepWork, UserInfo fromUser, UserInfo toUser, Long runId,
+      Timestamp postTime, String type, String data, String nodeId) {
     setStepWork(stepWork);
     setFromUser(fromUser);
     setToUser(toUser);
@@ -164,17 +130,16 @@ public class Annotation extends PersistableDomain {
 
   public JSONObject getAnnotationForNodeStateId(Long nodeStateId) {
     try {
-      JSONObject dataJSON = new JSONObject(this.data);
+      JSONObject dataJSON = new JSONObject(data);
       if (dataJSON != null) {
         JSONArray valueArray = dataJSON.getJSONArray("value");
         if (valueArray != null) {
-          for (int i=0; i<valueArray.length(); i++) {
+          for (int i = 0; i < valueArray.length(); i++) {
             JSONObject nodeStateCRaterAnnotation = valueArray.getJSONObject(i);
             long nodeStateIdFromAnnotation = nodeStateCRaterAnnotation.getLong("nodeStateId");
             if (nodeStateId != null && nodeStateId.equals(nodeStateIdFromAnnotation)) {
               return nodeStateCRaterAnnotation;
             }
-
           }
         }
       }
@@ -187,12 +152,12 @@ public class Annotation extends PersistableDomain {
 
   public void appendNodeStateAnnotation(JSONObject nodeStateAnnotation) {
     try {
-      JSONObject dataJSON = new JSONObject(this.data);
+      JSONObject dataJSON = new JSONObject(data);
       if (dataJSON != null) {
         JSONArray valueArray = dataJSON.getJSONArray("value");
         if (valueArray != null) {
           valueArray.put(nodeStateAnnotation);
-          this.data = dataJSON.toString();
+          data = dataJSON.toString();
         }
       }
     } catch (JSONException e) {
@@ -200,9 +165,9 @@ public class Annotation extends PersistableDomain {
     }
   }
 
-  public static JSONObject createCRaterNodeStateAnnotation(Long nodeStateId, int score, String concepts, JSONObject studentResponse, String cRaterResponse) {
+  public static JSONObject createCRaterNodeStateAnnotation(Long nodeStateId, int score,
+      String concepts, JSONObject studentResponse, String cRaterResponse) {
     JSONObject cRaterNodeStateAnnotation = new JSONObject();
-
     try {
       cRaterNodeStateAnnotation.put("nodeStateId", nodeStateId);
       cRaterNodeStateAnnotation.put("score", score);
@@ -212,7 +177,6 @@ public class Annotation extends PersistableDomain {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return cRaterNodeStateAnnotation;
   }
 }

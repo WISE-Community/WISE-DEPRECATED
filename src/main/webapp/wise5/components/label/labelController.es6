@@ -32,12 +32,6 @@ class LabelController extends ComponentController {
     this.LabelService = LabelService;
     this.OpenResponseService = OpenResponseService;
 
-    // holds student attachments like assets
-    this.attachments = [];
-
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // whether the new label button is shown or not
     this.isNewLabelButtonVisible = true;
 
@@ -148,9 +142,6 @@ class LabelController extends ComponentController {
         this.canCreateLabels = false;
         this.isResetButtonVisible = false;
       }
-
-      // get the latest annotations
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
@@ -164,9 +155,6 @@ class LabelController extends ComponentController {
           this.canvasId = 'labelCanvas_gradingRevision_' + componentState.id;
         }
       }
-
-      // get the latest annotations
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'onlyShowWork') {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
@@ -338,7 +326,7 @@ class LabelController extends ComponentController {
           });
         }
       }
-    }
+    };
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
@@ -359,9 +347,6 @@ class LabelController extends ComponentController {
       // create the key down listener to listen for the delete key
       this.createKeydownListener();
     }
-
-    // set whether studentAttachment is enabled
-    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
     if (this.mode == 'student') {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
@@ -424,11 +409,6 @@ class LabelController extends ComponentController {
     }
 
     this.disableComponentIfNecessary();
-
-    if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
   }
 
   /**
@@ -469,30 +449,7 @@ class LabelController extends ComponentController {
           this.submitCounter = submitCounter;
         }
 
-        this.processLatestSubmit();
-      }
-    }
-  };
-
-  /**
-   * Check if latest component state is a submission and set isSubmitDirty accordingly
-   */
-  processLatestSubmit() {
-    let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-    if (latestState) {
-      let serverSaveTime = latestState.serverSaveTime;
-      let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      if (latestState.isSubmit) {
-        // latest state is a submission, so set isSubmitDirty to false and notify node
-        this.isSubmitDirty = false;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        this.setSubmittedMessage(clientSaveTime);
-      } else {
-        // latest state is not a submission, so set isSubmitDirty to true and notify node
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        this.setSavedMessage(clientSaveTime);
+        this.processLatestStudentWork();
       }
     }
   };
@@ -531,100 +488,11 @@ class LabelController extends ComponentController {
         }
       }
     }
-  };
-
-  /**
-   * A submit was triggered by the component submit button or node submit button
-   * @param submitTriggeredBy what triggered the submit
-   * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-   */
-  submit(submitTriggeredBy) {
-
-    if (this.isSubmitDirty) {
-      // the student has unsubmitted work
-
-      var performSubmit = true;
-
-      if (this.componentContent.maxSubmitCount != null) {
-        // there is a max submit count
-
-        // calculate the number of submits this student has left
-        var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-        var message = '';
-
-        if (numberOfSubmitsLeft <= 0) {
-          // the student does not have any more chances to submit
-          performSubmit = false;
-        } else if (numberOfSubmitsLeft == 1) {
-          /*
-           * the student has one more chance to submit left so maybe
-           * we should ask the student if they are sure they want to submit
-           */
-        } else if (numberOfSubmitsLeft > 1) {
-          /*
-           * the student has more than one chance to submit left so maybe
-           * we should ask the student if they are sure they want to submit
-           */
-        }
-      }
-
-      if (performSubmit) {
-
-        /*
-         * set isSubmit to true so that when the component state is
-         * created, it will know that is a submit component state
-         * instead of just a save component state
-         */
-        this.isSubmit = true;
-        this.incrementSubmitCounter();
-
-        // check if the student has used up all of their submits
-        if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-          /*
-           * the student has used up all of their submits so we will
-           * disable the submit button
-           */
-          this.isSubmitButtonDisabled = true;
-        }
-
-        if (this.mode === 'authoring') {
-          /*
-           * we are in authoring mode so we will set values appropriately
-           * here because the 'componentSubmitTriggered' event won't
-           * work in authoring mode
-           */
-          this.isDirty = false;
-          this.isSubmitDirty = false;
-          this.createComponentState('submit');
-        }
-
-        if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-          // tell the parent node that this component wants to submit
-          this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-        } else if (submitTriggeredBy === 'nodeSubmitButton') {
-          // nothing extra needs to be performed
-        }
-      } else {
-        /*
-         * the student has cancelled the submit so if a component state
-         * is created, it will just be a regular save and not submit
-         */
-        this.isSubmit = false;
-      }
-    }
   }
 
-  /**
-   * Called when the student clicks on the new label button to enter
-   * create label mode
-   */
   newLabelButtonClicked() {
-    this.createLabelMode = true;
-    this.isCancelButtonVisible = true;
-    this.editLabelMode = false;
-    this.selectedLabel = null;
-  };
+    this.createLabelOnCanvas();
+  }
 
   /**
    * Called when the student clicks on the cancel button to exit
@@ -866,29 +734,6 @@ class LabelController extends ComponentController {
     return this.isCancelButtonVisible;
   };
 
-  removeAttachment(attachment) {
-    if (this.attachments.indexOf(attachment) != -1) {
-      this.attachments.splice(this.attachments.indexOf(attachment), 1);
-      this.studentDataChanged();
-    }
-  };
-
-  attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
-        if (copiedAsset != null) {
-          var attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.attachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
-  };
-
   /**
    * Initialize the canvas
    * @returns the canvas object
@@ -943,66 +788,6 @@ class LabelController extends ComponentController {
          */
         this.selectedLabel = null;
         this.editLabelMode = false;
-      }
-
-      // check if the student is in create label mode
-      if (this.createLabelMode) {
-        /*
-         * the student is in create label mode so we will create a new label
-         * where they have clicked
-         */
-
-        // turn off create label mode and hide the cancel button
-        this.createLabelMode = false;
-        this.isCancelButtonVisible = false;
-
-        var event = options.e;
-
-        if (event != null) {
-          // get the x and y position that the student clicked on
-          var x = event.layerX;
-          var y = event.layerY;
-
-          /*
-           * set the location of the text object to be down to the right
-           * of the position the student clicked on
-           */
-          let textX = null;
-          let textY = null;
-          if (this.enableCircles) {
-            // place the text to the bottom right of the circle
-            if (this.isStudentDataVersion(1)) {
-              // text is relatively positioned
-              textX = 100;
-              textY = 100;
-            } else {
-              // text is absolutely positioned
-              textX = x + 100;
-              textY = y + 100;
-            }
-          } else {
-            // circles are not enabled so we are only using the text
-            textX = x;
-            textY = y;
-          }
-
-          let canEdit = true;
-          let canDelete = true;
-
-          // create a new label
-          var newLabel = this.createLabel(x, y, textX, textY,
-              this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
-
-          // add the label to the canvas
-          this.addLabelToCanvas(this.canvas, newLabel);
-
-          /*
-           * make the new label selected so that the student can edit
-           * the text
-           */
-          this.selectLabel(newLabel);
-          this.studentDataChanged();
-        }
       }
     }));
 
@@ -1143,6 +928,96 @@ class LabelController extends ComponentController {
 
     return canvas;
   };
+
+  createLabelOnCanvas() {
+    this.createLabelMode = false;
+    this.isCancelButtonVisible = false;
+    const newLabelLocation = this.getNewLabelLocation();
+    const canEdit = true;
+    const canDelete = true;
+    const newLabel = this.createLabel(newLabelLocation.pointX, newLabelLocation.pointY,
+        newLabelLocation.textX, newLabelLocation.textY,
+        this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
+    this.addLabelToCanvas(this.canvas, newLabel);
+    this.selectLabel(newLabel);
+    this.studentDataChanged();
+  }
+
+  getNewLabelLocation() {
+    const nextPointLocation = this.getNextPointLocation();
+    const pointX = nextPointLocation.pointX;
+    const pointY = nextPointLocation.pointY;
+    const newTextLocation = this.getNextTextLocation(pointX, pointY);
+    const textX = newTextLocation.textX;
+    const textY = newTextLocation.textY;
+    return {
+      pointX: pointX,
+      pointY: pointY,
+      textX: textX,
+      textY: textY
+    };
+  }
+
+  getNextPointLocation() {
+    let unoccupiedPointLocation = this.getUnoccupiedPointLocation();
+    if (unoccupiedPointLocation == null) {
+      return {pointX: 50, pointY: 50};
+    } else {
+      return unoccupiedPointLocation;
+    }
+  }
+
+  getNextTextLocation(pointX, pointY) {
+    let textX = null;
+    let textY = null;
+    if (this.enableCircles) {
+      // place the text to the bottom right of the circle
+      if (this.isStudentDataVersion(1)) {
+        // text is relatively positioned
+        textX = 100;
+        textY = 100;
+      } else {
+        // text is absolutely positioned
+        textX = pointX + 100;
+        textY = pointY + 100;
+      }
+    } else {
+      // circles are not enabled so we are only using the text
+      textX = pointX;
+      textY = pointY;
+    }
+    return {textX: textX, textY: textY};
+  }
+
+  getOccupiedPointLocations() {
+    let labels = this.getLabelData();
+    const occupiedPointLocations = [];
+    for (let label of labels) {
+      occupiedPointLocations.push({pointX: label.pointX, pointY: label.pointY});
+    }
+    return occupiedPointLocations;
+  }
+
+  isPointOccupied(occupiedPointLocations, pointX, pointY) {
+    for (let occupiedPointLocation of occupiedPointLocations) {
+      if (occupiedPointLocation.pointX == pointX && occupiedPointLocation.pointY == pointY) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getUnoccupiedPointLocation() {
+    const occupiedPointLocations = this.getOccupiedPointLocations();
+    for (let y = 50; y < this.canvasHeight; y += 150) {
+      for (let x = 50; x < this.canvasWidth; x += 150) {
+        if (!this.isPointOccupied(occupiedPointLocations, x, y)) {
+          return {pointX: x, pointY: y};
+        }
+      }
+    }
+    return null;
+  }
 
   /**
    * Set the background image
@@ -1319,6 +1194,9 @@ class LabelController extends ComponentController {
       hasControls: false,
       hasBorders: true,
       borderColor: 'red',
+      borderDashArray: [8, 8],
+      borderScaleFactor: 3,
+      borderOpacityWhenMoving: 1,
       selectable: true,
       cursorWidth: 0,
       editable: false,
@@ -1461,21 +1339,26 @@ class LabelController extends ComponentController {
        */
       this.selectedLabelText = label.text.text;
 
-      // show the label text input
       this.editLabelMode = true;
+      this.canvas.setActiveObject(label.text);
+      this.giveFocusToLabelTextInput();
+    } else {
+      // hide label text input
+      this.editLabelMode = false;
+    }
+  }
 
+  giveFocusToLabelTextInput() {
+    this.$timeout(() => {
       /*
-       * Give focus to the label text input element so the student can immediately
-       * start typing.
+       * Get the y position of the top of the edit label text input. If this
+       * value is negative, it means the element is above the currently
+       * viewable area and can not be seen. If the value is positive, it means
+       * the element is currently in the viewable area and can be seen.
        */
-      this.$timeout(() => {
-        /*
-         * Get the y position of the top of the edit label text input. If this
-         * value is negative, it means the element is above the currently
-         * viewable area and can not be seen. If the value is positive, it means
-         * the element is currently in the viewable area and can be seen.
-         */
-        var editLabelTextInputTop = $('#editLabelTextInput').offset().top;
+      const offset = $('#editLabelTextInput').offset();
+      if (offset != null) {
+        const editLabelTextInputTop = offset.top;
 
         /*
          * Check if the edit label text input is viewable. We want to make sure
@@ -1489,18 +1372,8 @@ class LabelController extends ComponentController {
           // the input is in view so we will give it focus.
           angular.element('#editLabelTextInput').focus();
         }
-      });
-    } else {
-      // hide label text input
-      this.editLabelMode = false;
-    }
-
-    /*
-     * force angular to refresh, otherwise angular will wait until the
-     * user generates another input (such as moving the mouse) before
-     * refreshing
-     */
-    this.$scope.$apply();
+      }
+    });
   }
 
   /**

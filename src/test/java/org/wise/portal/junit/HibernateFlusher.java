@@ -17,7 +17,7 @@
  */
 package org.wise.portal.junit;
 
-import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 /**
  * @author Cynick Young

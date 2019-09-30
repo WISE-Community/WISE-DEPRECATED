@@ -1,0 +1,17 @@
+.mat-expansion-panel-header--lg {
+  height: 64px !important;
+}
+
+.mat-accordion {
+  .mat-expansion-panel {
+    &:not(.mat-expanded) {
+      margin-bottom: 8px;
+      border-radius: $button-border-radius;
+    }
+  }
+}
+
+.mat-expansion-panel-body {
+  border-bottom-left-radius: $button-border-radius;
+  border-bottom-right-radius: $button-border-radius;
+}

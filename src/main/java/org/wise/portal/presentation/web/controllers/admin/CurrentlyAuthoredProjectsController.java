@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -23,90 +23,44 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.session.SessionService;
+
 import java.util.HashMap;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
-import org.wise.portal.service.project.ProjectService;
-
 /**
- * Controller for showing currently-authored project in the admin page.
- * Retrieves relevant objects and passes the along to the view (jsp), which does the rendering
+ * Controller for showing currently-authored project in the admin page
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin/project/currentlyAuthoredProjects.html")
+@RequestMapping("/admin/project/currentlyAuthoredProjects")
 public class CurrentlyAuthoredProjectsController {
 
   @Autowired
   private ProjectService projectService;
 
-  /**
-   * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-   */
+  @Autowired
+  private SessionService sessionService;
+
   @RequestMapping(method = RequestMethod.GET)
-  protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
-    ModelAndView mav = new ModelAndView();
-
-    HttpSession currentUserSession = request.getSession();
-    HashMap<String, ArrayList<String>> openedProjectsToSessions =
-      (HashMap<String, ArrayList<String>>) currentUserSession.getServletContext().getAttribute("openedProjectsToSessions");
-
-    // use a copy to remove unused project ids. this will avoid concurrentmodificationexception. https://github.com/WISE-Community/WISE-Portal/issues/96
-    HashMap<String, ArrayList<String>> openedProjectsToSessionsCopy = new HashMap<String, ArrayList<String>>();
-    if (openedProjectsToSessions != null) {
-      openedProjectsToSessionsCopy.putAll(openedProjectsToSessions);
+  protected String showCurrentlyAuthoredProjects(ModelMap modelMap) throws Exception {
+    Set<String> currentlyAuthoredProjects = sessionService.getCurrentlyAuthoredProjects();
+    HashMap<String, Set<String>> projectsToAuthors = new HashMap<>();
+    HashMap<String, String> projectNames = new HashMap<>();
+    for (String currentlyAuthoredProject : currentlyAuthoredProjects) {
+      Project project = projectService.getById(currentlyAuthoredProject);
+      projectNames.put(currentlyAuthoredProject, project.getName());
+      projectsToAuthors.put(currentlyAuthoredProject, sessionService.getCurrentAuthors(currentlyAuthoredProject));
     }
-
-    HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) currentUserSession.getServletContext()
-      .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-
-    HashMap<String, Project> openedProjects = new HashMap<String, Project>();  // <projectId, Project> mapping.
-
-    ArrayList<String> openedProjectIds = new ArrayList<String>();  // list of project ids. Keep track of project ids that are being authored right now
-    if (openedProjectsToSessions != null) {
-      Set<String> openedProjectIdsSet = openedProjectsToSessions.keySet();
-      for (String openedProjectId : openedProjectIdsSet) {
-        // check if there is a session associated with the opened project
-        if (openedProjectsToSessions.get(openedProjectId) != null &&
-          openedProjectsToSessions.get(openedProjectId).size() > 0) {
-          openedProjectIds.add(openedProjectId);
-          Project project = projectService.getById(openedProjectId);
-          openedProjects.put(openedProjectId, project);
-        } else {
-          // otherwise remove this opened project id information from this set because it's not accurate
-          openedProjectsToSessionsCopy.remove(openedProjectId);
-        }
-      }
-    }
-
-    // filter allLoggedInUsers by teacher since students can't author projects.
-    HashMap<String, User> loggedInTeachers = new HashMap<String, User>();
-    if (allLoggedInUsers != null) {
-      for (String sessionId : allLoggedInUsers.keySet()) {
-        User loggedInUser = allLoggedInUsers.get(sessionId);
-        if (loggedInUser.getUserDetails() instanceof TeacherUserDetails) {
-          loggedInTeachers.put(sessionId, loggedInUser);
-        }
-      }
-    }
-
-    mav.addObject("loggedInTeachers", loggedInTeachers);
-    mav.addObject("openedProjectIds", openedProjectIds);
-    mav.addObject("openedProjects", openedProjects);
-    mav.addObject("openedProjectsToSessions", openedProjectsToSessionsCopy);
-    return mav;
+    modelMap.put("projectNames", projectNames);
+    modelMap.put("projectsToAuthors", projectsToAuthors);
+    return "admin/project/currentlyAuthoredProjects";
   }
 }

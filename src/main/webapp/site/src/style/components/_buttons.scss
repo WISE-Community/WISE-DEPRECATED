@@ -1,0 +1,65 @@
+@import '~@angular/material/theming';
+
+.mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
+  text-transform: uppercase;
+
+  &:hover, &:focus {
+    text-decoration: none;
+  }
+
+  mat-progress-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+  }
+}
+
+.mat-raised-button {
+  &:not(.mat-icon-button) {
+    &:not([class*=mat-elevation-z]) {
+      @include mat-elevation(3);
+    }
+  }
+}
+
+.mat-fab.mat-fab--extended {
+  border-radius: 24px;
+  padding: 0px 16px;
+  width: auto;
+  height: 48px;
+
+  .mat-button-wrapper {
+    padding: 8px 0;
+  }
+}
+
+.button--card {
+  cursor: pointer;
+
+  &:hover, &:focus {
+    outline: none;
+    @include mat-elevation(8);
+  }
+}
+
+.button--social-login {
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    width: 18px;
+    height: auto;
+    margin: 0 18px 0 -14px;
+    padding: 7px;
+    background-color: #fff;
+    border-radius: 2px;
+  }
+}
+
+.button--google {
+  background-color: #ea4335 !important;
+}

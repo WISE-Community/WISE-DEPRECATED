@@ -28,9 +28,7 @@ class TopBarController {
     this.avatarColor =
         this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
 
-    // get the teacher name and user name
-    this.userName = this.ConfigService.getMyUserName();
-
+    this.userInfo = this.ConfigService.getMyUserInfo();
     this.themePath = this.ProjectService.getThemePath();
     this.contextPath = this.ConfigService.getContextPath();
   }
@@ -81,6 +79,7 @@ const TopBar = {
             <img ng-src="{{ $ctrl.logoPath }}" alt="{{ 'WISE_LOGO' | translate }}" class="logo" />
           </a>
         </span>
+        <span flex>
         <h3>
           <span ng-if="$ctrl.projectTitle" id="projectTitleSpan">{{ $ctrl.projectTitle }}</span>
           <span ng-if="!$ctrl.projectTitle" id="projectTitleSpan">{{ 'authoringTool' | translate }}</span>
@@ -88,7 +87,7 @@ const TopBar = {
             ({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}<span class="md-caption" ng-if="$ctrl.runId"> | {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}</span>)
           </span>
         </h3>
-        <span flex></span>
+        </span>
         <md-button style="text-transform: none;"
             ng-click="$ctrl.helpButtonClicked()">{{ 'HELP' | translate }}</md-button>
         <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">

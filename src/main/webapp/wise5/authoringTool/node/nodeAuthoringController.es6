@@ -252,6 +252,49 @@ class NodeAuthoringController {
             text: this.$translate('requiredNumberOfWords')
           }
         ]
+      },
+      {
+        value: "addXNumberOfNotesOnThisStep",
+        text: this.$translate('addXNumberOfNotesOnThisStep'),
+        params: [
+          {
+            value: "nodeId",
+            text: this.$translate('step')
+          },
+          {
+            value: "requiredNumberOfNotes",
+            text: this.$translate('requiredNumberOfNotes')
+          }
+        ]
+      },
+      {
+        value: "fillXNumberOfRows",
+        text: this.$translate('fillXNumberOfRows'),
+        params: [
+          {
+            value: "nodeId",
+            text: this.$translate('step')
+          },
+          {
+            value: "componentId",
+            text: this.$translate('component')
+          },
+          {
+            value: "requiredNumberOfFilledRows",
+            defaultValue: null,
+            text: this.$translate('requiredNumberOfFilledRowsNotIncludingHeaderRow')
+          },
+          {
+            value: "tableHasHeaderRow",
+            defaultValue: true,
+            text: this.$translate('tableHasHeaderRow')
+          },
+          {
+            value: "requireAllCellsInARowToBeFilled",
+            defaultValue: true,
+            text: this.$translate('requireAllCellsInARowToBeFilled')
+          }
+        ]
       }
     ];
 
@@ -330,6 +373,7 @@ class NodeAuthoringController {
       {componentType: 'MultipleChoice', componentName: this.UtilService.getComponentTypeLabel('MultipleChoice')},
       {componentType: 'OpenResponse', componentName: this.UtilService.getComponentTypeLabel('OpenResponse')},
       {componentType: 'OutsideURL', componentName: this.UtilService.getComponentTypeLabel('OutsideURL')},
+      {componentType: 'Summary', componentName: this.UtilService.getComponentTypeLabel('Summary')}, 
       {componentType: 'Table', componentName: this.UtilService.getComponentTypeLabel('Table')}
     ];
 
@@ -479,7 +523,7 @@ class NodeAuthoringController {
          * a component is hiding their submit button so we may need
          * to show the step save button
          */
-        if (this.ProjectService.doesAnyComponentShowSubmitButton(this.node.id)) {
+        if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.node.id)) {
           /*
            * there is at least one component in the step that is showing
            * their submit button so we will show the save button on
@@ -1292,8 +1336,11 @@ class NodeAuthoringController {
           if (paramObject != null) {
             let value = paramObject.value;
 
-            // initialize the param value
-            criteria.params[value] = '';
+            if (paramObject.hasOwnProperty('defaultValue')) {
+              criteria.params[value] = paramObject.defaultValue;
+            } else {
+              criteria.params[value] = '';
+            }
 
             if (value == 'nodeId') {
               // default the node id param to this node
@@ -2836,7 +2883,7 @@ class NodeAuthoringController {
    * Check if we need to show the node save or node submit buttons
    */
   checkIfNeedToShowNodeSaveOrNodeSubmitButtons() {
-    if (this.ProjectService.doesAnyComponentShowSubmitButton(this.nodeId)) {
+    if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.nodeId)) {
       /*
        * there is a component in this step that is showing their
        * submit button

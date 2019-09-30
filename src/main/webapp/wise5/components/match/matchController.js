@@ -42,10 +42,10 @@ var MatchController = function (_ComponentController) {
     _this.isHorizontal = _this.componentContent.horizontal; // whether to orient the choices and buckets side-by-side
     _this.choiceStyle = '';
     _this.bucketStyle = '';
-    _this.latestAnnotations = null;
     _this.sourceBucketId = '0';
     _this.hasCorrectAnswer = false;
     _this.isLatestComponentStateSubmit = false;
+    _this.sourceBucket = null;
 
     _this.privateNotebookItems = [];
 
@@ -53,7 +53,6 @@ var MatchController = function (_ComponentController) {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
       if (_this.shouldImportPrivateNotes()) {
         _this.privateNotebookItems = _this.NotebookService.getPrivateNotebookItems();
         _this.$rootScope.$on('notebookUpdated', function (event, args) {
@@ -67,9 +66,6 @@ var MatchController = function (_ComponentController) {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isDisabled = true;
-      if (_this.mode === 'grading') {
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-      }
       if (_this.shouldImportPrivateNotes()) {
         _this.privateNotebookItems = _this.NotebookService.getPrivateNotebookItems(_this.workgroupId);
       }
@@ -111,10 +107,6 @@ var MatchController = function (_ComponentController) {
     }
 
     _this.disableComponentIfNecessary();
-
-    if (_this.$scope.$parent.nodeController != null) {
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
 
     _this.registerDragListeners();
 
@@ -262,13 +254,16 @@ var MatchController = function (_ComponentController) {
 
                 var currentChoiceId = currentChoice.id;
                 var currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
+                var bucket = this.getBucketById(componentStateBucketId);
                 if (currentChoiceLocation > -1) {
                   // choice is valid and used by student in a valid bucket, so add it to that bucket
-                  var bucket = this.getBucketById(componentStateBucketId);
-                  // content for choice with this id may have change, so get updated content
+
+                  // content for choice with this id may have changed, so get updated content
                   var updatedChoice = this.getChoiceById(currentChoiceId);
                   bucket.items.push(updatedChoice);
                   choiceIds.splice(currentChoiceLocation, 1);
+                } else {
+                  bucket.items.push(currentChoice);
                 }
               }
             } catch (err) {
@@ -575,7 +570,7 @@ var MatchController = function (_ComponentController) {
       this.setNumChoiceColumns();
       this.setChoiceStyle();
       this.setBucketStyle();
-      var sourceBucket = {
+      this.sourceBucket = {
         id: this.sourceBucketId,
         value: this.componentContent.choicesLabel ? this.componentContent.choicesLabel : this.$translate('match.choices'),
         type: 'bucket',
@@ -589,7 +584,7 @@ var MatchController = function (_ComponentController) {
         for (var _iterator7 = this.getChoices()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
           var choice = _step7.value;
 
-          sourceBucket.items.push(choice);
+          this.sourceBucket.items.push(choice);
         }
       } catch (err) {
         _didIteratorError7 = true;
@@ -606,7 +601,7 @@ var MatchController = function (_ComponentController) {
         }
       }
 
-      this.buckets.push(sourceBucket);
+      this.buckets.push(this.sourceBucket);
       var _iteratorNormalCompletion8 = true;
       var _didIteratorError8 = false;
       var _iteratorError8 = undefined;
@@ -704,49 +699,6 @@ var MatchController = function (_ComponentController) {
     value: function getCopyOfBuckets() {
       var bucketsJSONString = angular.toJson(this.getBuckets());
       return angular.fromJson(bucketsJSONString);
-    }
-
-    /**
-     * A submit was triggered by the component submit button or node submit button
-     * @param {string} submitTriggeredBy what triggered the submit
-     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-     */
-
-  }, {
-    key: 'submit',
-    value: function submit(submitTriggeredBy) {
-      if (this.isSubmitDirty) {
-        var performSubmit = true;
-        if (this.componentContent.maxSubmitCount != null && this.hasStudentUsedAllSubmits()) {
-          performSubmit = false;
-        }
-        if (performSubmit) {
-          this.isSubmit = true;
-          this.isCorrect = null;
-          this.incrementSubmitCounter();
-          if (this.componentContent.maxSubmitCount != null && this.hasStudentUsedAllSubmits()) {
-            this.isDisabled = true;
-            this.isSubmitButtonDisabled = true;
-          }
-
-          if (this.mode === 'authoring') {
-            /*
-             * we are in authoring mode so we will set values appropriately
-             * here because the 'componentSubmitTriggered' event won't
-             * work in authoring mode
-             */
-            this.isDirty = false;
-            this.isSubmitDirty = false;
-            this.createComponentState('submit');
-          }
-
-          if (submitTriggeredBy === 'componentSubmitButton') {
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-          }
-        } else {
-          this.isSubmit = false;
-        }
-      }
     }
   }, {
     key: 'getNumSubmitsLeft',
@@ -1584,6 +1536,64 @@ var MatchController = function (_ComponentController) {
       }
 
       return ids;
+    }
+  }, {
+    key: 'addChoice',
+    value: function addChoice() {
+      var _this4 = this;
+
+      var confirm = this.$mdDialog.prompt().title(this.$translate('match.enterChoiceText')).placeholder(this.$translate('match.typeSomething')).cancel(this.$translate('CANCEL')).ok(this.$translate('OK'));
+      this.$mdDialog.show(confirm).then(function (result) {
+        if (result != null && result != '') {
+          var newChoice = {
+            id: _this4.UtilService.generateKey(10),
+            value: result,
+            type: 'choice',
+            studentCreated: true
+          };
+          _this4.sourceBucket.items.push(newChoice);
+          _this4.studentDataChanged();
+        }
+      });
+    }
+  }, {
+    key: 'deleteChoice',
+    value: function deleteChoice(choice) {
+      if (confirm(this.$translate('match.areYouSureYouWantToDeleteThisChoice'))) {
+        var buckets = this.getBuckets();
+        var _iteratorNormalCompletion27 = true;
+        var _didIteratorError27 = false;
+        var _iteratorError27 = undefined;
+
+        try {
+          for (var _iterator27 = buckets[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+            var bucket = _step27.value;
+
+            var items = bucket.items;
+            for (var i = 0; i < items.length; i++) {
+              var item = items[i];
+              if (item.id == choice.id) {
+                items.splice(i, 1);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError27 = true;
+          _iteratorError27 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion27 && _iterator27.return) {
+              _iterator27.return();
+            }
+          } finally {
+            if (_didIteratorError27) {
+              throw _iteratorError27;
+            }
+          }
+        }
+
+        this.studentDataChanged();
+      }
     }
   }]);
 

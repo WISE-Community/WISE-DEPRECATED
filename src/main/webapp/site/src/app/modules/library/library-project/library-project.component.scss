@@ -1,0 +1,83 @@
+@import
+  '~@angular/material/theming',
+  '~style/abstracts/functions',
+  '~style/abstracts/variables';
+
+// Create a config with the default typography levels.
+$config: mat-typography-config();
+
+.library-project {
+  margin: 8px;
+  overflow: hidden;
+
+  &.mat-card {
+    padding: 0;
+  }
+}
+
+.library-project__cover {
+  position: relative;
+  padding-top: 75%;
+  background-size: cover;
+  background-position: center;
+  border-radius: $button-border-radius;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.15);
+    border-radius: $button-border-radius;
+    transition: background-color 280ms cubic-bezier(.4,0,.2,1);
+  }
+}
+
+.library-project {
+  &:hover, &:focus {
+    .library-project__cover {
+      &:after {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+.library-project__details {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background-color: #ffffff;
+  font-size: mat-font-size($config, body-1);
+
+  p {
+    margin-bottom: 6px;
+    line-height: 1.25;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  .mat-icon {
+    vertical-align: bottom;
+  }
+}
+
+.library-project__title {
+  font-weight: 500;
+
+  span {
+    display: inline-block;
+  }
+}
+
+.library-project-disciplines {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}

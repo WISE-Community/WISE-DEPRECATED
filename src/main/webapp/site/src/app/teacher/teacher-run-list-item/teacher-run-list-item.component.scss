@@ -1,0 +1,32 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/functions';
+
+.mat-card-avatar {
+  background-size: cover;
+  border-radius: 4px;
+  margin-bottom: 4px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    height: 64px;
+    width: 64px;
+  }
+}
+
+.mat-card-title {
+  margin-bottom: 6px;
+
+  @media (max-width: breakpoint('xs.max')) {
+    @include mat-typography-level-to-styles($config, body-1);
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+}
+
+.mat-card-subtitle {
+  margin-bottom: 2px;
+}
+
+app-run-menu {
+  margin: -8px -8px 0 0;
+}

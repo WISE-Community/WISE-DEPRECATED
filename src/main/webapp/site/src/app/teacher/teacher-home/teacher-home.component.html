@@ -1,0 +1,26 @@
+<header fxLayout="row" class="content__header">
+  <h1 class="accent"
+      fxLayoutAlign="center center"
+      fxLayoutGap="8px"
+      ngClass="mat-display-1"
+      [ngClass.xs]="{ 'mat-display-1': false }">
+    <mat-icon>home</mat-icon><span i18n>Teacher Home</span>
+  </h1>
+</header>
+<section>
+  <nav mat-tab-nav-bar i18n-aria-label aria-label="Teacher home navigation">
+    <a mat-tab-link *ngFor="let tab of tabLinks"
+       [routerLink]="[tab.path]"
+       routerLinkActive
+       #rla="routerLinkActive"
+       [active]="rla.isActive">
+      {{tab.label}}
+    </a>
+    <a mat-tab-link [href]="authoringToolLink">
+      <ng-container i18n>Authoring Tool</ng-container>
+      &nbsp;<mat-icon class="text">open_in_browser</mat-icon>
+    </a>
+  </nav>
+  <app-teacher-run-list [hidden]="!isRunListRoute()"></app-teacher-run-list>
+  <app-teacher-project-library [hidden]="isRunListRoute()"></app-teacher-project-library>
+</section>

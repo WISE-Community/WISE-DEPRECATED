@@ -34,13 +34,13 @@ class StudentAssetController {
 
   getTemplateUrl() {
     return this.templateUrl;
-  };
+  }
 
   retrieveStudentAssets() {
     this.StudentAssetService.retrieveAssets().then((studentAssets) => {
       this.studentAssets = studentAssets;
     });
-  };
+  }
 
   // TODO can we ensure files is not null?
   uploadStudentAssets(files) {
@@ -56,11 +56,11 @@ class StudentAssetController {
         });
       }
     }
-  };
+  }
 
   deleteStudentAsset(studentAsset) {
     alert(this.$translate('deleteStudentAssetNotImplementedYet'));
-  };
+  }
 
   attachStudentAssetToComponent($event, studentAsset) {
     if (this.componentController != null) {
@@ -70,17 +70,17 @@ class StudentAssetController {
       // TODO: add some kind of unobtrusive confirmation to let student know that the student asset has been added to current component
       $event.stopPropagation();  // prevents parent student asset list item from getting the onclick event so this item won't be re-selected.
     }
-  };
+  }
 }
 
 StudentAssetController.$inject = [
-  "$filter",
-  "$injector",
-  "$rootScope",
-  "$scope",
-  "ConfigService",
-  "ProjectService",
-  "StudentAssetService"
+  '$filter',
+  '$injector',
+  '$rootScope',
+  '$scope',
+  'ConfigService',
+  'ProjectService',
+  'StudentAssetService'
 ];
 
 export default StudentAssetController;

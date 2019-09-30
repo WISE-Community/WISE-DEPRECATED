@@ -75,11 +75,17 @@ public class PortalImpl implements Portal {
   @Column(name = "settings", length = 32768, columnDefinition = "text")
   private String settings;  // text (blob) 2^15
 
+  @Column(name = "projectLibraryGroups", length = 32768, columnDefinition = "text")
+  private String projectLibraryGroups;
+
   @Column(name = "run_survey_template", length = 32768, columnDefinition = "text")
   private String runSurveyTemplate;  // text (blob) 2^15
 
   @Column(name = "projectMetadataSettings", length = 32768, columnDefinition = "text")
   private String projectMetadataSettings;  // text (blob) 2^15
+
+  @Column(name = "announcement", length = 32768, columnDefinition = "text")
+  private String announcement;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

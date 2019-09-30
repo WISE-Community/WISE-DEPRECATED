@@ -158,7 +158,7 @@
 						</c:forEach>
 					</spring:bind>
 				</div>
-				<form:form method="post" commandName="addProjectParameters" id="addproject" autocomplete='off'>
+				<form:form method="post" modelAttribute="addProjectParameters" id="addproject" autocomplete='off'>
 					<div>
 						<label for="runCode_part1" id="runCode_part1_label"><spring:message code="student.addproject.accessCode" /></label>
 						<form:input path="runCode_part1" id="runCode_part1" size="25" maxlength="25" tabindex="1" onkeyup="checkRunCode()"/>

@@ -1,0 +1,29 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
+
+h2 {
+  margin-bottom: 0;
+}
+
+.student-run-list {
+  margin-top: 16px;
+}
+
+.content-block {
+  margin-top: 24px;
+  overflow: hidden;
+}
+
+.content-block__header {
+  margin: -16px -16px 16px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    margin: -24px -24px 16px;
+  }
+}
+
+.notice {
+  font-weight: 500;
+}

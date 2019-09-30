@@ -12,6 +12,9 @@
   <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
   <link href="${contextPath}/<spring:theme code="studenthomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
   <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+  <c:if test="${textDirection == 'rtl' }">
+      <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+  </c:if>
 
   <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
   <script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
@@ -87,7 +90,7 @@
             Cancel: function(){ $(this).dialog('destroy'); }
           }
         });
-        $("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "${contextPath}/student/updatestudentaccount.html");
+        $("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "${contextPath}/legacy/student/updatestudentaccount.html");
 
       });
 
@@ -175,9 +178,11 @@
                 <li>
                   <a id="addprojectLink" class="wisebutton altbutton"><spring:message code="student.addproject.title" /></a>
                 </li>
-                <li>
-                  <a id="changePasswordLink" class="wisebutton altbutton-small"><spring:message code="changePassword" /></a>
-                </li>
+                <c:if test="${!user.userDetails.isGoogleUser()}">
+                  <li>
+                    <a id="changePasswordLink" class="wisebutton altbutton-small"><spring:message code="changePassword" /></a>
+                  </li>
+                </c:if>
                 <li>
                   <a class="wisebutton altbutton-small" href="${contextPath}/logout" id="studentsignout"><spring:message code="signOut" /></a>
                 </li>
@@ -283,7 +288,7 @@
                               <a id="viewAnnouncements_${studentRunInfo.run.id}" class="viewAnnouncements"><spring:message code="student.index.viewAnnouncements"/></a>
                             </li>
                             <li>
-                              <a href="${contextPath}/contact/contactwise.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}">
+                              <a href="${contextPath}/legacy/contact/contactwise.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}">
                                 <spring:message code="student.index.reportProblem"/>
                               </a>
                             </li>

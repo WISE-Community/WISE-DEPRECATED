@@ -1,0 +1,39 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/functions',
+  '~style/abstracts/mixins';
+
+.header {
+  padding: 0;
+  position: relative;
+}
+
+.header__content {
+  min-height: $header-height;
+  font-size: 14px;
+}
+
+.header__logo {
+  width: 200px;
+  max-width: 248px;
+  margin-top: 1.5%;
+
+  @media (min-width: breakpoint('sm.min')) {
+    width: 36%;
+  }
+
+  img {
+    vertical-align: middle;
+    max-width: 100%;
+    height: auto;
+    //image-rendering: -moz-crisp-edges;         /* Firefox */
+    //image-rendering:   -o-crisp-edges;         /* Opera */
+    //image-rendering: -webkit-optimize-contrast;/* Webkit (non-standard naming) */
+    //image-rendering: crisp-edges;
+    //-ms-interpolation-mode: nearest-neighbor;  /* IE (non-standard property) */
+  }
+}
+
+.mat-icon-button {
+  @include mat-icon-button-size(32px);
+}

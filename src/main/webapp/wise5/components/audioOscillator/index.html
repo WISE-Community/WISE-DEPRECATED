@@ -55,7 +55,8 @@
         <div class='component-content__actions' layout='row'>
           <md-button class='md-accent'
               ng-if='audioOscillatorController.isStudentAttachmentEnabled'
-              ng-click='nodeController.showStudentAssets($event, component.id, audioOscillatorController.isDisabled)'>
+              ng-click='nodeController.showStudentAssets($event, component.id, audioOscillatorController.isDisabled)'
+              ng-disabled='audioOscillatorController.isDisabled'>
             <md-icon>image</md-icon> {{ 'audioOscillator.importData' | translate }}
           </md-button>
         </div>
@@ -66,6 +67,7 @@
             <label>{{ 'audioOscillator.oscillatorType' | translate }}</label>
             <md-select ng-model='audioOscillatorController.oscillatorType'
                 ng-change='audioOscillatorController.oscillatorTypeChanged()'
+                ng-disabled='audioOscillatorController.isDisabled'
                 style='width: 120px'>
               <md-option ng-repeat='oscillatorType in audioOscillatorController.oscillatorTypes'
                   value='{{oscillatorType}}'>
@@ -77,14 +79,16 @@
             <label>{{ 'audioOscillator.frequency' | translate }}</label>
             <input type='number'
                 ng-model='audioOscillatorController.frequency'
-                ng-change='audioOscillatorController.frequencyChanged()'/>
+                ng-change='audioOscillatorController.frequencyChanged()'
+                ng-disabled='audioOscillatorController.isDisabled'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px;'>
             {{ 'audioOscillator.hz' | translate }}
           </md-input-container>
           <md-input-container style='margin-right: 20px;'>
             <md-button class='playStopButton md-raised md-primary'
-                ng-click='audioOscillatorController.playStopClicked()'>
+                ng-click='audioOscillatorController.togglePlay()'
+                ng-disabled='audioOscillatorController.isDisabled'>
               <md-icon ng-if='!audioOscillatorController.isPlaying'>play_arrow</md-icon>
               <md-icon ng-if='audioOscillatorController.isPlaying'>stop</md-icon>
               <md-tooltip md-direction='top'

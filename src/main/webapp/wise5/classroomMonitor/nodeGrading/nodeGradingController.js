@@ -70,19 +70,7 @@ var NodeGradingController = function () {
         });
 
         this.$scope.$on('projectSaved', function (event, args) {
-            // update maxScore
             _this.maxScore = _this.ProjectService.getMaxScoreForNode(_this.nodeId);
-        });
-
-        this.$scope.$on('notificationAdded', function (event, notification) {
-            if (notification.type === 'CRaterResult') {
-                // there is a new CRaterResult notification
-                // TODO: expand to encompass other notification types that should be shown to teacher
-                var workgroupId = notification.toWorkgroupId;
-                if (_this.workgroupsById[workgroupId]) {
-                    _this.updateWorkgroup(workgroupId);
-                }
-            }
         });
 
         this.$scope.$on('notificationChanged', function (event, notification) {

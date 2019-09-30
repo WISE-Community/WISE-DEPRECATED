@@ -55,7 +55,7 @@ public class VLEController {
   private ProjectService projectService;
 
   @Autowired
-  Properties wiseProperties;
+  Properties appProperties;
 
   @RequestMapping(value = "/student/vle/vle.html")
   protected ModelAndView launchVLEWISE4Run(HttpServletRequest request, HttpServletResponse response)
@@ -69,7 +69,7 @@ public class VLEController {
     modelAndView.addObject("vleurl", contextPath + "/vle/vle.html");
     modelAndView.addObject("vleConfigUrl",
       contextPath + "/vleconfig?runId=" + run.getId() + "&mode=run");
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     String rawProjectUrl = run.getProject().getModulePath();
     String contentUrl = curriculumBaseWWW + rawProjectUrl;
     modelAndView.addObject("contentUrl", contentUrl);

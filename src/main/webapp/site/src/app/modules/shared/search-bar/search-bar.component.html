@@ -1,0 +1,16 @@
+<mat-form-field class="search-bar" appearance="fill">
+  <mat-label>{{ placeholderText }}</mat-label>
+  <mat-icon matPrefix>search</mat-icon>
+  <input matInput type="search"
+         [formControl]="searchField"/>
+  <button mat-button
+          matSuffix
+          mat-icon-button
+          [disabled]="disable"
+          [ngClass]="{'invisible': !value}"
+          i18n-aria-label
+          aria-label="Clear"
+          (click)="clear()" >
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>

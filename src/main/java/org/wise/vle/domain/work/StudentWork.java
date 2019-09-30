@@ -27,6 +27,7 @@ import java.sql.Timestamp;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -57,14 +58,17 @@ public class StudentWork extends PersistableDomain {
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
+  @JsonIgnore
   private Run run;
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId", nullable = false)
+  @JsonIgnore
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = false)
+  @JsonIgnore
   private Workgroup workgroup;
 
   @Column(name = "isAutoSave", nullable = false)
@@ -91,70 +95,81 @@ public class StudentWork extends PersistableDomain {
   @Column(name = "studentData", length = 5120000, columnDefinition = "mediumtext", nullable = false)
   private String studentData;
 
+  @Transient
+  private long runId;
+
+  @Transient
+  private long periodId;
+
+  @Transient
+  private long workgroupId;
+
   @Override
   protected Class<?> getObjectClass() {
     return StudentWork.class;
   }
 
-  /**
-   * Get the JSON representation of the StudentWork
-   * @return a JSONObject with the values from the StudentWork
-   */
+  public void convertToClientStudentWork() {
+    this.setRunId(this.getRun().getId());
+    this.setPeriodId(this.getPeriod().getId());
+    this.setWorkgroupId(this.getWorkgroup().getId());
+  }
+
   public JSONObject toJSON() {
     JSONObject studentWorkJSONObject = new JSONObject();
     try {
-      if (this.id != null) {
-        studentWorkJSONObject.put("id", this.id);
+      if (id != null) {
+        studentWorkJSONObject.put("id", id);
       }
 
-      if (this.run != null) {
-        Long runId = this.run.getId();
+      if (run != null) {
+        Long runId = run.getId();
         studentWorkJSONObject.put("runId", runId);
       }
 
-      if (this.period != null) {
-        Long periodId = this.period.getId();
+      if (period != null) {
+        Long periodId = period.getId();
         studentWorkJSONObject.put("periodId", periodId);
       }
 
-      if (this.workgroup != null) {
-        Long workgroupId = this.workgroup.getId();
+      if (workgroup != null) {
+        Long workgroupId = workgroup.getId();
         studentWorkJSONObject.put("workgroupId", workgroupId);
       }
 
-      if (this.isAutoSave != null) {
-        studentWorkJSONObject.put("isAutoSave", this.isAutoSave);
+      if (isAutoSave != null) {
+        studentWorkJSONObject.put("isAutoSave", isAutoSave);
       }
 
-      if (this.isSubmit != null) {
-        studentWorkJSONObject.put("isSubmit", this.isSubmit);
+      if (isSubmit != null) {
+        studentWorkJSONObject.put("isSubmit", isSubmit);
       }
 
-      if (this.nodeId != null) {
-        studentWorkJSONObject.put("nodeId", this.nodeId);
+      if (nodeId != null) {
+        studentWorkJSONObject.put("nodeId", nodeId);
       }
 
-      if (this.componentId != null) {
-        studentWorkJSONObject.put("componentId", this.componentId);
+      if (componentId != null) {
+        studentWorkJSONObject.put("componentId", componentId);
       }
 
-      if (this.componentType != null) {
-        studentWorkJSONObject.put("componentType", this.componentType);
+      if (componentType != null) {
+        studentWorkJSONObject.put("componentType", componentType);
       }
 
-      if (this.clientSaveTime != null) {
+      if (clientSaveTime != null) {
         studentWorkJSONObject.put("clientSaveTime", clientSaveTime.getTime());
       }
 
-      if (this.serverSaveTime != null) {
+      if (serverSaveTime != null) {
         studentWorkJSONObject.put("serverSaveTime", serverSaveTime.getTime());
       }
 
-      if (this.studentData != null) {
+      if (studentData != null) {
         try {
           studentWorkJSONObject.put("studentData", new JSONObject(studentData));
         } catch (JSONException e) {
-          studentWorkJSONObject.put("studentData", this.studentData);
+          studentWorkJSONObject.put("studentData", studentData);
         }
       }
     } catch (JSONException e) {

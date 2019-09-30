@@ -34,6 +34,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.json.JSONArray;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -66,6 +67,18 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
   @Setter
   private String author;
 
+  @Getter
+  @Setter
+  private String authors;
+
+  @Getter
+  @Setter
+  private String uri;
+
+  @Getter
+  @Setter
+  private String parentProjects;
+
   @Column(name = "subject")
   @Getter
   @Setter
@@ -76,10 +89,18 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
   @Setter
   private String summary;
 
+  @Getter
+  @Setter
+  private String features;
+
   @Column(name = "grade_range")
   @Getter
   @Setter
   private String gradeRange;
+
+  @Getter
+  @Setter
+  private String grades;
 
   @Column(name = "total_time")
   @Getter
@@ -115,6 +136,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
   @Getter
   @Setter
   private String standards;
+
+  @Getter
+  @Setter
+  private String standardsAddressed;
 
   @Column(name = "keywords")
   @Getter
@@ -195,6 +220,18 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
+    if (metadataJSON.has("uri") && !metadataJSON.isNull("uri")) {
+      try {
+        String uri = metadataJSON.getString("uri");
+        if (uri.equals("null")) {
+          uri = "";
+        }
+        setUri(uri);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
     if (metadataJSON.has("author") && !metadataJSON.isNull("author")) {
       try {
         String author = metadataJSON.getString("author");
@@ -202,6 +239,30 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
           author = "";
         }
         setAuthor(author);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if (metadataJSON.has("authors") && !metadataJSON.isNull("authors")) {
+      try {
+        JSONArray authors = metadataJSON.getJSONArray("authors");
+        if (authors.equals("null")) {
+          authors = new JSONArray();
+        }
+        setAuthors(authors.toString());
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if (metadataJSON.has("parentProjects") && !metadataJSON.isNull("parentProjects")) {
+      try {
+        JSONArray parentProjects = metadataJSON.getJSONArray("parentProjects");
+        if (parentProjects.equals("null")) {
+          parentProjects = new JSONArray();
+        }
+        setParentProjects(parentProjects.toString());
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -231,6 +292,20 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
+    //check that the features exists and is not null
+    if (metadataJSON.has("features") && !metadataJSON.isNull("features")) {
+      try {
+        String features = metadataJSON.getString("features");
+        if (features.equals("null")) {
+          features = "";
+        }
+        setFeatures(features);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    //check that the grade range exists and is not null
     if (metadataJSON.has("gradeRange") && !metadataJSON.isNull("gradeRange")) {
       try {
         String gradeRange = metadataJSON.getString("gradeRange");
@@ -243,6 +318,20 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
+    //check that grades exists and is not null
+    if (metadataJSON.has("grades") && !metadataJSON.isNull("grades")) {
+      try {
+        JSONArray grades = metadataJSON.getJSONArray("grades");
+        if (grades.equals("null")) {
+          grades = new JSONArray();
+        }
+        setGrades(grades.toString());
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    //check that the total time exists and is not null
     if (metadataJSON.has("totalTime")  && !metadataJSON.isNull("totalTime")) {
       try {
         String totalTime = metadataJSON.getString("totalTime");
@@ -329,6 +418,20 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
+    //check that standardsAddressed exists and is not null
+    if (metadataJSON.has("standardsAddressed") && !metadataJSON.isNull("standardsAddressed")) {
+      try {
+        JSONObject standardsAddressed = metadataJSON.getJSONObject("standardsAddressed");
+        if (standardsAddressed.equals("null")) {
+          standardsAddressed = new JSONObject();
+        }
+        setStandardsAddressed(standardsAddressed.toString());
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    //check that the keywords exists and is not null
     if (metadataJSON.has("keywords") && !metadataJSON.isNull("keywords")) {
       try {
         String keywords = metadataJSON.getString("keywords");
@@ -453,6 +556,33 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
   public String toJSONString() {
     JSONObject metadata = new JSONObject(this);
     try {
+      String authorsString = metadata.getString("authors");
+      if (authorsString != null && authorsString != "null") {
+        JSONArray authorsJSON = new JSONArray(authorsString);
+
+        metadata.put("authors", authorsJSON);
+      } else {
+        metadata.put("authors", new JSONArray());
+      }
+
+      /*
+       * we will retrieve the grades JSON string and replace it with a JSON array
+       * so that the client does not need to parse the JSON string
+       */
+      String gradesString = metadata.getString("grades");
+
+      // check if the field is null or "null"
+      if (gradesString != null && gradesString != "null") {
+        // create the JSON object
+        JSONArray gradesJSON = new JSONArray(gradesString);
+
+        // override the existing grades string with this JSON array
+        metadata.put("grades", gradesJSON);
+      } else {
+        // override the existing grades string with this empty JSON array
+        metadata.put("grades", new JSONArray());
+      }
+
       /*
        * we will retrieve the techReqs JSON string and replace it with a JSON Object
        * so that the client does not need to parse the JSON string
@@ -470,6 +600,7 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
         // override the existing techReqs string with this empty JSON object
         metadata.put("techReqs", new JSONObject());
       }
+
       /*
        * we will retrieve the tools JSON string and replace it with a JSON Object
        * so that the client does not need to parse the JSON string
@@ -488,9 +619,34 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
         metadata.put("tools", new JSONObject());
       }
 
+      String standardsAddressedString = metadata.getString("standardsAddressed");
+      if (standardsAddressedString != null && standardsAddressedString != "null") {
+        JSONObject standardsAddressedJSON = new JSONObject(standardsAddressedString);
+        metadata.put("standardsAddressed", standardsAddressedJSON);
+      } else {
+        metadata.put("standardsAddressed", new JSONObject());
+      }
+
+      String parentProjectsString = metadata.getString("parentProjects");
+      if (parentProjectsString != null && parentProjectsString != "null") {
+        JSONArray parentProjectsJSON = new JSONArray(parentProjectsString);
+        metadata.put("parentProjects", parentProjectsJSON);
+      } else {
+        metadata.put("parentProjects", new JSONArray());
+      }
+
     } catch (JSONException e) {
       e.printStackTrace();
     }
     return metadata.toString();
+  }
+
+  public JSONObject toJSONObject() {
+    JSONObject result = new JSONObject();
+    try {
+      result = new JSONObject(toJSONString());
+    } catch (JSONException e) {
+    }
+    return result;
   }
 }

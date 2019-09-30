@@ -1,0 +1,33 @@
+<mat-card class="standalone__content standalone__content--sm  mat-elevation-z4">
+  <mat-card-content>
+    <h2 class="standalone__title accent" i18n>Create Teacher Account</h2>
+    <p>
+      <mat-form-field appearance="fill" fxFlex>
+        <mat-label i18n>Email</mat-label>
+        <input matInput
+               id="email"
+               name="email"
+               [(ngModel)]="email" />
+      </mat-form-field>
+    </p>
+    <p>
+      <button fxFlex
+              mat-flat-button
+              color="primary"
+              (click)="signUp()">
+        <ng-container i18n>Sign Up</ng-container>
+      </button>
+    </p>
+    <span *ngIf="isGoogleAuthenticationEnabled">
+      <p class="center mat-title" i18n>- or -</p>
+      <p class="center">
+        <button class="button--social-login button--google"
+                color="accent"
+                mat-flat-button
+                (click)="socialSignIn('google')">
+          <img src="assets/img/icons/g-logo.png" i18n-alt alt="Google logo" /><ng-container i18n>Sign up with Google</ng-container>
+        </button>
+      </p>
+    </span>
+  </mat-card-content>
+</mat-card>

@@ -57,7 +57,7 @@ public final class Template {
     return project;
   }
 
-  public static JSONObject getProjectNodeTemplate(String type, String name, String title, String nodeClass) throws JSONException{
+  public static JSONObject getProjectNodeTemplate(String type, String name, String title, String nodeClass) throws JSONException {
     JSONObject node = new JSONObject();
     node.put("type", type);
     node.put("identifier", name);
@@ -70,7 +70,7 @@ public final class Template {
     return node;
   }
 
-  public static JSONObject getSequenceTemplate(String id, String title) throws JSONException{
+  public static JSONObject getSequenceTemplate(String id, String title) throws JSONException {
     JSONObject sequence = new JSONObject();
     sequence.put("type", "sequence");
     sequence.put("identifier", id);
@@ -79,42 +79,42 @@ public final class Template {
     return sequence;
   }
 
-  public static JSONObject getNodeTemplate(String type, String title, String filename) throws JSONException{
-    if(type.equals("BrainstormNode")){
+  public static JSONObject getNodeTemplate(String type, String title, String filename) throws JSONException {
+    if (type.equals("BrainstormNode")) {
       return getBrainstormTemplate();
-    } else if(type.equals("FillinNode")){
+    } else if (type.equals("FillinNode")) {
       return getFillinTemplate();
-    } else if(type.equals("HtmlNode")){
+    } else if (type.equals("HtmlNode")) {
       return getHtmlTemplate(title, filename);
-    } else if(type.equals("MatchSequenceNode")){
+    } else if (type.equals("MatchSequenceNode")) {
       return getMatchSequenceTemplate();
-    } else if(type.equals("MultipleChoiceNode")){
+    } else if (type.equals("MultipleChoiceNode")) {
       return getMultipleChoiceTemplate("MultipleChoice");
-    } else if(type.equals("ChallengeNode")){
+    } else if (type.equals("ChallengeNode")) {
       return getChallengeTemplate();
-    } else if(type.equals("BranchNode")){
+    } else if (type.equals("BranchNode")) {
       return getBranchTemplate();
-    } else if(type.equals("NoteNode")){
+    } else if (type.equals("NoteNode")) {
       return getNoteTemplate();
-    } else if(type.equals("OutsideUrlNode")){
+    } else if (type.equals("OutsideUrlNode")) {
       return getOutsideUrlTemplate();
-    } else if(type.equals("OpenResponseNode")){
+    } else if (type.equals("OpenResponseNode")) {
       return getOpenResponseTemplate();
-    } else if(type.equals("DrawNode")){
+    } else if (type.equals("DrawNode")) {
       return getDrawingTemplate(title, filename);
-    } else if(type.equals("DataGraphNode")){
+    } else if (type.equals("DataGraphNode")) {
       return getDataGraphTemplate();
-    } else if(type.equals("MySystemNode")){
+    } else if (type.equals("MySystemNode")) {
       return getMySystemTemplate();
-    } else if(type.equals("SVGDrawNode")){
+    } else if (type.equals("SVGDrawNode")) {
       return getSVGDrawTemplate();
-    } else if(type.equals("AnnotatorNode")){
+    } else if (type.equals("AnnotatorNode")) {
       return getAnnotatorTemplate();
-    } else if(type.equals("AssessmentListNode")){
+    } else if (type.equals("AssessmentListNode")) {
       return getAssessmentListTemplate();
-    } else if(type.equals("SensorNode")) {
+    } else if (type.equals("SensorNode")) {
       return getSensorTemplate();
-    } else if(type.equals("ExplanationBuilderNode")) {
+    } else if (type.equals("ExplanationBuilderNode")) {
       return getExplanationBuilderTemplate();
     } else {
       return null;
@@ -136,7 +136,7 @@ public final class Template {
    * Returns an Open Response Template
    * @throws JSONException
    */
-  protected static JSONObject getOpenResponseTemplate() throws JSONException{
+  protected static JSONObject getOpenResponseTemplate() throws JSONException {
     JSONObject node = new JSONObject();
     JSONObject assessmentItem = new JSONObject();
     JSONObject responseDeclaration = new JSONObject();
@@ -235,31 +235,26 @@ public final class Template {
 
   protected static JSONObject getChallengeTemplate() throws JSONException {
     JSONObject node = getMultipleChoiceTemplate("Challenge");
-
-    if(node.has("assessmentItem")){
+    if (node.has("assessmentItem")) {
       JSONObject assessmentItem = node.getJSONObject("assessmentItem");
-      if(assessmentItem.has("interaction")){
+      if (assessmentItem.has("interaction")) {
         JSONObject interaction = assessmentItem.getJSONObject("interaction");
-        if(interaction != null){
+        if (interaction != null) {
           JSONObject attempts = new JSONObject();
           attempts.put("navigateTo", "");
           attempts.put("scores", new JSONObject());
-
           interaction.put("attempts", attempts);
         }
       }
     }
     node.put("type", "Challenge");
-
     return node;
   }
 
   protected static JSONObject getBranchTemplate() throws JSONException {
     JSONObject node = getMultipleChoiceTemplate("Branch");
-
     node.put("branches", new ArrayList<String>());
     node.put("type", "Branch");
-
     return node;
   }
 
@@ -300,10 +295,10 @@ public final class Template {
     return node;
   }
 
-  protected static String getHtmlStringForType(String type, String title, String filename){
-    if(type.equals("HtmlNode")){
+  protected static String getHtmlStringForType(String type, String title, String filename) {
+    if (type.equals("HtmlNode")) {
       return "<html>" + NL + "<head>" + NL + "<title>" + title + "</title>" + NL + "</head>" + NL + "<body>" + NL + "</body>" + NL + "</html>";
-    } else if(type.equals("DrawNode")){
+    } else if (type.equals("DrawNode")) {
       return getDrawingString(title);
     } else {
       return null;
@@ -366,17 +361,15 @@ public final class Template {
     return node;
   }
 
-  private static JSONObject getDrawingTemplate(String title, String filename) throws JSONException{
+  private static JSONObject getDrawingTemplate(String title, String filename) throws JSONException {
     JSONObject node = new JSONObject();
     node.put("type", "Draw");
     node.put("src", filename.replace(".ht", ".html"));
-
     return node;
   }
 
   protected static JSONObject getSVGDrawTemplate() throws JSONException {
     JSONObject node = new JSONObject();
-
     node.put("svg_background", "");
     node.put("prompt", "");
     node.put("stamps", new ArrayList<String>());
@@ -384,13 +377,11 @@ public final class Template {
     node.put("description_active", true);
     node.put("description_default", "Enter description here.");
     node.put("type","SVGDraw");
-
     return node;
   }
 
   protected static JSONObject getAnnotatorTemplate() throws JSONException {
     JSONObject node = new JSONObject();
-
     node.put("prompt", "");
     node.put("enableStudentTextArea", true);
     node.put("textAreaInstructions", "");
@@ -402,24 +393,21 @@ public final class Template {
     node.put("backgroundImg", "");
     node.put("colorDefault", "");
     node.put("type","Annotator");
-
     return node;
   }
 
   protected static JSONObject getAssessmentListTemplate() throws JSONException {
     JSONObject node = new JSONObject();
-
     node.put("prompt", "");
     node.put("assessments", new ArrayList<JSONObject>());
     node.put("type","AssessmentList");
     node.put("displayAnswerAfterSubmit", true);
     node.put("isMustCompleteAllPartsBeforeExit",true);
     node.put("isLockAfterSubmit", false);
-
     return node;
   }
 
-  protected static JSONObject getDataGraphTemplate() throws JSONException{
+  protected static JSONObject getDataGraphTemplate() throws JSONException {
     JSONObject node = new JSONObject();
     JSONObject options = new JSONObject();
     JSONObject display = new JSONObject();
@@ -466,22 +454,16 @@ public final class Template {
    * @throws JSONException
    */
   protected static JSONObject getSensorTemplate() throws JSONException {
-    //the object that represents the step
     JSONObject node = new JSONObject();
-
-    //create a starter sentence object with attributes
     JSONObject starterSentence = new JSONObject();
     starterSentence.put("display", "0");
     starterSentence.put("sentence", "");
-
-    //set the attributes in the step
     node.put("prompt", "");
     node.put("graphParams", new JSONObject());
     node.put("sensorType", "motion");
     node.put("starterSentence", starterSentence);
     node.put("expectedLines", 5);
     node.put("type", "Sensor");
-
     return node;
   }
 
@@ -492,27 +474,22 @@ public final class Template {
    * @throws JSONException
    */
   protected static JSONObject getExplanationBuilderTemplate() throws JSONException {
-    //the object that represents the step
     JSONObject node = new JSONObject();
-
-    //set the attributes in the step
     node.put("prompt", "");
     node.put("background", "");
     node.put("type", "ExplanationBuilder");
-
     return node;
   }
 
-  protected static JSONObject getMySystemTemplate() throws JSONException{
+  protected static JSONObject getMySystemTemplate() throws JSONException {
     JSONObject node = new JSONObject();
     node.put("type", "MySystem");
     node.put("prompt", "");
     node.put("modules", new ArrayList<JSONObject>());
-
     return node;
   }
 
-  private static String getDrawingString(String title){
+  private static String getDrawingString(String title) {
     return "<html>" + NL + "<head>" + NL + "<title>" + title + "</title>" + NL +
       "<script type=\"text/javascript\" src=\"vle/node/draw/wisedraw.js\"></script>" +
       NL + "</head>" + NL + "<body onload=\"doneLoading()\">" + NL +
@@ -526,7 +503,7 @@ public final class Template {
       "<param name=\"tool:9\" value=\"StampTool\">" + NL + "</applet>" + NL + "</body>" + NL + "</html>";
   }
 
-  protected static JSONObject getProjectMetaTemplate(String title) throws JSONException{
+  protected static JSONObject getProjectMetaTemplate(String title) throws JSONException {
     JSONObject meta = new JSONObject();
 
     meta.put("title", title);
@@ -550,7 +527,7 @@ public final class Template {
     return meta;
   }
 
-  private static JSONObject getLastCleanedJSON(Long timestamp) throws JSONException{
+  private static JSONObject getLastCleanedJSON(Long timestamp) throws JSONException {
     JSONObject lastCleaned = new JSONObject();
     JSONObject results = new JSONObject();
     JSONObject severe = new JSONObject();

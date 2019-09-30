@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -40,8 +39,9 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
-import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.portal.spring.data.redis.MessagePublisher;
+import org.wise.vle.domain.WebSocketMessage;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.StudentWork;
@@ -70,49 +70,42 @@ public class StudentDataController {
   private WorkgroupService workgroupService;
 
   @Autowired
-  private WebSocketHandler webSocketHandler;
+  private MessagePublisher redisPublisher;
 
   @RequestMapping(method = RequestMethod.GET, value = "/student/data")
   public void getWISE5StudentData(
-    HttpServletResponse response,
-    @RequestParam(value = "getStudentWork", defaultValue = "false") boolean getStudentWork,
-    @RequestParam(value = "getEvents", defaultValue = "false") boolean getEvents,
-    @RequestParam(value = "getAnnotations", defaultValue = "false") boolean getAnnotations,
-    @RequestParam(value = "id", required = false) Integer id,
-    @RequestParam(value = "runId", required = false) Integer runId,
-    @RequestParam(value = "periodId", required = false) Integer periodId,
-    @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
-    @RequestParam(value = "isAutoSave", required = false) Boolean isAutoSave,
-    @RequestParam(value = "isSubmit", required = false) Boolean isSubmit,
-    @RequestParam(value = "nodeId", required = false) String nodeId,
-    @RequestParam(value = "componentId", required = false) String componentId,
-    @RequestParam(value = "componentType", required = false) String componentType,
-    @RequestParam(value = "context", required = false) String context,
-    @RequestParam(value = "category", required = false) String category,
-    @RequestParam(value = "event", required = false) String event,
-    @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
-    @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
-    @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
-    @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
-    @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
-    @RequestParam(value = "annotationType", required = false) String annotationType,
-    @RequestParam(value = "components", required = false) List<JSONObject> components,
-    @RequestParam(value = "onlyGetLatest", required = false) Boolean onlyGetLatest
-  ) {
-
+      HttpServletResponse response,
+      @RequestParam(value = "getStudentWork", defaultValue = "false") boolean getStudentWork,
+      @RequestParam(value = "getEvents", defaultValue = "false") boolean getEvents,
+      @RequestParam(value = "getAnnotations", defaultValue = "false") boolean getAnnotations,
+      @RequestParam(value = "id", required = false) Integer id,
+      @RequestParam(value = "runId", required = false) Integer runId,
+      @RequestParam(value = "periodId", required = false) Integer periodId,
+      @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+      @RequestParam(value = "isAutoSave", required = false) Boolean isAutoSave,
+      @RequestParam(value = "isSubmit", required = false) Boolean isSubmit,
+      @RequestParam(value = "nodeId", required = false) String nodeId,
+      @RequestParam(value = "componentId", required = false) String componentId,
+      @RequestParam(value = "componentType", required = false) String componentType,
+      @RequestParam(value = "context", required = false) String context,
+      @RequestParam(value = "category", required = false) String category,
+      @RequestParam(value = "event", required = false) String event,
+      @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
+      @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
+      @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
+      @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
+      @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
+      @RequestParam(value = "annotationType", required = false) String annotationType,
+      @RequestParam(value = "components", required = false) List<JSONObject> components,
+      @RequestParam(value = "onlyGetLatest", required = false) Boolean onlyGetLatest) {
     JSONObject result = new JSONObject();
-
     if (getStudentWork) {
-      List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-        isAutoSave, isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
-
+      List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId,
+        workgroupId, isAutoSave, isSubmit, nodeId, componentId, componentType, components,
+        onlyGetLatest);
       JSONArray studentWorkJSONArray = new JSONArray();
-
-      // loop through all the component states
       for (int c = 0; c < studentWorkList.size(); c++) {
         StudentWork studentWork = studentWorkList.get(c);
-
-        // get the JSON representation of the component state and add to studentWorkJSONArray
         studentWorkJSONArray.put(studentWork.toJSON());
       }
       try {
@@ -124,14 +117,9 @@ public class StudentDataController {
     if (getEvents) {
       List<Event> events = vleService.getEvents(id, runId, periodId, workgroupId,
         nodeId, componentId, componentType, context, category, event, components);
-
       JSONArray eventsJSONArray = new JSONArray();
-
-      // loop through all the events
       for (int e = 0; e < events.size(); e++) {
         Event eventObject = events.get(e);
-
-        // get the JSON representation of the event and add to eventsJSONArray
         eventsJSONArray.put(eventObject.toJSON());
       }
       try {
@@ -142,16 +130,11 @@ public class StudentDataController {
     }
     if (getAnnotations) {
       List<Annotation> annotations = vleService.getAnnotations(
-        id, runId, periodId, fromWorkgroupId, toWorkgroupId,
-        nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType);
-
+          id, runId, periodId, fromWorkgroupId, toWorkgroupId,
+          nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType);
       JSONArray annotationsJSONArray = new JSONArray();
-
-      // loop through all the annotations
       for (int a = 0; a < annotations.size(); a++) {
         Annotation annotationObject = annotations.get(a);
-
-        // get the JSON representation of the annotation and add to annotationsJSONArray
         annotationsJSONArray.put(annotationObject.toJSON());
       }
       try {
@@ -160,8 +143,6 @@ public class StudentDataController {
         e.printStackTrace();
       }
     }
-
-    // write the result to the response
     try {
       PrintWriter writer = response.getWriter();
       writer.write(result.toString());
@@ -187,14 +168,12 @@ public class StudentDataController {
    */
   @RequestMapping(method = RequestMethod.GET, value = "/achievement/{runId}")
   public void getWISE5StudentAchievements(
-    @PathVariable Integer runId,
-    @RequestParam(value = "id", required = false) Integer id,
-    @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
-    @RequestParam(value = "achievementId", required = false) String achievementId,
-    @RequestParam(value = "type", required = false) String type,
-    HttpServletResponse response
-  ) {
-    // test for permissions
+      @PathVariable Integer runId,
+      @RequestParam(value = "id", required = false) Integer id,
+      @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+      @RequestParam(value = "achievementId", required = false) String achievementId,
+      @RequestParam(value = "type", required = false) String type,
+      HttpServletResponse response) {
     User user = ControllerUtil.getSignedInUser();
     Run run = null;
     Workgroup workgroup = null;
@@ -217,19 +196,13 @@ public class StudentDataController {
       return;
     }
 
-    List<Achievement> achievements = vleService.getAchievements(id, runId, workgroupId, achievementId,
-      type);
-
+    List<Achievement> achievements = vleService.getAchievements(id, runId, workgroupId,
+      achievementId, type);
     JSONArray achievementsJSONArray = new JSONArray();
-
-    // loop through all the component states
     for (int c = 0; c < achievements.size(); c++) {
       Achievement achievement = achievements.get(c);
-
-      // get the JSON representation of the component state and add to studentWorkJSONArray
       achievementsJSONArray.put(achievement.toJSON());
     }
-    // write the result to the response
     try {
       PrintWriter writer = response.getWriter();
       writer.write(achievementsJSONArray.toString());
@@ -254,15 +227,13 @@ public class StudentDataController {
    */
   @RequestMapping(method = RequestMethod.POST, value = "/achievement/{runId}")
   public void saveWISE5StudentAchievement(
-    @PathVariable Integer runId,
-    @RequestParam(value = "id", required = false) Integer id,
-    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-    @RequestParam(value = "achievementId", required = true) String achievementId,
-    @RequestParam(value = "type", required = true) String type,
-    @RequestParam(value = "data", required = true) String data,
-    HttpServletResponse response
-  ) {
-    // test for permissions
+      @PathVariable Integer runId,
+      @RequestParam(value = "id", required = false) Integer id,
+      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "achievementId", required = true) String achievementId,
+      @RequestParam(value = "type", required = true) String type,
+      @RequestParam(value = "data", required = true) String data,
+      HttpServletResponse response) throws JSONException {
     User user = ControllerUtil.getSignedInUser();
     Run run = null;
     Workgroup workgroup = null;
@@ -286,9 +257,7 @@ public class StudentDataController {
     }
 
     Achievement achievement = vleService.saveAchievement(id, runId, workgroupId, achievementId,
-      type, data);
-
-    // write the result to the response
+        type, data);
     try {
       PrintWriter writer = response.getWriter();
       writer.write(achievement.toJSON().toString());
@@ -296,26 +265,41 @@ public class StudentDataController {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    achievement.convertToClientAchievement();
+    broadcastAchievementToTeacher(achievement);
+  }
 
-    // send this achievement immediately to the teacher so the Classroom Monitor can be updated
-    try {
-      if (webSocketHandler != null && achievement != null) {
-        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+  public void broadcastAchievementToTeacher(Achievement achievement) throws JSONException {
+    JSONObject message = new JSONObject();
+    message.put("type", "achievementToTeacher");
+    message.put("topic", String.format("/topic/teacher/%s", achievement.getRunId()));
+    message.put("achievement", achievement.toJSON());
+    redisPublisher.publish(message.toString());
+  }
 
-        if (wiseWebSocketHandler != null) {
-          // send this message to websockets
-          JSONObject webSocketMessageJSON = new JSONObject();
-          webSocketMessageJSON.put("messageType", "newStudentAchievement");
-          webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-          webSocketMessageJSON.put("studentAchievement", achievement.toJSON());
-          wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
-        }
-      }
-    } catch (Exception e) {
-      // if something fails during creating annotation and sending to websocket,
-      // allow the rest to continue
-      e.printStackTrace();
-    }
+  public void broadcastAnnotationToTeacher(Annotation annotation) throws JSONException {
+    JSONObject message = new JSONObject();
+    message.put("type", "annotationToTeacher");
+    message.put("topic", String.format("/topic/teacher/%s", annotation.getRunId()));
+    message.put("annotation", annotation.toJSON());
+    redisPublisher.publish(message.toString());
+  }
+
+  public void broadcastStudentWorkToClassroom(StudentWork componentState) throws JSONException {
+    JSONObject message = new JSONObject();
+    message.put("type", "studentWorkToClassroom");
+    message.put("topic", String.format("/topic/classroom/%s/%s",
+        componentState.getRunId(), componentState.getPeriodId()));
+    message.put("studentWork", componentState.toJSON());
+    redisPublisher.publish(message.toString());
+  }
+
+  public void broadcastStudentWorkToTeacher(StudentWork componentState) throws JSONException {
+    JSONObject message = new JSONObject();
+    message.put("type", "studentWorkToTeacher");
+    message.put("topic", String.format("/topic/teacher/%s", componentState.getRunId()));
+    message.put("studentWork", componentState.toJSON());
+    redisPublisher.publish(message.toString());
   }
 
   /**
@@ -327,20 +311,19 @@ public class StudentDataController {
    */
   @RequestMapping(method = RequestMethod.POST, value = "/student/data")
   public void postWISE5StudentData(
-    HttpServletResponse response,
-    @RequestParam(value = "runId", required = true) Integer runId,
-    @RequestParam(value = "studentWorkList", required = true) String studentWorkList,
-    @RequestParam(value = "events", required = true) String events,
-    @RequestParam(value = "annotations", required = true) String annotations
-  ) throws JSONException {
+      HttpServletResponse response,
+      @RequestParam(value = "runId", required = true) Integer runId,
+      @RequestParam(value = "studentWorkList", required = true) String studentWorkList,
+      @RequestParam(value = "events", required = true) String events,
+      @RequestParam(value = "annotations", required = true) String annotations
+      ) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
     JSONObject result = new JSONObject();
-
-    // verify that the student is in the run
     try {
       Run run = runService.retrieveById(new Long(runId));
-      if (run.isStudentAssociatedToThisRun(signedInUser)) {
-        HashMap<String, StudentWork> savedStudentWorkList = new HashMap<>(); // maps nodeId_componentId to StudentWork.
+      if (run.isActive() && run.isStudentAssociatedToThisRun(signedInUser)) {
+        // maps nodeId_componentId to StudentWork.
+        HashMap<String, StudentWork> savedStudentWorkList = new HashMap<>();
         // Used later for handling simultaneous POST of CRater annotation
         // handle POST'ed studentWork
         JSONArray studentWorkJSONArray = new JSONArray(studentWorkList);
@@ -375,34 +358,17 @@ public class StudentDataController {
               savedStudentWorkJSONObject.put("serverSaveTime", studentWork.getServerSaveTime().getTime());
               studentWorkResultJSONArray.put(savedStudentWorkJSONObject);
 
-              // send this studentWork immediately to the teacher so the Classroom Monitor can be updated
-              try {
-                if (webSocketHandler != null && studentWork != null) {
-                  WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-
-                  if (wiseWebSocketHandler != null) {
-                    // send this message to websockets
-                    JSONObject webSocketMessageJSON = new JSONObject();
-                    webSocketMessageJSON.put("messageType", "newStudentWork");
-                    webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-                    webSocketMessageJSON.put("studentWork", studentWork.toJSON());
-                    wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-                  }
-                }
-              } catch (Exception e) {
-                // if something fails during creating annotation and sending to websocket,
-                // allow the rest to continue
-                e.printStackTrace();
+              studentWork.convertToClientStudentWork();
+              broadcastStudentWorkToTeacher(studentWork);
+              if (studentWork.getComponentType().equals("Discussion")) {
+                broadcastStudentWorkToClassroom(studentWork);
               }
-
             } catch (Exception e) {
               e.printStackTrace();
             }
           }
           result.put("studentWorkList", studentWorkResultJSONArray);
         }
-
-        // handle POST'ed events
         JSONArray eventsJSONArray = new JSONArray(events);
         if (eventsJSONArray != null) {
           JSONArray eventsResultJSONArray = new JSONArray();
@@ -411,20 +377,20 @@ public class StudentDataController {
               JSONObject eventJSONObject = eventsJSONArray.getJSONObject(e);
               String requestToken = eventJSONObject.getString("requestToken");
               Event event = vleService.saveEvent(
-                eventJSONObject.isNull("id") ? null : eventJSONObject.getInt("id"),
-                eventJSONObject.isNull("runId") ? null : eventJSONObject.getInt("runId"),
-                eventJSONObject.isNull("periodId") ? null : eventJSONObject.getInt("periodId"),
-                eventJSONObject.isNull("workgroupId") ? null : eventJSONObject.getInt("workgroupId"),
-                eventJSONObject.isNull("nodeId") ? null : eventJSONObject.getString("nodeId"),
-                eventJSONObject.isNull("componentId") ? null : eventJSONObject.getString("componentId"),
-                eventJSONObject.isNull("componentType") ? null : eventJSONObject.getString("componentType"),
-                eventJSONObject.isNull("context") ? null : eventJSONObject.getString("context"),
-                eventJSONObject.isNull("category") ? null : eventJSONObject.getString("category"),
-                eventJSONObject.isNull("event") ? null : eventJSONObject.getString("event"),
-                eventJSONObject.isNull("data") ? null : eventJSONObject.getString("data"),
-                eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"),
-                eventJSONObject.isNull("projectId") ? null : eventJSONObject.getInt("projectId"),
-                eventJSONObject.isNull("userId") ? null : eventJSONObject.getInt("userId"));
+                  eventJSONObject.isNull("id") ? null : eventJSONObject.getInt("id"),
+                  eventJSONObject.isNull("runId") ? null : eventJSONObject.getInt("runId"),
+                  eventJSONObject.isNull("periodId") ? null : eventJSONObject.getInt("periodId"),
+                  eventJSONObject.isNull("workgroupId") ? null : eventJSONObject.getInt("workgroupId"),
+                  eventJSONObject.isNull("nodeId") ? null : eventJSONObject.getString("nodeId"),
+                  eventJSONObject.isNull("componentId") ? null : eventJSONObject.getString("componentId"),
+                  eventJSONObject.isNull("componentType") ? null : eventJSONObject.getString("componentType"),
+                  eventJSONObject.isNull("context") ? null : eventJSONObject.getString("context"),
+                  eventJSONObject.isNull("category") ? null : eventJSONObject.getString("category"),
+                  eventJSONObject.isNull("event") ? null : eventJSONObject.getString("event"),
+                  eventJSONObject.isNull("data") ? null : eventJSONObject.getString("data"),
+                  eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"),
+                  eventJSONObject.isNull("projectId") ? null : eventJSONObject.getInt("projectId"),
+                  eventJSONObject.isNull("userId") ? null : eventJSONObject.getInt("userId"));
 
               // before returning saved Event, strip all fields except id, responseToken, and serverSaveTime to minimize response size
               JSONObject savedEventJSONObject = new JSONObject();
@@ -432,15 +398,12 @@ public class StudentDataController {
               savedEventJSONObject.put("requestToken", requestToken);
               savedEventJSONObject.put("serverSaveTime", event.getServerSaveTime().getTime());
               eventsResultJSONArray.put(savedEventJSONObject);
-
             } catch (Exception exception) {
               exception.printStackTrace();
             }
           }
           result.put("events", eventsResultJSONArray);
         }
-
-        // handle POST'ed annotations
         JSONArray annotationsJSONArray = new JSONArray(annotations);
         if (annotationsJSONArray != null) {
           JSONArray annotationsResultJSONArray = new JSONArray();
@@ -451,11 +414,11 @@ public class StudentDataController {
               Annotation annotation;
               // check to see if this Annotation was posted along with a StudentWork (e.g. CRater)
               if (annotationJSONObject.isNull("studentWorkId") &&
-                !annotationJSONObject.isNull("nodeId") &&
-                !annotationJSONObject.isNull("componentId") &&
-                savedStudentWorkList.containsKey(
+                  !annotationJSONObject.isNull("nodeId") &&
+                  !annotationJSONObject.isNull("componentId") &&
+                  savedStudentWorkList.containsKey(
                   annotationJSONObject.getString("nodeId") + "_" + annotationJSONObject.getString("componentId"))
-                ) {
+                  ) {
                 // this is an annotation for a StudentWork that we just saved.
                 String localNotebookItemId = null;  // since this is an annotation on student work, notebook item should be null.
                 Integer notebookItemId = null;   // since this is an annotation on student work, notebook item should be null.
@@ -477,24 +440,8 @@ public class StudentDataController {
                   annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
 
                 // send this annotation immediately to the teacher so the Classroom Monitor can be updated
-                try {
-                  if (webSocketHandler != null && annotation != null) {
-                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-
-                    if (wiseWebSocketHandler != null) {
-                      // send this message to websockets
-                      JSONObject webSocketMessageJSON = new JSONObject();
-                      webSocketMessageJSON.put("messageType", "newAnnotation");
-                      webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-                      webSocketMessageJSON.put("annotation", annotation.toJSON());
-                      wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-                    }
-                  }
-                } catch (Exception e) {
-                  // if something fails during creating annotation and sending to websocket,
-                  // allow the rest to continue
-                  e.printStackTrace();
-                }
+                annotation.convertToClientAnnotation();
+                broadcastAnnotationToTeacher(annotation);
               } else {
                 annotation = vleService.saveAnnotation(
                   annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
@@ -518,7 +465,6 @@ public class StudentDataController {
               savedAnnotationJSONObject.put("requestToken", requestToken);
               savedAnnotationJSONObject.put("serverSaveTime", annotation.getServerSaveTime().getTime());
               annotationsResultJSONArray.put(savedAnnotationJSONObject);
-
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -531,7 +477,6 @@ public class StudentDataController {
       return;
     }
 
-    // write the result to the response
     try {
       PrintWriter writer = response.getWriter();
       writer.write(result.toString());

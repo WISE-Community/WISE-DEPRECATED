@@ -40,12 +40,6 @@ var LabelController = function (_ComponentController) {
     _this.LabelService = LabelService;
     _this.OpenResponseService = OpenResponseService;
 
-    // holds student attachments like assets
-    _this.attachments = [];
-
-    // the latest annotations
-    _this.latestAnnotations = null;
-
     // whether the new label button is shown or not
     _this.isNewLabelButtonVisible = true;
 
@@ -156,9 +150,6 @@ var LabelController = function (_ComponentController) {
         _this.canCreateLabels = false;
         _this.isResetButtonVisible = false;
       }
-
-      // get the latest annotations
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
@@ -172,9 +163,6 @@ var LabelController = function (_ComponentController) {
           _this.canvasId = 'labelCanvas_gradingRevision_' + componentState.id;
         }
       }
-
-      // get the latest annotations
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'onlyShowWork') {
       _this.isPromptVisible = false;
       _this.isSaveButtonVisible = false;
@@ -371,9 +359,6 @@ var LabelController = function (_ComponentController) {
         this.createKeydownListener();
       }
 
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
       if (this.mode == 'student') {
         if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
           // we will show work from another component
@@ -435,11 +420,6 @@ var LabelController = function (_ComponentController) {
       }
 
       this.disableComponentIfNecessary();
-
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
     }
 
     /**
@@ -483,33 +463,7 @@ var LabelController = function (_ComponentController) {
             this.submitCounter = submitCounter;
           }
 
-          this.processLatestSubmit();
-        }
-      }
-    }
-  }, {
-    key: 'processLatestSubmit',
-
-
-    /**
-     * Check if latest component state is a submission and set isSubmitDirty accordingly
-     */
-    value: function processLatestSubmit() {
-      var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-      if (latestState) {
-        var serverSaveTime = latestState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestState.isSubmit) {
-          // latest state is a submission, so set isSubmitDirty to false and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSubmittedMessage(clientSaveTime);
-        } else {
-          // latest state is not a submission, so set isSubmitDirty to true and notify node
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSavedMessage(clientSaveTime);
+          this.processLatestStudentWork();
         }
       }
     }
@@ -552,112 +506,18 @@ var LabelController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'submit',
-
-
-    /**
-     * A submit was triggered by the component submit button or node submit button
-     * @param submitTriggeredBy what triggered the submit
-     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-     */
-    value: function submit(submitTriggeredBy) {
-
-      if (this.isSubmitDirty) {
-        // the student has unsubmitted work
-
-        var performSubmit = true;
-
-        if (this.componentContent.maxSubmitCount != null) {
-          // there is a max submit count
-
-          // calculate the number of submits this student has left
-          var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-          var message = '';
-
-          if (numberOfSubmitsLeft <= 0) {
-            // the student does not have any more chances to submit
-            performSubmit = false;
-          } else if (numberOfSubmitsLeft == 1) {
-            /*
-             * the student has one more chance to submit left so maybe
-             * we should ask the student if they are sure they want to submit
-             */
-          } else if (numberOfSubmitsLeft > 1) {
-            /*
-             * the student has more than one chance to submit left so maybe
-             * we should ask the student if they are sure they want to submit
-             */
-          }
-        }
-
-        if (performSubmit) {
-
-          /*
-           * set isSubmit to true so that when the component state is
-           * created, it will know that is a submit component state
-           * instead of just a save component state
-           */
-          this.isSubmit = true;
-          this.incrementSubmitCounter();
-
-          // check if the student has used up all of their submits
-          if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-            /*
-             * the student has used up all of their submits so we will
-             * disable the submit button
-             */
-            this.isSubmitButtonDisabled = true;
-          }
-
-          if (this.mode === 'authoring') {
-            /*
-             * we are in authoring mode so we will set values appropriately
-             * here because the 'componentSubmitTriggered' event won't
-             * work in authoring mode
-             */
-            this.isDirty = false;
-            this.isSubmitDirty = false;
-            this.createComponentState('submit');
-          }
-
-          if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-          } else if (submitTriggeredBy === 'nodeSubmitButton') {
-            // nothing extra needs to be performed
-          }
-        } else {
-          /*
-           * the student has cancelled the submit so if a component state
-           * is created, it will just be a regular save and not submit
-           */
-          this.isSubmit = false;
-        }
-      }
-    }
-
-    /**
-     * Called when the student clicks on the new label button to enter
-     * create label mode
-     */
-
-  }, {
     key: 'newLabelButtonClicked',
     value: function newLabelButtonClicked() {
-      this.createLabelMode = true;
-      this.isCancelButtonVisible = true;
-      this.editLabelMode = false;
-      this.selectedLabel = null;
+      this.createLabelOnCanvas();
     }
-  }, {
-    key: 'cancelButtonClicked',
-
 
     /**
      * Called when the student clicks on the cancel button to exit
      * create label mode
      */
+
+  }, {
+    key: 'cancelButtonClicked',
     value: function cancelButtonClicked() {
       this.createLabelMode = false;
       this.isCancelButtonVisible = false;
@@ -912,33 +772,6 @@ var LabelController = function (_ComponentController) {
       return this.isCancelButtonVisible;
     }
   }, {
-    key: 'removeAttachment',
-    value: function removeAttachment(attachment) {
-      if (this.attachments.indexOf(attachment) != -1) {
-        this.attachments.splice(this.attachments.indexOf(attachment), 1);
-        this.studentDataChanged();
-      }
-    }
-  }, {
-    key: 'attachStudentAsset',
-    value: function attachStudentAsset(studentAsset) {
-      var _this3 = this;
-
-      if (studentAsset != null) {
-        this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-          if (copiedAsset != null) {
-            var attachment = {
-              studentAssetId: copiedAsset.id,
-              iconURL: copiedAsset.iconURL
-            };
-
-            _this3.attachments.push(attachment);
-            _this3.studentDataChanged();
-          }
-        });
-      }
-    }
-  }, {
     key: 'initializeCanvas',
 
 
@@ -996,65 +829,6 @@ var LabelController = function (_ComponentController) {
            */
           this.selectedLabel = null;
           this.editLabelMode = false;
-        }
-
-        // check if the student is in create label mode
-        if (this.createLabelMode) {
-          /*
-           * the student is in create label mode so we will create a new label
-           * where they have clicked
-           */
-
-          // turn off create label mode and hide the cancel button
-          this.createLabelMode = false;
-          this.isCancelButtonVisible = false;
-
-          var event = options.e;
-
-          if (event != null) {
-            // get the x and y position that the student clicked on
-            var x = event.layerX;
-            var y = event.layerY;
-
-            /*
-             * set the location of the text object to be down to the right
-             * of the position the student clicked on
-             */
-            var textX = null;
-            var textY = null;
-            if (this.enableCircles) {
-              // place the text to the bottom right of the circle
-              if (this.isStudentDataVersion(1)) {
-                // text is relatively positioned
-                textX = 100;
-                textY = 100;
-              } else {
-                // text is absolutely positioned
-                textX = x + 100;
-                textY = y + 100;
-              }
-            } else {
-              // circles are not enabled so we are only using the text
-              textX = x;
-              textY = y;
-            }
-
-            var canEdit = true;
-            var canDelete = true;
-
-            // create a new label
-            var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
-
-            // add the label to the canvas
-            this.addLabelToCanvas(this.canvas, newLabel);
-
-            /*
-             * make the new label selected so that the student can edit
-             * the text
-             */
-            this.selectLabel(newLabel);
-            this.studentDataChanged();
-          }
         }
       }));
 
@@ -1196,13 +970,152 @@ var LabelController = function (_ComponentController) {
       return canvas;
     }
   }, {
-    key: 'setBackgroundImage',
+    key: 'createLabelOnCanvas',
+    value: function createLabelOnCanvas() {
+      this.createLabelMode = false;
+      this.isCancelButtonVisible = false;
+      var newLabelLocation = this.getNewLabelLocation();
+      var canEdit = true;
+      var canDelete = true;
+      var newLabel = this.createLabel(newLabelLocation.pointX, newLabelLocation.pointY, newLabelLocation.textX, newLabelLocation.textY, this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
+      this.addLabelToCanvas(this.canvas, newLabel);
+      this.selectLabel(newLabel);
+      this.studentDataChanged();
+    }
+  }, {
+    key: 'getNewLabelLocation',
+    value: function getNewLabelLocation() {
+      var nextPointLocation = this.getNextPointLocation();
+      var pointX = nextPointLocation.pointX;
+      var pointY = nextPointLocation.pointY;
+      var newTextLocation = this.getNextTextLocation(pointX, pointY);
+      var textX = newTextLocation.textX;
+      var textY = newTextLocation.textY;
+      return {
+        pointX: pointX,
+        pointY: pointY,
+        textX: textX,
+        textY: textY
+      };
+    }
+  }, {
+    key: 'getNextPointLocation',
+    value: function getNextPointLocation() {
+      var unoccupiedPointLocation = this.getUnoccupiedPointLocation();
+      if (unoccupiedPointLocation == null) {
+        return { pointX: 50, pointY: 50 };
+      } else {
+        return unoccupiedPointLocation;
+      }
+    }
+  }, {
+    key: 'getNextTextLocation',
+    value: function getNextTextLocation(pointX, pointY) {
+      var textX = null;
+      var textY = null;
+      if (this.enableCircles) {
+        // place the text to the bottom right of the circle
+        if (this.isStudentDataVersion(1)) {
+          // text is relatively positioned
+          textX = 100;
+          textY = 100;
+        } else {
+          // text is absolutely positioned
+          textX = pointX + 100;
+          textY = pointY + 100;
+        }
+      } else {
+        // circles are not enabled so we are only using the text
+        textX = pointX;
+        textY = pointY;
+      }
+      return { textX: textX, textY: textY };
+    }
+  }, {
+    key: 'getOccupiedPointLocations',
+    value: function getOccupiedPointLocations() {
+      var labels = this.getLabelData();
+      var occupiedPointLocations = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
+      try {
+        for (var _iterator = labels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var label = _step.value;
+
+          occupiedPointLocations.push({ pointX: label.pointX, pointY: label.pointY });
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return occupiedPointLocations;
+    }
+  }, {
+    key: 'isPointOccupied',
+    value: function isPointOccupied(occupiedPointLocations, pointX, pointY) {
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = occupiedPointLocations[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var occupiedPointLocation = _step2.value;
+
+          if (occupiedPointLocation.pointX == pointX && occupiedPointLocation.pointY == pointY) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: 'getUnoccupiedPointLocation',
+    value: function getUnoccupiedPointLocation() {
+      var occupiedPointLocations = this.getOccupiedPointLocations();
+      for (var y = 50; y < this.canvasHeight; y += 150) {
+        for (var x = 50; x < this.canvasWidth; x += 150) {
+          if (!this.isPointOccupied(occupiedPointLocations, x, y)) {
+            return { pointX: x, pointY: y };
+          }
+        }
+      }
+      return null;
+    }
 
     /**
      * Set the background image
      * @param backgroundImagePath the url path to an image
      */
+
+  }, {
+    key: 'setBackgroundImage',
     value: function setBackgroundImage(backgroundImagePath) {
       if (backgroundImagePath != null) {
         this.backgroundImage = backgroundImagePath;
@@ -1264,29 +1177,29 @@ var LabelController = function (_ComponentController) {
      * @return A label object.
      */
     value: function getLabelFromCircle(circle) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator = this.labels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var label = _step.value;
+        for (var _iterator3 = this.labels[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var label = _step3.value;
 
           if (circle == label.circle) {
             return label;
           }
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
           }
         } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }
@@ -1303,29 +1216,29 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'getLabelFromText',
     value: function getLabelFromText(text) {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
 
       try {
-        for (var _iterator2 = this.labels[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var label = _step2.value;
+        for (var _iterator4 = this.labels[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var label = _step4.value;
 
           if (text == label.text) {
             return label;
           }
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
           }
         } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
+          if (_didIteratorError4) {
+            throw _iteratorError4;
           }
         }
       }
@@ -1434,6 +1347,9 @@ var LabelController = function (_ComponentController) {
         hasControls: false,
         hasBorders: true,
         borderColor: 'red',
+        borderDashArray: [8, 8],
+        borderScaleFactor: 3,
+        borderOpacityWhenMoving: 1,
         selectable: true,
         cursorWidth: 0,
         editable: false,
@@ -1519,7 +1435,7 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'addLabelToCanvas',
     value: function addLabelToCanvas(canvas, label) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (canvas != null && label != null) {
 
@@ -1553,7 +1469,7 @@ var LabelController = function (_ComponentController) {
                * the circle was clicked so we will make the associated
                * label selected
                */
-              _this4.selectLabel(label);
+              _this3.selectLabel(label);
             });
           }
 
@@ -1562,7 +1478,7 @@ var LabelController = function (_ComponentController) {
              * the text was clicked so we will make the associated
              * label selected
              */
-            _this4.selectLabel(label);
+            _this3.selectLabel(label);
           });
 
           this.labels.push(label);
@@ -1589,21 +1505,27 @@ var LabelController = function (_ComponentController) {
          */
         this.selectedLabelText = label.text.text;
 
-        // show the label text input
         this.editLabelMode = true;
-
+        this.canvas.setActiveObject(label.text);
+        this.giveFocusToLabelTextInput();
+      } else {
+        // hide label text input
+        this.editLabelMode = false;
+      }
+    }
+  }, {
+    key: 'giveFocusToLabelTextInput',
+    value: function giveFocusToLabelTextInput() {
+      this.$timeout(function () {
         /*
-         * Give focus to the label text input element so the student can immediately
-         * start typing.
+         * Get the y position of the top of the edit label text input. If this
+         * value is negative, it means the element is above the currently
+         * viewable area and can not be seen. If the value is positive, it means
+         * the element is currently in the viewable area and can be seen.
          */
-        this.$timeout(function () {
-          /*
-           * Get the y position of the top of the edit label text input. If this
-           * value is negative, it means the element is above the currently
-           * viewable area and can not be seen. If the value is positive, it means
-           * the element is currently in the viewable area and can be seen.
-           */
-          var editLabelTextInputTop = $('#editLabelTextInput').offset().top;
+        var offset = $('#editLabelTextInput').offset();
+        if (offset != null) {
+          var editLabelTextInputTop = offset.top;
 
           /*
            * Check if the edit label text input is viewable. We want to make sure
@@ -1617,18 +1539,8 @@ var LabelController = function (_ComponentController) {
             // the input is in view so we will give it focus.
             angular.element('#editLabelTextInput').focus();
           }
-        });
-      } else {
-        // hide label text input
-        this.editLabelMode = false;
-      }
-
-      /*
-       * force angular to refresh, otherwise angular will wait until the
-       * user generates another input (such as moving the mouse) before
-       * refreshing
-       */
-      this.$scope.$apply();
+        }
+      });
     }
 
     /**
@@ -1869,7 +1781,7 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
-      var _this5 = this;
+      var _this4 = this;
 
       var mergedComponentState = this.NodeService.createNewComponentState();
 
@@ -1908,10 +1820,10 @@ var LabelController = function (_ComponentController) {
                   // create an image from the concept map data
                   this.LabelService.createImageFromText(response, null, null, charactersPerLine, null, spaceInbetweenLines, fontSize).then(function (image) {
                     // set the image as the background
-                    _this5.setBackgroundImage(image);
+                    _this4.setBackgroundImage(image);
 
                     // make the work dirty so that it gets saved
-                    _this5.studentDataChanged();
+                    _this4.studentDataChanged();
                   });
                 }
               }
@@ -1947,29 +1859,29 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'getConnectedComponentForComponentState',
     value: function getConnectedComponentForComponentState(componentState) {
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
       try {
-        for (var _iterator3 = this.componentContent.connectedComponents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var connectedComponent = _step3.value;
+        for (var _iterator5 = this.componentContent.connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var connectedComponent = _step5.value;
 
           if (componentState.nodeId == connectedComponent.nodeId && componentState.componentId == connectedComponent.componentId) {
             return connectedComponent;
           }
         }
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return) {
-            _iterator3.return();
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
           }
         } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
@@ -1985,10 +1897,10 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this6 = this;
+      var _this5 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this6.setBackgroundImage(image.url);
+        _this5.setBackgroundImage(image.url);
       });
     }
 
@@ -2005,38 +1917,38 @@ var LabelController = function (_ComponentController) {
 
       if (answer) {
         var tempLabels = [];
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
 
         try {
-          for (var _iterator4 = this.labels[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var label = _step4.value;
+          for (var _iterator6 = this.labels[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var label = _step6.value;
 
             tempLabels.push(label);
           }
         } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
             }
           } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
 
-        var _iteratorNormalCompletion5 = true;
-        var _didIteratorError5 = false;
-        var _iteratorError5 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-          for (var _iterator5 = tempLabels[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var tempLabel = _step5.value;
+          for (var _iterator7 = tempLabels[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var tempLabel = _step7.value;
 
             this.deleteLabel(tempLabel);
           }
@@ -2046,16 +1958,16 @@ var LabelController = function (_ComponentController) {
            * longer be selected
            */
         } catch (err) {
-          _didIteratorError5 = true;
-          _iteratorError5 = err;
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-              _iterator5.return();
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
             }
           } finally {
-            if (_didIteratorError5) {
-              throw _iteratorError5;
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
@@ -2131,29 +2043,29 @@ var LabelController = function (_ComponentController) {
       var connectedComponents = this.componentContent.connectedComponents;
       var showWorkConnectedComponentCount = 0;
       if (connectedComponents != null) {
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
 
         try {
-          for (var _iterator6 = connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var connectedComponent = _step6.value;
+          for (var _iterator8 = connectedComponents[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var connectedComponent = _step8.value;
 
             if (connectedComponent.type == 'showWork') {
               showWorkConnectedComponentCount += 1;
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
             }
           } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
+            if (_didIteratorError8) {
+              throw _iteratorError8;
             }
           }
         }

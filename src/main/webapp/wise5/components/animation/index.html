@@ -54,29 +54,34 @@
           </label>
           <md-button class='regularButton md-raised md-primary'
               ng-click='animationController.playButtonClicked()'
-              ng-show='animationController.animationState == "stopped"'>
+              ng-show='animationController.animationState == "stopped"'
+              ng-disabled='animationController.isDisabled'>
             <md-icon>play_arrow</md-icon>
             <md-tooltip>{{ 'animation.play' | translate }}</md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
               ng-click='animationController.pauseButtonClicked()'
-              ng-show='animationController.animationState == "playing"'>
+              ng-show='animationController.animationState == "playing"'
+              ng-disabled='animationController.isDisabled'>
             <md-icon>pause</md-icon>
             <md-tooltip>{{ 'animation.pause' | translate }}</md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
               ng-click='animationController.resumeButtonClicked()'
-              ng-show='animationController.animationState == "paused"'>
+              ng-show='animationController.animationState == "paused"'
+              ng-disabled='animationController.isDisabled'>
             <md-icon>play_arrow</md-icon>
             <md-tooltip>{{ 'animation.resume' | translate }}</md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
-              ng-click='animationController.resetButtonClicked()'>
+              ng-click='animationController.resetButtonClicked()'
+              ng-disabled='animationController.isDisabled'>
             <md-icon>replay</md-icon>
             <md-tooltip>{{ 'animation.reset' | translate }}</md-tooltip>
           </md-button>
           <span style='display: inline-block;'>
-            <md-slider-container style='width: 100px;'>
+            <md-slider-container style='width: 100px;'
+                                 ng-disabled='animationController.isDisabled'>
               <div style='margin-right: 35'>
                 {{ 'animation.slower' | translate }}
               </div>
@@ -120,7 +125,8 @@
         layout-wrap='true'>
       <div class='component__add-attachment'>
         <md-button class='md-accent'
-            ng-click='nodeController.showStudentAssets($event, component.id, animationController.isDisabled)'>
+            ng-click='nodeController.showStudentAssets($event, component.id)'
+            ng-disabled='animationController.isDisabled'>
           <md-icon>image</md-icon> <span>{{ 'animation.addFile' | translate }}</span>
         </md-button>
       </div>
@@ -131,7 +137,8 @@
         <md-button ng-if='!animationController.isDisabled'
             class='component__attachment__delete'
             ng-click='animationController.removeAttachment(attachment)'
-            title='Remove file'>
+            title='Remove file'
+            ng-disabled='animationController.isDisabled'>
           <md-icon>cancel</md-icon>
         </md-button>
       </div>

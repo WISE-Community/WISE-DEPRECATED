@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -39,7 +39,8 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Geoffrey Kwan
  */
 @Entity
-@Table(name = "ideabasket", indexes = { @Index(columnList = "runId,workgroupId", name = "ideabasketRunIdAndWorkgroupIdIndex") } )
+@Table(name = "ideabasket", indexes = {
+    @Index(columnList = "runId,workgroupId", name = "ideabasketRunIdAndWorkgroupIdIndex") } )
 @Getter
 @Setter
 public class IdeaBasket extends PersistableDomain implements Serializable {
@@ -71,11 +72,11 @@ public class IdeaBasket extends PersistableDomain implements Serializable {
   @Column(name = "isPublic")
   private Boolean isPublic = false;
 
-  //the action that is being performed to create this new basket revision (only used for public idea basket)
+  // the action that is being performed to create this new basket revision (only used for public idea basket)
   @Column(name = "action")
   private String action = "";
 
-  //the workgroup id performing the action to create a new basket revision (only used for public idea basket)
+  // the workgroup id performing the action to create a new basket revision (only used for public idea basket)
   @Column(name = "actionPerformer")
   private Long actionPerformer = null;
 
@@ -111,7 +112,8 @@ public class IdeaBasket extends PersistableDomain implements Serializable {
    * @param workgroupId the id of the workgroup
    * @param data the idea basket JSON
    */
-  public IdeaBasket(long runId, long periodId, long projectId, long workgroupId, String data, boolean isPublic) {
+  public IdeaBasket(long runId, long periodId, long projectId, long workgroupId, String data,
+      boolean isPublic) {
     this.runId = runId;
     this.projectId = projectId;
     this.periodId = periodId;
@@ -129,7 +131,8 @@ public class IdeaBasket extends PersistableDomain implements Serializable {
    * @param workgroupId the id of the workgroup
    * @param data the idea basket JSON
    */
-  public IdeaBasket(long runId, long periodId, long projectId, long workgroupId, String data, boolean isPublic, String action, Long actionPerformer, Long ideaId, Long ideaWorkgroupId) {
+  public IdeaBasket(long runId, long periodId, long projectId, long workgroupId, String data,
+      boolean isPublic, String action, Long actionPerformer, Long ideaId, Long ideaWorkgroupId) {
     this.runId = runId;
     this.projectId = projectId;
     this.periodId = periodId;
@@ -158,19 +161,11 @@ public class IdeaBasket extends PersistableDomain implements Serializable {
     return IdeaBasket.class;
   }
 
-  /**
-   * Get the JSON object representation of the IdeaBasket
-   * @return a JSONObject containing the data from the idea basket
-   */
   public JSONObject toJSONObject() {
     JSONObject jsonObject = null;
     String dataString = "";
     dataString = getData();
     if (dataString == null) {
-      /*
-       * the data is null so we will create and return a JSONObject
-       * that has the metadata for the idea basket
-       */
       try {
         jsonObject = new JSONObject();
         jsonObject.put("id", getId());
@@ -183,11 +178,6 @@ public class IdeaBasket extends PersistableDomain implements Serializable {
         e.printStackTrace();
       }
     } else {
-      /*
-       * the data is not null so we will create a JSONObject from
-       * the data string and inject metadata values if they are
-       * not already present in the data string
-       */
       try {
         jsonObject = new JSONObject(dataString);
         if (!jsonObject.has("id")) {
@@ -220,14 +210,9 @@ public class IdeaBasket extends PersistableDomain implements Serializable {
     return jsonObject;
   }
 
-  /**
-   * Get the JSON string representation of the IdeaBasket
-   * @return
-   */
   public String toJSONString() {
     String jsonString = null;
     JSONObject jsonObject = toJSONObject();
-
     try {
       if (jsonObject != null) {
         jsonString = jsonObject.toString(3);

@@ -10,6 +10,8 @@ import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularOnload from 'ng-onload';
 import angularSanitize from 'angular-sanitize';
+import angularSock from 'angular-sockjs';
+import angularStomp from '../lib/stomp/ng-stomp.standalone.min';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
@@ -19,6 +21,7 @@ import angularWebSocket from 'angular-websocket';
 import AnimationComponentModule from '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
+import canvg from 'canvg';
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
@@ -29,6 +32,7 @@ import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
 import Filters from '../filters/filters';
 import Highcharts from '../lib/highcharts@4.2.1';
+import HighchartsExporting from '../lib/highcharts-exporting@4.2.1';
 import draggablePoints from '../lib/draggable-points/draggable-points';
 import GraphComponentModule from '../components/graph/graphComponentModule';
 import HTMLComponentModule from '../components/html/htmlComponentModule';
@@ -51,6 +55,7 @@ import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
+import SummaryComponentModule from '../components/summary/summaryComponentModule';
 import TableComponentModule from '../components/table/tableComponentModule';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
@@ -59,8 +64,9 @@ import ocLazyLoad from 'oclazyload';
 import moment from 'moment';
 import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.min';
 
-let vleModule = angular.module('vle', [
+const vleModule = angular.module('vle', [
     angularDragula(angular),
+    'summaryComponentModule',
     'angularMoment',
     'angular-toArrayFilter',
     'animationComponentModule',
@@ -82,6 +88,8 @@ let vleModule = angular.module('vle', [
     'ngMaterial',
     'ngOnload',
     'ngSanitize',
+    'bd.sockjs',
+    'ngStomp',
     'ngWebSocket',
     'oc.lazyLoad',
     'openResponseComponentModule',
@@ -166,7 +174,7 @@ let vleModule = angular.module('vle', [
               });
             },
             achievements: (AchievementService, studentData, config, project) => {
-              return AchievementService.retrieveAchievements();
+              return AchievementService.retrieveStudentAchievements();
             },
             notifications: (NotificationService, studentData, config, project) => {
               return NotificationService.retrieveNotifications();
@@ -174,11 +182,10 @@ let vleModule = angular.module('vle', [
             runStatus: (StudentDataService, config) => {
               return StudentDataService.retrieveRunStatus();
             },
-            sessionTimers: (SessionService, config, project, studentData) => {
-              return SessionService.initializeSession();
-            },
-            webSocket: (StudentWebSocketService, config, project) => {
-              return StudentWebSocketService.initialize();
+            webSocket: (StudentWebSocketService, ConfigService, config, project) => {
+              if (!ConfigService.isPreview()) {
+                return StudentWebSocketService.initialize();
+              }
             },
             language: ($translate, ConfigService, config) => {
               let locale = ConfigService.getLocale();  // defaults to "en"
@@ -250,7 +257,7 @@ let vleModule = angular.module('vle', [
         urlTemplate: 'wise5/{part}/i18n_{lang}.json'
       })
         .fallbackLanguage(['en'])
-        .registerAvailableLanguageKeys(['el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
+        .registerAvailableLanguageKeys(['ar','el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
           'en_US': 'en',
           'en_UK': 'en'
         })

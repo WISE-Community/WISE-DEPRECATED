@@ -1,0 +1,34 @@
+@import '~@angular/material/theming';
+
+// Create a config with the default Angular Material typography levels
+$config: mat-typography-config();
+
+// media queries and breakpoints
+$breakpoints: (
+  xs: (
+    min: 0px,
+    max: 599.99px
+  ),
+  sm: (
+    min: 600px,
+    max: 959.99px
+  ),
+  md: (
+    min: 960px,
+    max: 1279.99px
+  ),
+  lg: (
+    min: 1280px,
+    max: 1599.99px
+  ),
+  xl: (
+    min: 1600px,
+    max: none
+  )
+);
+
+$button-border-radius: 4px;
+$card-border-radius: 6px;
+$feature-border-radius: 6px;
+$header-height: 80px;
+$announcement-height: 40px;

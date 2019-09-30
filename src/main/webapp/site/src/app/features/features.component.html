@@ -1,0 +1,182 @@
+<div class="main app-background">
+  <div class="content">
+    <header fxLayout="row" class="content__header">
+      <h1 class="accent"
+          fxLayoutAlign="center center"
+          fxLayoutGap="8px"
+          ngClass="mat-display-1"
+          [ngClass.xs]="{ 'mat-display-1': false }">
+        <mat-icon>widgets</mat-icon>
+        <span i18n>WISE Features</span>
+      </h1>
+    </header>
+    <section class="section"
+             fxLayout="column"
+             fxLayout.gt-xs="row"
+             fxLayoutAlign="center center"
+             fxLayoutGap="36px"
+             fxLayoutGap.gt-md="64px">
+      <div fxFlex="100%" fxFlex.gt-xs="50%">
+        <h2 class="accent-1" i18n>A powerful online platform for designing, developing, and implementing science inquiry units</h2>
+        <p i18n>Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</p>
+      </div>
+      <div fxFlex="100%" fxFlex.gt-xs="50%">
+        <div class="features__intros">
+          <img class="features__intro" src="assets/img/features/wise-students.jpg" i18n-alt alt="WISE students" />
+        </div>
+      </div>
+    </section>
+    <section id="inquiry"
+             class="section"
+             fxLayout="column"
+             fxLayout.gt-xs="row"
+             fxLayoutAlign="center center"
+             fxLayoutGap="36px"
+             fxLayoutGap.gt-xs="36px"
+             fxLayoutGap.gt-md="64px">
+      <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlexOrder="2" fxFlexOrder.gt-xs="1">
+        <div class="content-block feature--l">
+          <h3 class="content-block__title" i18n>WISE students collaborate to:</h3>
+          <ul class="list--icons">
+            <li fxLayoutAlign="start start">
+              <mat-icon class="accent">public</mat-icon>
+              <span i18n>Explore issues of social importance</span>
+            </li>
+            <li fxLayoutAlign="start start">
+              <mat-icon class="accent">live_help</mat-icon>
+              <span i18n>Pose relevant questions and make predictions</span>
+            </li>
+            <li fxLayoutAlign="start start">
+              <mat-icon class="accent">gamepad</mat-icon>
+              <span i18n>Experiment with computational models</span>
+            </li>
+            <li fxLayoutAlign="start start">
+              <mat-icon class="accent">compare</mat-icon>
+              <span i18n>Evaluate and distinguish discrepant information</span>
+            </li>
+            <li fxLayoutAlign="start start">
+              <mat-icon class="accent">message</mat-icon>
+              <span i18n>Construct explanations through reflection and discussion</span>
+            </li>
+            <li fxLayoutAlign="start start">
+              <mat-icon class="accent">build</mat-icon>
+              <span i18n>Design and build evidence-based solutions</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlexOrder="1" fxFlexOrder.gt-xs="2">
+        <h2 class="accent-1" i18n>Inquiry-Based Learning</h2>
+        <p i18n>WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</p>
+        <p i18n>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</p>
+      </div>
+    </section>
+    <section id="curricula"
+             class="section"
+             fxLayout="column"
+             fxLayout.gt-xs="row"
+             fxLayoutAlign="center center"
+             fxLayoutGap="36px"
+             fxLayoutGap.gt-md="64px">
+      <div fxFlex="100%" fxFlex.gt-xs="50%">
+        <h2 class="accent-1" i18n>Standards-Aligned Curricula</h2>
+        <p i18n>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</p>
+        <p>
+          <ng-container i18n>WISE units support the <a href="http://www.nextgenscience.org" target="_blank">Next Generation Science Standards (NGSS)</a>, encourage <a href="http://www.nextgenscience.org/three-dimensions" target="_blank">3-dimensional learning</a>, and can be adapted to address local standards.</ng-container>
+          <br><br>
+          <a mat-raised-button color="accent" routerLink="/about" i18n>Design Process & Goals</a>
+        </p>
+      </div>
+      <div fxFlex="100%" fxFlex.gt-xs="50%">
+        <div class="features__standards feature--r">
+          <img class="features__standard" src="assets/img/features/wise-solar-ovens.jpg" i18n-alt alt="WISE solar ovens unit" />
+          <img class="features__standard" src="assets/img/features/wise-students-building-oven.jpg" i18n-alt alt="WISE students building solar oven" />
+        </div>
+      </div>
+    </section>
+    <section id="tech"
+             class="section"
+             fxLayout="column"
+             fxLayout.gt-xs="row"
+             fxLayoutAlign="center center"
+             fxLayoutGap="36px"
+             fxLayoutGap.gt-xs="36px"
+             fxLayoutGap.gt-md="64px">
+      <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlexOrder="2" fxFlexOrder.gt-xs="1">
+        <div class="features__technologies feature--l">
+          <img class="features__tech" src="assets/img/features/wise-mymodel-guidance.jpg" i18n-alt alt="MyModel diagram with guidance" />
+          <img class="features__tech" src="assets/img/features/wise-cellular-respiraton-model.jpg" i18n-alt alt="WISE cellular respiration model" />
+          <img class="features__tech" src="assets/img/features/wise-design-report.jpg" i18n-alt alt="WISE design report" />
+          <img class="features__tech" src="assets/img/features/wise-thermo-insulator-model.jpg" i18n-alt alt="WISE thermodynamics insulator model" />
+        </div>
+      </div>
+      <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlexOrder="1" fxFlexOrder.gt-xs="2">
+        <h2 class="accent-1" i18n>Powerful Learning Technologies</h2>
+        <p i18n>WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</p>
+        <p i18n>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</p>
+      </div>
+    </section>
+    <section id="instructional-supports"
+             class="section"
+             fxLayout="column"
+             fxLayout.gt-xs="row"
+             fxLayoutAlign="center center"
+             fxLayoutGap="36px"
+             fxLayoutGap.gt-md="64px">
+      <div fxFlex="100%" fxFlex.gt-xs="50%">
+        <h2 class="accent-1" i18n>Comprehensive Instructional Supports</h2>
+        <p i18n>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</p>
+        <p i18n>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</p>
+        <p class="features__teachers">
+          <img class="features__teacher" src="assets/img/features/wise-teacher-tools-progress.jpg" i18n-alt alt="WISE teacher progress" />
+          <img class="features__teacher" src="assets/img/features/wise-teacher-tools-grading.jpg" i18n-alt alt="WISE teacher grading" />
+        </p>
+      </div>
+      <div fxFlex="100%" fxFlex.gt-xs="50%">
+        <div class="feature--r">
+          <div class="content-block">
+            <h3 class="content-block__title" i18n>Featured Teacher Tools:</h3>
+            <ul class="list--icons">
+              <li fxLayoutAlign="start start">
+                <mat-icon class="accent">poll</mat-icon>
+                <span i18n>Real-time progress monitor</span>
+              </li>
+              <li fxLayoutAlign="start start">
+                <mat-icon class="accent">assignment_turned_in</mat-icon>
+                <span i18n>Grade and give feedback + sample scoring rubrics</span>
+              </li>
+              <li fxLayoutAlign="start start">
+                <mat-icon class="accent">flash_auto</mat-icon>
+                <span i18n>Automatically scored assessment items</span>
+              </li>
+              <li fxLayoutAlign="start start">
+                <mat-icon class="accent">pause_circle_filled</mat-icon>
+                <span i18n>Pause student screens</span>
+              </li>
+              <li fxLayoutAlign="start start">
+                <mat-icon class="accent">people</mat-icon>
+                <span i18n>Share and collaborate with colleagues</span>
+              </li>
+              <li fxLayoutAlign="start start">
+                <mat-icon class="accent">edit</mat-icon>
+                <span i18n>Authoring environment that supports customization and creation of new units</span>
+              </li>
+            </ul>
+            <mat-divider></mat-divider>
+            <div class="accent-1 center" i18n>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</div>
+          </div>
+          <br><br>
+          <h2 class="accent-1 center"
+              fxLayout.gt-md="row"
+              fxLayout="column"
+              fxLayoutGap="16px"
+              fxLayoutAlign="center center"
+              fxLayoutWrap>
+            <span i18n>Explore what WISE has to offer!</span>
+            <a mat-raised-button color="accent" routerLink="/join" i18n>Join for free</a>
+          </h2>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

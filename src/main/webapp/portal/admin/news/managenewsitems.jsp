@@ -13,6 +13,9 @@
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css">
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<c:if test="${textDirection == 'rtl' }">
+		<link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
@@ -24,9 +27,8 @@ function removeNewsItem(newsItemId, newsItemTitle) {
 	var doRemove = confirm("Remove News Item: '"+ newsItemTitle +"'?");
 	if (doRemove) {
 		$.ajax({
-			url:"managenewsitems.html",
+			url:"delete/" + newsItemId,
 			type:"POST",
-			data:{"action":"remove","newsItemId":newsItemId},
 			success:function(data) {
 				if (data == "success") {
 					window.location.reload();
@@ -42,15 +44,15 @@ function removeNewsItem(newsItemId, newsItemTitle) {
 };
 
 function addNewsItem() {
-	var div = $('#addNewsItemDialog').html('<iframe width="100%" height="100%" src="addnewsitem.html?action=add"></iframe>');
+	var div = $('#addNewsItemDialog').html('<iframe width="100%" height="100%" src="add"></iframe>');
 	div.dialog({
 		modal: true,
 		width: '700',
 		height: '600',
-		title: 'Add News Item',
+		title: '<spring:message code="admin.news.addNewsItem" />',
 		close: function(){ $(this).html(''); },
 		buttons: {
-			Close: function(){
+			'<spring:message code="close" />': function(){
 				$(this).dialog('close');
 			}
 		}
@@ -58,15 +60,15 @@ function addNewsItem() {
 }
 
 function editNewsItem(newsItemId) {
-	var div = $('#editNewsItemDialog').html('<iframe width="100%" height="100%" src="editnewsitem.html?action=edit&newsItemId='+newsItemId+'"></iframe>');
+	var div = $('#editNewsItemDialog').html('<iframe width="100%" height="100%" src="edit/'+newsItemId+'"></iframe>');
 	div.dialog({
 		modal: true,
 		width: '700',
 		height: '600',
-		title: 'Edit News Item',
+		title: '<spring:message code="admin.news.editNewsItem" />',
 		close: function(){ $(this).html(''); },
 		buttons: {
-			Close: function(){
+			'<spring:message code="close" />': function(){
 				$(this).dialog('close');
 			}
 		}
@@ -75,6 +77,7 @@ function editNewsItem(newsItemId) {
 </script>
 </head>
 <body>
+<div id="pageWrapper">
 <%@ include file="../../headermain.jsp"%>
 <div id="page">
 <div id="pageContent">
@@ -92,7 +95,7 @@ function editNewsItem(newsItemId) {
 <div class="sectionContent">
 
 <c:choose>
-	<c:when test="${fn:length(all_news) > 0}">
+	<c:when test="${fn:length(allNews) > 0}">
 		<table id="newsItems" border="2" cellpadding="2" cellspacing="0" align="center">
 		<tr>
 			<th><h5><spring:message code="date" /></h5></th>
@@ -101,7 +104,7 @@ function editNewsItem(newsItemId) {
 			<th><h5><spring:message code="message" /></h5></th>
 			<th><h5><spring:message code="available_actions" /></h5></th>
 		</tr>
-		<c:forEach var="news" items="${all_news}">
+		<c:forEach var="news" items="${allNews}">
 			<tr>
 				<td><fmt:formatDate value="${news.date}" type="both" dateStyle="short" timeStyle="short" /></td>
 				<td>${news.type}</td>
@@ -125,5 +128,6 @@ function editNewsItem(newsItemId) {
 </div>
 <div id="editNewsItemDialog" class="dialog"></div>
 <div id="addNewsItemDialog" class="dialog"></div>
+</div>
 </body>
 </html>

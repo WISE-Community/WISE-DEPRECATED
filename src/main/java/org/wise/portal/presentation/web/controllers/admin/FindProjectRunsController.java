@@ -25,23 +25,19 @@ package org.wise.portal.presentation.web.controllers.admin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
 /**
@@ -61,23 +57,20 @@ public class FindProjectRunsController {
   @Autowired
   private UserService userService;
 
-  @Autowired
-  private Properties wiseProperties;
-
-  @RequestMapping(method = RequestMethod.GET)
+  @GetMapping
   protected String findRun(
       @RequestParam(value = "runLookupType", required = true) String runLookupType,
       @RequestParam(value = "runLookupValue", required = true) String runLookupValue,
       ModelMap modelMap) {
     List<Run> runList = new ArrayList<Run>();
     if ("runId".equals(runLookupType)) {
-      runList = this.getRunListByRunId(Long.parseLong(runLookupValue));
+      runList = getRunListByRunId(Long.parseLong(runLookupValue));
     } else if ("projectId".equals(runLookupType)) {
-      runList = this.getRunListByProjectId(Long.parseLong(runLookupValue));
+      runList = getRunListByProjectId(Long.parseLong(runLookupValue));
     } else if ("teacherUsername".equals(runLookupType)) {
-      runList = this.getRunListByUsername(runLookupValue);
+      runList = getRunListByUsername(runLookupValue);
     } else if ("runTitle".equals(runLookupType)) {
-      runList = this.getRunListByRunTitle(runLookupValue);
+      runList = getRunListByRunTitle(runLookupValue);
     }
     modelMap.put("runList", runList);
     return "admin/run/manageprojectruns";
@@ -136,7 +129,7 @@ public class FindProjectRunsController {
   private List<Run> getRunListByRunId(Long runId) {
     List<Run> runList = new ArrayList<Run>();
     try {
-      Run run = this.runService.retrieveById(runId);
+      Run run = runService.retrieveById(runId);
       if (run != null) {
         runList.add(run);
       }
@@ -154,6 +147,6 @@ public class FindProjectRunsController {
    * @return List<Run> - list of runs associated with the runTitle
    */
   private List<Run> getRunListByRunTitle(String runTitle) {
-    return this.runService.getRunsByTitle(runTitle);
+    return runService.getRunsByTitle(runTitle);
   }
 }

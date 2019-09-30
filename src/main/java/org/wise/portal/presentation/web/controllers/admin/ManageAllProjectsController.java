@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,12 +53,10 @@ public class ManageAllProjectsController {
 
   private static final String INTERNAL_PROJECT_LIST_PARAM_NAME = "internal_project_list";
 
-  @RequestMapping(method=RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   protected ModelAndView handleGET(
     HttpServletRequest request) throws Exception {
-    // separate calls to project services to get internal and external projects
     List<Project> internalProjectList = new ArrayList<Project>();
-    // check if projectLookupType was passed in, can be ["id","author","title"]
     String projectLookupType = request.getParameter("projectLookupType");
     if (projectLookupType != null) {
       String projectLookupValue = request.getParameter("projectLookupValue");
@@ -73,16 +70,13 @@ public class ManageAllProjectsController {
     } else {
       internalProjectList.addAll(projectService.getAdminProjectList());
     }
-
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     modelAndView.addObject(INTERNAL_PROJECT_LIST_PARAM_NAME, internalProjectList);
     return modelAndView;
   }
 
-  @RequestMapping(method=RequestMethod.POST)
-  protected ModelAndView handleRequestInternal(
-    HttpServletRequest request) throws Exception {
-    // posting changes to project
+  @RequestMapping(method = RequestMethod.POST)
+  protected ModelAndView handleRequestInternal(HttpServletRequest request) {
     ModelAndView mav = new ModelAndView();
     try {
       String projectIdStr = request.getParameter("projectId");

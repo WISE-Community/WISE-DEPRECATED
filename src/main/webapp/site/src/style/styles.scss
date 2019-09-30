@@ -1,0 +1,63 @@
+@charset 'UTF-8';
+
+// 1. Configuration and helpers
+@import
+  'abstracts/variables',
+  'abstracts/functions',
+  'abstracts/mixins';
+
+// 2. Vendors
+//@import
+  //'vendor/normalize';
+
+// 3. Base stuff
+@import
+  'base/base',
+  'base/fonts',
+  'base/typography',
+  'base/helpers';
+
+// 4. Layout-related sections
+@import
+  'layout/content',
+  'layout/main',
+  'layout/section',
+  'layout/standalone';
+
+// 5. Components
+@import
+  'components/avatar',
+  'components/buttons',
+  'components/content-block',
+  'components/dialog',
+  'components/inputs',
+  'components/lists',
+  'components/expansion-panel',
+  'components/info-block',
+  'components/menu',
+  'components/notice',
+  'components/tooltip';
+
+// 6. Page-specific styles
+//@import
+  //'pages/home';
+
+// 7. Themes
+// Angular Material themes
+@import '~@angular/material/theming';
+
+// always include only once per project
+@include mat-core();
+
+// import themes
+@import 'themes/default';
+@import 'themes/dark';
+
+// specify theme classes eg: <body class="default-theme"> ... </body>
+.default-theme {
+  @include theme-setup($default-theme, $default-colors);
+}
+
+.dark-theme {
+  @include theme-setup($dark-theme, $dark-colors);
+}

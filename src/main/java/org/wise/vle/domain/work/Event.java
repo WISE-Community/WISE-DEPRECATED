@@ -117,73 +117,67 @@ public class Event extends PersistableDomain {
     return Event.class;
   }
 
-  /**
-   * Get the JSON representation of the Event
-   * @return a JSONObject with the values from the Event
-   */
   public JSONObject toJSON() {
     JSONObject eventJSONObject = new JSONObject();
-
     try {
-      if (this.id != null) {
-        eventJSONObject.put("id", this.id);
+      if (id != null) {
+        eventJSONObject.put("id", id);
       }
 
-      if (this.run != null) {
-        Long runId = this.run.getId();
+      if (run != null) {
+        Long runId = run.getId();
         eventJSONObject.put("runId", runId);
       }
 
-      if (this.period != null) {
-        Long periodId = this.period.getId();
+      if (period != null) {
+        Long periodId = period.getId();
         eventJSONObject.put("periodId", periodId);
       }
 
-      if (this.workgroup != null) {
-        Long workgroupId = this.workgroup.getId();
+      if (workgroup != null) {
+        Long workgroupId = workgroup.getId();
         eventJSONObject.put("workgroupId", workgroupId);
       }
 
-      if (this.nodeId != null) {
-        eventJSONObject.put("nodeId", this.nodeId);
+      if (nodeId != null) {
+        eventJSONObject.put("nodeId", nodeId);
       }
 
-      if (this.componentId != null) {
-        eventJSONObject.put("componentId", this.componentId);
+      if (componentId != null) {
+        eventJSONObject.put("componentId", componentId);
       }
 
-      if (this.componentType != null) {
-        eventJSONObject.put("componentType", this.componentType);
+      if (componentType != null) {
+        eventJSONObject.put("componentType", componentType);
       }
 
-      if (this.context != null) {
-        eventJSONObject.put("context", this.context);
+      if (context != null) {
+        eventJSONObject.put("context", context);
       }
 
-      if (this.category != null) {
-        eventJSONObject.put("category", this.category);
+      if (category != null) {
+        eventJSONObject.put("category", category);
       }
 
-      if (this.event != null) {
-        eventJSONObject.put("event", this.event);
+      if (event != null) {
+        eventJSONObject.put("event", event);
       }
 
-      if (this.data != null) {
+      if (data != null) {
         try {
-          eventJSONObject.put("data", new JSONObject(this.data));
+          eventJSONObject.put("data", new JSONObject(data));
         } catch (Exception e) {
-          eventJSONObject.put("data", this.data);
+          eventJSONObject.put("data", data);
         }
       }
 
-      if (this.clientSaveTime != null) {
+      if (clientSaveTime != null) {
         eventJSONObject.put("clientSaveTime", clientSaveTime.getTime());
       }
 
-      if (this.serverSaveTime != null) {
+      if (serverSaveTime != null) {
         eventJSONObject.put("serverSaveTime", serverSaveTime.getTime());
       }
-
     } catch (JSONException e) {
       e.printStackTrace();
     }

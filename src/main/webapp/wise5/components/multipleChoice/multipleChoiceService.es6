@@ -53,77 +53,34 @@ class MultipleChoiceService extends ComponentService {
    * criteria object
    */
   choiceChosen(criteria) {
+    const nodeId = criteria.params.nodeId;
+    const componentId = criteria.params.componentId;
+    const constraintChoiceIds = criteria.params.choiceIds;
+    const latestComponentState =
+        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    if (latestComponentState != null) {
+      const studentChoices = latestComponentState.studentData.studentChoices;
+      const studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
+      return this.isChoicesSelected(studentChoiceIds, constraintChoiceIds);
+    }
+    return false;
+  }
 
-    let result = false;
-
-    if (criteria != null && criteria.params != null) {
-      let nodeId = criteria.params.nodeId;
-      let componentId = criteria.params.componentId;
-      let choiceIds = criteria.params.choiceIds; // the choice ids that we expect the student to have chosen
-
-      if (nodeId != null && componentId != null) {
-
-        // get the component states
-        let componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
-
-        if (componentStates != null && componentStates.length > 0) {
-
-          if (choiceIds != null) {
-            // get the latest component state
-            let componentState = componentStates[componentStates.length - 1];
-
-            // get the student data
-            let studentData = componentState.studentData;
-
-            if (studentData != null) {
-
-              // get the choice(s) the student chose
-              let studentChoices = studentData.studentChoices;
-
-              if (studentChoices != null) {
-
-                if (studentChoices.length === choiceIds.length) {
-                  /*
-                   * the number of choices the student chose do match so the student may
-                   * have matched the choices. we will now need to compare each of the
-                   * choice ids to make sure the student chose the ones that are required
-                   */
-
-                  let studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
-
-                  for (let c = 0; c < choiceIds.length; c++) {
-                    let choiceId = choiceIds[c];
-
-                    if (studentChoiceIds.indexOf(choiceId) === -1) {
-                      /*
-                       * the required choice id is not in the student choices so the student
-                       * did not match all the choices
-                       */
-                      result = false;
-                      break;
-                    } else {
-                      // the required choice id is in the student choices
-                      result = true;
-                    }
-                  }
-
-                } else {
-                  /*
-                   * the number of choices the student chose do not match so the student did
-                   * not match the choices
-                   */
-
-                  result = false;
-                }
-              }
-            }
+  isChoicesSelected(studentChoiceIds, constraintChoiceIds) {
+    if (typeof constraintChoiceIds === 'string') {
+      return studentChoiceIds.length === 1 && studentChoiceIds[0] === constraintChoiceIds;
+    } else if (Array.isArray(constraintChoiceIds)) {
+      if (studentChoiceIds.length === constraintChoiceIds.length) {
+        for (let constraintChoiceId of constraintChoiceIds) {
+          if (studentChoiceIds.indexOf(constraintChoiceId) === -1) {
+            return false;
           }
         }
+        return true;
       }
     }
-
-    return result;
-  };
+    return false;
+  }
 
   /**
    * Get the student choice ids from the student choice objects
@@ -246,6 +203,15 @@ class MultipleChoiceService extends ComponentService {
         if (studentChoices != null && studentChoices.length > 0) {
           return true;
         }
+      }
+    }
+    return false;
+  }
+
+  componentHasCorrectAnswer(component) {
+    for (const choice of component.choices) {
+      if (choice.isCorrect) {
+        return true;
       }
     }
     return false;

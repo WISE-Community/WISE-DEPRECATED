@@ -20,17 +20,10 @@ class NotebookGradingController {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-
         this.themePath = this.ProjectService.getThemePath();
-
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-
-        // get the workgroups sorted alphabetically
         this.workgroups = this.ConfigService.getClassmateUserInfos();
-
-        this.noteFilter = "note";
-        this.reportFilter = "report";
-
+        this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
         this.showAllNotes = false;
         this.showAllReports = false;
         this.showNoteForWorkgroup = {};
@@ -85,35 +78,35 @@ class NotebookGradingController {
 
     toggleDisplayAllReports() {
         this.showAllReports = !this.showAllReports;
-
         for (let workgroupId in this.showReportForWorkgroup) {
             this.showReportForWorkgroup[workgroupId] = this.showAllReports;
         }
     }
 
-    /**
-     * Handle request to view notes for the specified workgroup
-     * @param workgroupId
-     */
     viewNotes(workgroupId) {
         alert(workgroupId);
     }
 
-    /**
-     * Handle request to view report for the specified workgroup
-     * @param workgroupId
-     */
     viewReport(workgroupId) {
         alert(workgroupId);
     }
 
-    /**
-     * Get the current period
-     */
     getCurrentPeriod() {
         return this.TeacherDataService.getCurrentPeriod();
-    };
+    }
 
+    getNotebookForWorkgroup(workgroupId) {
+        return this.NotebookService.getNotebookByWorkgroup(workgroupId);
+    }
+
+    getNotebookConfigForWorkgroup(workgroupId) {
+        if (this.ConfigService.isRunOwner(workgroupId) ||
+            this.ConfigService.isRunSharedTeacher(workgroupId)) {
+          return this.NotebookService.getTeacherNotebookConfig();
+        } else {
+          return this.NotebookService.getStudentNotebookConfig();
+        }
+    }
 }
 
 NotebookGradingController.$inject = [

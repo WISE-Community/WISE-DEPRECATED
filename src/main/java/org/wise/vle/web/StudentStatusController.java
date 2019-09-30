@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -23,16 +23,6 @@
  */
 package org.wise.vle.web;
 
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,14 +31,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.VLEService;
-import org.wise.portal.service.websocket.WISEWebSocketHandler;
+import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.status.StudentStatus;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 @Controller
 @RequestMapping("/studentStatus")
@@ -61,7 +59,7 @@ public class StudentStatusController {
   private RunService runService;
 
   @Autowired
-  private WebSocketHandler webSocketHandler;
+  private MessagePublisher redisPublisher;
 
   /**
    * Handles GET requests from the teacher when a teacher requests for all the student
@@ -70,13 +68,10 @@ public class StudentStatusController {
    * @throws IOException
    */
   @RequestMapping(method = RequestMethod.GET)
-  public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    //get the signed in user
+  public ModelAndView getStudentStatus(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
-
-    //get the run id
     String runIdString = request.getParameter("runId");
-
     Long runId = null;
 
     try {
@@ -92,72 +87,43 @@ public class StudentStatusController {
      * students can not make a request
      */
     if (SecurityUtils.isAdmin(signedInUser)) {
-      //the user is an admin so we will allow this request
       allowedAccess = true;
     } else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
-      //the user is a teacher that is an owner or shared owner of the run so we will allow the request
       allowedAccess = true;
     }
 
     if (!allowedAccess) {
-      //the user is not allowed to make this request
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
       return null;
     }
 
-    /* make sure that this request is authenticated through the portal before proceeding */
     if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-      /* not authenticated send not authorized status */
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
       return null;
     }
 
-    //get all the student statuses for the run id
     List<StudentStatus> studentStatuses = vleService.getStudentStatusesByRunId(runId);
-
-    //the JSONArray that we will put all the student statuses into
     JSONArray studentStatusesJSONArray = new JSONArray();
-
     Iterator<StudentStatus> studentStatusesIterator = studentStatuses.iterator();
-
-    //loop through all the student statuses
     while (studentStatusesIterator.hasNext()) {
-      //get a student status
       StudentStatus studentStatus = studentStatusesIterator.next();
-
-      //get the status
       String status = studentStatus.getStatus();
-
       try {
-        //convert the status to a JSONObject
         JSONObject statusJSON = new JSONObject(status);
-
-        //get the post timestamp
         Timestamp postTimestamp = studentStatus.getTimestamp();
         long postTimestampMilliseconds = postTimestamp.getTime();
-
-        //add the post timestamp for when the student sent this student status to the server
         statusJSON.put("postTimestamp", postTimestampMilliseconds);
-
-        //get the current timestamp
         Date currentTime = new Date();
         long retrievalTimestampMilliseconds = currentTime.getTime();
-
-        //add the retrieval timestamp for when this student status was requested
         statusJSON.put("retrievalTimestamp", retrievalTimestampMilliseconds);
-
-        //put the status JSONObject into our JSONArray that we will return to the teacher
         studentStatusesJSONArray.put(statusJSON);
       } catch (JSONException e) {
         e.printStackTrace();
       }
     }
 
-    //convert the JSONArray into a string
     String studentStatusesString = studentStatusesJSONArray.toString();
-
     try {
-      //write the JSONArray string to the response
       response.getWriter().print(studentStatusesString);
     } catch (IOException e) {
       e.printStackTrace();
@@ -176,11 +142,9 @@ public class StudentStatusController {
    * @throws IOException
    */
   @RequestMapping(method = RequestMethod.POST)
-  public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // get the signed in user
+  public ModelAndView saveStudentStatus(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
-
-    // get the post parameters
     String runIdString = request.getParameter("runId");
     String periodIdString = request.getParameter("periodId");
     String workgroupIdString = request.getParameter("workgroupId");
@@ -210,70 +174,46 @@ public class StudentStatusController {
 
     boolean allowedAccess = false;
 
-    /*
-     * teachers can not make a request
-     * students can make a request if they are in the run and in the workgroup
-     */
-    if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) &&
-      SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
-      // the student is in the run and the workgroup so we will allow this request
+    if (SecurityUtils.isStudent(signedInUser) &&
+        SecurityUtils.isUserInRun(signedInUser, runId) &&
+        SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
       allowedAccess = true;
     }
 
     if (!allowedAccess) {
-      // the user is not allowed to make this request
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
       return null;
     }
 
-    // get the student status object for the workgroup id if it already exists
     StudentStatus studentStatus = vleService.getStudentStatusByWorkgroupId(workgroupId);
-
     if (studentStatus == null) {
-      // the student status object does not already exist so we will create it
       studentStatus = new StudentStatus(runId, periodId, workgroupId, status);
     } else {
-      // the student status object already exists so we will update the timestamp and status
       Calendar now = Calendar.getInstance();
       studentStatus.setTimestamp(new Timestamp(now.getTimeInMillis()));
       studentStatus.setStatus(status);
     }
 
-    // save the student status to the database
     vleService.saveStudentStatus(studentStatus);
 
-    // Send message to teachers if this is a WISE5 run
-    // so this can be displayed in classroom monitor in real-time
     try {
       Run run = runService.retrieveById(runId);
       Integer wiseVersion = run.getProject().getWiseVersion();
       if (wiseVersion.equals(5)) {
-        if (webSocketHandler != null) {
-          WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-
-          if (wiseWebSocketHandler != null) {
-            // send this message to websockets
-            JSONObject webSocketMessageJSON = new JSONObject();
-            JSONObject studentStatusJSON = new JSONObject(status);
-            webSocketMessageJSON.put("messageType", "studentStatus");
-            webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
-            if (studentStatusJSON.has("currentNodeId")) {
-              webSocketMessageJSON.put("currentNodeId", studentStatusJSON.get("currentNodeId"));
-            }
-            if (studentStatusJSON.has("nodeStatuses")) {
-              webSocketMessageJSON.put("nodeStatuses", studentStatusJSON.get("nodeStatuses"));
-            }
-            if (studentStatusJSON.has("projectCompletion")) {
-              webSocketMessageJSON.put("projectCompletion", studentStatusJSON.get("projectCompletion"));
-            }
-            wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
-          }
-        }
+        this.broadcastStudentStatusToTeacher(studentStatus);
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
-
     return null;
   }
+
+  public void broadcastStudentStatusToTeacher(StudentStatus studentStatus) throws Exception {
+    JSONObject message = new JSONObject();
+    message.put("type", "studentStatusToTeacher");
+    message.put("topic", String.format("/topic/teacher/%s", studentStatus.getRunId()));
+    message.put("studentStatus", studentStatus.getStatus());
+    redisPublisher.publish(message.toString());
+  }
+
 }

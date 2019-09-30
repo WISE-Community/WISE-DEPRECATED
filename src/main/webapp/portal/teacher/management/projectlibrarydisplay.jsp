@@ -2,6 +2,29 @@
 <link href="${contextPath}/<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="tiptip.css"/>" media="screen" rel="stylesheet" type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+		<link href="${contextPath}/<spring:theme code="facetedfilter-rtl.css"/>" rel="stylesheet" type="text/css" >
+</c:if>
+<style media="screen">
+	.basicCreated {
+		float:right;
+	}
+	[dir=rtl] .basicCreated {
+		float:left;
+	}
+	.link-details {
+		float:right; text-align:right;
+	}
+	[dir=rtl] .link-details {
+		float:left; text-align:left;
+	}
+	.link-child {
+		float:left; text-align:left;
+	}
+	[dir=rtl] .link-child {
+		float:right; text-align:right;
+	}
+</style>
 
 <%@ page buffer="100kb" %>
 
@@ -155,7 +178,7 @@
 																<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
 																<c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}">${project.metadata.totalTime} | </c:if>
 																<c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
-																<div style="float:right;">
+																<div class="basicCreated">
 																	<c:choose>
 																		<c:when test="${hasRun && (isChild || isChildNoRoot)}">
 																			<span class="runCopy"><spring:message code="teacher.management.projectlibrarydisplay.createdForRun" /> ${projectRunIdMap[project.id]}: <fmt:formatDate value="${projectRunDateMap[project.id]}" type="date" dateStyle="medium" /> </span><img class='tooltip' src="${contextPath}/<spring:theme code="helpicon"/>" title="<spring:message code="teacher.management.projectlibrarydisplay.help_runCopy" />" data-tooltip-anchor="left" data-tooltip-class="info" data-tooltip-event="click" data-tooltip-title="<spring:message code="teacher.management.projectlibrarydisplay.help_runCopy_title" />" alt="help" />
@@ -183,9 +206,9 @@
 															</div>
 															<div class="details" data-id="${project.id}">
 																<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tags" /></span> ${project.metadata.keywords}</p></c:if>
-																<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
+																<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/legacy/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
 																<c:if test="${project.metadata.compTime != null && project.metadata.compTime != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_compTime" /></span> ${project.metadata.compTime}</p></c:if>
-																<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
+																<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/legacy/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
 																<c:set var="lastEdited" value="${project.metadata.lastEdited}" />
 																<c:if test="${lastEdited == null || lastEdited == ''}">
 																	<c:set var="lastEdited" value="${project.dateCreated}" />
@@ -199,7 +222,7 @@
 																	<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																	<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																		<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																			<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																			<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																		</div>
 																		<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																			<div class="basicInfo sectionContent">
@@ -233,7 +256,7 @@
 													</div>
 													<div style="clear:both;"></div>
 													<div class="detailsLinks">
-														<div style="float:right; text-align:right">
+														<div class="link-details" style="">
 															<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 														</div>
 														<div style="clear:both;"></div>
@@ -420,7 +443,7 @@
 															</div>
 															<div class="details" data-id="${project.id}">
 																<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tags" /></span> ${project.metadata.keywords}</p></c:if>
-																<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
+																<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/legacy/legacy/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
 																<c:if test="${project.metadata.compTime != null && project.metadata.compTime != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_compTime" /></span> ${project.metadata.compTime}</p></c:if>
 																<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
 																<c:set var="lastEdited" value="${project.metadata.lastEdited}" />
@@ -436,7 +459,7 @@
 																	<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																	<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																		<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																			<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																			<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																		</div>
 																		<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																			<div class="basicInfo sectionContent">
@@ -470,7 +493,7 @@
 													</div>
 													<div style="clear:both;"></div>
 													<div class="detailsLinks">
-														<div style="float:right; text-align:right">
+														<div class="link-details" style="float:right; text-align:right">
 															<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 														</div>
 														<div style="clear:both;"></div>
@@ -607,7 +630,7 @@
 																<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
 																<c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}">${project.metadata.totalTime} | </c:if>
 																<c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
-																<div style="float:right;">
+																<div class="basicCreated">
 																	<spring:message code="teacher.management.projectlibrarydisplay.created" /> <fmt:formatDate value="${project.dateCreated}" type="date" dateStyle="medium" />
 																</div>
 															</div>
@@ -628,9 +651,9 @@
 															</div>
 															<div class="details" data-id="${project.id}">
 																<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tags" /></span> ${project.metadata.keywords}</p></c:if>
-																<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
+																<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/legacy/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
 																<c:if test="${project.metadata.compTime != null && project.metadata.compTime != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_compTime" /></span> ${project.metadata.compTime}</p></c:if>
-																<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
+																<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/legacy/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
 																<c:set var="lastEdited" value="${project.metadata.lastEdited}" />
 																<c:if test="${lastEdited == null || lastEdited == ''}">
 																	<c:set var="lastEdited" value="${project.dateCreated}" />
@@ -641,7 +664,7 @@
 																	<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																	<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																		<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																			<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																			<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																		</div>
 																		<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																			<div class="basicInfo sectionContent">
@@ -665,7 +688,7 @@
 													</div>
 													<div style="clear:both;"></div>
 													<div class="detailsLinks">
-														<div style="float:right; text-align:right">
+														<div class="link-details" style="">
 															<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 														</div>
 														<div style="clear:both;"></div>
@@ -823,7 +846,7 @@
 																		<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
 																		<c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}">${project.metadata.totalTime} | </c:if>
 																		<c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
-																		<div style="float:right;">
+																		<div class="basicCreated">
 																			<c:choose>
 																				<c:when test="${hasRun && (isChild || isChildNoRoot)}">
 																					<span class="runCopy"><spring:message code="teacher.management.projectlibrarydisplay.createdForRun" /> ${projectRunIdMap[project.id]}: <fmt:formatDate value="${projectRunDateMap[project.id]}" type="date" dateStyle="medium" /> </span><img class='tooltip' src="${contextPath}/<spring:theme code="helpicon"/>" title="<spring:message code="teacher.management.projectlibrarydisplay.help_runCopy" />" data-tooltip-anchor="left" data-tooltip-class="info" data-tooltip-event="click" data-tooltip-title="<spring:message code="teacher.management.projectlibrarydisplay.help_runCopy_title" />" alt="help" />
@@ -851,9 +874,9 @@
 																	</div>
 																	<div class="details" data-id="${project.id}">
 																		<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tags" /></span> ${project.metadata.keywords}</p></c:if>
-																		<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
+																		<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/legacy/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
 																		<c:if test="${project.metadata.compTime != null && project.metadata.compTime != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_compTime" /></span> ${project.metadata.compTime}</p></c:if>
-																		<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
+																		<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/legacy/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
 																		<c:set var="lastEdited" value="${project.metadata.lastEdited}" />
 																		<c:if test="${lastEdited == null || lastEdited == ''}">
 																			<c:set var="lastEdited" value="${project.dateCreated}" />
@@ -867,7 +890,7 @@
 																			<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																			<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																				<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																					<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																					<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																				</div>
 																				<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																					<div class="basicInfo sectionContent">
@@ -901,7 +924,7 @@
 															</div>
 															<div style="clear:both;"></div>
 															<div class="detailsLinks">
-																<div style="float:right; text-align:right">
+																<div class="link-details" style="">
 																	<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 																</div>
 																<div style="clear:both;"></div>
@@ -1079,9 +1102,9 @@
 																	</div>
 																	<div class="details" data-id="${project.id}">
 																		<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tags" /></span> ${project.metadata.keywords}</p></c:if>
-																		<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility"/></a>)</p>
+																		<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/legacy/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility"/></a>)</p>
 																		<c:if test="${project.metadata.compTime != null && project.metadata.compTime != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_compTime" /></span> ${project.metadata.compTime}</p></c:if>
-																		<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
+																		<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/legacy/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
 																		<c:set var="lastEdited" value="${project.metadata.lastEdited}" />
 																		<c:if test="${lastEdited == null || lastEdited == ''}">
 																			<c:set var="lastEdited" value="${project.dateCreated}" />
@@ -1095,7 +1118,7 @@
 																			<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																			<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																				<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																					<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																					<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																				</div>
 																				<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																					<div class="basicInfo sectionContent">
@@ -1129,7 +1152,7 @@
 															</div>
 															<div style="clear:both;"></div>
 															<div class="detailsLinks">
-																<div style="float:right; text-align:right">
+																<div class="link-details" style="">
 																	<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 																</div>
 																<div style="clear:both;"></div>
@@ -1275,9 +1298,9 @@
 																	</div>
 																	<div class="details" data-id="${project.id}">
 																		<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tags" /></span> ${project.metadata.keywords}</p></c:if>
-																		<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
+																		<p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/legacy/pages/check.html?projectId=${project.id}" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p>
 																		<c:if test="${project.metadata.compTime != null && project.metadata.compTime != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_compTime" /></span> ${project.metadata.compTime}</p></c:if>
-																		<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
+																		<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/legacy/contact/contactwise.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
 																		<c:set var="lastEdited" value="${project.metadata.lastEdited}" />
 																		<c:if test="${lastEdited == null || lastEdited == ''}">
 																			<c:set var="lastEdited" value="${project.dateCreated}" />
@@ -1288,7 +1311,7 @@
 																			<div class="viewLesson"><a class="viewLesson" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards_tip" />"><spring:message code="teacher.projects.projectinfo.tipsAndStandards" /></a></div>
 																			<div class="lessonPlan" data-id="${project.id}" title="<spring:message code="teacher.projects.projectinfo.tipsAndStandards" />">
 																				<div class="panelHeader">${project.name} (<spring:message code="id_label" /> ${project.id})
-																					<span style="float:right;"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
+																					<span class="link-print"><a class="printLesson" data-id="${project.id}"><spring:message code="print" /></a></span>
 																				</div>
 																				<c:if test="${project.metadata.lessonPlan != null && project.metadata.lessonPlan != ''}">
 																					<div class="basicInfo sectionContent">
@@ -1312,7 +1335,7 @@
 															</div>
 															<div style="clear:both;"></div>
 															<div class="detailsLinks">
-																<div style="float:right; text-align:right">
+																<div class="link-details" style="float:right; text-align:right">
 																	<a data-id="${project.id}" class="detailsToggle"><spring:message code="teacher.management.projectlibrarydisplay.detailsShow" /></a>
 																</div>
 																<div style="clear:both;"></div>
@@ -1384,7 +1407,7 @@
 			checked = bookmarkLink.hasClass('true');
 		$.ajax({
 			type: 'POST',
-			url: '${contextPath}/teacher/project/bookmark?projectId=' + pID + '&checked=' + !checked,
+			url: '${contextPath}/legacy/teacher/project/bookmark?projectId=' + pID + '&checked=' + !checked,
 			success: function(response) {
 				var updateString = '',
 					updateRow,
@@ -1433,7 +1456,7 @@
 	 */
 	function copy(wiseVersion, pID, type, name, fileName, relativeProjectFilePathUrl){
 		if (typeof(isTeacher) == "undefined") {
-			window.location.href = "${contextPath}/login";
+			window.location.href = "${contextPath}/legacy/login";
 			return;
 		}
 		var $copyDialog = '<div id="copyDialog" class="dialog"><p><spring:message code="teacher.management.projectlibrarydisplay.copy_info" /></p>' +
@@ -1670,7 +1693,7 @@
 							copyLabel = ' <spring:message code="copy" />';
 						}
 					}
-					var $childLink = $('<div style="float:left;"><a data-id="' + id + '" class="childToggle">' + numChildren + copyLabel + ' +</a></div>');
+					var $childLink = $('<div class="link-child"><a data-id="' + id + '" class="childToggle">' + numChildren + copyLabel + ' +</a></div>');
 					$(this).find('.detailsLinks').prepend($childLink);
 					if($(this).hasClass('missingRoot')){
 						$childLink.find('.childToggle').addClass('missingRoot');
@@ -2012,6 +2035,7 @@
 					{
 						"identifier": "language", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language"/>", "column": 7,
 						"options": [
+							{"query": "arabic", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_arabic"/>"},
 							{"query": "chinese", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_chinese"/>"},
 							{"query": "dutch", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_dutch"/>"},
 							{"query": "english", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_english"/>"},

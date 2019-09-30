@@ -32,9 +32,6 @@ class TableController extends ComponentController {
     // holds the the table data
     this.tableData = null;
 
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // whether the reset table button is shown or not
     this.isResetTableButtonVisible = true;
 
@@ -50,20 +47,12 @@ class TableController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-      // get the latest annotations
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
       this.isResetTableButtonVisible = true;
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
       this.isResetTableButtonVisible = false;
       this.isDisabled = true;
-
-      if (this.mode === 'grading') {
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      }
     } else if (this.mode === 'onlyShowWork') {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
@@ -82,9 +71,6 @@ class TableController extends ComponentController {
 
     // get the component state from the scope
     componentState = this.$scope.componentState;
-
-    // set whether studentAttachment is enabled
-    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
     if (this.mode == 'student') {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
@@ -130,11 +116,6 @@ class TableController extends ComponentController {
 
     this.disableComponentIfNecessary();
 
-    if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
-
     /**
      * A connected component has changed its student data so we will
      * perform any necessary changes to this component
@@ -175,12 +156,9 @@ class TableController extends ComponentController {
           // the table has changed
           this.$scope.tableController.isDirty = true;
         } else if (componentType === 'Embedded') {
-
-          // set the table data
           this.$scope.tableController.setStudentWork(componentState);
-
-          // the table has changed
           this.$scope.tableController.isDirty = true;
+          this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         }
       }
     }.bind(this);
@@ -397,6 +375,7 @@ class TableController extends ComponentController {
   resetTable() {
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
       // this component imports work so we will import the work again
+      this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
       this.handleConnectedComponents();
     } else {
       // get the original table from the step content
@@ -434,112 +413,7 @@ class TableController extends ComponentController {
           this.submitCounter = submitCounter;
         }
 
-        this.processLatestSubmit();
-      }
-    }
-  };
-
-  /**
-   * Check if latest component state is a submission and set isSubmitDirty accordingly
-   */
-  processLatestSubmit() {
-    let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-    if (latestState) {
-      let serverSaveTime = latestState.serverSaveTime;
-      let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      if (latestState.isSubmit) {
-        // latest state is a submission, so set isSubmitDirty to false and notify node
-        this.isSubmitDirty = false;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        this.setSubmittedMessage(clientSaveTime);
-      } else {
-        // latest state is not a submission, so set isSubmitDirty to true and notify node
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        this.setSavedMessage(clientSaveTime);
-      }
-    }
-  };
-
-  /**
-   * A submit was triggered by the component submit button or node submit button
-   * @param submitTriggeredBy what triggered the submit
-   * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-   */
-  submit(submitTriggeredBy) {
-
-    if (this.isSubmitDirty) {
-      // the student has unsubmitted work
-
-      var performSubmit = true;
-
-      if (this.componentContent.maxSubmitCount != null) {
-        // there is a max submit count
-
-        // calculate the number of submits this student has left
-        var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-        var message = '';
-
-        if (numberOfSubmitsLeft <= 0) {
-          // the student does not have any more chances to submit
-          performSubmit = false;
-        } else if (numberOfSubmitsLeft == 1) {
-          /*
-           * the student has one more chance to submit left so maybe
-           * we should ask the student if they are sure they want to submit
-           */
-        } else if (numberOfSubmitsLeft > 1) {
-          /*
-           * the student has more than one chance to submit left so maybe
-           * we should ask the student if they are sure they want to submit
-           */
-        }
-      }
-
-      if (performSubmit) {
-
-        /*
-         * set isSubmit to true so that when the component state is
-         * created, it will know that is a submit component state
-         * instead of just a save component state
-         */
-        this.isSubmit = true;
-        this.incrementSubmitCounter();
-
-        // check if the student has used up all of their submits
-        if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-          /*
-           * the student has used up all of their submits so we will
-           * disable the submit button
-           */
-          this.isSubmitButtonDisabled = true;
-        }
-
-        if (this.mode === 'authoring') {
-          /*
-           * we are in authoring mode so we will set values appropriately
-           * here because the 'componentSubmitTriggered' event won't
-           * work in authoring mode
-           */
-          this.isDirty = false;
-          this.isSubmitDirty = false;
-          this.createComponentState('submit');
-        }
-
-        if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-          // tell the parent node that this component wants to submit
-          this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-        } else if (submitTriggeredBy === 'nodeSubmitButton') {
-          // nothing extra needs to be performed
-        }
-      } else {
-        /*
-         * the student has cancelled the submit so if a component state
-         * is created, it will just be a regular save and not submit
-         */
-        this.isSubmit = false;
+        this.processLatestStudentWork();
       }
     }
   }
@@ -620,13 +494,6 @@ class TableController extends ComponentController {
    */
   showResetTableButton() {
     return this.isResetTableButtonVisible;
-  };
-
-  /**
-   * handle importing notebook item data (we only support csv for now)
-   */
-  attachStudentAsset(studentAsset) {
-    // TODO: implement me
   };
 
   /**
@@ -1119,55 +986,80 @@ class TableController extends ComponentController {
     }
   }
 
-  /**
-   * Copy the table data cell text from one component state to another
-   * @param fromComponentState get the cell text values from this component state
-   * @param toComponentState set the cell text values in this component state
-   */
-  copyTableDataCellText(fromComponentState, toComponentState) {
-
-    if (fromComponentState != null && toComponentState != null) {
-      var fromStudentData = fromComponentState.studentData;
-      var toStudentData = toComponentState.studentData;
-
-      if (fromStudentData != null && toStudentData != null) {
-        var fromTableData = fromStudentData.tableData;
-        var toTableData = toStudentData.tableData;
-
-        if (fromTableData != null & toTableData != null) {
-
-          // loop through all the rows
-          for (var y = 0; y < this.getNumRows(); y++) {
-
-            // loop through all the columns
-            for (var x = 0; x < this.getNumColumns(); x++) {
-
-              // get the cell value
-              var cellValue = this.getTableDataCellValue(x, y, fromTableData);
-
-              if (cellValue != null) {
-                // set the cell value
-                this.setTableDataCellValue(x, y, toTableData, cellValue);
-              }
-            }
+  handleConnectedComponents() {
+    let isStudentDataChanged = false;
+    const connectedComponentsAndTheirComponentStates =
+        this.getConnectedComponentsAndTheirComponentStates();
+    for (const connectedComponentAndComponentState of connectedComponentsAndTheirComponentStates) {
+      const connectedComponent = connectedComponentAndComponentState.connectedComponent;
+      const componentState = connectedComponentAndComponentState.componentState;
+      if (componentState != null) {
+        if (connectedComponent.type === 'showWork') {
+          this.tableData = componentState.studentData.tableData;
+          this.isDisabled = true;
+        } else {
+          if (connectedComponent.action === 'append') {
+            this.appendComponentState(componentState, connectedComponent);
+          } else {
+            this.mergeComponentState(componentState);
           }
+        }
+        isStudentDataChanged = true;
+      }
+    }
+    if (isStudentDataChanged) {
+      this.studentDataChanged();
+    }
+  }
+
+  mergeComponentState(componentState) {
+    if (this.tableData == null) {
+      this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+    }
+    if (this.componentContent.numRows === 0 || this.componentContent.numColumns === 0) {
+      this.tableData = componentState.studentData.tableData;
+    } else {
+      this.mergeTableData(componentState.studentData.tableData);
+    }
+  }
+
+  mergeTableData(tableData) {
+    for (let y = 0; y < this.getNumRows(); y++) {
+      for (let x = 0; x < this.getNumColumns(); x++) {
+        const cellValue = this.getTableDataCellValue(x, y, tableData);
+        if (cellValue != null && cellValue !== '') {
+          this.setTableDataCellValue(x, y, this.tableData, cellValue);
         }
       }
     }
-
-    return toComponentState;
   }
 
-  /**
-   * Only merges the first component state
-   * TODO: implement merging all component states
-   * @param {array} componentStates
-   * @return {object} merged component state
-   */
-  createMergedComponentState(componentStates) {
-    const defaultComponentState = this.createBlankComponentState();
-    defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);
-    return this.copyTableDataCellText(componentStates[0], defaultComponentState);
+  appendComponentState(componentState, connectedComponent) {
+    if (this.tableData == null) {
+      this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+    }
+    let tableData = componentState.studentData.tableData;
+    if (connectedComponent.excludeFirstRow) {
+      tableData = tableData.slice(1);
+    }
+    this.appendTable(tableData);
+  }
+
+  appendTable(tableData) {
+    this.tableData = this.tableData.concat(tableData);
+  }
+
+  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+    if (connectedComponent.type === 'importWork' && connectedComponent.action == null) {
+      connectedComponent.action = 'merge';
+    } else if (connectedComponent.type === 'showWork') {
+      connectedComponent.action = null;
+    }
+  }
+
+  authoringConnectedComponentTypeChanged(connectedComponent) {
+    this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
   }
 }
 

@@ -11,6 +11,12 @@ class StepToolsController {
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
+        
+        this.is_rtl = ($('html').attr('dir') == 'rtl');
+        this.icons = { prev: 'chevron_left', next: 'chevron_right' };
+        if (this.is_rtl) {
+          this.icons = { prev: 'chevron_right', next: 'chevron_left' };
+        }
 
         // service objects and utility functions
         this.idToOrder = this.ProjectService.idToOrder;
@@ -88,7 +94,7 @@ const StepTools = {
             <md-button aria-label="{{ 'PREVIOUS_STEP' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
-                <md-icon> chevron_left </md-icon>
+                <md-icon> {{ $ctrl.icons.prev }} </md-icon>
                 <md-tooltip md-direction="bottom">{{ 'PREVIOUS_STEP' | translate }}</md-tooltip>
             </md-button>
             <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>&nbsp;
@@ -112,7 +118,7 @@ const StepTools = {
             <md-button aria-label="{{ 'NEXT_STEP' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()">
-                <md-icon> chevron_right </md-icon>
+                <md-icon> {{ $ctrl.icons.next }} </md-icon>
                 <md-tooltip md-direction="bottom">{{ 'NEXT_STEP' | translate }}</md-tooltip>
             </md-button>
         </div>`,

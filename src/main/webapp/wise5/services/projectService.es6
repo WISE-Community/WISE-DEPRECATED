@@ -328,8 +328,8 @@ class ProjectService {
        */
       this.calculateNodeNumbers();
 
-      if (this.project.achievements != null) {
-        this.achievements = this.project.achievements;
+      if (this.project.projectAchievements != null) {
+        this.achievements = this.project.projectAchievements;
       }
     }
 
@@ -994,12 +994,14 @@ class ProjectService {
       const targetId = constraint.targetId;
       const action = constraint.action;
 
-      if (action === 'makeAllNodesAfterThisNotVisible' &&
-          this.isNodeIdAfter(targetId, node.id)) {
-        result = true;
-      } else if (action === 'makeAllNodesAfterThisNotVisitable' &&
-          this.isNodeIdAfter(targetId, node.id)) {
-        result = true;
+      if (action === 'makeAllNodesAfterThisNotVisible') {
+        if (this.isNodeIdAfter(targetId, node.id)) {
+          result = true;
+        }
+      } else if (action === 'makeAllNodesAfterThisNotVisitable') {
+        if (this.isNodeIdAfter(targetId, node.id)) {
+          result = true;
+        }
       } else {
         const targetNode = this.getNodeById(targetId);
         if (targetNode != null) {
@@ -1026,10 +1028,14 @@ class ProjectService {
    */
   isNodeIdAfter(nodeId1, nodeId2) {
     if (this.isApplicationNode(nodeId1)) {
-      const pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
-      for (let pathToEnd of pathsFromNodeId1ToEnd) {
-        if (pathToEnd.indexOf(nodeId2) != -1) {
-          return true;
+      if (nodeId1 == nodeId2) {
+        return false;
+      } else {
+        const pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
+        for (let pathToEnd of pathsFromNodeId1ToEnd) {
+          if (pathToEnd.indexOf(nodeId2) != -1) {
+            return true;
+          }
         }
       }
     } else {
@@ -1221,6 +1227,21 @@ class ProjectService {
     if (projectId == null || saveProjectURL == null) {
       return null;
     }
+
+    const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
+    const userInfo = this.ConfigService.getMyUserInfo();
+    let exists = false;
+    for (let [index, author] of authors.entries()) {
+      if (author.id === userInfo.id) {
+        author = userInfo;
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      authors.push(userInfo);
+    }
+    this.project.metadata.authors = authors;
 
     const httpParams = {
       method: 'POST',
@@ -3426,7 +3447,7 @@ class ProjectService {
              * the save button on this new component
              */
           } else {
-            if (this.doesAnyComponentShowSubmitButton(node.id)) {
+            if (this.doesAnyComponentInNodeShowSubmitButton(node.id)) {
               /*
                * at least one of the other components in the step are
                * showing a submit button so we will also show the save
@@ -3465,44 +3486,15 @@ class ProjectService {
   }
 
   /**
-   * Check if any of the components in the node are showing their save button
-   * @param nodeId the node id to check
-   * @return whether any of the components in the node show their save button
+   * Check if any of the components in the node are showing their submit button.
+   * @param nodeId {string} The node id to check.
+   * @return {boolean} Whether any of the components in the node show their submit button.
    */
-  doesAnyComponentShowSaveButton(nodeId) {
+  doesAnyComponentInNodeShowSubmitButton(nodeId) {
     const node = this.getNodeById(nodeId);
-    if (node != null) {
-      const components = node.components;
-      if (components != null) {
-        for (let component of components) {
-          if (component != null) {
-            if (component.showSaveButton == true) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Check if any of the components in the node are showing their submit button
-   * @param nodeId the node id to check
-   * @return whether any of the components in the node show their submit button
-   */
-  doesAnyComponentShowSubmitButton(nodeId) {
-    const node = this.getNodeById(nodeId);
-    if (node != null) {
-      const components = node.components;
-      if (components != null) {
-        for (let component of components) {
-          if (component != null) {
-            if (component.showSubmitButton == true) {
-              return true;
-            }
-          }
-        }
+    for (let component of node.components) {
+      if (component.showSubmitButton == true) {
+        return true;
       }
     }
     return false;
@@ -4005,6 +3997,28 @@ class ProjectService {
         if (nodeId != null) {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
           message += this.$translate('nodeTitleIsVisitable', { nodeTitle: nodeTitle });
+        }
+      } else if (name === 'addXNumberOfNotesOnThisStep') {
+        const nodeId = params.nodeId;
+        const requiredNumberOfNotes = params.requiredNumberOfNotes;
+        const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+        if (requiredNumberOfNotes == 1) {
+          message += this.$translate('addXNumberOfNotesOnThisStepSingular',
+            { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: nodeTitle });
+        } else {
+          message += this.$translate('addXNumberOfNotesOnThisStepPlural',
+            { requiredNumberOfNotes: requiredNumberOfNotes, nodeTitle: nodeTitle });
+        }
+      } else if (name === 'fillXNumberOfRows') {
+        const requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
+        const nodeId = params.nodeId;
+        const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+        if (requiredNumberOfFilledRows == 1) {
+          message += this.$translate('youMustFillInXRow',
+            { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: nodeTitle });
+        } else {
+          message += this.$translate('youMustFillInXRows',
+            { requiredNumberOfFilledRows: requiredNumberOfFilledRows, nodeTitle: nodeTitle });
         }
       }
     }
@@ -5540,21 +5554,18 @@ class ProjectService {
   }
 
   /**
-   * Get all the achievements object in the project. The achievements object
+   * Get all the projectAchievements object in the project. The projectAchievements object
    * contains the isEnabled field and an array of items.
    * @return the achievement object
    */
   getAchievements() {
-    if (this.project != null) {
-      if (this.project.achievements == null) {
-        this.project.achievements = {
-          isEnabled: true,
-          items: []
-        };
-      }
-      return this.project.achievements;
+    if (this.project.achievements == null) {
+      this.project.achievements = {
+        isEnabled: false,
+        items: []
+      };
     }
-    return null;
+    return this.project.achievements;
   }
 
   /**
@@ -5563,13 +5574,10 @@ class ProjectService {
    */
   getAchievementItems() {
     const achievements = this.getAchievements();
-    if (achievements != null) {
-      if (achievements.items == null) {
-        achievements.items = [];
-      }
-      return achievements.items;
+    if (achievements.items == null) {
+      achievements.items = [];
     }
-    return null;
+    return achievements.items;
   }
 
   /**
@@ -5724,6 +5732,39 @@ class ProjectService {
   getAdditionalProcessingFunctions(nodeId, componentId) {
     let key = nodeId + "_" + componentId;
     return this.additionalProcessingFunctionsMap[key];
+  }
+
+  getFeaturedProjectIcons() {
+    const featuredProjectIconsURL = this.ConfigService.getConfigParam('featuredProjectIcons');
+    return this.$http.get(featuredProjectIconsURL).then((result) => {
+      return result.data;
+    });
+  }
+
+  setFeaturedProjectIcon(projectIcon) {
+    const featuredProjectIconURL = this.ConfigService.getConfigParam('featuredProjectIcon');
+    return this.setProjectIcon(projectIcon, featuredProjectIconURL);
+  }
+
+  setCustomProjectIcon(projectIcon) {
+    const customProjectIconURL = this.ConfigService.getConfigParam('customProjectIcon');
+    return this.setProjectIcon(projectIcon, customProjectIconURL);
+  }
+
+  setProjectIcon(projectIcon, projectIconURL) {
+    let projectId = this.ConfigService.getProjectId();
+    const httpParams = {
+      method: 'POST',
+      url: projectIconURL,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        projectId: projectId,
+        projectIcon: projectIcon
+      })
+    };
+    return this.$http(httpParams).then((result) => {
+      return result.data;
+    });
   }
 }
 

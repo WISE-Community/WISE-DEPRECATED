@@ -11,6 +11,9 @@
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
@@ -29,7 +32,7 @@
 					<spring:message code="teacher.run.create.createrunconfigure.setupAClassroomRun" />
 					<span class="pageTitle"><spring:message code="teacher.run.create.createrunconfigure.management"/></span>
 				</div>
-				<form:form method="post" commandName="runParameters" autocomplete='off'>
+				<form:form method="post" modelAttribute="runParameters" autocomplete='off'>
 					<div class="panelContent">
 						<div id="setUpRunBox">
 							<div id="stepNumber" class="sectionHead"><spring:message code="teacher.run.create.createrunconfigure.step4Of5"/>&nbsp;<spring:message code="teacher.run.create.createrunconfigure.configureTheRun"/></div>
@@ -58,7 +61,7 @@
 						</div>
 					</div>
 				</form:form>
-				<form:form method="post" commandName="runParameters" autocomplete='off'>
+				<form:form method="post" modelAttribute="runParameters" autocomplete='off'>
 				    <input id=goToPageField" type="hidden" name="_page" value="2" />
 				</form:form>
 				

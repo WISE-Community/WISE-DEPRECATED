@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2019 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -96,6 +96,18 @@ public class PersistentUserDetails implements MutableUserDetails {
   public static final String COLUMN_NAME_LANGUAGE = "language";
 
   @Transient
+  public static final String COLUMN_NAME_RESET_PASSWORD_VERIFICATION_CODE_REQUEST_TIME = "reset_password_verification_code_request_time";
+
+  @Transient
+  public static final String COLUMN_NAME_RESET_PASSWORD_VERIFICATION_CODE = "reset_password_verification_code";
+
+  @Transient
+  public static final String COLUMN_NAME_RECENT_FAILED_VERIFICATION_ATTEMPT_TIME = "recent_failed_verification_code_attempt_time";
+
+  @Transient
+  public static final String COLUMN_NAME_RECENT_NUMBER_FAILED_VERIFICATION_ATTEMPTS = "recent_number_of_failed_verification_code_attempts";
+
+  @Transient
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -110,7 +122,7 @@ public class PersistentUserDetails implements MutableUserDetails {
   // EJB3 spec annotations require the use of a java <code>Collection</code>.
   // However, Acegi Security deals with an array. There are internal methods
   // to convert to and from the different data structures.
-  @ManyToMany(targetEntity = PersistentGrantedAuthority.class, fetch = FetchType.LAZY)
+  @ManyToMany(targetEntity = PersistentGrantedAuthority.class, fetch = FetchType.EAGER)
   @JoinTable(name = PersistentUserDetails.GRANTED_AUTHORITY_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = USER_DETAILS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = GRANTED_AUTHORITY_JOIN_COLUMN_NAME, nullable = false))
   private Set<GrantedAuthority> grantedAuthorities = null;
 
@@ -162,6 +174,31 @@ public class PersistentUserDetails implements MutableUserDetails {
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_LANGUAGE, nullable = true)
   private String language = null;
+
+  @Column(name = "googleUserId")
+  @Getter
+  @Setter
+  private String googleUserId;
+
+  @Column(name = PersistentUserDetails.COLUMN_NAME_RESET_PASSWORD_VERIFICATION_CODE_REQUEST_TIME, nullable = true)
+  @Getter
+  @Setter
+  private Date resetPasswordVerificationCodeRequestTime = null;
+
+  @Column(name = PersistentUserDetails.COLUMN_NAME_RESET_PASSWORD_VERIFICATION_CODE, nullable = true)
+  @Getter
+  @Setter
+  private String resetPasswordVerificationCode = null;
+
+  @Column(name = PersistentUserDetails.COLUMN_NAME_RECENT_FAILED_VERIFICATION_ATTEMPT_TIME, nullable = true)
+  @Getter
+  @Setter
+  private Date recentFailedVerificationCodeAttemptTime = null;
+
+  @Column(name = PersistentUserDetails.COLUMN_NAME_RECENT_NUMBER_FAILED_VERIFICATION_ATTEMPTS, nullable = true)
+  @Getter
+  @Setter
+  private Integer numberOfRecentFailedVerificationCodeAttempts = 0;
 
   @Transient
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -296,7 +333,6 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void setFirstname(String firstname) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
@@ -308,7 +344,6 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void setLastname(String lastname) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
@@ -320,7 +355,6 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void setSignupdate(Date signupdate) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
@@ -356,13 +390,11 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void setNumberOfLogins(Integer numberOfLogins) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
   public void setLastLoginTime(Date lastLoginTime) {
     // TODO Auto-generated method stub
-
   }
 
   public String getLanguage() {
@@ -376,6 +408,44 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Override
   public void incrementNumberOfLogins() {
     // TODO Auto-generated method stub
+  }
 
+  public void setResetPasswordVerificationCodeRequestTime(Date date) {
+    this.resetPasswordVerificationCodeRequestTime = date;
+  }
+
+  public void clearResetPasswordVerificationCodeRequestTime() {
+    this.resetPasswordVerificationCodeRequestTime = null;
+  }
+
+  public void setResetPasswordVerificationCode(String verificationCode) {
+    this.resetPasswordVerificationCode = verificationCode;
+  }
+
+  public void clearResetPasswordVerificationCode() {
+    this.resetPasswordVerificationCode = null;
+  }
+
+  public void setRecentFailedVerificationCodeAttemptTime(Date date) {
+    this.recentFailedVerificationCodeAttemptTime = date;
+  }
+
+  public void clearRecentFailedVerificationCodeAttemptTime() {
+    this.recentFailedVerificationCodeAttemptTime = null;
+  }
+
+  public void incrementNumberOfRecentFailedVerificationCodeAttempts() {
+    if (this.numberOfRecentFailedVerificationCodeAttempts == null) {
+      this.numberOfRecentFailedVerificationCodeAttempts = 0;
+    }
+    this.numberOfRecentFailedVerificationCodeAttempts++;
+  }
+
+  public void clearNumberOfRecentFailedVerificationCodeAttempts() {
+    this.numberOfRecentFailedVerificationCodeAttempts = null;
+  }
+
+  public boolean isGoogleUser() {
+    return this.googleUserId != null && !this.googleUserId.isEmpty();
   }
 }

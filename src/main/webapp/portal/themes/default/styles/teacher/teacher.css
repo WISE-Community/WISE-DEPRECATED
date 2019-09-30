@@ -56,6 +56,12 @@
 	vertical-align:text-top;
 	text-align:left;
 }
+[dir=rtl] #teacherMessageTable td	{  
+	text-align:right;
+}		
+[dir=rtl] #teacherQuickLinks td, [dir=rtl] #teacherMessageTable td {
+  text-align:right;
+}
 		
 #teacherMessageTable li	{
 	list-style-type:none;

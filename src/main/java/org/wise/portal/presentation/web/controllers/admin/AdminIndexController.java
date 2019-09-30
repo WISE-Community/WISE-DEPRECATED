@@ -23,18 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -44,15 +32,24 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.admin.DailyAdminJob;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.service.session.SessionService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Controller for Admin index page
@@ -62,23 +59,24 @@ import org.wise.portal.service.portal.PortalService;
 public class AdminIndexController {
 
   private static final String GET_WISE_INFO_URL = "http://wise5.org/getWISEInfo.php";
-
   private static final String WISE_UPDATE_URL = "http://wise5.org";
-
-  // where to get commit history information
-  private static final String WISE_COMMIT_HISTORY_URL = "https://api.github.com/repos/WISE-Community/WISE/commits?page=1&per_page=20";
+  private static final String WISE_COMMIT_HISTORY_URL =
+      "https://api.github.com/repos/WISE-Community/WISE/commits?page=1&per_page=20";
 
   @Autowired
   private PortalService portalService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private DailyAdminJob adminJob;
 
-  @RequestMapping(value = "/admin", method = RequestMethod.GET)
-  protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
+  @Autowired
+  protected SessionService sessionService;
+
+  @GetMapping("/admin")
+  protected ModelAndView showAdminHome(HttpServletRequest request) throws Exception {
     ModelAndView modelAndView = new ModelAndView("admin/index");
 
     String thisWISEVersion;
@@ -90,48 +88,35 @@ public class AdminIndexController {
       e.printStackTrace();
     }
 
-    // add the Portal object to the page
     Integer portalId = 1;
     Portal portal = portalService.getById(portalId);
     modelAndView.addObject("portal", portal);
-
-    // add URL where people can download new versions of WISE
     modelAndView.addObject("updateWISEURL", WISE_UPDATE_URL);
+    modelAndView.addObject("isBatchCreateUserAccountsEnabled",
+        Boolean.valueOf(appProperties.getProperty("isBatchCreateUserAccountsEnabled", "false")));
+    modelAndView.addObject("numCurrentlyLoggedInUsers", sessionService.getNumberSignedInUsers());
 
-    // add if this WISE instance allows batch creation of user accounts
-    modelAndView.addObject("isBatchCreateUserAccountsEnabled", Boolean.valueOf(wiseProperties.getProperty("isBatchCreateUserAccountsEnabled", "false")));
-
-    // add number of curently-logged in users to model
-    HashMap<String, User> allLoggedInUsers =
-      (HashMap<String, User>) request.getSession()
-        .getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-
-    if (allLoggedInUsers != null) {
-      modelAndView.addObject("numCurrentlyLoggedInUsers", allLoggedInUsers.size());
-    } else {
-      modelAndView.addObject("numCurrentlyLoggedInUsers", 0);
-    }
-
-    // add number of users logged in today to model
     Calendar todayZeroHour = Calendar.getInstance();
-    todayZeroHour.set(Calendar.HOUR_OF_DAY, 0);            // set hour to midnight
-    todayZeroHour.set(Calendar.MINUTE, 0);                 // set minute in hour
-    todayZeroHour.set(Calendar.SECOND, 0);                 // set second in minute
-    todayZeroHour.set(Calendar.MILLISECOND, 0);            // set millis in second
+    todayZeroHour.set(Calendar.HOUR_OF_DAY, 0);
+    todayZeroHour.set(Calendar.MINUTE, 0);
+    todayZeroHour.set(Calendar.SECOND, 0);
+    todayZeroHour.set(Calendar.MILLISECOND, 0);
     Date dateMin = todayZeroHour.getTime();
 
-    Date dateMax = new java.util.Date(Calendar.getInstance().getTimeInMillis());
+    Date dateMax = new Date(Calendar.getInstance().getTimeInMillis());
     adminJob.setYesterday(dateMin);
     adminJob.setToday(dateMax);
 
-    List<User> studentsWhoLoggedInToday = adminJob.findUsersWhoLoggedInSinceYesterday("studentUserDetails");
-    List<User> teachersWhoLoggedInToday = adminJob.findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
+    List<User> studentsWhoLoggedInToday =
+        adminJob.findUsersWhoLoggedInSinceYesterday("studentUserDetails");
+    List<User> teachersWhoLoggedInToday =
+        adminJob.findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
     if (studentsWhoLoggedInToday != null && teachersWhoLoggedInToday != null) {
-      modelAndView.addObject("numUsersWhoLoggedInToday", studentsWhoLoggedInToday.size()+teachersWhoLoggedInToday.size());
+      modelAndView.addObject("numUsersWhoLoggedInToday",
+          studentsWhoLoggedInToday.size()+teachersWhoLoggedInToday.size());
     } else {
       modelAndView.addObject("numUsersWhoLoggedInToday", 0);
     }
-
     return modelAndView;
   }
 
@@ -139,13 +124,10 @@ public class AdminIndexController {
    * Gets the latest global WISE version from master location and writes it in the response.
    * If there was an error retrieving the latest version, write the error message in the response.
    */
-  @RequestMapping(value = "/admin/latestWISEVersion", method = RequestMethod.GET)
+  @GetMapping("/admin/latestWISEVersion")
   public void getLatestGlobalWISEVersion(HttpServletResponse response) throws IOException {
     String latestWISEVersion = null;
-
-    // get the WISE instance name
     String wiseInstanceName = "";
-
     try {
       Integer portalId = 1;
       Portal portal = portalService.getById(portalId);
@@ -153,18 +135,18 @@ public class AdminIndexController {
         wiseInstanceName = portal.getPortalName();
       }
     } catch (Exception e) {
-      // do nothing
     }
 
-    if (wiseInstanceName.isEmpty()) {
-      wiseInstanceName = wiseProperties.getProperty("wise.name", "noName");
+    if (wiseInstanceName == null || wiseInstanceName.isEmpty()) {
+      wiseInstanceName = appProperties.getProperty("wise.name", "noName");
     }
 
     String wiseInstanceVersion = ControllerUtil.getWISEVersion();
-    String wiseInfoUrl = GET_WISE_INFO_URL + "?wiseInstanceName=" +  URLEncoder.encode(wiseInstanceName, "UTF-8") + "&wiseInstanceVersion=" + URLEncoder.encode(wiseInstanceVersion, "UTF-8");
+    String wiseInfoUrl = GET_WISE_INFO_URL + "?wiseInstanceName=" +
+        URLEncoder.encode(wiseInstanceName, "UTF-8") + "&wiseInstanceVersion=" +
+        URLEncoder.encode(wiseInstanceVersion, "UTF-8");
     String globalWISEVersionJSONString = retrieveString(wiseInfoUrl);
     try {
-      // now parse global WISE version JSON and add to ModelAndView.
       JSONObject globalWISEVersionJSON = new JSONObject(globalWISEVersionJSONString);
       String globalWISEMajorVersion = globalWISEVersionJSON.getString("major");
       String globalWISEMinorVersion = globalWISEVersionJSON.getString("minor");
@@ -181,12 +163,10 @@ public class AdminIndexController {
    * @param response
    * @throws IOException
    */
-  @RequestMapping(value = "/admin/recentCommitHistory", method = RequestMethod.GET)
+  @GetMapping("/admin/recentCommitHistory")
   public void getRecentCommitHistory(HttpServletResponse response) throws IOException {
-    // now fetch recent commits from GitHub
     String recentCommitHistoryJSONString = retrieveString(WISE_COMMIT_HISTORY_URL);
     try {
-      // now parse commit history json and add to ModelAndView.
       JSONArray recentCommitHistoryJSONArray = new JSONArray(recentCommitHistoryJSONString);
       response.getWriter().print(recentCommitHistoryJSONArray.toString());
     } catch (Exception e) {
@@ -196,28 +176,23 @@ public class AdminIndexController {
   }
 
   /**
-   * GET's the specified url and returns the string
+   * GETs the specified url and returns the string
    * @param url
    * @return
    */
   private String retrieveString(String url) {
     HttpClient client = HttpClientBuilder.create().build();
     HttpGet request = new HttpGet(url);
-
     byte[] responseBody = null;
     String responseString = null;
-
     try {
       HttpResponse response = client.execute(request);
-
-      // read the response body.
       InputStream responseBodyAsStream = response.getEntity().getContent();
       responseBody = IOUtils.toByteArray(responseBodyAsStream);
     } catch (IOException e) {
       System.err.println("Fatal transport error: " + e.getMessage());
       e.printStackTrace();
     } finally {
-      // release the connection.
       request.releaseConnection();
     }
     if (responseBody != null) {

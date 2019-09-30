@@ -146,4 +146,10 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
    * @return
    */
   List<Project> getProjectCopies(Long projectId);
+
+  List<Project> getProjectsWithoutRuns(User user);
+
+  List<Project> getAllSharedProjects();
+
+  long getMaxProjectId();
 }

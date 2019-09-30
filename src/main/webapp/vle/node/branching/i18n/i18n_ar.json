@@ -1,0 +1,22 @@
+{
+    "incomplete_paths": {
+        "description": "Paths that have not been completed by students yet",
+        "value": "مسارات لم تستكملها حتى الآن"
+    },
+    "completed_paths": {
+        "description": "Paths that have been completed by students",
+        "value": "مسارات أكملتها بالفعل (انقر لمعاينة مسار)"
+    },
+    "no_incomplete_paths": {
+        "description": "Paths that have been visited by students",
+        "value": "لقد أكملت جميع المسارات. انتقل للخطوة التالية."
+    },
+    "no_complete_paths": {
+        "description": "Paths that have been visited by students",
+        "value": "لم تستكمل أيًا من المسارات حتى الآن. اختر من بين المسارات أعلاه."
+    },
+    "branch_step_completed_msg": {
+        "description": "Message shown to students telling them that they've completed the branching step",
+        "value": "لقد أكملت هذه الخطوة. يمكنك الاستمرار في العمل أو الانتقال للخطوة التالية."
+    }
+}

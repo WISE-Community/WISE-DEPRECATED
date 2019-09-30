@@ -1,6 +1,6 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
 
 class DiscussionController extends ComponentController {
   constructor($filter,
@@ -21,483 +21,292 @@ class DiscussionController extends ComponentController {
       UtilService,
       $mdMedia) {
     super($filter, $mdDialog, $rootScope, $scope,
-      AnnotationService, ConfigService, NodeService,
-      NotebookService, ProjectService, StudentAssetService,
-      StudentDataService, UtilService);
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
     this.DiscussionService = DiscussionService;
     this.NotificationService = NotificationService;
     this.StudentWebSocketService = StudentWebSocketService;
     this.$mdMedia = $mdMedia;
-
-    // holds the text that the student has typed
     this.studentResponse = '';
-
-    // holds the text for a new response (not a reply)
     this.newResponse = '';
-
-    // holds student attachments like assets
-    this.newAttachments = [];
-
-    // will hold the class responses
     this.classResponses = [];
-
-    // will hold the top level responses
     this.topLevelResponses = [];
-
-    // the text that is being submitted
-    this.submitText = null;
-
-    // map from component state id to response
     this.responsesMap = {};
-
-    // whether rich text is enabled
-    this.isRichTextEnabled = false;
-
-    // whether we have retrieved the classmate responses
     this.retrievedClassmateResponses = false;
-
-    // the latest annotations
-    this.latestAnnotations = null;
-
-
-    if (this.$scope.workgroupId != null) {
-      this.workgroupId = this.$scope.workgroupId;
-    }
-
-    if (this.$scope.nodeId != null) {
-      this.nodeId = this.$scope.nodeId;
-    }
-
-    if (this.mode === 'student') {
+    if (this.isStudentMode()) {
       if (this.ConfigService.isPreview()) {
-        let componentStates = null;
+        let componentStates = [];
         if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // assume there can only be one connected component
-          let connectedComponent = this.componentContent.connectedComponents[0];
-          componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-            connectedComponent.nodeId, connectedComponent.componentId);
+          for (const connectedComponent of this.componentContent.connectedComponents) {
+            componentStates = componentStates.concat(this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                connectedComponent.nodeId, connectedComponent.componentId));
+          }
+          if (this.isConnectedComponentImportWorkMode()) {
+            componentStates = componentStates.concat(this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                this.nodeId, this.componentId));
+          }
         } else {
           componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-            this.nodeId, this.componentId);
+              this.nodeId, this.componentId);
         }
         this.setClassResponses(componentStates);
       } else {
-        // we are in regular student run mode
-
         if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // assume there can only be one connected component
-          let connectedComponent = this.componentContent.connectedComponents[0];
-          this.getClassmateResponses(connectedComponent.nodeId, connectedComponent.componentId);
+          const retrieveWorkFromTheseComponents = [];
+          for (const connectedComponent of this.componentContent.connectedComponents) {
+            retrieveWorkFromTheseComponents.push(
+                {nodeId: connectedComponent.nodeId, componentId: connectedComponent.componentId});
+          }
+          if (this.isConnectedComponentImportWorkMode()) {
+            retrieveWorkFromTheseComponents.push({nodeId: this.nodeId, componentId: this.componentId});
+          }
+          this.getClassmateResponses(retrieveWorkFromTheseComponents);
         } else {
           if (this.isClassmateResponsesGated()) {
-            /*
-             * classmate responses are gated so we will not show them if the student
-             * has not submitted a response
-             */
-
-            // get the component state from the scope
-            var componentState = this.$scope.componentState;
-
+            const componentState = this.$scope.componentState;
             if (componentState != null) {
-              /*
-               * the student has already submitted a response so we will
-               * display the classmate responses
-               */
-              this.getClassmateResponses();
+              if (this.DiscussionService.componentStateHasStudentWork(componentState, this.componentContent)) {
+                this.getClassmateResponses();
+              }
             }
           } else {
-            // classmate responses are not gated so we will show them
             this.getClassmateResponses();
           }
         }
-
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
       }
-
       this.disableComponentIfNecessary();
-    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-
-      /*
-       * get all the posts that this workgroup id is part of. if the student
-       * posted a top level response we will get the top level response and
-       * all the replies. if the student replied to a top level response we
-       * will get the top level response and all the replies.
-       */
-      var componentStates = this.DiscussionService.getPostsAssociatedWithWorkgroupId(this.componentId, this.workgroupId);
-
-      // get the innappropriate flag annotations for the component states
-      var annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-
-      // show the posts
-      this.setClassResponses(componentStates, annotations);
-
-      this.isDisabled = true;
-
-      if (this.mode === 'grading') {
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    } else if (this.isGradingMode() || this.isGradingRevisionMode()) {
+      if (this.DiscussionService.workgroupHasWorkForComponent(this.workgroupId, this.componentId)) {
+        const componentIds = this.getGradingComponentIds();
+        const componentStates = this.DiscussionService.
+            getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, this.workgroupId);
+        const annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+        this.setClassResponses(componentStates, annotations);
       }
-    } else if (this.mode === 'onlyShowWork') {
-      this.isDisabled = true;
-    } else if (this.mode === 'showPreviousWork') {
-      this.isPromptVisible = true;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isDisabled = true;
     }
+    this.initializeScopeSubmitButtonClicked();
+    this.initializeScopeGetComponentState();
+    this.initializeScopeStudentDataChanged();
+    this.registerStudentWorkReceivedListener();
+    this.initializeWatchMdMedia();
+    this.broadcastDoneRenderingComponent();
+  }
 
-    this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
-
-    // set whether studentAttachment is enabled
-    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-    if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+  isConnectedComponentShowWorkMode() {
+    if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      let isShowWorkMode = true;
+      for (const connectedComponent of this.componentContent.connectedComponents) {
+        isShowWorkMode = isShowWorkMode && connectedComponent.type === 'showWork';
+      }
+      return isShowWorkMode;
     }
+    return false;
+  }
 
-    /**
-     * The submit button was clicked
-     * @param response the response object related to the submit button
-     */
-    this.$scope.submitbuttonclicked = function(response) {
+  isConnectedComponentImportWorkMode() {
+    if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      let isImportWorkMode = true;
+      for (const connectedComponent of this.componentContent.connectedComponents) {
+        isImportWorkMode = isImportWorkMode && connectedComponent.type === 'importWork';
+      }
+      return isImportWorkMode;
+    }
+    return false;
+  }
 
-      if (response) {
-        // this submit button was clicked for a reply
+  getGradingComponentIds() {
+    const connectedComponentIds = [this.componentId];
+    if (this.componentContent.connectedComponents != null) {
+      for (const connectedComponent of this.componentContent.connectedComponents) {
+        connectedComponentIds.push(connectedComponent.componentId);
+      }
+    }
+    return connectedComponentIds;
+  }
 
-        if (response.replyText){
-          var componentState = response;
-
-          // get the component state id
-          var componentStateId = componentState.id;
-
-          /*
-           * remember the values in the controller so we can read
-           * from them later when the student data is saved
-           */
-          this.$scope.discussionController.studentResponse = componentState.replyText;
-          this.$scope.discussionController.componentStateIdReplyingTo = componentStateId;
-
-          // clear the reply input
-          response.replyText = null;
-
-          this.$scope.discussionController.isSubmit = true;
-          this.$scope.discussionController.isDirty = true;
-        }
+  initializeScopeSubmitButtonClicked() {
+    this.$scope.submitbuttonclicked = (componentStateReplyingTo) => {
+      if (componentStateReplyingTo && componentStateReplyingTo.replyText) {
+        const componentState = componentStateReplyingTo;
+        const componentStateId = componentState.id;
+        this.$scope.discussionController.studentResponse = componentState.replyText;
+        this.$scope.discussionController.componentStateIdReplyingTo = componentStateId;
+        this.$scope.discussionController.isSubmit = true;
+        this.$scope.discussionController.isDirty = true;
+        componentStateReplyingTo.replyText = null;
       } else {
-        // the submit button was clicked for the new post
-
-        /*
-         * set the response from the top textarea into the
-         * studentResponse field that we will read from later
-         * when the student data is saved
-         */
         this.$scope.discussionController.studentResponse = this.$scope.discussionController.newResponse;
-
         this.$scope.discussionController.isSubmit = true;
       }
-
-      if (this.mode === 'authoring') {
+      if (this.isAuthoringMode()) {
         this.createComponentState('submit');
       }
+      this.$scope.$emit('componentSubmitTriggered',
+          {
+            nodeId: this.$scope.discussionController.nodeId,
+            componentId: this.$scope.discussionController.componentId
+          }
+       );
+    };
+  }
 
-      // tell the parent node that this component wants to submit
-      this.$scope.$emit('componentSubmitTriggered', {nodeId: this.$scope.discussionController.nodeId, componentId: this.$scope.discussionController.componentId});
-    }.bind(this);
-
-    /**
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @return a component state containing the student data
-     */
-    this.$scope.getComponentState = function() {
-      var deferred = this.$q.defer();
-
-      // check if the student work is dirty and the student clicked the submit button
+  initializeScopeGetComponentState() {
+    this.$scope.getComponentState = () => {
+      const deferred = this.$q.defer();
       if (this.$scope.discussionController.isDirty && this.$scope.discussionController.isSubmit) {
-
-        var action = 'submit';
-
-        // create a component state populated with the student data
+        const action = 'submit';
         this.$scope.discussionController.createComponentState(action).then((componentState) => {
-          /*
-           * clear the component values so they aren't accidentally used again
-           * later
-           */
           this.$scope.discussionController.clearComponentValues();
-
-          // set isDirty to false since this student work is about to be saved
           this.$scope.discussionController.isDirty = false;
-
           deferred.resolve(componentState);
         });
       } else {
-        /*
-         * the student does not have any unsaved changes in this component
-         * so we don't need to save a component state for this component.
-         * we will immediately resolve the promise here.
-         */
         deferred.resolve();
       }
-
       return deferred.promise;
-    }.bind(this);
+    };
+  }
 
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on('exitNode', (event, args) => {
-
-      // do nothing
-    });
-
-    this.$scope.studentdatachanged = function() {
+  initializeScopeStudentDataChanged() {
+    this.$scope.studentdatachanged = () => {
       this.$scope.discussionController.studentDataChanged();
     };
-
-    /**
-     * We have recived a web socket message
-     */
-    this.$rootScope.$on('webSocketMessageRecieved', (event, args) => {
-      if (args != null) {
-        var data = args.data;
-
-        var componentState = data.data;
-
-        if (componentState != null) {
-
-          // check that the web socket message is for this step
-          if (componentState.nodeId === this.nodeId) {
-
-            // get the sender of the message
-            var componentStateWorkgroupId = componentState.workgroupId;
-
-            // get the workgroup id of the signed in student
-            var workgroupId = this.ConfigService.getWorkgroupId();
-
-            /*
-             * check if the signed in student sent the message. if the
-             * signed in student sent the message we can ignore it.
-             */
-            if (workgroupId !== componentStateWorkgroupId) {
-
-              if (this.retrievedClassmateResponses) {
-                // display the classmate post
-                this.addClassResponse(componentState);
-              }
-            }
-          }
-        }
-      }
-    });
-
-    var scope = this;
-    var themePath = this.ProjectService.getThemePath();
-
-    // TODO: make toolbar items and plugins customizable by authors?
-    // Rich text editor options
-    this.tinymceOptions = {
-      //onChange: function(e) {
-      //scope.studentDataChanged();
-      //},
-      menubar: false,
-      plugins: 'link autoresize',
-      toolbar: 'superscript subscript',
-      autoresize_bottom_margin: '0',
-      autoresize_min_height: '100',
-      image_advtab: true,
-      content_css: themePath + '/style/tinymce.css',
-      statusbar: false,
-      forced_root_block: false,
-      setup: function (ed) {
-        ed.on('focus', function (e) {
-          $(e.target.editorContainer).addClass('input--focused').parent().addClass('input-wrapper--focused');
-          $('label[for="' + e.target.id + '"]').addClass('input-label--focused');
-        });
-
-        ed.on('blur', function (e) {
-          $(e.target.editorContainer).removeClass('input--focused').parent().removeClass('input-wrapper--focused');
-          $('label[for="' + e.target.id + '"]').removeClass('input-label--focused');
-        });
-      }
-    };
-
-    this.$scope.$watch(function() { return $mdMedia('gt-sm'); }, function(md) {
-      $scope.mdScreen = md;
-    });
-
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   registerStudentWorkSavedToServerListener() {
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-
-      let componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId
-        && this.componentId === componentState.componentId) {
-
-        // check if the classmate responses are gated
+    this.destroyStudentWorkSavedToServerListener =
+        this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+      const componentState = args.studentWork;
+      if (this.isWorkFromThisComponent(componentState)) {
         if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
-          /*
-           * the classmate responses are gated and we haven't retrieved
-           * them yet so we will obtain them now and show them since the student
-           * has just submitted a response. getting the classmate responses will
-           * also get the post the student just saved to the server.
-           */
           this.getClassmateResponses();
         } else {
-          /*
-           * the classmate responses are not gated or have already been retrieved
-           * which means they are already being displayed. we just need to add the
-           * new response in this case.
-           */
-
-          // add the component state to our collection of class responses
           this.addClassResponse(componentState);
         }
-
         this.disableComponentIfNecessary();
-
-        // send the student post to web sockets so all the classmates receive it in real time
-        let messageType = 'studentData';
-        componentState.userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
-
-        this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
-
-        // next, send notifications to students who have posted a response in the same thread as this post
-        let studentData = componentState.studentData;
-        if (studentData != null && this.responsesMap != null) {
-          let componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-          if (componentStateIdReplyingTo != null) {
-            // populate fields of the notification
-            let fromWorkgroupId = componentState.workgroupId;
-            let notificationType = 'DiscussionReply';
-            let nodeId = componentState.nodeId;
-            let componentId = componentState.componentId;
-            // add the user names to the component state so we can display next to the response
-            let userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
-            let userNames = userNamesArray.map( (obj) => {
-              return obj.name;
-            }).join(', ');
-            let notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
-
-            let workgroupsNotifiedSoFar = [];  // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
-            // check if we have the component state that was replied to
-            if (this.responsesMap[componentStateIdReplyingTo] != null) {
-              let originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
-              let toWorkgroupId = originalPostComponentState.workgroupId; // notify the workgroup who posted this reply
-              if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
-                let notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-                this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
-                  let messageType = 'notification';
-                  this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-                });
-                workgroupsNotifiedSoFar.push(toWorkgroupId);  // make sure we don't notify this workgroup again.
-              }
-
-              // also notify repliers to this thread, if any.
-              if (this.responsesMap[componentStateIdReplyingTo].replies != null) {
-                let replies = this.responsesMap[componentStateIdReplyingTo].replies;
-
-                for (let r = 0; r < replies.length; r++) {
-                  let reply = replies[r];
-                  let toWorkgroupId = reply.workgroupId; // notify the workgroup who posted this reply
-                  if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) == -1) {
-                    let notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-                    this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
-                      let messageType = 'notification';
-                      this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-                    });
-                    workgroupsNotifiedSoFar.push(toWorkgroupId);  // make sure we don't notify this workgroup again.
-                  }
-                }
-              }
-            }
-          }
-        }
+        this.sendPostToStudentsInThread(componentState);
       }
-
       this.isSubmit = null;
     });
   }
 
-  /**
-   * Get the classmate responses
-   */
-  getClassmateResponses(nodeId = this.nodeId, componentId = this.componentId) {
-    var runId = this.ConfigService.getRunId();
-    var periodId = this.ConfigService.getPeriodId();
+  sendPostToStudentsInThread(componentState) {
+    const studentData = componentState.studentData;
+    if (studentData != null && this.responsesMap != null) {
+      const componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+      if (componentStateIdReplyingTo != null) {
+        const fromWorkgroupId = componentState.workgroupId;
+        const notificationType = 'DiscussionReply';
+        const nodeId = componentState.nodeId;
+        const componentId = componentState.componentId;
+        const usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(fromWorkgroupId);
+        const usernames = usernamesArray.map((obj) => {
+          return obj.name;
+        }).join(', ');
+        const notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { usernames: usernames });
+        const workgroupsNotifiedSoFar = [];
+        if (this.responsesMap[componentStateIdReplyingTo] != null) {
+          this.sendPostToThreadCreator(componentStateIdReplyingTo, notificationType, nodeId,
+              componentId, fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar);
+          this.sendPostToThreadRepliers(componentStateIdReplyingTo, notificationType, nodeId,
+              componentId, fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar);
+        }
+      }
+    }
+  }
 
-    // make the request for the classmate responses
-    this.DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then((result) => {
+  sendPostToThreadCreator(componentStateIdReplyingTo, notificationType, nodeId, componentId,
+      fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
+    const originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
+    const toWorkgroupId = originalPostComponentState.workgroupId;
+    if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
+      const notification = this.NotificationService.createNewNotification(
+          notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
+      this.NotificationService.saveNotificationToServer(notification);
+      workgroupsNotifiedSoFar.push(toWorkgroupId);
+    }
+  }
 
-      if (result != null) {
-        var componentStates = result.studentWorkList;
+  sendPostToThreadRepliers(componentStateIdReplyingTo, notificationType, nodeId, componentId,
+      fromWorkgroupId, notificationMessage, workgroupsNotifiedSoFar) {
+    if (this.responsesMap[componentStateIdReplyingTo].replies != null) {
+      const replies = this.responsesMap[componentStateIdReplyingTo].replies;
+      for (let r = 0; r < replies.length; r++) {
+        const reply = replies[r];
+        const toWorkgroupId = reply.workgroupId;
+        if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId &&
+            workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1) {
+          const notification = this.NotificationService.createNewNotification(
+              notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
+          this.NotificationService.saveNotificationToServer(notification);
+          workgroupsNotifiedSoFar.push(toWorkgroupId);
+        }
+      }
+    }
+  }
 
-        /*
-         * get the annotations in case there are any that have
-         * inappropriate flags
-         */
-        var annotations = result.annotations;
-
-        // set the classmate responses
-        this.setClassResponses(componentStates, annotations);
+  registerStudentWorkReceivedListener() {
+    this.destroyStudentWorkReceivedListener =
+        this.$rootScope.$on('studentWorkReceived', (event, componentState) => {
+      if ((this.isWorkFromThisComponent(componentState) ||
+          this.isWorkFromConnectedComponent(componentState)) &&
+          this.isWorkFromClassmate(componentState) &&
+          this.retrievedClassmateResponses) {
+        this.addClassResponse(componentState);
       }
     });
-  };
+  }
 
-  /**
-   * Populate the student work into the component
-   * @param componentState the component state to populate into the component
-   */
-  setStudentWork(componentState) {
+  isWorkFromClassmate(componentState) {
+    return componentState.workgroupId !== this.ConfigService.getWorkgroupId();
+  }
 
-    if (componentState != null) {
-      // populate the text the student previously typed
-      var studentData = componentState.studentData;
+  isWorkFromThisComponent(componentState) {
+    return this.isForThisComponent(componentState);
+  }
+
+  isWorkFromConnectedComponent(componentState) {
+    if (this.componentContent.connectedComponents != null) {
+      for (const connectedComponent of this.componentContent.connectedComponents) {
+        if (connectedComponent.nodeId === componentState.nodeId &&
+          connectedComponent.componentId === componentState.componentId) {
+          return true;
+        }
+      }
     }
-  };
+    return false;
+  }
 
-  /**
-   * Called when the student clicks the submit button
-   */
+  initializeWatchMdMedia() {
+    this.$scope.$watch(() => { return this.$mdMedia('gt-sm'); }, (md) => {
+      this.$scope.mdScreen = md;
+    });
+  }
+
+  getClassmateResponses(components = [{nodeId: this.nodeId, componentId: this.componentId}]) {
+    const runId = this.ConfigService.getRunId();
+    const periodId = this.ConfigService.getPeriodId();
+    this.DiscussionService.getClassmateResponses(runId, periodId, components).then((result) => {
+      this.setClassResponses(result.studentWorkList, result.annotations);
+    });
+  }
+
   submitButtonClicked() {
     this.isSubmit = true;
     this.disableComponentIfNecessary();
     this.$scope.submitbuttonclicked();
-  };
+  }
 
   studentDataChanged() {
-    /*
-     * set the dirty flag so we will know we need to save the
-     * student work later
-     */
     this.isDirty = true;
-
-    /*
-     * the student work in this component has changed so we will tell
-     * the parent node that the student data will need to be saved.
-     * this will also notify connected parts that this component's student
-     * data has changed.
-     */
-    var action = 'change';
-
-    // create a component state populated with the student data
+    const action = 'change';
     this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+      this.$scope.$emit('componentStudentDataChanged',
+          {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
     });
-  };
+  }
 
   /**
    * Create a new component state populated with the student data
@@ -506,466 +315,224 @@ class DiscussionController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-
-    // create a new component state
-    var componentState = this.NodeService.createNewComponentState();
-
-    if (componentState != null) {
-      var studentData = {};
-
-      // set the response into the component state
-      studentData.response = this.studentResponse;
-
-      studentData.attachments = this.newAttachments;
-
-      if (this.componentStateIdReplyingTo != null) {
-        // if this step is replying, set the component state id replying to
-        studentData.componentStateIdReplyingTo = this.componentStateIdReplyingTo;
-      }
-
-      componentState.studentData = studentData;
-
-      // set the component type
-      componentState.componentType = 'Discussion';
-
-      // set the node id
-      componentState.nodeId = this.nodeId;
-
-      // set the component id
-      componentState.componentId = this.componentId;
-
-      if ((this.ConfigService.isPreview() && !this.componentStateIdReplyingTo) || this.mode === 'authoring') {
-        // create a dummy component state id if we're in preview mode and posting a new response
-        componentState.id = this.UtilService.generateKey();
-      }
-
-      if (this.isSubmit) {
-        // the student submitted this work
-        componentState.studentData.isSubmit = this.isSubmit;
-
-        /*
-         * reset the isSubmit value so that the next component state
-         * doesn't maintain the same value
-         */
-        this.isSubmit = false;
-
-        if (this.mode === 'authoring') {
-          if (this.StudentDataService.studentData == null) {
-            /*
-             * initialize the student data since this usually doesn't
-             * occur in the authoring mode
-             */
-            this.StudentDataService.studentData = {};
-            this.StudentDataService.studentData.componentStates = [];
-          }
-
-          // add the component state to the StudentDataService studentData
-          this.StudentDataService.studentData.componentStates.push(componentState);
-
-          // get the component states for this component
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          // set the component states into the component
-          this.setClassResponses(componentStates);
-
-          /*
-           * clear the input where the user has entered the text they
-           * are posting
-           */
-          this.clearComponentValues();
-          this.isDirty = false;
+    const componentState = this.NodeService.createNewComponentState();
+    const studentData = {
+      response: this.studentResponse,
+      attachments: this.attachments,
+    };
+    if (this.componentStateIdReplyingTo != null) {
+      studentData.componentStateIdReplyingTo = this.componentStateIdReplyingTo;
+    }
+    componentState.studentData = studentData;
+    componentState.componentType = 'Discussion';
+    componentState.nodeId = this.nodeId;
+    componentState.componentId = this.componentId;
+    if ((this.ConfigService.isPreview() && !this.componentStateIdReplyingTo) || this.mode === 'authoring') {
+      componentState.id = this.UtilService.generateKey();
+    }
+    if (this.isSubmit) {
+      componentState.studentData.isSubmit = this.isSubmit;
+      this.isSubmit = false;
+      if (this.mode === 'authoring') {
+        if (this.StudentDataService.studentData == null) {
+          this.StudentDataService.studentData = {};
+          this.StudentDataService.studentData.componentStates = [];
         }
+        this.StudentDataService.studentData.componentStates.push(componentState);
+        const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+        this.setClassResponses(componentStates);
+        this.clearComponentValues();
+        this.isDirty = false;
       }
     }
-
-    var deferred = this.$q.defer();
-
-    /*
-     * perform any additional processing that is required before returning
-     * the component state
-     */
+    const deferred = this.$q.defer();
     this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-
     return deferred.promise;
-  };
+  }
 
-  /**
-   * Clear the component values so they aren't accidentally used again
-   */
   clearComponentValues() {
-
-    // clear the student response
     this.studentResponse = '';
-
-    // clear the new response input
     this.newResponse = '';
-
-    // clear new attachments input
-    this.newAttachments = [];
-
-    // clear the component state id replying to
+    this.attachments = [];
     this.componentStateIdReplyingTo = null;
-  };
+  }
 
   disableComponentIfNecessary() {
     super.disableComponentIfNecessary();
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
       for (let connectedComponent of this.componentContent.connectedComponents) {
-        if (connectedComponent.type == 'showWork') {
+        if (connectedComponent.type === 'showWork') {
           this.isDisabled = true;
         }
       }
     }
-  };
+  }
 
-  /**
-   * Check whether we need to show the save button
-   * @return whether to show the save button
-   */
   showSaveButton() {
-    var show = false;
+    return this.componentContent.showSaveButton;
+  }
 
-    if (this.componentContent != null) {
-
-      // check the showSaveButton field in the component content
-      if (this.componentContent.showSaveButton) {
-        show = true;
-      }
-    }
-
-    return show;
-  };
-
-  /**
-   * Check whether we need to show the submit button
-   * @return whether to show the submit button
-   */
   showSubmitButton() {
-    var show = false;
+    return this.componentContent.showSubmitButton;
+  }
 
-    if (this.componentContent != null) {
-
-      // check the showSubmitButton field in the component content
-      if (this.componentContent.showSubmitButton) {
-        show = true;
-      }
-    }
-
-    return show;
-  };
-
-  /**
-   * Check whether we need to gate the classmate responses
-   * @return whether to gate the classmate responses
-   */
   isClassmateResponsesGated() {
-    var result = false;
+    return this.componentContent.gateClassmateResponses;
+  }
 
-    if (this.componentContent != null) {
-
-      // check the gateClassmateResponses field in the component content
-      if (this.componentContent.gateClassmateResponses) {
-        result = true;
-      }
-    }
-
-    return result;
-  };
-
-  removeAttachment(attachment) {
-    if (this.newAttachments.indexOf(attachment) != -1) {
-      this.newAttachments.splice(this.newAttachments.indexOf(attachment), 1);
-      this.studentDataChanged();
-    }
-  };
-
-  /**
-   * Attach student asset to this Component's attachments
-   * @param studentAsset
-   */
-  attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
-        if (copiedAsset != null) {
-          var attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.newAttachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
-  };
-
-  /**
-   * Set the class responses into the controller
-   * @param componentStates the class component states
-   * @param annotations the inappropriate flag annotations
-   */
   setClassResponses(componentStates, annotations) {
-
     this.classResponses = [];
-
-    if (componentStates != null) {
-
-      // loop through all the component states
-      for (var c = 0; c < componentStates.length; c++) {
-        var componentState = componentStates[c];
-
-        if (componentState != null) {
-
-          // get the component state id
-          var id = componentState.id;
-
-          // get the workgroup id
-          var workgroupId = componentState.workgroupId;
-
-          // get the student data
-          var studentData = componentState.studentData;
-
-          if (studentData != null) {
-
-            if (componentState.studentData.isSubmit) {
-
-              // get the latest inappropriate flag for this compnent state
-              var latestInappropriateFlagAnnotation = this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
-
-              // add the user names to the component state so we can display next to the response
-              let userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-              componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
-
-              // add a replies array to the component state that we will fill with component state replies later
-              componentState.replies = [];
-
-              if (this.mode == 'grading' || this.mode == 'gradingRevision') {
-
-                if (latestInappropriateFlagAnnotation != null) {
-                  /*
-                   * Set the inappropriate flag annotation into
-                   * the component state. This is used for the
-                   * grading tool to determine whether to show
-                   * the 'Delete' button or the 'Undo Delete'
-                   * button.
-                   */
-                  componentState.latestInappropriateFlagAnnotation = latestInappropriateFlagAnnotation;
-                }
-
-                // add the component state to our array
-                this.classResponses.push(componentState);
-              } else if (this.mode == 'student') {
-
-                if (latestInappropriateFlagAnnotation != null &&
-                  latestInappropriateFlagAnnotation.data != null &&
-                  latestInappropriateFlagAnnotation.data.action == 'Delete') {
-
-                  // do not show this post because the teacher has deleted it
-                } else {
-                  // add the component state to our array
-                  this.classResponses.push(componentState);
-                }
-              }
-            }
-          }
+    componentStates = componentStates.sort(this.sortByServerSaveTime);
+    for (let componentState of componentStates) {
+      if (componentState.studentData.isSubmit) {
+        const workgroupId = componentState.workgroupId;
+        const latestInappropriateFlagAnnotation =
+            this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
+        const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
+        if (usernames.length === 0) {
+          componentState.usernames = this.getUserIdsDisplay(workgroupId);
+        } else {
+          componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
         }
-      }
-    }
-
-    // process the class responses
-    this.processResponses(this.classResponses);
-
-    this.retrievedClassmateResponses = true;
-  };
-
-  /**
-   * Get the latest inappropriate flag annotation for a student work id
-   * @param annotations an array of annotations
-   * @param studentWorkId a student work id
-   * @return the latest inappropriate flag annotation for the given student
-   * work id
-   */
-  getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
-
-    if (annotations != null) {
-
-      // loop through all the annotations from newest to oldest
-      for (var a = annotations.length - 1; a >= 0; a--) {
-        var annotation = annotations[a];
-
-        if (annotation != null) {
-          if (studentWorkId == annotation.studentWorkId && annotation.type == 'inappropriateFlag') {
+        componentState.replies = [];
+        if (this.isGradingMode() || this.isGradingRevisionMode()) {
+          if (latestInappropriateFlagAnnotation != null) {
             /*
-             * we have found an inappropriate flag annotation for
-             * the student work id we are looking for
+             * Set the inappropriate flag annotation into the component state. This is used for the
+             * grading tool to determine whether to show the 'Delete' button or the 'Undo Delete'
+             * button.
              */
-            return annotation;
+            componentState.latestInappropriateFlagAnnotation = latestInappropriateFlagAnnotation;
+          }
+          this.classResponses.push(componentState);
+        } else if (this.isStudentMode()) {
+          if (latestInappropriateFlagAnnotation != null &&
+              latestInappropriateFlagAnnotation.data != null &&
+              latestInappropriateFlagAnnotation.data.action === 'Delete') {
+            // do not show this post because the teacher has deleted it
+          } else {
+            this.classResponses.push(componentState);
           }
         }
       }
     }
+    this.processResponses(this.classResponses);
+    this.retrievedClassmateResponses = true;
+  }
 
+  sortByServerSaveTime(componentState1, componentState2) {
+    if (componentState1.serverSaveTime < componentState2.serverSaveTime) {
+      return -1;
+    } else if (componentState1.serverSaveTime > componentState2.serverSaveTime) {
+      return 1;
+    }
+    return 0;
+  }
+
+  getUserIdsDisplay(workgroupId) {
+    const userIds = this.ConfigService.getUserIdsByWorkgroupId(workgroupId);
+    const userIdsDisplay = [];
+    for (let userId of userIds) {
+      userIdsDisplay.push(`Student ${userId}`);
+    }
+    return userIdsDisplay.join(', ');
+  }
+
+  getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
+    if (annotations != null) {
+      for (const annotation of annotations) {
+        if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
+          return annotation;
+        }
+      }
+    }
     return null;
   }
 
-  /**
-   * Process the class responses. This will put responses into the
-   * replies arrays.
-   * @param classResponses an array of component states
-   */
   processResponses(componentStates) {
-
-    if (componentStates) {
-      var componentState;
-
-      // loop through all the component states
-      for (var i = 0; i < componentStates.length; i++) {
-        componentState = componentStates[i];
-
-        if (componentState) {
-          var componentStateId = componentState.id;
-
-          // set the component state into the map
-          this.responsesMap[componentStateId] = componentState;
-        }
-      }
-
-      // loop through all the component states
-      for (var c = 0; c < componentStates.length; c++) {
-        componentState = componentStates[c];
-
-        if (componentState && componentState.studentData) {
-
-          // get the student data
-          var studentData = componentState.studentData;
-
-          // get the component state id replying to if any
-          var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-
-          if (componentStateIdReplyingTo) {
-
-            if (this.responsesMap[componentStateIdReplyingTo] &&
-              this.responsesMap[componentStateIdReplyingTo].replies) {
-              /*
-               * add this component state to the replies array of the
-               * component state that was replied to
-               */
-              this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
-            }
+    for (const componentState of componentStates) {
+      this.responsesMap[componentState.id] = componentState;
+    }
+    for (const componentState of componentStates) {
+      if (componentState && componentState.studentData) {
+        const studentData = componentState.studentData;
+        const componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+        if (componentStateIdReplyingTo) {
+          if (this.responsesMap[componentStateIdReplyingTo] &&
+            this.responsesMap[componentStateIdReplyingTo].replies) {
+            this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
           }
         }
       }
+    }
+    this.topLevelResponses = this.getLevel1Responses();
+    if (this.isGradingMode() || this.isGradingRevisionMode()) {
+      this.topLevelResponses =
+          this.topLevelResponses.filter(this.threadHasPostFromThisComponentAndWorkgroupId());
+    }
+  }
 
+  threadHasPostFromThisComponentAndWorkgroupId() {
+    const thisComponentId = this.componentId;
+    const thisWorkgroupId = this.workgroupId;
+    return (componentState) => {
+      if (componentState.componentId === thisComponentId &&
+          componentState.workgroupId === thisWorkgroupId) {
+        return true;
+      }
+      for (const replyComponentState of componentState.replies) {
+        if (replyComponentState.componentId === thisComponentId &&
+            replyComponentState.workgroupId === thisWorkgroupId) {
+          return true;
+        }
+      }
+      return false;
+    };
+  }
+
+  addClassResponse(componentState) {
+    if (componentState.studentData.isSubmit) {
+      const workgroupId = componentState.workgroupId;
+      const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
+      if (usernames.length > 0) {
+        componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
+      } else if (componentState.usernamesArray != null) {
+        componentState.usernames = componentState.usernamesArray
+            .map(function(obj) { return obj.name; }).join(', ');
+      }
+      componentState.replies = [];
+      this.classResponses.push(componentState);
+      this.responsesMap[componentState.id] = componentState;
+      const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
+      if (componentStateIdReplyingTo != null) {
+        if (this.responsesMap[componentStateIdReplyingTo] != null &&
+            this.responsesMap[componentStateIdReplyingTo].replies != null) {
+          this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
+        }
+      }
       this.topLevelResponses = this.getLevel1Responses();
     }
-  };
+  }
 
-  /**
-   * Add a class response to our model
-   * @param componentState the component state to add to our model
-   */
-  addClassResponse(componentState) {
-
-    if (componentState != null) {
-
-      // get the student data
-      var studentData = componentState.studentData;
-
-      if (studentData != null) {
-
-        if (componentState.studentData.isSubmit) {
-          // this component state is a submit, so we will add it
-
-          // get the workgroup id
-          var workgroupId = componentState.workgroupId;
-
-          // add the user names to the component state so we can display next to the response
-          let userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-          if (userNames.length > 0) {
-            componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
-          } else if (componentState.userNamesArray != null) {
-            componentState.userNames = componentState.userNamesArray
-                .map(function(obj) { return obj.name; }).join(', ');
-          }
-
-          // add a replies array to the component state that we will fill with component state replies later
-          componentState.replies = [];
-
-          // add the component state to our array of class responses
-          this.classResponses.push(componentState);
-
-          // get the component state id
-          var componentStateId = componentState.id;
-
-          // add the response to our map
-          this.responsesMap[componentStateId] = componentState;
-
-          // get the component state id replying to if any
-          var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-
-          if (componentStateIdReplyingTo != null) {
-
-            // check if we have the component state that was replied to
-            if (this.responsesMap[componentStateIdReplyingTo] != null &&
-              this.responsesMap[componentStateIdReplyingTo].replies != null) {
-              /*
-               * add this response to the replies array of the response
-               * that was replied to
-               */
-              this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
-            }
-          }
-
-          this.topLevelResponses = this.getLevel1Responses();
-        }
-      }
-    }
-  };
-
-  /**
-   * Get the class responses
-   */
   getClassResponses() {
     return this.classResponses;
-  };
+  }
 
   /**
-   * Get the level 1 responses which are posts that are not a
-   * reply to another response.
-   * @return an array of responses that are not a reply to another
-   * response
+   * Get the level 1 responses which are posts that are not a reply to
+   * another response.
+   * @return an array of responses that are not a reply to another response
    */
   getLevel1Responses() {
-    var level1Responses = [];
-    var classResponses = this.classResponses;
-
-    if (classResponses != null) {
-
-      // loop through all the class responses
-      for (var r = 0; r < classResponses.length; r++) {
-        var tempClassResponse = classResponses[r];
-
-        if (tempClassResponse != null && tempClassResponse.studentData) {
-
-          // get the student data
-          var studentData = tempClassResponse.studentData;
-
-          // get the component state id replying to if any
-          var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-
-          if (componentStateIdReplyingTo == null) {
-            /*
-             * this response was not a reply to another post so it is a
-             * level 1 response
-             */
-            level1Responses.push(tempClassResponse);
-          }
-        }
+    const level1Responses = [];
+    for (const classResponse of this.classResponses) {
+      const componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
+      if (componentStateIdReplyingTo == null) {
+        level1Responses.push(classResponse);
       }
     }
-
     return level1Responses;
-  };
+  }
 
   /**
    * The teacher has clicked the delete button to delete a post. We won't
@@ -976,50 +543,26 @@ class DiscussionController extends ComponentController {
    * delete.
    */
   deletebuttonclicked(componentState) {
-
-    if (componentState != null) {
-
-      var toWorkgroupId = componentState.workgroupId;
-
-      var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
-
-      var periodId = null;
-
-      if (userInfo != null) {
-        periodId = userInfo.periodId;
-      }
-
-      var teacherUserInfo = this.ConfigService.getMyUserInfo();
-
-      var fromWorkgroupId = null;
-
-      if (teacherUserInfo != null) {
-        fromWorkgroupId = teacherUserInfo.workgroupId;
-      }
-
-      var runId = this.ConfigService.getRunId();
-      var nodeId = this.nodeId;
-      var componentId = this.componentId;
-      var studentWorkId = componentState.id;
-      var data = {};
-      data.action = 'Delete';
-
-      // create the inappropriate flag 'Delete' annotation
-      var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
-
-      // save the annotation to the server
-      this.AnnotationService.saveAnnotation(annotation).then(() => {
-
-        // get the component states made by the student
-        var componentStates = this.DiscussionService.getPostsAssociatedWithWorkgroupId(this.componentId, this.workgroupId);
-
-        // get the annotations for the component states
-        var annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-
-        // refresh the teacher view of the posts
-        this.setClassResponses(componentStates, annotations);
-      });
-    }
+    const toWorkgroupId = componentState.workgroupId;
+    const userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
+    const periodId = userInfo.periodId;
+    const teacherUserInfo = this.ConfigService.getMyUserInfo();
+    const fromWorkgroupId = teacherUserInfo.workgroupId;
+    const runId = this.ConfigService.getRunId();
+    const nodeId = this.nodeId;
+    const componentId = this.componentId;
+    const studentWorkId = componentState.id;
+    const data = {
+      action: 'Delete'
+    };
+    const annotation = this.AnnotationService.createInappropriateFlagAnnotation(
+        runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
+    this.AnnotationService.saveAnnotation(annotation).then(() => {
+      const componentStates = this.DiscussionService.getPostsAssociatedWithWorkgroupIds(
+          this.getGradingComponentIds(), this.workgroupId);
+      const annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+      this.setClassResponses(componentStates, annotations);
+    });
   }
 
   /**
@@ -1031,50 +574,26 @@ class DiscussionController extends ComponentController {
    * show again.
    */
   undodeletebuttonclicked(componentState) {
-
-    if (componentState != null) {
-
-      var toWorkgroupId = componentState.workgroupId;
-
-      var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
-
-      var periodId = null;
-
-      if (userInfo != null) {
-        periodId = userInfo.periodId;
-      }
-
-      var teacherUserInfo = this.ConfigService.getMyUserInfo();
-
-      var fromWorkgroupId = null;
-
-      if (teacherUserInfo != null) {
-        fromWorkgroupId = teacherUserInfo.workgroupId;
-      }
-
-      var runId = this.ConfigService.getRunId();
-      var nodeId = this.nodeId;
-      var componentId = this.componentId;
-      var studentWorkId = componentState.id;
-      var data = {};
-      data.action = 'Undo Delete';
-
-      // create the inappropriate flag annotation
-      var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
-
-      // save the annotation to the server
-      this.AnnotationService.saveAnnotation(annotation).then(() => {
-
-        // get the component states made by the student
-        var componentStates = this.DiscussionService.getPostsAssociatedWithWorkgroupId(this.componentId, this.workgroupId);
-
-        // get the annotations for the component states
-        var annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
-
-        // refresh the teacher view of the posts
-        this.setClassResponses(componentStates, annotations);
-      });
-    }
+    const toWorkgroupId = componentState.workgroupId;
+    const userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
+    const periodId = userInfo.periodId;
+    const teacherUserInfo = this.ConfigService.getMyUserInfo();
+    const fromWorkgroupId = teacherUserInfo.workgroupId;
+    const runId = this.ConfigService.getRunId();
+    const nodeId = this.nodeId;
+    const componentId = this.componentId;
+    const studentWorkId = componentState.id;
+    const data = {
+      action: 'Undo Delete'
+    };
+    const annotation = this.AnnotationService.createInappropriateFlagAnnotation(
+        runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
+    this.AnnotationService.saveAnnotation(annotation).then(() => {
+      const componentStates = this.DiscussionService.getPostsAssociatedWithWorkgroupIds(
+          this.getGradingComponentIds(), this.workgroupId);
+      const annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+      this.setClassResponses(componentStates, annotations);
+    });
   }
 
   /**
@@ -1084,80 +603,23 @@ class DiscussionController extends ComponentController {
    * with the component states
    */
   getInappropriateFlagAnnotationsByComponentStates(componentStates) {
-    var annotations = [];
-
+    const annotations = [];
     if (componentStates != null) {
-
-      // loop through all the component states
-      for (var c = 0; c < componentStates.length; c++) {
-
-        var componentState = componentStates[c];
-
-        if (componentState != null) {
-
-          /*
-           * get the latest inappropriate flag annotation for the
-           * component state
-           */
-          var latestInappropriateFlagAnnotation = this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(componentState.id, 'inappropriateFlag');
-
-          if (latestInappropriateFlagAnnotation != null) {
-            annotations.push(latestInappropriateFlagAnnotation);
-          }
+      for (let componentState of componentStates) {
+        const latestInappropriateFlagAnnotation =
+            this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(
+                componentState.id, 'inappropriateFlag');
+        if (latestInappropriateFlagAnnotation != null) {
+          annotations.push(latestInappropriateFlagAnnotation);
         }
       }
     }
-
     return annotations;
   }
 
-  /**
-   * Create a component state with the merged student responses
-   * @param componentStates an array of component states
-   * @return a component state with the merged student responses
-   */
-  createMergedComponentState(componentStates) {
-
-    // create a new component state
-    let mergedComponentState = this.NodeService.createNewComponentState();
-
-    if (componentStates != null) {
-
-      let mergedResponse = '';
-
-      // loop through all the component state
-      for (let c = 0; c < componentStates.length; c++) {
-        let componentState = componentStates[c];
-
-        if (componentState != null) {
-          let studentData = componentState.studentData;
-
-          if (studentData != null) {
-
-            // get the student response
-            let response = studentData.response;
-
-            if (response != null && response != '') {
-              if (mergedResponse != '') {
-                // add a new line between the responses
-                mergedResponse += '\n';
-              }
-
-              // append the response
-              mergedResponse += response;
-            }
-          }
-        }
-      }
-
-      if (mergedResponse != null && mergedResponse != '') {
-        // set the merged response into the merged component state
-        mergedComponentState.studentData = {};
-        mergedComponentState.studentData.response = mergedResponse;
-      }
-    }
-
-    return mergedComponentState;
+  cleanupBeforeExiting() {
+    this.destroyStudentWorkSavedToServerListener();
+    this.destroyStudentWorkReceivedListener();
   }
 }
 

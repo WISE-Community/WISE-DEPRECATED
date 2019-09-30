@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -35,9 +35,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
@@ -45,14 +46,14 @@ import org.wise.portal.service.mail.MailService;
 import org.wise.portal.service.user.UserService;
 
 @Controller
-@RequestMapping("/forgotaccount/resetpassword.html")
+@RequestMapping("/legacy/forgotaccount/resetpassword.html")
 public class ResetPasswordController {
 
   @Autowired
   protected UserService userService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   protected MailService mailService;
@@ -60,7 +61,6 @@ public class ResetPasswordController {
   @Autowired
   private MessageSource messageSource;
 
-  //the path to this form view
   protected String formView = "/forgotaccount/resetpassword";
 
   /**
@@ -74,12 +74,11 @@ public class ResetPasswordController {
    * @param request the http request
    * @return the path of the view to display
    */
-  @RequestMapping(method=RequestMethod.GET)
-  public String initializeForm(@ModelAttribute("passwordReminderParameters") PasswordReminderParameters passwordReminderParameters, BindingResult bindingResult, ModelMap modelMap, HttpServletRequest request) throws Exception {
-    //get the reset password key
+  @GetMapping
+  public String initializeForm(
+      @ModelAttribute("passwordReminderParameters") PasswordReminderParameters passwordReminderParameters,
+      BindingResult bindingResult, ModelMap modelMap, HttpServletRequest request) {
     String resetPasswordKey = request.getParameter("k");
-
-    //boolean values that will be used in the jsp to determine what to display
     boolean displayForgotPasswordSelectAccountTypeLink = false;
     boolean displayLoginLink = false;
     boolean passwordResetSuccess = false;
@@ -90,26 +89,20 @@ public class ResetPasswordController {
      * password change form successfully and we call showForm()
      * again.
      */
-    if(request.getAttribute("passwordResetSuccess") != null) {
+    if (request.getAttribute("passwordResetSuccess") != null) {
       passwordResetSuccess = (Boolean) request.getAttribute("passwordResetSuccess");
     }
 
-    if(passwordResetSuccess) {
-      //we want to display the success page and display a link to login
+    if (passwordResetSuccess) {
       displayLoginLink = true;
     } else {
-      //make sure we have a reset password key
-      if(resetPasswordKey != null) {
-        //get the user associated with this reset password key
+      if (resetPasswordKey != null) {
         User user = userService.retrieveByResetPasswordKey(resetPasswordKey);
-
-        if(user != null) {
-          //get the time the reset password email was sent
+        if (user != null) {
           MutableUserDetails userDetails = user.getUserDetails();
           Date resetPasswordRequestTime = userDetails.getResetPasswordRequestTime();
           long resetPasswordRequestTimeMs = resetPasswordRequestTime.getTime();
 
-          //get the current time
           Date now = new Date();
           long nowMs = now.getTime();
 
@@ -118,35 +111,21 @@ public class ResetPasswordController {
            * more than 30 minutes ago
            * 1000 * 60 * 30 = 1800000
            */
-          if(nowMs - resetPasswordRequestTimeMs > 1800000) {
-            //reset password link has expired
+          if (nowMs - resetPasswordRequestTimeMs > 1800000) {
             bindingResult.reject("error.password-reset-timeout");
-
-            //variable to tell the jsp page to display the link to the forgot password page
             displayForgotPasswordSelectAccountTypeLink = true;
           }
         } else {
-          /*
-           * we could not find a user with the given reset password
-           * key so this password reset url is invalid
-           */
           bindingResult.reject("error.invalid-password-reset-url");
-
-          //variable to tell the jsp page to display the link to the forgot password page
           displayForgotPasswordSelectAccountTypeLink = true;
         }
       } else {
-        //there is no reset password key provided as a GET param so this password reset url is invalid
         bindingResult.reject("error.invalid-password-reset-url");
-
-        //variable to tell the jsp page to display the link to the forgot password page
         displayForgotPasswordSelectAccountTypeLink = true;
       }
     }
-
     modelMap.addAttribute("displayForgotPasswordSelectAccountTypeLink", displayForgotPasswordSelectAccountTypeLink);
     modelMap.addAttribute("displayLoginLink", displayLoginLink);
-
     return formView;
   }
 
@@ -154,86 +133,48 @@ public class ResetPasswordController {
    * Called when the user chooses a new password and submits the form.
    * @param passwordReminderParameters the object that contains values from the form
    * @param bindingResult the object used for validation in which errors will be stored
-   * @param modelMap the model object that contains values for the page to use when rendering the view
+   * @param model the model object that contains values for the page to use when rendering the view
    * @param request the http request
    * @return the path of the view to display
    */
-  @RequestMapping(method=RequestMethod.POST)
-  protected String onSubmit(@ModelAttribute("passwordReminderParameters") PasswordReminderParameters passwordReminderParameters, BindingResult bindingResult, Model model, HttpServletRequest request) throws Exception {
+  @PostMapping
+  protected String onSubmit(
+      @ModelAttribute("passwordReminderParameters") PasswordReminderParameters passwordReminderParameters,
+      BindingResult bindingResult, Model model, HttpServletRequest request) throws Exception {
     String view = formView;
-
-    //get the password values the user entered
     String newPassword = passwordReminderParameters.getNewPassword();
     String verifyPassword = passwordReminderParameters.getVerifyPassword();
 
     if (!verifyPassword.equals(newPassword)) {
-      //passwords are not the same
       bindingResult.reject("error.verify-newpassword");
-
-      //do not display the "Forgot Username or Password?" link
       model.addAttribute("displayForgotPasswordSelectAccountTypeLink", false);
-
-      //do not display the sign in button
       model.addAttribute("displayLoginLink", false);
     } else if(verifyPassword.equals("")) {
-      //password is empty string
       bindingResult.reject("error.verify-password-empty");
-
-      //do not display the "Forgot Username or Password?" link
       model.addAttribute("displayForgotPasswordSelectAccountTypeLink", false);
-
-      //do not display the sign in button
       model.addAttribute("displayLoginLink", false);
     } else {
-      //get the reset password key
       String resetPasswordKey = request.getParameter("k");
-
-      //get the user associated with the reset password key
       User user = userService.retrieveByResetPasswordKey(resetPasswordKey);
-
-      //update the user's password
       userService.updateUserPassword(user, verifyPassword);
-
-      //set the reset password key and time so the key can no longer be used
       user.getUserDetails().setResetPasswordKey(null);
       user.getUserDetails().setResetPasswordRequestTime(null);
       userService.updateUser(user);
-
-      //get the user name
       String username = user.getUserDetails().getUsername();
-
-      //get the portal name
-      String portalName = wiseProperties.getProperty("wise.name");
-
-      //get the user's email
+      String portalName = appProperties.getProperty("wise.name");
       String userEmail = user.getUserDetails().getEmailAddress();
       String[] recipients = new String[]{userEmail};
-
-      // get user Locale
       Locale userLocale = request.getLocale();
-
-      // subject looks like this: "Notification from WISE4@Berkeley: Password Changed"
       String defaultSubject = messageSource.getMessage("forgotaccount.teacher.index.passwordChangedEmailSubject", new Object[]{portalName}, Locale.US);
       String subject = messageSource.getMessage("forgotaccount.teacher.index.passwordChangedEmailSubject", new Object[]{portalName}, defaultSubject, userLocale);
       String defaultBody = messageSource.getMessage("forgotaccount.teacher.index.passwordChangedEmailBody", new Object[]{username,portalName}, Locale.US);
       String body = messageSource.getMessage("forgotaccount.teacher.index.passwordChangedEmailBody", new Object[] {username,portalName}, defaultBody, userLocale);
-
-      // send password in the email here
       mailService.postMail(recipients, subject, body, userEmail);
-
-      //passwords are the same so we will change their password
       bindingResult.reject("changePassword_success");
-
-      //tell the jsp to display the success message
       request.setAttribute("passwordResetSuccess", true);
-
-      //do not display the "Forgot Username or Password?" link
       model.addAttribute("displayForgotPasswordSelectAccountTypeLink", false);
-
-      //display the sign in button
       model.addAttribute("displayLoginLink", true);
     }
-
     return view;
   }
 }

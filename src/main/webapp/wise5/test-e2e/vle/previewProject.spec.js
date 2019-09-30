@@ -147,7 +147,7 @@ describe('WISE5 Student VLE Preview', function () {
     common.shouldBeDisplayed(vle.accountMenu);
 
     // account menu should have the preview user account icon and the exit and sign out buttons
-    _protractor.element.all(by.repeater('userName in themeCtrl.workgroupUserNames')).then(function (workgroupNames) {
+    _protractor.element.all(by.repeater('username in themeCtrl.workgroupUsernames')).then(function (workgroupNames) {
       expect(workgroupNames[0].getText()).toBe('Preview Team');
     });
 

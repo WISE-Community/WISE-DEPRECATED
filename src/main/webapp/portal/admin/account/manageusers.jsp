@@ -14,15 +14,14 @@
 <title><spring:message code="wiseAdmin" /></title>
 
 <script type="text/javascript">
-// does a form POST to find the project by runId.
-$(document).ready(function() {
-	if ($(".newTeacher").length > 0) {
-		$(".newTeacherTotal").html("("+$(".newTeacher").length+")")
-	}
-	if ($(".newStudent").length > 0) {
-		$(".newStudentTotal").html("("+$(".newStudent").length+")")
-	}
-});
+    $(document).ready(function() {
+        if ($(".newTeacher").length > 0) {
+            $(".newTeacherTotal").html("("+$(".newTeacher").length+")")
+        }
+        if ($(".newStudent").length > 0) {
+            $(".newStudentTotal").html("("+$(".newStudent").length+")")
+        }
+    });
 </script>
 <style type="text/css">
 .newTeacher, .newStudent {
@@ -70,146 +69,116 @@ a:hover {
 <h3><spring:message code="admin.account.manageusers.currentlyLoggedInTeachers" /> (${fn:length(loggedInTeacherUsernames)}).  <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span></h3>
 <table id="teachersTable" class='userTable' border="2">
     <tr><th><spring:message code="username" /></th><th colspan="4"><spring:message code="available_actions" /></th></tr>
-	<c:forEach var="user" items="${loggedInTeacherUsernames}">
-		<c:set var="username" value="${user.userDetails.username}"></c:set>
-		<c:choose>
-		<c:when test="${user.userDetails.signupdate > today}">
-			<tr class="newTeacher">
-		</c:when>
-		<c:otherwise>
-			<tr>
-		</c:otherwise>
-		</c:choose>
-			<td>${username}</td>
-			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
-			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
-			<td><a onclick="javascript:popup640('../../teacher/account/info?userName=${username}');"><spring:message code="info" /></a></td>
-			<td><a onclick="javascript:popup640('manageuserroles.html?userName=${username}');"><spring:message code="admin.index.manageUserRoles" /></a></td>
-		</tr>
-	</c:forEach>
+    <c:forEach var="username" items="${loggedInTeacherUsernames}">
+        <tr>
+            <td>${username}</td>
+            <td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?username=${username}');"><spring:message code="changePassword" /></a></td>
+            <td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+            <td><a onclick="javascript:popup640('../../teacher/account/info?username=${username}');"><spring:message code="info" /></a></td>
+            <td><a onclick="javascript:popup640('manageuserroles.html?username=${username}');"><spring:message code="admin.index.manageUserRoles" /></a></td>
+        </tr>
+    </c:forEach>
 </table>
 <br/>
 <hr/>
 <h3><spring:message code="admin.account.manageusers.currentlyLoggedInStudents" /> (${fn:length(loggedInStudentUsernames)}). <spring:message code="admin.account.manageusers.newStudentsMsg" /> <span class='newStudentTotal'></span></h3>
 <table id="studentsTable" class='userTable' border="2">
-<tr><th><spring:message code="username" /></th><th colspan="3"><spring:message code="available_actions" /></th><th><spring:message code="admin.account.manageusers.runInfoIfInProgress" /></th></tr>
-	<c:forEach var="studentUserArray" items="${loggedInStudentUsernames}">
-	<!--  user[0] = student username
-	      user[1] = run object that student is running
-	-->
-		<c:set var="user" value="${studentUserArray[0]}"></c:set>
-		<c:set var="username" value="${user.userDetails.username}"></c:set>
-		<c:choose>
-		<c:when test="${user.userDetails.signupdate > today}">
-			<tr class="newStudent">
-		</c:when>
-		<c:otherwise>
-			<tr>
-		</c:otherwise>
-		</c:choose>
-			<td>${username}</td>
-			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
-			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
-			<td><a onclick="javascript:popup640('../../student/account/info?userName=${username}');"><spring:message code="info" /></a></td>
-			<c:if test="${not empty studentUserArray[1]}">
-				<td>
-				${studentUserArray[1]}
-				</td>
-			</c:if>
-		</tr>
-	</c:forEach>
+<tr><th><spring:message code="username" /></th><th colspan="3"><spring:message code="available_actions" /></th></tr>
+    <c:forEach var="username" items="${loggedInStudentUsernames}">
+        <tr>
+            <td>${username}</td>
+            <td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?username=${username}');"><spring:message code="changePassword" /></a></td>
+            <td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+            <td><a onclick="javascript:popup640('../../student/account/info?username=${username}');"><spring:message code="info" /></a></td>
+        </tr>
+    </c:forEach>
 </table>
 </c:when>
 
 <c:otherwise>
 
 <c:choose>
-<c:when test="${studentsWhoLoggedInSince != null && teachersWhoLoggedInSince != null}">
-<h3><spring:message code="admin.account.manageusers.teachersWhoLoggedIn" /> (${fn:length(teachersWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span></h3>
-<table id="teachersTable" class='userTable' border="2">
-	<c:forEach var="user" items="${teachersWhoLoggedInSince}">
-		<c:set var="username" value="${user.userDetails.username}"></c:set>
- 		<c:choose>
-		<c:when test="${user.userDetails.signupdate > today}">
-			<tr class="newTeacher">
-		</c:when>
-		<c:otherwise>
-			<tr>
-		</c:otherwise>
-		</c:choose>
-			<td>${username}</td>
-			<td><a
-				onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
-			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
-			<td><a
-				onclick="javascript:popup640('../../teacher/account/info?userName=${username}');"><spring:message code="info" /></a></td>
-			<td>${user.userDetails.schoolname},${user.userDetails.city},${user.userDetails.state},${user.userDetails.country}</td>
-		</tr>
-	</c:forEach>
-</table>
-<br/>
-<hr/>
-<h3><spring:message code="admin.account.manageusers.studentsWhoLoggedIn" /> (${fn:length(studentsWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newStudentsMsg" /> <span class='newStudentTotal'></span></h3>
-<table id="teachersTable" class='userTable' border="2">
-	<c:forEach var="user" items="${studentsWhoLoggedInSince}">
-		<c:set var="username" value="${user.userDetails.username}"></c:set>
-		<c:choose>
-		<c:when test="${user.userDetails.signupdate > today}">
-			<tr class="newStudent">
-		</c:when>
-		<c:otherwise>
-			<tr>
-		</c:otherwise>
-		</c:choose>
-			<td>${username}</td>
-			<td><a
-				onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
-			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
-			<td><a
-				onclick="javascript:popup640('../../student/account/info?userName=${username}');"><spring:message code="info" /></a></td>
-		</tr>
-	</c:forEach>
-</table>
-
-</c:when>
-<c:otherwise>
-
-<c:choose>
-<c:when test="${fn:length(teachers) > 0}">
-<h3><spring:message code="admin.account.manageusers.totalNumberOfTeachers" />: ${fn:length(teachers)}</h3>
-<table id="teachersTable" class='userTable' border="2">
-	<c:forEach var="username" items="${teachers}">
-		<tr>
-			<td>${username}</td>
-			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
-			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
-			<td><a onclick="javascript:popup640('../../teacher/account/info?userName=${username}');"><spring:message code="info" /></a></td>
-			<td><a onclick="javascript:popup640('manageuserroles.html?userName=${username}');"><spring:message code="admin.index.manageUserRoles" /></a></td>
-		</tr>
-	</c:forEach>
-</table>
-</c:when>
-<c:otherwise>
-<h3><spring:message code="admin.account.manageusers.totalNumberOfStudents" />: ${fn:length(students)}</h3>
-<table id="studentsTable" class='userTable' border="2">
-	<c:forEach var="username" items="${students}">
-		<tr>
-			<td>${username}</td>
-			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
-			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
-			<td><a onclick="javascript:popup640('../../student/account/info?userName=${username}');"><spring:message code="info" /></a></td>
-		</tr>
-	</c:forEach>
-</table>
+    <c:when test="${studentsWhoLoggedInSince != null && teachersWhoLoggedInSince != null}">
+        <h3><spring:message code="admin.account.manageusers.teachersWhoLoggedIn" /> (${fn:length(teachersWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span></h3>
+        <table id="teachersTable" class='userTable' border="2">
+            <c:forEach var="user" items="${teachersWhoLoggedInSince}">
+                <c:set var="username" value="${user.userDetails.username}"></c:set>
+                <c:choose>
+                    <c:when test="${user.userDetails.signupdate > today}">
+                        <tr class="newTeacher">
+                    </c:when>
+                    <c:otherwise>
+                        <tr>
+                    </c:otherwise>
+                </c:choose>
+                <td>${username}</td>
+                <td><a
+                        onclick="javascript:popup640('../../teacher/management/changepassword.html?username=${username}');"><spring:message code="changePassword" /></a></td>
+                <td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+                <td><a
+                        onclick="javascript:popup640('../../teacher/account/info?username=${username}');"><spring:message code="info" /></a></td>
+                <td>${user.userDetails.schoolname},${user.userDetails.city},${user.userDetails.state},${user.userDetails.country}</td>
+                </tr>
+            </c:forEach>
+        </table>
+        <br/>
+        <hr/>
+        <h3><spring:message code="admin.account.manageusers.studentsWhoLoggedIn" /> (${fn:length(studentsWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newStudentsMsg" /> <span class='newStudentTotal'></span></h3>
+        <table id="teachersTable" class='userTable' border="2">
+            <c:forEach var="user" items="${studentsWhoLoggedInSince}">
+                <c:set var="username" value="${user.userDetails.username}"></c:set>
+                <c:choose>
+                    <c:when test="${user.userDetails.signupdate > today}">
+                        <tr class="newStudent">
+                    </c:when>
+                    <c:otherwise>
+                        <tr>
+                    </c:otherwise>
+                </c:choose>
+                <td>${username}</td>
+                <td><a
+                        onclick="javascript:popup640('../../teacher/management/changepassword.html?username=${username}');"><spring:message code="changePassword" /></a></td>
+                <td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+                <td><a
+                        onclick="javascript:popup640('../../student/account/info?username=${username}');"><spring:message code="info" /></a></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:when>
+    <c:otherwise>
+        <c:choose>
+            <c:when test="${fn:length(teachers) > 0}">
+                <h3><spring:message code="admin.account.manageusers.totalNumberOfTeachers" />: ${fn:length(teachers)}</h3>
+                <table id="teachersTable" class='userTable' border="2">
+                    <c:forEach var="username" items="${teachers}">
+                        <tr>
+                            <td>${username}</td>
+                            <td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?username=${username}');"><spring:message code="changePassword" /></a></td>
+                            <td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+                            <td><a onclick="javascript:popup640('../../teacher/account/info?username=${username}');"><spring:message code="info" /></a></td>
+                            <td><a onclick="javascript:popup640('manageuserroles.html?username=${username}');"><spring:message code="admin.index.manageUserRoles" /></a></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:when>
+            <c:otherwise>
+                <h3><spring:message code="admin.account.manageusers.totalNumberOfStudents" />: ${fn:length(students)}</h3>
+                <table id="studentsTable" class='userTable' border="2">
+                    <c:forEach var="username" items="${students}">
+                        <tr>
+                            <td>${username}</td>
+                            <td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?username=${username}');"><spring:message code="changePassword" /></a></td>
+                            <td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+                            <td><a onclick="javascript:popup640('../../student/account/info?username=${username}');"><spring:message code="info" /></a></td>
+                        </tr>
+                    </c:forEach>
+                </table>
 </c:otherwise>
 </c:choose>
 
 </c:otherwise>
 </c:choose>
-
-
 </c:otherwise>
-
 </c:choose>
 </body>
 </html>

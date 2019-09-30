@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -23,6 +23,16 @@
  */
 package org.wise.vle.web.wise5;
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -42,12 +52,6 @@ import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.work.StudentAsset;
 import org.wise.vle.web.AssetManager;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Controller for handling GET and POST requests of WISE5 StudentAsset domain objects
@@ -63,7 +67,7 @@ public class StudentAssetController {
   private RunService runService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private WorkgroupService workgroupService;
@@ -73,18 +77,16 @@ public class StudentAssetController {
    */
   @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}")
   protected void getStudentAssets(
-    @PathVariable Integer runId,
-    @RequestParam(value = "id", required = false) Integer id,
-    @RequestParam(value = "periodId", required = false) Integer periodId,
-    @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
-    @RequestParam(value = "workgroups", required = false) String workgroups,
-    @RequestParam(value = "nodeId", required = false) String nodeId,
-    @RequestParam(value = "componentId", required = false) String componentId,
-    @RequestParam(value = "componentType", required = false) String componentType,
-    @RequestParam(value = "isReferenced", required = false) Boolean isReferenced,
-    HttpServletResponse response)
-    throws ServletException, IOException {
-
+      @PathVariable Integer runId,
+      @RequestParam(value = "id", required = false) Integer id,
+      @RequestParam(value = "periodId", required = false) Integer periodId,
+      @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+      @RequestParam(value = "workgroups", required = false) String workgroups,
+      @RequestParam(value = "nodeId", required = false) String nodeId,
+      @RequestParam(value = "componentId", required = false) String componentId,
+      @RequestParam(value = "componentType", required = false) String componentType,
+      @RequestParam(value = "isReferenced", required = false) Boolean isReferenced,
+      HttpServletResponse response) throws IOException {
     Run run = null;
     try {
       run = runService.retrieveById(new Long(runId));
@@ -93,10 +95,7 @@ public class StudentAssetController {
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
-
-    //get the student uploads base directory path
-    String studentUploadsBaseDir = wiseProperties.getProperty("studentuploads_base_dir");
-
+    String studentUploadsBaseDir = appProperties.getProperty("studentuploads_base_dir");
     if (workgroups != null) {
       // this is a request from the teacher of the run or admin who wants to see the run's students' assets
             /* COMMENTED OUT FOR NOW. This block will work, but does not use the StudentAsset domain object.
@@ -127,10 +126,9 @@ public class StudentAssetController {
             }
                 */
     } else if (workgroupId != null) {
-      // this is a request from the student of the run who wants to see their assets
       try {
-        List<StudentAsset> studentAssets = vleService.getStudentAssets(id, runId, periodId, workgroupId,
-          nodeId, componentId, componentType, isReferenced);
+        List<StudentAsset> studentAssets = vleService.getStudentAssets(id, runId, periodId,
+            workgroupId, nodeId, componentId, componentType, isReferenced);
         JSONArray studentAssetList = new JSONArray();
         for (StudentAsset studentAsset : studentAssets) {
           studentAssetList.put(studentAsset.toJSON());
@@ -147,18 +145,16 @@ public class StudentAssetController {
    */
   @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}")
   protected void postStudentAsset(
-    @PathVariable Integer runId,
-    @RequestParam(value = "periodId", required = true) Integer periodId,
-    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-    @RequestParam(value = "nodeId", required = false) String nodeId,
-    @RequestParam(value = "componentId", required = false) String componentId,
-    @RequestParam(value = "componentType", required = false) String componentType,
-    @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException {
+      @PathVariable Integer runId,
+      @RequestParam(value = "periodId", required = true) Integer periodId,
+      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "nodeId", required = false) String nodeId,
+      @RequestParam(value = "componentId", required = false) String componentId,
+      @RequestParam(value = "componentType", required = false) String componentType,
+      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+      HttpServletRequest request,
+      HttpServletResponse response) throws IOException {
 
-    // get the run
     Run run = null;
     try {
       run = runService.retrieveById(new Long(runId));
@@ -168,16 +164,12 @@ public class StudentAssetController {
       e.printStackTrace();
     }
 
-    // get the directory name for the workgroup for this run
     String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
-
-    // get the student uploads base directory path
-    String path = wiseProperties.getProperty("studentuploads_base_dir");
-    Long studentMaxAssetSize = new Long(wiseProperties.getProperty("student_max_asset_size", "5242880"));
-    Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "10485760"));
+    String path = appProperties.getProperty("studentuploads_base_dir");
+    Long studentMaxAssetSize = new Long(appProperties.getProperty("student_max_asset_size", "5242880"));
+    Long studentMaxTotalAssetsSize = new Long(appProperties.getProperty("student_max_total_assets_size", "10485760"));
     String pathToCheckSize = path + "/" + dirName;
-
-    DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
+    StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
     Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
     if (fileMap != null && fileMap.size() > 0) {
       Set<String> keySet = fileMap.keySet();
@@ -190,8 +182,6 @@ public class StudentAssetController {
           return;
         }
         String clientDeleteTime = null;
-
-        // upload the files
         Boolean result = AssetManager.uploadAssetWISE5(file, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
         if (result) {
           Integer id = null;
@@ -202,20 +192,9 @@ public class StudentAssetController {
 
           StudentAsset studentAsset = null;
           try {
-            studentAsset = vleService.saveStudentAsset(
-              id,
-              runId,
-              periodId,
-              workgroupId,
-              nodeId,
-              componentId,
-              componentType,
-              isReferenced,
-              fileName,
-              filePath,
-              fileSize,
-              clientSaveTime,
-              clientDeleteTime);
+            studentAsset = vleService.saveStudentAsset(id, runId, periodId, workgroupId, nodeId,
+                componentId, componentType, isReferenced, fileName, filePath, fileSize,
+                clientSaveTime, clientDeleteTime);
             response.getWriter().write(studentAsset.toJSON().toString());
           } catch (ObjectNotFoundException e) {
             e.printStackTrace();
@@ -235,17 +214,12 @@ public class StudentAssetController {
    */
   @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/remove")
   protected void removeStudentAsset(
-    @PathVariable Integer runId,
-    @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
-    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-    @RequestParam(value = "clientDeleteTime", required = true) Long clientDeleteTime,
-    HttpServletResponse response)
-    throws ServletException, IOException {
-
-    // the student is removing an asset
+      @PathVariable Integer runId,
+      @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
+      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "clientDeleteTime", required = true) Long clientDeleteTime,
+      HttpServletResponse response) throws IOException {
     User user = ControllerUtil.getSignedInUser();
-
-    // get the run
     Run run = null;
     try {
       run = runService.retrieveById(new Long(runId));
@@ -262,16 +236,9 @@ public class StudentAssetController {
       e.printStackTrace();
     }
     String assetFileName = studentAsset.getFileName();
-
-    // get the directory name for the workgroup for this run
     String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-
-    // get the student uploads base directory path
-    String path = wiseProperties.getProperty("studentuploads_base_dir");
-
-    // remove the file from the student asset folder
+    String path = appProperties.getProperty("studentuploads_base_dir");
     Boolean removeSuccess = AssetManager.removeAssetWISE5(path, dirName, assetFileName);
-
     if (removeSuccess) {
       studentAsset = vleService.deleteStudentAsset(studentAssetId, clientDeleteTime);
       response.getWriter().write(studentAsset.toJSON().toString());
@@ -283,20 +250,16 @@ public class StudentAssetController {
    */
   @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/copy")
   protected void copyStudentAsset(
-    @PathVariable Integer runId,
-    @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
-    @RequestParam(value = "periodId", required = true) Integer periodId,
-    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-    @RequestParam(value = "nodeId", required = false) String nodeId,
-    @RequestParam(value = "componentId", required = false) String componentId,
-    @RequestParam(value = "componentType", required = false) String componentType,
-    @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-    HttpServletResponse response)
-    throws ServletException, IOException {
-
+      @PathVariable Integer runId,
+      @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
+      @RequestParam(value = "periodId", required = true) Integer periodId,
+      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "nodeId", required = false) String nodeId,
+      @RequestParam(value = "componentId", required = false) String componentId,
+      @RequestParam(value = "componentType", required = false) String componentType,
+      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+      HttpServletResponse response) throws IOException {
     User user = ControllerUtil.getSignedInUser();
-
-    // get the run
     Run run = null;
     try {
       run = runService.retrieveById(new Long(runId));
@@ -313,15 +276,9 @@ public class StudentAssetController {
       e.printStackTrace();
     }
     String assetFileName = studentAsset.getFileName();
-
-    // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
     String unreferencedDirName = run.getId() + "/" + workgroupId + "/unreferenced";
-
-    // if we're copying student asset for reference, also pass along the referenced dir. looks like /studentuploads/[runId]/[workgroupId]/referenced
     String referencedDirName = run.getId() + "/" + workgroupId + "/referenced";
-
     String copiedFileName = AssetManager.copyAssetForReferenceWISE5(unreferencedDirName, referencedDirName, assetFileName);
-
     if (copiedFileName != null) {
       Integer id = null;
       Boolean isReferenced = true;
@@ -332,20 +289,9 @@ public class StudentAssetController {
 
       StudentAsset copiedStudentAsset = null;
       try {
-        copiedStudentAsset = vleService.saveStudentAsset(
-          id,
-          runId,
-          periodId,
-          workgroupId,
-          nodeId,
-          componentId,
-          componentType,
-          isReferenced,
-          fileName,
-          filePath,
-          fileSize,
-          clientSaveTime,
-          clientDeleteTime);
+        copiedStudentAsset = vleService.saveStudentAsset(id, runId, periodId, workgroupId,
+            nodeId, componentId, componentType, isReferenced, fileName, filePath, fileSize,
+            clientSaveTime, clientDeleteTime);
         response.getWriter().write(copiedStudentAsset.toJSON().toString());
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
@@ -360,13 +306,9 @@ public class StudentAssetController {
    * Returns size of logged-in student's unreferenced directory
    */
   @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}/size")
-  protected void getStudentAssetsSize(
-    @PathVariable Long runId,
-    HttpServletResponse response)
-    throws ServletException, IOException {
-
+  protected void getStudentAssetsSize(@PathVariable Long runId, HttpServletResponse response)
+      throws IOException {
     User user = ControllerUtil.getSignedInUser();
-
     Run run = null;
     try {
       run = runService.retrieveById(runId);
@@ -375,19 +317,12 @@ public class StudentAssetController {
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
-
-    // get the workgroup id
-    List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
+    List<Workgroup> workgroupListByRunAndUser =
+        workgroupService.getWorkgroupListByRunAndUser(run, user);
     Workgroup workgroup = workgroupListByRunAndUser.get(0);
     Long workgroupId = workgroup.getId();
-
-    // get the directory name for the workgroup for this run
     String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-
-    // get the student uploads base directory path
-    String path = wiseProperties.getProperty("studentuploads_base_dir");
-
-    // get the disk space usage of the workgroup's upload directory
+    String path = appProperties.getProperty("studentuploads_base_dir");
     String result = AssetManager.getSize(path, dirName);
     response.getWriter().write(result);
   }

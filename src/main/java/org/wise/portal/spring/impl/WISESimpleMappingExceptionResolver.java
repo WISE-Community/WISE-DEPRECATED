@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -57,41 +57,34 @@ public class WISESimpleMappingExceptionResolver extends SimpleMappingExceptionRe
   protected IMailFacade mailService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   private static final String HANDLE_EXCEPTION_PROPERTY_KEY = "handle_exception";
 
   private static final String HANDLE_EXCEPTION_MAIL_SUBJECT = "WISE Exception Report";
 
-  /**
-   * @see org.springframework.web.servlet.handler.SimpleMappingExceptionResolver#resolveException(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, java.lang.Exception)
-   */
   @Override
   public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
       Object handler, Exception exception) {
     exception.printStackTrace();
-    // send email to programmers
-    String sendEmailOnExceptionStr = wiseProperties.getProperty("send_email_on_exception");
+    String sendEmailOnExceptionStr = appProperties.getProperty("send_email_on_exception");
     boolean sendEmailOnException = sendEmailOnExceptionStr.equalsIgnoreCase("true");
 
     if (sendEmailOnException) {
-      String portalName = wiseProperties.getProperty("wise.name");
-      String[] recipients = wiseProperties.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
+      String portalName = appProperties.getProperty("wise.name");
+      String[] recipients = appProperties.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
       String subject = HANDLE_EXCEPTION_MAIL_SUBJECT + ": (" + portalName + ")";
-      String fromEmail = wiseProperties.getProperty("mail.from");
+      String fromEmail = appProperties.getProperty("mail.from");
       String message = getHandleExceptionMessage(request, exception);
 
       ExceptionEmailSender emailSender =
-        new ExceptionEmailSender(recipients,subject,fromEmail,message);
+          new ExceptionEmailSender(recipients,subject,fromEmail,message);
       Thread thread = new Thread(emailSender);
       thread.start();
     }
     return super.resolveException(request, response, handler, exception);
   }
 
-  /**
-   * Sends exception email in a new thread.
-   */
   class ExceptionEmailSender implements Runnable {
     String[] recipients;
     String subject;
@@ -133,7 +126,6 @@ public class WISESimpleMappingExceptionResolver extends SimpleMappingExceptionRe
         request.getServerPort() + request.getRequestURI() + "?" +
         request.getQueryString();
 
-    // get full stack trace
     Writer result = new StringWriter();
     PrintWriter printWriter = new PrintWriter(result);
     exception.printStackTrace(printWriter);

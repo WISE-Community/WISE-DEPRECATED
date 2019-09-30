@@ -42,6 +42,10 @@ public interface ProjectMetadata{
    */
   String getTitle();
 
+  void setUri(String uri);
+
+  String getUri();
+
   /**
    * @param <code>String</code> the title to set
    */
@@ -56,6 +60,14 @@ public interface ProjectMetadata{
    * @param <code>String</code> the author to set
    */
   void setAuthor(String author);
+
+  String getAuthors();
+
+  void setAuthors(String authors);
+
+  String getParentProjects();
+
+  void setParentProjects(String parentProjects);
 
   /**
    * @return <code>String</code> the subject to get
@@ -228,4 +240,6 @@ public interface ProjectMetadata{
   void setMaxScores(String maxScores);
 
   String toJSONString();
+
+  JSONObject toJSONObject();
 }

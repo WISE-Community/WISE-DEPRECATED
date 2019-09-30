@@ -48,9 +48,6 @@ public class ChangePasswordParametersValidator implements Validator {
   @Autowired
   private UserService userService;
 
-  /**
-   * @see Validator#supports(Class)
-   */
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {
     return ChangePasswordParameters.class.isAssignableFrom(clazz) ||
@@ -60,9 +57,12 @@ public class ChangePasswordParametersValidator implements Validator {
   public void validate(Object paramsIn, Errors errors) {
     ChangePasswordParameters params = (ChangePasswordParameters) paramsIn;
 
-    validatePasswd0(errors,params);
-    if (errors.getErrorCount() != 0) {
-      return;
+    if (params.getUser() != null && !params.getUser().getUserDetails().isGoogleUser() ||
+        params.getTeacherUser() != null && !params.getTeacherUser().getUserDetails().isGoogleUser()) {
+      validatePasswd0(errors,params);
+      if (errors.getErrorCount() != 0) {
+        return;
+      }
     }
 
     validatePasswd1(errors,params);
@@ -83,7 +83,7 @@ public class ChangePasswordParametersValidator implements Validator {
    * @param errors
    * @param params
    */
-  public void validatePasswd0(Errors errors, ChangePasswordParameters params) {
+  private void validatePasswd0(Errors errors, ChangePasswordParameters params) {
     User userToCheckPasswordFor;
 
     if (params.getTeacherUser() != null) {
@@ -111,24 +111,24 @@ public class ChangePasswordParametersValidator implements Validator {
     }
   }
 
-  public void validatePasswd1(Errors errors, ChangePasswordParameters params) {
+  private void validatePasswd1(Errors errors, ChangePasswordParameters params) {
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwd1",
         "presentation.validators.ChangePasswordParametersValidator.errorNewPasswordMissing");
 
     if (errors.getErrorCount() != 0) {
       return;
     }
-    this.validatePasswordAsciiPrintable(errors, params.getPasswd1());
+    validatePasswordAsciiPrintable(errors, params.getPasswd1());
   }
 
-  public void validatePasswd2(Errors errors, ChangePasswordParameters params) {
+  private void validatePasswd2(Errors errors, ChangePasswordParameters params) {
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwd2",
         "presentation.validators.ChangePasswordParametersValidator.errorNewPasswordMissing");
 
     if (errors.getErrorCount() != 0) {
       return;
     }
-    this.validatePasswordAsciiPrintable(errors, params.getPasswd2());
+    validatePasswordAsciiPrintable(errors, params.getPasswd2());
   }
 
   private void validatePasswordsMatch(Errors errors, String password1, String password2, ChangePasswordParameters params) {
@@ -139,13 +139,13 @@ public class ChangePasswordParametersValidator implements Validator {
     }
   }
 
-  public void validatePasswordAsciiPrintable(Errors errors, String passwd) {
+  private void validatePasswordAsciiPrintable(Errors errors, String passwd) {
     if (!StringUtils.isAsciiPrintable(passwd))
       errors.rejectValue("passwd1", "presentation.validators.ChangePasswordParametersValidator.errorPasswordContainsIllegalCharacters");
 
   }
 
-  public void validatePasswordLength(Errors errors, ChangePasswordParameters params) {
+  private void validatePasswordLength(Errors errors, ChangePasswordParameters params) {
     if (params.getPasswd1().length() > MAX_PASSWORD_LENGTH
         || params.getPasswd2().length() > MAX_PASSWORD_LENGTH) {
       errors.rejectValue("passwd1", "presentation.validators.ChangePasswordParametersValidator.errorPasswordTooLong");

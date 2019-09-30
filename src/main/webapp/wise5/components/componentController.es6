@@ -39,11 +39,10 @@ class ComponentController {
     this.isDisabled = false;
     this.isDirty = false;
     this.parentStudentWorkIds = null;
+    this.attachments = [];
 
-    // whether the student work has changed since last submit
     this.isSubmitDirty = false;
 
-    // whether the student work is for a submit
     this.isSubmit = false;
 
     this.saveMessage = {
@@ -51,8 +50,7 @@ class ComponentController {
       time: ''
     };
 
-    // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
+    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
     this.isPromptVisible = true;
     this.isSaveButtonVisible = false;
@@ -68,7 +66,35 @@ class ComponentController {
     this.showAddToNotebookButton =
       this.componentContent.showAddToNotebookButton == null ? true : this.componentContent.showAddToNotebookButton;
 
-    if (this.isGradingMode() || this.mode === 'gradingRevision' || this.mode === 'onlyShowWork') {
+    if (this.isStudentMode()) {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      if (!this.ConfigService.isRunActive()) {
+        this.isDisabled = true;
+      }
+    } else if (this.isGradingMode()) {
+      this.isPromptVisible = false;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.isGradingRevisionMode()) {
+      this.isPromptVisible = false;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.isOnlyShowWorkMode()) {
+      this.isPromptVisible = false;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    }
+
+    if (this.isStudentMode() || this.isGradingMode() || this.isGradingRevisionMode()) {
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    }
+
+    if (this.isGradingMode() || this.isGradingRevisionMode() || this.isOnlyShowWorkMode()) {
       this.showAddToNotebookButton = false;
     } else if (this.isAuthoringMode()) {
       if (this.authoringComponentContent.showAddToNotebookButton == null) {
@@ -78,6 +104,7 @@ class ComponentController {
     }
 
     this.registerListeners();
+    this.registerComponentWithParentNode();
   }
 
   isStudentMode() {
@@ -90,6 +117,70 @@ class ComponentController {
 
   isGradingMode() {
     return this.mode === 'grading';
+  }
+
+  isGradingRevisionMode() {
+    return this.mode === 'gradingRevision';
+  }
+
+  isOnlyShowWorkMode() {
+    return this.mode === 'onlyShowWork';
+  }
+
+  registerListeners() {
+    this.$scope.$on('annotationSavedToServer', (event, args) => {
+      const annotation = args.annotation;
+      if (this.isEventTargetThisComponent(annotation)) {
+        this.latestAnnotations = this.AnnotationService
+          .getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      }
+    });
+
+    this.$scope.$on('nodeSubmitClicked', (event, args) => {
+      if (this.nodeId === args.nodeId) {
+        this.handleNodeSubmit();
+      }
+    });
+
+    /**
+     * Listen for the 'exitNode' event which is fired when the student
+     * exits the parent node. This will perform any necessary cleanup
+     * when the student exits the parent node.
+     */
+    this.$scope.$on('exitNode', (event, args) => {
+      this.cleanupBeforeExiting(event, args);
+    });
+
+    this.registerStudentWorkSavedToServerListener();
+  }
+
+  initializeScopeGetComponentState(scope, childControllerName) {
+    scope.getComponentState = (isSubmit) => {
+      const deferred = this.$q.defer();
+      const childController = scope[childControllerName];
+      if (this.hasDirtyWorkToSendToParent(childController, isSubmit)) {
+        const action = this.getDirtyWorkToSendToParentAction(childController, isSubmit);
+        childController.createComponentState(action).then((componentState) => {
+          deferred.resolve(componentState);
+        });
+      } else {
+        deferred.resolve();
+      }
+      return deferred.promise;
+    };
+  }
+
+  hasDirtyWorkToSendToParent(childController, isSubmit) {
+    return (isSubmit && childController.isSubmitDirty) || childController.isDirty;
+  }
+
+  getDirtyWorkToSendToParentAction(childController, isSubmit) {
+    if (isSubmit && childController.isSubmitDirty) {
+      return 'submit';
+    } else if (childController.isDirty) {
+      return 'save';
+    }
+    return 'change';
   }
 
   authoringConstructor() {
@@ -122,6 +213,21 @@ class ComponentController {
       }
     };
 
+    this.registerAuthoringListeners();
+    this.updateAdvancedAuthoringView();
+  }
+
+  registerAuthoringListeners() {
+    this.$scope.$watch(
+        () => {
+          return this.authoringComponentContent
+        },
+        (newValue, oldValue) => {
+          this.handleAuthoringComponentContentChanged(newValue, oldValue);
+        },
+        true
+    );
+
     this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
       if (this.componentId === args.componentId) {
         this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
@@ -129,36 +235,73 @@ class ComponentController {
       }
     });
 
-    this.updateAdvancedAuthoringView();
+    this.$scope.$on('assetSelected', (event, args) => {
+      this.assetSelected(event, args);
+    });
   }
 
-  registerListeners() {
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
-      const annotation = args.annotation;
-      if (this.nodeId === annotation.nodeId &&
-          this.componentId === annotation.componentId) {
-        this.latestAnnotations = this.AnnotationService
-            .getLatestComponentAnnotations(this.nodeId, this.componentId,
-                this.workgroupId);
+  handleAuthoringComponentContentChanged(newValue, oldValue) {
+    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+    this.latestAnnotations = null;
+    this.isDirty = false;
+    this.isSubmitDirty = false;
+    this.submitCounter = 0;
+  }
+
+  getFullAssetPath(fileName) {
+    const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+    return assetsDirectoryPath + '/' + fileName;
+  }
+
+  getSummernoteId(args) {
+    let summernoteId = '';
+    if (args.target == 'prompt') {
+      summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
+    } else if (args.target == 'rubric') {
+      summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+    }
+    return summernoteId;
+  }
+
+  restoreSummernoteCursorPosition(summernoteId) {
+    $('#' + summernoteId).summernote('editor.restoreRange');
+    $('#' + summernoteId).summernote('editor.focus');
+  }
+
+  insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
+    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+  }
+
+  insertVideoIntoSummernote(summernoteId, fullAssetPath) {
+    var videoElement = document.createElement('video');
+    videoElement.controls = 'true';
+    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+    $('#' + summernoteId).summernote('insertNode', videoElement);
+  }
+
+  assetSelected(event, args) {
+    if (this.isEventTargetThisComponent(args)) {
+      if (args.target === 'rubric') {
+        const fileName = args.assetItem.fileName;
+        const summernoteId = this.getSummernoteId(args);
+        this.restoreSummernoteCursorPosition(summernoteId);
+        const fullAssetPath = this.getFullAssetPath(fileName);
+        if (this.UtilService.isImage(fileName)) {
+          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+        } else if (this.UtilService.isVideo(fileName)) {
+          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+        }
       }
-    });
+    }
+    this.$mdDialog.hide();
+  }
 
-    this.$scope.$on('nodeSubmitClicked', (event, args) => {
-      if (this.nodeId === args.nodeId) {
-        this.handleNodeSubmit();
-      }
-    });
-
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on('exitNode', (event, args) => {
-      this.cleanupBeforeExiting();
-    });
-
-    this.registerStudentWorkSavedToServerListener();
+  registerComponentWithParentNode() {
+    if (this.$scope.$parent.nodeController != null) {
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+    }
   }
 
   cleanupBeforeExiting() {
@@ -170,25 +313,33 @@ class ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
-      const componentState = args.studentWork;
-      if (componentState && this.nodeId === componentState.nodeId
-          && this.componentId === componentState.componentId) {
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: this.isDirty});
-        const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
-        if (componentState.isSubmit) {
-          this.setSubmittedMessage(clientSaveTime);
-          this.lockIfNecessary();
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: this.isSubmitDirty});
-        } else if (componentState.isAutoSave) {
-          this.setAutoSavedMessage(clientSaveTime);
-        } else {
-          this.setSavedMessage(clientSaveTime);
-        }
+    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+      this.handleStudentWorkSavedToServer(event, args);
+    });
+  }
+
+  handleStudentWorkSavedToServer(event, args) {
+    const componentState = args.studentWork;
+    if (this.isForThisComponent(componentState)) {
+      this.setIsDirty(false);
+      this.emitComponentDirty(this.getIsDirty());
+      const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
+      if (componentState.isSubmit) {
+        this.setSubmittedMessage(clientSaveTime);
+        this.lockIfNecessary();
+        this.setIsSubmitDirty(false);
+        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: this.isSubmitDirty});
+      } else if (componentState.isAutoSave) {
+        this.setAutoSavedMessage(clientSaveTime);
+      } else {
+        this.setSavedMessage(clientSaveTime);
       }
-    }));
+    }
+    this.handleStudentWorkSavedToServerAdditionalProcessing(event, args);
+  }
+
+  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
+
   }
 
   handleNodeSubmit() {
@@ -211,12 +362,73 @@ class ComponentController {
     this.submit('componentSubmitButton');
   }
 
+  /**
+   * A submit was triggered by the component submit button or node submit button.
+   * @param {string} submitTriggeredBy What triggered the submit.
+   * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
+   */
   submit(submitTriggeredBy) {
+    if (this.getIsSubmitDirty()) {
+      let isPerformSubmit = true;
 
+      if (this.hasMaxSubmitCount()) {
+        const numberOfSubmitsLeft = this.getNumberOfSubmitsLeft();
+
+        if (this.hasSubmitMessage()) {
+          isPerformSubmit = this.confirmSubmit(numberOfSubmitsLeft);
+        } else {
+          if (numberOfSubmitsLeft <= 0) {
+            isPerformSubmit = false;
+          }
+        }
+      }
+
+      if (isPerformSubmit) {
+        this.performSubmit(submitTriggeredBy);
+      } else {
+        this.setIsSubmit(false);
+      }
+    }
+  }
+
+  disableSubmitButton() {
+    this.isSubmitButtonDisabled = true;
+  }
+
+  performSubmit(submitTriggeredBy) {
+    this.setIsSubmit(true);
+    this.incrementSubmitCounter();
+
+    if (!this.canSubmit()) {
+      this.disableSubmitButton();
+    }
+
+    if (this.isAuthoringMode()) {
+      /*
+       * We are in authoring mode so we will set values appropriately
+       * here because the 'componentSubmitTriggered' event won't
+       * work in authoring mode.
+       */
+      this.setIsDirty(false);
+      this.setIsSubmitDirty(false);
+      this.createComponentState('submit');
+    } else {
+      if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
+        this.emitComponentSubmitTriggered();
+      }
+    }
+  }
+
+  hasSubmitMessage() {
+    return false;
   }
 
   incrementSubmitCounter() {
     this.submitCounter++;
+  }
+
+  emitComponentSubmitTriggered() {
+    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
   }
 
   disableComponentIfNecessary() {
@@ -239,30 +451,82 @@ class ComponentController {
     return this.componentContent.lockAfterSubmit;
   }
 
-  studentDataChanged() {
-    /*
-     * set the dirty flags so we will know we need to save or submit the
-     * student work later
-     */
-    this.isDirty = true;
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
-
-    this.isSubmitDirty = true;
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+  studentDataChanged(isCompleted = false) {
+    this.setIsDirtyAndBroadcast();
+    this.setIsSubmitDirtyAndBroadcast();
     this.clearSaveText();
+    const action = 'change';
+    this.createComponentStateAndBroadcast(action);
+  }
 
-    /*
-     * the student work in this component has changed so we will tell
-     * the parent node that the student data will need to be saved.
-     * this will also notify connected parts that this component's student
-     * data has changed.
-     */
-    var action = 'change';
+  setIsDirtyAndBroadcast() {
+    this.setIsDirty(true);
+    this.emitComponentDirty(true);
+  }
 
-    // create a component state populated with the student data
+  setIsSubmitDirtyAndBroadcast() {
+    this.setIsSubmitDirty(true);
+    this.emitComponentSubmitDirty(true);
+  }
+
+  /*
+   * the student work in this component has changed so we will tell
+   * the parent node that the student data will need to be saved.
+   * this will also notify connected parts that this component's student
+   * data has changed.
+   */
+  createComponentStateAndBroadcast(action) {
     this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+      this.emitComponentStudentDataChanged(componentState);
+      if (componentState.isCompleted) {
+        this.emitComponentCompleted(componentState);
+      }
     });
+  }
+
+  emitComponentStudentDataChanged(componentState) {
+    this.$scope.$emit('componentStudentDataChanged',
+        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+  }
+
+  emitComponentCompleted(componentState) {
+    this.$scope.$emit('componentCompleted',
+        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+  }
+
+  processLatestStudentWork() {
+    const latestComponentState =
+        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+    if (latestComponentState) {
+      const serverSaveTime = latestComponentState.serverSaveTime;
+      const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+      if (latestComponentState.isSubmit) {
+        this.setIsSubmitDirty(false);
+        this.emitComponentSubmitDirty(false);
+        this.setSubmittedMessage(clientSaveTime);
+      } else {
+        this.setIsSubmitDirty(true);
+        this.emitComponentSubmitDirty(true);
+        this.setSavedMessage(clientSaveTime);
+      }
+    }
+  }
+
+  setIsSubmitDirty(isDirty) {
+    this.isSubmitDirty = isDirty;
+  }
+
+  getIsSubmitDirty() {
+    return this.isSubmitDirty;
+  }
+
+  emitComponentDirty(isDirty) {
+    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: isDirty});
+  }
+
+  emitComponentSubmitDirty(isDirty) {
+    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isDirty});
   }
 
   setSavedMessage(time) {
@@ -321,6 +585,17 @@ class ComponentController {
     return this.ProjectService.isApplicationNode(nodeId);
   }
 
+
+  /**
+   * Create a new component state populated with the student data
+   * @param action the action that is triggering creating of this component state
+   * e.g. 'submit', 'save', 'change'
+   * @return a promise that will return a component state
+   */
+  createComponentState(action) {
+
+  }
+
   /**
    * Perform any additional processing that is required before returning the
    * component state
@@ -352,18 +627,38 @@ class ComponentController {
         if (componentState != null) {
           componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
         }
-        if (connectedComponent.type == 'showWork') {
+        if (connectedComponent.type === 'showWork') {
           this.isDisabled = true;
         }
       }
-      this.setStudentWork(this.createMergedComponentState(componentStates));
-      this.handleConnectedComponentsPostProcess();
-      this.studentDataChanged();
+      if (componentStates.length > 0) {
+        this.setStudentWork(this.createMergedComponentState(componentStates));
+        this.handleConnectedComponentsPostProcess();
+        this.studentDataChanged();
+      }
     }
   }
 
+  createMergedComponentState(componentStates) {
+    return componentStates[0];
+  }
+
   handleConnectedComponentsPostProcess() {
-    // overriden by children
+    // overridden by children
+  }
+
+  getConnectedComponentsAndTheirComponentStates() {
+    const connectedComponentsAndTheirComponentStates = [];
+    for (const connectedComponent of this.componentContent.connectedComponents) {
+      const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+        connectedComponent.nodeId, connectedComponent.componentId);
+      const connectedComponentsAndComponentState = {
+        connectedComponent: connectedComponent,
+        componentState: this.UtilService.makeCopyOfJSONObject(componentState)
+      };
+      connectedComponentsAndTheirComponentStates.push(connectedComponentsAndComponentState);
+    }
+    return connectedComponentsAndTheirComponentStates;
   }
 
   showCopyPublicNotebookItemButton() {
@@ -393,8 +688,13 @@ class ComponentController {
     return this.NotebookService.isNotebookEnabled();
   }
 
+  isStudentNoteClippingEnabled() {
+    return this.NotebookService.isStudentNoteClippingEnabled();
+  }
+
   isAddToNotebookEnabled() {
-    return this.isNotebookEnabled() && this.showAddToNotebookButton;
+    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled() &&
+        this.showAddToNotebookButton;
   }
 
   /**
@@ -436,31 +736,26 @@ class ComponentController {
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Add a connected component
-   */
   authoringAddConnectedComponent() {
+    const connectedComponent = this.createConnectedComponent();
+    this.addConnectedComponent(connectedComponent);
+    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
 
-    /*
-     * create the new connected component object that will contain a
-     * node id and component id
-     */
-    var newConnectedComponent = {};
-    newConnectedComponent.nodeId = this.nodeId;
-    newConnectedComponent.componentId = null;
-    newConnectedComponent.type = null;
-    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
-
-    // initialize the array of connected components if it does not exist yet
+  addConnectedComponent(connectedComponent) {
     if (this.authoringComponentContent.connectedComponents == null) {
       this.authoringComponentContent.connectedComponents = [];
     }
+    this.authoringComponentContent.connectedComponents.push(connectedComponent);
+  }
 
-    // add the connected component
-    this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
+  createConnectedComponent() {
+    return {
+      nodeId: this.nodeId,
+      componentId: null,
+      type: null
+    };
   }
 
   /**
@@ -495,6 +790,18 @@ class ComponentController {
         }
       }
     }
+    this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+  }
+
+  authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
+    if (connectedComponent.componentId != null) {
+      connectedComponent.type = 'importWork';
+    }
+    this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+  }
+
+  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+
   }
 
   /**
@@ -560,20 +867,9 @@ class ComponentController {
     }
   }
 
-  /**
-   * The connected component component id has changed
-   * @param connectedComponent the connected component that has changed
-   */
   authoringConnectedComponentComponentIdChanged(connectedComponent) {
-
-    if (connectedComponent != null) {
-
-      // default the type to import work
-      connectedComponent.type = 'importWork';
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
+    this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
   }
 
   /**
@@ -584,11 +880,11 @@ class ComponentController {
 
     if (connectedComponent != null) {
 
-      if (connectedComponent.type == 'importWork') {
+      if (connectedComponent.type === 'importWork') {
         /*
          * the type has changed to import work
          */
-      } else if (connectedComponent.type == 'showWork') {
+      } else if (connectedComponent.type === 'showWork') {
         /*
          * the type has changed to show work
          */
@@ -675,7 +971,7 @@ class ComponentController {
   summernoteRubricHTMLChanged() {
 
     // get the summernote rubric html
-    var html = this.summernoteRubricHTML;
+    let html = this.summernoteRubricHTML;
 
     /*
      * remove the absolute asset paths
@@ -712,21 +1008,20 @@ class ComponentController {
      * the project to the server
      */
     this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-  };
+  }
 
   /**
    * Update the component JSON string that will be displayed in the advanced authoring view textarea
    */
   updateAdvancedAuthoringView() {
     this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-  };
+  }
 
   /**
    * The component has changed in the advanced authoring view so we will update
    * the component and save the project.
    */
   advancedAuthoringViewComponentChanged() {
-
     try {
       /*
        * create a new component by converting the JSON string in the advanced
@@ -748,58 +1043,91 @@ class ComponentController {
     } catch(e) {
       this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
     }
-  };
+  }
 
-  /**
-   * The show JSON button was clicked to show or hide the JSON authoring
-   */
   showJSONButtonClicked() {
-    // toggle the JSON authoring textarea
-    this.showJSONAuthoring = !this.showJSONAuthoring;
-
-    if (this.jsonStringChanged && !this.showJSONAuthoring) {
-      /*
-       * the author has changed the JSON and has just closed the JSON
-       * authoring view so we will save the component
-       */
-      this.advancedAuthoringViewComponentChanged();
-
-      // scroll to the top of the component
-      this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-      this.jsonStringChanged = false;
+    if (this.showJSONAuthoring) {
+      // we were showing the JSON authoring view and now we want to hide it
+      if (this.isJSONValid()) {
+        this.saveJSONAuthoringViewChanges();
+        this.toggleJSONAuthoringView();
+        this.UtilService.hideJSONValidMessage();
+      } else {
+        let isRollback = confirm(this.$translate('jsonInvalidErrorMessage'));
+        if (isRollback) {
+          // the author wants to revert back to the last valid JSON
+          this.toggleJSONAuthoringView();
+          this.UtilService.hideJSONValidMessage();
+          this.isJSONStringChanged = false;
+          this.rollbackToRecentValidJSON();
+          this.saveJSONAuthoringViewChanges();
+        }
+      }
+    } else {
+      // we were not showing the JSON authoring view and now we want to show it
+      this.toggleJSONAuthoringView();
+      this.rememberRecentValidJSON();
     }
   }
 
-  /**
-   * The author has changed the JSON manually in the advanced view
-   */
+  toggleJSONAuthoringView() {
+    this.showJSONAuthoring = !this.showJSONAuthoring;
+  }
+
   authoringJSONChanged() {
-    this.jsonStringChanged = true;
+    this.isJSONStringChanged = true;
+    if (this.isJSONValid()) {
+      this.UtilService.showJSONValidMessage();
+      this.rememberRecentValidJSON();
+    } else {
+      this.UtilService.showJSONInvalidMessage();
+    }
+  }
+
+  isJSONValid() {
+    try {
+      angular.fromJson(this.authoringComponentContentJSONString);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  rememberRecentValidJSON() {
+    this.authoringValidComponentContentJSONString = this.authoringComponentContentJSONString;
+  }
+
+  rollbackToRecentValidJSON() {
+    this.authoringComponentContentJSONString = this.authoringValidComponentContentJSONString;
+  }
+
+  /**
+   * The component has changed in the advanced authoring view so we will update
+   * the component and save the project.
+   */
+  saveJSONAuthoringViewChanges() {
+    try {
+      const editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
+      this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+      this.componentContent = editedComponentContent;
+      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
+      this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
+      this.isJSONStringChanged = false;
+    } catch(e) {
+      this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
+    }
   }
 
   isEventTargetThisComponent(args) {
-    return this.nodeId == args.nodeId && this.componentId == args.componentId;
+    return this.isForThisComponent(args);
   }
 
-  createSummernoteRubricId() {
-    return 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+  isForThisComponent(object) {
+    return this.nodeId == object.nodeId && this.componentId == object.componentId;
   }
 
-  restoreSummernoteCursorPosition(summernoteId) {
-    $('#' + summernoteId).summernote('editor.restoreRange');
-    $('#' + summernoteId).summernote('editor.focus');
-  }
-
-  insertImageIntoSummernote(fullAssetPath, fileName) {
-    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-  }
-
-  insertVideoIntoSummernote(fullAssetPath) {
-    const videoElement = document.createElement('video');
-    videoElement.controls = 'true';
-    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-    $('#' + summernoteId).summernote('insertNode', videoElement);
+  canSubmit() {
+    return !this.hasMaxSubmitCount() || this.hasSubmitsLeft();
   }
 
   hasMaxSubmitCount() {
@@ -818,14 +1146,6 @@ class ComponentController {
     return this.getNumberOfSubmitsLeft() > 0;
   }
 
-  setIsSubmitTrue() {
-    this.setIsSubmit(true);
-  }
-
-  setIsSubmitFalse() {
-    this.setIsSubmit(false);
-  }
-
   setIsSubmit(isSubmit) {
     this.isSubmit = isSubmit;
   }
@@ -837,8 +1157,66 @@ class ComponentController {
   setIsDirty(isDirty) {
     this.isDirty = isDirty;
   }
+
+  getIsDirty() {
+    return this.isDirty;
+  }
+
+  removeAttachment(attachment) {
+    if (this.attachments.indexOf(attachment) !== -1) {
+      this.attachments.splice(this.attachments.indexOf(attachment), 1);
+      this.studentDataChanged();
+    }
+  }
+
+  attachStudentAsset(studentAsset) {
+    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+      const attachment = {
+        studentAssetId: copiedAsset.id,
+        iconURL: copiedAsset.iconURL
+      };
+      this.attachments.push(attachment);
+      this.studentDataChanged();
+    });
+  }
+
+  hasMaxScore() {
+    return this.componentContent.maxScore != null && this.componentContent.maxScore !== '';
+  }
+
+  getMaxScore() {
+    return this.componentContent.maxScore;
+  }
+
+  createAutoScoreAnnotation(data) {
+    return this.createAutoAnnotation('autoScore', data);
+  }
+
+  createAutoCommentAnnotation(data) {
+    return this.createAutoAnnotation('autoComment', data);
+  }
+
+  createAutoAnnotation(type, data) {
+    const runId = this.ConfigService.getRunId();
+    const periodId = this.ConfigService.getPeriodId();
+    const nodeId = this.nodeId;
+    const componentId = this.componentId;
+    const toWorkgroupId = this.ConfigService.getWorkgroupId();
+    if (type === 'autoScore') {
+      return this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+    } else if (type === 'autoComment') {
+      return this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+    }
+  }
+
+  updateLatestScoreAnnotation(annotation) {
+    this.latestAnnotations.score = annotation;
+  }
+
+  updateLatestCommentAnnotation(annotation) {
+    this.latestAnnotations.comment = annotation;
+  }
 }
 
 ComponentController.$inject = [];
-
 export default ComponentController;

@@ -9,6 +9,9 @@
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 </head>
 <body>
@@ -18,7 +21,7 @@
 
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage" />"><spring:message code="wiseHome" /></a>
+				<a id="name" href="${contextPath}/legacy" title="<spring:message code="wiseHomepage" />"><spring:message code="wiseHome" /></a>
 			</div>
 
 			<div class="infoContent">
@@ -26,7 +29,7 @@
 				<div class="infoContentBox">
 					<div><spring:message code="forgotaccount.student.passwordreminder2.step2"/></div>
 					<div><spring:message code="forgotaccount.student.passwordreminder2.hello"/>, ${username}. <spring:message code="forgotaccount.student.passwordreminder2.answerPasswordReminderQuestion"/></div>
-					<form id="submittedAccountAnswer" method="post" commandName="passwordReminderParameters" autocomplete='off'>
+					<form id="submittedAccountAnswer" method="post" modelAttribute="passwordReminderParameters" autocomplete='off'>
 						<div><spring:message code="forgotaccount.student.passwordreminder2.question"/>: <spring:message code="forgotaccount.student.passwordreminder2.${accountQuestion}"/></div>
 						<div class="forgotPasswordInstructionText3">
 							<label for="submittedAnswer"><spring:message code="forgotaccount.student.passwordreminder2.answer"/>:</label>
@@ -50,7 +53,7 @@
 							</spring:bind>
 					</div>
 				</div>
-				<a href="${contextPath}" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/legacy" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

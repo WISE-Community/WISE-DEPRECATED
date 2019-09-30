@@ -1,0 +1,118 @@
+<div class="standalone mat-app-background">
+  <div class="standalone__logo">
+    <a routerLink="/">
+      <img src="assets/img/wise-web-logo-full.png" alt="WISE logo" />
+    </a>
+  </div>
+  <mat-card class="standalone__content mat-elevation-z4">
+    <mat-card-content>
+      <div *ngIf="complete" class="center">
+        <p class="mat-body-2" i18n>Thank you for contacting WISE!</p>
+        <p i18n>Your message has been sent. We will get back to you as soon as possible.</p>
+        <br>
+        <div>
+          <a mat-flat-button color="accent" routerLink="/" i18n>Return to WISE Home</a>
+        </div>
+      </div>
+      <form *ngIf="!complete"
+            role="form"
+            (submit)="submit()"
+            [formGroup]="contactFormGroup"
+            fxLayout="column">
+        <h2 class="accent center" i18n>Contact WISE</h2>
+        <p>
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label i18n>Name</mat-label>
+            <input matInput
+                   id="name"
+                   name="name"
+                   formControlName="name" />
+            <mat-error *ngIf="contactFormGroup.controls['name'].hasError('required')" i18n>Name required</mat-error>
+          </mat-form-field>
+        </p>
+        <p *ngIf="!isStudent">
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label i18n>Email</mat-label>
+            <input matInput
+                   id="email"
+                   name="email"
+                   formControlName="email" />
+            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('required')" i18n>Email required</mat-error>
+            <mat-error *ngIf="contactFormGroup.controls['email'].hasError('email')" i18n>Invalid Email</mat-error>
+          </mat-form-field>
+        </p>
+        <p *ngIf="isStudent && teachers.length > 0">
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label i18n>Teacher</mat-label>
+            <mat-select formControlName="teacher">
+              <mat-option *ngFor="let teacher of teachers" [value]="teacher.username">
+                {{teacher.displayName}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="contactFormGroup.controls['teacher'].hasError('required')" i18n>Teacher required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label i18n>Issue Type</mat-label>
+            <mat-select formControlName="issueType">
+              <mat-option *ngFor="let issueType of issueTypes" [value]="issueType.key">
+                {{issueType.value}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="contactFormGroup.controls['issueType'].hasError('required')" i18n>Issue Type required</mat-error>
+          </mat-form-field>
+        </p>
+        <p *ngIf="projectName">
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label i18n>Project Name</mat-label>
+            <input matInput
+                   name="projectName"
+                   [value]="projectName"
+                   disabled />
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label i18n>Summary</mat-label>
+            <input matInput
+                   id="summary"
+                   name="summary"
+                   formControlName="summary" />
+            <mat-error *ngIf="contactFormGroup.controls['summary'].hasError('required')" i18n>Summary required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label i18n>Description</mat-label>
+            <textarea matInput
+                      id="description"
+                      name="description"
+                      formControlName="description"
+                      rows="10"
+                      cols="10">
+            </textarea>
+            <mat-error *ngIf="contactFormGroup.controls['description'].hasError('required')" i18n>Description required</mat-error>
+          </mat-form-field>
+        </p>
+        <p *ngIf="isRecaptchaEnabled"
+           class="recaptcha-container">
+          <re-captcha formControlName="recaptcha"
+                      (resolved)="recaptchaResolved($event)"
+                      [siteKey]="recaptchaPublicKey"></re-captcha>
+        </p>
+        <p class="warn center standalone__error inactive" [ngClass]="{'failure': error}" i18n>Sorry, there was a problem submitting the form. Please try again.</p>
+        <p>
+          <button fxFlex
+                  mat-flat-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="!contactFormGroup.valid || isSendingRequest">
+            <mat-progress-bar *ngIf="isSendingRequest" mode="indeterminate"></mat-progress-bar>
+            <ng-container i18n>Submit</ng-container>
+          </button>
+        </p>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

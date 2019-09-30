@@ -25,7 +25,6 @@ package org.wise.portal.domain.authentication;
 
 /**
  * Enumeration class for School level
- *
  * @author Hiroki Terashima
  */
 public enum Schoollevel {

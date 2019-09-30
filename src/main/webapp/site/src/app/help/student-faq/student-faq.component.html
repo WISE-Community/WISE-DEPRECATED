@@ -1,0 +1,97 @@
+<div id="studentFAQTop" class="content-block">
+  <h1 fxLayoutAlign="left center">
+    <mat-icon class="title-icon">face</mat-icon><span i18n>Student Frequently Asked Questions</span>
+  </h1>
+  <hr/>
+  <h2 id="generalQuestions" i18n>Table of Contents</h2>
+  <p class="indented-text"><a (click)="scrollTo('generalQuestions')" class="link" i18n>General Questions</a></p>
+  <p class="indented-text"><a (click)="scrollTo('technicalQuestions')" class="link" i18n>Technical Questions</a></p>
+  <hr/>
+  <h2 i18n>General Questions</h2>
+  <h3 i18n>How do I create an account?</h3>
+  <ol>
+    <li i18n>Go to the <a href="{{contextPath}}/join" target="_blank">Register</a> page.</li>
+    <li i18n>Click on <a href="{{contextPath}}/join/student" target="_blank">Student</a>.</li>
+    <li i18n>Choose to sign up with your email or with your Google Account.</li>
+    <li i18n>Fill out the form and submit it.</li>
+    <li i18n>If you created an account using your email, you will be given a username that you will need to remember. Your username will be your first name and your last name with no space inbetween. There may be a number added at the end of your username if someone has the same name as you.</li>
+  </ol>
+  <h3 i18n>I forgot my username, how can I find it?</h3>
+  <ul>
+    <li i18n>Go to the forgot username page and follow the instructions to retrieve your username.</li>
+  </ul>
+  <h3 i18n>I forgot my password, how can I change it?</h3>
+  <ul>
+    <li i18n>Go to the forgot password page and follow the instructions to reset your password.</li>
+  </ul>
+  <h3 i18n>How do I start working on a project?</h3>
+  <p i18n>In order to start working on a project you must obtain an Access Code from your teacher. Once you have an Access Code, follow the directions below.</p>
+  <ol>
+    <li i18n>Log into WISE with your student account.</li>
+    <li i18n>Click on the "Add Unit" button at the top right of the <a href="{{contextPath}}/student" target="_blank">Student Home Page</a>.</li>
+    <li i18n>Enter the Access Code from your teacher.</li>
+    <li i18n>Choose your period.</li>
+    <li i18n>Click "Add".</li>
+    <li i18n>The run will be added to your list of runs.</li>
+    <li id="technicalQuestions" i18n>Click "Launch" to open the project.</li>
+  </ol>
+  <h3 i18n>I chose the wrong period, how can I change it?</h3>
+  <ul>
+    <li i18n>Only your teacher can change your period. Please ask them for assistance.</li>
+  </ul>
+  <hr/>
+  <h2 i18n>Technical Questions</h2>
+  <h3 i18n>The WISE web site won't load on my web browser. What do I do?</h3>
+  <ul>
+    <li i18n>You can try <a href="http://www.wikihow.com/Clear-Your-Browser's-Cache" target="_blank">clearing your browser cache</a> and then reloading the WISE web site.</li>
+    <li i18n>You can try using a different web browser. We recommend using Chrome or Firefox.</li>
+  </ul>
+  <h3 i18n>What if I have trouble logging in?</h3>
+  <ul>
+    <li i18n>If you do not remember your username or password click the Lost Username or Password link and follow the instructions. </li>
+  </ul>
+  <h3 i18n>Can I use WISE in another language?</h3>
+  <span class="indented-text" i18n>Yes!</span>
+  <ol>
+    <li i18n>Sign into WISE with your student account.</li>
+    <li i18n>Click on your account icon at the top right of the page. This should open a drop down with options.</li>
+    <li i18n>Click the <a href="{{contextPath}}/student/profile/edit" target="_blank">"Edit Profile"</a> option.</li>
+    <li i18n>Near the bottom there will be a "Language" setting.</li>
+    <li i18n>Change the language to the language of your choice.</li>
+    <li i18n>Note 1: If your language is not listed as an option, or you'd like to help us improve the translation, please contact us and we'll help you get started!</li>
+    <li i18n>Note 2: Changing the language will change the language of the website but will not change the language of the projects. Projects must be independently translated which means that if you want to use a project in another language, you must translate it yourself or find a version of the project that has been translated by someone else.</li>
+  </ol>
+  <h3 i18n>Who do I contact when I have a problem I can't solve?</h3>
+  <ul>
+    <li i18n>The <a href="{{contextPath}}/contact" target="_blank">Contact WISE form</a> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</li>
+  </ul>
+</div>
+<br/>
+<div class="content">
+  <div fxLayout="row"
+       fxLayout.xs="column"
+       fxLayoutAlign="center stretch"
+       fxLayoutAlign.xs="center center"
+       fxLayoutGap="32px"
+       fxLayoutGap.sm="24px"
+       fxLayoutGap.gt-sm="32px">
+    <app-call-to-action fxFlex
+                        fxFlex.gt-xs="33"
+                        icon="info"
+                        iconColor="accent-2"
+                        i18n-headline
+                        headline="Getting Started"
+                        i18n-content
+                        content="Information for new users."
+                        destination="../getting-started"></app-call-to-action>
+    <app-call-to-action fxFlex
+                        fxFlex.gt-xs="33"
+                        icon="school"
+                        iconColor="accent"
+                        i18n-headline
+                        headline="Teacher FAQ"
+                        i18n-content
+                        content="Questions from teachers."
+                        destination="../teacher-faq"></app-call-to-action>
+  </div>
+</div>

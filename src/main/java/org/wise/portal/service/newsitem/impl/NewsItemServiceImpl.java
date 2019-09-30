@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -23,12 +23,7 @@
  */
 package org.wise.portal.service.newsitem.impl;
 
-import java.util.Date;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -37,6 +32,9 @@ import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.newsitem.NewsItemService;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Patrick Lawler
@@ -47,12 +45,10 @@ public class NewsItemServiceImpl implements NewsItemService {
   @Autowired
   private NewsItemDao<NewsItem> newsItemDao;
 
-  @Cacheable(value = "news")
   public List<NewsItem> retrieveAllNewsItem() {
     return newsItemDao.getList();
   }
 
-  @Cacheable(value = "news")
   public List<NewsItem> retrieveByType(String type) {
     return newsItemDao.getListByType(type);
   }
@@ -65,7 +61,6 @@ public class NewsItemServiceImpl implements NewsItemService {
     }
   }
 
-  @CacheEvict(value = "news", allEntries = true)
   @Transactional
   public NewsItem createNewsItem(Date date, User owner, String title, String news, String type) {
     NewsItem newsItem = new NewsItemImpl();
@@ -74,12 +69,10 @@ public class NewsItemServiceImpl implements NewsItemService {
     newsItem.setTitle(title);
     newsItem.setNews(news);
     newsItem.setType(type);
-
     newsItemDao.save(newsItem);
     return newsItem;
   }
 
-  @CacheEvict(value = "news", allEntries = true)
   @Transactional
   public void updateNewsItem(Integer id, Date date, User owner, String title,
       String news, String type) throws ObjectNotFoundException {
@@ -96,7 +89,6 @@ public class NewsItemServiceImpl implements NewsItemService {
     }
   }
 
-  @CacheEvict(value = "news", allEntries = true)
   @Transactional
   public void deleteNewsItem(Integer newsItemId) {
     try {

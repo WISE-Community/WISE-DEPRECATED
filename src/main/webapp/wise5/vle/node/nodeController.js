@@ -42,6 +42,7 @@ var NodeController = function () {
     this.submit = false;
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.teacherWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
+    this.isDisabled = !this.ConfigService.isRunActive();
 
     /*
      * an object that holds the mappings with the key being the component
@@ -564,13 +565,13 @@ var NodeController = function () {
 
       this.$rootScope.$broadcast('showStudentAssets', { componentController: componentController, $event: $event });
     }
-  }, {
-    key: 'saveButtonClicked',
-
 
     /**
      * Called when the student clicks the save button
      */
+
+  }, {
+    key: 'saveButtonClicked',
     value: function saveButtonClicked() {
       this.$rootScope.$broadcast('nodeSaveClicked', { nodeId: this.nodeId });
       var isAutoSave = false;

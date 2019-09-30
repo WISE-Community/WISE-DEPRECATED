@@ -23,7 +23,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var AnimationController = function (_ComponentController) {
   _inherits(AnimationController, _ComponentController);
 
-  function AnimationController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnimationService, AnnotationService, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+  function AnimationController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnimationService, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, AnimationController);
 
     var _this = _possibleConstructorReturn(this, (AnimationController.__proto__ || Object.getPrototypeOf(AnimationController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
@@ -31,9 +31,7 @@ var AnimationController = function (_ComponentController) {
     _this.$q = $q;
     _this.$timeout = $timeout;
     _this.AnimationService = AnimationService;
-    _this.NotificationService = NotificationService;
 
-    _this.latestAnnotations = null;
     _this.width = 800;
     _this.height = 600;
     _this.pixelsPerXUnit = 1;
@@ -53,7 +51,6 @@ var AnimationController = function (_ComponentController) {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.isGradingMode()) {
       if (componentState != null) {
         _this.svgId = 'svg_' + _this.nodeId + '_' + _this.componentId + '_' + componentState.id;
@@ -81,42 +78,13 @@ var AnimationController = function (_ComponentController) {
       }
     }
 
-    if (_this.hasStudentUsedAllSubmits()) {
+    if (_this.hasMaxSubmitCount() && !_this.hasSubmitsLeft()) {
       _this.disableSubmitButton();
     }
 
     _this.disableComponentIfNecessary();
 
-    if (_this.$scope.$parent.nodeController != null) {
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
-
     _this.setupSVGAfterTimeout();
-
-    _this.$scope.isDirty = function () {
-      return _this.$scope.animationController.isDirty;
-    };
-
-    /*
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @param {boolean} isSubmit boolean whether the request is coming from a submit
-     * action (optional; default is false)
-     * @return {promise} a promise of a component state containing the student data
-     */
-    _this.$scope.getComponentState = function (isSubmit) {
-      var deferred = _this.$q.defer();
-      if (_this.hasDirtyWorkToSendToParent(isSubmit)) {
-        var action = _this.getDirtyWorkToSendToParentAction(isSubmit);
-        _this.$scope.animationController.createComponentState(action).then(function (componentState) {
-          deferred.resolve(componentState);
-        });
-      } else {
-        deferred.resolve();
-      }
-      return deferred.promise;
-    };
 
     /**
      * A connected component has changed its student data so we will
@@ -133,6 +101,7 @@ var AnimationController = function (_ComponentController) {
       }
     };
 
+    _this.initializeScopeGetComponentState(_this.$scope, 'animationController');
     _this.broadcastDoneRenderingComponent();
     return _this;
   }
@@ -176,27 +145,6 @@ var AnimationController = function (_ComponentController) {
     key: 'hasStudentUsedAllSubmits',
     value: function hasStudentUsedAllSubmits() {
       return this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount;
-    }
-  }, {
-    key: 'disableSubmitButton',
-    value: function disableSubmitButton() {
-      this.isSubmitButtonDisabled = true;
-    }
-  }, {
-    key: 'hasDirtyWorkToSendToParent',
-    value: function hasDirtyWorkToSendToParent(isSubmit) {
-      return isSubmit && this.$scope.animationController.isSubmitDirty || this.$scope.animationController.isDirty;
-    }
-  }, {
-    key: 'getDirtyWorkToSendToParentAction',
-    value: function getDirtyWorkToSendToParentAction(isSubmit) {
-      var action = 'change';
-      if (isSubmit && this.$scope.animationController.isSubmitDirty) {
-        action = 'submit';
-      } else if (this.$scope.animationController.isDirty) {
-        action = 'save';
-      }
-      return action;
     }
   }, {
     key: 'handleNodeSubmit',
@@ -1134,106 +1082,7 @@ var AnimationController = function (_ComponentController) {
         if (submitCounter != null) {
           this.submitCounter = submitCounter;
         }
-        this.processLatestSubmit();
-      }
-    }
-
-    /**
-     * Check if latest component state is a submission and set isSubmitDirty accordingly.
-     */
-
-  }, {
-    key: 'processLatestSubmit',
-    value: function processLatestSubmit() {
-      var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-      if (latestComponentState) {
-        var serverSaveTime = latestComponentState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestComponentState.isSubmit) {
-          this.setIsSubmitDirtyFalse();
-          this.emitComponentSubmitDirty(false);
-          this.setSubmittedMessage(clientSaveTime);
-        } else {
-          this.setIsSubmitDirtyTrue();
-          this.emitComponentSubmitDirty(true);
-          this.setSavedMessage(clientSaveTime);
-        }
-      }
-    }
-  }, {
-    key: 'setIsSubmitDirtyTrue',
-    value: function setIsSubmitDirtyTrue() {
-      this.setIsSubmitDirty(true);
-    }
-  }, {
-    key: 'setIsSubmitDirtyFalse',
-    value: function setIsSubmitDirtyFalse() {
-      this.setIsSubmitDirty(false);
-    }
-  }, {
-    key: 'setIsSubmitDirty',
-    value: function setIsSubmitDirty(isDirty) {
-      this.isSubmitDirty = isDirty;
-    }
-  }, {
-    key: 'getIsSubmitDirty',
-    value: function getIsSubmitDirty() {
-      return this.isSubmitDirty;
-    }
-  }, {
-    key: 'emitComponentDirty',
-    value: function emitComponentDirty(isDirty) {
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: isDirty });
-    }
-  }, {
-    key: 'emitComponentSubmitDirty',
-    value: function emitComponentSubmitDirty(isDirty) {
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
-    }
-
-    /**
-     * A submit was triggered by the component submit button or node submit button.
-     * @param {string} submitTriggeredBy What triggered the submit.
-     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-     */
-
-  }, {
-    key: 'submit',
-    value: function submit(submitTriggeredBy) {
-      if (this.getIsSubmitDirty()) {
-        var performSubmit = true;
-
-        if (this.hasMaxSubmitCount()) {
-          var numberOfSubmitsLeft = this.getNumberOfSubmitsLeft();
-          performSubmit = this.confirmSubmit(numberOfSubmitsLeft);
-        }
-
-        if (performSubmit) {
-          this.setIsSubmitTrue();
-          this.incrementSubmitCounter();
-
-          if (this.hasSubmitsLeft()) {
-            this.isSubmitButtonDisabled = true;
-          }
-
-          if (this.isAuthoringMode()) {
-            /*
-             * We are in authoring mode so we will set values appropriately
-             * here because the 'componentSubmitTriggered' event won't
-             * work in authoring mode.
-             */
-            this.isDirty = false;
-            this.setIsSubmitDirty(false);
-            this.createComponentState('submit');
-          } else {
-            if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-              this.emitComponentSubmitTriggered();
-            }
-          }
-        } else {
-          this.setIsSubmitFalse();
-        }
+        this.processLatestStudentWork();
       }
     }
   }, {
@@ -1252,11 +1101,6 @@ var AnimationController = function (_ComponentController) {
       return isPerformSubmit;
     }
   }, {
-    key: 'emitComponentSubmitTriggered',
-    value: function emitComponentSubmitTriggered() {
-      this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-    }
-  }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
       var _this5 = this;
@@ -1264,7 +1108,7 @@ var AnimationController = function (_ComponentController) {
       this.setIsDirty(true);
       this.emitComponentDirty(true);
 
-      this.setIsSubmitDirty(true);
+      this.setIsSubmit(true);
       this.emitComponentSubmitDirty(true);
 
       this.clearSaveText();
@@ -1296,7 +1140,7 @@ var AnimationController = function (_ComponentController) {
        * Reset the isSubmit value so that the next component state
        * doesn't maintain the same value.
        */
-      this.setIsSubmitFalse();
+      this.setIsSubmit(false);
 
       /*
        * Perform any additional processing that is required before returning
@@ -1348,6 +1192,7 @@ var AnimationController = function (_ComponentController) {
     value: function playButtonClicked() {
       this.setAnimationStateToPlaying();
       this.startAnimation();
+      this.studentDataChanged();
     }
   }, {
     key: 'pauseButtonClicked',
@@ -1544,7 +1389,7 @@ var AnimationController = function (_ComponentController) {
 
 ;
 
-AnimationController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnimationService', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+AnimationController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnimationService', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = AnimationController;
 //# sourceMappingURL=animationController.js.map

@@ -16,6 +16,13 @@ class StepToolsController {
     this.ProjectService = ProjectService;
     this.TeacherDataService = TeacherDataService;
     this.projectId = this.ConfigService.getProjectId();
+    
+    this.is_rtl = ($('html').attr('dir')=='rtl');
+    
+    this.icons = {prev: 'chevron_left', next: 'chevron_right'};
+    if (this.is_rtl) {
+      this.icons = {prev: 'chevron_right', next: 'chevron_left'};
+    }
 
     // set the current node to be selected in the drop down
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
@@ -39,6 +46,8 @@ class StepToolsController {
        * the project has changed most likely because the author has
        * added, deleted, or moved a step
        */
+
+      this.projectId = this.ConfigService.getProjectId();
 
       // update the idToOrder mappings
       this.idToOrder = this.ProjectService.idToOrder;
@@ -185,7 +194,7 @@ const StepTools = {
                  aria-label="{{ 'PREVIOUS_STEP' | translate }}"
                  class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
-          <md-icon> chevron_left </md-icon>
+          <md-icon> {{$ctrl.icons.prev}} </md-icon>
           <md-tooltip md-direction="bottom">{{ 'PREVIOUS_STEP' | translate }}</md-tooltip>
       </md-button>
       <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>&nbsp;
@@ -210,7 +219,7 @@ const StepTools = {
                  aria-label="{{ 'NEXT_STEP' | translate }}"
                  class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()">
-          <md-icon> chevron_right </md-icon>
+          <md-icon> {{$ctrl.icons.next}} </md-icon>
           <md-tooltip md-direction="bottom">{{ 'NEXT_STEP' | translate }}</md-tooltip>
       </md-button>
   </div>`,

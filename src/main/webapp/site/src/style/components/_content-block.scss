@@ -1,0 +1,22 @@
+.content-block {
+  padding: 16px;
+  border-radius: $card-border-radius;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding: 24px;
+  }
+}
+
+.content-block__header {
+  margin-bottom: 8px;
+}
+
+.content-block__title {
+  border-bottom: 1px solid;
+  padding-bottom: 12px;
+}
+
+.content-block__actions {
+  text-align: center;
+  padding-top: 16px;
+}

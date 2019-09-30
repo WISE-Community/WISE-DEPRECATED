@@ -46,8 +46,8 @@ import java.util.Calendar;
  */
 @Entity
 @Table(name = "notebookItems",  indexes = {
-  @Index(columnList = "runId", name = "notebookItemsRunIdIndex"),
-  @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
+    @Index(columnList = "runId", name = "notebookItemsRunIdIndex"),
+    @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
 @Getter
 @Setter
 public class NotebookItem extends PersistableDomain {
@@ -61,7 +61,7 @@ public class NotebookItem extends PersistableDomain {
   private Run run;
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-  @JoinColumn(name = "periodId", nullable = false)
+  @JoinColumn(name = "periodId")
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
@@ -117,10 +117,6 @@ public class NotebookItem extends PersistableDomain {
     return NotebookItem.class;
   }
 
-  /**
-   * Get the JSON representation of the NotebookItem
-   * @return a JSONObject with the values from the NotebookItem
-   */
   public JSONObject toJSON() {
     JSONObject notebookItemJSONObject = new JSONObject();
     try {
@@ -191,7 +187,6 @@ public class NotebookItem extends PersistableDomain {
       if (serverDeleteTime != null) {
         notebookItemJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
       }
-
       if (groups != null) {
         notebookItemJSONObject.put("groups", new JSONArray(groups));
       }

@@ -1,0 +1,57 @@
+<form role="form" (submit)="saveChanges()" [formGroup]="editProfileFormGroup">
+  <div fxLayout="column" fxLayoutAlign="start">
+    <p>
+      <mat-form-field fxFlex appearance="fill">
+        <mat-label i18n>First Name</mat-label>
+        <input matInput
+               id="firstName"
+               name="firstName"
+               formControlName="firstName" />
+        <mat-error *ngIf="editProfileFormGroup.controls['firstName'].hasError('required')" i18n>First Name required</mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field fxFlex appearance="fill">
+        <mat-label i18n>Last Name</mat-label>
+        <input matInput
+               id="lastName"
+               name="lastName"
+               formControlName="lastName" />
+        <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')" i18n>Last Name required</mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field fxFlex appearance="fill">
+        <mat-label i18n>Username</mat-label>
+        <input matInput
+               id="username"
+               name="username"
+               formControlName="username" />
+        <mat-error *ngIf="editProfileFormGroup.controls['username'].hasError('required')" i18n>User Name required</mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field fxFlex appearance="fill">
+        <mat-label i18n>Language</mat-label>
+        <mat-select placeholder="Language"
+                    formControlName="language">
+          <mat-option *ngFor="let language of languages" [value]="language.locale">
+            {{language.language}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="editProfileFormGroup.controls['language'].hasError('required')" i18n>Language required</mat-error>
+      </mat-form-field>
+    </p>
+    <div>
+      <button mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="!editProfileFormGroup.valid || !changed || isSaving"
+              fxFlex
+              fxFlex.gt-xs="0 0 auto">
+        <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
+        <ng-container i18n>Save Changes</ng-container>
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -45,6 +45,11 @@ var NotebookLauncherController = function () {
         return this.config.label;
       }
     }
+  }, {
+    key: 'isShowButton',
+    value: function isShowButton() {
+      return !this.notesVisible || this.config.itemTypes.note.enableAddNote;
+    }
   }]);
 
   return NotebookLauncherController;
@@ -59,7 +64,7 @@ var NotebookLauncher = {
     notesVisible: '<',
     onOpen: '&'
   },
-  template: '<md-button class="md-scale md-fab md-fab-bottom-right notebook-launcher"\n                    aria-label="{{ $ctrl.fabLabel() }}"\n                    ng-click="$ctrl.fabAction($event)">\n            <md-icon ng-if="!$ctrl.notesVisible">{{ $ctrl.config.icon }}</md-icon>\n            <md-icon ng-if="$ctrl.notesVisible">add</md-icon>\n            <md-tooltip md-direction="top">\n                {{ $ctrl.fabLabel() }}\n            </md-tooltip>\n        </md-button>',
+  template: '<md-button ng-if="$ctrl.isShowButton()"\n                    class="md-scale md-fab md-fab-bottom-right notebook-launcher"\n                    aria-label="{{ $ctrl.fabLabel() }}"\n                    ng-click="$ctrl.fabAction($event)">\n            <md-icon ng-if="!$ctrl.notesVisible">{{ $ctrl.config.icon }}</md-icon>\n            <md-icon ng-if="$ctrl.notesVisible">add</md-icon>\n            <md-tooltip md-direction="top">\n                {{ $ctrl.fabLabel() }}\n            </md-tooltip>\n        </md-button>',
   controller: NotebookLauncherController
 };
 

@@ -1,0 +1,22 @@
+<nav class="mobile-menu dark-theme">
+  <div class="mobile-menu__close" fxLayoutAlign="end center">
+    <button mat-icon-button (click)="close()" i18n-aria-label aria-label="Close menu">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div fxLayout="column" fxLayoutGap="8px">
+    <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>WISE Home</a>
+    <a mat-button routerLink="/features" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>Features</a>
+    <a mat-button routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>About Us</a>
+    <a mat-button routerLink="/news" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" i18n>News</a>
+    <a mat-button href="https://wise-research.berkeley.edu" target="_blank" i18n>Research <mat-icon>call_made</mat-icon></a>
+    <div id="mobileMenuAccountLinks"
+         *ngIf="!signedIn"
+         fxLayout="column"
+         fxLayoutGap="8px">
+      <mat-divider></mat-divider>
+      <a mat-button routerLink="/login" i18n>Sign In</a>
+      <a mat-button routerLink="/join" i18n>Create Account</a>
+    </div>
+  </div>
+</nav>

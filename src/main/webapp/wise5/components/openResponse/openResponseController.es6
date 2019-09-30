@@ -32,17 +32,11 @@ class OpenResponseController extends ComponentController {
     // holds the text that the student has typed
     this.studentResponse = '';
 
-    // holds student attachments like assets
-    this.attachments = [];
-
     // whether rich text editing is enabled
     this.isRichTextEnabled = false;
 
     // whether we're only showing the student work
     this.onlyShowWork = false;
-
-    // the latest annotations
-    this.latestAnnotations = null;
 
     // used to hold a message dialog if we need to use one
     this.messageDialog = null;
@@ -89,9 +83,6 @@ class OpenResponseController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-      // get the latest annotations
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'grading') {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
@@ -114,9 +105,6 @@ class OpenResponseController extends ComponentController {
 
     // set whether rich text is enabled
     this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
-
-    // set whether studentAttachment is enabled
-    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
     if (this.componentContent.completionCriteria != null) {
       this.useCustomCompletionCriteria = true;
@@ -162,23 +150,11 @@ class OpenResponseController extends ComponentController {
       this.setStudentWork(componentState);
     }
 
-    // check if the student has used up all of their submits
-    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-      /*
-       * the student has used up all of their chances to submit so we
-       * will disable the submit button
-       */
+    if (!this.canSubmit()) {
       this.isSubmitButtonDisabled = true;
     }
 
     this.disableComponentIfNecessary();
-
-    if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
-
-    //$('.openResponse').off('dragover').off('drop');
 
     /**
      * Returns true iff there is student work that hasn't been saved yet
@@ -291,118 +267,30 @@ class OpenResponseController extends ComponentController {
           this.attachments = attachments;
         }
 
-        this.processLatestSubmit();
+        this.processLatestStudentWork();
       }
     }
-  };
+  }
 
-  /**
-   * Check if latest component state is a submission and set isSubmitDirty accordingly
-   */
-  processLatestSubmit() {
-    let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+  hasSubmitMessage() {
+    return true;
+  }
 
-    if (latestState) {
-      let serverSaveTime = latestState.serverSaveTime;
-      let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      if (latestState.isSubmit) {
-        // latest state is a submission, so set isSubmitDirty to false and notify node
-        this.isSubmitDirty = false;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        this.setSubmittedMessage(clientSaveTime);
-      } else {
-        // latest state is not a submission, so set isSubmitDirty to true and notify node
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        this.setSavedMessage(clientSaveTime);
-      }
+  confirmSubmit(numberOfSubmitsLeft) {
+    let message = '';
+    let isPerformSubmit = false;
+
+    if (numberOfSubmitsLeft <= 0) {
+      alert(this.$translate('openResponse.youHaveNoMoreChances'));
+    } else if (numberOfSubmitsLeft == 1) {
+      message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+      isPerformSubmit = confirm(message);
+    } else if (numberOfSubmitsLeft > 1) {
+      message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+      isPerformSubmit = confirm(message);
     }
-  };
 
-  /**
-   * A submit was triggered by the component submit button or node submit button
-   * @param submitTriggeredBy what triggered the submit
-   * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-   */
-  submit(submitTriggeredBy) {
-
-    if (this.isSubmitDirty) {
-      // the student has unsubmitted work
-
-      var performSubmit = true;
-
-      if (this.componentContent.maxSubmitCount != null) {
-        // there is a max submit count
-
-        // calculate the number of submits this student has left
-        var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-        var message = '';
-
-        if (numberOfSubmitsLeft <= 0) {
-
-          // the student does not have any more chances to submit
-          alert(this.$translate('openResponse.youHaveNoMoreChances'));
-          performSubmit = false;
-        } else if (numberOfSubmitsLeft == 1) {
-
-          // ask the student if they are sure they want to submit
-          message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-          //message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
-          performSubmit = confirm(message);
-        } else if (numberOfSubmitsLeft > 1) {
-
-          // ask the student if they are sure they want to submit
-          message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-          //message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
-          performSubmit = confirm(message);
-        }
-      }
-
-      if (performSubmit) {
-
-        /*
-         * set isSubmit to true so that when the component state is
-         * created, it will know that is a submit component state
-         * instead of just a save component state
-         */
-        this.isSubmit = true;
-        this.incrementSubmitCounter();
-
-        // check if the student has used up all of their submits
-        if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-          /*
-           * the student has used up all of their submits so we will
-           * disable the submit button
-           */
-          this.isSubmitButtonDisabled = true;
-        }
-
-        if (this.mode === 'authoring') {
-          /*
-           * we are in authoring mode so we will set values appropriately
-           * here because the 'componentSubmitTriggered' event won't
-           * work in authoring mode
-           */
-          this.isDirty = false;
-          this.isSubmitDirty = false;
-          this.createComponentState('submit');
-        }
-
-        if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-          // tell the parent node that this component wants to submit
-          this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-        } else if (submitTriggeredBy === 'nodeSubmitButton') {
-          // nothing extra needs to be performed
-        }
-      } else {
-        /*
-         * the student has cancelled the submit so if a component state
-         * is created, it will just be a regular save and not submit
-         */
-        this.isSubmit = false;
-      }
-    }
+    return isPerformSubmit;
   }
 
   /**
@@ -456,6 +344,9 @@ class OpenResponseController extends ComponentController {
     // set the component id
     componentState.componentId = this.componentId;
 
+    componentState.isCompleted = this.OpenResponseService.isCompleted(
+        this.componentContent, [componentState], null, null, this.ProjectService.getNodeById(this.nodeId));
+
     /*
      * reset the isSubmit value so that the next component state
      * doesn't maintain the same value
@@ -502,10 +393,7 @@ class OpenResponseController extends ComponentController {
 
     if (performCRaterScoring) {
       // we need to perform CRater scoring
-
-      var cRaterItemType = this.CRaterService.getCRaterItemType(this.componentContent);
       var cRaterItemId = this.CRaterService.getCRaterItemId(this.componentContent);
-      var cRaterRequestType = 'scoring';
       var cRaterResponseId = new Date().getTime();
       var studentData = this.studentResponse;
 
@@ -519,7 +407,7 @@ class OpenResponseController extends ComponentController {
       });
 
       // make the CRater request to score the student data
-      this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then((result) => {
+      this.CRaterService.makeCRaterScoringRequest(cRaterItemId, cRaterResponseId, studentData).then((result) => {
 
         if (result != null) {
 
@@ -538,15 +426,21 @@ class OpenResponseController extends ComponentController {
             let score = data.score;
             let concepts = data.concepts;
             let previousScore = null;
+            if (data.scores != null) {
+              const maxSoFarFunc = (accumulator, currentValue) => { return Math.max(accumulator, currentValue.score); };
+              score = data.scores.reduce(maxSoFarFunc, 0);
+            }
 
             if (score != null) {
-
-              // create the auto score annotation
-              let autoScoreAnnotationData = {};
-              autoScoreAnnotationData.value = score;
-              autoScoreAnnotationData.maxAutoScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
-              autoScoreAnnotationData.concepts = concepts;
-              autoScoreAnnotationData.autoGrader = 'cRater';
+              const autoScoreAnnotationData = {
+                value: score,
+                maxAutoScore: this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId),
+                concepts: concepts,
+                autoGrader: 'cRater'
+              };
+              if (data.scores != null) {
+                autoScoreAnnotationData.scores = data.scores;
+              }
 
               let autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
 
@@ -662,9 +556,7 @@ class OpenResponseController extends ComponentController {
                 }
               }
               if (this.componentContent.enableNotifications) {
-                // get the notification properties for the score that the student got.
-                let notificationForScore = this.ProjectService.getNotificationByScore(this.componentContent, previousScore, score);
-
+                const notificationForScore = this.ProjectService.getNotificationByScore(this.componentContent, previousScore, score);
                 if (notificationForScore != null) {
                   notificationForScore.score = score;
                   notificationForScore.nodeId = this.nodeId;
@@ -760,33 +652,6 @@ class OpenResponseController extends ComponentController {
 
     return annotation;
   }
-
-  removeAttachment(attachment) {
-    if (this.attachments.indexOf(attachment) != -1) {
-      this.attachments.splice(this.attachments.indexOf(attachment), 1);
-      this.studentDataChanged();
-    }
-  }
-
-  /**
-   * Attach student asset to this Component's attachments
-   * @param studentAsset
-   */
-  attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
-        if (copiedAsset != null) {
-          var attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.attachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
-  };
 
   /**
    * Get the number of rows for the textarea
@@ -981,6 +846,18 @@ class OpenResponseController extends ComponentController {
     }
 
     return mergedComponentState;
+  }
+
+  studentDataChanged() {
+    this.setIsDirtyAndBroadcast();
+    if (this.studentResponse === '') {
+      this.setIsSubmitDirty(false);
+    } else {
+      this.setIsSubmitDirtyAndBroadcast();
+    }
+    this.clearSaveText();
+    const action = 'change';
+    this.createComponentStateAndBroadcast(action);
   }
 };
 

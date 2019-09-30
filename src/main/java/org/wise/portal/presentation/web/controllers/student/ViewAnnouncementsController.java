@@ -57,7 +57,7 @@ public class ViewAnnouncementsController {
   private static final String PREVIOUS_LOGIN = "previousLoginTime";
 
   @RequestMapping(method = RequestMethod.GET)
-  protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
+  protected ModelAndView getAnnouncements(HttpServletRequest request) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     String runIdsStr = request.getParameter(RUNID);
     List<Run> runs = new ArrayList<Run>();
@@ -77,10 +77,10 @@ public class ViewAnnouncementsController {
       cal.setTimeInMillis(pLT);
       previousLoginTime = cal.getTime();
     } catch (NumberFormatException nfe) {
-      // if there was an exception parsing previous last login time, such as user appending pLT=1302049863000\, assume this is the lasttimelogging in
+      // if there was an exception parsing previous last login time,
+      // such as user appending pLT=1302049863000\, assume this is the last time logging in
       previousLoginTime = cal.getTime();
     }
-
     ModelAndView modelAndView = new ModelAndView();
     modelAndView.addObject("user", user);
     modelAndView.addObject(PREVIOUS_LOGIN, previousLoginTime);

@@ -1,0 +1,38 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
+
+.library-filters {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .25s ease;
+
+  &.expand {
+    max-height: 1000px;
+  }
+
+  &.isSplitScreen {
+    @media (min-width: breakpoint('md.min')) {
+      max-height: 1000px;
+    }
+  }
+
+  .notice {
+    margin-top: 0;
+    margin-bottom: 16px;
+    max-width: none;
+    background-color: transparent;
+    padding: 0;
+  }
+}
+
+.library-filter {
+  margin: 0;
+
+  @media (max-width: breakpoint('xs.max')) {
+    .mat-form-field-infix {
+      width: auto;
+    }
+  }
+}

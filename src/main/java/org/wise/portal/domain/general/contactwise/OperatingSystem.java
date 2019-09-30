@@ -35,7 +35,6 @@ public enum OperatingSystem {
   WINDOWS_VISTA, WINDOWS_XP, WINDOWS_2K_NT,
   WINDOWS_98, LINUX, OTHER;
 
-  //the properties file that contains the user friendly values
   private static Properties i18nProperties;
 
   /**

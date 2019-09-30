@@ -1,0 +1,64 @@
+<mat-card class="standalone__content standalone__content--sm mat-elevation-z4">
+  <mat-card-content>
+    <form role="form" (submit)="login()">
+      <h2 class="standalone__title accent" i18n>Sign in to WISE</h2>
+      <p class="warn center standalone__error inactive" [ngClass]="{'active': passwordError}" i18n>Username and password not recognized. Please try again.</p>
+      <p *ngIf="isRecaptchaRequired" class="warn center standalone__error inactive" [ngClass]="{'active': isRecaptchaRequired}" i18n>Please try again and verify that you are not a robot.</p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Username</mat-label>
+          <input matInput
+                 id="username"
+                 name="username"
+                 [(ngModel)]="credentials.username"
+                 [disabled]="processing"
+                 autofocus />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label i18n>Password</mat-label>
+          <input matInput
+                 id="password"
+                 name="password"
+                 type="password"
+                 [disabled]="processing"
+                 [(ngModel)]="credentials.password" />
+        </mat-form-field>
+      </p>
+      <p *ngIf="isRecaptchaRequired"
+           class="recaptcha-container">
+        <re-captcha #recaptchaRef="reCaptcha"
+                    (resolved)="recaptchaResolved($event)"
+                    [siteKey]="recaptchaPublicKey"></re-captcha>
+      </p>
+      <p>
+        <button fxFlex
+                mat-flat-button
+                color="primary"
+                type="submit"
+                [disabled]="processing">
+          <mat-progress-bar *ngIf="processing" mode="indeterminate"></mat-progress-bar>
+          <span i18n>Sign In</span>
+        </button>
+      </p>
+    </form>
+    <div *ngIf="isGoogleAuthenticationEnabled && isShowGoogleLogin">
+      <p class="center mat-title">- or -</p>
+      <p class="center">
+        <button class="button--social-login button--google"
+                color="accent"
+                mat-flat-button
+                (click)="socialSignIn('google')">
+          <img src="assets/img/icons/g-logo.png" alt="Google logo"/>
+          <ng-container i18n>Sign in with Google</ng-container>
+        </button>
+      </p>
+    </div>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions class="center">
+    <p><a routerLink="/forgot" i18n>Forgot username or password?</a></p>
+    <p i18n>New to WISE? <a routerLink="/join">Join for free!</a></p>
+  </mat-card-actions>
+</mat-card>

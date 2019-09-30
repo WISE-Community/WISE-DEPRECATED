@@ -1,0 +1,24 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/functions',
+  '~style/abstracts/mixins';
+
+app-announcement {
+  z-index: 3;
+}
+
+app-header {
+  z-index: 2;
+}
+
+.to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1;
+
+  @media (min-width: breakpoint('sm.min')) {
+    bottom: 32px;
+    right: 32px;
+  }
+}

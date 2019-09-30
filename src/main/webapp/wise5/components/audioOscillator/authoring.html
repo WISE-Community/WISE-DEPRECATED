@@ -212,7 +212,7 @@
             {{ 'SHOW_JSON' | translate }}
           </md-tooltip>
         </md-button>
-        <span ng-if='audioOscillatorController.jsonStringChanged'>
+        <span ng-if='audioOscillatorController.isJSONStringChanged'>
           {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
         </span>
         <div ng-if='audioOscillatorController.showJSONAuthoring'>
@@ -298,12 +298,6 @@
                ng-model-options='{ debounce: 1000 }'
                ng-change='labelController.authoringViewComponentChanged()'/>
       </md-input-container>
-      <br/>
-      <md-checkbox class='md-primary'
-                   ng-model='audioOscillatorController.authoringComponentContent.stopAfterGoodDraw'
-                   ng-change='audioOscillatorController.authoringViewComponentChanged()'>
-        {{ 'audioOscillator.oscilloscopeStopAfterGoodDraw' | translate }}
-      </md-checkbox>
     </div>
   </div>
   <div ng-style='{"border": "5px solid black", "padding": "20px"}'>
@@ -385,7 +379,7 @@
           </md-input-container>
           <md-input-container style='margin-right: 20px;'>
             <md-button class='playStopButton md-raised md-primary'
-                       ng-click='audioOscillatorController.playStopClicked()'>
+                       ng-click='audioOscillatorController.togglePlay()'>
               <md-icon ng-if='!audioOscillatorController.isPlaying'>play_arrow</md-icon>
               <md-icon ng-if='audioOscillatorController.isPlaying'>stop</md-icon>
               <md-tooltip md-direction='top'

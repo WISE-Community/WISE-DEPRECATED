@@ -1,0 +1,25 @@
+$padding-top: 48px;
+$padding-top-gt-xs: 64px;
+$padding-top-gt-md: 72px;
+$announcement-height: 40px;
+
+.main {
+  padding: $padding-top 8px 48px;
+  flex: 1 0 auto;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding: $padding-top-gt-xs 24px 64px;
+  }
+
+  @media (min-width: breakpoint('md.min')) {
+    padding: $padding-top-gt-xs 40px 78px;
+  }
+
+  @media (min-width: breakpoint('lg.min')) {
+    padding-top: $padding-top-gt-md;
+  }
+}
+
+.main--fullwidth {
+  padding: 0;
+}

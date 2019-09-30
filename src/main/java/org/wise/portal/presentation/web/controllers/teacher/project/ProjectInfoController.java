@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.project.Project;
@@ -52,34 +52,30 @@ public class ProjectInfoController {
   private RunService runService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   // path to project thumb image relative to project folder
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
-  @RequestMapping("/projectInfo")
+  @GetMapping("/projectInfo")
   protected ModelAndView handleRequestInternal(
-    @RequestParam("projectId") String projectIdStr,
-    HttpServletRequest request,
-    HttpServletResponse response) throws Exception {
-
+      @RequestParam("projectId") String projectIdStr,
+      HttpServletRequest request,
+      HttpServletResponse response) throws Exception {
     Project project = projectService.getById(projectIdStr);
-
     if (project != null) {
       ModelAndView modelAndView = new ModelAndView();
       modelAndView.addObject("project", project);
-      Integer usage = this.runService.getProjectUsage((Long)project.getId());
+      Integer usage = runService.getProjectUsage((Long)project.getId());
       modelAndView.addObject("usage", usage);
 
-      //get the command
       String command = request.getParameter("command");
-      //if command is 'getTimesRun', return the usage count
       if (command != null && command.equals("getNumberOfRuns")) {
         response.getWriter().write(usage.toString());
         return null;
       }
 
-      String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
+      String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
       String url = project.getModulePath();
       if (url != null && url != "") {
         int ndx = url.lastIndexOf("/");
@@ -94,7 +90,6 @@ public class ProjectInfoController {
           modelAndView.addObject("projectThumbPath", projectThumbPath);
         }
       }
-
       return modelAndView;
     } else {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Cannot determine project to retrieve info for.");

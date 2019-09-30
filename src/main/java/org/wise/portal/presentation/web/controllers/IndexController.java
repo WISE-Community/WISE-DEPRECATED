@@ -23,14 +23,13 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 import org.wise.portal.domain.project.Project;
@@ -38,13 +37,14 @@ import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.project.ProjectService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Controller for WISE main home page
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/")
+@RequestMapping("/legacy")
 public class IndexController {
 
   @Autowired
@@ -54,7 +54,7 @@ public class IndexController {
   private ProjectService projectService;
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
   private MessageSource messageSource;
@@ -62,10 +62,25 @@ public class IndexController {
   // path to project thumbnail image relative to project folder
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
+  @GetMapping("/join")
+  protected String showJoinPage() {
+    return "join";
+  }
+
+  @GetMapping("/pages/{filename}")
+  protected String showStaticPages(@PathVariable String filename) {
+    return "pages/" + filename;
+  }
+
+  @GetMapping("/forgotaccount/selectaccounttype")
+  protected String showForgotAccountSelectAccountPage() {
+    return "forgotaccount/selectaccounttype";
+  }
+
   /**
    * Displays the home page with news items and public library projects
    */
-  @RequestMapping(method = RequestMethod.GET)
+  @GetMapping
   protected String showHomePage(
       HttpServletRequest request,
       ModelMap modelMap) throws Exception {
@@ -81,6 +96,7 @@ public class IndexController {
     for (Project p: libraryProjectsList) {
       String subject = p.getMetadata().getSubject();
       if (subject != null) {
+        // TODO: compare the translated subjects
         if (subject.equals("Earth Science")) {
           esProjects.add(p);
         } else if (subject.equals("Life Science")) {
@@ -98,17 +114,12 @@ public class IndexController {
     }
 
     Map<Long,String> projectThumbMap = new TreeMap<Long,String>();
-    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     for (Project p : libraryProjectsList) {
       if (p.isCurrent()) {
         String modulePath = p.getModulePath();
         int lastIndexOfSlash = modulePath.lastIndexOf("/");
         if (lastIndexOfSlash != -1) {
-          /*
-           * The project thumb url by default is the same (/assets/project_thumb.png)
-           * for all projects, but this could be overwritten in the future
-           * e.g. /253/assets/projectThumb.png
-           */
           projectThumbMap.put((Long) p.getId(),
               curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH);
         }

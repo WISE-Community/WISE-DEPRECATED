@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -26,8 +26,6 @@ package org.wise.portal.service.portal.impl;
 import java.io.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -44,31 +42,21 @@ public class PortalServiceImpl implements PortalService {
   @Autowired
   private PortalDao<Portal> portalDao;
 
-  // default project metadata fields
   private String defaultProjectMetadataSettings = "{\"fields\":[{\"name\":\"Title\",\"key\":\"title\",\"type\":\"input\"},{\"name\":\"Summary\",\"key\":\"summary\",\"type\":\"textarea\"},{\"name\":\"Language\",\"key\":\"language\",\"type\":\"radio\",\"choices\":[\"English\",\"Chinese (Simplified)\",\"Chinese (Traditional)\",\"Dutch\",\"German\",\"Greek\",\"Hebrew\",\"Japanese\",\"Korean\",\"Portuguese\",\"Spanish\",\"Thai\",\"Turkish\"]},{\"name\":\"Subject\",\"key\":\"subject\",\"type\":\"radio\",\"choices\":[\"Life Science\",\"Physical Science\",\"Earth Science\",\"General Science\",\"Biology\",\"Chemistry\",\"Physics\",\"Other\"]},{\"name\":\"Time Required to Complete Project\",\"key\":\"time\",\"type\":\"input\"},{\"name\":\"Supported Devices\",\"key\":\"supportedDevices\",\"type\":\"checkbox\",\"choices\":[\"PC\",\"Tablet\"]}],\"i18n\":{\"lifeScience\":{\"en\":\"Life Science\",\"ja\":\"ライフサイエンス\"},\"earthScience\":{\"en\":\"Earth Science\",\"ja\":\"地球科学\"},\"physicalScience\":{\"en\":\"Physical Science\",\"ja\":\"物理科学\",\"es\":\"ciencia física\"}}}";
 
-  /**
-   * @throws ObjectNotFoundException
-   * @see org.wise.portal.service.portal.PortalService#getById(Serializable)
-   */
-  @Cacheable(value = "portal")
+  private String defaultProjectLibraryGroups = "[{\"name\":\"Integrated\",\"id\":\"integrated\",\"type\":\"group\",\"children\":[{\"name\":\"Grade6\",\"id\":\"grade6\",\"type\":\"group\",\"children\":[]},{\"name\":\"Grade7\",\"id\":\"grade7\",\"type\":\"group\",\"children\":[]},{\"name\":\"Grade8\",\"id\":\"grade8\",\"type\":\"group\",\"children\":[]}]},{\"name\":\"DisciplineSpecific\",\"id\":\"disciplineSpecific\",\"type\":\"group\",\"children\":[]},{\"name\":\"Grade7\",\"id\":\"grade7\",\"type\":\"group\",\"children\":[]},{\"name\":\"Grade8\",\"id\":\"grade8\",\"type\":\"group\",\"children\":[]}]";
+
+  private String defaultAnnouncement = "{\"visible\":false,\"bannerText\":\"\",\"bannerButton\":\"\",\"title\":\"\",\"content\":\"\",\"buttons\":[]}";
+
   public Portal getById(Serializable id) throws ObjectNotFoundException {
     return portalDao.getById(id);
   }
 
-  /**
-   * @see org.wise.portal.service.portal.PortalService#updatePortal(org.wise.portal.domain.portal.Portal)
-   */
   @Transactional()
-  @CacheEvict(value = "portal", allEntries = true)
   public void updatePortal(Portal portal) {
-    this.portalDao.save(portal);
+    portalDao.save(portal);
   }
 
-  /**
-   * @throws Exception
-   * @see org.wise.portal.service.portal.PortalService#getWISEVersion()
-   */
   public String getWISEVersion() throws Exception {
     InputStream in = getClass().getResourceAsStream("/version.txt");
     BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
@@ -81,11 +69,15 @@ public class PortalServiceImpl implements PortalService {
     return responseStrBuilder.toString();
   }
 
-  /**
-   * Get the default project metadata settings
-   * @return the default project metadata settings
-   */
   public String getDefaultProjectMetadataSettings() {
-    return this.defaultProjectMetadataSettings;
+    return defaultProjectMetadataSettings;
+  }
+
+  public String getDefaultProjectLibraryGroups() {
+    return this.defaultProjectLibraryGroups;
+  }
+
+  public String getDefaultAnnouncement() {
+    return this.defaultAnnouncement;
   }
 }

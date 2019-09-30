@@ -1,0 +1,44 @@
+// create a custom Angular Material theme
+@function create-custom-theme($primary, $accent, $warn, $foreground, $background, $isDark: false) {
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: $isDark,
+    foreground: $foreground,
+    background: $background,
+  );
+}
+
+/// Map deep get (from https://css-tricks.com/snippets/sass/deep-getset-maps/)
+/// @author Hugo Giraudel, modified by commenter Travis
+/// @param {Map} $map - Map
+/// @param {String} $path - List of keys separated by periods
+/// @return {*} - Desired value
+@function map-deep-get($map, $path) {
+  $value: $map;
+  $keys: ();
+  $separator: '.';
+  $index : str-index($path, $separator);
+
+  @while $index != null {
+    $item: str-slice($path, 1, $index - 1);
+    $keys: append($keys, $item);
+    $path: str-slice($path, $index + 1);
+    $index : str-index($path, $separator);
+  }
+
+  $keys: append($keys, $path);
+
+  @each $key in $keys {
+    $value: map-get($value, $key);
+  }
+
+  @return $value;
+}
+
+// get breakpoint size or media query
+// @param {String} $path - List of keys separated by periods, e.g. 'md.mediaQuery' or 'md.min'
+@function breakpoint($path) {
+  @return map-deep-get($breakpoints, $path);
+}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2019 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -24,15 +24,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
+
+import javax.sql.DataSource;
 
 import org.hibernate.proxy.HibernateProxyHelper;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
+import org.springframework.security.acls.jdbc.JdbcMutableAclService;
+import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.AccessControlEntry;
+import org.springframework.security.acls.model.AclCache;
 import org.springframework.security.acls.model.MutableAcl;
-import org.springframework.security.acls.model.MutableAclService;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.acls.model.Permission;
@@ -50,86 +54,80 @@ import org.wise.portal.service.acl.AclService;
  *
  * @author Laurel Williams
  */
-public class AclServiceImpl<T extends Persistable> implements AclService<T> {
+public class AclServiceImpl<T extends Persistable>
+    extends JdbcMutableAclService implements AclService<T> {
 
-  private MutableAclService mutableAclService;
-
-  /**
-   * @param mutableAclService
-   *            the mutableAclService to set
-   */
-  @Required
-  public void setMutableAclService(MutableAclService mutableAclService) {
-    this.mutableAclService = mutableAclService;
+  public AclServiceImpl(DataSource dataSource, LookupStrategy lookupStrategy,
+      AclCache aclCache, Properties appProperties) {
+    super(dataSource, lookupStrategy, aclCache);
+    if (appProperties.containsKey("spring.datasource.driver-class-name")) {
+      String driverClass = (String) appProperties.get("spring.datasource.driver-class-name");
+      if ("com.mysql.jdbc.Driver".equals(driverClass)) {
+        setClassIdentityQuery("SELECT @@IDENTITY");
+        setSidIdentityQuery("SELECT @@IDENTITY");
+      }
+    }
   }
 
-  /**
-   * @see org.wise.portal.service.acl.AclService#addPermission(Object, Permission)
-   */
   public void addPermission(T object, Permission permission) {
     if (object != null) {
       MutableAcl acl = null;
       ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object.getId());
 
       try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity);
+        acl = (MutableAcl) this.readAclById(objectIdentity);
       } catch (NotFoundException nfe) {
-        acl = mutableAclService.createAcl(objectIdentity);
+        acl = createAcl(objectIdentity);
       }
       // add this new ace at the end of the acl.
-      acl.insertAce(acl.getEntries().size(), permission,
-        new PrincipalSid(this.getAuthentication()), true);
-      this.mutableAclService.updateAcl(acl);
+      acl.insertAce(acl.getEntries().size(), permission, new PrincipalSid(getAuthentication()),
+          true);
+      updateAcl(acl);
     } else {
       throw new IllegalArgumentException("Cannot create ACL. Object not set.");
     }
   }
 
-  /**
-   * @see org.wise.portal.service.acl.AclService#addPermission(Object, Permission, User)
-   */
   public void addPermission(T object, Permission permission, User user) {
     if (object != null) {
       MutableAcl acl = null;
       ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object.getId());
 
       try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity);
+        acl = (MutableAcl) readAclById(objectIdentity);
       } catch (NotFoundException nfe) {
-        acl = mutableAclService.createAcl(objectIdentity);
+        acl = createAcl(objectIdentity);
       }
       // add this new ace at the end of the acl.
       acl.insertAce(acl.getEntries().size(), permission,
-        new PrincipalSid(user.getUserDetails().getUsername()), true);
-      this.mutableAclService.updateAcl(acl);
+          new PrincipalSid(user.getUserDetails().getUsername()), true);
+      updateAcl(acl);
     } else {
       throw new IllegalArgumentException("Cannot create ACL. Object not set.");
     }
   }
 
-  /**
-   * @see org.wise.portal.service.acl.AclService#removePermission(Object, Permission, User)
-   */
   public void removePermission(T object, Permission permission, User user) {
     if (object != null) {
       MutableAcl acl = null;
-      ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object.getId());
+      ObjectIdentity objectIdentity = new ObjectIdentityImpl(
+          HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
       List<Sid> sid = new ArrayList<Sid>();
       sid.add(new PrincipalSid(user.getUserDetails().getUsername()));
 
       try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity, sid);
+        acl = (MutableAcl) this.readAclById(objectIdentity, sid);
       } catch (NotFoundException nfe) {
         return;
       }
       List<AccessControlEntry> aces = acl.getEntries();
-      for (int i=0; i < aces.size(); i++) {
+      for (int i = 0; i < aces.size(); i++) {
         AccessControlEntry ace = aces.get(i);
         if (ace.getPermission().equals(permission) && ace.getSid().equals(sid.get(0))) {
           acl.deleteAce(i);
         }
       }
-      this.mutableAclService.updateAcl(acl);
+      updateAcl(acl);
     } else {
       throw new IllegalArgumentException("Cannot delete ACL. Object not set.");
     }
@@ -149,35 +147,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       sid.add(new PrincipalSid(user.getUserDetails().getUsername()));
 
       try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity, sid);
-      } catch (NotFoundException nfe) {
-        return permissions;
-      }
-      List<AccessControlEntry> aces = acl.getEntries();
-      for (AccessControlEntry ace : aces) {
-        if (ace.getSid().equals(sid.get(0))) {
-          permissions.add(ace.getPermission());
-        }
-      }
-      return permissions;
-    } else {
-      throw new IllegalArgumentException(
-        "Cannot retrieve ACL. Object not set.");
-    }
-  }
-
-  public List<Permission> getPermissions(T object, UserDetails userDetails) {
-    List<Permission> permissions = new ArrayList<Permission>();
-    if (object != null) {
-      MutableAcl acl = null;
-
-      ObjectIdentity objectIdentity = new ObjectIdentityImpl(
-          HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
-      List<Sid> sid = new ArrayList<Sid>();
-      sid.add(new PrincipalSid(userDetails.getUsername()));
-
-      try {
-        acl = (MutableAcl) mutableAclService.readAclById(objectIdentity, sid);
+        acl = (MutableAcl) this.readAclById(objectIdentity, sid);
       } catch (NotFoundException nfe) {
         return permissions;
       }
@@ -193,35 +163,54 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
     }
   }
 
-  /**
-   * @see  org.wise.portal.service.acl.AclService#hasPermission(Object, Permission, User)
-   */
+  public List<Permission> getPermissions(T object, UserDetails userDetails) {
+    List<Permission> permissions = new ArrayList<Permission>();
+    if (object != null) {
+      MutableAcl acl = null;
+
+      ObjectIdentity objectIdentity = new ObjectIdentityImpl(
+          HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
+      List<Sid> sid = new ArrayList<Sid>();
+      sid.add(new PrincipalSid(userDetails.getUsername()));
+
+      try {
+        acl = (MutableAcl) this.readAclById(objectIdentity, sid);
+      } catch (NotFoundException nfe) {
+        return permissions;
+      }
+      List<AccessControlEntry> aces = acl.getEntries();
+      for (AccessControlEntry ace : aces) {
+        if (ace.getSid().equals(sid.get(0))) {
+          permissions.add(ace.getPermission());
+        }
+      }
+      return permissions;
+    } else {
+      throw new IllegalArgumentException("Cannot retrieve ACL. Object not set.");
+    }
+  }
+
   public boolean hasPermission(T object, Permission permission, User user) {
     if (object != null && permission != null && user != null) {
-      List<Permission> permissions = this.getPermissions(object, user);
+      List<Permission> permissions = getPermissions(object, user);
       for (Permission p : permissions){
         if (p.getMask() >= permission.getMask()){
           return true;
         }
       }
     }
-
     return false;
   }
 
-  /**
-   * @see org.wise.portal.service.acl.AclService#hasPermission(Authentication, Object, Object)
-   */
   public boolean hasPermission(T object, Permission permission, UserDetails userDetails) {
     if (object != null && permission != null && userDetails != null) {
-      List<Permission> permissions = this.getPermissions(object, userDetails);
+      List<Permission> permissions = getPermissions(object, userDetails);
       for (Permission p : permissions) {
         if (p.getMask() >= permission.getMask()) {
           return true;
         }
       }
     }
-
     return false;
   }
 
@@ -255,7 +244,8 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       } else if (permissionMask == BasePermission.WRITE.getMask()) {
         p = BasePermission.WRITE;
       }
-      hasAllPermissions &= this.hasPermission((T) targetDomainObject, p, (UserDetails) authentication.getPrincipal());
+      hasAllPermissions &= hasPermission((T) targetDomainObject, p,
+          (UserDetails) authentication.getPrincipal());
     }
     return hasAllPermissions;
   }

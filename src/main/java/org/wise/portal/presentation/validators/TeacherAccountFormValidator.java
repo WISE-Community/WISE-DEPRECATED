@@ -104,9 +104,6 @@ public class TeacherAccountFormValidator extends UserAccountFormValidator {
     }
   }
 
-  /*
-   * Validates the email against the email regular expression
-   */
   private void validateEmail(String email, Errors errors) {
     if (email != null && !Pattern.matches(EMAIL_REGEXP, email)) {
       errors.rejectValue("userDetails.emailAddress", "error.email-invalid");

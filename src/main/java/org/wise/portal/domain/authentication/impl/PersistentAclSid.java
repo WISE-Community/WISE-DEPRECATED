@@ -42,7 +42,7 @@ import org.wise.portal.domain.authentication.MutableAclSid;
  * annotations for persistence.
  *
  * @author Cynick Young
- * @see org.acegisecurity.acls.sid.Sid
+ * @see org.springframework.security.acls.model.Sid
  */
 @Entity
 @Table(name = PersistentAclSid.DATA_STORE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = {

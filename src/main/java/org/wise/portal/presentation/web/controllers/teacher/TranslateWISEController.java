@@ -50,10 +50,10 @@ import java.util.*;
 public class TranslateWISEController {
 
   @Autowired
-  private Properties wiseProperties;
+  private Properties appProperties;
 
   @Autowired
-  private IMailFacade mailService = null;
+  private IMailFacade mailService;
 
   private static final Map<String, String> projectToFileDirMap;
 
@@ -103,7 +103,7 @@ public class TranslateWISEController {
   @RequestMapping(value = "/translate", method = RequestMethod.GET)
   protected ModelAndView getIndexPage(HttpServletRequest request) throws Exception {
     ModelAndView modelAndView = new ModelAndView("translate/index");
-    String supportedLocales = wiseProperties.getProperty("supportedLocales", "en");
+    String supportedLocales = appProperties.getProperty("supportedLocales", "en");
     modelAndView.addObject("supportedLocales", supportedLocales);
     return modelAndView;
   }
@@ -117,13 +117,13 @@ public class TranslateWISEController {
    */
   @RequestMapping(value = "/translate/download/{projectType}/{locale}", method = RequestMethod.GET)
   protected void getTranslationFileDownload(
-    HttpServletResponse response,
-    @PathVariable String projectType,
-    @PathVariable String locale) throws Exception {
-
+      HttpServletResponse response,
+      @PathVariable String projectType,
+      @PathVariable String locale) throws Exception {
     File translationFile = getTranslationFile(projectType, locale);
     response.setContentType("application/octet-stream");
-    response.addHeader("Content-Disposition", "attachment;filename=\"" + projectType + "_" + translationFile.getName() + "\"");
+    response.addHeader("Content-Disposition", "attachment;filename=\"" +
+        projectType + "_" + translationFile.getName() + "\"");
     FileUtils.copyFile(translationFile, response.getOutputStream());
   }
 
@@ -136,16 +136,14 @@ public class TranslateWISEController {
    */
   @RequestMapping(value = "/translate/{projectType}/{locale}", method = RequestMethod.GET)
   protected void getTranslationFile(
-    HttpServletResponse response,
-    @PathVariable String projectType,
-    @PathVariable String locale) throws Exception {
-
+      HttpServletResponse response,
+      @PathVariable String projectType,
+      @PathVariable String locale) throws Exception {
     File translationFile = getTranslationFile(projectType, locale);
     String translationFileContents = "";
     if (translationFile.exists()) {
       translationFileContents = FileUtils.readFileToString(translationFile, "UTF-8");
     }
-
     response.getWriter().write(translationFileContents);
   }
 
@@ -154,30 +152,26 @@ public class TranslateWISEController {
       // portal properties is in src/main/resource and is a resource, so we must load it differently.
       String propertiesFilePath = "";
       if ("en".equals(locale)) {
-        // in properties file, only "en" doesn't have _en.json at the end. All other locales have i18n_ja.properties, i18n_de.properties, etc.
-        propertiesFilePath = TranslateWISEController.class.getResource("/i18n/i18n.properties").getFile();
+        // in properties file, only "en" doesn't have _en.json at the end.
+        // All other locales have i18n_ja.properties, i18n_de.properties, etc.
+        propertiesFilePath = TranslateWISEController.class
+            .getResource("/i18n/i18n.properties").getFile();
       } else {
-        propertiesFilePath = TranslateWISEController.class.getResource("/i18n/i18n_" + locale + ".properties").getFile();
+        propertiesFilePath = TranslateWISEController.class
+            .getResource("/i18n/i18n_" + locale + ".properties").getFile();
       }
-      //System.out.println(propertiesFilePath);
       File propertiesFile = new File(propertiesFilePath);
       return propertiesFile;
     } else {
-      // lookup the fileDirMapping
       String projectFileDir = projectToFileDirMap.get(projectType);
-
       String projectFilePath = projectFileDir + "i18n_" + locale + ".json";
-      // prepend wiseBaseDir
-      String wiseBaseDir = wiseProperties.getProperty("wiseBaseDir", "/");
+      String wiseBaseDir = appProperties.getProperty("wiseBaseDir", "/");
       if (!wiseBaseDir.endsWith("/")) {
         // make sure wiseBaseDir ends with "/" or the path will be incorrect.
         wiseBaseDir += "/";
       }
       projectFilePath = wiseBaseDir + projectFilePath;
-
-      //System.out.println(projectFilePath);
-      File projectFile = new File(projectFilePath);
-      return projectFile;
+      return new File(projectFilePath);
     }
   }
 
@@ -189,23 +183,16 @@ public class TranslateWISEController {
    */
   @RequestMapping(value = "/translate/save/{projectType}/{locale}", method = RequestMethod.POST)
   protected void saveTranslationFile(
-    @PathVariable String projectType,
-    @PathVariable String locale,
-    @RequestParam(value = "translationString", required = true) String translationString
-  ) throws Exception {
-
+      @PathVariable String projectType,
+      @PathVariable String locale,
+      @RequestParam("translationString") String translationString) throws Exception {
     File translationFile = getTranslationFile(projectType, locale);
     if (!translationFile.exists()) {
       translationFile.createNewFile();
     }
     FileUtils.writeStringToFile(translationFile, translationString, "UTF-8");
-
-    User user = ControllerUtil.getSignedInUser();
     boolean isComplete = false;
-    TranslationNotifyAdminEmailService emailService =
-      new TranslationNotifyAdminEmailService(user, isComplete, projectType, locale, translationString);
-    Thread thread = new Thread(emailService);
-    thread.start();
+    emailAdminTranslationSaved(projectType, locale, translationString, isComplete);
   }
 
   /**
@@ -215,20 +202,24 @@ public class TranslateWISEController {
    * @throws Exception
    */
   @RequestMapping(value = "/translate/complete/{projectType}/{locale}", method = RequestMethod.POST)
-  protected void translationComplete(@PathVariable String projectType, @PathVariable String locale,
-      @RequestParam(value = "translationString", required = true) String translationString)
-      throws Exception {
+  protected void translationComplete(
+      @PathVariable String projectType,
+      @PathVariable String locale,
+      @RequestParam("translationString") String translationString) throws Exception {
     File translationFile = getTranslationFile(projectType, locale);
     if (!translationFile.exists()) {
       translationFile.createNewFile();
     }
     FileUtils.writeStringToFile(translationFile, translationString, "UTF-8");
-
-    User user = ControllerUtil.getSignedInUser();
     boolean isComplete = true;
+    emailAdminTranslationSaved(projectType, locale, translationString, isComplete);
+  }
 
-    TranslationNotifyAdminEmailService emailService =
-      new TranslationNotifyAdminEmailService(user, isComplete, projectType, locale, translationString);
+  private void emailAdminTranslationSaved(String projectType, String locale,
+      String translationString, boolean isComplete) {
+    User user = ControllerUtil.getSignedInUser();
+    TranslationNotifyAdminEmailService emailService = new TranslationNotifyAdminEmailService(
+        user, isComplete, projectType, locale, translationString);
     Thread thread = new Thread(emailService);
     thread.start();
   }
@@ -238,7 +229,6 @@ public class TranslateWISEController {
    * Also sends a copy of the email to the translator.
    */
   class TranslationNotifyAdminEmailService implements Runnable {
-
     private User user;
     boolean isComplete;
     private String projectType;
@@ -256,47 +246,34 @@ public class TranslateWISEController {
 
     public void run() {
       try {
-        String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled");
+        String sendEmailEnabledStr = appProperties.getProperty("send_email_enabled");
         Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
         if (!sendEmailEnabled) {
           return;
         }
 
-        String teacherName = null;
-        String teacherEmail = null;
-
-        TeacherUserDetails teacherUserDetails =
-          (TeacherUserDetails) user.getUserDetails();
-
-        teacherName = teacherUserDetails.getFirstname() + " " +
-          teacherUserDetails.getLastname();
-        teacherEmail = teacherUserDetails.getEmailAddress();
-
-        String message = this.translationString;
-
-        String fromEmail = wiseProperties.getProperty("portalemailaddress");
-
-        String adminSubject = "Translation saved. Project: " + projectType + ", locale: " + locale + ", teacher: " + teacherName;
+        TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
+        String teacherName = teacherUserDetails.getFirstname() + " " +
+            teacherUserDetails.getLastname();
+        String teacherEmail = teacherUserDetails.getEmailAddress();
+        String message = translationString;
+        String fromEmail = appProperties.getProperty("portalemailaddress");
+        String adminSubject = "Translation saved. Project: " + projectType +
+            ", locale: " + locale + ", teacher: " + teacherName;
         if (isComplete) {
           adminSubject = "[Completed] " + adminSubject;
         }
-        String teacherSubject = "[Keep for backup] Translation saved. Project: " + projectType + ", locale: " + locale;
 
-        String[] recipients = wiseProperties.getProperty("uber_admin").split(",");
-
-        //sends the email to the admin
+        String[] recipients = appProperties.getProperty("uber_admin").split(",");
         mailService.postMail(recipients, adminSubject, message, fromEmail);
-
-        //also send email to teacher
         String[] teacherRecipient = new String[]{teacherEmail};
-
-        //sends the email to the teacher
         if (!isComplete) {
+          String teacherSubject = "[Keep for backup] Translation saved. Project: " +
+              projectType + ", locale: " + locale;
           mailService.postMail(teacherRecipient, teacherSubject, message, fromEmail);
         }
       } catch (MessagingException e) {
-        // what if there was an error sending email?
-        // should uber_admin be notified?
+        // TODO hiroki: what if there was an error sending email? should uber_admin be notified?
         e.printStackTrace();
       }
     }

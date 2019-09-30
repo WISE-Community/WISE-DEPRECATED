@@ -37,10 +37,10 @@ class MatchController extends ComponentController {
     this.isHorizontal = this.componentContent.horizontal; // whether to orient the choices and buckets side-by-side
     this.choiceStyle = '';
     this.bucketStyle = '';
-    this.latestAnnotations = null;
     this.sourceBucketId = '0';
     this.hasCorrectAnswer = false;
     this.isLatestComponentStateSubmit = false;
+    this.sourceBucket = null;
 
     this.privateNotebookItems = [];
 
@@ -48,7 +48,6 @@ class MatchController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
       if (this.shouldImportPrivateNotes()) {
         this.privateNotebookItems = this.NotebookService.getPrivateNotebookItems();
         this.$rootScope.$on('notebookUpdated', (event, args) => {
@@ -62,9 +61,6 @@ class MatchController extends ComponentController {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
       this.isDisabled = true;
-      if (this.mode === 'grading') {
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      }
       if (this.shouldImportPrivateNotes()) {
         this.privateNotebookItems = this.NotebookService.getPrivateNotebookItems(this.workgroupId);
       }
@@ -106,10 +102,6 @@ class MatchController extends ComponentController {
     }
 
     this.disableComponentIfNecessary();
-
-    if (this.$scope.$parent.nodeController != null) {
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
 
     this.registerDragListeners();
 
@@ -229,13 +221,16 @@ class MatchController extends ComponentController {
         for (let currentChoice of componentStateBucket.items) {
           const currentChoiceId = currentChoice.id;
           const currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
+          const bucket = this.getBucketById(componentStateBucketId);
           if (currentChoiceLocation > -1) {
             // choice is valid and used by student in a valid bucket, so add it to that bucket
-            const bucket = this.getBucketById(componentStateBucketId);
-            // content for choice with this id may have change, so get updated content
+
+            // content for choice with this id may have changed, so get updated content
             const updatedChoice = this.getChoiceById(currentChoiceId);
             bucket.items.push(updatedChoice);
             choiceIds.splice(currentChoiceLocation, 1);
+          } else {
+            bucket.items.push(currentChoice);
           }
         }
       }
@@ -408,16 +403,16 @@ class MatchController extends ComponentController {
     this.setNumChoiceColumns();
     this.setChoiceStyle();
     this.setBucketStyle();
-    const sourceBucket = {
+    this.sourceBucket = {
       id: this.sourceBucketId,
       value: this.componentContent.choicesLabel ? this.componentContent.choicesLabel : this.$translate('match.choices'),
       type: 'bucket',
       items: []
     };
     for (let choice of this.getChoices()) {
-      sourceBucket.items.push(choice);
+      this.sourceBucket.items.push(choice);
     }
-    this.buckets.push(sourceBucket);
+    this.buckets.push(this.sourceBucket);
     for (let bucket of this.componentContent.buckets) {
       bucket.items = [];
       this.buckets.push(bucket);
@@ -486,46 +481,6 @@ class MatchController extends ComponentController {
   getCopyOfBuckets() {
     const bucketsJSONString = angular.toJson(this.getBuckets());
     return angular.fromJson(bucketsJSONString);
-  }
-
-  /**
-   * A submit was triggered by the component submit button or node submit button
-   * @param {string} submitTriggeredBy what triggered the submit
-   * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-   */
-  submit(submitTriggeredBy) {
-    if (this.isSubmitDirty) {
-      let performSubmit = true;
-      if (this.componentContent.maxSubmitCount != null && this.hasStudentUsedAllSubmits()) {
-        performSubmit = false;
-      }
-      if (performSubmit) {
-        this.isSubmit = true;
-        this.isCorrect = null;
-        this.incrementSubmitCounter();
-        if (this.componentContent.maxSubmitCount != null && this.hasStudentUsedAllSubmits()) {
-          this.isDisabled = true;
-          this.isSubmitButtonDisabled = true;
-        }
-
-        if (this.mode === 'authoring') {
-          /*
-           * we are in authoring mode so we will set values appropriately
-           * here because the 'componentSubmitTriggered' event won't
-           * work in authoring mode
-           */
-          this.isDirty = false;
-          this.isSubmitDirty = false;
-          this.createComponentState('submit');
-        }
-
-        if (submitTriggeredBy === 'componentSubmitButton') {
-          this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-        }
-      } else {
-        this.isSubmit = false;
-      }
-    }
   }
 
   getNumSubmitsLeft() {
@@ -921,6 +876,42 @@ class MatchController extends ComponentController {
       ids.push(object.id);
     }
     return ids;
+  }
+
+  addChoice() {
+    const confirm = this.$mdDialog.prompt()
+        .title(this.$translate('match.enterChoiceText'))
+        .placeholder(this.$translate('match.typeSomething'))
+        .cancel(this.$translate('CANCEL'))
+        .ok(this.$translate('OK'));
+    this.$mdDialog.show(confirm).then((result) => {
+      if (result != null && result != '') {
+        const newChoice = {
+          id: this.UtilService.generateKey(10),
+          value: result,
+          type: 'choice',
+          studentCreated: true
+        };
+        this.sourceBucket.items.push(newChoice);
+        this.studentDataChanged();
+      }
+    });
+  }
+
+  deleteChoice(choice) {
+    if (confirm(this.$translate('match.areYouSureYouWantToDeleteThisChoice'))) {
+      const buckets = this.getBuckets();
+      for (let bucket of buckets) {
+        const items = bucket.items;
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          if (item.id == choice.id) {
+            items.splice(i, 1);
+          }
+        }
+      }
+      this.studentDataChanged();
+    }
   }
 }
 

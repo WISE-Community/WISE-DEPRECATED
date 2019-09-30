@@ -28,6 +28,7 @@ import java.util.List;
  * @author Geoffrey Kwan
  */
 @Controller
+@RequestMapping(value = {"/student/notebook", "/teacher/notebook"})
 public class NotebookController {
 
   @Autowired
@@ -39,43 +40,43 @@ public class NotebookController {
   @Autowired
   private WorkgroupService workgroupService;
 
-  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}")
+  @RequestMapping(method = RequestMethod.GET, value = "/{runId}")
   protected void getNotebookItemsForTeacher(
-      @PathVariable Integer runId,
-      @RequestParam(value = "id", required = false) Integer id,
-      @RequestParam(value = "periodId", required = false) Integer periodId,
-      @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
-      @RequestParam(value = "nodeId", required = false) String nodeId,
-      @RequestParam(value = "componentId", required = false) String componentId,
-      HttpServletResponse response) throws IOException {
+    @PathVariable Integer runId,
+    @RequestParam(value = "id", required = false) Integer id,
+    @RequestParam(value = "periodId", required = false) Integer periodId,
+    @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+    @RequestParam(value = "nodeId", required = false) String nodeId,
+    @RequestParam(value = "componentId", required = false) String componentId,
+    HttpServletResponse response) throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     if (!isUserAssociatedWithRun(signedInUser, runId)) {
       response.sendError(400);
       return;
     }
     JSONArray notebookItems =
-        getNotebookItems(runId, id, periodId, workgroupId, nodeId, componentId, response);
+      getNotebookItems(runId, id, periodId, workgroupId, nodeId, componentId, response);
     response.getWriter().write(notebookItems.toString());
   }
 
-  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}")
+  @RequestMapping(method = RequestMethod.POST, value = "/{runId}")
   protected void saveNotebookItem(
-      @PathVariable Integer runId,
-      @RequestParam(value = "periodId", required = true) Integer periodId,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-      @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
-      @RequestParam(value = "nodeId", required = false) String nodeId,
-      @RequestParam(value = "componentId", required = false) String componentId,
-      @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
-      @RequestParam(value = "studentAssetId", required = false) Integer studentAssetId,
-      @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
-      @RequestParam(value = "type", required = false) String type,
-      @RequestParam(value = "title", required = false) String title,
-      @RequestParam(value = "content", required = false) String content,
-      @RequestParam(value = "groups", required = false) String groups,
-      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-      @RequestParam(value = "clientDeleteTime", required = false) String clientDeleteTime,
-      HttpServletResponse response) throws IOException, ObjectNotFoundException {
+    @PathVariable Integer runId,
+    @RequestParam(value = "periodId", required = false) Integer periodId,
+    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+    @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
+    @RequestParam(value = "nodeId", required = false) String nodeId,
+    @RequestParam(value = "componentId", required = false) String componentId,
+    @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
+    @RequestParam(value = "studentAssetId", required = false) Integer studentAssetId,
+    @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
+    @RequestParam(value = "type", required = false) String type,
+    @RequestParam(value = "title", required = false) String title,
+    @RequestParam(value = "content", required = false) String content,
+    @RequestParam(value = "groups", required = false) String groups,
+    @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+    @RequestParam(value = "clientDeleteTime", required = false) String clientDeleteTime,
+    HttpServletResponse response) throws IOException, ObjectNotFoundException {
     if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
       return;
     }
@@ -99,14 +100,14 @@ public class NotebookController {
     response.getWriter().write(notebookItem.toJSON().toString());
   }
 
-  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}/group/{group}")
+  @RequestMapping(method = RequestMethod.POST, value = "/{runId}/group/{group}")
   protected void addNotebookItemToGroup(
-      @PathVariable Integer runId,
-      @PathVariable String group,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-      @RequestParam(value = "notebookItemId", required = true) Integer notebookItemId,
-      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-      HttpServletResponse response) throws IOException, ObjectNotFoundException {
+    @PathVariable Integer runId,
+    @PathVariable String group,
+    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+    @RequestParam(value = "notebookItemId", required = true) Integer notebookItemId,
+    @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+    HttpServletResponse response) throws IOException, ObjectNotFoundException {
     if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
       return;
     }
@@ -118,31 +119,31 @@ public class NotebookController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.DELETE, value = "/student/notebook/{runId}/group/{group}")
+  @RequestMapping(method = RequestMethod.DELETE, value = "/{runId}/group/{group}")
   protected void removeNotebookItemFromGroup(
-      @PathVariable Integer runId,
-      @PathVariable String group,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-      @RequestParam(value = "notebookItemId", required = true) Integer notebookItemId,
-      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-      HttpServletResponse response) throws ObjectNotFoundException, IOException {
+    @PathVariable Integer runId,
+    @PathVariable String group,
+    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+    @RequestParam(value = "notebookItemId", required = true) Integer notebookItemId,
+    @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+    HttpServletResponse response) throws ObjectNotFoundException, IOException {
     if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
       return;
     }
     NotebookItem notebookItem = vleService.removeNotebookItemFromGroup(
-        notebookItemId, group, clientSaveTime);
+      notebookItemId, group, clientSaveTime);
     response.getWriter().write(notebookItem.toJSON().toString());
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/{workgroupId}")
+  @RequestMapping(method = RequestMethod.GET, value = "/{runId}/{workgroupId}")
   protected void getNotebookItemsForStudent(
-      @PathVariable Integer runId,
-      @PathVariable Integer workgroupId,
-      @RequestParam(value = "id", required = false) Integer id,
-      @RequestParam(value = "periodId", required = false) Integer periodId,
-      @RequestParam(value = "nodeId", required = false) String nodeId,
-      @RequestParam(value = "componentId", required = false) String componentId,
-      HttpServletResponse response) throws IOException {
+    @PathVariable Integer runId,
+    @PathVariable Integer workgroupId,
+    @RequestParam(value = "id", required = false) Integer id,
+    @RequestParam(value = "periodId", required = false) Integer periodId,
+    @RequestParam(value = "nodeId", required = false) String nodeId,
+    @RequestParam(value = "componentId", required = false) String componentId,
+    HttpServletResponse response) throws IOException {
     try {
       if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
         return;
@@ -156,12 +157,12 @@ public class NotebookController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/group/{group}")
+  @RequestMapping(method = RequestMethod.GET, value = "/{runId}/group/{group}")
   protected void getNotebookItemsInGroup(
-      @PathVariable Integer runId,
-      @PathVariable String group,
-      @RequestParam(value = "periodId", required = false) Integer periodId,
-      HttpServletResponse response) throws IOException {
+    @PathVariable Integer runId,
+    @PathVariable String group,
+    @RequestParam(value = "periodId", required = false) Integer periodId,
+    HttpServletResponse response) throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     if (!isUserAssociatedWithRun(signedInUser, runId)) {
       return;
@@ -177,13 +178,13 @@ public class NotebookController {
     response.getWriter().write(notebookItems.toString());
   }
 
-  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}/parent/{parentNotebookItemId}")
+  @RequestMapping(method = RequestMethod.POST, value = "/{runId}/parent/{parentNotebookItemId}")
   protected void copyNotebookItem(
-      @PathVariable Integer runId,
-      @PathVariable Integer parentNotebookItemId,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-      HttpServletResponse response) throws IOException, ObjectNotFoundException {
+    @PathVariable Integer runId,
+    @PathVariable Integer parentNotebookItemId,
+    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+    @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+    HttpServletResponse response) throws IOException, ObjectNotFoundException {
     if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
       return;
     }
@@ -193,13 +194,13 @@ public class NotebookController {
   }
 
   private JSONArray getNotebookItems(
-      Integer runId,
-      Integer id,
-      Integer periodId,
-      Integer workgroupId,
-      String nodeId,
-      String componentId,
-      HttpServletResponse response) throws IOException {
+    Integer runId,
+    Integer id,
+    Integer periodId,
+    Integer workgroupId,
+    String nodeId,
+    String componentId,
+    HttpServletResponse response) throws IOException {
     List<NotebookItem> notebookItemList = vleService.getNotebookItems(
       id, runId, periodId, workgroupId, nodeId, componentId);
     JSONArray notebookItems = new JSONArray();
@@ -232,7 +233,7 @@ public class NotebookController {
   }
 
   private boolean isUserInRunAndWorkgroup(Integer runId, Integer workgroupId)
-      throws ObjectNotFoundException {
+    throws ObjectNotFoundException {
     User signedInUser = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(new Long(runId));
     Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));

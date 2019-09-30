@@ -1,0 +1,14 @@
+@import '~style/abstracts/variables',
+        '~style/abstracts/mixins',
+        '~style/abstracts/functions';
+
+.home {
+  app-blurb, app-call-to-action {
+    width: 360px;
+    max-width: 100%;
+  }
+
+  .cta, .cta__wrap, .cta .mat-button-wrapper, .blurb {
+    height: 100%;
+  }
+}

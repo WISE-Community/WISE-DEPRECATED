@@ -1,0 +1,74 @@
+<div class="library-filter">
+  <div fxLayout="row"
+       fxLayout.gt-sm="{{ isSplitScreen ? 'column' : 'row' }}"
+       fxLayoutGap="8px">
+    <div fxFlex>
+      <app-search-bar [value]="searchValue"
+                      (update)="searchUpdated($event)"></app-search-bar>
+    </div>
+    <button class="input-control--appearance-fill"
+            mat-icon-button
+            i18n-aria-label
+            aria-label="Toggle filters"
+            (click)="showFilters = !showFilters"
+            fxHide.gt-sm="{{ isSplitScreen ? true : false }}">
+      <mat-icon matBadge="+"
+                matBadgeDescription="Filters applied"
+                matBadgeOverlap="true"
+                matBadgeSize="small"
+                [matBadgeHidden]="!hasFilters()">filter_list</mat-icon>
+    </button>
+  </div>
+</div>
+<div class="library-filters" [class.expand]="showFilters" [class.isSplitScreen]="isSplitScreen">
+  <div class="notice">
+    <ng-container i18n>Filter by <a href="https://www.nextgenscience.org/" target="_blank">Next Generation Science Standards</a> (NGSS).</ng-container>&nbsp;<a *ngIf="hasFilters()" href="#" (click)="!!clearFilterValues()" i18n>Reset</a>
+  </div>
+  <div fxLayout="column"
+       fxLayout.gt-sm="{{ isSplitScreen ? 'column' : 'row' }}"
+       fxLayoutGap="0"
+       fxLayoutGap.gt-sm="{{ isSplitScreen ? '0' : '8px' }}">
+    <div *ngIf="disciplineOptions.length > 0"
+         class="library-filter"
+         fxFlex.gt-sm="{{ isSplitScreen ? 100 : 33 }}">
+      <app-select-menu id="disciplineSelectMenu"
+                       [options]="disciplineOptions"
+                       i18n-placeholderText
+                       placeholderText="Discipline"
+                       [value]="disciplineValue"
+                       (update)="filterUpdated($event, 'discipline')"
+                       [valueProp]="'id'"
+                       [viewValueProp]="'name'"
+                       [multiple]="true">
+      </app-select-menu>
+    </div>
+    <div *ngIf="dciArrangementOptions.length > 0"
+         class="library-filter"
+         fxFlex.gt-sm="{{ isSplitScreen ? 100 : 33 }}">
+      <app-select-menu id="dciArrangementSelectMenu"
+                       [options]="dciArrangementOptions"
+                       i18n-placeholderText
+                       placeholderText="DCI Arrangement"
+                       [value]="dciArrangementValue"
+                       (update)="filterUpdated($event, 'dci')"
+                       [valueProp]="'id'"
+                       [viewValueProp]="'name'"
+                       [multiple]="true">
+      </app-select-menu>
+    </div>
+    <div *ngIf="peOptions.length > 0"
+         class="library-filter"
+         fxFlex.gt-sm="{{ isSplitScreen ? 100 : 33 }}">
+      <app-select-menu id="performanceExpectationSelectMenu"
+                       [options]="peOptions"
+                       i18n-placeholderText
+                       placeholderText="Performance Expectation"
+                       [value]="peValue"
+                       (update)="filterUpdated($event, 'pe')"
+                       [valueProp]="'id'"
+                       [viewValueProp]="'name'"
+                       [multiple]="true">
+      </app-select-menu>
+    </div>
+  </div>
+</div>

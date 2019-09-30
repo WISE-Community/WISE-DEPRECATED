@@ -142,9 +142,9 @@ create table events (
     nodeId varchar(30),
     serverSaveTime datetime not null,
     periodId bigint,
-    runId bigint not null,
-    workgroupId bigint not null,
-    projectId bigint not null,
+    runId bigint,
+    workgroupId bigint,
+    projectId bigint,
     userId bigint,
     index eventsRunIdIndex (runId),
     index eventsWorkgroupIdIndex (workgroupId),
@@ -233,7 +233,7 @@ create table notebookItems (
     serverSaveTime datetime not null,
     title varchar(255),
     type varchar(30),
-    periodId bigint not null,
+    periodId bigint,
     runId bigint not null,
     studentAssetId integer,
     studentWorkId integer,
@@ -309,10 +309,12 @@ create table portal (
     google_map_key varchar(255),
     sendmail_on_exception bit,
     portalname varchar(255),
+    projectLibraryGroups text,
     projectMetadataSettings text,
     run_survey_template text,
     sendmail_properties tinyblob,
     settings text,
+    announcement text,
     OPTLOCK integer,
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -548,8 +550,8 @@ create table student_attendance (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table student_user_details (
-    accountanswer varchar(255) not null,
-    accountquestion varchar(255) not null,
+    accountanswer varchar(255),
+    accountquestion varchar(255),
     birthday datetime not null,
     firstname varchar(255) not null,
     gender integer not null,
@@ -607,6 +609,11 @@ create table user_details (
     credentials_not_expired bit not null,
     email_address varchar(255),
     enabled bit not null,
+    googleUserId varchar(255) null,
+    reset_password_verification_code_request_time datetime null,
+    reset_password_verification_code varchar(255) null,
+    recent_failed_verification_code_attempt_time datetime null,
+    recent_number_of_failed_verification_code_attempts integer null,
     language varchar(255),
     recent_number_of_failed_login_attempts integer,
     password varchar(255) not null,
@@ -668,7 +675,7 @@ create table workgroups (
 
 INSERT INTO granted_authorities VALUES (1,'ROLE_USER',0),(2,'ROLE_ADMINISTRATOR',0),(3,'ROLE_TEACHER',0),(4,'ROLE_STUDENT',0),(5,'ROLE_AUTHOR',0),(6,'ROLE_RESEARCHER',0),(7,'ROLE_TRUSTED_AUTHOR',0),(8,'ROLE_TRANSLATOR',0);
 
-INSERT INTO portal (id,portalname,settings,projectMetadataSettings,run_survey_template,sendmail_on_exception,OPTLOCK) VALUES (1,'My Production WISE Site (change me)','{isLoginAllowed:true}','{"fields":[{"name":"Title","key":"title","type":"input"},{"name":"Summary","key":"summary","type":"textarea"},{"name":"Language","key":"language","type":"radio","choices":["English","Chinese (Simplified)","Chinese (Traditional)","Dutch","German","Greek","Hebrew","Japanese","Korean","Portuguese","Spanish","Thai","Turkish"]},{"name":"Subject","key":"subject","type":"radio","choices":["Life Science","Physical Science","Earth Science","General Science","Biology","Chemistry","Physics","Other"]},{"name":"Time Required to Complete Project","key":"time","type":"input"},{"name":"Supported Devices","key":"supportedDevices","type":"checkbox","choices":["PC","Tablet"]}],"i18n":{"lifeScience":{"en":"Life Science","ja":"ライフサイエンス"},"earthScience":{"en":"Earth Science","ja":"地球科学"},"physicalScience":{"en":"Physical Science","ja":"物理科学","es":"ciencia física"}}}','{"save_time":null,"items":[{"id":"recommendProjectToOtherTeachers","type":"radio","prompt":"How likely would you recommend this project to other teachers?","choices":[{"id":"5","text":"Extremely likely"},{"id":"4","text":"Very likely"},{"id":"3","text":"Moderately likely"},{"id":"2","text":"Slightly likely"},{"id":"1","text":"Not at all likely"}],"answer":null},{"id":"runProjectAgain","type":"radio","prompt":"How likely would you run this project again?","choices":[{"id":"5","text":"Extremely likely"},{"id":"4","text":"Very likely"},{"id":"3","text":"Moderately likely"},{"id":"2","text":"Slightly likely"},{"id":"1","text":"Not at all likely"}],"answer":null},{"id":"useWISEAgain","type":"radio","prompt":"How likely would you use WISE again in your classroom?","choices":[{"id":"5","text":"Extremely likely"},{"id":"4","text":"Very likely"},{"id":"3","text":"Moderately likely"},{"id":"2","text":"Slightly likely"},{"id":"1","text":"Not at all likely"}],"answer":null},{"id":"adviceForOtherTeachers","type":"textarea","prompt":"Please share any advice for other teachers about this project or about WISE in general.","answer":null},{"id":"technicalProblems","type":"textarea","prompt":"Please write about any technical problems that you had while running this project.","answer":null},{"id":"generalFeedback","type":"textarea","prompt":"Please provide any other feedback to WISE staff.","answer":null}]}',1,0);
+INSERT INTO portal (id,portalname,settings,announcement,projectLibraryGroups,projectMetadataSettings,run_survey_template,sendmail_on_exception,OPTLOCK) VALUES (1,'My Production WISE Site (change me)','{isLoginAllowed:true}','{"visible":false,"bannerText":"","bannerButton":"","title":"","content":"","buttons":[]}','[]','{"fields":[{"name":"Title","key":"title","type":"input"},{"name":"Summary","key":"summary","type":"textarea"},{"name":"Language","key":"language","type":"radio","choices":["English","Chinese (Simplified)","Chinese (Traditional)","Dutch","German","Greek","Hebrew","Japanese","Korean","Portuguese","Spanish","Thai","Turkish"]},{"name":"Subject","key":"subject","type":"radio","choices":["Life Science","Physical Science","Earth Science","General Science","Biology","Chemistry","Physics","Other"]},{"name":"Time Required to Complete Project","key":"time","type":"input"},{"name":"Supported Devices","key":"supportedDevices","type":"checkbox","choices":["PC","Tablet"]}],"i18n":{"lifeScience":{"en":"Life Science","ja":"ライフサイエンス"},"earthScience":{"en":"Earth Science","ja":"地球科学"},"physicalScience":{"en":"Physical Science","ja":"物理科学","es":"ciencia física"}}}','{"save_time":null,"items":[{"id":"recommendProjectToOtherTeachers","type":"radio","prompt":"How likely would you recommend this project to other teachers?","choices":[{"id":"5","text":"Extremely likely"},{"id":"4","text":"Very likely"},{"id":"3","text":"Moderately likely"},{"id":"2","text":"Slightly likely"},{"id":"1","text":"Not at all likely"}],"answer":null},{"id":"runProjectAgain","type":"radio","prompt":"How likely would you run this project again?","choices":[{"id":"5","text":"Extremely likely"},{"id":"4","text":"Very likely"},{"id":"3","text":"Moderately likely"},{"id":"2","text":"Slightly likely"},{"id":"1","text":"Not at all likely"}],"answer":null},{"id":"useWISEAgain","type":"radio","prompt":"How likely would you use WISE again in your classroom?","choices":[{"id":"5","text":"Extremely likely"},{"id":"4","text":"Very likely"},{"id":"3","text":"Moderately likely"},{"id":"2","text":"Slightly likely"},{"id":"1","text":"Not at all likely"}],"answer":null},{"id":"adviceForOtherTeachers","type":"textarea","prompt":"Please share any advice for other teachers about this project or about WISE in general.","answer":null},{"id":"technicalProblems","type":"textarea","prompt":"Please write about any technical problems that you had while running this project.","answer":null},{"id":"generalFeedback","type":"textarea","prompt":"Please provide any other feedback to WISE staff.","answer":null}]}',1,0);
 
 INSERT INTO user_details (id, account_not_expired, account_not_locked, credentials_not_expired, email_address, enabled, language, password, username, OPTLOCK)  VALUES (1,1,1,1,NULL,1,'en','24c002f26c14d8e087ade986531c7b5d','admin',0),(2,1,1,1,NULL,1,'en','4cd92091d686b42ec74a29a26432915a','preview',0);
 

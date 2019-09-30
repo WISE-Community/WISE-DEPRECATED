@@ -1,0 +1,36 @@
+@import
+'~style/abstracts/variables',
+'~style/abstracts/functions',
+'~style/abstracts/mixins';
+
+.form-fields {
+  margin-bottom: 0 !important;
+
+  @media (min-width: breakpoint('sm.min')) {
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  // hacks necessary until fxLayoutGap resize bug is fixed: https://github.com/angular/flex-layout/issues/606
+  @media (max-width: breakpoint('xs.max')) {
+    margin: 0 !important;
+
+    p {
+      padding: 0 !important;
+    }
+  }
+}
+
+.mat-select-panel {
+  overflow:visible !important;
+}
+
+.contact__form {
+  width: 800px;
+}
+
+.recaptcha-container {
+  display: flex;
+  justify-content: center;
+}

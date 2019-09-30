@@ -23,11 +23,18 @@
  */
 package org.wise.portal.domain;
 
+import java.util.Properties;
+
 /**
  * Enumeration class for account questions
  *
  * @author Anthony Perritano
  */
 public enum AccountQuestion {
-  QUESTION_FOUR, QUESTION_TWO, QUESTION_THREE;
+  QUESTION_ONE,
+  QUESTION_TWO,
+  QUESTION_THREE,
+  QUESTION_FOUR,
+  QUESTION_FIVE,
+  QUESTION_SIX;
 }

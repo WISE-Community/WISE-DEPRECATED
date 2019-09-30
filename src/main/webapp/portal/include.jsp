@@ -1,4 +1,4 @@
-<!-- 
+<!--
  * Copyright (c) 2008-2015 Regents of the University of California (Regents). Created
  * by WISE, Graduate School of Education, University of California, Berkeley.
  *
@@ -28,10 +28,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.util.Properties" %>
+<% 
+Properties appProperties = new Properties();
+appProperties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+String defaultLocale = appProperties.getProperty("defaultLocale");
+request.setAttribute("defaultLocale", defaultLocale);
+%>
 
 <!-- $Id$ -->
 
 <c:set var="sessionLocale" value="${sessionScope['org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE']}"/>
-<c:set var="locale" value="${ empty sessionLocale ? pageContext.request.locale : sessionLocale }" />
-<c:set var="textDirection" value="${'iw' == locale ? 'rtl' : 'ltr'}" />
+<c:set var="locale" value="${ empty sessionLocale ? defaultLocale : sessionLocale }" />
+<c:set var="textDirection" value="${'iw' == locale || 'ar' == locale ? 'rtl' : 'ltr'}" />
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>

@@ -1564,6 +1564,69 @@ var ConceptMapService = function (_ComponentService) {
       return deferred.promise;
     }
 
+    /**
+     * @param objects An array of nodes or links.
+     * @param prefix The prefix for the given type of objects
+     * For example the prefix for 'studentNode3' would be
+     * 'studentNode'
+     */
+
+  }, {
+    key: 'getNextAvailableId',
+    value: function getNextAvailableId(objects, prefix) {
+      var nextAvailableNumber = 1;
+      var usedNumbers = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var object = _step.value;
+
+          var objectId = object.id;
+          var objectIdNumber = parseInt(objectId.replace(prefix, ''));
+          usedNumbers.push(objectIdNumber);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      if (usedNumbers.length > 0) {
+        var maxNumberUsed = Math.max.apply(Math, usedNumbers);
+        if (!isNaN(maxNumberUsed)) {
+          nextAvailableNumber = maxNumberUsed + 1;
+        }
+      }
+
+      return prefix + nextAvailableNumber;
+    }
+  }, {
+    key: 'displayAnnotation',
+    value: function displayAnnotation(componentContent, annotation) {
+      if (annotation.displayToStudent === false) {
+        return false;
+      } else {
+        if (annotation.type == 'score') {} else if (annotation.type == 'comment') {} else if (annotation.type == 'autoScore') {
+          return componentContent.showAutoScore;
+        } else if (annotation.type == 'autoComment') {
+          return componentContent.showAutoFeedback;
+        }
+      }
+      return true;
+    }
+
     // end of ConceptMapService class
 
   }]);

@@ -1,0 +1,38 @@
+<div class="main app-background">
+  <div class="content">
+    <header fxLayout="row" class="content__header">
+      <h1 class="accent"
+          fxLayoutAlign="center center"
+          fxLayoutGap="8px"
+          ngClass="mat-display-1"
+          [ngClass.xs]="{ 'mat-display-1': false }">
+        <mat-icon>rss_feed</mat-icon><span i18n>What's New?</span>
+      </h1>
+    </header>
+    <section>
+      <div class="content-block">
+        <app-timeline>
+          <ng-container *ngFor="let newsItem of allNewsItems; let i=index">
+            <app-timeline-item *ngIf="i < 10 || showAll">
+              <app-timeline-item-label>
+                <strong>{{ newsItem.date | amDateFormat:'MMM D, Y' }}</strong>
+              </app-timeline-item-label>
+              <app-timeline-item-content>
+                <mat-card>
+                  <mat-card-content>
+                    <h2 class="accent-1">{{newsItem.title}}</h2>
+                    <div class="mat-body-1" [innerHTML]="sanitizer.bypassSecurityTrustHtml(newsItem.news)"></div>
+                  </mat-card-content>
+                </mat-card>
+              </app-timeline-item-content>
+            </app-timeline-item>
+          </ng-container>
+        </app-timeline>
+        <div class="content-block__actions"
+             *ngIf="allNewsItems.length > 10 && !showAll" >
+          <a mat-raised-button color="accent" (click)="showAll = true" i18n>Show More</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

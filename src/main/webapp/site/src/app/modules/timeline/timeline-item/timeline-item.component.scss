@@ -1,0 +1,51 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
+
+.timeline-item {
+  display: block;
+  position: relative;
+  margin-left: 14px;
+  padding-left: 24px;
+  padding-bottom: 32px;
+
+  @media (min-width: breakpoint('md.min')) {
+    margin-left: 48px;
+    margin-right: 36px;
+    padding-left: 28px;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    border-left: 2px solid #cccccc;
+    left: -2px;
+    top: 28px;
+    bottom: 4px;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background-color: #cccccc;
+    height: 24px;
+    left: -13px;
+    width: 24px;
+    top: 0;
+  }
+
+  &.active {
+    &:after {
+      background-color: #00C853;
+    }
+  }
+}
+
+.timeline-item__label {
+  line-height: 24px;
+  display: block;
+  margin-bottom: 8px;
+  font-size: mat-font-size($config, body-1);
+}

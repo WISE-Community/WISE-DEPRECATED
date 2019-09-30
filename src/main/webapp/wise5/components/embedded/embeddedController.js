@@ -41,255 +41,254 @@ var EmbeddedController = function (_ComponentController) {
     _this.EmbeddedService = EmbeddedService;
     _this.componentType = null;
     _this.url = null;
-
-    // the width of the iframe (optional)
-    _this.width = null;
-
-    // the height of the iframe (optional)
-    _this.height = null;
-
-    // the max width of the iframe
+    _this.width = _this.componentContent.width ? _this.componentContent.width : '100%';
+    _this.height = _this.componentContent.height ? _this.componentContent.height : '100%';
     _this.maxWidth = null;
-
-    // the max height of the iframe
     _this.maxHeight = null;
-
     _this.notebookConfig = _this.NotebookService.getNotebookConfig();
-
-    _this.latestAnnotations = null;
     _this.componentStateId = null;
     _this.embeddedApplicationIFrameId = '';
-
+    _this.annotationsToSave = [];
     _this.embeddedApplicationIFrameId = 'componentApp_' + _this.componentId;
     _this.componentType = _this.componentContent.type;
 
-    if (_this.mode === 'student') {
-      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
-      _this.isSaveButtonVisible = false;
-      _this.isSubmitButtonVisible = false;
+    if (_this.isGradingMode() || _this.isGradingRevisionMode()) {
       var componentState = _this.$scope.componentState;
       if (componentState != null) {
-        // create a unique id for the application iframe using this component state
         _this.embeddedApplicationIFrameId = 'componentApp_' + componentState.id;
-        if (_this.mode === 'gradingRevision') {
+        if (_this.isGradingRevisionMode()) {
           _this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
         }
       }
-
-      if (_this.mode === 'grading') {
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-      }
-    } else if (_this.mode === 'onlyShowWork') {
-      _this.isSaveButtonVisible = false;
-      _this.isSubmitButtonVisible = false;
-    } else if (_this.mode === 'showPreviousWork') {
-      _this.isSaveButtonVisible = false;
-      _this.isSubmitButtonVisible = false;
     }
 
-    if (_this.componentContent != null) {
-      _this.setURL(_this.componentContent.url);
-    }
-
-    _this.width = _this.componentContent.width ? _this.componentContent.width : '100%';
-    _this.height = _this.componentContent.height ? _this.componentContent.height : '100%';
-
-    if (_this.$scope.$parent.nodeController != null) {
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
+    _this.setURL(_this.componentContent.url);
 
     /**
      * A connected component has changed its student data so we will
      * perform any necessary changes to this component
      * @param connectedComponent the connected component
      * @param connectedComponentParams the connected component params
-     * @param componentState the student data from the connected
-     * component that has changed
+     * @param componentState the student data from the connected component that has changed
      */
     _this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
-      var message = {};
-      message.messageType = 'handleConnectedComponentStudentDataChanged';
-      message.componentState = componentState;
+      var message = {
+        messageType: 'handleConnectedComponentStudentDataChanged',
+        componentState: componentState
+      };
       _this.sendMessageToApplication(message);
     };
 
-    /**
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @param isSubmit boolean whether the request is coming from a submit
-     * action (optional; default is false)
-     * @return a promise of a component state containing the student data
-     */
-    _this.$scope.getComponentState = function (isSubmit) {
-      var deferred = this.$q.defer();
-      var getState = false;
-      var action = 'change';
-
-      if (isSubmit) {
-        if (this.$scope.embeddedController.isSubmitDirty) {
-          getState = true;
-          action = 'submit';
-        }
-      } else {
-        if (this.$scope.embeddedController.isDirty) {
-          getState = true;
-          action = 'save';
-        }
-      }
-
-      if (getState) {
-        this.$scope.embeddedController.createComponentState(action).then(function (componentState) {
-          deferred.resolve(componentState);
-        });
-      } else {
-        /*
-         * the student does not have any unsaved changes in this component
-         * so we don't need to save a component state for this component.
-         * we will immediately resolve the promise here.
-         */
-        deferred.resolve();
-      }
-
-      return deferred.promise;
-    }.bind(_this);
-
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    _this.$scope.$on('exitNode', angular.bind(_this, function (event, args) {
-      this.$window.removeEventListener('message', this.messageEventListener);
-    }));
+    _this.initializeScopeGetComponentState(_this.$scope, 'embeddedController');
 
     /*
      * Listen for the siblingComponentStudentDataChanged event which occurs
-     * when the student data has changed for another component in this step
+     * when the student data has changed for another component in this step.
      */
     _this.$scope.$on('siblingComponentStudentDataChanged', function (event, args) {
-      if (_this.nodeId == args.nodeId && _this.componentId != args.componentId) {
-        var message = {};
-        message.messageType = 'siblingComponentStudentDataChanged';
-        message.componentState = args.componentState;
+      if (_this.isEventTargetThisComponent(args)) {
+        var message = {
+          messageType: 'siblingComponentStudentDataChanged',
+          componentState: args.componentState
+        };
         _this.sendMessageToApplication(message);
       }
     });
 
-    _this.messageEventListener = angular.bind(_this, function (messageEvent) {
-      var messageEventData = messageEvent.data;
-      if (messageEventData.messageType === 'event') {
-        var nodeId = this.nodeId;
-        var componentId = this.componentId;
-        var componentType = this.componentType;
-        var category = messageEventData.eventCategory;
-        var event = messageEventData.event;
-        var eventData = messageEventData.eventData;
-        this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-      } else if (messageEventData.messageType === 'studentWork') {
-        if (messageEventData.id != null) {
-          //the model wants to update/overwrite an existing component state
-          this.componentStateId = messageEventData.id;
-        } else {
-          // the model wants to create a new component state
-          this.componentStateId = null;
-        }
-
-        if (messageEventData.isSubmit) {
-          this.isSubmit = messageEventData.isSubmit;
-        }
-
-        this.isDirty = true;
-        this.setStudentData(messageEventData.studentData);
-        this.studentDataChanged();
-
-        // tell the parent node that this component wants to save
-        this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-      } else if (messageEventData.messageType === 'applicationInitialized') {
-        this.sendLatestWorkToApplication();
-        this.processLatestSubmit();
-
-        // activate iframe-resizer on the embedded app's iframe
-        $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
-      } else if (messageEventData.messageType === 'componentDirty') {
-        var _isDirty = messageEventData.isDirty;
-        this.isDirty = _isDirty;
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: _isDirty });
-      } else if (messageEventData.messageType === 'componentSubmitDirty') {
-        var isSubmitDirty = messageEventData.isDirty;
-        this.isSubmitDirty = isSubmitDirty;
-        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
-      } else if (messageEventData.messageType === 'studentDataChanged') {
-        this.setStudentData(messageEventData.studentData);
-        this.studentDataChanged();
-      } else if (messageEventData.messageType === 'getStudentWork') {
-        var getStudentWorkParams = messageEventData.getStudentWorkParams;
-        var studentWork = this.getStudentWork(messageEventData.getStudentWorkParams);
-        var message = studentWork;
-        message.messageType = 'studentWork';
-        message.getStudentWorkParams = getStudentWorkParams;
-        this.sendMessageToApplication(message);
-      } else if (messageEventData.messageType === 'getLatestStudentWork') {
-        var latestComponentState = this.getLatestStudentWork();
-        var message = {};
-        message.messageType = 'latestStudentWork';
-        message.latestStudentWork = latestComponentState;
-        this.sendMessageToApplication(message);
-      } else if (messageEventData.messageType === 'getParameters') {
-        var message = {};
-        message.messageType = 'parameters';
-        var parameters = {};
-        if (this.componentContent.parameters != null) {
-          parameters = this.UtilService.makeCopyOfJSONObject(this.componentContent.parameters);
-        }
-        parameters.nodeId = this.nodeId;
-        parameters.componentId = this.componentId;
-        message.parameters = parameters;
-        this.sendMessageToApplication(message);
-      }
-    });
-
-    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    _this.initializeMessageEventListener();
+    _this.broadcastDoneRenderingComponent();
     return _this;
   }
 
   _createClass(EmbeddedController, [{
+    key: 'cleanupBeforeExiting',
+    value: function cleanupBeforeExiting() {
+      this.$window.removeEventListener('message', this.messageEventListener);
+    }
+  }, {
+    key: 'initializeMessageEventListener',
+    value: function initializeMessageEventListener() {
+      var _this2 = this;
+
+      this.messageEventListener = function (messageEvent) {
+        var messageEventData = messageEvent.data;
+        if (messageEventData.messageType === 'event') {
+          _this2.handleEventMessage(messageEventData);
+        } else if (messageEventData.messageType === 'studentWork') {
+          _this2.handleStudentWorkMessage(messageEventData);
+        } else if (messageEventData.messageType === 'applicationInitialized') {
+          _this2.handleApplicationInitializedMessage(messageEventData);
+        } else if (messageEventData.messageType === 'componentDirty') {
+          _this2.handleComponentDirtyMessage(messageEventData);
+        } else if (messageEventData.messageType === 'componentSubmitDirty') {
+          _this2.handleComponentSubmitDirtyMessage(messageEventData);
+        } else if (messageEventData.messageType === 'studentDataChanged') {
+          _this2.handleStudentDataChangedMessage(messageEventData);
+        } else if (messageEventData.messageType === 'getStudentWork') {
+          _this2.handleGetStudentWorkMessage(messageEventData);
+        } else if (messageEventData.messageType === 'getLatestStudentWork') {
+          _this2.handleGetLatestStudentWorkMessage(messageEventData);
+        } else if (messageEventData.messageType === 'getParameters') {
+          _this2.handleGetParametersMessage(messageEventData);
+        } else if (messageEventData.messageType === 'getProjectPath') {
+          _this2.handleGetProjectPathMessage(messageEventData);
+        } else if (messageEventData.messageType === 'getLatestAnnotations') {
+          _this2.handleGetLatestAnnotationsMessage(messageEventData);
+        }
+      };
+    }
+  }, {
+    key: 'handleEventMessage',
+    value: function handleEventMessage(messageEventData) {
+      var nodeId = this.nodeId;
+      var componentId = this.componentId;
+      var componentType = this.componentType;
+      var category = messageEventData.eventCategory;
+      var event = messageEventData.event;
+      var eventData = messageEventData.eventData;
+      this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+    }
+  }, {
+    key: 'handleStudentWorkMessage',
+    value: function handleStudentWorkMessage(messageEventData) {
+      if (messageEventData.id != null) {
+        //the model wants to update/overwrite an existing component state
+        this.componentStateId = messageEventData.id;
+      } else {
+        // the model wants to create a new component state
+        this.componentStateId = null;
+      }
+
+      if (messageEventData.isSubmit) {
+        this.isSubmit = messageEventData.isSubmit;
+      }
+
+      this.isDirty = true;
+      this.setStudentData(messageEventData.studentData);
+      if (messageEventData.annotations != null) {
+        this.setAnnotations(messageEventData.annotations);
+      }
+      this.studentDataChanged();
+
+      // tell the parent node that this component wants to save
+      this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+    }
+  }, {
+    key: 'handleApplicationInitializedMessage',
+    value: function handleApplicationInitializedMessage(messageEventData) {
+      this.sendLatestWorkToApplication();
+      this.processLatestStudentWork();
+      $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
+    }
+  }, {
+    key: 'handleComponentDirtyMessage',
+    value: function handleComponentDirtyMessage(messageEventData) {
+      this.isDirty = messageEventData.isDirty;
+      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: isDirty });
+    }
+  }, {
+    key: 'handleComponentSubmitDirtyMessage',
+    value: function handleComponentSubmitDirtyMessage(messageEventData) {
+      this.isSubmitDirty = messageEventData.isDirty;
+      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
+    }
+  }, {
+    key: 'handleStudentDataChangedMessage',
+    value: function handleStudentDataChangedMessage(messageEventData) {
+      this.setStudentData(messageEventData.studentData);
+      if (messageEventData.annotations != null) {
+        this.setAnnotations(messageEventData.annotations);
+      }
+      this.studentDataChanged();
+    }
+  }, {
+    key: 'handleGetStudentWorkMessage',
+    value: function handleGetStudentWorkMessage(messageEventData) {
+      var getStudentWorkParams = messageEventData.getStudentWorkParams;
+      var studentWork = this.getStudentWork(messageEventData.getStudentWorkParams);
+      var message = studentWork;
+      message.messageType = 'studentWork';
+      message.getStudentWorkParams = getStudentWorkParams;
+      this.sendMessageToApplication(message);
+    }
+  }, {
+    key: 'handleGetLatestStudentWorkMessage',
+    value: function handleGetLatestStudentWorkMessage(messageEventData) {
+      var latestComponentState = this.getLatestStudentWork();
+      var message = {
+        messageType: 'latestStudentWork',
+        latestStudentWork: latestComponentState
+      };
+      this.sendMessageToApplication(message);
+    }
+  }, {
+    key: 'handleGetParametersMessage',
+    value: function handleGetParametersMessage(messageEventData) {
+      var parameters = {};
+      if (this.componentContent.parameters != null) {
+        parameters = this.UtilService.makeCopyOfJSONObject(this.componentContent.parameters);
+      }
+      parameters.nodeId = this.nodeId;
+      parameters.componentId = this.componentId;
+      var message = {
+        messageType: 'parameters',
+        parameters: parameters
+      };
+      this.sendMessageToApplication(message);
+    }
+  }, {
+    key: 'handleGetProjectPathMessage',
+    value: function handleGetProjectPathMessage(messageEventData) {
+      var message = {
+        messageType: 'projectPath',
+        projectPath: this.ConfigService.getConfigParam('projectBaseURL'),
+        projectAssetsPath: this.ConfigService.getConfigParam('projectBaseURL') + 'assets'
+      };
+      this.sendMessageToApplication(message);
+    }
+  }, {
+    key: 'handleGetLatestAnnotationsMessage',
+    value: function handleGetLatestAnnotationsMessage(messageEventData) {
+      var latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
+      var latestCommentAnnotation = this.AnnotationService.getLatestCommentAnnotation(this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
+      var message = {
+        messageType: 'latestAnnotations',
+        latestScoreAnnotation: latestScoreAnnotation,
+        latestCommentAnnotation: latestCommentAnnotation
+      };
+      this.sendMessageToApplication(message);
+    }
+  }, {
     key: 'registerStudentWorkSavedToServerListener',
     value: function registerStudentWorkSavedToServerListener() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$scope.$on('studentWorkSavedToServer', function (event, args) {
         var componentState = args.studentWork;
         if (componentState != null) {
-          if (componentState.componentId === _this2.componentId) {
-            // set isDirty to false because the component state was just saved and notify node
-            _this2.isDirty = false;
-            _this2.$scope.$emit('componentDirty', { componentId: _this2.componentId, isDirty: false });
-            _this2.$scope.embeddedController.componentState = null;
-
+          if (componentState.componentId === _this3.componentId) {
+            _this3.isDirty = false;
+            _this3.$scope.$emit('componentDirty', { componentId: _this3.componentId, isDirty: false });
+            _this3.$scope.embeddedController.componentState = null;
             var isAutoSave = componentState.isAutoSave;
             var isSubmit = componentState.isSubmit;
             var serverSaveTime = componentState.serverSaveTime;
-            var clientSaveTime = _this2.ConfigService.convertToClientTimestamp(serverSaveTime);
-
+            var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
             if (isSubmit) {
-              _this2.setSubmittedMessage(clientSaveTime);
-              _this2.submit();
-              _this2.isSubmitDirty = false;
-              _this2.$scope.$emit('componentSubmitDirty', { componentId: _this2.componentId, isDirty: false });
+              _this3.setSubmittedMessage(clientSaveTime);
+              _this3.submit();
+              _this3.isSubmitDirty = false;
+              _this3.$scope.$emit('componentSubmitDirty', { componentId: _this3.componentId, isDirty: false });
             } else if (isAutoSave) {
-              _this2.setAutoSavedMessage(clientSaveTime);
+              _this3.setAutoSavedMessage(clientSaveTime);
             } else {
-              _this2.setSavedMessage(clientSaveTime);
+              _this3.setSavedMessage(clientSaveTime);
             }
-
-            var message = {};
-            message.messageType = 'componentStateSaved';
-            message.componentState = componentState;
-            _this2.sendMessageToApplication(message);
+            var message = {
+              messageType: 'componentStateSaved',
+              componentState: componentState
+            };
+            _this3.sendMessageToApplication(message);
           }
         }
       });
@@ -299,81 +298,46 @@ var EmbeddedController = function (_ComponentController) {
     value: function iframeLoaded(contentLocation) {
       window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.addEventListener('message', this.messageEventListener);
     }
-
-    /**
-     * Check if latest component state is a submission and if not, set isSubmitDirty to true
-     */
-
-  }, {
-    key: 'processLatestSubmit',
-    value: function processLatestSubmit() {
-      var latestState = this.$scope.componentState;
-      if (latestState) {
-        var serverSaveTime = latestState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestState.isSubmit) {
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSubmittedMessage(clientSaveTime);
-        } else {
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSavedMessage(clientSaveTime);
-        }
-      }
-    }
   }, {
     key: 'setURL',
     value: function setURL(url) {
-      if (url != null) {
-        this.url = this.$sce.trustAsResourceUrl(url);
-      }
+      this.url = this.$sce.trustAsResourceUrl(url);
     }
-  }, {
-    key: 'submit',
-    value: function submit() {
-      if (this.isLockAfterSubmit()) {
-        this.isDisabled = true;
-      }
-    }
-  }, {
-    key: 'createComponentState',
-
 
     /**
      * Create a new component state populated with the student data
      * @return the componentState after it has been populated
      */
+
+  }, {
+    key: 'createComponentState',
     value: function createComponentState(action) {
       var componentState = this.NodeService.createNewComponentState();
-
-      if (this.componentStateId != null) {
-        componentState.id = this.componentStateId;
-      }
-
-      if (this.isSubmit) {
-        componentState.isSubmit = this.isSubmit;
-
-        /*
-         * reset the isSubmit value so that the next component state
-         * doesn't maintain the same value
-         */
-        this.isSubmit = false;
-      }
-
       componentState.studentData = this.studentData;
       componentState.componentType = 'Embedded';
       componentState.nodeId = this.nodeId;
       componentState.componentId = this.componentId;
-
+      if (this.componentStateId != null) {
+        componentState.id = this.componentStateId;
+      }
+      if (this.isSubmit) {
+        componentState.isSubmit = this.isSubmit;
+        this.isSubmit = false;
+      }
+      if (this.annotationsToSave.length !== 0) {
+        componentState.annotations = this.annotationsToSave;
+      }
+      if (action === 'save') {
+        this.clearAnnotationsToSave();
+      }
       var deferred = this.$q.defer();
-
-      /*
-       * perform any additional processing that is required before returning
-       * the component state
-       */
       this.createComponentStateAdditionalProcessing(deferred, componentState, action);
       return deferred.promise;
+    }
+  }, {
+    key: 'clearAnnotationsToSave',
+    value: function clearAnnotationsToSave() {
+      this.annotationsToSave = [];
     }
   }, {
     key: 'sendLatestWorkToApplication',
@@ -386,7 +350,6 @@ var EmbeddedController = function (_ComponentController) {
         messageType: 'componentState',
         componentState: componentState
       };
-
       this.sendMessageToApplication(message);
     }
   }, {
@@ -394,37 +357,29 @@ var EmbeddedController = function (_ComponentController) {
     value: function sendMessageToApplication(message) {
       window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.postMessage(message, '*');
     }
-  }, {
-    key: 'snipModel',
-
 
     /**
      * Snip the model by converting it to an image
      * @param $event the click event
      */
+
+  }, {
+    key: 'snipModel',
     value: function snipModel($event) {
-      var _this3 = this;
+      var _this4 = this;
 
       var iframe = $('#' + this.embeddedApplicationIFrameId);
       if (iframe != null && iframe.length > 0) {
         var modelElement = iframe.contents().find('html');
         if (modelElement != null && modelElement.length > 0) {
           modelElement = modelElement[0];
-
-          // convert the model element to a canvas element
           (0, _html2canvas2.default)(modelElement).then(function (canvas) {
-            var img_b64 = canvas.toDataURL('image/png');
-            var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
-            _this3.NotebookService.addNote($event, imageObject);
+            var base64Image = canvas.toDataURL('image/png');
+            var imageObject = _this4.UtilService.getImageObjectFromBase64String(base64Image);
+            _this4.NotebookService.addNote($event, imageObject);
           });
         }
       }
-    }
-  }, {
-    key: 'submit',
-    value: function submit(submitTriggeredBy) {
-      this.isSubmit = true;
-      this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
     }
   }, {
     key: 'getLatestStudentWork',
@@ -454,107 +409,107 @@ var EmbeddedController = function (_ComponentController) {
     key: 'getStudentWork',
     value: function getStudentWork(params) {
       var studentWork = {};
-
-      if (params != null && params.getLatestStudentWorkFromThisComponent) {
-        studentWork.latestStudentWorkFromThisComponent = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-      }
-
-      if (params != null && params.getAllStudentWorkFromThisComponent) {
-        studentWork.allStudentWorkFromThisComponent = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-      }
-
-      if (params != null && params.getLatestStudentWorkFromThisNode) {
-        studentWork.latestStudentWorkFromThisNode = this.StudentDataService.getLatestComponentStatesByNodeId(this.nodeId);
-      }
-
-      if (params != null && params.getAllStudentWorkFromThisNode) {
-        studentWork.allStudentWorkFromThisNode = this.StudentDataService.getComponentStatesByNodeId(this.nodeId);
-      }
-
-      if (params != null && params.getLatestStudentWorkFromOtherComponents) {
-        // an array of objects that contain a nodeId and component Id
-        var otherComponents = params.otherComponents;
-        var latestStudentWorkFromOtherComponents = [];
-        if (otherComponents != null) {
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
-
-          try {
-            for (var _iterator = otherComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var otherComponent = _step.value;
-
-              if (otherComponent != null) {
-                var tempNodeId = otherComponent.nodeId;
-                var tempComponentId = otherComponent.componentId;
-
-                if (tempNodeId != null && tempComponentId != null) {
-                  var tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(tempNodeId, tempComponentId);
-                  if (tempComponentState != null) {
-                    latestStudentWorkFromOtherComponents.push(tempComponentState);
-                  }
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
-          }
+      if (params != null) {
+        if (params.getLatestStudentWorkFromThisComponent) {
+          studentWork.latestStudentWorkFromThisComponent = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
         }
-        studentWork.latestStudentWorkFromOtherComponents = latestStudentWorkFromOtherComponents;
-      }
-
-      if (params != null && params.getAllStudentWorkFromOtherComponents) {
-        var otherComponents = params.otherComponents;
-        var allStudentWorkFromOtherComponents = [];
-        if (otherComponents != null) {
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
-
-          try {
-            for (var _iterator2 = otherComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var otherComponent = _step2.value;
-
-              if (otherComponent != null) {
-                var tempNodeId = otherComponent.nodeId;
-                var tempComponentId = otherComponent.componentId;
-                if (tempNodeId != null && tempComponentId != null) {
-                  var tempComponentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
-                  if (tempComponentStates != null && tempComponentStates.length > 0) {
-                    allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents.concat(tempComponentStates);
-                  }
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-              }
-            } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
-              }
-            }
-          }
+        if (params.getAllStudentWorkFromThisComponent) {
+          studentWork.allStudentWorkFromThisComponent = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
         }
-        studentWork.allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents;
+        if (params.getLatestStudentWorkFromThisNode) {
+          studentWork.latestStudentWorkFromThisNode = this.StudentDataService.getLatestComponentStatesByNodeId(this.nodeId);
+        }
+        if (params.getAllStudentWorkFromThisNode) {
+          studentWork.allStudentWorkFromThisNode = this.StudentDataService.getComponentStatesByNodeId(this.nodeId);
+        }
+        if (params.getLatestStudentWorkFromOtherComponents) {
+          studentWork.latestStudentWorkFromOtherComponents = this.getLatestStudentWorkFromOtherComponents(params.otherComponents);
+        }
+        if (params.getAllStudentWorkFromOtherComponents) {
+          studentWork.allStudentWorkFromOtherComponents = this.getAllStudentWorkFromOtherComponents(params.otherComponents);
+        }
       }
       return studentWork;
+    }
+  }, {
+    key: 'getLatestStudentWorkFromOtherComponents',
+    value: function getLatestStudentWorkFromOtherComponents(otherComponents) {
+      var latestStudentWorkFromOtherComponents = [];
+      if (otherComponents != null) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = otherComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var otherComponent = _step.value;
+
+            var tempNodeId = otherComponent.nodeId;
+            var tempComponentId = otherComponent.componentId;
+            if (tempNodeId != null && tempComponentId != null) {
+              var tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(tempNodeId, tempComponentId);
+              if (tempComponentState != null) {
+                latestStudentWorkFromOtherComponents.push(tempComponentState);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+      }
+      return latestStudentWorkFromOtherComponents;
+    }
+  }, {
+    key: 'getAllStudentWorkFromOtherComponents',
+    value: function getAllStudentWorkFromOtherComponents(otherComponents) {
+      var allStudentWorkFromOtherComponents = [];
+      if (otherComponents != null) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = otherComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var otherComponent = _step2.value;
+
+            if (otherComponent != null) {
+              var tempNodeId = otherComponent.nodeId;
+              var tempComponentId = otherComponent.componentId;
+              if (tempNodeId != null && tempComponentId != null) {
+                var tempComponentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                if (tempComponentStates != null && tempComponentStates.length > 0) {
+                  allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents.concat(tempComponentStates);
+                }
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+      }
+      return allStudentWorkFromOtherComponents;
     }
 
     /**
@@ -583,25 +538,11 @@ var EmbeddedController = function (_ComponentController) {
           for (var _iterator3 = connectedComponents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
             var connectedComponent = _step3.value;
 
-            if (connectedComponent != null) {
-              var nodeId = connectedComponent.nodeId;
-              var componentId = connectedComponent.componentId;
-              var type = connectedComponent.type;
-              var mergeFields = connectedComponent.mergeFields;
-              if (type == 'showWork') {
-                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-                if (componentState != null) {
-                  componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-                }
-                // we are showing work so we will not allow the student to edit it
-                this.isDisabled = true;
-              } else if (type == 'importWork' || type == null) {
-                var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-                if (connectedComponentState != null) {
-                  var fields = connectedComponent.fields;
-                  mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
-                }
-              }
+            var type = connectedComponent.type;
+            if (type === 'showWork') {
+              this.handleShowWorkConnectedComponent(connectedComponent, componentStates);
+            } else if (type === 'importWork' || type == null) {
+              mergedComponentState = this.handleImportWorkConnectedComponent(connectedComponent, mergedComponentState, firstTime);
             }
           }
         } catch (err) {
@@ -626,11 +567,37 @@ var EmbeddedController = function (_ComponentController) {
       }
       return mergedComponentState;
     }
+  }, {
+    key: 'handleShowWorkConnectedComponent',
+    value: function handleShowWorkConnectedComponent(connectedComponent, componentStates) {
+      var nodeId = connectedComponent.nodeId;
+      var componentId = connectedComponent.componentId;
+      var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+      if (componentState != null) {
+        componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+      }
+      this.isDisabled = true;
+    }
+  }, {
+    key: 'handleImportWorkConnectedComponent',
+    value: function handleImportWorkConnectedComponent(connectedComponent, mergedComponentState, firstTime) {
+      var nodeId = connectedComponent.nodeId;
+      var componentId = connectedComponent.componentId;
+      var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+      if (connectedComponentState != null) {
+        var fields = connectedComponent.fields;
+        var when = connectedComponent.when;
+        if (when == null || when === 'firstTime' && firstTime) {
+          mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+        }
+      }
+      return mergedComponentState;
+    }
 
     /**
      * Merge a new component state into a base component state.
-     * @param baseComponentState The component state we will be merging into.
-     * @param newComponentState The component state we will be merging from.
+     * @param toComponentState The component state we will be merging into.
+     * @param fromComponentState The component state we will be merging from.
      * @param mergeFields The fields to merge.
      * @param firstTime Whether this is the first time the baseComponentState is
      * being merged into.
@@ -638,14 +605,13 @@ var EmbeddedController = function (_ComponentController) {
 
   }, {
     key: 'mergeComponentState',
-    value: function mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
+    value: function mergeComponentState(toComponentState, fromComponentState, mergeFields, firstTime) {
       if (mergeFields == null) {
-        if (newComponentState.componentType == 'Embedded') {
-          // there are no merge fields specified so we will get all of the fields
-          baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
+        // there are no merge fields specified so we will get all of the fields
+        if (fromComponentState.componentType === 'Embedded') {
+          toComponentState.studentData = this.UtilService.makeCopyOfJSONObject(fromComponentState.studentData);
         }
       } else {
-        // we will merge specific fields
         var _iteratorNormalCompletion4 = true;
         var _didIteratorError4 = false;
         var _iteratorError4 = undefined;
@@ -654,22 +620,7 @@ var EmbeddedController = function (_ComponentController) {
           for (var _iterator4 = mergeFields[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
             var mergeField = _step4.value;
 
-            var name = mergeField.name;
-            var when = mergeField.when;
-            var action = mergeField.action;
-            if (when == 'firstTime' && firstTime == true) {
-              if (action == 'write') {
-                baseComponentState.studentData[name] = newComponentState.studentData[name];
-              } else if (action == 'read') {
-                // TODO
-              }
-            } else if (when == 'always') {
-              if (action == 'write') {
-                baseComponentState.studentData[name] = newComponentState.studentData[name];
-              } else if (action == 'read') {
-                // TODO
-              }
-            }
+            this.mergeField(toComponentState, fromComponentState, mergeField, firstTime);
           }
         } catch (err) {
           _didIteratorError4 = true;
@@ -686,14 +637,28 @@ var EmbeddedController = function (_ComponentController) {
           }
         }
       }
-      return baseComponentState;
+      return toComponentState;
     }
-
-    /**
-     * Populate the student work into the component
-     * @param componentState the component state to populate into the component
-     */
-
+  }, {
+    key: 'mergeField',
+    value: function mergeField(toComponentState, fromComponentState, _mergeField, firstTime) {
+      var name = _mergeField.name;
+      var when = _mergeField.when;
+      var action = _mergeField.action;
+      if (when == 'firstTime' && firstTime == true) {
+        if (action == 'write') {
+          toComponentState.studentData[name] = fromComponentState.studentData[name];
+        } else if (action == 'read') {
+          // TODO
+        }
+      } else if (when == 'always') {
+        if (action == 'write') {
+          toComponentState.studentData[name] = fromComponentState.studentData[name];
+        } else if (action == 'read') {
+          // TODO
+        }
+      }
+    }
   }, {
     key: 'setStudentWork',
     value: function setStudentWork(componentState) {
@@ -701,14 +666,56 @@ var EmbeddedController = function (_ComponentController) {
     }
   }, {
     key: 'setStudentData',
-
-
-    /**
-     * Populate the student work into the component
-     * @param componentState the component state to populate into the component
-     */
     value: function setStudentData(studentData) {
       this.studentData = studentData;
+    }
+  }, {
+    key: 'setAnnotations',
+    value: function setAnnotations(annotations) {
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = annotations[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var annotation = _step5.value;
+
+          if (this.isAnnotationValid(annotation)) {
+            if (annotation.type === 'autoScore') {
+              var scoreAnnotation = this.createAutoScoreAnnotation(annotation.data);
+              this.updateLatestScoreAnnotation(scoreAnnotation);
+              this.addToAnnotationsToSave(scoreAnnotation);
+            } else if (annotation.type === 'autoComment') {
+              var commentAnnotation = this.createAutoCommentAnnotation(annotation.data);
+              this.updateLatestCommentAnnotation(commentAnnotation);
+              this.addToAnnotationsToSave(commentAnnotation);
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
+      }
+    }
+  }, {
+    key: 'isAnnotationValid',
+    value: function isAnnotationValid(annotation) {
+      return annotation.type != null && annotation.data != null && annotation.data.value != null;
+    }
+  }, {
+    key: 'addToAnnotationsToSave',
+    value: function addToAnnotationsToSave(annotation) {
+      this.annotationsToSave.push(annotation);
     }
   }]);
 

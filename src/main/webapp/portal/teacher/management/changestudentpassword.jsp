@@ -7,6 +7,9 @@
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
     
 <title><spring:message code="changePassword" /></title>
 
@@ -17,11 +20,13 @@
 
 	<div class="sectionHead"><spring:message code="changePassword" /></div>
 
-	<form:form method="post" action="changestudentpassword.html" commandName="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
-		<div class="sectionContent">
-			<label><spring:message code="teacher.management.changestudentpassword.typeTeacherPassword" /></label>
-	      	<form:password path="passwd0" />
-		</div>
+	<form:form method="post" action="changestudentpassword" modelAttribute="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
+    <c:if test="${!changeStudentPasswordParameters.teacherUser.getUserDetails().isGoogleUser()}">
+      <div class="sectionContent">
+        <label><spring:message code="teacher.management.changestudentpassword.typeTeacherPassword" /></label>
+        <form:password path="passwd0" />
+      </div>
+    </c:if>
 
 		<div class="sectionContent">
 			<label><spring:message code="teacher.management.changestudentpassword.typeStudentPassword" /></label>

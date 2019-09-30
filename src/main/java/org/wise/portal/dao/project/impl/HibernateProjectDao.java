@@ -23,13 +23,12 @@
  */
 package org.wise.portal.dao.project.impl;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +41,11 @@ import org.wise.portal.domain.project.ProjectInfo;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.user.User;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Hiroki Terashima
@@ -246,5 +250,36 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
         "from ProjectImpl as project where project.parentProjectId = :parentProjectId",
         "parentProjectId", projectId);
     return projects;
+  }
+
+  public List<Project> getProjectsWithoutRuns(User user) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    SQLQuery sqlQuery = session
+      .createSQLQuery("SELECT * FROM projects as p "
+        + "WHERE p.owner_fk = :ownerId "
+        + "AND p.id not in (select project_fk from runs) order by id desc");
+    sqlQuery.addEntity("project", ProjectImpl.class);
+    sqlQuery.setParameter("ownerId", user.getId());
+    return sqlQuery.list();
+  }
+
+  public List<Project> getAllSharedProjects() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    SQLQuery sqlQuery = session
+      .createSQLQuery("SELECT * FROM projects as p "
+        + "where p.id in "
+        + "(select distinct projects_fk from projects_related_to_shared_owners)"
+        + "order by id desc");
+    sqlQuery.addEntity("project", ProjectImpl.class);
+    return sqlQuery.list();
+  }
+
+  @Override
+  public long getMaxProjectId() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    Criteria crit = session.createCriteria(ProjectImpl.class);
+    crit.setProjection(Projections.max("id"));
+    List<Long> results = crit.list();
+    return results.get(0);
   }
 }

@@ -54,6 +54,13 @@
 	border-bottom-width:2px;
 }
 
+.studentManageHeader {
+	text-align:left;
+}
+[dir=rtl] .studentManageHeader {
+	text-align:right;
+}
+	
 .manageStudents .gradingContent {
 	margin-top:0;
 	padding:1em;
@@ -99,6 +106,10 @@
 .manageDataStyle {
 	font-weight:bold;
 	margin-right:.5em;
+}
+[dir=rtl] .manageDataStyle {
+	margin-right:auto;
+	margin-left:.5em;
 }
 
 #periodHeaderBar li {
@@ -183,14 +194,22 @@ ul.draglist_alt li {
     margin: 1px;
 }
 
-.userNameWithinView {
+.usernameWithinView {
 	margin-right:.25em;
 	color: #585F0C;
+}
+[dir=rtl] .usernameWithinView {
+	margin-right:auto;
+	margin-left:.25em;
 }
 	
 .userLinksBar {
 	position:absolute;
 	right:1em;
+}
+[dir=rtl] .userLinksBar {
+	right:auto;
+	left:1em;
 }
 	  
 .userLinks {
@@ -257,7 +276,7 @@ li.grouplesslist {
 	border: 1px solid #f7a391;
 }
 
-li.grouplesslist .userNameWithinView {
+li.grouplesslist .usernameWithinView {
 	color:#E81B00;
 }
 
@@ -267,7 +286,7 @@ li.changed {
 	border-color:#87bcb3;
 }
 
-li.changed .userNameWithinView {
+li.changed .usernameWithinView {
 	color:#007391;
 }
 
@@ -276,7 +295,7 @@ li.clone {
 	border-color: #CCC;
 }
 
-li.clone .userNameWithinView {
+li.clone .usernameWithinView {
 	color: #999;
 }
 
@@ -375,4 +394,3 @@ li.workgroupHeader a:hover {
 	font-size:.85em;
 	color:#333333;
 }
-	
