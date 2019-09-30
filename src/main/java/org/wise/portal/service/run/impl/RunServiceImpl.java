@@ -23,18 +23,10 @@
  */
 package org.wise.portal.service.run.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.stereotype.Service;
@@ -58,6 +50,7 @@ import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.run.impl.RunPermission;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
 import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.service.acl.AclService;
@@ -67,6 +60,17 @@ import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.DuplicateRunCodeException;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Services for WISE Run
@@ -306,9 +310,65 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public SharedOwner addSharedTeacher(Long runId, String teacherUsername)
+  @Transactional
+  public JSONObject transferRunOwnership(Long runId, String teacherUsername)
+      throws ObjectNotFoundException {
+    Run run = retrieveById(runId);
+    Project project = run.getProject();
+    User oldOwner = run.getOwner();
+    User newOwner = userDao.retrieveByUsername(teacherUsername);
+    projectService.transferProjectOwnership(project, newOwner);
+    if (run.isSharedTeacher(newOwner)) {
+      removeSharedTeacherAndPermissions(run, newOwner);
+    }
+    setOwner(run, newOwner);
+    addSharedTeacherWithViewAndGradePermissions(run, oldOwner);
+    removeAministrationPermission(run, oldOwner);
+    createSharedTeacherWorkgroupIfNecessary(run, newOwner);
+    runDao.save(run);
+    try {
+      return ControllerUtil.getRunJSON(run);
+    }  catch (JSONException e) {
+      return null;
+    }
+  }
+
+  private void removeSharedTeacherAndPermissions(Run run, User user) {
+    removeSharedTeacher(run, user);
+    removePermissions(run, user);
+  }
+
+  private void removeSharedTeacher(Run run, User user) {
+    run.getSharedowners().remove(user);
+  }
+
+  private void removePermissions(Run run, User user) {
+    List<Permission> permissions = aclService.getPermissions(run, user);
+    for (Permission permission : permissions) {
+      aclService.removePermission(run, permission, user);
+    }
+  }
+
+  private void setOwner(Run run, User user) {
+    run.setOwner(user);
+    aclService.addPermission(run, BasePermission.ADMINISTRATION, user);
+  }
+
+  private void addSharedTeacherWithViewAndGradePermissions(Run run, User user) {
+    if (!run.isSharedTeacher(user)) {
+      run.getSharedowners().add(user);
+    }
+    aclService.addPermission(run, RunPermission.VIEW_STUDENT_NAMES, user);
+    aclService.addPermission(run, RunPermission.GRADE_AND_MANAGE, user);
+  }
+
+  private void removeAministrationPermission(Run run, User user) {
+    aclService.removePermission(run, BasePermission.ADMINISTRATION, user);
+  }
+
+  public SharedOwner addSharedTeacher(Long runId, String username)
       throws ObjectNotFoundException, TeacherAlreadySharedWithRunException {
-    User user = userDao.retrieveByUsername(teacherUsername);
+    User user = userDao.retrieveByUsername(username);
     Run run = this.retrieveById(runId);
     if (!run.getSharedowners().contains(user)) {
       run.getSharedowners().add(user);
@@ -325,11 +385,13 @@ public class RunServiceImpl implements RunService {
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
         user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
     } else {
-      throw new TeacherAlreadySharedWithRunException(teacherUsername + " is already shared with this run");
+      throw new TeacherAlreadySharedWithRunException(user.getUserDetails().getUsername()
+          + " is already shared with this run");
     }
   }
 
-  private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user) throws ObjectNotFoundException {
+  private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user)
+      throws ObjectNotFoundException {
     if (workgroupService.getWorkgroupListByRunAndUser(run, user).size() == 0) {
       return createSharedTeacherWorkgroup(run, user);
     }
@@ -647,7 +709,7 @@ public class RunServiceImpl implements RunService {
     try {
       Run run = this.retrieveById(runId);
       run.setStarttime(new Date(startTime));
-      this.runDao.save(run);
+      runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }

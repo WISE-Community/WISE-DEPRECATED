@@ -202,7 +202,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="7f32abe3fc638f65c0d3eb269d478ee49ad41ebe" datatype="html">
         <source>more</source>
@@ -1458,6 +1458,10 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
       </trans-unit><trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
         <source>Add</source>
         <context-group purpose="location">
@@ -1496,7 +1500,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
@@ -1800,7 +1804,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="39e715b9ebc52d3b9c9a0b629419034bf1610efa" datatype="html">
         <source>Teacher is already on shared list.</source>
@@ -1810,7 +1814,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="cff1428d10d59d14e45edec3c735a27b5482db59" datatype="html">
         <source>Name</source>
@@ -1824,7 +1828,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit><trans-unit id="53ea2772322e7d4d21515bb0c6dead283f8e18a5" datatype="html">
         <source>Revoke</source>
@@ -1834,7 +1838,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit><trans-unit id="70f45880fce6ac5d8e468e25e82aefbba8098cfe" datatype="html">
         <source>Permissions</source>
@@ -1844,7 +1848,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit><trans-unit id="e4c62e79146aa053669046c6d0d40e889049f8a1" datatype="html">
         <source>Owner. Full permissions.</source>
@@ -1854,7 +1858,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit><trans-unit id="6bd0461d56d457667267858196994feefee0de48" datatype="html">
         <source>View &amp; Use with Students</source>
@@ -1870,7 +1874,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit><trans-unit id="d1acaeb5fa466988ff526619702c4bf21e0a5e15" datatype="html">
         <source>Copy Unit</source>
@@ -1914,7 +1918,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
@@ -1937,6 +1941,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
           <context context-type="linenumber">21</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit><trans-unit id="8dce5a1b53185785ceb8eaece03a45f95a1058ae" datatype="html">
         <source>Parent ID:</source>
@@ -4796,9 +4804,9 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-      </trans-unit><trans-unit id="036f708ee8fd9a343c47dc81fb0df7650488f5da" datatype="html">
+      </trans-unit><trans-unit id="958238c9a38f867922fab7579f5e7c77194fe6a1" datatype="html">
         <source>
-    Shared by <x id="INTERPOLATION" equiv-text="{{run.owner.displayName}}"/>
+    Shared by <x id="INTERPOLATION" equiv-text="{{run.owner.firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{run.owner.lastName}}"/>
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
@@ -4828,23 +4836,47 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="f1b3a4c04de059a8a400c8eace966d618373afe0" datatype="html">
+        <source>Transfer Classroom Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
       </trans-unit><trans-unit id="ba04cd26cfc1093921e7196b9c934a2e45c5ca2d" datatype="html">
         <source>View Student Work</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit><trans-unit id="93315f528b07c5cc6aa5eba3c97ac7815711d320" datatype="html">
         <source>View Student Names</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit><trans-unit id="f95fae4dbd1692e5faa4c26a1c3b6ea1ae55f862" datatype="html">
         <source>Grade and Manage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit><trans-unit id="b26220770d5f6b450e9df4fbcadd454f492b7872" datatype="html">
+        <source>Are you sure you want to make <x id="INTERPOLATION" equiv-text="{{teacherSearchControl.value}}"/> the new owner of this unit?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+      </trans-unit><trans-unit id="5b45cfc4c7c5c38692885d9d8eb056f42dd48a05" datatype="html">
+        <source>You will still be able to access the unit but the new owner will have the ability to take away or change your access permissions.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+      </trans-unit><trans-unit id="987c58bf54a75a2dad4d366b6546d80749bc5a30" datatype="html">
+        <source>Transfer Ownership</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit><trans-unit id="a2a99d70cee0c47626832a30636f0ede3c84c2eb" datatype="html">
         <source>Edit Settings</source>
@@ -5379,34 +5411,22 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="46e4ba42c378685244d606204ade725e243a5572" datatype="html">
-        <source>Sharing permissions updated for <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/share-run-dialog/share-run-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/share-run-dialog/share-run-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="33b9dd7d7bbb965d7208dcf0e33cc0545a3030a2" datatype="html">
-        <source>Added shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
+      <trans-unit id="87e83ba367d61f39003bd653b2be6b8deb0a4077" datatype="html">
+        <source>Sharing permissions updated for <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="a468fe0f9732107893d00498816aaf811c0e4190" datatype="html">
-        <source>Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{username}}"/>.</source>
+      <trans-unit id="21e1f17b31c2539755f91af0891b3d45eb535b41" datatype="html">
+        <source>Added shared teacher: <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="918997618ef46e7aafddf9ab28e6a59ed4aa6d4e" datatype="html">
+        <source>Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5671,6 +5691,13 @@
         <source>Unit settings updated.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="13a4ce63135573625f668e8ccf5fda16933a846e" datatype="html">
+        <source>Transferred classroom unit ownership to <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/share-run-dialog/share-run-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

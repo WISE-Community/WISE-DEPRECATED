@@ -71,4 +71,16 @@ export class UtilService {
       return 0;
     });
   }
+
+  sortByUsername(obj1: any, obj2: any) {
+    const username1 = obj1.username.toLowerCase();
+    const username2 = obj2.username.toLowerCase(); 
+    if (username1 < username2) {
+      return -1;
+    } else if (username1 > username2) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 }

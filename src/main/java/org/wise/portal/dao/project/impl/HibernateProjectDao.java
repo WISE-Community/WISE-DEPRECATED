@@ -23,12 +23,25 @@
  */
 package org.wise.portal.dao.project.impl;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,12 +53,9 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
  * @author Hiroki Terashima
@@ -55,6 +65,9 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     ProjectDao<Project> {
 
   private static final String FIND_ALL_QUERY = "from ProjectImpl";
+
+  @PersistenceContext
+  private EntityManager entityManager;
 
   /**
    * @see org.wise.portal.dao.run.RunDao#retrieveByRunCode(String)
@@ -122,6 +135,30 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
       role + "s " + role + " where " + role + ".id='" + user.getId() + "'" +
       " order by project.id desc";
     return (List<Project>) this.getHibernateTemplate().find(q);
+  }
+  
+  public List<Project> getSharedProjectsWithoutRun(User user) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<ProjectImpl> cq = cb.createQuery(ProjectImpl.class);
+    Root<ProjectImpl> projectRoot = cq.from(ProjectImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Subquery<RunImpl> runProjectIds = getRunProjectIds(cq);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(userRoot.get("id"), user.getId()));
+    predicates.add(cb.isMember(userRoot.get("id"), projectRoot.<Set<User>>get("sharedowners")));
+    predicates.add(cb.not(projectRoot.get("id").in(runProjectIds)));
+    cq.select(projectRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
+    List<ProjectImpl> projectResultList = query.getResultList();
+    return (List<Project>)(Object)projectResultList;
+  }
+
+  private Subquery<RunImpl> getRunProjectIds(CriteriaQuery cq) {
+    Subquery<RunImpl> runsSubquery = cq.subquery(RunImpl.class);
+    Root<RunImpl> runRoot = runsSubquery.from(RunImpl.class);
+    runsSubquery.select(runRoot.get("project").get("id"));
+    return runsSubquery;
   }
 
   /**

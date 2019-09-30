@@ -24,10 +24,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
-import org.springframework.security.acls.model.MutableAcl;
-import org.springframework.security.acls.model.MutableAclService;
-import org.springframework.security.acls.model.NotFoundException;
-import org.springframework.security.acls.model.ObjectIdentity;
+import org.springframework.security.acls.jdbc.LookupStrategy;
+import org.springframework.security.acls.model.*;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,7 +36,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.service.acl.impl.AclServiceImpl;
 
+import javax.sql.DataSource;
 import java.util.Collections;
+import java.util.Properties;
 
 /**
  * @author Laurel Williams
@@ -65,9 +65,12 @@ public class AclServiceImplTest extends TestCase {
     securityContext.setAuthentication(authority);
     SecurityContextHolder.setContext(securityContext);
 
-    groupAclService = new AclServiceImpl<Group>();
+    DataSource dataSource = EasyMock.createMock(DataSource.class);
+    LookupStrategy lookupStrategy = EasyMock.createMock(LookupStrategy.class);
+    AclCache aclCache = EasyMock.createMock(AclCache.class);
+    Properties properties = EasyMock.createMock(Properties.class);
+    groupAclService = new AclServiceImpl<Group>(dataSource, lookupStrategy, aclCache, properties);
     mutableAclService = EasyMock.createMock(MutableAclService.class);
-    groupAclService.setMutableAclService(mutableAclService);
 
     group = EasyMock.createMock(Group.class);
     EasyMock.expect(group.getId()).andReturn(new Long(1)).anyTimes();
