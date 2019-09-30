@@ -14,8 +14,8 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <script src="${contextPath}/wise5/lib/sockjs/sockjs.min.js"></script>
         <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
-        <script src="${contextPath}/wise5/config.js?v=5.7.8"></script>
-        <script src="${contextPath}/wise5/cacheBuster.js?v=5.7.8"></script>
+        <script src="${contextPath}/wise5/config.js?v=5.8.0"></script>
+        <script src="${contextPath}/wise5/cacheBuster.js?v=5.8.0"></script>
         <script>
             System.import('${contextPath}/wise5/vle/bootstrap');
         </script>
