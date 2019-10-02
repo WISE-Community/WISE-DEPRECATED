@@ -43,7 +43,7 @@ import * as jQuery from 'jquery';
 import * as fabric from 'fabric';
 import * as StompJS from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-
+import * as Highcharts from '../../lib/highcharts/highcharts.src';
 import * as hopscotch from 'hopscotch';
 import * as EventEmitter2 from 'EventEmitter2';
 
@@ -53,4 +53,7 @@ window['fabric'] = fabric.fabric;
 window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
 window['hopscotch'] = hopscotch;
+window['Highcharts'] = Highcharts;
 window['EventEmitter2'] = EventEmitter2;
+import * as summernote from 'summernote';
+window['summernote'] = summernote;

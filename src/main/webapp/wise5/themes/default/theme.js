@@ -1,8 +1,8 @@
 'use strict';
 
 import ThemeController from './themeController';
-import ThemeComponents from './themeComponents';
-import NotebookComponents from './notebook/notebookComponents';
+import './themeComponents';
+import './notebook/notebookComponents';
 
 import './js/webfonts';
 

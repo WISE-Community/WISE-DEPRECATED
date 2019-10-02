@@ -32,7 +32,7 @@ fi
 
 if [ $1 = "package" ]; then
   npm install
-  npm run build-all
+  npm run build-prod-all
   ./mvnw clean -Dmaven.test.skip=true package
   exit 0
 fi

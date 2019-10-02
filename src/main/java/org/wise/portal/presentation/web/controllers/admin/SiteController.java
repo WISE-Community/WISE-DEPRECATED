@@ -36,10 +36,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class SiteController {
 
-  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", 
+  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login",
       "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news",
       "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"})
   protected String showSite() {
-    return "forward:/index.html";
+    return "forward:/site/dist/index.html";
   }
 }

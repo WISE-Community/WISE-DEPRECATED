@@ -78,20 +78,12 @@ public class VLEController {
   }
 
   @GetMapping("/student/run/{runId}")
-  protected String launchVLEWISE5Run(HttpServletRequest request, @PathVariable Long runId, ModelMap modelMap) {
-    String contextPath = request.getContextPath();
-    modelMap.put("configURL", contextPath + "/config/studentRun/" + runId);
-    return "student";
+  protected String launchVLEWISE5Run(@PathVariable Long runId) {
+    return "forward:/wise5/vle/dist/index.html#/run/" + runId;
   }
 
   @GetMapping("/project/{projectId}")
-  protected String launchVLEWISE5Preview(HttpServletRequest request, @PathVariable String projectId, ModelMap modelMap)
-      throws NumberFormatException, ObjectNotFoundException {
-    if (!"demo".equals(projectId)) {
-      projectService.getById(Long.parseLong(projectId));
-    }
-    String contextPath = request.getContextPath();
-    modelMap.put("configURL", contextPath + "/config/preview/" + projectId);
-    return "student";
+  protected String launchVLEWISE5Preview(@PathVariable String projectId) {
+    return "forward:/wise5/vle/dist/index.html#/project/" + projectId;
   }
 }

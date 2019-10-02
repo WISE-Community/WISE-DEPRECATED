@@ -1,4 +1,4 @@
 'use strict';
 
-import SharedComponents from './shared/shared';
+import './shared/shared';
 export default angular.module('authoringTool.components', ['sharedComponents']);

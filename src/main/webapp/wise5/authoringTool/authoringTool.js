@@ -10,7 +10,7 @@ import 'angular-ui-router';
 import 'angular-material';
 import 'angular-moment';
 import 'angular-sanitize';
-import angularStomp from 'ng-stomp';
+import 'ng-stomp';
 import '../lib/angular-toArrayFilter/toArrayFilter';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
@@ -60,7 +60,7 @@ import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
-import SummaryAuthoringComponentModule from '../components/summary/summaryAuthoringComponentModule'
+import '../components/summary/summaryAuthoringComponentModule'
 import '../components/table/tableAuthoringComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';

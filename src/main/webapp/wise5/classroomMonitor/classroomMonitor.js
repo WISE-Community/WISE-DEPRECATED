@@ -5,54 +5,54 @@ import $ from 'jquery';
 import AchievementService from '../services/achievementService';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
-import angularFileSaver from 'angular-file-saver';
-import angularInview from 'angular-inview';
-import angularMoment from 'angular-moment';
-import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
-import angularUIRouter from 'angular-ui-router';
-import ngFileUpload from 'ng-file-upload';
-import ngMaterial from 'angular-material';
-import angularSanitize from 'angular-sanitize';
-import angularStomp from 'ng-stomp';
-import angularTranslate from 'angular-translate';
-import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
-import AnimationComponentModule from '../components/animation/animationComponentModule';
+import 'angular-file-saver';
+import 'angular-inview';
+import 'angular-moment';
+import '../lib/angular-toArrayFilter/toArrayFilter';
+import 'angular-ui-router';
+import 'ng-file-upload';
+import 'angular-material';
+import 'angular-sanitize';
+import 'ng-stomp';
+import 'angular-translate';
+import 'angular-translate-loader-partial';
+import '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
-import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
+import '../components/audioOscillator/audioOscillatorComponentModule';
 import bootstrap from 'bootstrap';
-import ClassroomMonitorComponents from './classroomMonitorComponents';
+import './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
 import ClassroomMonitorProjectService from './classroomMonitorProjectService';
-import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
+import '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
-import Components from '../directives/components';
+import '../directives/components';
 import ComponentService from '../components/componentService';
-import DashboardController from './dashboard/dashboardController';
+import './dashboard/dashboardController';
 import DataExportController from './dataExport/dataExportController';
-import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
-import DrawComponentModule from '../components/draw/drawComponentModule';
-import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
-import GraphComponentModule from '../components/graph/graphComponentModule';
+import '../components/discussion/discussionComponentModule';
+import '../components/draw/drawComponentModule';
+import '../components/embedded/embeddedComponentModule';
+import '../components/graph/graphComponentModule';
 import Highcharts from '../lib/highcharts@4.2.1';
-import highchartsng from 'highcharts-ng';
-import HTMLComponentModule from '../components/html/htmlComponentModule';
+import 'highcharts-ng';
+import '../components/html/htmlComponentModule';
 import HttpInterceptor from '../services/httpInterceptor';
-import LabelComponentModule from '../components/label/labelComponentModule';
-import MatchComponentModule from '../components/match/matchComponentModule';
+import '../components/label/labelComponentModule';
+import '../components/match/matchComponentModule';
 import ManageStudentsController from './manageStudents/manageStudentsController';
 import MilestonesController from './milestones/milestonesController';
-import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
+import '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeGradingController from './nodeGrading/nodeGradingController';
 import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeService from '../services/nodeService';
-import NotebookComponents from '../themes/default/notebook/notebookComponents';
+import '../themes/default/notebook/notebookComponents';
 import NotebookGradingController from './notebook/notebookGradingController';
 import NotebookItemGrading from './notebook/notebookItemGrading/notebookItemGrading';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
-import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
-import OutsideURLComponentModule from '../components/outsideURL/outsideURLComponentModule';
+import '../components/openResponse/openResponseComponentModule';
+import '../components/outsideURL/outsideURLComponentModule';
 import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
@@ -64,13 +64,13 @@ import StudentGradingController from './studentGrading/studentGradingController'
 import StudentProgressController from './studentProgress/studentProgressController';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
-import SummaryComponentModule from '../components/summary/summaryComponentModule';
-import TableComponentModule from '../components/table/tableComponentModule';
+import '../components/summary/summaryComponentModule';
+import '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
-import summernote from 'summernote';
-import angularSummernote from '../lib/angular-summernote/dist/angular-summernote';
+import '../lib/summernote/dist/summernote';
+import '../lib/angular-summernote/dist/angular-summernote';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js'
 import moment from 'moment';
@@ -155,23 +155,15 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
          $mdThemingProvider,
          $httpProvider) => {
 
-            $urlRouterProvider.otherwise('/project/');
-
             $stateProvider
                 .state('root', {
-                    url: '',
-                    abstract: true,
+                    url: '/run/:runId',
                     templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
                     controller: 'ClassroomMonitorController',
                     controllerAs: 'classroomMonitorController',
                     resolve: {
-                        config: ['ConfigService', (ConfigService) => {
-                          if (window.configURL != null) {
-                            return ConfigService.retrieveConfig(window.configURL);
-                          } else {
-                            const runId = prompt('Please enter Run ID:');
-                            return ConfigService.retrieveConfig(`/config/classroomMonitor/${runId}`);
-                          }
+                        config: ['ConfigService', '$stateParams', (ConfigService, $stateParams) => {
+                            return ConfigService.retrieveConfig(`/config/classroomMonitor/${$stateParams.runId}`);
                         }],
                         project: ['ProjectService', 'config', (ProjectService, config) => {
                           return ProjectService.retrieveProject();
@@ -272,6 +264,11 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                     controller: 'NotebookGradingController',
                     controllerAs: 'notebookGradingController'
                 });
+
+            $urlRouterProvider.otherwise(($injector, $location) => {
+               var $state = $injector.get('$state');
+               $state.go('root.project', {});
+            });
 
             $httpProvider.interceptors.push('HttpInterceptor');
 

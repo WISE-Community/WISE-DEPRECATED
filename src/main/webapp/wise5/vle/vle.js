@@ -4,76 +4,73 @@ import $ from 'jquery';
 import AchievementService from '../services/achievementService';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
-import angularFileUpload from 'ng-file-upload';
-import angularHighcharts from 'highcharts-ng';
-import angularMaterial from 'angular-material';
-import angularMoment from 'angular-moment';
-import angularOnload from 'ng-onload';
-import angularSanitize from 'angular-sanitize';
-import angularStomp from 'ng-stomp';
-import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
-import angularTranslate from 'angular-translate';
-import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
-import angularUIRouter from 'angular-ui-router';
-import angularUIScrollpoint from 'angular-ui-scrollpoint';
-import AnimationComponentModule from '../components/animation/animationComponentModule';
+import 'ng-file-upload';
+import 'highcharts-ng';
+import 'angular-material';
+import 'angular-moment';
+import 'ng-onload';
+import 'angular-sanitize';
+import 'ng-stomp';
+import '../lib/angular-toArrayFilter/toArrayFilter';
+import 'angular-translate';
+import 'angular-translate-loader-partial';
+import 'angular-ui-router';
+import 'angular-ui-scrollpoint';
+import '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
-import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
+import '../components/audioOscillator/audioOscillatorComponentModule';
 import bootstrap from 'bootstrap';
 import canvg from 'canvg';
-import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
+import '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
-import Components from '../directives/components';
+import '../directives/components';
 import ComponentService from '../components/componentService';
-import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
-import DrawComponentModule from '../components/draw/drawComponentModule';
-import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
+import '../components/discussion/discussionComponentModule';
+import '../components/draw/drawComponentModule';
+import '../components/embedded/embeddedComponentModule';
 import Fabric from 'fabric';
 import Hopscotch from '../lib/hopscotch/dist/js/hopscotch.min'
 import Filters from '../filters/filters';
 import Highcharts from '../lib/highcharts@4.2.1';
 import HighchartsExporting from '../lib/highcharts-exporting@4.2.1';
 import draggablePoints from '../lib/draggable-points/draggable-points';
-import GraphComponentModule from '../components/graph/graphComponentModule';
+import '../components/graph/graphComponentModule';
 import hopscotch from 'hopscotch';
-import HTMLComponentModule from '../components/html/htmlComponentModule';
+import '../components/html/htmlComponentModule';
 import HttpInterceptor from '../services/httpInterceptor';
-import LabelComponentModule from '../components/label/labelComponentModule';
-import MatchComponentModule from '../components/match/matchComponentModule';
-import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
+import '../components/label/labelComponentModule';
+import '../components/match/matchComponentModule';
+import '../components/multipleChoice/multipleChoiceComponentModule';
 import NavigationController from './navigation/navigationController';
 import NodeController from './node/nodeController';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
-import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
-import OutsideURLComponentModule from '../components/outsideURL/outsideURLComponentModule';
+import '../components/openResponse/openResponseComponentModule';
+import '../components/outsideURL/outsideURLComponentModule';
 import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
-import StudentAsset from './studentAsset/studentAsset';
+import './studentAsset/studentAsset';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
-import SummaryComponentModule from '../components/summary/summaryComponentModule';
-import TableComponentModule from '../components/table/tableComponentModule';
+import '../components/summary/summaryComponentModule';
+import '../components/table/tableComponentModule';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
 import VLEProjectService from './vleProjectService';
 import moment from 'moment';
 import SockJS from 'sockjs-client';
 import Stomp from "@stomp/stompjs";
-import * as summernote from '../lib/summernote/dist/summernote';
-import angularSummernote from '../lib/angular-summernote/dist/angular-summernote';
-import '../lib/summernoteExtensions/summernote-ext-addNote.js';
-import '../lib/summernoteExtensions/summernote-ext-print.js';
-import theme from '../themes/default/theme';
+import '../lib/summernote/dist/summernote';
+import '../lib/angular-summernote/dist/angular-summernote';
+import '../themes/default/theme';
 
-const vleModule = angular.module('vle', [
+export default angular.module('vle', [
     angularDragula(angular),
-    'summaryComponentModule',
     'angularMoment',
     'angular-toArrayFilter',
     'animationComponentModule',
@@ -100,6 +97,7 @@ const vleModule = angular.module('vle', [
     'outsideURLComponentModule',
     'pascalprecht.translate',
     'studentAsset',
+    'summaryComponentModule',
     'summernote',
     'tableComponentModule',
     'theme',
@@ -324,7 +322,7 @@ const vleModule = angular.module('vle', [
       $translatePartialLoaderProvider.addPart('i18n');
       $translatePartialLoaderProvider.addPart('vle/i18n');
       $translateProvider.useLoader('$translatePartialLoader', {
-        urlTemplate: 'wise5/{part}/i18n_{lang}.json'
+        urlTemplate: '/wise5/{part}/i18n_{lang}.json'
       })
         .fallbackLanguage(['en'])
         .registerAvailableLanguageKeys(['ar','el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
@@ -416,5 +414,3 @@ const vleModule = angular.module('vle', [
       });
     }
 ]);
-
-export default vleModule;
