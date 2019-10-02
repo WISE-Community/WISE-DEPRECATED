@@ -283,7 +283,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     try {
       return results.get(0);
     } catch (NullPointerException npe) {
-      return 1;
+      return 0;
     }
   }
 }
