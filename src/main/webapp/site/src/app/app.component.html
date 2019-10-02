@@ -14,13 +14,9 @@
     <mat-sidenav-content fxLayout="column" 
                          track-scroll 
                          (yPositionChange)="onYPositionChange($event)">
-      <app-announcement *ngIf="showHeaderAndFooter() && hasAnnouncement"
+      <app-announcement *ngIf="hasAnnouncement"
                         class="top-content"
-                        i18n-message
-                        message="Welcome to our new site!"
-                        i18n-action
-                        action="Learn More"
-                        (callback)="showAnnouncementDetails()"
+                        [announcement]="announcement"
                         (dismiss)="dismissAnnouncement()"></app-announcement>
       <app-header class="dark-theme top-content"></app-header>
       <div fxFlex>
@@ -41,4 +37,4 @@
   </mat-sidenav-container>
 </ng-template>
 
-<ng-container *ngTemplateOutlet="showHeaderAndFooter() ? default: standalone"></ng-container>
+<ng-container *ngTemplateOutlet="showHeaderAndFooter() ? default : standalone"></ng-container>

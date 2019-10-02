@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Config } from "../domain/config";
 import { User } from "../domain/user";
+import { Announcement } from '../domain/announcement';
 
 @Injectable()
 export class ConfigService {
@@ -10,6 +11,7 @@ export class ConfigService {
   private userConfigUrl = 'api/user/config';
   private studentConfigUrl = 'api/student/config';
   private teacherConfigUrl = 'api/teacher/config';
+  private announcementUrl = 'announcement';
   private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(null);
   private timeDiff: number = 0;
 
@@ -53,5 +55,10 @@ export class ConfigService {
 
   getCurrentServerTime() {
     return Date.now() - this.timeDiff;
+  }
+
+  getAnnouncement(): Observable<Announcement> {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get(this.announcementUrl, { headers: headers }) as Observable<Announcement>;
   }
 }

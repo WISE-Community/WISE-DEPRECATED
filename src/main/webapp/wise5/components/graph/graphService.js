@@ -35,7 +35,8 @@ class GraphService extends ComponentService {
     component.graphType = 'line';
     component.xAxis = {
       title: {
-        text: this.$translate('graph.timeSeconds')
+        text: this.$translate('graph.timeSeconds'),
+        useHTML: true
       },
       min: 0,
       max: 100,
@@ -45,7 +46,8 @@ class GraphService extends ComponentService {
     };
     component.yAxis = {
       title: {
-        text: this.$translate('graph.positionMeters')
+        text: this.$translate('graph.positionMeters'),
+        useHTML: true
       },
       min: 0,
       max: 100,
@@ -264,7 +266,7 @@ class GraphService extends ComponentService {
   generateImageFromRenderedComponentState(componentState) {
     const deferred = this.$q.defer();
     const componentId = componentState.componentId;
-    let highchartsDiv = angular.element(document.querySelector('#chart_' + componentId).find('.highcharts-container'));
+    let highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
     if (highchartsDiv != null && highchartsDiv.length > 0) {
       highchartsDiv = highchartsDiv[0];
       html2canvas(highchartsDiv).then((canvas) => {

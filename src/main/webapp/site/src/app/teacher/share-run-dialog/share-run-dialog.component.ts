@@ -1,10 +1,11 @@
 import { Component, Inject } from '@angular/core';
-import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar,
-  MatTableDataSource } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatTableDataSource } from "@angular/material";
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { UserService } from '../../services/user.service';
+import { UtilService } from '../../services/util.service';
+import { TeacherRun } from '../teacher-run';
 
 @Component({
   selector: 'app-share-run-dialog',
@@ -13,39 +14,48 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 })
 export class ShareRunDialogComponent extends ShareItemDialogComponent {
 
-  run: Run = new Run();
+  run: TeacherRun;
   dataSource: MatTableDataSource<any[]> = new MatTableDataSource<any[]>();
   displayedColumns: string[] = ['name', 'permissions'];
   duplicate: boolean = false;
+  isOwner: boolean = false;
+  isTransfer: boolean = false;
+  transferRunWarning: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public teacherService: TeacherService,
+              private userService: UserService,
+              private utilService: UtilService,
               public snackBar: MatSnackBar,
               i18n: I18n) {
     super(dialogRef, data, teacherService, snackBar, i18n);
-    this.runId = data.run.id;
-    this.teacherService.getRun(this.runId).subscribe((run: Run) => {
-      this.run = run;
-      this.project = run.project;
-      this.projectId = run.project.id;
+    this.teacherService.getRun(this.data.run.id).subscribe((run: TeacherRun) => {
+      this.run = new TeacherRun(run);
+      this.runId = this.run.id;
+      this.project = this.run.project;
+      this.projectId = this.run.project.id;
+      this.isOwner = this.run.isOwner(this.userService.getUserId());
       this.populateSharedOwners(run.sharedOwners);
+      this.getSharedOwners().subscribe(sharedOwners => {
+        sharedOwners = sharedOwners.sort(this.utilService.sortByUsername);
+        this.updateSharedOwners(sharedOwners);
+      });
     });
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.getSharedOwners().subscribe(sharedOwners => {
-      let owners = [...sharedOwners];
-      owners.reverse();
-      if (this.run.owner) {
-        owners.unshift({
-          sharedOwner: this.run.owner,
-          isOwner: true
-        });
-      }
-      this.dataSource = new MatTableDataSource(owners);
-    });
+  }
+
+  updateSharedOwners(owners: any[]) {
+    if (this.run.owner) {
+      owners.unshift({
+        sharedOwner: this.run.owner,
+        isOwner: true
+      });
+    }
+    this.dataSource = new MatTableDataSource(owners);
   }
 
   populatePermissions(sharedOwner) {
@@ -84,53 +94,97 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
             if (response.status == "success") {
               this.addRunPermissionToSharedOwner(sharedOwnerId, permissionId);
             }
-      })
+      });
     } else {
       this.teacherService.removeSharedOwnerRunPermission(this.runId, sharedOwnerId, permissionId)
         .subscribe((response: any) => {
           if (response.status == "success") {
             this.removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId);
           }
-      })
+      });
     }
   }
 
   addRunPermissionToSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = true;
-    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
+    this.notifyRunPermissionChange(sharedOwner);
   }
 
   removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
     sharedOwner.runPermissions[permissionId] = false;
-    this.snackBar.open(this.i18n('Sharing permissions updated for {{username}}.', {username: sharedOwner.username}));
+    this.notifyRunPermissionChange(sharedOwner);
   }
 
   shareRun() {
     this.duplicate = false;
     const sharedOwnerUsername = this.teacherSearchControl.value;
     if (this.run.owner.username !== sharedOwnerUsername &&
-      !this.isSharedOwner(sharedOwnerUsername)) {
-      this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername)
-          .subscribe((newSharedOwner) => {
-        if (newSharedOwner != null) {
+        (!this.isSharedOwner(sharedOwnerUsername) || this.isTransfer)) {
+      if (this.isTransfer) {
+        this.transferRunWarning = true;
+      } else {
+        this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername)
+            .subscribe(newSharedOwner => {
           this.setDefaultRunPermissions(newSharedOwner);
           this.setDefaultProjectPermissions(newSharedOwner);
           this.addSharedOwner(newSharedOwner);
+          this.data.run.sharedOwners = this.sharedOwners;
           this.teacherSearchControl.setValue('');
-        }
-      });
+        });
+        document.getElementById('share-run-dialog-search').blur();
+      }
     } else {
       this.duplicate = true;
     }
-    document.getElementById("share-run-dialog-search").blur();
+  }
+
+  completeRunOwnershipTransfer() {
+    const newOwnerUsername = this.teacherSearchControl.value;
+    this.teacherService.transferRunOwnership(this.runId, newOwnerUsername)
+        .subscribe(run => {
+      if (run != null) {
+        this.updateRunAndProjectPermissions(run);
+        this.closeTransferRunDialog();
+      }
+      this.teacherSearchControl.setValue('');
+    });
+  }
+
+  updateRunAndProjectPermissions(run) {
+    this.run = new TeacherRun(run);
+    this.transferRunOwnership(this.run);
+    this.data.run.shared = true;
+    this.data.run.owner = run.owner;
+    this.data.run.sharedOwners = run.sharedOwners;
+  }
+
+  transferRunOwnership(run: TeacherRun) {
+    this.sharedOwners = [];
+    this.project = run.project;
+    this.populateSharedOwners(run.sharedOwners);
+    run.sharedOwners = this.sharedOwners;
+    run.shared = true;
+    this.snackBar.open(this.i18n('Transferred classroom unit ownership to {{firstName}} {{lastName}}.', 
+      {firstName: run.owner.firstName, lastName: run.owner.lastName}));
   }
 
   unshareRun(sharedOwner) {
     this.teacherService.removeSharedOwner(this.runId, sharedOwner.username)
         .subscribe((response) => {
       this.removeSharedOwner(sharedOwner);
+      this.data.run.sharedOwners = this.sharedOwners;
     });
+  }
+
+  openTransferRunDialog() {
+    this.isTransfer = true;
+  }
+
+  closeTransferRunDialog() {
+    this.isTransfer = false;
+    this.transferRunWarning = false;
+    this.teacherSearchControl.setValue('');
   }
 }

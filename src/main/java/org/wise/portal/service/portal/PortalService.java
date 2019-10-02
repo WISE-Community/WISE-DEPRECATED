@@ -58,4 +58,6 @@ public interface PortalService {
    * @return the default project library groups
    */
   String getDefaultProjectLibraryGroups();
+
+  String getDefaultAnnouncement();
 }

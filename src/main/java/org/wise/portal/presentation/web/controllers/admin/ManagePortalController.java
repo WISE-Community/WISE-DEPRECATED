@@ -55,6 +55,7 @@ public class ManagePortalController {
       @RequestParam(value = "portalId", defaultValue = "1") Integer portalId) throws Exception {
     Portal portal = portalService.getById(portalId);
     modelMap.put("portal", portal);
+    modelMap.put("defaultAnnouncement", portalService.getDefaultAnnouncement());
     modelMap.put("defaultProjectMetadataSettings", portalService.getDefaultProjectMetadataSettings());
     modelMap.put("defaultProjectLibraryGroups", portalService.getDefaultProjectLibraryGroups());
     return "admin/portal/manage";
@@ -92,6 +93,10 @@ public class ManagePortalController {
         portal.setProjectLibraryGroups(val);
         portalService.updatePortal(portal);
         addOfficialTagToProjectLibraryGroup(val);
+        modelMap.put("msg", "success");
+      } else if (attr.equals("announcement")) {
+        portal.setAnnouncement(val);
+        portalService.updatePortal(portal);
         modelMap.put("msg", "success");
       } else {
         modelMap.put("msg", "error: permission denied");

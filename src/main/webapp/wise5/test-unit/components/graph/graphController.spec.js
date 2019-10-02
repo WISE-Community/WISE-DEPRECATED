@@ -767,6 +767,7 @@ describe('GraphController', () => {
     ];
     const deferred = {};
     const title = 'My Graph';
+    const subtitle = 'My Subtitle';
     const xAxis = {
       min: 0,
       max: 100
@@ -777,7 +778,8 @@ describe('GraphController', () => {
     };
     const series = [[10, 20], [100, 200]];
     const zoomType = null;
-    const chartConfig = graphController.createChartConfig(deferred, title, xAxis, yAxis, series, zoomType);
+    const chartConfig = graphController.createChartConfig(deferred, title, subtitle, xAxis, yAxis,
+        series, zoomType);
     expect(chartConfig.title.text).toEqual('My Graph');
     expect(chartConfig.xAxis.min).toEqual(0);
     expect(chartConfig.xAxis.max).toEqual(100);
@@ -1104,5 +1106,4 @@ describe('GraphController', () => {
     expect(graphController.activeTrial).toEqual(trial1);
     expect(graphController.activeSeries).toEqual(trial1.series[0]);
   });
-
 });

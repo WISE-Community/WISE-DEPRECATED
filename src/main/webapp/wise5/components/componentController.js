@@ -266,19 +266,19 @@ class ComponentController {
   }
 
   restoreSummernoteCursorPosition(summernoteId) {
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
+    $('#' + summernoteId).summernote('editor.restoreRange');
+    $('#' + summernoteId).summernote('editor.focus');
   }
 
   insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
+    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
   }
 
   insertVideoIntoSummernote(summernoteId, fullAssetPath) {
     var videoElement = document.createElement('video');
     videoElement.controls = 'true';
     videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
+    $('#' + summernoteId).summernote('insertNode', videoElement);
   }
 
   assetSelected(event, args) {
@@ -693,7 +693,8 @@ class ComponentController {
   }
 
   isAddToNotebookEnabled() {
-    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled();
+    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled() &&
+        this.showAddToNotebookButton;
   }
 
   /**

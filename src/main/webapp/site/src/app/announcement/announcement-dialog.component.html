@@ -1,0 +1,10 @@
+<h2 class="mat-dialog-title">{{data.title}}</h2>
+<mat-dialog-content>
+  <div class="info-block" [innerHTML]="data.content"></div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end">
+  <a mat-button *ngFor="let button of data.buttons" color="{{button.color}}" href="{{button.link}}">
+    {{button.text}}
+  </a>
+  <button mat-button mat-dialog-close cdkFocusRegionstart i18n>Close</button>
+</mat-dialog-actions>

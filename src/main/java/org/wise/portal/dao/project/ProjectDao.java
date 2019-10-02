@@ -87,6 +87,8 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
    */
   List<T> getProjectListByUAR(User user, String role);
 
+  List<T> getSharedProjectsWithoutRun(User user);
+
   /**
    * Returns a <code>List</code> of <code>Project</code> from the data store that
    * satisifies the given <code>String</code> query.
