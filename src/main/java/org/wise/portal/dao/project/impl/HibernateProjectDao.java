@@ -76,6 +76,11 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     return new ProjectImpl();
   }
 
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
+  }
+
   @SuppressWarnings("unchecked")
   public List<Project> getProjectListByUAR(User user, String role) {
     CriteriaBuilder cb = getCriteriaBuilder();
@@ -224,10 +229,5 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     cq.select(cb.max(runRoot.<Long>get("id")));
     TypedQuery<Long> query = entityManager.createQuery(cq);
     return query.getSingleResult();
-  }
-
-  private CriteriaBuilder getCriteriaBuilder() {
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    return session.getCriteriaBuilder(); 
   }
 }

@@ -74,6 +74,11 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     return RunImpl.class;
   }
 
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
+  }
+
   public Run retrieveByRunCode(String runcode) throws ObjectNotFoundException {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class); 
@@ -254,10 +259,5 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     cq.select(cb.max(runRoot.<Long>get("id")));
     TypedQuery<Long> query = entityManager.createQuery(cq);
     return query.getSingleResult();
-  }
-
-  private CriteriaBuilder getCriteriaBuilder() {
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    return session.getCriteriaBuilder(); 
   }
 }
