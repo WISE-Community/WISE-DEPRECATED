@@ -728,7 +728,8 @@ class NodeAuthoringController {
   previewStepInNewWindow() {
     const data = { 'constraints': true };
     this.saveEvent('stepPreviewed', 'Navigation', data);
-    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#/project/${this.projectId}/${this.nodeId}`);
+    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}` +
+        `#/project/${this.projectId}/${this.nodeId}`);
   };
 
   /**
@@ -737,7 +738,8 @@ class NodeAuthoringController {
   previewStepWithoutConstraintsInNewWindow() {
     const data = { 'constraints': false };
     this.saveEvent('stepPreviewed', 'Navigation', data);
-    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}?contraints=false#/project/${this.projectId}/${this.nodeId}`);
+    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}` +
+        `?constraints=false#/project/${this.projectId}/${this.nodeId}`);
   };
 
   /**
