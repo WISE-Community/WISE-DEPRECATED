@@ -119,17 +119,16 @@
     "webpack-node-externals": "^1.7.2"
   },
   "scripts": {
-    "browser-sync": "./node_modules/browser-sync/bin/browser-sync.js start --config bs-config.js",
     "build-dev-all": "node node_modules/concurrently/bin/concurrently.js \"npm run build-dev-site\" \"npm run build-dev-at\" \"npm run build-dev-cm\" \"npm run build-dev-vle\"",
     "build-dev-at": "node node_modules/concurrently/bin/concurrently.js \"node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build at --watch\" \"node scripts/afterBuild.js at true\"",
     "build-dev-cm": "node node_modules/concurrently/bin/concurrently.js \"node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build cm --watch\" \"node scripts/afterBuild.js cm true\"",
     "build-dev-site": "node node_modules/concurrently/bin/concurrently.js \"ng build site --watch\" \"ng test --source-map=false --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox\"  \"node scripts/afterBuild.js site true\"",
     "build-dev-vle": "node node_modules/concurrently/bin/concurrently.js \"node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build vle --watch\" \"node scripts/afterBuild.js vle true\"",
-    "build-prod-all": "npm run build-prod-at; npm run build-prod-cm; npm run build-prod-vle; npm run build-prod-site",
-    "build-prod-at": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build at --configuration=production; node scripts/afterBuild.js at",
-    "build-prod-cm": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build cm --configuration=production; node scripts/afterBuild.js cm",
-    "build-prod-vle": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build vle --configuration=production; node scripts/afterBuild.js vle",
-    "build-prod-site": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build site --configuration=production; node scripts/afterBuild.js site",
+    "build-prod-all": "node node_modules/concurrently/bin/concurrently.js \"npm run build-prod-at\" \"npm run build-prod-cm\" \"npm run build-prod-vle\" \"npm run build-prod-site\"",
+    "build-prod-at": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build at --configuration=production && node scripts/afterBuild.js at",
+    "build-prod-cm": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build cm --configuration=production && node scripts/afterBuild.js cm",
+    "build-prod-vle": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build vle --configuration=production && node scripts/afterBuild.js vle",
+    "build-prod-site": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build site --configuration=production && node scripts/afterBuild.js site",
     "bundle-report": "node ./node_modules/webpack-bundle-analyzer/lib/bin/analyzer.js src/main/webapp/site/dist/stats.json",
     "watch-all-wise5": "node node_modules/concurrently/bin/concurrently.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-wise5-watch\"",
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
@@ -140,12 +139,7 @@
     "test-wise5-watch": "node ./node_modules/karma/bin/karma start src/main/webapp/wise5/karma.conf.js --color --browsers ChromeHeadlessNoSandbox",
     "test-e2e-comment": "test-e2e assumes wise is already running.",
     "test-e2e": "node ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js",
-    "test-e2e-all-comment": "test-e2e-all assumes wise is not running yet.",
-    "test-e2e-all": "./wise.sh run & sleep 20; ./node_modules/protractor/bin/webdriver-manager update; ./node_modules/protractor/bin/webdriver-manager start & ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js; for pid in $(ps -ef | awk '/tomcat7:run/ {print $2}'); do kill -9 $pid; done",
-    "ngx-extractor": "./node_modules/.bin/ngx-extractor -i \"src/main/webapp/site/**/*.ts\" -o src/main/webapp/site/src/messages.xlf",
-    "standalone-server-at": "cd ./src/main/webapp/wise5/authoringTool; webpack-dev-server --open --config webpack.dev.js --history-api-fallback --inline --progress",
-    "standalone-server-cm": "cd ./src/main/webapp/wise5/classroomMonitor; webpack-dev-server --open --config webpack.dev.js --history-api-fallback --inline --progress",
-    "standalone-server-vle": "cd ./src/main/webapp/wise5/vle; webpack-dev-server --open --config webpack.dev.js --history-api-fallback --inline --progress"
+    "ngx-extractor": "./node_modules/.bin/ngx-extractor -i \"src/main/webapp/site/**/*.ts\" -o src/main/webapp/site/src/messages.xlf"
   },
   "repository": {
     "type": "git",
