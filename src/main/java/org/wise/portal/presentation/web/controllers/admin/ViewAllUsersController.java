@@ -118,10 +118,10 @@ public class ViewAllUsersController{
         List<String> allUsernames = this.userService.retrieveAllUsernames();
         modelMap.put(USERNAMES, allUsernames);
       } else if (userType.equals(STUDENT)) {
-        List<String> usernames = this.userDetailsService.retrieveAllUsernames(StudentUserDetails.class.getName());
+        List<String> usernames = this.userDetailsService.retrieveAllStudentUsernames();
         modelMap.put(STUDENTS, usernames);
       } else if (userType.equals(TEACHER)) {
-        List<String> usernames = this.userDetailsService.retrieveAllUsernames(TeacherUserDetails.class.getName());
+        List<String> usernames = this.userDetailsService.retrieveAllTeacherUsernames();
         modelMap.put(TEACHERS, usernames);
       }
     }

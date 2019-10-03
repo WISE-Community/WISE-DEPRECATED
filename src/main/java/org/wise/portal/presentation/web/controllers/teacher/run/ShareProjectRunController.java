@@ -140,7 +140,7 @@ public class ShareProjectRunController {
       if (message != null) {
         modelMap.put("message", message);
       }
-      List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
+      List<String> allTeacherUsernames = userDetailsService.retrieveAllTeacherUsernames();
       allTeacherUsernames.remove(run.getOwner().getUserDetails().getUsername());
       Set<User> sharedowners = run.getSharedowners();
       for (User sharedowner : sharedowners) {
