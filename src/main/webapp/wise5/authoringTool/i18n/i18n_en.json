@@ -280,6 +280,7 @@
     "source": "Source",
     "starterText": "Starter Text",
     "step": "Step",
+    "stepHasNoComponents": "This step does not have any components. Click the + button to add a component.",
     "stepTitle": "Step Title",
     "stepTools": "Step Tools",
     "studentPreview": "Student Preview",
