@@ -34,7 +34,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -117,7 +116,7 @@ public class WISE5AuthorProjectController {
       SecurityContextHolder.getContext().setAuthentication(null);
       return "redirect:/index.html";
     }
-    return "forward:/wise5/authoringTool/dist/index.html#/project/24699/node/node11";
+    return "forward:/wise5/authoringTool/dist/index.html";
   }
 
   /**
