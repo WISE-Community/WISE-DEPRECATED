@@ -390,7 +390,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="needs-translation">Add Ideas</target>
+        <target state="translated">新增想法</target>
       </trans-unit>
       <trans-unit id="6f2168a4a47a1e6fa5d58a4334c7b67805dd3fe0" datatype="html">
         <source>Distinguish Ideas</source>
@@ -506,7 +506,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
-        <target state="needs-translation">Sign up for free!</target>
+        <target state="translated">免費註冊</target>
       </trans-unit>
       <trans-unit id="da6aa9950c74cadd85a3bf26272f34f28d8338c8" datatype="html">
         <source>Connect</source>
