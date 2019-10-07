@@ -228,7 +228,7 @@
           <context context-type="sourcefile">app/modules/header/header.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Main menu</target>
+        <target state="translated">主選單</target>
       </trans-unit>
       <trans-unit id="99ee4faa69cd2ea8e3678c1f557c0ff1f05aae46" datatype="html">
         <source>Clear</source>
@@ -252,7 +252,7 @@
           <context context-type="sourcefile">app/modules/shared/select-menu/select-menu.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">more</target>
+        <target state="translated">更多</target>
       </trans-unit>
       <trans-unit id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d" datatype="html">
         <source>Current Password</source>
@@ -260,7 +260,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Current Password</target>
+        <target state="translated">目前的密碼</target>
       </trans-unit>
       <trans-unit id="9b79b69a1ba8ba29e68a45acd0829da17da704ce" datatype="html">
         <source>Current Password required</source>
@@ -268,7 +268,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Current Password required</target>
+        <target state="translated">目前密碼為必填欄位</target>
       </trans-unit>
       <trans-unit id="0315d84608647a2d4a2b2e7e509d10ad0ec78536" datatype="html">
         <source>Current Password is incorrect</source>
@@ -276,7 +276,10 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Current Password is incorrect</target>
+        <target state="translated">密碼不正確</target>
+        <alt-trans>
+          <target>密碼不正確.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c7014c6360e94b236286b869c3fe0ea9911c0387" datatype="html">
         <source>New Password</source>
@@ -284,7 +287,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">New Password</target>
+        <target state="translated">新密碼</target>
       </trans-unit>
       <trans-unit id="ae26b4e37fa94304d1fa1b0c46b10ad979bcecfa" datatype="html">
         <source>New Password required</source>
@@ -292,7 +295,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">New Password required</target>
+        <target state="translated">必須輸入新密碼</target>
       </trans-unit>
       <trans-unit id="b81fbd1b5d0723eba41870071d02065674bdd565" datatype="html">
         <source>Confirm New Password</source>
@@ -300,7 +303,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation">Confirm New Password</target>
+        <target state="translated">確認新密碼</target>
       </trans-unit>
       <trans-unit id="4b4b336ca43da85eee55391d95fbc03d921353b5" datatype="html">
         <source>Confirm Password required</source>
@@ -324,7 +327,10 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">106</context>
         </context-group>
-        <target state="needs-translation">Confirm Password required</target>
+        <target state="translated">必須確認密碼</target>
+        <alt-trans>
+          <target>確認密碼是必需的.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="0a9dcaac5aadd48fe716eaff77ab9b21a8bef3af" datatype="html">
         <source>Passwords do not match</source>
@@ -332,7 +338,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <target state="needs-translation">Passwords do not match</target>
+        <target state="translated">密碼不相符</target>
       </trans-unit>
       <trans-unit id="5edf054f14aa57bc25a28cb7db01956fee53dac8" datatype="html">
         <source>Change Password</source>
@@ -348,7 +354,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Change Password</target>
+        <target state="translated">更改密碼</target>
       </trans-unit>
       <trans-unit id="1622b67543d6f79dc5e9730e121f7e21b3d034b1" datatype="html">
         <source>This account was created using Google and doesn't use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
