@@ -157,35 +157,6 @@ public class VLEServiceImpl implements VLEService {
     return new JSONArray(notebookItemExport);
   }
 
-  public JSONArray getStudentWorkExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> studentWorkExport = studentWorkDao.getStudentWorkExport(runId);
-    for (int i = 1; i < studentWorkExport.size(); i++) {  // skip header row
-      Object[] studentWorkExportRow = studentWorkExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp studentWorkExportRowClientSaveTimeTimestamp = (Timestamp) studentWorkExportRow[9];
-      studentWorkExportRow[9] = df.format(studentWorkExportRowClientSaveTimeTimestamp);
-      Timestamp studentWorkExportRowServerSaveTimeTimestamp = (Timestamp) studentWorkExportRow[10];
-      studentWorkExportRow[10] = df.format(studentWorkExportRowServerSaveTimeTimestamp);
-
-      // set TRUE=1, FALSE=0 instead of "TRUE" and "FALSE"
-      boolean studentWorkExportRowIsAutoSave = (boolean) studentWorkExportRow[7];
-      studentWorkExportRow[7] = studentWorkExportRowIsAutoSave ? 1 : 0;
-
-      boolean studentWorkExportRowIsSubmit = (boolean) studentWorkExportRow[8];
-      studentWorkExportRow[8] = studentWorkExportRowIsSubmit ? 1 : 0;
-
-      String studentWorkExportRowStudentDataString = (String) studentWorkExportRow[11];
-      try {
-        studentWorkExportRow[11] = new JSONObject(studentWorkExportRowStudentDataString);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    }
-    return new JSONArray(studentWorkExport);
-  }
-
   public JSONArray getStudentEventExport(Integer runId) {
     SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
     List<Object[]> studentEventExport = eventDao.getStudentEventExport(runId);

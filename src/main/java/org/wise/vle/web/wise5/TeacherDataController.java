@@ -80,17 +80,7 @@ public class TeacherDataController {
       Set<User> sharedOwners = run.getSharedowners();
 
       if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser) || signedInUser.isAdmin()) {
-        if ("allStudentWork".equals(exportType) || "latestStudentWork".equals(exportType)) {
-          JSONArray resultArray = vleService.getStudentWorkExport(runId);
-          PrintWriter writer = response.getWriter();
-          writer.write(resultArray.toString());
-          writer.close();
-        } else if ("events".equals(exportType)) {
-          JSONArray resultArray = vleService.getStudentEventExport(runId);
-          PrintWriter writer = response.getWriter();
-          writer.write(resultArray.toString());
-          writer.close();
-        } else if ("allNotebookItems".equals(exportType) || "latestNotebookItems".equals(exportType)) {
+        if ("allNotebookItems".equals(exportType) || "latestNotebookItems".equals(exportType)) {
           JSONArray resultArray = vleService.getNotebookExport(runId);
           PrintWriter writer = response.getWriter();
           writer.write(resultArray.toString());

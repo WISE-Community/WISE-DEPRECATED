@@ -48,11 +48,6 @@ public interface VLEService {
       String componentType, List<JSONObject> components, Boolean onlyGetLatest);
 
   /**
-   * @return JSONArray of student work for researcher export for the given run id.
-   */
-  JSONArray getStudentWorkExport(Integer runId);
-
-  /**
    * @return JSON array of notebook items for researcher export for the given run id.
    */
   JSONArray getNotebookExport(Integer runId);
