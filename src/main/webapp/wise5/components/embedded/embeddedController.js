@@ -33,8 +33,8 @@ class EmbeddedController extends ComponentController {
     this.EmbeddedService = EmbeddedService;
     this.componentType = null;
     this.url = null;
-    this.width = this.componentContent.width ? this.componentContent.width : '100%';
-    this.height = this.componentContent.height ? this.componentContent.height : '100%';
+    this.width = this.componentContent.width ? this.componentContent.width + 'px' : '100%';
+    this.height = this.componentContent.height ? this.componentContent.height + 'px' : '100%';
     this.maxWidth = null;
     this.maxHeight = null;
     this.notebookConfig = this.NotebookService.getNotebookConfig();
