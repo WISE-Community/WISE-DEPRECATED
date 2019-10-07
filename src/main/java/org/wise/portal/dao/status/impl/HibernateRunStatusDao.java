@@ -23,9 +23,14 @@
  */
 package org.wise.portal.dao.status.impl;
 
-import org.hibernate.NonUniqueResultException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -37,6 +42,14 @@ import org.wise.vle.domain.status.RunStatus;
 public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus>
     implements RunStatusDao<RunStatus> {
 
+  @PersistenceContext
+  private EntityManager entityManager;
+
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
+  }
+  
   @Override
   protected String getFindAllQuery() {
     return null;
@@ -64,24 +77,13 @@ public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus>
     save(runStatus);
   }
 
-  /**
-   * Get a RunStatus object given the run id
-   * @param runId the run id
-   * @return the RunStatus with the given run id or null if none is found
-   */
   @Transactional
   public RunStatus getRunStatusByRunId(Long runId) {
-    RunStatus result = null;
-
-    try {
-      Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-
-      result = (RunStatus) session.createCriteria(RunStatus.class).add(Restrictions.eq("runId", runId)).uniqueResult();
-
-    } catch (NonUniqueResultException e) {
-      throw e;
-    }
-
-    return result;
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<RunStatus> cq = cb.createQuery(RunStatus.class);
+    Root<RunStatus> runStatusRoot = cq.from(RunStatus.class);
+    cq.select(runStatusRoot).where(cb.equal(runStatusRoot.get("runId"), runId));
+    TypedQuery<RunStatus> query = entityManager.createQuery(cq);
+    return query.getSingleResult();
   }
 }

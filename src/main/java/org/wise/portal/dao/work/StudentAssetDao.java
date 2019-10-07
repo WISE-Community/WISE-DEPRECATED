@@ -23,14 +23,13 @@
  */
 package org.wise.portal.dao.work;
 
+import java.util.List;
+
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.work.StudentAsset;
-import org.wise.vle.domain.work.StudentWork;
-
-import java.util.List;
 
 /**
  * Domain Access Object for StudentAsset
@@ -38,7 +37,7 @@ import java.util.List;
  */
 public interface StudentAssetDao<T extends StudentAsset> extends SimpleDao<T> {
 
-  List<StudentWork> getStudentAssetListByParams(Integer id, Run run, Group period,
+  List<StudentAsset> getStudentAssetListByParams(Integer id, Run run, Group period,
       Workgroup workgroup, String nodeId, String componentId, String componentType,
       Boolean isAutoSave);
 }
