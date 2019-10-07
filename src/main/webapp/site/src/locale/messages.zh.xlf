@@ -438,7 +438,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="needs-translation">The WISE Advantage</target>
+        <target state="translated">WISE優勢</target>
       </trans-unit>
       <trans-unit id="8127b5c0780e941a1948d8ac7b49af813bd7df98" datatype="html">
         <source>
@@ -474,7 +474,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">53</context>
         </context-group>
-        <target state="needs-translation">WISE students and teacher</target>
+        <target state="translated">WISE學生和老師</target>
       </trans-unit>
       <trans-unit id="2acf9aae127d9822ffecf4d7509f05744f09e788" datatype="html">
         <source>Robust teacher grading and management tools supporting individualized and customized learning</source>
