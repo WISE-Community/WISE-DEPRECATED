@@ -86,6 +86,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation>
     if (type != null) {
       predicates.add(cb.equal(annotationRoot.get("type"), type));
     }
+    cq.select(annotationRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<Annotation> query = entityManager.createQuery(cq);
     return (List<Annotation>)(Object)query.getResultList();
   }
