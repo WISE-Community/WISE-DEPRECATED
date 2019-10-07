@@ -40,7 +40,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Features</target>
+        <target state="translated">特色功能</target>
       </trans-unit>
       <trans-unit id="847171f94c5e932a67df0c3b4d57e4e10d844b52" datatype="html">
         <source>About Us</source>
@@ -60,7 +60,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">About Us</target>
+        <target state="translated">關於我們</target>
       </trans-unit>
       <trans-unit id="1d0974afae70914072a4fbf19e53328e517bae73" datatype="html">
         <source>News</source>
@@ -80,7 +80,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">News</target>
+        <target state="translated">最新消息</target>
       </trans-unit>
       <trans-unit id="53c1019d0a23e95290e125bf93e34257eaadb8b6" datatype="html">
         <source>Help + FAQs</source>
@@ -92,7 +92,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">125</context>
         </context-group>
-        <target state="needs-translation">Help + FAQs</target>
+        <target state="translated">説明 / 常見問題</target>
       </trans-unit>
       <trans-unit id="3d469f0ca2f579eedee96edd4ef40883f65e77aa" datatype="html">
         <source>Privacy + Use</source>
@@ -100,7 +100,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Privacy + Use</target>
+        <target state="translated">隱私權 / 使用條款</target>
       </trans-unit>
       <trans-unit id="02e9e69ddcbf93de9fd38bc4d0f312142658610d" datatype="html">
         <source>Contact Us</source>
@@ -112,7 +112,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">134</context>
         </context-group>
-        <target state="needs-translation">Contact Us</target>
+        <target state="translated">聯繫我們</target>
       </trans-unit>
       <trans-unit id="d97fd6757dbd8190c0e310c2be8432718b2a417b" datatype="html">
         <source>Legacy</source>
@@ -120,7 +120,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Legacy</target>
+        <target state="translated">舊版</target>
       </trans-unit>
       <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
         <source>WISE on Facebook</source>
@@ -132,7 +132,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">WISE on Facebook</target>
+        <target state="translated">分享到 Facebook</target>
       </trans-unit>
       <trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html">
         <source>WISE on Twitter</source>
