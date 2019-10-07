@@ -45,7 +45,7 @@ import * as StompJS from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import * as Highcharts from '../../lib/highcharts/highcharts.src';
 import * as hopscotch from 'hopscotch';
-import * as EventEmitter2 from 'EventEmitter2';
+import * as EventEmitter2 from 'eventemitter2';
 
 window['$'] = jQuery;
 window['jQuery'] = jQuery;
