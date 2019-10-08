@@ -554,7 +554,7 @@
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Close menu</target>
+        <target state="translated">關閉選單</target>
       </trans-unit>
       <trans-unit id="c0b05f996bb39c9db400e2ec0d5506b75d464af0" datatype="html">
         <source>WISE Home</source>
@@ -562,7 +562,7 @@
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">WISE Home</target>
+        <target state="translated">WISE首頁</target>
       </trans-unit>
       <trans-unit id="ab8be185fd77636da821443e6071c033ebc47a59" datatype="html">
         <source>Research <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></source>
@@ -574,7 +574,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Research <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></target>
+        <target state="translated">研究 <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></target>
       </trans-unit>
       <trans-unit id="ba4f24bf9bf3dc4db3d6bc1b8b63339295f0b806" datatype="html">
         <source>Sign In</source>
@@ -602,7 +602,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">Sign In</target>
+        <target state="translated">登入</target>
       </trans-unit>
       <trans-unit id="acd82db1a5e5f81b87f6a6b1639f028a4d106d49" datatype="html">
         <source>WISE logo</source>
@@ -610,7 +610,10 @@
           <context context-type="sourcefile">app/register/register.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">WISE logo</target>
+        <target state="translated">WISE 圖標</target>
+        <alt-trans>
+          <target>WISE logo</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="abc0c762d328168e523abf84749240e43593f8df" datatype="html">
         <source>WISE Features</source>
@@ -618,7 +621,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">WISE Features</target>
+        <target state="translated">WISE功能</target>
       </trans-unit>
       <trans-unit id="ddf8132cf62ce6ac16351585c35e306e6971af4b" datatype="html">
         <source>A powerful online platform for designing, developing, and implementing science inquiry units</source>
