@@ -23,10 +23,19 @@
  */
 package org.wise.portal.dao.notification.impl;
 
-import org.hibernate.Criteria;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.notification.NotificationDao;
@@ -35,9 +44,6 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.notification.Notification;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Domain Access Object hibernate implementation for Notifications
  * @author Hiroki Terashima
@@ -45,6 +51,14 @@ import java.util.List;
 @Repository
 public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
     implements NotificationDao<Notification> {
+
+  @PersistenceContext
+  private EntityManager entityManager;
+
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
+  }
 
   @Override
   protected String getFindAllQuery() {
@@ -86,34 +100,36 @@ public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
   }
 
   @Override
-  public List<Notification> getNotificationListByParams(
-    Integer id, Run run, Group period, Workgroup toWorkgroup,
-    String groupId, String nodeId, String componentId) {
-
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    Criteria sessionCriteria = session.createCriteria(Notification.class);
+  @SuppressWarnings("unchecked")
+  public List<Notification> getNotificationListByParams(Integer id, Run run, Group period,
+      Workgroup toWorkgroup, String groupId, String nodeId, String componentId) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<Notification> cq = cb.createQuery(Notification.class);
+    Root<Notification> notificationRoot = cq.from(Notification.class);
+    List<Predicate> predicates = new ArrayList<>();
     if (id != null) {
-      sessionCriteria.add(Restrictions.eq("id", id));
+      predicates.add(cb.equal(notificationRoot.get("id"), id));
     }
     if (run != null) {
-      sessionCriteria.add(Restrictions.eq("run", run));
+      predicates.add(cb.equal(notificationRoot.get("run"), run));
     }
     if (period != null) {
-      sessionCriteria.add(Restrictions.eq("period", period));
+      predicates.add(cb.equal(notificationRoot.get("period"), period));
     }
     if (toWorkgroup != null) {
-      sessionCriteria.add(Restrictions.eq("toWorkgroup", toWorkgroup));
+      predicates.add(cb.equal(notificationRoot.get("toWorkgroup"), toWorkgroup));
     }
     if (groupId != null) {
-      sessionCriteria.add(Restrictions.eq("groupId", groupId));
+      predicates.add(cb.equal(notificationRoot.get("groupId"), groupId));
     }
     if (nodeId != null) {
-      sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
+      predicates.add(cb.equal(notificationRoot.get("nodeId"), nodeId));
     }
     if (componentId != null) {
-      sessionCriteria.add(Restrictions.eq("componentId", componentId));
+      predicates.add(cb.equal(notificationRoot.get("componentId"), componentId));
     }
-
-    return sessionCriteria.list();
+    cq.select(notificationRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<Notification> query = entityManager.createQuery(cq);
+    return (List<Notification>)(Object)query.getResultList();
   }
 }
