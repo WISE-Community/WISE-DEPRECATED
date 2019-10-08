@@ -76,11 +76,6 @@ public interface VLEService {
       List<JSONObject> components);
 
   /**
-   * @return JSONArray of student events for researcher export
-   */
-  JSONArray getStudentEventExport(Integer runId);
-
-  /**
    * Saves Event in the data store
    */
   Event saveEvent(
