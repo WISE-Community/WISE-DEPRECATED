@@ -422,7 +422,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">84</context>
         </context-group>
-        <target state="needs-translation">Connect Ideas</target>
+        <target state="translated">連結想法</target>
       </trans-unit>
       <trans-unit id="6ce56d323684d1af10f44ca44809177cef1412eb" datatype="html">
         <source>Integrated science learning and teaching with technology</source>
@@ -448,9 +448,14 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">
-              Free, standards-aligned, and research-based inquiry curricula that address <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>NGSS 3D proficiency<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+        <target state="translated">
+              免費，符合標準且研究導向探究課程，可解決 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>NGSS 3D 的能力<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
             </target>
+        <alt-trans>
+          <target>
+              免費，符合標準且研究導向探究課程，可解決 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>新世代科學教育標準(NGSS)的3D 能力<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+            </target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="ea65faeacfcd369b74fd184e411eeb5d36b59c12" datatype="html">
         <source>WISE project on laptop</source>
@@ -458,7 +463,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target state="translated">筆電上的WISE專題</target>
+        <target state="translated">在筆電上的WISE專題</target>
+        <alt-trans>
+          <target>筆電上的WISE專題</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="0c8d974a19a8a92110e0b43514330732e936da2b" datatype="html">
         <source>Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</source>
