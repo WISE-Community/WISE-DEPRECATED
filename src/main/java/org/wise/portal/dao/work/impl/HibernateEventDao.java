@@ -133,7 +133,8 @@ public class HibernateEventDao extends AbstractHibernateDao<Event> implements Ev
             nodeIdPredicate = cb.isNull(eventRoot.get("nodeId"));
           }
           if (component.has("componentId")) {
-            componentIdPredicate = cb.equal(eventRoot.get("componentId"), component.getString("componentId"));
+            componentIdPredicate = cb.equal(eventRoot.get("componentId"),
+                component.getString("componentId"));
           } else {
             componentIdPredicate = cb.isNull(eventRoot.get("componentId"));
           }
