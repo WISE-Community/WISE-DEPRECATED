@@ -406,7 +406,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="needs-translation">Distinguish Ideas</target>
+        <target state="translated">區分想法</target>
       </trans-unit>
       <trans-unit id="b85ab229e72d6560e6193e30a362083ce7e12da6" datatype="html">
         <source>Connect Ideas</source>
@@ -430,7 +430,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">Integrated science learning and teaching with technology</target>
+        <target state="translated">將科學與技術融為一體</target>
       </trans-unit>
       <trans-unit id="d0339bceaff58f22bba77d0231838a8df686c98e" datatype="html">
         <source>The WISE Advantage</source>
@@ -474,7 +474,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <target state="needs-translation">Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</target>
+        <target state="translated">互動式科學模型以及動手實作、個人化指導和豐富的融入式評量</target>
       </trans-unit>
       <trans-unit id="82fc5ad6af1a149044ba97ac4d4e567312c6ce9f" datatype="html">
         <source>WISE students and teacher</source>
@@ -498,7 +498,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation">Curriculum Offerings</target>
+        <target state="translated">課程設置</target>
       </trans-unit>
       <trans-unit id="dcd4eff483113708f4fd91f98236bee705e676a8" datatype="html">
         <source>Ready to try WISE in the Classroom?</source>
