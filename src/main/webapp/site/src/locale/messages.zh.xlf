@@ -220,7 +220,7 @@
           <context context-type="sourcefile">app/modules/header/header.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">WISE header logo</target>
+        <target state="translated">WISE首頁區域logo</target>
       </trans-unit>
       <trans-unit id="32b2b5a41c731dedcd41bc360ffdc42a36fe481f" datatype="html">
         <source>Main menu</source>
@@ -244,7 +244,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Clear</target>
+        <target state="translated">清除</target>
       </trans-unit>
       <trans-unit id="7f32abe3fc638f65c0d3eb269d478ee49ad41ebe" datatype="html">
         <source>more</source>
