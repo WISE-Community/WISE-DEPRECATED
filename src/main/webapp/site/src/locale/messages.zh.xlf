@@ -458,7 +458,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target state="needs-translation">WISE project on laptop</target>
+        <target state="translated">筆電上的WISE專題</target>
       </trans-unit>
       <trans-unit id="0c8d974a19a8a92110e0b43514330732e936da2b" datatype="html">
         <source>Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</source>
@@ -482,7 +482,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">Robust teacher grading and management tools supporting individualized and customized learning</target>
+        <target state="translated">完整支援個人化及客製化學習的教師評分及管理工具</target>
       </trans-unit>
       <trans-unit id="23bd67ab9c1e8b08481bd99aa471c2a29b587143" datatype="html">
         <source>Curriculum Offerings</source>
@@ -498,7 +498,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <target state="needs-translation">Ready to try WISE in the Classroom?</target>
+        <target state="translated">準備在課堂上嘗試使用WISE了嗎？</target>
       </trans-unit>
       <trans-unit id="b4b200f1299f2e043cae72f59718dca3b12f1f38" datatype="html">
         <source>Sign up for free!</source>
@@ -514,7 +514,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="needs-translation">Connect</target>
+        <target state="translated">聯繫我們</target>
       </trans-unit>
       <trans-unit id="34dc5c906ca725ffe2bfacaa6983bfdc30561ddb" datatype="html">
         <source>Learn what's new in the WISE community.</source>
@@ -522,7 +522,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">118</context>
         </context-group>
-        <target state="needs-translation">Learn what's new in the WISE community.</target>
+        <target state="translated">了解在WISE社群中的新功能。</target>
       </trans-unit>
       <trans-unit id="ba44ee280d91539e6c5892dccbb8556bcce235be" datatype="html">
         <source>View tutorials and common questions.</source>
@@ -530,7 +530,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="needs-translation">View tutorials and common questions.</target>
+        <target state="translated">檢視課程和常見問題。</target>
       </trans-unit>
       <trans-unit id="c2e1e231feb67c7dd4f5e748cce6c1c46fbdf9cf" datatype="html">
         <source>Want to get in touch? Send us a message.</source>
@@ -538,7 +538,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">136</context>
         </context-group>
-        <target state="needs-translation">Want to get in touch? Send us a message.</target>
+        <target state="translated">想要聯繫我們嗎？ 歡迎您傳送信息。</target>
       </trans-unit>
       <trans-unit id="a55bfaabb5258f66c2f853ce2383cfead1abd258" datatype="html">
         <source>Close menu</source>
