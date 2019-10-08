@@ -362,7 +362,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">This account was created using Google and doesn't use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">此帳戶是由Google創建，並且不使用WISE密碼。 如果您想取消關聯您的Google帳戶，請 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>與我們聯繫<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。</target>
       </trans-unit>
       <trans-unit id="9df7621dfbe30a790903d461e721c9029627ff34" datatype="html">
         <source>Elicit Ideas</source>
@@ -378,7 +378,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <target state="needs-translation">Elicit Ideas</target>
+        <target state="translated">激發想法</target>
       </trans-unit>
       <trans-unit id="cba3bcc252b9f7b980c934ce394a1345eebfd970" datatype="html">
         <source>Add Ideas</source>
