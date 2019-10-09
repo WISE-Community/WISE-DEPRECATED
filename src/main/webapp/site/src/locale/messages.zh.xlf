@@ -965,7 +965,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">WISE student and teacher</target>
+        <target state="translated">WISE學生和老師</target>
       </trans-unit>
       <trans-unit id="2b4a83d9816a80170d470f0cbe714553f33450ae" datatype="html">
         <source>WISE teacher workshop design</source>
