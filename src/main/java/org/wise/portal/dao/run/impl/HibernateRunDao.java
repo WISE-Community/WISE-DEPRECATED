@@ -239,7 +239,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
       cq.select(runRoot).where(cb.equal(runRoot.get("id"), runId));
       runRoot.fetch("project");
       runRoot.fetch("periods");
-      runRoot.fetch("owners");
+      runRoot.fetch("owner");
       runRoot.fetch("sharedowners");
       runRoot.fetch("announcements");
       TypedQuery<RunImpl> query = entityManager.createQuery(cq);
