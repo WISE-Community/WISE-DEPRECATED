@@ -704,7 +704,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation">Design and build evidence-based solutions</target>
+        <target state="translated">設計和建立基於證據的解決方案</target>
       </trans-unit>
       <trans-unit id="120d488ee5852e71a5ff417392534368677d0e1d" datatype="html">
         <source>Inquiry-Based Learning</source>
@@ -712,7 +712,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation">Inquiry-Based Learning</target>
+        <target state="translated">探究式學習</target>
       </trans-unit>
       <trans-unit id="ffe45ae6c8c4ce43774404fc9113d577f474b482" datatype="html">
         <source>WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</source>
