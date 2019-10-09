@@ -645,7 +645,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">WISE students</target>
+        <target state="translated">WISE學生</target>
       </trans-unit>
       <trans-unit id="3c7d295a97553e2107807061d481f221cee12704" datatype="html">
         <source>WISE students collaborate to:</source>
@@ -653,7 +653,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">WISE students collaborate to:</target>
+        <target state="translated">WISE學生合作以：</target>
       </trans-unit>
       <trans-unit id="c98d738b85e189cd244839c16b3dcdee30cac973" datatype="html">
         <source>Explore issues of social importance</source>
@@ -661,7 +661,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
-        <target state="needs-translation">Explore issues of social importance</target>
+        <target state="translated">探索具有社會重要性的問題</target>
       </trans-unit>
       <trans-unit id="704339fc471e1b8d675435af5455c289241dbe1c" datatype="html">
         <source>Pose relevant questions and make predictions</source>
@@ -669,7 +669,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">Pose relevant questions and make predictions</target>
+        <target state="translated">提出相關問題並做出預測</target>
       </trans-unit>
       <trans-unit id="a372d9315580ccb7e6cc4bdaa345a9bc0b428fc4" datatype="html">
         <source>Experiment with computational models</source>
@@ -677,7 +677,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">Experiment with computational models</target>
+        <target state="translated">實驗計算模型</target>
       </trans-unit>
       <trans-unit id="b07d8ea0af45cef781e5d604f6e9c2a7b2f701f0" datatype="html">
         <source>Evaluate and distinguish discrepant information</source>
@@ -949,7 +949,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">176</context>
         </context-group>
-        <target state="needs-translation">Join for free</target>
+        <target state="translated">免費加入</target>
       </trans-unit>
       <trans-unit id="ffc2518d2bc8ccd34f05251329883a6d0642a4ca" datatype="html">
         <source>WISE is the product of more than 25 years of research on teaching and learning with educational technologies</source>
@@ -973,7 +973,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">WISE teacher workshop design</target>
+        <target state="translated">WISE教師工作坊設計</target>
       </trans-unit>
       <trans-unit id="cf46260d6f44d44d379d124ec8df098441107eb5" datatype="html">
         <source>Marcia at WISE workshop</source>
