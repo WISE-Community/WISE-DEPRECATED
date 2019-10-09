@@ -91,14 +91,14 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     if (isAddingPermission) {
       this.teacherService.addSharedOwnerRunPermission(this.runId, sharedOwnerId, permissionId)
           .subscribe((response: any) => {
-        if (response.status == "success") {
+        if (response.status === 'success') {
           this.addRunPermissionToSharedOwner(sharedOwnerId, permissionId);
         }
       });
     } else {
       this.teacherService.removeSharedOwnerRunPermission(this.runId, sharedOwnerId, permissionId)
           .subscribe((response: any) => {
-        if (response.status == "success") {
+        if (response.status === 'success') {
           this.removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId);
         }
       });
