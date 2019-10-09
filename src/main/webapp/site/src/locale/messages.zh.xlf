@@ -629,7 +629,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">A powerful online platform for designing, developing, and implementing science inquiry units</target>
+        <target state="translated">一個用於設計，開發和實施科學探究式學習的強大線上平台</target>
       </trans-unit>
       <trans-unit id="49a463f2fe873efdcbedb06a71cfbadc9c83cb14" datatype="html">
         <source>Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</source>
