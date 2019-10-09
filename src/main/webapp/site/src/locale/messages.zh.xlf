@@ -720,7 +720,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</target>
+        <target state="translated">WISE讓學生學習真正的科學家和工程師的方法。 我們採用多學科方法，讓學生通過強調閱讀，寫作和多媒體素養的基本技能的活動來學習探究。 我們的很多學習單元也都是基於項目的，同時提供實踐動手操作的設計挑戰。</target>
       </trans-unit>
       <trans-unit id="7681bdf7430711347073032e83e99c10be4f4e7b" datatype="html">
         <source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</source>
@@ -728,7 +728,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</target>
+        <target state="translated">通過WISE探究學習單元，學生不僅能夠掌握使他們在STEM中取得成功的技能，還能夠學習成為一名負責、具備批判性思維公民的所必需的技能。</target>
       </trans-unit>
       <trans-unit id="811c99b1c960d5acedf84179c8c29e177ae0bf27" datatype="html">
         <source>Standards-Aligned Curricula</source>
@@ -736,7 +736,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="needs-translation">Standards-Aligned Curricula</target>
+        <target state="translated">標準化的課程</target>
+        <alt-trans>
+          <target>標準化課程</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="28963fab05c3d72dc5ca696c47dd7d486df8292c" datatype="html">
         <source>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</source>
@@ -744,7 +747,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">83</context>
         </context-group>
-        <target state="needs-translation">WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</target>
+        <target state="translated">WISE提供越來越多的課程單元，解決學生在科學學習中遇到的關鍵性概念難題。課程單元經過精心設計，以補充教師的核心課程範圍和順序，並通過基於課堂的研究進行反覆完善。</target>
+        <alt-trans>
+          <target>WISE提供越來越多的課程單元，解決學生在科學學習中遇到的關鍵性概念難題。課程單元經過精心設計，以補充教師的核心課程範圍和順序，並通過基於課堂的研究進行迭代完善。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="09ce791db454a957cfc6658b0c198962ea7cac6c" datatype="html">
         <source>WISE units support the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3-dimensional learning<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, and can be adapted to address local standards.</source>
@@ -752,7 +758,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">85</context>
         </context-group>
-        <target state="needs-translation">WISE units support the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3-dimensional learning<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, and can be adapted to address local standards.</target>
+        <target state="translated">WISE學習單元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科學標準（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>三維學習<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 並且可以適用於解決本地標準。</target>
       </trans-unit>
       <trans-unit id="6e15a0555bed4b010ba36febb47e87ff32616dd8" datatype="html">
         <source>Design Process &amp; Goals</source>
@@ -760,7 +766,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="needs-translation">Design Process &amp; Goals</target>
+        <target state="translated">設計流程與目標</target>
+        <alt-trans>
+          <target>設計流程目標</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="5ba7433a2233cdf924ae0948dc017372200293e3" datatype="html">
         <source>WISE solar ovens unit</source>
@@ -768,7 +777,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">92</context>
         </context-group>
-        <target state="needs-translation">WISE solar ovens unit</target>
+        <target state="translated">WISE太陽能烤箱單元</target>
       </trans-unit>
       <trans-unit id="13e72d05735ba2963b1725426c59ba2f513bd709" datatype="html">
         <source>WISE students building solar oven</source>
@@ -776,7 +785,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">93</context>
         </context-group>
-        <target state="needs-translation">WISE students building solar oven</target>
+        <target state="translated">WISE學生建造太陽能烤箱</target>
       </trans-unit>
       <trans-unit id="faf67b4eceba9ca62f5db3703ae2d16a7da9dc2c" datatype="html">
         <source>MyModel diagram with guidance</source>
@@ -784,7 +793,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="needs-translation">MyModel diagram with guidance</target>
+        <target state="translated">指導性的我的模型圖</target>
       </trans-unit>
       <trans-unit id="e7c4c4ab5b72934b5a6783e1e6084202e8610c4c" datatype="html">
         <source>WISE cellular respiration model</source>
