@@ -685,7 +685,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">Evaluate and distinguish discrepant information</target>
+        <target state="translated">評估和區分不同的訊息</target>
+        <alt-trans>
+          <target>評估並區分不同的訊息</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="85031434993fe1bad0400c10fb78687a633a21ac" datatype="html">
         <source>Construct explanations through reflection and discussion</source>
@@ -693,7 +696,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="needs-translation">Construct explanations through reflection and discussion</target>
+        <target state="translated">透過反思和討論建構出解釋</target>
       </trans-unit>
       <trans-unit id="9fb0cd948878e98ed66ee30acc38db27f54ee91c" datatype="html">
         <source>Design and build evidence-based solutions</source>
