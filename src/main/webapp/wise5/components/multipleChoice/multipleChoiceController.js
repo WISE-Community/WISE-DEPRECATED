@@ -30,12 +30,6 @@ class MultipleChoiceController extends ComponentController {
     // holds whether the student answered correctly if there is a correct answer
     this.isCorrect = null;
 
-    // whether to show the feedback or not
-    this.showFeedback = true;
-
-    // whether this component has been authored with a correct answer
-    this.componentHasCorrectAnswer = false;
-
     // whether the latest component state was a submit
     this.isLatestComponentStateSubmit = false;
 
@@ -296,6 +290,9 @@ class MultipleChoiceController extends ComponentController {
    * @param choiceId the choice id of the radio button the student clicked
    */
   radioChoiceSelected(choiceId) {
+    if (this.isDisabled) {
+      return;
+    }
     this.studentDataChanged();
 
     if (choiceId != null) {
@@ -313,7 +310,9 @@ class MultipleChoiceController extends ComponentController {
    * @param choiceId the choice id of the checkbox the student clicked
    */
   toggleSelection(choiceId) {
-
+    if (this.isDisabled) {
+      return;
+    }
     if (choiceId != null) {
       /*
        * get the array of choice ids that were checked before the

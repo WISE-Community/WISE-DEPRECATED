@@ -17,9 +17,9 @@
 
         <div class="l-constrained" layout="column">
             <div ng-repeat="workgroup in notebookGradingController.workgroups"
-                ng-show="notebookGradingController.getCurrentPeriod().periodId == -1 || workgroup.periodId == notebookGradingController.getCurrentPeriod().periodId">
-                <span style="font-weight:bold" ng-if="notebookGradingController.canViewStudentNames">{{workgroup.username}} ({{'WORKGROUP_ID' | translate }}: {{workgroup.workgroupId}})</span>
-                <span ng-if="!notebookGradingController.canViewStudentNames">{{workgroup.workgroupId}}</span>
+                ng-if="notebookGradingController.getCurrentPeriod().periodId == -1 || workgroup.periodId == notebookGradingController.getCurrentPeriod().periodId">
+                <span style="font-weight:bold" ng-if="notebookGradingController.canViewStudentNames">{{::workgroup.username}} ({{::'WORKGROUP_ID' | translate }}: {{workgroup.workgroupId}})</span>
+                <span ng-if="!notebookGradingController.canViewStudentNames">{{::workgroup.workgroupId}}</span>
                 <a ng-click="notebookGradingController.toggleDisplayNoteForWorkgroup(workgroup.workgroupId)" translate="NOTES"></a>
                 <a ng-click="notebookGradingController.toggleDisplayReportForWorkgroup(workgroup.workgroupId)" translate="REPORT"></a>
                 <notebook-notes mode="classroomMonitor"

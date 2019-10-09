@@ -214,25 +214,25 @@ const Notebook = {
     workgroupId: '='
   },
   template:
-    `<div ng-if="$ctrl.config.enabled" ng-class="{'notes-visible': $ctrl.notesVisible}">
+    `<div ng-if="::$ctrl.config.enabled" ng-class="{'notes-visible': $ctrl.notesVisible}">
       <div class="notebook-overlay"></div>
-      <notebook-launcher ng-if="$ctrl.config.itemTypes.note.enabled"
+      <notebook-launcher ng-if="::$ctrl.config.itemTypes.note.enabled"
                  config="$ctrl.config"
                  note-count="$ctrl.notebook.items.length"
                  notes-visible="$ctrl.notesVisible"
                  on-open="$ctrl.open(value, event)"></notebook-launcher>
-      <notebook-report ng-if="$ctrl.config.itemTypes.report.enabled"
+      <notebook-report ng-if="::$ctrl.config.itemTypes.report.enabled"
                mode="{{$ctrl.mode}}"
                insert-content="$ctrl.insertContent"
                insert-mode="$ctrl.insertMode"
                config="$ctrl.config"
-               reportId="$ctrl.reportId"
+               reportId="::$ctrl.reportId"
                visible="$ctrl.reportVisible"
-               workgroup-id="$ctrl.workgroupId"
+               workgroup-id="::$ctrl.workgroupId"
                on-collapse="$ctrl.insertMode=false"
                on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-report>               
     </div>
-    <notebook-notes ng-if="$ctrl.config.enabled"
+    <notebook-notes ng-if="::$ctrl.config.enabled"
             notebook="$ctrl.notebook"
             notes-visible="$ctrl.notesVisible"
             config="$ctrl.config"

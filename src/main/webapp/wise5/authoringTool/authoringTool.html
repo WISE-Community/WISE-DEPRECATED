@@ -13,9 +13,9 @@
 <div disable-delete-keypress
     ng-mousemove='authoringToolController.mouseMoved()'
     role="main" layout="column" layout-fill>
-  <top-bar logo-path="{{authoringToolController.logoPath}}"
-       project-id="authoringToolController.projectId"
-       project-title="authoringToolController.projectTitle"
+  <top-bar logo-path="{{::authoringToolController.logoPath}}"
+       project-id="::authoringToolController.projectId"
+       project-title="::authoringToolController.projectTitle"
        run-id="authoringToolController.runId"></top-bar>
   <toolbar ng-if="authoringToolController.showToolbar"
        number-project="authoringToolController.numberProject"

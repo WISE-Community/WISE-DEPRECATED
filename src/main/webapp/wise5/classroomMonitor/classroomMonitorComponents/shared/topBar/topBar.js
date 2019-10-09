@@ -111,14 +111,14 @@ const TopBar = {
         `<md-toolbar class="l-header">
             <div class="md-toolbar-tools">
                 <span class="md-button logo-link">
-                    <a href="{{$ctrl.contextPath}}/teacher" target="_self">
-                        <img ng-src="{{ $ctrl.logoPath }}" alt="{{ 'WISE_LOGO' | translate }}" class="logo" />
+                    <a href="{{::$ctrl.contextPath}}/teacher" target="_self">
+                        <img ng-src="{{ ::$ctrl.logoPath }}" alt="{{ ::'WISE_LOGO' | translate }}" class="logo" />
                     </a>
                 </span>
-                <h3>{{ $ctrl.projectTitle }} <span class="md-caption">({{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span></h3>
+                <h3>{{ ::$ctrl.projectTitle }} <span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span></h3>
                 <span flex></span>
                 <md-menu md-position-mode="target-right target" md-offset="52 26">
-                    <md-button aria-label="{{ 'ALERTS' | translate }}" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event)">
+                    <md-button aria-label="{{ ::'ALERTS' | translate }}" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event)">
                         <span ng-show="$ctrl.newNotifications.length" class="notification-count">{{$ctrl.newNotifications.length}}</span>
                         <md-icon md-menu-origin> notifications </md-icon>
                     </md-button>
@@ -127,7 +127,7 @@ const TopBar = {
                     </md-menu-content>
                 </md-menu>
                 <md-menu md-position-mode="target-right target" md-offset="40 26">
-                    <md-button aria-label="{{ 'pauseStudentScreens' | translate }}"
+                    <md-button aria-label="{{ ::'pauseStudentScreens' | translate }}"
                                class="md-icon-button"
                                ng-class="{ 'has-indicator has-indicator--icon-button': $ctrl.isAnyPeriodPaused() }"
                                ng-click="$mdMenu.open($event)">
@@ -139,11 +139,11 @@ const TopBar = {
                     </md-menu-content>
                 </md-menu>
                 <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">
-                    <md-button aria-label="{{ 'USER_MENU' | translate }}" class="md-icon-button" ng-click="$mdMenu.open($event)">
+                    <md-button aria-label="{{ ::'USER_MENU' | translate }}" class="md-icon-button" ng-click="$mdMenu.open($event)">
                         <md-icon md-menu-origin> account_box </md-icon>
                     </md-button>
                     <md-menu-content width="5" class="account-menu">
-                        <ng-include src="$ctrl.themePath + '/templates/teacherAccountMenu.html'"></ng-include>
+                        <ng-include src="::$ctrl.themePath + '/templates/teacherAccountMenu.html'"></ng-include>
                     </md-menu-content>
                 </md-menu>
             </div>

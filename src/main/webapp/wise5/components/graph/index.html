@@ -1,7 +1,7 @@
 <div ng-controller='GraphController as graphController' flex>
   <div>
     <div>
-      <div ng-switch='graphController.mode'>
+      <div ng-switch='::graphController.mode'>
         <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
           <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
             <div class='component--grading__response__content'>
@@ -38,7 +38,7 @@
                ng-disabled='graphController.isDisabled'/>
           <div class='component__actions' layout='row' ng-if='graphController.showTrialSelect'>
             <md-input-container ng-if='graphController.componentContent.enableTrials'>
-              <label>{{ 'graph.selectTrialsToShow' | translate }}</label>
+              <label>{{ ::'graph.selectTrialsToShow' | translate }}</label>
               <md-select ng-model='graphController.trialIdsToShow'
                      ng-change='graphController.trialIdsToShowChanged()'
                      md-selected-text='graphController.selectedTrialsText'
@@ -60,7 +60,7 @@
               </md-select>
             </md-input-container>
             <md-input-container ng-if='graphController.componentContent.enableTrials && graphController.showSelectActiveTrials()'>
-              <label>{{ 'graph.selectTrialToEdit' | translate }}</label>
+              <label>{{ ::'graph.selectTrialToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeTrial'
                      ng-change='graphController.activeTrialChanged()'
                      class='graph-select'
@@ -73,7 +73,7 @@
               </md-select>
             </md-input-container>
             <md-input-container ng-if="graphController.isShowSelectSeriesInput()">
-              <label>{{ 'graph.selectSeriesToEdit' | translate }}</label>
+              <label>{{ ::'graph.selectSeriesToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeSeries'
                      ng-change='graphController.activeSeriesChanged()'
                      class='graph-select'
@@ -89,7 +89,7 @@
                      ng-click='graphController.resetSeries()'
                      ng-if='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'
                      ng-disabled='graphController.isDisabled'>
-                <md-icon> restore </md-icon> {{ 'graph.resetSeries' | translate }}
+                <md-icon> restore </md-icon> {{ ::'graph.resetSeries' | translate }}
               </md-button>
             </md-input-container>
             <md-input-container ng-if='graphController.showUndoButton'>
@@ -115,7 +115,7 @@
             </md-button>
             <md-button class='md-accent md-primary'
                 ng-click='graphController.snipGraph($event)'
-                ng-if='graphController.isAddToNotebookEnabled()'
+                ng-if='::graphController.isAddToNotebookEnabled()'
                 ng-disabled='graphController.isDisabled'>
               <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
             </md-button>
@@ -185,15 +185,15 @@
               </div>
             </div>
           </div>
-          <div ng-if='graphController.isSaveButtonVisible || graphController.isSubmitButtonVisible'
+          <div ng-if='::graphController.isSaveOrSubmitButtonVisible()'
              class='component__actions' layout='row' layout-align='start center'>
             <md-button class='md-raised md-primary'
                    ng-click='graphController.saveButtonClicked()'
-                   ng-if='graphController.isSaveButtonVisible'
+                   ng-if='::graphController.isSaveButtonVisible'
                    ng-disabled='graphController.isDisabled || !graphController.isDirty'>{{ 'SAVE' | translate }}</md-button>
             <md-button class='md-raised md-primary'
                    ng-click='graphController.submitButtonClicked()'
-                   ng-if='graphController.isSubmitButtonVisible'
+                   ng-if='::graphController.isSubmitButtonVisible'
                    ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty || graphController.isSubmitButtonDisabled'>{{ 'SUBMIT' | translate }}</md-button>
             <span ng-if='graphController.saveMessage.text'
                 class='component__actions__info md-caption'>

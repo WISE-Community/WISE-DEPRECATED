@@ -112,21 +112,21 @@ const ComponentSelect = {
                     ng-model="$ctrl.selectedComponents"
                     ng-change="$ctrl.selectedComponentsChange()"
                     md-selected-html="$ctrl.getSelectedText()"
-                    placeholder="{{ 'assessmentItemsToShow' | translate }"
+                    placeholder="{{ ::'assessmentItemsToShow' | translate }"
                     multiple>
-            <md-optgroup label="{{ 'assessmentItemsToShow' | translate }}">
+            <md-optgroup label="{{ ::'assessmentItemsToShow' | translate }}">
                 <md-option ng-value="component.id" ng-repeat="component in $ctrl.components | filter:{hasWork: true}">
                     {{ $index+1 }}: {{ $ctrl.getComponentTypeLabel(component.type) }}
                 </md-option>
             </md-optgroup>
         </md-select>
-        <md-button class="md-body-1 md-raised" aria-label="{{ 'assessmentItemsToShow' | translate }" disabled
+        <md-button class="md-body-1 md-raised" aria-label="{{ ::'assessmentItemsToShow' | translate }" disabled
                    ng-if="($ctrl.components | filter:{hasWork: true}).length === 0">
-            {{ 'numberOfAssessmentItems_0' | translate }}
+            {{ ::'numberOfAssessmentItems_0' | translate }}
         </md-button>
-        <md-button class="md-body-1 md-raised" aria-label="{{ 'assessmentItemsToShow' | translate }" disabled
+        <md-button class="md-body-1 md-raised" aria-label="{{ ::'assessmentItemsToShow' | translate }" disabled
                    ng-if="($ctrl.components | filter:{hasWork: true}).length === 1">
-            {{ 'numberOfAssessmentItems_1' | translate }}
+            {{ ::'numberOfAssessmentItems_1' | translate }}
         </md-button>`,
     controller: ComponentSelectController
 };

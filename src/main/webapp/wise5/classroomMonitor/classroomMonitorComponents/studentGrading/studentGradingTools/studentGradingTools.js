@@ -127,22 +127,22 @@ const StudentGradingTools = {
   },
   template:
     `<div layout="row" layout-align="center center">
-      <md-button aria-label="{{ 'previousTeam' | translate }}"
+      <md-button aria-label="{{ ::'previousTeam' | translate }}"
                  class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevTeam()">
-        <md-icon> {{ $ctrl.icons.prev }} </md-icon>
-        <md-tooltip md-direction="bottom">{{ 'previousTeam' | translate }}</md-tooltip>
+        <md-icon> {{ ::$ctrl.icons.prev }} </md-icon>
+        <md-tooltip md-direction="bottom">{{ ::'previousTeam' | translate }}</md-tooltip>
       </md-button>
       <md-icon class="md-30" hide-xs
                style="color: {{ $ctrl.avatarColor }};"> account_circle </md-icon>&nbsp;
       <workgroup-select custom-class="'md-button md-no-underline
                           toolbar__select toolbar__select--fixedwidth'"
                         custom-placeholder="$ctrl.selectTeamPlaceholder"></workgroup-select>
-      <md-button aria-label="{{ 'nextTeam' | translate }}"
+      <md-button aria-label="{{ ::'nextTeam' | translate }}"
                  class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextTeam()">
-        <md-icon> {{ $ctrl.icons.next }} </md-icon>
-        <md-tooltip md-direction="bottom">{{ 'nextTeam' | translate }}</md-tooltip>
+        <md-icon> {{ ::$ctrl.icons.next }} </md-icon>
+        <md-tooltip md-direction="bottom">{{ ::'nextTeam' | translate }}</md-tooltip>
       </md-button>
     </div>`,
   controller: StudentGradingToolsController

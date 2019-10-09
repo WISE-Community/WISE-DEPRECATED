@@ -411,7 +411,7 @@
       <div>
         <h5>{{ 'studentPreview' | translate }}</h5>
       </div>
-      <div ng-switch='tableController.mode'>
+      <div ng-switch='::tableController.mode'>
         <div ng-switch-when='grading|gradingRevision'
              ng-switch-when-separator='|'
              layout='row'

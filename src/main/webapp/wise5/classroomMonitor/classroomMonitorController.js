@@ -103,7 +103,7 @@ class ClassroomMonitorController {
         // build server disconnect display
         this.connectionLostDisplay = this.$mdToast.build({
             template: `<md-toast>
-                        <span>{{ 'ERROR_CHECK_YOUR_INTERNET_CONNECTION' | translate }}</span>
+                        <span>{{ ::'ERROR_CHECK_YOUR_INTERNET_CONNECTION' | translate }}</span>
                       </md-toast>`,
             hideDelay: 0
         });

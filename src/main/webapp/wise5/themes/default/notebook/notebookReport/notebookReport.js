@@ -253,35 +253,35 @@ const NotebookReport = {
     mode: '@'
   },
   template:
-    `<div ng-if="$ctrl.mode !== 'classroomMonitor' && ($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>
+    `<div ng-if="::$ctrl.mode !== 'classroomMonitor' && ($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>
         <div ng-if="$ctrl.visible" class="notebook-report-container"
               ng-class="{'notebook-report-container__collapsed': $ctrl.collapsed, 'notebook-report-container__full': $ctrl.full && !$ctrl.collapsed}">
             <md-card class="notebook-report md-whiteframe-3dp l-constrained">
                 <md-toolbar ng-click="$ctrl.collapsed ? $ctrl.collapse() : return" class="md-toolbar--wise md-toolbar--wise--sm notebook-report__toolbar">
                     <md-toolbar-tools class="md-toolbar-tools">
                         <md-icon>assignment</md-icon>&nbsp;
-                        <span ng-if="$ctrl.collapsed" class="overflow--ellipsis notebook-report__toolbar__title">{{$ctrl.reportItem.content.title}}</span>
+                        <span ng-if="$ctrl.collapsed" class="overflow--ellipsis notebook-report__toolbar__title">{{::$ctrl.reportItem.content.title}}</span>
                         <span flex></span>
-                        <md-button aria-label="{{'toggleFullScreen' | translate}}" title="{{'toggleFullScreen' | translate}}" class="md-icon-button notebook-tools--full"
+                        <md-button aria-label="{{::'toggleFullScreen' | translate}}" title="{{::'toggleFullScreen' | translate}}" class="md-icon-button notebook-tools--full"
                                    ng-click="$ctrl.fullscreen()">
                             <md-icon ng-if="!$ctrl.full || $ctrl.collapsed"> fullscreen </md-icon>
                             <md-icon ng-if="$ctrl.full && !$ctrl.collapsed"> fullscreen_exit </md-icon>
                         </md-button>
-                        <md-button aria-label="{{'collapse' | translate}}" title="{{'collapse' | translate}}" class="md-icon-button"
+                        <md-button aria-label="{{::'collapse' | translate}}" title="{{::'collapse' | translate}}" class="md-icon-button"
                                    ng-if="!$ctrl.collapsed" ng-click="$event.stopPropagation(); $ctrl.collapse()">
                             <md-icon> arrow_drop_down </md-icon>
                         </md-button>
-                        <md-button aria-label="{{'restore' | translate}}" title="{{'restore' | translate}}" class="md-icon-button"
+                        <md-button aria-label="{{::'restore' | translate}}" title="{{'restore' | translate}}" class="md-icon-button"
                                    ng-if="$ctrl.collapsed" ng-click="$event.stopPropagation(); $ctrl.collapse()">
                             <md-icon> arrow_drop_up </md-icon>
                         </md-button>
                     </md-toolbar-tools>
                     <div class="notebook-report__content__header md-whiteframe-1dp" layout="row" layout-align="start center">
-                        <span style="color: {{$ctrl.config.itemTypes.report.label.color}};">{{$ctrl.reportItem.content.title}}</span>
+                        <span style="color: {{::$ctrl.config.itemTypes.report.label.color}};">{{::$ctrl.reportItem.content.title}}</span>
                         <span flex></span>
-                        <md-icon aria-label="{{$ctrl.reportItem.content.title}} info" style="color: {{$ctrl.config.itemTypes.report.label.color}};">
+                        <md-icon aria-label="{{::$ctrl.reportItem.content.title}} info" style="color: {{::$ctrl.config.itemTypes.report.label.color}};">
                             info
-                            <md-tooltip md-direction="left">{{$ctrl.reportItem.content.prompt}}</md-tooltip>
+                            <md-tooltip md-direction="left">{{::$ctrl.reportItem.content.prompt}}</md-tooltip>
                         </md-icon>
                     </div>
                 </md-toolbar>
@@ -299,10 +299,10 @@ const NotebookReport = {
                     <div id="{{$ctrl.reportId}}-toolbar"></div>
                     <div layout="row" layout-align="start center">
                         <md-button class="md-primary md-raised button--small"
-                                   aria-label="{{ 'save' | translate }}"
+                                   aria-label="{{ ::'save' | translate }}"
                                    ng-disabled="!$ctrl.dirty"
                                    ng-click="$ctrl.saveNotebookReportItem()">{{ 'save' | translate }}</md-button>
-                        <span ng-show="$ctrl.saveMessage.text"
+                        <span ng-if="$ctrl.saveMessage.text"
                               class="component__actions__info md-caption">
                               {{$ctrl.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ $ctrl.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="$ctrl.saveMessage.time"></span></span>
                         </span>
@@ -310,7 +310,7 @@ const NotebookReport = {
                 </md-card-actions>
             </md-card>
         </div>
-        <div ng-if="$ctrl.mode === 'classroomMonitor'">
+        <div ng-if="::$ctrl.mode === 'classroomMonitor'">
             <compile data="$ctrl.reportItemContent"></compile>
             <notebook-item-grading
                 notebook-item="$ctrl.reportItem">

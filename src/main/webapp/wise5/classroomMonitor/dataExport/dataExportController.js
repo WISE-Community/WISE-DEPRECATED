@@ -3418,7 +3418,7 @@ class DataExportController {
             template: `
                 <div align="center">
                     <div style="width: 200px; height: 100px; margin: 20px;">
-                      <span>{{ 'downloadingExport' | translate }}</span>
+                      <span>{{ ::'downloadingExport' | translate }}</span>
                       <br/>
                       <br/>
                       <md-progress-circular md-mode="indeterminate"></md-progress-circular>

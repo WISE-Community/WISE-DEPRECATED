@@ -202,14 +202,14 @@ const NotebookItem = {
                            aria-label="Delete notebook item"
                            ng-click="$ctrl.doDelete($event)">
                     <md-icon> delete </md-icon>
-                    <md-tooltip md-direction="top">{{ 'DELETE' | translate }}</md-tooltip>
+                    <md-tooltip md-direction="top">{{ ::'DELETE' | translate }}</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button"
                            ng-if="$ctrl.canReviveNotebookItem()"
                            aria-label="Revive notebook item"
                            ng-click="$ctrl.doRevive($event)">
                     <md-icon> undo </md-icon>
-                    <md-tooltip md-direction="top">{{ 'reviveNote' | translate }}</md-tooltip>
+                    <md-tooltip md-direction="top">{{ ::'reviveNote' | translate }}</md-tooltip>
                 </md-button>
             </md-card-actions>
         </md-card>`,

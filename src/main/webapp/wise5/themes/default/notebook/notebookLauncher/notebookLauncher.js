@@ -56,12 +56,12 @@ const NotebookLauncher = {
   template:
     `<md-button ng-if="$ctrl.isShowButton()"
                     class="md-scale md-fab md-fab-bottom-right notebook-launcher"
-                    aria-label="{{ $ctrl.fabLabel() }}"
+                    aria-label="{{ ::$ctrl.fabLabel() }}"
                     ng-click="$ctrl.fabAction($event)">
-            <md-icon ng-if="!$ctrl.notesVisible">{{ $ctrl.config.icon }}</md-icon>
+            <md-icon ng-if="!$ctrl.notesVisible">{{ ::$ctrl.config.icon }}</md-icon>
             <md-icon ng-if="$ctrl.notesVisible">add</md-icon>
             <md-tooltip md-direction="top">
-                {{ $ctrl.fabLabel() }}
+                {{ ::$ctrl.fabLabel() }}
             </md-tooltip>
         </md-button>`,
   controller: NotebookLauncherController

@@ -171,27 +171,27 @@ const MilestoneDetails = {
     template:
         `<div class="milestone-details md-whiteframe-1dp" layout-padding>
             <form name="milestoneEditForm">
-                <h6>{{ 'DETAILS' | translate }}</h6>
+                <h6>{{ ::'DETAILS' | translate }}</h6>
                 <div layout-gt-xs="row">
                     <md-input-container class="md-block" flex>
-                        <label>{{ 'name' | translate }}</label>
+                        <label>{{ ::'name' | translate }}</label>
                         <input name="milestoneName" ng-model="$ctrl.milestone.name" ng-change="$ctrl.change()" required>
                     </md-input-container>
 
                     <md-input-container>
-                        <label>{{ 'dueDate' | translate }}</label>
+                        <label>{{ ::'dueDate' | translate }}</label>
                         <md-datepicker name="date" ng-model="$ctrl.date" ng-change="$ctrl.dateChange()" required></md-datepicker>
                     </md-input-container>
                 </div>
                 <md-input-container class="md-block" flex>
-                    <label>{{ 'DESCRIPTION' | translate }}</label>
+                    <label>{{ ::'DESCRIPTION' | translate }}</label>
                     <textarea ng-model="$ctrl.milestone.description" ng-change="$ctrl.change()" rows="1" md-select-on-focus></textarea>
                 </md-input-container>
             </form>
         </div>
         <div class="milestone-details md-whiteframe-1dp" layout-padding>
             <form name="milestoneRequirementsForm">
-                <h6>{{ 'REQUIREMENTS' | translate }}</h6>
+                <h6>{{ ::'REQUIREMENTS' | translate }}</h6>
                 <div ng-repeat="item in $ctrl.milestone.items | toArray | orderBy : 'order'"
                      ng-class="{ 'layout-margin': !$ctrl.isGroupNode(item.$key) }"
                      ng-show="$ctrl.isGroupNode(item.$key) || item.show">
@@ -199,8 +199,8 @@ const MilestoneDetails = {
                     <md-checkbox ng-model="item.checked"
                                  ng-if="item.order !== 0"
                                  ng-change="$ctrl.itemChanged(item)"
-                                 aria-label="{{ $ctrl.getNodePositionAndTitleByNodeId(item.$key) }}">
-                        <span class="md-body-2">{{ $ctrl.getNodePositionAndTitleByNodeId(item.$key) }}</span>
+                                 aria-label="{{ ::$ctrl.getNodePositionAndTitleByNodeId(item.$key) }}">
+                        <span class="md-body-2">{{ ::$ctrl.getNodePositionAndTitleByNodeId(item.$key) }}</span>
                     </md-checkbox>
                     <md-button class="md-primary md-icon-button"
                                ng-if="item.order!==0 && $ctrl.isGroupNode(item.$key)"

@@ -3,11 +3,11 @@
     <div class='advancedAuthoringDiv'
          ng-if='discussionController.showAdvancedAuthoring'>
       <div>
-        <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+        <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ 'MAX_SCORE' | translate }}</label>
+          <label>{{ ::'MAX_SCORE' | translate }}</label>
           <input type='number'
                  ng-model='discussionController.authoringComponentContent.maxScore'
                  ng-model-options='{ debounce: 1000 }'
@@ -16,7 +16,7 @@
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+          <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
           <input type='number'
                  ng-model='discussionController.authoringComponentContent.componentWidth'
                  ng-model-options='{ debounce: 1000 }'
@@ -25,14 +25,14 @@
       </div>
       <div>
         <label class='node__label--vertical-alignment'>
-          {{ 'RUBRIC' | translate }}
+          {{ ::'RUBRIC' | translate }}
         </label>
         <md-button class='topButton md-raised md-primary'
                    ng-click='discussionController.showRubricAuthoring = !discussionController.showRubricAuthoring'>
           <md-icon>message</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
-            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+            {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
           </md-tooltip>
         </md-button>
         <div ng-if='discussionController.showRubricAuthoring'>
@@ -49,14 +49,14 @@
       <div>
         <div style='height: 50;'>
           <label class='node__label--vertical-alignment'>
-            {{ 'CONNECTED_COMPONENTS' | translate }}
+            {{ ::'CONNECTED_COMPONENTS' | translate }}
           </label>
           <md-button class='topButton md-raised md-primary'
                      ng-click='discussionController.authoringAddConnectedComponent()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
-              {{ 'ADD_CONNECTED_COMPONENT' | translate }}
+              {{ ::'ADD_CONNECTED_COMPONENT' | translate }}
             </md-tooltip>
           </md-button>
         </div>
@@ -65,7 +65,7 @@
              layout='row'>
           <div flex>
             <md-input-container style='margin-right: 20; width: 300;'>
-              <label>{{ 'step' | translate }}</label>
+              <label>{{ ::'step' | translate }}</label>
               <md-select ng-model='connectedComponent.nodeId'
                          ng-change='discussionController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
                          style='width: 300'>
@@ -77,7 +77,7 @@
               </md-select>
             </md-input-container>
             <md-input-container style='margin-right: 20; width: 300;'>
-              <label>{{ 'component' | translate }}</label>
+              <label>{{ ::'component' | translate }}</label>
               <md-select ng-model='connectedComponent.componentId'
                          ng-change='discussionController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
                          style='width: 300'>
@@ -86,7 +86,7 @@
                            ng-disabled='!discussionController.isConnectedComponentTypeAllowed(component.type) || component.id == discussionController.componentId'>
                   {{ componentIndex + 1 }}. {{ component.type }}
                   <span ng-if='component.id == discussionController.componentId'>
-                    ({{ 'thisComponent' | translate }})
+                    ({{ ::'thisComponent' | translate }})
                   </span>
                 </md-option>
               </md-select>
@@ -97,10 +97,10 @@
                          ng-change='discussionController.authoringConnectedComponentTypeChanged(connectedComponent)'
                          style='width: 200'>
                 <md-option value='importWork'>
-                  {{ 'importWork' | translate }}
+                  {{ ::'importWork' | translate }}
                 </md-option>
                 <md-option value='showWork'>
-                  {{ 'showWork' | translate }}
+                  {{ ::'showWork' | translate }}
                 </md-option>
               </md-select>
             </md-input-container>
@@ -111,7 +111,7 @@
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>
-                  {{ 'DELETE' | translate }}
+                  {{ ::'DELETE' | translate }}
                 </md-tooltip>
               </md-button>
             </md-input-container>
@@ -120,13 +120,13 @@
       </div>
       <div style='margin-top: 10px; margin-bottom: 10px;'>
         <div style='height: 50;'>
-          <label class='node__label--vertical-alignment'>{{ 'tags' | translate }}</label>
+          <label class='node__label--vertical-alignment'>{{ ::'tags' | translate }}</label>
           <md-button class='topButton md-raised md-primary'
                      ng-click='discussionController.addTag()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
-              {{ 'addTag' | translate }}
+              {{ ::'addTag' | translate }}
             </md-tooltip>
           </md-button>
         </div>
@@ -138,14 +138,14 @@
                      ng-change='discussionController.authoringViewComponentChanged()'
                      ng-model-options='{ debounce: 1000 }'
                      size='100'
-                     placeholder='{{ "enterTag" | translate }}'/>
+                     placeholder='{{ ::"enterTag" | translate }}'/>
             </md-input-container>
             <md-button class='moveComponentButton md-raised md-primary'
                        ng-click='discussionController.moveTagUp($index)'>
               <md-icon>arrow_upward</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
-                {{ 'moveUp' | translate }}
+                {{ ::'moveUp' | translate }}
               </md-tooltip>
             </md-button>
             <md-button class='moveComponentButton md-raised md-primary'
@@ -153,7 +153,7 @@
               <md-icon>arrow_downward</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
-                {{ 'moveDown' | translate }}
+                {{ ::'moveDown' | translate }}
               </md-tooltip>
             </md-button>
             <md-button class='moveComponentButton md-raised md-primary'
@@ -161,24 +161,24 @@
               <md-icon>delete</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
-                {{ 'DELETE' | translate }}
+                {{ ::'DELETE' | translate }}
               </md-tooltip>
             </md-button>
           </div>
         </div>
       </div>
       <div>
-        <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
+        <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
         <md-button class='topButton md-raised md-primary'
                    ng-click='discussionController.showJSONButtonClicked()'>
           <md-icon>code</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
-            {{ 'SHOW_JSON' | translate }}
+            {{ ::'SHOW_JSON' | translate }}
           </md-tooltip>
         </md-button>
         <span ng-if='discussionController.isJSONStringChanged'>
-          {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+          {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
         </span>
         <div ng-if='discussionController.showJSONAuthoring'>
           <md-input-container style='width: 100%;'>
@@ -194,27 +194,27 @@
     <br/>
     <div ng-if='!discussionController.authoringComponentContent.showPreviousWork'>
       <md-input-container style='width: 100%; margin-bottom: 0;'>
-        <label>{{ 'PROMPT' | translate }}</label>
+        <label>{{ ::'PROMPT' | translate }}</label>
         <textarea rows='1'
                   ng-model='discussionController.authoringComponentContent.prompt'
                   ng-change='discussionController.authoringViewComponentChanged()'
                   ng-model-options='{ debounce: 1000 }'
-                  placeholder='{{ "enterPromptHere" | translate }}'>
+                  placeholder='{{ ::"enterPromptHere" | translate }}'>
       </textarea>
       </md-input-container>
       <md-input-container style='margin-top: 0; margin-bottom: 0;'>
         <md-checkbox ng-model='discussionController.authoringComponentContent.isStudentAttachmentEnabled'
                      ng-change='discussionController.authoringViewComponentChanged()'>
-          {{ 'discussion.allowUploadedImagesInPosts' | translate }}
+          {{ ::'discussion.allowUploadedImagesInPosts' | translate }}
         </md-checkbox>
       </md-input-container>
     </div>
   </div>
   <div ng-style='discussionController.mode === "authoring" && {"border": "5px solid black", "padding": "20px"}'>
     <div ng-if='discussionController.mode === "authoring"'>
-      <h5>{{ 'studentPreview' | translate }}</h5>
+      <h5>{{ ::'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='discussionController.mode'>
+    <div ng-switch='::discussionController.mode'>
       <div ng-switch-when='grading|gradingRevision'
            ng-switch-when-separator='|'
            layout='row'
@@ -300,7 +300,7 @@
                   </div>
                   <textarea ng-if='!discussionController.isRichTextEnabled && !discussionController.isDisabled'
                             class='discussion-new__input--textarea'
-                            placeholder='{{ "discussion.shareDiscussionPostWithClass" | translate }}'
+                            placeholder='{{ ::"discussion.shareDiscussionPostWithClass" | translate }}'
                             ng-model='discussionController.newResponse'
                             ng-model-options='{ debounce: 100 }'
                             ng-disabled='discussionController.isDisabled'
@@ -341,7 +341,7 @@
                   <md-button class='md-raised md-primary'
                              ng-click='discussionController.submitButtonClicked()'
                              ng-disabled='discussionController.isDisabled || (!discussionController.newResponse && discussionController.attachments.length == 0)'>
-                    {{ 'discussion.post' | translate }}
+                    {{ ::'discussion.post' | translate }}
                   </md-button>
                 </div>
               </md-card>

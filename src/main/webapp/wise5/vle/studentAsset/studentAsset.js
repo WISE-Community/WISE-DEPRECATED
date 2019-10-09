@@ -10,7 +10,7 @@ const studentAssetModule = angular.module('studentAsset', [])
           templateUrl: '=',
           componentController: '='
         },
-        template: '<ng-include src="studentAssetController.getTemplateUrl()"></ng-include>',
+        template: '<ng-include src="::studentAssetController.getTemplateUrl()"></ng-include>',
         controller: 'StudentAssetController',
         controllerAs: 'studentAssetController',
         bindToController: true

@@ -102,28 +102,28 @@ const MilestoneDetails = {
                 </span>
             </span>
             <p ng-if="$ctrl.milestone.description">
-              <span class="heavy">{{ 'description' | translate }}: </span>&nbsp;
+              <span class="heavy">{{ ::'description' | translate }}: </span>&nbsp;
               <compile data="$ctrl.milestone.description"></compile>
             </p>
-            <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy">{{ 'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
+            <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy">{{ ::'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
             <p ng-if="$ctrl.requirements.length">
-                <span class="heavy">{{ 'REQUIREMENTS' | translate }}: </span>
+                <span class="heavy">{{ ::'REQUIREMENTS' | translate }}: </span>
                 <a ng-repeat="requirement in $ctrl.requirements" ui-sref="root.project({nodeId: \'{{ requirement }}\'})" ng-click="$ctrl.visitNodeGrading(event)">
-                    {{ $ctrl.getNodeNumberByNodeId(requirement) }}: {{ $ctrl.getNodeTitleByNodeId(requirement) }}<span ng-if="!$last">, </span>
+                    {{ ::$ctrl.getNodeNumberByNodeId(requirement) }}: {{ ::$ctrl.getNodeTitleByNodeId(requirement) }}<span ng-if="!$last">, </span>
                 </a>
             </p>
         </div>
         <div ng-if="$ctrl.milestone.type === 'milestoneReport'"
              class="milestone-details md-whiteframe-1dp">
-            <div class="milestone-details__header accent-2 md-body-2 gray-lightest-bg">{{ 'classReport' | translate }}</div>
+            <div class="milestone-details__header accent-2 md-body-2 gray-lightest-bg">{{ ::'classReport' | translate }}</div>
             <div ng-if="!$ctrl.milestone.isReportAvailable"
                 class="center">
-                <p>{{ 'milestoneReportExplanation' | translate }} {{ 'milestoneReportAvailability' | translate }}</p>
+                <p>{{ ::'milestoneReportExplanation' | translate }} {{ ::'milestoneReportAvailability' | translate }}</p>
                 <p class="bold" ng-if="$ctrl.milestone.satisfyConditional === 'any'">
-                    {{ 'milestoneReportAvailabilityRequirementsAny' | translate: { num: $ctrl.milestone.satisfyMinNumWorkgroups, percent: $ctrl.milestone.satisfyMinPercentage } }}
+                    {{ ::'milestoneReportAvailabilityRequirementsAny' | translate: { num: $ctrl.milestone.satisfyMinNumWorkgroups, percent: $ctrl.milestone.satisfyMinPercentage } }}
                 </p>
                 <p class="bold" ng-if="$ctrl.milestone.satisfyConditional === 'all'">
-                    {{ 'milestoneReportAvailabilityRequirementsAll' | translate: { num: $ctrl.milestone.satisfyMinNumWorkgroups, percent: $ctrl.milestone.satisfyMinPercentage } }}
+                    {{ ::'milestoneReportAvailabilityRequirementsAll' | translate: { num: $ctrl.milestone.satisfyMinNumWorkgroups, percent: $ctrl.milestone.satisfyMinPercentage } }}
                 </p>
             </div>
             <div ng-if="$ctrl.milestone.isReportAvailable">
@@ -131,11 +131,11 @@ const MilestoneDetails = {
             </div>
         </div>
         <div class="milestone-details md-whiteframe-1dp">
-            <div class="milestone-details__header accent-2 md-body-2 gray-lightest-bg">{{ 'studentCompletion' | translate }}</div>
+            <div class="milestone-details__header accent-2 md-body-2 gray-lightest-bg">{{ ::'studentCompletion' | translate }}</div>
             <md-list class="user-list md-whiteframe-1dp">
                 <md-list-item class="thead md-with-secondary gray-lightest-bg md-body-1">
-                    <p>{{ 'team' | translate }}</p>
-                    <div class="md-secondary-container">{{ 'completed' | translate }}</div>
+                    <p>{{ ::'team' | translate }}</p>
+                    <div class="md-secondary-container">{{ ::'completed' | translate }}</div>
                 </md-list-item>
                 <md-list-item class="list-item md-with-secondary"
                             ng-repeat="workgroup in $ctrl.milestone.workgroups | orderBy:'-achievementTime'">
@@ -148,7 +148,7 @@ const MilestoneDetails = {
                             {{ workgroup.achievementTime | amTimeAgo }}
                         </span>
                         <span ng-if="workgroup.achievementTime === null" class="warn">
-                            {{ 'notCompleted' | translate }}
+                            {{ ::'notCompleted' | translate }}
                         </span>
                     </div>
                 </md-list-item>

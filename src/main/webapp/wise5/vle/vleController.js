@@ -109,15 +109,7 @@ class VLEController {
     });
 
     this.notifications = this.NotificationService.notifications;
-    this.$scope.$watch(
-      () => {
-        return this.NotificationService.notifications.length;
-      },
-      (newValue, oldValue) => {
-        this.notifications = this.NotificationService.notifications;
-        this.newNotifications = this.getNewNotifications();
-      }
-    );
+    this.newNotifications = this.getNewNotifications();
 
     this.$scope.$on('notificationChanged', (event, notification) => {
       // update new notifications

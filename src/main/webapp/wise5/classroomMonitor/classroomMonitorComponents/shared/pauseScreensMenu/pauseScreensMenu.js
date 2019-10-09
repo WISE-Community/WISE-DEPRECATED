@@ -42,19 +42,19 @@ const PauseScreensMenu = {
             </md-toolbar>
             <md-content flex>
                 <md-switch class="md-primary account-menu__control"
-                           aria-label="{{ 'lockPeriodLabel' | translate: { periodName: ('allPeriods' | translate) } }}"
+                           aria-label="{{ ::'lockPeriodLabel' | translate: { periodName: ('allPeriods' | translate) } }}"
                            ng-model="$ctrl.allPeriodsPaused"
                            ng-change="$ctrl.toggleAllPeriods()">
-                    {{ 'allPeriods' | translate }}
+                    {{ ::'allPeriods' | translate }}
                 </md-switch>
                 <md-divider></md-divider>
                 <md-switch ng-repeat="period in $ctrl.periods"
                            ng-if="period.periodId !== -1"
                            class="md-primary account-menu__control"
-                           aria-label="{{ 'lockPeriodLabel' | translate: { periodName: period.periodName } }}"
+                           aria-label="{{ ::'lockPeriodLabel' | translate: { periodName: period.periodName } }}"
                            ng-model="period.paused"
                            ng-change="$ctrl.togglePeriod(period)">
-                    {{ 'periodLabel' | translate:{ name: period.periodName } }}
+                    {{ ::'periodLabel' | translate:{ name: period.periodName } }}
                 </md-switch>
             </md-content>
         </div>`,

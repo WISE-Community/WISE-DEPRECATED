@@ -191,14 +191,14 @@ const WorkgroupSelect = {
                           md-item-text="workgroup.displayNames"
                           md-min-length="0"
                           ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"
-                          placeholder="{{ $ctrl.placeholder }}"
-                          title="{{ $ctrl.placeholder }}">
+                          placeholder="{{ ::$ctrl.placeholder }}"
+                          title="{{ ::$ctrl.placeholder }}">
             <md-item-template>
                 <span md-highlight-text="$ctrl.searchText"
-                      md-highlight-flags="ig">{{ workgroup.displayNames }}</span>
+                      md-highlight-flags="ig">{{ ::workgroup.displayNames }}</span>
             </md-item-template>
             <md-not-found>
-                {{ 'noMatchesFound' | translate }}
+                {{ ::'noMatchesFound' | translate }}
             </md-not-found>
         </md-autocomplete>
         <md-select ng-if="!$ctrl.useAutocomplete"
@@ -213,7 +213,7 @@ const WorkgroupSelect = {
             <md-select-header class="select__header" layout="row" flex>
                 <input ng-model="$ctrl.searchTerm"
                        type="search"
-                       placeholder="{{ 'findAStudent' | translate }}"
+                       placeholder="{{ ::'findAStudent' | translate }}"
                        ng-keydown="$event.stopPropagation()">
             </md-select-header>
             <md-divider></md-divider>
@@ -222,7 +222,7 @@ const WorkgroupSelect = {
                     filter:$ctrl.searchTerm"
                     ng-value="workgroup">
                     <!-- TODO: add avatar? -->
-                    <span class="node-select__text">{{ workgroup.displayNames }}</span>
+                    <span class="node-select__text">{{ ::workgroup.displayNames }}</span>
                 </md-option>
             </md-opt-group>
         </md-select>`,

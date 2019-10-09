@@ -466,6 +466,14 @@ class NodeController {
     }
   }
 
+  isShowNodeRubric() {
+    return this.rubric != null && this.rubric != "" && this.mode === 'preview';
+  }
+
+  isShowComponentRubric(component) {
+    return component.rubric != null && component.rubric != "" && this.mode === 'preview';
+  }
+
   /**
    * Populate the student work into the node
    */

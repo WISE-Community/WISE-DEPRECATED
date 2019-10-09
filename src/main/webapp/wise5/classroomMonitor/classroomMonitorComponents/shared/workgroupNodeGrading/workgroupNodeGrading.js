@@ -135,20 +135,20 @@ const WorkgroupNodeGrading = {
     },
     template:
         `<div class="grading__item">
-            <div id="component_{{component.id}}_{{$ctrl.workgroupId}}" class="component component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
+            <div id="component_{{::component.id}}_{{::$ctrl.workgroupId}}" class="component component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
                 <div ng-show="$ctrl.isComponentVisible(component.id)">
                     <h3 class="accent-2 md-body-2 gray-lightest-bg component__header">
                         {{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
-                        <component-new-work-badge component-id="component.id"
-                                                  workgroup-id="$ctrl.workgroupId"
+                        <component-new-work-badge component-id="::component.id"
+                                                  workgroup-id="::$ctrl.workgroupId"
                                                   node-id="$ctrl.nodeId"></component-new-work-badge>
                     </h3>
                     <component class="component-container"
-                               node-id='{{$ctrl.nodeId}}'
-                               component-id='{{component.id}}'
+                               node-id='{{::$ctrl.nodeId}}'
+                               component-id='{{::component.id}}'
                                component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}'
-                               workgroup-id='{{$ctrl.workgroupId}}'
-                               teacher-workgroup-id='{{$ctrl.teacherWorkgroupId}}'
+                               workgroup-id='{{::$ctrl.workgroupId}}'
+                               teacher-workgroup-id='{{::$ctrl.teacherWorkgroupId}}'
                                mode='grading'></component>
                 </div>
             </div>

@@ -117,24 +117,24 @@ const NodeInfo = {
                     <md-icon class="annotations__icon md-36 info">info</md-icon>
                 </div>
                 <div class="annotations__title" layout="row" flex>
-                    <span>{{ 'STEP_INFO' | translate }}</span>
+                    <span>{{ ::'STEP_INFO' | translate }}</span>
                 </div>
             </md-card-title>
             <md-card-content class="annotations__body md-body-1">
                 <div ng-bind-html="$ctrl.getRubricWithAssetPaths($ctrl.nodeContent.rubric)"></div>
             </md-card-content>
         </md-card>
-        <md-card class="node-info node-content" style="border-color: {{ $ctrl.color }};">
+        <md-card class="node-info node-content" style="border-color: {{ ::$ctrl.color }};">
             <md-card-content>
-                <div id="component_{{component.id}}" ng-repeat='component in $ctrl.components' class="component">
+                <div id="component_{{::component.id}}" ng-repeat='component in ::$ctrl.components' class="component">
                     <md-divider class="divider divider--dashed" ng-if="!$first"></md-divider>
                     <h3 ng-if="component.hasWork"
                         class="accent-2 md-body-2 gray-lightest-bg
                             component__header">
                         {{ component.assessmentItemIndex + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
                     </h3>
-                    <component node-id='{{$ctrl.nodeId}}'
-                               component-id='{{component.id}}'
+                    <component node-id='{{::$ctrl.nodeId}}'
+                               component-id='{{::component.id}}'
                                mode='student'></component>
                     <md-card class="annotations annotations--info" ng-if="component.rubric">
                        <md-card-title class="annotations__header">
@@ -142,7 +142,7 @@ const NodeInfo = {
                                <md-icon class="annotations__icon md-36 info">info</md-icon>
                            </div>
                            <div class="annotations__title" layout="row" flex>
-                               <span>{{ 'ITEM_INFO' | translate }}</span>
+                               <span>{{ ::'ITEM_INFO' | translate }}</span>
                            </div>
                        </md-card-title>
                        <md-card-content class="annotations__body md-body-1">
@@ -151,13 +151,13 @@ const NodeInfo = {
                     </md-card>
                     <div ng-if='$ctrl.isResponsesSummaryAvailableForComponentType(component.type)'>
                         <summary-display ng-if='component.type === "MultipleChoice"'
-                                node-id='$ctrl.nodeId' component-id='component.id'
+                                node-id='::$ctrl.nodeId' component-id='::component.id'
                                 period-id='$ctrl.periodId' student-data-type='"responses"'>
                         </summary-display>
                     </div>
                     <div ng-if='$ctrl.isScoresSummaryAvailableForComponentType(component.type) &&
                             $ctrl.componentHasScoreAnnotation(component.id)'>
-                        <summary-display node-id='$ctrl.nodeId' component-id='component.id'
+                        <summary-display node-id='::$ctrl.nodeId' component-id='::component.id'
                                 period-id='$ctrl.periodId' student-data-type='"scores"'>
                         </summary-display>
                     </div>

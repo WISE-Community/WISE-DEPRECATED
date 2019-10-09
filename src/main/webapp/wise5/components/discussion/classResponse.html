@@ -52,7 +52,7 @@
       <md-subheader class='md-no-sticky discussion-comments__header'>
         <a ng-if='classResponseCtrl.response.replies.length > 1'
             ng-click='classResponseCtrl.toggleExpanded()'>
-          {{ 'discussion.comments' | translate }} ({{ classResponseCtrl.response.replies.length }})
+          {{ ::'discussion.comments' | translate }} ({{ classResponseCtrl.response.replies.length }})
           <md-icon class='md-primary' ng-if='!classResponseCtrl.expanded'>
             expand_more
           </md-icon>
@@ -61,7 +61,7 @@
           </md-icon>
         </a>
         <span ng-if='classResponseCtrl.response.replies.length < 2'>
-          {{ 'discussion.comments' | translate }} ({{ classResponseCtrl.response.replies.length }})
+          {{ ::'discussion.comments' | translate }} ({{ classResponseCtrl.response.replies.length }})
         </span>
       </md-subheader>
       <md-list class='discussion-comments__list'>
@@ -124,8 +124,8 @@
         <textarea class='input--textarea discussion-reply__input'
             ng-model='classResponseCtrl.response.replyText'
             ng-model-options='{ debounce: 100 }'
-            placeholder='{{ "addComment" | translate }}'
-            aria-label='{{ "addComment" | translate }}'
+            placeholder='{{ ::"addComment" | translate }}'
+            aria-label='{{ ::"addComment" | translate }}'
             ng-keyup='classResponseCtrl.replyEntered($event, classResponseCtrl.response)'>
         </textarea>
       </md-input-container>
@@ -138,7 +138,7 @@
         <md-button class='md-primary discussion-new-reply__submit'
             ng-disabled='!classResponseCtrl.response.replyText'
             ng-click='classResponseCtrl.submitButtonClicked(classResponseCtrl.response)'>
-          {{ 'discussion.reply' | translate }}
+          {{ ::'discussion.reply' | translate }}
         </md-button>
       </div>
     </div>

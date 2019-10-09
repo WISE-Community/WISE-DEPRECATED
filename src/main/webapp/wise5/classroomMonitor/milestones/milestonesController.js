@@ -730,20 +730,20 @@ class MilestonesController {
                     <md-button class="warn"
                                ng-click="delete()"
                                ng-if="!milestone.type === 'milestoneReport'"
-                               aria-label="{{ 'DELETE' | translate }}">
-                        {{ 'DELETE' | translate }}
+                               aria-label="{{ ::'DELETE' | translate }}">
+                        {{ ::'DELETE' | translate }}
                     </md-button>
                     <span flex></span>
                     <md-button class="md-primary"
                                ng-click="edit()"
                                ng-if="!milestone.type === 'milestoneReport'"
-                               aria-label="{{ 'EDIT' | translate }}">
-                        {{ 'EDIT' | translate }}
+                               aria-label="{{ ::'EDIT' | translate }}">
+                        {{ ::'EDIT' | translate }}
                     </md-button>
                     <md-button class="md-primary"
                                ng-click="close()"
-                               aria-label="{{ 'CLOSE' | translate }}">
-                            {{ 'CLOSE' | translate }}
+                               aria-label="{{ ::'CLOSE' | translate }}">
+                            {{ ::'CLOSE' | translate }}
                         </md-button>
                     </md-dialog-actions>
             </md-dialog>`;
@@ -826,13 +826,13 @@ class MilestonesController {
                 </md-dialog-content>
                 <md-dialog-actions layout="row" layout-align="end center">
                     <md-button ng-click="close()"
-                               aria-label="{{ 'CANCEL' | translate }}">
-                        {{ 'CANCEL' | translate }}
+                               aria-label="{{ ::'CANCEL' | translate }}">
+                        {{ ::'CANCEL' | translate }}
                     </md-button>
                     <md-button class="md-primary"
                                ng-click="save()"
-                               aria-label="{{ 'SAVE' | translate }}">
-                            {{ 'SAVE' | translate }}
+                               aria-label="{{ ::'SAVE' | translate }}">
+                            {{ ::'SAVE' | translate }}
                         </md-button>
                     </md-dialog-actions>
             </md-dialog>`;

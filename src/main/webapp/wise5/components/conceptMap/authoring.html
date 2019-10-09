@@ -543,7 +543,7 @@
     <div>
       <h5>{{ 'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='conceptMapController.mode'>
+    <div ng-switch='::conceptMapController.mode'>
       <div ng-switch-default>
         <md-input-container class='input-container md-block input-container--open-response input-container--component md-no-float'>
           <label class='input-label md-no-float'
@@ -558,7 +558,7 @@
             </md-button>
             <md-button class='md-accent'
                        ng-click='conceptMapController.snip($event)'
-                       ng-if='conceptMapController.isAddToNotebookEnabled()'>
+                       ng-if='::conceptMapController.isAddToNotebookEnabled()'>
               <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
             </md-button>
             <div id='{{conceptMapController.conceptMapContainerId}}'

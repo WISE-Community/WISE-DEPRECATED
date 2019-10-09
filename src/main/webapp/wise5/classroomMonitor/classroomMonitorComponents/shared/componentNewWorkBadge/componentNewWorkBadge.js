@@ -89,7 +89,7 @@ const ComponentNewWorkBadge = {
         nodeId: '<'
     },
     template:
-        `<span ng-if="$ctrl.hasNewWork" class="badge badge--info">{{ 'NEW' | translate }}</span>`,
+        `<span ng-if="$ctrl.hasNewWork" class="badge badge--info">{{ ::'NEW' | translate }}</span>`,
     controller: ComponentNewWorkBadgeController
 };
 

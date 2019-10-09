@@ -93,7 +93,7 @@ const StepItem = {
             'list-item--info': $ctrl.statusClass === 'info' }">
       <md-subheader class="list-item md-whiteframe-1dp">
         <button class="md-button md-ink-ripple list-item__subheader-button"
-                aria-label="{{ toggleTeamWorkDisplay | translate }}"
+                aria-label="{{ ::toggleTeamWorkDisplay | translate }}"
                 ng-class="{ 'list-item--noclick': !$ctrl.showScore ||
                   $ctrl.disabled }"
                 ng-click="$ctrl.toggleExpand()"
@@ -104,8 +104,8 @@ const StepItem = {
               <step-info has-alert="$ctrl.hasAlert"
                          has-new-alert="$ctrl.hasNewAlert"
                          has-new-work="$ctrl.hasNewWork"
-                         node-id="$ctrl.nodeId"
-                         node-title="{{ $ctrl.title }}"
+                         node-id="::$ctrl.nodeId"
+                         node-title="{{ ::$ctrl.title }}"
                          show-position="true"></step-info>
             </div>
             <div flex="{{ $ctrl.showScore ? 30 : 20 }}" layout="row"
@@ -125,9 +125,9 @@ const StepItem = {
       </md-subheader>
       <md-list-item ng-if="$ctrl.expand && !$ctrl.disabled"
                     class="grading__item-container">
-        <workgroup-node-grading workgroup-id="$ctrl.workgroupId"
+        <workgroup-node-grading workgroup-id="::$ctrl.workgroupId"
                                 class="workgroup-node-grading"
-                                node-id="{{ $ctrl.nodeId }}"
+                                node-id="{{ ::$ctrl.nodeId }}"
                                 hidden-components="[]"
                                 flex></workgroup-node-grading>
       </md-list-item>

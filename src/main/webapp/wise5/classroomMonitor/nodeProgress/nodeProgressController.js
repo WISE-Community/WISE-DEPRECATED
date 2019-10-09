@@ -230,8 +230,8 @@ class NodeProgressController {
 
         let dialogActions =
             `<md-dialog-actions layout="row" layout-align="end center">
-                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ 'openInNewWindow' | translate }}">{{ 'openInNewWindow' | translate }}</md-button>
-                <md-button class="md-primary" ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
+                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ ::'openInNewWindow' | translate }}">{{ ::'openInNewWindow' | translate }}</md-button>
+                <md-button class="md-primary" ng-click="close()" aria-label="{{ ::'close' | translate }}">{{ ::'close' | translate }}</md-button>
             </md-dialog-actions>`;
 
         /*

@@ -180,7 +180,7 @@ const NotebookNotes = {
     mode: '@'
   },
   template:
-    `<md-sidenav ng-if="$ctrl.mode !== 'classroomMonitor'" md-component-id="notes"
+    `<md-sidenav ng-if="::$ctrl.mode !== 'classroomMonitor'" md-component-id="notes"
         md-is-open="$ctrl.notesVisible"
         md-whiteframe="4"
         md-disable-backdrop
@@ -194,7 +194,7 @@ const NotebookNotes = {
               <span flex></span>
               <md-button ng-click="$ctrl.close($event)"
                   class="md-icon-button"
-                  aria-label="{{ 'Close' | translate }}">
+                  aria-label="{{ ::'Close' | translate }}">
                 <md-icon>close</md-icon>
               </md-button>
           </div>
@@ -202,7 +202,7 @@ const NotebookNotes = {
       <md-content>
       <md-tabs md-selected="$ctrl.selectedTabIndex" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
         <md-tab ng-repeat="group in $ctrl.groups"
-            ng-disabled="group.disabled"
+            ng-disabled="::group.disabled"
             label="{{group.title}}">
           <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
               <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
@@ -226,9 +226,9 @@ const NotebookNotes = {
       </md-tabs>
       </md-content>
     </md-sidenav>
-    <div ng-if="$ctrl.mode === 'classroomMonitor'" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
+    <div ng-if="::$ctrl.mode === 'classroomMonitor'" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
       <div ng-repeat="group in $ctrl.groups"
-          ng-disabled="group.disabled"
+          ng-disabled="::group.disabled"
           label="{{group.title}}">
         <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
             <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>

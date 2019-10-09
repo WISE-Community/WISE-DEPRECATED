@@ -28,11 +28,11 @@ const Toolbar = {
     template:
         `<md-toolbar class="md-whiteframe-1dp toolbar md-toolbar--wise" md-theme="light">
             <div class="md-toolbar-tools toolbar__tools">
-                <md-button aria-label="{{ 'mainMenu' | translate }}" class="md-icon-button" ng-click="$ctrl.toggleMenu()">
+                <md-button aria-label="{{ ::'mainMenu' | translate }}" class="md-icon-button" ng-click="$ctrl.toggleMenu()">
                     <md-icon> menu </md-icon>
-                    <md-tooltip md-direction="bottom">{{ 'mainMenu' | translate }}</md-tooltip>
+                    <md-tooltip md-direction="bottom">{{ ::'mainMenu' | translate }}</md-tooltip>
                 </md-button>
-                <span class="toolbar__title" ng-if="$ctrl.showTitle">{{ $ctrl.viewName }}</span>
+                <span class="toolbar__title" ng-if="$ctrl.showTitle">{{ ::$ctrl.viewName }}</span>
                 <step-tools ng-if="$ctrl.showStepTools" show-position="$ctrl.numberProject"></step-tools>
                 <student-grading-tools ng-if="$ctrl.showTeamTools" workgroup-id="$ctrl.workgroupId"></student-grading-tools>
                 <span flex></span>

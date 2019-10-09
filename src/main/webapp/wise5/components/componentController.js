@@ -127,6 +127,10 @@ class ComponentController {
     return this.mode === 'onlyShowWork';
   }
 
+  isSaveOrSubmitButtonVisible() {
+    return this.isSaveButtonVisible || this.isSubmitButtonVisible;
+  }
+
   registerListeners() {
     this.$scope.$on('annotationSavedToServer', (event, args) => {
       const annotation = args.annotation;

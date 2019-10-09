@@ -150,13 +150,6 @@ class NavItemController {
             }
         );
 
-        this.$scope.$watch(
-            () => { return this.planningMode; },
-            (value) => {
-                this.$scope.$parent.planningMode = value;
-            }
-        );
-
         // a group node has turned on or off planning mode
         this.$rootScope.$on('togglePlanningMode', (event, args) => {
 

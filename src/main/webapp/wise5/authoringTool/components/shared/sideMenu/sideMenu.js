@@ -30,7 +30,7 @@ const SideMenu = {
         <md-tooltip md-direction="right">{{ value.name }}</md-tooltip>
       </md-button>
       <md-divider></md-divider>
-      <md-button aria-label="{{ 'authoringToolMenu' | translate }}"
+      <md-button aria-label="{{ ::'authoringToolMenu' | translate }}"
              ng-click="$ctrl.toggleMenu()"
              class="md-icon-button menu-sidebar__link">
         <md-icon ng-class="{'primary': $ctrl.views[$ctrl.state.$current.name].type !== 'primary'}"> more_horiz </md-icon>

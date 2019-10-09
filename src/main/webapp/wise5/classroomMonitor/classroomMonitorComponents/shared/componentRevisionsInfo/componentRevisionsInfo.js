@@ -71,10 +71,10 @@ class ComponentRevisionsInfoController {
             targetEvent: $event,
             fullscreen: true,
             template:
-                `<md-dialog aria-label="{{ 'revisionsForTeam' | translate:{teamNames: usernames} }}" class="dialog--wider">
+                `<md-dialog aria-label="{{ ::'revisionsForTeam' | translate:{teamNames: usernames} }}" class="dialog--wider">
                     <md-toolbar>
                         <div class="md-toolbar-tools">
-                            <h2 class="overflow--ellipsis">{{ 'revisionsForTeam' | translate:{teamNames: usernames} }}</h2>
+                            <h2 class="overflow--ellipsis">{{ ::'revisionsForTeam' | translate:{teamNames: usernames} }}</h2>
                         </div>
                     </md-toolbar>
                     <md-dialog-content>
@@ -85,7 +85,7 @@ class ComponentRevisionsInfoController {
                         </div>
                     </md-dialog-content>
                     <md-dialog-actions layout="row" layout-align="end center">
-                        <md-button class="md-primary" ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
+                        <md-button class="md-primary" ng-click="close()" aria-label="{{ ::'close' | translate }}">{{ ::'close' | translate }}</md-button>
                     </md-dialog-actions>
                 </md-dialog>`,
             locals: {
@@ -130,15 +130,15 @@ const ComponentRevisionsInfo = {
     template:
         `<div class="component__actions__info component--grading__actions__info md-caption">
             <span ng-if="$ctrl.componentStates.length > 0">
-                <span ng-if="$ctrl.latestComponentStateIsSubmit">{{ 'SUBMITTED' | translate }} </span>
-                <span ng-if="!$ctrl.latestComponentStateIsSubmit">{{ 'SAVED' | translate }} </span>
+                <span ng-if="$ctrl.latestComponentStateIsSubmit">{{ ::'SUBMITTED' | translate }} </span>
+                <span ng-if="!$ctrl.latestComponentStateIsSubmit">{{ ::'SAVED' | translate }} </span>
                 <span ng-if="$ctrl.active">
                     <span class="component__actions__more" am-time-ago="$ctrl.latestComponentStateTime"></span>
                     <md-tooltip md-direction="top">{{ $ctrl.latestComponentStateTime | amDateFormat:'ddd MMM D YYYY, h:mm a' }}</md-tooltip>
                 </span>
                 <span ng-if="!$ctrl.active">{{ $ctrl.latestComponentStateTime | amDateFormat:'ddd MMM D YYYY, h:mm a' }}</span>
             </span>
-            <span ng-if="$ctrl.componentStates.length === 0">{{ 'TEAM_HAS_NOT_SAVED_ANY_WORK' | translate }}</span>
+            <span ng-if="$ctrl.componentStates.length === 0">{{ ::'TEAM_HAS_NOT_SAVED_ANY_WORK' | translate }}</span>
             <span ng-if="$ctrl.active && $ctrl.componentStates.length > 1">
                 &#8226;&nbsp;<a ng-click="$ctrl.showRevisions($event)" translate="seeRevisions"></a>
            </span>

@@ -45,7 +45,7 @@ const StepInfo = {
     <node-icon node-id="$ctrl.nodeId" size="18" hide-xs></node-icon>
     <span hide-xs>&nbsp;&nbsp;</span>
     <div class="heavy">
-      {{ $ctrl.stepTitle }}
+      {{ ::$ctrl.stepTitle }}
       <status-icon ng-if="$ctrl.hasAlert"
                    icon-class="$ctrl.alertIconClass"
                    icon-name="$ctrl.alertIconName"
@@ -57,7 +57,7 @@ const StepInfo = {
                    icon-label="$ctrl.rubricIconLabel"
                    icon-tooltip="$ctrl.rubricIconLabel"></status-icon>
       <span ng-if="$ctrl.hasNewWork" class="badge badge--info
-            animate-fade">{{ 'NEW' | translate }}</span>
+            animate-fade">{{ ::'NEW' | translate }}</span>
     </div>
   </div>`
 };
