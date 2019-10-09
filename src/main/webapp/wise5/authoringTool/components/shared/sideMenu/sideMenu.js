@@ -21,13 +21,13 @@ const SideMenu = {
   template:
     `<div class="menu-sidebar">
       <md-button ng-repeat="(key, value) in $ctrl.views"
-             id="{{ value.id }}"
+             id="{{ ::value.id }}"
              ng-if="value.type === 'primary' && value.active"
-             aria-label="{{ value.label }}"
-             ui-sref="{{ key }}"
+             aria-label="{{ ::value.label }}"
+             ui-sref="{{ ::key }}"
              class="md-icon-button menu-sidebar__link">
-        <md-icon ng-class="{'primary': $ctrl.state.$current.name === key}"> {{ value.icon }} </md-icon>
-        <md-tooltip md-direction="right">{{ value.name }}</md-tooltip>
+        <md-icon ng-class="{'primary': $ctrl.state.$current.name === key}"> {{ ::value.icon }} </md-icon>
+        <md-tooltip md-direction="right">{{ ::value.name }}</md-tooltip>
       </md-button>
       <md-divider></md-divider>
       <md-button aria-label="{{ ::'authoringToolMenu' | translate }}"

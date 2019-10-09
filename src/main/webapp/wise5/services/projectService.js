@@ -20,12 +20,12 @@ class ProjectService {
     this.metadata = {};
     this.activeConstraints = [];
     this.rootNode = null;
-    this.idToPosition = {};
     this.idToOrder = {};
     this.nodeCount = 0;
     this.componentServices = {};
     this.nodeIdToNumber = {};
     this.nodeIdToIsInBranchPath = {};
+    this.nodeIdsInAnyBranch = [];
     this.nodeIdToBranchPathLetter = {};
     this.achievements = [];
     this.isNodeAffectedByConstraintResult = {};
@@ -63,10 +63,10 @@ class ProjectService {
     this.metadata = {};
     this.activeConstraints = [];
     this.rootNode = null;
-    this.idToPosition = {};
     this.idToOrder = {};
     this.nodeCount = 0;
     this.nodeIdToIsInBranchPath = {};
+    this.nodeIdsInAnyBranch = [];
     this.achievements = [];
     this.clearBranchesCache();
   };
@@ -292,32 +292,11 @@ class ProjectService {
       this.rootNode = this.getRootNode(nodes[0].id);
       this.calculateNodeOrderOfProject();
 
-      let n = nodes.length;
       const branches = this.getBranches();
-      const branchNodeIds = [];
-
-      // set node positions
-      let id, pos;
-
-      while (n--) {
-        id = nodes[n].id;
-        if (id === this.rootNode.id) {
-          this.setIdToPosition(id, '0');
-        } else if (this.isNodeIdInABranch(branches, id)) {
-          // node is in a branch, so process later
-          branchNodeIds.push(id);
-        } else {
-          pos = this.getPositionById(id);
-          this.setIdToPosition(id, pos);
+      for (const branch of branches) {
+        for (const branchPath of branch.branchPaths) {
+          this.nodeIdsInAnyBranch = this.nodeIdsInAnyBranch.concat(branchPath);
         }
-      }
-
-      // set branch node positions
-      let b = branchNodeIds.length;
-      while (b--) {
-        id = branchNodeIds[b];
-        pos = this.getBranchNodePositionById(id);
-        this.setIdToPosition(id, pos);
       }
 
       /*
@@ -468,42 +447,6 @@ class ProjectService {
   };
 
   /**
-   * Returns the position in the project for the branch node with the given id. Returns null if no node with id exists or node is not a branch node.
-   * @param id a node id
-   * @return string position of the given node id in the project
-   */
-  getBranchNodePositionById(id) {
-    const branches = this.getBranches();
-    let b = branches.length;
-
-    // TODO: should we localize this? should we support more than 26?
-    const integerToAlpha = function(int) {
-      const alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-      if (int > -1 && int < 26) {
-        return alphabet[int];
-      } else {
-        return int;
-      }
-    };
-
-    while (b--) {
-      const branch = branches[b];
-      const branchPaths = branch.branchPaths;
-      for (let p = 0; p < branchPaths.length; p++) {
-        const branchPath = branchPaths[p];
-        const nodeIndex = branchPath.indexOf(id);
-        if (nodeIndex > -1) {
-          const startPoint = branch.branchStartPoint;
-          const startPointPos = this.idToPosition[startPoint];
-          const branchPathPos = startPointPos + ' ' + integerToAlpha(p);
-          return branchPathPos + (nodeIndex+1);
-        }
-      }
-    }
-    return null;
-  };
-
-  /**
    * Recursively searches for the given node id from the point of the given node down and returns the path number (position)
    * @param node a node to start searching down
    * @param path the position of the given node
@@ -515,11 +458,8 @@ class ProjectService {
       return path + '';
     } else if (node.type === 'group') {
       let num = 0;
-      const branches = this.getBranches();
       for (let nodeId of node.ids) {
-        if (this.isNodeIdInABranch(branches, nodeId)) {
-          this.getBranchNodePositionById(nodeId);
-        } else {
+        if (this.nodeIdsInAnyBranch.indexOf(nodeId) === -1) {
           ++num;
           const pos = this.getPathToNode(this.getNodeById(nodeId), (path) + '.' + (num), id);
           if (pos) {
@@ -527,12 +467,6 @@ class ProjectService {
           }
         }
       }
-    }
-  };
-
-  setIdToPosition(id, pos) {
-    if (id != null) {
-      this.idToPosition[id] = pos;
     }
   };
 
@@ -1195,23 +1129,16 @@ class ProjectService {
    * @return a promise to return the project JSON
    */
   retrieveProjectById(projectId) {
-    if (projectId != null) {
-      const configURL = window.configURL + '/' + projectId;
-      return this.$http.get(configURL).then((result) => {
-        const configJSON = result.data;
-        if (configJSON != null) {
-          const projectURL = configJSON.projectURL;
-          const previewProjectURL = configJSON.previewProjectURL;
-          if (projectURL != null) {
-            return this.$http.get(projectURL).then((result) => {
-              const projectJSON = result.data;
-              projectJSON.previewProjectURL = previewProjectURL;
-              return projectJSON;
-            });
-          }
-        }
+    return this.$http.get(`/authorConfig/${projectId}`).then((result) => {
+      const configJSON = result.data;
+      const projectURL = configJSON.projectURL;
+      const previewProjectURL = configJSON.previewProjectURL;
+      return this.$http.get(projectURL).then((result) => {
+        const projectJSON = result.data;
+        projectJSON.previewProjectURL = previewProjectURL;
+        return projectJSON;
       });
-    }
+    });
   }
 
   /**
@@ -2177,33 +2104,6 @@ class ProjectService {
   };
 
   /**
-   * Check if a node id is in any branch
-   * @param branches an array of branch objects
-   * @param nodeId the node id to check
-   * @return whether the node id is in any branch
-   */
-  isNodeIdInABranch(branches, nodeId) {
-    if (branches != null && nodeId != null) {
-      for (let branch of branches) {
-        if (branch != null) {
-          const branchPaths = branch.branchPaths;
-          if (branchPaths != null) {
-            for (let branchPath of branchPaths) {
-              if (branchPath != null) {
-                const index = branchPath.indexOf(nodeId);
-                if (index != -1) {
-                  return true;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    return false;
-  };
-
-  /**
    * Get the branch paths that a node id is in
    * @param branches an array of branch objects
    * @param nodeId the node id to check
@@ -2994,7 +2894,6 @@ class ProjectService {
     this.removeNodeIdFromTransitions(nodeId);
     this.removeNodeIdFromGroups(nodeId);
     this.removeNodeIdFromNodes(nodeId);
-    this.recalculatePositionsInGroup(parentGroup.id);
   }
 
   updateProjectStartNodeIdToNextLogicalNode(nodeId) {
@@ -3784,23 +3683,6 @@ class ProjectService {
             }
           }
         }
-      }
-    }
-  }
-
-  /**
-   * Recalculate the positions of the children in the group.
-   * The positions are the numbers usually seen before the title
-   * e.g. if the step is seen as 1.3: Gather Evidence, then 1.3
-   * is the position
-   * @param groupId recalculate all the children of this group
-   */
-  recalculatePositionsInGroup(groupId) {
-    if (groupId != null) {
-      let childIds = this.getChildNodeIdsById(groupId);
-      for (let childId of childIds) {
-        let pos = this.getPositionById(childId);
-        this.setIdToPosition(childId, pos);
       }
     }
   }
@@ -5181,9 +5063,7 @@ class ProjectService {
        * we have not calculated whether the node id is in a branch path
        * before so we will now
        */
-
-      const branches = this.getBranches();
-      result = this.isNodeIdInABranch(branches, nodeId);
+      result = this.nodeIdsInAnyBranch.indexOf(nodeId) !== -1;
 
       // remember the result for this node id
       this.nodeIdToIsInBranchPath[nodeId] = result;

@@ -81,10 +81,10 @@ const TopBar = {
         </span>
         <span flex>
         <h3>
-          <span ng-if="$ctrl.projectTitle" id="projectTitleSpan">{{ ::$ctrl.projectTitle }}</span>
+          <span ng-if="$ctrl.projectTitle" id="projectTitleSpan">{{ $ctrl.projectTitle }}</span>
           <span ng-if="!$ctrl.projectTitle" id="projectTitleSpan">{{ ::'authoringTool' | translate }}</span>
           <span class="md-caption" ng-if="$ctrl.projectId">
-            ({{ ::'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}<span class="md-caption" ng-if="$ctrl.runId"> | {{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}</span>)
+            ({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}<span class="md-caption" ng-if="$ctrl.runId"> | {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}</span>)
           </span>
         </h3>
         </span>

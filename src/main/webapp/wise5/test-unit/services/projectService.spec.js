@@ -175,7 +175,6 @@ describe('ProjectService Unit Test', () => {
     // TODO: add test for ProjectService.removeDuplicatePaths()
     // TODO: add test for ProjectService.pathsEqual()
 
-    // TODO: add test for ProjectService.isNodeIdInABranch()
     // TODO: add test for ProjectService.getBranchPathsByNodeId()
 
 
