@@ -864,7 +864,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">131</context>
         </context-group>
-        <target state="needs-translation">WISE teacher progress</target>
+        <target state="translated">WISE教師進度</target>
       </trans-unit>
       <trans-unit id="334e3ef2374254d76dfe1f56599cf1d0598372e8" datatype="html">
         <source>WISE teacher grading</source>
