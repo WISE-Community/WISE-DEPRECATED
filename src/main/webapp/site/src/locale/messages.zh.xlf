@@ -637,7 +637,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-        <target state="needs-translation">Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</target>
+        <target state="translated">自1997年以來，WISE已為一個持續發展的社群提供服務，該社群在全球超過2萬名老師，研究人員和課程設計人員，以及超過200,000名K-12學生。</target>
       </trans-unit>
       <trans-unit id="53d2c0a09cfd0d1836aa6306785412e894b571d5" datatype="html">
         <source>WISE students</source>
