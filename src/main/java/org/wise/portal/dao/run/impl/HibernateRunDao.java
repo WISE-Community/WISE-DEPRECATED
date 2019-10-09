@@ -258,6 +258,10 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     Root<RunImpl> runRoot = cq.from(RunImpl.class);
     cq.select(cb.max(runRoot.<Long>get("id")));
     TypedQuery<Long> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    try {
+      return query.getSingleResult();
+    } catch (Exception e) {
+      return 0;
+    }
   }
 }

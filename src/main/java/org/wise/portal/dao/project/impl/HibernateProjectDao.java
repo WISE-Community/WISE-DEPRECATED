@@ -80,6 +80,31 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
     return session.getCriteriaBuilder(); 
   }
+  
+  @SuppressWarnings("unchecked")
+  public List<Project> getSharedProjectsWithoutRun(User user) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<ProjectImpl> cq = cb.createQuery(ProjectImpl.class);
+    Root<ProjectImpl> projectRoot = cq.from(ProjectImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Subquery<RunImpl> runProjectIds = getRunProjectIds(cq);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(userRoot.get("id"), user.getId()));
+    predicates.add(cb.isMember(userRoot.get("id"), projectRoot.<Set<User>>get("sharedowners")));
+    predicates.add(cb.not(projectRoot.get("id").in(runProjectIds)));
+    cq.select(projectRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
+    List<ProjectImpl> projectResultList = query.getResultList();
+    return (List<Project>)(Object)projectResultList;
+  }
+
+  private Subquery<RunImpl> getRunProjectIds(CriteriaQuery cq) {
+    Subquery<RunImpl> runsSubquery = cq.subquery(RunImpl.class);
+    Root<RunImpl> runRoot = runsSubquery.from(RunImpl.class);
+    runsSubquery.select(runRoot.get("project").get("id"));
+    return runsSubquery;
+  }
 
   @SuppressWarnings("unchecked")
   public List<Project> getProjectListByUAR(User user, String role) {
@@ -202,13 +227,6 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     return (List<Project>)(Object)projectResultList;
   }
 
-  private Subquery<RunImpl> getRunProjectIds(CriteriaQuery cq) {
-    Subquery<RunImpl> runsSubquery = cq.subquery(RunImpl.class);
-    Root<RunImpl> runRoot = runsSubquery.from(RunImpl.class);
-    runsSubquery.select(runRoot.get("project").get("id"));
-    return runsSubquery;
-  }
-
   @SuppressWarnings("unchecked")
   public List<Project> getAllSharedProjects() {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
@@ -228,6 +246,10 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     Root<ProjectImpl> runRoot = cq.from(ProjectImpl.class);
     cq.select(cb.max(runRoot.<Long>get("id")));
     TypedQuery<Long> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    try {
+      return query.getSingleResult();
+    } catch (Exception e) {
+      return 0;
+    }
   }
 }

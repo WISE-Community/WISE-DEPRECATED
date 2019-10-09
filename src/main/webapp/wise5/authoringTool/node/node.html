@@ -966,6 +966,10 @@
   </md-button>
   <span style='font-weight:bold; margin-right:10px'>{{ 'insertAsFirstComponent' | translate }}</span>
 </div>
+<div style='margin-left: 45px; margin-top: 45px; font-size: 1em; font-weight: bold;' ng-if='nodeAuthoringController.showComponents && !nodeAuthoringController.showImportView &&
+   nodeAuthoringController.components.length === 0 && !nodeAuthoringController.insertComponentMode && nodeAuthoringController.node.type != "group"''>
+   <em>{{ 'stepHasNoComponents' | translate }}</em>
+</div>
 <div ng-repeat='(componentIndex, component) in nodeAuthoringController.components'
    class='component md-padding'
    style='padding: 0; margin-top: 0; margin-left: 16;'

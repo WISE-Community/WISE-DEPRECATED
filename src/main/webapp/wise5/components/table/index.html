@@ -93,14 +93,15 @@
             <tr ng-repeat='row in tableController.getTableDataRows()'>
               <td ng-repeat='cell in row'
                   ng-class='{ "inactive" : !cell.editable }'>
-                <md-input-container>
+                <span ng-if='!cell.editable || tableController.isDisabled'>
+                  {{ cell.text }}
+                </span>
+                <md-input-container ng-if='cell.editable && !tableController.isDisabled'>
                   <input type='text'
                       ng-model='cell.text'
                       ng-change='tableController.studentDataChanged()'
-                      ng-disabled='tableController.isDisabled'
                       aria-label='Text'
-                      size='{{cell.size || tableController.componentContent.globalCellSize}}'
-                      ng-disabled='!cell.editable || tableController.isDisabled''/>
+                      size='{{cell.size || tableController.componentContent.globalCellSize}}'/>
                 </md-input-container>
               </td>
             </tr>

@@ -54,6 +54,8 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
    */
   List<T> getProjectListByUAR(User user, String role);
 
+  List<T> getSharedProjectsWithoutRun(User user);
+
   /**
    * Returns a list of Projects that is owned by the specified user
    * @param owner <code>User</code>
