@@ -872,7 +872,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">132</context>
         </context-group>
-        <target state="needs-translation">WISE teacher grading</target>
+        <target state="translated">WISE教師評分</target>
       </trans-unit>
       <trans-unit id="7f5177858a6d5d359f61637516a36470cbf6ba89" datatype="html">
         <source>Featured Teacher Tools:</source>
@@ -888,7 +888,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">142</context>
         </context-group>
-        <target state="needs-translation">Real-time progress monitor</target>
+        <target state="translated">即時進度監控</target>
       </trans-unit>
       <trans-unit id="cb1e93373a4084ceca88b2c7f7d135792293b743" datatype="html">
         <source>Grade and give feedback + sample scoring rubrics</source>
@@ -896,7 +896,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">146</context>
         </context-group>
-        <target state="needs-translation">Grade and give feedback + sample scoring rubrics</target>
+        <target state="translated">評分並提供回饋+範例評分標準</target>
       </trans-unit>
       <trans-unit id="6047c27c7e32ac81f954987ee2574c123e088014" datatype="html">
         <source>Automatically scored assessment items</source>
