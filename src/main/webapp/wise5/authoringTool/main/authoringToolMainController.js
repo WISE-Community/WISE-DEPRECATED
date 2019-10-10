@@ -92,7 +92,7 @@ class AuthoringToolMainController {
         this.saveEvent('projectCopied', 'Authoring', null, projectId);
 
         // refresh the project list and highlight the newly copied project
-        this.ConfigService.retrieveConfig(window.configURL).then(() => {
+        this.ConfigService.retrieveConfig(`/authorConfig`).then(() => {
           this.projects = this.ConfigService.getConfigParam('projects');
           this.scrollToTopOfPage();
           // the timeout is necessary for new element to appear on the page

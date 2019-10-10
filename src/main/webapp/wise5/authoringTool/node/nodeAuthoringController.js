@@ -3158,6 +3158,18 @@ class NodeAuthoringController {
     }
   }
 
+  previewImportNode(node) {
+    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}/${node.id}`);
+  }
+
+  previewImportProject() {
+    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}`);
+  }
+
+  previewImportComponent(node, componentId) {
+    this.previewImportNode(node);
+  }
+
   /**
    * Import the selected steps
    */

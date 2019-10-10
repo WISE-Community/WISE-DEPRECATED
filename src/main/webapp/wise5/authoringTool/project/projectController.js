@@ -1082,30 +1082,12 @@ class ProjectController {
     }
   }
 
-  /**
-   * Preview the step in a new tab
-   * @param node
-   */
   previewImportNode(node) {
     window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}/${node.id}`);
   }
 
-  /**
-   * Preview the import project in a new tab
-   */
   previewImportProject() {
-    if (this.importProject != null) {
-      window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}`);
-    }
-  }
-
-  /**
-   * Preview the component in a new tab
-   * @param node the node
-   * @param componentId the component id
-   */
-  previewImportComponent(node, componentId) {
-    this.previewImportNode(node);
+    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}`);
   }
 
   /**
