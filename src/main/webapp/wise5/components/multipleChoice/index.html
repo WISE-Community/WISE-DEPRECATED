@@ -23,7 +23,7 @@
                       <compile data='::choice.text'></compile>
                     </span>
                     <span ng-if='::multipleChoiceController.showFeedback && choice.showFeedback'
-                        ng-class='{"success": ::multipleChoiceController.hasCorrectChoices() && ::choice.isCorrect, "warn": ::multipleChoiceController.hasCorrectChoices() && !::choice.isCorrect, "info": !::multipleChoiceController.hasCorrectChoices()}'>
+                        ng-class='::{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
                         {{::choice.feedbackToShow}}
                     </span>
                   </md-radio-button>
@@ -37,8 +37,8 @@
                     <span>
                       <compile data='::choice.text'></compile>
                     </span>
-                    <span ng-if='choice.showFeedback'
-                        ng-class='{"success": ::multipleChoiceController.hasCorrectChoices() && ::choice.isCorrect, "warn": ::multipleChoiceController.hasCorrectChoices() && !::choice.isCorrect, "info": !::multipleChoiceController.hasCorrectChoices()}'>
+                    <span ng-if='::choice.showFeedback'
+                        ng-class='::{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
                         {{::choice.feedbackToShow}}
                     </span>
                   </md-checkbox>
@@ -59,11 +59,11 @@
               </div>
               <div ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'
                   style='color: green'>
-                {{ 'CORRECT' | translate }}!
+                {{ ::'CORRECT' | translate }}!
               </div>
               <div ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'
                   style='color: red'>
-                {{ 'INCORRECT' | translate }}
+                {{ ::'INCORRECT' | translate }}
               </div>
             </md-input-container>
           </div>
@@ -110,8 +110,8 @@
                 <span>
                   <compile data='::choice.text'></compile>
                 </span>
-                <span ng-if='::multipleChoiceController.showFeedback && choice.showFeedback'
-                    ng-class='{"success": ::multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": ::multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !::multipleChoiceController.hasCorrectChoices()}'>
+                <span ng-if='multipleChoiceController.showFeedback && choice.showFeedback'
+                    ng-class='::{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
                     {{::choice.feedbackToShow}}
                 </span>
               </md-radio-button>
@@ -127,7 +127,7 @@
                   <compile data='::choice.text'></compile>
                 </span>
                 <span ng-if='choice.showFeedback'
-                    ng-class='{"success": ::multipleChoiceController.hasCorrectChoices() && ::choice.isCorrect, "warn": ::multipleChoiceController.hasCorrectChoices() && !::choice.isCorrect, "info": !::multipleChoiceController.hasCorrectChoices()}'>
+                    ng-class='::{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
                     {{::choice.feedbackToShow}}
                 </span>
               </md-checkbox>
@@ -146,13 +146,13 @@
           <div ng-if='!multipleChoiceController.isLatestComponentStateSubmit || !multipleChoiceController.componentHasCorrectAnswer || !multipleChoiceController.showFeedback'>
             &nbsp
           </div>
-          <div ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'
+          <div ng-if='multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'
               style='color: green'>
-            {{ 'CORRECT' | translate }}!
+            {{ ::'CORRECT' | translate }}!
           </div>
-          <div ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'
+          <div ng-if='multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'
               style='color: red'>
-            {{ 'INCORRECT' | translate }}
+            {{ ::'INCORRECT' | translate }}
           </div>
         </md-input-container>
         <div ng-if='::multipleChoiceController.isSaveOrSubmitButtonVisible()'
