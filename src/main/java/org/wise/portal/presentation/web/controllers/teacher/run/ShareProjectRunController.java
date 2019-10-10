@@ -118,8 +118,7 @@ public class ShareProjectRunController {
   @RequestMapping(method = RequestMethod.GET, value = "/teacher/run/shareprojectrun.html")
   public String initializeForm(ModelMap modelMap, HttpServletRequest request) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-    boolean doEagerFetch = true;
-    Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)), doEagerFetch);
+    Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)));
     String message = request.getParameter("message");
     populateModel(modelMap, user, run, message);
     return formView;
@@ -189,8 +188,7 @@ public class ShareProjectRunController {
     Long runId = run.getId();
 
     try {
-      boolean doEagerFetch = true;
-      run = runService.retrieveById(runId, doEagerFetch);
+      run = runService.retrieveById(runId);
       params.setRun(run);
     } catch (ObjectNotFoundException e1) {
       e1.printStackTrace();

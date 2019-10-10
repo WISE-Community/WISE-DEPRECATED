@@ -23,6 +23,11 @@
  */
 package org.wise.portal.service.vle.wise5.impl;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,12 +55,11 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
-import org.wise.vle.domain.work.*;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
+import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.NotebookItem;
+import org.wise.vle.domain.work.NotebookItemAlreadyInGroupException;
+import org.wise.vle.domain.work.StudentAsset;
+import org.wise.vle.domain.work.StudentWork;
 
 /**
  * Services for the WISE Virtual Learning Environment (WISE VLE v5)
@@ -108,8 +112,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -205,8 +208,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        studentWork.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        studentWork.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -271,8 +273,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -317,8 +318,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        event.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        event.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -388,8 +388,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -422,8 +421,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        achievement.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        achievement.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -459,8 +457,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -531,8 +528,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        annotation.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        annotation.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -606,8 +602,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -655,8 +650,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        studentAsset.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        studentAsset.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -744,8 +738,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -796,8 +789,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        notebookItem.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        notebookItem.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -978,8 +970,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -1026,8 +1017,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        notification.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        notification.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }

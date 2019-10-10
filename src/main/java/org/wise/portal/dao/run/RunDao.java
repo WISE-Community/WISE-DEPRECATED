@@ -110,14 +110,6 @@ public interface RunDao<T extends Run> extends SimpleDao<T> {
    */
   List<Run> getRunsByActivity();
 
-  /**
-   * Retrieves run by id, and fetches all fields if specified.
-   * @param runId
-   * @param doEagerFetch true iff fetch all fields eagerly
-   * @return
-   */
-  Run getById(Long runId, boolean doEagerFetch);
-
   List<Workgroup> getWorkgroupsForRun(Long runId);
   List<Workgroup> getWorkgroupsForRunAndPeriod(Long runId, Long periodId);
 

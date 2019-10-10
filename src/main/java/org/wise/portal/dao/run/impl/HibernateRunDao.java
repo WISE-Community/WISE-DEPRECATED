@@ -39,7 +39,6 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.run.RunDao;
@@ -227,28 +226,6 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     TypedQuery<RunImpl> query = entityManager.createQuery(cq);
     List<RunImpl> runResultList = query.getResultList();
     return (List<Run>)(Object)runResultList;
-  }
-
-  @Override
-  @Transactional(readOnly=true)
-  public Run getById(Long runId, boolean doEagerFetch) {
-    CriteriaBuilder cb = getCriteriaBuilder();
-    CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class);
-    Root<RunImpl> runRoot = cq.from(RunImpl.class);
-    if (doEagerFetch) {
-      cq.select(runRoot).where(cb.equal(runRoot.get("id"), runId));
-      runRoot.fetch("project");
-      runRoot.fetch("periods");
-      runRoot.fetch("owner");
-      runRoot.fetch("sharedowners");
-      runRoot.fetch("announcements");
-      TypedQuery<RunImpl> query = entityManager.createQuery(cq);
-      return query.getSingleResult();
-    } else {
-      cq.select(runRoot).where(cb.equal(runRoot.get("id"), runId));
-      TypedQuery<RunImpl> query = entityManager.createQuery(cq);
-      return query.getSingleResult();
-    }
   }
 
   @Override

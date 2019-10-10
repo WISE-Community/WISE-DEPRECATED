@@ -23,10 +23,20 @@
  */
 package org.wise.portal.service.run.impl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.stereotype.Service;
@@ -60,17 +70,6 @@ import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.DuplicateRunCodeException;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Services for WISE Run
@@ -508,10 +507,6 @@ public class RunServiceImpl implements RunService {
 
   public Run retrieveById(Long runId) throws ObjectNotFoundException {
     return runDao.getById(runId);
-  }
-
-  public Run retrieveById(Long runId, boolean doEagerFetch) {
-    return runDao.getById(runId, doEagerFetch);
   }
 
   @Transactional()
