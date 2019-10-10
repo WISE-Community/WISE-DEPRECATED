@@ -801,7 +801,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">108</context>
         </context-group>
-        <target state="needs-translation">WISE cellular respiration model</target>
+        <target state="translated">WISE細胞呼吸模型</target>
       </trans-unit>
       <trans-unit id="68f9c6b469faf7dc111d7f51a9a77ff188844867" datatype="html">
         <source>WISE design report</source>
@@ -809,7 +809,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">109</context>
         </context-group>
-        <target state="needs-translation">WISE design report</target>
+        <target state="translated">WISE設計報告</target>
       </trans-unit>
       <trans-unit id="6a00767c4e60cdb9e156cced2058eaccb255c100" datatype="html">
         <source>WISE thermodynamics insulator model</source>
@@ -817,7 +817,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">110</context>
         </context-group>
-        <target state="needs-translation">WISE thermodynamics insulator model</target>
+        <target state="translated">WISE熱力學絕緣子模型</target>
       </trans-unit>
       <trans-unit id="4382ac8d5db5536ce6c46dfe9e65a4d2b47fb2b4" datatype="html">
         <source>Powerful Learning Technologies</source>
@@ -825,7 +825,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">114</context>
         </context-group>
-        <target state="needs-translation">Powerful Learning Technologies</target>
+        <target state="translated">強大的學習技術</target>
       </trans-unit>
       <trans-unit id="5153efa236be513c65eb59c5f8daccf57898030a" datatype="html">
         <source>WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</source>
@@ -849,7 +849,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="needs-translation">Comprehensive Instructional Supports</target>
+        <target state="translated">全方位的教學支援</target>
       </trans-unit>
       <trans-unit id="62933fa524d08c2b75f7b687ff566b5ee1118ec1" datatype="html">
         <source>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</source>
@@ -889,7 +889,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">138</context>
         </context-group>
-        <target state="needs-translation">Featured Teacher Tools:</target>
+        <target state="translated">特色教師工具：</target>
       </trans-unit>
       <trans-unit id="6acdfffcc102679870fecbf9a48a200663b14017" datatype="html">
         <source>Real-time progress monitor</source>
@@ -921,7 +921,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">154</context>
         </context-group>
-        <target state="needs-translation">Pause student screens</target>
+        <target state="translated">暫停學生螢幕</target>
       </trans-unit>
       <trans-unit id="b062a147b8e789096be63da3fb5db00eb7e15304" datatype="html">
         <source>Share and collaborate with colleagues</source>
@@ -929,7 +929,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">158</context>
         </context-group>
-        <target state="needs-translation">Share and collaborate with colleagues</target>
+        <target state="translated">與同事分享和協作</target>
       </trans-unit>
       <trans-unit id="5c6c920ee56f5a35c5768fe01c5f9abfcd4ea002" datatype="html">
         <source>Authoring environment that supports customization and creation of new units</source>
@@ -953,7 +953,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">175</context>
         </context-group>
-        <target state="needs-translation">Explore what WISE has to offer!</target>
+        <target state="translated">探索WISE提供的功能！</target>
       </trans-unit>
       <trans-unit id="681e76367080f43321e94e6462dd735296dc5c2f" datatype="html">
         <source>Join for free</source>
