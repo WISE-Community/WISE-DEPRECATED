@@ -295,7 +295,7 @@ class MultipleChoiceController extends ComponentController {
     }
     this.studentDataChanged();
 
-    if (choiceId != null) {
+    if (this.mode === 'student') {
       // log this event
       var category = 'StudentInteraction';
       var event = 'choiceSelected';
@@ -344,12 +344,14 @@ class MultipleChoiceController extends ComponentController {
       this.studentDataChanged();
 
       // log this event
-      var category = 'StudentInteraction';
-      var event = 'choiceSelected';
-      var data = {};
-      data.selectedChoiceId = choiceId;
-      data.choicesAfter = studentChoices;
-      this.StudentDataService.saveComponentEvent(this, category, event, data);
+      if (this.mode === 'student') {
+        var category = 'StudentInteraction';
+        var event = 'choiceSelected';
+        var data = {};
+        data.selectedChoiceId = choiceId;
+        data.choicesAfter = studentChoices;
+        this.StudentDataService.saveComponentEvent(this, category, event, data);
+      }
     }
   };
 

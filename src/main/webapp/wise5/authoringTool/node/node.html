@@ -894,7 +894,7 @@
   <h4 style='display:inline'>{{nodeAuthoringController.importProject.metadata.title}}</h4>
   <md-button class='topButton md-raised md-primary'
       ng-if='nodeAuthoringController.importProject != null'
-      ng-click='nodeAuthoringController.previewImportProject()'>
+      ng-click='projectController.previewImportProject()'>
     <md-icon>visibility</md-icon>
     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewProject' | translate }}</md-tooltip>
   </md-button>
@@ -907,7 +907,7 @@
     </h6>
     <md-button class='topButton md-raised md-primary'
         ng-if='importItem.node.type != "group"'
-        ng-click='nodeAuthoringController.previewImportNode(importItem.node)'
+        ng-click='projectController.previewImportNode(importItem.node)'
         aria-label='{{ ::"previewStep" | translate }}'>
       <md-icon>visibility</md-icon>
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewStep' | translate }}</md-tooltip>
@@ -924,7 +924,7 @@
           <md-button class='regularButton md-raised md-primary'
               style='margin-top: -5px;'
               ng-if='importItem.node.type != "group"'
-              ng-click='nodeAuthoringController.previewImportComponent(importItem.node, component.id)'
+              ng-click='projectController.previewImportComponent(importItem.node, component.id)'
               aria-label='{{ ::"previewComponent" | translate }}'>
             <md-icon>visibility</md-icon>
             <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewComponent' | translate }}</md-tooltip>

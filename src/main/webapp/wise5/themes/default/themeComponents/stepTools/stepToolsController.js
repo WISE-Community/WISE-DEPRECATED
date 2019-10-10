@@ -39,8 +39,9 @@ class StepToolsCtrl {
     }*/
 
     toNodeIdChanged() {
-        // selected node id has changed, so open new node
+      if (!this.ProjectService.isGroupNode(this.toNodeId)) {
         this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.toNodeId);
+      }
     }
 
     updateModel() {

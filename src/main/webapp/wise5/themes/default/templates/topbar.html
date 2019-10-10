@@ -10,8 +10,11 @@
             <span>{{::vleController.projectName}}</span>
         </h3>
         <span flex></span>
-        <md-button id="toggleConstraints" class="md-raised md-primary" ng-if="::vleController.isPreview() && vleController.hasConstraints()" ng-click="vleController.disableConstraints()" title="{{ 'onlyAvailableInPreviewMode' | translate }}">{{ 'turnOffConstraints' | translate }}</md-button>
-        <span ng-if="::vleController.isPreview() && vleController.constraintsDisabled">Constraints Are Off</span>
+        <span ng-if="::vleController.isPreview()">
+            <md-button id="toggleConstraints" class="md-raised md-primary" ng-if="vleController.hasConstraints()" ng-click="vleController.disableConstraints()" title="{{ ::'onlyAvailableInPreviewMode' | translate }}">
+                {{ ::'turnOffConstraints' | translate }}</md-button>
+            <span ng-if="vleController.constraintsDisabled">Constraints Are Off</span>
+        </span>
         <md-menu md-position-mode="target-right target" md-offset="40 26">
             <md-button id="viewNotificationsButton" aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdOpenMenu(); $event.stopPropagation();">
                 <span ng-if="vleController.hasNewNotifications()" class="notification-count">{{vleController.newNotifications.length}}</span>

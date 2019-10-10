@@ -1083,25 +1083,29 @@ class ProjectController {
   }
 
   /**
+   * Preview the step in a new tab
+   * @param node
+   */
+  previewImportNode(node) {
+    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}/${node.id}`);
+  }
+
+  /**
    * Preview the import project in a new tab
    */
   previewImportProject() {
     if (this.importProject != null) {
-      window.open(this.importProject.previewProjectURL);
+      window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}`);
     }
   }
 
   /**
-   * Preview the import step in a new tab
-   * @param node
+   * Preview the component in a new tab
+   * @param node the node
+   * @param componentId the component id
    */
-  previewImportNode(node) {
-    if (node != null) {
-      const nodeId = node.id;
-      const previewProjectURL = this.importProject.previewProjectURL;
-      const previewStepURL  = previewProjectURL + '#/vle/' + nodeId;
-      window.open(previewStepURL);
-    }
+  previewImportComponent(node, componentId) {
+    this.previewImportNode(node);
   }
 
   /**

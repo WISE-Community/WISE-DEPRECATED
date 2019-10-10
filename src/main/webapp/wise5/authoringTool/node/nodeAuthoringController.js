@@ -3249,34 +3249,6 @@ class NodeAuthoringController {
   }
 
   /**
-   * Preview the import project in a new tab
-   */
-  previewImportProject() {
-    if (this.importProject != null) {
-      window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}`);
-    }
-  }
-
-  /**
-   * Preview the step in a new tab
-   * @param node
-   */
-  previewImportNode(node) {
-    if (node != null) {
-      window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}/${node.id}`);
-    }
-  }
-
-  /**
-   * Preview the component in a new tab
-   * @param node the node
-   * @param componentId the component id
-   */
-  previewImportComponent(node, componentId) {
-    this.previewImportNode(node);
-  }
-
-  /**
    * We are in the create a new component mode and the user has clicked
    * on a component type
    * @param componentType the component type the author clicked
