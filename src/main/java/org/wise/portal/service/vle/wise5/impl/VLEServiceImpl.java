@@ -24,7 +24,6 @@
 package org.wise.portal.service.vle.wise5.impl;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -138,26 +137,32 @@ public class VLEServiceImpl implements VLEService {
       isAutoSave, isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
   }
 
-  public JSONArray getNotebookExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> notebookItemExport = notebookItemDao.getNotebookItemExport(runId);
-    for (int i = 1; i < notebookItemExport.size(); i++) {  // skip header row
-      Object[] notebookItemExportRow = notebookItemExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp notebookItemExportRowClientSaveTimeTimestamp = (Timestamp) notebookItemExportRow[7];
-      notebookItemExportRow[7] = df.format(notebookItemExportRowClientSaveTimeTimestamp);
-      Timestamp notebookItemExportRowServerSaveTimeTimestamp = (Timestamp) notebookItemExportRow[8];
-      notebookItemExportRow[8] = df.format(notebookItemExportRowServerSaveTimeTimestamp);
-
-      String notebookItemExportRowStudentDataString = (String) notebookItemExportRow[10];
-      try {
-        notebookItemExportRow[10] = new JSONObject(notebookItemExportRowStudentDataString);
-      } catch (JSONException e) {
-        e.printStackTrace();
+  public JSONArray getNotebookItemsExport(Integer runId) {
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      List<NotebookItem> notebookItems = notebookItemDao.getNotebookItemsExport(run);
+      JSONArray notebookItemsJSONArray = new JSONArray();
+      for (int n = 0; n < notebookItems.size(); n++) {
+        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
       }
+      return notebookItemsJSONArray;
+    } catch(Exception e) {
+      return new JSONArray();
     }
-    return new JSONArray(notebookItemExport);
+  }
+
+  public JSONArray getLatestNotebookItemsExport(Integer runId) {
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      List<NotebookItem> notebookItems = notebookItemDao.getLatestNotebookItemsExport(run);
+      JSONArray notebookItemsJSONArray = new JSONArray();
+      for (int n = 0; n < notebookItems.size(); n++) {
+        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
+      }
+      return notebookItemsJSONArray;
+    } catch(Exception e) {
+      return new JSONArray();
+    }
   }
 
   public JSONArray getNotificationsExport(Integer runId) {

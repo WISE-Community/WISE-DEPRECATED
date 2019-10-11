@@ -825,7 +825,9 @@ class DataExportController {
                         // get the cell value
                         var cell = row[c];
 
-                        if (typeof cell === "object") {
+                        if (cell == null || cell === '' || typeof cell === 'undefined') {
+                            cell = ' ';
+                        } else if (typeof cell === "object") {
                             /*
                              * the cell value is an object so we will obtain the
                              * string representation of the object and wrap it
@@ -1293,115 +1295,118 @@ class DataExportController {
     exportNotebookItems(exportType) {
         this.showDownloadingExportMessage();
         this.TeacherDataService.getExport(exportType).then((result) => {
-            let runId = this.ConfigService.getRunId();
-            let exportFilename = "";
-
-            let csvString = "";  // resulting csv string
-
-            exportFilename = runId + "_notebook.csv";
-
-            let COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID = 1;
-            let COLUMN_INDEX_NODE_ID = 2;
-            let COLUMN_INDEX_COMPONENT_ID = 3;
-            let COLUMN_INDEX_STEP_NUMBER = 4;
-            let COLUMN_INDEX_STEP_TITLE = 5;
-            let COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
-            let COLUMN_INDEX_TYPE = 9;
-            let COLUMN_INDEX_STUDENT_DATA = 10;
-            let COLUMN_INDEX_WORKGROUP_ID = 13;
-            let COLUMN_INDEX_WISE_IDS = 17;
-            let COLUMN_INDEX_WISE_ID_1 = 17;
-            let COLUMN_INDEX_WISE_ID_2 = 18;
-            let COLUMN_INDEX_WISE_ID_3 = 19;
-            let COLUMN_INDEX_STUDENT_RESPONSE = 20;
-
-            if (exportType === "latestNotebookItems") {
-                let hash = {};  // store latestStudentWork. Assume that key = (localNotebookItemId)
-                result = result.reverse().filter( (studentWorkRow) => {
-                    let hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
-                    if (!hash.hasOwnProperty(hashKey)) {
-                        // remember in hash
-                        hash[hashKey] = studentWorkRow;
-                        return true;
-                    } else {
-                        // we already have the latest, so we can disregard this studentWorkRow.
-                        return false;
-                    }
-                }).reverse();
-                exportFilename = runId + "_latest_notebook_items.csv";
-            } else if (exportType === "allNotebookItems") {
-                exportFilename = runId + "_all_notebook_items.csv";
+            const notebookItems = result;
+            const columnNames = [
+                'ID',
+                'Teacher Username',
+                'Run ID',
+                'Period ID',
+                'Period Name',
+                'Project ID',
+                'Node ID',
+                'Component ID',
+                'Step Number',
+                'Step Title',
+                'Component Part Number',
+                'Component Type',
+                'Client Save Time',
+                'Server Save Time',
+                'Workgroup ID',
+                'WISE ID 1',
+                'WISE ID 2',
+                'WISE ID 3',
+                'Content',
+                'Note Item ID',
+                'Type',
+                'Response'
+            ];
+            const columnNameToNumber = {};
+            const headerRow = [];
+            for (let c = 0; c < columnNames.length; c++) {
+                const columnName = columnNames[c];
+                columnNameToNumber[columnName] = c;
+                headerRow.push(columnName);
             }
-
-            for (let rowIndex = 0; rowIndex < result.length; rowIndex++) {
-                let row = result[rowIndex];
-
-                if (rowIndex === 0) {
-                    // append additional header columns
-                    row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
-                    row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
-                    row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
-                    row[COLUMN_INDEX_STUDENT_RESPONSE] = "response";
-                } else {
-                    // for all non-header rows, fill in step numbers, titles, and component part numbers.
-                    let nodeId = row[COLUMN_INDEX_NODE_ID];
-                    let componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                    row[COLUMN_INDEX_STEP_NUMBER] = this.ProjectService.getNodePositionById(nodeId);
-                    row[COLUMN_INDEX_STEP_TITLE] = this.ProjectService.getNodeTitleByNodeId(nodeId);
-                    row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
-                    let wiseIDs = row[COLUMN_INDEX_WISE_IDS];
-                    let wiseIDsArray = wiseIDs.split(",");
-                    row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
-                    row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
-                    row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
-
-                    // get the student data JSON and extract responses into its own column
-                    let studentDataJSONCell = row[COLUMN_INDEX_STUDENT_DATA];
-                    if (row[COLUMN_INDEX_TYPE] === "report") {
-                        if (studentDataJSONCell.content != null) {
-                            //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.content);
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = this.UtilService.removeHTMLTags(studentDataJSONCell.content);
-
-                        } else {
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
-                        }
-                    } else if (row[COLUMN_INDEX_TYPE] === "note") {
-                        if (studentDataJSONCell.text != null) {
-                            //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.text);
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = this.UtilService.removeHTMLTags(studentDataJSONCell.text);
-                        } else {
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
-                        }
-                    }
-                }
-
-                // append row to csvString
-                for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
-                    let cell = row[cellIndex];
-                    if (typeof cell === "object") {
-                        cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
-                    } else if (typeof cell === "string") {
-                        cell = "\"" + cell + "\"";
-                    }
-                    csvString += cell + ",";
-                }
-                csvString += "\r\n";
+            const rows = [];
+            rows.push(headerRow);
+            for (const notebookItem of notebookItems) {
+                rows.push(this.createExportNotebookItemRow(columnNames, columnNameToNumber,
+                        notebookItem));
             }
-
-            let csvBlob = new Blob([csvString], {type: 'text/csv'});
-            let csvUrl = URL.createObjectURL(csvBlob);
-            let a = document.createElement("a");
-            document.body.appendChild(a);
-            a.href = csvUrl;
-            a.download = exportFilename;
-            a.click();
-
-            // timeout is required for FF.
-            window.setTimeout(() => {
-                URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
-                this.hideDownloadingExportMessage();
-            }, 3000);
+            const runId = this.ConfigService.getRunId();
+            let fileName = '';
+            if (exportType === 'latestNotebookItems') {
+                fileName = `${runId}_latest_notebook_items.csv`;
+            } else if (exportType === 'allNotebookItems') {
+                fileName = `${runId}_all_notebook_items.csv`;
+            }
+            this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
+    }
+
+    createExportNotebookItemRow(columnNames, columnNameToNumber, notebookItem) {
+        const row = new Array(columnNames.length);
+        row.fill(' ');
+        row[columnNameToNumber['ID']] = notebookItem.id;
+        row[columnNameToNumber['Note Item ID']] = notebookItem.localNotebookItemId;
+        row[columnNameToNumber['Node ID']] = notebookItem.nodeId;
+        row[columnNameToNumber['Component ID']] = notebookItem.componentId;
+        const component = this.ProjectService.getComponentByNodeIdAndComponentId(
+                notebookItem.nodeId, notebookItem.componentId);
+        if (component != null) {
+            row[columnNameToNumber['Component Type']] = component.type;
+        }
+        row[columnNameToNumber['Step Number']] =
+                this.getNodePositionById(notebookItem.nodeId);
+        row[columnNameToNumber['Step Title']] =
+                this.getNodeTitleByNodeId(notebookItem.nodeId);
+        const position = this.ProjectService.getComponentPositionByNodeIdAndComponentId(
+                notebookItem.nodeId, notebookItem.componentId);
+        if (position != -1) {
+            row[columnNameToNumber['Component Part Number']] = position + 1;
+        }
+        row[columnNameToNumber['Client Save Time']] =
+                this.UtilService.convertMillisecondsToFormattedDateTime(
+                notebookItem.clientSaveTime);
+        row[columnNameToNumber['Server Save Time']] =
+                this.UtilService.convertMillisecondsToFormattedDateTime(
+                notebookItem.serverSaveTime);
+        row[columnNameToNumber['Type']] = notebookItem.type;
+        row[columnNameToNumber['Content']] = JSON.parse(notebookItem.content);
+        row[columnNameToNumber['Run ID']] = notebookItem.runId;
+        row[columnNameToNumber['Workgroup ID']] = notebookItem.workgroupId;
+        const userInfo =
+                this.ConfigService.getUserInfoByWorkgroupId(notebookItem.workgroupId);
+        if (notebookItem.localNotebookItemId !== 'teacherReport') {
+            row[columnNameToNumber['Period ID']] = notebookItem.periodId;
+            row[columnNameToNumber['Period Name']] = userInfo.periodName;
+        }
+        row[columnNameToNumber['Teacher Username']] =
+                this.ConfigService.getTeacherUserInfo().username;
+        row[columnNameToNumber['Project ID']] = this.ConfigService.getProjectId();
+        if (notebookItem.localNotebookItemId !== 'teacherReport') {
+            const student1 = userInfo.users[0];
+            const student2 = userInfo.users[1];
+            const student3 = userInfo.users[2];
+            if (student1 != null) {
+                row[columnNameToNumber['WISE ID 1']] = student1.id;
+            }
+            if (student2 != null) {
+                row[columnNameToNumber['WISE ID 2']] = student2.id;
+            }
+            if (student3 != null) {
+                row[columnNameToNumber['WISE ID 3']] = student3.id;
+            }
+        }
+        const responseJSON = JSON.parse(notebookItem.content);
+        if (notebookItem.type === 'report') {
+            row[columnNameToNumber['Response']] =
+                    this.UtilService.removeHTMLTags(responseJSON.content);
+        } else {
+            row[columnNameToNumber['Response']] = responseJSON.text;
+        }
+        return row;
     }
 
     exportNotifications() {
@@ -1410,29 +1415,29 @@ class DataExportController {
             const notifications = result;
             const columnNames = [
                 'ID',
+                'Teacher Username',
+                'Run ID',
+                'Period ID',
+                'Period Name',
+                'Project ID',
                 'Node ID',
                 'Component ID',
-                'Component Type',
                 'Step Number',
                 'Step Title',
                 'Component Part Number',
+                'Component Type',
                 'Server Save Time',
                 'Time Generated',
                 'Time Dismissed',
-                'Type',
-                'Group ID',
-                'Message',
-                'Data',
-                'Period ID',
-                'Run ID',
                 'From Workgroup ID',
                 'To Workgroup ID',
-                'Period Name',
-                'Teacher Username',
-                'Project ID',
                 'WISE ID 1',
                 'WISE ID 2',
-                'WISE ID 3'
+                'WISE ID 3',
+                'Data',
+                'Group ID',
+                'Type',
+                'Message'
             ];
             const columnNameToNumber = {};
             const headerRow = [];
@@ -1496,7 +1501,7 @@ class DataExportController {
         row[columnNameToNumber['Period Name']] = userInfo.periodName;
         row[columnNameToNumber['Teacher Username']] =
                 this.ConfigService.getTeacherUserInfo().username;
-        row[columnNameToNumber['Project ID']] = notification.id;
+        row[columnNameToNumber['Project ID']] = this.ConfigService.getProjectId();
         const student1 = userInfo.users[0];
         const student2 = userInfo.users[1];
         const student3 = userInfo.users[2];
