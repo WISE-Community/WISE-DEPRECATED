@@ -86,7 +86,7 @@ public class TeacherDataController {
           writer.write(resultArray.toString());
           writer.close();
         } else if ("notifications".equals(exportType)) {
-          JSONArray resultArray = vleService.getNotificationExport(runId);
+          JSONArray resultArray = vleService.getNotificationsExport(runId);
           PrintWriter writer = response.getWriter();
           writer.write(resultArray.toString());
           writer.close();

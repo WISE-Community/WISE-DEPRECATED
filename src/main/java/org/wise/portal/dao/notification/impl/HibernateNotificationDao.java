@@ -34,7 +34,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -70,35 +69,6 @@ public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
     return Notification.class;
   }
 
-  public List<Object[]> getNotificationExport(Integer runId) {
-    String queryString =
-      "SELECT n.id, n.nodeId, n.componentId, n.componentType, 'step number', 'step title', 'component part number', " +
-        "n.serverSaveTime, n.timeGenerated, n.timeDismissed, n.type, n.groupId, n.message, n.data, n.periodId, n.runId, n.fromWorkgroupId, n.toWorkgroupId, " +
-        "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') as \"WISE IDs\" "+
-        "FROM notification n, "+
-        "workgroups w, "+
-        "groups_related_to_users gu, "+
-        "groups g, "+
-        "runs r, "+
-        "users u, "+
-        "user_details ud "+
-        "where n.runId = :runId and n.toWorkgroupId = w.id and w.group_fk = gu.group_fk and g.id = n.periodId and "+
-        "n.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id "+
-        "group by n.id, n.nodeId, n.componentId, n.componentType, n.serverSaveTime, n.timeGenerated, n.timeDismissed, n.type, n.groupId, n.message, n.data, n.periodId, n.runId, n.fromWorkgroupId, n.toWorkgroupId, "+
-        "g.name, ud.username, r.project_fk order by n.toWorkgroupId";
-
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    SQLQuery query = session.createSQLQuery(queryString);
-    query.setParameter("runId", runId);
-    List resultList = new ArrayList<Object[]>();
-    Object[] headerRow = new String[]{"id","node id","component id","component type","step number","step title","component part number",
-      "serverSaveTime","timeGenerated","timeDismissed","type","group id","message","data","period id","run id","from workgroup id","to workgroup id",
-      "period name", "teacher username", "project id", "WISE ids"};
-    resultList.add(headerRow);
-    resultList.addAll(query.list());
-    return resultList;
-  }
-
   @Override
   @SuppressWarnings("unchecked")
   public List<Notification> getNotificationListByParams(Integer id, Run run, Group period,
@@ -129,6 +99,20 @@ public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
       predicates.add(cb.equal(notificationRoot.get("componentId"), componentId));
     }
     cq.select(notificationRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<Notification> query = entityManager.createQuery(cq);
+    return (List<Notification>)(Object)query.getResultList();
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<Notification> getExport(Run run) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<Notification> cq = cb.createQuery(Notification.class);
+    Root<Notification> notificationRoot = cq.from(Notification.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(notificationRoot.get("run"), run));
+    cq.select(notificationRoot).where(predicates.toArray(new Predicate[predicates.size()]))
+        .orderBy(cb.asc(notificationRoot.get("toWorkgroup")), cb.asc(notificationRoot.get("id")));
     TypedQuery<Notification> query = entityManager.createQuery(cq);
     return (List<Notification>)(Object)query.getResultList();
   }

@@ -1406,74 +1406,110 @@ class DataExportController {
 
     exportNotifications() {
         this.showDownloadingExportMessage();
-        this.TeacherDataService.getExport("notifications").then((result) => {
-            let runId = this.ConfigService.getRunId();
-            let exportFilename = "";
-
-            let csvString = "";  // resulting csv string
-
-            exportFilename = runId + "_notifications.csv";
-
-            let COLUMN_INDEX_NODE_ID = 1;
-            let COLUMN_INDEX_COMPONENT_ID = 2;
-            let COLUMN_INDEX_STEP_NUMBER = 4;
-            let COLUMN_INDEX_STEP_TITLE = 5;
-            let COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
-            let COLUMN_INDEX_TYPE = 10;
-            let COLUMN_INDEX_WISE_IDS = 21;
-            let COLUMN_INDEX_WISE_ID_1 = 21;
-            let COLUMN_INDEX_WISE_ID_2 = 22;
-            let COLUMN_INDEX_WISE_ID_3 = 23;
-
-            for (let rowIndex = 0; rowIndex < result.length; rowIndex++) {
-                let row = result[rowIndex];
-
-                if (rowIndex === 0) {
-                    // append additional header columns
-                    row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
-                    row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
-                    row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
-                } else {
-                    // for all non-header rows, fill in step numbers, titles, and component part numbers.
-                    let nodeId = row[COLUMN_INDEX_NODE_ID];
-                    let componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                    row[COLUMN_INDEX_STEP_NUMBER] = this.ProjectService.getNodePositionById(nodeId);
-                    row[COLUMN_INDEX_STEP_TITLE] = this.ProjectService.getNodeTitleByNodeId(nodeId);
-                    row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
-                    let wiseIDs = row[COLUMN_INDEX_WISE_IDS];
-                    let wiseIDsArray = wiseIDs.split(",");
-                    row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
-                    row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
-                    row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
-                }
-
-                // append row to csvString
-                for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
-                    let cell = row[cellIndex];
-                    if (typeof cell === "object") {
-                        cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
-                    } else if (typeof cell === "string") {
-                        cell = "\"" + cell + "\"";
-                    }
-                    csvString += cell + ",";
-                }
-                csvString += "\r\n";
+        this.TeacherDataService.getExport('notifications').then((result) => {
+            const notifications = result;
+            const columnNames = [
+                'ID',
+                'Node ID',
+                'Component ID',
+                'Component Type',
+                'Step Number',
+                'Step Title',
+                'Component Part Number',
+                'Server Save Time',
+                'Time Generated',
+                'Time Dismissed',
+                'Type',
+                'Group ID',
+                'Message',
+                'Data',
+                'Period ID',
+                'Run ID',
+                'From Workgroup ID',
+                'To Workgroup ID',
+                'Period Name',
+                'Teacher Username',
+                'Project ID',
+                'WISE ID 1',
+                'WISE ID 2',
+                'WISE ID 3'
+            ];
+            const columnNameToNumber = {};
+            const headerRow = [];
+            for (let c = 0; c < columnNames.length; c++) {
+                const columnName = columnNames[c];
+                columnNameToNumber[columnName] = c;
+                headerRow.push(columnName);
             }
-
-            let csvBlob = new Blob([csvString], {type: 'text/csv'});
-            let csvUrl = URL.createObjectURL(csvBlob);
-            let a = document.createElement("a");
-            document.body.appendChild(a);
-            a.href = csvUrl;
-            a.download = exportFilename;
-            a.click();
-
-            // timeout is required for FF.
-            window.setTimeout(() => {
-                URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
-                this.hideDownloadingExportMessage();
-            }, 3000);
+            const rows = [];
+            rows.push(headerRow);
+            for (const notification of notifications) {
+                rows.push(this.createExportNotificationRow(columnNames, columnNameToNumber,
+                        notification));
+            }
+            const runId = this.ConfigService.getRunId();
+            const fileName = `${runId}_notifications.csv`;
+            this.generateCSVFile(rows, fileName);
+            this.hideDownloadingExportMessage();
         });
+    }
+
+    createExportNotificationRow(columnNames, columnNameToNumber, notification) {
+        const row = new Array(columnNames.length);
+        row.fill(' ');
+        row[columnNameToNumber['ID']] = notification.id;
+        row[columnNameToNumber['Node ID']] = notification.nodeId;
+        row[columnNameToNumber['Component ID']] = notification.componentId;
+        const component = this.ProjectService.getComponentByNodeIdAndComponentId(
+                notification.nodeId, notification.componentId);
+        row[columnNameToNumber['Component Type']] = component.type;
+        row[columnNameToNumber['Step Number']] =
+                this.getNodePositionById(notification.nodeId);
+        row[columnNameToNumber['Step Title']] =
+                this.getNodeTitleByNodeId(notification.nodeId);
+        row[columnNameToNumber['Component Part Number']] =
+                this.ProjectService.getComponentPositionByNodeIdAndComponentId(
+                notification.nodeId, notification.componentId) + 1;
+        row[columnNameToNumber['Server Save Time']] =
+                this.UtilService.convertMillisecondsToFormattedDateTime(
+                notification.serverSaveTime);
+        row[columnNameToNumber['Time Generated']] =
+                this.UtilService.convertMillisecondsToFormattedDateTime(
+                notification.timeGenerated);
+        if (notification.timeDismissed != null) {
+            row[columnNameToNumber['Time Dismissed']] =
+                    this.UtilService.convertMillisecondsToFormattedDateTime(
+                    notification.timeDismissed);
+        }
+        row[columnNameToNumber['Type']] = notification.type;
+        if (notification.groupId != null) {
+            row[columnNameToNumber['Group ID']] = notification.groupId;
+        }
+        row[columnNameToNumber['Message']] = notification.message;
+        row[columnNameToNumber['Data']] = notification.data;
+        row[columnNameToNumber['Period ID']] = notification.periodId;
+        row[columnNameToNumber['Run ID']] = notification.runId;
+        row[columnNameToNumber['From Workgroup ID']] = notification.fromWorkgroupId;
+        row[columnNameToNumber['To Workgroup ID']] = notification.toWorkgroupId;
+        const userInfo =
+                this.ConfigService.getUserInfoByWorkgroupId(notification.toWorkgroupId);
+        row[columnNameToNumber['Period Name']] = userInfo.periodName;
+        row[columnNameToNumber['Teacher Username']] =
+                this.ConfigService.getTeacherUserInfo().username;
+        row[columnNameToNumber['Project ID']] = notification.id;
+        const student1 = userInfo.users[0];
+        const student2 = userInfo.users[1];
+        const student3 = userInfo.users[2];
+        if (student1 != null) {
+            row[columnNameToNumber['WISE ID 1']] = student1.id;
+        }
+        if (student2 != null) {
+            row[columnNameToNumber['WISE ID 2']] = student2.id;
+        }
+        if (student3 != null) {
+            row[columnNameToNumber['WISE ID 3']] = student3.id;
+        }
+        return row;
     }
 
     exportStudentAssets() {

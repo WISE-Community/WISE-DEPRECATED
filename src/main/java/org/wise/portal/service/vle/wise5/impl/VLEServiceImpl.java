@@ -160,32 +160,18 @@ public class VLEServiceImpl implements VLEService {
     return new JSONArray(notebookItemExport);
   }
 
-  public JSONArray getNotificationExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> notificationExport = notificationDao.getNotificationExport(runId);
-    for (int i = 1; i < notificationExport.size(); i++) {  // skip header row
-      Object[] notificationExportRow = notificationExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp notificationExportRowServerSaveTimeTimestamp = (Timestamp) notificationExportRow[7];
-      notificationExportRow[7] = df.format(notificationExportRowServerSaveTimeTimestamp);
-      Timestamp notificationExportRowTimeGeneratedTimestamp = (Timestamp) notificationExportRow[8];
-      notificationExportRow[8] = df.format(notificationExportRowTimeGeneratedTimestamp);
-      Timestamp notificationExportRowTimeDismissedTimeTimestamp = (Timestamp) notificationExportRow[9];
-      if (notificationExportRowTimeDismissedTimeTimestamp != null) {
-        notificationExportRow[9] = df.format(notificationExportRowTimeDismissedTimeTimestamp);
+  public JSONArray getNotificationsExport(Integer runId) {
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      List<Notification> notificationsList = notificationDao.getExport(run);
+      JSONArray notificationsJSONArray = new JSONArray();
+      for (int n = 0; n < notificationsList.size(); n++) {
+        notificationsJSONArray.put(notificationsList.get(n).toJSON());
       }
-
-      String notificationExportRowStudentDataString = (String) notificationExportRow[13];
-      try {
-        if (notificationExportRowStudentDataString != null) {
-          notificationExportRow[13] = new JSONObject(notificationExportRowStudentDataString);
-        }
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+      return notificationsJSONArray;
+    } catch (Exception e) {
+      return new JSONArray();
     }
-    return new JSONArray(notificationExport);
   }
 
   @Override

@@ -55,7 +55,7 @@ public interface VLEService {
   /**
    * @return JSONArray of notification for researcher export for the given run id.
    */
-  JSONArray getNotificationExport(Integer runId);
+  JSONArray getNotificationsExport(Integer runId);
 
   /**
    * Saves StudentWork in the data store
