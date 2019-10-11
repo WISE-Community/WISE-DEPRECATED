@@ -833,7 +833,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">115</context>
         </context-group>
-        <target state="needs-translation">WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</target>
+        <target state="translated">WISE提供了簡單的用戶界面，認知提示，嵌入式評估和線上討論，以及用於繪圖，註釋，概念圖，圖表和圖形的工具。</target>
       </trans-unit>
       <trans-unit id="e8c9262fe52f9282929800e851aee426dfd6ae48" datatype="html">
         <source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</source>
@@ -969,7 +969,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">WISE is the product of more than 25 years of research on teaching and learning with educational technologies</target>
+        <target state="translated">WISE是經過25年以上教育技術與教學研究的產物</target>
       </trans-unit>
       <trans-unit id="70ff1cc8f851490c4cb6237ec6991ef6a644d4e4" datatype="html">
         <source>WISE student and teacher</source>
