@@ -857,7 +857,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">128</context>
         </context-group>
-        <target state="needs-translation">WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</target>
+        <target state="translated">WISE提供了多元的完整工具套件，可幫助教師規劃、監控進度、獲取見解、提供回饋並更有效地評分。透過與在職教師的合作不斷完善這些工具，使他們了解管理現代化教室的真正挑戰。</target>
       </trans-unit>
       <trans-unit id="4f7d6b85797f6cd6114c235b464ad7910657c631" datatype="html">
         <source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</source>
