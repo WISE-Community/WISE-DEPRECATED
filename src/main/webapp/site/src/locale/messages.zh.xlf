@@ -1073,7 +1073,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">109</context>
         </context-group>
-        <target state="needs-translation">WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</target>
+        <target state="translated">WISE單元透過與個人和社會相關的主題向學生介紹複雜的科學概念。 每個單元都使用經過課堂測試的教學模式，該模式重視學生帶來的想法，幫助他們將新的訊息與他們的個人經歷聯繫在一起，並將他們的思想融入對科學的理解中。</target>
       </trans-unit>
       <trans-unit id="ae2bc001ed6c6fb5416b490b7c6dbe2260697024" datatype="html">
         <source>Support Diverse Learners</source>
@@ -1081,7 +1081,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">114</context>
         </context-group>
-        <target state="needs-translation">Support Diverse Learners</target>
+        <target state="translated">支持各色各樣的學習者</target>
       </trans-unit>
       <trans-unit id="e582a65e12f2b176d3eef63cd4caa67d68cfb5b9" datatype="html">
         <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</source>
@@ -1097,7 +1097,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="needs-translation">Increase Participation in Science</target>
+        <target state="translated">提高科學學習的參與度</target>
       </trans-unit>
       <trans-unit id="eb68c61cc5bb54a55a39d5ad7702268ba2c656f2" datatype="html">
         <source>WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</source>
@@ -1113,7 +1113,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">134</context>
         </context-group>
-        <target state="needs-translation">Accessible to All</target>
+        <target state="translated">所有人都可以使用</target>
       </trans-unit>
       <trans-unit id="416ce0bcfd9bbe81b9ccc34d764504df4c8088d1" datatype="html">
         <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
