@@ -1017,7 +1017,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">This means that when implementing WISE units, you can be assured that what you're using is grown from a solid foundation, advised by real teachers' experiences, and tested in classrooms with real students.</target>
+        <target state="translated">這意味著在實施WISE單元時，您可以放心，您所使用的內容是紮根於堅實的基礎上的，並受到真正老師的經驗的啟發，並在真實學生的課堂上進行了測試。</target>
       </trans-unit>
       <trans-unit id="ba47fad2e84864c65ead1cd83f593ddb919c274f" datatype="html">
         <source>Our Research + Team</source>
@@ -1025,7 +1025,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">Our Research + Team</target>
+        <target state="translated">我們的研究+團隊</target>
       </trans-unit>
       <trans-unit id="2430d9c22ccaf6b5daf94c0135b02f753ca6b185" datatype="html">
         <source>Knowledge Integration</source>
@@ -1033,7 +1033,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">Knowledge Integration</target>
+        <target state="translated">知識整合</target>
       </trans-unit>
       <trans-unit id="1a90e48699c691ba54728351e4be72af77b280ce" datatype="html">
         <source>As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</source>
@@ -1041,7 +1041,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="needs-translation">As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</target>
+        <target state="translated">當學生們努力面對多種矛盾和令人困惑的想法時，研究表示，以學生的觀點作為科學研究的起點，教學是最有效的。</target>
       </trans-unit>
       <trans-unit id="e40dc97986107e694a5c5860f0fbf5bd0ddadeae" datatype="html">
         <source>The KI Processes:</source>
@@ -1049,7 +1049,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">The KI Processes:</target>
+        <target state="translated">KI流程：</target>
       </trans-unit>
       <trans-unit id="e85808e27272fa3c1d2dfaf998ce12ca205e5fbd" datatype="html">
         <source>~ WISE Goals ~</source>
@@ -1057,7 +1057,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">94</context>
         </context-group>
-        <target state="needs-translation">~ WISE Goals ~</target>
+        <target state="translated">~ WISE目標 ~</target>
       </trans-unit>
       <trans-unit id="a8c4f4b7ff2dc03b066549737367901b95c1f556" datatype="html">
         <source>Make Science Meaningful</source>
@@ -1065,7 +1065,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">108</context>
         </context-group>
-        <target state="needs-translation">Make Science Meaningful</target>
+        <target state="translated">使科學有意義</target>
       </trans-unit>
       <trans-unit id="d1d5c7485a7278e9df8a76c3481541ef3d231792" datatype="html">
         <source>WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</source>
