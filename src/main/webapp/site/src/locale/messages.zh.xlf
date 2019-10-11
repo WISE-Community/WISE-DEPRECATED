@@ -841,7 +841,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">116</context>
         </context-group>
-        <target state="needs-translation">Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</target>
+        <target state="translated">學生可以使用互動式模擬和模型進行探索。筆記本工具可以幫助學生收集想法並將證據整理成研究和設計報告。WISE單元通過協作反思活動以及自動化、個性化指導和適應性指導來促進自我監控。</target>
       </trans-unit>
       <trans-unit id="7b049ab7ccd15afcbe53f4b4dae5b4292919fbb7" datatype="html">
         <source>Comprehensive Instructional Supports</source>
@@ -913,7 +913,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">150</context>
         </context-group>
-        <target state="needs-translation">Automatically scored assessment items</target>
+        <target state="translated">自動評分的評估項目</target>
       </trans-unit>
       <trans-unit id="eff210843d034ee2569f9b96f6b643934e473a45" datatype="html">
         <source>Pause student screens</source>
@@ -937,7 +937,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">162</context>
         </context-group>
-        <target state="needs-translation">Authoring environment that supports customization and creation of new units</target>
+        <target state="translated">支援客製化和建立新單元的創作環境</target>
       </trans-unit>
       <trans-unit id="9e46c9aca377fd39515f72e323c4c1e3e13fb3cb" datatype="html">
         <source>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</source>
@@ -945,7 +945,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">166</context>
         </context-group>
-        <target state="needs-translation">In development: Automated insights into student NGSS understanding + suggested classroom interventions!</target>
+        <target state="translated">開發中：自動了解學生對NGSS的理解+建議的課堂干預措施！</target>
       </trans-unit>
       <trans-unit id="337a4aa817a8f5f73548041105128b973b9fb6d2" datatype="html">
         <source>Explore what WISE has to offer!</source>
