@@ -1303,7 +1303,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-        <target state="needs-translation">These Terms of Use and Privacy Policy constitute an agreement between you and the Web-based Inquiry Science Environment team that governs your use of wise.berkeley.edu and all associated services and websites (collectively "WISE"). The WISE team is a federally-funded research group headquartered at the University of California, Berkeley and is a non-profit organization.</target>
+        <target state="translated">這些使用條款和隱私政策構成您與網路科學探究式平台團隊之間的協議，該團隊管理您對wise.berkeley.edu以及所有相關服務和網站（統稱為“ WISE”）的使用。 WISE團隊是由聯邦資助的研究小組，總部位於加州柏克萊大學，並且是一個非營利組織。</target>
       </trans-unit>
       <trans-unit id="b35b13440a00be341535fafb52bf90eae8c7456c" datatype="html">
         <source>Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -1311,7 +1311,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">請仔細閱讀本文檔。 透過使用WISE，您確認您已閱讀，理解並接受此處概述的條款和條件。 如果您不同意以上任何條件，請不要使用WISE。 如果您對此政策有疑問，請隨時使用我們的<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>聯繫表<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>與我們聯繫。</target>
       </trans-unit>
       <trans-unit id="5403166a98d789195745d246a5135c0416d77fe2" datatype="html">
         <source>This policy was last updated on September 8, 2017.</source>
@@ -1319,7 +1319,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="needs-translation">This policy was last updated on September 8, 2017.</target>
+        <target state="translated">此政策的最新更新時間為2017年9月8日。</target>
       </trans-unit>
       <trans-unit id="2c6ce41500d1363e6ae097bccbab4712c0943d42" datatype="html">
         <source>2. Information We Collect</source>
@@ -1343,7 +1343,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation">In order to use some features of WISE, you will need to register by creating a user account. Creating an account is optional, but without an account you will not be able to create or publish curriculum projects or use WISE curricula to capture, store, review, or assess student work.</target>
+        <target state="translated">為了使用WISE的某些功能，您需要透過建立帳號來進行註冊。 建立帳號是可以選擇的，但是如果沒有帳號，您將無法建立或發布課程專題，也無法使用WISE課程來擷取、儲存、檢視或評分學生的學習情況。</target>
       </trans-unit>
       <trans-unit id="75c166e888318c9399a404e476a0637d5662cac3" datatype="html">
         <source>When creating a WISE teacher account, we ask you to provide your first and last name, email address, password, city, state, country, school name, school level, and school subjects. To create a WISE student account, we ask you to provide your first and last name, birth day and month, gender, and password, and choose a security question and answer.</source>
