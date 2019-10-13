@@ -1327,7 +1327,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">2. Information We Collect</target>
+        <target state="translated">我們收集的信息</target>
       </trans-unit>
       <trans-unit id="2b16d754538c43298a40b3efa2b957beb1d29f27" datatype="html">
         <source>Personal Information</source>
@@ -1335,7 +1335,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">Personal Information</target>
+        <target state="translated">個人資訊</target>
       </trans-unit>
       <trans-unit id="5398c70dfe79e17bc0f165376e45834878a98540" datatype="html">
         <source>In order to use some features of WISE, you will need to register by creating a user account. Creating an account is optional, but without an account you will not be able to create or publish curriculum projects or use WISE curricula to capture, store, review, or assess student work.</source>
@@ -1407,7 +1407,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">44</context>
         </context-group>
-        <target state="needs-translation">Licensing</target>
+        <target state="translated">授權</target>
       </trans-unit>
       <trans-unit id="d3cee34156cc74603c393d78d45916c7f94c8a8f" datatype="html">
         <source>All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://creativecommons.org/licenses/by-sa/4.0/<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</source>
