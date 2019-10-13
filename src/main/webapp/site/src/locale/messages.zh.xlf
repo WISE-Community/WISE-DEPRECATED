@@ -1121,10 +1121,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">135</context>
         </context-group>
-        <target state="translated">WISE是<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免費<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 及 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>開源的 id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/&gt;! WISE在國家科學基金會的慷慨支援下繼續存在，這意味著只要有在網路上連接，任何人都可以使用WISE。 在活躍的開發人員社群的推動下，WISE不斷得到擴展和改進。 將科學探究帶入教室、博物館、課後或家庭學習環境！</target>
-        <alt-trans>
-          <target>ISE是 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免費和<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 開源的<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>！ WISE在國家科學基金會的慷慨支援下繼續存在，這意味著只要有在網路上連接，任何人都可以使用WISE。 在活躍的開發人員社群的推動下，WISE不斷得到擴展和改進。 將科學探究帶入教室、博物館、課後或家庭學習環境！</target>
-        </alt-trans>
+        <target state="translated">WISE是<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免費使用<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>及<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>開放原始碼<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE在國家科學基金會的慷慨支援下繼續存在，這意味著只要有網路連接，任何人都可以使用WISE。 在社群開發人員積極的推動下，WISE不斷得到擴展和改進。 將科學探究帶入教室、博物館、課後或家庭學習環境中！</target>
       </trans-unit>
       <trans-unit id="4ad1e5cce5dbc999f93e23e6bc9fa28d9cbb0ee1" datatype="html">
         <source>WISE on student computer</source>
@@ -1170,7 +1167,7 @@
           <context context-type="sourcefile">app/app.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">Back to Top</target>
+        <target state="translated">回到頂端</target>
       </trans-unit>
       <trans-unit id="ea4d9fe61420a3fce81cf54c4c615e3c19c646a6" datatype="html">
         <source>Dismiss</source>
@@ -1178,7 +1175,7 @@
           <context context-type="sourcefile">app/announcement/announcement.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Dismiss</target>
+        <target state="translated">取消</target>
       </trans-unit>
       <trans-unit id="f4e529ae5ffd73001d1ff4bbdeeb0a72e342e5c8" datatype="html">
         <source>Close</source>
@@ -1202,7 +1199,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">Close</target>
+        <target state="translated">關閉</target>
       </trans-unit>
       <trans-unit id="51d583eae34e00ff68b64c83bb27a77927206e5c" datatype="html">
         <source>WISE Terms of Use &amp; Privacy Policy</source>
@@ -1210,7 +1207,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">WISE Terms of Use &amp; Privacy Policy</target>
+        <target state="translated">WISE使用條款和隱私政策</target>
       </trans-unit>
       <trans-unit id="632476f072cc8007d0fd769265b1dd21675f9b19" datatype="html">
         <source>Table of Contents</source>
@@ -1226,7 +1223,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Table of Contents</target>
+        <target state="translated">目錄</target>
       </trans-unit>
       <trans-unit id="73546446e442c1b3861297089d5436ee268b4866" datatype="html">
         <source>User Agreement</source>
