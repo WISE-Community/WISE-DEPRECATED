@@ -1231,7 +1231,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">User Agreement</target>
+        <target state="translated">使用者協定</target>
       </trans-unit>
       <trans-unit id="bc5c8fc1c4e71b3ee81861339adbe75a81f330bd" datatype="html">
         <source>Information We Collect</source>
@@ -1239,7 +1239,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Information We Collect</target>
+        <target state="translated">我們收集的信息</target>
       </trans-unit>
       <trans-unit id="3b2c25aac9bb263b63bc9310da65eb68324d83da" datatype="html">
         <source>How We Use the Data</source>
@@ -1247,7 +1247,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">How We Use the Data</target>
+        <target state="translated">我們如何使用數據資料</target>
       </trans-unit>
       <trans-unit id="fdceccac4c4cd3ede00411684560fc40b0b9df41" datatype="html">
         <source>Rules of Use</source>
@@ -1255,7 +1255,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Rules of Use</target>
+        <target state="translated">使用規則</target>
       </trans-unit>
       <trans-unit id="d3a3efa42b14f2671bf3418fe0a7462293334ac0" datatype="html">
         <source>Information Security</source>
@@ -1263,7 +1263,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Information Security</target>
+        <target state="translated">訊息安全</target>
       </trans-unit>
       <trans-unit id="a364c9c2a87d2b9cf91adffebe1e931310d94d60" datatype="html">
         <source>State &amp; Federal Laws</source>
@@ -1271,7 +1271,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">State &amp; Federal Laws</target>
+        <target state="translated">國家和聯邦法律</target>
       </trans-unit>
       <trans-unit id="75d5b0f2bf76429bfac084e2e1e1002c01c320ad" datatype="html">
         <source>Changes &amp; Updates</source>
@@ -1279,7 +1279,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Changes &amp; Updates</target>
+        <target state="translated">修改與更新</target>
       </trans-unit>
       <trans-unit id="78713b0ca875ff567b8eae9e9c8966d96e31b7b5" datatype="html">
         <source>1. User Agreement</source>
@@ -1287,7 +1287,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">1. User Agreement</target>
+        <target state="translated">1. 使用者協定</target>
       </trans-unit>
       <trans-unit id="3b103ca309b22df74ae171e0bccc2982acba1185" datatype="html">
         <source>We understand how important privacy is to our community, especially the teachers and students all over the world who use WISE resources in their educational endeavors. This policy explains what information we collect, how we use it, and what we do to keep it safe.</source>
