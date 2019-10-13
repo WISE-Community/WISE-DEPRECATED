@@ -1391,7 +1391,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-        <target state="needs-translation">Curriculum projects that teachers author using the WISE platform are also saved and stored on our servers and may be published to a public project library that is accessible to other WISE users or visitors (with the owner's permission). Please note: Every WISE project hosted by the WISE site (whether it is shared in a public project library or not) is viewable by anyone using the internet via the project's unique URL.</target>
+        <target state="translated">教師使用WISE平台編寫課程專題也將保存並儲存在我們的伺服器上，並且可以發佈到公開專題庫中，其他WISE用戶或訪問者可以訪問該專題庫（在所有者的允許下）。 請注意：由WISE網站管理的每個WISE專題（無論是否在公開專題庫中共享）都可以使用網路通過該專題的唯一網址進行預覽。</target>
       </trans-unit>
       <trans-unit id="542c08b88b52d143ac45330ea26b616f4877ea4c" datatype="html">
         <source>Some sections or features of WISE may allow you to share information concerning your opinions, experiences, or preferences about WISE content or other topics. For example, you might be able to voluntarily review or rate WISE resources, answer user questions, designate favorite WISE projects, respond to surveys, share personal information or social media profile links to your public WISE profile, etc. Information you provide will be stored by WISE and may be shared with other WISE users either anonymously or not (as long as you provide permission). Unless otherwise expressly provided for in this policy, WISE shall have no liability to you or to any third party with respect to information submitted voluntarily by you via the WISE site.</source>
