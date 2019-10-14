@@ -1841,7 +1841,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Add an assignment for this unit in Google Classroom.</target>
+        <target state="translated">在Google課堂中為此單元加入任務。</target>
       </trans-unit>
       <trans-unit id="3f45dd6922690245cfed6cf0c6dd4f06f125d3ef" datatype="html">
         <source>1. Choose Google Class</source>
@@ -1849,7 +1849,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="needs-translation">1. Choose Google Class</target>
+        <target state="translated">1. 選擇Google課堂</target>
       </trans-unit>
       <trans-unit id="5566d6863125d49ad8caf9b1264b49f343f41f44" datatype="html">
         <source> (Section <x id="INTERPOLATION" equiv-text="{{ courses[i].section }}"/>)</source>
@@ -1857,7 +1857,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="needs-translation"> (Section <x id="INTERPOLATION" equiv-text="{{ courses[i].section }}"/>)</target>
+        <target state="translated"> (Section <x id="INTERPOLATION" equiv-text="{{ courses[i].section }}"/>)</target>
       </trans-unit>
       <trans-unit id="20b6acf1174cff2aec4931ca70a8c1a3038695af" datatype="html">
         <source>2. Add Description</source>
@@ -1865,7 +1865,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="needs-translation">2. Add Description</target>
+        <target state="translated">2. 加入說明</target>
       </trans-unit>
       <trans-unit id="af6c19f94a19093641cec5233a2c7f1b03f355a1" datatype="html">
         <source>Assignment description</source>
@@ -1873,7 +1873,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
-        <target state="needs-translation">Assignment description</target>
+        <target state="translated">任務說明</target>
       </trans-unit>
       <trans-unit id="8b49c52315ea545a3b62d127fbe3515910bfa5cd" datatype="html">
         <source>Description is required.</source>
@@ -1881,7 +1881,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">Description is required.</target>
+        <target state="translated">描述為必填</target>
       </trans-unit>
       <trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
         <source>Cancel</source>
@@ -1917,7 +1917,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">95</context>
         </context-group>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
       </trans-unit>
       <trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
         <source>Add</source>
@@ -1929,7 +1929,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Add</target>
+        <target state="translated">新增</target>
       </trans-unit>
       <trans-unit id="e9a74cfea4f80b5d5c656bd147bdf4588c98572e" datatype="html">
         <source>The unit has been successfully added to the following Google Classroom(s)</source>
@@ -1937,7 +1937,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation">The unit has been successfully added to the following Google Classroom(s)</target>
+        <target state="translated">該單元已成功增加到以下Google課堂</target>
       </trans-unit>
       <trans-unit id="5864637a64f27a59e5c5ffec7481035b9d025b1b" datatype="html">
         <source>There was a problem trying to add the unit to the following Google Classroom(s)</source>
@@ -1945,7 +1945,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation">There was a problem trying to add the unit to the following Google Classroom(s)</target>
+        <target state="translated">嘗試將單元加入到以下Google課堂時出現問題</target>
       </trans-unit>
       <trans-unit id="8dd413cee2228118c536f503709329a4d1a395e2" datatype="html">
         <source>Done</source>
@@ -1969,7 +1969,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">Done</target>
+        <target state="translated">完成</target>
       </trans-unit>
       <trans-unit id="053c99466a9288207400b49f2ca907192b5bd44d" datatype="html">
         <source>Use with Class</source>
@@ -1981,7 +1981,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">92</context>
         </context-group>
-        <target state="needs-translation">Use with Class</target>
+        <target state="translated">與班級一起使用</target>
       </trans-unit>
       <trans-unit id="a40392824621859bfd694580f1bb21debbc50eb0" datatype="html">
         <source>(Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
@@ -1997,7 +1997,7 @@
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">(Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
+        <target state="translated">(Unit ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="a2d9400df68d9f4e89fe24f6a3f40bc5322f19f2" datatype="html">
         <source>1. Choose Periods</source>
@@ -2005,7 +2005,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">1. Choose Periods</target>
+        <target state="translated">1. 選擇期間</target>
       </trans-unit>
       <trans-unit id="91272b78c905b6e7e35774c484eb61a33cd3dd12" datatype="html">
         <source>Add your own periods</source>
@@ -2013,7 +2013,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Add your own periods</target>
+        <target state="translated">添加自己的期間</target>
       </trans-unit>
       <trans-unit id="b13b5b62a4356cdcd81f358640fb7863fdde1361" datatype="html">
         <source>For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.</source>
