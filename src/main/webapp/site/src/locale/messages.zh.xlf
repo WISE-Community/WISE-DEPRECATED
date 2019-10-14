@@ -3975,7 +3975,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target state="needs-translation">WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the "Register" link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their username/password on their first day in the project run.</target>
+        <target state="translated">WISE使學生註冊變得簡單而直覺 -- 透過讓學生進入WISE首頁並點擊右上角的“註冊”連接，將學生引導到註冊頁面。 他們應該能夠在10分鐘或更短的時間內完成註冊。 但是，您也可以選擇預先註冊所有學生，並在專題執行的第一天為他們提供帳號/密碼。</target>
       </trans-unit>
       <trans-unit id="90a07f702eb512ee62bff7940263f760a401a538" datatype="html">
         <source>Once a student has created a WISE account they should never need to create another one.</source>
@@ -3983,7 +3983,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <target state="needs-translation">Once a student has created a WISE account they should never need to create another one.</target>
+        <target state="translated">一旦學生建立了WISE帳號，他們就不需要建立另一個帳號。</target>
       </trans-unit>
       <trans-unit id="c7b0387a07f1ace4b34995b3990a9705117b2fb4" datatype="html">
         <source>Some teachers that pre-register prefer to give all students the same initial password, to decrease problems with students signing in. This is ok, but for security purposes, we advise that you have the students change their passwords once they log in.</source>
@@ -3991,7 +3991,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
-        <target state="needs-translation">Some teachers that pre-register prefer to give all students the same initial password, to decrease problems with students signing in. This is ok, but for security purposes, we advise that you have the students change their passwords once they log in.</target>
+        <target state="translated">一些預先註冊的老師希望為所有學生提供相同的初始密碼，以減少學生登錄的麻煩。這是可以的，但是出於安全考慮，我們建議您讓學生在登錄後更改密碼。</target>
       </trans-unit>
       <trans-unit id="75241afb27cf8555c0fbea2f6607b233b880ad12" datatype="html">
         <source>A student has forgotten his/her username or password. What should I do?</source>
@@ -3999,7 +3999,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="needs-translation">A student has forgotten his/her username or password. What should I do?</target>
+        <target state="translated">學生忘記了他/她的帳號或密碼。 我該怎麼辦？</target>
       </trans-unit>
       <trans-unit id="bf651aa2d8a6a5afc3a142cc29e5186620753bd3" datatype="html">
         <source>First, we recommend always having students WRITE DOWN their username/password when they first register.</source>
@@ -4007,7 +4007,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">First, we recommend always having students WRITE DOWN their username/password when they first register.</target>
+        <target state="translated">首先，我們建議學生在第一次註冊時帳號/密碼寫下來。</target>
       </trans-unit>
       <trans-unit id="427421b70d77408e21b0462e665b63cb5765f06a" datatype="html">
         <source>Second, encourage the students to solve the problem themselves. Tell them to go to the WISE home page, click the Lost username/password link, and click the Student button. If the student can answer their security question (created at registration) they can change their password.</source>
@@ -4015,7 +4015,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <target state="needs-translation">Second, encourage the students to solve the problem themselves. Tell them to go to the WISE home page, click the Lost username/password link, and click the Student button. If the student can answer their security question (created at registration) they can change their password.</target>
+        <target state="translated">第二，鼓勵學生自己解決問題。 告訴他們到WISE首頁，點擊“遺失的帳號/密碼”連結，然後點擊“學生”按鈕。 如果學生可以回答他們的安全問題（在註冊時建立），則可以更改密碼。</target>
       </trans-unit>
       <trans-unit id="467c00b97052f8105444837a01e9d2fa9b2bc6cc" datatype="html">
         <source>Third, if the student can't solve the problem directly, you can change their password for them using the instructions below.</source>
@@ -4023,7 +4023,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">Third, if the student can't solve the problem directly, you can change their password for them using the instructions below.</target>
+        <target state="translated">第三，如果學生無法自己解決問題，您可以使用以下說明更改密碼。</target>
       </trans-unit>
       <trans-unit id="289c7c9faaf6520c30e7822ca87e7456179d6c98" datatype="html">
         <source>How do I change a student's password?</source>
@@ -4031,7 +4031,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">How do I change a student's password?</target>
+        <target state="translated">教師如何更改學生的密碼？</target>
       </trans-unit>
       <trans-unit id="cb4e82ff9c49f15fee75a56ccd4bb3feccbcb850" datatype="html">
         <source>Sign into WISE with your teacher account.</source>
@@ -4071,7 +4071,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">206</context>
         </context-group>
-        <target state="needs-translation">Sign into WISE with your teacher account.</target>
+        <target state="translated">使用您的教師帳號登錄WISE。</target>
       </trans-unit>
       <trans-unit id="ca00e98ef0f13b9fd9899fac4169da61b2d05856" datatype="html">
         <source>Find the run in your Teacher Home Page.</source>
@@ -4103,7 +4103,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">147</context>
         </context-group>
-        <target state="needs-translation">Find the run in your Teacher Home Page.</target>
+        <target state="translated">在教師首頁中執行。</target>
       </trans-unit>
       <trans-unit id="f0c1ec314fd1d5147dfff4a0411434d4263193f7" datatype="html">
         <source>Click the "Teacher Tools" button on the run.</source>
@@ -4123,7 +4123,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">148</context>
         </context-group>
-        <target state="needs-translation">Click the "Teacher Tools" button on the run.</target>
+        <target state="translated">點擊其中的“教師工具”按鈕。</target>
       </trans-unit>
       <trans-unit id="7104fd0691398e7245d187335be218b7ae1eb417" datatype="html">
         <source>Click on the "Manage Students" icon on the left side bar.</source>
@@ -4139,7 +4139,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">78</context>
         </context-group>
-        <target state="needs-translation">Click on the "Manage Students" icon on the left side bar.</target>
+        <target state="translated">單擊左側欄中的“管理學生”圖示。</target>
       </trans-unit>
       <trans-unit id="2ebe8a4dc9e74fe00021dd7a5a1d7938c26bbf7d" datatype="html">
         <source>Find the period the student is in.</source>
@@ -4155,7 +4155,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
-        <target state="needs-translation">Find the period the student is in.</target>
+        <target state="translated">找出學生所在的期間。</target>
       </trans-unit>
       <trans-unit id="94caa8f0ed38f74d051cf5bff5256123b00f480c" datatype="html">
         <source>Find the student and click "Change Password".</source>
@@ -4163,7 +4163,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">58</context>
         </context-group>
-        <target state="needs-translation">Find the student and click "Change Password".</target>
+        <target state="translated">找到學生，然後點擊“更改密碼”。</target>
       </trans-unit>
       <trans-unit id="941958bcf0217f57435b86d50e2a4806cbf5d679" datatype="html">
         <source>Alternatively, you can change the password for ALL students in the current period (the new password will be applied to all the students in the period).</source>
