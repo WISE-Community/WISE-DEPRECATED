@@ -1637,7 +1637,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">89</context>
         </context-group>
-        <target state="needs-translation">If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child's content or information, please contact us at https://wise.berkeley.edu/contact for assistance or you can delete specific information from you or your child's account.</target>
+        <target state="translated">如果您居住在加利福尼亞州且未滿18歲，或者是18歲以下學生的父母或法定監護人，則可以要求從我們的網站中刪除您的資訊。 當您請求刪除您的資訊時，我們會盡力刪除您的所有個人資訊。 請注意，我們可能無法刪除儲存在我們資料庫中的所有去識別資訊或內容，也可能無法刪除根據適用的聯邦和州法律要求保留的內容。 如果您想請求刪除您或您孩子的內容或資訊，請通過https://wise.berkeley.edu/contact與我們聯繫以獲得幫助，或者您可以從您或孩子的帳戶中刪除特定資訊。</target>
       </trans-unit>
       <trans-unit id="a696cb5c99995dd1420b2dd62b2c6409888b9605" datatype="html">
         <source>Family Educational Rights and Privacy Act (FERPA)</source>
