@@ -3518,7 +3518,7 @@
           <context context-type="linenumber">7</context>
         </context-group>
         <target state="translated">
-    所有使用者都必須創立自己的帳號。 教師必須建立一個教師帳號，而學生必須建立一個學生帳號。 使用者可以到<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE首頁<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>並點擊螢幕右上方的<x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>連結來建立帳號。
+    所有使用者都必須創立自己的帳號。 教師必須建立一個教師帳號，而學生必須建立一個學生帳號。 使用者可以到<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE首頁<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>並點擊螢幕右上方的<x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>註冊<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>連結來建立帳號。
   </target>
       </trans-unit>
       <trans-unit id="8667ecd04a352367c4c964c92a7763320d3f8946" datatype="html">
@@ -3535,7 +3535,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Go to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">前往 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE 首頁<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="b6140858fd535cc6f3236e4446df5c52fa2caa1d" datatype="html">
         <source>Click the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> link at the upper right of the screen.</source>
@@ -3543,7 +3543,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">Click the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> link at the upper right of the screen.</target>
+        <target state="translated">點擊螢幕右上方的<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>註冊<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>連結。</target>
       </trans-unit>
       <trans-unit id="2e06e81d5bce0468d498f4f754a63511b54a31f1" datatype="html">
         <source>Click on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Teacher<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
