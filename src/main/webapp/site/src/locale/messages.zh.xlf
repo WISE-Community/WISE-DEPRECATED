@@ -4187,7 +4187,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">Drag-and-drop student names to move them from one team to another. Make sure to save your changes before leaving this window.</target>
+        <target state="translated">拖放學生姓名即可將他們從一個組轉移到另一個組。 在離開此窗口之前，請確認您有儲存您的更改。</target>
       </trans-unit>
       <trans-unit id="8651e5c9fed5b42224d970458cb11046917dc6a6" datatype="html">
         <source>If you want to move students into a brand new team, click New Team, then drag 1 or more students into the new team. Save your changes.</source>
@@ -4195,7 +4195,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation">If you want to move students into a brand new team, click New Team, then drag 1 or more students into the new team. Save your changes.</target>
+        <target state="translated">如果要將學生轉移到一個全新的組別中，請點擊“新組別”，然後將1個或更多學生拖到該新組別中。 儲存您的更改。</target>
       </trans-unit>
       <trans-unit id="5418b88e19814f7ddcb2b6dbdd2d0d5adf57b556" datatype="html">
         <source>Warning 1</source>
@@ -4203,7 +4203,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">Warning 1</target>
+        <target state="translated">警告1</target>
       </trans-unit>
       <trans-unit id="bce5e9f9e8847d8a1cf6f535b8d6ba481bf878ae" datatype="html">
         <source>If you move Student A into an established team, student A loses all of their current work and inherits the current work of the established team.</source>
