@@ -2612,7 +2612,7 @@
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation">Performance Expectation</target>
+        <target state="translated">成效預期</target>
       </trans-unit>
       <trans-unit id="5fb96f87d294d558a0de557ff5cd2049b9e3d635" datatype="html">
         <source>What is Community Built?</source>
@@ -2620,7 +2620,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">What is Community Built?</target>
+        <target state="translated">什麼是社群建設？</target>
       </trans-unit>
       <trans-unit id="4f6276982b612e3be0a1c89c456d29506016d863" datatype="html">
         <source>No community designed units found.</source>
@@ -2628,7 +2628,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">No community designed units found.</target>
+        <target state="translated">找不到社群設計的課程。</target>
       </trans-unit>
       <trans-unit id="481add1796f59f7dfdcfb8e69283dd39230d67e9" datatype="html">
         <source>Community Built</source>
@@ -2636,7 +2636,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Community Built</target>
+        <target state="translated">社群建設</target>
       </trans-unit>
       <trans-unit id="adc984d8f77dc423434e753052fcf8b519a4d69d" datatype="html">
         <source>The "Community Built" library contains units that were designed and contributed by WISE community members. Want to publicly share your custom unit? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</source>
@@ -2644,7 +2644,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">The "Community Built" library contains units that were designed and contributed by WISE community members. Want to publicly share your custom unit? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</target>
+        <target state="translated">“社群建設”庫包含由WISE社群成員設計和貢獻的課程。 想要公開分享您建立的課程？ <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>聯繫我們<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>！</target>
       </trans-unit>
       <trans-unit id="1f519374aa2d63b8d101da2f56f778edf9052131" datatype="html">
         <source>*Please note: While WISE staff have reviewed the units listed here, we cannot specifically vouch for their effectiveness or quality. Please examine the units carefully before using in your classrooms. Thanks!</source>
@@ -2652,7 +2652,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">*Please note: While WISE staff have reviewed the units listed here, we cannot specifically vouch for their effectiveness or quality. Please examine the units carefully before using in your classrooms. Thanks!</target>
+        <target state="translated">*請注意：雖然WISE工作人員已審核了此處列出的課程，但我們不能特別保證其有效性或質量。 在教室中使用前，請仔細檢查課程。 謝謝！</target>
       </trans-unit>
       <trans-unit id="c7dd4f5065afe35f6940c8c4214cbf4c02cd32fc" datatype="html">
         <source>What are My Units?</source>
@@ -2660,7 +2660,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">What are My Units?</target>
+        <target state="translated">我的課程是什麼？</target>
       </trans-unit>
       <trans-unit id="329cfb58bde439dc1f1839ebf205991382a9a2de" datatype="html">
         <source>No owned or shared units found.</source>
@@ -2668,7 +2668,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">No owned or shared units found.</target>
+        <target state="translated">找不到擁有或共享的課程。</target>
       </trans-unit>
       <trans-unit id="c4058ff063f874b650aca76a5d972f11323bb6fb" datatype="html">
         <source>My Units</source>
@@ -2676,7 +2676,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">My Units</target>
+        <target state="translated">我的課程</target>
       </trans-unit>
       <trans-unit id="35f92c76101a5f5b5010e09dedea982832cf1e87" datatype="html">
         <source>The "My Units" library contains curriculum units that you own or that have been shared with you by other WISE users.</source>
@@ -2684,7 +2684,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">The "My Units" library contains curriculum units that you own or that have been shared with you by other WISE users.</target>
+        <target state="translated">“我的課程”庫包含您擁有的課程，或其他WISE用戶已與您分享的課程。</target>
       </trans-unit>
       <trans-unit id="855dab22c74d8f9a4e55113cef0c528802dc7bec" datatype="html">
         <source>Units that you create using the WISE Authoring Tool will appear here. Any units that you copy will also be listed here.</source>
@@ -2692,7 +2692,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">Units that you create using the WISE Authoring Tool will appear here. Any units that you copy will also be listed here.</target>
+        <target state="translated">您使用WISE編輯工具建立的課程將顯示在此。 您複製的任何課程也會在此處列出。</target>
       </trans-unit>
       <trans-unit id="4c00c8f929591b166c1e22e74a414a4dd42ff00b" datatype="html">
         <source>Thank you for contacting WISE!</source>
@@ -2700,7 +2700,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Thank you for contacting WISE!</target>
+        <target state="translated">感謝您與WISE聯繫！</target>
       </trans-unit>
       <trans-unit id="708d809914d6b7756b27dd0e9a0233e8ee4e070a" datatype="html">
         <source>Your message has been sent. We will get back to you as soon as possible.</source>
@@ -2708,7 +2708,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Your message has been sent. We will get back to you as soon as possible.</target>
+        <target state="translated">您的留言已經發送。 我們會盡快回覆您。</target>
       </trans-unit>
       <trans-unit id="09f91390d13a08363b46a6cc623a4765f29d3992" datatype="html">
         <source>Return to WISE Home</source>
@@ -2716,7 +2716,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Return to WISE Home</target>
+        <target state="translated">返回WISE首页</target>
       </trans-unit>
       <trans-unit id="3fdb49f59b7dbcd4ef2e9a4fdff71007b32b2933" datatype="html">
         <source>Contact WISE</source>
@@ -2756,7 +2756,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">Contact WISE</target>
+        <target state="translated">聯繫WISE</target>
       </trans-unit>
       <trans-unit id="4f25015c69f7e23714c642e14a711938efeab311" datatype="html">
         <source>Name required</source>
