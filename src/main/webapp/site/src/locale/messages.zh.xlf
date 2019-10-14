@@ -2132,7 +2132,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="translated">訪問代碼: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
+        <target state="translated">課程代碼: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
       </trans-unit>
       <trans-unit id="534ba8ba6d05fed93bd074e67fb6d03d2e466b46" datatype="html">
         <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</source>
@@ -2140,7 +2140,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">78</context>
         </context-group>
-        <target state="needs-translation">Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</target>
+        <target state="translated">重要提醒：每個課程都有一個唯一的課程代碼。 學生可以使用此課程代碼加入一個課程。 在您的學生第一次註冊WISE帳號時，將其課程代碼提供給您的學生。 如果他們已經有WISE帳號，請讓他們登錄，然後從學生首頁選擇“新增課程”。</target>
       </trans-unit>
       <trans-unit id="f2069492a5ba2249fb5f24e59009120d73623289" datatype="html">
         <source>You can always find the Access Code for each classroom unit in your Class Schedule.</source>
@@ -2148,7 +2148,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
-        <target state="needs-translation">You can always find the Access Code for each classroom unit in your Class Schedule.</target>
+        <target state="translated">您永遠可以在課程表中找到每個課程的課程代碼。</target>
       </trans-unit>
       <trans-unit id="d9b2ffb3e1ce1ca42a3db04d00ea072777898eb3" datatype="html">
         <source>Legacy Unit Warning</source>
@@ -2156,7 +2156,7 @@
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Legacy Unit Warning</target>
+        <target state="translated">舊版課程警告</target>
       </trans-unit>
       <trans-unit id="6f526813fe643e11e1e0c4632ab8d782aa2eb1f0" datatype="html">
         <source>WARNING: this is a legacy unit from a version of WISE that is many years old.</source>
