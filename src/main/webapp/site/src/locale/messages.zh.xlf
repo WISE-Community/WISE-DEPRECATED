@@ -212,7 +212,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="translated">©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | 網路科學探究學習平台</target>
+        <target state="translated">©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | 線上科學探究平台</target>
       </trans-unit>
       <trans-unit id="470b3fb4b02529d4f9f25850711632271fd27508" datatype="html">
         <source>WISE header logo</source>
@@ -1306,7 +1306,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-        <target state="translated">這些使用條款和隱私政策構成您與網路科學探究式平台團隊之間的協議，該團隊管理您對wise.berkeley.edu以及所有相關服務和網站（統稱為“ WISE”）的使用。 WISE團隊是由聯邦資助的研究小組，總部位於加州柏克萊大學，並且是一個非營利組織。</target>
+        <target state="translated">這些使用條款和隱私政策構成您與線上科學探究平台團隊之間的協議，該團隊管理您對wise.berkeley.edu以及所有相關服務和網站（統稱為“ WISE”）的使用。 WISE團隊是由聯邦資助的研究小組，總部位於加州柏克萊大學，並且是一個非營利組織。</target>
       </trans-unit>
       <trans-unit id="b35b13440a00be341535fafb52bf90eae8c7456c" datatype="html">
         <source>Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -1701,7 +1701,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">102</context>
         </context-group>
-        <target state="needs-translation">Attn: David Crowell</target>
+        <target state="translated">參與者：David Crowell</target>
       </trans-unit>
       <trans-unit id="f39e4e0e398d7d2caf4f0330f322059d52593c09" datatype="html">
         <source>2121 Berkeley Way, Room 4203</source>
@@ -1709,7 +1709,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">103</context>
         </context-group>
-        <target state="needs-translation">2121 Berkeley Way, Room 4203</target>
+        <target state="translated">2121 Berkeley Way，4203室</target>
       </trans-unit>
       <trans-unit id="1d7e5910925c9f4101d153ff63e6d89e23f9ea82" datatype="html">
         <source>Berkeley, CA 94720-1670</source>
@@ -1717,7 +1717,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">104</context>
         </context-group>
-        <target state="needs-translation">Berkeley, CA 94720-1670</target>
+        <target state="translated">Berkeley, CA 94720-1670</target>
       </trans-unit>
       <trans-unit id="891537ceca296c8821e5edf088b3e9cc5c6f17c9" datatype="html">
         <source>Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.</source>
@@ -1725,7 +1725,7 @@
           <context context-type="sourcefile">app/modules/library/home-page-project-library/home-page-project-library.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.</target>
+        <target state="translated">探索為特定年級水平建議的WISE課程，或者搜索滿足您需求的特定學習單元。</target>
       </trans-unit>
       <trans-unit id="32994fe5ec4e53b681a661dd565256e91a9eb515" datatype="html">
         <source>unit(s)</source>
@@ -1733,7 +1733,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">unit(s)</target>
+        <target state="translated">單元</target>
       </trans-unit>
       <trans-unit id="73da064756ecee7cf3d056dc8a0b99f0f39863b6" datatype="html">
         <source>What is WISE Tested?</source>
@@ -1741,7 +1741,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">What is WISE Tested?</target>
+        <target state="translated">什麼是WISE測試？</target>
       </trans-unit>
       <trans-unit id="5080207bff284204adb9544ae12ef39917aa74ae" datatype="html">
         <source>WISE Tested</source>
@@ -1749,7 +1749,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">WISE Tested</target>
+        <target state="translated">WISE測試</target>
       </trans-unit>
       <trans-unit id="babd041c8f47bf5bb8dcabfc02d9904a8e363c9c" datatype="html">
         <source>The "WISE Tested" library contains curricula developed by the WISE team.</source>
@@ -1757,7 +1757,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">The "WISE Tested" library contains curricula developed by the WISE team.</target>
+        <target state="translated">“WISE測試”庫中包含WISE團隊開發的課程。</target>
       </trans-unit>
       <trans-unit id="cda4813957412f125af0b3c464de60460ca0fe2f" datatype="html">
         <source>Each of the units in this collection has been designed and iteratively refined through a partnership of university-based education researchers and science teachers. They have all been implemeneted and tested in real classrooms and have shown proven learning gains.</source>
@@ -1765,7 +1765,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">Each of the units in this collection has been designed and iteratively refined through a partnership of university-based education researchers and science teachers. They have all been implemeneted and tested in real classrooms and have shown proven learning gains.</target>
+        <target state="translated">該系列中的每個單元都是通過大學教育研究人員和科學老師的合作進行設計和反覆修改。 它們都已在實際教室中實現並經過測試，並顯示出可靠的學習成果。</target>
       </trans-unit>
       <trans-unit id="e67065cfae11c998159fc6722e70e4ee76db2c8f" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Learn more<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> about our design process and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>check out our research and publications<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -1773,7 +1773,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Learn more<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> about our design process and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>check out our research and publications<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>了解更多<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>有關我們設計過程的資訊，並<x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>查看我們的研究和出版物<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。</target>
       </trans-unit>
       <trans-unit id="4d4b87e130f67964a35a56bdd05df593406fcc17" datatype="html">
         <source>Teacher unit library navigation</source>
@@ -1781,7 +1781,7 @@
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Teacher unit library navigation</target>
+        <target state="translated">教師單位庫導覽</target>
       </trans-unit>
       <trans-unit id="a90197fbaf305621cf15da6e9f88ccff3087ea1d" datatype="html">
         <source>Add to Google Classroom</source>
@@ -1797,7 +1797,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Add to Google Classroom</target>
+        <target state="translated">添加到Google課堂</target>
       </trans-unit>
       <trans-unit id="d559090ad7dfe99c26a7143c93579f3b768f4dd3" datatype="html">
         <source>Hey there! Looks like you don't have any active Google classes.</source>
@@ -1805,7 +1805,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Hey there! Looks like you don't have any active Google classes.</target>
+        <target state="translated">嘿！ 您似乎沒有任何有效的Google課程。</target>
       </trans-unit>
       <trans-unit id="c7e87d327022a7084f33267598e99b895289a5cc" datatype="html">
         <source>Visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Google Classroom<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> to create a class and try again.</source>
