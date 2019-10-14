@@ -2061,7 +2061,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">3. Set Schedule</target>
+        <target state="translated">3. 設定時間表</target>
       </trans-unit>
       <trans-unit id="77bbe324b08f6636fb50f673cea05313b86fb692" datatype="html">
         <source>Start date</source>
@@ -2104,7 +2104,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="needs-translation">Note: These dates can be changed at any time from your Class Schedule. Just select "Edit Settings" from the unit's dropdown menu.</target>
+        <target state="translated">注意：這些日期可以隨時從課程表中更改。 只需從課程的下拉選單中選擇“編輯設定”即可。</target>
       </trans-unit>
       <trans-unit id="b515510495245a2c50f9001287f9e6d4e6250944" datatype="html">
         <source>Create Run</source>
@@ -2112,7 +2112,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">Create Run</target>
+        <target state="translated">建立執行</target>
       </trans-unit>
       <trans-unit id="db6e4c2b4925a66905d9a41e398e18b1e1b3a69d" datatype="html">
         <source>Success! This unit has been added to your Class Schedule.</source>
@@ -2120,7 +2120,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="needs-translation">Success! This unit has been added to your Class Schedule.</target>
+        <target state="translated">成功！ 該單元已增加到您的課程表中。</target>
       </trans-unit>
       <trans-unit id="08386d4e77c0a63a78f010c21160833578891b20" datatype="html">
         <source>Access Code: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></source>
@@ -2132,7 +2132,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">Access Code: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
+        <target state="translated">訪問代碼: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
       </trans-unit>
       <trans-unit id="534ba8ba6d05fed93bd074e67fb6d03d2e466b46" datatype="html">
         <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</source>
