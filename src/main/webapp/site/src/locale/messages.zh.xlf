@@ -3687,7 +3687,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Click the "Use With Class" button.</target>
+        <target state="translated">點擊“在課堂上使用”的按鈕。</target>
       </trans-unit>
       <trans-unit id="0b4cc6a461d3a489f1aad44dfcd492bc70cbac56" datatype="html">
         <source>Choose the periods you will use the project in.</source>
@@ -3699,7 +3699,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="needs-translation">Choose the periods you will use the project in.</target>
+        <target state="translated">選擇您將使用專題的時間</target>
       </trans-unit>
       <trans-unit id="6cc37950c100f636f42e53a6c5f988f65778ea7f" datatype="html">
         <source>Choose the number of students per team. Choosing 1-3 will allow students to work together in a team.</source>
@@ -3711,7 +3711,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Choose the number of students per team. Choosing 1-3 will allow students to work together in a team.</target>
+        <target state="translated">選擇每組的學生人數。 一般允許1-3名學生在同一組中進行。</target>
       </trans-unit>
       <trans-unit id="1cb2e099227c306dd9d16e07422d03b6aad86133" datatype="html">
         <source>Choose the start date. Students will not be able to use the project until this date.</source>
@@ -3723,7 +3723,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">32</context>
         </context-group>
-        <target state="needs-translation">Choose the start date. Students will not be able to use the project until this date.</target>
+        <target state="translated">選擇開始日期。 在此之前，學生將無法使用該專題</target>
       </trans-unit>
       <trans-unit id="de1a012e22926afd24e72b207b9ac213c07f1074" datatype="html">
         <source>Click "Create Run".</source>
