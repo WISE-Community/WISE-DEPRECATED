@@ -1439,10 +1439,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="translated">當學生和老師使用WISE時，我們將保存事件資料，例如滑鼠點擊、瀏覽頁面所花費的時間以及其他網站切換。 該資料用於研究目的以及WISE專題運行中的自動化分析和工具。 （有關更多信息，請參見“我們如何使用資料”。）</target>
-        <alt-trans>
-          <target>當學生和老師使用WISE時，我們將保存事件資料，例如滑鼠點擊、瀏覽頁面所花費的時間以及其他網站交互。 該資料用於研究目的以及WISE專題運行中的自動化分析和工具。 （有關更多信息，請參見“我們如何使用資料”。）</target>
-        </alt-trans>
+        <target state="translated">當學生和老師使用WISE時，我們將保存事件資料，例如滑鼠點擊、瀏覽頁面所花費的時間以及其他網站互動。 該資料用於研究目的以及WISE專題運行中的自動化分析和工具。 （有關更多信息，請參見“我們如何使用資料”。）</target>
       </trans-unit>
       <trans-unit id="4f489cc30da4fa5f11f653ae52eacef505ba9170" datatype="html">
         <source>Cookies</source>
@@ -1458,7 +1455,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">When you log in, WISE will ask your browser to put a "cookie" on your computer. This allows WISE to remember that you are logged in when you go to a different page. You can delete this cookie at any time through your browser's settings.</target>
+        <target state="translated">當您登錄時，WISE會要求您的瀏覽器在您的電腦上儲存一個“ cookie”。 這使得WISE可以記住您在轉到其他頁面時仍保持登錄狀態。 您可以隨時通過瀏覽器的設定來刪除此Cookie。</target>
       </trans-unit>
       <trans-unit id="eddb0914a7a33bdc6f8e1fb3318df254558527bf" datatype="html">
         <source>Google Analytics</source>
@@ -1466,7 +1463,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
-        <target state="needs-translation">Google Analytics</target>
+        <target state="translated">Google 分析</target>
       </trans-unit>
       <trans-unit id="22cdbb653a197077d357885fc2daa5bb7fbeb795" datatype="html">
         <source>WISE uses Google Analytics to help us understand our site usage. We use data like which pages you visit and clicks you make to help us improve the site.  Information collected and processed by Google Analytics includes user IP addresses, network locations, and geographic locations. Some browsers allow you to opt-out of the Google Analytics tracking by installing add-ons for your browser.</source>
@@ -1474,7 +1471,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">WISE uses Google Analytics to help us understand our site usage. We use data like which pages you visit and clicks you make to help us improve the site.  Information collected and processed by Google Analytics includes user IP addresses, network locations, and geographic locations. Some browsers allow you to opt-out of the Google Analytics tracking by installing add-ons for your browser.</target>
+        <target state="translated">WISE使用Google Analytics來幫助我們了解我們的網站使用情況。 我們使用諸如您訪問的頁面和獲得的點擊之類的數據來幫助我們改善網站。 Google Analytics收集和處理的訊息包括用戶IP地址、網路位置和地理位置。 某些瀏覽器允許您通過為瀏覽器安裝擴充套件來退出Google Analytics跟踪。</target>
       </trans-unit>
       <trans-unit id="9af481581bbddd55af685583742a16757964160e" datatype="html">
         <source>3. How We Use the Data</source>
@@ -1482,7 +1479,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">3. How We Use the Data</target>
+        <target state="translated">3. 我們如何使用資料</target>
       </trans-unit>
       <trans-unit id="e0623fb9a358c80cf9e4e20163c6178325b7ddb7" datatype="html">
         <source>We will not sell your information to anyone under any circumstances.</source>
@@ -1490,7 +1487,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">We will not sell your information to anyone under any circumstances.</target>
+        <target state="translated">在任何情況下，我們都不會將您的訊息販賣給任何人。</target>
       </trans-unit>
       <trans-unit id="ea5d4b60a8833374b7aab8168c828d0b22971ed6" datatype="html">
         <source>The WISE team uses de-identified user data to perform research. Researchers in the Graduate School of Education at The University of California at Berkeley and partner institutions may use de-identified data to perform data analyses and explore research topics. This data includes both user-generated and auto-generated content (see 'Information We Collect' section). Results of our research may be shared with educators and other researchers through conferences, journals, and other publications.</source>
@@ -1498,7 +1495,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="needs-translation">The WISE team uses de-identified user data to perform research. Researchers in the Graduate School of Education at The University of California at Berkeley and partner institutions may use de-identified data to perform data analyses and explore research topics. This data includes both user-generated and auto-generated content (see 'Information We Collect' section). Results of our research may be shared with educators and other researchers through conferences, journals, and other publications.</target>
+        <target state="translated">WISE團隊使用已取消標識的用戶資料進行研究。 加州大學伯克利分校教育研究生院的研究人員和合作機構可以使用已取消識別的資料來進行資料分析和探索研究主題。 此資料包括用戶產生的內容和自動產生的內容（請參閱“我們收集的資料”部分）。 我們的研究結果可能會通過會議、期刊和其他出版物與教育者和其他研究人員共享。</target>
       </trans-unit>
       <trans-unit id="c3e5c34f74aeac58acd9e6656046d51d968bae86" datatype="html">
         <source>When generating and analyzing research data, student names are removed from all student work and replaced with identification numbers. This process of replacing names with identification numbers is performed automatically by the WISE platform when exporting research data and will be performed by teachers if any other student work (e.g., from other instructional materials) is to be analyzed by researchers.</source>
