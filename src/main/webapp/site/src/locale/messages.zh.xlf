@@ -1581,7 +1581,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="needs-translation">All user-generated content is provided as-is. The WISE Team is not responsible for the accuracy or reliability of any user-generated content available through WISE. The WISE Team does not endorse any views, opinions, or advice expressed in user-generated content. You agree to relieve the WISE Team of any and all liability arising from your user-generated content.</target>
+        <target state="translated">所有用戶產生的內容均為原始內容。 WISE團隊不會對透過WISE提供的任何用戶所產生內容的準確性或可靠性負責。 WISE團隊不認可用戶產生的內容中表達的任何觀點、意見或建議。 您同意免除WISE團隊因用戶產生的內容而引起的任何責任。</target>
       </trans-unit>
       <trans-unit id="58bf2f522bfb669f040c49d745a07badf14f8157" datatype="html">
         <source>If you notice any offensive material or user-generated content that are in violation with the rules above, please report them to the WISE Team using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -1589,7 +1589,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <target state="needs-translation">If you notice any offensive material or user-generated content that are in violation with the rules above, please report them to the WISE Team using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">如果您發現任何違反上述規則的令人反感的內容或用戶產生的內容，請使用我們的<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>聯繫表<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>將其回報給WISE團隊。</target>
       </trans-unit>
       <trans-unit id="83e835d7ae5255ef507a1ed474c87044d226fde0" datatype="html">
         <source>5. Information Security</source>
@@ -1597,7 +1597,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="needs-translation">5. Information Security</target>
+        <target state="translated">5. 資訊安全</target>
       </trans-unit>
       <trans-unit id="9e8e34ba63c3678ef43b9bef38ad48245621d346" datatype="html">
         <source>The security of your information is important to us and we try to maintain a high standard for security by using technical safeguards. We will try our best to keep your data safe. However, no system can ever be 100% secure so we can not guarantee your personal information will be 100% safe from unauthorized access, either while stored on our site or our databases or while being transmitted to WISE over the internet.</source>
@@ -1605,7 +1605,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">81</context>
         </context-group>
-        <target state="needs-translation">The security of your information is important to us and we try to maintain a high standard for security by using technical safeguards. We will try our best to keep your data safe. However, no system can ever be 100% secure so we can not guarantee your personal information will be 100% safe from unauthorized access, either while stored on our site or our databases or while being transmitted to WISE over the internet.</target>
+        <target state="translated">您資訊的安全性對我們很重要，我們會透過使用技術保障措施來維持高標準的安全性。 我們將盡力確保您的資料安全。 但是，任何系統都不可能100％安全，因此無論是儲存在我們的網站或資料庫中還是透過網路傳輸到WISE，我們無法保證您的個人資訊不受未經授權的情況下100％安全。</target>
       </trans-unit>
       <trans-unit id="c21bc1664b1acd6740b428fa2ce9e99439a9d3b6" datatype="html">
         <source>You can help us protect against unauthorized access to your account by choosing a strong password and keeping your password secret at all times.</source>
