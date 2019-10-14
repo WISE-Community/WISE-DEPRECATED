@@ -1573,7 +1573,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">74</context>
         </context-group>
-        <target state="needs-translation">You may not deliberately perform actions that are intended to negatively affect the WISE website or its users. You may not post links to harmful sites to download viruses or malware.</target>
+        <target state="translated">您不能故意執行對WISE網站或其用戶產生負面影響的行為。 您不能發布對網站有害的連結來下載病毒或惡意軟體。</target>
       </trans-unit>
       <trans-unit id="da13c45e9a2a5de6912e6c9674b210d0345d739b" datatype="html">
         <source>All user-generated content is provided as-is. The WISE Team is not responsible for the accuracy or reliability of any user-generated content available through WISE. The WISE Team does not endorse any views, opinions, or advice expressed in user-generated content. You agree to relieve the WISE Team of any and all liability arising from your user-generated content.</source>
