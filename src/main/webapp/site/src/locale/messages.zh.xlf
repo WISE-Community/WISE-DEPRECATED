@@ -1421,7 +1421,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="translated">您在WISE網站上建立或共享的所有專題均應根據知識共享署名 - 相同方式共享4.0許可進行許可。 有關此許可條款的詳細信息，請訪問<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/> https://creativecommons.org/licenses/by-sa/4.0 / <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。WISE團隊保留刪除任何由WISE團隊自行決定對社群有害或違反WISE使用條款的內容的權利。 有害使用包括垃圾郵件或通過項目、評論或討論帖重複商業廣告、以及不適當或令人反感的內容。</target>
+        <target state="translated">您在WISE網站上建立或共享的所有專題均應根據知識共享署名 - 相同方式共享4.0許可進行許可。 有關此許可條款的詳細資訊，請訪問<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/> https://creativecommons.org/licenses/by-sa/4.0 / <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。WISE團隊保留刪除任何由WISE團隊自行決定對社群有害或違反WISE使用條款的內容的權利。 有害使用包括垃圾郵件或透過專題、評論或討論帖重複商業廣告、以及不適當或令人反感的內容。</target>
       </trans-unit>
       <trans-unit id="d832788aab0ba91d394cc36c4c63bedb07a7e5ea" datatype="html">
         <source>You may link to or include outside resources or materials in your WISE projects or in any public parts of the WISE site, but it is your responsibility to obtain any necessary permission from the original owners and include any required attribution for your use of such content. WISE will not be held responsible for the unauthorized use by a WISE account holder of any third-party content in WISE projects or on any other sections of the WISE site.</source>
@@ -1445,7 +1445,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="translated">當學生和老師使用WISE時，我們將保存事件資料，例如滑鼠點擊、瀏覽頁面所花費的時間以及其他網站互動。 該資料用於研究目的以及WISE專題運行中的自動化分析和工具。 （有關更多信息，請參見“我們如何使用資料”。）</target>
+        <target state="translated">當學生和老師使用WISE時，我們將儲存事件資料，例如滑鼠點擊、瀏覽頁面所花費的時間以及其他網站互動。 該資料用於研究目的以及WISE專題運行中的自動化分析和工具。 （有關更多信息，請參見“我們如何使用資訊”。）</target>
       </trans-unit>
       <trans-unit id="4f489cc30da4fa5f11f653ae52eacef505ba9170" datatype="html">
         <source>Cookies</source>
@@ -1477,7 +1477,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="translated">WISE使用Google Analytics來幫助我們了解我們的網站使用情況。 我們使用諸如您訪問的頁面和獲得的點擊之類的數據來幫助我們改善網站。 Google Analytics收集和處理的訊息包括用戶IP地址、網路位置和地理位置。 某些瀏覽器允許您通過為瀏覽器安裝擴充套件來退出Google Analytics跟踪。</target>
+        <target state="translated">WISE使用Google Analytics來幫助我們了解我們的網站使用情況。 我們使用諸如您訪問的頁面和獲得的點擊之類的數據來幫助我們改善網站。 Google Analytics收集和處理的資訊包括用戶IP地址、網路位置和地理位置。 某些瀏覽器允許您通過為瀏覽器安裝擴充套件來退出Google Analytics跟踪。</target>
       </trans-unit>
       <trans-unit id="9af481581bbddd55af685583742a16757964160e" datatype="html">
         <source>3. How We Use the Data</source>
@@ -1509,7 +1509,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation">When generating and analyzing research data, student names are removed from all student work and replaced with identification numbers. This process of replacing names with identification numbers is performed automatically by the WISE platform when exporting research data and will be performed by teachers if any other student work (e.g., from other instructional materials) is to be analyzed by researchers.</target>
+        <target state="translated">在產生和分析研究資料時，將從所有學生作業中刪除學生姓名，並用編號代替。 WISE平台在導出研究資料時會自動執行此用編號代替姓名的過程，如果研究人員要分析其他任何學生作業（例如，來自其他教學內容），則將由教師執行。</target>
       </trans-unit>
       <trans-unit id="d87525b73f1b562f8e65e395225c27c3a95fa920" datatype="html">
         <source>Email addresses for teacher accounts are used for communication: (a) for support, and (b) for occasional public announcements from the WISE Team. Teacher email addresses are also used to facilitate resetting of passwords.</source>
@@ -1517,7 +1517,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation">Email addresses for teacher accounts are used for communication: (a) for support, and (b) for occasional public announcements from the WISE Team. Teacher email addresses are also used to facilitate resetting of passwords.</target>
+        <target state="translated">教師帳號的電子郵件用於聯繫：（a）支援，（b）WISE團隊偶爾發布的公告。 教師電子郵件地址也用於幫助重啟密碼。</target>
       </trans-unit>
       <trans-unit id="79fd12be51fabc3997ebf91056835b68468377e4" datatype="html">
         <source>We do not ask students for their email address and do not share any student personal information with outside parties. Only the students' teachers can access student names and usernames within WISE (for purposes of reviewing student work, grading, sending feedback, etc). Each participating teacher will have access to his or her own students' project work and will not be able to see any information from other teachers' students. Teachers are also able to reset passwords for their students.</source>
