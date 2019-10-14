@@ -3092,7 +3092,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher/forgot-teacher.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Teacher Forgot Username or Password</target>
+        <target state="translated">教師忘記帳號或密碼</target>
       </trans-unit>
       <trans-unit id="6244139ed5734258736685c4d638b4fac1b04bbb" datatype="html">
         <source>Forgot Student Password</source>
@@ -3100,7 +3100,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-password/forgot-student-password.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Forgot Student Password</target>
+        <target state="translated">忘記學生密碼</target>
       </trans-unit>
       <trans-unit id="fa35e72aac432810b1ffca368a2e203c894d28eb" datatype="html">
         <source>Username required</source>
@@ -3112,7 +3112,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Username required</target>
+        <target state="translated">需要使用者名稱</target>
       </trans-unit>
       <trans-unit id="c69eedb9000f33dbc7e6fc00e2cbdb830c83f214" datatype="html">
         <source>Forgot Student Username</source>
@@ -3124,7 +3124,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-username/forgot-student-username.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Forgot Student Username</target>
+        <target state="translated">忘記學生帳號</target>
       </trans-unit>
       <trans-unit id="8017fdbaf670dcefd48842920617824337d762f7" datatype="html">
         <source>Create New Account</source>
@@ -3160,7 +3160,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-        <target state="needs-translation">Create New Account</target>
+        <target state="translated">建立新帳戶</target>
       </trans-unit>
       <trans-unit id="c83b838d845690bcb897f775f53b5316535306dc" datatype="html">
         <source>First Name</source>
@@ -3188,7 +3188,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">First Name</target>
+        <target state="translated">名</target>
       </trans-unit>
       <trans-unit id="dfb446b53f5c04e99f7deed2f454d3e959e1d324" datatype="html">
         <source>First Name required</source>
@@ -3212,7 +3212,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">First Name required</target>
+        <target state="translated">名字是必填的</target>
       </trans-unit>
       <trans-unit id="166b2cc65003221ff5f3ec05d5baca41e6821396" datatype="html">
         <source>Last Name</source>
@@ -3240,7 +3240,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="needs-translation">Last Name</target>
+        <target state="translated">姓</target>
       </trans-unit>
       <trans-unit id="17de8a2f90413b5c8a6d622d9cfa4c5eda8bb742" datatype="html">
         <source>Last Name required</source>
@@ -3264,7 +3264,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-        <target state="needs-translation">Last Name required</target>
+        <target state="translated">姓氏是必填的</target>
       </trans-unit>
       <trans-unit id="4b7e7f2459572a6ee907c22976119464ae2556bf" datatype="html">
         <source>Birthday (Month)</source>
@@ -3276,7 +3276,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">44</context>
         </context-group>
-        <target state="needs-translation">Birthday (Month)</target>
+        <target state="translated">月份</target>
       </trans-unit>
       <trans-unit id="53b5f38b420c0d1f9b62a0b34612ed28a20d37d8" datatype="html">
         <source>Month required</source>
@@ -3288,7 +3288,10 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
-        <target state="needs-translation">Month required</target>
+        <target state="translated">出生月份是必填的</target>
+        <alt-trans>
+          <target>月份是必填的</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e3945fcac2b828a12bd531c748cf8bd08b04498c" datatype="html">
         <source>Birthday (Day)</source>
@@ -3300,7 +3303,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">Birthday (Day)</target>
+        <target state="translated">日期</target>
       </trans-unit>
       <trans-unit id="c086edf00fc75cb05dc70186d7c2b60ddc8a7cb4" datatype="html">
         <source>Day required</source>
@@ -3312,7 +3315,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">Day required</target>
+        <target state="translated">出生日是必填的</target>
       </trans-unit>
       <trans-unit id="7e892ba15f2c6c17e83510e273b3e10fc32ea016" datatype="html">
         <source>Search</source>
@@ -3320,7 +3323,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-username/forgot-student-username.component.html</context>
           <context context-type="linenumber">58</context>
         </context-group>
-        <target state="needs-translation">Search</target>
+        <target state="translated">搜尋</target>
       </trans-unit>
       <trans-unit id="53a454dd8d85d4a61d248f7452828b57d70e5055" datatype="html">
         <source>Forgot Teacher Username</source>
@@ -3332,7 +3335,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Forgot Teacher Username</target>
+        <target state="translated">忘記教師帳號</target>
       </trans-unit>
       <trans-unit id="23af976ab1853a354809cbada9c79f9a9c64df3d" datatype="html">
         <source>Teacher Forgot Password</source>
@@ -3348,7 +3351,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">Teacher Forgot Password</target>
+        <target state="translated">教師忘記密碼</target>
       </trans-unit>
       <trans-unit id="8994fda971a6de5ac8b393ab5f86aed5e914de4a" datatype="html">
         <source>Answer Security Question</source>
@@ -3356,7 +3359,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Answer Security Question</target>
+        <target state="translated">回答安全問題</target>
       </trans-unit>
       <trans-unit id="36a316cb26f14955dcbc311d9f6f326a079df159" datatype="html">
         <source>Answer required</source>
@@ -3364,7 +3367,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Answer required</target>
+        <target state="translated">回答是必填的</target>
       </trans-unit>
       <trans-unit id="5ead54400cc272b882d8fb68895f8cf558d8edd7" datatype="html">
         <source>Password required</source>
@@ -3384,7 +3387,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">94</context>
         </context-group>
-        <target state="needs-translation">Password required</target>
+        <target state="translated">密碼是必填的</target>
       </trans-unit>
       <trans-unit id="c1b7e6d75ff4285c7636c67e5ef259629b81725b" datatype="html">
         <source>Confirm Password</source>
@@ -3404,7 +3407,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">99</context>
         </context-group>
-        <target state="needs-translation">Confirm Password</target>
+        <target state="translated">確認密碼</target>
       </trans-unit>
       <trans-unit id="3979fc2476b643d89e8a9f38d1bbc3014c4a4891" datatype="html">
         <source>Password Changed</source>
@@ -3416,7 +3419,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-complete/forgot-teacher-password-complete.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Password Changed</target>
+        <target state="translated">密碼已更改</target>
       </trans-unit>
       <trans-unit id="2784275ed58bc0769631888b08b14612543c64ec" datatype="html">
         <source>Your password has been successfully changed. Click the button below to sign in.</source>
@@ -3428,7 +3431,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-complete/forgot-teacher-password-complete.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Your password has been successfully changed. Click the button below to sign in.</target>
+        <target state="translated">你的密碼已成功更改。 點擊下方的按鈕重新登錄。</target>
       </trans-unit>
       <trans-unit id="5c112eccf2cd10cf48736fb8fd2c18c1788b6bb9" datatype="html">
         <source>Email Sent</source>
@@ -3436,7 +3439,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-username-complete/forgot-teacher-username-complete.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Email Sent</target>
+        <target state="translated">已發送郵件</target>
       </trans-unit>
       <trans-unit id="d435ebc318d809e47590e548156cb48e005bf444" datatype="html">
         <source>Your username has been sent to your email. Once you have received your username, you can use the button below to sign in.</source>
@@ -3444,7 +3447,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-username-complete/forgot-teacher-username-complete.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Your username has been sent to your email. Once you have received your username, you can use the button below to sign in.</target>
+        <target state="translated">您的帳號已發送到您的電子郵件。 收到帳號後，您可以使用下方的按鈕登入。</target>
       </trans-unit>
       <trans-unit id="a4d0068934144e3f61b8e981a62e014ab0a90ebe" datatype="html">
         <source>Enter Verification Code</source>
@@ -3452,7 +3455,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Enter Verification Code</target>
+        <target state="translated">輸入驗證碼</target>
       </trans-unit>
       <trans-unit id="f5678bbf6890d459f03f2b9e563a5643af79f3f0" datatype="html">
         <source>We have sent a verification code to your email. Please check your email and enter the verification code below.</source>
@@ -3460,7 +3463,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">We have sent a verification code to your email. Please check your email and enter the verification code below.</target>
+        <target state="translated">我們已經向您的電子郵件發送了驗證碼。 請檢查您的電子郵件，然後在下方輸入驗證碼。</target>
       </trans-unit>
       <trans-unit id="0b0c831918036f2a99b923ae0d79076409374fef" datatype="html">
         <source>Verification Code</source>
@@ -3468,7 +3471,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Verification Code</target>
+        <target state="translated">驗證碼</target>
       </trans-unit>
       <trans-unit id="e84f19d665b761a941a2038aca627b2011f34a26" datatype="html">
         <source>Verification Code required</source>
@@ -3476,7 +3479,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Verification Code required</target>
+        <target state="translated">驗證碼是必填的</target>
       </trans-unit>
       <trans-unit id="486c6addfeb93356cab8bbb37310c8f61534e1f2" datatype="html">
         <source>Getting Started</source>
@@ -3496,7 +3499,7 @@
           <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Getting Started</target>
+        <target state="translated">開始使用</target>
       </trans-unit>
       <trans-unit id="d8a1b53c813ad335ed55f8201498c45af536f8b5" datatype="html">
         <source>Creating an Account</source>
@@ -3504,7 +3507,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Creating an Account</target>
+        <target state="translated">建立帳戶</target>
       </trans-unit>
       <trans-unit id="d38483514cb4d3dfdb109d7a3381dee14b11cfc1" datatype="html">
         <source>
@@ -3514,8 +3517,8 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">
-    All users must create their own account. Teachers must create a teacher account and students must create a student account. Users can create an account by going to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and clicking on the <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> link at the upper right of the screen.
+        <target state="translated">
+    所有使用者都必須創立自己的帳號。 教師必須建立一個教師帳號，而學生必須建立一個學生帳號。 使用者可以到<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE首頁<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>並點擊螢幕右上方的<x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>連結來建立帳號。
   </target>
       </trans-unit>
       <trans-unit id="8667ecd04a352367c4c964c92a7763320d3f8946" datatype="html">
@@ -3524,7 +3527,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Here are instructions on how to create a teacher account.</target>
+        <target state="translated">以下是有關如何建立教師帳號的說明。</target>
       </trans-unit>
       <trans-unit id="2964f6a797ee681e920953a80029f041f0edc7bf" datatype="html">
         <source>Go to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
