@@ -685,10 +685,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="translated">評估和區分不同的訊息</target>
-        <alt-trans>
-          <target>評估並區分不同的訊息</target>
-        </alt-trans>
+        <target state="translated">評估和區分不同的資訊</target>
       </trans-unit>
       <trans-unit id="85031434993fe1bad0400c10fb78687a633a21ac" datatype="html">
         <source>Construct explanations through reflection and discussion</source>
@@ -1073,7 +1070,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">109</context>
         </context-group>
-        <target state="translated">WISE單元透過與個人和社會相關的主題向學生介紹複雜的科學概念。 每個單元都使用經過課堂測試的教學模式，該模式重視學生帶來的想法，幫助他們將新的訊息與他們的個人經歷聯繫在一起，並將他們的思想融入對科學的理解中。</target>
+        <target state="translated">WISE單元透過與個人和社會相關的主題向學生介紹複雜的科學概念。 每個單元都使用經過課堂測試的教學模式，該模式重視學生帶來的想法，幫助他們將新的資訊與他們的個人經歷聯繫在一起，並將他們的思想融入對科學的理解中。</target>
       </trans-unit>
       <trans-unit id="ae2bc001ed6c6fb5416b490b7c6dbe2260697024" datatype="html">
         <source>Support Diverse Learners</source>
@@ -1239,7 +1236,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="translated">我們收集的信息</target>
+        <target state="translated">我們收集的資訊</target>
+        <alt-trans>
+          <target>我們收集的信息</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="3b2c25aac9bb263b63bc9310da65eb68324d83da" datatype="html">
         <source>How We Use the Data</source>
@@ -1263,7 +1263,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="translated">訊息安全</target>
+        <target state="translated">資訊安全</target>
+        <alt-trans>
+          <target>訊息安全</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="a364c9c2a87d2b9cf91adffebe1e931310d94d60" datatype="html">
         <source>State &amp; Federal Laws</source>
@@ -1295,7 +1298,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-        <target state="translated">我們了解隱私對我們的社群，特別是全世界在教育活動中使用WISE資源的老師和學生的重要性。 該政策說明了我們收集的訊息，我們如何使用它以及我們為確保信息安全所做的工作。</target>
+        <target state="translated">我們了解隱私對我們的社群，特別是全世界在教育活動中使用WISE資源的老師和學生的重要性。 該政策說明了我們收集的資訊，我們如何使用它以及我們為確保資訊安全所做的工作。</target>
       </trans-unit>
       <trans-unit id="d8cb0bb1a320c0fdf31c9939c9e6f8deb55f3a63" datatype="html">
         <source>These Terms of Use and Privacy Policy constitute an agreement between you and the Web-based Inquiry Science Environment team that governs your use of wise.berkeley.edu and all associated services and websites (collectively "WISE"). The WISE team is a federally-funded research group headquartered at the University of California, Berkeley and is a non-profit organization.</source>
@@ -1327,7 +1330,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="translated">我們收集的信息</target>
+        <target state="translated">我們收集的資訊</target>
+        <alt-trans>
+          <target>我們收集的信息</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="2b16d754538c43298a40b3efa2b957beb1d29f27" datatype="html">
         <source>Personal Information</source>
@@ -1399,7 +1405,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <target state="translated">WISE的某些部分或功能可能允許您分享您對WISE內容或其他主題的觀點、經驗或偏好。 例如，您可以自願審核或評價WISE資源、回答用戶問題、標明最喜歡的WISE項目、回覆調查、分享個人信息或社交媒體資料鏈接到您的公共WISE個人資料等。您提供的信息將透過WISE被儲存，可以匿名或不與其他WISE用戶共享（只要您提供許可）。 除非本政策另有明確規定，否則WISE對您或任何第三方對您通過WISE網站自願提交的訊息不承擔任何責任。</target>
+        <target state="translated">WISE的某些部分或功能可能允許您分享您對WISE內容或其他主題的觀點、經驗或偏好。 例如，您可以自願審核或評價WISE資源、回答用戶問題、標明最喜歡的WISE專題、回覆調查、分享個人資訊或將社群媒體資料連結到您的公共WISE個人資料等。您提供的資訊將透過WISE被儲存，可以匿名或不與其他WISE用戶共享（只要您提供許可）。 除非本政策另有明確規定，否則WISE對您或任何第三方對您通過WISE網站自願提交的資訊不承擔任何責任。</target>
       </trans-unit>
       <trans-unit id="568b67fc6418a4b7c573ddceac9823ee0cfa9adc" datatype="html">
         <source>Licensing</source>
@@ -1487,7 +1493,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="translated">在任何情況下，我們都不會將您的訊息販賣給任何人。</target>
+        <target state="translated">在任何情況下，我們都不會將您的資訊販賣給任何人。</target>
       </trans-unit>
       <trans-unit id="ea5d4b60a8833374b7aab8168c828d0b22971ed6" datatype="html">
         <source>The WISE team uses de-identified user data to perform research. Researchers in the Graduate School of Education at The University of California at Berkeley and partner institutions may use de-identified data to perform data analyses and explore research topics. This data includes both user-generated and auto-generated content (see 'Information We Collect' section). Results of our research may be shared with educators and other researchers through conferences, journals, and other publications.</source>
@@ -1495,7 +1501,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="translated">WISE團隊使用已取消標識的用戶資料進行研究。 加州大學伯克利分校教育研究生院的研究人員和合作機構可以使用已取消識別的資料來進行資料分析和探索研究主題。 此資料包括用戶產生的內容和自動產生的內容（請參閱“我們收集的資料”部分）。 我們的研究結果可能會通過會議、期刊和其他出版物與教育者和其他研究人員共享。</target>
+        <target state="translated">WISE團隊使用去識別的用戶資料進行研究。 加州大學伯克利分校教育研究生院的研究人員和合作機構可以使用去識別的資料來進行資料分析和探索研究主題。 此資料包括用戶產生的內容和自動產生的內容（請參閱“我們收集的資訊”部分）。 我們的研究結果可能會通過會議、期刊和其他出版物與教育者和其他研究人員共享。</target>
       </trans-unit>
       <trans-unit id="c3e5c34f74aeac58acd9e6656046d51d968bae86" datatype="html">
         <source>When generating and analyzing research data, student names are removed from all student work and replaced with identification numbers. This process of replacing names with identification numbers is performed automatically by the WISE platform when exporting research data and will be performed by teachers if any other student work (e.g., from other instructional materials) is to be analyzed by researchers.</source>
