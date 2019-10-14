@@ -1423,7 +1423,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target state="needs-translation">You may link to or include outside resources or materials in your WISE projects or in any public parts of the WISE site, but it is your responsibility to obtain any necessary permission from the original owners and include any required attribution for your use of such content. WISE will not be held responsible for the unauthorized use by a WISE account holder of any third-party content in WISE projects or on any other sections of the WISE site.</target>
+        <target state="translated">您可以連結到WISE專題或WISE網站的任何公開部分中的外部資源或內容，但您有責任從原始所有者那裡獲得任何必要的許可，並包含您使用此類內容所需的任何歸屬。 對於WISE帳戶持有者未經授權使用WISE專題或WISE網站任何其他部分的任何第三方內容，WISE概不負責。</target>
       </trans-unit>
       <trans-unit id="716f7328f7d5fa0ca3e779de08cbb57f0e170883" datatype="html">
         <source>Auto-Generated Data</source>
@@ -1431,7 +1431,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <target state="needs-translation">Auto-Generated Data</target>
+        <target state="translated">自動產生數據</target>
       </trans-unit>
       <trans-unit id="b1f5669bb23dc1a815043d912919ee226524739c" datatype="html">
         <source>When students and teachers use WISE, we save event data such as mouse clicks, time spent viewing pages, and other site interactions. This data is used for research purposes and for automated analyses and tools within WISE project runs. (See ‘How We Use the Data' for more information.)</source>
@@ -1439,7 +1439,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">When students and teachers use WISE, we save event data such as mouse clicks, time spent viewing pages, and other site interactions. This data is used for research purposes and for automated analyses and tools within WISE project runs. (See ‘How We Use the Data' for more information.)</target>
+        <target state="translated">當學生和老師使用WISE時，我們將保存事件資料，例如滑鼠點擊、瀏覽頁面所花費的時間以及其他網站切換。 該資料用於研究目的以及WISE專題運行中的自動化分析和工具。 （有關更多信息，請參見“我們如何使用資料”。）</target>
+        <alt-trans>
+          <target>當學生和老師使用WISE時，我們將保存事件資料，例如滑鼠點擊、瀏覽頁面所花費的時間以及其他網站交互。 該資料用於研究目的以及WISE專題運行中的自動化分析和工具。 （有關更多信息，請參見“我們如何使用資料”。）</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="4f489cc30da4fa5f11f653ae52eacef505ba9170" datatype="html">
         <source>Cookies</source>
@@ -1447,7 +1450,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">Cookies</target>
+        <target state="translated">瀏覽器暫存記錄檔</target>
       </trans-unit>
       <trans-unit id="bd0246d98ce40cc5ad586bd1792e8ca55f1b7269" datatype="html">
         <source>When you log in, WISE will ask your browser to put a "cookie" on your computer. This allows WISE to remember that you are logged in when you go to a different page. You can delete this cookie at any time through your browser's settings.</source>
