@@ -3551,7 +3551,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Click on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Teacher<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">點擊<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>教師<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="802cc87d8831d0d77405a7acd6d0ac904580d1f8" datatype="html">
         <source>Choose to sign up with your email or with your Google Account.</source>
@@ -3567,7 +3567,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Choose to sign up with your email or with your Google Account.</target>
+        <target state="translated">選擇使用您的電子郵件或Google帳戶註冊。</target>
       </trans-unit>
       <trans-unit id="96dd8e77e6d9cc5a20a58f0e665033c9bbb453a2" datatype="html">
         <source>Fill out the form and submit it.</source>
@@ -3583,7 +3583,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Fill out the form and submit it.</target>
+        <target state="translated">填寫表單並送出。</target>
       </trans-unit>
       <trans-unit id="975971ac2dc0d8cef08dcb18f641f58f6f77d3c5" datatype="html">
         <source>If you created an account using your email, you will be given a username that you will need to remember. Your username will be your first name and your last name with no space inbetween. There may be a number added at the end of your username if someone has the same name as you.</source>
@@ -3599,7 +3599,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">If you created an account using your email, you will be given a username that you will need to remember. Your username will be your first name and your last name with no space inbetween. There may be a number added at the end of your username if someone has the same name as you.</target>
+        <target state="translated">如果您使用電子郵件建立了一個帳戶，將獲得一個帳號，您需要記住該帳號。 您的帳號將是您的名字和姓氏，中間沒有空格。 如果某人的名字與您相同，則帳號末尾可能會添加一個數字。</target>
       </trans-unit>
       <trans-unit id="905ffa00030446fe94ad48b0690cf4c703ddf061" datatype="html">
         <source>Using a WISE Unit</source>
@@ -3607,7 +3607,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">Using a WISE Unit</target>
+        <target state="translated">使用WISE課程</target>
       </trans-unit>
       <trans-unit id="90ec3aae8236091afd31bd0b64d9ddc6f8cdd59a" datatype="html">
         <source>To use a WISE unit with your class, you must first choose a unit to use and then set up a "Run" of that unit.</source>
@@ -3615,7 +3615,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-        <target state="needs-translation">To use a WISE unit with your class, you must first choose a unit to use and then set up a "Run" of that unit.</target>
+        <target state="translated">要在課堂上使用WISE課程，首先選擇要使用的課程，然後將該課程設定為“執行”狀態。</target>
       </trans-unit>
       <trans-unit id="b76ba9990938b43e176c04d0e0d9ba95aa6ee325" datatype="html">
         <source>Here are instructions on how to set up a Run.</source>
@@ -3623,7 +3623,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">Here are instructions on how to set up a Run.</target>
+        <target state="translated">以下是關於如何設定執行的說明。</target>
       </trans-unit>
       <trans-unit id="e9a22cb12f2c9f5db14a01d04ae6d9e829cd5b48" datatype="html">
         <source>Sign in to WISE with your teacher account.</source>
@@ -3635,7 +3635,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Sign in to WISE with your teacher account.</target>
+        <target state="translated">使用您的教師帳號登入WISE。</target>
       </trans-unit>
       <trans-unit id="9d2a72632d6e73065adbe8ea78a680e16c07619c" datatype="html">
         <source>Click the "Browse WISE Units" tab.</source>
@@ -3651,7 +3651,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">110</context>
         </context-group>
-        <target state="needs-translation">Click the "Browse WISE Units" tab.</target>
+        <target state="translated">點擊“瀏覽WISE課程”標籤。</target>
       </trans-unit>
       <trans-unit id="6aad599c3073e68956b4f15a368db489510bbe7e" datatype="html">
         <source>Find a project that you would like to use with your class.</source>
@@ -3663,7 +3663,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-        <target state="needs-translation">Find a project that you would like to use with your class.</target>
+        <target state="translated">找出您想與班級一起使用的課程。</target>
       </trans-unit>
       <trans-unit id="034f8c49e52de836444ee0a380700af6068d299f" datatype="html">
         <source>Click on the project to open the information for the project.</source>
@@ -3675,7 +3675,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">28</context>
         </context-group>
-        <target state="needs-translation">Click on the project to open the information for the project.</target>
+        <target state="translated">點擊專題以打開該專題的資訊。</target>
       </trans-unit>
       <trans-unit id="f5d3e0352ec003e7072916f913e6340c4e2d3613" datatype="html">
         <source>Click the "Use With Class" button.</source>
