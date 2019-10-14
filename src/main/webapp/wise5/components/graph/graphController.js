@@ -284,20 +284,20 @@ class GraphController extends ComponentController {
        * Remove all existing listeners on the chart div to make sure we don't
        * bind a listener multiple times.
        */
-      $('#' + this.chartId).unbind();
-      $('#' + this.chartId).bind('mousedown', (e) => {
+      angular.element(document.querySelector(`#${this.chartId}`)).unbind();
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousedown', (e) => {
         this.mouseDown = true;
         this.mouseDownEventOccurred(e);
       });
-      $('#' + this.chartId).bind('mouseup', (e) => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseup', (e) => {
         this.mouseDown = false;
       });
-      $('#' + this.chartId).bind('mousemove', (e) => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousemove', (e) => {
         if (this.mouseDown) {
           this.mouseDownEventOccurred(e);
         }
       });
-      $('#' + this.chartId).bind('mouseleave', (e) => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseleave', (e) => {
         this.mouseDown = false;
       });
       this.setupMouseMoveListenerDone = true;
@@ -343,7 +343,7 @@ class GraphController extends ComponentController {
   }
 
   handleMouseDownXPosition(e) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     const chartXAxis = chart.xAxis[0];
     let x = chartXAxis.toValue(e.offsetX, false);
     x = this.makeSureXIsWithinXMinMaxLimits(x);
@@ -354,7 +354,7 @@ class GraphController extends ComponentController {
   }
 
   handleMouseDownYPosition(e) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     const chartYAxis = chart.yAxis[0];
     let y = chartYAxis.toValue(e.offsetY, false);
     y = this.makeSureYIsWithinYMinMaxLimits(y);
@@ -370,7 +370,7 @@ class GraphController extends ComponentController {
    * @param text The text to show on the plot line.
    */
   showXPlotLine(x, text) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     const chartXAxis = chart.xAxis[0];
     chartXAxis.removePlotLine('plot-line-x');
     const plotLine = {
@@ -413,18 +413,18 @@ class GraphController extends ComponentController {
   }
 
   convertToXPixels(graphUnitValue) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     return chart.xAxis[0].translate(graphUnitValue);
   }
 
   convertToYPixels(graphUnitValue) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     return chart.yAxis[0].translate(graphUnitValue);
   }
 
   createRectangleIfNecessary(strokeColor, strokeWidth, fillColor, fillOpacity) {
     if (this.rectangle == null) {
-      const chart = $('#' + this.chartId).highcharts();
+      const chart = this.getChartById(this.chartId);
       this.rectangle = chart.renderer.rect(0,0,0,0,0).css({
         stroke: strokeColor,
         strokeWidth: strokeWidth,
@@ -435,7 +435,7 @@ class GraphController extends ComponentController {
   }
 
   updateRectanglePositionAndSize(xMin, xMax, yMin, yMax) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     this.rectangle.attr({
       x: xMin + chart.plotLeft,
       y: chart.plotHeight + chart.plotTop - yMax,
@@ -450,7 +450,7 @@ class GraphController extends ComponentController {
    * @param text The text to show on the plot line.
    */
   showYPlotLine(y, text) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     const chartYAxis = chart.yAxis[0];
     chartYAxis.removePlotLine('plot-line-y');
     const plotLine = {
@@ -1656,13 +1656,22 @@ class GraphController extends ComponentController {
     return nextSeriesId;
   }
 
+  getChartById(chartId) {
+    for (const chart of Highcharts.charts) {
+      if (chart != null && chart.renderTo.id === chartId) {
+        return chart;
+      }
+    }
+    return null;
+  }
+
   handleDeleteKeyPressed() {
     const series = this.activeSeries;
     if (this.canEdit(series)) {
-      const chart = $('#' + this.chartId).highcharts();
+      const chart = this.getChartById(this.chartId)
       const selectedPoints = chart.getSelectedPoints();
       let index = null;
-      if (selectedPoints != null) {
+      if (selectedPoints.length > 0) {
         const indexesToDelete = [];
         const data = series.data;
         for (const selectedPoint of selectedPoints) {
@@ -2298,7 +2307,7 @@ class GraphController extends ComponentController {
   }
 
   snipGraph($event) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     const svgString = chart.getSVG();
     const hiddenCanvas = document.getElementById(this.hiddenCanvasId);
     canvg(hiddenCanvas, svgString, { renderCallback: () => {
@@ -2881,7 +2890,7 @@ class GraphController extends ComponentController {
   }
 
   showTooltipOnX(seriesId, x) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     if (chart.series.length > 0) {
       let series = null;
       if (seriesId == null) {
@@ -2903,7 +2912,7 @@ class GraphController extends ComponentController {
   }
 
   highlightPointOnX(seriesId, x) {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     if (chart.series.length > 0) {
       let series = null;
       if (seriesId == null) {
@@ -2935,7 +2944,7 @@ class GraphController extends ComponentController {
   }
 
   showTooltipOnLatestPoint() {
-    const chart = $('#' + this.chartId).highcharts();
+    const chart = this.getChartById(this.chartId);
     if (chart.series.length > 0) {
       const latestSeries = chart.series[chart.series.length - 1];
       const points = latestSeries.points;
