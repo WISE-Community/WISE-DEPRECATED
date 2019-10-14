@@ -1,6 +1,6 @@
 <div ng-controller='ConceptMapController as conceptMapController' ng-mouseup='conceptMapController.mouseUp()' flex>
   <style>
-    {{conceptMapController.nodeContent.style}}
+    {{::conceptMapController.nodeContent.style}}
   </style>
   <div ng-switch='::conceptMapController.mode'>
     <div ng-switch-when='grading|gradingRevision'

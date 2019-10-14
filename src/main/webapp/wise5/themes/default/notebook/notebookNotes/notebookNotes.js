@@ -124,13 +124,11 @@ class NotebookNotesController {
   }
 
   getTitle() {
-    let title = '';
     if (this.insertMode) {
-      title = this.$translate('selectItemToInsert');
+      return this.$translate('selectItemToInsert');
     } else {
-      title = this.config.itemTypes.note.label.link;
+      return this.config.itemTypes.note.label.link;
     }
-    return title;
   }
 
   editItem($ev, note) {
@@ -203,13 +201,13 @@ const NotebookNotes = {
       <md-tabs md-selected="$ctrl.selectedTabIndex" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
         <md-tab ng-repeat="group in $ctrl.groups"
             ng-disabled="::group.disabled"
-            label="{{group.title}}">
+            label="{{::group.title}}">
           <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
               <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
-                <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>
+                <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{::$ctrl.config.itemTypes.note.label.plural}}"></div>
                 <notebook-item ng-repeat="note in group.items"
                     config="$ctrl.config"
-                    group="{{group.name}}"
+                    group="{{::group.name}}"
                     item-id="note.localNotebookItemId"
                     is-edit-allowed="group.isEditAllowed"
                     is-choose-mode="$ctrl.insertMode"

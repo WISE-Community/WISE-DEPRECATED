@@ -7,7 +7,7 @@
             </div>
             <div class="md-list-item-text">
                 <span ng-repeat="username in ::themeCtrl.workgroupUsernames">{{::username.name}}<span ng-if="!$last">,&nbsp;</span></span>&nbsp;
-                <span class="account-menu__info__team" translate="accountMenuTeam" translate-value-id="{{themeCtrl.workgroupId}}"></span>
+                <span class="account-menu__info__team" translate="accountMenuTeam" translate-value-id="{{::themeCtrl.workgroupId}}"></span>
             </div>
         </md-list-item>
     </md-list>

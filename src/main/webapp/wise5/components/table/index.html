@@ -71,7 +71,7 @@
                 ng-click='nodeController.showStudentAssets($event, component.id, tableController.isDisabled)'
                 ng-disabled='tableController.isDisabled'>
               <md-icon>image</md-icon>
-              {{ 'table.importData' | translate }}
+              {{ ::'table.importData' | translate }}
             </md-button>
           </div>
           <md-button class='md-accent'
@@ -79,14 +79,14 @@
               ng-if='tableController.showResetTableButton()'
               ng-disabled='tableController.isDisabled'>
             <md-icon>restore</md-icon>
-            {{ 'reset' | translate }}
+            {{ ::'reset' | translate }}
           </md-button>
           <md-button class='md-accent'
               ng-click='tableController.snipTable($event)'
               ng-if='::tableController.isAddToNotebookEnabled()'
               ng-disabled='tableController.isDisabled'>
             <md-icon>note_add</md-icon>
-            {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
+            {{ ::'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
           </md-button>
           <table id='{{tableController.tableId}}'
               class='table table--student'>
@@ -116,7 +116,7 @@
                 ng-if='::tableController.isSaveButtonVisible'
                 aria-label='Save'
                 translate='SAVE'>
-              {{ 'save' | translate }}
+              {{ ::'save' | translate }}
             </md-button>
             <md-button class='md-raised md-primary'
                 ng-click='tableController.submitButtonClicked()'
@@ -124,7 +124,7 @@
                 ng-if='::tableController.isSubmitButtonVisible'
                 aria-label='Submit'
                 translate='SUBMIT'>
-              {{ 'submit' | translate }}
+              {{ ::'submit' | translate }}
             </md-button>
             <span ng-if='tableController.saveMessage.text'
                 class='component__actions__info md-caption'>

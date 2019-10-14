@@ -73,14 +73,14 @@
             ng-if='::drawController.isAddToNotebookEnabled()'
             ng-disabled='drawController.isDisabled'>
           <md-icon>note_add</md-icon>
-          {{ 'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
+          {{ ::'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
         </md-button>
         <md-button class='md-accent md-primary'
                    ng-click='drawController.copyPublicNotebookItemButtonClicked($event)'
                    ng-if='::drawController.showCopyPublicNotebookItemButton()'
                    ng-disabled='drawController.isDisabled'>
           <md-icon>file_download</md-icon>
-          {{ 'importClassmateWork' | translate:{label:drawController.notebookConfig.label} }}
+          {{ ::'importClassmateWork' | translate:{label:drawController.notebookConfig.label} }}
         </md-button>
         <div data-drop='true'
             jqyoui-droppable='{onDrop: "drawController.dropCallback(item, $index)"}'>
