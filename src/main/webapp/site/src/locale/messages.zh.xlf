@@ -4171,7 +4171,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="needs-translation">Alternatively, you can change the password for ALL students in the current period (the new password will be applied to all the students in the period).</target>
+        <target state="translated">或者，您可以更改這個時間上所有學生的密碼（新密碼將應用於該期間的所有學生）。</target>
       </trans-unit>
       <trans-unit id="3444260f02adf2bf6ac230295ebd2beb0cf5780a" datatype="html">
         <source>How do I change a student team after they've started a project run?</source>
@@ -4179,7 +4179,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">How do I change a student team after they've started a project run?</target>
+        <target state="translated">教師如何在專題開始後更改學生組別？</target>
       </trans-unit>
       <trans-unit id="e2ba447afc78e6be3baf2014b334cac6656236aa" datatype="html">
         <source>Drag-and-drop student names to move them from one team to another. Make sure to save your changes before leaving this window.</source>
