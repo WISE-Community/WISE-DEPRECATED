@@ -1525,7 +1525,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation">We do not ask students for their email address and do not share any student personal information with outside parties. Only the students' teachers can access student names and usernames within WISE (for purposes of reviewing student work, grading, sending feedback, etc). Each participating teacher will have access to his or her own students' project work and will not be able to see any information from other teachers' students. Teachers are also able to reset passwords for their students.</target>
+        <target state="translated">我們不要求學生提供其電子郵件，也不與外界共享任何學生的個人資訊。 只有學生的老師可以在WISE中訪問學生的姓名及帳號（用於檢查學生的作業、評分、發送評語等）。 每位參與活動的老師將有權訪問他或她自己的學生的專題內容，並且將無法看到其他老師的學生的任何資訊。 教師也可以為學生重啟密碼。</target>
       </trans-unit>
       <trans-unit id="25bb43838a3729ddd0f3d61f352a80c55ce81010" datatype="html">
         <source>A small set of WISE administrators are able to access user account information and data for support and technical purposes. A few select researchers may access teacher accounts to view anonymized student work or support teachers in setting up and managing projects and runs.</source>
@@ -1533,7 +1533,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">66</context>
         </context-group>
-        <target state="needs-translation">A small set of WISE administrators are able to access user account information and data for support and technical purposes. A few select researchers may access teacher accounts to view anonymized student work or support teachers in setting up and managing projects and runs.</target>
+        <target state="translated">一小部分WISE管理員能夠訪問用戶帳號資訊和資料，用於支援和技術目的。 一些精選的研究人員可以登入教師帳號，以查看匿名的學生作業，或支援教師設定和管理專題及運行。</target>
       </trans-unit>
       <trans-unit id="1fc37dc8b8c475ae1e94dfaacd972514a289d08a" datatype="html">
         <source>We will not disclose your personally identifying information to any other parties except in the following cases: 1) In cases where you (or a legal guardian) have provided your express consent; 2) As required by applicable law; or 3) With the appropriate authorities (including schools, school districts, and law enforcement, when necessary) for the purposes of protecting the safety of users, other individuals, or the security of the site.</source>
@@ -1541,7 +1541,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">67</context>
         </context-group>
-        <target state="needs-translation">We will not disclose your personally identifying information to any other parties except in the following cases: 1) In cases where you (or a legal guardian) have provided your express consent; 2) As required by applicable law; or 3) With the appropriate authorities (including schools, school districts, and law enforcement, when necessary) for the purposes of protecting the safety of users, other individuals, or the security of the site.</target>
+        <target state="translated">除以下情況外，我們不會將您的個人資訊透露給任何其他方：1）如果您（或法定監護人）已明確表示同意； 2）根據適用法律的要求； 或3）為了保護用戶，其他人的安全或站點的安全，請與適當的主管部門（如果需要時，則包括學校、學區和執法機構）一起使用。</target>
       </trans-unit>
       <trans-unit id="ef29710ebb07c1bf2c97e99c8967001a8ce9caf8" datatype="html">
         <source>4. Rules of Use</source>
@@ -1549,7 +1549,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">4. Rules of Use</target>
+        <target state="translated">使用規則</target>
       </trans-unit>
       <trans-unit id="b1bf615bcd41ce20e24ba76efcffeca199138119" datatype="html">
         <source>WISE promotes and supports freedom of speech and expression and strives to create a welcoming, supportive, and productive community of educators and learners.</source>
