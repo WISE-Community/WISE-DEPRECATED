@@ -1637,7 +1637,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">89</context>
         </context-group>
-        <target state="translated">如果您居住在加利福尼亞州且未滿18歲，或者是18歲以下學生的父母或法定監護人，則可以要求從我們的網站中刪除您的資訊。 當您請求刪除您的資訊時，我們會盡力刪除您的所有個人資訊。 請注意，我們可能無法刪除儲存在我們資料庫中的所有去識別資訊或內容，也可能無法刪除根據適用的聯邦和州法律要求保留的內容。 如果您想請求刪除您或您孩子的內容或資訊，請通過https://wise.berkeley.edu/contact與我們聯繫以獲得幫助，或者您可以從您或孩子的帳戶中刪除特定資訊。</target>
+        <target state="translated">如果您居住在加利福尼亞州且未滿18歲，或者是18歲以下學生的父母或法定監護人，則可以要求從我們的網站中刪除您的資訊。 當您請求刪除您的資訊時，我們會盡力刪除您的所有個人資訊。 請注意，我們可能無法刪除儲存在我們資料庫中的所有去識別資訊或內容，也可能無法刪除根據適用的聯邦和州法律要求保留的內容。 如果您想請求刪除您或您孩子的內容或資訊，請透過https://wise.berkeley.edu/contact與我們聯繫以獲得幫助，或者您可以從您或孩子的帳戶中刪除特定資訊。</target>
       </trans-unit>
       <trans-unit id="a696cb5c99995dd1420b2dd62b2c6409888b9605" datatype="html">
         <source>Family Educational Rights and Privacy Act (FERPA)</source>
@@ -1645,7 +1645,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">Family Educational Rights and Privacy Act (FERPA)</target>
+        <target state="translated">家庭教育權利和隱私法（FERPA）</target>
       </trans-unit>
       <trans-unit id="d961fdb0f1ecf8986fa129281805855cee5cca75" datatype="html">
         <source>We take care to be familiar with FERPA legislation and we take all possible measures to ensure your compliance with FERPA's requirements when you use WISE. We are confident that the protection of data outlined in this document satisfies its requirements.</source>
@@ -1653,7 +1653,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">92</context>
         </context-group>
-        <target state="needs-translation">We take care to be familiar with FERPA legislation and we take all possible measures to ensure your compliance with FERPA's requirements when you use WISE. We are confident that the protection of data outlined in this document satisfies its requirements.</target>
+        <target state="translated">我們會注重熟悉《家庭教育權和隱私權法案》，並且採取一切可能的措施來確保您在使用WISE時符合《家庭教育權和隱私權法案》的要求。 我們認為，文件中概述的資料保護符合其要求。</target>
       </trans-unit>
       <trans-unit id="41443d0531f4cbd040cbd27d732a1ab7b361b751" datatype="html">
         <source>7. Changes and Updates to the Terms of Use &amp; Privacy Policy</source>
@@ -1661,7 +1661,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">96</context>
         </context-group>
-        <target state="needs-translation">7. Changes and Updates to the Terms of Use &amp; Privacy Policy</target>
+        <target state="translated">7. 使用條款隱私政策的更改和更新</target>
       </trans-unit>
       <trans-unit id="c48aa34c21d6e247f54757d5fb617b1faa59f064" datatype="html">
         <source>We may occasionally update or modify our Terms of Use and Privacy Policy. We will always display the date this document was last updated. If we make significant changes to these terms, we will display a prominent notice on the WISE home page and may notify users via registered email.  We encourage you to review this document periodically. By continuing to use WISE after any changes to this document, you acknowledge that you agree to the current version of these terms.</source>
@@ -1669,7 +1669,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
-        <target state="needs-translation">We may occasionally update or modify our Terms of Use and Privacy Policy. We will always display the date this document was last updated. If we make significant changes to these terms, we will display a prominent notice on the WISE home page and may notify users via registered email.  We encourage you to review this document periodically. By continuing to use WISE after any changes to this document, you acknowledge that you agree to the current version of these terms.</target>
+        <target state="translated">我們有時可能會更新或修改我們的使用條款和隱私政策。 我們將始終顯示該文件檔的最後更新日期。 如果我們對這些條款進行重大更改，我們將在WISE首頁上顯示醒目的通知，並可能透過電子郵件通知用戶。 我們建議您定期閱讀此文件。 在對文件進行任何更改後繼續使用WISE，即表示您同意這些條款的最新版本。</target>
       </trans-unit>
       <trans-unit id="88698050f16ebf91474ddae66b687f795af7e57b" datatype="html">
         <source>If you have any questions or concerns about this document or the WISE site, please contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. We can also be reached by mail at:</source>
@@ -1677,7 +1677,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">98</context>
         </context-group>
-        <target state="needs-translation">If you have any questions or concerns about this document or the WISE site, please contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. We can also be reached by mail at:</target>
+        <target state="translated">如果您對文件或WISE網站有任何問題或疑慮，請透過 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>與我們聯繫。您也可以通過墊子郵件聯繫我們：</target>
       </trans-unit>
       <trans-unit id="a53ebef13aa69d9f02d5e74bad14f75519260813" datatype="html">
         <source>UC Berkeley Graduate School of Education</source>
@@ -1685,7 +1685,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">100</context>
         </context-group>
-        <target state="needs-translation">UC Berkeley Graduate School of Education</target>
+        <target state="translated">加州大學伯克利分校教育學院</target>
       </trans-unit>
       <trans-unit id="60d92c21ade5f819b7a1482c77f1cd0199d44440" datatype="html">
         <source>Web-based Inquiry Science Environment (WISE)</source>
@@ -1693,7 +1693,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
-        <target state="needs-translation">Web-based Inquiry Science Environment (WISE)</target>
+        <target state="translated">線上科學探究平台（WISE）</target>
       </trans-unit>
       <trans-unit id="25fdbce3537fcb574f51e927a84a17b5eef828c1" datatype="html">
         <source>Attn: David Crowell</source>
