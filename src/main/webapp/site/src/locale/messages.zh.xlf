@@ -1557,7 +1557,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <target state="needs-translation">WISE promotes and supports freedom of speech and expression and strives to create a welcoming, supportive, and productive community of educators and learners.</target>
+        <target state="translated">WISE促進並支持言論和表達自由，並努力建立一個受歡迎、能給予幫助及生產性的教育者和學習者社群。</target>
       </trans-unit>
       <trans-unit id="47fff652811daadbc91494bd2dffc16ae02f45fa" datatype="html">
         <source>You may not use WISE to promote bigotry, discrimination, hatred, or violence against any individual or group. You may not expose any other person's identifying or contact information without that person's permission. Threatening, harassing, or intimidating any other person is not allowed and we reserve the right to remove any user-generated content that, in our discretion, does so. Projects, discussion posts, and user-profile pages containing offensive or sexually explicit material will not be tolerated and removed from the site immediately once brought to the attention of the WISE team.</source>
@@ -1565,7 +1565,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
-        <target state="needs-translation">You may not use WISE to promote bigotry, discrimination, hatred, or violence against any individual or group. You may not expose any other person's identifying or contact information without that person's permission. Threatening, harassing, or intimidating any other person is not allowed and we reserve the right to remove any user-generated content that, in our discretion, does so. Projects, discussion posts, and user-profile pages containing offensive or sexually explicit material will not be tolerated and removed from the site immediately once brought to the attention of the WISE team.</target>
+        <target state="translated">您不得使用WISE對任何個人或團體煽動偏執，歧視，仇恨或暴力。 未經他人允許，您不得公開任何其他人的身份或聯繫資訊。 禁止威脅，騷擾或恐嚇任何其他人，並且我們保留刪除我們自行決定刪除的用戶產生內容的權利。 一旦引起WISE團隊的注意，將不會容忍並從網站中刪除包含冒犯性或露骨色情內容的項目、討論文章和用戶個人資料頁面。</target>
       </trans-unit>
       <trans-unit id="f1330e63665b0b21c183e95f2531534fa397e652" datatype="html">
         <source>You may not deliberately perform actions that are intended to negatively affect the WISE website or its users. You may not post links to harmful sites to download viruses or malware.</source>
