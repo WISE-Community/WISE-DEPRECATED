@@ -5144,7 +5144,7 @@
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
-        <target state="needs-translation">Please enter a valid email address</target>
+        <target state="translated">請輸入有效的電子信箱</target>
       </trans-unit>
       <trans-unit id="5c7012b5a926b32d9e45fefdcc8a1a3cb6f023d0" datatype="html">
         <source>City</source>
@@ -5156,7 +5156,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
-        <target state="needs-translation">City</target>
+        <target state="translated">城市</target>
       </trans-unit>
       <trans-unit id="526394b14298e223b7e076e1b0cd15e54b03fe22" datatype="html">
         <source>City required</source>
@@ -5168,7 +5168,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">City required</target>
+        <target state="translated">城市是必填的</target>
       </trans-unit>
       <trans-unit id="873b72903b1858a9cd6c8967521030b4d7d1435b" datatype="html">
         <source>State</source>
@@ -5180,7 +5180,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">State</target>
+        <target state="translated">州/省</target>
       </trans-unit>
       <trans-unit id="1417d4b0e633084ccb2b0bdb43d119c17ac0cd01" datatype="html">
         <source>State required</source>
@@ -5192,7 +5192,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation">State required</target>
+        <target state="translated">州/省是必填的</target>
       </trans-unit>
       <trans-unit id="a43f25a9ac40e8e2441ff0be7a36b8e5d15534df" datatype="html">
         <source>Country</source>
@@ -5204,7 +5204,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">Country</target>
+        <target state="translated">國家</target>
       </trans-unit>
       <trans-unit id="ef20a8366401a5c10bb1b459b34d40d828dba200" datatype="html">
         <source>Country required</source>
@@ -5216,7 +5216,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="needs-translation">Country required</target>
+        <target state="translated">國家是必填的</target>
       </trans-unit>
       <trans-unit id="2f3ba3fa63119eb68067c64a34cf1ff37b8e790a" datatype="html">
         <source>School Name</source>
@@ -5228,7 +5228,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="needs-translation">School Name</target>
+        <target state="translated">學校名稱</target>
       </trans-unit>
       <trans-unit id="804ee3edbc2df4841b73e55dfee3f0a2217e09ce" datatype="html">
         <source>School Name required</source>
@@ -5240,7 +5240,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">85</context>
         </context-group>
-        <target state="needs-translation">School Name required</target>
+        <target state="translated">學校名稱是必填的</target>
       </trans-unit>
       <trans-unit id="bb50c6e4315c4b5991486747158cba2db8460886" datatype="html">
         <source>School Level</source>
@@ -5252,7 +5252,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">90</context>
         </context-group>
-        <target state="needs-translation">School Level</target>
+        <target state="translated">學校級別</target>
       </trans-unit>
       <trans-unit id="a3f4acdc98e1b9e7af0f27f1c4f420b8298e7f3e" datatype="html">
         <source>School Level required</source>
@@ -5264,7 +5264,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">96</context>
         </context-group>
-        <target state="needs-translation">School Level required</target>
+        <target state="translated">學校級別是必填的</target>
       </trans-unit>
       <trans-unit id="da3b0dd33f2cb1c9b2d8a6a9cce5a4b59aaf6451" datatype="html">
         <source>How did you hear about us?</source>
@@ -5272,7 +5272,7 @@
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
           <context context-type="linenumber">106</context>
         </context-group>
-        <target state="needs-translation">How did you hear about us?</target>
+        <target state="translated">您是怎麼知道我們的？</target>
       </trans-unit>
       <trans-unit id="584ebc12808d276bf569e451417266bf68c6d8fa" datatype="html">
         <source>Password does not match</source>
@@ -5284,7 +5284,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="needs-translation">Password does not match</target>
+        <target state="translated">密碼不匹配</target>
       </trans-unit>
       <trans-unit id="bc1675556b151ef6a4e3031221cdb172cc3b9d5c" datatype="html">
         <source>I agree to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> *</source>
@@ -5292,7 +5292,7 @@
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
           <context context-type="linenumber">142</context>
         </context-group>
-        <target state="needs-translation">I agree to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> *</target>
+        <target state="translated">我同意 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE 隱私策略和使用條款<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> *</target>
       </trans-unit>
       <trans-unit id="63fa2c4efa44cd8a08579763cdd62f981a8b1aaa" datatype="html">
         <source>You must agree to the Privacy Policy &amp; Terms of Use</source>
@@ -5300,7 +5300,7 @@
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
           <context context-type="linenumber">143</context>
         </context-group>
-        <target state="needs-translation">You must agree to the Privacy Policy &amp; Terms of Use</target>
+        <target state="translated">您必須同意我們的隱私政策和使用條款</target>
       </trans-unit>
       <trans-unit id="89a4722a9d6828f6aa9e3600033561ffad582c36" datatype="html">
         <source>Your WISE account has been created!</source>
@@ -5312,7 +5312,7 @@
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Your WISE account has been created!</target>
+        <target state="translated">您的WISE帳號已建立！</target>
       </trans-unit>
       <trans-unit id="5aef459db579dd07ae9bc8685beccbac4fc1f7a8" datatype="html">
         <source>
@@ -5326,8 +5326,8 @@
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">
-      Your username is: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{username}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>.
+        <target state="translated">
+      你的帳號是: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{username}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>.
     </target>
       </trans-unit>
       <trans-unit id="b6c571f49a9876275382c366aabd8aac85dbbd8f" datatype="html">
@@ -5336,7 +5336,7 @@
           <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">You should receive an email with your account details shortly.</target>
+        <target state="translated">您馬上會收到一封包含您帳號資訊的電子郵件。</target>
       </trans-unit>
       <trans-unit id="573963e1285d0c1e6208d5bb8cab9eb6a8b6bb46" datatype="html">
         <source>Sign In to Get Started</source>
@@ -5348,7 +5348,7 @@
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">Sign In to Get Started</target>
+        <target state="translated">登錄並開始使用</target>
       </trans-unit>
       <trans-unit id="d745a22ae7b825b146ca8185126c482597f1d485" datatype="html">
         <source>Sign in with Google</source>
@@ -5372,7 +5372,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">Sign in with Google</target>
+        <target state="translated">使用 Google 登入</target>
       </trans-unit>
       <trans-unit id="34ddf1b79aa0ae0e5ced9f0f1de2af2cd5d883ba" datatype="html">
         <source>Create Student Account</source>
