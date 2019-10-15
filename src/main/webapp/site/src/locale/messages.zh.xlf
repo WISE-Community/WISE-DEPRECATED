@@ -4755,7 +4755,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">If you do not remember your username or password click the Lost Username or Password link and follow the instructions. </target>
+        <target state="translated">如果您忘記了帳號或密碼，請點擊“遺失的帳號或密碼”連結，然後按照說明進行操作。 </target>
       </trans-unit>
       <trans-unit id="df6ec49a683a1c798d509516f3b73dd1befb6a62" datatype="html">
         <source>Can I use WISE in another language?</source>
@@ -4767,7 +4767,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">53</context>
         </context-group>
-        <target state="needs-translation">Can I use WISE in another language?</target>
+        <target state="translated">我可以使用其他語言的WISE嗎？</target>
       </trans-unit>
       <trans-unit id="5e6b10e07638120f23c5e8bf743c1fed409876c7" datatype="html">
         <source>Yes!</source>
@@ -4779,7 +4779,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
-        <target state="needs-translation">Yes!</target>
+        <target state="translated">可以！</target>
       </trans-unit>
       <trans-unit id="cd761cded422c423fa11257b80da3e4ecff46339" datatype="html">
         <source>Click on your account icon at the top right of the page. This should open a drop down with options.</source>
@@ -4791,7 +4791,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">57</context>
         </context-group>
-        <target state="needs-translation">Click on your account icon at the top right of the page. This should open a drop down with options.</target>
+        <target state="translated">點擊頁面右上角的帳戶圖示。 這將開啟下拉式表單的選項。</target>
       </trans-unit>
       <trans-unit id="a8484540c88600524e3d99bffc641f5588cc4ecc" datatype="html">
         <source>Click the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>"Edit Profile"<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> option.</source>
