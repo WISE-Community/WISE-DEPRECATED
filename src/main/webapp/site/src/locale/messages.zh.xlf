@@ -4590,7 +4590,8 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">162</context>
         </context-group>
-        <target state="needs-translation">The following link will give you a sample rubric for grading a step in the Mitosis and Cell Processes project. The rubric is based on our TELS Center research on how students integrate their knowledge of complex science concepts. We hope that it can give you a start in developing your own rubrics for the notes and steps you plan to grade.</target>
+        <target state="translated">下面的連結將為您提供評量指標的範例，用於對有絲分裂和細胞過程專題中的步驟進行分級。該評量指標是在我們TELS中心的一項研究學生如何整合他們對複雜科學概念的知識的研究項目的基礎上進行的。 我們希望它可以讓您開始為計劃評分的筆記和步驟開發自己的評量指標。
+</target>
       </trans-unit>
       <trans-unit id="4d5c08a9dd67d4172985bfa1e4ba5afaa90c8dd8" datatype="html">
         <source>Sample rubric for assessing student work</source>
@@ -4598,7 +4599,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">163</context>
         </context-group>
-        <target state="needs-translation">Sample rubric for assessing student work</target>
+        <target state="translated">評估學生作業的評量指標範例</target>
       </trans-unit>
       <trans-unit id="6f12118a17d16549ad4800a13e534af3c06f8196" datatype="html">
         <source>How can I encourage my students to review the graded notes and comments I have made?</source>
@@ -4606,7 +4607,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">165</context>
         </context-group>
-        <target state="needs-translation">How can I encourage my students to review the graded notes and comments I have made?</target>
+        <target state="translated">我如何鼓勵學生查看我已評分的內容和評論？</target>
       </trans-unit>
       <trans-unit id="4c89f57cff7fe4aa81c04b787bcfeefa40c6ee32" datatype="html">
         <source>Many teachers find it advantageous to grade the first step or two at the end of the first day of the project run. At the beginning of class the next day they share with the whole class some sample responses and have the class critique the work.</source>
