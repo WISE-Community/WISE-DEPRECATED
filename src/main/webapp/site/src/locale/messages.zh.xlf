@@ -4615,7 +4615,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">167</context>
         </context-group>
-        <target state="needs-translation">Many teachers find it advantageous to grade the first step or two at the end of the first day of the project run. At the beginning of class the next day they share with the whole class some sample responses and have the class critique the work.</target>
+        <target state="translated">許多老師發現在執行課程的第一天結束時對第一步或第二步進行評分是有利的。 第二天在上課開始時，他們與全班同學分享一些範例回覆，並讓全班評論該項作業。</target>
       </trans-unit>
       <trans-unit id="15649bf7feb32472ef18cfb49d0014856da86b86" datatype="html">
         <source>How do I find time to grade all of the student work?</source>
@@ -4623,7 +4623,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">169</context>
         </context-group>
-        <target state="needs-translation">How do I find time to grade all of the student work?</target>
+        <target state="translated">我如何找到時間為所有學生作業評分？</target>
       </trans-unit>
       <trans-unit id="aa25bf22d74c6350808bdcad5b07d6af280353b6" datatype="html">
         <source>We recommend that you go through the project and select a few steps that you think best demonstrate the students' understanding of the complex concepts covered in the module and grade those steps. Then tell your students they must complete all questions but should concentrate their efforts on the key steps. We recognize that critically grading each step is very time consuming and unpractical.</source>
@@ -4631,7 +4631,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">171</context>
         </context-group>
-        <target state="needs-translation">We recommend that you go through the project and select a few steps that you think best demonstrate the students' understanding of the complex concepts covered in the module and grade those steps. Then tell your students they must complete all questions but should concentrate their efforts on the key steps. We recognize that critically grading each step is very time consuming and unpractical.</target>
+        <target state="translated">我們建議您完成該專題，然後選擇一些您認為最能說明學生對模組中涵蓋的複雜概念的理解的步驟，並對這些步驟進行評分。 然後告訴學生他們必須完成所有問題，但應將精力集中在關鍵步驟上。 我們發現到，嚴格評分每個步驟非常耗時且不切實際。</target>
       </trans-unit>
       <trans-unit id="d43085815938bf7369d9f4d71748c90955f4ac4c" datatype="html">
         <source>What is the Real Time Classroom Monitor?</source>
