@@ -4639,7 +4639,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">175</context>
         </context-group>
-        <target state="needs-translation">What is the Real Time Classroom Monitor?</target>
+        <target state="translated">什麼是即時課程監視器？</target>
       </trans-unit>
       <trans-unit id="29327e05e932f62505e1ff1e3719dde6df2a2503" datatype="html">
         <source>The Real Time Classroom Monitor allows teachers to view student progress in real time. Teachers will be able to see what step a student is on, how much time the student has spent on that step, and how much of the project the student has completed. All of this information will be updated immediately in real time as students work on the project.</source>
@@ -4647,7 +4647,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">177</context>
         </context-group>
-        <target state="needs-translation">The Real Time Classroom Monitor allows teachers to view student progress in real time. Teachers will be able to see what step a student is on, how much time the student has spent on that step, and how much of the project the student has completed. All of this information will be updated immediately in real time as students work on the project.</target>
+        <target state="translated">即時課程監視器使教師可以實時查看學生的進度。 教師將能夠查看學生正在執行的步驟，該步驟花費了多少時間以及該學生完成了多少項目。 當學生從事該專題時，所有這些資訊都將立刻即時更新。</target>
       </trans-unit>
       <trans-unit id="1afad465fed504ea4222ce6712c1431dabca3efb" datatype="html">
         <source>Does the Real Time Classroom Monitor work on a tablet like the iPad?</source>
@@ -4655,7 +4655,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">179</context>
         </context-group>
-        <target state="needs-translation">Does the Real Time Classroom Monitor work on a tablet like the iPad?</target>
+        <target state="translated">即時課程監視器可以在iPad等平板電腦上使用嗎？</target>
       </trans-unit>
       <trans-unit id="27b6112b01a06a0e3c0e0792bc1dbb38fc5b47b5" datatype="html">
         <source>Yes it does.</source>
@@ -4663,7 +4663,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">181</context>
         </context-group>
-        <target state="needs-translation">Yes it does.</target>
+        <target state="translated">是的，它可以。</target>
       </trans-unit>
       <trans-unit id="a9d707572558962320f0d20f346be62a0ae3b4d0" datatype="html">
         <source>Can I use the Real Time Classroom Monitor to pause student screens?</source>
@@ -4671,7 +4671,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">183</context>
         </context-group>
-        <target state="needs-translation">Can I use the Real Time Classroom Monitor to pause student screens?</target>
+        <target state="translated">我可以使用“即時課程監視器”暫停學生螢幕嗎？</target>
       </trans-unit>
       <trans-unit id="39ff505a10ad3f65f49a01a13d66a234d3813681" datatype="html">
         <source>Yes you can! This can be useful if you need to grab their attention in order to have a class discussion or to make an announcement.</source>
@@ -4679,7 +4679,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">185</context>
         </context-group>
-        <target state="needs-translation">Yes you can! This can be useful if you need to grab their attention in order to have a class discussion or to make an announcement.</target>
+        <target state="translated">是得，你可以！ 如果您需要引起他們的注意以進行課堂討論或發佈公告，這將非常有用。</target>
       </trans-unit>
       <trans-unit id="c7a7fe783c37fe2f45e8cdee103e70f13c5c7a7e" datatype="html">
         <source>The WISE web site won't load on my web browser. What do I do?</source>
@@ -4691,7 +4691,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">44</context>
         </context-group>
-        <target state="needs-translation">The WISE web site won't load on my web browser. What do I do?</target>
+        <target state="translated">WISE網站無法在我的瀏覽器上載入。 我該怎麼辦？</target>
       </trans-unit>
       <trans-unit id="af71879ff4b2c7e9d79167d67a8558c4fd64ee09" datatype="html">
         <source>You can try <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>clearing your browser cache<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and then reloading the WISE web site.</source>
@@ -4703,7 +4703,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target state="needs-translation">You can try <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>clearing your browser cache<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and then reloading the WISE web site.</target>
+        <target state="translated">您可以嘗試<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>清除瀏覽器緩存<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>，然後重新載入WISE網站。</target>
       </trans-unit>
       <trans-unit id="2b8d27d2ef531e0cdf597e90b8c80e339d679ad3" datatype="html">
         <source>You can try using a different web browser. We recommend using Chrome or Firefox.</source>
@@ -4715,7 +4715,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="needs-translation">You can try using a different web browser. We recommend using Chrome or Firefox.</target>
+        <target state="translated">您可以嘗試使用其他Web瀏覽器。 我們建議使用Chrome或Firefox。</target>
       </trans-unit>
       <trans-unit id="47fdad3268de5bb44d62ef7bf2e4b8e39c432588" datatype="html">
         <source>How many computers do I need to run WISE?</source>
@@ -4723,7 +4723,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">194</context>
         </context-group>
-        <target state="needs-translation">How many computers do I need to run WISE?</target>
+        <target state="translated">執行WISE我需要多少台電腦？</target>
       </trans-unit>
       <trans-unit id="f12bc480c8322f1948f28e8ef2d1925c2caf9bf0" datatype="html">
         <source>We strongly recommend one computer for every two students. Research shows that students benefit from working together as a team of two.</source>
@@ -4731,7 +4731,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">196</context>
         </context-group>
-        <target state="needs-translation">We strongly recommend one computer for every two students. Research shows that students benefit from working together as a team of two.</target>
+        <target state="translated">我們強烈建議每兩名學生使用一台電腦。 研究表示，學生可以從兩個人一起作答中受益。</target>
       </trans-unit>
       <trans-unit id="72d03fe604d9ac13e9a9b1a46d1421fdc4284eca" datatype="html">
         <source>What if I have trouble logging in?</source>
@@ -4743,7 +4743,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">What if I have trouble logging in?</target>
+        <target state="translated">如果我無法登錄怎麼辦？</target>
       </trans-unit>
       <trans-unit id="ef91b6733f15c82512f30d911641bc4b2076879c" datatype="html">
         <source>If you do not remember your username or password click the Lost Username or Password link and follow the instructions. </source>
