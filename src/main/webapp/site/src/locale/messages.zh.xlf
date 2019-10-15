@@ -5687,7 +5687,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Invalid Access Code</target>
+        <target state="translated">無效的課程代碼</target>
       </trans-unit>
       <trans-unit id="708f75da14455350322691fa2ad7543355b7f372" datatype="html">
         <source>You have already added this unit.</source>
@@ -5695,7 +5695,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">You have already added this unit.</target>
+        <target state="translated">您已經加入這個課程</target>
       </trans-unit>
       <trans-unit id="38b627ddc0611e9f2027cb255872829f3c7917fc" datatype="html">
         <source>Choose Period</source>
@@ -5711,7 +5711,7 @@
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Add unit</target>
+        <target state="translated">加入課程</target>
       </trans-unit>
       <trans-unit id="2278f83021a218f6d93e2cea52ba171c864b7b9d" datatype="html">
         <source>Hey there! Looks like you don't have any WISE units yet.</source>
