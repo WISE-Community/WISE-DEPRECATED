@@ -1019,7 +1019,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="translated">我們的研究+團隊</target>
+        <target state="translated">我們的研究和小組</target>
       </trans-unit>
       <trans-unit id="2430d9c22ccaf6b5daf94c0135b02f753ca6b185" datatype="html">
         <source>Knowledge Integration</source>
@@ -5719,7 +5719,7 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Hey there! Looks like you don't have any WISE units yet.</target>
+        <target state="translated">您好！您還沒加入任何的WISE課程。</target>
       </trans-unit>
       <trans-unit id="aba3e9a4c258ce63221b9496a392384d00b6e471" datatype="html">
         <source>Ask your teacher for an <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Access Code<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and then tap the <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Add Unit<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> button to get started.</source>
@@ -5727,7 +5727,7 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Ask your teacher for an <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Access Code<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and then tap the <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Add Unit<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> button to get started.</target>
+        <target state="translated">請向您的老師詢問 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>課程代碼<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> ，然後點擊<x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>新增課程<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>按鈕開始執行</target>
       </trans-unit>
       <trans-unit id="5b6d466cdfc67986fb402712d003dd3a455a3507" datatype="html">
         <source>Units found: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></source>
@@ -5739,7 +5739,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Units found: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <target state="translated">找到的課程： <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit id="cba86a51e8ee210e24b4d9b47ceffed1e70b61d1" datatype="html">
         <source>My WISE units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></source>
@@ -5747,7 +5747,7 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">My WISE units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <target state="translated">我的WISE課程：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit id="c6a2c19b6bd10c35aca82f19ffebdc75a2fc164c" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ scheduledTotal() }}"/> scheduled</source>
@@ -5759,7 +5759,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">32</context>
         </context-group>
-        <target state="needs-translation"><x id="INTERPOLATION" equiv-text="{{ scheduledTotal() }}"/> scheduled</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ scheduledTotal() }}"/> 已預定</target>
       </trans-unit>
       <trans-unit id="db39827bab98f8af5e0a97d4614a0d667e98fcb6" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ activeTotal() }}"/> active</source>
@@ -5771,7 +5771,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation"><x id="INTERPOLATION" equiv-text="{{ activeTotal() }}"/> active</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ activeTotal() }}"/> 有效</target>
       </trans-unit>
       <trans-unit id="c3840ff3430f7c6130e4d7a2f0aec5a7cb3ebb3a" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ completedTotal() }}"/> completed</source>
@@ -5783,7 +5783,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation"><x id="INTERPOLATION" equiv-text="{{ completedTotal() }}"/> completed</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ completedTotal() }}"/> 已完成</target>
       </trans-unit>
       <trans-unit id="13c602751734f72430891c9781167bf53c612481" datatype="html">
         <source>Team Sign In</source>
@@ -5791,7 +5791,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Team Sign In</target>
+        <target state="translated">小組登入</target>
       </trans-unit>
       <trans-unit id="756301ed182522fac63571d5cf61d3095dfb325a" datatype="html">
         <source>Signed In</source>
@@ -5803,7 +5803,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Signed In</target>
+        <target state="translated">已登入</target>
       </trans-unit>
       <trans-unit id="f880a8881701a609d4471ceb44122110831c6dca" datatype="html">
         <source>Add Teammate</source>
@@ -5811,7 +5811,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Add Teammate</target>
+        <target state="translated">新增小組成員</target>
       </trans-unit>
       <trans-unit id="7db97e28a034d08df9488f5990cd17e2de2b3fb5" datatype="html">
         <source>Launch Unit</source>
@@ -5819,7 +5819,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation">Launch Unit</target>
+        <target state="translated">啟動課程</target>
       </trans-unit>
       <trans-unit id="dbe6d72ccb1cef61c338292357b793077b7ed08a" datatype="html">
         <source>Teacher:</source>
@@ -5831,7 +5831,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Teacher:</target>
+        <target state="translated">教師:</target>
       </trans-unit>
       <trans-unit id="194bd6633b7c7f30307dc9452ac14a49bdacc1a9" datatype="html">
         <source>Period:</source>
@@ -5855,7 +5855,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Code:</target>
+        <target state="translated">代碼：</target>
       </trans-unit>
       <trans-unit id="09c081794fa93437e95b43ad2d190955917673d0" datatype="html">
         <source>Team:</source>
@@ -5863,7 +5863,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Team:</target>
+        <target state="translated">小組：</target>
       </trans-unit>
       <trans-unit id="8b41458d5cc58ec3df56d2e882893790347ec21e" datatype="html">
         <source>Run ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></source>
@@ -5871,7 +5871,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-        <target state="needs-translation">Run ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></target>
+        <target state="translated">課程 ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></target>
       </trans-unit>
       <trans-unit id="5bbe77fbbc93c3a34cea3b4b7c99aac62e670e08" datatype="html">
         <source>Report Problem</source>
@@ -5883,7 +5883,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="needs-translation">Report Problem</target>
+        <target state="translated">回報問題</target>
       </trans-unit>
       <trans-unit id="b0e70620d635e9fc164c5ea3c2f1f658513b0b97" datatype="html">
         <source>Starts <x id="INTERPOLATION" equiv-text="{{run.startTime | amTimeAgo}}"/></source>
@@ -5895,7 +5895,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">74</context>
         </context-group>
-        <target state="needs-translation">Starts <x id="INTERPOLATION" equiv-text="{{run.startTime | amTimeAgo}}"/></target>
+        <target state="translated">開始 <x id="INTERPOLATION" equiv-text="{{run.startTime | amTimeAgo}}"/></target>
       </trans-unit>
       <trans-unit id="2874cc3a35edcf67e588849afeb796f57163458b" datatype="html">
         <source>Launch</source>
@@ -5903,7 +5903,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">Launch</target>
+        <target state="translated">發布</target>
       </trans-unit>
       <trans-unit id="385a5a4a2c1453ee22b0ab14da5cd4fb83df0ee5" datatype="html">
         <source>Review Work</source>
