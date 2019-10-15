@@ -4470,7 +4470,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">129</context>
         </context-group>
-        <target state="needs-translation">How do I delete a period after creating a run?</target>
+        <target state="translated">建立執行課程後如何刪除時段？</target>
       </trans-unit>
       <trans-unit id="bb7ab3ec40a26c50c521d920bb1d22eec80d5880" datatype="html">
         <source>Find the period you want to delete and click the "Delete" button next to it.</source>
@@ -4478,7 +4478,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">135</context>
         </context-group>
-        <target state="needs-translation">Find the period you want to delete and click the "Delete" button next to it.</target>
+        <target state="translated">找到您要刪除的時段，然後點擊旁邊的“刪除”按鈕。</target>
       </trans-unit>
       <trans-unit id="10ea9b60d7c7d6dd481af2b5d1920d07f4e84cc5" datatype="html">
         <source>Note: You are not allowed to delete a period that has students in it.</source>
@@ -4486,7 +4486,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">136</context>
         </context-group>
-        <target state="needs-translation">Note: You are not allowed to delete a period that has students in it.</target>
+        <target state="translated">注意：不允許刪除其中有學生的時段。</target>
       </trans-unit>
       <trans-unit id="4004c45063f2adf542a30c59d71e6a9b0b1a7587" datatype="html">
         <source>What if I run out of computer lab time but some of my students are not finished with the project?</source>
@@ -4494,7 +4494,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">138</context>
         </context-group>
-        <target state="needs-translation">What if I run out of computer lab time but some of my students are not finished with the project?</target>
+        <target state="translated">如果我的電腦教室借得時間不足，但是我的一些學生還沒有完成該專題怎麼辦？</target>
       </trans-unit>
       <trans-unit id="e42c6ee16c0475e7cd0a418736dd8da66fdde98f" datatype="html">
         <source>WISE is a web-based learning environments, so students can sign in from a computer at school or at home. This means that students can complete the project from any home or community based computer, per the teacher's discretion.</source>
@@ -4502,7 +4502,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">140</context>
         </context-group>
-        <target state="needs-translation">WISE is a web-based learning environments, so students can sign in from a computer at school or at home. This means that students can complete the project from any home or community based computer, per the teacher's discretion.</target>
+        <target state="translated">WISE是在網路學習的環境，因此學生可以在學校或家裡通過電腦登錄。 這意味著，根據老師的判斷，學生可以從任何家庭或圖書館的電腦上完成專題。</target>
       </trans-unit>
       <trans-unit id="a40fe31275b2daa3205d75bd58536d5a7830f3e6" datatype="html">
         <source>How do I review and grade student work?</source>
