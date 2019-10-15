@@ -4995,7 +4995,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation">Click "Add".</target>
+        <target state="translated">點擊“新增”。</target>
       </trans-unit>
       <trans-unit id="29a187acf9e3654fbc3bc2f34dc7b8490c2c3085" datatype="html">
         <source>The run will be added to your list of runs.</source>
@@ -5003,7 +5003,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="needs-translation">The run will be added to your list of runs.</target>
+        <target state="translated">這個專題將被增加到您的專題列表中。</target>
       </trans-unit>
       <trans-unit id="8bd99290f700002f66521ecaeff19f420c156558" datatype="html">
         <source>Click "Launch" to open the project.</source>
@@ -5011,7 +5011,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">36</context>
         </context-group>
-        <target state="needs-translation">Click "Launch" to open the project.</target>
+        <target state="translated">點擊“啟動”來打開專題。</target>
       </trans-unit>
       <trans-unit id="46598f80db6ba570e88591e090b9480a1a06bc57" datatype="html">
         <source>I chose the wrong period, how can I change it?</source>
@@ -5035,7 +5035,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">56</context>
         </context-group>
-        <target state="needs-translation">Sign into WISE with your student account.</target>
+        <target state="translated">使用您的學生帳號登錄WISE。</target>
       </trans-unit>
       <trans-unit id="0374570fb5bc65ef42fa03c5923070a11d7f0b5e" datatype="html">
         <source>Create WISE Account</source>
@@ -5043,7 +5043,7 @@
           <context context-type="sourcefile">app/register/register-home/register-home.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Create WISE Account</target>
+        <target state="translated">建立WISE帳號</target>
       </trans-unit>
       <trans-unit id="de4f0be5b99420e05b27c9fc347488dd6babca71" datatype="html">
         <source>Students can view and complete WISE lessons offered by teachers.</source>
@@ -5051,7 +5051,7 @@
           <context context-type="sourcefile">app/register/register-home/register-home.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Students can view and complete WISE lessons offered by teachers.</target>
+        <target state="translated">學生可以查看並完成老師提供的WISE課程。</target>
       </trans-unit>
       <trans-unit id="5d440e046aeae72880c188414cdafa69bf9b4f97" datatype="html">
         <source>Teachers can select, author, and run WISE lessons with their students.</source>
@@ -5059,7 +5059,7 @@
           <context context-type="sourcefile">app/register/register-home/register-home.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">Teachers can select, author, and run WISE lessons with their students.</target>
+        <target state="translated">老師可以與學生一起選擇，建立和執行WISE課程。</target>
       </trans-unit>
       <trans-unit id="9de680553fb4018566c2ad94c91e3a407f760ca4" datatype="html">
         <source>Create Teacher Account</source>
@@ -6978,7 +6978,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">You do not have permission to add periods to this unit.</target>
+        <target state="translated">您沒有權限向此課程增加時段。</target>
       </trans-unit>
       <trans-unit id="c4b14ec0b005bee96593685d8346973e8651ea82" datatype="html">
         <source>You are not allowed to delete a period that contains students.</source>
@@ -6986,7 +6986,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">You are not allowed to delete a period that contains students.</target>
+        <target state="translated">您不能刪除包含學生的課程時段。</target>
       </trans-unit>
       <trans-unit id="f8f08ff0913736a1048d0f70a2b2390d5ec590ca" datatype="html">
         <source>You do not have permission to delete periods from this unit.</source>
@@ -6994,7 +6994,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">You do not have permission to delete periods from this unit.</target>
+        <target state="translated">您沒有權限在此課程中刪除時段。</target>
       </trans-unit>
       <trans-unit id="fa0351289ae6073e666ece8b95c8d14958d50d98" datatype="html">
         <source>You do not have permission to change the number of students per team for this unit.</source>
@@ -7042,7 +7042,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Please enter a new period name.</target>
+        <target state="translated">請輸入新的課程時段名稱。</target>
       </trans-unit>
       <trans-unit id="6d329babddc8b922dadb62f6034c992073e073e4" datatype="html">
         <source>1-3</source>
@@ -7114,7 +7114,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-run-list-item/teacher-run-list-item.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Class Periods:</target>
+        <target state="translated">課程時段：</target>
       </trans-unit>
     </body>
   </file>
