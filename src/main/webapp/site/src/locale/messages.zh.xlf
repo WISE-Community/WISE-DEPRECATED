@@ -4422,7 +4422,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">120</context>
         </context-group>
-        <target state="needs-translation">How do I add a period after creating a run?</target>
+        <target state="translated">如何在建立課程後增加一個時段？</target>
       </trans-unit>
       <trans-unit id="154b39e56c182703eed32833f84f4e6f955cf89d" datatype="html">
         <source>On the run, click the three vertical dots to view the run options.</source>
@@ -4434,7 +4434,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">133</context>
         </context-group>
-        <target state="needs-translation">On the run, click the three vertical dots to view the run options.</target>
+        <target state="translated">在執行中，點擊省略號以檢視執行選項。</target>
       </trans-unit>
       <trans-unit id="caf98385e768f00b3e1734b93aa31eaed64d7bc1" datatype="html">
         <source>Click "Edit Settings".</source>
@@ -4446,7 +4446,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">134</context>
         </context-group>
-        <target state="needs-translation">Click "Edit Settings".</target>
+        <target state="translated">點擊“編輯設定”。</target>
       </trans-unit>
       <trans-unit id="dd80561bf8a3ed6b8c7dbc171555263c3a993121" datatype="html">
         <source>Enter a period name in the "Add New Period" field.</source>
@@ -4454,7 +4454,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">126</context>
         </context-group>
-        <target state="needs-translation">Enter a period name in the "Add New Period" field.</target>
+        <target state="translated">在“新增新時段”欄位中輸入時段名稱。</target>
       </trans-unit>
       <trans-unit id="df671da9712c9c220f2219c80e8eb13d8c591d09" datatype="html">
         <source>Click "Add Period".</source>
@@ -4462,7 +4462,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="needs-translation">Click "Add Period".</target>
+        <target state="translated">點擊“新增時段”</target>
       </trans-unit>
       <trans-unit id="33b8b8009eda1df67d154a725b9cd11e690a5405" datatype="html">
         <source>How do I delete a period after creating a run?</source>
