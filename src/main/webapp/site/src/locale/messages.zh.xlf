@@ -5384,7 +5384,7 @@
           <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Create Student Account</target>
+        <target state="translated">建立學生帳戶</target>
       </trans-unit>
       <trans-unit id="003d4f5e4909ccf01b6a204c688fd6dab15c20bd" datatype="html">
         <source>Gender</source>
@@ -5392,7 +5392,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">Gender</target>
+        <target state="translated">性別</target>
       </trans-unit>
       <trans-unit id="5497bf7696a020473be2ec2082c78d6c6c81e29a" datatype="html">
         <source>Gender required</source>
@@ -5400,7 +5400,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">Gender required</target>
+        <target state="translated">性別是必填的</target>
       </trans-unit>
       <trans-unit id="b3e41f03bc6ea2f17a56c29543587f77cd5247c5" datatype="html">
         <source>Security Question</source>
@@ -5408,7 +5408,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">67</context>
         </context-group>
-        <target state="needs-translation">Security Question</target>
+        <target state="translated">安全問題</target>
       </trans-unit>
       <trans-unit id="b22c1c2f78e92d3c683da9b673254fe7f3a40f85" datatype="html">
         <source>Security Question required</source>
@@ -5416,7 +5416,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
-        <target state="needs-translation">Security Question required</target>
+        <target state="translated">安全問題是必填的</target>
       </trans-unit>
       <trans-unit id="402fdfe22e77d0e0b0e60acbf1c8dfe04ff4e076" datatype="html">
         <source>Security Question Answer</source>
@@ -5424,7 +5424,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">78</context>
         </context-group>
-        <target state="needs-translation">Security Question Answer</target>
+        <target state="translated">安全問題答案</target>
       </trans-unit>
       <trans-unit id="59dcaff6c089405d4d18e483d6ed730a3f1cef8f" datatype="html">
         <source>Security Question Answer required</source>
@@ -5432,7 +5432,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="needs-translation">Security Question Answer required</target>
+        <target state="translated">安全問題的答案是必填的</target>
       </trans-unit>
       <trans-unit id="60abd69611e9432d4d506e292e421a9a26bfa454" datatype="html">
         <source>By clicking "Create Account", you agree to our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
@@ -5440,7 +5440,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">111</context>
         </context-group>
-        <target state="needs-translation">By clicking "Create Account", you agree to our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
+        <target state="translated">點擊“建立帳號”，表示您同意我們的<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>隱私策略和使用條款<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
       </trans-unit>
       <trans-unit id="34fe434c734c4d0366fc952715e5f93e68e55ba3" datatype="html">
         <source>Please write this down. You will need it when signing in to WISE in the future.</source>
@@ -5448,7 +5448,7 @@
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Please write this down. You will need it when signing in to WISE in the future.</target>
+        <target state="translated">請記錄下來，您之後登錄WISE時需要它。</target>
       </trans-unit>
       <trans-unit id="558a4e3546333e209423ef98d8e846c143ba0804" datatype="html">
         <source>Hi! There is already a WISE user with this Google account.</source>
@@ -5456,7 +5456,7 @@
           <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Hi! There is already a WISE user with this Google account.</target>
+        <target state="translated">您好！此Google帳號已經有WISE用戶。</target>
       </trans-unit>
       <trans-unit id="263e1717422fe3b5810e9a2e55b87e477b35d1ed" datatype="html">
         <source>Sign in to WISE</source>
@@ -5464,7 +5464,7 @@
           <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Sign in to WISE</target>
+        <target state="translated">登入WISE</target>
       </trans-unit>
       <trans-unit id="7ed8a9be3807389db666a73b3c4fd805e773f551" datatype="html">
         <source>Username and password not recognized. Please try again.</source>
@@ -5472,7 +5472,7 @@
           <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">Username and password not recognized. Please try again.</target>
+        <target state="translated">帳號和密碼輸入不正確。 請再試一次。</target>
       </trans-unit>
       <trans-unit id="9fb7b860775d8522b9402f7e31392531ec8079d6" datatype="html">
         <source>Please try again and verify that you are not a robot.</source>
@@ -5480,7 +5480,7 @@
           <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Please try again and verify that you are not a robot.</target>
+        <target state="translated">請再試一次，驗證您不是機器人。</target>
       </trans-unit>
       <trans-unit id="cabe636014527fb69951e0f36b7aec9697e00c71" datatype="html">
         <source>Forgot username or password?</source>
@@ -5488,7 +5488,7 @@
           <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">Forgot username or password?</target>
+        <target state="translated">忘記帳號和密碼？</target>
       </trans-unit>
       <trans-unit id="c6c31f501feef87ab274bd3a000b99eeb7434cff" datatype="html">
         <source>New to WISE? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Join for free!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
@@ -5500,7 +5500,7 @@
           <context context-type="sourcefile">app/login/login-google-user-not-found/login-google-user-not-found.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">New to WISE? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Join for free!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
+        <target state="translated">第一次使用WISE? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>免費加入!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
       </trans-unit>
       <trans-unit id="050473ed2d269f07090850ebf8f56f635436869e" datatype="html">
         <source>Your Google User ID was not found in WISE.</source>
@@ -5508,7 +5508,7 @@
           <context context-type="sourcefile">app/login/login-google-user-not-found/login-google-user-not-found.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-        <target state="needs-translation">Your Google User ID was not found in WISE.</target>
+        <target state="translated">我們在WISE中找不到您的Google用戶帳號。</target>
       </trans-unit>
       <trans-unit id="69780389024fe4b31a860424a4ca428609fdde0f" datatype="html">
         <source>What's New?</source>
@@ -5516,7 +5516,7 @@
           <context context-type="sourcefile">app/news/news.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">What's New?</target>
+        <target state="translated">有甚麼新功能？</target>
       </trans-unit>
       <trans-unit id="ca98710638193518e4fe1302f8977d2db4f2b842" datatype="html">
         <source>Show More</source>
@@ -5532,7 +5532,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <target state="needs-translation">Show More</target>
+        <target state="translated">顯示更多</target>
       </trans-unit>
       <trans-unit id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Sign In<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
@@ -5541,8 +5541,8 @@
           <context context-type="sourcefile">app/modules/header/header-signin/header-signin.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">
-  <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>Sign In<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+        <target state="translated">
+  <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>註冊<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>登入<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
 </target>
       </trans-unit>
       <trans-unit id="17f37e96c7b8059b23c07791dca1bdb3f3f6853f" datatype="html">
@@ -5555,7 +5555,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Welcome <x id="INTERPOLATION" equiv-text="{{ user.firstName }}"/>!</target>
+        <target state="translated">歡迎 <x id="INTERPOLATION" equiv-text="{{ user.firstName }}"/>!</target>
       </trans-unit>
       <trans-unit id="d222f6ff9f7e28fdb4e8b2af47898446cf2eafe4" datatype="html">
         <source>Account Menu</source>
@@ -5567,7 +5567,7 @@
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Account Menu</target>
+        <target state="translated">帳號清單</target>
       </trans-unit>
       <trans-unit id="879fef27271d8247d791381cf1f9bb0eb8974166" datatype="html">
         <source>Account avatar</source>
