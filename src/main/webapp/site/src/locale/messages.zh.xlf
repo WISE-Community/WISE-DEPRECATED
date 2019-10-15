@@ -4358,7 +4358,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">105</context>
         </context-group>
-        <target state="needs-translation">It is not recommended to shorten a project. Each project has been carefully designed to lead the student through an inquiry process and cutting it short will result in a less satisfactory educational student experience. Nevertheless, if you are under a time constraint and knowledgeable of the project topic, you could customize the project and shorten it to your specific needs.</target>
+        <target state="translated">我們不建議縮短專題。 每個專題都經過精心設計，目的在引導學生完成探究的過程，而將它縮短會導致學生對教育的滿意度降低。 但是，如果您受時間限制並且了解專題主題，則可以自行編輯專題並將其縮短為滿足您的特定需求。</target>
       </trans-unit>
       <trans-unit id="3024ecf162acff3ec72fe6d47aee6bf2ea097db3" datatype="html">
         <source>Where do I find out about lesson plans and standards for WISE projects?</source>
@@ -4366,7 +4366,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="needs-translation">Where do I find out about lesson plans and standards for WISE projects?</target>
+        <target state="translated">我在哪裡可以找到有關WISE專題的課程規劃和標準？</target>
       </trans-unit>
       <trans-unit id="62eba7a349fc52a73bcc8fa453b5820324eed7a6" datatype="html">
         <source>Find a project you would like to learn about.</source>
@@ -4374,7 +4374,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">111</context>
         </context-group>
-        <target state="needs-translation">Find a project you would like to learn about.</target>
+        <target state="translated">尋找您想了解的專題。</target>
       </trans-unit>
       <trans-unit id="4214fdac6b2b04e5afb05556b5ba647563c02b92" datatype="html">
         <source>Click on the project.</source>
@@ -4382,7 +4382,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">112</context>
         </context-group>
-        <target state="needs-translation">Click on the project.</target>
+        <target state="translated">點擊專題。</target>
       </trans-unit>
       <trans-unit id="7c669c5c1a3a10743f60933f238fa21a6e23b1e0" datatype="html">
         <source>This will display a popup that displays information about the project.</source>
@@ -4390,7 +4390,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">113</context>
         </context-group>
-        <target state="needs-translation">This will display a popup that displays information about the project.</target>
+        <target state="translated">這將顯示一個跳出視窗，其中顯示有關專題的資訊。</target>
       </trans-unit>
       <trans-unit id="fb31dc42edfa71c489ba8d350f1ddc61c72f0bda" datatype="html">
         <source>Note: Some projects may not have much information because it is dependent on the author to provide the lesson plan and standards.</source>
@@ -4398,7 +4398,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">114</context>
         </context-group>
-        <target state="needs-translation">Note: Some projects may not have much information because it is dependent on the author to provide the lesson plan and standards.</target>
+        <target state="translated">注意：某些專題可能沒有太多資訊，因為它取決於作者提供的課程規劃和標準。</target>
       </trans-unit>
       <trans-unit id="0caa9631c30a1085708f8f7ac6f6b207af99c1b9" datatype="html">
         <source>How do I fit a WISE project into my curriculum?</source>
@@ -4406,7 +4406,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">116</context>
         </context-group>
-        <target state="needs-translation">How do I fit a WISE project into my curriculum?</target>
+        <target state="translated">如何將WISE專題納入到我的課程中？</target>
       </trans-unit>
       <trans-unit id="8067ba3441dfe3495b289859b58d59b28fed36f0" datatype="html">
         <source>In general students will benefit from some pre-teaching of the topic covered in the project. It is really up to the teacher to decide where it best fits to support student learning. Many teachers use a WISE project as a capstone activity while others integrate it into their curriculum at a midpoint. Some teachers elect to use WISE projects an introductory activity for a unit, or as a summation activity for a unit.</source>
@@ -4414,7 +4414,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">118</context>
         </context-group>
-        <target state="needs-translation">In general students will benefit from some pre-teaching of the topic covered in the project. It is really up to the teacher to decide where it best fits to support student learning. Many teachers use a WISE project as a capstone activity while others integrate it into their curriculum at a midpoint. Some teachers elect to use WISE projects an introductory activity for a unit, or as a summation activity for a unit.</target>
+        <target state="translated">一般來說，學生將受益於專題中涉及的一些主題的預習。這是由老師決定最適合幫助學生學習的地方。許多老師使用WISE專題作為活動的重點，而其他老師則將其整合到他們的課程中間的環節。 一些老師選擇使用WISE專題作為單元的導入活動，或作為單元的總結性活動。</target>
       </trans-unit>
       <trans-unit id="4c1a3a26df6b1a44c59f821d35521cb0dee57b8b" datatype="html">
         <source>How do I add a period after creating a run?</source>
