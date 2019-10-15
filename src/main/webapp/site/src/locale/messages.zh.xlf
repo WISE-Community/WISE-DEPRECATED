@@ -1778,7 +1778,7 @@
           <context context-type="sourcefile">app/modules/library/teacher-project-library/teacher-project-library.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="translated">教師單位庫導覽</target>
+        <target state="translated">教師課程庫導覽</target>
       </trans-unit>
       <trans-unit id="a90197fbaf305621cf15da6e9f88ccff3087ea1d" datatype="html">
         <source>Add to Google Classroom</source>
@@ -5911,7 +5911,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
-        <target state="needs-translation">Review Work</target>
+        <target state="translated">檢視作業</target>
       </trans-unit>
       <trans-unit id="a41a1ea741ebed7a4ff655f233fc2d275b9bfa42" datatype="html">
         <source>Account Info</source>
@@ -5923,7 +5923,7 @@
           <context context-type="sourcefile">app/teacher/account/edit/edit.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Account Info</target>
+        <target state="translated">帳號資訊</target>
       </trans-unit>
       <trans-unit id="e931f6b80399785ea1647269f43ffeea54327cb6" datatype="html">
         <source>User Name required</source>
@@ -5931,7 +5931,7 @@
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="needs-translation">User Name required</target>
+        <target state="translated">使用者名稱是必填的</target>
       </trans-unit>
       <trans-unit id="fe46ccaae902ce974e2441abe752399288298619" datatype="html">
         <source>Language</source>
@@ -5943,7 +5943,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
-        <target state="needs-translation">Language</target>
+        <target state="translated">語言</target>
       </trans-unit>
       <trans-unit id="cabad35c321f1c28ef7c11f848cd458bb934e304" datatype="html">
         <source>Language required</source>
@@ -5955,7 +5955,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="needs-translation">Language required</target>
+        <target state="translated">語言是必填的</target>
       </trans-unit>
       <trans-unit id="afa960379d26eb20fd22e6e10537c1c5ec74c5d1" datatype="html">
         <source>Save Changes</source>
@@ -5967,7 +5967,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">119</context>
         </context-group>
-        <target state="needs-translation">Save Changes</target>
+        <target state="translated">儲存更改</target>
       </trans-unit>
       <trans-unit id="9f4ae450ac1d2d2939642f56dffcfa210fd6020e" datatype="html">
         <source>Authoring Tool</source>
@@ -5975,7 +5975,7 @@
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">Authoring Tool</target>
+        <target state="translated">編輯工具</target>
       </trans-unit>
       <trans-unit id="48ae429835665b58a2711db68e68b9a4dfa1f0ff" datatype="html">
         <source>Teacher home navigation</source>
@@ -5983,7 +5983,7 @@
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Teacher home navigation</target>
+        <target state="translated">教師家庭導航</target>
       </trans-unit>
       <trans-unit id="2353459e710912ab1e887bf5c0adbeaaf7e6b2af" datatype="html">
         <source>Hey there! Looks like you haven't run any WISE units in your classes yet.</source>
@@ -5991,7 +5991,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-        <target state="needs-translation">Hey there! Looks like you haven't run any WISE units in your classes yet.</target>
+        <target state="translated">你好! 你還沒有在你的課程中執行任何WISE課程。</target>
       </trans-unit>
       <trans-unit id="0f1eeb1121b8585f39941f1c4de7c9ef98ff42bf" datatype="html">
         <source>Select "Browse Units" to find titles to use with your students.</source>
@@ -5999,7 +5999,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Select "Browse Units" to find titles to use with your students.</target>
+        <target state="translated">選擇“瀏覽課程”以尋找要與學生一起使用的標題。</target>
       </trans-unit>
       <trans-unit id="54d96f2f53d37cf8c3260171012afedef7ba7f95" datatype="html">
         <source>Total classroom units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></source>
@@ -6007,7 +6007,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="needs-translation">Total classroom units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <target state="translated">所有課程：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit id="9a208893f13987ce5a706b3b5e4fed09e486cb5d" datatype="html">
         <source>periods</source>
@@ -6039,7 +6039,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">students</target>
+        <target state="translated">學生</target>
       </trans-unit>
       <trans-unit id="de9dcd15573cb1dcf344993c1eae59f09a2a6ba5" datatype="html">
         <source>student</source>
@@ -6047,7 +6047,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">student</target>
+        <target state="translated">學生</target>
       </trans-unit>
       <trans-unit id="958238c9a38f867922fab7579f5e7c77194fe6a1" datatype="html">
         <source>
@@ -6057,8 +6057,8 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-        <target state="needs-translation">
-    Shared by <x id="INTERPOLATION" equiv-text="{{run.owner.firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{run.owner.lastName}}"/>
+        <target state="translated">
+    <x id="INTERPOLATION" equiv-text="{{run.owner.firstName}}"/><x id="INTERPOLATION_1" equiv-text="{{run.owner.lastName}}"/>通過共享
   </target>
       </trans-unit>
       <trans-unit id="490233cd77b10fe95606d32aa5ed4be533645820" datatype="html">
@@ -6067,7 +6067,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="needs-translation">(Legacy Unit)</target>
+        <target state="translated">（舊版課程）</target>
       </trans-unit>
       <trans-unit id="492e00b6b69577737a10d7af505fd3c483173468" datatype="html">
         <source>Last student login: <x id="INTERPOLATION" equiv-text="{{run.lastRun | amCalendar}}"/></source>
@@ -6075,7 +6075,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">Last student login: <x id="INTERPOLATION" equiv-text="{{run.lastRun | amCalendar}}"/></target>
+        <target state="translated">上次學生登入：<x id="INTERPOLATION" equiv-text="{{run.lastRun | amCalendar}}"/></target>
       </trans-unit>
       <trans-unit id="f31a4ac5cfc26f2d23677bd24f59219dc5f1c491" datatype="html">
         <source>Teacher Tools</source>
@@ -6083,7 +6083,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="needs-translation">Teacher Tools</target>
+        <target state="translated">教師工具</target>
       </trans-unit>
       <trans-unit id="a164f074813172df85048d4ce91c4e922abfcdf9" datatype="html">
         <source>Share Classroom Unit</source>
@@ -6091,7 +6091,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Share Classroom Unit</target>
+        <target state="translated">分享課程</target>
       </trans-unit>
       <trans-unit id="f1b3a4c04de059a8a400c8eace966d618373afe0" datatype="html">
         <source>Transfer Classroom Unit</source>
@@ -6099,7 +6099,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Transfer Classroom Unit</target>
+        <target state="translated">分享課程</target>
       </trans-unit>
       <trans-unit id="ba04cd26cfc1093921e7196b9c934a2e45c5ca2d" datatype="html">
         <source>View Student Work</source>
