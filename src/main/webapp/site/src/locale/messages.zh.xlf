@@ -538,7 +538,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="translated">檢視課程和常見問題。</target>
+        <target state="translated">瀏覽課程和常見問題。</target>
       </trans-unit>
       <trans-unit id="c2e1e231feb67c7dd4f5e748cce6c1c46fbdf9cf" datatype="html">
         <source>Want to get in touch? Send us a message.</source>
@@ -1107,7 +1107,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">134</context>
         </context-group>
-        <target state="translated">所有人都可以使用</target>
+        <target state="translated">所有人都可以存取</target>
       </trans-unit>
       <trans-unit id="416ce0bcfd9bbe81b9ccc34d764504df4c8088d1" datatype="html">
         <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
@@ -1830,7 +1830,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="translated">(Run ID: <x id="INTERPOLATION" equiv-text="{{ data.run.id }}"/>)</target>
+        <target state="translated">(課程 ID: <x id="INTERPOLATION" equiv-text="{{ data.run.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="b6d98e943848266c1ee9234245f2d1505d969d72" datatype="html">
         <source>Add an assignment for this unit in Google Classroom.</source>
@@ -2425,7 +2425,7 @@
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="translated">查看學生使用</target>
+        <target state="translated">瀏覽學生使用狀況</target>
       </trans-unit>
       <trans-unit id="66b2e8f48c13af491ad76683bc68fb0b07df83c4" datatype="html">
         <source>Edit Unit Content</source>
@@ -2497,7 +2497,10 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
+        <target state="translated">(課程 ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
+        <alt-trans>
+          <target>(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="7729e322ed636f18b5930ee33fde3b4a10f2e4ce" datatype="html">
         <source>Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in lost data or other problems.</source>
@@ -6107,7 +6110,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation">View Student Work</target>
+        <target state="translated">瀏覽學生作業</target>
       </trans-unit>
       <trans-unit id="93315f528b07c5cc6aa5eba3c97ac7815711d320" datatype="html">
         <source>View Student Names</source>
@@ -6115,7 +6118,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">View Student Names</target>
+        <target state="translated">瀏覽學生名字</target>
       </trans-unit>
       <trans-unit id="f95fae4dbd1692e5faa4c26a1c3b6ea1ae55f862" datatype="html">
         <source>Grade and Manage</source>
@@ -6123,7 +6126,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <target state="needs-translation">Grade and Manage</target>
+        <target state="translated">評分和管理</target>
       </trans-unit>
       <trans-unit id="b26220770d5f6b450e9df4fbcadd454f492b7872" datatype="html">
         <source>Are you sure you want to make <x id="INTERPOLATION" equiv-text="{{teacherSearchControl.value}}"/> the new owner of this unit?</source>
@@ -6131,7 +6134,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">86</context>
         </context-group>
-        <target state="needs-translation">Are you sure you want to make <x id="INTERPOLATION" equiv-text="{{teacherSearchControl.value}}"/> the new owner of this unit?</target>
+        <target state="translated">您確定要讓<x id="INTERPOLATION" equiv-text="{{teacherSearchControl.value}}"/>成為該課程的新所有者嗎？</target>
       </trans-unit>
       <trans-unit id="5b45cfc4c7c5c38692885d9d8eb056f42dd48a05" datatype="html">
         <source>You will still be able to access the unit but the new owner will have the ability to take away or change your access permissions.</source>
@@ -6139,7 +6142,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="needs-translation">You will still be able to access the unit but the new owner will have the ability to take away or change your access permissions.</target>
+        <target state="translated">您仍然可以存取該課程，但是新所有者將可以撤消或更改您的存取權限。</target>
       </trans-unit>
       <trans-unit id="987c58bf54a75a2dad4d366b6546d80749bc5a30" datatype="html">
         <source>Transfer Ownership</source>
@@ -6147,7 +6150,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">94</context>
         </context-group>
-        <target state="needs-translation">Transfer Ownership</target>
+        <target state="translated">轉移所有權</target>
       </trans-unit>
       <trans-unit id="a2a99d70cee0c47626832a30636f0ede3c84c2eb" datatype="html">
         <source>Edit Settings</source>
@@ -6155,7 +6158,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Edit Settings</target>
+        <target state="translated">編輯設定</target>
       </trans-unit>
       <trans-unit id="9cce5b778a46771992b9753e43f7f3dbcc8c322a" datatype="html">
         <source>Class Periods</source>
@@ -6195,7 +6198,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Students Per Team</target>
+        <target state="translated">每組的學生</target>
       </trans-unit>
       <trans-unit id="4a4f46a2dcec36bd5c8c371ceee55c2226dec27f" datatype="html">
         <source>Schedule</source>
@@ -6203,7 +6206,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">Schedule</target>
+        <target state="translated">預定排程</target>
       </trans-unit>
       <trans-unit id="966a68a11a339aa294e2d035b6982039b2448ef4" datatype="html">
         <source>(Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</source>
@@ -6211,7 +6214,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-        <target state="needs-translation">(Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</target>
+        <target state="translated">(上次學生登入：<x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</target>
       </trans-unit>
       <trans-unit id="a1c89f5496e99086127a54d08cecba1d0920397e" datatype="html">
         <source>Start date is required.</source>
@@ -6219,7 +6222,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">Start date is required.</target>
+        <target state="translated">開始日期是必填的。</target>
       </trans-unit>
       <trans-unit id="9c83559c416a8e596b51a342566efdb2868f2404" datatype="html">
         <source>Run Menu</source>
@@ -6227,7 +6230,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-        <target state="needs-translation">Run Menu</target>
+        <target state="translated">執行清單</target>
       </trans-unit>
       <trans-unit id="32f41f2afbd1719ea56da292e89a340d43bcf7dd" datatype="html">
         <source>Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/></source>
@@ -6235,7 +6238,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/></target>
+        <target state="translated">課程 ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/></target>
       </trans-unit>
       <trans-unit id="3ee54b66b7f53827035c3055f228bc2bf2550dab" datatype="html">
         <source>Unit Info</source>
@@ -6243,7 +6246,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Unit Info</target>
+        <target state="translated">課程資訊</target>
       </trans-unit>
       <trans-unit id="6a7bd392c66daf784d909ea00e8530e93c232dd6" datatype="html">
         <source>Edit Content</source>
@@ -6251,7 +6254,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">Edit Content</target>
+        <target state="translated">編輯內容</target>
       </trans-unit>
       <trans-unit id="e438ba78cbafdb5bcbce0820bfaad995a504f222" datatype="html">
         <source>Display Name</source>
@@ -6259,7 +6262,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Display Name</target>
+        <target state="translated">顯示名稱</target>
       </trans-unit>
       <trans-unit id="a46da4e5dedf077f8ee26fa4af926df0fc909e0c" datatype="html">
         <source>This is the name your students will see.</source>
@@ -6267,7 +6270,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation">This is the name your students will see.</target>
+        <target state="translated">這是您的學生將看到的名稱。</target>
       </trans-unit>
       <trans-unit id="8633775b7643de744fc8b916ccef6b1c8700e83e" datatype="html">
         <source>Display Name required</source>
@@ -6275,7 +6278,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="needs-translation">Display Name required</target>
+        <target state="translated">顯示名稱是必填的</target>
       </trans-unit>
       <trans-unit id="de4fdef260a86fc9c409a2d4562e8910d93e2b6d" datatype="html">
         <source>Trouble Signing In</source>
@@ -6287,7 +6290,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Trouble Signing In</target>
+        <target state="translated">無法登錄</target>
       </trans-unit>
       <trans-unit id="84ca5513dca4fe431338da8c2b1f43d8c0d075cb" datatype="html">
         <source>Need Help Using WISE</source>
@@ -6299,7 +6302,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Need Help Using WISE</target>
+        <target state="translated">在使用WISE需要幫助</target>
       </trans-unit>
       <trans-unit id="6a6f97816b45d44504a072d73938c951bbd01810" datatype="html">
         <source>Problems with a WISE Unit</source>
@@ -6311,7 +6314,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Problems with a WISE Unit</target>
+        <target state="translated">WISE課程的问题</target>
       </trans-unit>
       <trans-unit id="f1807ecd6fbc3fe83f80ac9aa16bc7070b8b8710" datatype="html">
         <source>Feedback to WISE</source>
