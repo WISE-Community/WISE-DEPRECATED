@@ -2,6 +2,7 @@
 
 class VLEController {
   constructor(
+      $anchorScroll,
       $scope,
       $rootScope,
       $filter,
@@ -16,6 +17,7 @@ class VLEController {
       SessionService,
       StudentDataService,
       UtilService) {
+    this.$anchorScroll = $anchorScroll;
     this.$scope = $scope;
     this.$rootScope = $rootScope;
     this.$filter = $filter;
@@ -106,6 +108,11 @@ class VLEController {
         eventNodeId = currentNode.id;
         this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
       }
+    });
+
+    this.$scope.$on('$stateChangeSuccess',
+        (event, toState, toParams, fromState, fromParams) => {
+      this.$anchorScroll('node');
     });
 
     this.notifications = this.NotificationService.notifications;
@@ -612,6 +619,7 @@ class VLEController {
 }
 
 VLEController.$inject = [
+  '$anchorScroll',
   '$scope',
   '$rootScope',
   '$filter',
