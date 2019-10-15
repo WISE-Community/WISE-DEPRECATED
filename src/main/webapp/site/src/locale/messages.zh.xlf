@@ -4875,7 +4875,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">66</context>
         </context-group>
-        <target state="needs-translation">The <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact WISE form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</target>
+        <target state="translated">透過<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>聯繫WISE表單<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>將向WISE技術組發送電子郵件。 您可以在首頁底部找到該表單的連接。請務必盡可能的提供有關問題的資訊。 我們會盡快與您回覆。</target>
       </trans-unit>
       <trans-unit id="0b66532dc98434ee7c1a4b609e3f3a7d49c23d60" datatype="html">
         <source>Information for new users.</source>
@@ -4891,7 +4891,7 @@
           <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Information for new users.</target>
+        <target state="translated">給新用戶的資訊。</target>
       </trans-unit>
       <trans-unit id="3ba2943f558468dbbc717d0d93b708c05640f297" datatype="html">
         <source>Student Frequently Asked Questions</source>
@@ -4899,7 +4899,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Student Frequently Asked Questions</target>
+        <target state="translated">學生常見問題</target>
       </trans-unit>
       <trans-unit id="6f352eaa805d09d80fce681e63d73b007a681142" datatype="html">
         <source>Click on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -4907,7 +4907,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Click on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">點擊 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>學生<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit id="ae21d5a7a66ab2122f138b30d6aec4e8538ee94c" datatype="html">
         <source>I forgot my username, how can I find it?</source>
@@ -4915,7 +4915,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="needs-translation">I forgot my username, how can I find it?</target>
+        <target state="translated">我忘記了帳號，我該如何找回？</target>
       </trans-unit>
       <trans-unit id="1219a9794a1c01bab8fc1601bb58ce0a86310b93" datatype="html">
         <source>Go to the forgot username page and follow the instructions to retrieve your username.</source>
@@ -4923,7 +4923,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-        <target state="needs-translation">Go to the forgot username page and follow the instructions to retrieve your username.</target>
+        <target state="translated">前往“忘記帳號”網頁，然後按照說明搜尋帳號。</target>
       </trans-unit>
       <trans-unit id="7a8b3b1d4ba29026aabcd075b48e4de18bf81ecf" datatype="html">
         <source>I forgot my password, how can I change it?</source>
@@ -4931,7 +4931,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-        <target state="needs-translation">I forgot my password, how can I change it?</target>
+        <target state="translated">我忘記了密碼，如何更改密码？</target>
       </trans-unit>
       <trans-unit id="aa17e4de65d75d06e18b88dc9abca8177b575dac" datatype="html">
         <source>Go to the forgot password page and follow the instructions to reset your password.</source>
@@ -4939,7 +4939,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Go to the forgot password page and follow the instructions to reset your password.</target>
+        <target state="translated">前往“忘記密碼”網頁，然後按照說明重設密碼。</target>
       </trans-unit>
       <trans-unit id="c4672e4b6ec584927ff0957152d61090c5eabb13" datatype="html">
         <source>How do I start working on a project?</source>
@@ -4947,7 +4947,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-        <target state="needs-translation">How do I start working on a project?</target>
+        <target state="translated">我該如何開始執行專題？</target>
       </trans-unit>
       <trans-unit id="f9da1cef9bd9138c03ae216c3043cbad817aa47e" datatype="html">
         <source>In order to start working on a project you must obtain an Access Code from your teacher. Once you have an Access Code, follow the directions below.</source>
@@ -4955,7 +4955,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">28</context>
         </context-group>
-        <target state="needs-translation">In order to start working on a project you must obtain an Access Code from your teacher. Once you have an Access Code, follow the directions below.</target>
+        <target state="translated">為了開始執行專題，您必須從老師那裡取得課程代碼。 有了課程代碼後，請按照以下說明進行操作。</target>
       </trans-unit>
       <trans-unit id="6ad63a4282b7f50738ef1f9293cc8d44bb81a3b0" datatype="html">
         <source>Log into WISE with your student account.</source>
@@ -4963,7 +4963,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="needs-translation">Log into WISE with your student account.</target>
+        <target state="translated">使用您的學生帳號登錄WISE。</target>
       </trans-unit>
       <trans-unit id="bb5b64fcfcf15dfdc125061775f9a1a5396735c9" datatype="html">
         <source>Click on the "Add Unit" button at the top right of the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -4971,7 +4971,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Click on the "Add Unit" button at the top right of the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">點擊<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>學生首頁<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>右上角的“新增課程”按鈕。</target>
       </trans-unit>
       <trans-unit id="318e90549e03b7a6a6fc59f3253708f3b9ed94ce" datatype="html">
         <source>Enter the Access Code from your teacher.</source>
@@ -4979,7 +4979,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">32</context>
         </context-group>
-        <target state="needs-translation">Enter the Access Code from your teacher.</target>
+        <target state="translated">輸入老師給的課程代碼</target>
       </trans-unit>
       <trans-unit id="a90b66044c387d48ea596e638c46df2e1d8e38f2" datatype="html">
         <source>Choose your period.</source>
@@ -4987,7 +4987,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">Choose your period.</target>
+        <target state="translated">選擇你的課程時段</target>
       </trans-unit>
       <trans-unit id="a28da34a2ca521ebd61814bb9df8f2c8106efa16" datatype="html">
         <source>Click "Add".</source>
@@ -5019,7 +5019,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">I chose the wrong period, how can I change it?</target>
+        <target state="translated">我選擇了錯誤的時段，我該如何修改呢？</target>
       </trans-unit>
       <trans-unit id="06df3524151d18c0a2e261269b0b4e41282dd91d" datatype="html">
         <source>Only your teacher can change your period. Please ask them for assistance.</source>
@@ -5027,7 +5027,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target state="needs-translation">Only your teacher can change your period. Please ask them for assistance.</target>
+        <target state="translated">只有你的老師可以更改你的課程時間。 請向他們尋求幫助。</target>
       </trans-unit>
       <trans-unit id="2c78c51700ea174231b7fb84a2d51a96f5b5ed78" datatype="html">
         <source>Sign into WISE with your student account.</source>
@@ -5706,7 +5706,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Choose Period</target>
+        <target state="translated">選擇課程時段</target>
       </trans-unit>
       <trans-unit id="a118959daf55b5584609654f7d5ee9e443b961d0" datatype="html">
         <source>Add unit</source>
@@ -5846,7 +5846,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">Period:</target>
+        <target state="translated">課程時段：</target>
       </trans-unit>
       <trans-unit id="08a3263c58aafca24f31b3f312d90934a14069e5" datatype="html">
         <source>Code:</source>
@@ -6022,7 +6022,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">periods</target>
+        <target state="translated">課程時段</target>
       </trans-unit>
       <trans-unit id="97d146f3502e6472ae9aca1b2bdacfb3ae9c40a4" datatype="html">
         <source>period</source>
@@ -6030,7 +6030,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">period</target>
+        <target state="translated">課程時段</target>
       </trans-unit>
       <trans-unit id="c1e3525227cd71f6849b07d4d0babd32b1e1ea9d" datatype="html">
         <source>students</source>
@@ -6166,7 +6166,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Class Periods</target>
+        <target state="translated">課程時段</target>
       </trans-unit>
       <trans-unit id="200beac9fb92373dc2bb97201d34e1346d1c08a0" datatype="html">
         <source>Delete period</source>
@@ -6174,7 +6174,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Delete period</target>
+        <target state="translated">刪除課程時段</target>
       </trans-unit>
       <trans-unit id="d82dfc07206fd771e111875d19d04941fb255662" datatype="html">
         <source>Add new period</source>
@@ -6182,7 +6182,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Add new period</target>
+        <target state="translated">新增新的課程時段</target>
       </trans-unit>
       <trans-unit id="d184c11334133744f14daeee4fc04735cdc88e9e" datatype="html">
         <source>Add period</source>
@@ -6190,7 +6190,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">Add period</target>
+        <target state="translated">新增課程時段</target>
       </trans-unit>
       <trans-unit id="9e52801929bc9e355f8de5c5c13ba357055d1bdf" datatype="html">
         <source>Students Per Team</source>
@@ -6970,7 +6970,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">There is already a period with that name.</target>
+        <target state="translated">該時段名稱已存在</target>
       </trans-unit>
       <trans-unit id="e80540a5d520797610af6a2b765156063cadb46f" datatype="html">
         <source>You do not have permission to add periods to this unit.</source>
