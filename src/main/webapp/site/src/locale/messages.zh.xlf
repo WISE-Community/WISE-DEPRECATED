@@ -610,10 +610,7 @@
           <context context-type="sourcefile">app/register/register.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">WISE 圖標</target>
-        <alt-trans>
-          <target>WISE logo</target>
-        </alt-trans>
+        <target state="translated">WISE logo</target>
       </trans-unit>
       <trans-unit id="abc0c762d328168e523abf84749240e43593f8df" datatype="html">
         <source>WISE Features</source>
@@ -5071,7 +5068,7 @@
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Create Teacher Account</target>
+        <target state="translated">建立教師帳號</target>
       </trans-unit>
       <trans-unit id="28629af803ab8b5f6e995b17d486e6a1527e2a96" datatype="html">
         <source>Sign Up</source>
@@ -5083,7 +5080,7 @@
           <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Sign Up</target>
+        <target state="translated">註冊</target>
       </trans-unit>
       <trans-unit id="223846e3b440a5bf278a46411d71586ac79cc6ec" datatype="html">
         <source>- or -</source>
@@ -5091,7 +5088,7 @@
           <context context-type="sourcefile">app/register/register-teacher/register-teacher.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">- or -</target>
+        <target state="translated">-或者-</target>
       </trans-unit>
       <trans-unit id="692e665f8177ee9150169dca0ff15418616cb3cb" datatype="html">
         <source>Google logo</source>
@@ -5119,7 +5116,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="needs-translation">Google logo</target>
+        <target state="translated">Google logo</target>
       </trans-unit>
       <trans-unit id="49ddce3277c9c81865f8d2278255426cdc9e94f2" datatype="html">
         <source>Sign up with Google</source>
@@ -5131,7 +5128,7 @@
           <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">Sign up with Google</target>
+        <target state="translated">使用 Google 註冊</target>
       </trans-unit>
       <trans-unit id="cf1b0697a564b781038d0a13989200044d851de3" datatype="html">
         <source>We’ll never share your email address or personal information with anyone without your consent.</source>
@@ -5139,7 +5136,7 @@
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-        <target state="needs-translation">We’ll never share your email address or personal information with anyone without your consent.</target>
+        <target state="translated">未經您的同意，我們絕不會與任何人共享您的電子郵件或個人資訊。</target>
       </trans-unit>
       <trans-unit id="e527ace700a5dfcd97e170b854de7b539afacc0c" datatype="html">
         <source>Please enter a valid email address</source>
