@@ -4510,7 +4510,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">144</context>
         </context-group>
-        <target state="needs-translation">How do I review and grade student work?</target>
+        <target state="translated">我如何檢視學生的作業並給予評分？</target>
       </trans-unit>
       <trans-unit id="6d1b5c10cbc1d79f81c60e7c39c78579489cbf7c" datatype="html">
         <source>Here you will be able to look at your students' work.</source>
@@ -4518,7 +4518,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">149</context>
         </context-group>
-        <target state="needs-translation">Here you will be able to look at your students' work.</target>
+        <target state="translated">在這裡，您將能夠檢視學生的作業。</target>
       </trans-unit>
       <trans-unit id="ee4f7ca95b6b6fab1891ae6d1e2228eed8a81a44" datatype="html">
         <source>On the left sidebar you can choose to look at the work by step by clicking "Grade By Step" or you can choose to look at the work by team by clicking "Grade By Team".</source>
@@ -4526,7 +4526,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">150</context>
         </context-group>
-        <target state="needs-translation">On the left sidebar you can choose to look at the work by step by clicking "Grade By Step" or you can choose to look at the work by team by clicking "Grade By Team".</target>
+        <target state="translated">在左側邊欄上，您可以選擇透過點擊“按步驟評分”來逐步檢視作業，也可以通過點擊“按組別評分”來選擇依照組別檢視作業。</target>
       </trans-unit>
       <trans-unit id="01d297ec79e8da8648c32bea29cc49b500480938" datatype="html">
         <source>Next to each student's work, you will be able to give them a score and comment.</source>
@@ -4534,7 +4534,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">151</context>
         </context-group>
-        <target state="needs-translation">Next to each student's work, you will be able to give them a score and comment.</target>
+        <target state="translated">在每個學生的作業旁邊，您可以給他們評分及評論。</target>
       </trans-unit>
       <trans-unit id="ce87a87a75de3f9a89f4ccb83b69b189c217f30b" datatype="html">
         <source>How do students see my comments and scores for their work?</source>
@@ -4542,7 +4542,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">153</context>
         </context-group>
-        <target state="needs-translation">How do students see my comments and scores for their work?</target>
+        <target state="translated">學生如何查看我對他們作業的評論和評分？</target>
       </trans-unit>
       <trans-unit id="6f1b5176d1ac687e91e947309867726178ea6075" datatype="html">
         <source>The student must sign into WISE with their student account.</source>
@@ -4550,7 +4550,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">155</context>
         </context-group>
-        <target state="needs-translation">The student must sign into WISE with their student account.</target>
+        <target state="translated">學生必須使用他們的學生帳號登錄WISE。</target>
       </trans-unit>
       <trans-unit id="3841de15fe215a519a782c724a896d08e6629bea" datatype="html">
         <source>Open the project.</source>
@@ -4558,7 +4558,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">156</context>
         </context-group>
-        <target state="needs-translation">Open the project.</target>
+        <target state="translated">打開專題。</target>
       </trans-unit>
       <trans-unit id="fd1e6e8e6b4e2772c8bd4dece6ed05076b1a6647" datatype="html">
         <source>Go to the step that the teacher graded.</source>
@@ -4566,7 +4566,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">157</context>
         </context-group>
-        <target state="needs-translation">Go to the step that the teacher graded.</target>
+        <target state="translated">前往教師評分的步驟。</target>
       </trans-unit>
       <trans-unit id="2f82e4eae51beaa2d83a4e717af35b409bec8993" datatype="html">
         <source>The comment and score will be displayed under the piece of work that was graded.</source>
@@ -4574,7 +4574,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">158</context>
         </context-group>
-        <target state="needs-translation">The comment and score will be displayed under the piece of work that was graded.</target>
+        <target state="translated">評論和分數將顯示在已評分的作業下。</target>
       </trans-unit>
       <trans-unit id="f4f0bb05aa6bad172e17cce01cddc091c3abe59c" datatype="html">
         <source>What should I look for in my student's answers?</source>
@@ -4582,7 +4582,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">160</context>
         </context-group>
-        <target state="needs-translation">What should I look for in my student's answers?</target>
+        <target state="translated">我應該在學生的答案中看到什麼？</target>
       </trans-unit>
       <trans-unit id="8ad1ae10ce55dbadbc0d79c5df1e0e3236a443ce" datatype="html">
         <source>The following link will give you a sample rubric for grading a step in the Mitosis and Cell Processes project. The rubric is based on our TELS Center research on how students integrate their knowledge of complex science concepts. We hope that it can give you a start in developing your own rubrics for the notes and steps you plan to grade.</source>
