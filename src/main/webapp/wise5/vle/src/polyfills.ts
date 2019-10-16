@@ -38,7 +38,6 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
-import 'zone-blacklist.js';
 import * as jQuery from 'jquery';
 import * as fabric from 'fabric';
 import * as StompJS from '@stomp/stompjs';
