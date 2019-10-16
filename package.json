@@ -1,6 +1,6 @@
 {
   "name": "wise",
-  "version": "5.8.0",
+  "version": "5.8.1",
   "description": "Web-based Inquiry Science Environment",
   "main": "app.js",
   "dependencies": {

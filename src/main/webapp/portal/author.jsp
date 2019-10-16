@@ -13,8 +13,8 @@
         <%@ include file="favicon.jsp"%>
         <script src="${contextPath}/wise5/lib/sockjs/sockjs.min.js"></script>
         <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
-        <script src="${contextPath}/wise5/config.js?v=5.8.0"></script>
-        <script src="${contextPath}/wise5/cacheBuster.js?v=5.8.0"></script>
+        <script src="${contextPath}/wise5/config.js?v=5.8.1"></script>
+        <script src="${contextPath}/wise5/cacheBuster.js?v=5.8.1"></script>
         <script>
             System.import('${contextPath}/wise5/authoringTool/bootstrap');
         </script>
