@@ -98,7 +98,7 @@ public class AddProjectController {
     } catch (StudentUserAlreadyAssociatedWithRunException se) {
       result.rejectValue("projectcode", "student.index.error.studentAlreadyAssociatedWithRun");
       return modelAndView;
-    } catch (RunHasEndedException e){
+    } catch (RunHasEndedException e) {
       result.rejectValue("projectcode", "student.index.error.runHasEnded");
     }
     return modelAndView;

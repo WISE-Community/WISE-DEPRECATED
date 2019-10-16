@@ -151,7 +151,7 @@ public class StudentServiceImplTest extends TestCase {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e){
+		} catch (RunHasEndedException e) {
 			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    
@@ -181,7 +181,7 @@ public class StudentServiceImplTest extends TestCase {
 		} catch (PeriodNotFoundException pe) {
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e){
+		} catch (RunHasEndedException e) {
 			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    
@@ -208,7 +208,7 @@ public class StudentServiceImplTest extends TestCase {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e){
+		} catch (RunHasEndedException e) {
 			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    verify(mockRunService);
@@ -228,7 +228,7 @@ public class StudentServiceImplTest extends TestCase {
 		} catch (PeriodNotFoundException pe) {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-		} catch (RunHasEndedException e){
+		} catch (RunHasEndedException e) {
 			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    verify(mockRunService);

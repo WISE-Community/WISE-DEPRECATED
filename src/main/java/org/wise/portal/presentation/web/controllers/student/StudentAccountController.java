@@ -176,7 +176,7 @@ public class StudentAccountController {
         bindingResult.rejectValue("projectCode",
             "student.index.error.studentAlreadyAssociatedWithRun");
         return "student/join";
-      } catch (RunHasEndedException e){
+      } catch (RunHasEndedException e) {
         bindingResult.rejectValue("projectCode", "student.index.error.RunHasEnded");
         return "student/join";
       }

@@ -63,7 +63,7 @@ public class StudentServiceImpl implements StudentService {
 
   public synchronized void addStudentToRun(User studentUser, Projectcode projectcode)
       throws ObjectNotFoundException, PeriodNotFoundException,
-      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException{
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
     // TODO HT: figure out if we need a Transactional annotation for this method
     // possible problem: groupService.addMembers is transactional
     // we probably need a rollback though
@@ -71,8 +71,8 @@ public class StudentServiceImpl implements StudentService {
     String periodName = projectcode.getRunPeriod();
 
     Run run = runService.retrieveRunByRuncode(runcode);
-    //run.getEndtime() 
-    if(run.getEndtime().compareTo(new Date()) < 0){
+    Date currentTime = new Date();
+    if (run.getEndtime().before(currentTime)) {
       throw new RunHasEndedException(run);
     }
     if (!run.isStudentAssociatedToThisRun(studentUser)) {

@@ -416,7 +416,7 @@ public class StudentAPIController {
       error = "periodNotFound";
     } catch (StudentUserAlreadyAssociatedWithRunException se) {
       error = "studentAlreadyAssociatedWithRun";
-    } catch (RunHasEndedException e){
+    } catch (RunHasEndedException e) {
       error = "runHasEnded";
     }
 
