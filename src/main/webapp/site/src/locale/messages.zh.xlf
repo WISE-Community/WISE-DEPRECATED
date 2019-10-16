@@ -4590,8 +4590,11 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">162</context>
         </context-group>
-        <target state="translated">下面的連結將為您提供評量指標的範例，用於對有絲分裂和細胞過程專題中的步驟進行分級。該評量指標是在我們TELS中心的一項研究學生如何整合他們對複雜科學概念的知識的研究項目的基礎上進行的。 我們希望它可以讓您開始為計劃評分的筆記和步驟開發自己的評量指標。
+        <target state="translated">下面的連結將為您提供評量指標的範例，用於對有絲分裂和細胞過程專題中的步驟進行分級。該評量指標是在我們TELS中心的一項研究學生如何整合他們對複雜科學概念的知識的研究項目的基礎上進行的。 我們希望它可以讓您開始為計劃評分的筆記和步驟開發自己的評量指標。</target>
+        <alt-trans>
+          <target>下面的連結將為您提供評量指標的範例，用於對有絲分裂和細胞過程專題中的步驟進行分級。該評量指標是在我們TELS中心的一項研究學生如何整合他們對複雜科學概念的知識的研究項目的基礎上進行的。 我們希望它可以讓您開始為計劃評分的筆記和步驟開發自己的評量指標。
 </target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="4d5c08a9dd67d4172985bfa1e4ba5afaa90c8dd8" datatype="html">
         <source>Sample rubric for assessing student work</source>
