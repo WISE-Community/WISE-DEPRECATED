@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class='md-content discussion-post__content md-body-1'
-        ng-bind-html='classResponseCtrl.response.studentData.response'>
+        ng-bind-html='classResponseCtrl.response.studentData.responseText'>
     </div>
     <img ng-repeat='attachment in classResponseCtrl.response.studentData.attachments'
         ng-src='{{attachment.iconURL}}'
@@ -88,7 +88,7 @@
               </span>
             </h3>
             <div class='discusstion-reply__content md-body-1'
-                ng-bind-html='reply.studentData.response'>
+                ng-bind-html='reply.studentData.responseText'>
             </div>
           </div>
           <div ng-if='classResponseCtrl.mode == "grading" || classResponseCtrl.mode == "gradingRevision"'>
