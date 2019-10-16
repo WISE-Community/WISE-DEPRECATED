@@ -280,6 +280,10 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     Criteria crit = session.createCriteria(ProjectImpl.class);
     crit.setProjection(Projections.max("id"));
     List<Long> results = crit.list();
-    return results.get(0);
+    try {
+      return results.get(0);
+    } catch (NullPointerException npe) {
+      return 0;
+    }
   }
 }
