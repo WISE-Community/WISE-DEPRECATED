@@ -41,6 +41,11 @@ class ClassResponseController {
     return response.replace(this.urlMatcher, (match) => {
       let matchUrl = match;
       if (!match.startsWith('http')) {
+        /*
+         * The url does not begin with http so we will add // to the beginning of it so that the
+         * browser treats the url as an absolute link and not a relative link. The browser will also
+         * use the same protocol that the current page is loaded with (http or https).
+         */
         matchUrl = '//' + match;
       }
       return `<a href="${matchUrl}" target="_blank">${match}</a>`;
