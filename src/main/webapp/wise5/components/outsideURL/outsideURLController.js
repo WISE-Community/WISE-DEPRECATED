@@ -3,96 +3,102 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _componentController = _interopRequireDefault(require("../componentController"));
 
-var _componentController = require('../componentController');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _componentController2 = _interopRequireDefault(_componentController);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var OutsideURLController = function (_ComponentController) {
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var OutsideURLController =
+/*#__PURE__*/
+function (_ComponentController) {
   _inherits(OutsideURLController, _ComponentController);
 
   function OutsideURLController($filter, $mdDialog, $q, $rootScope, $sce, $scope, AnnotationService, ConfigService, NodeService, NotebookService, OutsideURLService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    var _this;
+
     _classCallCheck(this, OutsideURLController);
 
-    var _this = _possibleConstructorReturn(this, (OutsideURLController.__proto__ || Object.getPrototypeOf(OutsideURLController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(OutsideURLController).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
     _this.$q = $q;
     _this.$sce = $sce;
-    _this.OutsideURLService = OutsideURLService;
+    _this.OutsideURLService = OutsideURLService; // the url to the web page to display
 
-    // the url to the web page to display
     _this.url = null;
-
-    // the max width of the iframe
-    _this.maxWidth = null;
-
-    // the max height of the iframe
-    _this.maxHeight = null;
 
     if (_this.componentContent != null) {
       // set the url
       _this.setURL(_this.componentContent.url);
     }
 
-    // get the max width
-    _this.maxWidth = _this.componentContent.maxWidth ? _this.componentContent.maxWidth : 'none';
-
-    // get the max height
-    _this.maxHeight = _this.componentContent.maxHeight ? _this.componentContent.maxHeight : 'none';
-
+    _this.setWidthAndHeight(_this.componentContent.width, _this.componentContent.height);
     /**
      * Get the component state from this component. The parent node will
      * call this function to obtain the component state when it needs to
      * save student data.
      * @return a promise of a component state containing the student data
      */
+
+
     _this.$scope.getComponentState = function () {
       var deferred = this.$q.defer();
-
       /*
        * the student does not have any unsaved changes in this component
        * so we don't need to save a component state for this component.
        * we will immediately resolve the promise here.
        */
+
       deferred.resolve();
-
       return deferred.promise;
-    }.bind(_this);
+    }.bind(_assertThisInitialized(_this));
 
-    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    _this.$rootScope.$broadcast('doneRenderingComponent', {
+      nodeId: _this.nodeId,
+      componentId: _this.componentId
+    });
+
     return _this;
   }
 
-  /**
-   * Set the url
-   * @param url the url
-   */
-
-
   _createClass(OutsideURLController, [{
-    key: 'setURL',
+    key: "setWidthAndHeight",
+    value: function setWidthAndHeight(width, height) {
+      this.width = width ? width + 'px' : 'none';
+      this.height = height ? height + 'px' : '600px';
+    }
+  }, {
+    key: "setURL",
     value: function setURL(url) {
-      if (url != null) {
-        var trustedURL = this.$sce.trustAsResourceUrl(url);
-        this.url = trustedURL;
+      if (url == null || url === '') {
+        this.url = ' ';
+      } else {
+        this.url = this.$sce.trustAsResourceUrl(url);
       }
     }
   }]);
 
   return OutsideURLController;
-}(_componentController2.default);
+}(_componentController["default"]);
 
 OutsideURLController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$sce', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'OutsideURLService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-exports.default = OutsideURLController;
+var _default = OutsideURLController;
+exports["default"] = _default;
 //# sourceMappingURL=outsideURLController.js.map

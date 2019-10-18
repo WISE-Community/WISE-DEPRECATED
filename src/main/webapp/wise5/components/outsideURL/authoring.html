@@ -7,7 +7,23 @@
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+          <label>{{ 'WIDTH' | translate }} ({{ 'outsideURL.px' | translate }})</label>
+          <input type='number'
+                 ng-model='outsideURLController.authoringComponentContent.width'
+                 ng-model-options='{ debounce: 1000 }'
+                 ng-change='outsideURLController.authoringViewComponentChanged()'/>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+          <label>{{ 'HEIGHT' | translate }} ({{ 'outsideURL.px' | translate }})</label>
+          <input type='number'
+                 ng-model='outsideURLController.authoringComponentContent.height'
+                 ng-model-options='{ debounce: 1000 }'
+                 ng-change='outsideURLController.authoringViewComponentChanged()'/>
+        </md-input-container>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 400px; height: 25px;'>
+          <label>{{ 'COMPONENT_WIDTH' | translate }} ({{ 'outsideURL.integerPercentageOfPageWidth' | translate }})</label>
           <input type='number'
                  ng-model='outsideURLController.authoringComponentContent.componentWidth'
                  ng-model-options='{ debounce: 1000 }'
@@ -70,7 +86,8 @@
              placeholder='{{ "outsideURL.enterURLHere" | translate }}'/>
     </md-input-container>
   </div>
-  <iframe ng-src='{{outsideURLController.url}}'
-          style="height: 100%; width:100%; max-width: {{outsideURLController.maxWidth}}; max-height: {{outsideURLController.maxHeight}};">
-  </iframe>
+  <div style="width: {{outsideURLController.width}}; height: {{outsideURLController.height}}">
+    <iframe ng-src='{{outsideURLController.url}}' style="height: 100%; width:100%;"></iframe>
+    </iframe>
+  </div>
 </div>

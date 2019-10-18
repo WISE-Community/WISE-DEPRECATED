@@ -29,22 +29,12 @@ class OutsideURLController extends ComponentController {
     // the url to the web page to display
     this.url = null;
 
-    // the max width of the iframe
-    this.maxWidth = null;
-
-    // the max height of the iframe
-    this.maxHeight = null;
-
     if (this.componentContent != null) {
       // set the url
       this.setURL(this.componentContent.url);
     }
 
-    // get the max width
-    this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : 'none';
-
-    // get the max height
-    this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : 'none';
+    this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
 
     /**
      * Get the component state from this component. The parent node will
@@ -68,14 +58,16 @@ class OutsideURLController extends ComponentController {
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
-  /**
-   * Set the url
-   * @param url the url
-   */
+  setWidthAndHeight(width, height) {
+    this.width = width ? width + 'px' : 'none';
+    this.height = height ? height + 'px' : '600px';
+  }
+
   setURL(url) {
-    if (url != null) {
-      var trustedURL = this.$sce.trustAsResourceUrl(url);
-      this.url = trustedURL;
+    if (url == null || url === '') {
+      this.url = ' ';
+    } else {
+      this.url = this.$sce.trustAsResourceUrl(url);
     }
   };
 }
