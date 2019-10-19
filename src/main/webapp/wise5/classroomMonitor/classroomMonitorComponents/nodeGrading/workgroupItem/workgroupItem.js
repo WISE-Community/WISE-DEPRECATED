@@ -4,39 +4,39 @@ class WorkgroupItemController {
     constructor($filter,
                 $scope,
                 ProjectService) {
-
         this.$filter = $filter;
         this.$scope = $scope;
         this.ProjectService = ProjectService;
-
         this.$translate = this.$filter('translate');
-        this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
-        this.statusText = '';
+    }
 
-        this.$onChanges = (changesObj) => {
-            if (changesObj.hiddenComponents) {
-                this.hiddenComponents = angular.copy(changesObj.hiddenComponents.currentValue);
-            }
+    $onInit() {
+      this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
+      this.statusText = '';
+      this.update();
+    }
 
-            if (changesObj.maxScore) {
-                this.maxScore = typeof changesObj.maxScore.currentValue === 'number' ? changesObj.maxScore.currentValue : 0;
-            }
+    $onChanges(changesObj) {
+      if (changesObj.hiddenComponents) {
+          this.hiddenComponents = angular.copy(changesObj.hiddenComponents.currentValue);
+      }
 
-            if (changesObj.workgroupData) {
-                let workgroupData = angular.copy(changesObj.workgroupData.currentValue);
-                this.hasAlert = workgroupData.hasAlert;
-                this.hasNewAlert = workgroupData.hasNewAlert;
-                this.status = workgroupData.completionStatus;
-                this.score = workgroupData.score >= 0 ? workgroupData.score : '-';
-            }
+      if (changesObj.maxScore) {
+          this.maxScore = typeof changesObj.maxScore.currentValue === 'number' ? changesObj.maxScore.currentValue : 0;
+      }
 
-            this.update();
-        };
-    };
+      if (changesObj.workgroupData) {
+          let workgroupData = angular.copy(changesObj.workgroupData.currentValue);
+          this.hasAlert = workgroupData.hasAlert;
+          this.hasNewAlert = workgroupData.hasNewAlert;
+          this.status = workgroupData.completionStatus;
+          this.score = workgroupData.score >= 0 ? workgroupData.score : '-';
+      }
+
+      this.update();
+    }
 
     update() {
-        let completion = 0;
-
         switch (this.status) {
             case -1:
                 this.statusClass = ' ';

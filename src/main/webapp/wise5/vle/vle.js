@@ -11,7 +11,7 @@ import 'angular-moment';
 import 'ng-onload';
 import 'angular-sanitize';
 import 'ng-stomp';
-import '../lib/angular-toArrayFilter/toArrayFilter';
+import 'angular-toarrayfilter';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
 import 'angular-ui-router';
@@ -33,8 +33,6 @@ import Fabric from 'fabric';
 import Hopscotch from '../lib/hopscotch/dist/js/hopscotch.min'
 import Filters from '../filters/filters';
 import Highcharts from '../lib/highcharts@4.2.1';
-import HighchartsExporting from '../lib/highcharts-exporting@4.2.1';
-import draggablePoints from '../lib/draggable-points/draggable-points';
 import '../components/graph/graphComponentModule';
 import hopscotch from 'hopscotch';
 import '../components/html/htmlComponentModule';

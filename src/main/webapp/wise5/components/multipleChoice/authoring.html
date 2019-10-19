@@ -360,6 +360,7 @@
               <div ng-switch-when='checkbox'>
                 <div ng-repeat='choice in multipleChoiceController.getChoices()'>
                   <md-checkbox class='md-primary'
+                               aria-label='::choice.text'
                                ng-checked='multipleChoiceController.isChecked(choice.id)'
                                disabled>
                     <span>
@@ -434,6 +435,7 @@
                           ng-change='multipleChoiceController.studentDataChanged()'>
             <div ng-repeat='choice in multipleChoiceController.getChoices()'>
               <md-radio-button class='md-primary'
+                               aria-label='choice.text'
                                ng-value='choice.id'
                                ng-click='multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)'
                                ng-disabled='multipleChoiceController.isDisabled'>
@@ -451,6 +453,7 @@
           <div ng-switch-when='checkbox'>
             <div ng-repeat='choice in multipleChoiceController.getChoices()'>
               <md-checkbox class='md-primary'
+                           aria-label='::choice.text'
                            ng-checked='multipleChoiceController.isChecked(choice.id)'
                            ng-click='multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)'
                            ng-disabled='multipleChoiceController.isDisabled'>

@@ -29,6 +29,7 @@
     "angular-moment": "^1.0.0-beta.6",
     "angular-sanitize": "1.5.11",
     "angular-summernote": "0.8.1",
+    "angular-toarrayfilter": "1.0.1",
     "angular-translate": "^2.12.0",
     "angular-translate-loader-partial": "^2.12.0",
     "angular-ui-router": "^0.3.1",

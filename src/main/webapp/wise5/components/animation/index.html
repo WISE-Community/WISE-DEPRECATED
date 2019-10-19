@@ -86,6 +86,7 @@
                 {{ ::'animation.slower' | translate }}
               </div>
               <md-slider ng-model='animationController.speedSliderValue'
+                  aria-label='slider'
                   ng-change='animationController.speedSliderChanged()'
                   min='1'
                   max='5'>
@@ -96,7 +97,7 @@
             </md-slider-container>
           </span>
           <br/>
-          <svg id='{{animationController.svgId}}'
+          <svg id='{{::animationController.svgId}}'
               width='{{animationController.width}}'
               height='{{animationController.height}}'
               ng-style='{"background-image": animationController.componentContent.background != null ? "url(" + animationController.componentContent.background + ")" : "",

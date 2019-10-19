@@ -8,7 +8,7 @@ import angularDragula from 'angular-dragula';
 import 'angular-file-saver';
 import 'angular-inview';
 import 'angular-moment';
-import '../lib/angular-toArrayFilter/toArrayFilter';
+import 'angular-toarrayfilter';
 import 'angular-ui-router';
 import 'ng-file-upload';
 import 'angular-material';

@@ -11,7 +11,7 @@ import 'angular-material';
 import 'angular-moment';
 import 'angular-sanitize';
 import 'ng-stomp';
-import '../lib/angular-toArrayFilter/toArrayFilter';
+import 'angular-toarrayfilter';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
 import '../components/animation/animationAuthoringComponentModule';

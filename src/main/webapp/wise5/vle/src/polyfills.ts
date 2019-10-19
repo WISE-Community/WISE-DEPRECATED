@@ -45,6 +45,8 @@ import * as SockJS from 'sockjs-client';
 import * as Highcharts from '../../lib/highcharts/highcharts.src';
 import * as hopscotch from 'hopscotch';
 import * as EventEmitter2 from 'eventemitter2';
+import * as draggablePoints from '../../lib/draggable-points/draggable-points';
+import * as HighchartsExporting from '../../lib/highcharts-exporting@4.2.1';
 
 window['$'] = jQuery;
 window['jQuery'] = jQuery;
@@ -56,3 +58,5 @@ window['Highcharts'] = Highcharts;
 window['EventEmitter2'] = EventEmitter2;
 import * as summernote from 'summernote';
 window['summernote'] = summernote;
+window['draggablePoints'] = draggablePoints;
+window['HighchartsExporting'] = HighchartsExporting;
