@@ -36,6 +36,7 @@ import java.util.TreeSet;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.PeriodNotFoundException;
@@ -116,7 +117,7 @@ public class StudentServiceImplTest extends TestCase {
 		projectcode = null;		
 		studentService = null;
 	}
-	
+
 	public void testAddStudentToRun_success() 
 	     throws ObjectNotFoundException, PeriodNotFoundException, 
 	     StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
@@ -265,6 +266,35 @@ public class StudentServiceImplTest extends TestCase {
 		verify(mockGroupService);
 	}
 
+	public void testAddStudentsToRun_RunHasEndedException() 
+            throws ObjectNotFoundException, PeriodNotFoundException {
+		run.setEndtime(new Date(System.currentTimeMillis() - 1));
+  	    expect(mockRunService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
+  	    replay(mockRunService);
+		Group period = run.getPeriodByName(PERIODNAME);
+  	    Set<User> membersToAdd = new HashSet<User>();
+  	    membersToAdd.add(studentUser);
+  	    mockGroupService.addMembers(period, membersToAdd);
+  	    expectLastCall();
+		replay(mockGroupService);
+		  
+  	    // now if we try to add this run that has ended, 
+		// we should get a RunHasEndedException
+  	    try {
+			studentService.addStudentToRun(studentUser, projectcode);
+			fail("Expected the RunHasEndedException to be thrown");
+		} catch (ObjectNotFoundException oe) {
+			fail("ObjectNotFoundException was not expected to be thrown");
+		} catch (PeriodNotFoundException pe) {
+			fail("PeriodNotFoundException was not expected to be thrown");
+		} catch (StudentUserAlreadyAssociatedWithRunException se) {
+			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
+		} catch (RunHasEndedException e) {
+		}
+  	    verify(mockRunService);
+  	    verify(mockGroupService);
+	}
+
 	// TODO Hiroki test getStudentRunInfo()
-	
+
 }

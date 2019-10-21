@@ -26,8 +26,8 @@ package org.wise.portal.domain;
 import org.wise.portal.domain.run.Run;
 
 /**
- * A checked exception that gets thrown when the student that was to be
- * added to a <code>Run</code> was already-associated with the run.
+ * A checked exception that gets thrown when the student wants to input the code and wants to
+ * add a run that has ended
  *
  * @author Arthur Yin
  */

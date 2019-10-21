@@ -309,7 +309,7 @@ public class StudentAPIController {
   private JSONObject performLaunchRun(Long runId, Long workgroupId, String presentUserIds,
       String absentUserIds, HttpServletRequest request, Run run, Set<User> presentMembers,
       Workgroup workgroup) throws ObjectNotFoundException, PeriodNotFoundException,
-      StudentUserAlreadyAssociatedWithRunException,RunHasEndedException, JSONException {
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException, JSONException {
     addStudentsToRunIfNecessary(run, presentMembers, workgroup);
     if (!run.isEnded()) {
       saveStudentAttendance(runId, workgroupId, presentUserIds, absentUserIds);
