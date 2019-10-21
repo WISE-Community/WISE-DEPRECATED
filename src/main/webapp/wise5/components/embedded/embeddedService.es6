@@ -21,6 +21,7 @@ class EmbeddedService extends ComponentService {
     const component = super.createComponent();
     component.type = 'Embedded';
     component.url = '';
+    component.height = 600;
     return component;
   }
 

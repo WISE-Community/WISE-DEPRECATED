@@ -1,59 +1,74 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _componentService = _interopRequireDefault(require("../componentService"));
 
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+var _html2canvas = _interopRequireDefault(require("html2canvas"));
 
-var _componentService = require('../componentService');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _componentService2 = _interopRequireDefault(_componentService);
-
-var _html2canvas = require('html2canvas');
-
-var _html2canvas2 = _interopRequireDefault(_html2canvas);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var EmbeddedService = function (_ComponentService) {
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var EmbeddedService =
+/*#__PURE__*/
+function (_ComponentService) {
   _inherits(EmbeddedService, _ComponentService);
 
   function EmbeddedService($filter, $q, StudentAssetService, StudentDataService, UtilService) {
+    var _this;
+
     _classCallCheck(this, EmbeddedService);
 
-    var _this = _possibleConstructorReturn(this, (EmbeddedService.__proto__ || Object.getPrototypeOf(EmbeddedService)).call(this, $filter, StudentDataService, UtilService));
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(EmbeddedService).call(this, $filter, StudentDataService, UtilService));
     _this.$q = $q;
     _this.StudentAssetService = StudentAssetService;
     return _this;
   }
 
   _createClass(EmbeddedService, [{
-    key: 'getComponentTypeLabel',
+    key: "getComponentTypeLabel",
     value: function getComponentTypeLabel() {
       return this.$translate('embedded.componentTypeLabel');
     }
   }, {
-    key: 'createComponent',
+    key: "createComponent",
     value: function createComponent() {
-      var component = _get(EmbeddedService.prototype.__proto__ || Object.getPrototypeOf(EmbeddedService.prototype), 'createComponent', this).call(this);
+      var component = _get(_getPrototypeOf(EmbeddedService.prototype), "createComponent", this).call(this);
+
       component.type = 'Embedded';
       component.url = '';
+      component.height = 600;
       return component;
     }
   }, {
-    key: 'isCompleted',
+    key: "isCompleted",
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
       var isCompletedFieldInComponentState = false;
+
       if (componentStates != null) {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -62,12 +77,13 @@ var EmbeddedService = function (_ComponentService) {
         try {
           for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var componentState = _step.value;
-
             var studentData = componentState.studentData;
+
             if (studentData != null && studentData.isCompleted != null) {
               if (studentData.isCompleted === true) {
                 return true;
               }
+
               isCompletedFieldInComponentState = true;
             }
           }
@@ -76,8 +92,8 @@ var EmbeddedService = function (_ComponentService) {
           _iteratorError = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
             }
           } finally {
             if (_didIteratorError) {
@@ -110,8 +126,8 @@ var EmbeddedService = function (_ComponentService) {
             _iteratorError2 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
+              if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+                _iterator2["return"]();
               }
             } finally {
               if (_didIteratorError2) {
@@ -121,19 +137,19 @@ var EmbeddedService = function (_ComponentService) {
           }
         }
       }
+
       return false;
     }
   }, {
-    key: 'componentHasWork',
+    key: "componentHasWork",
     value: function componentHasWork(component) {
       return false;
     }
   }, {
-    key: 'componentStateHasStudentWork',
+    key: "componentStateHasStudentWork",
     value: function componentStateHasStudentWork(componentState, componentContent) {
       return componentState.studentData != null;
     }
-
     /**
      * The component state has been rendered in a <component></component> element
      * and now we want to take a snapshot of the work.
@@ -142,33 +158,38 @@ var EmbeddedService = function (_ComponentService) {
      */
 
   }, {
-    key: 'generateImageFromRenderedComponentState',
+    key: "generateImageFromRenderedComponentState",
     value: function generateImageFromRenderedComponentState(componentState) {
       var _this2 = this;
 
       var deferred = this.$q.defer();
       var iframe = $('#componentApp_' + componentState.componentId);
+
       if (iframe != null && iframe.length > 0) {
         var modelElement = iframe.contents().find('html');
+
         if (modelElement != null && modelElement.length > 0) {
           modelElement = modelElement[0];
-          (0, _html2canvas2.default)(modelElement).then(function (canvas) {
+          (0, _html2canvas["default"])(modelElement).then(function (canvas) {
             var base64Image = canvas.toDataURL('image/png');
+
             var imageObject = _this2.UtilService.getImageObjectFromBase64String(base64Image);
+
             _this2.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
               deferred.resolve(asset);
             });
           });
         }
       }
+
       return deferred.promise;
     }
   }]);
 
   return EmbeddedService;
-}(_componentService2.default);
+}(_componentService["default"]);
 
 EmbeddedService.$inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-exports.default = EmbeddedService;
+var _default = EmbeddedService;
+exports["default"] = _default;
 //# sourceMappingURL=embeddedService.js.map
