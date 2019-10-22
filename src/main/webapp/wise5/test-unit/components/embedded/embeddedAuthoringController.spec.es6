@@ -50,4 +50,16 @@ describe('EmbeddedAuthoringController', () => {
     expect(embeddedAuthoringController.authoringComponentContent.url).toEqual('thermo.html');
   });
 
+  it('should have a default height', () => {
+    expect(embeddedAuthoringController.height).toEqual('600px');
+  });
+
+  it('should set the width and height', () => {
+    expect(embeddedAuthoringController.width).toEqual('none');
+    expect(embeddedAuthoringController.height).toEqual('600px');
+    embeddedAuthoringController.setWidthAndHeight(400, 300);
+    expect(embeddedAuthoringController.width).toEqual('400px');
+    expect(embeddedAuthoringController.height).toEqual('300px');
+  });
+
 });

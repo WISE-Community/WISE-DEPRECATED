@@ -3,37 +3,45 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _componentController = _interopRequireDefault(require("../componentController"));
 
-var _componentController = require('../componentController');
+var _html2canvas = _interopRequireDefault(require("html2canvas"));
 
-var _componentController2 = _interopRequireDefault(_componentController);
+var _iframeResizer = _interopRequireDefault(require("iframe-resizer"));
 
-var _html2canvas = require('html2canvas');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _html2canvas2 = _interopRequireDefault(_html2canvas);
-
-var _iframeResizer = require('iframe-resizer');
-
-var _iframeResizer2 = _interopRequireDefault(_iframeResizer);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var EmbeddedController = function (_ComponentController) {
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var EmbeddedController =
+/*#__PURE__*/
+function (_ComponentController) {
   _inherits(EmbeddedController, _ComponentController);
 
   function EmbeddedController($filter, $mdDialog, $q, $rootScope, $scope, $sce, $timeout, $window, AnnotationService, ConfigService, EmbeddedService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    var _this;
+
     _classCallCheck(this, EmbeddedController);
 
-    var _this = _possibleConstructorReturn(this, (EmbeddedController.__proto__ || Object.getPrototypeOf(EmbeddedController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(EmbeddedController).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
     _this.$q = $q;
     _this.$sce = $sce;
     _this.$timeout = $timeout;
@@ -41,8 +49,9 @@ var EmbeddedController = function (_ComponentController) {
     _this.EmbeddedService = EmbeddedService;
     _this.componentType = null;
     _this.url = null;
-    _this.width = _this.componentContent.width ? _this.componentContent.width : '100%';
-    _this.height = _this.componentContent.height ? _this.componentContent.height : '100%';
+
+    _this.setWidthAndHeight(_this.componentContent.width, _this.componentContent.height);
+
     _this.maxWidth = null;
     _this.maxHeight = null;
     _this.notebookConfig = _this.NotebookService.getNotebookConfig();
@@ -54,8 +63,10 @@ var EmbeddedController = function (_ComponentController) {
 
     if (_this.isGradingMode() || _this.isGradingRevisionMode()) {
       var componentState = _this.$scope.componentState;
+
       if (componentState != null) {
         _this.embeddedApplicationIFrameId = 'componentApp_' + componentState.id;
+
         if (_this.isGradingRevisionMode()) {
           _this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
         }
@@ -63,7 +74,6 @@ var EmbeddedController = function (_ComponentController) {
     }
 
     _this.setURL(_this.componentContent.url);
-
     /**
      * A connected component has changed its student data so we will
      * perform any necessary changes to this component
@@ -71,47 +81,61 @@ var EmbeddedController = function (_ComponentController) {
      * @param connectedComponentParams the connected component params
      * @param componentState the student data from the connected component that has changed
      */
+
+
     _this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
       var message = {
         messageType: 'handleConnectedComponentStudentDataChanged',
         componentState: componentState
       };
+
       _this.sendMessageToApplication(message);
     };
 
     _this.initializeScopeGetComponentState(_this.$scope, 'embeddedController');
-
     /*
      * Listen for the siblingComponentStudentDataChanged event which occurs
      * when the student data has changed for another component in this step.
      */
+
+
     _this.$scope.$on('siblingComponentStudentDataChanged', function (event, args) {
       if (_this.isEventTargetThisComponent(args)) {
         var message = {
           messageType: 'siblingComponentStudentDataChanged',
           componentState: args.componentState
         };
+
         _this.sendMessageToApplication(message);
       }
     });
 
     _this.initializeMessageEventListener();
+
     _this.broadcastDoneRenderingComponent();
+
     return _this;
   }
 
   _createClass(EmbeddedController, [{
-    key: 'cleanupBeforeExiting',
+    key: "setWidthAndHeight",
+    value: function setWidthAndHeight(width, height) {
+      this.width = width ? width + 'px' : 'none';
+      this.height = height ? height + 'px' : '600px';
+    }
+  }, {
+    key: "cleanupBeforeExiting",
     value: function cleanupBeforeExiting() {
       this.$window.removeEventListener('message', this.messageEventListener);
     }
   }, {
-    key: 'initializeMessageEventListener',
+    key: "initializeMessageEventListener",
     value: function initializeMessageEventListener() {
       var _this2 = this;
 
       this.messageEventListener = function (messageEvent) {
         var messageEventData = messageEvent.data;
+
         if (messageEventData.messageType === 'event') {
           _this2.handleEventMessage(messageEventData);
         } else if (messageEventData.messageType === 'studentWork') {
@@ -138,7 +162,7 @@ var EmbeddedController = function (_ComponentController) {
       };
     }
   }, {
-    key: 'handleEventMessage',
+    key: "handleEventMessage",
     value: function handleEventMessage(messageEventData) {
       var nodeId = this.nodeId;
       var componentId = this.componentId;
@@ -149,7 +173,7 @@ var EmbeddedController = function (_ComponentController) {
       this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
     }
   }, {
-    key: 'handleStudentWorkMessage',
+    key: "handleStudentWorkMessage",
     value: function handleStudentWorkMessage(messageEventData) {
       if (messageEventData.id != null) {
         //the model wants to update/overwrite an existing component state
@@ -165,44 +189,58 @@ var EmbeddedController = function (_ComponentController) {
 
       this.isDirty = true;
       this.setStudentData(messageEventData.studentData);
+
       if (messageEventData.annotations != null) {
         this.setAnnotations(messageEventData.annotations);
       }
-      this.studentDataChanged();
 
-      // tell the parent node that this component wants to save
-      this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+      this.studentDataChanged(); // tell the parent node that this component wants to save
+
+      this.$scope.$emit('componentSaveTriggered', {
+        nodeId: this.nodeId,
+        componentId: this.componentId
+      });
     }
   }, {
-    key: 'handleApplicationInitializedMessage',
+    key: "handleApplicationInitializedMessage",
     value: function handleApplicationInitializedMessage(messageEventData) {
       this.sendLatestWorkToApplication();
       this.processLatestStudentWork();
-      $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
+      $('#' + this.embeddedApplicationIFrameId).iFrameResize({
+        scrolling: true
+      });
     }
   }, {
-    key: 'handleComponentDirtyMessage',
+    key: "handleComponentDirtyMessage",
     value: function handleComponentDirtyMessage(messageEventData) {
       this.isDirty = messageEventData.isDirty;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: isDirty });
+      this.$scope.$emit('componentDirty', {
+        componentId: this.componentId,
+        isDirty: isDirty
+      });
     }
   }, {
-    key: 'handleComponentSubmitDirtyMessage',
+    key: "handleComponentSubmitDirtyMessage",
     value: function handleComponentSubmitDirtyMessage(messageEventData) {
       this.isSubmitDirty = messageEventData.isDirty;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
+      this.$scope.$emit('componentSubmitDirty', {
+        componentId: this.componentId,
+        isDirty: isDirty
+      });
     }
   }, {
-    key: 'handleStudentDataChangedMessage',
+    key: "handleStudentDataChangedMessage",
     value: function handleStudentDataChangedMessage(messageEventData) {
       this.setStudentData(messageEventData.studentData);
+
       if (messageEventData.annotations != null) {
         this.setAnnotations(messageEventData.annotations);
       }
+
       this.studentDataChanged();
     }
   }, {
-    key: 'handleGetStudentWorkMessage',
+    key: "handleGetStudentWorkMessage",
     value: function handleGetStudentWorkMessage(messageEventData) {
       var getStudentWorkParams = messageEventData.getStudentWorkParams;
       var studentWork = this.getStudentWork(messageEventData.getStudentWorkParams);
@@ -212,7 +250,7 @@ var EmbeddedController = function (_ComponentController) {
       this.sendMessageToApplication(message);
     }
   }, {
-    key: 'handleGetLatestStudentWorkMessage',
+    key: "handleGetLatestStudentWorkMessage",
     value: function handleGetLatestStudentWorkMessage(messageEventData) {
       var latestComponentState = this.getLatestStudentWork();
       var message = {
@@ -222,12 +260,14 @@ var EmbeddedController = function (_ComponentController) {
       this.sendMessageToApplication(message);
     }
   }, {
-    key: 'handleGetParametersMessage',
+    key: "handleGetParametersMessage",
     value: function handleGetParametersMessage(messageEventData) {
       var parameters = {};
+
       if (this.componentContent.parameters != null) {
         parameters = this.UtilService.makeCopyOfJSONObject(this.componentContent.parameters);
       }
+
       parameters.nodeId = this.nodeId;
       parameters.componentId = this.componentId;
       var message = {
@@ -237,7 +277,7 @@ var EmbeddedController = function (_ComponentController) {
       this.sendMessageToApplication(message);
     }
   }, {
-    key: 'handleGetProjectPathMessage',
+    key: "handleGetProjectPathMessage",
     value: function handleGetProjectPathMessage(messageEventData) {
       var message = {
         messageType: 'projectPath',
@@ -247,7 +287,7 @@ var EmbeddedController = function (_ComponentController) {
       this.sendMessageToApplication(message);
     }
   }, {
-    key: 'handleGetLatestAnnotationsMessage',
+    key: "handleGetLatestAnnotationsMessage",
     value: function handleGetLatestAnnotationsMessage(messageEventData) {
       var latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
       var latestCommentAnnotation = this.AnnotationService.getLatestCommentAnnotation(this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
@@ -259,93 +299,115 @@ var EmbeddedController = function (_ComponentController) {
       this.sendMessageToApplication(message);
     }
   }, {
-    key: 'registerStudentWorkSavedToServerListener',
+    key: "registerStudentWorkSavedToServerListener",
     value: function registerStudentWorkSavedToServerListener() {
       var _this3 = this;
 
       this.$scope.$on('studentWorkSavedToServer', function (event, args) {
         var componentState = args.studentWork;
+
         if (componentState != null) {
           if (componentState.componentId === _this3.componentId) {
             _this3.isDirty = false;
-            _this3.$scope.$emit('componentDirty', { componentId: _this3.componentId, isDirty: false });
+
+            _this3.$scope.$emit('componentDirty', {
+              componentId: _this3.componentId,
+              isDirty: false
+            });
+
             _this3.$scope.embeddedController.componentState = null;
             var isAutoSave = componentState.isAutoSave;
             var isSubmit = componentState.isSubmit;
             var serverSaveTime = componentState.serverSaveTime;
+
             var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
+
             if (isSubmit) {
               _this3.setSubmittedMessage(clientSaveTime);
+
               _this3.submit();
+
               _this3.isSubmitDirty = false;
-              _this3.$scope.$emit('componentSubmitDirty', { componentId: _this3.componentId, isDirty: false });
+
+              _this3.$scope.$emit('componentSubmitDirty', {
+                componentId: _this3.componentId,
+                isDirty: false
+              });
             } else if (isAutoSave) {
               _this3.setAutoSavedMessage(clientSaveTime);
             } else {
               _this3.setSavedMessage(clientSaveTime);
             }
+
             var message = {
               messageType: 'componentStateSaved',
               componentState: componentState
             };
+
             _this3.sendMessageToApplication(message);
           }
         }
       });
     }
   }, {
-    key: 'iframeLoaded',
+    key: "iframeLoaded",
     value: function iframeLoaded(contentLocation) {
       window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.addEventListener('message', this.messageEventListener);
     }
   }, {
-    key: 'setURL',
+    key: "setURL",
     value: function setURL(url) {
       this.url = this.$sce.trustAsResourceUrl(url);
     }
-
     /**
      * Create a new component state populated with the student data
      * @return the componentState after it has been populated
      */
 
   }, {
-    key: 'createComponentState',
+    key: "createComponentState",
     value: function createComponentState(action) {
       var componentState = this.NodeService.createNewComponentState();
       componentState.studentData = this.studentData;
       componentState.componentType = 'Embedded';
       componentState.nodeId = this.nodeId;
       componentState.componentId = this.componentId;
+
       if (this.componentStateId != null) {
         componentState.id = this.componentStateId;
       }
+
       if (this.isSubmit) {
         componentState.isSubmit = this.isSubmit;
         this.isSubmit = false;
       }
+
       if (this.annotationsToSave.length !== 0) {
         componentState.annotations = this.annotationsToSave;
       }
+
       if (action === 'save') {
         this.clearAnnotationsToSave();
       }
+
       var deferred = this.$q.defer();
       this.createComponentStateAdditionalProcessing(deferred, componentState, action);
       return deferred.promise;
     }
   }, {
-    key: 'clearAnnotationsToSave',
+    key: "clearAnnotationsToSave",
     value: function clearAnnotationsToSave() {
       this.annotationsToSave = [];
     }
   }, {
-    key: 'sendLatestWorkToApplication',
+    key: "sendLatestWorkToApplication",
     value: function sendLatestWorkToApplication() {
       var componentState = this.$scope.componentState;
+
       if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         componentState = this.handleConnectedComponents();
       }
+
       var message = {
         messageType: 'componentState',
         componentState: componentState
@@ -353,40 +415,42 @@ var EmbeddedController = function (_ComponentController) {
       this.sendMessageToApplication(message);
     }
   }, {
-    key: 'sendMessageToApplication',
+    key: "sendMessageToApplication",
     value: function sendMessageToApplication(message) {
       window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.postMessage(message, '*');
     }
-
     /**
      * Snip the model by converting it to an image
      * @param $event the click event
      */
 
   }, {
-    key: 'snipModel',
+    key: "snipModel",
     value: function snipModel($event) {
       var _this4 = this;
 
       var iframe = $('#' + this.embeddedApplicationIFrameId);
+
       if (iframe != null && iframe.length > 0) {
         var modelElement = iframe.contents().find('html');
+
         if (modelElement != null && modelElement.length > 0) {
           modelElement = modelElement[0];
-          (0, _html2canvas2.default)(modelElement).then(function (canvas) {
+          (0, _html2canvas["default"])(modelElement).then(function (canvas) {
             var base64Image = canvas.toDataURL('image/png');
+
             var imageObject = _this4.UtilService.getImageObjectFromBase64String(base64Image);
+
             _this4.NotebookService.addNote($event, imageObject);
           });
         }
       }
     }
   }, {
-    key: 'getLatestStudentWork',
+    key: "getLatestStudentWork",
     value: function getLatestStudentWork() {
       return this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
     }
-
     /**
      * Get the student work from the specified components/nodes
      * @param params The params for getting the student work. The possible
@@ -406,35 +470,43 @@ var EmbeddedController = function (_ComponentController) {
      */
 
   }, {
-    key: 'getStudentWork',
+    key: "getStudentWork",
     value: function getStudentWork(params) {
       var studentWork = {};
+
       if (params != null) {
         if (params.getLatestStudentWorkFromThisComponent) {
           studentWork.latestStudentWorkFromThisComponent = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
         }
+
         if (params.getAllStudentWorkFromThisComponent) {
           studentWork.allStudentWorkFromThisComponent = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
         }
+
         if (params.getLatestStudentWorkFromThisNode) {
           studentWork.latestStudentWorkFromThisNode = this.StudentDataService.getLatestComponentStatesByNodeId(this.nodeId);
         }
+
         if (params.getAllStudentWorkFromThisNode) {
           studentWork.allStudentWorkFromThisNode = this.StudentDataService.getComponentStatesByNodeId(this.nodeId);
         }
+
         if (params.getLatestStudentWorkFromOtherComponents) {
           studentWork.latestStudentWorkFromOtherComponents = this.getLatestStudentWorkFromOtherComponents(params.otherComponents);
         }
+
         if (params.getAllStudentWorkFromOtherComponents) {
           studentWork.allStudentWorkFromOtherComponents = this.getAllStudentWorkFromOtherComponents(params.otherComponents);
         }
       }
+
       return studentWork;
     }
   }, {
-    key: 'getLatestStudentWorkFromOtherComponents',
+    key: "getLatestStudentWorkFromOtherComponents",
     value: function getLatestStudentWorkFromOtherComponents(otherComponents) {
       var latestStudentWorkFromOtherComponents = [];
+
       if (otherComponents != null) {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -443,11 +515,12 @@ var EmbeddedController = function (_ComponentController) {
         try {
           for (var _iterator = otherComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var otherComponent = _step.value;
-
             var tempNodeId = otherComponent.nodeId;
             var tempComponentId = otherComponent.componentId;
+
             if (tempNodeId != null && tempComponentId != null) {
               var tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(tempNodeId, tempComponentId);
+
               if (tempComponentState != null) {
                 latestStudentWorkFromOtherComponents.push(tempComponentState);
               }
@@ -458,8 +531,8 @@ var EmbeddedController = function (_ComponentController) {
           _iteratorError = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
             }
           } finally {
             if (_didIteratorError) {
@@ -468,12 +541,14 @@ var EmbeddedController = function (_ComponentController) {
           }
         }
       }
+
       return latestStudentWorkFromOtherComponents;
     }
   }, {
-    key: 'getAllStudentWorkFromOtherComponents',
+    key: "getAllStudentWorkFromOtherComponents",
     value: function getAllStudentWorkFromOtherComponents(otherComponents) {
       var allStudentWorkFromOtherComponents = [];
+
       if (otherComponents != null) {
         var _iteratorNormalCompletion2 = true;
         var _didIteratorError2 = false;
@@ -486,8 +561,10 @@ var EmbeddedController = function (_ComponentController) {
             if (otherComponent != null) {
               var tempNodeId = otherComponent.nodeId;
               var tempComponentId = otherComponent.componentId;
+
               if (tempNodeId != null && tempComponentId != null) {
                 var tempComponentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
+
                 if (tempComponentStates != null && tempComponentStates.length > 0) {
                   allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents.concat(tempComponentStates);
                 }
@@ -499,8 +576,8 @@ var EmbeddedController = function (_ComponentController) {
           _iteratorError2 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
             }
           } finally {
             if (_didIteratorError2) {
@@ -509,25 +586,28 @@ var EmbeddedController = function (_ComponentController) {
           }
         }
       }
+
       return allStudentWorkFromOtherComponents;
     }
-
     /**
      * Import any work we need from connected components
      */
 
   }, {
-    key: 'handleConnectedComponents',
+    key: "handleConnectedComponents",
     value: function handleConnectedComponents() {
       var mergedComponentState = this.$scope.componentState;
       var firstTime = true;
+
       if (mergedComponentState == null) {
         mergedComponentState = this.NodeService.createNewComponentState();
         mergedComponentState.studentData = {};
       } else {
         firstTime = false;
       }
+
       var connectedComponents = this.componentContent.connectedComponents;
+
       if (connectedComponents != null) {
         var componentStates = [];
         var _iteratorNormalCompletion3 = true;
@@ -537,8 +617,8 @@ var EmbeddedController = function (_ComponentController) {
         try {
           for (var _iterator3 = connectedComponents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
             var connectedComponent = _step3.value;
-
             var type = connectedComponent.type;
+
             if (type === 'showWork') {
               this.handleShowWorkConnectedComponent(connectedComponent, componentStates);
             } else if (type === 'importWork' || type == null) {
@@ -550,8 +630,8 @@ var EmbeddedController = function (_ComponentController) {
           _iteratorError3 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-              _iterator3.return();
+            if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+              _iterator3["return"]();
             }
           } finally {
             if (_didIteratorError3) {
@@ -565,35 +645,40 @@ var EmbeddedController = function (_ComponentController) {
           this.studentDataChanged();
         }
       }
+
       return mergedComponentState;
     }
   }, {
-    key: 'handleShowWorkConnectedComponent',
+    key: "handleShowWorkConnectedComponent",
     value: function handleShowWorkConnectedComponent(connectedComponent, componentStates) {
       var nodeId = connectedComponent.nodeId;
       var componentId = connectedComponent.componentId;
       var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
       if (componentState != null) {
         componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
       }
+
       this.isDisabled = true;
     }
   }, {
-    key: 'handleImportWorkConnectedComponent',
+    key: "handleImportWorkConnectedComponent",
     value: function handleImportWorkConnectedComponent(connectedComponent, mergedComponentState, firstTime) {
       var nodeId = connectedComponent.nodeId;
       var componentId = connectedComponent.componentId;
       var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
       if (connectedComponentState != null) {
         var fields = connectedComponent.fields;
         var when = connectedComponent.when;
+
         if (when == null || when === 'firstTime' && firstTime) {
           mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
         }
       }
+
       return mergedComponentState;
     }
-
     /**
      * Merge a new component state into a base component state.
      * @param toComponentState The component state we will be merging into.
@@ -604,7 +689,7 @@ var EmbeddedController = function (_ComponentController) {
      */
 
   }, {
-    key: 'mergeComponentState',
+    key: "mergeComponentState",
     value: function mergeComponentState(toComponentState, fromComponentState, mergeFields, firstTime) {
       if (mergeFields == null) {
         // there are no merge fields specified so we will get all of the fields
@@ -619,7 +704,6 @@ var EmbeddedController = function (_ComponentController) {
         try {
           for (var _iterator4 = mergeFields[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
             var mergeField = _step4.value;
-
             this.mergeField(toComponentState, fromComponentState, mergeField, firstTime);
           }
         } catch (err) {
@@ -627,8 +711,8 @@ var EmbeddedController = function (_ComponentController) {
           _iteratorError4 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
+            if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+              _iterator4["return"]();
             }
           } finally {
             if (_didIteratorError4) {
@@ -637,40 +721,40 @@ var EmbeddedController = function (_ComponentController) {
           }
         }
       }
+
       return toComponentState;
     }
   }, {
-    key: 'mergeField',
+    key: "mergeField",
     value: function mergeField(toComponentState, fromComponentState, _mergeField, firstTime) {
       var name = _mergeField.name;
       var when = _mergeField.when;
       var action = _mergeField.action;
+
       if (when == 'firstTime' && firstTime == true) {
         if (action == 'write') {
           toComponentState.studentData[name] = fromComponentState.studentData[name];
-        } else if (action == 'read') {
-          // TODO
+        } else if (action == 'read') {// TODO
         }
       } else if (when == 'always') {
         if (action == 'write') {
           toComponentState.studentData[name] = fromComponentState.studentData[name];
-        } else if (action == 'read') {
-          // TODO
+        } else if (action == 'read') {// TODO
         }
       }
     }
   }, {
-    key: 'setStudentWork',
+    key: "setStudentWork",
     value: function setStudentWork(componentState) {
       this.studentData = componentState.studentData;
     }
   }, {
-    key: 'setStudentData',
+    key: "setStudentData",
     value: function setStudentData(studentData) {
       this.studentData = studentData;
     }
   }, {
-    key: 'setAnnotations',
+    key: "setAnnotations",
     value: function setAnnotations(annotations) {
       var _iteratorNormalCompletion5 = true;
       var _didIteratorError5 = false;
@@ -697,8 +781,8 @@ var EmbeddedController = function (_ComponentController) {
         _iteratorError5 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+            _iterator5["return"]();
           }
         } finally {
           if (_didIteratorError5) {
@@ -708,21 +792,21 @@ var EmbeddedController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'isAnnotationValid',
+    key: "isAnnotationValid",
     value: function isAnnotationValid(annotation) {
       return annotation.type != null && annotation.data != null && annotation.data.value != null;
     }
   }, {
-    key: 'addToAnnotationsToSave',
+    key: "addToAnnotationsToSave",
     value: function addToAnnotationsToSave(annotation) {
       this.annotationsToSave.push(annotation);
     }
   }]);
 
   return EmbeddedController;
-}(_componentController2.default);
+}(_componentController["default"]);
 
 EmbeddedController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$sce', '$timeout', '$window', 'AnnotationService', 'ConfigService', 'EmbeddedService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-exports.default = EmbeddedController;
+var _default = EmbeddedController;
+exports["default"] = _default;
 //# sourceMappingURL=embeddedController.js.map

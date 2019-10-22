@@ -33,8 +33,7 @@ class EmbeddedController extends ComponentController {
     this.EmbeddedService = EmbeddedService;
     this.componentType = null;
     this.url = null;
-    this.width = this.componentContent.width ? this.componentContent.width : '100%';
-    this.height = this.componentContent.height ? this.componentContent.height : '100%';
+    this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
     this.maxWidth = null;
     this.maxHeight = null;
     this.notebookConfig = this.NotebookService.getNotebookConfig();
@@ -90,6 +89,11 @@ class EmbeddedController extends ComponentController {
 
     this.initializeMessageEventListener();
     this.broadcastDoneRenderingComponent();
+  }
+
+  setWidthAndHeight(width, height) {
+    this.width = width ? width + 'px' : 'none';
+    this.height = height ? height + 'px' : '600px';
   }
 
   cleanupBeforeExiting() {
