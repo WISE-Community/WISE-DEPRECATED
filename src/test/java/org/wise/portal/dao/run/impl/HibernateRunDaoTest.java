@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -120,7 +121,7 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
         User owner = new UserImpl();
         owner.setUserDetails(userDetails);
         userDao.save(owner);
-        this.sessionFactory.getCurrentSession().flush();
+        this.toilet.flush();
         this.run.setOwner(owner);
 
         project = new ProjectImpl();
@@ -129,7 +130,7 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
         project.setDateCreated(new Date());
         project.setOwner(owner);
         projectDao.save(project);
-        this.sessionFactory.getCurrentSession().flush();
+        this.toilet.flush();
         this.run.setProject(project);
     }
 
@@ -140,7 +141,7 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     @Test
     public void testSave() {
         this.runDao.save(this.run);
-        this.sessionFactory.getCurrentSession().flush();
+        this.toilet.flush();
 
         assertNumRuns(1);
         List<?> runsList = retrieveRunListFromDb();
@@ -166,7 +167,23 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
 
         runsList = retrieveRunListFromDb();
         assertNumRuns(1);
-        // TODO retrieve run and test that the periods saved correctly
+
+        List<?> runsAndGroups = retrieveRunsAndGroupsListFromDb();
+        assertEquals(1, runsList.size());
+        assertEquals(2, retrieveRunsRelatedToGroupsListFromDb().size());
+        assertEquals(2, runsAndGroups.size());
+
+        List<String> periodNames = new ArrayList<String>();
+        periodNames.add(group1.getName());
+        periodNames.add(group2.getName());
+
+        for (int i = 0; i < runsAndGroups.size(); i++) {
+            Map<?, ?> allRunMap = (Map<?, ?>) runsAndGroups.get(i);
+            String periodName = (String) allRunMap
+                    .get("periodName");
+            assertTrue(periodNames.contains(periodName));
+            periodNames.remove(periodName);
+        }
 
         this.endTime = Calendar.getInstance().getTime();
         this.run.setEndtime(this.endTime);
@@ -185,7 +202,7 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
         this.run.setProject(null);
         try {
           this.runDao.save(this.run);
-          this.sessionFactory.getCurrentSession().flush();
+          this.toilet.flush();
         	fail("Exception expected to be thrown but was not");
         } catch (Exception e) {
         }
@@ -194,7 +211,7 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     @Test
     public void testRetrieveByRunCode() throws Exception {
         this.runDao.save(this.run);
-        this.sessionFactory.getCurrentSession().flush();
+        this.toilet.flush();
 
         Run run = this.runDao.retrieveByRunCode(runcode);
         assertTrue(run instanceof RunImpl);
@@ -216,7 +233,7 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     @Test
     public void testGetById() throws Exception {
         this.runDao.save(this.run);
-        this.sessionFactory.getCurrentSession().flush();
+        this.toilet.flush();
         assertNotNull(this.runDao.getById(this.run.getId()));
     }
 
@@ -236,7 +253,7 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     }
 
     private List<?> retrieveRunsAndGroupsListFromDb() {
-        return this.jdbcTemplate.queryForList("SELECT * FROM "
+        return this.jdbcTemplate.queryForList("SELECT *, " + PersistentGroup.DATA_STORE_NAME + ".name as periodName FROM "
                 + RunImpl.DATA_STORE_NAME + ", " + RunImpl.PERIODS_JOIN_TABLE_NAME
                 + ", " + PersistentGroup.DATA_STORE_NAME + " WHERE "
                 + RunImpl.DATA_STORE_NAME + ".id = " + RunImpl.PERIODS_JOIN_TABLE_NAME

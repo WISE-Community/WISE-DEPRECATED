@@ -49,7 +49,7 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
   @Autowired
   @Transactional
   public void init() {
-    entityManager=entityManager.getEntityManagerFactory().createEntityManager();
+    entityManager = entityManager.getEntityManagerFactory().createEntityManager();
     Session session = (Session) entityManager.unwrap(Session.class);
     SessionFactory sessionFactory = session.getSessionFactory();
     setSessionFactory(sessionFactory);
