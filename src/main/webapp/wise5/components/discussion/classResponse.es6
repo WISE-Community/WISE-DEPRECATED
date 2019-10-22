@@ -9,15 +9,47 @@ class ClassResponseController {
     this.ConfigService = ConfigService;
 
     this.$translate = this.$filter('translate');
+    this.urlMatcher = /((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?)/g;
 
     this.$scope.$watch(
       () => { return this.response.replies.length; },
-      (oldValue, newValue) => {
+      (newValue, oldValue) => {
         if (newValue !== oldValue) {
+          this.injectLinksIntoReplies();
           this.toggleExpanded(true);
         }
       }
     );
+
+    this.injectLinksIntoResponse();
+    this.injectLinksIntoReplies();
+  }
+
+  injectLinksIntoResponse() {
+    this.response.studentData.responseText = this.injectLinks(this.response.studentData.response);
+  }
+
+  injectLinksIntoReplies() {
+    for (const reply of this.response.replies) {
+      if (reply.studentData.responseText == null) {
+        reply.studentData.responseText = this.injectLinks(reply.studentData.response);
+      }
+    }
+  }
+
+  injectLinks(response) {
+    return response.replace(this.urlMatcher, (match) => {
+      let matchUrl = match;
+      if (!match.startsWith('http')) {
+        /*
+         * The url does not begin with http so we will add // to the beginning of it so that the
+         * browser treats the url as an absolute link and not a relative link. The browser will also
+         * use the same protocol that the current page is loaded with (http or https).
+         */
+        matchUrl = '//' + match;
+      }
+      return `<a href="${matchUrl}" target="_blank">${match}</a>`;
+    });
   }
 
   getAvatarColorForWorkgroupId(workgroupId) {
