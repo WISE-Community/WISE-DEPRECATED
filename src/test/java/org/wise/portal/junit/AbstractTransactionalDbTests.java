@@ -19,11 +19,10 @@ package org.wise.portal.junit;
 
 import org.hibernate.SessionFactory;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.wise.portal.spring.SpringConfiguration;
-import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
 /**
  * Allows testers to perform data store integration tests. Provides transactions and access
@@ -31,27 +30,18 @@ import org.wise.portal.spring.impl.SpringConfigurationImpl;
  *
  * @author Cynick Young
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @WebAppConfiguration
 public abstract class AbstractTransactionalDbTests extends
     AbstractTransactionalJUnit4SpringContextTests {
 
-  private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
-
+  @Autowired
   protected SessionFactory sessionFactory;
 
   protected HibernateFlusher toilet;
 
-  protected void onSetUpBeforeTransaction() throws Exception {
+  public void setUp() throws Exception {
     this.toilet = new HibernateFlusher();
     this.toilet.setSessionFactory(this.sessionFactory);
-  }
-
-  protected String[] getConfigLocations() {
-    return SPRING_CONFIG.getRootApplicationContextConfigLocations();
-  }
-
-  public void setSessionFactory(SessionFactory sessionFactory) {
-    this.sessionFactory = sessionFactory;
   }
 }
