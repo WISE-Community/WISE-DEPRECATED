@@ -139,7 +139,14 @@
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
-                <exclude>**/org/wise/portal/dao/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/project/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/user/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
               </testExcludes>
             </configuration>
           </execution>
@@ -162,7 +169,14 @@
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
-            <exclude>**/org/wise/portal/dao/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/project/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/user/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -423,6 +437,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.200</version>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
