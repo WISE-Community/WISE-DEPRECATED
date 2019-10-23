@@ -38,9 +38,9 @@ class OutsideURLAuthoringController extends OutsideURLController {
       return this.authoringComponentContent;
     }, (newValue, oldValue) => {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-      // set the url
       this.setURL(this.authoringComponentContent.url);
+      this.setWidthAndHeight(
+          this.authoringComponentContent.width, this.authoringComponentContent.height);
     }, true);
 
     /*

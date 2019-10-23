@@ -13,6 +13,7 @@ class OutsideURLService extends ComponentService {
     const component = super.createComponent();
     component.type = 'OutsideURL';
     component.url = '';
+    component.height = 600;
     return component;
   }
 

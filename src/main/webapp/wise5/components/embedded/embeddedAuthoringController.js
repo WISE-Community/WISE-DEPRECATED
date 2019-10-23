@@ -59,8 +59,7 @@ class EmbeddedAuthoringController extends EmbeddedController {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.width = this.componentContent.width ? this.componentContent.width : '100%';
-      this.height = this.componentContent.height ? this.componentContent.height : '100%';
+      this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
       this.setURL(this.componentContent.url);
     }.bind(this), true);
   }

@@ -1177,7 +1177,7 @@ class ProjectService {
       data: $.param({
         projectId: projectId,
         commitMessage: commitMessage,
-        projectJSONString: angular.toJson(this.project, 4)
+        projectJSONString: angular.toJson(this.project, false)
       })
     };
 
