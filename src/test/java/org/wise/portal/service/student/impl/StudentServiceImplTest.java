@@ -265,36 +265,5 @@ public class StudentServiceImplTest extends TestCase {
 
 		verify(mockGroupService);
 	}
-
-	public void testAddStudentsToRun_RunHasEndedException() 
-            throws ObjectNotFoundException, PeriodNotFoundException {
-		run.setEndtime(new Date(System.currentTimeMillis() - 1));
-  	    expect(mockRunService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
-  	    replay(mockRunService);
-		Group period = run.getPeriodByName(PERIODNAME);
-  	    Set<User> membersToAdd = new HashSet<User>();
-  	    membersToAdd.add(studentUser);
-  	    mockGroupService.addMembers(period, membersToAdd);
-  	    expectLastCall();
-		replay(mockGroupService);
-		  
-  	    // now if we try to add this run that has ended, 
-		// we should get a RunHasEndedException
-  	    try {
-			studentService.addStudentToRun(studentUser, projectcode);
-			fail("Expected the RunHasEndedException to be thrown");
-		} catch (ObjectNotFoundException oe) {
-			fail("ObjectNotFoundException was not expected to be thrown");
-		} catch (PeriodNotFoundException pe) {
-			fail("PeriodNotFoundException was not expected to be thrown");
-		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e) {
-		}
-  	    verify(mockRunService);
-  	    verify(mockGroupService);
-	}
-
 	// TODO Hiroki test getStudentRunInfo()
-
 }
