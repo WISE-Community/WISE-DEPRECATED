@@ -17,6 +17,9 @@
       </ng-template>
       <span>{{ firstName }} {{ lastName }}</span>
     </div>
+    <div *ngIf="isPreviousAdmin" class="user-switch">
+      <a href="/logout/impersonate" i18n>Switch back to original user</a>
+    </div>
     <mat-divider></mat-divider>
     <a *ngIf="role === 'student'"
        routerLinkActive="active"
