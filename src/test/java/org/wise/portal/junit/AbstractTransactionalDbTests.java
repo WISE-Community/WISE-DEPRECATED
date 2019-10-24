@@ -23,12 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
  * Allows testers to perform data store integration tests. Provides transactions and access
  * to the Spring Beans.
  *
  * @author Cynick Young
+ * @author Hiroki Terashima
  */
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
@@ -43,5 +47,14 @@ public abstract class AbstractTransactionalDbTests extends
   public void setUp() throws Exception {
     this.toilet = new HibernateFlusher();
     this.toilet.setSessionFactory(this.sessionFactory);
+  }
+
+  public User createUser() {
+    PersistentUserDetails userDetails = new PersistentUserDetails();
+    userDetails.setUsername("username");
+    userDetails.setPassword("password");
+    User user = new UserImpl();
+    user.setUserDetails(userDetails);
+    return user;
   }
 }

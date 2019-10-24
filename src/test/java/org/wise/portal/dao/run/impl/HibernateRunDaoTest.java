@@ -46,8 +46,6 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.impl.HibernateGroupDao;
 import org.wise.portal.dao.project.impl.HibernateProjectDao;
 import org.wise.portal.dao.user.impl.HibernateUserDao;
-import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.project.Project;
@@ -55,7 +53,6 @@ import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.junit.AbstractTransactionalDbTests;
 
 /**
@@ -64,8 +61,6 @@ import org.wise.portal.junit.AbstractTransactionalDbTests;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
-
-  private static final String projectName = "Airbags";
 
 	private static Project project;
 
@@ -108,21 +103,17 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
         group3 = new PersistentGroup();
         group3.setName("Period 3");
 
-        this.run = new RunImpl();
-        this.run.setId(projectId++);
-        this.run.setStarttime(startTime);
-        this.run.setRuncode(runcode);
-        this.run.setArchiveReminderTime(new Date());
-        this.run.setPostLevel(5);
+        run = new RunImpl();
+        run.setId(projectId++);
+        run.setStarttime(startTime);
+        run.setRuncode(runcode);
+        run.setArchiveReminderTime(new Date());
+        run.setPostLevel(5);
 
-        MutableUserDetails userDetails = new PersistentUserDetails();
-        userDetails.setPassword(projectName);
-        userDetails.setUsername(projectName);
-        User owner = new UserImpl();
-        owner.setUserDetails(userDetails);
+        User owner = createUser();
         userDao.save(owner);
-        this.toilet.flush();
-        this.run.setOwner(owner);
+        toilet.flush();
+        run.setOwner(owner);
 
         project = new ProjectImpl();
         project.setId(projectId++);
@@ -130,8 +121,8 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
         project.setDateCreated(new Date());
         project.setOwner(owner);
         projectDao.save(project);
-        this.toilet.flush();
-        this.run.setProject(project);
+        toilet.flush();
+        run.setProject(project);
     }
 
     private void assertNumRuns(int expected) {
@@ -139,9 +130,9 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
    }
 
     @Test
-    public void testSave() {
-        this.runDao.save(this.run);
-        this.toilet.flush();
+    public void save_NewRun_Success() {
+        runDao.save(run);
+        toilet.flush();
 
         assertNumRuns(1);
         List<?> runsList = retrieveRunListFromDb();
@@ -149,21 +140,21 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
         assertEquals(0, retrieveRunsAndGroupsListFromDb().size());
 
         Map<?, ?> runMap = (Map<?, ?>) runsList.get(0);
-        assertEquals(this.startTime, runMap
+        assertEquals(startTime, runMap
                 .get(RunImpl.COLUMN_NAME_STARTTIME.toUpperCase()));
-        assertEquals(this.runcode, runMap.get(RunImpl.COLUMN_NAME_RUN_CODE
+        assertEquals(runcode, runMap.get(RunImpl.COLUMN_NAME_RUN_CODE
                 .toUpperCase()));
         assertNull(runMap.get(RunImpl.COLUMN_NAME_ENDTIME.toUpperCase()));
 
         Set<Group> periods = new TreeSet<Group>();
         periods.add(group1);
         periods.add(group2);
-        this.groupDao.save(group1);
-        this.groupDao.save(group2);
-        this.run.setPeriods(periods);
+        groupDao.save(group1);
+        groupDao.save(group2);
+        run.setPeriods(periods);
 
-        this.runDao.save(this.run);
-        this.toilet.flush();
+        runDao.save(run);
+        toilet.flush();
 
         runsList = retrieveRunListFromDb();
         assertNumRuns(1);
@@ -185,35 +176,35 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
             periodNames.remove(periodName);
         }
 
-        this.endTime = Calendar.getInstance().getTime();
-        this.run.setEndtime(this.endTime);
+        endTime = Calendar.getInstance().getTime();
+        run.setEndtime(endTime);
 
-        this.runDao.save(this.run);
-        this.toilet.flush();
+        runDao.save(run);
+        toilet.flush();
 
         runsList = retrieveRunListFromDb();
         runMap = (Map<?, ?>) runsList.get(0);
-        assertEquals(this.endTime, runMap.get(RunImpl.COLUMN_NAME_ENDTIME
+        assertEquals(endTime, runMap.get(RunImpl.COLUMN_NAME_ENDTIME
             .toUpperCase()));
     }
 
     @Test
-    public void testSave_withoutProject() {
-        this.run.setProject(null);
+    public void save_WithoutProject_ShouldThrowException() {
+        run.setProject(null);
         try {
-          this.runDao.save(this.run);
-          this.toilet.flush();
+          runDao.save(run);
+          toilet.flush();
         	fail("Exception expected to be thrown but was not");
         } catch (Exception e) {
         }
     }
 
     @Test
-    public void testRetrieveByRunCode() throws Exception {
-        this.runDao.save(this.run);
-        this.toilet.flush();
+    public void retrieveByRunCode_ValidRunCode_Success() throws Exception {
+        runDao.save(run);
+        toilet.flush();
 
-        Run run = this.runDao.retrieveByRunCode(runcode);
+        Run run = runDao.retrieveByRunCode(runcode);
         assertTrue(run instanceof RunImpl);
         assertTrue(run.getClass() == RunImpl.class);
 
@@ -222,38 +213,38 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     }
 
     @Test
-    public void testRetrieveNonExistingRuncode() {
+    public void retrieveByRunCode_NonExistingRuncode_ShouldThrowException() {
         try {
-        	this.runDao.retrieveByRunCode(runcodeNotInDB);
+        	runDao.retrieveByRunCode(runcodeNotInDB);
         	fail ("Expected ObjectNotFoundException");
         } catch (ObjectNotFoundException e) {
         }
     }
 
     @Test
-    public void testGetById() throws Exception {
-        this.runDao.save(this.run);
-        this.toilet.flush();
-        assertNotNull(this.runDao.getById(this.run.getId()));
+    public void getById_ExistingRunId_Success() throws Exception {
+        runDao.save(run);
+        toilet.flush();
+        assertNotNull(runDao.getById(run.getId()));
     }
 
     private void verifyRunAndJoinTablesAreEmpty() {
-        assertTrue(this.retrieveRunListFromDb().isEmpty());
-        assertTrue(this.retrieveRunsRelatedToGroupsListFromDb().isEmpty());
+        assertTrue(retrieveRunListFromDb().isEmpty());
+        assertTrue(retrieveRunsRelatedToGroupsListFromDb().isEmpty());
     }
 
     private List<?> retrieveRunsRelatedToGroupsListFromDb() {
-        return this.jdbcTemplate.queryForList("SELECT * FROM "
+        return jdbcTemplate.queryForList("SELECT * FROM "
                 + RunImpl.PERIODS_JOIN_TABLE_NAME);
     }
 
     private List<?> retrieveRunListFromDb() {
-        return this.jdbcTemplate.queryForList("SELECT * FROM "
+        return jdbcTemplate.queryForList("SELECT * FROM "
                 + RunImpl.DATA_STORE_NAME, (Object[]) null);
     }
 
     private List<?> retrieveRunsAndGroupsListFromDb() {
-        return this.jdbcTemplate.queryForList("SELECT *, " + PersistentGroup.DATA_STORE_NAME + ".name as periodName FROM "
+        return jdbcTemplate.queryForList("SELECT *, " + PersistentGroup.DATA_STORE_NAME + ".name as periodName FROM "
                 + RunImpl.DATA_STORE_NAME + ", " + RunImpl.PERIODS_JOIN_TABLE_NAME
                 + ", " + PersistentGroup.DATA_STORE_NAME + " WHERE "
                 + RunImpl.DATA_STORE_NAME + ".id = " + RunImpl.PERIODS_JOIN_TABLE_NAME
