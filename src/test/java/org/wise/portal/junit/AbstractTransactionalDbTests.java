@@ -45,8 +45,8 @@ public abstract class AbstractTransactionalDbTests extends
   protected HibernateFlusher toilet;
 
   public void setUp() throws Exception {
-    this.toilet = new HibernateFlusher();
-    this.toilet.setSessionFactory(this.sessionFactory);
+    toilet = new HibernateFlusher();
+    toilet.setSessionFactory(sessionFactory);
   }
 
   public User createUser() {
