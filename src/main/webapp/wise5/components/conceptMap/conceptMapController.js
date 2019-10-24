@@ -636,7 +636,7 @@ class ConceptMapController extends ComponentController {
 
   linkTypeSelected(selectedLink) {
     if (this.highlightedElement != null &&
-        this.highlightedElement.constructor.name === 'ConceptMapLink') {
+        this.highlightedElement.type === 'ConceptMapLink') {
       const link = this.highlightedElement;
       const label = selectedLink.label;
       const color = selectedLink.color;
@@ -1138,10 +1138,9 @@ class ConceptMapController extends ComponentController {
     this.highlightedElement = element;
     element.isHighlighted(true);
     element.showDeleteButton();
-
-    if (element.constructor.name === 'ConceptMapNode') {
+    if (element.type === 'ConceptMapNode') {
       element.showBorder();
-    } else if (element.constructor.name === 'ConceptMapLink') {
+    } else if (element.type === 'ConceptMapLink') {
       this.showLinkTypeChooser();
       this.selectedLinkType = element.getOriginalId();
     }
@@ -1149,9 +1148,9 @@ class ConceptMapController extends ComponentController {
 
   clearHighlightedElement() {
     if (this.highlightedElement != null) {
-      if (this.highlightedElement.constructor.name === 'ConceptMapNode') {
+      if (this.highlightedElement.type === 'ConceptMapNode') {
         this.highlightedElement.hideBorder();
-      } else if (this.highlightedElement.constructor.name === 'ConceptMapLink') {
+      } else if (this.highlightedElement.type === 'ConceptMapLink') {
         this.hideLinkTypeChooser();
       }
       this.highlightedElement.isHighlighted(false);

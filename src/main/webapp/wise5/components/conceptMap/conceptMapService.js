@@ -1527,6 +1527,8 @@ class ConceptMapNode {
     // remember the ConceptMapService
     this.ConceptMapService = ConceptMapService;
 
+    this.type = 'ConceptMapNode';
+
     // remember the svg.js draw object so we can draw onto it
     this.draw = draw;
 
@@ -2647,6 +2649,8 @@ class ConceptMapLink {
 
     // remember the ConceptMapService
     this.ConceptMapService = ConceptMapService;
+
+    this.type = 'ConceptMapLink';
 
     // remember the svg.js draw object
     this.draw = draw;
