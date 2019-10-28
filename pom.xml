@@ -135,7 +135,6 @@
               <testExcludes>
                 <exclude>**/org/wise/portal/service/*.java</exclude>
                 <exclude>**/org/wise/portal/service/impl/*.java</exclude>
-                <exclude>**/org/wise/portal/service/newsitem/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/premadecomment/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/group/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
@@ -173,7 +172,6 @@
           <excludes>
             <exclude>**/org/wise/portal/service/*.java</exclude>
             <exclude>**/org/wise/portal/service/impl/*.java</exclude>
-            <exclude>**/org/wise/portal/service/newsitem/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/premadecomment/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/group/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
