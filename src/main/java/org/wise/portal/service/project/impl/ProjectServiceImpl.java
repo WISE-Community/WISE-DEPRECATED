@@ -133,12 +133,12 @@ public class ProjectServiceImpl implements ProjectService {
 
   public SharedOwner addSharedTeacher(Long projectId, String username)
       throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
-    Project project = this.getById(projectId);
+    Project project = getById(projectId);
     User user = userService.retrieveUserByUsername(username);
     if (!project.isSharedTeacher(user)) {
       project.getSharedowners().add(user);
-      this.projectDao.save(project);
-      this.aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
+      projectDao.save(project);
+      aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
       List<Integer> newPermissions = new ArrayList<>();
       newPermissions.add(ProjectPermission.VIEW_PROJECT.getMask());
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
@@ -579,7 +579,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public List<Permission> getSharedTeacherPermissions(Project project, User sharedTeacher) {
-    return this.aclService.getPermissions(project, sharedTeacher);
+    return aclService.getPermissions(project, sharedTeacher);
   }
 
   SharedOwner createNewSharedOwner(String username) {
@@ -604,7 +604,7 @@ public class ProjectServiceImpl implements ProjectService {
     User user = userService.retrieveById(userId);
     Project project = getById(projectId);
     if (project.getSharedowners().contains(user)) {
-      this.aclService.addPermission(project, new ProjectPermission(permissionId), user);
+      aclService.addPermission(project, new ProjectPermission(permissionId), user);
     }
   }
 
@@ -613,7 +613,7 @@ public class ProjectServiceImpl implements ProjectService {
     User user = userService.retrieveById(userId);
     Project project = getById(projectId);
     if (project.getSharedowners().contains(user)) {
-      this.aclService.removePermission(project, new ProjectPermission(permissionId), user);
+      aclService.removePermission(project, new ProjectPermission(permissionId), user);
     }
   }
 

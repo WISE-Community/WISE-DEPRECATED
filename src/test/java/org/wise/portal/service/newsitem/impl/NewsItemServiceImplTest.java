@@ -101,7 +101,7 @@ public class NewsItemServiceImplTest extends TestCase {
   }
 
   @After
-  public void tearDown() throws Exception{
+  public void tearDown() throws Exception {
     newsItem1 = null;
     newsItem2 = null;
     newsItemDao = null;
