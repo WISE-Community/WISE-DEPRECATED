@@ -45,11 +45,11 @@ public class SiteController {
   @Autowired
   PortalService portalService;
 
-  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", 
+  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login",
       "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news",
       "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"})
   protected String showSite() {
-    return "forward:/index.html";
+    return "forward:/site/dist/index.html";
   }
 
   @ResponseBody

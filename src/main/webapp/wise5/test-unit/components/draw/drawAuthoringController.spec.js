@@ -1,28 +1,16 @@
-'use strict';
+import authoringToolModule from '../../../authoringTool/authoringTool';
 
-var _angular = require('angular');
+describe('DrawAuthoringController', () => {
 
-var _angular2 = _interopRequireDefault(_angular);
+  let $controller;
+  let $rootScope;
+  let $scope;
+  let drawAuthoringController;
+  let component;
 
-var _main = require('authoringTool/main');
+  beforeEach(angular.mock.module(authoringToolModule.name));
 
-var _main2 = _interopRequireDefault(_main);
-
-require('angular-mocks');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-describe('DrawAuthoringController', function () {
-
-  var $controller = void 0;
-  var $rootScope = void 0;
-  var $scope = void 0;
-  var drawAuthoringController = void 0;
-  var component = void 0;
-
-  beforeEach(_angular2.default.mock.module(_main2.default.name));
-
-  beforeEach(inject(function (_$controller_, _$rootScope_) {
+  beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     component = {
@@ -32,7 +20,10 @@ describe('DrawAuthoringController', function () {
       'showSaveButton': false,
       'showSubmitButton': false,
       'stamps': {
-        'Stamps': ['carbon.png', 'oxygen.png']
+        'Stamps': [
+          'carbon.png',
+          'oxygen.png'
+        ]
       },
       'tools': {
         'select': true,
@@ -61,13 +52,13 @@ describe('DrawAuthoringController', function () {
     drawAuthoringController.nodeId = 'node1';
   }));
 
-  it('should select the background image', function () {
+  it('should select the background image', () => {
     drawAuthoringController.nodeId = 'node1';
     drawAuthoringController.componentId = 'component1';
     expect(drawAuthoringController.authoringComponentContent.background).toEqual('background.png');
-    spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(function () {});
-    var event = {};
-    var args = {
+    spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    const event = {};
+    const args = {
       nodeId: 'node1',
       componentId: 'component1',
       target: 'background',
@@ -79,22 +70,22 @@ describe('DrawAuthoringController', function () {
     expect(drawAuthoringController.authoringComponentContent.background).toEqual('new_background.png');
   });
 
-  it('should move a stamp up', function () {
+  it('should move a stamp up', () => {
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[0]).toEqual('carbon.png');
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[1]).toEqual('oxygen.png');
-    spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(function () {});
+    spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
     drawAuthoringController.authoringMoveStampUp(1);
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[0]).toEqual('oxygen.png');
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[1]).toEqual('carbon.png');
   });
 
-  it('should move a stamp down', function () {
+  it('should move a stamp down', () => {
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[0]).toEqual('carbon.png');
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[1]).toEqual('oxygen.png');
-    spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(function () {});
+    spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
     drawAuthoringController.authoringMoveStampDown(0);
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[0]).toEqual('oxygen.png');
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[1]).toEqual('carbon.png');
   });
+
 });
-//# sourceMappingURL=drawAuthoringController.spec.js.map

@@ -24,15 +24,15 @@
         <span flex hide-xs hide-sm></span>
         <div class="md-secondary-container"
            flex-xs="100" flex-sm="100" layout-column layout-align="center center">
-          <md-button aria-label="{{ 'explandAllSteps' | translate }}"
+          <md-button aria-label="{{ ::'explandAllSteps' | translate }}"
                      class="button--small md-primary"
                      ng-click="studentGradingController.expandAll()">
-            {{ 'expandAll' | translate }}
+            {{ ::'expandAll' | translate }}
           </md-button>
-          <md-button aria-label="{{ 'collapseAllSteps' | translate }}"
+          <md-button aria-label="{{ ::'collapseAllSteps' | translate }}"
                      class="button--small md-primary"
                      ng-click="studentGradingController.collapseAll()">
-            {{ 'collapseAll' | translate }}
+            {{ ::'collapseAll' | translate }}
           </md-button>
         </div>
       </md-list-item>
@@ -42,7 +42,7 @@
           <md-button class="table--list__thead__link"
                      flex layout="row" layout-align="start center"
                      ng-click="studentGradingController.setSort('step')"
-                     aria-label="{{ 'sortByStep' | translate }}">
+                     aria-label="{{ ::'sortByStep' | translate }}">
             <span translate="step"></span>
             <md-icon ng-if="studentGradingController.sort === 'step' || studentGradingController.sort === '-step'"
                      class="text-light table--list__thead__sort"
@@ -53,7 +53,7 @@
           <md-button class="table--list__thead__link"
                      flex="30" layout="row" layout-align="center center"
                      ng-click="studentGradingController.setSort('status')"
-                     aria-label="{{'sortByCompletion' | translate}}">
+                     aria-label="{{::'sortByCompletion' | translate}}">
             <span translate="status"></span>
             <md-icon ng-if="studentGradingController.sort === 'status' || studentGradingController.sort === '-status'"
                      class="text-light table--list__thead__sort"
@@ -65,7 +65,7 @@
           <md-button class="table--list__thead__link"
                      flex="20" layout="row" layout-align="center center"
                      ng-click="studentGradingController.setSort('score')"
-                     aria-label="{{ 'sortByScore' | translate }}">
+                     aria-label="{{ ::'sortByScore' | translate }}">
             <span translate="score"></span>
             <md-icon ng-if="studentGradingController.sort === 'score' || studentGradingController.sort === '-score'"
                      class="text-light table--list__thead__sort"
@@ -80,9 +80,9 @@
                  expand="studentGradingController.nodeVisibilityById[node.$key]"
                  max-score="node.maxScore"
                  show-score="node.hasWork"
-                 node-id="node.$key"
+                 node-id="::node.$key"
                  step-data="node"
-                 workgroup-id="studentGradingController.workgroupId"
+                 workgroup-id="::studentGradingController.workgroupId"
                  on-update-expand="studentGradingController.onUpdateExpand(nodeId, value)"
                  in-view="studentGradingController.stepInView(node.$key, $inview)"></step-item>
     </md-list>

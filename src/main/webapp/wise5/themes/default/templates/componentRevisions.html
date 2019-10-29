@@ -1,7 +1,7 @@
 <md-dialog aria-label="List dialog">
     <md-toolbar md-theme="light">
         <div class="md-toolbar-tools">
-            <h2>{{ 'recentWorkForThisItem' | translate }}</h2>
+            <h2>{{ ::'recentWorkForThisItem' | translate }}</h2>
             <span flex></span>
             <md-button class="md-icon-button" ng-click="close()">
                 <md-icon aria-label="Close dialog"> close </md-icon>
@@ -17,11 +17,11 @@
                 <span ng-if="!item.isAutoSave && item.isSubmit">Submitted</span>-->
                 <span class="md-caption" title="{{item.clientSaveTime | amCalendar}}">{{item.clientSaveTime | amTimeAgo}}</span>
                 <span flex></span>
-                <a ng-if="allowRevert" ng-click="revertWork(item)">{{ 'revert' | translate }}</a>
+                <a ng-if="allowRevert" ng-click="revertWork(item)">{{ ::'revert' | translate }}</a>
             </div>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button ng-click="close()" class="md-primary">{{ 'CLOSE' | translate }}</md-button>
+        <md-button ng-click="close()" class="md-primary">{{ ::'CLOSE' | translate }}</md-button>
     </md-dialog-actions>
 </md-dialog>

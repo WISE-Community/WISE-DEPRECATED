@@ -12,7 +12,7 @@
             <div class="md-body-1">
                 <p class="accent-2 center" translate="dismissNotificationDismissCodeMessage"></p>
                 <md-input-container md-no-float class="md-block notification-dismiss__input">
-                    <input ng-model="input.dismissCode" type="password" placeholder="{{'dismissNotificationDismissCode' | translate}}">
+                    <input ng-model="input.dismissCode" type="password" placeholder="{{::'dismissNotificationDismissCode' | translate}}">
                     <div class="md-input-message-animation">
                         {{errorMessage}}
                     </div>
@@ -21,8 +21,8 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button ng-click="closeDialog()" class="md-primary" aria-label="{{'cancel' | translate}}" translate="cancel"></md-button>
-        <md-button ng-if="hasDismissCode" ng-click="checkDismissCode()" ng-disabled="!input.dismissCode" class="md-primary" aria-label="{{'dismiss' | translate}}" translate="dismiss"></md-button>
-        <md-button ng-if="!hasDismissCode" ng-click="checkDismissCode()" class="md-primary" aria-label="{{'dismiss' | translate}}" translate="dismiss"></md-button>
+        <md-button ng-click="closeDialog()" class="md-primary" aria-label="{{::'cancel' | translate}}" translate="cancel"></md-button>
+        <md-button ng-if="hasDismissCode" ng-click="checkDismissCode()" ng-disabled="!input.dismissCode" class="md-primary" aria-label="{{::'dismiss' | translate}}" translate="dismiss"></md-button>
+        <md-button ng-if="!hasDismissCode" ng-click="checkDismissCode()" class="md-primary" aria-label="{{::'dismiss' | translate}}" translate="dismiss"></md-button>
     </div>
 </md-dialog>

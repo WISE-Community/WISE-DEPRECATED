@@ -1,21 +1,16 @@
-"use strict";
+import authoringToolModule from '../../../authoringTool/authoringTool';
 
-var _angular = _interopRequireDefault(require("angular"));
+describe('EmbeddedAuthoringController', () => {
 
-var _main = _interopRequireDefault(require("authoringTool/main"));
+  let $controller;
+  let $rootScope;
+  let $scope;
+  let embeddedAuthoringController;
+  let component;
 
-require("angular-mocks");
+  beforeEach(angular.mock.module(authoringToolModule.name));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-describe('EmbeddedAuthoringController', function () {
-  var $controller;
-  var $rootScope;
-  var $scope;
-  var embeddedAuthoringController;
-  var component;
-  beforeEach(_angular["default"].mock.module(_main["default"].name));
-  beforeEach(inject(function (_$controller_, _$rootScope_) {
+  beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     component = {
@@ -36,13 +31,14 @@ describe('EmbeddedAuthoringController', function () {
     });
     embeddedAuthoringController.nodeId = 'node1';
   }));
-  it('should select the model file', function () {
+
+  it('should select the model file', () => {
     embeddedAuthoringController.nodeId = 'node1';
     embeddedAuthoringController.componentId = 'component1';
     expect(embeddedAuthoringController.authoringComponentContent.url).toEqual('glucose.html');
-    spyOn(embeddedAuthoringController, 'authoringViewComponentChanged').and.callFake(function () {});
-    var event = {};
-    var args = {
+    spyOn(embeddedAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    const event = {};
+    const args = {
       nodeId: 'node1',
       componentId: 'component1',
       target: 'modelFile',
@@ -53,10 +49,10 @@ describe('EmbeddedAuthoringController', function () {
     embeddedAuthoringController.assetSelected(event, args);
     expect(embeddedAuthoringController.authoringComponentContent.url).toEqual('thermo.html');
   });
-  it('should have a default height', function () {
+  it('should have a default height', () => {
     expect(embeddedAuthoringController.height).toEqual('600px');
   });
-  it('should set the width and height', function () {
+  it('should set the width and height', () => {
     expect(embeddedAuthoringController.width).toEqual('none');
     expect(embeddedAuthoringController.height).toEqual('600px');
     embeddedAuthoringController.setWidthAndHeight(400, 300);
@@ -64,4 +60,3 @@ describe('EmbeddedAuthoringController', function () {
     expect(embeddedAuthoringController.height).toEqual('300px');
   });
 });
-//# sourceMappingURL=embeddedAuthoringController.spec.js.map

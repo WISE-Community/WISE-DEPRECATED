@@ -14,9 +14,9 @@
                         <tr>
                             <th class="table--list__thead__th" sticky>
                                 <md-button class="table--list__thead__link"
-                                           aria-label="{{ 'onlineLabel' | translate }}"
+                                           aria-label="{{ ::'onlineLabel' | translate }}"
                                            ng-click="studentProgressController.setSort('online')"
-                                           title="{{'sortByOnline' | translate}}"
+                                           title="{{::'sortByOnline' | translate}}"
                                            layout="row"
                                            layout-align="center center">
                                     <span translate="onlineLabel"></span>
@@ -27,9 +27,9 @@
                             </th>
                             <th class="table--list__thead__th" sticky>
                                 <md-button class="table--list__thead__link"
-                                           aria-label="{{ 'teamIdTitle' | translate }}"
+                                           aria-label="{{ ::'teamIdTitle' | translate }}"
                                            ng-click="studentProgressController.setSort('team')"
-                                           title="{{'sortByTeam' | translate}}"
+                                           title="{{::'sortByTeam' | translate}}"
                                            layout="row"
                                            layout-align="center center">
                                     <span translate="team"></span>
@@ -40,9 +40,9 @@
                             </th>
                             <th class="table--list__thead__th" sticky>
                                 <md-button class="table--list__thead__link"
-                                           aria-label="{{ 'names' | translate }}"
+                                           aria-label="{{ ::'names' | translate }}"
                                            ng-click="studentProgressController.setSort('student')"
-                                           title="{{'sortByNames' | translate}}"
+                                           title="{{::'sortByNames' | translate}}"
                                            layout="row">
                                     <span translate="names"></span>
                                     <md-icon ng-if="studentProgressController.sort === 'student' || studentProgressController.sort === '-student'"
@@ -52,9 +52,9 @@
                             </th>
                             <th class="table--list__thead__th" sticky>
                                 <md-button class="table--list__thead__link"
-                                           aria-label="{{ 'currentLocation' | translate }}"
+                                           aria-label="{{ ::'currentLocation' | translate }}"
                                            ng-click="studentProgressController.setSort('location')"
-                                           title="{{'sortByLocation' | translate}}"
+                                           title="{{::'sortByLocation' | translate}}"
                                            layout="row"
                                            layout-align="center center">
                                     <span translate="currentLocation"></span>
@@ -65,9 +65,9 @@
                             </th>
                             <th class="table--list__thead__th" sticky>
                                 <md-button class="table--list__thead__link"
-                                           aria-label="{{ 'timeSpent' | translate }}"
+                                           aria-label="{{ ::'timeSpent' | translate }}"
                                            ng-click="studentProgressController.setSort('time')"
-                                           title="{{'sortByTimeSpent' | translate}}"
+                                           title="{{::'sortByTimeSpent' | translate}}"
                                            layout="row"
                                            layout-align="center center">
                                     <span translate="timeSpent"></span>
@@ -78,9 +78,9 @@
                             </th>
                             <th class="table--list__thead__th" sticky>
                                 <md-button class="table--list__thead__link"
-                                           aria-label="{{ 'projectCompletion' | translate }}"
+                                           aria-label="{{ ::'projectCompletion' | translate }}"
                                            ng-click="studentProgressController.setSort('completion')"
-                                           title="{{'sortByCompletion' | translate}}"
+                                           title="{{::'sortByCompletion' | translate}}"
                                            layout="row"
                                            layout-align="center center">
                                     <span translate="projectCompletion"></span>
@@ -91,9 +91,9 @@
                             </th>
                             <th class="table--list__thead__th" sticky>
                                 <md-button class="table--list__thead__link"
-                                           aria-label="{{ 'score' | translate }}"
+                                           aria-label="{{ ::'score' | translate }}"
                                            ng-click="studentProgressController.setSort('score')"
-                                           title="{{'sortByScore' | translate}}"
+                                           title="{{::'sortByScore' | translate}}"
                                            layout="row"
                                            layout-align="center center">
                                     <span translate="score"></span>
@@ -107,22 +107,22 @@
                     <tbody>
                         <tr class="list-item md-button"
                             ng-repeat="team in studentProgressController.teams | orderBy:studentProgressController.getOrderBy()"
-                            ng-show="studentProgressController.isWorkgroupShown(team)"
+                            ng-if="studentProgressController.isWorkgroupShown(team)"
                             ng-click="studentProgressController.showStudentGradingView(team)">
                             <td class="center">
-                                <md-icon ng-if="team.online" class="success" aria-label="{{ online |translate }}"> fiber_manual_record </md-icon>
-                                <md-icon ng-if="!team.online" aria-label="{{ offline | translate }}"> fiber_manual_record </md-icon>
+                                <md-icon ng-if="team.online" class="success" aria-label="{{ ::online | translate }}"> fiber_manual_record </md-icon>
+                                <md-icon ng-if="!team.online" aria-label="{{ ::'offline' | translate }}"> fiber_manual_record </md-icon>
                             </td>
-                            <td class="center">{{ team.workgroupId }}</td>
+                            <td class="center">{{ ::team.workgroupId }}</td>
                             <td class="md-body-2 td--wrap">
-                                <div layout="row" layout-wrap>{{ team.username }}</div>
+                                <div layout="row" layout-wrap>{{ ::team.username }}</div>
                             </td>
                             <td class="md-body-1 center td--wrap td--max-width">
                                 {{ team.location }}
                             </td>
                             <td class="md-body-1 center">{{ team.timeSpent }}</td>
                             <td layout="row" layout-align="center center">
-                                <project-progress completed="team.completion.completedItems" total="team.completion.totalItems" percent="team.completion.completionPct"</project-progress>
+                                <project-progress completed="team.completion.completedItems" total="team.completion.totalItems" percent="team.completion.completionPct"></project-progress>
                                 </td>
                             <td class="center">
                                 <div layout="row" layout-align="center center" class="layout-align-center-center layout-row">

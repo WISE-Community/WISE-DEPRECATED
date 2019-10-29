@@ -1,34 +1,22 @@
-'use strict';
+import authoringToolModule from '../../../authoringTool/authoringTool';
 
-var _angular = require('angular');
-
-var _angular2 = _interopRequireDefault(_angular);
-
-var _main = require('authoringTool/main');
-
-var _main2 = _interopRequireDefault(_main);
-
-require('angular-mocks');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var mockUtilService = {
-  generateKey: function generateKey(length) {
+const mockUtilService = {
+  generateKey: function(length) {
     return '1234567890';
   }
 };
 
-describe('AnimationAuthoringController', function () {
+describe('AnimationAuthoringController', () => {
 
-  var $controller = void 0;
-  var $rootScope = void 0;
-  var $scope = void 0;
-  var animationAuthoringController = void 0;
-  var component = void 0;
+  let $controller;
+  let $rootScope;
+  let $scope;
+  let animationAuthoringController;
+  let component;
 
-  beforeEach(_angular2.default.mock.module(_main2.default.name));
+  beforeEach(angular.mock.module(authoringToolModule.name));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_) {
+  beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     component = {
@@ -51,37 +39,38 @@ describe('AnimationAuthoringController', function () {
     $scope.componentContent = JSON.parse(JSON.stringify(component));
     $scope.authoringComponentContent = JSON.parse(JSON.stringify(component));
 
-    animationAuthoringController = $controller('AnimationAuthoringController', { $scope: $scope, UtilService: mockUtilService });
+    animationAuthoringController = $controller('AnimationAuthoringController',
+        { $scope: $scope, UtilService: mockUtilService });
   }));
 
-  it('should add an animation object', function () {
+  it('should add an animation object', () => {
     spyOn(animationAuthoringController, 'authoringViewComponentChanged');
     animationAuthoringController.authoringAddObject();
     expect(animationAuthoringController.authoringComponentContent.objects.length).toEqual(1);
   });
 
-  it('should add a data point to an animation object', function () {
+  it('should add a data point to an animation object', () => {
     spyOn(animationAuthoringController, 'authoringViewComponentChanged');
-    var animationObject = {};
+    const animationObject = {};
     animationAuthoringController.authoringAddDataPointToObject(animationObject);
     expect(animationObject.data.length).toEqual(1);
   });
 
-  it('should add a data source from an animation object', function () {
+  it('should add a data source from an animation object', () => {
     spyOn(animationAuthoringController, 'authoringViewComponentChanged');
-    var animationObject = {};
+    const animationObject = {};
     animationAuthoringController.authoringAddDataSource(animationObject);
     expect(animationObject.dataSource).not.toBeNull();
   });
 
-  it('should delete a data source from an animation object', function () {
+  it('should delete a data source from an animation object', () => {
     spyOn(animationAuthoringController, 'authoringViewComponentChanged');
     spyOn(window, 'confirm').and.returnValue(true);
-    var animationObject = {
+    const animationObject = {
       dataSource: {}
     };
     animationAuthoringController.authoringDeleteDataSource(animationObject);
     expect(animationObject.hasOwnProperty('dataSource')).toBeFalsy();
   });
+
 });
-//# sourceMappingURL=animationAuthoringController.spec.js.map

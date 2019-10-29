@@ -1,14 +1,16 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var NodeCompletionIcon = {
+const NodeCompletionIcon = {
     bindings: {
         nodeStatus: '<'
     },
-    template: "<md-icon ng-if=\"$ctrl.nodeStatus.isCompleted\"\n                  ng-class=\"[$ctrl.customClass, {'success': $ctrl.nodeStatus.isSuccess}]\"\n                  aria-label=\"{{'completed' | translate}}\">\n                  {{'check_circle'}}\n        </md-icon>\n        <md-icon ng-if=\"!$ctrl.nodeStatus.isCompleted\"></md-icon>"
+    template:
+        `<md-icon ng-if="$ctrl.nodeStatus.isCompleted"
+                  ng-class="[$ctrl.customClass, {'success': $ctrl.nodeStatus.isSuccess}]"
+                  aria-label="{{'completed' | translate}}">
+                  {{'check_circle'}}
+        </md-icon>
+        <md-icon ng-if="!$ctrl.nodeStatus.isCompleted"></md-icon>`
 };
 
-exports.default = NodeCompletionIcon;
-//# sourceMappingURL=nodeCompletionIcon.js.map
+export default NodeCompletionIcon;

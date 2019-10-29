@@ -1,21 +1,16 @@
-"use strict";
+import authoringToolModule from '../../../authoringTool/authoringTool';
 
-var _angular = _interopRequireDefault(require("angular"));
+describe('GraphAuthoringController', () => {
 
-var _main = _interopRequireDefault(require("authoringTool/main"));
+  let $controller;
+  let $rootScope;
+  let $scope;
+  let graphAuthoringController;
+  let component;
 
-require("angular-mocks");
+  beforeEach(angular.mock.module(authoringToolModule.name));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-describe('GraphAuthoringController', function () {
-  var $controller;
-  var $rootScope;
-  var $scope;
-  var graphAuthoringController;
-  var component;
-  beforeEach(_angular["default"].mock.module(_main["default"].name));
-  beforeEach(inject(function (_$controller_, _$rootScope_) {
+  beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     component = {
@@ -34,19 +29,19 @@ describe('GraphAuthoringController', function () {
     $scope = $rootScope.$new();
     $scope.componentContent = JSON.parse(JSON.stringify(component));
     $scope.authoringComponentContent = JSON.parse(JSON.stringify(component));
-    graphAuthoringController = $controller('GraphAuthoringController', {
-      $scope: $scope
-    });
+    graphAuthoringController = $controller('GraphAuthoringController', { $scope: $scope });
   }));
-  it('should add an x axis plot line', function () {
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(function () {});
+
+  it('should add an x axis plot line', () => {
+    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
     expect(graphAuthoringController.authoringComponentContent.xAxis.plotLines.length).toEqual(0);
     graphAuthoringController.authoringAddXAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.xAxis.plotLines.length).toEqual(1);
   });
-  it('should delete an x axis plot line', function () {
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(function () {});
-    var plotLine = {
+
+  it('should delete an x axis plot line', () => {
+    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    const plotLine = {
       value: 10,
       label: {
         text: 'Hello'
@@ -57,15 +52,17 @@ describe('GraphAuthoringController', function () {
     graphAuthoringController.authoringDeleteXAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.xAxis.plotLines.length).toEqual(0);
   });
-  it('should add a y axis plot line', function () {
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(function () {});
+
+  it('should add a y axis plot line', () => {
+    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
     expect(graphAuthoringController.authoringComponentContent.yAxis.plotLines.length).toEqual(0);
     graphAuthoringController.authoringAddYAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.yAxis.plotLines.length).toEqual(1);
   });
-  it('should delete a y axis plot line', function () {
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(function () {});
-    var plotLine = {
+
+  it('should delete a y axis plot line', () => {
+    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    const plotLine = {
       value: 10,
       label: {
         text: 'Hello'
@@ -76,5 +73,5 @@ describe('GraphAuthoringController', function () {
     graphAuthoringController.authoringDeleteYAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.yAxis.plotLines.length).toEqual(0);
   });
+
 });
-//# sourceMappingURL=graphAuthoringController.spec.js.map

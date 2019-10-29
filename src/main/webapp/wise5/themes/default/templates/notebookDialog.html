@@ -1,7 +1,7 @@
 <md-dialog aria-label="Notebook">
     <md-toolbar class="l-sidebar__header md-whiteframe-z1">
         <div class="md-toolbar-tools">
-            <h3>{{ 'notebook' | translate }}</h3>
+            <h3>{{ ::'notebook' | translate }}</h3>
             <md-select class="md-body-1" md-theme="default" placeholder="Filter" ng-model="notebookFilter">
                 <md-option ng-repeat="filter in notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>
             </md-select>
@@ -11,6 +11,6 @@
         <notebook template-url="notebookTemplateUrl" filter="notebookFilter" component-controller="componentController"></notebook>
     </md-content>
     <md-dialog-actions layout="row">
-        <md-button ng-click="closeDialog()" class="md-primary">{{ 'CLOSE' | translate }}</md-button>
+        <md-button ng-click="closeDialog()" class="md-primary">{{ ::'CLOSE' | translate }}</md-button>
     </div>
 </md-dialog>
