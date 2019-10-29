@@ -43,7 +43,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.dao.run.RunDao;
-import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.FamilyTag;
@@ -99,9 +98,6 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Autowired
   private PremadeCommentService premadeCommentService;
-
-  @Autowired
-  private UserDao<User> userDao;
 
   public void addBookmarkerToProject(Project project, User bookmarker) {
     project.getBookmarkers().add(bookmarker);
@@ -692,9 +688,11 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public String getProjectURI(Project project) {
-    String previewPath = "/project/";
+    String previewPath;
     if (project.getWiseVersion().equals(4)) {
       previewPath = "/previewproject.html?projectId=";
+    } else {
+      previewPath = "/project/";
     }
     return appProperties.getProperty("wise.hostname") + previewPath + project.getId();
   }

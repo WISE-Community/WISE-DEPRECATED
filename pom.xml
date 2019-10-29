@@ -138,7 +138,6 @@
                 <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/project/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
@@ -173,7 +172,6 @@
             <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/project/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
             <exclude>**/org/wise/portal/domain/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
