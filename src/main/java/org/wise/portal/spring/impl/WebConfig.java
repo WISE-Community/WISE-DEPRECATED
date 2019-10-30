@@ -137,7 +137,7 @@ public class WebConfig implements WebMvcConfigurer {
     return new UrlFilenameViewController();
   }
 
-  @Bean(name = "messageSource")
+  @Bean
   public ReloadableResourceBundleMessageSource messageSource() {
     ReloadableResourceBundleMessageSource messageBundle = new ReloadableResourceBundleMessageSource();
     messageBundle.setBasename("classpath:i18n/i18n");
@@ -155,8 +155,8 @@ public class WebConfig implements WebMvcConfigurer {
     return exporter;
   }
 
-  @Bean(name = "exceptionResolver")
-  public WISESimpleMappingExceptionResolver wiseSimpleMappingExceptionResolver() {
+  @Bean
+  public WISESimpleMappingExceptionResolver exceptionResolver() {
     WISESimpleMappingExceptionResolver resolver = new WISESimpleMappingExceptionResolver();
     Properties mappings = new Properties();
     mappings.setProperty("org.springframework.web.multipart.MaxUploadSizeExceededException",
