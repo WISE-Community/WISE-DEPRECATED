@@ -72,7 +72,7 @@ public class StudentServiceImpl implements StudentService {
 
     Run run = runService.retrieveRunByRuncode(runcode);
     Date currentTime = new Date();
-    if (run.getEndtime().before(currentTime)) {
+    if (run.getEndtime() != null && run.getEndtime().before(currentTime)) {
       throw new RunHasEndedException(run);
     }
     if (!run.isStudentAssociatedToThisRun(studentUser)) {
