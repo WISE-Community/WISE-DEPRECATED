@@ -93,9 +93,6 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     }
   }
 
-  /**
-   * TODO HT comment and test this method
-   */
   @SuppressWarnings("unchecked")
   public List<Workgroup> getWorkgroupsForRun(Long runId) {
     CriteriaBuilder cb = getCriteriaBuilder();
