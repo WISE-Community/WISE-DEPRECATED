@@ -67,6 +67,7 @@ import org.wise.portal.service.user.UserService;
 
 /**
  * @author Hiroki Terashima
+ * @author Geoffrey Kwan
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -120,9 +121,7 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
   }
 
   private Long getNextAvailableProjectId() {
-    Long nextAvailableProjectId = this.nextAvailableProjectId;
-    this.nextAvailableProjectId++;
-    return nextAvailableProjectId;
+    return nextAvailableProjectId++;
   }
 
   private Group createPeriod(String name) {
@@ -261,8 +260,8 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     assertTrue(run instanceof RunImpl);
     assertTrue(run.getClass() == RunImpl.class);
 
-    assertEquals(run.getRuncode(), runCode);
-    assertEquals(run.getStarttime(), startTime);
+    assertEquals(runCode, run.getRuncode());
+    assertEquals(startTime, run.getStarttime());
   }
 
   @Test
@@ -278,19 +277,19 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
   public void getWorkgroupsForRun_OnePeriod_Success() throws Exception {
     Long runId = run.getId();
     List<Workgroup> workgroups = runDao.getWorkgroupsForRun(runId);
-    assertEquals(workgroups.size(), 0);
+    assertEquals(0, workgroups.size());
     Set<User> members1 = new HashSet<User>();
     members1.add(student1);
     createWorkgroup(members1, run, period1);
     workgroups = runDao.getWorkgroupsForRun(runId);
-    assertEquals(workgroups.size(), 1);
+    assertEquals(1, workgroups.size());
   }
 
   @Test
   public void getWorkgroupsForRun_TwoPeriods_Success() throws Exception {
     Long runId = run.getId();
     List<Workgroup> workgroups = runDao.getWorkgroupsForRun(runId);
-    assertEquals(workgroups.size(), 0);
+    assertEquals(0, workgroups.size());
     Set<User> members1 = new HashSet<User>();
     members1.add(student1);
     createWorkgroup(members1, run, period1);
@@ -298,7 +297,7 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     members2.add(student2);
     createWorkgroup(members2, run, period2);
     workgroups = runDao.getWorkgroupsForRun(runId);
-    assertEquals(workgroups.size(), 2);
+    assertEquals(2, workgroups.size());
   }
 
   private User createStudentUser(String firstName, String lastName, String  username, 
@@ -332,12 +331,12 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     Long runId = run.getId();
     Long period1Id = period1.getId();
     List<Workgroup> workgroups1 = runDao.getWorkgroupsForRunAndPeriod(runId, period1Id);
-    assertEquals(workgroups1.size(), 0);
+    assertEquals(0, workgroups1.size());
     Set<User> members1 = new HashSet<User>();
     members1.add(student1);
     createWorkgroup(members1, run, period1);
     workgroups1 = runDao.getWorkgroupsForRunAndPeriod(runId, period1.getId());
-    assertEquals(workgroups1.size(), 1);
+    assertEquals(1, workgroups1.size());
   }
 
   @Test
@@ -346,99 +345,99 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     Long period1Id = period1.getId();
     Long period2Id = period2.getId();
     List<Workgroup> workgroups1 = runDao.getWorkgroupsForRunAndPeriod(runId, period1Id);
-    assertEquals(workgroups1.size(), 0);
+    assertEquals(0, workgroups1.size());
     Set<User> members1 = new HashSet<User>();
     members1.add(student1);
     createWorkgroup(members1, run, period1);
     List<Workgroup> workgroups2 = runDao.getWorkgroupsForRunAndPeriod(runId, period2Id);
-    assertEquals(workgroups2.size(), 0);
+    assertEquals(0, workgroups2.size());
     Set<User> members2 = new HashSet<User>();
     members2.add(student2);
     createWorkgroup(members2, run, period2);
     workgroups1 = runDao.getWorkgroupsForRunAndPeriod(runId, period1.getId());
-    assertEquals(workgroups1.size(), 1);
+    assertEquals(1, workgroups1.size());
     workgroups2 = runDao.getWorkgroupsForRunAndPeriod(runId, period2.getId());
-    assertEquals(workgroups2.size(), 1);
+    assertEquals(1, workgroups2.size());
   }
 
   @Test
   public void retrieveByField_Name_Success() {
     String recyclingRunName = "Recycling";
     List<Run> recyclingRuns = runDao.retrieveByField("name", "like", recyclingRunName);
-    assertEquals(recyclingRuns.size(), 0);
+    assertEquals(0, recyclingRuns.size());
     String airbagsRunName = "Airbags";
     List<Run> airbagsRuns = runDao.retrieveByField("name", "like", airbagsRunName);
-    assertEquals(airbagsRuns.size(), 1);
-    assertEquals(airbagsRuns.get(0).getName(), airbagsRunName);
+    assertEquals(1, airbagsRuns.size());
+    assertEquals(airbagsRunName, airbagsRuns.get(0).getName());
   }
 
   @Test
   public void retrieveByField_StartTime_Success() {
     Date yesterday = getDateXDaysFromNow(-1);
     List<Run> runsStartedAfterYesterday = runDao.retrieveByField("starttime", ">", yesterday);
-    assertEquals(runsStartedAfterYesterday.size(), 1);
+    assertEquals(1, runsStartedAfterYesterday.size());
     Date tomorrow = getDateXDaysFromNow(1);
     List<Run> runsStartedAfterTomorrow = runDao.retrieveByField("starttime", ">", tomorrow);
-    assertEquals(runsStartedAfterTomorrow.size(), 0);
+    assertEquals(0, runsStartedAfterTomorrow.size());
   }
 
   @Test
   public void getRunListByUser_NoRuns_Success() throws Exception {
     List<Run> runsByUser = runDao.getRunListByUser(student1);
-    assertEquals(runsByUser.size(), 0);
+    assertEquals(0, runsByUser.size());
   }
 
   @Test
   public void getRunListByUser_OneRun_Success() throws Exception {
     List<Run> runsByUser = runDao.getRunListByUser(student1);
-    assertEquals(runsByUser.size(), 0);
+    assertEquals(0, runsByUser.size());
     Set<User> members1 = new HashSet<User>();
     members1.add(student1);
     createWorkgroup(members1, run, period1);
     runsByUser = runDao.getRunListByUser(student1);
-    assertEquals(runsByUser.size(), 1);
+    assertEquals(1, runsByUser.size());
   }
 
   @Test
   public void getRunsOfProject_NoRuns_Success() {
     List<Run> runs = runDao.getRunsOfProject(0L);
-    assertEquals(runs.size(), 0);
+    assertEquals(0, runs.size());
   }
 
   @Test
   public void getRunsOfProject_OneRun_Success() {
     List<Run> runs = runDao.getRunsOfProject(0L);
-    assertEquals(runs.size(), 0);
+    assertEquals(0, runs.size());
     runs = runDao.getRunsOfProject((Long) project.getId());
-    assertEquals(runs.size(), 1);
+    assertEquals(1, runs.size());
   }
 
   @Test
   public void getRunListByOwner_NoRuns_Success() throws Exception {
     List<Run> runs = runDao.getRunListByOwner(teacher2);
-    assertEquals(runs.size(), 0);
+    assertEquals(0, runs.size());
   }
 
   @Test
   public void getRunListByOwner_OneRun_Success() throws Exception {
     List<Run> runs = runDao.getRunListByOwner(teacher1);
-    assertEquals(runs.size(), 1);
+    assertEquals(1, runs.size());
   }
 
   @Test
   public void getRunListBySharedOwner_NoRuns_Success() throws Exception {
     List<Run> runs = runDao.getRunListBySharedOwner(teacher2);
-    assertEquals(runs.size(), 0);
+    assertEquals(0, runs.size());
   }
 
   @Test
   public void getRunListBySharedOwner_OneRun_Success() throws Exception {
     List<Run> runs = runDao.getRunListBySharedOwner(teacher2);
-    assertEquals(runs.size(), 0);
+    assertEquals(0, runs.size());
     run.getSharedowners().add(teacher2);
     runDao.save(run);
     runs = runDao.getRunListBySharedOwner(teacher2);
-    assertEquals(runs.size(), 1);
+    assertEquals(1, runs.size());
   }
 
   @Test
@@ -496,12 +495,12 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
   public void getRunsByActivity_TwoActive_Success() {
     List<Run> runs = runDao.getRunsByActivity();
     assertEquals(0, runs.size());
+    run.setTimesRun(1);
     String projectName = "Photosynthesis";
     String runCode = "Panda123";
     Long id = getNextAvailableProjectId();
-    Run photosynthesisRun = createProjectAndRun(id, projectName, teacher1, startTime, runCode);
-    photosynthesisRun.setTimesRun(1);
-    run.setTimesRun(1);
+    Run run2 = createProjectAndRun(id, projectName, teacher1, startTime, runCode);
+    run2.setTimesRun(1);
     runs = runDao.getRunsByActivity();
     assertEquals(2, runs.size());
   }

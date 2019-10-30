@@ -46,7 +46,7 @@ import org.wise.portal.service.authentication.UserDetailsService;
 @Table(name = UserImpl.DATA_STORE_NAME)
 @Getter
 @Setter
-public class UserImpl implements User, Comparable {
+public class UserImpl implements User {
 
   @Transient
   public static final String DATA_STORE_NAME = "users";
@@ -117,7 +117,7 @@ public class UserImpl implements User, Comparable {
   }
 
   @Override
-  public int compareTo(Object o) {
-    return 0;
+  public int compareTo(User o) {
+    return this.getId().compareTo(o.getId());
   }
 }
