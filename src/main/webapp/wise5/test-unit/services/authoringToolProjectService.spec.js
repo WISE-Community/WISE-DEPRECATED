@@ -1,31 +1,14 @@
-'use strict';
+import authoringToolModule from '../../authoringTool/authoringTool';
 
-var _angular = require('angular');
+describe('AuthoringToolProjectService Unit Test', () => {
 
-var _angular2 = _interopRequireDefault(_angular);
+  beforeEach(angular.mock.module(authoringToolModule.name));
 
-var _main = require('authoringTool/main');
+  const demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
+  const scootersProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
 
-var _main2 = _interopRequireDefault(_main);
-
-require('angular-mocks');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-describe('AuthoringToolProjectService Unit Test', function () {
-
-  beforeEach(_angular2.default.mock.module(_main2.default.name));
-
-  var demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
-  var scootersProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
-
-  var ConfigService = void 0,
-      ProjectService = void 0,
-      $rootScope = void 0,
-      $httpBackend = void 0,
-      demoProjectJSON = void 0,
-      scootersProjectJSON = void 0;
-  beforeEach(inject(function (_ConfigService_, _ProjectService_, _$rootScope_, _$httpBackend_) {
+  let ConfigService, ProjectService, $rootScope, $httpBackend,  demoProjectJSON, scootersProjectJSON;
+  beforeEach(inject(function(_ConfigService_, _ProjectService_, _$rootScope_, _$httpBackend_) {
     ConfigService = _ConfigService_;
     ProjectService = _ProjectService_;
     $rootScope = _$rootScope_;
@@ -34,24 +17,24 @@ describe('AuthoringToolProjectService Unit Test', function () {
     scootersProjectJSON = JSON.parse(JSON.stringify(scootersProjectJSONOriginal));
   }));
 
-  describe('AuthoringToolProjectService', function () {
-    var scootersProjectJSONString = JSON.stringify(scootersProjectJSONOriginal);
-    var invalidProjectJSONString = "{'a':1";
-    var projectIdDefault = 1;
-    var projectBaseURL = "http://localhost:8080/curriculum/12345/";
-    var projectURL = projectBaseURL + "project.json";
-    var registerNewProjectURL = "http://localhost:8080/wise/project/new";
-    var saveProjectURL = "http://localhost:8080/wise/project/save/" + projectIdDefault;
-    var commitMessageDefault = "Made simple changes";
-    var defaultCommitHistory = [{ "id": "abc", "message": "first commit" }, { "id": "def", "message": "second commit" }];
-    var wiseBaseURL = "/wise";
-    var i18nURL_common_en = "wise5/i18n/i18n_en.json";
-    var i18nURL_vle_en = "wise5/vle/i18n/i18n_en.json";
-    var sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
-    var sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
+  describe('AuthoringToolProjectService', () => {
+    const scootersProjectJSONString = JSON.stringify(scootersProjectJSONOriginal);
+    const invalidProjectJSONString = "{'a':1";
+    const projectIdDefault = 1;
+    const projectBaseURL = "http://localhost:8080/curriculum/12345/";
+    const projectURL = projectBaseURL + "project.json";
+    const registerNewProjectURL = "http://localhost:8080/wise/project/new";
+    const saveProjectURL = "http://localhost:8080/wise/project/save/" + projectIdDefault;
+    const commitMessageDefault = "Made simple changes";
+    const defaultCommitHistory = [{"id":"abc","message":"first commit"}, {"id":"def", "message":"second commit"}];
+    const wiseBaseURL = "/wise";
+    const i18nURL_common_en = "wise5/i18n/i18n_en.json";
+    const i18nURL_vle_en = "wise5/vle/i18n/i18n_en.json";
+    const sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
+    const sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
 
     function createNormalSpy() {
-      spyOn(ConfigService, "getConfigParam").and.callFake(function (param) {
+      spyOn(ConfigService, "getConfigParam").and.callFake((param) => {
         if (param === "projectBaseURL") {
           return projectBaseURL;
         } else if (param === "projectURL") {
@@ -66,50 +49,49 @@ describe('AuthoringToolProjectService Unit Test', function () {
       });
     }
 
-    it('should register new project', function () {
+    it('should register new project', () => {
       spyOn(ConfigService, "getConfigParam").and.returnValue(registerNewProjectURL);
-      var newProjectIdExpected = projectIdDefault;
+      const newProjectIdExpected = projectIdDefault;
       $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      var newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
+      const newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
       $httpBackend.expectPOST(registerNewProjectURL);
     });
 
-    it('should not register new project when Config.registerNewProjectURL is undefined', function () {
+    it('should not register new project when Config.registerNewProjectURL is undefined', () => {
       spyOn(ConfigService, "getConfigParam").and.returnValue(null);
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      var newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
+      const newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
       expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
       expect(newProjectIdActualPromise).toBeNull();
     });
 
-    it('should not register new project when projectJSON is invalid JSON', function () {
+    it('should not register new project when projectJSON is invalid JSON', () => {
       spyOn(ConfigService, "getConfigParam").and.returnValue(registerNewProjectURL);
       try {
-        var newProjectIdActualPromise = ProjectService.registerNewProject(invalidProjectJSONString, commitMessageDefault);
-        expect(1).toEqual(2); // This line should not get called because the above line will throw an error
+        const newProjectIdActualPromise = ProjectService.registerNewProject(invalidProjectJSONString, commitMessageDefault);
+        expect(1).toEqual(2);   // This line should not get called because the above line will throw an error
       } catch (e) {
         expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
-        expect(e.message).toEqual("Invalid projectJSONString.");
+        expect(e.message).toEqual("Invalid projectJSONString.")
       }
     });
 
-    it('should find used node id in active nodes', function () {
+    it('should find used node id in active nodes', () => {
       ProjectService.setProject(demoProjectJSON);
       expect(ProjectService.isNodeIdUsed("node1")).toEqual(true);
     });
 
-    it('should find used node id in inactive nodes', function () {
+    it('should find used node id in inactive nodes', () => {
       ProjectService.setProject(demoProjectJSON);
       expect(ProjectService.isNodeIdUsed("node789")).toEqual(true);
     });
 
-    it('should not find used node id in active or inactive nodes', function () {
+    it('should not find used node id in active or inactive nodes', () => {
       ProjectService.setProject(demoProjectJSON);
       expect(ProjectService.isNodeIdUsed("nodedoesnotexist")).toEqual(false);
     });
   });
 });
-//# sourceMappingURL=authoringToolProjectService.spec.js.map

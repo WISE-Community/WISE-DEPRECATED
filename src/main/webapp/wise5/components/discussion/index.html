@@ -1,6 +1,6 @@
 <div ng-controller='DiscussionController as discussionController'>
   <div>
-    <div ng-switch='discussionController.mode'>
+    <div ng-switch='::discussionController.mode'>
       <div ng-switch-when='grading|gradingRevision'
           ng-switch-when-separator='|'
           layout='row'
@@ -77,7 +77,7 @@
                   </div>
                   <textarea ng-if='!discussionController.isDisabled'
                       class='discussion-new__input--textarea'
-                      placeholder='{{ "discussion.shareDiscussionPostWithClass" | translate }}'
+                      placeholder='{{ ::"discussion.shareDiscussionPostWithClass" | translate }}'
                       ng-model='discussionController.newResponse'
                       ng-model-options='{ debounce: 100 }'
                       ng-disabled='discussionController.isDisabled'
@@ -120,7 +120,7 @@
                   <md-button class='md-raised md-primary'
                       ng-click='discussionController.submitButtonClicked()'
                       ng-disabled='discussionController.isDisabled || (!discussionController.newResponse && discussionController.attachments.length == 0)'>
-                    {{ 'discussion.post' | translate }}
+                    {{ ::'discussion.post' | translate }}
                   </md-button>
                 </div>
               </md-card>

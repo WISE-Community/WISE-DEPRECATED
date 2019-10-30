@@ -43,7 +43,6 @@ import org.wise.portal.service.run.RunService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Properties;
 
 /**
  * A Controller for Grading Student Work
@@ -85,7 +84,8 @@ public class GradeWorkController {
    * @throws Exception
    */
   @RequestMapping(value = "/classroomMonitor/{runId}")
-  protected ModelAndView launchClassroomMonitorWISE5(HttpServletRequest request, @PathVariable Integer runId) throws Exception {
+  protected ModelAndView launchClassroomMonitorWISE5(HttpServletRequest request, @PathVariable Integer runId)
+      throws Exception {
     Run run = null;
     try {
       run = runService.retrieveById(new Long(runId));
@@ -99,11 +99,7 @@ public class GradeWorkController {
     if (user.isAdmin() ||
         this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
         this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-      String contextPath = request.getContextPath();
-      String getClassroomMonitorConfigUrl = contextPath + "/config/classroomMonitor/" + runId;
-      ModelAndView modelAndView = new ModelAndView("classroomMonitor");
-      modelAndView.addObject("configURL", getClassroomMonitorConfigUrl);
-      return modelAndView;
+      return new ModelAndView("forward:/wise5/classroomMonitor/dist/index.html#/run/" + runId + "/project/");
     }
     return null;
   }

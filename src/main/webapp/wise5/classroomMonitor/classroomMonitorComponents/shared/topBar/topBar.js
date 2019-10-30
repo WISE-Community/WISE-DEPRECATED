@@ -1,19 +1,10 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var TopBarController = function () {
-    function TopBarController($rootScope, ConfigService, ProjectService, TeacherDataService) {
-        var _this = this;
-
-        _classCallCheck(this, TopBarController);
-
+class TopBarController {
+    constructor($rootScope,
+                ConfigService,
+                ProjectService,
+                TeacherDataService) {
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -28,14 +19,14 @@ var TopBarController = function () {
         this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
         this.userInfo = this.ConfigService.getMyUserInfo();
 
-        this.$onChanges = function (changesObj) {
+        this.$onChanges = (changesObj) => {
             if (changesObj.notifications) {
-                _this.setNotifications();
+                this.setNotifications();
             }
         };
 
-        this.$rootScope.$on('notificationChanged', function (event, notification) {
-            _this.setNotifications();
+        this.$rootScope.$on('notificationChanged', (event, notification) => {
+          this.setNotifications();
         });
         this.themePath = this.ProjectService.getThemePath();
         this.contextPath = this.ConfigService.getContextPath();
@@ -45,72 +36,69 @@ var TopBarController = function () {
      * Find all teacher notifications and separate into new and dismissed arrays
      * TODO: move to TeacherDataService?
      */
+    setNotifications() {
+        // get all notifications for the logged in teacher
+        // TODO: take into account shared teacher users!
+        let userNotifications = this.notifications.filter(
+            notification => {
+                return (notification.toWorkgroupId === this.workgroupId);
+            }
+        );
 
+        this.newNotifications = userNotifications.filter(
+            notification => {
+                return (notification.timeDismissed == null);
+            }
+        );
 
-    _createClass(TopBarController, [{
-        key: 'setNotifications',
-        value: function setNotifications() {
-            var _this2 = this;
+        this.dismissedNotifications = userNotifications.filter(
+            notification => {
+                return (notification.timeDismissed != null);
+            }
+        );
+    }
 
-            // get all notifications for the logged in teacher
-            // TODO: take into account shared teacher users!
-            var userNotifications = this.notifications.filter(function (notification) {
-                return notification.toWorkgroupId === _this2.workgroupId;
-            });
+    /**
+     * Check whether any period in the run is paused
+     * @return Boolean whether any of the periods are paused
+     */
+    isAnyPeriodPaused() {
+        return this.TeacherDataService.isAnyPeriodPaused();
+    }
 
-            this.newNotifications = userNotifications.filter(function (notification) {
-                return notification.timeDismissed == null;
-            });
+    goHome() {
+        var context = "ClassroomMonitor";
+        var nodeId = null;
+        var componentId = null;
+        var componentType = null;
+        var category = "Navigation";
+        var event = "goHomeButtonClicked";
+        var eventData = {};
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, eventData);
+        this.$rootScope.$broadcast('goHome');
+    }
 
-            this.dismissedNotifications = userNotifications.filter(function (notification) {
-                return notification.timeDismissed != null;
-            });
-        }
+    logOut() {
+        var context = "ClassroomMonitor";
+        var nodeId = null;
+        var componentId = null;
+        var componentType = null;
+        var category = "Navigation";
+        var event = "logOutButtonClicked";
+        var eventData = {};
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, eventData);
+        this.$rootScope.$broadcast('logOut');
+    }
+}
 
-        /**
-         * Check whether any period in the run is paused
-         * @return Boolean whether any of the periods are paused
-         */
+TopBarController.$inject = [
+    '$rootScope',
+    'ConfigService',
+    'ProjectService',
+    'TeacherDataService'
+];
 
-    }, {
-        key: 'isAnyPeriodPaused',
-        value: function isAnyPeriodPaused() {
-            return this.TeacherDataService.isAnyPeriodPaused();
-        }
-    }, {
-        key: 'goHome',
-        value: function goHome() {
-            var context = "ClassroomMonitor";
-            var nodeId = null;
-            var componentId = null;
-            var componentType = null;
-            var category = "Navigation";
-            var event = "goHomeButtonClicked";
-            var eventData = {};
-            this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, eventData);
-            this.$rootScope.$broadcast('goHome');
-        }
-    }, {
-        key: 'logOut',
-        value: function logOut() {
-            var context = "ClassroomMonitor";
-            var nodeId = null;
-            var componentId = null;
-            var componentType = null;
-            var category = "Navigation";
-            var event = "logOutButtonClicked";
-            var eventData = {};
-            this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, eventData);
-            this.$rootScope.$broadcast('logOut');
-        }
-    }]);
-
-    return TopBarController;
-}();
-
-TopBarController.$inject = ['$rootScope', 'ConfigService', 'ProjectService', 'TeacherDataService'];
-
-var TopBar = {
+const TopBar = {
     bindings: {
         logoPath: '@',
         notifications: '<',
@@ -119,8 +107,48 @@ var TopBar = {
         runId: '<'
     },
     controller: TopBarController,
-    template: '<md-toolbar class="l-header">\n            <div class="md-toolbar-tools">\n                <span class="md-button logo-link">\n                    <a href="{{$ctrl.contextPath}}/teacher" target="_self">\n                        <img ng-src="{{ $ctrl.logoPath }}" alt="{{ \'WISE_LOGO\' | translate }}" class="logo" />\n                    </a>\n                </span>\n                <h3>{{ $ctrl.projectTitle }} <span class="md-caption">({{ \'RUN_ID_DISPLAY\' | translate:{id: $ctrl.runId} }})</span></h3>\n                <span flex></span>\n                <md-menu md-position-mode="target-right target" md-offset="52 26">\n                    <md-button aria-label="{{ \'ALERTS\' | translate }}" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event)">\n                        <span ng-show="$ctrl.newNotifications.length" class="notification-count">{{$ctrl.newNotifications.length}}</span>\n                        <md-icon md-menu-origin> notifications </md-icon>\n                    </md-button>\n                    <md-menu-content width="5" class="account-menu">\n                        <notifications-menu new-notifications="$ctrl.newNotifications" dismissed-notifications="$ctrl.dismissedNotifications" with-pause="true"></notifications-menu>\n                    </md-menu-content>\n                </md-menu>\n                <md-menu md-position-mode="target-right target" md-offset="40 26">\n                    <md-button aria-label="{{ \'pauseStudentScreens\' | translate }}"\n                               class="md-icon-button"\n                               ng-class="{ \'has-indicator has-indicator--icon-button\': $ctrl.isAnyPeriodPaused() }"\n                               ng-click="$mdMenu.open($event)">\n                        <md-icon md-menu-origin ng-if="$ctrl.isAnyPeriodPaused()"> lock </md-icon>\n                        <md-icon md-menu-origin ng-if="!$ctrl.isAnyPeriodPaused()"> lock_open </md-icon>\n                    </md-button>\n                    <md-menu-content width="5" class="account-menu">\n                        <pause-screens-menu></pause-screens-menu>\n                    </md-menu-content>\n                </md-menu>\n                <md-menu id=\'accountMenu\' md-position-mode="target-right target" md-offset="8 26">\n                    <md-button aria-label="{{ \'USER_MENU\' | translate }}" class="md-icon-button" ng-click="$mdMenu.open($event)">\n                        <md-icon md-menu-origin> account_box </md-icon>\n                    </md-button>\n                    <md-menu-content width="5" class="account-menu">\n                        <ng-include src="$ctrl.themePath + \'/templates/teacherAccountMenu.html\'"></ng-include>\n                    </md-menu-content>\n                </md-menu>\n            </div>\n        </md-toolbar>\n'
+    template:
+        `<md-toolbar class="l-header">
+            <div class="md-toolbar-tools">
+                <span class="md-button logo-link">
+                    <a href="{{::$ctrl.contextPath}}/teacher" target="_self">
+                        <img ng-src="{{ ::$ctrl.logoPath }}" alt="{{ ::'WISE_LOGO' | translate }}" class="logo" />
+                    </a>
+                </span>
+                <h3>{{ ::$ctrl.projectTitle }} <span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span></h3>
+                <span flex></span>
+                <md-menu md-position-mode="target-right target" md-offset="52 26">
+                    <md-button aria-label="{{ ::'ALERTS' | translate }}" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event)">
+                        <span ng-show="$ctrl.newNotifications.length" class="notification-count">{{$ctrl.newNotifications.length}}</span>
+                        <md-icon md-menu-origin> notifications </md-icon>
+                    </md-button>
+                    <md-menu-content width="5" class="account-menu">
+                        <notifications-menu new-notifications="$ctrl.newNotifications" dismissed-notifications="$ctrl.dismissedNotifications" with-pause="true"></notifications-menu>
+                    </md-menu-content>
+                </md-menu>
+                <md-menu md-position-mode="target-right target" md-offset="40 26">
+                    <md-button aria-label="{{ ::'pauseStudentScreens' | translate }}"
+                               class="md-icon-button"
+                               ng-class="{ 'has-indicator has-indicator--icon-button': $ctrl.isAnyPeriodPaused() }"
+                               ng-click="$mdMenu.open($event)">
+                        <md-icon md-menu-origin ng-if="$ctrl.isAnyPeriodPaused()"> lock </md-icon>
+                        <md-icon md-menu-origin ng-if="!$ctrl.isAnyPeriodPaused()"> lock_open </md-icon>
+                    </md-button>
+                    <md-menu-content width="5" class="account-menu">
+                        <pause-screens-menu></pause-screens-menu>
+                    </md-menu-content>
+                </md-menu>
+                <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">
+                    <md-button aria-label="{{ ::'USER_MENU' | translate }}" class="md-icon-button" ng-click="$mdMenu.open($event)">
+                        <md-icon md-menu-origin> account_box </md-icon>
+                    </md-button>
+                    <md-menu-content width="5" class="account-menu">
+                        <ng-include src="::$ctrl.themePath + '/templates/teacherAccountMenu.html'"></ng-include>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </md-toolbar>
+`
 };
 
-exports.default = TopBar;
-//# sourceMappingURL=topBar.js.map
+export default TopBar;

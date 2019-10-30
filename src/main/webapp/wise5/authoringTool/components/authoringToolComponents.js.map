@@ -1,1 +1,0 @@
-{"version":3,"sources":["authoringToolComponents.es6"],"names":["angular","module"],"mappings":"AAAA;;;;;;AAEA;;;;;;kBACeA,QAAQC,MAAR,CAAe,0BAAf,EAA2C,CAAC,kBAAD,CAA3C,C","file":"authoringToolComponents.js","sourcesContent":["'use strict';\n\nimport SharedComponents from './shared/shared';\nexport default angular.module('authoringTool.components', ['sharedComponents']);\n"]}

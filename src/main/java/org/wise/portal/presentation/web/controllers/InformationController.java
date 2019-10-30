@@ -42,9 +42,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -164,6 +166,13 @@ public class InformationController {
       printConfigToResponse(response, config);
       return;
     }
+  }
+
+  @GetMapping("/config/vle")
+  @ResponseBody
+  public String getVLEDefaultConfig(HttpServletRequest request) throws JSONException {
+    JSONObject config = getDefaultVLEConfig(request);
+    return config.toString();
   }
 
   /**
@@ -711,6 +720,12 @@ public class InformationController {
       JSONObject config, Project project) throws JSONException {
     String rawProjectUrl = project.getModulePath();
     addCommonConfigParameters(request, config, project, rawProjectUrl);
+  }
+  private JSONObject getDefaultVLEConfig(HttpServletRequest request) throws JSONException {
+    JSONObject config = new JSONObject();
+    String contextPath = request.getContextPath();
+    config.put("wiseBaseURL", contextPath);
+    return config;
   }
 
   private void addCommonConfigParameters(

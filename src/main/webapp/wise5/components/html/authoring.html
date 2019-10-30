@@ -2,11 +2,11 @@
   <div class='advancedAuthoringDiv'
        ng-if='htmlController.showAdvancedAuthoring'>
     <div>
-      <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+      <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
     </div>
     <div>
       <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-        <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+        <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
         <input type='number'
                ng-model='htmlController.authoringComponentContent.componentWidth'
                ng-model-options='{ debounce: 1000 }'
@@ -15,11 +15,11 @@
     </div>
     <div>
       <label class='node__label--vertical-alignment'>
-        {{ 'RUBRIC' | translate }}
+        {{ ::'RUBRIC' | translate }}
       </label>
       <md-button class='topButton md-raised md-primary' ng-click='htmlController.showRubricAuthoring = !htmlController.showRubricAuthoring'>
         <md-icon>message</md-icon>
-        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
       </md-button>
       <div ng-if='htmlController.showRubricAuthoring'>
         <summernote id='{{htmlController.summernoteRubricId}}'
@@ -33,14 +33,14 @@
       </div>
     </div>
     <div>
-      <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
+      <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
       <md-button class='topButton md-raised md-primary'
                  ng-click='htmlController.showJSONButtonClicked()'>
         <md-icon>code</md-icon>
-        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
       </md-button>
       <span ng-if='htmlController.isJSONStringChanged'>
-          {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+          {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
         </span>
       <div ng-if='htmlController.showJSONAuthoring'>
         <md-input-container style='width: 100%;'>
@@ -52,7 +52,7 @@
     </div>
   </div>
   <br/>
-  <summernote id='{{htmlController.summernotePromptId}}'
+  <summernote id='{{::htmlController.summernotePromptId}}'
               ng-model='htmlController.summernotePromptHTML'
               ng-change='htmlController.summernotePromptHTMLChanged()'
               config='htmlController.summernotePromptOptions'
