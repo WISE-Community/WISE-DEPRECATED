@@ -38,7 +38,6 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.group.Group;
@@ -120,7 +119,7 @@ public class StudentServiceImplTest extends TestCase {
 
 	public void testAddStudentToRun_success() 
 	     throws ObjectNotFoundException, PeriodNotFoundException, 
-	     StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
+	     StudentUserAlreadyAssociatedWithRunException {
   	    expect(mockRunService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
   	    replay(mockRunService);
   	    Group period = run.getPeriodByName(PERIODNAME);
@@ -152,10 +151,7 @@ public class StudentServiceImplTest extends TestCase {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e) {
-			fail("RunHasEndedException was not expected to be thrown.");
 		}
-  	    
   	    verify(mockRunService);
   	    verify(mockGroupService);
 	}
@@ -182,10 +178,7 @@ public class StudentServiceImplTest extends TestCase {
 		} catch (PeriodNotFoundException pe) {
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e) {
-			fail("RunHasEndedException was not expected to be thrown.");
 		}
-  	    
   	    verify(mockRunService);
   	    verify(mockGroupService);	
 	}
@@ -209,8 +202,6 @@ public class StudentServiceImplTest extends TestCase {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e) {
-			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    verify(mockRunService);
   	    verify(mockGroupService);
@@ -229,8 +220,6 @@ public class StudentServiceImplTest extends TestCase {
 		} catch (PeriodNotFoundException pe) {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-		} catch (RunHasEndedException e) {
-			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    verify(mockRunService);
 	}
@@ -264,35 +253,6 @@ public class StudentServiceImplTest extends TestCase {
 		studentService.removeStudentFromRun(studentUser, run);
 
 		verify(mockGroupService);
-	}
-
-	public void testAddStudentsToRun_RunHasEndedException() 
-            throws ObjectNotFoundException, PeriodNotFoundException {
-		run.setEndtime(new Date(System.currentTimeMillis() - 1));
-  	    expect(mockRunService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
-  	    replay(mockRunService);
-		Group period = run.getPeriodByName(PERIODNAME);
-  	    Set<User> membersToAdd = new HashSet<User>();
-  	    membersToAdd.add(studentUser);
-  	    mockGroupService.addMembers(period, membersToAdd);
-  	    expectLastCall();
-		replay(mockGroupService);
-		  
-  	    // now if we try to add this run that has ended, 
-		// we should get a RunHasEndedException
-  	    try {
-			studentService.addStudentToRun(studentUser, projectcode);
-			fail("Expected the RunHasEndedException to be thrown");
-		} catch (ObjectNotFoundException oe) {
-			fail("ObjectNotFoundException was not expected to be thrown");
-		} catch (PeriodNotFoundException pe) {
-			fail("PeriodNotFoundException was not expected to be thrown");
-		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e) {
-		}
-  	    verify(mockRunService);
-  	    verify(mockGroupService);
 	}
 
 	// TODO Hiroki test getStudentRunInfo()
