@@ -101,7 +101,7 @@ public class GradeWorkController {
         this.runService.hasRunPermission(run, user, BasePermission.READ)) {
       return new ModelAndView("forward:/wise5/classroomMonitor/dist/index.html#/run/" + runId + "/project/");
     }
-    return null;
+    return new ModelAndView("errors/accessdenied");
   }
 
   /**
