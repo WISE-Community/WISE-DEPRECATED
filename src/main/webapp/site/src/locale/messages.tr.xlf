@@ -1866,7 +1866,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
@@ -1886,7 +1886,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <target state="needs-translation">Add</target>
       </trans-unit>
@@ -5649,11 +5649,19 @@
         </context-group>
         <target state="needs-translation">You have already added this unit.</target>
       </trans-unit>
+      <trans-unit id="2ac78802200564a04e42b0c60d0283d32e04060e" datatype="html">
+        <source>This run has ended. Please talk to your teacher.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target state="needs-translation">This run has ended. Please talk to your teacher.</target>
+      </trans-unit>
       <trans-unit id="38b627ddc0611e9f2027cb255872829f3c7917fc" datatype="html">
         <source>Choose Period</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <target state="needs-translation">Choose Period</target>
       </trans-unit>
