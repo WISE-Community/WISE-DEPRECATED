@@ -1,39 +1,35 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+class StepInfoController {
+  constructor($filter,
+        ProjectService) {
+    this.$filter = $filter;
+    this.ProjectService = ProjectService;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    this.$translate = this.$filter('translate');
 
-var StepInfoController = function StepInfoController($filter, ProjectService) {
-  var _this = this;
-
-  _classCallCheck(this, StepInfoController);
-
-  this.$filter = $filter;
-  this.ProjectService = ProjectService;
-
-  this.$translate = this.$filter('translate');
-
-  this.$onInit = function () {
-    _this.stepTitle = _this.showPosition ? _this.ProjectService.nodeIdToNumber[_this.nodeId] + ': ' + _this.nodeTitle : _this.nodeTitle;
-    _this.icon = _this.ProjectService.getNodeIconByNodeId(_this.nodeId);
-    if (_this.hasAlert) {
-      _this.alertIconClass = _this.hasNewAlert ? 'warn' : 'text-disabled';
-      _this.alertIconName = 'notifications';
-      _this.alertIconLabel = _this.hasNewAlert ? _this.$translate('HAS_ALERTS_NEW') : _this.$translate('HAS_ALERTS_DISMISSED');
+    this.$onInit = () => {
+      this.stepTitle = this.showPosition ? (this.ProjectService.nodeIdToNumber[this.nodeId] + ': ' + this.nodeTitle) : this.nodeTitle;
+      this.icon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
+      if (this.hasAlert) {
+        this.alertIconClass = this.hasNewAlert ? 'warn' : 'text-disabled';
+        this.alertIconName = 'notifications';
+        this.alertIconLabel = this.hasNewAlert ? this.$translate('HAS_ALERTS_NEW') : this.$translate('HAS_ALERTS_DISMISSED');
+      }
+      this.hasRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId) > 0;
+      this.rubricIconLabel = this.$translate('STEP_HAS_RUBRICS_TIPS');
+      this.rubricIconClass = 'info';
+      this.rubricIconName = 'info';
     }
-    _this.hasRubrics = _this.ProjectService.getNumberOfRubricsByNodeId(_this.nodeId) > 0;
-    _this.rubricIconLabel = _this.$translate('STEP_HAS_RUBRICS_TIPS');
-    _this.rubricIconClass = 'info';
-    _this.rubricIconName = 'info';
   };
-};
+}
 
-StepInfoController.$inject = ['$filter', 'ProjectService'];
+StepInfoController.$inject = [
+  '$filter',
+  'ProjectService'
+];
 
-var StepInfo = {
+const StepInfo = {
   bindings: {
     hasAlert: '<',
     hasNewAlert: '<',
@@ -44,8 +40,26 @@ var StepInfo = {
     showPosition: '<'
   },
   controller: StepInfoController,
-  template: '<div layout="row" layout-align="start center">\n    <node-icon node-id="$ctrl.nodeId" size="18" hide-xs></node-icon>\n    <span hide-xs>&nbsp;&nbsp;</span>\n    <div class="heavy">\n      {{ $ctrl.stepTitle }}\n      <status-icon ng-if="$ctrl.hasAlert"\n                   icon-class="$ctrl.alertIconClass"\n                   icon-name="$ctrl.alertIconName"\n                   icon-label="$ctrl.alertIconLabel"\n                   icon-tooltip="$ctrl.alertIconLabel"></status-icon>\n      <status-icon ng-if="$ctrl.hasRubrics"\n                   icon-class="$ctrl.rubricIconClass"\n                   icon-name="$ctrl.rubricIconName"\n                   icon-label="$ctrl.rubricIconLabel"\n                   icon-tooltip="$ctrl.rubricIconLabel"></status-icon>\n      <span ng-if="$ctrl.hasNewWork" class="badge badge--info\n            animate-fade">{{ \'NEW\' | translate }}</span>\n    </div>\n  </div>'
+  template:
+  `<div layout="row" layout-align="start center">
+    <node-icon node-id="$ctrl.nodeId" size="18" hide-xs></node-icon>
+    <span hide-xs>&nbsp;&nbsp;</span>
+    <div class="heavy">
+      {{ ::$ctrl.stepTitle }}
+      <status-icon ng-if="$ctrl.hasAlert"
+                   icon-class="$ctrl.alertIconClass"
+                   icon-name="$ctrl.alertIconName"
+                   icon-label="$ctrl.alertIconLabel"
+                   icon-tooltip="$ctrl.alertIconLabel"></status-icon>
+      <status-icon ng-if="$ctrl.hasRubrics"
+                   icon-class="$ctrl.rubricIconClass"
+                   icon-name="$ctrl.rubricIconName"
+                   icon-label="$ctrl.rubricIconLabel"
+                   icon-tooltip="$ctrl.rubricIconLabel"></status-icon>
+      <span ng-if="$ctrl.hasNewWork" class="badge badge--info
+            animate-fade">{{ ::'NEW' | translate }}</span>
+    </div>
+  </div>`
 };
 
-exports.default = StepInfo;
-//# sourceMappingURL=stepInfo.js.map
+export default StepInfo;

@@ -1,55 +1,35 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
+import Annotation from './annotation/annotation';
+import Compile from './compile/compile';
+import Component from './component/component';
+import ComponentAnnotations from './componentAnnotations/componentAnnotations';
+import DisableDeleteKeypress from './disableDeleteKeypress/disableDeleteKeypress';
+import Draggable from './draggable/draggable';
+import GlobalAnnotations from './globalAnnotations/globalAnnotations';
+import GlobalAnnotationsList from './globalAnnotationsList/globalAnnotationsList';
+import ListenForDeleteKeypress from './listenForDeleteKeypress/listenForDeleteKeypress';
+import MilestoneReportGraph from './milestoneReportGraph/milestoneReportGraph';
+import PossibleScore from './possibleScore/possibleScore';
+import SummaryDisplay from './summaryDisplay/summaryDisplay';
+import Wiselink from './wiselink/wiselink';
+import Sticky from './sticky/sticky';
 
-var _annotation = _interopRequireDefault(require("./annotation/annotation"));
+const Components = angular.module('components', []);
 
-var _compile = _interopRequireDefault(require("./compile/compile"));
+Components.component('annotation', Annotation);
+Components.component('compile', Compile);
+Components.component('component', Component);
+Components.component('componentAnnotations', ComponentAnnotations);
+Components.component('disableDeleteKeypress', DisableDeleteKeypress);
+Components.component('draggable', Draggable);
+Components.component('globalAnnotations', GlobalAnnotations);
+Components.component('globalAnnotationsList', GlobalAnnotationsList);
+Components.component('listenForDeleteKeypress', ListenForDeleteKeypress);
+Components.component('milestoneReportGraph', MilestoneReportGraph);
+Components.component('possibleScore', PossibleScore);
+Components.component('summaryDisplay', SummaryDisplay);
+Components.component('wiselink', Wiselink);
+Components.directive('sticky', Sticky);
 
-var _component = _interopRequireDefault(require("./component/component"));
-
-var _componentAnnotations = _interopRequireDefault(require("./componentAnnotations/componentAnnotations"));
-
-var _disableDeleteKeypress = _interopRequireDefault(require("./disableDeleteKeypress/disableDeleteKeypress"));
-
-var _draggable = _interopRequireDefault(require("./draggable/draggable"));
-
-var _globalAnnotations = _interopRequireDefault(require("./globalAnnotations/globalAnnotations"));
-
-var _globalAnnotationsList = _interopRequireDefault(require("./globalAnnotationsList/globalAnnotationsList"));
-
-var _listenForDeleteKeypress = _interopRequireDefault(require("./listenForDeleteKeypress/listenForDeleteKeypress"));
-
-var _milestoneReportGraph = _interopRequireDefault(require("./milestoneReportGraph/milestoneReportGraph"));
-
-var _possibleScore = _interopRequireDefault(require("./possibleScore/possibleScore"));
-
-var _summaryDisplay = _interopRequireDefault(require("./summaryDisplay/summaryDisplay"));
-
-var _wiselink = _interopRequireDefault(require("./wiselink/wiselink"));
-
-var _sticky = _interopRequireDefault(require("./sticky/sticky"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var Components = angular.module('components', []);
-Components.component('annotation', _annotation["default"]);
-Components.component('compile', _compile["default"]);
-Components.component('component', _component["default"]);
-Components.component('componentAnnotations', _componentAnnotations["default"]);
-Components.component('disableDeleteKeypress', _disableDeleteKeypress["default"]);
-Components.component('draggable', _draggable["default"]);
-Components.component('globalAnnotations', _globalAnnotations["default"]);
-Components.component('globalAnnotationsList', _globalAnnotationsList["default"]);
-Components.component('listenForDeleteKeypress', _listenForDeleteKeypress["default"]);
-Components.component('milestoneReportGraph', _milestoneReportGraph["default"]);
-Components.component('possibleScore', _possibleScore["default"]);
-Components.component('summaryDisplay', _summaryDisplay["default"]);
-Components.component('wiselink', _wiselink["default"]);
-Components.directive('sticky', _sticky["default"]);
-var _default = Components;
-exports["default"] = _default;
-//# sourceMappingURL=components.js.map
+export default Components;

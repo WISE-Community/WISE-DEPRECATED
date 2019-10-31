@@ -1,11 +1,11 @@
 <div ng-controller='GraphController as graphController' flex>
   <div>
     <div>
-      <div ng-switch='graphController.mode'>
+      <div ng-switch='::graphController.mode'>
         <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
           <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
             <div class='component--grading__response__content'>
-              <highchart id='{{graphController.chartId}}' config='graphController.chartConfig' ng-if='graphController.$scope.componentState'></highchart>
+              <highchart id='{{::graphController.chartId}}' config='graphController.chartConfig' ng-if='graphController.$scope.componentState'></highchart>
             </div>
             <span flex></span>
             <component-revisions-info node-id='graphController.nodeId'
@@ -38,7 +38,7 @@
                ng-disabled='graphController.isDisabled'/>
           <div class='component__actions' layout='row' ng-if='graphController.showTrialSelect'>
             <md-input-container ng-if='graphController.componentContent.enableTrials'>
-              <label>{{ 'graph.selectTrialsToShow' | translate }}</label>
+              <label>{{ ::'graph.selectTrialsToShow' | translate }}</label>
               <md-select ng-model='graphController.trialIdsToShow'
                      ng-change='graphController.trialIdsToShowChanged()'
                      md-selected-text='graphController.selectedTrialsText'
@@ -60,7 +60,7 @@
               </md-select>
             </md-input-container>
             <md-input-container ng-if='graphController.componentContent.enableTrials && graphController.showSelectActiveTrials()'>
-              <label>{{ 'graph.selectTrialToEdit' | translate }}</label>
+              <label>{{ ::'graph.selectTrialToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeTrial'
                      ng-change='graphController.activeTrialChanged()'
                      class='graph-select'
@@ -73,7 +73,7 @@
               </md-select>
             </md-input-container>
             <md-input-container ng-if="graphController.isShowSelectSeriesInput()">
-              <label>{{ 'graph.selectSeriesToEdit' | translate }}</label>
+              <label>{{ ::'graph.selectSeriesToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeSeries'
                      ng-change='graphController.activeSeriesChanged()'
                      class='graph-select'
@@ -89,14 +89,14 @@
                      ng-click='graphController.resetSeries()'
                      ng-if='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'
                      ng-disabled='graphController.isDisabled'>
-                <md-icon> restore </md-icon> {{ 'graph.resetSeries' | translate }}
+                <md-icon> restore </md-icon> {{ ::'graph.resetSeries' | translate }}
               </md-button>
             </md-input-container>
             <md-input-container ng-if='graphController.showUndoButton'>
               <md-button class='md-accent'
                      ng-click='graphController.undoClicked()'
                      ng-disabled='graphController.isDisabled'>
-                <md-icon>undo</md-icon> {{ 'undo' | translate }}
+                <md-icon>undo</md-icon> {{ ::'undo' | translate }}
               </md-button>
             </md-input-container>
           </div>
@@ -105,24 +105,24 @@
                    ng-click='graphController.newTrialButtonClicked()'
                    ng-if='graphController.componentContent.canCreateNewTrials'
                    ng-disabled='graphController.isDisabled'>
-              <md-icon> add </md-icon> {{ 'graph.newTrial' | translate }}
+              <md-icon> add </md-icon> {{ ::'graph.newTrial' | translate }}
             </md-button>
             <md-button class='md-accent'
                    ng-click='graphController.resetGraph()'
                    ng-if='graphController.showResetGraphButton()'
                    ng-disabled='graphController.isDisabled'>
-              <md-icon> restore </md-icon> {{ 'graph.resetGraph' | translate }}
+              <md-icon> restore </md-icon> {{ ::'graph.resetGraph' | translate }}
             </md-button>
             <md-button class='md-accent md-primary'
                 ng-click='graphController.snipGraph($event)'
-                ng-if='graphController.isAddToNotebookEnabled()'
+                ng-if='::graphController.isAddToNotebookEnabled()'
                 ng-disabled='graphController.isDisabled'>
-              <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
+              <md-icon> note_add </md-icon>  {{ ::'ADD_TO_NOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
             </md-button>
             <md-button class='md-accent' ng-if='graphController.isStudentAttachmentEnabled'
                    ng-click='nodeController.showStudentAssets($event, component.id, graphController.isDisabled)'
                    ng-disabled='graphController.isDisabled'>
-              <md-icon>image</md-icon> {{ 'graph.importData' | translate }}
+              <md-icon>image</md-icon> {{ ::'graph.importData' | translate }}
             </md-button>
           </div>
           <div layout='column'>
@@ -131,7 +131,7 @@
                  style='width: 80;'
                  ng-if='!graphController.componentContent.yAxis.locked'>
                 <md-input-container>
-                  <label>{{ 'graph.yMax' | translate }}</label>
+                  <label>{{ ::'graph.yMax' | translate }}</label>
                   <input type='number'
                        style='width: 60'
                        ng-model='graphController.yAxis.max'
@@ -141,7 +141,7 @@
                 </md-input-container>
                 <span flex></span>
                 <md-input-container>
-                  <label>{{ 'graph.yMin' | translate }}</label>
+                  <label>{{ ::'graph.yMin' | translate }}</label>
                   <input type='number'
                        style='width: 60'
                        ng-model='graphController.yAxis.min'
@@ -151,7 +151,7 @@
                 </md-input-container>
               </div>
               <div style="width: 100%;">
-                <highchart id='{{graphController.chartId}}' config='graphController.chartConfig'></highchart>
+                <highchart id='{{::graphController.chartId}}' config='graphController.chartConfig'></highchart>
               </div>
             </div>
             <div layout='row'
@@ -164,7 +164,7 @@
                  style='width: 100%;'
                  ng-if='!graphController.componentContent.xAxis.locked'>
                 <md-input-container>
-                  <label>{{ 'graph.xMin' | translate }}</label>
+                  <label>{{ ::'graph.xMin' | translate }}</label>
                   <input type='number'
                        style='width: 60'
                        ng-model='graphController.xAxis.min'
@@ -174,7 +174,7 @@
                 </md-input-container>
                 <span style='width: {{graphController.xAxisLimitSpacerWidth}};'></span>
                 <md-input-container>
-                  <label>{{ 'graph.xMax' | translate }}</label>
+                  <label>{{ ::'graph.xMax' | translate }}</label>
                   <input type='number'
                        style='width: 60'
                        ng-model='graphController.xAxis.max'
@@ -185,16 +185,16 @@
               </div>
             </div>
           </div>
-          <div ng-if='graphController.isSaveButtonVisible || graphController.isSubmitButtonVisible'
+          <div ng-if='::graphController.isSaveOrSubmitButtonVisible()'
              class='component__actions' layout='row' layout-align='start center'>
             <md-button class='md-raised md-primary'
                    ng-click='graphController.saveButtonClicked()'
-                   ng-if='graphController.isSaveButtonVisible'
-                   ng-disabled='graphController.isDisabled || !graphController.isDirty'>{{ 'SAVE' | translate }}</md-button>
+                   ng-if='::graphController.isSaveButtonVisible'
+                   ng-disabled='graphController.isDisabled || !graphController.isDirty'>{{ ::'SAVE' | translate }}</md-button>
             <md-button class='md-raised md-primary'
                    ng-click='graphController.submitButtonClicked()'
-                   ng-if='graphController.isSubmitButtonVisible'
-                   ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty || graphController.isSubmitButtonDisabled'>{{ 'SUBMIT' | translate }}</md-button>
+                   ng-if='::graphController.isSubmitButtonVisible'
+                   ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty || graphController.isSubmitButtonDisabled'>{{ '::SUBMIT' | translate }}</md-button>
             <span ng-if='graphController.saveMessage.text'
                 class='component__actions__info md-caption'>
               {{graphController.saveMessage.text}} <span class='component__actions__more'><md-tooltip md-direction='top'>{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago='graphController.saveMessage.time'></span></span>
@@ -206,7 +206,7 @@
                    annotations='graphController.latestAnnotations'
                    max-score='graphController.componentContent.maxScore'></component-annotations>
       <div style="display:none">
-        <canvas id="{{graphController.hiddenCanvasId}}"></canvas>
+        <canvas id="{{::graphController.hiddenCanvasId}}"></canvas>
       </div>
     </div>
   </div>

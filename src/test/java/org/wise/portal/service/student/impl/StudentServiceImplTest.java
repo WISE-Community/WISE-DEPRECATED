@@ -256,5 +256,4 @@ public class StudentServiceImplTest extends TestCase {
 	}
 
 	// TODO Hiroki test getStudentRunInfo()
-
 }

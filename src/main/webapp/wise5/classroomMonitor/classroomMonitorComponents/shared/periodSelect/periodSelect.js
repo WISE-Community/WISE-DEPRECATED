@@ -1,19 +1,11 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var PeriodSelectController = function () {
-    function PeriodSelectController($filter, $scope, ProjectService, StudentStatusService, TeacherDataService) {
-        var _this = this;
-
-        _classCallCheck(this, PeriodSelectController);
-
+class PeriodSelectController {
+    constructor($filter,
+                $scope,
+                ProjectService,
+                StudentStatusService,
+                TeacherDataService) {
         this.$filter = $filter;
         this.$scope = $scope;
         this.ProjectService = ProjectService;
@@ -21,7 +13,7 @@ var PeriodSelectController = function () {
         this.TeacherDataService = TeacherDataService;
         this.$translate = this.$filter('translate');
 
-        var startNodeId = this.ProjectService.getStartNodeId();
+        let startNodeId = this.ProjectService.getStartNodeId();
         this.rootNodeId = this.ProjectService.getRootNode(startNodeId).id;
 
         this.currentPeriod = null;
@@ -31,109 +23,115 @@ var PeriodSelectController = function () {
         /**
          * Listen for current period changed event
          */
-        this.$scope.$on('currentPeriodChanged', function (event, args) {
-            _this.currentPeriod = args.currentPeriod;
+        this.$scope.$on('currentPeriodChanged', (event, args) => {
+            this.currentPeriod = args.currentPeriod;
         });
+    };
+
+    /**
+     * Initialize the periods
+     */
+    initializePeriods() {
+        this.periods = this.TeacherDataService.getPeriods();
+
+        // set the current period if it hasn't been set yet
+        if (this.getCurrentPeriod()) {
+            this.currentPeriod = this.getCurrentPeriod();
+        } else {
+            if (this.periods != null && this.periods.length > 0) {
+                // set it to the all periods option
+                this.setCurrentPeriod(this.periods[0]);
+            }
+        }
+
+        // set the number of workgroups in each period
+        let n = this.periods.length;
+        for (let i = 0; i < n; i++) {
+            let period = this.periods[i];
+            let id = (i === 0) ? -1 : period.periodId;
+            let numWorkgroupsInPeriod = this.getNumberOfWorkgroupsInPeriod(id);
+
+            period.numWorkgroupsInPeriod = numWorkgroupsInPeriod;
+        }
     }
 
-    _createClass(PeriodSelectController, [{
-        key: 'initializePeriods',
+    /**
+     * The current period was changed
+     */
+    currentPeriodChanged() {
+        this.setCurrentPeriod(this.currentPeriod);
+    }
 
+    /**
+     * Set the current period
+     * @param period the period object
+     */
+    setCurrentPeriod(period) {
+        this.TeacherDataService.setCurrentPeriod(period);
+    }
 
-        /**
-         * Initialize the periods
-         */
-        value: function initializePeriods() {
-            this.periods = this.TeacherDataService.getPeriods();
+    /**
+     * Get the current period
+     */
+    getCurrentPeriod() {
+        return this.TeacherDataService.getCurrentPeriod();
+    }
 
-            // set the current period if it hasn't been set yet
-            if (this.getCurrentPeriod()) {
-                this.currentPeriod = this.getCurrentPeriod();
-            } else {
-                if (this.periods != null && this.periods.length > 0) {
-                    // set it to the all periods option
-                    this.setCurrentPeriod(this.periods[0]);
-                }
-            }
+    /**
+     * Get the number of workgroups in period with the given periodId
+     * @param periodId the period id
+     * @returns the number of workgroups that are in the period
+     */
+    getNumberOfWorkgroupsInPeriod(periodId) {
+        // get and return the number of workgroups that are in the period
+        return this.StudentStatusService.getWorkgroupIdsOnNode(this.rootNodeId, periodId).length;
+    }
 
-            // set the number of workgroups in each period
-            var n = this.periods.length;
-            for (var i = 0; i < n; i++) {
-                var period = this.periods[i];
-                var id = i === 0 ? -1 : period.periodId;
-                var numWorkgroupsInPeriod = this.getNumberOfWorkgroupsInPeriod(id);
-
-                period.numWorkgroupsInPeriod = numWorkgroupsInPeriod;
-            }
+    getSelectedText() {
+        let text = '';
+        if (this.currentPeriod.periodId === -1) {
+            return this.currentPeriod.periodName;
+        } else {
+            return this.$translate('periodLabel', { name: this.currentPeriod.periodName });
         }
+    }
+}
 
-        /**
-         * The current period was changed
-         */
+PeriodSelectController.$inject = [
+    '$filter',
+    '$scope',
+    'ProjectService',
+    'StudentStatusService',
+    'TeacherDataService'
+];
 
-    }, {
-        key: 'currentPeriodChanged',
-        value: function currentPeriodChanged() {
-            this.setCurrentPeriod(this.currentPeriod);
-        }
-
-        /**
-         * Set the current period
-         * @param period the period object
-         */
-
-    }, {
-        key: 'setCurrentPeriod',
-        value: function setCurrentPeriod(period) {
-            this.TeacherDataService.setCurrentPeriod(period);
-        }
-
-        /**
-         * Get the current period
-         */
-
-    }, {
-        key: 'getCurrentPeriod',
-        value: function getCurrentPeriod() {
-            return this.TeacherDataService.getCurrentPeriod();
-        }
-
-        /**
-         * Get the number of workgroups in period with the given periodId
-         * @param periodId the period id
-         * @returns the number of workgroups that are in the period
-         */
-
-    }, {
-        key: 'getNumberOfWorkgroupsInPeriod',
-        value: function getNumberOfWorkgroupsInPeriod(periodId) {
-            // get and return the number of workgroups that are in the period
-            return this.StudentStatusService.getWorkgroupIdsOnNode(this.rootNodeId, periodId).length;
-        }
-    }, {
-        key: 'getSelectedText',
-        value: function getSelectedText() {
-            var text = '';
-            if (this.currentPeriod.periodId === -1) {
-                return this.currentPeriod.periodName;
-            } else {
-                return this.$translate('periodLabel', { name: this.currentPeriod.periodName });
-            }
-        }
-    }]);
-
-    return PeriodSelectController;
-}();
-
-PeriodSelectController.$inject = ['$filter', '$scope', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
-
-var PeriodSelect = {
+const PeriodSelect = {
     bindings: {
         customClass: '<'
     },
-    template: '<md-select md-theme="default"\n                    ng-model="$ctrl.currentPeriod"\n                    ng-model-options="{ trackBy: \'$value.periodId\' }"\n                    ng-class="$ctrl.customClass"\n                    ng-change="$ctrl.currentPeriodChanged()"\n                    aria-label="{{ \'selectPeriod\' | translate }}"\n                    md-selected-text="$ctrl.getSelectedText()">\n            <md-option ng-repeat="period in $ctrl.periods"\n                       ng-value="period"\n                       ng-disabled="!period.numWorkgroupsInPeriod">\n                <span ng-if="period.periodId === -1" translate="allPeriods"></span>\n                <span ng-if="period.periodId != -1" translate="periodLabel" translate-value-name="{{ period.periodName }}"></span>\n                <span class="text-secondary">\n                    (<ng-pluralize count="period.numWorkgroupsInPeriod"\n                        when="{\'0\': \'{{ &quot;numberOfTeams_0&quot; | translate }}\',\n                            \'one\': \'{{ &quot;numberOfTeams_1&quot; | translate }}\',\n                            \'other\': \'{{ &quot;numberOfTeams_other&quot; | translate:{count: period.numWorkgroupsInPeriod} }}\'}">\n                    </ng-pluralize>)\n                </span>\n            </md-option>\n        </md-select>',
+    template:
+        `<md-select md-theme="default"
+                    ng-model="$ctrl.currentPeriod"
+                    ng-model-options="{ trackBy: '$value.periodId' }"
+                    ng-class="$ctrl.customClass"
+                    ng-change="$ctrl.currentPeriodChanged()"
+                    aria-label="{{ ::'selectPeriod' | translate }}"
+                    md-selected-text="$ctrl.getSelectedText()">
+            <md-option ng-repeat="period in $ctrl.periods"
+                       ng-value="period"
+                       ng-disabled="!period.numWorkgroupsInPeriod">
+                <span ng-if="period.periodId === -1" translate="allPeriods"></span>
+                <span ng-if="period.periodId != -1" translate="periodLabel" translate-value-name="{{ period.periodName }}"></span>
+                <span class="text-secondary">
+                    (<ng-pluralize count="period.numWorkgroupsInPeriod"
+                        when="{'0': '{{ &quot;numberOfTeams_0&quot; | translate }}',
+                            'one': '{{ &quot;numberOfTeams_1&quot; | translate }}',
+                            'other': '{{ &quot;numberOfTeams_other&quot; | translate:{count: period.numWorkgroupsInPeriod} }}'}">
+                    </ng-pluralize>)
+                </span>
+            </md-option>
+        </md-select>`,
     controller: PeriodSelectController
 };
 
-exports.default = PeriodSelect;
-//# sourceMappingURL=periodSelect.js.map
+export default PeriodSelect;

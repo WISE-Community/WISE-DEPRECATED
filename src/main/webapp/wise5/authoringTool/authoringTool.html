@@ -13,7 +13,7 @@
 <div disable-delete-keypress
     ng-mousemove='authoringToolController.mouseMoved()'
     role="main" layout="column" layout-fill>
-  <top-bar logo-path="{{authoringToolController.logoPath}}"
+  <top-bar logo-path="{{::authoringToolController.logoPath}}"
        project-id="authoringToolController.projectId"
        project-title="authoringToolController.projectTitle"
        run-id="authoringToolController.runId"></top-bar>
@@ -40,7 +40,6 @@
   </side-menu>
 </div>
 
-<!-- TODO: load below using jspm -->
 <script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script>
-<script src="wise5/lib/summernote/dist/summernote.js"></script>
+<script src="wise5/lib/summernote/dist/summernote.min.js"></script>
 <script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script>

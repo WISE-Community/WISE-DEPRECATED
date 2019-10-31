@@ -1,20 +1,16 @@
-'use strict';
+'use strict'
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+class ManageStudentsController {
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    constructor(ConfigService) {
+        const runId = ConfigService.getRunId();
+        const contextPath = ConfigService.getConfigParam('contextPath');
+        this.iframeSrc = `${contextPath}/teacher/management/viewmystudents?runId=${runId}`;
+    }
+}
 
-var ManageStudentsController = function ManageStudentsController(ConfigService) {
-    _classCallCheck(this, ManageStudentsController);
+ManageStudentsController.$inject = [
+  'ConfigService'
+];
 
-    var runId = ConfigService.getRunId();
-    var contextPath = ConfigService.getConfigParam('contextPath');
-    this.iframeSrc = contextPath + '/teacher/management/viewmystudents?runId=' + runId;
-};
-
-ManageStudentsController.$inject = ['ConfigService'];
-
-exports.default = ManageStudentsController;
-//# sourceMappingURL=manageStudentsController.js.map
+export default ManageStudentsController;

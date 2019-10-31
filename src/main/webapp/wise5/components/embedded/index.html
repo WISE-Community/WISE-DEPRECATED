@@ -4,15 +4,17 @@
       var embeddedController = embeddedController;
     </script>
     <div>
-      <div ng-switch='embeddedController.mode'>
+      <div ng-switch='::embeddedController.mode'>
         <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
           <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
-            <div class='component--grading__response__content'>
+            <div class='component--grading__response__content'
+                style='width: {{embeddedController.width}}; height: {{embeddedController.height}};'>
               <iframe ng-if='embeddedController.$scope.componentState'
                   ng-attr-id='{{embeddedController.embeddedApplicationIFrameId}}'
                   ng-src='{{embeddedController.url}}'
                   class='embedded-content__iframe'
-                  style='width: {{embeddedController.width}}; height: {{embeddedController.height}};'></iframe>
+                  style='width: 100%; height: 100%'>
+              </iframe>
             </div>
             <span flex></span>
             <component-revisions-info node-id='embeddedController.nodeId'
@@ -36,29 +38,33 @@
           <div style='text-align: center'>
             <md-button class='md-accent md-primary'
                   ng-click='embeddedController.snipModel($event)'
-                  ng-if='embeddedController.isAddToNotebookEnabled()'
+                  ng-if='::embeddedController.isAddToNotebookEnabled()'
                   ng-disabled='embeddedController.isDisabled'>
-              <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
+              <md-icon> note_add </md-icon>  {{ ::'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
             </md-button>
             <br/>
-            <iframe ng-attr-id='{{"componentApp_" + embeddedController.componentId}}' ng-src='{{embeddedController.url}}'
-                ng-onload='embeddedController.iframeLoaded(contentLocation)'
-                class='embedded-content__iframe'
-                style='width: {{embeddedController.width}}; height: {{embeddedController.height}};'></iframe>
+            <div style='width: {{::embeddedController.width}}; height: {{::embeddedController.height}};'>
+              <iframe ng-attr-id='{{"componentApp_" + embeddedController.componentId}}'
+                  ng-src='{{embeddedController.url}}'
+                  ng-onload='embeddedController.iframeLoaded(contentLocation)'
+                  class='embedded-content__iframe'
+                  style='width: 100%; height: 100%;'>
+              </iframe>
+            </div>
           </div>
-          <div ng-if='embeddedController.isSaveButtonVisible || embeddedController.isSubmitButtonVisible'
+          <div ng-if='::embeddedController.isSaveOrSubmitButtonVisible()'
              class='component__actions' layout='row' layout-align='start center'>
             <md-button class='md-raised md-primary'
                    ng-class='{"md-raised": !embeddedController.isSubmitButtonVisible}'
                    ng-click='embeddedController.saveButtonClicked()'
                    ng-disabled='embeddedController.isDisabled || !embeddedController.isDirty'
-                   ng-if='embeddedController.isSaveButtonVisible'
+                   ng-if='::embeddedController.isSaveButtonVisible'
                    aria-label='Save'
                    translate='SAVE'></md-button>
             <md-button class='md-raised md-primary'
                    ng-click='embeddedController.submitButtonClicked()'
                    ng-disabled='embeddedController.isDisabled || !embeddedController.isSubmitDirty'
-                   ng-if='embeddedController.isSubmitButtonVisible'
+                   ng-if='::embeddedController.isSubmitButtonVisible'
                    aria-label='Submit'
                    translate='SUBMIT'></md-button>
             <span ng-if='embeddedController.saveMessage.text'

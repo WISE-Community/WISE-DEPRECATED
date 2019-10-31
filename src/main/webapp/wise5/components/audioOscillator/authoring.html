@@ -12,26 +12,26 @@
     <div class='advancedAuthoringDiv'
          ng-if='audioOscillatorController.showAdvancedAuthoring'>
       <div>
-        <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+        <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='audioOscillatorController.authoringComponentContent.showSaveButton'
                      ng-change='audioOscillatorController.authoringViewComponentChanged()'>
-          {{ 'SHOW_SAVE_BUTTON' | translate }}
+          {{ ::'SHOW_SAVE_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='audioOscillatorController.authoringComponentContent.showSubmitButton'
                      ng-change='audioOscillatorController.authoringViewComponentChanged()'>
-          {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+          {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
                             ng-if='audioOscillatorController.authoringComponentContent.showSubmitButton'>
-          <label>{{ 'MAX_SUBMIT' | translate }}</label>
+          <label>{{ ::'MAX_SUBMIT' | translate }}</label>
           <input type='number'
                  ng-model='audioOscillatorController.authoringComponentContent.maxSubmitCount'
                  ng-model-options='{ debounce: 1000 }'
@@ -40,7 +40,7 @@
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ 'MAX_SCORE' | translate }}</label>
+          <label>{{ ::'MAX_SCORE' | translate }}</label>
           <input type='number'
                  ng-model='audioOscillatorController.authoringComponentContent.maxScore'
                  ng-model-options='{ debounce: 1000 }'
@@ -49,7 +49,7 @@
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+          <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
           <input type='number'
                  ng-model='audioOscillatorController.authoringComponentContent.componentWidth'
                  ng-model-options='{ debounce: 1000 }'
@@ -304,7 +304,7 @@
     <div>
       <h5>{{ 'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='audioOscillatorController.mode'>
+    <div ng-switch='::audioOscillatorController.mode'>
       <div ng-switch-when='grading|gradingRevision'
            ng-switch-when-separator='|'
            layout='row'
@@ -325,7 +325,7 @@
                                     component-id='audioOscillatorController.componentId'
                                     to-workgroup-id='workgroupId'
                                     component-state='componentState'
-                                    active='audioOscillatorController.mode === "grading"'>
+                                    active='::audioOscillatorController.mode === "grading"'>
           </component-revisions-info>
         </div>
         <div flex='100'
@@ -337,7 +337,7 @@
                              from-workgroup-id='teacherWorkgroupId'
                              to-workgroup-id='workgroupId'
                              component-state-id='componentState.id'
-                             show-all-annotations='audioOscillatorController.mode !== "grading"'
+                             show-all-annotations='::audioOscillatorController.mode !== "grading"'
                              is-disabled='audioOscillatorController.mode !== "grading"'>
           </component-grading>
         </div>

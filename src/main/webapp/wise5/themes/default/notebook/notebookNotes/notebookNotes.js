@@ -1,21 +1,11 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var NotebookNotesController = function () {
-  function NotebookNotesController($filter, $rootScope, $scope, NotebookService, ProjectService) {
-    var _this = this;
-
-    _classCallCheck(this, NotebookNotesController);
-
+class NotebookNotesController {
+  constructor($filter,
+              $rootScope,
+              $scope,
+              NotebookService,
+              ProjectService) {
     this.$translate = $filter('translate');
     this.$rootScope = $rootScope;
     this.NotebookService = NotebookService;
@@ -25,226 +15,156 @@ var NotebookNotesController = function () {
     this.$scope = $scope;
     this.publicNotebookItems = this.NotebookService.publicNotebookItems;
     this.groupNameToGroup = {};
+  }
 
-    var personalGroup = {
+  $onInit() {
+    const personalGroup = {
       title: 'Personal',
       name: 'private',
       isEditAllowed: true,
       items: []
     };
     this.groupNameToGroup['private'] = personalGroup;
-
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = Object.entries(this.notebook.items)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var _step$value = _slicedToArray(_step.value, 2),
-            personalItemKey = _step$value[0],
-            personalItemValue = _step$value[1];
-
-        if (personalItemValue.last().type === 'note') {
-          personalGroup.items.push(personalItemValue.last());
-        }
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
+    for (const [personalItemKey, personalItemValue] of Object.entries(this.notebook.items)) {
+      if (personalItemValue.last().type === 'note') {
+        personalGroup.items.push(personalItemValue.last());
       }
     }
-
     this.groups.push(personalGroup);
 
-    var spaces = this.ProjectService.getSpaces();
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-      for (var _iterator2 = spaces[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-        var space = _step2.value;
-
-        if (space.isShowInNotebook) {
-          var spaceGroup = {
-            title: space.name,
-            name: space.id,
-            isEditAllowed: true,
-            items: []
-          };
-          this.groupNameToGroup[space.id] = spaceGroup;
-          this.groups.push(spaceGroup);
-        }
-      }
-    } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-          _iterator2.return();
-        }
-      } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
-        }
+    const spaces = this.ProjectService.getSpaces();
+    for (let space of spaces) {
+      if (space.isShowInNotebook) {
+        const spaceGroup = {
+          title: space.name,
+          name: space.id,
+          isEditAllowed: true,
+          items: []
+        };
+        this.groupNameToGroup[space.id] = spaceGroup;
+        this.groups.push(spaceGroup);
       }
     }
 
-    this.$onInit = function () {
-      _this.color = _this.config.itemTypes.note.label.color;
+    this.$onInit = () => {
+      this.color = this.config.itemTypes.note.label.color;
     };
 
-    this.$onChanges = function (changes) {
+    this.$onChanges = (changes) => {
       if (changes.notebook) {
-        _this.notebook = angular.copy(changes.notebook.currentValue);
-        _this.hasNotes = Object.keys(_this.notebook.items).length ? true : false;
+        this.notebook = angular.copy(changes.notebook.currentValue);
+        this.hasNotes = Object.keys(this.notebook.items).length ? true : false;
       }
     };
 
-    this.$scope.$on('openNotebook', function (event, args) {
-      _this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
+    this.$scope.$on('openNotebook', (event, args) => {
+      this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
     });
 
-    this.$rootScope.$on('publicNotebookItemsRetrieved', function (event, args) {
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
-
-      try {
-        for (var _iterator3 = _this.groups[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var group = _step3.value;
-
-          if (group.name !== 'private') {
-            group.items = _this.publicNotebookItems[group.name];
-          }
-        }
-      } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return) {
-            _iterator3.return();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
+    this.$rootScope.$on('publicNotebookItemsRetrieved', (event, args) => {
+      for (let group of this.groups) {
+        if (group.name !== 'private') {
+          group.items = this.publicNotebookItems[group.name];
         }
       }
     });
 
-    this.$rootScope.$on('notebookUpdated', function (event, args) {
-      var notebookItem = args.notebookItem;
-      if ((notebookItem.groups == null || notebookItem.groups.length === 0) && notebookItem.type === 'note') {
-        _this.updatePrivateNotebookNote(notebookItem);
+    this.$rootScope.$on('notebookUpdated', (event, args) => {
+      let notebookItem = args.notebookItem;
+      if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
+          notebookItem.type === 'note') {
+        this.updatePrivateNotebookNote(notebookItem);
       }
       if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
-        _this.updatePublicNotebookNote(notebookItem);
+        this.updatePublicNotebookNote(notebookItem);
       }
     });
   }
 
-  _createClass(NotebookNotesController, [{
-    key: 'updatePrivateNotebookNote',
-    value: function updatePrivateNotebookNote(notebookItem) {
-      this.updateNotebookNote(this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
-      if (this.groupNameToGroup['public'] != null) {
-        this.removeNotebookNote(this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId);
-      }
+  updatePrivateNotebookNote(notebookItem) {
+    this.updateNotebookNote(this.groupNameToGroup['private'],
+        notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+    if (this.groupNameToGroup['public'] != null) {
+      this.removeNotebookNote(this.groupNameToGroup['public'],
+        notebookItem.localNotebookItemId, notebookItem.workgroupId);
     }
-  }, {
-    key: 'updatePublicNotebookNote',
-    value: function updatePublicNotebookNote(notebookItem) {
-      this.updateNotebookNote(this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
-      this.removeNotebookNote(this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId);
-    }
-  }, {
-    key: 'updateNotebookNote',
-    value: function updateNotebookNote(group, localNotebookItemId, workgroupId, notebookItem) {
-      var added = false;
-      var items = group.items;
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        if (item.localNotebookItemId == localNotebookItemId && item.workgroupId == workgroupId) {
-          items[i] = notebookItem;
-          added = true;
-        }
-      }
-      if (!added) {
-        items.push(notebookItem);
-      }
-    }
-  }, {
-    key: 'removeNotebookNote',
-    value: function removeNotebookNote(group, localNotebookItemId, workgroupId) {
-      var items = group.items;
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        if (item.localNotebookItemId == localNotebookItemId && item.workgroupId == workgroupId) {
-          items.splice(i, 1);
-          i--;
-        }
-      }
-    }
-  }, {
-    key: 'getTitle',
-    value: function getTitle() {
-      var title = '';
-      if (this.insertMode) {
-        title = this.$translate('selectItemToInsert');
-      } else {
-        title = this.config.itemTypes.note.label.link;
-      }
-      return title;
-    }
-  }, {
-    key: 'editItem',
-    value: function editItem($ev, note) {
-      this.$rootScope.$broadcast('editNote', { note: note, ev: $ev });
-    }
-  }, {
-    key: 'select',
-    value: function select($ev, note) {
-      if (this.insertMode) {
-        this.onInsert({ note: note, event: $ev });
-      } else {
-        this.editItem($ev, note);
-      }
-    }
-  }, {
-    key: 'edit',
-    value: function edit(itemId) {
-      alert('Edit the item: ' + itemId);
-    }
-  }, {
-    key: 'close',
-    value: function close($event) {
-      this.onClose($event);
-    }
-  }, {
-    key: 'cancelInsertMode',
-    value: function cancelInsertMode($event) {
-      this.onSetInsertMode({ value: false });
-    }
-  }]);
+  }
 
-  return NotebookNotesController;
-}();
+  updatePublicNotebookNote(notebookItem) {
+    this.updateNotebookNote(this.groupNameToGroup['public'],
+        notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+    this.removeNotebookNote(this.groupNameToGroup['private'],
+        notebookItem.localNotebookItemId, notebookItem.workgroupId);
+  }
 
-NotebookNotesController.$inject = ['$filter', '$rootScope', '$scope', 'NotebookService', 'ProjectService'];
+  updateNotebookNote(group, localNotebookItemId, workgroupId, notebookItem) {
+    let added = false;
+    let items = group.items;
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      if (item.localNotebookItemId == localNotebookItemId && item.workgroupId == workgroupId) {
+        items[i] = notebookItem;
+        added = true;
+      }
+    }
+    if (!added) {
+      items.push(notebookItem);
+    }
+  }
 
-var NotebookNotes = {
+  removeNotebookNote(group, localNotebookItemId, workgroupId) {
+    let items = group.items;
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      if (item.localNotebookItemId == localNotebookItemId && item.workgroupId == workgroupId) {
+        items.splice(i, 1);
+        i--;
+      }
+    }
+  }
+
+  getTitle() {
+    if (this.insertMode) {
+      return this.$translate('selectItemToInsert');
+    } else {
+      return this.config.itemTypes.note.label.link;
+    }
+  }
+
+  editItem($ev, note) {
+    this.$rootScope.$broadcast('editNote', {note: note, ev: $ev});
+  }
+
+  select($ev, note) {
+    if (this.insertMode) {
+      this.onInsert({note: note, event: $ev});
+    } else {
+      this.editItem($ev, note);
+    }
+  }
+
+  edit(itemId) {
+    alert(`Edit the item: ${itemId}`);
+  }
+
+  close($event) {
+    this.onClose($event);
+  }
+
+  cancelInsertMode($event) {
+    this.onSetInsertMode({value: false});
+  }
+}
+
+NotebookNotesController.$inject = [
+  '$filter',
+  '$rootScope',
+  '$scope',
+  'NotebookService',
+  'ProjectService'
+];
+
+const NotebookNotes = {
   bindings: {
     config: '<',
     insertMode: '<',
@@ -257,9 +177,79 @@ var NotebookNotes = {
     onSetInsertMode: '&',
     mode: '@'
   },
-  template: '<md-sidenav ng-if="$ctrl.mode !== \'classroomMonitor\'" md-component-id="notes"\n        md-is-open="$ctrl.notesVisible"\n        md-whiteframe="4"\n        md-disable-backdrop\n        layout="column"\n        class="md-sidenav-right notebook-sidebar">\n      <md-toolbar>\n          <div class="md-toolbar-tools"\n               ng-class="{\'insert-mode\': $ctrl.insertMode}"\n               style="background-color: {{$ctrl.color}};">\n              {{$ctrl.getTitle()}}\n              <span flex></span>\n              <md-button ng-click="$ctrl.close($event)"\n                  class="md-icon-button"\n                  aria-label="{{ \'Close\' | translate }}">\n                <md-icon>close</md-icon>\n              </md-button>\n          </div>\n      </md-toolbar>\n      <md-content>\n      <md-tabs md-selected="$ctrl.selectedTabIndex" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>\n        <md-tab ng-repeat="group in $ctrl.groups"\n            ng-disabled="group.disabled"\n            label="{{group.title}}">\n          <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">\n              <div class="notebook-items" ng-class="{\'notebook-items--insert\': $ctrl.insertMode}" layout="row" layout-wrap>\n                <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>\n                <notebook-item ng-repeat="note in group.items"\n                    config="$ctrl.config"\n                    group="{{group.name}}"\n                    item-id="note.localNotebookItemId"\n                    is-edit-allowed="group.isEditAllowed"\n                    is-choose-mode="$ctrl.insertMode"\n                    note="note"\n                    workgroup-id="note.workgroupId"\n                    on-select="$ctrl.select($ev, note)"\n                    style="display: flex;"\n                    flex="100"\n                    flex-gt-xs="50">\n                </notebook-item>\n            </div>\n          </div>\n        </md-tab>\n      </md-tabs>\n      </md-content>\n    </md-sidenav>\n    <div ng-if="$ctrl.mode === \'classroomMonitor\'" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>\n      <div ng-repeat="group in $ctrl.groups"\n          ng-disabled="group.disabled"\n          label="{{group.title}}">\n        <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">\n            <div class="notebook-items" ng-class="{\'notebook-items--insert\': $ctrl.insertMode}" layout="row" layout-wrap>\n              <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>\n              <notebook-item ng-repeat="note in group.items"\n                  config="$ctrl.config"\n                  group="{{group.name}}"\n                  item-id="note.localNotebookItemId"\n                  is-edit-allowed="group.isEditAllowed"\n                  is-choose-mode="$ctrl.insertMode"\n                  note="note"\n                  workgroup-id="note.workgroupId"\n                  on-select="$ctrl.select($ev, note)"\n                  style="display: flex;"\n                  flex="100"\n                  flex-gt-xs="50">\n              </notebook-item>\n          </div>\n        </div>\n      </div>\n    </div>\n    ',
+  template:
+    `<md-sidenav ng-if="::$ctrl.mode !== 'classroomMonitor'" md-component-id="notes"
+        md-is-open="$ctrl.notesVisible"
+        md-whiteframe="4"
+        md-disable-backdrop
+        layout="column"
+        class="md-sidenav-right notebook-sidebar">
+      <md-toolbar>
+          <div class="md-toolbar-tools"
+               ng-class="{'insert-mode': $ctrl.insertMode}"
+               style="background-color: {{$ctrl.color}};">
+              {{$ctrl.getTitle()}}
+              <span flex></span>
+              <md-button ng-click="$ctrl.close($event)"
+                  class="md-icon-button"
+                  aria-label="{{ ::'Close' | translate }}">
+                <md-icon>close</md-icon>
+              </md-button>
+          </div>
+      </md-toolbar>
+      <md-content>
+      <md-tabs md-selected="$ctrl.selectedTabIndex" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
+        <md-tab ng-repeat="group in $ctrl.groups"
+            ng-disabled="::group.disabled"
+            label="{{::group.title}}">
+          <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
+              <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
+                <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{::$ctrl.config.itemTypes.note.label.plural}}"></div>
+                <notebook-item ng-repeat="note in group.items"
+                    config="$ctrl.config"
+                    group="{{::group.name}}"
+                    item-id="note.localNotebookItemId"
+                    is-edit-allowed="group.isEditAllowed"
+                    is-choose-mode="$ctrl.insertMode"
+                    note="note"
+                    workgroup-id="note.workgroupId"
+                    on-select="$ctrl.select($ev, note)"
+                    style="display: flex;"
+                    flex="100"
+                    flex-gt-xs="50">
+                </notebook-item>
+            </div>
+          </div>
+        </md-tab>
+      </md-tabs>
+      </md-content>
+    </md-sidenav>
+    <div ng-if="::$ctrl.mode === 'classroomMonitor'" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
+      <div ng-repeat="group in $ctrl.groups"
+          ng-disabled="::group.disabled"
+          label="{{group.title}}">
+        <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
+            <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
+              <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>
+              <notebook-item ng-repeat="note in group.items"
+                  config="$ctrl.config"
+                  group="{{group.name}}"
+                  item-id="note.localNotebookItemId"
+                  is-edit-allowed="group.isEditAllowed"
+                  is-choose-mode="$ctrl.insertMode"
+                  note="note"
+                  workgroup-id="note.workgroupId"
+                  on-select="$ctrl.select($ev, note)"
+                  style="display: flex;"
+                  flex="100"
+                  flex-gt-xs="50">
+              </notebook-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    `,
   controller: NotebookNotesController
 };
 
-exports.default = NotebookNotes;
-//# sourceMappingURL=notebookNotes.js.map
+export default NotebookNotes;
