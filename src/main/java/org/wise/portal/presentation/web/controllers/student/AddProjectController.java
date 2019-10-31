@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.project.impl.AddProjectParameters;
 import org.wise.portal.domain.project.impl.Projectcode;
@@ -97,6 +98,8 @@ public class AddProjectController {
     } catch (StudentUserAlreadyAssociatedWithRunException se) {
       result.rejectValue("projectcode", "student.index.error.studentAlreadyAssociatedWithRun");
       return modelAndView;
+    } catch (RunHasEndedException e) {
+      result.rejectValue("projectcode", "student.index.error.runHasEnded");
     }
     return modelAndView;
   }

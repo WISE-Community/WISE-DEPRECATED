@@ -36,7 +36,9 @@ import java.util.TreeSet;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.group.Group;
@@ -115,10 +117,10 @@ public class StudentServiceImplTest extends TestCase {
 		projectcode = null;		
 		studentService = null;
 	}
-	
+
 	public void testAddStudentToRun_success() 
 	     throws ObjectNotFoundException, PeriodNotFoundException, 
-	     StudentUserAlreadyAssociatedWithRunException {
+	     StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
   	    expect(mockRunService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
   	    replay(mockRunService);
   	    Group period = run.getPeriodByName(PERIODNAME);
@@ -150,6 +152,8 @@ public class StudentServiceImplTest extends TestCase {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
+		} catch (RunHasEndedException e) {
+			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    
   	    verify(mockRunService);
@@ -178,6 +182,8 @@ public class StudentServiceImplTest extends TestCase {
 		} catch (PeriodNotFoundException pe) {
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
+		} catch (RunHasEndedException e) {
+			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    
   	    verify(mockRunService);
@@ -203,6 +209,8 @@ public class StudentServiceImplTest extends TestCase {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
+		} catch (RunHasEndedException e) {
+			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    verify(mockRunService);
   	    verify(mockGroupService);
@@ -221,6 +229,8 @@ public class StudentServiceImplTest extends TestCase {
 		} catch (PeriodNotFoundException pe) {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
+		} catch (RunHasEndedException e) {
+			fail("RunHasEndedException was not expected to be thrown.");
 		}
   	    verify(mockRunService);
 	}
@@ -255,7 +265,5 @@ public class StudentServiceImplTest extends TestCase {
 
 		verify(mockGroupService);
 	}
-
 	// TODO Hiroki test getStudentRunInfo()
-	
 }
