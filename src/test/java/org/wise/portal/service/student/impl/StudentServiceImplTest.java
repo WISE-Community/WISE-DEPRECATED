@@ -44,6 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -124,7 +125,7 @@ public class StudentServiceImplTest extends TestCase {
   @Test
 	public void testAddStudentToRun_success()
       throws ObjectNotFoundException, PeriodNotFoundException,
-      StudentUserAlreadyAssociatedWithRunException {
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
     EasyMock.expect(runService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
     EasyMock.replay(runService);
     Group period = run.getPeriodByName(PERIODNAME);
@@ -151,6 +152,8 @@ public class StudentServiceImplTest extends TestCase {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
+		} catch (RunHasEndedException e) {
+			fail("RunHasEndedException was not expected to be thrown.");
 		}
     verify(runService);
     verify(groupService);
@@ -176,6 +179,8 @@ public class StudentServiceImplTest extends TestCase {
 		} catch (PeriodNotFoundException pe) {
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
 			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
+		} catch (RunHasEndedException e) {
+			fail("RunHasEndedException was not expected to be thrown.");
 		}
     verify(runService);
     verify(groupService);
@@ -198,7 +203,9 @@ public class StudentServiceImplTest extends TestCase {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException e) {
       fail("StudentAlreadyAssociatedWithRunException was not expected to be thrown");
-    }
+    } catch (RunHasEndedException e) {
+			fail("RunHasEndedException was not expected to be thrown.");
+		}
     verify(runService);
     verify(groupService);
     reset(runService);
@@ -215,6 +222,8 @@ public class StudentServiceImplTest extends TestCase {
 		} catch (PeriodNotFoundException pe) {
 			fail("PeriodNotFoundException was not expected to be thrown");
 		} catch (StudentUserAlreadyAssociatedWithRunException se) {
+		} catch (RunHasEndedException e) {
+			fail("RunHasEndedException was not expected to be thrown.");
 		}
     verify(runService);
 	}

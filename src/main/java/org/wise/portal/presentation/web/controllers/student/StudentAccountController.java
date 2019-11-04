@@ -54,6 +54,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -174,6 +175,9 @@ public class StudentAccountController {
       } catch (StudentUserAlreadyAssociatedWithRunException e) {
         bindingResult.rejectValue("projectCode",
             "student.index.error.studentAlreadyAssociatedWithRun");
+        return "student/join";
+      } catch (RunHasEndedException e) {
+        bindingResult.rejectValue("projectCode", "student.index.error.RunHasEnded");
         return "student/join";
       }
       // if it reaches here, it means there were no issues, so we can exit the loop.
