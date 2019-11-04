@@ -1701,12 +1701,12 @@ class DataExportController {
     }
 
     previewProject() {
-        window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#/project/${this.ConfigService.getProjectId()}`);
+        window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.ConfigService.getProjectId()}`);
     }
 
     previewNode(node) {
         if (node != null) {
-            window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#/project/${this.ConfigService.getProjectId()}/${node.id}`);
+            window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.ConfigService.getProjectId()}/${node.id}`);
         }
     }
 
