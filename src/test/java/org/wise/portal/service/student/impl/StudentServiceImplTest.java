@@ -70,60 +70,60 @@ import junit.framework.TestCase;
 public class StudentServiceImplTest extends TestCase {
 
   @TestSubject
-	private StudentService studentService = new StudentServiceImpl();
+  private StudentService studentService = new StudentServiceImpl();
 
   @Mock
-	private RunService runService;
+  private RunService runService;
 
   @Mock
-	private GroupService groupService;
+  private GroupService groupService;
 
   @Mock
-	private WorkgroupService workgroupService;
+  private WorkgroupService workgroupService;
 
-	private User studentUser;
+  private User studentUser;
 
-	private Projectcode projectcode;
+  private Projectcode projectcode;
 
-	private final String RUNCODE = "falcon4432";
+  private final String RUNCODE = "falcon4432";
 
-	private final String PERIODNAME = "3";
+  private final String PERIODNAME = "3";
 
-	private final String NON_EXISTING_PERIODNAME = "4";
+  private final String NON_EXISTING_PERIODNAME = "4";
 
-	private Run run;
+  private Run run;
 
-	private final Long runId = new Long(3);
+  private final Long runId = new Long(3);
 
   @Before
   public void setUp() throws Exception {
-		super.setUp();
+    super.setUp();
     studentUser = new UserImpl();
     StudentUserDetails userDetails = new StudentUserDetails();
     userDetails.setUsername("spongebobs0101");
     studentUser.setUserDetails(userDetails);
-		projectcode = new Projectcode(RUNCODE, PERIODNAME);
-		run = new RunImpl();
-		Set<Group> periods = new TreeSet<Group>();
-		Group period3 = new PersistentGroup();
-		period3.setName(PERIODNAME);
-		periods.add(period3);
+    projectcode = new Projectcode(RUNCODE, PERIODNAME);
+    run = new RunImpl();
+    Set<Group> periods = new TreeSet<Group>();
+    Group period3 = new PersistentGroup();
+    period3.setName(PERIODNAME);
+    periods.add(period3);
     run.setPeriods(periods);
     run.setMaxWorkgroupSize(1);
-	}
+  }
 
   @After
-	public void tearDown() throws Exception {
-		super.tearDown();
-		runService = null;
-		groupService = null;
-		studentUser = null;
-		projectcode = null;
-		studentService = null;
-	}
+  public void tearDown() throws Exception {
+    super.tearDown();
+    runService = null;
+    groupService = null;
+    studentUser = null;
+    projectcode = null;
+    studentService = null;
+  }
 
   @Test
-	public void testAddStudentToRun_success()
+  public void testAddStudentToRun_success()
       throws ObjectNotFoundException, PeriodNotFoundException,
       StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
     EasyMock.expect(runService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
@@ -135,33 +135,33 @@ public class StudentServiceImplTest extends TestCase {
     studentService.addStudentToRun(studentUser, projectcode);
     verify(runService);
     verify(groupService);
-	}
+  }
 
   @Test
   public void testAddStudentToRun_RunNotFoundException()
-	    throws PeriodNotFoundException, ObjectNotFoundException {
+      throws PeriodNotFoundException, ObjectNotFoundException {
     expect(runService.retrieveRunByRuncode(RUNCODE))
         .andThrow(new ObjectNotFoundException(runId, Run.class));
     replay(runService);
     replay(groupService); // not expecting groupService to be called because of the exception
     try {
-			studentService.addStudentToRun(studentUser, projectcode);
-			fail("ObjectNotFoundException was expected to be thrown but was not");
-		} catch (ObjectNotFoundException oe) {
-		} catch (PeriodNotFoundException pe) {
-			fail("PeriodNotFoundException was not expected to be thrown");
-		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e) {
-			fail("RunHasEndedException was not expected to be thrown.");
-		}
+      studentService.addStudentToRun(studentUser, projectcode);
+      fail("ObjectNotFoundException was expected to be thrown but was not");
+    } catch (ObjectNotFoundException oe) {
+    } catch (PeriodNotFoundException pe) {
+      fail("PeriodNotFoundException was not expected to be thrown");
+    } catch (StudentUserAlreadyAssociatedWithRunException se) {
+      fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
+    } catch (RunHasEndedException e) {
+      fail("RunHasEndedException was not expected to be thrown.");
+    }
     verify(runService);
     verify(groupService);
-	}
+  }
 
   @Test
-	public void testAddStudentsToRun_PeriodNotFoundException()
-	    throws ObjectNotFoundException, PeriodNotFoundException {
+  public void testAddStudentsToRun_PeriodNotFoundException()
+      throws ObjectNotFoundException, PeriodNotFoundException {
     expect(runService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
     replay(runService);
     try {
@@ -173,18 +173,18 @@ public class StudentServiceImplTest extends TestCase {
     try {
       studentService.addStudentToRun(studentUser,
           new Projectcode(RUNCODE, NON_EXISTING_PERIODNAME));
-			fail("PeriodNotFoundException was expected to be thrown but was not");
-		} catch (ObjectNotFoundException oe) {
-			fail("ObjectNotFoundException was not expected to be thrown");
-		} catch (PeriodNotFoundException pe) {
-		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		} catch (RunHasEndedException e) {
-			fail("RunHasEndedException was not expected to be thrown.");
-		}
+      fail("PeriodNotFoundException was expected to be thrown but was not");
+    } catch (ObjectNotFoundException oe) {
+      fail("ObjectNotFoundException was not expected to be thrown");
+    } catch (PeriodNotFoundException pe) {
+    } catch (StudentUserAlreadyAssociatedWithRunException se) {
+      fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
+    } catch (RunHasEndedException e) {
+      fail("RunHasEndedException was not expected to be thrown.");
+    }
     verify(runService);
     verify(groupService);
-	}
+  }
 
   @Test
   public void testAddStudentsToRun_StudentAlreadyAssociatedWithRunException()
@@ -197,15 +197,15 @@ public class StudentServiceImplTest extends TestCase {
     replay(groupService);
     try {
       studentService.addStudentToRun(studentUser, projectcode);
-		} catch (ObjectNotFoundException oe) {
-			fail("ObjectNotFoundException was not expected to be thrown");
-		} catch (PeriodNotFoundException pe) {
-			fail("PeriodNotFoundException was not expected to be thrown");
-		} catch (StudentUserAlreadyAssociatedWithRunException e) {
+    } catch (ObjectNotFoundException oe) {
+      fail("ObjectNotFoundException was not expected to be thrown");
+    } catch (PeriodNotFoundException pe) {
+      fail("PeriodNotFoundException was not expected to be thrown");
+    } catch (StudentUserAlreadyAssociatedWithRunException e) {
       fail("StudentAlreadyAssociatedWithRunException was not expected to be thrown");
     } catch (RunHasEndedException e) {
-			fail("RunHasEndedException was not expected to be thrown.");
-		}
+      fail("RunHasEndedException was not expected to be thrown.");
+    }
     verify(runService);
     verify(groupService);
     reset(runService);
@@ -215,51 +215,51 @@ public class StudentServiceImplTest extends TestCase {
 
     // now, if we try to add the studentUser again, we expect
     // StudentUserAlreadyAssociatedWithRunException to be thrown
-		try {
+    try {
       studentService.addStudentToRun(studentUser, projectcode);
-		} catch (ObjectNotFoundException oe) {
-			fail("ObjectNotFoundException was not expected to be thrown");
-		} catch (PeriodNotFoundException pe) {
-			fail("PeriodNotFoundException was not expected to be thrown");
-		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-		} catch (RunHasEndedException e) {
-			fail("RunHasEndedException was not expected to be thrown.");
-		}
+    } catch (ObjectNotFoundException oe) {
+      fail("ObjectNotFoundException was not expected to be thrown");
+    } catch (PeriodNotFoundException pe) {
+      fail("PeriodNotFoundException was not expected to be thrown");
+    } catch (StudentUserAlreadyAssociatedWithRunException se) {
+    } catch (RunHasEndedException e) {
+      fail("RunHasEndedException was not expected to be thrown.");
+    }
     verify(runService);
-	}
+  }
 
   @Test
   public void testRemoveStudentFromRun_student_in_run() throws PeriodNotFoundException {
-		Group period = run.getPeriodByName(PERIODNAME);
-		period.addMember(studentUser);
-		Set<User> membersToRemove = new HashSet<User>();
-		membersToRemove.add(studentUser);
-		groupService.removeMembers(period, membersToRemove);
-		expectLastCall();
+    Group period = run.getPeriodByName(PERIODNAME);
+    period.addMember(studentUser);
+    Set<User> membersToRemove = new HashSet<User>();
+    membersToRemove.add(studentUser);
+    groupService.removeMembers(period, membersToRemove);
+    expectLastCall();
     replay(groupService);
     List<Workgroup> workgroupsForRun = new ArrayList<Workgroup>();
     Workgroup workgroup = new WorkgroupImpl();
     workgroupsForRun.add(workgroup);
-		EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, studentUser))
+    EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, studentUser))
         .andReturn(workgroupsForRun);
     Set<User> membersToRemoveFromWorkgroup = new HashSet<User>();
     membersToRemoveFromWorkgroup.add(studentUser);
     workgroupService.removeMembers(workgroup, membersToRemoveFromWorkgroup);
     expectLastCall();
-		EasyMock.replay(workgroupService);
-		studentService.removeStudentFromRun(studentUser, run);
-		verify(groupService);
-		verify(workgroupService);
-	}
+    EasyMock.replay(workgroupService);
+    studentService.removeStudentFromRun(studentUser, run);
+    verify(groupService);
+    verify(workgroupService);
+  }
 
   @Test
   public void testRemoveStudentFromRun_student_not_in_run() throws PeriodNotFoundException {
-		EasyMock.replay(runService);
-		EasyMock.replay(groupService);
-		EasyMock.replay(workgroupService);
-		studentService.removeStudentFromRun(studentUser, run);
+    EasyMock.replay(runService);
+    EasyMock.replay(groupService);
+    EasyMock.replay(workgroupService);
+    studentService.removeStudentFromRun(studentUser, run);
     verify(runService);
     verify(groupService);
-		verify(workgroupService);
-	}
+    verify(workgroupService);
+  }
 }
