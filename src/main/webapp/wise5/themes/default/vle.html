@@ -3,31 +3,25 @@
 <link rel="stylesheet" href="wise5/lib/hopscotch/dist/css/hopscotch.min.css" />
 <link rel="stylesheet" href="wise5/themes/default/style/angular-material.css" />
 <link rel="stylesheet" href="wise5/themes/default/style/vle.css" />
-<script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernote/dist/summernote.min.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernoteExtensions/summernote-ext-print.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/hopscotch/dist/js/hopscotch.min.js"></script> <!-- TODO: load using jspm -->
-
-<style>
-    {{vleController.projectStyle}}
-</style>
-
+<script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="wise5/lib/summernote/dist/summernote.min.js"></script>
+<script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script>
+<script src="wise5/lib/summernoteExtensions/summernote-ext-print.js"></script>
 <disable-delete-keypress>
     <listen-for-delete-keypress>
         <div ng-controller="ThemeController as themeCtrl" role="main" layout="column" layout-fill
              ng-mousemove="themeCtrl.mouseMoved()"
-             ng-class="{'notebook-enabled': vleController.notebookEnabled}">
-            <ng-include src="vleController.themePath + '/templates/topbar.html'"></ng-include>
+             ng-class="::{'notebook-enabled': vleController.notebookEnabled}">
+            <ng-include src="::vleController.themePath + '/templates/topbar.html'"></ng-include>
             <step-tools show-position="themeCtrl.numberProject"
-                        ng-show="themeCtrl.layoutState === 'node'"></step-tools>
+                        ng-if="themeCtrl.layoutState === 'node'"></step-tools>
             <md-content id="content" flex role="main" ui-scrollpoint-target
                         ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node'}" layout="column">
-                <div id="nav" ng-include="vleController.themePath + '/navigation/navigation.html'" ng-show="themeCtrl.layoutState === 'nav'"></div>
+                <div id="nav" ng-include="::vleController.themePath + '/navigation/navigation.html'" ng-show="themeCtrl.layoutState === 'nav'"></div>
                 <div id="node" ng-cloak ui-view="nodeView" ng-if="themeCtrl.layoutState === 'node'"></div>
             </md-content>
             <global-annotations></global-annotations>
-            <notebook workgroup-id="vleController.workgroupId"></notebook>
+            <notebook workgroup-id="::vleController.workgroupId"></notebook>
         </div>
     </listen-for-delete-keypress>
 </disable-delete-keypress>

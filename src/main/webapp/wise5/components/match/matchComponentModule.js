@@ -1,22 +1,18 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+import MatchService from './matchService';
+import MatchController from './matchController';
 
-var _matchService = require('./matchService');
+let matchComponentModule = angular.module('matchComponentModule', [
+    'pascalprecht.translate'
+  ])
+  .service('MatchService', MatchService)
+  .controller('MatchController', MatchController)
+  .config([
+    '$translatePartialLoaderProvider',
+    ($translatePartialLoaderProvider) => {
+      $translatePartialLoaderProvider.addPart('components/match/i18n');
+    }
+  ]);
 
-var _matchService2 = _interopRequireDefault(_matchService);
-
-var _matchController = require('./matchController');
-
-var _matchController2 = _interopRequireDefault(_matchController);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var matchComponentModule = angular.module('matchComponentModule', ['pascalprecht.translate']).service(_matchService2.default.name, _matchService2.default).controller(_matchController2.default.name, _matchController2.default).config(['$translatePartialLoaderProvider', function ($translatePartialLoaderProvider) {
-  $translatePartialLoaderProvider.addPart('components/match/i18n');
-}]);
-
-exports.default = matchComponentModule;
-//# sourceMappingURL=matchComponentModule.js.map
+export default matchComponentModule;

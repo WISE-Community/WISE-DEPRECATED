@@ -1,13 +1,13 @@
 <style>
-  {{labelController.nodeContent.style}}
+  {{::labelController.nodeContent.style}}
   .studentButton {
-    min-width: 50;
-    max-width: 50;
+    min-width: 50px;
+    max-width: 50px;
   }
 </style>
 <div ng-controller='LabelController as labelController' flex>
   <br/>
-  <div ng-switch='labelController.mode'>
+  <div ng-switch='::labelController.mode'>
     <div ng-switch-when='grading|gradingRevision'
         ng-switch-when-separator='|'
         layout='row'
@@ -17,9 +17,9 @@
           layout='column'
           class='component--grading__response'>
         <div class='component--grading__response__content'>
-          <div id='canvasParent_{{labelController.canvasId}}'
+          <div id='canvasParent_{{::labelController.canvasId}}'
               ng-if='labelController.$scope.componentState'>
-            <canvas id='{{labelController.canvasId}}'
+            <canvas id='{{::labelController.canvasId}}'
                 width='800'
                 height='600'
                 style='border:1px solid black;'>
@@ -27,31 +27,31 @@
           </div>
         </div>
         <span flex></span>
-        <component-revisions-info node-id='labelController.nodeId'
-            component-id='labelController.componentId'
-            to-workgroup-id='workgroupId'
-            component-state='componentState'
-            active='labelController.mode === "grading"'>
+        <component-revisions-info node-id='::labelController.nodeId'
+            component-id='::labelController.componentId'
+            to-workgroup-id='::workgroupId'
+            component-state='::componentState'
+            active='::labelController.mode === "grading"'>
         </component-revisions-info>
       </div>
       <div flex='100'
           flex-gt-sm='33'
           class='component--grading__annotations'>
-        <component-grading node-id='labelController.nodeId'
-            component-id='labelController.componentId'
+        <component-grading node-id='::labelController.nodeId'
+            component-id='::labelController.componentId'
             max-score='labelController.componentContent.maxScore'
             from-workgroup-id='teacherWorkgroupId'
             to-workgroup-id='workgroupId'
-            component-state-id='componentState.id'
-            show-all-annotations='labelController.mode !== "grading"'
-            is-disabled='labelController.mode !== "grading"'>
+            component-state-id='::componentState.id'
+            show-all-annotations='::labelController.mode !== "grading"'
+            is-disabled='::labelController.mode !== "grading"'>
         </component-grading>
       </div>
     </div>
     <div ng-switch-default>
       <div class='component__prompt'>
         <div class='component__prompt__content'>
-          <compile data='labelController.getPrompt()'></compile>
+          <compile data='::labelController.getPrompt()'></compile>
         </div>
         <possible-score max-score='labelController.componentContent.maxScore'
             ng-if='labelController.mode === "student" && !labelController.latestAnnotations.score'>
@@ -65,11 +65,11 @@
           <md-icon>add</md-icon>
           <md-tooltip md-direction='top'
               class='projectButtonTooltip'>
-            {{ 'label.addNewLabel' | translate }}
+            {{ ::'label.addNewLabel' | translate }}
           </md-tooltip>
         </md-button>
         <span ng-if='labelController.createLabelMode'>
-          {{ 'label.clickOnTheImageToCreateALabelOr' | translate }}
+          {{ ::'label.clickOnTheImageToCreateALabelOr' | translate }}
         </span>
         <md-button class='studentButton md-raised md-primary'
             ng-click='labelController.cancelButtonClicked()'
@@ -78,14 +78,14 @@
           <md-icon>clear</md-icon>
           <md-tooltip md-direction='top'
               class='projectButtonTooltip'>
-            {{ 'CANCEL' | translate }}
+            {{ ::'CANCEL' | translate }}
           <md-tooltip>
         </md-button>
         <span ng-if='labelController.createLabelMode'>
-          {{ 'label.toCancel' | translate }}
+          {{ ::'label.toCancel' | translate }}
         </span>
         <span ng-if='labelController.editLabelMode'>
-          {{ 'label.labelText' | translate }}:&nbsp
+          {{ ::'label.labelText' | translate }}:&nbsp
         </span>
         <input id='editLabelTextInput'
             type='text'
@@ -101,7 +101,7 @@
           <md-icon>delete</md-icon>
           <md-tooltip md-direction='top'
               class='projectButtonTooltip'>
-            {{ 'DELETE' | translate }}
+            {{ ::'DELETE' | translate }}
           </md-tooltip>
         </md-button>
         <span style='flex-grow: 1;'></span>
@@ -110,21 +110,21 @@
             ng-if='labelController.isResetButtonVisible'
             ng-disabled='labelController.isDisabled'>
             <md-icon>restore</md-icon>
-            {{ 'RESET' | translate }}
+            {{ ::'RESET' | translate }}
         </md-button>
         <md-button class='studentButton md-accent md-primary'
             ng-click='labelController.snipImage($event)'
-            ng-if='labelController.isAddToNotebookEnabled()'
+            ng-if='::labelController.isAddToNotebookEnabled()'
             ng-disabled='labelController.isDisabled'>
           <md-icon> note_add </md-icon>
           <md-tooltip md-direction='top'
               class='projectButtonTooltip'>
-            {{ 'ADD_TO_NOTEBOOK' | translate:{label:labelController.notebookConfig.label} }}
+            {{ ::'ADD_TO_NOTEBOOK' | translate:{label:labelController.notebookConfig.label} }}
           </md-tooltip>
         </md-button>
         <br/>
         <div ng-if='labelController.componentContent.enableStudentUploadBackground'>
-          {{ 'label.uploadBackgroundImage' | translate }}:
+          {{ ::'label.uploadBackgroundImage' | translate }}:
           <input type='file'
               ng-if='labelController.componentContent.enableStudentUploadBackground'
               onchange='angular.element(this).scope().fileUploadChanged(this)'
@@ -132,8 +132,8 @@
               ng-disabled='labelController.isDisabled'/>
         </div>
       </div>
-      <div id='canvasParent_{{labelController.canvasId}}' style='margin-top: 10px;'>
-        <canvas id='{{labelController.canvasId}}'
+      <div id='canvasParent_{{::labelController.canvasId}}' style='margin-top: 10px;'>
+        <canvas id='{{::labelController.canvasId}}'
             width='800'
             height='600'
             style='border:1px solid black;'>
@@ -148,7 +148,7 @@
               ng-click='nodeController.showStudentAssets($event, component.id, labelController.isDisabled)'
               ng-disabled='labelController.isDisabled'>
             <md-icon>image</md-icon>
-            <span>{{ 'label.addFile' | translate }}</span>
+            <span>{{ ::'label.addFile' | translate }}</span>
           </md-button>
         </div>
         <div class='component__attachment'
@@ -163,21 +163,21 @@
           </md-button>
         </div>
       </div>
-      <div ng-if='labelController.isSaveButtonVisible || labelController.isSubmitButtonVisible'
+      <div ng-if='::labelController.isSaveOrSubmitButtonVisible()'
           class='component__actions'
           layout='row'
           layout-align='start center'>
         <md-button class='md-raised md-primary'
             ng-click='labelController.saveButtonClicked()'
-            ng-if='labelController.isSaveButtonVisible'
+            ng-if='::labelController.isSaveButtonVisible'
             ng-disabled='labelController.isDisabled || !labelController.isDirty'>
-          {{ 'SAVE' | translate }}
+          {{ ::'SAVE' | translate }}
         </md-button>
         <md-button class='md-raised md-primary'
             ng-click='labelController.submitButtonClicked()'
-            ng-if='labelController.isSubmitButtonVisible'
+            ng-if='::labelController.isSubmitButtonVisible'
             ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty || labelController.isSubmitButtonDisabled'>
-          {{ 'SUBMIT' | translate }}
+          {{ ::'SUBMIT' | translate }}
         </md-button>
         <span ng-if='labelController.saveMessage.text'
             class='component__actions__info md-caption'>

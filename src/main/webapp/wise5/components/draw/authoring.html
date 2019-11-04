@@ -9,20 +9,20 @@
     <div class='advancedAuthoringDiv'
          ng-if='drawController.showAdvancedAuthoring'>
       <div>
-        <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+        <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='drawController.authoringComponentContent.showSaveButton'
                      ng-change='drawController.authoringViewComponentChanged()'>
-          {{ 'SHOW_SAVE_BUTTON' | translate }}
+          {{ ::'SHOW_SAVE_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='drawController.authoringComponentContent.showSubmitButton'
                      ng-change='drawController.authoringViewComponentChanged()'>
-          {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+          {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
@@ -30,13 +30,13 @@
                      ng-if='drawController.isNotebookEnabled()'
                      ng-model='drawController.authoringComponentContent.showAddToNotebookButton'
                      ng-change='drawController.authoringViewComponentChanged()'>
-          {{ 'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+          {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
                             ng-if='drawController.authoringComponentContent.showSubmitButton'>
-          <label>{{ 'MAX_SUBMIT' | translate }}</label>
+          <label>{{ ::'MAX_SUBMIT' | translate }}</label>
           <input type='number'
                  ng-model='drawController.authoringComponentContent.maxSubmitCount'
                  ng-model-options='{ debounce: 1000 }'
@@ -45,7 +45,7 @@
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ 'MAX_SCORE' | translate }}</label>
+          <label>{{ ::'MAX_SCORE' | translate }}</label>
           <input type='number'
                  ng-model='drawController.authoringComponentContent.maxScore'
                  ng-model-options='{ debounce: 1000 }'
@@ -54,7 +54,7 @@
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+          <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
           <input type='number'
                  ng-model='drawController.authoringComponentContent.componentWidth'
                  ng-model-options='{ debounce: 1000 }'
@@ -63,14 +63,14 @@
       </div>
       <div>
         <label class='node__label--vertical-alignment'>
-          {{ 'RUBRIC' | translate }}
+          {{ ::'RUBRIC' | translate }}
         </label>
         <md-button class='topButton md-raised md-primary'
                    ng-click='drawController.showRubricAuthoring = !drawController.showRubricAuthoring'>
           <md-icon>message</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
-            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+            {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
           </md-tooltip>
         </md-button>
         <div ng-if='drawController.showRubricAuthoring'>
@@ -87,14 +87,14 @@
       <div>
         <div style='height: 50;'>
           <label class='node__label--vertical-alignment'>
-            {{ 'CONNECTED_COMPONENTS' | translate }}
+            {{ ::'CONNECTED_COMPONENTS' | translate }}
           </label>
           <md-button class='topButton md-raised md-primary'
                      ng-click='drawController.authoringAddConnectedComponent()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
-              {{ 'ADD_CONNECTED_COMPONENT' | translate }}
+              {{ ::'ADD_CONNECTED_COMPONENT' | translate }}
             </md-tooltip>
           </md-button>
         </div>
@@ -103,7 +103,7 @@
              layout='row'>
           <div flex>
             <md-input-container style='margin-right: 20; width: 300;'>
-              <label>{{ 'step' | translate }}</label>
+              <label>{{ ::'step' | translate }}</label>
               <md-select ng-model='connectedComponent.nodeId'
                          ng-change='drawController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
                          style='width: 300'>
@@ -115,7 +115,7 @@
               </md-select>
             </md-input-container>
             <md-input-container style='margin-right: 20; width: 300;'>
-              <label>{{ 'component' | translate }}</label>
+              <label>{{ ::'component' | translate }}</label>
               <md-select ng-model='connectedComponent.componentId'
                          ng-change='drawController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
                          style='width: 300'>
@@ -124,21 +124,21 @@
                            ng-disabled='!drawController.isConnectedComponentTypeAllowed(component.type) || component.id == drawController.componentId'>
                   {{ componentIndex + 1 }}. {{ component.type }}
                   <span ng-if='component.id == drawController.componentId'>
-                    ({{ 'thisComponent' | translate }})
+                    ({{ ::'thisComponent' | translate }})
                   </span>
                 </md-option>
               </md-select>
             </md-input-container>
             <md-input-container style='margin-right: 20; width: 200;'>
-              <label>{{ 'type' | translate }}</label>
+              <label>{{ ::'type' | translate }}</label>
               <md-select ng-model='connectedComponent.type'
                          ng-change='drawController.authoringConnectedComponentTypeChanged(connectedComponent)'
                          style='width: 200'>
                 <md-option value='importWork'>
-                  {{ 'importWork' | translate }}
+                  {{ ::'importWork' | translate }}
                 </md-option>
                 <md-option value='showWork'>
-                  {{ 'showWork' | translate }}
+                  {{ ::'showWork' | translate }}
                 </md-option>
               </md-select>
             </md-input-container>
@@ -149,7 +149,7 @@
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>
-                  {{ 'DELETE' | translate }}
+                  {{ ::'DELETE' | translate }}
                 </md-tooltip>
               </md-button>
             </md-input-container>
@@ -159,7 +159,7 @@
                              ng-model='connectedComponent.importWorkAsBackground'
                              ng-change='drawController.authoringImportWorkAsBackgroundClicked(connectedComponent)'
                              ng-disabled='true'>
-                  {{ 'importWorkAsBackground' | translate }}
+                  {{ ::'importWorkAsBackground' | translate }}
                 </md-checkbox>
               </md-input-container>
             </div>
@@ -169,14 +169,14 @@
       <div style='margin-top: 10px; margin-bottom: 10px;'>
         <div style='height: 50;'>
           <label class='node__label--vertical-alignment'>
-            {{ 'tags' | translate }}
+            {{ ::'tags' | translate }}
           </label>
           <md-button class='topButton md-raised md-primary'
                      ng-click='drawController.addTag()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
-              {{ 'addTag' | translate }}
+              {{ ::'addTag' | translate }}
             </md-tooltip>
           </md-button>
         </div>
@@ -188,14 +188,14 @@
                      ng-change='drawController.authoringViewComponentChanged()'
                      ng-model-options='{ debounce: 1000 }'
                      size='100'
-                     placeholder='{{ "enterTag" | translate }}'/>
+                     placeholder='{{ ::"enterTag" | translate }}'/>
             </md-input-container>
             <md-button class='moveComponentButton md-raised md-primary'
                        ng-click='drawController.moveTagUp($index)'>
               <md-icon>arrow_upward</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
-                {{ 'moveUp' | translate }}
+                {{ ::'moveUp' | translate }}
               </md-tooltip>
             </md-button>
             <md-button class='moveComponentButton md-raised md-primary'
@@ -203,7 +203,7 @@
               <md-icon>arrow_downward</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
-                {{ 'moveDown' | translate }}
+                {{ ::'moveDown' | translate }}
               </md-tooltip>
             </md-button>
             <md-button class='moveComponentButton md-raised md-primary'
@@ -211,24 +211,24 @@
               <md-icon>delete</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
-                {{ 'DELETE' | translate }}
+                {{ ::'DELETE' | translate }}
               </md-tooltip>
             </md-button>
           </div>
         </div>
       </div>
       <div>
-        <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
+        <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
         <md-button class='topButton md-raised md-primary'
                    ng-click='drawController.showJSONButtonClicked()'>
           <md-icon>code</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
-            {{ 'SHOW_JSON' | translate }}
+            {{ ::'SHOW_JSON' | translate }}
           </md-tooltip>
         </md-button>
         <span ng-if='drawController.isJSONStringChanged'>
-          {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+          {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
         </span>
         <div ng-if='drawController.showJSONAuthoring'>
           <md-input-container style='width: 100%;'>
@@ -243,17 +243,17 @@
     <br/>
     <div ng-if='!drawController.authoringComponentContent.showPreviousWork'>
       <md-input-container style='width: 100%; margin-bottom: 0px;'>
-        <label>{{ 'PROMPT' | translate }}</label>
+        <label>{{ ::'PROMPT' | translate }}</label>
         <textarea ng-model='drawController.authoringComponentContent.prompt'
                   ng-change='drawController.authoringViewComponentChanged()'
                   ng-model-options='{ debounce: 1000 }'
                   rows='1'
-                  placeholder='{{ "enterPromptHere" | translate }}'>
+                  placeholder='{{ ::"enterPromptHere" | translate }}'>
       </textarea>
       </md-input-container>
       <div style='height: 60px;'>
         <md-input-container>
-          <label>{{ 'BACKGROUND_IMAGE' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+          <label>{{ ::'BACKGROUND_IMAGE' | translate }} ({{ ::'OPTIONAL' | translate }})</label>
           <input size='100'
                  ng-model='drawController.authoringComponentContent.background'
                  ng-change='drawController.authoringViewBackgroundChanged()'/>
@@ -263,20 +263,20 @@
           <md-icon>insert_photo</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
-            {{ 'chooseAnImage' | translate }}
+            {{ ::'chooseAnImage' | translate }}
           </md-tooltip>
         </md-button>
       </div>
       <div style='height: 60px;'>
         <md-input-container>
-          <label>{{ 'draw.canvasWidth' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+          <label>{{ ::'draw.canvasWidth' | translate }} ({{ ::'OPTIONAL' | translate }})</label>
           <input type='number'
                  style='width: 200'
                  ng-model='drawController.authoringComponentContent.width'
                  ng-change='drawController.authoringViewWidthChanged()'/>
         </md-input-container>
         <md-input-container>
-          <label>{{ 'draw.canvasHeight' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+          <label>{{ ::'draw.canvasHeight' | translate }} ({{ ::'OPTIONAL' | translate }})</label>
           <input type='number'
                  style='width: 200'
                  ng-model='drawController.authoringComponentContent.height'
@@ -289,7 +289,7 @@
         <md-icon>check</md-icon>
         <md-tooltip md-direction='top'
                     class='projectButtonTooltip'>
-          {{ 'draw.enableAllTools' | translate }}
+          {{ ::'draw.enableAllTools' | translate }}
         </md-tooltip>
       </md-button>
       <md-button class='topButton md-raised md-primary'
@@ -297,7 +297,7 @@
         <md-icon>check_box_outline_blank</md-icon>
         <md-tooltip md-direction='top'
                     class='projectButtonTooltip'>
-          {{ 'draw.disableAllTools' | translate }}
+          {{ ::'draw.disableAllTools' | translate }}
         </md-tooltip>
       </md-button>
       <br/>
@@ -306,102 +306,102 @@
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.select'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.selectTool' | translate }}
+            {{ ::'draw.selectTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.line'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.lineTool' | translate }}
+            {{ ::'draw.lineTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.shape'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.shapeTool' | translate }}
+            {{ ::'draw.shapeTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.freeHand'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.freeHandTool' | translate }}
+            {{ ::'draw.freeHandTool' | translate }}
           </md-checkbox>
         </div>
         <div class='toolsDiv'>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.text'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.textTool' | translate }}
+            {{ ::'draw.textTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.stamp'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.stampTool' | translate }}
+            {{ ::'draw.stampTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.clone'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.cloneTool' | translate }}
+            {{ ::'draw.cloneTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.strokeColor'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.strokeColorTool' | translate }}
+            {{ ::'draw.strokeColorTool' | translate }}
           </md-checkbox>
         </div>
         <div class='toolsDiv'>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.fillColor'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.fillColorTool' | translate }}
+            {{ ::'draw.fillColorTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.strokeWidth'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.strokeWidthTool' | translate }}
+            {{ ::'draw.strokeWidthTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.sendBack'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.sendBackTool' | translate }}
+            {{ ::'draw.sendBackTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.sendForward'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.sendForwardTool' | translate }}
+            {{ ::'draw.sendForwardTool' | translate }}
           </md-checkbox>
         </div>
         <div class='toolsDiv'>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.undo'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.undoTool' | translate }}
+            {{ ::'draw.undoTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.redo'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.redoTool' | translate }}
+            {{ ::'draw.redoTool' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='drawController.authoringComponentContent.tools.delete'
                        ng-change='drawController.authoringViewToolClicked()'>
-            {{ 'draw.deleteTool' | translate }}
+            {{ ::'draw.deleteTool' | translate }}
           </md-checkbox>
         </div>
       </div>
       <div ng-if='drawController.authoringComponentContent.tools.stamp'>
-        <p>{{ 'draw.stamps' | translate }}</p>
+        <p>{{ ::'draw.stamps' | translate }}</p>
         <br/>
         <div ng-if='drawController.authoringComponentContent.stamps.Stamps.length == 0'>
-          {{ 'draw.thereAreNoStampsClickTheAddStampButtonToAddAStamp' | translate }}
+          {{ ::'draw.thereAreNoStampsClickTheAddStampButtonToAddAStamp' | translate }}
         </div>
         <div ng-repeat='stamp in drawController.authoringComponentContent.stamps.Stamps track by $index'
              style='height: 60px'>
@@ -410,14 +410,14 @@
             <input size='50'
                    ng-model='drawController.authoringComponentContent.stamps.Stamps[$index]'
                    ng-change='drawController.authoringViewComponentChanged()'
-                   placeholder='{{ "chooseAnImage" | translate }}'/>
+                   placeholder='{{ ::"chooseAnImage" | translate }}'/>
           </md-input-container>
           <md-button class='topButton md-raised md-primary'
                      ng-click='drawController.chooseStampImage($index)'>
             <md-icon>insert_photo</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
-              {{ 'chooseAnImage' | translate }}
+              {{ ::'chooseAnImage' | translate }}
             </md-tooltip>
           </md-button>
           <md-button class='topButton md-raised md-primary'
@@ -425,7 +425,7 @@
             <md-icon>arrow_upward</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
-              {{ 'UP' | translate }}
+              {{ ::'UP' | translate }}
             </md-tooltip>
           </md-button>
           <md-button class='topButton md-raised md-primary'
@@ -433,7 +433,7 @@
             <md-icon>arrow_downward</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
-              {{ 'DOWN' | translate }}
+              {{ ::'DOWN' | translate }}
             </md-tooltip>
           </md-button>
           <md-button class='topButton md-raised md-primary'
@@ -441,7 +441,7 @@
             <md-icon>delete</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
-              {{ 'DELETE' | translate }}
+              {{ ::'DELETE' | translate }}
             </md-tooltip>
           </md-button>
         </div>
@@ -451,7 +451,7 @@
           <md-icon>library_add</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
-            {{ 'draw.addStamp' | translate }}
+            {{ ::'draw.addStamp' | translate }}
           </md-tooltip>
         </md-button>
       </div>
@@ -460,7 +460,7 @@
         <md-icon>create</md-icon>
         <md-tooltip md-direction='top'
                     class='projectButtonTooltip'>
-          {{ 'draw.saveStarterDrawing' | translate }}
+          {{ ::'draw.saveStarterDrawing' | translate }}
         </md-tooltip>
       </md-button>
       <md-button class='topButton md-raised md-primary'
@@ -468,16 +468,16 @@
         <md-icon>delete_sweep</md-icon>
         <md-tooltip md-direction='top'
                     class='projectButtonTooltip'>
-          {{ 'draw.deleteStarterDrawing' | translate }}
+          {{ ::'draw.deleteStarterDrawing' | translate }}
         </md-tooltip>
       </md-button>
     </div>
   </div>
   <div>
     <div>
-      <h5>{{ 'studentPreview' | translate }}</h5>
+      <h5>{{ ::'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='drawController.mode'>
+    <div ng-switch='::drawController.mode'>
       <div ng-switch-when='grading|gradingRevision'
            ng-switch-when-separator='|'
            layout='row'
@@ -528,26 +528,26 @@
                      ng-if='drawController.isStudentAttachmentEnabled'
                      ng-click='nodeController.showStudentAssets($event, component.id, drawController.isDisabled)'>
             <md-icon>image</md-icon>
-            {{ 'draw.insertFile' | translate }}
+            {{ ::'draw.insertFile' | translate }}
           </md-button>
         </div>
         <md-button class='md-accent'
                    ng-click='drawController.resetButtonClicked()'
                    ng-if='drawController.isResetButtonVisible'>
           <md-icon>restore</md-icon>
-          {{ 'RESET' | translate }}
+          {{ ::'RESET' | translate }}
         </md-button>
         <md-button class='md-accent md-primary'
                    ng-click='drawController.snipButtonClicked($event)'
                    ng-if='drawController.isAddToNotebookEnabled()'>
           <md-icon>note_add</md-icon>
-          {{ 'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
+          {{ ::'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
         </md-button>
         <md-button class='md-accent md-primary'
                    ng-click='drawController.copyPublicNotebookItemButtonClicked($event)'
                    ng-if='drawController.showCopyPublicNotebookItemButton()'>
           <md-icon>file_download</md-icon>
-          {{ 'importClassmateWork' | translate:{label:drawController.notebookConfig.label} }}
+          {{ ::'importClassmateWork' | translate:{label:drawController.notebookConfig.label} }}
         </md-button>
         <div data-drop='true'
              jqyoui-droppable='{onDrop: "drawController.dropCallback(item, $index)"}'>
@@ -573,7 +573,7 @@
                    ng-if='nodeController.getRevisions(component.id).length > 1'>
           <md-icon> history </md-icon>
           <md-tooltip md-direction='top'>
-            {{nodeController.getRevisions(component.id).length}} {{ 'draw.versions' | translate }}
+            {{nodeController.getRevisions(component.id).length}} {{ ::'draw.versions' | translate }}
           </md-tooltip>
         </md-button>
         <div ng-if='drawController.isSaveButtonVisible || drawController.isSubmitButtonVisible'
@@ -584,13 +584,13 @@
                      ng-click='drawController.saveButtonClicked()'
                      ng-disabled='drawController.isDisabled || !drawController.isDirty'
                      ng-if='drawController.isSaveButtonVisible'>
-            {{ 'SAVE' | translate }}
+            {{ ::'SAVE' | translate }}
           </md-button>
           <md-button class='md-raised md-primary'
                      ng-click='drawController.submitButtonClicked()'
                      ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty || drawController.isSubmitButtonDisabled'
                      ng-if='drawController.isSubmitButtonVisible'>
-            {{ 'SUBMIT' | translate }}
+            {{ ::'SUBMIT' | translate }}
           </md-button>
           <span ng-if='drawController.saveMessage.text'
                 class='component__actions__info md-caption'>

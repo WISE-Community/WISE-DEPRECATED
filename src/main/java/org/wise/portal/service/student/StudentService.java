@@ -28,6 +28,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
@@ -58,7 +59,7 @@ public interface StudentService {
   @Transactional
   void addStudentToRun(User studentUser, Projectcode projectcode)
       throws ObjectNotFoundException, PeriodNotFoundException,
-      StudentUserAlreadyAssociatedWithRunException;
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException;
 
   /**
    * Returns a list of teachers that this student is associated with through runs.

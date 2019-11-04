@@ -19,39 +19,42 @@ package org.wise.portal.junit;
 
 import org.hibernate.SessionFactory;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.wise.portal.spring.SpringConfiguration;
-import org.wise.portal.spring.impl.SpringConfigurationImpl;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
  * Allows testers to perform data store integration tests. Provides transactions and access
  * to the Spring Beans.
  *
  * @author Cynick Young
+ * @author Hiroki Terashima
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @WebAppConfiguration
 public abstract class AbstractTransactionalDbTests extends
     AbstractTransactionalJUnit4SpringContextTests {
 
-  private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
-
+  @Autowired
   protected SessionFactory sessionFactory;
 
   protected HibernateFlusher toilet;
 
-  protected void onSetUpBeforeTransaction() throws Exception {
-    this.toilet = new HibernateFlusher();
-    this.toilet.setSessionFactory(this.sessionFactory);
+  public void setUp() throws Exception {
+    toilet = new HibernateFlusher();
+    toilet.setSessionFactory(sessionFactory);
   }
 
-  protected String[] getConfigLocations() {
-    return SPRING_CONFIG.getRootApplicationContextConfigLocations();
-  }
-
-  public void setSessionFactory(SessionFactory sessionFactory) {
-    this.sessionFactory = sessionFactory;
+  public User createUser() {
+    PersistentUserDetails userDetails = new PersistentUserDetails();
+    userDetails.setUsername("username");
+    userDetails.setPassword("password");
+    User user = new UserImpl();
+    user.setUserDetails(userDetails);
+    return user;
   }
 }

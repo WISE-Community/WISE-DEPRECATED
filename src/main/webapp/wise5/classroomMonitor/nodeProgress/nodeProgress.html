@@ -1,12 +1,12 @@
-<div class="view-content--with-sidemenu" ng-show="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
+<div class="view-content--with-sidemenu" ng-if="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
     <div class="l-constrained l-constrained-md md-padding nav">
         <div class="flex md-subhead" layout="row" layout-align="start center" layout-wrap layout-margin>
             <span flex></span>
-            <md-button ng-show="nodeProgressController.showRubricButton"
+            <md-button ng-if="nodeProgressController.showRubricButton"
                        ng-click="nodeProgressController.showRubric($event)"
                        class="info md-raised">
                 <md-icon class="info"> info_outline </md-icon>
-                {{ 'projectInfo' | translate }}
+                {{ ::'projectInfo' | translate }}
             </md-button>
         </div>
 
@@ -15,7 +15,7 @@
                 <nav-item ng-repeat="id in nodeProgressController.rootNode.ids"
                           class="nav-item nav-item--root"
                           ng-class="{'expanded': itemExpanded}"
-                          node-id="id"
+                          node-id="::id"
                           show-position="true"
                           type="'card'"
                           flex="100" flex-sm="50" flex-gt-sm="50"></nav-item>

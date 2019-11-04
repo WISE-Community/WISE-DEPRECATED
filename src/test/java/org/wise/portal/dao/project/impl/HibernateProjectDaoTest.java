@@ -22,147 +22,71 @@
  */
 package org.wise.portal.dao.project.impl;
 
-import java.util.Calendar;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.wise.portal.domain.module.impl.CurnitImpl;
-import org.wise.portal.domain.module.impl.ModuleImpl;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.wise.portal.dao.user.impl.HibernateUserDao;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
-import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.junit.AbstractTransactionalDbTests;
 
 /**
  * @author Hiroki Terashima
- *
- * @version $Id$
  */
-public class HibernateProjectDaoTest extends org.wise.portal.dao.AbstractTransactionalDaoTests<HibernateProjectDao, Project> {
+@SpringBootTest
+@RunWith(SpringRunner.class)
+public class HibernateProjectDaoTest extends AbstractTransactionalDbTests {
 
-    private static final String MODULE_DESCRIPTION = "this module is for smart kids";
+  private Project project;
 
-	private static final Long MODULE_COMPUTER_TIME = new Long(40);
+  @Autowired
+  private HibernateProjectDao projectDao;
 
-	private static final Set<User> MODULE_OWNERS = new HashSet<User>();
+  @Autowired
+  private HibernateUserDao userDao;
 
-	private static final String MODULE_TECH_REQS = "This module requires a giant TV";
+  @Before
+  public void setUp() throws Exception {
+    super.setUp();
+    project = new ProjectImpl();
+    project.setId(1L);
+    project.setName("Airbags");
+    project.setDateCreated(new Date());
+    User owner = createUser();
+    userDao.save(owner);
+    toilet.flush();
+    project.setOwner(owner);
+  }
 
-	private static final Long MODULE_TOTAL_TIME = new Long(45);
-	
-	private static final Date START_TIME = Calendar.getInstance().getTime();
-
-	private static final Date END_TIME = Calendar.getInstance().getTime();
-	
-	private static final String RUNCODE = "abcde-123";
-
-    private Run run;
-		
-	public void setRun(Run run) {
-		this.run = run;
-	}
-
-	/**
-     * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#onSetUpBeforeTransaction()
-     */
-    @Override
-    protected void onSetUpBeforeTransaction() throws Exception {
-    	super.onSetUpBeforeTransaction();
-    	this.dao = (HibernateProjectDao) this.applicationContext
-    	        .getBean("projectDao");
-    	this.dataObject = (ProjectImpl) this.applicationContext
-    			.getBean("project");
-    	
-    	this.run.setOwner(null);
-		this.run.setPeriods(null);
-		this.run.setRuncode(RUNCODE);
-    	this.run.setStarttime(START_TIME);
-    	this.run.setEndtime(END_TIME);
-    	this.run.setProject(this.dataObject);
-    	this.dataObject.setPreviewRun(run);
-    }
-    
-    /**
-     * @see org.springframework.test.AbstractTransactionalSpringContextTests#onTearDownAfterTransaction()
-     */
-    @Override
-    protected void onTearDownAfterTransaction() throws Exception {
-    	super.onTearDownAfterTransaction();
-    }
-    
-	/**
-	 * @see net.sf.sail.webapp.dao.AbstractTransactionalDaoTests#testSave()
-	 */
-    @Override
-	public void testSave() {
+  @Test
+	public void save_NewProject_Success() {
 		verifyDataStoreIsEmpty();
-		
-		this.dao.save(this.dataObject);
-		
-        // verify data store contains saved data using direct jdbc retrieval
-        // (not using dao)
+	  projectDao.save(project);
+    toilet.flush();
 		List<?> actualList = retrieveProjectListFromDb();
-        assertEquals(1, actualList.size());
-        
-        Map<?, ?> actualProjectMap = (Map<?, ?>) actualList.get(0);
+    assertEquals(1, actualList.size());
+    Map<?, ?> projectMap = (Map<?, ?>) actualList.get(0);
+    assertEquals(1L, projectMap.get("id"));
+    assertEquals("Airbags", projectMap.get("name"));
 	}
-    
-    /**
-     * @see net.sf.sail.webapp.dao.AbstractTransactionalDaoTests#testDelete()
-     */
-    @Override
-    public void testDelete() {
-    	// TODO HIROKI implement me
-    	assertTrue(true);
-    }
-    
-    /**
-     * @see net.sf.sail.webapp.dao.AbstractTransactionalDaoTests#testGetList()
-     */
-    @Override
-    public void testGetList() {
-    	// TODO HIROKI implement me
-    	assertTrue(true);
-    }
-    
-    /**
-     * @see net.sf.sail.webapp.dao.AbstractTransactionalDaoTests#testGetById()
-     */
-    @Override
-    public void testGetById() {
-    	// TODO HIROKI implement me
-    	assertTrue(true);
-    }
 
-	/**
-	 * @see net.sf.sail.webapp.dao.AbstractTransactionalDaoTests#retrieveDataObjectListFromDb()
-	 */
-	@Override
-	protected List<?> retrieveDataObjectListFromDb() {
-		return this.jdbcTemplate.queryForList("SELECT * FROM "
-				+ ProjectImpl.DATA_STORE_NAME, (Object[]) null);
+	private void verifyDataStoreIsEmpty() {
+    assertTrue(retrieveProjectListFromDb().isEmpty());
+  }
+
+  private List<?> retrieveProjectListFromDb() {
+    return jdbcTemplate.queryForList("SELECT * FROM " +
+        ProjectImpl.DATA_STORE_NAME, (Object[]) null);
 	}
-	
-	/*
-	 * SELECT * FROM projects, curnits
-	 * WHERE projects.curnit_fk = curnits.id 
-	 */
-	private static final String RETRIEVE_PROJECT_LIST_SQL = 
-		"SELECT * FROM "
-		+ ProjectImpl.DATA_STORE_NAME + ", " + CurnitImpl.DATA_STORE_NAME
-		+ " WHERE " 
-		+ ProjectImpl.DATA_STORE_NAME + "." + ProjectImpl.COLUMN_NAME_CURNIT_FK
-		+ " = "
-		+ CurnitImpl.DATA_STORE_NAME + ".id";
-
-		
-    private List<?> retrieveProjectListFromDb() {
-        return this.jdbcTemplate.queryForList(RETRIEVE_PROJECT_LIST_SQL,
-                (Object[]) null);
-    }
-
 }

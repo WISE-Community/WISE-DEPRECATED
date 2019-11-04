@@ -3,11 +3,27 @@
     <div class='advancedAuthoringDiv'
          ng-if='outsideURLController.showAdvancedAuthoring'>
       <div>
-        <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+        <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+          <label>{{ ::'WIDTH' | translate }} ({{ ::'outsideURL.px' | translate }})</label>
+          <input type='number'
+                 ng-model='outsideURLController.authoringComponentContent.width'
+                 ng-model-options='{ debounce: 1000 }'
+                 ng-change='outsideURLController.authoringViewComponentChanged()'/>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+          <label>{{ ::'HEIGHT' | translate }} ({{ ::'outsideURL.px' | translate }})</label>
+          <input type='number'
+                 ng-model='outsideURLController.authoringComponentContent.height'
+                 ng-model-options='{ debounce: 1000 }'
+                 ng-change='outsideURLController.authoringViewComponentChanged()'/>
+        </md-input-container>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 400px; height: 25px;'>
+          <label>{{ ::'COMPONENT_WIDTH' | translate }} ({{ ::'outsideURL.integerPercentageOfPageWidth' | translate }})</label>
           <input type='number'
                  ng-model='outsideURLController.authoringComponentContent.componentWidth'
                  ng-model-options='{ debounce: 1000 }'
@@ -16,14 +32,14 @@
       </div>
       <div>
         <label class='node__label--vertical-alignment'>
-          {{ 'RUBRIC' | translate }}
+          {{ ::'RUBRIC' | translate }}
         </label>
         <md-button class='topButton md-raised md-primary'
                    ng-click='outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring'>
           <md-icon>message</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
-            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+            {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
           </md-tooltip>
         </md-button>
         <div ng-if='outsideURLController.showRubricAuthoring'>
@@ -38,17 +54,17 @@
         </div>
       </div>
       <div>
-        <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
+        <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
         <md-button class='topButton md-raised md-primary'
                    ng-click='outsideURLController.showJSONButtonClicked()'>
           <md-icon>code</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
-            {{ 'SHOW_JSON' | translate }}
+            {{ ::'SHOW_JSON' | translate }}
           </md-tooltip>
         </md-button>
         <span ng-if='outsideURLController.isJSONStringChanged'>
-          {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+          {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
         </span>
         <div ng-if='outsideURLController.showJSONAuthoring'>
           <md-input-container style='width: 100%;'>
@@ -62,15 +78,16 @@
     </div>
     <br/>
     <md-input-container>
-      <label>{{ 'outsideURL.url' | translate }}</label>
+      <label>{{ ::'outsideURL.url' | translate }}</label>
       <input size='150'
              ng-model='outsideURLController.authoringComponentContent.url'
              ng-change='outsideURLController.authoringViewComponentChanged()'
              ng-model-options='{ debounce: 1000 }'
-             placeholder='{{ "outsideURL.enterURLHere" | translate }}'/>
+             placeholder='{{ ::"outsideURL.enterURLHere" | translate }}'/>
     </md-input-container>
   </div>
-  <iframe ng-src='{{outsideURLController.url}}'
-          style="height: 100%; width:100%; max-width: {{outsideURLController.maxWidth}}; max-height: {{outsideURLController.maxHeight}};">
-  </iframe>
+  <div style='width: {{outsideURLController.width}}; height: {{outsideURLController.height}}'>
+    <iframe ng-src='{{outsideURLController.url}}' style='height: 100%; width:100%;'>
+    </iframe>
+  </div>
 </div>

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "WISE Portal": {
+    "site": {
       "root": "src/main/webapp/site",
       "sourceRoot": "src/main/webapp/site/src",
       "projectType": "application",
@@ -73,24 +73,78 @@
               "i18nFile": "src/main/webapp/site/src/locale/messages.es.xlf",
               "i18nFormat": "xlf",
               "i18nLocale": "es"
+            },
+            "production-zh-Hans": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "statsJson": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/site/src/environments/environment.ts",
+                  "with": "src/main/webapp/site/src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/main/webapp/site/src/locale/messages.xlf",
+                  "with": "src/main/webapp/site/src/locale/messages.zh-Hans.xlf"
+                }
+              ],
+              "outputPath": "src/main/webapp/site/dist/zh-Hans/",
+              "baseHref": "/zh-Hans/",
+              "i18nFile": "src/main/webapp/site/src/locale/messages.zh-Hans.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "zh-Hans"
+            },
+            "production-zh-Hant": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "statsJson": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/site/src/environments/environment.ts",
+                  "with": "src/main/webapp/site/src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/main/webapp/site/src/locale/messages.xlf",
+                  "with": "src/main/webapp/site/src/locale/messages.zh-Hant.xlf"
+                }
+              ],
+              "outputPath": "src/main/webapp/site/dist/zh-Hant/",
+              "baseHref": "/zh-Hant/",
+              "i18nFile": "src/main/webapp/site/src/locale/messages.zh-Hant.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "zh-Hant"
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "WISE Portal:build"
+            "browserTarget": "site:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "WISE Portal:build:production"
+              "browserTarget": "site:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "WISE Portal:build"
+            "browserTarget": "site:build"
           }
         },
         "test": {
@@ -124,7 +178,7 @@
         }
       }
     },
-    "WISE Portal-e2e": {
+    "site-e2e": {
       "root": "src/main/webapp/site/e2e",
       "sourceRoot": "src/main/webapp/site/e2e",
       "projectType": "application",
@@ -133,7 +187,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "WISE Portal:serve"
+            "devServerTarget": "site:serve"
           }
         },
         "lint": {
@@ -148,9 +202,285 @@
           }
         }
       }
+    },
+    "vle": {
+      "root": "src/main/webapp/wise5/vle",
+      "sourceRoot": "src/main/webapp/wise5/vle/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "src/main/webapp/wise5/vle/dist",
+            "index": "src/main/webapp/wise5/vle/src/index.html",
+            "main": "src/main/webapp/wise5/vle/src/main.ts",
+            "tsConfig": "src/main/webapp/wise5/vle/src/tsconfig.app.json",
+            "polyfills": "src/main/webapp/wise5/vle/src/polyfills.ts",
+            "extractCss": true,
+            "assets": [
+            ],
+            "styles": [
+            ],
+            "scripts": [
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "statsJson": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/wise5/vle/src/environments/environment.ts",
+                  "with": "src/main/webapp/wise5/vle/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputPath": "src/main/webapp/wise5/vle/dist/",
+              "baseHref": "/"
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "vle:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "vle:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "vle:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/webapp/wise5/vle/src/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "polyfills": "src/main/webapp/wise5/vle/src/polyfills.ts",
+            "tsConfig": "src/main/webapp/wise5/vle/src/tsconfig.spec.json",
+            "scripts": [],
+            "styles": [
+              "src/main/webapp/wise5/vle/src/style/styles.scss"
+            ],
+            "assets": [
+              "src/main/webapp/wise5/vle/src/assets",
+              "src/main/webapp/wise5/vle/src/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "at": {
+      "root": "src/main/webapp/wise5/authoringTool",
+      "sourceRoot": "src/main/webapp/wise5/authoringTool/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "src/main/webapp/wise5/authoringTool/dist",
+            "index": "src/main/webapp/wise5/authoringTool/src/index.html",
+            "main": "src/main/webapp/wise5/authoringTool/src/main.ts",
+            "tsConfig": "src/main/webapp/wise5/authoringTool/src/tsconfig.app.json",
+            "polyfills": "src/main/webapp/wise5/authoringTool/src/polyfills.ts",
+            "extractCss": true,
+            "assets": [
+            ],
+            "styles": [
+            ],
+            "scripts": [
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "statsJson": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/wise5/authoringTool/src/environments/environment.ts",
+                  "with": "src/main/webapp/wise5/authoringTool/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputPath": "src/main/webapp/wise5/authoringTool/dist/",
+              "baseHref": "/"
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "at:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "at:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "at:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/webapp/wise5/authoringTool/src/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "polyfills": "src/main/webapp/wise5/authoringTool/src/polyfills.ts",
+            "tsConfig": "src/main/webapp/wise5/authoringTool/src/tsconfig.spec.json",
+            "scripts": [],
+            "styles": [
+              "src/main/webapp/wise5/authoringTool/src/style/styles.scss"
+            ],
+            "assets": [
+              "src/main/webapp/wise5/authoringTool/src/assets",
+              "src/main/webapp/wise5/authoringTool/src/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "cm": {
+      "root": "src/main/webapp/wise5/classroomMonitor",
+      "sourceRoot": "src/main/webapp/wise5/classroomMonitor/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "src/main/webapp/wise5/classroomMonitor/dist",
+            "index": "src/main/webapp/wise5/classroomMonitor/src/index.html",
+            "main": "src/main/webapp/wise5/classroomMonitor/src/main.ts",
+            "tsConfig": "src/main/webapp/wise5/classroomMonitor/src/tsconfig.app.json",
+            "polyfills": "src/main/webapp/wise5/classroomMonitor/src/polyfills.ts",
+            "extractCss": true,
+            "assets": [
+            ],
+            "styles": [
+            ],
+            "scripts": [
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "statsJson": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/wise5/classroomMonitor/src/environments/environment.ts",
+                  "with": "src/main/webapp/wise5/classroomMonitor/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputPath": "src/main/webapp/wise5/classroomMonitor/dist/",
+              "baseHref": "/"
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "cm:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "cm:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "cm:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/webapp/wise5/classroomMonitor/src/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "polyfills": "src/main/webapp/wise5/classroomMonitor/src/polyfills.ts",
+            "tsConfig": "src/main/webapp/wise5/classroomMonitor/src/tsconfig.spec.json",
+            "scripts": [],
+            "styles": [
+              "src/main/webapp/wise5/classroomMonitor/src/style/styles.scss"
+            ],
+            "assets": [
+              "src/main/webapp/wise5/classroomMonitor/src/assets",
+              "src/main/webapp/wise5/classroomMonitor/src/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
-  "defaultProject": "WISE Portal",
+  "defaultProject": "site",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

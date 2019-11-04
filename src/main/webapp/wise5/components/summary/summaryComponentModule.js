@@ -1,19 +1,18 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
+import SummaryService from './summaryService';
+import SummaryController from './summaryController';
 
-var _summaryService = _interopRequireDefault(require("./summaryService"));
+const summaryComponentModule = angular.module('summaryComponentModule', [
+    'pascalprecht.translate'
+  ])
+  .service('SummaryService', SummaryService)
+  .controller('SummaryController', SummaryController)
+  .config([
+    '$translatePartialLoaderProvider',
+    ($translatePartialLoaderProvider) => {
+      $translatePartialLoaderProvider.addPart('components/summary/i18n');
+    }
+  ]);
 
-var _summaryController = _interopRequireDefault(require("./summaryController"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var summaryComponentModule = angular.module('summaryComponentModule', ['pascalprecht.translate']).service(_summaryService["default"].name, _summaryService["default"]).controller(_summaryController["default"].name, _summaryController["default"]).config(['$translatePartialLoaderProvider', function ($translatePartialLoaderProvider) {
-  $translatePartialLoaderProvider.addPart('components/summary/i18n');
-}]);
-var _default = summaryComponentModule;
-exports["default"] = _default;
-//# sourceMappingURL=summaryComponentModule.js.map
+export default summaryComponentModule;

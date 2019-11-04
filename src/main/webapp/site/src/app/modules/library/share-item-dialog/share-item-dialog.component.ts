@@ -15,6 +15,7 @@ export abstract class ShareItemDialogComponent implements OnInit {
   teacherSearchControl = new FormControl();
   allTeacherUsernames: string[] = [];
   filteredTeacherUsernames: Observable<string[]>;
+  owner: any;
   sharedOwners: any[] = [];
   private sharedOwners$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(this.sharedOwners);
 

@@ -1,27 +1,12 @@
-'use strict';
+import {browser, element} from 'protractor';
+import * as common from '../../common.js';
+import VLEPage from '../../vlePage.js';
+import MultipleChoicePage from './multipleChoicePage.js';
 
-var _protractor = require('protractor');
-
-var _common = require('../../common.js');
-
-var common = _interopRequireWildcard(_common);
-
-var _vlePage = require('../../vlePage.js');
-
-var _vlePage2 = _interopRequireDefault(_vlePage);
-
-var _multipleChoicePage = require('./multipleChoicePage.js');
-
-var _multipleChoicePage2 = _interopRequireDefault(_multipleChoicePage);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-describe('WISE5 Multiple Choice Component Select One (radio)', function () {
-  var spongeBobChoice = (0, _protractor.element)(by.cssContainingText('md-radio-button', 'Spongebob'));
-  var patrickChoice = (0, _protractor.element)(by.cssContainingText('md-radio-button', 'Patrick'));
-  var squidwardChoice = (0, _protractor.element)(by.cssContainingText('md-radio-button', 'Squidward'));
+describe('WISE5 Multiple Choice Component Select One (radio)', () => {
+  const spongeBobChoice = element(by.cssContainingText('md-radio-button','Spongebob'));
+  const patrickChoice = element(by.cssContainingText('md-radio-button','Patrick'));
+  const squidwardChoice = element(by.cssContainingText('md-radio-button','Squidward'));
 
   function shouldDisplayDefaultElements(vle, mc) {
     vle.nodeSelectMenuShouldSay('1.5: Multiple Choice Step Single Answer');
@@ -29,11 +14,15 @@ describe('WISE5 Multiple Choice Component Select One (radio)', function () {
     common.shouldBeAbsent(mc.saveMessage);
     common.shouldBeDisabled(mc.saveButton, mc.submitButton);
 
-    var prompt = mc.getPrompt();
-    common.shouldBePresent(prompt, spongeBobChoice, patrickChoice, squidwardChoice);
-    expect(prompt.getText()).toEqual('This is a multiple choice step where' + ' the student is allowed to choose one choice.\nWho lives in a' + ' pineapple under the sea?');
+    const prompt = mc.getPrompt();
+    common.shouldBePresent(prompt, spongeBobChoice, patrickChoice,
+      squidwardChoice);
+    expect(prompt.getText()).toEqual('This is a multiple choice step where' +
+      ' the student is allowed to choose one choice.\nWho lives in a' +
+      ' pineapple under the sea?');
     common.shouldBeEnabled(spongeBobChoice, patrickChoice, squidwardChoice);
-    common.shouldBeUnselected(spongeBobChoice, patrickChoice, squidwardChoice);
+    common.shouldBeUnselected(spongeBobChoice, patrickChoice,
+      squidwardChoice);
   }
 
   function save(mc) {
@@ -49,19 +38,19 @@ describe('WISE5 Multiple Choice Component Select One (radio)', function () {
     expect(mc.submitMessage.getText()).toContain("Submitted");
   }
 
-  beforeEach(function () {
-    var vle = new _vlePage2.default();
-    _protractor.browser.get('http://localhost:8080/wise/project/demo#/vle/node5');
-    _protractor.browser.wait(function () {
-      return vle.nodeDropDownMenu.isPresent();
-    }, 5000, 'VLE didn\'t load properly').then(function () {
-      var mc = new _multipleChoicePage2.default();
+  beforeEach(() => {
+    const vle = new VLEPage();
+    browser.get('http://localhost:8080/wise/project/demo#/vle/node5');
+    browser.wait(function() {
+      return vle.nodeDropDownMenu.isPresent()
+    }, 5000, 'VLE didn\'t load properly').then(() => {
+      const mc = new MultipleChoicePage();
       shouldDisplayDefaultElements(vle, mc);
     });
   });
 
-  it('should allow user to choose a choice and save', function () {
-    var mc = new _multipleChoicePage2.default();
+  it('should allow user to choose a choice and save', () => {
+    const mc = new MultipleChoicePage();
     spongeBobChoice.click();
     common.shouldBeSelected(spongeBobChoice);
     common.shouldBeUnselected(patrickChoice, squidwardChoice);
@@ -81,8 +70,8 @@ describe('WISE5 Multiple Choice Component Select One (radio)', function () {
     common.shouldBeEnabled(mc.saveButton, mc.submitButton);
   });
 
-  it('should allow user to choose a choice and submit', function () {
-    var mc = new _multipleChoicePage2.default();
+  it('should allow user to choose a choice and submit', () => {
+    const mc = new MultipleChoicePage();
     patrickChoice.click();
     common.shouldBeSelected(patrickChoice);
     common.shouldBeUnselected(spongeBobChoice, squidwardChoice);
@@ -101,13 +90,13 @@ describe('WISE5 Multiple Choice Component Select One (radio)', function () {
     common.shouldBeUnselected(spongeBobChoice, patrickChoice);
   });
 
-  it('should preserve selected choices between step visits', function () {
-    var mc = new _multipleChoicePage2.default();
+  it('should preserve selected choices between step visits', () => {
+    const mc = new MultipleChoicePage();
     spongeBobChoice.click();
     common.shouldBeSelected(spongeBobChoice);
     common.shouldBeUnselected(squidwardChoice, patrickChoice);
 
-    var vle = new _vlePage2.default();
+    const vle = new VLEPage();
     vle.goToNextStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node6');
     vle.nodeSelectMenuShouldSay('1.6: Multiple Choice Step Multiple Answer');
@@ -119,4 +108,3 @@ describe('WISE5 Multiple Choice Component Select One (radio)', function () {
     common.shouldBeUnselected(squidwardChoice, patrickChoice);
   });
 });
-//# sourceMappingURL=multipleChoiceRadio.spec.js.map

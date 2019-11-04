@@ -35,7 +35,7 @@
   <artifactId>wise</artifactId>
   <packaging>war</packaging>
   <name>Web-based Inquiry Science Environment</name>
-  <version>5.8.0</version>
+  <version>5.8.1</version>
   <url>http://wise5.org</url>
 
   <licenses>
@@ -133,13 +133,28 @@
             </goals>
             <configuration>
               <testExcludes>
-                <exclude>**/org/wise/portal/service/**/*.java</exclude>
+                <exclude>**/org/wise/portal/service/*.java</exclude>
+                <exclude>**/org/wise/portal/service/impl/*.java</exclude>
+                <exclude>**/org/wise/portal/service/newsitem/**/*.java</exclude>
+                <exclude>**/org/wise/portal/service/premadecomment/**/*.java</exclude>
+                <exclude>**/org/wise/portal/service/group/**/*.java</exclude>
+                <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
+                <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
+                <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
+                <exclude>**/org/wise/portal/service/project/**/*.java</exclude>
+                <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
-                <exclude>**/org/wise/portal/dao/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/user/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
               </testExcludes>
             </configuration>
           </execution>
@@ -156,13 +171,28 @@
         <configuration>
           <forkMode>once</forkMode>
           <excludes>
-            <exclude>**/org/wise/portal/service/**/*.java</exclude>
+            <exclude>**/org/wise/portal/service/*.java</exclude>
+            <exclude>**/org/wise/portal/service/impl/*.java</exclude>
+            <exclude>**/org/wise/portal/service/newsitem/**/*.java</exclude>
+            <exclude>**/org/wise/portal/service/premadecomment/**/*.java</exclude>
+            <exclude>**/org/wise/portal/service/group/**/*.java</exclude>
+            <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
+            <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
+            <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
+            <exclude>**/org/wise/portal/service/project/**/*.java</exclude>
+            <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
             <exclude>**/org/wise/portal/domain/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
-            <exclude>**/org/wise/portal/dao/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/user/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -423,6 +453,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.200</version>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>

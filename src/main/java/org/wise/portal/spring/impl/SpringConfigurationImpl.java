@@ -29,10 +29,12 @@ import org.springframework.security.access.intercept.RunAsImplAuthenticationProv
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.spring.SpringConfiguration;
 
 /**
- * Implementation of <code>SpringConfiguration</code> for the WISE portal.
+ * Implementation of <code>SpringConfiguration</code> for WISE.
  *
  * @author Cynick Young
  * @author Hiroki Terashima
@@ -41,17 +43,28 @@ import org.wise.portal.spring.SpringConfiguration;
 public class SpringConfigurationImpl implements SpringConfiguration {
 
   @Autowired
-  DaoAuthenticationProvider daoAuthenticationProvider;
+  RunAsImplAuthenticationProvider runAsAuthenticationProvider;
 
   @Autowired
-  RunAsImplAuthenticationProvider runAsAuthenticationProvider;
+  PasswordEncoder passwordEncoder;
+
+  @Autowired
+  UserDetailsService userDetailsService;
 
   @Bean
   public ProviderManager authenticationManager() {
     ArrayList<AuthenticationProvider> providers = new ArrayList<>();
-    providers.add(daoAuthenticationProvider);
+    providers.add(daoAuthenticationProvider());
     providers.add(runAsAuthenticationProvider);
     return new ProviderManager(providers);
+  }
+
+  @Bean
+  public DaoAuthenticationProvider daoAuthenticationProvider() {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    provider.setUserDetailsService(userDetailsService);
+    provider.setPasswordEncoder(passwordEncoder);
+    return provider;
   }
 
   public String[] getDispatcherServletContextConfigLocations() {

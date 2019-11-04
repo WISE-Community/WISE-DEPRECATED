@@ -26,6 +26,7 @@ package org.wise.portal.dao.statistics.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -96,6 +97,10 @@ public class HibernateVLEStatisticsDao extends AbstractHibernateDao<VLEStatistic
     Root<VLEStatistics> vleStatisticsRoot = cq.from(VLEStatistics.class);
     cq.select(vleStatisticsRoot).orderBy(cb.desc(vleStatisticsRoot.get("timestamp")));
     TypedQuery<VLEStatistics> query = entityManager.createQuery(cq);
-    return query.setMaxResults(1).getSingleResult();
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
+      return null;
+    }
   }
 }

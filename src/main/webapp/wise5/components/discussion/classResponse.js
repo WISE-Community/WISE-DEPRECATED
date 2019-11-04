@@ -1,19 +1,7 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var ClassResponseController = function () {
-  function ClassResponseController($scope, $element, $filter, StudentStatusService, ConfigService) {
-    var _this = this;
-
-    _classCallCheck(this, ClassResponseController);
-
+class ClassResponseController {
+  constructor($scope, $element, $filter, StudentStatusService, ConfigService) {
     this.$scope = $scope;
     this.$element = $element;
     this.$filter = $filter;
@@ -21,103 +9,122 @@ var ClassResponseController = function () {
     this.ConfigService = ConfigService;
 
     this.$translate = this.$filter('translate');
+    this.urlMatcher = /((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?)/g;
+  }
 
-    this.$scope.$watch(function () {
-      return _this.response.replies.length;
-    }, function (oldValue, newValue) {
-      if (newValue !== oldValue) {
-        _this.toggleExpanded(true);
+  $onInit() {
+    this.$scope.$watch(
+      () => { return this.response.replies.length; },
+      (newValue, oldValue) => {
+        if (newValue !== oldValue) {
+          this.injectLinksIntoReplies();
+          this.toggleExpanded(true);
+        }
       }
+    );
+    this.injectLinksIntoResponse();
+    this.injectLinksIntoReplies();
+  }
+
+  injectLinksIntoResponse() {
+    this.response.studentData.responseText = this.injectLinks(this.response.studentData.response);
+  }
+
+  injectLinksIntoReplies() {
+    for (const reply of this.response.replies) {
+      if (reply.studentData.responseText == null) {
+        reply.studentData.responseText = this.injectLinks(reply.studentData.response);
+      }
+    }
+  }
+
+  injectLinks(response) {
+    return response.replace(this.urlMatcher, (match) => {
+      let matchUrl = match;
+      if (!match.startsWith('http')) {
+        /*
+         * The url does not begin with http so we will add // to the beginning of it so that the
+         * browser treats the url as an absolute link and not a relative link. The browser will also
+         * use the same protocol that the current page is loaded with (http or https).
+         */
+        matchUrl = '//' + match;
+      }
+      return `<a href="${matchUrl}" target="_blank">${match}</a>`;
     });
   }
 
-  _createClass(ClassResponseController, [{
-    key: 'getAvatarColorForWorkgroupId',
-    value: function getAvatarColorForWorkgroupId(workgroupId) {
-      return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
-    }
-  }, {
-    key: 'replyEntered',
-    value: function replyEntered($event, response) {
-      if ($event.keyCode === 13) {
-        if (response.replyText) {
-          this.submitButtonClicked(response);
-        }
+  getAvatarColorForWorkgroupId(workgroupId) {
+    return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
+  }
+
+  replyEntered($event, response) {
+    if ($event.keyCode === 13) {
+      if (response.replyText) {
+        this.submitButtonClicked(response);
       }
     }
-  }, {
-    key: 'submitButtonClicked',
-    value: function submitButtonClicked(response) {
-      // call the callback function in discussionController
-      this.submitbuttonclicked({ r: response });
+  }
+
+  submitButtonClicked(response) {
+    // call the callback function in discussionController
+    this.submitbuttonclicked({r: response});
+  }
+
+  /**
+   * The delete button was clicked on a student post
+   * @param componentState the student component state
+   */
+  deleteButtonClicked(componentState) {
+
+    var answer = confirm(this.$translate("discussion.areYouSureYouWantToDeleteThisPost"));
+
+    if (answer) {
+      // the teacher has answered yes to delete
+
+      // tell the discussionController to delete the post
+      this.deletebuttonclicked({componentState: componentState});
+    }
+  }
+
+  /**
+   * The undo delete button was clicked on a student post
+   * @param componentState the student component state
+   */
+  undoDeleteButtonClicked(componentState) {
+
+    var answer = confirm(this.$translate("discussion.areYouSureYouWantToShowThisPost"));
+
+    if (answer) {
+      // the teacher has answered yes to undo the delete
+
+      // tell the discussionController to undo the delete of the post
+      this.undodeletebuttonclicked({componentState: componentState});
+    }
+  }
+
+  toggleExpanded(open) {
+    if (open) {
+      this.expanded = true;
+    } else {
+      this.expanded = !this.expanded;
     }
 
-    /**
-     * The delete button was clicked on a student post
-     * @param componentState the student component state
-     */
-
-  }, {
-    key: 'deleteButtonClicked',
-    value: function deleteButtonClicked(componentState) {
-
-      var answer = confirm(this.$translate("discussion.areYouSureYouWantToDeleteThisPost"));
-
-      if (answer) {
-        // the teacher has answered yes to delete
-
-        // tell the discussionController to delete the post
-        this.deletebuttonclicked({ componentState: componentState });
-      }
+    if (this.expanded) {
+      var $clist = $(this.element).find('.discussion-comments__list');
+      setTimeout(function () {
+        $clist.animate({scrollTop: $clist.height()}, 250);
+      }, 250);
     }
+  }
 
-    /**
-     * The undo delete button was clicked on a student post
-     * @param componentState the student component state
-     */
+  adjustClientSaveTime(time) {
+    return this.ConfigService.convertToClientTimestamp(time);
+  }
+}
 
-  }, {
-    key: 'undoDeleteButtonClicked',
-    value: function undoDeleteButtonClicked(componentState) {
+ClassResponseController.$inject = ['$scope','$element','$filter','StudentStatusService','ConfigService'];
 
-      var answer = confirm(this.$translate("discussion.areYouSureYouWantToShowThisPost"));
-
-      if (answer) {
-        // the teacher has answered yes to undo the delete
-
-        // tell the discussionController to undo the delete of the post
-        this.undodeletebuttonclicked({ componentState: componentState });
-      }
-    }
-  }, {
-    key: 'toggleExpanded',
-    value: function toggleExpanded(open) {
-      if (open) {
-        this.expanded = true;
-      } else {
-        this.expanded = !this.expanded;
-      }
-
-      if (this.expanded) {
-        var $clist = $(this.element).find('.discussion-comments__list');
-        setTimeout(function () {
-          $clist.animate({ scrollTop: $clist.height() }, 250);
-        }, 250);
-      }
-    }
-  }, {
-    key: 'adjustClientSaveTime',
-    value: function adjustClientSaveTime(time) {
-      return this.ConfigService.convertToClientTimestamp(time);
-    }
-  }]);
-
-  return ClassResponseController;
-}();
-
-ClassResponseController.$inject = ['$scope', '$element', '$filter', 'StudentStatusService', 'ConfigService'];
-
-var ClassResponseComponentOptions = {
+const ClassResponseComponentOptions = {
   bindings: {
     response: '=',
     mode: '=',
@@ -131,6 +138,4 @@ var ClassResponseComponentOptions = {
   controller: 'ClassResponseController as classResponseCtrl'
 };
 
-exports.ClassResponseController = ClassResponseController;
-exports.ClassResponseComponentOptions = ClassResponseComponentOptions;
-//# sourceMappingURL=classResponse.js.map
+export { ClassResponseController, ClassResponseComponentOptions };

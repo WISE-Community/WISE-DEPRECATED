@@ -23,6 +23,7 @@ package org.wise.portal.dao.authentication.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -47,7 +48,7 @@ import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 @Repository
 public class HibernateUserDetailsDao extends AbstractHibernateDao<MutableUserDetails> implements
     UserDetailsDao<MutableUserDetails> {
-  
+
   @PersistenceContext
   private EntityManager entityManager;
 
@@ -55,7 +56,7 @@ public class HibernateUserDetailsDao extends AbstractHibernateDao<MutableUserDet
 
   private CriteriaBuilder getCriteriaBuilder() {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    return session.getCriteriaBuilder(); 
+    return session.getCriteriaBuilder();
   }
 
   public PersistentUserDetails retrieveByName(String username) {
@@ -65,7 +66,11 @@ public class HibernateUserDetailsDao extends AbstractHibernateDao<MutableUserDet
     cq.select(persistentUserDetailsRoot).where(
         cb.equal(persistentUserDetailsRoot.get("username"), username));
     TypedQuery<PersistentUserDetails> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
+      return null;
+    }
   }
 
   public List<String> retrieveAllTeacherUsernames() {
@@ -97,11 +102,15 @@ public class HibernateUserDetailsDao extends AbstractHibernateDao<MutableUserDet
     cq.select(persistentUserDetailsRoot).where(
         cb.equal(persistentUserDetailsRoot.get("googleUserId"), googleUserId));
     TypedQuery<PersistentUserDetails> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
+      return null;
+    }
   }
 
   public boolean hasUsername(String username) {
-    return (this.retrieveByName(username) != null);
+    return this.retrieveByName(username) != null;
   }
 
   @Override

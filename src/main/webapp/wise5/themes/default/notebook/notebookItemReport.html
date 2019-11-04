@@ -2,10 +2,10 @@
     <div class="notebook-item--report__heading">
         <p class="md-headline" style="color: {{notebookItemReportController.label.color}};">
             {{notebookItemReportController.reportItem.content.title}}
-            <md-button ng-if="notebookItemReportController.mode === 'classroomMonitor'"
+            <md-button ng-if="::notebookItemReportController.mode === 'classroomMonitor'"
                        class="md-icon-button text-secondary"
                        ng-click="notebookItemReportController.print()"
-                       aria-label="{{ 'PRINT' | translate }}">
+                       aria-label="{{ ::'PRINT' | translate }}">
                 <md-icon class="text-secondary"> print </md-icon>
             </md-button>
         </p>
@@ -16,17 +16,17 @@
             <div id="{{notebookItemReportController.reportId}}-toolbar" class="l-constrained l-constrained-md"></div>
         </div>
         <summernote id="{{notebookItemReportController.reportId}}"
-                    ng-if="notebookItemReportController.mode != 'classroomMonitor'"
+                    ng-if="::notebookItemReportController.mode != 'classroomMonitor'"
                     class="notebook-item--report__content"
                     ng-model="notebookItemReportController.reportItemContent"
                     ng-change="notebookItemReportController.reportItemContentChanged()"
                     config="notebookItemReportController.summernoteOptions"></summernote>
-        <div ng-if="notebookItemReportController.mode == 'classroomMonitor'"
+        <div ng-if="::notebookItemReportController.mode == 'classroomMonitor'"
              class="notebook-item--report__content"><compile data="notebookItemReportController.reportItem.content.content"></compile></div>
     </div>
-    <md-divider class="divider--withmargin" ng-if="notebookItemReportController.mode === 'classroomMonitor'"></md-divider>
+    <md-divider class="divider--withmargin" ng-if="::notebookItemReportController.mode === 'classroomMonitor'"></md-divider>
     <div class="component__actions">
-        <md-button ng-if="notebookItemReportController.mode != 'classroomMonitor'"
+        <md-button ng-if="::notebookItemReportController.mode != 'classroomMonitor'"
                    class="md-primary md-raised" aria-label="Save {{notebookItemReportController.label.link}}"
                    ng-click="notebookItemReportController.saveNotebookReportItem()"
                    ng-disabled="!notebookItemReportController.dirty">{{ 'SAVE' | translate }}</md-button>
@@ -36,8 +36,8 @@
         </span>
     </div>
 </div>
-<notebook-item-annotations ng-if="notebookItemReportController.mode == 'studentRun'"
+<notebook-item-annotations ng-if="::notebookItemReportController.mode == 'studentRun'"
                            notebook-item="notebookItemReportController.reportItem"></notebook-item-annotations>
 
-<notebook-item-grading ng-if="notebookItemReportController.mode == 'classroomMonitor'"
+<notebook-item-grading ng-if="::notebookItemReportController.mode == 'classroomMonitor'"
                        notebook-item="notebookItemReportController.reportItem"></notebook-item-grading>
