@@ -1467,14 +1467,18 @@ class DataExportController {
         row[columnNameToNumber['Component ID']] = notification.componentId;
         const component = this.ProjectService.getComponentByNodeIdAndComponentId(
                 notification.nodeId, notification.componentId);
-        row[columnNameToNumber['Component Type']] = component.type;
+        if (component != null) {
+            row[columnNameToNumber['Component Type']] = component.type;
+        }
         row[columnNameToNumber['Step Number']] =
                 this.getNodePositionById(notification.nodeId);
         row[columnNameToNumber['Step Title']] =
                 this.getNodeTitleByNodeId(notification.nodeId);
-        row[columnNameToNumber['Component Part Number']] =
-                this.ProjectService.getComponentPositionByNodeIdAndComponentId(
-                notification.nodeId, notification.componentId) + 1;
+        const componentPosition = this.ProjectService.getComponentPositionByNodeIdAndComponentId(
+                notification.nodeId, notification.componentId);
+        if (componentPosition != -1) {
+            row[columnNameToNumber['Component Part Number']] = componentPosition + 1;
+        }
         row[columnNameToNumber['Server Save Time']] =
                 this.UtilService.convertMillisecondsToFormattedDateTime(
                 notification.serverSaveTime);
