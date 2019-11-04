@@ -418,96 +418,90 @@ public class HibernateUserDaoTest extends AbstractTransactionalDbTests {
 
   @Test
   public void retrieveTeacherUsersWhoLoggedInSinceYesterday_WithRecentLogin_ShouldReturnUsers() {
-    ((TeacherUserDetails) teacher1.getUserDetails()).setLastLoginTime(new Date());
+    teacher1.getUserDetails().setLastLoginTime(new Date());
     List<User> users = userDao.retrieveTeacherUsersWhoLoggedInSinceYesterday();
     assertEquals(1, users.size());
   }
 
   @Test
   public void retrieveTeacherUsersWhoLoggedInToday_WithRecentLogin_ShouldReturnUsers() {
-    ((TeacherUserDetails) teacher1.getUserDetails()).setLastLoginTime(new Date());
-    ((TeacherUserDetails) teacher2.getUserDetails()).setLastLoginTime(new Date());
+    teacher1.getUserDetails().setLastLoginTime(new Date());
+    teacher2.getUserDetails().setLastLoginTime(new Date());
     List<User> users = userDao.retrieveTeacherUsersWhoLoggedInToday();
     assertEquals(2, users.size());
   }
 
   @Test
   public void retrieveTeacherUsersWhoLoggedInThisWeek_WithRecentLogin_ShouldReturnUsers() {
-    ((TeacherUserDetails) teacher1.getUserDetails()).setLastLoginTime(getDateXDaysFromNow(-8));
+    teacher1.getUserDetails().setLastLoginTime(getDateXDaysFromNow(-8));
     Calendar c = Calendar.getInstance();
     c.set(Calendar.DAY_OF_WEEK, 1);
-    ((TeacherUserDetails) teacher2.getUserDetails())
-        .setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
+    teacher2.getUserDetails().setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
     List<User> users = userDao.retrieveTeacherUsersWhoLoggedInThisWeek();
     assertEquals(1, users.size());
   }
 
   @Test
   public void retrieveTeacherUsersWhoLoggedInThisMonth_WithRecentLogin_ShouldReturnUsers() {
-    ((TeacherUserDetails) teacher1.getUserDetails()).setLastLoginTime(getDateXDaysFromNow(-32));
+    teacher1.getUserDetails().setLastLoginTime(getDateXDaysFromNow(-32));
     Calendar c = Calendar.getInstance();
     c.set(Calendar.DAY_OF_MONTH, 1);
-    ((TeacherUserDetails) teacher2.getUserDetails())
-        .setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
+    teacher2.getUserDetails().setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
     List<User> users = userDao.retrieveTeacherUsersWhoLoggedInThisMonth();
     assertEquals(1, users.size());
   }
 
   @Test
   public void retrieveTeacherUsersWhoLoggedInThisYear_WithRecentLogin_ShouldReturnUsers() {
-    ((TeacherUserDetails) teacher1.getUserDetails()).setLastLoginTime(getDateXDaysFromNow(-366));
+    teacher1.getUserDetails().setLastLoginTime(getDateXDaysFromNow(-366));
     Calendar c = Calendar.getInstance();
     c.set(Calendar.DAY_OF_YEAR, 1);
-    ((TeacherUserDetails) teacher2.getUserDetails())
-        .setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
+    teacher2.getUserDetails().setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
     List<User> users = userDao.retrieveTeacherUsersWhoLoggedInThisYear();
     assertEquals(1, users.size());
   }
 
   @Test
   public void retrieveStudentUsersWhoLoggedInSinceYesterday_WithRecentLogin_ShouldReturnUsers() {
-    ((StudentUserDetails) student1.getUserDetails()).setLastLoginTime(new Date());
+    student1.getUserDetails().setLastLoginTime(new Date());
     List<User> users = userDao.retrieveStudentUsersWhoLoggedInSinceYesterday();
     assertEquals(1, users.size());
   }
 
   @Test
   public void retrieveStudentUsersWhoLoggedInToday_WithRecentLogin_ShouldReturnUsers() {
-    ((StudentUserDetails) student1.getUserDetails()).setLastLoginTime(new Date());
-    ((StudentUserDetails) student2.getUserDetails()).setLastLoginTime(new Date());
+    student1.getUserDetails().setLastLoginTime(new Date());
+    student2.getUserDetails().setLastLoginTime(new Date());
     List<User> users = userDao.retrieveStudentUsersWhoLoggedInToday();
     assertEquals(2, users.size());
   }
 
   @Test
   public void retrieveStudentUsersWhoLoggedInThisWeek_WithRecentLogin_ShouldReturnUsers() {
-    ((StudentUserDetails) student1.getUserDetails()).setLastLoginTime(getDateXDaysFromNow(-8));
+    student1.getUserDetails().setLastLoginTime(getDateXDaysFromNow(-8));
     Calendar c = Calendar.getInstance();
     c.set(Calendar.DAY_OF_WEEK, 1);
-    ((StudentUserDetails) student2.getUserDetails())
-        .setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
+    student2.getUserDetails().setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
     List<User> users = userDao.retrieveStudentUsersWhoLoggedInThisWeek();
     assertEquals(1, users.size());
   }
 
   @Test
   public void retrieveStudentUsersWhoLoggedInThisMonth_WithRecentLogin_ShouldReturnUsers() {
-    ((StudentUserDetails) student1.getUserDetails()).setLastLoginTime(getDateXDaysFromNow(-32));
+    student1.getUserDetails().setLastLoginTime(getDateXDaysFromNow(-32));
     Calendar c = Calendar.getInstance();
     c.set(Calendar.DAY_OF_MONTH, 1);
-    ((StudentUserDetails) student2.getUserDetails())
-        .setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
+    student2.getUserDetails().setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
     List<User> users = userDao.retrieveStudentUsersWhoLoggedInThisMonth();
     assertEquals(1, users.size());
   }
 
   @Test
   public void retrieveStudentUsersWhoLoggedInThisYear_WithRecentLogin_ShouldReturnUsers() {
-    ((StudentUserDetails) student1.getUserDetails()).setLastLoginTime(getDateXDaysFromNow(-366));
+    student1.getUserDetails().setLastLoginTime(getDateXDaysFromNow(-366));
     Calendar c = Calendar.getInstance();
     c.set(Calendar.DAY_OF_YEAR, 1);
-    ((StudentUserDetails) student2.getUserDetails())
-        .setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
+    student2.getUserDetails().setLastLoginTime(new Date(c.getTimeInMillis() + 1000));
     List<User> users = userDao.retrieveStudentUsersWhoLoggedInThisYear();
     assertEquals(1, users.size());
   }
