@@ -55,25 +55,30 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
       Workgroup workgroup, String nodeId, String componentId) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<NotebookItem> cq = cb.createQuery(NotebookItem.class);
-    Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
     Subquery<Long> subQuery = cq.subquery(Long.class);
     Root<NotebookItem> subNotebookItemRoot = subQuery.from(NotebookItem.class);
-    Root<RunImpl> subRunRoot = subQuery.from(RunImpl.class);
-    Root<WorkgroupImpl> subWorkgroupRoot = subQuery.from(WorkgroupImpl.class);
     List<Predicate> subPredicates = new ArrayList<>();
-    subPredicates.add(cb.equal(subRunRoot, subNotebookItemRoot.get("run")));
-    subPredicates.add(cb.equal(subRunRoot.get("id"), run.getId()));
+    subPredicates.add(cb.equal(subNotebookItemRoot.get("run"), run));
+    subPredicates.add(cb.isNull(subNotebookItemRoot.get("groups")));
     if (workgroup != null) {
-      subPredicates.add(cb.equal(subWorkgroupRoot, subNotebookItemRoot.get("workgroup")));
-      subPredicates.add(cb.equal(subWorkgroupRoot.get("id"), workgroup.getId()));
+      subPredicates.add(
+          cb.equal(subNotebookItemRoot.get("workgroup"), workgroup));
+    }
+    if (period != null) {
+      subPredicates.add(cb.equal(subNotebookItemRoot.get("period"), period));
+    }
+    if (nodeId != null) {
+      subPredicates.add(cb.equal(subNotebookItemRoot.get("nodeId"), nodeId));
+    }
+    if (componentId != null) {
+      subPredicates.add(cb.equal(subNotebookItemRoot.get("componentId"), componentId));
     }
     subQuery.select(cb.max(subNotebookItemRoot.get("id")))
         .where(subPredicates.toArray(new Predicate[subPredicates.size()]))
-        .groupBy(subWorkgroupRoot.get("id"), subNotebookItemRoot.get("localNotebookItemId"));
-    List<Predicate> predicates = new ArrayList<>();
-    predicates.add(cb.in(notebookItemRoot.get("id")).value(subQuery));
-    predicates.add(cb.isNull(notebookItemRoot.get("groups")));
-    cq.select(notebookItemRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+        .groupBy(subNotebookItemRoot.get("workgroup").get("id"),
+        subNotebookItemRoot.get("localNotebookItemId"));
+    Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
+    cq.select(notebookItemRoot).where(cb.in(notebookItemRoot.get("id")).value(subQuery));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
     return (List<NotebookItem>)(Object)query.getResultList();
   }
@@ -82,22 +87,17 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
   public List<NotebookItem> getNotebookItemByGroup(Integer runId, String groupName) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<NotebookItem> cq = cb.createQuery(NotebookItem.class);
-    Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
     Subquery<Long> subQuery = cq.subquery(Long.class);
     Root<NotebookItem> subNotebookItemRoot = subQuery.from(NotebookItem.class);
-    Root<RunImpl> subRunRoot = subQuery.from(RunImpl.class);
-    Root<WorkgroupImpl> subWorkgroupRoot = subQuery.from(WorkgroupImpl.class);
     List<Predicate> subPredicates = new ArrayList<>();
-    subPredicates.add(cb.equal(subRunRoot.get("id"), runId));
-    subPredicates.add(cb.equal(subRunRoot, subNotebookItemRoot.get("run")));
-    subPredicates.add(cb.equal(subWorkgroupRoot, subNotebookItemRoot.get("workgroup")));
+    subPredicates.add(cb.equal(subNotebookItemRoot.get("run").get("id"), runId));
+    subPredicates.add(cb.like(subNotebookItemRoot.get("groups"), "%" + groupName + "%"));
     subQuery.select(cb.max(subNotebookItemRoot.get("id")))
         .where(subPredicates.toArray(new Predicate[subPredicates.size()]))
-        .groupBy(subWorkgroupRoot.get("id"), subNotebookItemRoot.get("localNotebookItemId"));
-    List<Predicate> predicates = new ArrayList<>();
-    predicates.add(cb.in(notebookItemRoot.get("id")).value(subQuery));
-    predicates.add(cb.like(notebookItemRoot.get("groups"), "%" + groupName + "%"));
-    cq.select(notebookItemRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+        .groupBy(subNotebookItemRoot.get("workgroup").get("id"),
+        subNotebookItemRoot.get("localNotebookItemId"));
+    Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
+    cq.select(notebookItemRoot).where(cb.in(notebookItemRoot.get("id")).value(subQuery));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
     return (List<NotebookItem>)(Object)query.getResultList();
   }
