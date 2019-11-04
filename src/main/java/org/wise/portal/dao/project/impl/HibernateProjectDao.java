@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -140,11 +141,11 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     Root<ProjectImpl> projectRoot = cq.from(ProjectImpl.class);
     cq.select(projectRoot).where(cb.equal(projectRoot.get("id"), id));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
-    Project project = query.getSingleResult();
-    if (project == null) {
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
       throw new ObjectNotFoundException((Long) id, ProjectImpl.class);
     }
-    return project;
   }
 
   @SuppressWarnings("unchecked")
@@ -248,7 +249,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     TypedQuery<Long> query = entityManager.createQuery(cq);
     try {
       return query.getSingleResult();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       return 0;
     }
   }

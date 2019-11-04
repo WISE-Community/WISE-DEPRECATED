@@ -66,7 +66,11 @@ public class HibernateUserDetailsDao extends AbstractHibernateDao<MutableUserDet
     cq.select(persistentUserDetailsRoot).where(
         cb.equal(persistentUserDetailsRoot.get("username"), username));
     TypedQuery<PersistentUserDetails> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
+      return null;
+    }
   }
 
   public List<String> retrieveAllTeacherUsernames() {
@@ -98,16 +102,15 @@ public class HibernateUserDetailsDao extends AbstractHibernateDao<MutableUserDet
     cq.select(persistentUserDetailsRoot).where(
         cb.equal(persistentUserDetailsRoot.get("googleUserId"), googleUserId));
     TypedQuery<PersistentUserDetails> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
+      return null;
+    }
   }
 
   public boolean hasUsername(String username) {
-    try {
-      this.retrieveByName(username);
-    } catch (NoResultException e) {
-      return false;
-    }
-    return true;
+    return this.retrieveByName(username) != null;
   }
 
   @Override

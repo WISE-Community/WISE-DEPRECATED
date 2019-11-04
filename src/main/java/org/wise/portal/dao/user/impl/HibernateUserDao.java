@@ -78,7 +78,11 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     Root<UserImpl> userRoot = cq.from(UserImpl.class);
     cq.select(userRoot).where(cb.equal(userRoot.get("userDetails"), userDetails));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
+      return null;
+    }
   }
 
   public List<String> retrieveAllUsernames() {
@@ -96,7 +100,11 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     Root<UserImpl> userRoot = cq.from(UserImpl.class);
     cq.select(userRoot).where(cb.equal(userRoot.get("userDetails").get("username"), username));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
+      return null;
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -118,7 +126,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         cb.equal(userRoot.get("userDetails").get("googleUserId"), googleUserId));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
     try {
-      return query.getSingleResult();
+      return query.setMaxResults(1).getSingleResult();
     } catch(NoResultException e) {
       return null;
     }
@@ -361,7 +369,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         cb.equal(userRoot.get("userDetails").get("resetPasswordKey"), resetPasswordKey));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
     try {
-      return query.getSingleResult();
+      return query.setMaxResults(1).getSingleResult();
     } catch(NoResultException e) {
       return null;
     }

@@ -26,6 +26,7 @@ package org.wise.portal.dao.portal.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -77,7 +78,11 @@ public class HibernatePortalStatisticsDao extends AbstractHibernateDao<PortalSta
     Root<PortalStatisticsImpl> portalStatisticsRoot = cq.from(PortalStatisticsImpl.class);
     cq.select(portalStatisticsRoot).orderBy(cb.desc(portalStatisticsRoot.get("timestamp")));
     TypedQuery<PortalStatisticsImpl> query = entityManager.createQuery(cq);
-    return query.setMaxResults(1).getSingleResult();
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
+      return null;
+    }
   }
 
 }
