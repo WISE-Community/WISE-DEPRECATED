@@ -146,7 +146,7 @@ public class VLEServiceImpl implements VLEService {
         notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
       }
       return notebookItemsJSONArray;
-    } catch(Exception e) {
+    } catch (Exception e) {
       return new JSONArray();
     }
   }
@@ -160,7 +160,7 @@ public class VLEServiceImpl implements VLEService {
         notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
       }
       return notebookItemsJSONArray;
-    } catch(Exception e) {
+    } catch (Exception e) {
       return new JSONArray();
     }
   }

@@ -101,7 +101,7 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork>
       cq.select(studentWorkRoot).where(predicates.toArray(new Predicate[predicates.size()]))
           .orderBy(cb.asc(studentWorkRoot.get("serverSaveTime")));
       TypedQuery<StudentWork> query = entityManager.createQuery(cq);
-      return (List<StudentWork>)(Object)query.getResultList();
+      return (List<StudentWork>) (Object) query.getResultList();
     }
   }
 

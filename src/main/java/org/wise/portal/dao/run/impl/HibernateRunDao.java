@@ -101,7 +101,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     cq.select(workgroupRoot).where(cb.equal(workgroupRoot.get("run").get("id"), runId));
     TypedQuery<WorkgroupImpl> query = entityManager.createQuery(cq);
     List<WorkgroupImpl> workgroupResultList = query.getResultList();
-    return (List<Workgroup>)(Object)workgroupResultList;
+    return (List<Workgroup>) (Object) workgroupResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -116,7 +116,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     cq.select(workgroupRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<WorkgroupImpl> query = entityManager.createQuery(cq);
     List<WorkgroupImpl> workgroupResultList = query.getResultList();
-    return (List<Workgroup>)(Object)workgroupResultList;
+    return (List<Workgroup>) (Object) workgroupResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -131,7 +131,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     }
     TypedQuery<RunImpl> query = entityManager.createQuery(cq);
     List<RunImpl> runResultList = query.getResultList();
-    return (List<Run>)(Object)runResultList; 
+    return (List<Run>) (Object) runResultList; 
   }
 
   @SuppressWarnings("unchecked")
@@ -150,7 +150,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     cq.select(runRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<RunImpl> query = entityManager.createQuery(cq);
     List<RunImpl> runResultList = query.getResultList();
-    return (List<Run>)(Object)runResultList;
+    return (List<Run>) (Object) runResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -161,7 +161,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     cq.select(runRoot).where(cb.equal(runRoot.get("project").get("id"), projectId));
     TypedQuery<RunImpl> query = entityManager.createQuery(cq);
     List<RunImpl> runResultList = query.getResultList();
-    return (List<Run>)(Object)runResultList;
+    return (List<Run>) (Object) runResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -173,7 +173,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
         .orderBy(cb.desc(runRoot.get("id")));
     TypedQuery<RunImpl> query = entityManager.createQuery(cq);
     List<RunImpl> runResultList = query.getResultList();
-    return (List<Run>)(Object)runResultList;
+    return (List<Run>) (Object) runResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -188,7 +188,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
         .orderBy(cb.desc(runRoot.get("id")));
     TypedQuery<RunImpl> query = entityManager.createQuery(cq);
     List<RunImpl> runResultList = query.getResultList();
-    return (List<Run>)(Object)runResultList;
+    return (List<Run>) (Object) runResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -210,7 +210,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     cq.select(runRoot).where(cb.greaterThanOrEqualTo(runRoot.get("lastRun"), compareDate));
     TypedQuery<RunImpl> query = entityManager.createQuery(cq);
     List<RunImpl> runResultList = query.getResultList();
-    return (List<Run>)(Object)runResultList;
+    return (List<Run>) (Object) runResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -222,7 +222,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
         .orderBy(cb.desc(runRoot.get("timesRun")));
     TypedQuery<RunImpl> query = entityManager.createQuery(cq);
     List<RunImpl> runResultList = query.getResultList();
-    return (List<Run>)(Object)runResultList;
+    return (List<Run>) (Object) runResultList;
   }
 
   @Override

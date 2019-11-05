@@ -115,7 +115,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     cq.select(userRoot).where(
         cb.equal(userRoot.get("userDetails").get("emailAddress"), emailAddress));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   public User retrieveByGoogleUserId(String googleUserId) {
@@ -139,7 +139,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     Root<UserImpl> userRoot = cq.from(UserImpl.class);
     cq.select(userRoot).where(cb.isFalse(userRoot.get("userDetails").get("enabled")));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -153,7 +153,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -168,7 +168,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   public List<User> retrieveTeachersByFirstName(String firstName) {
@@ -219,7 +219,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -234,7 +234,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   private Schoollevel getLevel(String level) {
@@ -257,7 +257,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -272,7 +272,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   public List<User> retrieveStudentsByFirstName(String firstName) {
@@ -299,7 +299,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -315,7 +315,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -338,7 +338,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         birthDay));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -354,7 +354,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     predicates.add(cb.equal(teacherUserDetailsRoot.get("lastname"), lastName));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   /**
@@ -405,7 +405,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     }
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   public List<User> retrieveTeacherUsersWhoLoggedInSinceYesterday() {
@@ -442,7 +442,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         cb.equal(userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   public List<User> retrieveStudentUsersWhoLoggedInSinceYesterday() {
@@ -479,7 +479,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         cb.equal(userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return (List<User>) (Object) query.getResultList();
   }
 
   private Date getCompareDate(String when) {

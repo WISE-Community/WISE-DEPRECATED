@@ -77,7 +77,7 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
     Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
     cq.select(notebookItemRoot).where(cb.in(notebookItemRoot.get("id")).value(subQuery));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>)(Object)query.getResultList();
+    return (List<NotebookItem>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -96,7 +96,7 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
     Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
     cq.select(notebookItemRoot).where(cb.in(notebookItemRoot.get("id")).value(subQuery));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>)(Object)query.getResultList();
+    return (List<NotebookItem>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -108,7 +108,7 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
         .orderBy(cb.asc(notebookItemRoot.get("workgroup").get("id")),
         cb.asc(notebookItemRoot.get("id")));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>)(Object)query.getResultList();
+    return (List<NotebookItem>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -124,7 +124,7 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
         .orderBy(cb.asc(notebookItemRoot.get("workgroup").get("id")),
         cb.asc(notebookItemRoot.get("id")));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>)(Object)query.getResultList();
+    return (List<NotebookItem>) (Object) query.getResultList();
   }
 
   private Subquery<Long> getLatestNotebookItemIds(CriteriaBuilder cb, CriteriaQuery cq) {

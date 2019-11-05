@@ -100,7 +100,7 @@ public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
     }
     cq.select(notificationRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<Notification> query = entityManager.createQuery(cq);
-    return (List<Notification>)(Object)query.getResultList();
+    return (List<Notification>) (Object) query.getResultList();
   }
 
   @Override
@@ -114,6 +114,6 @@ public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
     cq.select(notificationRoot).where(predicates.toArray(new Predicate[predicates.size()]))
         .orderBy(cb.asc(notificationRoot.get("toWorkgroup")), cb.asc(notificationRoot.get("id")));
     TypedQuery<Notification> query = entityManager.createQuery(cq);
-    return (List<Notification>)(Object)query.getResultList();
+    return (List<Notification>) (Object) query.getResultList();
   }
 }
