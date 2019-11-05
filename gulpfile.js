@@ -17,7 +17,7 @@ const gulpif = require('gulp-if');
 const merge = require('gulp-merge-json');
 const newer = require('gulp-newer');
 const postcss = require('gulp-postcss');
-const print = require('gulp-print');
+const print = require('gulp-print').default;
 const sass = require('gulp-sass');
 //const rtlscss = require('rtlcss');
 
@@ -31,8 +31,6 @@ const paths = ['./src/main/webapp/wise5/style/**/*.scss',
 const sitePaths = ['./src/main/webapp/site/src/**/*.ts',
   './src/main/webapp/site/src/**/*.html'
 ];
-const autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions',
-    'Firefox ESR', 'not ie <= 10'] };
 
 // -----------------------------------------------------------------------------
 // Sass compilation
@@ -44,7 +42,7 @@ gulp.task('compile-sass', gulp.series(function() {
       newer({dest: './', ext: '.css', extra: paths })))
     .pipe(sourcemaps.init())
     .pipe(sass(sassOptions).on('error', sass.logError))
-    .pipe(postcss([ autoprefixer(autoprefixerOptions),
+    .pipe(postcss([ autoprefixer(),
       cssnano({zindex: false})/*, rtlcss*/ ]) )
     .pipe(sourcemaps.write('.'))
     //.pipe(rename({suffix: '.min'}))
