@@ -360,7 +360,7 @@ class MilestonesController {
       if (this.isCompletionReached(projectAchievement)) {
         const report = this.generateReport(projectAchievement);
         this.setReportAvailable(projectAchievement, true);
-        projectAchievement.generatedReport = report.content ? report.content: null;
+        projectAchievement.generatedReport = report.content ? report.content : null;
         projectAchievement.recommendations = report.recommendations ? report.recommendations : null;
       } else {
         this.setReportAvailable(projectAchievement, false);
@@ -386,7 +386,7 @@ class MilestonesController {
       aggregateAutoScores[componentId] = this.calculateAggregateAutoScores(nodeId, componentId, this.periodId);
     }
     const template = this.chooseTemplate(projectAchievement.report.templates, aggregateAutoScores);
-    let content = template.content ? template.content : "";
+    let content = template.content ? template.content : '';
     if (content) {
       for (let componentId of Object.keys(aggregateAutoScores)) {
         const componentAggregate = aggregateAutoScores[componentId];
@@ -407,7 +407,7 @@ class MilestonesController {
         }
       }
     }
-    const recommendations = template.recommendations ? template.recommendations : "";
+    const recommendations = template.recommendations ? template.recommendations : '';
     return {
       content: content,
       recommendations: recommendations
