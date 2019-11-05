@@ -527,7 +527,7 @@ class MilestonesController {
 
   isTemplateMatch(template, aggregateAutoScores) {
     const matchedCriteria = [];
-    for (let satisfyCriterion of template.satisfyCriteria) {
+    for (const satisfyCriterion of template.satisfyCriteria) {
       if (this.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)) {
         matchedCriteria.push(satisfyCriterion);
       }
@@ -552,6 +552,8 @@ class MilestonesController {
       return this.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores);
     } else if (satisfyCriterion.function === 'percentOfScoresNotEqualTo') {
       return this.isPercentOfScoresNotEqualTo(satisfyCriterion, aggregateAutoScores);
+    } else if (satisfyCriterion.function === 'default') {
+      return true;
     }
   }
 
