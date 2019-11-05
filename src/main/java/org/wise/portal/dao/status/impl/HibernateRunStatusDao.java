@@ -85,10 +85,6 @@ public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus>
     Root<RunStatus> runStatusRoot = cq.from(RunStatus.class);
     cq.select(runStatusRoot).where(cb.equal(runStatusRoot.get("runId"), runId));
     TypedQuery<RunStatus> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 }

@@ -60,11 +60,7 @@ public class HibernateGrantedAuthorityDao extends
     cq.select(persistentGrantedAuthorityRoot).where(
         cb.equal(persistentGrantedAuthorityRoot.get("authority"), authority));
     TypedQuery<PersistentGrantedAuthority> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   public boolean hasRole(String authority) {

@@ -65,11 +65,7 @@ public class HibernateAclTargetObjectIdentityDao extends
     cq.select(persistentAclTargetObjectIdentityRoot).where(
         cb.equal(persistentAclTargetObjectIdentityRoot.get("id"), objectIdentity.getIdentifier()));
     TypedQuery<PersistentAclTargetObjectIdentity> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   public MutableAclTargetObjectIdentity[] findChildren(

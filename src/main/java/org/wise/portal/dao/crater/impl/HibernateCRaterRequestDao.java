@@ -91,11 +91,7 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
         cb.equal(cRaterRequestRoot.get("stepWork"), stepWork),
         cb.equal(cRaterRequestRoot.get("nodeStateId"), nodeStateId)));
     TypedQuery<CRaterRequest> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   @SuppressWarnings("unchecked")

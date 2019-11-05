@@ -78,11 +78,7 @@ public class HibernatePortalStatisticsDao extends AbstractHibernateDao<PortalSta
     Root<PortalStatisticsImpl> portalStatisticsRoot = cq.from(PortalStatisticsImpl.class);
     cq.select(portalStatisticsRoot).orderBy(cb.desc(portalStatisticsRoot.get("timestamp")));
     TypedQuery<PortalStatisticsImpl> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 
 }

@@ -88,11 +88,7 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
     cq.select(studentStatusRoot).where(cb.equal(studentStatusRoot.get("workgroupId"), workgroupId))
         .orderBy(cb.desc(studentStatusRoot.get("id")));
     TypedQuery<StudentStatus> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   @Transactional

@@ -71,10 +71,6 @@ public class HibernateAclTargetObjectDao extends
     cq.select(persistentAclTargetObjectRoot).where(
         cb.equal(persistentAclTargetObjectRoot.get("classname"), classname));
     TypedQuery<PersistentAclTargetObject> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 }

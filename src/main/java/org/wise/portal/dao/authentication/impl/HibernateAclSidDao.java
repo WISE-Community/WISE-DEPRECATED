@@ -68,10 +68,6 @@ public class HibernateAclSidDao extends AbstractHibernateDao<MutableAclSid>
     Root<PersistentAclSid> persistentAclSidRoot = cq.from(PersistentAclSid.class);
     cq.select(persistentAclSidRoot).where(cb.equal(persistentAclSidRoot.get("sidName"), sidName));
     TypedQuery<PersistentAclSid> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 }

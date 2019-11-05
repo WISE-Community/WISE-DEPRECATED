@@ -78,11 +78,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     Root<UserImpl> userRoot = cq.from(UserImpl.class);
     cq.select(userRoot).where(cb.equal(userRoot.get("userDetails"), userDetails));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   public List<String> retrieveAllUsernames() {
@@ -100,11 +96,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     Root<UserImpl> userRoot = cq.from(UserImpl.class);
     cq.select(userRoot).where(cb.equal(userRoot.get("userDetails").get("username"), username));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   @SuppressWarnings("unchecked")
@@ -125,11 +117,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     cq.select(userRoot).where(
         cb.equal(userRoot.get("userDetails").get("googleUserId"), googleUserId));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   @SuppressWarnings("unchecked")
@@ -368,11 +356,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     cq.select(userRoot).where(
         cb.equal(userRoot.get("userDetails").get("resetPasswordKey"), resetPasswordKey));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    try {
-      return query.setMaxResults(1).getSingleResult();
-    } catch(NoResultException e) {
-      return null;
-    }
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   public List<User> retrieveTeacherUsersJoinedSinceYesterday() {
