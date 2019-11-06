@@ -33,12 +33,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.Schoollevel;
-import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.junit.AbstractTransactionalDbTests;
-import org.wise.portal.service.authentication.DuplicateUsernameException;
-import org.wise.portal.service.user.UserService;
 
 /**
  * @author Geoffrey Kwan
@@ -51,9 +47,6 @@ public class HibernateUserDaoTest extends AbstractTransactionalDbTests {
 
   @Autowired
   private HibernateUserDao userDao;
-  
-  @Autowired
-  private UserService userService;
 
   @Before
   public void setUp() throws Exception {
@@ -66,45 +59,6 @@ public class HibernateUserDaoTest extends AbstractTransactionalDbTests {
     student1 = createStudentUser("Spongebob", "Squarepants", "SpongebobS0101", "burger", 1, 1,
         Gender.MALE);
     student2 = createStudentUser("Patrick", "Star", "PatrickS0101", "rock", 1, 1, Gender.MALE);
-  }
-
-  private User createTeacherUser(String firstName, String lastName, String username,
-        String displayName, String password, String city, String state, String country,
-        String email, String schoolName, Schoollevel schoolLevel, String googleUserId)
-        throws DuplicateUsernameException {
-    TeacherUserDetails userDetails = new TeacherUserDetails();
-    userDetails.setFirstname(firstName);
-    userDetails.setLastname(lastName);
-    userDetails.setUsername(username);
-    userDetails.setDisplayname(displayName);
-    userDetails.setPassword(password);
-    userDetails.setCity(city);
-    userDetails.setState(state);
-    userDetails.setCountry(country);
-    userDetails.setEmailAddress(email);
-    userDetails.setSchoolname(schoolName);
-    userDetails.setSchoollevel(schoolLevel);
-    userDetails.setGoogleUserId(googleUserId);
-    User user = userService.createUser(userDetails);
-    userDao.save(user);
-    return user;
-  }
-
-  private User createStudentUser(String firstName, String lastName, String  username, 
-        String password, int birthMonth, int birthDay, Gender gender) throws DuplicateUsernameException {
-    StudentUserDetails userDetails = new StudentUserDetails();
-    userDetails.setFirstname(firstName);
-    userDetails.setLastname(lastName);
-    userDetails.setUsername(username);
-    userDetails.setPassword(password);
-    Calendar calendar = Calendar.getInstance();
-    calendar.set(Calendar.MONTH, birthMonth - 1);
-    calendar.set(Calendar.DAY_OF_MONTH, birthDay);
-    userDetails.setBirthday(new Date(calendar.getTimeInMillis()));
-    userDetails.setGender(gender);
-    User user = userService.createUser(userDetails);
-    userDao.save(user);
-    return user;
   }
 
   @Test

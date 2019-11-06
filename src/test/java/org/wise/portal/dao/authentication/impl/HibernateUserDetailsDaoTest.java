@@ -23,8 +23,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -33,16 +31,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.wise.portal.dao.user.impl.HibernateUserDao;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
-import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-import org.wise.portal.domain.user.User;
 import org.wise.portal.junit.AbstractTransactionalDbTests;
-import org.wise.portal.service.authentication.DuplicateUsernameException;
-import org.wise.portal.service.user.UserService;
 
 /**
  * @author Geoffrey Kwan
@@ -53,12 +45,6 @@ public class HibernateUserDetailsDaoTest extends AbstractTransactionalDbTests {
 
   @Autowired
   private HibernateUserDetailsDao userDetailsDao;
-
-  @Autowired
-  private HibernateUserDao userDao;
-  
-  @Autowired
-  private UserService userService;
 
   @Before
   public void setUp() throws Exception {
@@ -71,46 +57,6 @@ public class HibernateUserDetailsDaoTest extends AbstractTransactionalDbTests {
     createStudentUser("Spongebob", "Squarepants", "SpongebobS0101", "burger", 1, 1,
         Gender.MALE);
     createStudentUser("Patrick", "Star", "PatrickS0101", "rock", 1, 1, Gender.MALE);
-  }
-
-  private User createTeacherUser(String firstName, String lastName, String username,
-        String displayName, String password, String city, String state, String country,
-        String email, String schoolName, Schoollevel schoolLevel, String googleUserId)
-        throws DuplicateUsernameException {
-    TeacherUserDetails userDetails = new TeacherUserDetails();
-    userDetails.setFirstname(firstName);
-    userDetails.setLastname(lastName);
-    userDetails.setUsername(username);
-    userDetails.setDisplayname(displayName);
-    userDetails.setPassword(password);
-    userDetails.setCity(city);
-    userDetails.setState(state);
-    userDetails.setCountry(country);
-    userDetails.setEmailAddress(email);
-    userDetails.setSchoolname(schoolName);
-    userDetails.setSchoollevel(schoolLevel);
-    userDetails.setGoogleUserId(googleUserId);
-    User user = userService.createUser(userDetails);
-    userDao.save(user);
-    return user;
-  }
-
-  private User createStudentUser(String firstName, String lastName, String  username, 
-        String password, int birthMonth, int birthDay, Gender gender)
-        throws DuplicateUsernameException {
-    StudentUserDetails userDetails = new StudentUserDetails();
-    userDetails.setFirstname(firstName);
-    userDetails.setLastname(lastName);
-    userDetails.setUsername(username);
-    userDetails.setPassword(password);
-    Calendar calendar = Calendar.getInstance();
-    calendar.set(Calendar.MONTH, birthMonth - 1);
-    calendar.set(Calendar.DAY_OF_MONTH, birthDay);
-    userDetails.setBirthday(new Date(calendar.getTimeInMillis()));
-    userDetails.setGender(gender);
-    User user = userService.createUser(userDetails);
-    userDao.save(user);
-    return user;
   }
 
   @Test
