@@ -24,18 +24,21 @@ package org.wise.portal.dao.status.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.NoResultException;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.wise.portal.junit.AbstractTransactionalDbTests;
 import org.wise.vle.domain.status.RunStatus;
@@ -74,31 +77,24 @@ public class HibernateRunStatusDaoTest extends AbstractTransactionalDbTests {
   }
 
   @Test
-  public void getByRunId_NewRunStatus_Success() {
-    ArrayList<Timestamp> mockTimeStamps = new ArrayList<Timestamp>();
-    Long runId = 73L;
-    int numRunStatus = 10;
-    for (int i = 0; i < numRunStatus; i++) {
-      Timestamp timeStamp = new Timestamp(
-          Calendar.getInstance().getTimeInMillis());
-      runStatusDao.save(createMockRunStatus(runId, timeStamp));
-      toilet.flush();
-      mockTimeStamps.add(timeStamp);
-    }
+  public void getRunStatusByRunId_NewRunStatus_Success() {
+    Long existingRunId = 37L;
+    Timestamp timeStamp = new Timestamp(
+        Calendar.getInstance().getTimeInMillis());
+    runStatusDao.save(createMockRunStatus(existingRunId, timeStamp));
+    toilet.flush();
 
-    List<?> fetchedRunStatusList = retrieveRunStatusByRunIdFromDb(runId);
+    RunStatus runStatus = runStatusDao.getRunStatusByRunId(existingRunId);
+    assertTrue(runStatus instanceof RunStatus);
+    assertTrue(runStatus.getClass() == RunStatus.class);
 
-    for (int i = 0; i < numRunStatus; i++) {
-      Map<?, ?> fetchedRunStatusMap = (Map<?, ?>) fetchedRunStatusList.get(i);
-
-      assertEquals(runId, fetchedRunStatusMap.get("runId"));
-      assertEquals(status, fetchedRunStatusMap.get("status"));
-      assertEquals(mockTimeStamps.get(i), fetchedRunStatusMap.get("timestamp"));
-    }
+    assertEquals(existingRunId, runStatus.getRunId());
+    assertEquals(timeStamp, runStatus.getTimestamp());
+    assertEquals(status, runStatus.getStatus());
   }
 
   @Test
-  public void getByRunId_NonExistingRunStatus_Failure() {
+  public void getRunStatusByRunId_NonExistingRunStatus_ShouldThrowException() {
     Long existingRunId = 37L;
     Long nonExistingRunId = 999L;
     Timestamp timeStamp = new Timestamp(
@@ -106,9 +102,11 @@ public class HibernateRunStatusDaoTest extends AbstractTransactionalDbTests {
     runStatusDao.save(createMockRunStatus(existingRunId, timeStamp));
     toilet.flush();
 
-    List<?> fetchedRunStatusList = retrieveRunStatusByRunIdFromDb(
-      nonExistingRunId);
-    assertTrue(fetchedRunStatusList.isEmpty());
+    try {
+      runStatusDao.getRunStatusByRunId(nonExistingRunId);
+      fail("NoResultsException was not thrown");
+    } catch (EmptyResultDataAccessException e) {
+    }
   }
 
   private RunStatus createMockRunStatus(Long runId, Timestamp timeStamp) {
@@ -122,10 +120,5 @@ public class HibernateRunStatusDaoTest extends AbstractTransactionalDbTests {
   private List<?> retrieveRunStatusFromDb() {
     return jdbcTemplate.queryForList("SELECT * FROM runstatus",
         (Object[]) null);
-  }
-
-  private List<?> retrieveRunStatusByRunIdFromDb(Long runId) {
-    return jdbcTemplate.queryForList(
-        "SELECT * FROM runstatus WHERE runId = " + runId, (Object[]) null);
   }
 }

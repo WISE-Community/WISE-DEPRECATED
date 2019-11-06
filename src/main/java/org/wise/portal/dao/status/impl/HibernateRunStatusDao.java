@@ -33,7 +33,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.status.RunStatusDao;
 import org.wise.vle.domain.status.RunStatus;
@@ -58,18 +57,6 @@ public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus>
   @Override
   protected Class<? extends RunStatus> getDataObjectClass() {
     return null;
-  }
-
-  public RunStatus getRunStatusById(Long id) {
-    RunStatus runStatus = null;
-
-    try {
-      runStatus = getById(id);
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    return runStatus;
   }
 
   @Transactional
