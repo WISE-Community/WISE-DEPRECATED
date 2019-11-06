@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008 Regents of the University of California (Regents). Created
+ * Copyright (c) 2019 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -23,6 +23,7 @@
 package org.wise.portal.dao.status.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -46,87 +47,85 @@ import org.wise.vle.domain.status.RunStatus;
 @RunWith(SpringRunner.class)
 public class HibernateRunStatusDaoTest extends AbstractTransactionalDbTests {
 
-    private final String status =  "status";
+  private final String status = "status";
 
-    @Autowired
-    private HibernateRunStatusDao runStatusDao;
+  @Autowired
+  private HibernateRunStatusDao runStatusDao;
 
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
+  @Before
+  public void setUp() throws Exception {
+    super.setUp();
+  }
+
+  @Test
+  public void save_NewRunStatus_Success() {
+    Long runId = 1L;
+    Timestamp timeStamp = new Timestamp(
+        Calendar.getInstance().getTimeInMillis());
+    runStatusDao.save(createMockRunStatus(runId, timeStamp));
+    toilet.flush();
+
+    List<?> fetchedRunStatusList = retrieveRunStatusFromDb();
+    Map<?, ?> fetchedRunStatusMap = (Map<?, ?>) fetchedRunStatusList.get(0);
+
+    assertEquals(runId, fetchedRunStatusMap.get("runId"));
+    assertEquals(status, fetchedRunStatusMap.get("status"));
+    assertEquals(timeStamp, fetchedRunStatusMap.get("timestamp"));
+  }
+
+  @Test
+  public void getByRunId_NewRunStatus_Success() {
+    ArrayList<Timestamp> mockTimeStamps = new ArrayList<Timestamp>();
+    Long runId = 73L;
+    int numRunStatus = 10;
+    for (int i = 0; i < numRunStatus; i++) {
+      Timestamp timeStamp = new Timestamp(
+          Calendar.getInstance().getTimeInMillis());
+      runStatusDao.save(createMockRunStatus(runId, timeStamp));
+      toilet.flush();
+      mockTimeStamps.add(timeStamp);
     }
 
-    @Test
-    public void testSaveRunStatus() {
-        Long runId = 1L;
-        Timestamp timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-        runStatusDao.save(createMockRunStatus(runId, timeStamp));
-        toilet.flush();
+    List<?> fetchedRunStatusList = retrieveRunStatusByRunIdFromDb(runId);
 
-        List<?> fetchedRunStatusList  = retrieveRunStatusFromDb();
-        Map<?, ?> fetchedRunStatusMap = (Map<?, ?>) fetchedRunStatusList.get(0);
-        
-        assertEquals(runId, fetchedRunStatusMap.get("RUNID"));
-        assertEquals(status, fetchedRunStatusMap.get("STATUS"));
-        assertEquals(timeStamp, fetchedRunStatusMap.get("TIMESTAMP"));
+    for (int i = 0; i < numRunStatus; i++) {
+      Map<?, ?> fetchedRunStatusMap = (Map<?, ?>) fetchedRunStatusList.get(i);
+
+      assertEquals(runId, fetchedRunStatusMap.get("runId"));
+      assertEquals(status, fetchedRunStatusMap.get("status"));
+      assertEquals(mockTimeStamps.get(i), fetchedRunStatusMap.get("timestamp"));
     }
+  }
 
-    @Test
-    public void testgetRunStatusByRunIdSuccess() {
-        ArrayList<Timestamp> mockTimeStamps = new ArrayList<Timestamp>();
-        Long runId = 73L;
-        int numRunStatus = 10;
-        for (int i = 0; i < numRunStatus; i++) {
-            Timestamp timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-            runStatusDao.save(createMockRunStatus(runId, timeStamp));
-            toilet.flush();
-            mockTimeStamps.add(timeStamp);
-        }
+  @Test
+  public void getByRunId_NonExistingRunStatus_Failure() {
+    Long existingRunId = 37L;
+    Long nonExistingRunId = 999L;
+    Timestamp timeStamp = new Timestamp(
+        Calendar.getInstance().getTimeInMillis());
+    runStatusDao.save(createMockRunStatus(existingRunId, timeStamp));
+    toilet.flush();
 
-        List<?> fetchedRunStatusList  = retrieveRunStatusByRunIdFromDb(runId);
+    List<?> fetchedRunStatusList = retrieveRunStatusByRunIdFromDb(
+      nonExistingRunId);
+    assertTrue(fetchedRunStatusList.isEmpty());
+  }
 
-        for (int i = 0; i < numRunStatus; i++) {
-            Map<?, ?> fetchedRunStatusMap = (Map<?, ?>) fetchedRunStatusList.get(i);
-        
-            assertEquals(runId, fetchedRunStatusMap.get("RUNID"));
-            assertEquals(status, fetchedRunStatusMap.get("STATUS"));
-            assertEquals(mockTimeStamps.get(i), fetchedRunStatusMap.get("TIMESTAMP"));
-        }
-    }
+  private RunStatus createMockRunStatus(Long runId, Timestamp timeStamp) {
+    RunStatus runStatus = new RunStatus();
+    runStatus.setRunId(runId);
+    runStatus.setStatus(status);
+    runStatus.setTimestamp(timeStamp);
+    return runStatus;
+  }
 
-    @Test
-    public void testgetRunStatusByRunIdFailure() {
-        Long existingRunId = 37L;
-        Long notFoundRunId = 999L;
-        Timestamp timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-        runStatusDao.save(createMockRunStatus(existingRunId, timeStamp));
-        toilet.flush();
+  private List<?> retrieveRunStatusFromDb() {
+    return jdbcTemplate.queryForList("SELECT * FROM runstatus",
+        (Object[]) null);
+  }
 
-        List<?> fetchedRunStatusList  = retrieveRunStatusByRunIdFromDb(notFoundRunId);
-        
-        assertEquals(true, fetchedRunStatusList.isEmpty());
-
-        fetchedRunStatusList  = retrieveRunStatusByRunIdFromDb(existingRunId);
-        Map<?, ?> fetchedRunStatusMap = (Map<?, ?>) fetchedRunStatusList.get(0);
-        
-        assertEquals(existingRunId, fetchedRunStatusMap.get("RUNID"));
-        assertEquals(status, fetchedRunStatusMap.get("STATUS"));
-        assertEquals(timeStamp, fetchedRunStatusMap.get("TIMESTAMP"));
-    }
-
-    private RunStatus createMockRunStatus(Long runId, Timestamp timeStamp) {
-        RunStatus runStatus = new RunStatus();
-        runStatus.setRunId(runId);
-        runStatus.setStatus(status);
-        runStatus.setTimestamp(timeStamp);
-        return runStatus;
-    }
-
-    private List<?> retrieveRunStatusFromDb() {
-        return jdbcTemplate.queryForList("SELECT * FROM runstatus", (Object[]) null);
-    }
-
-    private List<?> retrieveRunStatusByRunIdFromDb(Long runId) {
-        return jdbcTemplate.queryForList("SELECT * FROM runstatus WHERE runId = " + runId, (Object[]) null);
-    }
+  private List<?> retrieveRunStatusByRunIdFromDb(Long runId) {
+    return jdbcTemplate.queryForList(
+        "SELECT * FROM runstatus WHERE runId = " + runId, (Object[]) null);
+  }
 }
