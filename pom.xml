@@ -149,7 +149,14 @@
                 <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/*.java</exclude>
-                <exclude>**/org/wise/portal/dao/authentication/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/AllTests.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclEntryDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclSidDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectIdentityDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateGrantedAuthorityDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateStudentUserDetailsDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateTeacherUserDetailsDaoTest.java</exclude>
                 <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
@@ -186,7 +193,14 @@
             <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
             <exclude>**/org/wise/portal/dao/*.java</exclude>
-            <exclude>**/org/wise/portal/dao/authentication/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/AllTests.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclEntryDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclSidDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectIdentityDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateGrantedAuthorityDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateStudentUserDetailsDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateTeacherUserDetailsDaoTest.java</exclude>
             <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
             <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
             <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>

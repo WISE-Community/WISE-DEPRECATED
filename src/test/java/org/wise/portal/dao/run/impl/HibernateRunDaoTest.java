@@ -46,12 +46,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.impl.HibernateGroupDao;
 import org.wise.portal.dao.project.impl.HibernateProjectDao;
-import org.wise.portal.dao.user.impl.HibernateUserDao;
 import org.wise.portal.dao.workgroup.impl.HibernateWorkgroupDao;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.Schoollevel;
-import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.project.Project;
@@ -62,8 +59,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.junit.AbstractTransactionalDbTests;
-import org.wise.portal.service.authentication.DuplicateUsernameException;
-import org.wise.portal.service.user.UserService;
 
 /**
  * @author Hiroki Terashima
@@ -90,16 +85,10 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
   private HibernateGroupDao groupDao;
 
   @Autowired
-  private HibernateUserDao userDao;
-
-  @Autowired
   private HibernateProjectDao projectDao;
 
   @Autowired
   private HibernateWorkgroupDao workgroupDao;
-
-  @Autowired
-  private UserService userService;
 
   @Before
   public void setUp() throws Exception {
@@ -107,12 +96,15 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     verifyRunAndJoinTablesAreEmpty();
     period1 = createPeriod("Period 1");
     period2 = createPeriod("Period 2");
-    teacher1 = createTeacherUser("Mrs", "Puff", "Mrs. Puff", "boat", "Bikini Bottom",
-        "mrspuff@bikinibottom.com", "Boating School", Schoollevel.COLLEGE);
-    teacher2 = createTeacherUser("Mr", "Krabs", "Mr. Krabs", "restaurant", "Bikini Bottom",
-        "mrkrabs@bikinibottom.com", "Krusty Krab", Schoollevel.COLLEGE);
-    student1 = createStudentUser("Spongebob", "Squarepants", "SpongebobS0101", "burger");
-    student2 = createStudentUser("Patrick", "Star", "PatrickS0101", "rock");
+    teacher1 = createTeacherUser("Mrs", "Puff", "MrsPuff", "Mrs. Puff", "boat", "Bikini Bottom",
+        "Water State", "Pacific Ocean", "mrspuff@bikinibottom.com", "Boating School",
+        Schoollevel.COLLEGE, "1234567890");
+    teacher2 = createTeacherUser("Mr", "Krabs", "MrKrabs", "Mr. Krabs", "restaurant",
+        "Bikini Bottom", "Water State", "Pacific Ocean", "mrkrabs@bikinibottom.com",
+        "Krusty Krab", Schoollevel.HIGH_SCHOOL, "abcdefghij");
+    student1 = createStudentUser("Spongebob", "Squarepants", "SpongebobS0101", "burger", 1, 1,
+        Gender.MALE);
+    student2 = createStudentUser("Patrick", "Star", "PatrickS0101", "rock", 1, 1, Gender.MALE);
     Long id = getNextAvailableProjectId();
     String projectName = "Airbags";
     run = createProjectAndRun(id, projectName, teacher1, startTime, runCode);
@@ -161,24 +153,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     Run run = createRun(id, name, startTime, runCode, owner, project);
     runDao.save(run);
     return run;
-  }
-
-  private User createTeacherUser(String firstName, String lastName, String username,
-      String password, String country, String email, String schoolName,
-      Schoollevel schoolLevel)
-      throws DuplicateUsernameException {
-    TeacherUserDetails userDetails = new TeacherUserDetails();
-    userDetails.setFirstname(firstName);
-    userDetails.setLastname(lastName);
-    userDetails.setUsername(username);
-    userDetails.setPassword(password);
-    userDetails.setCountry(country);
-    userDetails.setEmailAddress(email);
-    userDetails.setSchoolname(schoolName);
-    userDetails.setSchoollevel(schoolLevel);
-    User user = userService.createUser(userDetails);
-    userDao.save(user);
-    return user;
   }
 
   private void assertNumRuns(int expected) {
@@ -298,20 +272,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     createWorkgroup(members2, run, period2);
     workgroups = runDao.getWorkgroupsForRun(runId);
     assertEquals(2, workgroups.size());
-  }
-
-  private User createStudentUser(String firstName, String lastName, String  username, 
-      String password) throws DuplicateUsernameException {
-    StudentUserDetails userDetails = new StudentUserDetails();
-    userDetails.setFirstname(firstName);
-    userDetails.setLastname(lastName);
-    userDetails.setUsername(username);
-    userDetails.setPassword(password);
-    userDetails.setBirthday(new Date());
-    userDetails.setGender(Gender.MALE);
-    User user = userService.createUser(userDetails);
-    userDao.save(user);
-    return user;
   }
 
   private Workgroup createWorkgroup(Set<User> members, Run run, Group period) {
