@@ -24,14 +24,12 @@ package org.wise.portal.dao.status.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.NoResultException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -103,8 +101,7 @@ public class HibernateRunStatusDaoTest extends AbstractTransactionalDbTests {
     toilet.flush();
 
     try {
-      runStatusDao.getRunStatusByRunId(nonExistingRunId);
-      fail("NoResultsException was not thrown");
+      assertNull(runStatusDao.getRunStatusByRunId(nonExistingRunId));
     } catch (EmptyResultDataAccessException e) {
     }
   }
