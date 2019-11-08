@@ -522,11 +522,6 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public RunStatus getRunStatusById(Long id) {
-    return runStatusDao.getRunStatusById(id);
-  }
-
-  @Override
   public void saveRunStatus(RunStatus runStatus) {
     runStatusDao.saveRunStatus(runStatus);
   }
