@@ -1,7 +1,7 @@
-<md-dialog aria-label="{{editNotebookItemController.title}}" class="view-notebook-item" ng-cloak>
+<md-dialog aria-label="{{::editNotebookItemController.title}}" class="view-notebook-item" ng-cloak>
     <md-toolbar>
-        <div class="md-toolbar-tools" style="background-color: {{editNotebookItemController.color}};">
-            <h2>{{editNotebookItemController.title}}</h2>
+        <div class="md-toolbar-tools" style="background-color: {{::editNotebookItemController.color}};">
+            <h2>{{::editNotebookItemController.title}}</h2>
         </div>
     </md-toolbar>
     <md-dialog-content>
@@ -20,7 +20,7 @@
                 <md-button class="md-whiteframe-1dp notebook-item__attachment__delete md-icon-button md-raised"
                            ng-click='editNotebookItemController.removeAttachment(attachment)'
                            ng-disabled="!editNotebookItemController.isEditMode"
-                           title="{{ 'removeFile' | translate }}">
+                           title="{{ ::'removeFile' | translate }}">
                     <md-icon class="text-secondary">delete</md-icon>
                 </md-button>
             </div>
@@ -49,16 +49,16 @@
                          ng-checked="editNotebookItemController.isSharedWithClass()"
                          ng-if="editNotebookItemController.canShareWithClass()"
                          ng-click="editNotebookItemController.toggleMakeNotePublic()">
-                {{ 'shareNoteWithClass' | translate }}
+                {{ ::'shareNoteWithClass' | translate }}
             </md-checkbox>
         </div>
         <span flex></span>
         <div>
             <md-button class="primary" aria-label="Cancel" ng-click="editNotebookItemController.cancel()">
-                {{ 'CANCEL' | translate }}
+                {{ ::'CANCEL' | translate }}
             </md-button>
             <md-button class="primary" aria-label="Save" ng-click="editNotebookItemController.save()" ng-disabled="!editNotebookItemController.saveEnabled">
-                {{ 'SAVE' | translate }}
+                {{ ::'SAVE' | translate }}
             </md-button>
         </div>
     </md-dialog-actions>
@@ -69,13 +69,13 @@
                        ng-if="editNotebookItemController.canCopyPublicNotebookItem()"
                        ng-click="editNotebookItemController.copyPublicNotebookItem($event)">
                 <md-icon class="primary"> content_copy </md-icon>
-                {{ 'copyToMyNotes' | translate }}
+                {{ ::'copyToMyNotes' | translate }}
             </md-button>
         </div>
         <span flex></span>
         <div>
             <md-button class="primary" aria-label="Close" ng-click="editNotebookItemController.close()">
-                {{ 'CLOSE' | translate }}
+                {{ ::'CLOSE' | translate }}
             </md-button>
         </div>
     </md-dialog-actions>

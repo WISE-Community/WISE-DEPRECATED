@@ -93,9 +93,6 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     }
   }
 
-  /**
-   * TODO HT comment and test this method
-   */
   @SuppressWarnings("unchecked")
   public List<Workgroup> getWorkgroupsForRun(Long runId) {
     CriteriaBuilder cb = getCriteriaBuilder();
@@ -237,7 +234,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     TypedQuery<Long> query = entityManager.createQuery(cq);
     try {
       return query.getSingleResult();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       return 0;
     }
   }

@@ -1,28 +1,16 @@
-'use strict';
+import vleModule from '../../../vle/vle';
 
-var _angular = require('angular');
+describe('AnimationController', () => {
 
-var _angular2 = _interopRequireDefault(_angular);
+  let $controller;
+  let $rootScope;
+  let $scope;
+  let animationController;
+  let component;
 
-var _main = require('vle/main');
+  beforeEach(angular.mock.module(vleModule.name));
 
-var _main2 = _interopRequireDefault(_main);
-
-require('angular-mocks');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-describe('AnimationController', function () {
-
-  var $controller = void 0;
-  var $rootScope = void 0;
-  var $scope = void 0;
-  var animationController = void 0;
-  var component = void 0;
-
-  beforeEach(_angular2.default.mock.module(_main2.default.name));
-
-  beforeEach(inject(function (_$controller_, _$rootScope_) {
+  beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     component = {
@@ -38,23 +26,29 @@ describe('AnimationController', function () {
       "dataXOriginInPixels": 0,
       "dataYOriginInPixels": 80,
       "coordinateSystem": "screen",
-      "objects": [{
-        "id": "2uiqxlkvcc",
-        "type": "image",
-        "data": [{
-          "t": 0,
-          "x": 0
-        }, {
-          "t": 10,
-          "x": 50
-        }, {
-          "t": 20,
-          "x": 0
-        }],
-        "image": "Swimmer.png",
-        "dataX": 0,
-        "dataY": 0
-      }],
+      "objects": [
+        {
+          "id": "2uiqxlkvcc",
+          "type": "image",
+          "data": [
+            {
+              "t": 0,
+              "x": 0
+            },
+            {
+              "t": 10,
+              "x": 50
+            },
+            {
+              "t": 20,
+              "x": 0
+            }
+          ],
+          "image": "Swimmer.png",
+          "dataX": 0,
+          "dataY": 0
+        }
+      ],
       "showAddToNotebookButton": true,
       "connectedComponents": []
     };
@@ -65,14 +59,14 @@ describe('AnimationController', function () {
     animationController.nodeId = 'node1';
   }));
 
-  it('should convert data x to pixel x', function () {
-    var pixelX = animationController.dataXToPixelX(10);
+  it('should convert data x to pixel x', () => {
+    const pixelX = animationController.dataXToPixelX(10);
     expect(pixelX).toEqual(100);
   });
 
-  it('should convert data y to pixel y', function () {
-    var pixelY = animationController.dataYToPixelY(0);
+  it('should convert data y to pixel y', () => {
+    const pixelY = animationController.dataYToPixelY(0);
     expect(pixelY).toEqual(80);
   });
+
 });
-//# sourceMappingURL=animationController.spec.js.map

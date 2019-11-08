@@ -1,18 +1,21 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var NavItemController = function () {
-    function NavItemController($element, $filter, $rootScope, $scope, $state, AnnotationService, ConfigService, NodeService, NotificationService, PlanningService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
-        var _this = this;
-
-        _classCallCheck(this, NavItemController);
+class NavItemController {
+    constructor($element,
+                $filter,
+                $rootScope,
+                $scope,
+                $state,
+                AnnotationService,
+                ConfigService,
+                NodeService,
+                NotificationService,
+                PlanningService,
+                ProjectService,
+                StudentDataService,
+                StudentStatusService,
+                TeacherDataService,
+                TeacherWebSocketService) {
 
         this.$element = $element;
         this.$filter = $filter;
@@ -33,15 +36,17 @@ var NavItemController = function () {
         this.$translate = this.$filter('translate');
 
         this.expanded = false;
+    }
 
+    $onInit() {
         this.item = this.ProjectService.idToNode[this.nodeId];
         this.isGroup = this.ProjectService.isGroupNode(this.nodeId);
         this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
 
-        this.nodeTitle = this.showPosition ? this.ProjectService.nodeIdToNumber[this.nodeId] + ': ' + this.item.title : this.item.title;
+        this.nodeTitle = this.showPosition ? (this.ProjectService.nodeIdToNumber[this.nodeId] + ': ' + this.item.title) : this.item.title;
         this.currentNode = this.TeacherDataService.currentNode;
         this.previousNode = null;
-        this.isCurrentNode = this.currentNode.id === this.nodeId;
+        this.isCurrentNode = (this.currentNode.id === this.nodeId);
 
         // the current period
         this.currentPeriod = this.TeacherDataService.getCurrentPeriod();
@@ -89,359 +94,344 @@ var NavItemController = function () {
 
         this.setWorkgroupsOnNodeData();
 
-        this.$onInit = function () {
-            _this.hasAlert = false;
-            _this.newAlert = false;
-            _this.alertNotifications = [];
+        this.$onInit = () => {
+            this.hasAlert = false;
+            this.newAlert = false;
+            this.alertNotifications = [];
 
-            _this.getAlertNotifications();
+            this.getAlertNotifications();
 
-            _this.hasRubrics = _this.ProjectService.getNumberOfRubricsByNodeId(_this.nodeId) > 0;
-            _this.alertIconLabel = _this.$translate('HAS_ALERTS_NEW');
-            _this.alertIconClass = 'warn';
-            _this.alertIconName = 'notifications';
-            _this.rubricIconLabel = _this.$translate('STEP_HAS_RUBRICS_TIPS');
-            _this.rubricIconClass = 'info';
-            _this.rubricIconName = 'info';
+            this.hasRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId) > 0;
+            this.alertIconLabel = this.$translate('HAS_ALERTS_NEW');
+            this.alertIconClass = 'warn';
+            this.alertIconName = 'notifications';
+            this.rubricIconLabel = this.$translate('STEP_HAS_RUBRICS_TIPS');
+            this.rubricIconClass = 'info';
+            this.rubricIconName = 'info';
         };
 
-        this.$scope.$watch(function () {
-            return _this.TeacherDataService.currentNode;
-        }, function (newNode, oldNode) {
-            _this.currentNode = newNode;
-            _this.previousNode = oldNode;
-            _this.isCurrentNode = _this.nodeId === newNode.id;
-            var isPrev = false;
+        this.$scope.$watch(
+            () => { return this.TeacherDataService.currentNode; },
+            (newNode, oldNode) => {
+                this.currentNode = newNode;
+                this.previousNode = oldNode;
+                this.isCurrentNode = (this.nodeId === newNode.id);
+                let isPrev = false;
 
-            if (_this.ProjectService.isApplicationNode(newNode.id)) {
-                return;
-            }
-
-            if (oldNode) {
-                isPrev = _this.nodeId === oldNode.id;
-
-                if (_this.TeacherDataService.previousStep) {
-                    _this.$scope.$parent.isPrevStep = _this.nodeId === _this.TeacherDataService.previousStep.id;
+                if (this.ProjectService.isApplicationNode(newNode.id)) {
+                    return;
                 }
 
-                if (isPrev && !_this.isGroup) {
-                    _this.zoomToElement();
-                }
-            }
+                if (oldNode) {
+                    isPrev = (this.nodeId === oldNode.id);
 
-            if (_this.isGroup) {
-                var prevNodeisGroup = !oldNode || _this.ProjectService.isGroupNode(oldNode.id);
-                var prevNodeIsDescendant = _this.ProjectService.isNodeDescendentOfGroup(oldNode, _this.item);
-                if (_this.isCurrentNode) {
-                    _this.expanded = true;
-                    if (prevNodeisGroup || !prevNodeIsDescendant) {
-                        _this.zoomToElement();
+                    if (this.TeacherDataService.previousStep) {
+                        this.$scope.$parent.isPrevStep = (this.nodeId === this.TeacherDataService.previousStep.id);
                     }
-                } else {
-                    if (!prevNodeisGroup) {
-                        if (prevNodeIsDescendant) {
-                            _this.expanded = true;
-                        } else {
-                            _this.expanded = false;
+
+                    if (isPrev && !this.isGroup) {
+                        this.zoomToElement();
+                    }
+                }
+
+                if (this.isGroup) {
+                    let prevNodeisGroup = (!oldNode || this.ProjectService.isGroupNode(oldNode.id));
+                    let prevNodeIsDescendant = this.ProjectService.isNodeDescendentOfGroup(oldNode, this.item);
+                    if (this.isCurrentNode) {
+                        this.expanded = true;
+                        if (prevNodeisGroup || !prevNodeIsDescendant) {
+                            this.zoomToElement();
+                        }
+                    } else {
+                        if (!prevNodeisGroup) {
+                            if (prevNodeIsDescendant) {
+                                this.expanded = true;
+                            } else {
+                                this.expanded = false;
+                            }
                         }
                     }
-                }
-            } else {
-                if (isPrev && _this.ProjectService.isNodeDescendentOfGroup(_this.item, newNode)) {
-                    _this.zoomToElement();
+                } else {
+                    if (isPrev && this.ProjectService.isNodeDescendentOfGroup(this.item, newNode)) {
+                        this.zoomToElement();
+                    }
                 }
             }
-        });
+        );
 
-        this.$scope.$watch(function () {
-            return _this.expanded;
-        }, function (value) {
-            _this.$scope.$parent.itemExpanded = value;
-        });
+        this.$scope.$watch(
+            () => { return this.expanded; },
+            (value) => {
+                this.$scope.$parent.itemExpanded = value;
+            }
+        );
 
         // listen for the studentsOnlineReceived event
-        this.$rootScope.$on('studentsOnlineReceived', function (event, args) {
-            _this.setWorkgroupsOnNodeData();
+        this.$rootScope.$on('studentsOnlineReceived', (event, args) => {
+            this.setWorkgroupsOnNodeData();
         });
 
         // listen for the studentStatusReceived event
-        this.$rootScope.$on('studentStatusReceived', function (event, args) {
-            _this.setWorkgroupsOnNodeData();
-            _this.setCurrentNodeStatus();
-            _this.getAlertNotifications();
+        this.$rootScope.$on('studentStatusReceived', (event, args) => {
+            this.setWorkgroupsOnNodeData();
+            this.setCurrentNodeStatus();
+            this.getAlertNotifications();
         });
 
         // listen for the currentPeriodChanged event
-        this.$rootScope.$on('currentPeriodChanged', function (event, args) {
-            _this.currentPeriod = args.currentPeriod;
-            _this.setWorkgroupsOnNodeData();
-            _this.getAlertNotifications();
+        this.$rootScope.$on('currentPeriodChanged', (event, args) => {
+            this.currentPeriod = args.currentPeriod;
+            this.setWorkgroupsOnNodeData();
+            this.getAlertNotifications();
         });
     }
 
-    _createClass(NavItemController, [{
-        key: 'zoomToElement',
-        value: function zoomToElement() {
-            var _this2 = this;
+    zoomToElement() {
+        setTimeout(()=> {
+            // smooth scroll to expanded group's page location
+            let top = this.$element[0].offsetTop;
+            let location = this.isGroup ? top - 32 : top - 80;
+            let delay = 350;
+            $('#content').animate({
+                scrollTop: location
+            }, delay, 'linear');
+        }, 500);
+    }
 
-            setTimeout(function () {
-                // smooth scroll to expanded group's page location
-                var top = _this2.$element[0].offsetTop;
-                var location = _this2.isGroup ? top - 32 : top - 80;
-                var delay = 350;
-                $('#content').animate({
-                    scrollTop: location
-                }, delay, 'linear');
-            }, 500);
-        }
-    }, {
-        key: 'itemClicked',
-        value: function itemClicked(event) {
-            var previousNode = this.TeacherDataService.currentNode;
-            var currentNode = this.ProjectService.getNodeById(this.nodeId);
-            if (this.isGroup) {
-                this.expanded = !this.expanded;
-                if (this.expanded) {
-                    if (this.isCurrentNode) {
-                        this.zoomToElement();
-                    } else {
-                        this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
-                    }
-                }
-            } else {
-                this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
-            }
-        }
-
-        /**
-         * Returns the max times a planning node can be added to the project (-1 is
-         * is returned if there is no limit)
-         * @param planningNodeId
-         */
-
-    }, {
-        key: 'getPlannindNodeMaxAllowed',
-        value: function getPlannindNodeMaxAllowed(planningNodeId) {
-            var maxAddAllowed = -1; // by default, students can add as many instances as they want
-            var planningGroupNode = null;
-            if (this.isParentGroupPlanning) {
-                planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
-            } else {
-                planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
-            }
-            // get the maxAddAllowed value by looking up the planningNode in the project.
-            if (planningGroupNode && planningGroupNode.availablePlanningNodes) {
-                for (var a = 0; a < planningGroupNode.availablePlanningNodes.length; a++) {
-                    var availablePlanningNode = planningGroupNode.availablePlanningNodes[a];
-                    if (availablePlanningNode.nodeId === planningNodeId && availablePlanningNode.max != null) {
-                        maxAddAllowed = availablePlanningNode.max;
-                    }
+    itemClicked(event) {
+        let previousNode = this.TeacherDataService.currentNode;
+        let currentNode = this.ProjectService.getNodeById(this.nodeId);
+        if (this.isGroup) {
+            this.expanded = !this.expanded;
+            if (this.expanded) {
+                if (this.isCurrentNode) {
+                    this.zoomToElement();
+                } else {
+                    this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
                 }
             }
-
-            return maxAddAllowed;
+        } else {
+            this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
         }
+    }
 
-        /**
-         * Returns the number of times a planning node has been added to the project
-         * @param planningNodeId
-         */
-
-    }, {
-        key: 'getNumPlannindNodeInstances',
-        value: function getNumPlannindNodeInstances(planningNodeId) {
-            var numPlanningNodesAdded = 0; // keep track of number of instances
-            // otherwise, see how many times the planning node template has been used.
-
-            var planningGroupNode = null;
-            if (this.isParentGroupPlanning) {
-                planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
-            } else {
-                planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
-            }
-
-            // loop through the child ids in the planning group and see how many times they've been used
-            if (planningGroupNode && planningGroupNode.ids) {
-                for (var c = 0; c < planningGroupNode.ids.length; c++) {
-                    var childPlanningNodeId = planningGroupNode.ids[c];
-                    var childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
-                    if (childPlanningNode != null && childPlanningNode.planningNodeTemplateId === planningNodeId) {
-                        numPlanningNodesAdded++;
-                    }
+    /**
+     * Returns the max times a planning node can be added to the project (-1 is
+     * is returned if there is no limit)
+     * @param planningNodeId
+     */
+    getPlannindNodeMaxAllowed(planningNodeId) {
+        let maxAddAllowed = -1;  // by default, students can add as many instances as they want
+        let planningGroupNode = null;
+        if (this.isParentGroupPlanning) {
+            planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
+        } else {
+            planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
+        }
+        // get the maxAddAllowed value by looking up the planningNode in the project.
+        if (planningGroupNode && planningGroupNode.availablePlanningNodes) {
+            for (let a = 0; a < planningGroupNode.availablePlanningNodes.length; a++) {
+                let availablePlanningNode = planningGroupNode.availablePlanningNodes[a];
+                if (availablePlanningNode.nodeId === planningNodeId && availablePlanningNode.max != null) {
+                    maxAddAllowed = availablePlanningNode.max;
                 }
             }
-
-            return numPlanningNodesAdded;
         }
 
-        /**
-         * Get the node title
-         * @param nodeId get the title for this node
-         * @returns the title for the node
-         */
+        return maxAddAllowed;
+    }
 
-    }, {
-        key: 'getNodeTitle',
-        value: function getNodeTitle(nodeId) {
-            var node = this.ProjectService.idToNode[nodeId];
-            var title = null;
+    /**
+     * Returns the number of times a planning node has been added to the project
+     * @param planningNodeId
+     */
+    getNumPlannindNodeInstances(planningNodeId) {
+        let numPlanningNodesAdded = 0;  // keep track of number of instances
+        // otherwise, see how many times the planning node template has been used.
 
-            if (node != null) {
-                title = node.title;
-            }
-
-            return title;
+        let planningGroupNode = null;
+        if (this.isParentGroupPlanning) {
+            planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
+        } else {
+            planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
         }
 
-        /**
-         * Get the node description
-         * @param nodeId get the description for this node
-         * @returns the description for the node
-         */
-
-    }, {
-        key: 'getNodeDescription',
-        value: function getNodeDescription(nodeId) {
-            var node = this.ProjectService.idToNode[nodeId];
-            var description = null;
-
-            if (node != null) {
-                description = node.description;
-            }
-
-            return description;
-        }
-
-        /**
-         * Get the percentage of the node that the class or period has completed
-         * @returns the percentage of the node that the class or period has completed
-         */
-
-    }, {
-        key: 'getNodeCompletion',
-        value: function getNodeCompletion() {
-            // get completion for all students in the current period
-            var periodId = this.currentPeriod.periodId;
-            return this.StudentStatusService.getNodeCompletion(this.nodeId, periodId, null, true).completionPct;
-        }
-
-        /**
-         * Get the average score for the node
-         * @returns the average score for the node
-         */
-
-    }, {
-        key: 'getNodeAverageScore',
-        value: function getNodeAverageScore() {
-            // get the currently seleceted workgroupId
-            var workgroupId = this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null;
-
-            if (workgroupId) {
-                // get and return score for currently selected workgroup
-                return this.AnnotationService.getScore(workgroupId, this.nodeId);
-            } else {
-                // there is no currently selected workgroup, so get the currently selected period
-                var periodId = this.currentPeriod.periodId;
-
-                // get and return the average score for the node
-                return this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
-            }
-        }
-
-        /**
-         * Get the workgroup ids on this node in the current period
-         * @returns an array of workgroup ids on a node in a period
-         */
-
-    }, {
-        key: 'getWorkgroupIdsOnNode',
-        value: function getWorkgroupIdsOnNode() {
-            // get the currently selected period
-            var periodId = this.currentPeriod.periodId;
-
-            // get the workgroups that are on the node in the period
-            return this.StudentStatusService.getWorkgroupIdsOnNode(this.nodeId, periodId);
-        }
-    }, {
-        key: 'setWorkgroupsOnNodeData',
-        value: function setWorkgroupsOnNodeData() {
-            var workgroupIdsOnNode = this.getWorkgroupIdsOnNode();
-            var workgroupOnlineOnNode = false;
-            this.workgroupsOnNodeData = [];
-
-            var n = workgroupIdsOnNode.length;
-            for (var i = 0; i < n; i++) {
-                var id = workgroupIdsOnNode[i];
-
-                var usernames = this.ConfigService.getDisplayUsernamesByWorkgroupId(id);
-                var avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(id);
-                var online = this.TeacherWebSocketService.isStudentOnline(id);
-                if (online) {
-                    workgroupOnlineOnNode = true;
-                }
-
-                this.workgroupsOnNodeData.push({
-                    'workgroupId': id,
-                    'usernames': usernames,
-                    'avatarColor': avatarColor,
-                    'online': online
-                });
-            }
-
-            this.isWorkgroupOnlineOnNode = workgroupOnlineOnNode;
-        }
-    }, {
-        key: 'setCurrentNodeStatus',
-        value: function setCurrentNodeStatus() {
-            if (this.currentWorkgroup) {
-                // get the workgroup's studentStatus
-                var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
-
-                // get the current node status
-                this.currentNodeStatus = studentStatus.nodeStatuses[this.nodeId];
-            }
-        }
-    }, {
-        key: 'getAlertNotifications',
-        value: function getAlertNotifications() {
-            // get the currently selected period
-            var periodId = this.currentPeriod.periodId;
-            var workgroupId = this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null;
-
-            var args = {};
-            args.nodeId = this.nodeId;
-            args.periodId = periodId;
-            args.toWorkgroupId = workgroupId;
-            this.alertNotifications = this.NotificationService.getAlertNotifications(args);
-
-            this.hasAlert = this.alertNotifications.length > 0;
-            this.newAlert = this.hasNewAlert();
-        }
-    }, {
-        key: 'hasNewAlert',
-        value: function hasNewAlert() {
-            var result = false;
-
-            var nAlerts = this.alertNotifications.length;
-            for (var i = 0; i < nAlerts; i++) {
-                var alert = this.alertNotifications[i];
-
-                if (!alert.timeDismissed) {
-                    result = true;
-                    break;
+        // loop through the child ids in the planning group and see how many times they've been used
+        if (planningGroupNode && planningGroupNode.ids) {
+            for (let c = 0; c < planningGroupNode.ids.length; c++) {
+                let childPlanningNodeId = planningGroupNode.ids[c];
+                let childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
+                if (childPlanningNode != null && childPlanningNode.planningNodeTemplateId === planningNodeId) {
+                    numPlanningNodesAdded++;
                 }
             }
-
-            return result;
         }
-    }]);
 
-    return NavItemController;
-}();
+        return numPlanningNodesAdded;
+    }
 
-NavItemController.$inject = ['$element', '$filter', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'PlanningService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+    /**
+     * Get the node title
+     * @param nodeId get the title for this node
+     * @returns the title for the node
+     */
+    getNodeTitle(nodeId) {
+        var node = this.ProjectService.idToNode[nodeId];
+        var title = null;
 
-var NavItem = {
+        if (node != null) {
+            title = node.title;
+        }
+
+        return title;
+    }
+
+    /**
+     * Get the node description
+     * @param nodeId get the description for this node
+     * @returns the description for the node
+     */
+    getNodeDescription(nodeId) {
+        var node = this.ProjectService.idToNode[nodeId];
+        var description = null;
+
+        if (node != null) {
+            description = node.description;
+        }
+
+        return description;
+    }
+
+    /**
+     * Get the percentage of the node that the class or period has completed
+     * @returns the percentage of the node that the class or period has completed
+     */
+    getNodeCompletion() {
+        // get completion for all students in the current period
+        let periodId = this.currentPeriod.periodId;
+        return this.StudentStatusService.getNodeCompletion(this.nodeId, periodId, null, true).completionPct;
+    }
+
+    /**
+     * Get the average score for the node
+     * @returns the average score for the node
+     */
+    getNodeAverageScore() {
+        // get the currently seleceted workgroupId
+        let workgroupId = this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null;
+
+        if (workgroupId) {
+            // get and return score for currently selected workgroup
+            return this.AnnotationService.getScore(workgroupId, this.nodeId);
+        } else {
+            // there is no currently selected workgroup, so get the currently selected period
+            let periodId = this.currentPeriod.periodId;
+
+            // get and return the average score for the node
+            return this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
+        }
+    }
+
+    /**
+     * Get the workgroup ids on this node in the current period
+     * @returns an array of workgroup ids on a node in a period
+     */
+    getWorkgroupIdsOnNode() {
+        // get the currently selected period
+        let periodId = this.currentPeriod.periodId;
+
+        // get the workgroups that are on the node in the period
+        return this.StudentStatusService.getWorkgroupIdsOnNode(this.nodeId, periodId);
+    }
+
+    setWorkgroupsOnNodeData() {
+        let workgroupIdsOnNode = this.getWorkgroupIdsOnNode();
+        let workgroupOnlineOnNode = false;
+        this.workgroupsOnNodeData = [];
+
+        let n = workgroupIdsOnNode.length;
+        for (let i = 0; i < n; i++) {
+            let id = workgroupIdsOnNode[i];
+
+            let usernames = this.ConfigService.getDisplayUsernamesByWorkgroupId(id);
+            let avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(id);
+            let online = this.TeacherWebSocketService.isStudentOnline(id);
+            if (online) {
+                workgroupOnlineOnNode = true;
+            }
+
+            this.workgroupsOnNodeData.push({
+                'workgroupId': id,
+                'usernames': usernames,
+                'avatarColor': avatarColor,
+                'online': online
+            });
+        }
+
+        this.isWorkgroupOnlineOnNode = workgroupOnlineOnNode;
+    }
+
+    setCurrentNodeStatus() {
+        if (this.currentWorkgroup) {
+            // get the workgroup's studentStatus
+            let studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
+
+            // get the current node status
+            this.currentNodeStatus = studentStatus.nodeStatuses[this.nodeId];
+        }
+    }
+
+    getAlertNotifications() {
+        // get the currently selected period
+        let periodId = this.currentPeriod.periodId;
+        let workgroupId = this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null;
+
+        let args = {};
+        args.nodeId = this.nodeId;
+        args.periodId = periodId;
+        args.toWorkgroupId = workgroupId;
+        this.alertNotifications = this.NotificationService.getAlertNotifications(args);
+
+        this.hasAlert = (this.alertNotifications.length > 0);
+        this.newAlert = this.hasNewAlert();
+    }
+
+    hasNewAlert() {
+        let result = false;
+
+        let nAlerts = this.alertNotifications.length;
+        for (let i = 0; i < nAlerts; i++) {
+            let alert = this.alertNotifications[i];
+
+            if (!alert.timeDismissed) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+}
+
+NavItemController.$inject = [
+    '$element',
+    '$filter',
+    '$rootScope',
+    '$scope',
+    '$state',
+    'AnnotationService',
+    'ConfigService',
+    'NodeService',
+    'NotificationService',
+    'PlanningService',
+    'ProjectService',
+    'StudentDataService',
+    'StudentStatusService',
+    'TeacherDataService',
+    'TeacherWebSocketService'
+];
+
+const NavItem = {
     bindings: {
         nodeId: '<',
         showPosition: '<',
@@ -452,5 +442,4 @@ var NavItem = {
     controller: NavItemController
 };
 
-exports.default = NavItem;
-//# sourceMappingURL=navItem.js.map
+export default NavItem;

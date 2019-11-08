@@ -8,14 +8,14 @@
         </div>
         <span flex></span>
         <div class="content-head__more" layout="row" layout-align="center center">
-            <component-select node-id="{{ nodeGradingController.nodeId }}"
+            <component-select node-id="{{ ::nodeGradingController.nodeId }}"
                               custom-class="'md-no-underline md-button'"
                               on-change="nodeGradingController.onUpdateHiddenComponents(value)"></component-select>
             <md-button ng-click="nodeGradingController.showRubric($event)"
                        class="md-raised info">
                 <md-icon class="info"> info_outline </md-icon>
-                <span ng-if="!nodeGradingController.nRubrics">{{ 'STEP_INFO' | translate }}</span>
-                <span ng-if="nodeGradingController.nRubrics">{{ 'infoTipsLabel' | translate:{numberOfTips: nodeGradingController.nRubrics} }}</span>
+                <span ng-if="!nodeGradingController.nRubrics">{{ ::'STEP_INFO' | translate }}</span>
+                <span ng-if="nodeGradingController.nRubrics">{{ ::'infoTipsLabel' | translate:{numberOfTips: nodeGradingController.nRubrics} }}</span>
             </md-button>
         </div>
     </div>
@@ -30,12 +30,12 @@
             <span flex hide-xs hide-sm></span>
             <div class="md-secondary-container" ng-if="nodeGradingController.nodeHasWork"
                  flex-xs="100" flex-sm="100" layout-column layout-align="center center">
-                <md-button aria-label="{{ 'explandAllTeams' | translate }}"
+                <md-button aria-label="{{ ::'explandAllTeams' | translate }}"
                            class="button--small md-primary"
-                           ng-click="nodeGradingController.expandAll()">{{ 'expandAll' | translate }}</md-button>
-                <md-button aria-label="{{ 'collapseAllTeams' | translate }}"
+                           ng-click="nodeGradingController.expandAll()">{{ ::'expandAll' | translate }}</md-button>
+                <md-button aria-label="{{ ::'collapseAllTeams' | translate }}"
                            class="button--small md-primary"
-                           ng-click="nodeGradingController.collapseAll()">{{ 'collapseAll' | translate }}</md-button>
+                           ng-click="nodeGradingController.collapseAll()">{{ ::'collapseAll' | translate }}</md-button>
             </div>
             <div ng-if="!nodeGradingController.nodeHasWork" class="center md-padding" flex-xs="100" flex-sm="100">
                 <span class="text-secondary md-caption" translate="stepNoCaptureWork"></span>
@@ -44,18 +44,18 @@
         <md-list-item class="table--list__thead table--list__thead__th md-whiteframe-1dp">
             <div class="md-list-item-text table--list__thead__tr" layout="row" flex>
                 <md-button class="table--list__thead__link" flex layout="row" layout-align="start center"
-                           ng-click="nodeGradingController.setSort('team')" aria-label="{{'sortByTeam' | translate}}">
+                           ng-click="nodeGradingController.setSort('team')" aria-label="{{::'sortByTeam' | translate}}">
                     <span translate="team"></span>
                     <md-icon ng-if="nodeGradingController.sort === 'team' || nodeGradingController.sort === '-team'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': nodeGradingController.sort === '-team'}"> arrow_drop_up </md-icon>
                 </md-button>
                 <md-button class="table--list__thead__link" flex="{{nodeGradingController.nodeHasWork ? 30 : 20}}" layout="row" layout-align="center center"
-                           ng-click="nodeGradingController.setSort('status')" aria-label="{{'sortByCompletion' | translate}}">
+                           ng-click="nodeGradingController.setSort('status')" aria-label="{{::'sortByCompletion' | translate}}">
                     <span translate="status"></span>
                     <md-icon ng-if="nodeGradingController.sort === 'status' || nodeGradingController.sort === '-status'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': nodeGradingController.sort === '-status'}"> arrow_drop_up </md-icon>
                 </md-button>
                 <!--<div flex="20" layout="row" layout-align="center center">Time Spent</div>-->
                 <md-button class="table--list__thead__link" ng-if="nodeGradingController.nodeHasWork" flex="20" layout="row" layout-align="center center"
-                           ng-click="nodeGradingController.setSort('score')" aria-label="{{'sortByScore' | translate}}">
+                           ng-click="nodeGradingController.setSort('score')" aria-label="{{::'sortByScore' | translate}}">
                     <span translate="score"></span>
                     <md-icon ng-if="nodeGradingController.sort === 'score' || nodeGradingController.sort === '-score'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': nodeGradingController.sort === '-score'}"> arrow_drop_up </md-icon>
                 </md-button>

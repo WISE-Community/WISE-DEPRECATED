@@ -26,6 +26,7 @@ package org.wise.portal.dao.status.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -87,13 +88,7 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
     cq.select(studentStatusRoot).where(cb.equal(studentStatusRoot.get("workgroupId"), workgroupId))
         .orderBy(cb.desc(studentStatusRoot.get("id")));
     TypedQuery<StudentStatus> query = entityManager.createQuery(cq);
-    StudentStatus studentStatus = null;
-    try {
-      studentStatus = query.setMaxResults(1).getSingleResult();
-    } catch(Exception e) {
-
-    }
-    return studentStatus;
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   @Transactional

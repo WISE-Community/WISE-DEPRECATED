@@ -21,6 +21,7 @@
 package org.wise.portal.dao.authentication.impl;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -70,6 +71,6 @@ public class HibernateAclTargetObjectDao extends
     cq.select(persistentAclTargetObjectRoot).where(
         cb.equal(persistentAclTargetObjectRoot.get("classname"), classname));
     TypedQuery<PersistentAclTargetObject> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    return query.getResultStream().findFirst().orElse(null);
   }
 }

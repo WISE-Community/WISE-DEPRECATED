@@ -1,6 +1,6 @@
 <div ng-controller='MultipleChoiceController as multipleChoiceController' flex>
   <div>
-    <div ng-switch='multipleChoiceController.mode'>
+    <div ng-switch='::multipleChoiceController.mode'>
       <div ng-switch-when='grading|gradingRevision'
           ng-switch-when-separator='|'
           layout='row'
@@ -12,61 +12,59 @@
           <div class='component--grading__response__content'>
             <md-input-container ng-if='multipleChoiceController.$scope.componentState'
                 class='input-container md-block input-container--open-response input-container--component md-no-float'
-                ng-switch on='multipleChoiceController.getChoiceType()'>
+                ng-switch on='::multipleChoiceController.getChoiceType()'>
               <md-radio-group ng-switch-when='radio'
                   ng-model='multipleChoiceController.studentChoices'>
-                <div ng-repeat='choice in multipleChoiceController.getChoices()'>
+                <div ng-repeat='choice in ::multipleChoiceController.getChoices() track by choice.id'>
                   <md-radio-button class='md-primary'
-                      ng-value='choice.id'
+                      ng-value='::choice.id'
                       disabled>
                     <span>
-                      <compile data='choice.text'></compile>
+                      <compile data='::choice.text'></compile>
                     </span>
-                    <span ng-if='multipleChoiceController.showFeedback'
-                        ng-show='choice.showFeedback'
-                        ng-class='{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
-                        {{choice.feedbackToShow}}
+                    <span ng-if='::multipleChoiceController.showFeedback && choice.showFeedback'
+                        ng-class='::{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
+                        {{::choice.feedbackToShow}}
                     </span>
                   </md-radio-button>
                 </div>
               </md-radio-group>
               <div ng-switch-when='checkbox'>
-                <div ng-repeat='choice in multipleChoiceController.getChoices()'>
+                <div ng-repeat='choice in ::multipleChoiceController.getChoices() track by choice.id'>
                   <md-checkbox class='md-primary'
+                      aria-label='::choice.text'
                       ng-checked='multipleChoiceController.isChecked(choice.id)'
                       disabled>
                     <span>
-                      <compile data='choice.text'></compile>
+                      <compile data='::choice.text'></compile>
                     </span>
-                    <span ng-show='choice.showFeedback'
-                        ng-class='{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
-                        {{choice.feedbackToShow}}
+                    <span ng-if='::choice.showFeedback'
+                        ng-class='::{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
+                        {{::choice.feedbackToShow}}
                     </span>
                   </md-checkbox>
                 </div>
               </div>
               <div class='md-caption'
-                  ng-if='multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount == 1'
-                  ng-show='multipleChoiceController.componentContent.maxSubmitCount != null'
+                  ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount == 1'
                   translate='YOU_HAVE_USED_X_OF_Y_ATTEMPT'
                   translate-values='{x: multipleChoiceController.submitCounter, y: multipleChoiceController.componentContent.maxSubmitCount}'>
               </div>
               <div class='md-caption'
-                  ng-if='multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount > 1'
-                  ng-show='multipleChoiceController.componentContent.maxSubmitCount != null'
+                  ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount > 1'
                   translate='YOU_HAVE_USED_X_OF_Y_ATTEMPTS'
                   translate-values='{x: multipleChoiceController.submitCounter, y: multipleChoiceController.componentContent.maxSubmitCount}'>
               </div>
-              <div ng-if='multipleChoiceController.isLatestComponentStateSubmit == false || !multipleChoiceController.componentHasCorrectAnswer || !multipleChoiceController.showFeedback'>
+              <div ng-if='!multipleChoiceController.isLatestComponentStateSubmit || !multipleChoiceController.componentHasCorrectAnswer || !multipleChoiceController.showFeedback'>
                 &nbsp
               </div>
-              <div ng-if='multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'
+              <div ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'
                   style='color: green'>
-                {{ 'CORRECT' | translate }}!
+                {{ ::'CORRECT' | translate }}!
               </div>
-              <div ng-if='multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'
+              <div ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'
                   style='color: red'>
-                {{ 'INCORRECT' | translate }}
+                {{ ::'INCORRECT' | translate }}
               </div>
             </md-input-container>
           </div>
@@ -75,93 +73,92 @@
               component-id='multipleChoiceController.componentId'
               to-workgroup-id='workgroupId'
               component-state='componentState'
-              active='multipleChoiceController.mode === "grading"'>
+              active='::multipleChoiceController.mode === "grading"'>
           </component-revisions-info>
         </div>
         <div flex='100'
             flex-gt-sm='33'
             class='component--grading__annotations'>
-          <component-grading node-id='multipleChoiceController.nodeId'
-              component-id='multipleChoiceController.componentId'
-              max-score='multipleChoiceController.componentContent.maxScore'
+          <component-grading node-id='::multipleChoiceController.nodeId'
+              component-id='::multipleChoiceController.componentId'
+              max-score='::multipleChoiceController.componentContent.maxScore'
               from-workgroup-id='teacherWorkgroupId'
               to-workgroup-id='workgroupId'
               component-state-id='componentState.id'
-              show-all-annotations='multipleChoiceController.mode !== "grading"'
-              is-disabled='multipleChoiceController.mode !== "grading"'>
+              show-all-annotations='::multipleChoiceController.mode !== "grading"'
+              is-disabled='::multipleChoiceController.mode !== "grading"'>
           </component-grading>
         </div>
       </div>
       <div ng-switch-default>
         <md-input-container class='input-container md-block input-container--open-response input-container--component md-no-float'
-            ng-switch on='multipleChoiceController.getChoiceType()'>
+            ng-switch on='::multipleChoiceController.getChoiceType()'>
           <label class='input-label md-no-float'
-              ng-if='multipleChoiceController.isPromptVisible'>
-            <compile id='prompt' data='multipleChoiceController.getPrompt()'></compile>
+              ng-if='::multipleChoiceController.isPromptVisible'>
+            <compile id='prompt' data='::multipleChoiceController.getPrompt()'></compile>
           </label>
           <possible-score max-score='multipleChoiceController.componentContent.maxScore'
-              ng-if='multipleChoiceController.mode === "student" && !multipleChoiceController.latestAnnotations.score'>
+              ng-if='::multipleChoiceController.mode === "student" && !multipleChoiceController.latestAnnotations.score'>
           </possible-score>
           <md-radio-group ng-switch-when='radio'
               ng-model='multipleChoiceController.studentChoices'
               ng-change='multipleChoiceController.studentDataChanged()'>
-            <div ng-repeat='choice in multipleChoiceController.getChoices()'>
+            <div ng-repeat='choice in ::multipleChoiceController.getChoices() track by choice.id'>
               <md-radio-button class='md-primary'
-                  ng-value='choice.id'
-                  ng-click='multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)'
+                  aria-label='::choice.text'
+                  ng-value='::choice.id'
+                  ng-click='multipleChoiceController.radioChoiceSelected(choice.id)'
                   ng-disabled='multipleChoiceController.isDisabled'>
                 <span>
-                  <compile data='choice.text'></compile>
+                  <compile data='::choice.text'></compile>
                 </span>
-                <span ng-if='multipleChoiceController.showFeedback'
-                    ng-show='choice.showFeedback'
-                    ng-class='{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
-                    {{choice.feedbackToShow}}
+                <span ng-if='multipleChoiceController.showFeedback && choice.showFeedback'
+                    ng-class='::{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
+                    {{::choice.feedbackToShow}}
                 </span>
               </md-radio-button>
             </div>
           </md-radio-group>
           <div ng-switch-when='checkbox'>
-            <div ng-repeat='choice in multipleChoiceController.getChoices()'>
+            <div ng-repeat='choice in ::multipleChoiceController.getChoices() track by choice.id'>
               <md-checkbox class='md-primary'
+                  aria-label='::choice.text'
                   ng-checked='multipleChoiceController.isChecked(choice.id)'
-                  ng-click='multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)'
+                  ng-click='multipleChoiceController.toggleSelection(choice.id)'
                   ng-disabled='multipleChoiceController.isDisabled'>
                 <span>
-                  <compile data='choice.text'></compile>
+                  <compile data='::choice.text'></compile>
                 </span>
-                <span ng-show='choice.showFeedback'
-                    ng-class='{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
-                    {{choice.feedbackToShow}}
+                <span ng-if='choice.showFeedback'
+                    ng-class='::{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
+                    {{::choice.feedbackToShow}}
                 </span>
               </md-checkbox>
             </div>
           </div>
           <div class='md-caption'
-              ng-if='multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount == 1'
-              ng-show='multipleChoiceController.componentContent.maxSubmitCount != null'
+              ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount == 1'
               translate='YOU_HAVE_USED_X_OF_Y_ATTEMPT'
               translate-values='{x: multipleChoiceController.submitCounter, y: multipleChoiceController.componentContent.maxSubmitCount}'>
           </div>
           <div class='md-caption'
-              ng-if='multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount > 1'
-              ng-show='multipleChoiceController.componentContent.maxSubmitCount != null'
+              ng-if='::multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount > 1'
               translate='YOU_HAVE_USED_X_OF_Y_ATTEMPTS'
               translate-values='{x: multipleChoiceController.submitCounter, y: multipleChoiceController.componentContent.maxSubmitCount}'>
           </div>
-          <div ng-if='multipleChoiceController.isLatestComponentStateSubmit == false || !multipleChoiceController.componentHasCorrectAnswer || !multipleChoiceController.showFeedback'>
+          <div ng-if='!multipleChoiceController.isLatestComponentStateSubmit || !multipleChoiceController.componentHasCorrectAnswer || !multipleChoiceController.showFeedback'>
             &nbsp
           </div>
-          <div ng-if='multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'
+          <div ng-if='multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'
               style='color: green'>
-            {{ 'CORRECT' | translate }}!
+            {{ ::'CORRECT' | translate }}!
           </div>
-          <div ng-if='multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'
+          <div ng-if='multipleChoiceController.componentHasCorrectAnswer && multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'
               style='color: red'>
-            {{ 'INCORRECT' | translate }}
+            {{ ::'INCORRECT' | translate }}
           </div>
         </md-input-container>
-        <div ng-if='multipleChoiceController.isSaveButtonVisible || multipleChoiceController.isSubmitButtonVisible'
+        <div ng-if='::multipleChoiceController.isSaveOrSubmitButtonVisible()'
             class='component__actions'
             layout='row'
             layout-align='start center'>
@@ -169,7 +166,7 @@
               class='md-raised md-primary'
               ng-click='multipleChoiceController.saveButtonClicked()'
               ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isDirty'
-              ng-if='multipleChoiceController.isSaveButtonVisible'
+              ng-if='::multipleChoiceController.isSaveButtonVisible'
               aria-label='Save'
               translate='SAVE'>
           </md-button>
@@ -177,13 +174,13 @@
               class='md-raised md-primary'
               ng-click='multipleChoiceController.submitButtonClicked()'
               ng-disabled='multipleChoiceController.isSubmitButtonDisabled || multipleChoiceController.isDisabled || !multipleChoiceController.isSubmitDirty'
-              ng-if='multipleChoiceController.isSubmitButtonVisible'
+              ng-if='::multipleChoiceController.isSubmitButtonVisible'
               aria-label='Submit'
               translate='SUBMIT'>
           </md-button>
           <span ng-if='multipleChoiceController.saveMessage.text'
               class='component__actions__info md-caption'>
-              {{multipleChoiceController.saveMessage.text}}
+              {{ multipleChoiceController.saveMessage.text}}
               <span class='component__actions__more'>
                 <md-tooltip md-direction='top'>
                   {{ multipleChoiceController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}
@@ -192,7 +189,7 @@
               </span>
           </span>
         </div>
-        <component-annotations ng-if='multipleChoiceController.mode === "student"'
+        <component-annotations ng-if='::multipleChoiceController.mode === "student"'
             annotations='multipleChoiceController.latestAnnotations'
             max-score='multipleChoiceController.componentContent.maxScore'>
         </component-annotations>

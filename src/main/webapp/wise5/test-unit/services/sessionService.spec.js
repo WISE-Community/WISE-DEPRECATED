@@ -1,38 +1,35 @@
-"use strict";
+import vleModule from '../../vle/vle';
 
-var _angular = _interopRequireDefault(require("angular"));
+describe('SessionService', () => {
 
-var _main = _interopRequireDefault(require("vle/main"));
+  beforeEach(angular.mock.module(vleModule.name));
 
-require("angular-mocks");
+  let SessionService;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-describe('SessionService', function () {
-  beforeEach(_angular["default"].mock.module(_main["default"].name));
-  var SessionService;
-  beforeEach(inject(function (_SessionService_) {
+  beforeEach(inject((_SessionService_) => {
     SessionService = _SessionService_;
   }));
-  describe('calculateIntervals()', function () {
-    it('should calculate the warn and logout intervals when session timeout is 10 minutes', function () {
-      var sessionTimeout = 600;
-      var intervals = SessionService.calculateIntervals(sessionTimeout);
+
+  describe('calculateIntervals()', () => {
+    it('should calculate the warn and logout intervals when session timeout is 10 minutes', () => {
+      const sessionTimeout = 600;
+      const intervals = SessionService.calculateIntervals(sessionTimeout);
       expect(intervals.showWarningInterval).toEqual(540);
       expect(intervals.forceLogoutAfterWarningInterval).toEqual(60);
     });
-    it('should calculate the warn and logout intervals when session timeout is 30 minutes', function () {
-      var sessionTimeout = 1800;
-      var intervals = SessionService.calculateIntervals(sessionTimeout);
+
+    it('should calculate the warn and logout intervals when session timeout is 30 minutes', () => {
+      const sessionTimeout = 1800;
+      const intervals = SessionService.calculateIntervals(sessionTimeout);
       expect(intervals.showWarningInterval).toEqual(1620);
       expect(intervals.forceLogoutAfterWarningInterval).toEqual(180);
     });
-    it('should calculate the warn and logout intervals when session timeout is 60 minutes', function () {
-      var sessionTimeout = 3600;
-      var intervals = SessionService.calculateIntervals(sessionTimeout);
+
+    it('should calculate the warn and logout intervals when session timeout is 60 minutes', () => {
+      const sessionTimeout = 3600;
+      const intervals = SessionService.calculateIntervals(sessionTimeout);
       expect(intervals.showWarningInterval).toEqual(3300);
       expect(intervals.forceLogoutAfterWarningInterval).toEqual(300);
     });
   });
 });
-//# sourceMappingURL=sessionService.spec.js.map

@@ -4,50 +4,52 @@
             <md-icon> menu </md-icon>
         </md-button>-->
 
-        <!--<span>{{ stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(stepToolsCtrl.nodeId) + ': ' : '' }}{{ stepToolsCtrl.getNodeTitleByNodeId(stepToolsCtrl.nodeId) }}</span>-->
+        <!--<span>{{ stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(stepToolsCtrl.nodeId) + ': ' : '' }}{{ ::stepToolsCtrl.getNodeTitleByNodeId(stepToolsCtrl.nodeId) }}</span>-->
         <!--<md-button aria-label="Notifications" class="md-icon-button">
             <md-icon md-theme="default"> message </md-icon>
         </md-button> TODO: Add notifications and score when operational-->
         <div layout="row" layout-align="center center">
             <md-button id="prevButton"
-                       aria-label="{{ 'previousItem' | translate }}"
+                       aria-label="{{ ::'previousItem' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!stepToolsCtrl.prevId" ng-click="stepToolsCtrl.goToPrevNode()">
-                <md-icon> {{ stepToolsCtrl.icons.prev }} </md-icon>
-                <md-tooltip md-direction="bottom">{{ 'PREVIOUS_STEP' | translate }}</md-tooltip>
+                <md-icon> {{ ::stepToolsCtrl.icons.prev }} </md-icon>
+                <md-tooltip md-direction="bottom">{{ ::'PREVIOUS_STEP' | translate }}</md-tooltip>
             </md-button>
-            <node-icon node-id="stepToolsCtrl.nodeId" size="18" icon="stepToolsCtrl.nodeStatus.icon" style="width: 40; text-align: center;"></node-icon>
+            <node-icon node-id="::stepToolsCtrl.nodeId" size="18" icon="stepToolsCtrl.nodeStatus.icon" style="width: 40; text-align: center;"></node-icon>
             <md-select id="stepSelectMenu" md-theme="default"
                        class="md-button md-no-underline toolbar__select toolbar__select--fixedwidth"
                        md-container-class="stepSelectMenuContainer"
-                       aria-label="{{ 'selectAStep' | translate }}"
+                       aria-label="{{ ::'selectAStep' | translate }}"
                        ng-model="stepToolsCtrl.toNodeId"
                        ng-change="stepToolsCtrl.toNodeIdChanged()"
                        md-selected-text="stepToolsCtrl.getSelectedText()">
                 <md-option ng-repeat="item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'"
                            ng-if="stepToolsCtrl.nodeStatuses[item.$key].isVisible && item.order!==0"
-                           value="{{ item.$key }}"
-                           ng-class="{'node-select-option--group': stepToolsCtrl.isGroupNode(item.$key), 'node-select-option--node': !stepToolsCtrl.isGroupNode(item.$key)}">
+                           value="{{ ::item.$key }}"
+                           ng-class="::{'node-select-option--group': stepToolsCtrl.isGroupNode(item.$key), 'node-select-option--node': !stepToolsCtrl.isGroupNode(item.$key)}">
                     <div layout="row" layout-align="start center">
                         <node-icon node-id="item.$key" size="18" icon="stepToolsCtrl.nodeStatuses[item.$key].icon" custom-class="'node-select__icon'"></node-icon>
-                        <span class="node-select__text">{{ stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(item.$key) + ': ' : '' }}{{ stepToolsCtrl.getNodeTitleByNodeId(item.$key) }}</span>
+                        <span class="node-select__text">{{ ::stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(item.$key) + ': ' : '' }}{{ ::stepToolsCtrl.getNodeTitleByNodeId(item.$key) }}</span>
                     </div>
                 </md-option>
             </md-select>
-            <node-status-icon node-id="stepToolsCtrl.nodeId" style="width: 40; text-align: center;"></node-status-icon>
+            <node-status-icon node-id="::stepToolsCtrl.nodeId" style="width: 40; text-align: center;"></node-status-icon>
             <md-button id="nextButton"
-                       aria-label="{{ 'nextItem' | translate }}"
+                       aria-label="{{ ::'nextItem' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!stepToolsCtrl.nextId" ng-click="stepToolsCtrl.goToNextNode()">
-                <md-icon> {{ stepToolsCtrl.icons.next }} </md-icon>
-                <md-tooltip md-direction="bottom">{{ 'NEXT_STEP' | translate }}</md-tooltip>
+                <md-icon> {{ ::stepToolsCtrl.icons.next }} </md-icon>
+                <md-tooltip md-direction="bottom">{{ ::'NEXT_STEP' | translate }}</md-tooltip>
             </md-button>
         </div>
         <span flex></span>
+        <!--
         <md-button id='closeNodeButton'
-                   aria-label="{{ 'projectPlan' | translate }}" class="md-icon-button node-nav" ng-click="stepToolsCtrl.closeNode()">
+                   aria-label="{{ ::'projectPlan' | translate }}" class="md-icon-button node-nav" ng-click="stepToolsCtrl.closeNode()">
             <md-icon md-theme="default"> view_list </md-icon>
             <md-tooltip md-direction="down">{{ 'projectPlan' | translate }}</md-tooltip>
         </md-button>
+        -->
     </div>
 </md-toolbar>
