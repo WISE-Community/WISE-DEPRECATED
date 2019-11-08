@@ -24,16 +24,13 @@ package org.wise.portal.dao.run.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -72,7 +69,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
   private Group period1, period2;
   private User teacher1, teacher2, student1, student2;
   private final Date startTime = Calendar.getInstance().getTime();
-  private Date endTime = null;
   private final String runCode = "diamonds12345";
   private final String runCodeNotInDB = "diamonds54321";
   private Run run;
@@ -108,6 +104,12 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     Long id = getNextAvailableProjectId();
     String projectName = "Airbags";
     run = createProjectAndRun(id, projectName, teacher1, startTime, runCode);
+    Set<Group> periods = new TreeSet<Group>();
+    periods.add(period1);
+    periods.add(period2);
+    groupDao.save(period1);
+    groupDao.save(period2);
+    run.setPeriods(periods);
     project = run.getProject();
     toilet.flush();
   }
@@ -168,53 +170,14 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
   @Test
   public void save_NewRun_Success() {
     assertNumRuns(1);
-    List<?> runsList = retrieveRunListFromDb();
-    assertEquals(0, retrieveRunsRelatedToGroupsListFromDb().size());
-    assertEquals(0, retrieveRunsAndGroupsListFromDb().size());
-
-    Map<?, ?> runMap = (Map<?, ?>) runsList.get(0);
-    assertEquals(startTime, runMap.get(RunImpl.COLUMN_NAME_STARTTIME.toUpperCase()));
-    assertEquals(runCode, runMap.get(RunImpl.COLUMN_NAME_RUN_CODE.toUpperCase()));
-    assertNull(runMap.get(RunImpl.COLUMN_NAME_ENDTIME.toUpperCase()));
-
-    Set<Group> periods = new TreeSet<Group>();
-    periods.add(period1);
-    periods.add(period2);
-    groupDao.save(period1);
-    groupDao.save(period2);
-    run.setPeriods(periods);
-
+    Long id = getNextAvailableProjectId();
+    String projectName = "How to be a Fry Cook";
+    Date startTime = Calendar.getInstance().getTime();
+    String runCode = "Panda123";
+    run = createProjectAndRun(id, projectName, teacher2, startTime, runCode);
     runDao.save(run);
     toilet.flush();
-
-    runsList = retrieveRunListFromDb();
-    assertNumRuns(1);
-
-    List<?> runsAndGroups = retrieveRunsAndGroupsListFromDb();
-    assertEquals(1, runsList.size());
-    assertEquals(2, retrieveRunsRelatedToGroupsListFromDb().size());
-    assertEquals(2, runsAndGroups.size());
-
-    List<String> periodNames = new ArrayList<String>();
-    periodNames.add(period1.getName());
-    periodNames.add(period2.getName());
-
-    for (int i = 0; i < runsAndGroups.size(); i++) {
-      Map<?, ?> allRunMap = (Map<?, ?>) runsAndGroups.get(i);
-      String periodName = (String) allRunMap.get("periodName");
-      assertTrue(periodNames.contains(periodName));
-      periodNames.remove(periodName);
-    }
-
-    endTime = Calendar.getInstance().getTime();
-    run.setEndtime(endTime);
-
-    runDao.save(run);
-    toilet.flush();
-
-    runsList = retrieveRunListFromDb();
-    runMap = (Map<?, ?>) runsList.get(0);
-    assertEquals(endTime, runMap.get(RunImpl.COLUMN_NAME_ENDTIME .toUpperCase()));
+    assertNumRuns(2);
   }
 
   @Test
@@ -233,7 +196,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     Run run = runDao.retrieveByRunCode(runCode);
     assertTrue(run instanceof RunImpl);
     assertTrue(run.getClass() == RunImpl.class);
-
     assertEquals(runCode, run.getRuncode());
     assertEquals(startTime, run.getStarttime());
   }
@@ -342,19 +304,29 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
   }
 
   @Test
-  public void getRunListByUser_NoRuns_Success() throws Exception {
+  public void getRunListByUser_StudentNotInRun_ShouldReturnNoRuns() throws Exception {
     List<Run> runsByUser = runDao.getRunListByUser(student1);
     assertEquals(0, runsByUser.size());
   }
 
   @Test
-  public void getRunListByUser_OneRun_Success() throws Exception {
+  public void getRunListByUser_StudentInPeriodButNotWorkgroup_ShouldReturnRun() throws Exception {
     List<Run> runsByUser = runDao.getRunListByUser(student1);
     assertEquals(0, runsByUser.size());
-    Set<User> members1 = new HashSet<User>();
-    members1.add(student1);
-    createWorkgroup(members1, run, period1);
+    period1.addMember(student1);
     runsByUser = runDao.getRunListByUser(student1);
+    assertEquals(1, runsByUser.size());
+  }
+
+  @Test
+  public void getRunListByUser_StudentInPeriodAndWorkgroup_ShouldReturnRun() throws Exception {
+    List<Run> runsByUser = runDao.getRunListByUser(student2);
+    assertEquals(0, runsByUser.size());
+    period2.addMember(student2);
+    Set<User> members = new HashSet<User>();
+    members.add(student2);
+    createWorkgroup(members, run, period2);
+    runsByUser = runDao.getRunListByUser(student2);
     assertEquals(1, runsByUser.size());
   }
 
@@ -477,17 +449,5 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
   private List<?> retrieveRunListFromDb() {
     return jdbcTemplate.queryForList("SELECT * FROM " + RunImpl.DATA_STORE_NAME,
         (Object[]) null);
-  }
-
-  private List<?> retrieveRunsAndGroupsListFromDb() {
-    return jdbcTemplate.queryForList("SELECT *, " + PersistentGroup.DATA_STORE_NAME + 
-        ".name as periodName FROM "
-        + RunImpl.DATA_STORE_NAME + ", " + RunImpl.PERIODS_JOIN_TABLE_NAME
-        + ", " + PersistentGroup.DATA_STORE_NAME + " WHERE "
-        + RunImpl.DATA_STORE_NAME + ".id = " + RunImpl.PERIODS_JOIN_TABLE_NAME
-        + "." + RunImpl.RUNS_JOIN_COLUMN_NAME + " AND "
-        + PersistentGroup.DATA_STORE_NAME + ".id = "
-        + RunImpl.PERIODS_JOIN_TABLE_NAME + "."
-        + RunImpl.PERIODS_JOIN_COLUMN_NAME, (Object[]) null);
   }
 }
