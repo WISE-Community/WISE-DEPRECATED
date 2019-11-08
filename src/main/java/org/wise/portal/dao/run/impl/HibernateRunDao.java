@@ -140,13 +140,11 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao
     CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class); 
     Root<RunImpl> runRoot = cq.from(RunImpl.class);
     Root<UserImpl> userRoot = cq.from(UserImpl.class);
-    Root<WorkgroupImpl> workgroupRoot = cq.from(WorkgroupImpl.class);
-    Root<PersistentGroup> persistentGroupRoot = cq.from(PersistentGroup.class);
+    Root<PersistentGroup> periodGroupRoot = cq.from(PersistentGroup.class);
     List<Predicate> predicates = new ArrayList<>();
     predicates.add(cb.equal(userRoot.get("id"), user.getId()));
-    predicates.add(cb.equal(workgroupRoot.get("group"), persistentGroupRoot.get("id")));
-    predicates.add(cb.isMember(userRoot.get("id"), persistentGroupRoot.<Set<User>>get("members")));
-    predicates.add(cb.equal(runRoot.get("id"), workgroupRoot.get("run").get("id")));
+    predicates.add(cb.isMember(userRoot.get("id"), periodGroupRoot.<Set<User>>get("members")));
+    predicates.add(cb.isMember(periodGroupRoot, runRoot.<Set<PersistentGroup>>get("periods")));
     cq.select(runRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<RunImpl> query = entityManager.createQuery(cq);
     List<RunImpl> runResultList = query.getResultList();
