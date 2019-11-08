@@ -59,7 +59,7 @@ public class HibernateEventDaoTest extends AbstractTransactionalDbTests {
   private Event event1;
   
   @Autowired
-  private EventDao eventDao;
+  private EventDao<Event> eventDao;
 
   @Before
   public void setUp() throws Exception {
