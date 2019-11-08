@@ -56,7 +56,7 @@ public class HibernateEventDaoTest extends AbstractTransactionalDbTests {
   private Run run;
   private Workgroup workgroup1, workgroup2;
   private List<JSONObject> components;
-  private Event event1, event2, event3, event4;
+  private Event event1;
   
   @Autowired
   private EventDao eventDao;
@@ -90,11 +90,11 @@ public class HibernateEventDaoTest extends AbstractTransactionalDbTests {
     components.add(component);
     event1 = createEvent(run, period1, workgroup1, "node1", null, null, "VLE", "Navigation",
         "nodeEntered", "event1", null);
-    event2 = createEvent(run, period1, workgroup1, "node2", "12345abcde", "MultipleChoice",
+    createEvent(run, period1, workgroup1, "node2", "12345abcde", "MultipleChoice",
         "Component", "StudentInteraction", "buttonClicked", "event2", components);
-    event3 = createEvent(run, period2, workgroup2, "node1", null, null, "VLE", "Navigation",
+    createEvent(run, period2, workgroup2, "node1", null, null, "VLE", "Navigation",
         "nodeEntered", "event3", null);
-    event4 = createEvent(run, period2, workgroup2, "node2", "12345abcde", "MultipleChoice",
+    createEvent(run, period2, workgroup2, "node2", "12345abcde", "MultipleChoice",
         "Component", "StudentInteraction", "buttonClicked", "event4", components);
     toilet.flush();
   }
