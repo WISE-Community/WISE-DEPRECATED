@@ -179,7 +179,7 @@
             ng-change='summaryController.studentDataTypeChanged()'
             style='min-width: 200px'>
         <md-option value='responses'
-            ng-if='summaryController.isResponsesOptionAvailable'>
+            ng-if='summaryController.isResponsesOptionAvailable' ng-selected='true'>
           {{ ::'summary.responses' | translate }}
         </md-option>
         <md-option value='scores'>
