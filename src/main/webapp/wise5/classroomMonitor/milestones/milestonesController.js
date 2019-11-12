@@ -359,13 +359,9 @@ class MilestonesController {
     if (projectAchievement.type === 'milestoneReport') {
       if (this.isCompletionReached(projectAchievement)) {
         const report = this.generateReport(projectAchievement);
-        if (report != null) {
-          projectAchievement.generatedReport = this.generateReport(projectAchievement);
-          this.setReportAvailable(projectAchievement, true);
-        } else {
-          delete projectAchievement.generatedReport;
-          this.setReportAvailable(projectAchievement, false);
-        }
+        this.setReportAvailable(projectAchievement, true);
+        projectAchievement.generatedReport = report.content ? report.content : null;
+        projectAchievement.recommendations = report.recommendations ? report.recommendations : null;
       } else {
         this.setReportAvailable(projectAchievement, false);
       }
@@ -390,8 +386,8 @@ class MilestonesController {
       aggregateAutoScores[componentId] = this.calculateAggregateAutoScores(nodeId, componentId, this.periodId);
     }
     const template = this.chooseTemplate(projectAchievement.report.templates, aggregateAutoScores);
-    let templateContent = template.content;
-    if (templateContent != null) {
+    let content = template.content ? template.content : '';
+    if (content) {
       for (let componentId of Object.keys(aggregateAutoScores)) {
         const componentAggregate = aggregateAutoScores[componentId];
         let subScoreIndex = 0;
@@ -406,12 +402,16 @@ class MilestonesController {
           const milestoneCategories = this.calculateMilestoneCategories(subScoreId);
           const categories = JSON.stringify(milestoneCategories).replace(/\"/g, '\'');
           const data = JSON.stringify(milestoneData).replace(/\"/g, '\'');
-          templateContent = templateContent.replace(regex,
+          content = content.replace(regex,
             `$& categories=\"${categories}\" data=\"${data}\"`);
         }
       }
     }
-    return templateContent;
+    const recommendations = template.recommendations ? template.recommendations : '';
+    return {
+      content: content,
+      recommendations: recommendations
+    };
   }
 
   getSatisfyCriteriaReferencedComponents(projectAchievement) {
@@ -527,7 +527,7 @@ class MilestonesController {
 
   isTemplateMatch(template, aggregateAutoScores) {
     const matchedCriteria = [];
-    for (let satisfyCriterion of template.satisfyCriteria) {
+    for (const satisfyCriterion of template.satisfyCriteria) {
       if (this.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)) {
         matchedCriteria.push(satisfyCriterion);
       }
@@ -552,6 +552,8 @@ class MilestonesController {
       return this.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores);
     } else if (satisfyCriterion.function === 'percentOfScoresNotEqualTo') {
       return this.isPercentOfScoresNotEqualTo(satisfyCriterion, aggregateAutoScores);
+    } else if (satisfyCriterion.function === 'default') {
+      return true;
     }
   }
 
