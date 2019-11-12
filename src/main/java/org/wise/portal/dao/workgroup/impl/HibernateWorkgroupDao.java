@@ -92,7 +92,7 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
     cq.select(workgroupImplRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<WorkgroupImpl> query = entityManager.createQuery(cq);
     List<WorkgroupImpl> runResultList = query.getResultList();
-    return (List<Workgroup>)(Object)runResultList;
+    return (List<Workgroup>) (Object) runResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -110,6 +110,6 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
     cq.select(workgroupImplRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<WorkgroupImpl> query = entityManager.createQuery(cq);
     List<WorkgroupImpl> runResultList = query.getResultList();
-    return (List<Workgroup>)(Object)runResultList;
+    return (List<Workgroup>) (Object) runResultList;
   }
 }

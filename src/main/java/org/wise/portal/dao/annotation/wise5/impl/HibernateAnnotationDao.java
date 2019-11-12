@@ -88,6 +88,6 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation>
     }
     cq.select(annotationRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<Annotation> query = entityManager.createQuery(cq);
-    return (List<Annotation>)(Object)query.getResultList();
+    return (List<Annotation>) (Object) query.getResultList();
   }
 }

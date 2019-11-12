@@ -99,7 +99,7 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
     Root<StudentStatus> studentStatusRoot = cq.from(StudentStatus.class);
     cq.select(studentStatusRoot).where(cb.equal(studentStatusRoot.get("periodId"), periodId));
     TypedQuery<StudentStatus> query = entityManager.createQuery(cq);
-    return (List<StudentStatus>)(Object)query.getResultList();
+    return (List<StudentStatus>) (Object) query.getResultList();
   }
 
   @Transactional
@@ -110,6 +110,6 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
     Root<StudentStatus> studentStatusRoot = cq.from(StudentStatus.class);
     cq.select(studentStatusRoot).where(cb.equal(studentStatusRoot.get("runId"), runId));
     TypedQuery<StudentStatus> query = entityManager.createQuery(cq);
-    return (List<StudentStatus>)(Object)query.getResultList();
+    return (List<StudentStatus>) (Object) query.getResultList();
   }
 }
