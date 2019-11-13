@@ -72,7 +72,6 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork>
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period,
       Workgroup workgroup, Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId,
       String componentType, List<JSONObject> components, Boolean onlyGetLatest) {
@@ -90,7 +89,7 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork>
       Root<StudentWork> studentWorkRoot = cq.from(StudentWork.class);
       cq.select(studentWorkRoot).where(cb.in(studentWorkRoot.get("id")).value(subQuery));
       TypedQuery<StudentWork> query = entityManager.createQuery(cq);
-      return (List<StudentWork>)(Object)query.getResultList();
+      return (List<StudentWork>) query.getResultList();
     } else {
       CriteriaBuilder cb = getCriteriaBuilder();
       CriteriaQuery<StudentWork> cq = cb.createQuery(StudentWork.class);
@@ -101,7 +100,7 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork>
       cq.select(studentWorkRoot).where(predicates.toArray(new Predicate[predicates.size()]))
           .orderBy(cb.asc(studentWorkRoot.get("serverSaveTime")));
       TypedQuery<StudentWork> query = entityManager.createQuery(cq);
-      return (List<StudentWork>) (Object) query.getResultList();
+      return (List<StudentWork>) query.getResultList();
     }
   }
 
