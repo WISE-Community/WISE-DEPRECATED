@@ -78,24 +78,22 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
   }
 
   @Transactional
-  @SuppressWarnings("unchecked")
   public List<StudentStatus> getStudentStatusesByPeriodId(Long periodId) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<StudentStatus> cq = cb.createQuery(StudentStatus.class);
     Root<StudentStatus> studentStatusRoot = cq.from(StudentStatus.class);
     cq.select(studentStatusRoot).where(cb.equal(studentStatusRoot.get("periodId"), periodId));
     TypedQuery<StudentStatus> query = entityManager.createQuery(cq);
-    return (List<StudentStatus>)(Object)query.getResultList();
+    return (List<StudentStatus>) query.getResultList();
   }
 
   @Transactional
-  @SuppressWarnings("unchecked")
   public List<StudentStatus> getStudentStatusesByRunId(Long runId) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<StudentStatus> cq = cb.createQuery(StudentStatus.class);
     Root<StudentStatus> studentStatusRoot = cq.from(StudentStatus.class);
     cq.select(studentStatusRoot).where(cb.equal(studentStatusRoot.get("runId"), runId));
     TypedQuery<StudentStatus> query = entityManager.createQuery(cq);
-    return (List<StudentStatus>)(Object)query.getResultList();
+    return (List<StudentStatus>) query.getResultList();
   }
 }
