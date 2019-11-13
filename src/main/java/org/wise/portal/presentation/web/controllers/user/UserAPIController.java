@@ -1,10 +1,5 @@
 package org.wise.portal.presentation.web.controllers.user;
 
-import java.util.Locale;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
@@ -25,6 +17,9 @@ import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.user.UserService;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Controller for User REST API
@@ -85,7 +80,6 @@ public class UserAPIController {
       userJSON.put("lastName", userDetails.getLastname());
       userJSON.put("username", userDetails.getUsername());
       userJSON.put("isGoogleUser", userDetails.isGoogleUser());
-      userJSON.put("isPreviousAdmin", ControllerUtil.isUserPreviousAdministrator());
 
       if (isStudent) {
         userJSON.put("role", "student");
