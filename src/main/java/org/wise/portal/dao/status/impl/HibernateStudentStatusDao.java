@@ -26,7 +26,6 @@ package org.wise.portal.dao.status.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -36,7 +35,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.status.StudentStatusDao;
 import org.wise.vle.domain.status.StudentStatus;
@@ -61,18 +59,6 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
   @Override
   protected Class<? extends StudentStatus> getDataObjectClass() {
     return null;
-  }
-
-  public StudentStatus getStudentStatusById(Long id) {
-    StudentStatus studentStatus = null;
-
-    try {
-      studentStatus = getById(id);
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    return studentStatus;
   }
 
   @Transactional
