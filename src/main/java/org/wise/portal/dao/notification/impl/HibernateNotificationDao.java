@@ -70,7 +70,6 @@ public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public List<Notification> getNotificationListByParams(Integer id, Run run, Group period,
       Workgroup toWorkgroup, String groupId, String nodeId, String componentId) {
     CriteriaBuilder cb = getCriteriaBuilder();
@@ -100,11 +99,10 @@ public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
     }
     cq.select(notificationRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<Notification> query = entityManager.createQuery(cq);
-    return (List<Notification>) (Object) query.getResultList();
+    return (List<Notification>) query.getResultList();
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public List<Notification> getExport(Run run) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<Notification> cq = cb.createQuery(Notification.class);
@@ -114,6 +112,6 @@ public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
     cq.select(notificationRoot).where(predicates.toArray(new Predicate[predicates.size()]))
         .orderBy(cb.asc(notificationRoot.get("toWorkgroup")), cb.asc(notificationRoot.get("id")));
     TypedQuery<Notification> query = entityManager.createQuery(cq);
-    return (List<Notification>) (Object) query.getResultList();
+    return (List<Notification>) query.getResultList();
   }
 }
