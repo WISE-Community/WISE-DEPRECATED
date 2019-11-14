@@ -51,7 +51,7 @@ public class HibernateNotificationDaoTest extends AbstractTransactionalDbTests {
         Schoollevel.COLLEGE, "1234567890");
     run = createProjectAndRun(id, projectName, teacher, startTime, runCode);
     period1 = createPeriod("Period 1");
-    period2 = createPeriod("Period 1");
+    period2 = createPeriod("Period 2");
     Set<Group> periods = new TreeSet<Group>();
     periods.add(period1);
     periods.add(period2);
