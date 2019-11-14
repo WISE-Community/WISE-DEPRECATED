@@ -160,7 +160,8 @@
                 <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
-                <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/workgroup/impl/AllTests.java</exclude>
+                <exclude>**/org/wise/portal/dao/workgroup/impl/HibernateWorkgroupDaoAnotherTest.java</exclude>
               </testExcludes>
             </configuration>
           </execution>
@@ -204,7 +205,8 @@
             <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
             <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
             <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
-            <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/workgroup/impl/AllTests.java</exclude>
+            <exclude>**/org/wise/portal/dao/workgroup/impl/HibernateWorkgroupDaoAnotherTest.java</exclude>
           </excludes>
         </configuration>
       </plugin>
