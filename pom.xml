@@ -160,7 +160,6 @@
                 <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
-                <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
               </testExcludes>
             </configuration>
           </execution>
@@ -204,7 +203,6 @@
             <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
             <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
             <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
-            <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>
