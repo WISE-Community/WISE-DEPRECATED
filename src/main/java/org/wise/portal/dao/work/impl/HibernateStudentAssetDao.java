@@ -104,6 +104,6 @@ public class HibernateStudentAssetDao extends AbstractHibernateDao<StudentAsset>
     cq.select(studentAssetRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<StudentAsset> query = entityManager.createQuery(cq);
     List<StudentAsset> studentAssetResultList = query.getResultList();
-    return (List<StudentAsset>)(Object)studentAssetResultList;
+    return (List<StudentAsset>) (Object) studentAssetResultList;
   }
 }

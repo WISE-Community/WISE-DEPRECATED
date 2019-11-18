@@ -42,19 +42,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.impl.HibernateGroupDao;
-import org.wise.portal.dao.project.impl.HibernateProjectDao;
-import org.wise.portal.dao.workgroup.impl.HibernateWorkgroupDao;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.junit.AbstractTransactionalDbTests;
 
 /**
@@ -72,19 +68,12 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
   private final String runCode = "diamonds12345";
   private final String runCodeNotInDB = "diamonds54321";
   private Run run;
-  private Long nextAvailableProjectId = 1L;
 
   @Autowired
   private HibernateRunDao runDao;
 
   @Autowired
   private HibernateGroupDao groupDao;
-
-  @Autowired
-  private HibernateProjectDao projectDao;
-
-  @Autowired
-  private HibernateWorkgroupDao workgroupDao;
 
   @Before
   public void setUp() throws Exception {
@@ -112,49 +101,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     run.setPeriods(periods);
     project = run.getProject();
     toilet.flush();
-  }
-
-  private Long getNextAvailableProjectId() {
-    return nextAvailableProjectId++;
-  }
-
-  private Group createPeriod(String name) {
-    Group period = new PersistentGroup();
-    period.setName(name);
-    groupDao.save(period);
-    return period;
-  }
-
-  private Project createProject(Long id, String name, User owner) {
-    Project project = new ProjectImpl();
-    project.setId(id);
-    project.setName(name);
-    project.setDateCreated(new Date());
-    project.setOwner(owner);
-    return project;
-  }
-
-  private Run createRun(Long id, String name, Date startTime, String runCode, User owner,
-      Project project) {
-    Run run = new RunImpl();
-    run.setId(id);
-    run.setName(name);
-    run.setStarttime(startTime);
-    run.setRuncode(runCode);
-    run.setArchiveReminderTime(new Date());
-    run.setPostLevel(5);
-    run.setOwner(owner);
-    run.setProject(project);
-    return run;
-  }
-
-  private Run createProjectAndRun(Long id, String name, User owner, Date startTime,
-      String runCode) {
-    Project project = createProject(id, name, owner);
-    projectDao.save(project);
-    Run run = createRun(id, name, startTime, runCode, owner, project);
-    runDao.save(run);
-    return run;
   }
 
   private void assertNumRuns(int expected) {
@@ -234,18 +180,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     createWorkgroup(members2, run, period2);
     workgroups = runDao.getWorkgroupsForRun(runId);
     assertEquals(2, workgroups.size());
-  }
-
-  private Workgroup createWorkgroup(Set<User> members, Run run, Group period) {
-    Workgroup workgroup = new WorkgroupImpl();
-    for (User member : members) {
-      workgroup.addMember(member);
-    }
-    workgroup.setRun(run);
-    workgroup.setPeriod(period);
-    groupDao.save(workgroup.getGroup());
-    workgroupDao.save(workgroup);
-    return workgroup;
   }
 
   @Test

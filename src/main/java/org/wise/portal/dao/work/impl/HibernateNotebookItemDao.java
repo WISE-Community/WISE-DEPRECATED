@@ -12,7 +12,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -48,7 +47,6 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public List<NotebookItem> getNotebookItemListByParams(Integer id, Run run, Group period,
       Workgroup workgroup, String nodeId, String componentId) {
     CriteriaBuilder cb = getCriteriaBuilder();
@@ -78,10 +76,9 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
     Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
     cq.select(notebookItemRoot).where(cb.in(notebookItemRoot.get("id")).value(subQuery));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>)(Object)query.getResultList();
+    return (List<NotebookItem>) query.getResultList();
   }
 
-  @SuppressWarnings("unchecked")
   public List<NotebookItem> getNotebookItemByGroup(Integer runId, String groupName) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<NotebookItem> cq = cb.createQuery(NotebookItem.class);
@@ -97,33 +94,41 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
     Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
     cq.select(notebookItemRoot).where(cb.in(notebookItemRoot.get("id")).value(subQuery));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>)(Object)query.getResultList();
+    return (List<NotebookItem>) query.getResultList();
   }
 
-  public List<Object[]> getNotebookItemExport(Integer runId) {
-    String queryString =
-      "SELECT n.id, n.localNotebookItemId, n.nodeId, n.componentId, 'step number', 'step title', 'component part number', " +
-        "n.clientSaveTime, n.serverSaveTime, n.type, n.content, n.periodId, n.runId, n.workgroupId, " +
-        "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') \"WISE IDs\" " +
-        "FROM notebookItems n, " +
-        "workgroups w, " +
-        "groups_related_to_users gu, " +
-        "groups g, " +
-        "runs r, " +
-        "users u, " +
-        "user_details ud " +
-        "where n.runId = :runId and n.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = n.periodId and " +
-        "n.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
-        "group by n.id, n.localNotebookItemId, n.nodeId, n.componentId, n.clientSaveTime, n.serverSaveTime, n.type, n.content, n.periodId, n.runId, n.workgroupId, g.name, ud.username, r.project_fk order by workgroupId";
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    SQLQuery query = session.createSQLQuery(queryString);
-    query.setParameter("runId", runId);
-    List resultList = new ArrayList<Object[]>();
-    Object[] headerRow = new String[]{"id","note item id","node id","component id","step number","step title","component part number",
-      "client save time","server save time","type","content","period id","run id","workgroup id",
-      "period name", "teacher username", "project id", "WISE ids"};
-    resultList.add(headerRow);
-    resultList.addAll(query.list());
-    return resultList;
+  public List<NotebookItem> getNotebookItemsExport(Run run) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<NotebookItem> cq = cb.createQuery(NotebookItem.class);
+    Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
+    cq.select(notebookItemRoot).where(cb.equal(notebookItemRoot.get("run"), run))
+        .orderBy(cb.asc(notebookItemRoot.get("workgroup").get("id")),
+        cb.asc(notebookItemRoot.get("id")));
+    TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
+    return (List<NotebookItem>) query.getResultList();
+  }
+
+  public List<NotebookItem> getLatestNotebookItemsExport(Run run) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<NotebookItem> cq = cb.createQuery(NotebookItem.class);
+    Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
+    Subquery<Long> latestNotebookItemIds = getLatestNotebookItemIds(cb, cq);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(notebookItemRoot.get("run"), run));
+    predicates.add(notebookItemRoot.get("id").in(latestNotebookItemIds));
+    cq.select(notebookItemRoot).where(predicates.toArray(new Predicate[predicates.size()]))
+        .orderBy(cb.asc(notebookItemRoot.get("workgroup").get("id")),
+        cb.asc(notebookItemRoot.get("id")));
+    TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
+    return (List<NotebookItem>) query.getResultList();
+  }
+
+  private Subquery<Long> getLatestNotebookItemIds(CriteriaBuilder cb, CriteriaQuery cq) {
+    Subquery<Long> notebookItemSubquery = cq.subquery(Long.class);
+    Root<NotebookItem> notebookItemRoot = notebookItemSubquery.from(NotebookItem.class);
+    notebookItemSubquery.select(cb.max(notebookItemRoot.get("id")))
+        .groupBy(notebookItemRoot.get("workgroup").get("id"),
+        notebookItemRoot.get("localNotebookItemId"));
+    return notebookItemSubquery; 
   }
 }

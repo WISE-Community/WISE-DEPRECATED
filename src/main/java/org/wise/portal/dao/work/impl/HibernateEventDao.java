@@ -82,7 +82,7 @@ public class HibernateEventDao extends AbstractHibernateDao<Event> implements Ev
     cq.select(eventRoot).where(predicates.toArray(new Predicate[predicates.size()]))
         .orderBy(cb.asc(eventRoot.get("serverSaveTime")));
     TypedQuery<Event> query = entityManager.createQuery(cq);
-    return (List<Event>)(Object)query.getResultList();
+    return (List<Event>) (Object) query.getResultList();
   }
 
   private List<Predicate> getEventsByParamsPredicates(CriteriaBuilder cb, Root<Event> eventRoot,
