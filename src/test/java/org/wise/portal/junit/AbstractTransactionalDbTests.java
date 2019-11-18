@@ -195,4 +195,10 @@ public abstract class AbstractTransactionalDbTests extends
     workgroupDao.save(workgroup);
     return workgroup;
   }
+
+  public Date getDateXDaysFromNow(int x) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DATE, x); 
+    return new Date(calendar.getTimeInMillis());
+  }
 }

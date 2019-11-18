@@ -32,7 +32,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	org.wise.portal.dao.newsitem.impl.HibernateNewsItemTest.class
+	org.wise.portal.dao.newsitem.impl.HibernateNewsItemDaoTest.class
 })
 public class AllTests {
 }

@@ -336,12 +336,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     assertEquals(1, runs.size());
   }
 
-  private Date getDateXDaysFromNow(int x) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DATE, x); 
-    return new Date(calendar.getTimeInMillis());
-  }
-
   @Test
   public void getRunsByActivity_NoneActive_Success() {
     List<Run> runs = runDao.getRunsByActivity();
