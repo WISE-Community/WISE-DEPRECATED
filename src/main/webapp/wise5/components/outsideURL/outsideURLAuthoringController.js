@@ -43,6 +43,8 @@ class OutsideURLAuthoringController extends OutsideURLController {
           this.authoringComponentContent.width, this.authoringComponentContent.height);
     }, true);
 
+    this.openEducationalResources = this.OutsideURLService.getOpenEducationalResources();
+
     /*
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
@@ -109,6 +111,10 @@ class OutsideURLAuthoringController extends OutsideURLController {
       // close the popup
       this.$mdDialog.hide();
     });
+  }
+
+  populateOpenEducationalResourceURL(openEducationalResource) {
+    this.authoringComponentContent.url = openEducationalResource.url;
   }
 }
 
