@@ -47,7 +47,6 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public List<NotebookItem> getNotebookItemListByParams(Integer id, Run run, Group period,
       Workgroup workgroup, String nodeId, String componentId) {
     CriteriaBuilder cb = getCriteriaBuilder();
@@ -77,10 +76,9 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
     Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
     cq.select(notebookItemRoot).where(cb.in(notebookItemRoot.get("id")).value(subQuery));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>) (Object) query.getResultList();
+    return (List<NotebookItem>) query.getResultList();
   }
 
-  @SuppressWarnings("unchecked")
   public List<NotebookItem> getNotebookItemByGroup(Integer runId, String groupName) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<NotebookItem> cq = cb.createQuery(NotebookItem.class);
@@ -96,10 +94,9 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
     Root<NotebookItem> notebookItemRoot = cq.from(NotebookItem.class);
     cq.select(notebookItemRoot).where(cb.in(notebookItemRoot.get("id")).value(subQuery));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>) (Object) query.getResultList();
+    return (List<NotebookItem>) query.getResultList();
   }
 
-  @SuppressWarnings("unchecked")
   public List<NotebookItem> getNotebookItemsExport(Run run) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<NotebookItem> cq = cb.createQuery(NotebookItem.class);
@@ -108,10 +105,9 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
         .orderBy(cb.asc(notebookItemRoot.get("workgroup").get("id")),
         cb.asc(notebookItemRoot.get("id")));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>) (Object) query.getResultList();
+    return (List<NotebookItem>) query.getResultList();
   }
 
-  @SuppressWarnings("unchecked")
   public List<NotebookItem> getLatestNotebookItemsExport(Run run) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<NotebookItem> cq = cb.createQuery(NotebookItem.class);
@@ -124,7 +120,7 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
         .orderBy(cb.asc(notebookItemRoot.get("workgroup").get("id")),
         cb.asc(notebookItemRoot.get("id")));
     TypedQuery<NotebookItem> query = entityManager.createQuery(cq);
-    return (List<NotebookItem>) (Object) query.getResultList();
+    return (List<NotebookItem>) query.getResultList();
   }
 
   private Subquery<Long> getLatestNotebookItemIds(CriteriaBuilder cb, CriteriaQuery cq) {
