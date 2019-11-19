@@ -356,7 +356,7 @@ public final class SecurityUtils {
     boolean result = false;
     if (workgroupId != null && runId != null) {
       try {
-        Set<Workgroup> workgroupsInRun = runService.getWorkgroups(runId);
+        List<Workgroup> workgroupsInRun = runService.getWorkgroups(runId);
         Iterator<Workgroup> workgroupsInRunIterator = workgroupsInRun.iterator();
         while (workgroupsInRunIterator.hasNext()) {
           Workgroup tempWorkgroup = workgroupsInRunIterator.next();

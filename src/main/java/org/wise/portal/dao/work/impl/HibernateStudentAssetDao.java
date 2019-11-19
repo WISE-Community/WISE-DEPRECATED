@@ -23,9 +23,18 @@
  */
 package org.wise.portal.dao.work.impl;
 
-import org.hibernate.Criteria;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.work.StudentAssetDao;
@@ -33,9 +42,6 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.work.StudentAsset;
-import org.wise.vle.domain.work.StudentWork;
-
-import java.util.List;
 
 /**
  * @author Hiroki Terashima
@@ -44,6 +50,9 @@ import java.util.List;
 public class HibernateStudentAssetDao extends AbstractHibernateDao<StudentAsset>
     implements StudentAssetDao<StudentAsset> {
 
+  @PersistenceContext
+  private EntityManager entityManager;
+  
   @Override
   protected String getFindAllQuery() {
     return null;
@@ -54,39 +63,46 @@ public class HibernateStudentAssetDao extends AbstractHibernateDao<StudentAsset>
     return StudentAsset.class;
   }
 
-  @Override
-  public List<StudentWork> getStudentAssetListByParams(
-    Integer id, Run run, Group period, Workgroup workgroup,
-    String nodeId, String componentId, String componentType,
-    Boolean isReferenced) {
+  private CriteriaBuilder getCriteriaBuilder() {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    Criteria sessionCriteria = session.createCriteria(StudentAsset.class);
+    return session.getCriteriaBuilder(); 
+  }
 
+  @Override
+  public List<StudentAsset> getStudentAssetListByParams(Integer id, Run run, Group period,
+      Workgroup workgroup, String nodeId, String componentId, String componentType,
+      Boolean isReferenced) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<StudentAsset> cq = cb.createQuery(StudentAsset.class); 
+    Root<StudentAsset> studentAssetRoot = cq.from(StudentAsset.class);
+    List<Predicate> predicates = new ArrayList<>();
     if (id != null) {
-      sessionCriteria.add(Restrictions.eq("id", id));
+      predicates.add(cb.equal(studentAssetRoot.get("id"), id));
     }
     if (run != null) {
-      sessionCriteria.add(Restrictions.eq("run", run));
+      predicates.add(cb.equal(studentAssetRoot.get("run"), run));
     }
     if (period != null) {
-      sessionCriteria.add(Restrictions.eq("period", period));
+      predicates.add(cb.equal(studentAssetRoot.get("period"), period));
     }
     if (workgroup != null) {
-      sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
+      predicates.add(cb.equal(studentAssetRoot.get("workgroup"), workgroup));
     }
     if (nodeId != null) {
-      sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
+      predicates.add(cb.equal(studentAssetRoot.get("nodeId"), nodeId));
     }
     if (componentId != null) {
-      sessionCriteria.add(Restrictions.eq("componentId", componentId));
+      predicates.add(cb.equal(studentAssetRoot.get("componentId"), componentId));
     }
     if (componentType != null) {
-      sessionCriteria.add(Restrictions.eq("componentType", componentType));
+      predicates.add(cb.equal(studentAssetRoot.get("componentType"), componentType));
     }
     if (isReferenced != null) {
-      sessionCriteria.add(Restrictions.eq("isReferenced", isReferenced));
+      predicates.add(cb.equal(studentAssetRoot.get("isReferenced"), isReferenced));
     }
-
-    return sessionCriteria.list();
+    cq.select(studentAssetRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<StudentAsset> query = entityManager.createQuery(cq);
+    List<StudentAsset> studentAssetResultList = query.getResultList();
+    return (List<StudentAsset>) studentAssetResultList;
   }
 }

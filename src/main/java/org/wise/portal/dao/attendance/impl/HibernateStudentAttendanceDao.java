@@ -23,48 +23,67 @@
  */
 package org.wise.portal.dao.attendance.impl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.attendance.StudentAttendanceDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.attendance.StudentAttendance;
+import org.wise.portal.domain.attendance.impl.StudentAttendanceImpl;
 
 @Repository
-public class HibernateStudentAttendanceDao extends AbstractHibernateDao<StudentAttendance> implements StudentAttendanceDao<StudentAttendance> {
+public class HibernateStudentAttendanceDao extends AbstractHibernateDao<StudentAttendance>
+    implements StudentAttendanceDao<StudentAttendance> {
 
-  /**
-   * Get all the student attendance entries for a run id
-   * @see org.wise.portal.dao.attendance.StudentAttendanceDao#getStudentAttendanceByRunId(java.lang.Long)
-   */
+  @PersistenceContext
+  private EntityManager entityManager;
+  
   @Transactional(readOnly=true)
+  @SuppressWarnings("unchecked")
   public List<StudentAttendance> getStudentAttendanceByRunId(Long runId) {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-
-    /*
-     * get all the student attendance rows for the given run id and
-     * order the results by the loginTimestamp with the newer entries
-     * at the beginning and older entries at the end of the list
-     */
-    List<StudentAttendance> results = (List<StudentAttendance>) session.createCriteria(StudentAttendance.class).
-      add(Restrictions.eq("runId", runId)).addOrder(Order.desc("loginTimestamp")).list();
-
-    return results;
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<StudentAttendanceImpl> cq = cb.createQuery(StudentAttendanceImpl.class);
+    Root<StudentAttendanceImpl> studentAttendanceRoot = cq.from(StudentAttendanceImpl.class);
+    cq.select(studentAttendanceRoot).where(cb.equal(studentAttendanceRoot.get("runId"), runId))
+        .orderBy(cb.desc(studentAttendanceRoot.get("loginTimestamp")));
+    TypedQuery<StudentAttendanceImpl> query = entityManager.createQuery(cq);
+    return (List<StudentAttendance>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
   @Override
   @Transactional(readOnly=true)
   public List<StudentAttendance> getStudentAttendanceByRunIdAndPeriod(
-    Long runId, int lookBackNumDays) {
-
-    return (List<StudentAttendance>) this.getHibernateTemplate().find("select attendance from StudentAttendanceImpl attendance where"
-      + " datediff(curdate(), attendance.loginTimestamp) <=" + lookBackNumDays
-      + " and attendance.runId = " + runId);
+      Long runId, int lookBackNumDays) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<StudentAttendanceImpl> cq = cb.createQuery(StudentAttendanceImpl.class);
+    Root<StudentAttendanceImpl> studentAttendanceRoot = cq.from(StudentAttendanceImpl.class);
+    List<Predicate> predicates = new ArrayList<>();
+    Calendar c = Calendar.getInstance();
+    c.add(Calendar.DAY_OF_YEAR, -lookBackNumDays);
+    Date compareDate = c.getTime();
+    predicates.add(
+        cb.greaterThanOrEqualTo(studentAttendanceRoot.get("loginTimestamp"), compareDate));
+    predicates.add(cb.equal(studentAttendanceRoot.get("runId"), runId));
+    cq.select(studentAttendanceRoot).where(predicates.toArray(new Predicate[predicates.size()]))
+        .orderBy(cb.desc(studentAttendanceRoot.get("loginTimestamp")));
+    TypedQuery<StudentAttendanceImpl> query = entityManager.createQuery(cq);
+    return (List<StudentAttendance>) (Object) query.getResultList();
   }
 
   @Override

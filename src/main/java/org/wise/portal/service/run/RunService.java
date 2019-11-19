@@ -231,21 +231,11 @@ public interface RunService {
   Run retrieveById(Long runId) throws ObjectNotFoundException;
 
   /**
-   * Retrieves the Run domain object using a unique runId
-   *
-   * @param runId <code>Long</code> runId to use for lookup
-   * @param doEagerFetch <code>boolean</code> fetch all fields of the run eagerly, same as EAGER-fetch
-   * @return <code>Run</code> The Run object with the runId
-   * @throws <code>RunNotFoundException</code> when runId cannot be used to find an existing run
-   */
-  Run retrieveById(Long runId, boolean doEagerFetch) throws ObjectNotFoundException;
-
-  /**
    * Gets all of the Workgroups that are associated with this run
    * @return set of Workgroups for that are in this run
    * @throws ObjectNotFoundException when runId cannot be used to find an existing run
    */
-  Set<Workgroup> getWorkgroups(Long runId) throws ObjectNotFoundException;
+  List<Workgroup> getWorkgroups(Long runId) throws ObjectNotFoundException;
 
   /**
    * Gets all of the Workgroups that are associated with this run
@@ -254,7 +244,7 @@ public interface RunService {
    * @param runId runId to use for lookup
    * @param periodId periodId to which all returned workgroups belong
    */
-  Set<Workgroup> getWorkgroups(Long runId, Long periodId) throws ObjectNotFoundException;
+  List<Workgroup> getWorkgroups(Long runId, Long periodId) throws ObjectNotFoundException;
 
   /**
    * Adds an Announcement to this run
@@ -386,7 +376,7 @@ public interface RunService {
    * @param period
    * @return List<Run> - run list
    */
-  List<Run> getRunsRunWithinPeriod(String period);
+  List<Run> getRunsRunWithinTimePeriod(String period);
 
   /**
    * Returns a <code>List<Run></code> list of runs ordered descending by how

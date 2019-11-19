@@ -23,13 +23,13 @@
  */
 package org.wise.portal.dao.work;
 
+import java.util.List;
+
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.work.NotebookItem;
-
-import java.util.List;
 
 /**
  * Domain Access Object for NotebookItem
@@ -42,5 +42,6 @@ public interface NotebookItemDao<T extends NotebookItem> extends SimpleDao<T> {
 
   List<NotebookItem> getNotebookItemByGroup(Integer runId, String groupName);
 
-  List<Object[]> getNotebookItemExport(Integer runId);
+  List<NotebookItem> getNotebookItemsExport(Run run);
+  List<NotebookItem> getLatestNotebookItemsExport(Run run);
 }

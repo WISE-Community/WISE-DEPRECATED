@@ -230,7 +230,7 @@ public class VLEPeerReviewController {
          * set the number of students in the class period for when we need
          * to calculate peer review opening
          */
-        Set<Workgroup> classmateWorkgroups = runService.getWorkgroups(runIdLong, periodIdLong);
+        List<Workgroup> classmateWorkgroups = runService.getWorkgroups(runIdLong, periodIdLong);
         numWorkgroups = classmateWorkgroups.size();
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();

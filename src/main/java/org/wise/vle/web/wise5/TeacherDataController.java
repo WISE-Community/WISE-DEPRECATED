@@ -1,5 +1,20 @@
 package org.wise.vle.web.wise5;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -7,7 +22,11 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
@@ -22,16 +41,6 @@ import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
 import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * Controller for handling GET and POST of WISE5 Teacher related data
@@ -80,23 +89,18 @@ public class TeacherDataController {
       Set<User> sharedOwners = run.getSharedowners();
 
       if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser) || signedInUser.isAdmin()) {
-        if ("allStudentWork".equals(exportType) || "latestStudentWork".equals(exportType)) {
-          JSONArray resultArray = vleService.getStudentWorkExport(runId);
+        if ("allNotebookItems".equals(exportType)) {
+          JSONArray resultArray = vleService.getNotebookItemsExport(runId);
           PrintWriter writer = response.getWriter();
           writer.write(resultArray.toString());
           writer.close();
-        } else if ("events".equals(exportType)) {
-          JSONArray resultArray = vleService.getStudentEventExport(runId);
-          PrintWriter writer = response.getWriter();
-          writer.write(resultArray.toString());
-          writer.close();
-        } else if ("allNotebookItems".equals(exportType) || "latestNotebookItems".equals(exportType)) {
-          JSONArray resultArray = vleService.getNotebookExport(runId);
+        } else if ("latestNotebookItems".equals(exportType)) {
+          JSONArray resultArray = vleService.getLatestNotebookItemsExport(runId);
           PrintWriter writer = response.getWriter();
           writer.write(resultArray.toString());
           writer.close();
         } else if ("notifications".equals(exportType)) {
-          JSONArray resultArray = vleService.getNotificationExport(runId);
+          JSONArray resultArray = vleService.getNotificationsExport(runId);
           PrintWriter writer = response.getWriter();
           writer.write(resultArray.toString());
           writer.close();

@@ -20,14 +20,14 @@
  */
 package org.wise.portal.service.user;
 
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
-
-import java.util.List;
 
 /**
  * Represents the set of operations on a user.
@@ -60,14 +60,6 @@ public interface UserService {
    * @return <code>User</code> associated with the given username
    */
   User retrieveUserByUsername(String username);
-
-  /**
-   * Retrieve users with a similar username as the one provided
-   * Does a LIKE comparison
-   * @param username
-   * @return <code>User</code> associated with the given username
-   */
-  List<User> retrieveUsersByUsername(String username);
 
   /**
    * Retrieve users with the given emailAddress
@@ -127,31 +119,6 @@ public interface UserService {
   void updateUser(User user);
 
   /**
-   * Retrieves Users by a given field (eg username, gender), search type (eg =, like)
-   * search term (user provided) and classVar (eg teacher or studentUserDetails)
-   */
-  List<User> retrieveByField(String field, String type, Object term, String classVar);
-
-  /**
-   * Given an array of fields and an array of values and classVar, retrieves a list
-   * of Users
-   * @param fields an array of field names
-   * @param values an array of values, the index of a value must line up with
-   * the index in the field array
-   *
-   * e.g.
-   * fields[0] = "firstname"
-   * fields[1] = "lastname"
-   *
-   * values[0] = "Spongebob"
-   * values[1] = "Squarepants"
-   *
-   * @param classVar 'studentUserDetails' or 'teacherUserDetails'
-   * @return a list of Users that have matching values for the given fields
-   */
-  List<User> retrieveByFields(String[] fields, String[] values, String classVar);
-
-  /**
    * Get the User object given the reset password key
    * @param resetPasswordKey an alphanumeric string
    * @return a User object or null if there is no user with the given reset password key
@@ -172,4 +139,36 @@ public interface UserService {
    * @return true iff the password is correct.
    */
   boolean isPasswordCorrect(User user, String password);
+
+  List<User> retrieveStudentsByNameAndBirthday(String firstName, String lastName,
+      Integer birthMonth, Integer birthDay);
+  List<User> retrieveTeachersByName(String firstName, String lastName);
+  List<User> retrieveTeachersById(Long id);
+  List<User> retrieveTeachersByFirstName(String firstName);
+  List<User> retrieveTeachersByLastName(String lastName);
+  List<User> retrieveTeachersByUsername(String username);
+  List<User> retrieveTeachersByDisplayName(String displayName);
+  List<User> retrieveTeachersByCity(String city);
+  List<User> retrieveTeachersByState(String state);
+  List<User> retrieveTeachersByCountry(String country);
+  List<User> retrieveTeachersBySchoolName(String schoolName);
+  List<User> retrieveTeachersBySchoolLevel(String schoolLevel);
+  List<User> retrieveTeachersByEmail(String email);
+  List<User> retrieveStudentsById(Long id);
+  List<User> retrieveStudentsByFirstName(String firstName);
+  List<User> retrieveStudentsByLastName(String lastName);
+  List<User> retrieveStudentsByUsername(String username);
+  List<User> retrieveStudentsByGender(String gender);
+  List<User> retrieveTeacherUsersJoinedSinceYesterday();
+  List<User> retrieveStudentUsersJoinedSinceYesterday();
+  List<User> retrieveTeacherUsersWhoLoggedInSinceYesterday();
+  List<User> retrieveTeacherUsersWhoLoggedInToday();
+  List<User> retrieveTeacherUsersWhoLoggedInThisWeek();
+  List<User> retrieveTeacherUsersWhoLoggedInThisMonth();
+  List<User> retrieveTeacherUsersWhoLoggedInThisYear();
+  List<User> retrieveStudentUsersWhoLoggedInSinceYesterday();
+  List<User> retrieveStudentUsersWhoLoggedInToday();
+  List<User> retrieveStudentUsersWhoLoggedInThisWeek();
+  List<User> retrieveStudentUsersWhoLoggedInThisMonth();
+  List<User> retrieveStudentUsersWhoLoggedInThisYear();
 }

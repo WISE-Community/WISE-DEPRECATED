@@ -20,21 +20,28 @@
  */
 package org.wise.portal.dao.user.impl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.user.UserDao;
+import org.wise.portal.domain.authentication.Gender;
+import org.wise.portal.domain.authentication.Schoollevel;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 
@@ -44,206 +51,436 @@ import org.wise.portal.domain.user.impl.UserImpl;
 @Repository
 public class HibernateUserDao extends AbstractHibernateDao<User> implements UserDao<User> {
 
+  @PersistenceContext
+  private EntityManager entityManager;
+  
   private static final String FIND_ALL_QUERY = "from UserImpl";
 
-  /**
-   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-   */
   @Override
   protected String getFindAllQuery() {
     return FIND_ALL_QUERY;
   }
 
-  /**
-   * @see org.wise.portal.dao.user.UserDao#retrieveByUserDetails(org.acegisecurity.userdetails.UserDetails)
-   */
-  public User retrieveByUserDetails(UserDetails userDetails) {
-    return (User) DataAccessUtils
-      .uniqueResult(this
-        .getHibernateTemplate()
-        .findByNamedParam(
-          "from UserImpl as user where user.userDetails = :userDetails",
-          "userDetails", userDetails));
-  }
-
-  /**
-   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-   */
   @Override
   protected Class<UserImpl> getDataObjectClass() {
     return UserImpl.class;
   }
 
-  /**
-   * @see org.wise.portal.dao.user.UserDao#retrieveAllUsernames()
-   */
-  @SuppressWarnings("unchecked")
-  public List<String> retrieveAll(String selectClause) {
-    return (List<String>) this.getHibernateTemplate().find("select " + selectClause + " from UserImpl");
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
   }
 
-  /**
-   * @see org.wise.portal.dao.user.UserDao#retrieveByUsername(java.lang.String)
-   */
+  public User retrieveByUserDetails(UserDetails userDetails) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    cq.select(userRoot).where(cb.equal(userRoot.get("userDetails"), userDetails));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return query.getResultStream().findFirst().orElse(null);
+  }
+
+  public List<String> retrieveAllUsernames() {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<String> cq = cb.createQuery(String.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    cq.select(userRoot.get("userDetails").get("username"));
+    TypedQuery<String> query = entityManager.createQuery(cq);
+    return query.getResultList();
+  }
+
   public User retrieveByUsername(String username) {
-    return (User) DataAccessUtils
-      .requiredUniqueResult(this
-        .getHibernateTemplate()
-        .findByNamedParam(
-          "from UserImpl as user where upper(user.userDetails.username) = :username",
-          "username", username.toUpperCase()));
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    cq.select(userRoot).where(cb.equal(userRoot.get("userDetails").get("username"), username));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return query.getResultStream().findFirst().orElse(null);
   }
 
-  /**
-   * @see org.wise.portal.dao.user.UserDao#retrieveByEmailAddress(java.lang.String)
-   */
   @SuppressWarnings("unchecked")
   public List<User> retrieveByEmailAddress(String emailAddress) {
-    return (List<User>) this
-      .getHibernateTemplate()
-      .findByNamedParam(
-        "from UserImpl as user where user.userDetails.emailAddress = :emailAddress",
-        "emailAddress", emailAddress);
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    cq.select(userRoot).where(
+        cb.equal(userRoot.get("userDetails").get("emailAddress"), emailAddress));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
   }
 
-  @Override
   public User retrieveByGoogleUserId(String googleUserId) {
-    List<User> users = (List<User>) this
-        .getHibernateTemplate()
-        .findByNamedParam(
-          "from UserImpl as user where user.userDetails.googleUserId = :googleUserId",
-          "googleUserId", googleUserId);
-    if (users != null & users.size() > 0) {
-      return users.get(0);
-    }
-    return null;
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    cq.select(userRoot).where(
+        cb.equal(userRoot.get("userDetails").get("googleUserId"), googleUserId));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return query.getResultStream().findFirst().orElse(null);
   }
 
-  /**
-   * @see org.wise.portal.dao.user.UserDao#retrieveDisabledUsers()
-   */
   @SuppressWarnings("unchecked")
   public List<User> retrieveDisabledUsers() {
-    return (List<User>) this
-      .getHibernateTemplate()
-      .findByNamedParam(
-        "from UserImpl as user where user.userDetails.enabled = :enabled",
-        "enabled", false);
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    cq.select(userRoot).where(cb.isFalse(userRoot.get("userDetails").get("enabled")));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
   }
 
-  /**
-   * @see org.wise.portal.dao.user.UserDao#retrieveByField(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-   */
   @SuppressWarnings("unchecked")
-  public List<User> retrieveByField(String field, String type, Object term, String classVar){
-    if (field == null && type == null && term == null) {
-      return (List<User>) this.getHibernateTemplate().find(
-        "select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
-          classVar +  " where user.userDetails.id = " + classVar + ".id");
-    } else if ("id".equals(field)) {
-      // handle id specifically by looking for user.id instead of user.userDetails.id
-      return (List<User>) this.getHibernateTemplate().findByNamedParam(
-        "select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
-          classVar +  " where user.userDetails.id = " + classVar + ".id and user.id " + type + " :term", "term", term);
-    } else {
-      return (List<User>) this.getHibernateTemplate().findByNamedParam(
-        "select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
-          classVar +  " where user.userDetails.id = " + classVar + ".id and " +
-          classVar + "."  + field + " " +  type + " :term", "term", term);
-    }
+  public List<User> retrieveAllTeachers() {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<TeacherUserDetails> teacherUserDetailsRoot = cq.from(TeacherUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
   }
 
-  /**
-   * Capitalizes the first letter of a given String
-   *
-   * @param string
-   * @return String
-   */
-  private String capitalizeFirst(String string){
-    return StringUtils.upperCase(StringUtils.left(string, 1))
-      + StringUtils.right(string, string.length() - 1);
-  }
-
-  /**
-   * Get all the Users that have fields with the given matching values
-   * @param fields an array of field names
-   * e.g.
-   * 'firstname'
-   * 'lastname'
-   * 'birthmonth'
-   * 'birthday'
-   *
-   * @param values an array of values, the index of a value must line up with
-   * the index in the field array
-   * e.g.
-   * fields[0] = "firstname"
-   * fields[1] = "lastname"
-   *
-   * values[0] = "Spongebob"
-   * values[1] = "Squarepants"
-   *
-   * @param classVar 'studentUserDetails' or 'teacherUserDetails'
-   * @return a list of Users that have matching values for the given fields
-   */
   @SuppressWarnings("unchecked")
-  public List<User> retrieveByFields(String[] fields, String[] values, String classVar) {
-    HashMap<String, Object> params = new HashMap<>();
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    StringBuffer query = new StringBuffer();
+  public List<User> retrieveTeacherById(Long id) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<TeacherUserDetails> teacherUserDetailsRoot = cq.from(TeacherUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(userRoot.get("id"), id));
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
 
-    // make the beginning of the query
-    query.append("select user from UserImpl user, " + capitalizeFirst(classVar) + " " + classVar + " where ");
-    query.append("user.userDetails.id=" + classVar + ".id");
+  public List<User> retrieveTeachersByFirstName(String firstName) {
+    return retrieveTeachersByFieldValue("firstname", firstName);
+  }
 
-    // loop through all the fields so we can add more constraints to the 'where' clause
-    for (int x = 0; x < fields.length; x++) {
-      query.append(" and ");
+  public List<User> retrieveTeachersByLastName(String lastName) {
+    return retrieveTeachersByFieldValue("lastname", lastName);
+  }
 
-      if (fields[x] != null && (fields[x].equals("birthmonth") || fields[x].equals("birthday"))) {
-        //field is a birth month or birth day so we need to use a special function call
-        if (fields[x].equals("birthmonth")) {
-          query.append("month(" + classVar + ".birthday)=:birthmonth");
-          params.put("birthmonth", Integer.parseInt(values[x]));
-        } else if(fields[x].equals("birthday")) {
-          query.append("day(" + classVar + ".birthday)=:birthday");
-          params.put("birthday", Integer.parseInt(values[x]));
-        }
-      } else {
-        //add the constraint
-        query.append(classVar + "." + fields[x] + "=:" + fields[x]);
-        params.put(fields[x], values[x]);
+  public List<User> retrieveTeachersByUsername(String username) {
+    return retrieveTeachersByFieldValue("username", username);
+  }
+
+  public List<User> retrieveTeachersByDisplayName(String displayName) {
+    return retrieveTeachersByFieldValue("displayname", displayName);
+  }
+
+  public List<User> retrieveTeachersByCity(String city) {
+    return retrieveTeachersByFieldValue("city", city);
+  }
+
+  public List<User> retrieveTeachersByState(String state) {
+    return retrieveTeachersByFieldValue("state", state);
+  }
+
+  public List<User> retrieveTeachersByCountry(String country) {
+    return retrieveTeachersByFieldValue("country", country);
+  }
+
+  public List<User> retrieveTeachersBySchoolName(String schoolName) {
+    return retrieveTeachersByFieldValue("schoolname", schoolName);
+  }
+
+  public List<User> retrieveTeachersByEmail(String emailAddress) {
+    return retrieveTeachersByFieldValue("emailAddress", emailAddress);
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<User> retrieveTeachersByFieldValue(String field, String value) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<TeacherUserDetails> teacherUserDetailsRoot = cq.from(TeacherUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(teacherUserDetailsRoot.get(field), value));
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveTeachersBySchoolLevel(String schoolLevel) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<TeacherUserDetails> teacherUserDetailsRoot = cq.from(TeacherUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(teacherUserDetailsRoot.get("schoollevel"), getLevel(schoolLevel)));
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
+
+  private Schoollevel getLevel(String level) {
+    for (Schoollevel schoolLevel : Schoollevel.values()) {
+      if (schoolLevel.toString().toUpperCase().contains(level.toUpperCase())) {
+        return schoolLevel;
       }
     }
+    return Schoollevel.OTHER;
+  }
 
-    Query queryObject = session.createQuery(query.toString());
-    for (Map.Entry<String, Object> entry : params.entrySet()) {
-      queryObject.setParameter(entry.getKey(), entry.getValue());
-    }
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveAllStudents() {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<StudentUserDetails> studentUserDetailsRoot = cq.from(StudentUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
 
-    // run the query and return the results
-    List<User> result = queryObject.list();
-    return result;
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveStudentsById(Long id) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<StudentUserDetails> studentUserDetailsRoot = cq.from(StudentUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(userRoot.get("id"), id));
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
+
+  public List<User> retrieveStudentsByFirstName(String firstName) {
+    return retrieveStudentsByFieldValue("firstname", firstName);
+  }
+
+  public List<User> retrieveStudentsByLastName(String lastName) {
+    return retrieveStudentsByFieldValue("lastname", lastName);
+  }
+
+  public List<User> retrieveStudentsByUsername(String username) {
+    return retrieveStudentsByFieldValue("username", username);
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<User> retrieveStudentsByFieldValue(String field, String value) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<StudentUserDetails> studentUserDetailsRoot = cq.from(StudentUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(studentUserDetailsRoot.get(field), value));
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveStudentsByGender(String gender) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<StudentUserDetails> studentUserDetailsRoot = cq.from(StudentUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(
+        studentUserDetailsRoot.get("gender"), Gender.valueOf(gender.toUpperCase())));
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveStudentsByNameAndBirthday(String firstName, String lastName,
+      Integer birthMonth, Integer birthDay) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<StudentUserDetails> studentUserDetailsRoot = cq.from(StudentUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
+    predicates.add(cb.equal(studentUserDetailsRoot.get("firstname"), firstName));
+    predicates.add(cb.equal(studentUserDetailsRoot.get("lastname"), lastName));
+    predicates.add(cb.equal(
+        cb.function("MONTH", Integer.class, studentUserDetailsRoot.get("birthday")),
+        birthMonth));
+    predicates.add(cb.equal(
+        cb.function("DAY", Integer.class, studentUserDetailsRoot.get("birthday")),
+        birthDay));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveTeachersByName(String firstName, String lastName) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<TeacherUserDetails> teacherUserDetailsRoot = cq.from(TeacherUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(
+        userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
+    predicates.add(cb.equal(teacherUserDetailsRoot.get("firstname"), firstName));
+    predicates.add(cb.equal(teacherUserDetailsRoot.get("lastname"), lastName));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
   }
 
   /**
-   * Given a reset password key retrieve a corresponding user.
-   * @param resetPasswordKey an alphanumeric key
-   * @return a User object or null if there is no user with the given reset password key
+   * This seems to be only used by WISE4
    */
   @Override
   public User retrieveByResetPasswordKey(String resetPasswordKey) {
-    User user = null;
-    try {
-      user = (User) DataAccessUtils
-        .requiredUniqueResult(this
-          .getHibernateTemplate()
-          .findByNamedParam(
-            "from UserImpl as user where user.userDetails.resetPasswordKey = :resetPasswordKey",
-            "resetPasswordKey", resetPasswordKey));
-    } catch(EmptyResultDataAccessException e) {
-      e.printStackTrace();
-    }
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    cq.select(userRoot).where(
+        cb.equal(userRoot.get("userDetails").get("resetPasswordKey"), resetPasswordKey));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return query.getResultStream().findFirst().orElse(null);
+  }
 
-    return user;
+  public List<User> retrieveTeacherUsersJoinedSinceYesterday() {
+    return retrieveUsersJoinedSinceYesterday("teacher");
+  }
+
+  public List<User> retrieveStudentUsersJoinedSinceYesterday() {
+    return retrieveUsersJoinedSinceYesterday("student");
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveUsersJoinedSinceYesterday(String userType) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    List<Predicate> predicates = new ArrayList<>();
+    Date compareDate = getCompareDate("sinceYesterday");
+    if ("student".equals(userType)) {
+      Root<StudentUserDetails> studentUserDetailsRoot = cq.from(StudentUserDetails.class);
+      predicates.add(
+          cb.greaterThanOrEqualTo(studentUserDetailsRoot.get("signupdate"), compareDate));
+      predicates.add(cb.equal(
+          userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
+    } else if ("teacher".equals(userType)) {
+      Root<TeacherUserDetails> teacherUserDetailsRoot = cq.from(TeacherUserDetails.class);
+      predicates.add(
+          cb.greaterThanOrEqualTo(teacherUserDetailsRoot.get("signupdate"), compareDate));
+      predicates.add(cb.equal(
+          userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
+    }
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInSinceYesterday() {
+    return retrieveTeacherUsersWhoLoggedInRecently("sinceYesterday");
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInToday() {
+    return retrieveTeacherUsersWhoLoggedInRecently("today");
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInThisWeek() {
+    return retrieveTeacherUsersWhoLoggedInRecently("thisWeek");
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInThisMonth() {
+    return retrieveTeacherUsersWhoLoggedInRecently("thisMonth");
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInThisYear() {
+    return retrieveTeacherUsersWhoLoggedInRecently("thisYear");
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveTeacherUsersWhoLoggedInRecently(String when) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<TeacherUserDetails> teacherUserDetailsRoot = cq.from(TeacherUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    Date compareDate = getCompareDate(when);
+    predicates.add(
+        cb.greaterThanOrEqualTo(teacherUserDetailsRoot.get("lastLoginTime"), compareDate));
+    predicates.add(
+        cb.equal(userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInSinceYesterday() {
+    return retrieveStudentUsersWhoLoggedInRecently("sinceYesterday");
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInToday() {
+    return retrieveStudentUsersWhoLoggedInRecently("today");
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInThisWeek() {
+    return retrieveStudentUsersWhoLoggedInRecently("thisWeek");
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInThisMonth() {
+    return retrieveStudentUsersWhoLoggedInRecently("thisMonth");
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInThisYear() {
+    return retrieveStudentUsersWhoLoggedInRecently("thisYear");
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveStudentUsersWhoLoggedInRecently(String when) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<StudentUserDetails> studentUserDetailsRoot = cq.from(StudentUserDetails.class);
+    List<Predicate> predicates = new ArrayList<>();
+    Date compareDate = getCompareDate(when);
+    predicates.add(
+        cb.greaterThanOrEqualTo(studentUserDetailsRoot.get("lastLoginTime"), compareDate));
+    predicates.add(
+        cb.equal(userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
+    cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<UserImpl> query = entityManager.createQuery(cq);
+    return (List<User>) (Object) query.getResultList();
+  }
+
+  private Date getCompareDate(String when) {
+    Calendar c = Calendar.getInstance();
+    if ("sinceYesterday".equals(when)) {
+      c.add(Calendar.DAY_OF_YEAR, -1);
+    } else if ("today".equals(when)) {
+      c.set(Calendar.HOUR_OF_DAY, 0);
+      c.set(Calendar.MINUTE, 0);
+      c.set(Calendar.SECOND, 0);
+      c.set(Calendar.MILLISECOND, 0);
+    } else if ("thisWeek".equals(when)) {
+      c.set(Calendar.DAY_OF_WEEK, 1);
+    } else if ("thisMonth".equals(when)) {
+      c.set(Calendar.DAY_OF_MONTH, 1);
+    } else if ("thisYear".equals(when)) {
+      c.set(Calendar.DAY_OF_YEAR, 1);
+    }
+    return c.getTime();
   }
 }
