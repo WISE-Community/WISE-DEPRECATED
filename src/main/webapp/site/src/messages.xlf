@@ -106,8 +106,8 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-      </trans-unit><trans-unit id="def41e21488e39dc665a7d4f2324cb06705d09e6" datatype="html">
-        <source>Translation</source>
+      </trans-unit><trans-unit id="157c94cea65b7d8db8aaa143e9f9874990bb9cec" datatype="html">
+        <source>Translate WISE</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">17</context>
