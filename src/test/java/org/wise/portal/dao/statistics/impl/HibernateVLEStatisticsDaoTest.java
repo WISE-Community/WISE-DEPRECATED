@@ -43,7 +43,8 @@ import org.wise.vle.domain.statistics.VLEStatistics;
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class HibernateVLEStatisticsDaoTest extends AbstractTransactionalDbTests {
+public class HibernateVLEStatisticsDaoTest
+    extends AbstractTransactionalDbTests {
 
   @Autowired
   HibernateVLEStatisticsDao vleStatisticsDao;
@@ -62,7 +63,6 @@ public class HibernateVLEStatisticsDaoTest extends AbstractTransactionalDbTests 
     assertEquals(2, vleStatistics.size());
     assertEquals("vleStatistics1", vleStatistics.get(0).getData());
     assertEquals("vleStatistics2", vleStatistics.get(1).getData());
-    
   }
 
   @Test
@@ -83,7 +83,8 @@ public class HibernateVLEStatisticsDaoTest extends AbstractTransactionalDbTests 
   private VLEStatistics createVLEStatistics(String data) {
     VLEStatistics vleStatistics = new VLEStatistics();
     vleStatistics.setData(data);
-    vleStatistics.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+    vleStatistics
+        .setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     vleStatisticsDao.save(vleStatistics);
     return vleStatistics;
   }
