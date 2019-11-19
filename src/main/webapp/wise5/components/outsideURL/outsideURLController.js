@@ -25,12 +25,9 @@ class OutsideURLController extends ComponentController {
     this.$q = $q;
     this.$sce = $sce;
     this.OutsideURLService = OutsideURLService;
-
-    // the url to the web page to display
     this.url = null;
 
     if (this.componentContent != null) {
-      // set the url
       this.setURL(this.componentContent.url);
     }
 
@@ -43,7 +40,7 @@ class OutsideURLController extends ComponentController {
      * @return a promise of a component state containing the student data
      */
     this.$scope.getComponentState = function() {
-      var deferred = this.$q.defer();
+      const deferred = this.$q.defer();
 
       /*
        * the student does not have any unsaved changes in this component
@@ -51,7 +48,6 @@ class OutsideURLController extends ComponentController {
        * we will immediately resolve the promise here.
        */
       deferred.resolve();
-
       return deferred.promise;
     }.bind(this);
 
@@ -69,7 +65,7 @@ class OutsideURLController extends ComponentController {
     } else {
       this.url = this.$sce.trustAsResourceUrl(url);
     }
-  };
+  }
 }
 
 OutsideURLController.$inject = [

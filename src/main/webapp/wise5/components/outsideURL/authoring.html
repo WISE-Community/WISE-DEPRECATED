@@ -76,36 +76,49 @@
         </div>
       </div>
     </div>
-    <br/>
-    <md-input-container>
-      <label>{{ ::'outsideURL.url' | translate }}</label>
-      <input size='150'
-             ng-model='outsideURLController.authoringComponentContent.url'
-             ng-change='outsideURLController.authoringViewComponentChanged()'
-             ng-model-options='{ debounce: 1000 }'
-             placeholder='{{ ::"outsideURL.enterURLHere" | translate }}'/>
-    </md-input-container>
   </div>
-  <div style="display: flex">
-    <div style="width: 25%">
-      <md-input-container style="width: 200px;">
-        <input ng-model="searchText" type="text" placeholder='{{ ::"outsideURL.search" | translate }}'></input>
+  <md-switch ng-model="outsideURLController.isShowOERs"
+           class="md-primary">
+    Show Open Educational Resources
+  </md-switch>
+  <div style='width: 100%' ng-if='outsideURLController.isShowOERs'>
+    <div class='layout-row'>
+      <md-input-container style='width: 600px;'>
+        <input ng-model='searchText' type='text' placeholder='{{ ::"outsideURL.search" | translate }}'></input>
       </md-input-container>
-      <div ng-repeat="openEducationalResource in outsideURLController.openEducationalResources | filter : searchText">
+      <md-button class='regularButton md-raised md-primary'
+                ng-click='searchText = ""'>
+        <md-icon>clear</md-icon>
+        <md-tooltip md-direction='top'
+                    class='projectButtonTooltip'>
+          {{ ::'CLEAR' | translate }}
+        </md-tooltip>
+      </md-button>
+    </div>
+    <div style='height: 400px; overflow-y: auto; display: flex; flex-wrap: wrap'>
+      <div style='margin-right:10px; height: 200px' ng-repeat='openEducationalResource in outsideURLController.openEducationalResources | filter : searchText'>
         <span>{{openEducationalResource.metadata.title}}</span>
         <br/>
-        <img src="{{openEducationalResource.thumbnail}}"
-            style="width: 200px"
-            ng-click="outsideURLController.populateOpenEducationalResourceURL(openEducationalResource)">
+        <img src='{{::openEducationalResource.thumbnail}}'
+            style='width: 200px; height: 130px'
+            ng-click='outsideURLController.populateOpenEducationalResourceURL(openEducationalResource)'>
         <br/>
-        <a href="{{openEducationalResource.info}}" target="_blank">Info</a>
+        <a href='{{::openEducationalResource.info}}' target='_blank'>Info</a>
         <br/>
         <br/>
       </div>
     </div>
-    <div style='width: 75%; height: {{outsideURLController.height}}'>
-      <iframe ng-src='{{outsideURLController.url}}' style='height: 100%; width:100%;'>
-      </iframe>
-    </div>
+  </div>
+  <md-input-container>
+    <label>{{ ::'outsideURL.url' | translate }}</label>
+    <input size='150'
+           ng-model='outsideURLController.authoringComponentContent.url'
+           ng-change='outsideURLController.authoringViewComponentChanged()'
+           ng-model-options='{ debounce: 1000 }'
+           placeholder='{{ ::"outsideURL.enterURLHere" | translate }}'/>
+  </md-input-container>
+  <div style='width: {{outsideURLController.width}}; height: {{outsideURLController.height}}'>
+    <iframe ng-src='{{outsideURLController.url}}' style='height: 100%; width:100%;'>
+    </iframe>
   </div>
 </div>

@@ -33,6 +33,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
       StudentAssetService,
       StudentDataService,
       UtilService);
+    this.isShowOERs = this.componentContent.url === '';
 
     $scope.$watch(() => {
       return this.authoringComponentContent;
@@ -43,7 +44,9 @@ class OutsideURLAuthoringController extends OutsideURLController {
           this.authoringComponentContent.width, this.authoringComponentContent.height);
     }, true);
 
-    this.openEducationalResources = this.OutsideURLService.getOpenEducationalResources();
+    this.OutsideURLService.getOpenEducationalResources().then((openEducationalResources) => {
+      this.openEducationalResources = openEducationalResources;
+    });
 
     /*
      * Listen for the assetSelected event which occurs when the user
@@ -107,8 +110,6 @@ class OutsideURLAuthoringController extends OutsideURLController {
           }
         }
       }
-
-      // close the popup
       this.$mdDialog.hide();
     });
   }

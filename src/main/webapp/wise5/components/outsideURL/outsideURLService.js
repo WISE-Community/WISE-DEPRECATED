@@ -1,8 +1,9 @@
 import ComponentService from '../componentService';
 
 class OutsideURLService extends ComponentService {
-  constructor($filter, StudentDataService, UtilService) {
+  constructor($filter, $http, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
+    this.$http = $http;
   }
 
   getComponentTypeLabel() {
@@ -18,20 +19,15 @@ class OutsideURLService extends ComponentService {
   }
 
   isCompleted(component, componentStates, componentEvents, nodeEvents) {
-    var result = false;
     if (nodeEvents != null) {
-      // loop through all the events
-      for (var e = 0; e < nodeEvents.length; e++) {
-        // get an event
-        var event = nodeEvents[e];
-        if (event != null && event.event === 'nodeEntered') {
-          result = true;
-          break;
+      for (const event of nodeEvents) {
+        if (event.event === 'nodeEntered') {
+          return true;
         }
       }
     }
-    return result;
-  };
+    return false;
+  }
 
   componentHasWork(component) {
     return false;
@@ -44,35 +40,17 @@ class OutsideURLService extends ComponentService {
   componentUsesSubmitButton() {
     return false;
   }
-  
+
   getOpenEducationalResources() {
-    return [
-      {
-        url: "https://phet.colorado.edu/sims/html/energy-forms-and-changes/latest/energy-forms-and-changes_en.html",
-        info: "https://phet.colorado.edu/en/simulation/energy-forms-and-changes",
-        thumbnail: "https://phet.colorado.edu/sims/html/energy-forms-and-changes/latest/energy-forms-and-changes-600.png",
-        metadata: {
-          title: "Energy Forms and Changes",
-          subject: "Physics",
-          source: "PhET"
-        }
-      },
-      {
-        url: "http://has.concord.org/air-pollution.html",
-        info: "https://learn.concord.org/resources/855/air-pollution-model-cross-section",
-        thumbnail: "https://learn-resources.concord.org/images/stem-resources/icons/air.png",
-        metadata: {
-          title: "Air Pollution Model (cross-section)",
-          subject: "Earth Science",
-          source: "Concord Consortium"
-        }
-      }
-    ];
+    return this.$http.get(`wise5/components/outsideURL/resources.json`).then((result) => {
+      return result.data;
+    });
   }
 }
 
 OutsideURLService.$inject = [
   '$filter',
+  '$http',
   'StudentDataService',
   'UtilService'
 ];
