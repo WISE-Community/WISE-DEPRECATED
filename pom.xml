@@ -158,7 +158,6 @@
                 <exclude>**/org/wise/portal/dao/authentication/impl/HibernateStudentUserDetailsDaoTest.java</exclude>
                 <exclude>**/org/wise/portal/dao/authentication/impl/HibernateTeacherUserDetailsDaoTest.java</exclude>
                 <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
-                <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
               </testExcludes>
             </configuration>
@@ -201,7 +200,6 @@
             <exclude>**/org/wise/portal/dao/authentication/impl/HibernateStudentUserDetailsDaoTest.java</exclude>
             <exclude>**/org/wise/portal/dao/authentication/impl/HibernateTeacherUserDetailsDaoTest.java</exclude>
             <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
-            <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
             <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
           </excludes>
         </configuration>
