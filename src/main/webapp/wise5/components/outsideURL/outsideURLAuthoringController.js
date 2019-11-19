@@ -115,6 +115,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
 
   populateOpenEducationalResourceURL(openEducationalResource) {
     this.authoringComponentContent.url = openEducationalResource.url;
+    this.authoringViewComponentChanged();
   }
 }
 

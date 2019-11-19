@@ -87,8 +87,11 @@
     </md-input-container>
   </div>
   <div style="display: flex">
-    <div style="width: 50%">
-      <div ng-repeat="openEducationalResource in outsideURLController.openEducationalResources">
+    <div style="width: 25%">
+      <md-input-container style="width: 200px;">
+        <input ng-model="searchText" type="text" placeholder='{{ ::"outsideURL.search" | translate }}'></input>
+      </md-input-container>
+      <div ng-repeat="openEducationalResource in outsideURLController.openEducationalResources | filter : searchText">
         <span>{{openEducationalResource.metadata.title}}</span>
         <br/>
         <img src="{{openEducationalResource.thumbnail}}"
@@ -100,7 +103,7 @@
         <br/>
       </div>
     </div>
-    <div style='width: {{outsideURLController.width}}; height: {{outsideURLController.height}}'>
+    <div style='width: 75%; height: {{outsideURLController.height}}'>
       <iframe ng-src='{{outsideURLController.url}}' style='height: 100%; width:100%;'>
       </iframe>
     </div>
