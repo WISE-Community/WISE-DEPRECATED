@@ -729,7 +729,7 @@ class NodeAuthoringController {
     const data = { 'constraints': true };
     this.saveEvent('stepPreviewed', 'Navigation', data);
     window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `#/project/${this.projectId}/${this.nodeId}`);
+        `#!/project/${this.projectId}/${this.nodeId}`);
   };
 
   /**
@@ -739,7 +739,7 @@ class NodeAuthoringController {
     const data = { 'constraints': false };
     this.saveEvent('stepPreviewed', 'Navigation', data);
     window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `?constraints=false#/project/${this.projectId}/${this.nodeId}`);
+        `?constraints=false#!/project/${this.projectId}/${this.nodeId}`);
   };
 
   /**
@@ -3159,11 +3159,11 @@ class NodeAuthoringController {
   }
 
   previewImportNode(node) {
-    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}/${node.id}`);
+    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
   }
 
   previewImportProject() {
-    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}`);
+    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}`);
   }
 
   previewImportComponent(node, componentId) {

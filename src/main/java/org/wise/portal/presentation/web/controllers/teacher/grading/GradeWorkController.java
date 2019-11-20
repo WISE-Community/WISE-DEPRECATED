@@ -99,7 +99,7 @@ public class GradeWorkController {
     if (user.isAdmin() ||
         this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
         this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-      return new ModelAndView("forward:/wise5/classroomMonitor/dist/index.html#/run/" + runId + "/project/");
+      return new ModelAndView("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/");
     }
     return null;
   }

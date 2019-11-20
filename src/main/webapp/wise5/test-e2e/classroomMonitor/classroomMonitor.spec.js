@@ -50,7 +50,7 @@ describe('WISE Classroom Monitor', () => {
                 isAngularSite(true);
                 browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
                 browser.waitForAngular();   // wait for Angular to load
-                expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/classroomMonitor/[0-9]+#/project/');
+                expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/classroomMonitor/[0-9]+#!/project/');
                 expect(browser.getTitle()).toEqual('WISE Classroom Monitor');
                 expect(element(by.cssContainingText('top-bar',"My Awesome Science Project")).isDisplayed()).toBeTruthy();  // check that the title of the run is displayed
                 expect(element(by.cssContainingText('md-toolbar',"Grade By Step")).isDisplayed()).toBeTruthy();  // check Grade by Step view is displayed
