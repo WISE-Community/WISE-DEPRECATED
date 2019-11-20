@@ -136,8 +136,10 @@
                 <exclude>**/org/wise/portal/service/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherController.java</exclude>                <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/**/*.java</exclude>
               </testExcludes>
