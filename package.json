@@ -24,6 +24,7 @@
     "@angular/upgrade": "8.0.0",
     "@ngx-translate/i18n-polyfill": "^1.0.0",
     "@stomp/stompjs": "^5.4.2",
+    "@types/jquery": "^3.3.31",
     "angular": "1.5.11",
     "angular-animate": "1.5.11",
     "angular-aria": "1.5.11",
