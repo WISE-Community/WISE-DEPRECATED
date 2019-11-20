@@ -76,38 +76,39 @@ public class GradeWorkControllerTest extends TestCase {
   public void setUp() throws Exception {
     initializeAdminUser();
     PowerMock.mockStatic(ControllerUtil.class);
-    // PowerMock.expect(ControllerUtil.getSignedInUser()).andReturn(adminUser);
-    // PowerMock.replay(ControllerUtil.class);
+    EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(adminUser);
+    PowerMock.replay(ControllerUtil.class);
   }
 
   protected void initializeAdminUser() {
-    this.adminUser = new UserImpl();
-    this.adminUserDetails = new TeacherUserDetails();
+    adminUser = new UserImpl();
+    adminUserDetails = new TeacherUserDetails();
     PersistentGrantedAuthority adminAuthority = new PersistentGrantedAuthority();
     adminAuthority.setAuthority(UserDetailsService.ADMIN_ROLE);
     GrantedAuthority[] adminAuthorities = {adminAuthority};
-    this.adminUserDetails.setAuthorities(adminAuthorities);
-    this.adminUser.setUserDetails(this.adminUserDetails);
+    adminUserDetails.setAuthorities(adminAuthorities);
+    adminUser.setUserDetails(adminUserDetails);
   }
 
   @After
   public void tearDown(){
-    this.runService = null;
-    this.controller = null;
+    runService = null;
+    controller = null;
     PowerMock.verify(ControllerUtil.class);
   }
 
   @Test
   public void launchClassroomMonitorWISE5_AdminUser_ShouldReturnCMView() throws Exception {
-    EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(adminUser);
     Run run = new RunImpl();
     Long runId = 1l;
     run.setId(runId);
     MockHttpServletRequest request = new MockHttpServletRequest();
     EasyMock.expect(runService.retrieveById(runId)).andReturn(run);
+    EasyMock.expect(runService.hasReadPermission(run, adminUser)).andReturn(true);
+    EasyMock.replay(runService);
     PowerMock.replay(ControllerUtil.class);
-    ModelAndView modelAndView = this.controller.launchClassroomMonitorWISE5(request, runId);
-    assertEquals(new ModelAndView("forward:/wise5/classroomMonitor/dist/index.html#/run/" + runId + "/project/"), modelAndView);
-    PowerMock.verify(this.runService);
+    ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(request, runId);
+    assertEquals("forward:/wise5/classroomMonitor/dist/index.html#/run/" + runId + "/project/", modelAndView.getViewName());
+    PowerMock.verify(runService);
   }
 }
