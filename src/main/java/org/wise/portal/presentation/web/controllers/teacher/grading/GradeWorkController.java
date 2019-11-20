@@ -62,7 +62,7 @@ public class GradeWorkController {
    * @param runId ID of the run
    */
   @RequestMapping(value = "/teacher/run/manage/{runId}")
-  protected ModelAndView launchClassroomMonitor(@PathVariable Integer runId,
+  protected ModelAndView launchClassroomMonitor(@PathVariable Long runId,
       HttpServletRequest request, HttpServletResponse response) throws Exception {
     Run run = runService.retrieveById(new Long(runId));
     if (5 == run.getProject().getWiseVersion()) {
@@ -84,21 +84,17 @@ public class GradeWorkController {
    * @throws Exception
    */
   @RequestMapping(value = "/classroomMonitor/{runId}")
-  protected ModelAndView launchClassroomMonitorWISE5(HttpServletRequest request, @PathVariable Integer runId)
+  protected ModelAndView launchClassroomMonitorWISE5(HttpServletRequest request, @PathVariable Long runId)
       throws Exception {
     Run run = null;
     try {
-      run = runService.retrieveById(new Long(runId));
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
+      run = runService.retrieveById(runId);
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
 
     User user = ControllerUtil.getSignedInUser();
-    if (user.isAdmin() ||
-        this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-        this.runService.hasRunPermission(run, user, BasePermission.READ)) {
+    if (runService.hasReadPermission(run, user)) {
       return new ModelAndView("forward:/wise5/classroomMonitor/dist/index.html#/run/" + runId + "/project/");
     }
     return new ModelAndView("errors/accessdenied");
@@ -134,9 +130,7 @@ public class GradeWorkController {
       ProjectType projectType = run.getProject().getProjectType();
       if (projectType.equals(ProjectType.LD)) {
         User user = ControllerUtil.getSignedInUser();
-        if (user.isAdmin() ||
-            runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-            runService.hasRunPermission(run, user, BasePermission.READ)) {
+        if (runService.hasReadPermission(run, user)) {
           String contextPath = request.getContextPath();
           String getGradeWorkUrl = contextPath + "/vle/gradework.html";
           String getGradingConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;

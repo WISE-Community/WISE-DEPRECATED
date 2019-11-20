@@ -612,6 +612,11 @@ public class RunServiceImpl implements RunService {
     return aclService.hasPermission(run, permission, user);
   }
 
+  public boolean hasReadPermission(Run run, User user) {
+    return user.isAdmin() || hasRunPermission(run, user, BasePermission.READ) ||
+        hasRunPermission(run, user, BasePermission.WRITE);
+  }
+
   public boolean canDecreaseMaxStudentsPerTeam(Long runId) {
     Set<Workgroup> workgroups = this.getWorkgroups(runId);
     if (workgroups != null) {
@@ -780,4 +785,5 @@ public class RunServiceImpl implements RunService {
   public boolean isAllowedToViewStudentNames(Run run, User user) {
     return this.hasRunPermission(run, user, RunPermission.VIEW_STUDENT_NAMES);
   }
+
 }
