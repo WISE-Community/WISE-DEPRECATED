@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2007 Encore Research Group, University of Toronto
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -22,21 +22,15 @@ import java.util.List;
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.junit.AbstractTransactionalDbTests;
 import org.wise.portal.spring.SpringConfiguration;
-import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
 /**
  * Performs basic implementation tests on the methods defined in SimpleDao using
  * a real data store.
- * 
+ *
  * @author Cynick Young
- * 
- * @version $Id: AbstractTransactionalDaoTests.java 941 2007-08-16 14:03:11Z
- *          laurel $
  */
 public abstract class AbstractTransactionalDaoTests<DAO extends SimpleDao<OBJECT>, OBJECT extends Persistable>
 		extends AbstractTransactionalDbTests {
-
-    private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
 
 	protected DAO dao;
 
@@ -123,12 +117,4 @@ public abstract class AbstractTransactionalDaoTests<DAO extends SimpleDao<OBJECT
 		this.dao = null;
 		this.dataObject = null;
 	}
-	
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#getConfigLocations()
-     */
-    @Override
-    protected String[] getConfigLocations() {
-        return SPRING_CONFIG.getRootApplicationContextConfigLocations();
-    }
 }

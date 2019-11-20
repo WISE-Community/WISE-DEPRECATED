@@ -122,11 +122,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     userDetailsDao.save(userDetails);
   }
 
-  public List<MutableUserDetails> retrieveAllUserDetails(String userDetailsClassname) {
-    return userDetailsDao.retrieveAll(userDetailsClassname);
+  public List<String> retrieveAllTeacherUsernames() {
+    return userDetailsDao.retrieveAllTeacherUsernames();
   }
 
-  public List<String> retrieveAllUsernames(String userDetailsClassName) {
-    return userDetailsDao.retrieveAll(userDetailsClassName, "username");
+  public List<String> retrieveAllStudentUsernames() {
+    return userDetailsDao.retrieveAllStudentUsernames();
   }
 }

@@ -115,4 +115,9 @@ public class UserImpl implements User {
       return false;
     return true;
   }
+
+  @Override
+  public int compareTo(User o) {
+    return this.getId().compareTo(o.getId());
+  }
 }

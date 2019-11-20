@@ -20,7 +20,15 @@
  */
 package org.wise.portal.dao.authentication.impl;
 
-import org.springframework.dao.support.DataAccessUtils;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.AclTargetObjectIdentityDao;
@@ -37,57 +45,50 @@ import org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdent
  */
 @Repository
 public class HibernateAclTargetObjectIdentityDao extends
-        AbstractHibernateDao<MutableAclTargetObjectIdentity> implements
-        AclTargetObjectIdentityDao<MutableAclTargetObjectIdentity> {
+    AbstractHibernateDao<MutableAclTargetObjectIdentity> implements
+    AclTargetObjectIdentityDao<MutableAclTargetObjectIdentity> {
 
-    private static final String FIND_ALL_QUERY = "from PersistentAclTargetObjectIdentity";
+  @PersistenceContext
+  private EntityManager entityManager;
 
-    // private static final MutableAclTargetObjectIdentity[] SAMPLE = new
-    // MutableAclTargetObjectIdentity[0];
+  private static final String FIND_ALL_QUERY = "from PersistentAclTargetObjectIdentity";
 
-    private static final String[] RETRIEVE_BY_OBJECT_IDENTITY_PARAM_NAMES = new String[] {
-            "classname", "id" };
+  public MutableAclTargetObjectIdentity retrieveByObjectIdentity(ObjectIdentity objectIdentity) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<PersistentAclTargetObjectIdentity> cq = 
+        cb.createQuery(PersistentAclTargetObjectIdentity.class);
+    Root<PersistentAclTargetObjectIdentity> persistentAclTargetObjectIdentityRoot = 
+        cq.from(PersistentAclTargetObjectIdentity.class);
+    cq.select(persistentAclTargetObjectIdentityRoot).where(
+        cb.equal(persistentAclTargetObjectIdentityRoot.get("classname"), objectIdentity.getType()));
+    cq.select(persistentAclTargetObjectIdentityRoot).where(
+        cb.equal(persistentAclTargetObjectIdentityRoot.get("id"), objectIdentity.getIdentifier()));
+    TypedQuery<PersistentAclTargetObjectIdentity> query = entityManager.createQuery(cq);
+    return query.getResultStream().findFirst().orElse(null);
+  }
 
-    /**
-     * @see org.wise.portal.dao.authentication.AclTargetObjectIdentityDao#retrieveByObjectIdentity(org.acegisecurity.acls.objectidentity.ObjectIdentity)
-     */
-    public MutableAclTargetObjectIdentity retrieveByObjectIdentity(
-            ObjectIdentity objectIdentity) {
-        return (MutableAclTargetObjectIdentity) DataAccessUtils
-                .uniqueResult(this
-                        .getHibernateTemplate()
-                        .findByNamedParam(
-                                "from PersistentAclTargetObjectIdentity as object_id where object_id.aclTargetObject.classname = :classname and object_id.aclTargetObjectId = :id",
-                                RETRIEVE_BY_OBJECT_IDENTITY_PARAM_NAMES,
-                                new Object[] {
-                                        objectIdentity.getType(),
-                                        objectIdentity.getIdentifier() }));
-    }
+  public MutableAclTargetObjectIdentity[] findChildren(
+      ObjectIdentity parentIdentity) {
+    throw new UnsupportedOperationException();
+    // TODO CY - not really sure what the requirements are for this method
+    // List<?> list = this
+    // .getHibernateTemplate()
+    // .findByNamedParam(
+    // "from PersistentAclTargetObjectIdentity as object_identity where
+    // object_identity.parent = :parent",
+    // new String[] { "parent" },
+    // new Object[] { parentIdentity });
+    // return list.toArray(SAMPLE);
+  }
 
-    /**
-     * @see org.wise.portal.dao.authentication.AclTargetObjectIdentityDao#findChildren(org.acegisecurity.acls.objectidentity.ObjectIdentity)
-     */
-    public MutableAclTargetObjectIdentity[] findChildren(
-            ObjectIdentity parentIdentity) {
-        throw new UnsupportedOperationException();
-        // TODO CY - not really sure what the requirements are for this method
-        // List<?> list = this
-        // .getHibernateTemplate()
-        // .findByNamedParam(
-        // "from PersistentAclTargetObjectIdentity as object_identity where
-        // object_identity.parent = :parent",
-        // new String[] { "parent" },
-        // new Object[] { parentIdentity });
-        // return list.toArray(SAMPLE);
-    }
+  @Override
+  protected Class<PersistentAclTargetObjectIdentity> getDataObjectClass() {
+    return PersistentAclTargetObjectIdentity.class;
+  }
 
-    @Override
-    protected Class<PersistentAclTargetObjectIdentity> getDataObjectClass() {
-        return PersistentAclTargetObjectIdentity.class;
-    }
-
-    @Override
-    protected String getFindAllQuery() {
-        return FIND_ALL_QUERY;
-    }
+  @Override
+  protected String getFindAllQuery() {
+    return FIND_ALL_QUERY;
+  }
 }

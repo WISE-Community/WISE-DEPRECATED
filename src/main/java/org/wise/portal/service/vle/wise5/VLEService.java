@@ -23,15 +23,19 @@
  */
 package org.wise.portal.service.vle.wise5;
 
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
-import org.wise.vle.domain.work.*;
-
-import java.util.List;
+import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.NotebookItem;
+import org.wise.vle.domain.work.NotebookItemAlreadyInGroupException;
+import org.wise.vle.domain.work.StudentAsset;
+import org.wise.vle.domain.work.StudentWork;
 
 /**
  * Services for the WISE Virtual Learning Environment (WISE VLE v5)
@@ -47,20 +51,13 @@ public interface VLEService {
       Integer workgroupId, Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId,
       String componentType, List<JSONObject> components, Boolean onlyGetLatest);
 
-  /**
-   * @return JSONArray of student work for researcher export for the given run id.
-   */
-  JSONArray getStudentWorkExport(Integer runId);
-
-  /**
-   * @return JSON array of notebook items for researcher export for the given run id.
-   */
-  JSONArray getNotebookExport(Integer runId);
+  JSONArray getNotebookItemsExport(Integer runId);
+  JSONArray getLatestNotebookItemsExport(Integer runId);
 
   /**
    * @return JSONArray of notification for researcher export for the given run id.
    */
-  JSONArray getNotificationExport(Integer runId);
+  JSONArray getNotificationsExport(Integer runId);
 
   /**
    * Saves StudentWork in the data store
@@ -79,11 +76,6 @@ public interface VLEService {
       String nodeId, String componentId, String componentType,
       String context, String category, String event,
       List<JSONObject> components);
-
-  /**
-   * @return JSONArray of student events for researcher export
-   */
-  JSONArray getStudentEventExport(Integer runId);
 
   /**
    * Saves Event in the data store

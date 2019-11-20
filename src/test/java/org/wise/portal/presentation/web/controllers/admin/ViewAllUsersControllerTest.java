@@ -100,7 +100,7 @@ public class ViewAllUsersControllerTest extends TestCase {
     allTeacherUsernames.add("hirokiterashima");
     allTeacherUsernames.add("geoffreykwan");
     allTeacherUsernames.add("jonathanlimbreitbart");
-    EasyMock.expect(userDetailsService.retrieveAllUsernames(TeacherUserDetails.class.getName()))
+    EasyMock.expect(userDetailsService.retrieveAllTeacherUsernames())
         .andReturn(allTeacherUsernames);
     EasyMock.replay(userDetailsService);
     this.request.setParameter("userType", "teacher");
@@ -117,7 +117,7 @@ public class ViewAllUsersControllerTest extends TestCase {
     allStudentUsernames.add("hirokit0101");
     allStudentUsernames.add("geoffreyk0102");
     allStudentUsernames.add("jonathanb0103");
-    EasyMock.expect(userDetailsService.retrieveAllUsernames(StudentUserDetails.class.getName()))
+    EasyMock.expect(userDetailsService.retrieveAllStudentUsernames())
       .andReturn(allStudentUsernames);
     EasyMock.replay(userDetailsService);
     this.request.setParameter("userType", "student");

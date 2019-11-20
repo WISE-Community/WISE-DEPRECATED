@@ -109,31 +109,6 @@ public class ProjectServiceImplTest extends TestCase {
     	verify(mockProjectDao);
 	}
 	
-	public void testGetProjectListByTag() throws Exception {
-		// by familytag
-		List<Project> expectedList = new ArrayList<Project> ();
-		Project expectedProject = new ProjectImpl();
-		expectedProject.getProjectInfo().setFamilyTag(EXISTING_PROJECT_FAMILY_TAG);
-		expectedList.add(expectedProject);
-		expect(mockProjectDao.retrieveListByTag(EXISTING_PROJECT_FAMILY_TAG)).andReturn(expectedList);
-		replay(mockProjectDao);
-		assertEquals(expectedList, projectServiceImpl.getProjectListByTag(EXISTING_PROJECT_FAMILY_TAG));
-		verify(mockProjectDao);
-		reset(mockProjectDao);
-				
-		// by projectinfotag
-		// TODO: after projectinfotag defined in ProjectImpl
-	}
-	
-	public void testGetProjectListByTag_EmptyList() throws Exception {
-		List<Project> expectedList = new ArrayList<Project> ();
-		expect(mockProjectDao.retrieveListByTag(EXISTING_PROJECT_FAMILY_TAG)).andReturn(expectedList);
-		replay(mockProjectDao);
-		assertEquals(expectedList, projectServiceImpl.getProjectListByTag(EXISTING_PROJECT_FAMILY_TAG));
-		verify(mockProjectDao);
-		reset(mockProjectDao);
-	}
-	
 	public void testCreateProject_success() throws Exception {
 		Curnit expectedCurnit = new CurnitImpl();
 		expect(mockCurnitService.getById(EXISTING_CURNIT_ID)).andReturn(expectedCurnit);

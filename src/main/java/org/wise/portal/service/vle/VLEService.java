@@ -218,8 +218,6 @@ public interface VLEService {
 
   //StudentStatus functions
 
-  StudentStatus getStudentStatusById(Long id);
-
   void saveStudentStatus(StudentStatus studentStatus);
 
   StudentStatus getStudentStatusByWorkgroupId(Long workgroupId);
@@ -229,9 +227,6 @@ public interface VLEService {
   List<StudentStatus> getStudentStatusesByRunId(Long runId);
 
   //RunStatus functions
-
-  RunStatus getRunStatusById(Long id);
-
   void saveRunStatus(RunStatus runStatus);
 
   RunStatus getRunStatusByRunId(Long runId);

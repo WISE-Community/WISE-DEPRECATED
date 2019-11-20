@@ -23,6 +23,10 @@
  */
 package org.wise.portal.service.vle.wise5.impl;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.List;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,12 +54,11 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
-import org.wise.vle.domain.work.*;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
+import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.NotebookItem;
+import org.wise.vle.domain.work.NotebookItemAlreadyInGroupException;
+import org.wise.vle.domain.work.StudentAsset;
+import org.wise.vle.domain.work.StudentWork;
 
 /**
  * Services for the WISE Virtual Learning Environment (WISE VLE v5)
@@ -108,8 +111,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -135,105 +137,46 @@ public class VLEServiceImpl implements VLEService {
       isAutoSave, isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
   }
 
-  public JSONArray getNotebookExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> notebookItemExport = notebookItemDao.getNotebookItemExport(runId);
-    for (int i = 1; i < notebookItemExport.size(); i++) {  // skip header row
-      Object[] notebookItemExportRow = notebookItemExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp notebookItemExportRowClientSaveTimeTimestamp = (Timestamp) notebookItemExportRow[7];
-      notebookItemExportRow[7] = df.format(notebookItemExportRowClientSaveTimeTimestamp);
-      Timestamp notebookItemExportRowServerSaveTimeTimestamp = (Timestamp) notebookItemExportRow[8];
-      notebookItemExportRow[8] = df.format(notebookItemExportRowServerSaveTimeTimestamp);
-
-      String notebookItemExportRowStudentDataString = (String) notebookItemExportRow[10];
-      try {
-        notebookItemExportRow[10] = new JSONObject(notebookItemExportRowStudentDataString);
-      } catch (JSONException e) {
-        e.printStackTrace();
+  public JSONArray getNotebookItemsExport(Integer runId) {
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      List<NotebookItem> notebookItems = notebookItemDao.getNotebookItemsExport(run);
+      JSONArray notebookItemsJSONArray = new JSONArray();
+      for (int n = 0; n < notebookItems.size(); n++) {
+        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
       }
+      return notebookItemsJSONArray;
+    } catch (Exception e) {
+      return new JSONArray();
     }
-    return new JSONArray(notebookItemExport);
   }
 
-  public JSONArray getStudentWorkExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> studentWorkExport = studentWorkDao.getStudentWorkExport(runId);
-    for (int i = 1; i < studentWorkExport.size(); i++) {  // skip header row
-      Object[] studentWorkExportRow = studentWorkExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp studentWorkExportRowClientSaveTimeTimestamp = (Timestamp) studentWorkExportRow[9];
-      studentWorkExportRow[9] = df.format(studentWorkExportRowClientSaveTimeTimestamp);
-      Timestamp studentWorkExportRowServerSaveTimeTimestamp = (Timestamp) studentWorkExportRow[10];
-      studentWorkExportRow[10] = df.format(studentWorkExportRowServerSaveTimeTimestamp);
-
-      // set TRUE=1, FALSE=0 instead of "TRUE" and "FALSE"
-      boolean studentWorkExportRowIsAutoSave = (boolean) studentWorkExportRow[7];
-      studentWorkExportRow[7] = studentWorkExportRowIsAutoSave ? 1 : 0;
-
-      boolean studentWorkExportRowIsSubmit = (boolean) studentWorkExportRow[8];
-      studentWorkExportRow[8] = studentWorkExportRowIsSubmit ? 1 : 0;
-
-      String studentWorkExportRowStudentDataString = (String) studentWorkExportRow[11];
-      try {
-        studentWorkExportRow[11] = new JSONObject(studentWorkExportRowStudentDataString);
-      } catch (JSONException e) {
-        e.printStackTrace();
+  public JSONArray getLatestNotebookItemsExport(Integer runId) {
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      List<NotebookItem> notebookItems = notebookItemDao.getLatestNotebookItemsExport(run);
+      JSONArray notebookItemsJSONArray = new JSONArray();
+      for (int n = 0; n < notebookItems.size(); n++) {
+        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
       }
+      return notebookItemsJSONArray;
+    } catch (Exception e) {
+      return new JSONArray();
     }
-    return new JSONArray(studentWorkExport);
   }
 
-  public JSONArray getStudentEventExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> studentEventExport = eventDao.getStudentEventExport(runId);
-    for (int i = 1; i < studentEventExport.size(); i++) {  // skip header row
-      Object[] studentEventExportRow = studentEventExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp studentEventExportRowClientSaveTimeTimestamp = (Timestamp) studentEventExportRow[7];
-      studentEventExportRow[7] = df.format(studentEventExportRowClientSaveTimeTimestamp);
-      Timestamp studentEventExportRowServerSaveTimeTimestamp = (Timestamp) studentEventExportRow[8];
-      studentEventExportRow[8] = df.format(studentEventExportRowServerSaveTimeTimestamp);
-
-      String studentEventExportRowDataString = (String) studentEventExportRow[12];
-      try {
-        studentEventExportRow[12] = new JSONObject(studentEventExportRowDataString);
-      } catch (JSONException e) {
-        e.printStackTrace();
+  public JSONArray getNotificationsExport(Integer runId) {
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      List<Notification> notificationsList = notificationDao.getExport(run);
+      JSONArray notificationsJSONArray = new JSONArray();
+      for (int n = 0; n < notificationsList.size(); n++) {
+        notificationsJSONArray.put(notificationsList.get(n).toJSON());
       }
+      return notificationsJSONArray;
+    } catch (Exception e) {
+      return new JSONArray();
     }
-    return new JSONArray(studentEventExport);
-  }
-
-  public JSONArray getNotificationExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> notificationExport = notificationDao.getNotificationExport(runId);
-    for (int i = 1; i < notificationExport.size(); i++) {  // skip header row
-      Object[] notificationExportRow = notificationExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp notificationExportRowServerSaveTimeTimestamp = (Timestamp) notificationExportRow[7];
-      notificationExportRow[7] = df.format(notificationExportRowServerSaveTimeTimestamp);
-      Timestamp notificationExportRowTimeGeneratedTimestamp = (Timestamp) notificationExportRow[8];
-      notificationExportRow[8] = df.format(notificationExportRowTimeGeneratedTimestamp);
-      Timestamp notificationExportRowTimeDismissedTimeTimestamp = (Timestamp) notificationExportRow[9];
-      if (notificationExportRowTimeDismissedTimeTimestamp != null) {
-        notificationExportRow[9] = df.format(notificationExportRowTimeDismissedTimeTimestamp);
-      }
-
-      String notificationExportRowStudentDataString = (String) notificationExportRow[13];
-      try {
-        if (notificationExportRowStudentDataString != null) {
-          notificationExportRow[13] = new JSONObject(notificationExportRowStudentDataString);
-        }
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    }
-    return new JSONArray(notificationExport);
   }
 
   @Override
@@ -256,8 +199,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        studentWork.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        studentWork.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -322,8 +264,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -368,8 +309,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        event.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        event.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -439,8 +379,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -473,8 +412,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        achievement.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        achievement.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -510,8 +448,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -582,8 +519,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        annotation.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        annotation.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -657,8 +593,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -706,8 +641,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        studentAsset.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        studentAsset.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -795,8 +729,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -847,8 +780,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        notebookItem.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        notebookItem.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -1029,8 +961,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -1077,8 +1008,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        notification.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        notification.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }

@@ -25,6 +25,14 @@ package org.wise.portal.dao.newsitem.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.newsitem.NewsItemDao;
@@ -38,28 +46,35 @@ import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 public class HibernateNewsItemDao extends AbstractHibernateDao<NewsItem>
     implements NewsItemDao<NewsItem>{
 
+  @PersistenceContext
+  private EntityManager entityManager;
+
   private static final String FIND_ALL_QUERY = "from NewsItemImpl order by id desc";
 
-  /**
-   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-   */
   @Override
   protected String getFindAllQuery() {
     return FIND_ALL_QUERY;
   }
 
-  /**
-   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-   */
   @Override
   protected Class<NewsItemImpl> getDataObjectClass() {
     return NewsItemImpl.class;
   }
 
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
+  }
+
   @Override
+  @SuppressWarnings("unchecked")
   public List<NewsItem> getListByType(String type) {
-    return (List<NewsItem>) this.getHibernateTemplate().findByNamedParam(
-      "from NewsItemImpl as newsitem where newsitem.type = :type order by id desc",
-      "type", type);
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<NewsItemImpl> cq = cb.createQuery(NewsItemImpl.class);
+    Root<NewsItemImpl> newsItemRoot = cq.from(NewsItemImpl.class);
+    cq.select(newsItemRoot).where(cb.equal(newsItemRoot.get("type"), type))
+        .orderBy(cb.desc(newsItemRoot.get("id")));
+    TypedQuery<NewsItemImpl> query = entityManager.createQuery(cq);
+    return (List<NewsItem>) (Object) query.getResultList();
   }
 }
