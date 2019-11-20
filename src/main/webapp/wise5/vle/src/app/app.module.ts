@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { UpgradeModule } from '@angular/upgrade/static';
-import VLEModule from '../../vle';
+import VLEModule from './app.module.ajs';
 
 @NgModule({
   imports: [
