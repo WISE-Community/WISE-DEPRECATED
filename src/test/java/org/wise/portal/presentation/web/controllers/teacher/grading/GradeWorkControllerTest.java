@@ -153,7 +153,7 @@ public class GradeWorkControllerTest extends TestCase {
     run.setId(runId);
     MockHttpServletRequest request = new MockHttpServletRequest();
     EasyMock.expect(runService.retrieveById(runId)).andReturn(run);
-    EasyMock.expect(runService.hasReadPermission(run, adminUser)).andReturn(true);
+    EasyMock.expect(runService.hasReadPermission(run, teacherUser)).andReturn(true);
     EasyMock.replay(runService);
     PowerMock.replay(ControllerUtil.class);
     ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(request, runId);
@@ -170,7 +170,7 @@ public class GradeWorkControllerTest extends TestCase {
     run.setId(runId);
     MockHttpServletRequest request = new MockHttpServletRequest();
     EasyMock.expect(runService.retrieveById(runId)).andReturn(run);
-    EasyMock.expect(runService.hasReadPermission(run, adminUser)).andReturn(false);
+    EasyMock.expect(runService.hasReadPermission(run, teacherUser)).andReturn(false);
     EasyMock.replay(runService);
     PowerMock.replay(ControllerUtil.class);
     ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(request, runId);
