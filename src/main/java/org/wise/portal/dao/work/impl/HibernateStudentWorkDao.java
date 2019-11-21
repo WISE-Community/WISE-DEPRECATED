@@ -23,10 +23,19 @@
  */
 package org.wise.portal.dao.work.impl;
 
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
@@ -37,15 +46,20 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.work.StudentWork;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Hiroki Terashima
  */
 @Repository
 public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork>
     implements StudentWorkDao<StudentWork> {
+      
+  @PersistenceContext
+  private EntityManager entityManager;
+
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
+  }
 
   @Override
   protected String getFindAllQuery() {
@@ -57,129 +71,86 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork>
     return StudentWork.class;
   }
 
-  public List<Object[]> getStudentWorkExport(Integer runId) {
-    String queryString =
-      "SELECT sw.id, sw.nodeId, sw.componentId, sw.componentType, 'step number', 'step title', 'component part number', " +
-        "sw.isAutoSave, sw.isSubmit, sw.clientSaveTime, sw.serverSaveTime, sw.studentData, sw.periodId, sw.runId, sw.workgroupId, " +
-        "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') \"WISE IDs\" " +
-        "FROM studentWork sw, " +
-        "workgroups w, " +
-        "groups_related_to_users gu, " +
-        "groups g, " +
-        "runs r, " +
-        "users u, " +
-        "user_details ud " +
-        "where sw.runId = :runId and sw.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = sw.periodId and " +
-        "sw.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
-        "group by sw.id, sw.nodeId, sw.componentId, sw.componentType, sw.isAutoSave, sw.isSubmit, sw.clientSaveTime, sw.serverSaveTime, sw.studentData, sw.periodId, sw.runId, sw.workgroupId, g.name, ud.username, r.project_fk order by workgroupId";
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    SQLQuery query = session.createSQLQuery(queryString);
-    query.setParameter("runId", runId);
-    List resultList = new ArrayList<Object[]>();
-    Object[] headerRow = new String[]{"id","node id","component id","component type","step number","step title","component part number",
-      "isAutoSave","isSubmit","client save time","server save time","student data","period id","run id","workgroup id",
-      "period name", "teacher username", "project id", "WISE ids"};
-    resultList.add(headerRow);
-    resultList.addAll(query.list());
-    return resultList;
+  @Override
+  public List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period,
+      Workgroup workgroup, Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId,
+      String componentType, List<JSONObject> components, Boolean onlyGetLatest) {
+    if (Boolean.TRUE.equals(onlyGetLatest)) {
+      CriteriaBuilder cb = getCriteriaBuilder();
+      CriteriaQuery<StudentWork> cq = cb.createQuery(StudentWork.class);
+      Subquery<Long> subQuery = cq.subquery(Long.class);
+      Root<StudentWork> subStudentWorkRoot = subQuery.from(StudentWork.class);
+      List<Predicate> predicates = getStudentWorkListByParamsPredicates(cb, subStudentWorkRoot,
+          id, run, period, workgroup, isAutoSave, isSubmit, nodeId, componentId, componentType,
+          components);
+      subQuery.select(cb.max(subStudentWorkRoot.get("id")))
+          .where(predicates.toArray(new Predicate[predicates.size()]))
+          .groupBy(subStudentWorkRoot.get("workgroup"));
+      Root<StudentWork> studentWorkRoot = cq.from(StudentWork.class);
+      cq.select(studentWorkRoot).where(cb.in(studentWorkRoot.get("id")).value(subQuery));
+      TypedQuery<StudentWork> query = entityManager.createQuery(cq);
+      return (List<StudentWork>) query.getResultList();
+    } else {
+      CriteriaBuilder cb = getCriteriaBuilder();
+      CriteriaQuery<StudentWork> cq = cb.createQuery(StudentWork.class);
+      Root<StudentWork> studentWorkRoot = cq.from(StudentWork.class);
+      List<Predicate> predicates = getStudentWorkListByParamsPredicates(cb, studentWorkRoot,
+          id, run, period, workgroup, isAutoSave, isSubmit, nodeId, componentId, componentType,
+          components);
+      cq.select(studentWorkRoot).where(predicates.toArray(new Predicate[predicates.size()]))
+          .orderBy(cb.asc(studentWorkRoot.get("serverSaveTime")));
+      TypedQuery<StudentWork> query = entityManager.createQuery(cq);
+      return (List<StudentWork>) query.getResultList();
+    }
   }
 
-  @Override
-  public List<StudentWork> getStudentWorkListByParams(
-    Integer id, Run run, Group period, Workgroup workgroup,
-    Boolean isAutoSave, Boolean isSubmit,
-    String nodeId, String componentId, String componentType,
-    List<JSONObject> components, Boolean onlyGetLatest) {
-
-    List<StudentWork> result = null;
-
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    Criteria sessionCriteria = session.createCriteria(StudentWork.class);
-
+  private List<Predicate> getStudentWorkListByParamsPredicates(CriteriaBuilder cb,
+      Root<StudentWork> studentWorkRoot, Integer id, Run run, Group period, Workgroup workgroup,
+      Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType,
+      List<JSONObject> components) {
+    List<Predicate> predicates = new ArrayList<>();
     if (id != null) {
-      sessionCriteria.add(Restrictions.eq("id", id));
+      predicates.add(cb.equal(studentWorkRoot.get("id"), id));
     }
     if (run != null) {
-      sessionCriteria.add(Restrictions.eq("run", run));
+      predicates.add(cb.equal(studentWorkRoot.get("run"), run));
     }
     if (period != null) {
-      sessionCriteria.add(Restrictions.eq("period", period));
+      predicates.add(cb.equal(studentWorkRoot.get("period"), period));
     }
     if (workgroup != null) {
-      sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
+      predicates.add(cb.equal(studentWorkRoot.get("workgroup"), workgroup));
     }
     if (isAutoSave != null) {
-      sessionCriteria.add(Restrictions.eq("isAutoSave", isAutoSave));
+      predicates.add(cb.equal(studentWorkRoot.get("isAutoSave"), isAutoSave));
     }
     if (isSubmit != null) {
-      sessionCriteria.add(Restrictions.eq("isSubmit", isSubmit));
+      predicates.add(cb.equal(studentWorkRoot.get("isSubmit"), isSubmit));
     }
     if (nodeId != null) {
-      sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
+      predicates.add(cb.equal(studentWorkRoot.get("nodeId"), nodeId));
     }
     if (componentId != null) {
-      sessionCriteria.add(Restrictions.eq("componentId", componentId));
+      predicates.add(cb.equal(studentWorkRoot.get("componentId"), componentId));
     }
     if (componentType != null) {
-      sessionCriteria.add(Restrictions.eq("componentType", componentType));
+      predicates.add(cb.equal(studentWorkRoot.get("componentType"), componentType));
     }
     if (components != null) {
-      Disjunction disjunction = Restrictions.disjunction();
+      List<Predicate> componentsPredicates = new ArrayList<>();
       for (int c = 0; c < components.size(); c++) {
         JSONObject component = components.get(c);
         try {
-          SimpleExpression nodeIdRestriction = Restrictions.eq("nodeId", component.getString("nodeId"));
-          SimpleExpression componentIdRestriction = Restrictions.eq("componentId", component.getString("componentId"));
-          Conjunction conjunction = Restrictions.conjunction(nodeIdRestriction, componentIdRestriction);
-          disjunction.add(conjunction);
+          componentsPredicates.add(cb.and(
+              cb.equal(studentWorkRoot.get("nodeId"), component.getString("nodeId")),
+              cb.equal(studentWorkRoot.get("componentId"), component.getString("componentId"))));
         } catch (JSONException e) {
           e.printStackTrace();
         }
       }
-      sessionCriteria.add(disjunction);
+      predicates.add(cb.or(
+          componentsPredicates.toArray(new Predicate[componentsPredicates.size()])));
     }
-
-    if (onlyGetLatest != null && onlyGetLatest == true) {
-      // we are only getting the latest student work for each workgroup
-
-      // make the query group by the workgroup id and then get the row with the max id within each group
-      ProjectionList projectionList = Projections.projectionList();
-      projectionList.add(Projections.max("id"));
-      projectionList.add(Projections.groupProperty("workgroup"));
-      sessionCriteria.setProjection(projectionList);
-
-      // run the sub query to get the latest student work for each workgroup
-      List<Object> subQueryResults = sessionCriteria.list();
-
-      // we will use this list to hold the student work ids that we want
-      List<Integer> studentWorkIds = new ArrayList<Integer>();
-
-      // loop through all the rows that the sub query returned
-      for (int x = 0; x < subQueryResults.size(); x++) {
-
-        // get a row
-        Object[] projection = (Object[]) subQueryResults.get(x);
-
-        // 0 is the student work id
-        Integer studentWorkId = (Integer) projection[0];
-
-        // add the student work id to our list
-        studentWorkIds.add(studentWorkId);
-      }
-
-      // get all the student work with the given student work ids
-      result = session.createCriteria(StudentWork.class).add(Restrictions.in("id", studentWorkIds)).list();
-
-    } else {
-      // we are getting all the student work as opposed to just getting the latest
-
-      // order the student work by server save time from oldest to newest
-      sessionCriteria.addOrder(Order.asc("serverSaveTime"));
-
-      // run the query
-      result = sessionCriteria.list();
-    }
-
-    return result;
+    return predicates;
   }
 }

@@ -37,7 +37,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
 
 @Controller
-@RequestMapping("checkForExistingAccount")
+@RequestMapping("legacy/checkForExistingAccount")
 public class CheckForExistingAccountController {
 
   @Autowired
@@ -46,66 +46,27 @@ public class CheckForExistingAccountController {
   @RequestMapping(method = RequestMethod.GET)
   protected String handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
+    List<User> accountsThatMatch = null;
     String accountType = request.getParameter("accountType");
-
-    if (accountType != null) {
-      String[] fields = null;
-      String[] values = null;
-      String classVar = "";
-
-      if (accountType.equals("student")) {
-        /*
-         * we are looking for a student so we will look for a student account with
-         * a matching first name, last name, birth month, and birth day
-         */
-
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String birthMonth = request.getParameter("birthMonth");
-        String birthDay = request.getParameter("birthDay");
-
-        fields = new String[4];
-        fields[0] = "firstname";
-        fields[1] = "lastname";
-        fields[2] = "birthmonth";
-        fields[3] = "birthday";
-
-        values = new String[4];
-        values[0] = firstName;
-        values[1] = lastName;
-        values[2] = birthMonth;
-        values[3] = birthDay;
-
-        classVar = "studentUserDetails";
-      } else if (accountType.equals("teacher")) {
-        /*
-         * we are looking for a teacher so we will look for a teacher account with
-         * a matching first name, last name
-         */
-
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-
-        fields = new String[2];
-        fields[0] = "firstname";
-        fields[1] = "lastname";
-
-        values = new String[2];
-        values[0] = firstName;
-        values[1] = lastName;
-
-        classVar = "teacherUserDetails";
-      }
-
-      List<User> accountsThatMatch = userService.retrieveByFields(fields, values, classVar);
-      JSONArray existingUsernames = new JSONArray();
-      for (int x = 0; x < accountsThatMatch.size(); x++) {
-        User user = accountsThatMatch.get(x);
-        String username = user.getUserDetails().getUsername();
-        existingUsernames.put(username);
-      }
-      response.getWriter().write(existingUsernames.toString());
+    if (accountType.equals("student")) {
+      String firstName = request.getParameter("firstName");
+      String lastName = request.getParameter("lastName");
+      Integer birthMonth = Integer.parseInt(request.getParameter("birthMonth"));
+      Integer birthDay = Integer.parseInt(request.getParameter("birthDay"));
+      accountsThatMatch = userService.retrieveStudentsByNameAndBirthday(firstName, lastName, 
+          birthMonth, birthDay);
+    } else if (accountType.equals("teacher")) {
+      String firstName = request.getParameter("firstName");
+      String lastName = request.getParameter("lastName");
+      accountsThatMatch = userService.retrieveTeachersByName(firstName, lastName);
     }
+    JSONArray existingUsernames = new JSONArray();
+    for (int x = 0; x < accountsThatMatch.size(); x++) {
+      User user = accountsThatMatch.get(x);
+      String username = user.getUserDetails().getUsername();
+      existingUsernames.put(username);
+    }
+    response.getWriter().write(existingUsernames.toString());
     return null;
   }
 }

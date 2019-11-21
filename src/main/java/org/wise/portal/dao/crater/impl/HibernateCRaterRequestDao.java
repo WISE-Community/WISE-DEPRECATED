@@ -25,8 +25,15 @@ package org.wise.portal.dao.crater.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -39,6 +46,14 @@ import org.wise.vle.domain.work.StepWork;
 public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterRequest>
     implements CRaterRequestDao<CRaterRequest> {
 
+  @PersistenceContext
+  private EntityManager entityManager;
+
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
+  }
+  
   @Override
   protected String getFindAllQuery() {
     return null;
@@ -66,35 +81,27 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
     save(cRaterRequest);
   }
 
-  /**
-   * Returns a CRaterRequest for the specified StepWork and NodeStateId.
-   * @param stepWork
-   * @param nodeStateId
-   * @return
-   */
   @Transactional(readOnly=true)
-  public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork, Long nodeStateId) {
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-
-    CRaterRequest result =
-      (CRaterRequest) session.createCriteria(CRaterRequest.class)
-        .add( Restrictions.eq("stepWork", stepWork))
-        .add( Restrictions.eq("nodeStateId", nodeStateId))
-        .uniqueResult();
-    return result;
+  public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(
+      StepWork stepWork, Long nodeStateId) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<CRaterRequest> cq = cb.createQuery(CRaterRequest.class);
+    Root<CRaterRequest> cRaterRequestRoot = cq.from(CRaterRequest.class);
+    cq.select(cRaterRequestRoot).where(cb.and(
+        cb.equal(cRaterRequestRoot.get("stepWork"), stepWork),
+        cb.equal(cRaterRequestRoot.get("nodeStateId"), nodeStateId)));
+    TypedQuery<CRaterRequest> query = entityManager.createQuery(cq);
+    return query.getResultStream().findFirst().orElse(null);
   }
 
-  /**
-   * Returns a list of CRaterRequests that have not been completed.
-   * @return
-   */
   @SuppressWarnings("unchecked")
   @Transactional(readOnly=true)
   public List<CRaterRequest> getIncompleteCRaterRequests() {
-
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    List<CRaterRequest> result = (List<CRaterRequest>) session.createCriteria(CRaterRequest.class)
-      .add(Restrictions.isNull("timeCompleted")).list();
-    return result;
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<CRaterRequest> cq = cb.createQuery(CRaterRequest.class);
+    Root<CRaterRequest> cRaterRequestRoot = cq.from(CRaterRequest.class);
+    cq.select(cRaterRequestRoot).where(cb.isNull(cRaterRequestRoot.get("timeCompleted")));
+    TypedQuery<CRaterRequest> query = entityManager.createQuery(cq);
+    return (List<CRaterRequest>) (Object) query.getResultList();
   }
 }

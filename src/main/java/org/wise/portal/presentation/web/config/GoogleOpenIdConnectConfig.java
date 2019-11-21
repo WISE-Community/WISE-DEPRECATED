@@ -43,8 +43,8 @@ public class GoogleOpenIdConnectConfig {
     return details;
   }
 
-  @Bean(name = "googleOpenIdRestTemplate")
-  public OAuth2RestTemplate googleOpenIdTemplate(final OAuth2ClientContext clientContext) {
+  @Bean
+  public OAuth2RestTemplate googleOpenIdRestTemplate(final OAuth2ClientContext clientContext) {
     final OAuth2RestTemplate template = new OAuth2RestTemplate(googleOpenId(), clientContext);
     return template;
   }

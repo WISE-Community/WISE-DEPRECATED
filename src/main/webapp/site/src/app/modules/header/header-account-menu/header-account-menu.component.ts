@@ -15,6 +15,7 @@ export class HeaderAccountMenuComponent implements OnInit {
   firstName: string = "";
   lastName: string = "";
   role: string = "";
+  isPreviousAdmin: boolean = false;
   logOutURL: string;
 
   constructor(private configService: ConfigService) {
@@ -36,6 +37,7 @@ export class HeaderAccountMenuComponent implements OnInit {
         this.firstName = user.firstName;
         this.lastName = user.lastName;
         this.role = user.role;
+        this.isPreviousAdmin = user.isPreviousAdmin;
       }
     }
   }

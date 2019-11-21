@@ -136,7 +136,7 @@ View.prototype.parseWISE4Project = function(wise4Project) {
              * redirect the author to the WISE5 authoring tool and load the new
              * WISE5 project
              */
-            var wise5AuthoringToolURL = wiseBaseURL + '/author#/project/' + wise5ProjectId;
+            var wise5AuthoringToolURL = wiseBaseURL + '/author#!/project/' + wise5ProjectId;
 
             /*
              * redirect the user to the WISE5 authoring tool and load the new

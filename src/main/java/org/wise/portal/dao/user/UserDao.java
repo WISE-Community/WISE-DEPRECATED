@@ -22,7 +22,6 @@ package org.wise.portal.dao.user;
 
 import java.util.List;
 
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.user.User;
@@ -32,87 +31,44 @@ import org.wise.portal.domain.user.User;
  */
 public interface UserDao<T extends User> extends SimpleDao<T> {
 
-  /**
-   * Given a user details retrieve a corresponding user record from data
-   * store.
-   *
-   * @param userDetails
-   *            A <code>UserDetails</code> associated with the User in the
-   *            data store.
-   * @return A new instance of a data object.
-   */
   T retrieveByUserDetails(UserDetails userDetails);
-
-  /**
-   * Given a username retrieve a corresponding user record from data store
-   *
-   * @param username the users username
-   * @return A new instance of a data object
-   */
   T retrieveByUsername(String username);
-
-  /**
-   * Retrieves all users whose accounts are disabled.
-   * @return A list of users whose accounts are disabled.
-   */
   List<T> retrieveDisabledUsers();
-
-  /**
-   * Given a username retrieve a corresponding user records from data store.
-   *
-   * @param emailAddress
-   * @return  new instances of a data object
-   */
   List<T> retrieveByEmailAddress(String emailAddress);
-
-  /**
-   * Given a google user id retrieve a corresponding user record from data store
-   * @param googleUserId
-   * @return
-   */
   T retrieveByGoogleUserId(String googleUserId);
-
-  /**
-   * Retrieves all usernames from the datastore.
-   * @param selectClause ___ portion of the query in  "select ___ from"
-   * @return
-   */
-  List<String> retrieveAll(String selectClause);
-
-  /**
-   * Given a field, search type, search term and classVar (teacher or studentUserDetails),
-   *  retrieves a list of Users from data store
-   *
-   *  @param field
-   *  @param type
-   *  @param search term
-   *  @param classVar
-   */
-  List<T> retrieveByField(String field, String type, Object term, String classVar);
-
-  /**
-   * Given an array of fields and an array of values and classVar, retrieves a list
-   * of Users
-   * @param fields an array of field names
-   * @param values an array of values, the index of a value must line up with
-   * the index in the field array
-   *
-   * e.g.
-   * fields[0] = "firstname"
-   * fields[1] = "lastname"
-   *
-   * values[0] = "Spongebob"
-   * values[1] = "Squarepants"
-   *
-   * @param classVar 'studentUserDetails' or 'teacherUserDetails'
-   * @return a list of Users that have matching values for the given fields
-   */
-  List<T> retrieveByFields(String[] fields, String[] values, String classVar);
-
-  /**
-   * Given a reset password key retrieve a corresponding user.
-   * @param resetPasswordKey an alphanumeric key
-   * @return a User object
-   */
+  List<String> retrieveAllUsernames();
   T retrieveByResetPasswordKey(String resetPasswordKey);
+  List<User> retrieveStudentsByNameAndBirthday(String firstName, String lastName,
+      Integer birthMonth, Integer birthDay);
+  List<User> retrieveTeachersByName(String firstName, String lastName);
+  List<User> retrieveAllTeachers();
+  List<User> retrieveTeacherById(Long id);
+  List<User> retrieveTeachersByFirstName(String firstName);
+  List<User> retrieveTeachersByLastName(String lastName);
+  List<User> retrieveTeachersByUsername(String username);
+  List<User> retrieveTeachersByDisplayName(String displayName);
+  List<User> retrieveTeachersByCity(String city);
+  List<User> retrieveTeachersByState(String state);
+  List<User> retrieveTeachersByCountry(String country);
+  List<User> retrieveTeachersBySchoolName(String schoolName);
+  List<User> retrieveTeachersBySchoolLevel(String schoolLevel);
+  List<User> retrieveTeachersByEmail(String email);
+  List<User> retrieveAllStudents();
+  List<User> retrieveStudentsById(Long id);
+  List<User> retrieveStudentsByFirstName(String firstName);
+  List<User> retrieveStudentsByLastName(String lastName);
+  List<User> retrieveStudentsByUsername(String username);
+  List<User> retrieveStudentsByGender(String gender);
+  List<User> retrieveTeacherUsersJoinedSinceYesterday();
+  List<User> retrieveStudentUsersJoinedSinceYesterday();
+  List<User> retrieveTeacherUsersWhoLoggedInSinceYesterday();
+  List<User> retrieveTeacherUsersWhoLoggedInToday();
+  List<User> retrieveTeacherUsersWhoLoggedInThisWeek();
+  List<User> retrieveTeacherUsersWhoLoggedInThisMonth();
+  List<User> retrieveTeacherUsersWhoLoggedInThisYear();
+  List<User> retrieveStudentUsersWhoLoggedInSinceYesterday();
+  List<User> retrieveStudentUsersWhoLoggedInToday();
+  List<User> retrieveStudentUsersWhoLoggedInThisWeek();
+  List<User> retrieveStudentUsersWhoLoggedInThisMonth();
+  List<User> retrieveStudentUsersWhoLoggedInThisYear();
 }

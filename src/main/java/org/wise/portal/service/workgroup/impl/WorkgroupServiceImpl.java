@@ -164,11 +164,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     return workgroupDao.getById(workgroupId);
   }
 
-  @Override
-  public Workgroup retrieveById(Long workgroupId, boolean doEagerFetch) {
-    return workgroupDao.getById(workgroupId, doEagerFetch);
-  }
-
   /**
    * Check if a user is in any workgroup for the run
    * @param user the user

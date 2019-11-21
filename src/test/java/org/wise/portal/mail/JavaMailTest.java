@@ -33,7 +33,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.wise.portal.junit.AbstractSpringTests;
 import org.wise.portal.service.mail.MailService;
 
 /**
@@ -71,7 +70,7 @@ import org.wise.portal.service.mail.MailService;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-public class JavaMailTest extends AbstractSpringTests {
+public class JavaMailTest {
 
   @Autowired
   private MailService mailService;

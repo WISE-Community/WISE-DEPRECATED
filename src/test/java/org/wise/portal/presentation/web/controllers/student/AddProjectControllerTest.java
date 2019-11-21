@@ -70,6 +70,7 @@ import org.wise.portal.service.student.StudentService;
  * @author Hiroki Terashima
  */
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.management.*")
 @PrepareForTest(ControllerUtil.class)
 public class AddProjectControllerTest extends TestCase {
 

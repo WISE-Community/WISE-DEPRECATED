@@ -97,11 +97,10 @@ public interface UserDetailsService extends
    */
   void updateUserDetails(final MutableUserDetails userDetails);
 
-  List<MutableUserDetails> retrieveAllUserDetails(String userDetailsClassName);
-
-  List<String> retrieveAllUsernames(String userDetailsClassName);
-
   UserDetails loadUserByGoogleUserId(String googleUserId);
 
   void updateStatsOnSuccessfulLogin(MutableUserDetails userDetails);
+
+  List<String> retrieveAllTeacherUsernames();
+  List<String> retrieveAllStudentUsernames();
 }

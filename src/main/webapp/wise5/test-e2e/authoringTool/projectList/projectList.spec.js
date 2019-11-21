@@ -41,7 +41,7 @@ describe('WISE Authoring Tool Project List View', () => {
     common.shouldBeDisplayed(page.newProjectTitleInput);
     page.setNewProjectTitle('My Science Project');
     page.createProject();
-    common.urlShouldMatch('http://localhost:8080/wise/author#/project/[0-9]+');
+    common.urlShouldMatch('http://localhost:8080/wise/author#!/project/[0-9]+');
 
     // get the new project id and set it in the global variable
     browser.getCurrentUrl().then((url) => {
@@ -53,7 +53,7 @@ describe('WISE Authoring Tool Project List View', () => {
     const page = new ProjectListPage();
     const projects = page.projects;
     projects.get(0).click();
-    common.urlShouldMatch('http://localhost:8080/wise/author#/project/[0-9]+');
+    common.urlShouldMatch('http://localhost:8080/wise/author#!/project/[0-9]+');
   });
 
   // TODO: add test for copying a project

@@ -23,10 +23,18 @@
  */
 package org.wise.portal.dao.notification.impl;
 
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.notification.NotificationDao;
@@ -35,9 +43,6 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.notification.Notification;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Domain Access Object hibernate implementation for Notifications
  * @author Hiroki Terashima
@@ -45,6 +50,14 @@ import java.util.List;
 @Repository
 public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
     implements NotificationDao<Notification> {
+
+  @PersistenceContext
+  private EntityManager entityManager;
+
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
+  }
 
   @Override
   protected String getFindAllQuery() {
@@ -56,64 +69,49 @@ public class HibernateNotificationDao extends AbstractHibernateDao<Notification>
     return Notification.class;
   }
 
-  public List<Object[]> getNotificationExport(Integer runId) {
-    String queryString =
-      "SELECT n.id, n.nodeId, n.componentId, n.componentType, 'step number', 'step title', 'component part number', " +
-        "n.serverSaveTime, n.timeGenerated, n.timeDismissed, n.type, n.groupId, n.message, n.data, n.periodId, n.runId, n.fromWorkgroupId, n.toWorkgroupId, " +
-        "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') as \"WISE IDs\" "+
-        "FROM notification n, "+
-        "workgroups w, "+
-        "groups_related_to_users gu, "+
-        "groups g, "+
-        "runs r, "+
-        "users u, "+
-        "user_details ud "+
-        "where n.runId = :runId and n.toWorkgroupId = w.id and w.group_fk = gu.group_fk and g.id = n.periodId and "+
-        "n.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id "+
-        "group by n.id, n.nodeId, n.componentId, n.componentType, n.serverSaveTime, n.timeGenerated, n.timeDismissed, n.type, n.groupId, n.message, n.data, n.periodId, n.runId, n.fromWorkgroupId, n.toWorkgroupId, "+
-        "g.name, ud.username, r.project_fk order by n.toWorkgroupId";
-
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    SQLQuery query = session.createSQLQuery(queryString);
-    query.setParameter("runId", runId);
-    List resultList = new ArrayList<Object[]>();
-    Object[] headerRow = new String[]{"id","node id","component id","component type","step number","step title","component part number",
-      "serverSaveTime","timeGenerated","timeDismissed","type","group id","message","data","period id","run id","from workgroup id","to workgroup id",
-      "period name", "teacher username", "project id", "WISE ids"};
-    resultList.add(headerRow);
-    resultList.addAll(query.list());
-    return resultList;
+  @Override
+  public List<Notification> getNotificationListByParams(Integer id, Run run, Group period,
+      Workgroup toWorkgroup, String groupId, String nodeId, String componentId) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<Notification> cq = cb.createQuery(Notification.class);
+    Root<Notification> notificationRoot = cq.from(Notification.class);
+    List<Predicate> predicates = new ArrayList<>();
+    if (id != null) {
+      predicates.add(cb.equal(notificationRoot.get("id"), id));
+    }
+    if (run != null) {
+      predicates.add(cb.equal(notificationRoot.get("run"), run));
+    }
+    if (period != null) {
+      predicates.add(cb.equal(notificationRoot.get("period"), period));
+    }
+    if (toWorkgroup != null) {
+      predicates.add(cb.equal(notificationRoot.get("toWorkgroup"), toWorkgroup));
+    }
+    if (groupId != null) {
+      predicates.add(cb.equal(notificationRoot.get("groupId"), groupId));
+    }
+    if (nodeId != null) {
+      predicates.add(cb.equal(notificationRoot.get("nodeId"), nodeId));
+    }
+    if (componentId != null) {
+      predicates.add(cb.equal(notificationRoot.get("componentId"), componentId));
+    }
+    cq.select(notificationRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<Notification> query = entityManager.createQuery(cq);
+    return (List<Notification>) query.getResultList();
   }
 
   @Override
-  public List<Notification> getNotificationListByParams(
-    Integer id, Run run, Group period, Workgroup toWorkgroup,
-    String groupId, String nodeId, String componentId) {
-
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    Criteria sessionCriteria = session.createCriteria(Notification.class);
-    if (id != null) {
-      sessionCriteria.add(Restrictions.eq("id", id));
-    }
-    if (run != null) {
-      sessionCriteria.add(Restrictions.eq("run", run));
-    }
-    if (period != null) {
-      sessionCriteria.add(Restrictions.eq("period", period));
-    }
-    if (toWorkgroup != null) {
-      sessionCriteria.add(Restrictions.eq("toWorkgroup", toWorkgroup));
-    }
-    if (groupId != null) {
-      sessionCriteria.add(Restrictions.eq("groupId", groupId));
-    }
-    if (nodeId != null) {
-      sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
-    }
-    if (componentId != null) {
-      sessionCriteria.add(Restrictions.eq("componentId", componentId));
-    }
-
-    return sessionCriteria.list();
+  public List<Notification> getExport(Run run) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<Notification> cq = cb.createQuery(Notification.class);
+    Root<Notification> notificationRoot = cq.from(Notification.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(notificationRoot.get("run"), run));
+    cq.select(notificationRoot).where(predicates.toArray(new Predicate[predicates.size()]))
+        .orderBy(cb.asc(notificationRoot.get("toWorkgroup")), cb.asc(notificationRoot.get("id")));
+    TypedQuery<Notification> query = entityManager.createQuery(cq);
+    return (List<Notification>) query.getResultList();
   }
 }

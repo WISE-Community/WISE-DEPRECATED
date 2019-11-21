@@ -21,7 +21,7 @@ describe('WISE Authoring Tool Notebook View', () => {
   beforeEach(() => {
     const page = new NotebookPage();
     isAngularSite(true);
-    browser.get('http://localhost:8080/wise/author#/project/' + projectId + '/notebook');
+    browser.get('http://localhost:8080/wise/author#!/project/' + projectId + '/notebook');
     browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
     browser.wait(function() {
       return page.projectTitleSpan.isPresent()

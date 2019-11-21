@@ -257,7 +257,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public List<Project> getBookmarkerProjectList(User bookmarker) {
-    return projectDao.getProjectListByUAR(bookmarker, "bookmarker");
+    return projectDao.getProjectListByUAR(bookmarker, "bookmarkers");
   }
 
   @Transactional(readOnly = true)
@@ -273,7 +273,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public List<Project> getSharedProjectList(User user) {
-    return projectDao.getProjectListByUAR(user, "sharedowner");
+    return projectDao.getProjectListByUAR(user, "sharedowners");
   }
 
   public List<Project> getSharedProjectsWithoutRun(User user) {
@@ -392,7 +392,7 @@ public class ProjectServiceImpl implements ProjectService {
       return contextPath + "/student/vle/vle.html?runId=" +
           run.getId() + "&workgroupId=" + workgroup.getId();
     } else if (wiseVersion.equals(5)) {
-      return contextPath + "/student/run/" + run.getId() + "#/run/" + run.getId();
+      return contextPath + "/student/run/" + run.getId() + "#!/run/" + run.getId();
     }
     return null;
   }
@@ -696,7 +696,7 @@ public class ProjectServiceImpl implements ProjectService {
     if (project.getWiseVersion().equals(4)) {
       previewPath = "/previewproject.html?projectId=";
     }
-    return appProperties.getProperty("wise.hostname") + previewPath + project.getId() + "#/project/" + project.getId();
+    return appProperties.getProperty("wise.hostname") + previewPath + project.getId() + "#!/project/" + project.getId();
   }
 
   private String getAuthorsString(JSONArray authors) {

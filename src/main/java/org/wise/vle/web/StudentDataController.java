@@ -218,7 +218,7 @@ public class StudentDataController {
     if ("aggregate".equals(type) && Boolean.parseBoolean(request.getParameter("allStudents"))) {
       String workgroupIdStr = "";
       try {
-        Set<Workgroup> workgroups = runService.getWorkgroups(runId);
+        List<Workgroup> workgroups = runService.getWorkgroups(runId);
         for (Workgroup workgroup : workgroups) {
           workgroupIdStr += workgroup.getId() + ":";
         }

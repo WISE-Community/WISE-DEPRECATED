@@ -69,6 +69,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.portal.PortalStatisticsService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.statistics.VLEStatistics;
@@ -82,6 +83,9 @@ import org.wise.vle.web.VLEAnnotationController;
 @Component
 public class DailyAdminJob {
 
+  @Autowired
+  private UserService userService;
+  
   @Autowired
   private IMailFacade mailService;
 
@@ -173,11 +177,11 @@ public class DailyAdminJob {
   private void gatherPortalStatistics() {
     debugOutput("gatherPortalStatistics start");
 
-    List<User> allStudents = userDao.retrieveByField(null, null, null, "studentUserDetails");
+    List<User> allStudents = userDao.retrieveAllStudents();
     long totalNumberStudents = allStudents.size();
     debugOutput("Number of students: " + totalNumberStudents);
 
-    List<User> allTeachers = userDao.retrieveByField(null, null, null, "teacherUserDetails");
+    List<User> allTeachers = userDao.retrieveAllTeachers();
     long totalNumberTeachers = allTeachers.size();
     debugOutput("Number of teachers: " + totalNumberTeachers);
 
@@ -518,9 +522,12 @@ public class DailyAdminJob {
         + studentsJoinedSinceYesterday.size();
 
     // Number of Users that logged in at least once in the last day
-    List<User> studentsWhoLoggedInSinceYesterday = findUsersWhoLoggedInSinceYesterday("studentUserDetails");
-    List<User> teachersWhoLoggedInSinceYesterday = findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
-    int totalNumUsersLoggedInSinceYesterday = studentsWhoLoggedInSinceYesterday.size() + teachersWhoLoggedInSinceYesterday.size();
+    List<User> studentsWhoLoggedInSinceYesterday = 
+        findUsersWhoLoggedInSinceYesterday("studentUserDetails");
+    List<User> teachersWhoLoggedInSinceYesterday = 
+        findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
+    int totalNumUsersLoggedInSinceYesterday = 
+        studentsWhoLoggedInSinceYesterday.size() + teachersWhoLoggedInSinceYesterday.size();
     messageBody += "\n\n";
     messageBody += "Number of users who logged in at least once between "
         + df.format(yesterday) + " and " + df.format(today) + ": "
@@ -529,13 +536,13 @@ public class DailyAdminJob {
   }
 
   public List<User> findUsersJoinedSinceYesterday(String who) {
-    String field = "signupdate";
-    String type = ">";
-    Object term = yesterday;
-    String classVar = who;
-
-    List<User> usersJoinedSinceYesterday = userDao.retrieveByField(field, type, term, classVar);
-    return usersJoinedSinceYesterday;
+    List<User> users = new ArrayList<User>();
+    if ("studentUserDetails".equals(who)) {
+      users = userService.retrieveStudentUsersJoinedSinceYesterday();
+    } else if ("teacherUserDetails".equals(who)) {
+      users = userService.retrieveTeacherUsersJoinedSinceYesterday();
+    }
+    return users;
   }
 
 
@@ -551,12 +558,13 @@ public class DailyAdminJob {
   }
 
   public List<User> findUsersWhoLoggedInSinceYesterday(String who) {
-    String field = "lastLoginTime";
-    String type = ">";
-    Object term = yesterday;
-    String classVar = who;
-    List<User> usersJoinedSinceYesterday = userDao.retrieveByField(field, type, term, classVar);
-    return usersJoinedSinceYesterday;
+    List<User> users = new ArrayList<User>();
+    if ("studentUserDetails".equals(who)) {
+      users = userService.retrieveStudentUsersWhoLoggedInSinceYesterday();
+    } else if ("teacherUserDetails".equals(who)) {
+      users = userService.retrieveTeacherUsersWhoLoggedInSinceYesterday();
+    }
+    return users;
   }
 
   public void sendEmail(String message) {

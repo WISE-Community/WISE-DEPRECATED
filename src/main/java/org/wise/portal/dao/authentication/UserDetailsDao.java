@@ -31,49 +31,9 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
  */
 public interface UserDetailsDao<T extends MutableUserDetails> extends SimpleDao<T> {
 
-  /**
-   * Check if the username exists in the data store.
-   *
-   * @param username
-   * @return true if the data store contains a user with the corresponding
-   *         username, false otherwise.
-   */
   boolean hasUsername(String username);
-
-  /**
-   * Given an input string retrieve a corresponding record from data store.
-   *
-   * @param name
-   *            A string representing the name of the data in the data store.
-   * @return A new instance of a data object.
-   */
   T retrieveByName(String name);
-
-  /**
-   * Given an input string retrieve a corresponding record from data store.
-   *
-   * @param name
-   *            A string representing the name of the data in the data store.
-   * @return A new instance of a data object.
-   */
-  List<T> retrieveAll(String className);
-
-  /**
-   * Given an input string retrieve a corresponding record from data store.
-   *
-   * @param name
-   *            A string representing the name of the data in the data store.
-   * @param field
-   *            A string representing the field of the data in the data store. e.g. username
-   *
-   * @return A new instance of a data object.
-   */
-  List<String> retrieveAll(String className, String field);
-
-  /**
-   * Returns the User with the specified Google User Id.
-   * @param googleUserId
-   * @return
-   */
   T retrieveByGoogleUserId(String googleUserId);
+  List<String> retrieveAllStudentUsernames();
+  List<String> retrieveAllTeacherUsernames();
 }

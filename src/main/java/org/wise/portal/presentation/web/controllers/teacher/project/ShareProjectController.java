@@ -137,7 +137,7 @@ public class ShareProjectController {
         modelMap.put("message", message);
       }
 
-      List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
+      List<String> allTeacherUsernames = userDetailsService.retrieveAllTeacherUsernames();
       allTeacherUsernames.remove(project.getOwner().getUserDetails().getUsername());
       Set<User> sharedowners = project.getSharedowners();
 

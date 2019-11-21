@@ -25,26 +25,30 @@ package org.wise.portal.dao.run.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.run.RunDao;
+import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 
 /**
  * DAO for WISE run, which extends run
@@ -54,176 +58,181 @@ import org.wise.portal.domain.workgroup.Workgroup;
 @Repository
 public class HibernateRunDao extends AbstractHibernateDao<Run> implements RunDao<Run> {
 
+  @PersistenceContext
+  private EntityManager entityManager;
+  
   private static final String FIND_ALL_QUERY = "from RunImpl";
 
-  /**
-   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-   */
   @Override
   protected String getFindAllQuery() {
     return FIND_ALL_QUERY;
   }
 
-  /**
-   * @see org.wise.portal.dao.run.RunDao#retrieveByRunCode(String)
-   */
-  public Run retrieveByRunCode(String runcode) throws ObjectNotFoundException {
-    Run run = (Run) DataAccessUtils
-      .uniqueResult(this
-        .getHibernateTemplate()
-        .findByNamedParam(
-          "from RunImpl as run where upper(run.runcode) = :runcode",
-          "runcode", runcode.toUpperCase()));
-    if (run == null)
-      throw new ObjectNotFoundException(runcode, this
-        .getDataObjectClass());
-    return run;
-  }
-
-  /**
-   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-   */
   @Override
   protected Class<RunImpl> getDataObjectClass() {
     return RunImpl.class;
   }
 
-  /**
-   * TODO HT comment and test this method
-   */
-  @SuppressWarnings("unchecked")
-  public Set<Workgroup> getWorkgroupsForRun(Long runId) {
-    List<Workgroup> workgroupList =  (List<Workgroup>) this.getHibernateTemplate()
-      .findByNamedParam(
-        "from WorkgroupImpl as workgroup where workgroup.run.id = :runId",
-        "runId", runId);
-
-    Set<Workgroup> workgroupSet = new TreeSet<Workgroup>();
-    workgroupSet.addAll(workgroupList);
-    return workgroupSet;
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
   }
 
-  /**
-   * @see org.wise.portal.dao.run.RunDao#getWorkgroupsForRunAndPeriod(java.lang.Long, java.lang.Long)
-   */
-  @SuppressWarnings("unchecked")
-  public Set<Workgroup> getWorkgroupsForRunAndPeriod(Long runId, Long periodId) {
-    String q = "select workgroup from WorkgroupImpl workgroup where workgroup.run.id = '" + runId + "' and " +
-      "workgroup.period.id = '" + periodId + "' and workgroup.teacherWorkgroup = false";
-    List<Workgroup> workgroupList = (List<Workgroup>) this.getHibernateTemplate().find(q);
-    return new TreeSet<Workgroup>(workgroupList);
+  public Run retrieveByRunCode(String runcode) throws ObjectNotFoundException {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class); 
+    Root<RunImpl> runRoot = cq.from(RunImpl.class); 
+    cq.select(runRoot).where(cb.equal(runRoot.get("runcode"), runcode))
+        .orderBy(cb.desc(runRoot.get("id")));
+    TypedQuery<RunImpl> query = entityManager.createQuery(cq);
+    List<RunImpl> runResult = query.getResultList();
+    if (runResult.size() == 0) {
+      throw new ObjectNotFoundException(runcode, this.getDataObjectClass());
+    } else {
+      return runResult.get(0);
+    }
   }
 
-  /**
-   * @see org.wise.portal.dao.run.RunDao#retrieveByField(String, String, Object)
-   */
   @SuppressWarnings("unchecked")
-  public List<Run> retrieveByField(String field, String type, Object term){
-    return (List<Run>) this.getHibernateTemplate().findByNamedParam(
-      "select run from RunImpl run where run." + field + " " + type + " :term", "term", term);
+  public List<Workgroup> getWorkgroupsForRun(Long runId) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<WorkgroupImpl> cq = cb.createQuery(WorkgroupImpl.class); 
+    Root<WorkgroupImpl> workgroupRoot = cq.from(WorkgroupImpl.class);
+    cq.select(workgroupRoot).where(cb.equal(workgroupRoot.get("run").get("id"), runId));
+    TypedQuery<WorkgroupImpl> query = entityManager.createQuery(cq);
+    List<WorkgroupImpl> workgroupResultList = query.getResultList();
+    return (List<Workgroup>) (Object) workgroupResultList;
   }
 
-  /**
-   * @see org.wise.portal.dao.run.RunDao#getRunListByUserInPeriod(User)
-   */
   @SuppressWarnings("unchecked")
-  public List<Run> getRunListByUserInPeriod(User user){
-    String q = "select run from RunImpl run inner join run.periods period inner " +
-      "join period.members user where user.id='" + user.getId() + "' order by run.id desc ";
-    return (List<Run>) this.getHibernateTemplate().find(q);
+  public List<Workgroup> getWorkgroupsForRunAndPeriod(Long runId, Long periodId) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<WorkgroupImpl> cq = cb.createQuery(WorkgroupImpl.class); 
+    Root<WorkgroupImpl> workgroupRoot = cq.from(WorkgroupImpl.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(workgroupRoot.get("run").get("id"), runId));
+    predicates.add(cb.equal(workgroupRoot.get("period").get("id"), periodId));
+    predicates.add(cb.isFalse(workgroupRoot.get("teacherWorkgroup")));
+    cq.select(workgroupRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<WorkgroupImpl> query = entityManager.createQuery(cq);
+    List<WorkgroupImpl> workgroupResultList = query.getResultList();
+    return (List<Workgroup>) (Object) workgroupResultList;
   }
 
-  /**
-   * @see org.wise.portal.dao.run.RunDao#getRunsOfProject(java.lang.Long)
-   */
   @SuppressWarnings("unchecked")
-  public List<Run> getRunsOfProject(Long id){
-    String q = "select run from RunImpl run where run.project.id=" + id;
-    return (List<Run>) this.getHibernateTemplate().find(q);
+  public List<Run> retrieveByField(String field, String type, Object term) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class); 
+    Root<RunImpl> runRoot = cq.from(RunImpl.class);
+    if (type.equals(">")) {
+      cq.select(runRoot).where(cb.greaterThan(runRoot.get(field), (Date)term));
+    } else if (type.equals("like")) {
+      cq.select(runRoot).where(cb.like(runRoot.get(field), (String)term));
+    }
+    TypedQuery<RunImpl> query = entityManager.createQuery(cq);
+    List<RunImpl> runResultList = query.getResultList();
+    return (List<Run>) (Object) runResultList; 
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<Run> getRunListByUser(User user) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class); 
+    Root<RunImpl> runRoot = cq.from(RunImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    Root<PersistentGroup> periodGroupRoot = cq.from(PersistentGroup.class);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add(cb.equal(userRoot.get("id"), user.getId()));
+    predicates.add(cb.isMember(userRoot.get("id"), periodGroupRoot.<Set<User>>get("members")));
+    predicates.add(cb.isMember(periodGroupRoot, runRoot.<Set<PersistentGroup>>get("periods")));
+    cq.select(runRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<RunImpl> query = entityManager.createQuery(cq);
+    List<RunImpl> runResultList = query.getResultList();
+    return (List<Run>) (Object) runResultList;
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<Run> getRunsOfProject(Long projectId) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class); 
+    Root<RunImpl> runRoot = cq.from(RunImpl.class);
+    cq.select(runRoot).where(cb.equal(runRoot.get("project").get("id"), projectId));
+    TypedQuery<RunImpl> query = entityManager.createQuery(cq);
+    List<RunImpl> runResultList = query.getResultList();
+    return (List<Run>) (Object) runResultList;
   }
 
   @SuppressWarnings("unchecked")
   public List<Run> getRunListByOwner(User owner) {
-    if (owner == null) {
-      return new ArrayList<Run>();
-    }
-
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    List<Run> result = session.createCriteria(RunImpl.class)
-      .add(Restrictions.eq("owner", owner))
-      .addOrder(Order.desc("id"))
-      .list();
-
-    return result;
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class);
+    Root<RunImpl> runRoot = cq.from(RunImpl.class);
+    cq.select(runRoot).where(cb.equal(runRoot.get("owner").get("id"), owner.getId()))
+        .orderBy(cb.desc(runRoot.get("id")));
+    TypedQuery<RunImpl> query = entityManager.createQuery(cq);
+    List<RunImpl> runResultList = query.getResultList();
+    return (List<Run>) (Object) runResultList;
   }
 
   @SuppressWarnings("unchecked")
   public List<Run> getRunListBySharedOwner(User owner) {
-    String q = "select run from RunImpl run inner join run.sharedowners owner where owner.id='" + owner.getId() + "' order by run.id desc";
-    return (List<Run>) this.getHibernateTemplate().find(q);
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class);
+    Root<RunImpl> runRoot = cq.from(RunImpl.class);
+    Root<UserImpl> userRoot = cq.from(UserImpl.class);
+    cq.select(runRoot).where(cb.and(
+        cb.equal(userRoot.get("id"), owner.getId()),
+        cb.isMember(userRoot.get("id"), runRoot.<Set<User>>get("sharedowners"))))
+        .orderBy(cb.desc(runRoot.get("id")));
+    TypedQuery<RunImpl> query = entityManager.createQuery(cq);
+    List<RunImpl> runResultList = query.getResultList();
+    return (List<Run>) (Object) runResultList;
   }
 
-  /**
-   * @see org.wise.portal.dao.run.RunDao#getRunsRunWithinPeriod(java.lang.String)
-   */
   @SuppressWarnings("unchecked")
-  public List<Run> getRunsRunWithinPeriod(String period){
-    String oper = null, value = null;
-
-    if(period.equals("today")){
-      oper = " = ";
-      value = "0";
-    } else if(period.equals("week")){
-      oper = " <= ";
-      value = "7";
-    } else if(period.equals("month")){
-      oper = " <= ";
-      value = String.valueOf(Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH));
+  public List<Run> getRunsRunWithinTimePeriod(String timePeriod) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class);
+    Root<RunImpl> runRoot = cq.from(RunImpl.class);
+    int days = 0;
+    if (timePeriod.equals("today")) {
+      days = 1;
+    } else if (timePeriod.equals("week")) {
+      days = 7;
+    } else if (timePeriod.equals("month")) {
+      days = 30;
     }
-
-    return (List<Run>) this.getHibernateTemplate().find("select run from RunImpl run where datediff(curdate(), run.lastRun)" + oper + value);
+    Calendar c = Calendar.getInstance();
+    c.add(Calendar.DAY_OF_YEAR, -days);
+    Date compareDate = c.getTime();
+    cq.select(runRoot).where(cb.greaterThanOrEqualTo(runRoot.get("lastRun"), compareDate));
+    TypedQuery<RunImpl> query = entityManager.createQuery(cq);
+    List<RunImpl> runResultList = query.getResultList();
+    return (List<Run>) (Object) runResultList;
   }
 
-  /**
-   * @see org.wise.portal.dao.run.RunDao#getRunsByActivity()
-   */
   @SuppressWarnings("unchecked")
-  public List<Run> getRunsByActivity(){
-    String q = "select run from RunImpl run where run.timesRun <> null order by run.timesRun desc";
-    return (List<Run>) this.getHibernateTemplate().find(q);
-  }
-
-  @Override
-  @Transactional(readOnly=true)
-  public Run getById(Long runId, boolean doEagerFetch) {
-
-    Run result = null;
-    if (doEagerFetch) {
-      Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-      result = (Run) session.createCriteria(RunImpl.class)
-        .setFetchMode("project", FetchMode.JOIN)
-        .setFetchMode("periods", FetchMode.JOIN)
-        .setFetchMode("owners", FetchMode.JOIN)
-        .setFetchMode("sharedowners", FetchMode.JOIN)
-        .setFetchMode("announcements", FetchMode.JOIN)
-        .add( Restrictions.eq("id", runId))
-        .uniqueResult();
-    } else {
-      result = (Run) this.getHibernateTemplate().get(
-        this.getDataObjectClass(), runId);
-    }
-    return result;
+  public List<Run> getRunsByActivity() {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<RunImpl> cq = cb.createQuery(RunImpl.class);
+    Root<RunImpl> runRoot = cq.from(RunImpl.class);
+    cq.select(runRoot).where(cb.isNotNull(runRoot.get("timesRun")))
+        .orderBy(cb.desc(runRoot.get("timesRun")));
+    TypedQuery<RunImpl> query = entityManager.createQuery(cq);
+    List<RunImpl> runResultList = query.getResultList();
+    return (List<Run>) (Object) runResultList;
   }
 
   @Override
   public long getMaxRunId() {
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    Criteria crit = session.createCriteria(RunImpl.class);
-    crit.setProjection(Projections.max("id"));
-    List<Long> results = crit.list();
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+    Root<RunImpl> runRoot = cq.from(RunImpl.class);
+    cq.select(cb.max(runRoot.<Long>get("id")));
+    TypedQuery<Long> query = entityManager.createQuery(cq);
     try {
-      return results.get(0);
-    } catch (NullPointerException npe) {
+      return query.getSingleResult();
+    } catch (NullPointerException e) {
       return 0;
     }
   }
