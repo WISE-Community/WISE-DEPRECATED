@@ -1,8 +1,8 @@
 'use strict';
 
-import $ from 'jquery';
-import AchievementService from '../../../services/achievementService';
 import * as angular from 'angular';
+import * as $ from 'jquery';
+import AchievementService from '../../../services/achievementService';
 import * as angularDragula from 'angular-dragula';
 import 'ng-file-upload';
 import 'highcharts-ng';
@@ -66,6 +66,9 @@ import * as Stomp from "@stomp/stompjs";
 import '../../../lib/summernote/dist/summernote';
 import '../../../lib/angular-summernote/dist/angular-summernote';
 import '../../../themes/default/theme';
+import { downgradeComponent } from '@angular/upgrade/static';
+import { Html } from '../../../components/html/html.component';
+declare var angularStatic: angular.IAngularStatic;
 
 export default angular.module('vle', [
     angularDragula(angular),
@@ -121,13 +124,13 @@ export default angular.module('vle', [
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
+  .directive('htmlactivity', downgradeComponent({component: Html, inputs: ['content', 'name']}) as angular.IDirectiveFactory)
   .filter('Filters', Filters)
   .config([
       '$urlRouterProvider',
       '$stateProvider',
       '$translateProvider',
       '$translatePartialLoaderProvider',
-      '$controllerProvider',
       '$mdThemingProvider',
       '$httpProvider',
       '$injector',
@@ -136,13 +139,10 @@ export default angular.module('vle', [
       $stateProvider,
       $translateProvider,
       $translatePartialLoaderProvider,
-      $controllerProvider,
       $mdThemingProvider,
       $httpProvider,
       $injector,
       $provide) => {
-    angular.module('vle').$controllerProvider = $controllerProvider;
-
     $stateProvider
       .state('root', {
         url: '',

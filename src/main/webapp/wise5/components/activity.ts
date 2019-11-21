@@ -1,9 +1,6 @@
 import * as angular from 'angular';
-import { downgradeComponent } from '@angular/upgrade/static';
-declare var angular: angular.IAngularStatic;
 
 export class Activity {
-
   $filter;
   $mdDialog;
   $q;
