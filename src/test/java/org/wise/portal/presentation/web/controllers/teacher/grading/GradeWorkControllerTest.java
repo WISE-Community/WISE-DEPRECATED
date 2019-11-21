@@ -22,6 +22,8 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.grading;
 
+import java.util.Calendar;
+
 import org.easymock.EasyMock;
 import org.easymock.TestSubject;
 import org.junit.After;
@@ -35,6 +37,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.servlet.ModelAndView;
+import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.run.Run;
@@ -72,12 +75,15 @@ public class GradeWorkControllerTest extends TestCase {
 
   private TeacherUserDetails adminUserDetails;
 
+  private User teacherUser;
+
+  private TeacherUserDetails teacherUserDetails;
+
   @Before
   public void setUp() throws Exception {
     initializeAdminUser();
+    initializeTeacherUser();
     PowerMock.mockStatic(ControllerUtil.class);
-    EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(adminUser);
-    PowerMock.replay(ControllerUtil.class);
   }
 
   protected void initializeAdminUser() {
@@ -90,6 +96,30 @@ public class GradeWorkControllerTest extends TestCase {
     adminUser.setUserDetails(adminUserDetails);
   }
 
+  protected void initializeTeacherUser() {
+    teacherUser = new UserImpl();
+    teacherUserDetails = new TeacherUserDetails();
+    teacherUserDetails.setCity("Berkeley");
+    PersistentGrantedAuthority teacherAuthority = new PersistentGrantedAuthority();
+    teacherAuthority.setAuthority(UserDetailsService.TEACHER_ROLE);
+    GrantedAuthority[] authorities = {teacherAuthority};
+    teacherUserDetails.setAuthorities(authorities);
+    teacherUserDetails.setCountry("USA");
+    String[] subjects = {"physics", "astronomy"};
+    teacherUserDetails.setCurriculumsubjects(subjects);
+    teacherUserDetails.setDisplayname("Mr. Mister");
+    teacherUserDetails.setEmailAddress("mr@here.com");
+    teacherUserDetails.setFirstname("John");
+    teacherUserDetails.setLastLoginTime(Calendar.getInstance().getTime());
+    teacherUserDetails.setLastname("Smith");
+    teacherUserDetails.setNumberOfLogins(5);
+    teacherUserDetails.setSchoollevel(Schoollevel.HIGH_SCHOOL);
+    teacherUserDetails.setSchoolname("Berkeley");
+    teacherUserDetails.setSignupdate(Calendar.getInstance().getTime());
+    teacherUserDetails.setState("CA");
+    teacherUserDetails.setUsername("JohnSmith");
+    teacherUser.setUserDetails(teacherUserDetails);
+  }
   @After
   public void tearDown(){
     runService = null;
@@ -99,6 +129,8 @@ public class GradeWorkControllerTest extends TestCase {
 
   @Test
   public void launchClassroomMonitorWISE5_AdminUser_ShouldReturnCMView() throws Exception {
+    EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(adminUser);
+    PowerMock.replay(ControllerUtil.class);
     Run run = new RunImpl();
     Long runId = 1l;
     run.setId(runId);
@@ -109,6 +141,40 @@ public class GradeWorkControllerTest extends TestCase {
     PowerMock.replay(ControllerUtil.class);
     ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(request, runId);
     assertEquals("forward:/wise5/classroomMonitor/dist/index.html#/run/" + runId + "/project/", modelAndView.getViewName());
+    PowerMock.verify(runService);
+  }
+
+  @Test
+  public void launchClassroomMonitorWISE5_AuthorizedTeacher_ShouldReturnCMView() throws Exception {
+    EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(teacherUser);
+    PowerMock.replay(ControllerUtil.class);
+    Run run = new RunImpl();
+    Long runId = 1l;
+    run.setId(runId);
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    EasyMock.expect(runService.retrieveById(runId)).andReturn(run);
+    EasyMock.expect(runService.hasReadPermission(run, adminUser)).andReturn(true);
+    EasyMock.replay(runService);
+    PowerMock.replay(ControllerUtil.class);
+    ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(request, runId);
+    assertEquals("forward:/wise5/classroomMonitor/dist/index.html#/run/" + runId + "/project/", modelAndView.getViewName());
+    PowerMock.verify(runService);
+  }
+
+  @Test
+  public void launchClassroomMonitorWISE5_UnauthorizedTeacher_ShouldReturnAccessDenied() throws Exception {
+    EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(teacherUser);
+    PowerMock.replay(ControllerUtil.class);
+    Run run = new RunImpl();
+    Long runId = 1l;
+    run.setId(runId);
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    EasyMock.expect(runService.retrieveById(runId)).andReturn(run);
+    EasyMock.expect(runService.hasReadPermission(run, adminUser)).andReturn(false);
+    EasyMock.replay(runService);
+    PowerMock.replay(ControllerUtil.class);
+    ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(request, runId);
+    assertEquals("errors/accessdenied", modelAndView.getViewName());
     PowerMock.verify(runService);
   }
 }
