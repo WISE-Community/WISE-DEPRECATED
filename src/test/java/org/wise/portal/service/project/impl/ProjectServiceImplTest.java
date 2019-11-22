@@ -23,13 +23,16 @@
 package org.wise.portal.service.project.impl;
 
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.mock;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
-import org.easymock.EasyMock;
 import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
@@ -49,13 +52,11 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.project.ProjectService;
 
-import junit.framework.TestCase;
-
 /**
  * @author Hiroki Terashima
  */
 @RunWith(EasyMockRunner.class)
-public class ProjectServiceImplTest extends TestCase {
+public class ProjectServiceImplTest {
 
   @TestSubject
   private ProjectService projectServiceImpl = new ProjectServiceImpl();
@@ -77,7 +78,6 @@ public class ProjectServiceImplTest extends TestCase {
 
   @Before
   public void setUp() throws Exception {
-    super.setUp();
     TeacherUserDetails userDetails = new TeacherUserDetails();
     userDetails.setFirstname("SpongeBob");
     userDetails.setLastname("SquarePants");
@@ -87,13 +87,12 @@ public class ProjectServiceImplTest extends TestCase {
 
   @After
   public void tearDown() throws Exception {
-    super.tearDown();
     projectServiceImpl = null;
     projectOwner = null;
   }
 
   @Test
-  public void getById_ValidArgs_Success() throws Exception {
+  public void getById_ExistingProject_ShouldReturnProject() throws Exception {
     Project expectedProject = new ProjectImpl();
     expect(projectDao.getById(EXISTING_PROJECT_ID)).andReturn(expectedProject);
     replay(projectDao);
@@ -102,7 +101,7 @@ public class ProjectServiceImplTest extends TestCase {
   }
 
   @Test
-  public void getById_ProjectNotExist_ThrowException() throws Exception {
+  public void getById_ProjectNotExist_ShouldThrowException() throws Exception {
     expect(projectDao.getById(NONEXISTING_PROJECT_ID)).andThrow(
         new ObjectNotFoundException(NONEXISTING_PROJECT_ID, Project.class));
     replay(projectDao);
@@ -115,14 +114,14 @@ public class ProjectServiceImplTest extends TestCase {
   }
 
   @Test
-  public void createProject_ValidArgs_Success() throws ObjectNotFoundException {
+  public void createProject_NewProject_ShouldSucceed() throws ObjectNotFoundException {
     Project projectToCreate = new ProjectImpl();
     expect(projectDao.createEmptyProject()).andReturn(projectToCreate);
     projectToCreate.setName("Airbags");
     projectDao.save(projectToCreate);
-    EasyMock.expectLastCall();
+    expectLastCall();
     replay(projectDao);
-    FileUtils fileUtils = EasyMock.mock(FileUtils.class);
+    FileUtils fileUtils = mock(FileUtils.class);
     replay(fileUtils);
     expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
     replay(appProperties);
@@ -140,7 +139,7 @@ public class ProjectServiceImplTest extends TestCase {
   }
 
   @Test
-  public void getProjectURI_WISE4Project_Success() {
+  public void getProjectURI_WISE4Project_ShouldReturnWISE4URI() {
     Project project = new ProjectImpl();
     project.setId(12L);
     project.setWISEVersion(4);
@@ -152,7 +151,7 @@ public class ProjectServiceImplTest extends TestCase {
   }
 
   @Test
-  public void getProjectURI_WISE5Project_Success() {
+  public void getProjectURI_WISE5Project_ShouldReturnWISE5URI() {
     Project project = new ProjectImpl();
     project.setId(155L);
     project.setWISEVersion(5);

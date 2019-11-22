@@ -27,13 +27,13 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
-import org.easymock.EasyMock;
 import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
@@ -59,7 +59,7 @@ import org.wise.portal.service.group.GroupService;
  * @author Hiroki Terashima
  */
 @RunWith(EasyMockRunner.class)
-public class GroupServiceImplTest extends TestCase {
+public class GroupServiceImplTest {
 
   @TestSubject
   private GroupService groupService = new GroupServiceImpl();
@@ -85,7 +85,6 @@ public class GroupServiceImplTest extends TestCase {
 
   @Before
   public void setUp() throws Exception {
-    super.setUp();
     group1 = new PersistentGroup();
     group2 = new PersistentGroup();
     group3 = new PersistentGroup();
@@ -105,7 +104,6 @@ public class GroupServiceImplTest extends TestCase {
 
   @After
   public void tearDown() throws Exception {
-    super.tearDown();
     groupService = null;
     groupDao = null;
     group1 = null;
@@ -198,14 +196,21 @@ public class GroupServiceImplTest extends TestCase {
   }
 
   @Test
-  public void createGroup_ValidArgs_Success() {
+  public void createGroup_TwoGroupsWithSameName_ShouldSucceed() {
     createGroup1();
     createGroup2();
     assertEquals(group2.getName(), group1.getName());
   }
 
   @Test
-  public void changeGroupName_ValidArgs_Success() {
+  public void createGroup_CreateSubGroup_NoCycleShouldBeCreated_hereisalongsenthis() throws Exception {
+    createGroup1();
+    createGroup3(); // create a new group whose parent is group1
+    assertEquals(group3.getParent(), group1);
+  }
+
+  @Test
+  public void changeGroupName_ValidGroupName_ShouldSucceed() {
     createGroup1();
 
     group1.setName(DEFAULT_GROUP_NAMES[1]); // change group1's name
@@ -219,20 +224,14 @@ public class GroupServiceImplTest extends TestCase {
     assertEquals(DEFAULT_GROUP_NAMES[1], group1.getName());
   }
 
-  public void createGroup_CreateSubGroup_NoCycleShouldBeCreated() throws Exception {
-    createGroup1();
-    createGroup3(); // create a new group whose parent is group1
-    assertEquals(group3.getParent(), group1);
-  }
-
   @Test
   public void moveGroup_ChangeParent_NoCycleShouldBeCreated() {
     // Start with two root nodes. Have the second root node's parent
     // point to the first. This should not create a cycle
-    // A    A
-    //   => ^
-    //      |
-    // B    B
+    // A A
+    // => ^
+    // |
+    // B B
     createGroup1(); // Root node A
     createGroup2(); // Root node B
     group2.setParent(group1);
@@ -251,7 +250,8 @@ public class GroupServiceImplTest extends TestCase {
   }
 
   @Test
-  public void moveGroup_SetGroupParentToItself_ThrowsCycleException() throws Exception {
+  public void moveGroup_SetGroupParentToItself_ShouldThrowCycleException()
+      throws Exception {
     // test making a group's parent be itself. This should create a cycle.
     createGroup1();
     try {
@@ -261,12 +261,12 @@ public class GroupServiceImplTest extends TestCase {
     }
 
     // Now test that CyclicalGroupException is thrown for this:
-    // A    A
-    // ^    ^ \
+    // A A
+    // ^ ^ \
     // | => | |
-    // B    B |
-    //      ^ /
-    //      |/
+    // B B |
+    // ^ /
+    // |/
     createGroup2(); // Root node A
     createGroup3(); // intermediate node B
     group3.setParent(group2);
@@ -275,14 +275,14 @@ public class GroupServiceImplTest extends TestCase {
       fail("CyclicalException expected");
     } catch (CyclicalGroupException e) {
     }
-    assertNull(group2.getParent()); // group node A's parent shouldn't have changed
+    assertNull(group2.getParent()); // group node A's parent shouldn't have
+                                    // changed
   }
 
   @Test
-  public void addMembers_ValidArgs_Success() {
+  public void addMembers_TwoDifferentMembers_ShouldSucceed() {
     createGroup1();
 
-    // add two members to this group
     Set<User> members = new HashSet<User>();
     members.add(user1);
     members.add(user2);
@@ -295,30 +295,53 @@ public class GroupServiceImplTest extends TestCase {
     verify(groupDao);
     reset(groupDao);
     assertEquals(2, group1.getMembers().size());
+  }
+
+  @Test
+  public void addMembers_ExistingMembers_ShouldNotAddToGroupAgain() {
+    createGroup1();
+
+    Set<User> members = new HashSet<User>();
+    members.add(user1);
+    group1.setMembers(members);
+    groupDao.save(group1);
+    expectLastCall();
+    replay(groupDao);
+
+    groupService.addMembers(group1, members);
+    verify(groupDao);
+    reset(groupDao);
+    assertEquals(1, group1.getMembers().size());
 
     // now try adding 2 more members, only 1 of which is new
     Set<User> newMembers = new HashSet<User>();
     newMembers.add(user1);
     newMembers.add(user3);
+    groupDao.save(group1);
+    expectLastCall();
+    replay(groupDao);
     groupService.addMembers(group1, newMembers);
-    assertEquals(3, group1.getMembers().size());
+    verify(groupDao);
+    assertEquals(2, group1.getMembers().size());
   }
 
   @Test
-  public void retrieveById_ValidArgs_Success() throws Exception {
-    Group group = new PersistentGroup();
-    Long groupId = new Long(5);
-    expect(groupDao.getById(groupId)).andReturn(group);
+  public void retrieveById_WithExistingGroupId_ShouldReturnGroup()
+      throws Exception {
+    createGroup1();
+
+    Long groupId = group1.getId();
+    expect(groupDao.getById(groupId)).andReturn(group1);
     replay(groupDao);
 
     Group retrievedGroup = groupService.retrieveById(groupId);
-    assertEquals(group, retrievedGroup);
+    assertEquals(group1, retrievedGroup);
     verify(groupDao);
-    EasyMock.verify(groupDao);
   }
 
   @Test
-  public void retrieveById_GroupIdNotExists_ThrowException() throws Exception {
+  public void retrieveById_WithNonExistingGroupId_ShouldThrowException()
+      throws Exception {
     Long groupId = new Long(-1);
     expect(groupDao.getById(groupId))
         .andThrow(new ObjectNotFoundException(groupId, Group.class));
@@ -329,6 +352,6 @@ public class GroupServiceImplTest extends TestCase {
       fail("ObjectNotFoundException not thrown but should have been thrown");
     } catch (ObjectNotFoundException e) {
     }
-    EasyMock.verify(groupDao);
+    verify(groupDao);
   }
 }

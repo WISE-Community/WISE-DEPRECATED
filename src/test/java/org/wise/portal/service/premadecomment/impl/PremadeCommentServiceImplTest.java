@@ -23,12 +23,14 @@
 
 package org.wise.portal.service.premadecomment.impl;
 
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
 import java.util.Set;
 import java.util.TreeSet;
 
-import junit.framework.TestCase;
-
-import org.easymock.EasyMock;
 import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
@@ -53,7 +55,7 @@ import org.wise.portal.service.premadecomment.PremadeCommentService;
  * @author patrick lawler
  */
 @RunWith(EasyMockRunner.class)
-public class PremadeCommentServiceImplTest extends TestCase {
+public class PremadeCommentServiceImplTest {
 
   @TestSubject
   private PremadeCommentService premadeCommentService = new PremadeCommentServiceImpl();
@@ -115,11 +117,11 @@ public class PremadeCommentServiceImplTest extends TestCase {
   }
 
   @Test
-  public void createPremadeComment_ValidArg_Success() {
-    premadeCommentDao.save(EasyMock.isA(PremadeCommentImpl.class));
-    EasyMock.expectLastCall();
-    EasyMock.replay(premadeCommentDao);
+  public void createPremadeComment_ValidPremadeComment_ShouldSucceed() {
+    premadeCommentDao.save(isA(PremadeCommentImpl.class));
+    expectLastCall();
+    replay(premadeCommentDao);
     premadeCommentService.createPremadeComment(premadeCommentParameters[0]);
-    EasyMock.verify(premadeCommentDao);
+    verify(premadeCommentDao);
   }
 }
