@@ -140,7 +140,8 @@ public class GradeWorkControllerTest extends TestCase {
     EasyMock.replay(runService);
     PowerMock.replay(ControllerUtil.class);
     ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(request, runId);
-    assertEquals("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/", modelAndView.getViewName());
+    assertEquals("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/",
+        modelAndView.getViewName());
     PowerMock.verify(runService);
   }
 
@@ -157,12 +158,14 @@ public class GradeWorkControllerTest extends TestCase {
     EasyMock.replay(runService);
     PowerMock.replay(ControllerUtil.class);
     ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(request, runId);
-    assertEquals("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/", modelAndView.getViewName());
+    assertEquals("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/",
+        modelAndView.getViewName());
     PowerMock.verify(runService);
   }
 
   @Test
-  public void launchClassroomMonitorWISE5_UnauthorizedTeacher_ShouldReturnAccessDenied() throws Exception {
+  public void launchClassroomMonitorWISE5_UnauthorizedTeacher_ShouldReturnAccessDenied()
+      throws Exception {
     EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(teacherUser);
     PowerMock.replay(ControllerUtil.class);
     Run run = new RunImpl();

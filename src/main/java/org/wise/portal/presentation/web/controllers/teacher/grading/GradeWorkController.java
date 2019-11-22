@@ -64,7 +64,7 @@ public class GradeWorkController {
   @RequestMapping(value = "/teacher/run/manage/{runId}")
   protected ModelAndView launchClassroomMonitor(@PathVariable Long runId,
       HttpServletRequest request, HttpServletResponse response) throws Exception {
-    Run run = runService.retrieveById(new Long(runId));
+    Run run = runService.retrieveById(runId);
     if (5 == run.getProject().getWiseVersion()) {
       return this.launchClassroomMonitorWISE5(request, runId);
     } else if (4 == run.getProject().getWiseVersion()) {
@@ -84,8 +84,8 @@ public class GradeWorkController {
    * @throws Exception
    */
   @RequestMapping(value = "/classroomMonitor/{runId}")
-  protected ModelAndView launchClassroomMonitorWISE5(HttpServletRequest request, @PathVariable Long runId)
-      throws Exception {
+  protected ModelAndView launchClassroomMonitorWISE5(HttpServletRequest request,
+      @PathVariable Long runId) throws Exception {
     Run run = null;
     try {
       run = runService.retrieveById(runId);
@@ -95,7 +95,8 @@ public class GradeWorkController {
 
     User user = ControllerUtil.getSignedInUser();
     if (runService.hasReadPermission(run, user)) {
-      return new ModelAndView("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/");
+      return new ModelAndView("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId +
+          "/project/");
     }
     return new ModelAndView("errors/accessdenied");
   }
@@ -133,9 +134,12 @@ public class GradeWorkController {
         if (runService.hasReadPermission(run, user)) {
           String contextPath = request.getContextPath();
           String getGradeWorkUrl = contextPath + "/vle/gradework.html";
-          String getGradingConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+          String getGradingConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() +
+              "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
           String getClassroomMonitorUrl = contextPath + "/vle/classroomMonitor.html";
-          String getClassroomMonitorConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+          String getClassroomMonitorConfigUrl = contextPath + "/vleconfig?runId=" + 
+              run.getId().toString() + "&gradingType=" + gradingType + 
+              "&mode=grading&getRevisions=" + getRevisions;
           if (runService.hasRunPermission(run, user, BasePermission.WRITE)) {
             getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
             getClassroomMonitorUrl += "?loadScriptsIndividually&permission=write";
