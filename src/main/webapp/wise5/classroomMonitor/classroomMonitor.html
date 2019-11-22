@@ -1,16 +1,16 @@
 <link rel="stylesheet" href="wise5/lib/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" href="wise5/lib/summernote/dist/summernote.css" />
-<script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernote/dist/summernote.min.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernoteExtensions/summernote-ext-print.js"></script> <!-- TODO: load using jspm -->
 <link rel="stylesheet" href="wise5/themes/default/style/angular-material.css">
 <link rel="stylesheet" href="wise5/themes/default/style/monitor.css">
+<script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="wise5/lib/summernote/dist/summernote.min.js"></script>
+<script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script>
+<script src="wise5/lib/summernoteExtensions/summernote-ext-print.js"></script>
 
 <div disable-delete-keypress
      ng-mousemove='classroomMonitorController.mouseMoved()'
      role="main" layout="column" layout-fill>
-    <top-bar logo-path="{{ classroomMonitorController.logoPath }}"
+    <top-bar logo-path="{{ ::classroomMonitorController.logoPath }}"
              notifications="classroomMonitorController.notifications"
              project-id="classroomMonitorController.projectId"
              project-title="classroomMonitorController.projectTitle"
@@ -35,5 +35,5 @@
         </div>
     </md-content>
     <side-menu ng-if="classroomMonitorController.showToolbar" state="classroomMonitorController.$state" views="classroomMonitorController.views" on-menu-toggle="classroomMonitorController.toggleMenu()"></side-menu>
-    <notebook workgroup-id="classroomMonitorController.workgroupId"></notebook>
+    <notebook workgroup-id="::classroomMonitorController.workgroupId"></notebook>
 </div>

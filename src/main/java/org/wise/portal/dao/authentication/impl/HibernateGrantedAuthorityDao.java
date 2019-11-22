@@ -21,6 +21,7 @@
 package org.wise.portal.dao.authentication.impl;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -59,7 +60,7 @@ public class HibernateGrantedAuthorityDao extends
     cq.select(persistentGrantedAuthorityRoot).where(
         cb.equal(persistentGrantedAuthorityRoot.get("authority"), authority));
     TypedQuery<PersistentGrantedAuthority> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   public boolean hasRole(String authority) {

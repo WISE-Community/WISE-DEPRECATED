@@ -30,7 +30,7 @@
               (click)="teacherSearchControl.setValue('')">
         <mat-icon>close</mat-icon>
       </button>
-      <mat-hint *ngIf="duplicate && allTeacherUsernames.includes(teacherSearchControl.value)"
+      <mat-hint *ngIf="isDuplicateSharedTeacher && allTeacherUsernames.includes(teacherSearchControl.value)"
                 class="info">
         <ng-container i18n>Teacher is already on shared list.</ng-container>
       </mat-hint>

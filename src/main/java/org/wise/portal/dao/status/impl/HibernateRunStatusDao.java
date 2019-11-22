@@ -24,6 +24,7 @@
 package org.wise.portal.dao.status.impl;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -33,7 +34,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.status.RunStatusDao;
 import org.wise.vle.domain.status.RunStatus;
@@ -60,18 +60,6 @@ public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus>
     return null;
   }
 
-  public RunStatus getRunStatusById(Long id) {
-    RunStatus runStatus = null;
-
-    try {
-      runStatus = getById(id);
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    return runStatus;
-  }
-
   @Transactional
   public void saveRunStatus(RunStatus runStatus) {
     save(runStatus);
@@ -84,6 +72,6 @@ public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus>
     Root<RunStatus> runStatusRoot = cq.from(RunStatus.class);
     cq.select(runStatusRoot).where(cb.equal(runStatusRoot.get("runId"), runId));
     TypedQuery<RunStatus> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    return query.getResultStream().findFirst().orElse(null);
   }
 }

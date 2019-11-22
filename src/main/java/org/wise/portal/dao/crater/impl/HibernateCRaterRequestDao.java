@@ -26,6 +26,7 @@ package org.wise.portal.dao.crater.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -90,7 +91,7 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
         cb.equal(cRaterRequestRoot.get("stepWork"), stepWork),
         cb.equal(cRaterRequestRoot.get("nodeStateId"), nodeStateId)));
     TypedQuery<CRaterRequest> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   @SuppressWarnings("unchecked")
@@ -101,6 +102,6 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
     Root<CRaterRequest> cRaterRequestRoot = cq.from(CRaterRequest.class);
     cq.select(cRaterRequestRoot).where(cb.isNull(cRaterRequestRoot.get("timeCompleted")));
     TypedQuery<CRaterRequest> query = entityManager.createQuery(cq);
-    return (List<CRaterRequest>)(Object)query.getResultList();
+    return (List<CRaterRequest>) (Object) query.getResultList();
   }
 }

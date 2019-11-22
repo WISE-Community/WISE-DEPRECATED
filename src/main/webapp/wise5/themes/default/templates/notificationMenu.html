@@ -4,8 +4,8 @@
         <span class="accent-1 account-menu__info__title" layout="row" layout-align="start center"><md-icon class="accent-1"> notifications </md-icon>&nbsp;<span translate="notificationsTitle"></span></span>
     </md-toolbar>
     <md-content class="account-menu__actions" flex>
-        <div class="md-padding center" ng-if="!vleController.newNotifications.length"><span class="md-body-1" translate="noAlerts"></span></div>
-        <md-list class="notification-list" ng-if="vleController.newNotifications.length">
+        <div class="md-padding center" ng-if="!vleController.hasNewNotifications()"><span class="md-body-1" translate="noAlerts"></span></div>
+        <md-list class="notification-list" ng-if="vleController.hasNewNotifications()">
 
             <md-list-item ng-repeat="notificationAggregate in vleController.newNotifications track by $index"
                           ng-click="vleController.dismissNotificationAggregateAndVisitNode($event, notificationAggregate)"

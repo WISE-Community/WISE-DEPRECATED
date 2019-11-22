@@ -1,26 +1,20 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+import LabelService from './labelService';
+import LabelController from './labelController';
+import LabelAuthoringController from './labelAuthoringController';
 
-var _labelService = require('./labelService');
+let labelAuthoringComponentModule = angular.module('labelAuthoringComponentModule', [
+  'pascalprecht.translate'
+])
+  .service('LabelService', LabelService)
+  .controller('LabelController', LabelController)
+  .controller('LabelAuthoringController', LabelAuthoringController)
+  .config([
+    '$translatePartialLoaderProvider',
+    ($translatePartialLoaderProvider) => {
+      $translatePartialLoaderProvider.addPart('components/label/i18n');
+    }
+  ]);
 
-var _labelService2 = _interopRequireDefault(_labelService);
-
-var _labelController = require('./labelController');
-
-var _labelController2 = _interopRequireDefault(_labelController);
-
-var _labelAuthoringController = require('./labelAuthoringController');
-
-var _labelAuthoringController2 = _interopRequireDefault(_labelAuthoringController);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var labelAuthoringComponentModule = angular.module('labelAuthoringComponentModule', ['pascalprecht.translate']).service(_labelService2.default.name, _labelService2.default).controller(_labelController2.default.name, _labelController2.default).controller(_labelAuthoringController2.default.name, _labelAuthoringController2.default).config(['$translatePartialLoaderProvider', function ($translatePartialLoaderProvider) {
-  $translatePartialLoaderProvider.addPart('components/label/i18n');
-}]);
-
-exports.default = labelAuthoringComponentModule;
-//# sourceMappingURL=labelAuthoringComponentModule.js.map
+export default labelAuthoringComponentModule;

@@ -1,18 +1,9 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+import ProjectProgress from './projectProgress/projectProgress';
 
-var _projectProgress = require('./projectProgress/projectProgress');
+let StudentProgress = angular.module('studentProgress', []);
 
-var _projectProgress2 = _interopRequireDefault(_projectProgress);
+StudentProgress.component('projectProgress', ProjectProgress);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var StudentProgress = angular.module('studentProgress', []);
-
-StudentProgress.component('projectProgress', _projectProgress2.default);
-
-exports.default = StudentProgress;
-//# sourceMappingURL=studentProgress.js.map
+export default StudentProgress;

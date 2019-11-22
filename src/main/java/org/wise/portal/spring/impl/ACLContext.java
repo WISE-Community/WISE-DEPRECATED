@@ -53,7 +53,6 @@ import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.acl.impl.AclServiceImpl;
 
 @Configuration
-@EnableAutoConfiguration
 public class ACLContext {
 
   @Autowired
@@ -100,17 +99,17 @@ public class ACLContext {
     return new AclServiceImpl<Persistable>(dataSource, lookupStrategy(), aclCache(), appProperties);
   }
 
-  @Bean(name = "mutableAclSid")
+  @Bean
   public MutableAclSid mutableAclSid() {
     return new PersistentAclSid();
   }
 
-  @Bean(name = "mutableAclTargetObject")
+  @Bean
   public MutableAclTargetObject mutableAclTargetObject() {
     return new PersistentAclTargetObject();
   }
 
-  @Bean(name = "mutableAclTargetObjectIdentity")
+  @Bean
   public MutableAclTargetObjectIdentity mutableAclTargetObjectIdentity() {
     return new PersistentAclTargetObjectIdentity();
   }

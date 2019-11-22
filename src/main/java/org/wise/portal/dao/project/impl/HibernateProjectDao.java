@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -96,7 +97,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     cq.select(projectRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   private Subquery<RunImpl> getRunProjectIds(CriteriaQuery cq) {
@@ -118,7 +119,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     cq.select(projectRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -130,7 +131,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     cq.select(projectRoot);
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   @Override
@@ -140,11 +141,11 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     Root<ProjectImpl> projectRoot = cq.from(ProjectImpl.class);
     cq.select(projectRoot).where(cb.equal(projectRoot.get("id"), id));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
-    Project project = query.getSingleResult();
-    if (project == null) {
+    try {
+      return query.setMaxResults(1).getSingleResult();
+    } catch(NoResultException e) {
       throw new ObjectNotFoundException((Long) id, ProjectImpl.class);
     }
-    return project;
   }
 
   @SuppressWarnings("unchecked")
@@ -156,7 +157,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
         .orderBy(cb.desc(projectRoot.get("id")));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq); 
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -170,7 +171,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
         cb.isMember(tagRoot, projectRoot.<Set<TagImpl>>get("tags")))).distinct(true);
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -183,7 +184,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
         projectRoot.get("owner").get("userDetails").get("username"), "%" + authorName + "%"));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -195,7 +196,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     cq.select(projectRoot).where(cb.like(projectRoot.get("name"), "%" + title + "%"));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -206,7 +207,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     cq.select(projectRoot).where(cb.equal(projectRoot.get("parentProjectId"), parentProjectId));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -224,7 +225,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     cq.select(projectRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   @SuppressWarnings("unchecked")
@@ -236,7 +237,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     cq.select(projectRoot).where(cb.isNotEmpty(projectRoot.get("sharedowners")));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
-    return (List<Project>)(Object)projectResultList;
+    return (List<Project>) (Object) projectResultList;
   }
 
   @Override
@@ -248,7 +249,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     TypedQuery<Long> query = entityManager.createQuery(cq);
     try {
       return query.getSingleResult();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       return 0;
     }
   }

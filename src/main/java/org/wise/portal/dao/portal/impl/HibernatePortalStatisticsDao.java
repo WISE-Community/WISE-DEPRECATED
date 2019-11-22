@@ -48,7 +48,7 @@ public class HibernatePortalStatisticsDao extends AbstractHibernateDao<PortalSta
 
   private CriteriaBuilder getCriteriaBuilder() {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    return session.getCriteriaBuilder(); 
+    return session.getCriteriaBuilder();
   }
 
   @Override
@@ -68,7 +68,7 @@ public class HibernatePortalStatisticsDao extends AbstractHibernateDao<PortalSta
     Root<PortalStatisticsImpl> portalStatisticsRoot = cq.from(PortalStatisticsImpl.class);
     cq.select(portalStatisticsRoot).orderBy(cb.asc(portalStatisticsRoot.get("timestamp")));
     TypedQuery<PortalStatisticsImpl> query = entityManager.createQuery(cq);
-    return (List<PortalStatistics>)(Object)query.getResultList();
+    return (List<PortalStatistics>) (Object) query.getResultList();
   }
 
   public PortalStatistics getLatestPortalStatistics() {
@@ -77,7 +77,6 @@ public class HibernatePortalStatisticsDao extends AbstractHibernateDao<PortalSta
     Root<PortalStatisticsImpl> portalStatisticsRoot = cq.from(PortalStatisticsImpl.class);
     cq.select(portalStatisticsRoot).orderBy(cb.desc(portalStatisticsRoot.get("timestamp")));
     TypedQuery<PortalStatisticsImpl> query = entityManager.createQuery(cq);
-    return query.setMaxResults(1).getSingleResult();
+    return query.getResultStream().findFirst().orElse(null);
   }
-
 }

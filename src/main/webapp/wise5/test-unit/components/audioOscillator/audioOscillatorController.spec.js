@@ -1,28 +1,16 @@
-'use strict';
+import vleModule from '../../../vle/vle';
 
-var _angular = require('angular');
+describe('AudioOscillatorController', () => {
 
-var _angular2 = _interopRequireDefault(_angular);
+  let $controller;
+  let $rootScope;
+  let $scope;
+  let audioOscillatorController;
+  let component;
 
-var _main = require('vle/main');
+  beforeEach(angular.mock.module(vleModule.name));
 
-var _main2 = _interopRequireDefault(_main);
-
-require('angular-mocks');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-describe('AudioOscillatorController', function () {
-
-  var $controller = void 0;
-  var $rootScope = void 0;
-  var $scope = void 0;
-  var audioOscillatorController = void 0;
-  var component = void 0;
-
-  beforeEach(_angular2.default.mock.module(_main2.default.name));
-
-  beforeEach(inject(function (_$controller_, _$rootScope_) {
+  beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     component = {
@@ -31,7 +19,11 @@ describe('AudioOscillatorController', function () {
       "prompt": "",
       "showSaveButton": false,
       "showSubmitButton": true,
-      "oscillatorTypes": ["sine", "triangle", "sawtooth"],
+      "oscillatorTypes": [
+        "sine",
+        "triangle",
+        "sawtooth"
+      ],
       "startingFrequency": 440,
       "oscilloscopeWidth": 800,
       "oscilloscopeHeight": 400,
@@ -42,12 +34,12 @@ describe('AudioOscillatorController', function () {
 
     $scope = $rootScope.$new();
     $scope.componentContent = JSON.parse(JSON.stringify(component));
-    window.AudioContext = function () {};
+    window.AudioContext = function() {};
     audioOscillatorController = $controller('AudioOscillatorController', { $scope: $scope });
     audioOscillatorController.nodeId = 'node1';
   }));
 
-  it('should set the parameters from the component content', function () {
+  it('should set the parameters from the component content', () => {
     expect(audioOscillatorController.frequency).toEqual(component.startingFrequency);
     expect(audioOscillatorController.oscilloscopeWidth).toEqual(component.oscilloscopeWidth);
     expect(audioOscillatorController.oscilloscopeHeight).toEqual(component.oscilloscopeHeight);
@@ -55,20 +47,20 @@ describe('AudioOscillatorController', function () {
     expect(audioOscillatorController.oscillatorTypes.length).toEqual(3);
   });
 
-  it('should add a frequency played to the student data', function () {
+  it('should add a frequency played to the student data', () => {
     audioOscillatorController.addFrequencyPlayed(440);
     expect(audioOscillatorController.frequenciesPlayed.length).toEqual(1);
     expect(audioOscillatorController.frequenciesPlayed[0]).toEqual(440);
   });
 
-  it('should call play when the toggle play is called', function () {
-    var playSpy = spyOn(audioOscillatorController, 'play');
+  it('should call play when the toggle play is called', () => {
+    const playSpy = spyOn(audioOscillatorController, 'play');
     audioOscillatorController.togglePlay();
     expect(playSpy).toHaveBeenCalled();
   });
 
-  it('should repopulate student work', function () {
-    var componentState = {
+  it('should repopulate student work', () => {
+    const componentState = {
       studentData: {
         frequenciesPlayed: [440, 880]
       }
@@ -88,4 +80,3 @@ describe('AudioOscillatorController', function () {
   //   });
   // });
 });
-//# sourceMappingURL=audioOscillatorController.spec.js.map

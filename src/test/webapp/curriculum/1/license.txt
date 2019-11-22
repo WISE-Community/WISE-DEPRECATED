@@ -1,5 +1,6 @@
-"null" (http://localhost:8080/previewproject.html?projectId=null) is
-licensed under CC BY-SA by SpongeBob SquarePants.
+"null"
+(http://localhost:8080/previewproject.html?projectId=null#!/project/null)
+is licensed under CC BY-SA by SpongeBob SquarePants.
 
 License pertains to original content created by the author(s). Authors
 are responsible for the usage and attribution of any third-party content

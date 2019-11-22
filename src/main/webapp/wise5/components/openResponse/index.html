@@ -1,9 +1,9 @@
 <div class='openResponse' ng-controller='OpenResponseController as openResponseController' flex>
   <style>
-    {{openResponseController.nodeContent.style}}
+    {{::openResponseController.nodeContent.style}}
   </style>
   <div>
-    <div ng-switch='openResponseController.mode'>
+    <div ng-switch='::openResponseController.mode'>
       <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
         <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
           <div class='component--grading__response__content'><compile data='openResponseController.studentResponse'></compile></div>
@@ -12,7 +12,7 @@
                         component-id='openResponseController.componentId'
                         to-workgroup-id='workgroupId'
                         component-state='componentState'
-                        active='openResponseController.mode === "grading"'></component-revisions-info>
+                        active='::openResponseController.mode === "grading"'></component-revisions-info>
         </div>
         <div flex='100' flex-gt-sm='33' class='component--grading__annotations'>
           <component-grading node-id='openResponseController.nodeId'
@@ -21,46 +21,46 @@
                      from-workgroup-id='teacherWorkgroupId'
                      to-workgroup-id='workgroupId'
                      component-state-id='componentState.id'
-                     show-all-annotations='openResponseController.mode !== "grading"'
-                     is-disabled='openResponseController.mode !== "grading"'></component-grading>
+                     show-all-annotations='::openResponseController.mode !== "grading"'
+                     is-disabled='::openResponseController.mode !== "grading"'></component-grading>
         </div>
       </div>
       <div ng-switch-default>
         <md-input-container class='input-container input-container--open-response md-block md-no-float'>
           <label class='input-label md-no-float' ng-disabled='openResponseController.isDisabled'
-               ng-if='openResponseController.isPromptVisible'>
-            <compile id='prompt' data='openResponseController.getPrompt()'></compile>
+               ng-if='::openResponseController.isPromptVisible'>
+            <compile id='prompt' data='::openResponseController.getPrompt()'></compile>
             <possible-score max-score='openResponseController.componentContent.maxScore'></possible-score>
           </label>
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.snipButtonClicked($event)'
-                     ng-if='openResponseController.isAddToNotebookEnabled()'
+                     ng-if='::openResponseController.isAddToNotebookEnabled()'
                      ng-disabled='openResponseController.isDisabled'>
             <md-icon>note_add</md-icon>
-            {{ 'ADD_TO_NOTEBOOK' | translate:{label:openResponseController.notebookConfig.label} }}
+            {{ ::'ADD_TO_NOTEBOOK' | translate:{label:openResponseController.notebookConfig.label} }}
           </md-button>
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.copyPublicNotebookItemButtonClicked($event)'
-                     ng-if='openResponseController.showCopyPublicNotebookItemButton()'
+                     ng-if='::openResponseController.showCopyPublicNotebookItemButton()'
                      ng-disabled='openResponseController.isDisabled'>
             <md-icon>file_download</md-icon>
-            {{ 'importClassmateWork' | translate:{label:openResponseController.notebookConfig.label} }}
+            {{ ::'importClassmateWork' | translate:{label:openResponseController.notebookConfig.label} }}
           </md-button>
           <div class='input-wrapper' ng-class='{"input-wrapper--richtext": openResponseController.isRichTextEnabled}'>
-            <textarea ng-if='openResponseController.isRichTextEnabled && !openResponseController.isDisabled'
+            <textarea ng-if='::openResponseController.isRichTextEnabled && !openResponseController.isDisabled'
                   ui-tinymce='openResponseController.tinymceOptions'
                   ng-model='openResponseController.studentResponse'
                   ng-model-options='{ debounce: 100 }'
                   ng-disabled='openResponseController.isDisabled'
                   ng-change='openResponseController.studentDataChanged()'></textarea>
-            <div ng-if='openResponseController.isRichTextEnabled && openResponseController.isDisabled'
+            <div ng-if='::openResponseController.isRichTextEnabled && openResponseController.isDisabled'
                class='input--textarea input--textarea--disabled'>
                 <compile data='openResponseController.studentResponse'></compile>
             </div>
             <textarea
-                  ng-if='!openResponseController.isRichTextEnabled'
+                  ng-if='::!openResponseController.isRichTextEnabled'
                   class='input--textarea'
-                  rows='{{openResponseController.getNumRows() || 3}}'
+                  rows='{{::openResponseController.getNumRows() || 3}}'
                   ng-model='openResponseController.studentResponse'
                   ng-model-options='{ debounce: 100 }'
                   ng-disabled='openResponseController.isDisabled'
@@ -72,49 +72,49 @@
     </div>
     <div ng-if='nodeController.getRevisions().length > 1' layout='row' layout-align='center end'>
       <a ng-click='nodeController.showRevisions($event, component.id, openResponseController.isDisabled)'>
-         + {{ 'openResponse.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
+         + {{ ::'openResponse.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
        </a>
     </div>
-    <div class='component__actions' ng-if='openResponseController.isStudentAttachmentEnabled' layout='row' layout-wrap='true'>
+    <div class='component__actions' ng-if='::openResponseController.isStudentAttachmentEnabled' layout='row' layout-wrap='true'>
       <div class='component__add-attachment'>
         <md-button class='md-accent'
                ng-click='nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)'
                ng-disabled='openResponseController.isDisabled'>
-          <md-icon>image</md-icon> <span>{{ 'openResponse.addFile' | translate }}</span>
+          <md-icon>image</md-icon> <span>{{ ::'openResponse.addFile' | translate }}</span>
         </md-button>
       </div>
       <div class='component__attachment' ng-repeat='attachment in openResponseController.attachments'>
         <img ng-src='{{attachment.iconURL}}' class='component__attachment__content' />
-        <md-button ng-show='!openResponseController.isDisabled' class='component__attachment__delete'
+        <md-button ng-if='!openResponseController.isDisabled' class='component__attachment__delete'
                    ng-click='openResponseController.removeAttachment(attachment)' title='Remove file'
                    ng-disabled='openResponseController.isDisabled'>
           <md-icon>cancel</md-icon>
         </md-button>
       </div>
     </div>
-    <div ng-if='openResponseController.isSaveButtonVisible || openResponseController.isSubmitButtonVisible'
+    <div ng-if='::openResponseController.isSaveOrSubmitButtonVisible()'
        class='component__actions' layout='row' layout-align='start center'>
       <md-button id='saveButton'
              class='md-raised md-primary'
              ng-class='{"md-raised": !openResponseController.isSubmitButtonVisible}'
              ng-click='openResponseController.saveButtonClicked()'
              ng-disabled='openResponseController.isDisabled || !openResponseController.isDirty'
-             ng-if='openResponseController.isSaveButtonVisible'
-             aria-label='{{SAVE | translate}}'
+             ng-if='::openResponseController.isSaveButtonVisible'
+             aria-label='{{::SAVE | translate}}'
              translate='SAVE'></md-button>
       <md-button id='submitButton'
              class='md-raised md-primary'
              ng-click='openResponseController.submitButtonClicked()'
              ng-disabled='openResponseController.isDisabled || !openResponseController.isSubmitDirty || openResponseController.isSubmitButtonDisabled'
-             ng-if='openResponseController.isSubmitButtonVisible'
-             aria-label='{{SUBMIT | translate}}'
+             ng-if='::openResponseController.isSubmitButtonVisible'
+             aria-label='{{::SUBMIT | translate}}'
              translate='SUBMIT'></md-button>
       <span ng-if='openResponseController.saveMessage.text'
           class='component__actions__info md-caption'>
           {{openResponseController.saveMessage.text}} <span class='component__actions__more'><md-tooltip md-direction='top'>{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago='openResponseController.saveMessage.time'></span></span>
       </span>
     </div>
-    <component-annotations ng-if='openResponseController.mode === "student"'
+    <component-annotations ng-if='::openResponseController.mode === "student"'
                  annotations='openResponseController.latestAnnotations'
                  max-score='openResponseController.componentContent.maxScore'></component-annotations>
   </div>

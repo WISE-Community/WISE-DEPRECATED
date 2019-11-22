@@ -1,81 +1,49 @@
-'use strict';
+import vleModule from '../../../vle/vle';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _angular = require('angular');
-
-var _angular2 = _interopRequireDefault(_angular);
-
-var _main = require('vle/main');
-
-var _main2 = _interopRequireDefault(_main);
-
-require('angular-mocks');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var MockConceptMapNode = function () {
-  function MockConceptMapNode(draw, instanceId) {
-    _classCallCheck(this, MockConceptMapNode);
-
+class MockConceptMapNode {
+  constructor(draw, instanceId) {
     this.instanceId = instanceId;
   }
+  getId() {
+    return this.instanceId;
+  }
+  remove() {
 
-  _createClass(MockConceptMapNode, [{
-    key: 'getId',
-    value: function getId() {
-      return this.instanceId;
-    }
-  }, {
-    key: 'remove',
-    value: function remove() {}
-  }]);
+  }
+}
 
-  return MockConceptMapNode;
-}();
-
-var MockConceptMapLink = function () {
-  function MockConceptMapLink(draw, instanceId) {
-    _classCallCheck(this, MockConceptMapLink);
-
+class MockConceptMapLink {
+  constructor(draw, instanceId) {
     this.instanceId = instanceId;
   }
+  getId() {
+    return this.instanceId;
+  }
+  remove() {
 
-  _createClass(MockConceptMapLink, [{
-    key: 'getId',
-    value: function getId() {
-      return this.instanceId;
-    }
-  }, {
-    key: 'remove',
-    value: function remove() {}
-  }]);
+  }
+}
 
-  return MockConceptMapLink;
-}();
-
-var mockConceptMapService = {
-  newConceptMapNode: function newConceptMapNode(draw, instanceId) {
+const mockConceptMapService = {
+  newConceptMapNode: function(draw, instanceId) {
     return new MockConceptMapNode(draw, instanceId);
   },
-  newConceptMapLink: function newConceptMapLink(draw, instanceId) {
+  newConceptMapLink: function(draw, instanceId) {
     return new MockConceptMapLink(draw, instanceId);
   }
 };
 
-describe('ConceptMapController', function () {
+describe('ConceptMapController', () => {
 
-  var $controller = void 0;
-  var $rootScope = void 0;
-  var $scope = void 0;
-  var conceptMapController = void 0;
-  var component = void 0;
+  let $controller;
+  let $rootScope;
+  let $scope;
+  let conceptMapController;
+  let component;
 
-  beforeEach(_angular2.default.mock.module(_main2.default.name));
+  beforeEach(angular.mock.module(vleModule.name));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_) {
+  beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
 
@@ -89,45 +57,54 @@ describe('ConceptMapController', function () {
       'height': 600,
       'background': null,
       'stretchBackground': null,
-      'nodes': [{
-        'id': 'node1',
-        'label': 'Sun',
-        'fileName': 'sun.png',
-        'width': 100,
-        'height': 100
-      }, {
-        'id': 'node2',
-        'label': 'Space',
-        'fileName': 'Space.png',
-        'width': 100,
-        'height': 100
-      }, {
-        'id': 'node3',
-        'label': 'Earths Surface',
-        'fileName': 'Earth_surface.png',
-        'width': 100,
-        'height': 100
-      }, {
-        'id': 'node4',
-        'label': 'Beneath Surface',
-        'fileName': 'Earth_beneath.png',
-        'width': 100,
-        'height': 100
-      }],
+      'nodes': [
+        {
+          'id': 'node1',
+          'label': 'Sun',
+          'fileName': 'sun.png',
+          'width': 100,
+          'height': 100
+        },
+        {
+          'id': 'node2',
+          'label': 'Space',
+          'fileName': 'Space.png',
+          'width': 100,
+          'height': 100
+        },
+        {
+          'id': 'node3',
+          'label': 'Earths Surface',
+          'fileName': 'Earth_surface.png',
+          'width': 100,
+          'height': 100
+        },
+        {
+          'id': 'node4',
+          'label': 'Beneath Surface',
+          'fileName': 'Earth_beneath.png',
+          'width': 100,
+          'height': 100
+        }
+      ],
       'linksTitle': '',
-      'links': [{
-        'id': 'link1',
-        'label': 'Solar Radiation',
-        'color': '#DDD266'
-      }, {
-        'id': 'link2',
-        'label': 'Infrared Radiation',
-        'color': '#B62467'
-      }, {
-        'id': 'link3',
-        'label': 'Heat',
-        'color': '#DE2D26'
-      }],
+      'links': [
+        {
+          'id': 'link1',
+          'label': 'Solar Radiation',
+          'color': '#DDD266'
+        },
+        {
+          'id': 'link2',
+          'label': 'Infrared Radiation',
+          'color': '#B62467'
+        },
+        {
+          'id': 'link3',
+          'label': 'Heat',
+          'color': '#DE2D26'
+        }
+      ],
       'rules': [],
       'starterConceptMap': null,
       'customRuleEvaluator': '',
@@ -143,8 +120,8 @@ describe('ConceptMapController', function () {
     conceptMapController.nodeId = 'node1';
   }));
 
-  it('should populate the student work', function () {
-    var componentState = {
+  it('should populate the student work', () => {
+    const componentState = {
       'clientSaveTime': 1542412588000,
       'isSubmit': false,
       'studentData': {
@@ -204,10 +181,10 @@ describe('ConceptMapController', function () {
       'nodeId': 'node1',
       'componentId': 'ut00qpig10'
     };
-    var setNodeMouseEventsSpy = spyOn(conceptMapController, 'setNodeMouseEvents');
-    var setLinkMouseEventsSpy = spyOn(conceptMapController, 'setLinkMouseEvents');
-    var moveLinkTextToFrontSpy = spyOn(conceptMapController, 'moveLinkTextToFront');
-    var moveNodesToFrontSpy = spyOn(conceptMapController, 'moveNodesToFront');
+    const setNodeMouseEventsSpy = spyOn(conceptMapController, 'setNodeMouseEvents');
+    const setLinkMouseEventsSpy = spyOn(conceptMapController, 'setLinkMouseEvents');
+    const moveLinkTextToFrontSpy = spyOn(conceptMapController, 'moveLinkTextToFront');
+    const moveNodesToFrontSpy = spyOn(conceptMapController, 'moveNodesToFront');
     conceptMapController.setStudentWork(componentState);
     expect(setNodeMouseEventsSpy).toHaveBeenCalled();
     expect(setLinkMouseEventsSpy).toHaveBeenCalled();
@@ -217,7 +194,7 @@ describe('ConceptMapController', function () {
     expect(conceptMapController.links.length).toEqual(1);
   });
 
-  it('should clear the concept map', function () {
+  it('should clear the concept map', () => {
     conceptMapController.addNode(new MockConceptMapNode(null, 'node1'));
     conceptMapController.addNode(new MockConceptMapNode(null, 'node2'));
     conceptMapController.addLink(new MockConceptMapLink(null, 'link1'));
@@ -228,5 +205,5 @@ describe('ConceptMapController', function () {
     expect(conceptMapController.nodes.length).toEqual(0);
     expect(conceptMapController.links.length).toEqual(0);
   });
+
 });
-//# sourceMappingURL=conceptMapController.spec.js.map

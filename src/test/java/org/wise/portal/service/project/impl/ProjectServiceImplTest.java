@@ -147,7 +147,7 @@ public class ProjectServiceImplTest extends TestCase {
     expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
     replay(appProperties);
     String uri = projectServiceImpl.getProjectURI(project);
-    assertEquals("http://localhost:8080/previewproject.html?projectId=12", uri);
+    assertEquals("http://localhost:8080/previewproject.html?projectId=12#!/project/12", uri);
     verify(appProperties);
   }
 
@@ -159,7 +159,7 @@ public class ProjectServiceImplTest extends TestCase {
     expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
     replay(appProperties);
     String uri = projectServiceImpl.getProjectURI(project);
-    assertEquals("http://localhost:8080/project/155", uri);
+    assertEquals("http://localhost:8080/project/155#!/project/155", uri);
     verify(appProperties);
   }
 }

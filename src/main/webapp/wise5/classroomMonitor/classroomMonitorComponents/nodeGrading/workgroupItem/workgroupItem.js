@@ -1,104 +1,93 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var WorkgroupItemController = function () {
-    function WorkgroupItemController($filter, $scope, ProjectService) {
-        var _this = this;
-
-        _classCallCheck(this, WorkgroupItemController);
-
+class WorkgroupItemController {
+    constructor($filter,
+                $scope,
+                ProjectService) {
         this.$filter = $filter;
         this.$scope = $scope;
         this.ProjectService = ProjectService;
-
         this.$translate = this.$filter('translate');
-        this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
-        this.statusText = '';
-
-        this.$onChanges = function (changesObj) {
-            if (changesObj.hiddenComponents) {
-                _this.hiddenComponents = angular.copy(changesObj.hiddenComponents.currentValue);
-            }
-
-            if (changesObj.maxScore) {
-                _this.maxScore = typeof changesObj.maxScore.currentValue === 'number' ? changesObj.maxScore.currentValue : 0;
-            }
-
-            if (changesObj.workgroupData) {
-                var workgroupData = angular.copy(changesObj.workgroupData.currentValue);
-                _this.hasAlert = workgroupData.hasAlert;
-                _this.hasNewAlert = workgroupData.hasNewAlert;
-                _this.status = workgroupData.completionStatus;
-                _this.score = workgroupData.score >= 0 ? workgroupData.score : '-';
-            }
-
-            _this.update();
-        };
     }
 
-    _createClass(WorkgroupItemController, [{
-        key: 'update',
-        value: function update() {
-            var completion = 0;
+    $onInit() {
+      this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
+      this.statusText = '';
+      this.update();
+    }
 
-            switch (this.status) {
-                case -1:
-                    this.statusClass = ' ';
-                    this.statusText = this.$translate('notAssigned');
-                    break;
-                case 2:
-                    this.statusClass = 'success';
+    $onChanges(changesObj) {
+      if (changesObj.hiddenComponents) {
+          this.hiddenComponents = angular.copy(changesObj.hiddenComponents.currentValue);
+      }
 
-                    if (this.nodeHasWork) {
-                        this.statusText = this.$translate('completed');
-                    } else {
-                        this.statusText = this.$translate('visited');
-                    }
-                    break;
-                case 1:
-                    this.statusClass = 'text';
+      if (changesObj.maxScore) {
+          this.maxScore = typeof changesObj.maxScore.currentValue === 'number' ? changesObj.maxScore.currentValue : 0;
+      }
 
-                    this.statusText = this.$translate('partiallyCompleted');
-                    break;
-                default:
-                    this.statusClass = 'text-secondary';
+      if (changesObj.workgroupData) {
+          let workgroupData = angular.copy(changesObj.workgroupData.currentValue);
+          this.hasAlert = workgroupData.hasAlert;
+          this.hasNewAlert = workgroupData.hasNewAlert;
+          this.status = workgroupData.completionStatus;
+          this.score = workgroupData.score >= 0 ? workgroupData.score : '-';
+      }
 
-                    if (this.nodeHasWork) {
-                        this.statusText = this.$translate('noWork');
-                    } else {
-                        this.statusText = this.$translate('notVisited');
-                    }
-            }
+      this.update();
+    }
 
-            if (this.hasNewAlert) {
-                this.statusClass = 'warn';
-            }
+    update() {
+        switch (this.status) {
+            case -1:
+                this.statusClass = ' ';
+                this.statusText = this.$translate('notAssigned');
+                break;
+            case 2:
+                this.statusClass = 'success';
 
-            this.disabled = this.status === -1;
+                if (this.nodeHasWork) {
+                    this.statusText = this.$translate('completed');
+                } else {
+                    this.statusText = this.$translate('visited');
+                }
+                break;
+            case 1:
+                this.statusClass = 'text';
+
+                this.statusText = this.$translate('partiallyCompleted');
+                break;
+            default:
+                this.statusClass = 'text-secondary';
+
+                if (this.nodeHasWork) {
+                    this.statusText = this.$translate('noWork');
+                } else {
+                    this.statusText = this.$translate('notVisited');
+                }
         }
-    }, {
-        key: 'toggleExpand',
-        value: function toggleExpand() {
-            if (this.showScore) {
-                var expand = !this.expand;
-                this.onUpdateExpand({ workgroupId: this.workgroupId, value: expand });
-            }
+
+        if (this.hasNewAlert) {
+            this.statusClass = 'warn';
         }
-    }]);
 
-    return WorkgroupItemController;
-}();
+        this.disabled = (this.status === -1);
+    }
 
-WorkgroupItemController.$inject = ['$filter', '$scope', 'ProjectService'];
+    toggleExpand() {
+        if (this.showScore) {
+            let expand = !this.expand;
+            this.onUpdateExpand({workgroupId: this.workgroupId, value: expand});
+        }
+    }
+}
 
-var WorkgroupItem = {
+WorkgroupItemController.$inject = [
+    '$filter',
+    '$scope',
+    'ProjectService'
+];
+
+const WorkgroupItem = {
     bindings: {
         expand: '<',
         maxScore: '<',
@@ -110,8 +99,37 @@ var WorkgroupItem = {
         onUpdateExpand: '&'
     },
     controller: WorkgroupItemController,
-    template: '<div class="md-whiteframe-1dp" ng-class="{\'list-item--warn\': $ctrl.statusClass === \'warn\', \'list-item--info\': $ctrl.statusClass === \'info\'}">\n            <md-subheader class="list-item md-whiteframe-1dp">\n                <button class="md-button md-ink-ripple list-item__subheader-button"\n                               aria-label="{{ toggleTeamWorkDisplay | translate }}"\n                               ng-class="{\'list-item--expanded\': $ctrl.showWork,\n                                   \'list-item--noclick\': !$ctrl.showScore || $ctrl.disabled}"\n                               ng-click="$ctrl.toggleExpand()"\n                               ng-disabled="$ctrl.disabled"\n                               layout-wrap>\n                    <div layout="row" flex>\n                        <div flex layout="row" layout-align="start center">\n                            <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" has-new-work="$ctrl.hasNewWork" usernames="{{$ctrl.workgroupData.displayNames}}" workgroup-id="$ctrl.workgroupId"></workgroup-info>\n                        </div>\n                        <div flex="{{$ctrl.showScore ? 30 : 20}}" layout="row" layout-align="center center">\n                            <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>\n                        </div>\n                        <div ng-if="$ctrl.showScore" flex="20" layout="row" layout-align="center center">\n                            <workgroup-node-score score="{{$ctrl.score}}" max-score="{{$ctrl.maxScore}}"></workgroup-node-score>\n                        </div>\n                    </div>\n                </button>\n            </md-subheader>\n            <md-list-item ng-if="$ctrl.expand && !$ctrl.disabled" class="grading__item-container">\n                <workgroup-node-grading workgroup-id="$ctrl.workgroupId"\n                                        class="workgroup-node-grading"\n                                        node-id="{{$ctrl.nodeId}}"\n                                        hidden-components="$ctrl.hiddenComponents"\n                                        flex></workgroup-node-grading>\n            </md-list-item>\n        </div>'
+    template:
+        `<div class="md-whiteframe-1dp" ng-class="{'list-item--warn': $ctrl.statusClass === 'warn', 'list-item--info': $ctrl.statusClass === 'info'}">
+            <md-subheader class="list-item md-whiteframe-1dp">
+                <button class="md-button md-ink-ripple list-item__subheader-button"
+                               aria-label="{{ ::toggleTeamWorkDisplay | translate }}"
+                               ng-class="{'list-item--expanded': $ctrl.showWork,
+                                   'list-item--noclick': !$ctrl.showScore || $ctrl.disabled}"
+                               ng-click="$ctrl.toggleExpand()"
+                               ng-disabled="$ctrl.disabled"
+                               layout-wrap>
+                    <div layout="row" flex>
+                        <div flex layout="row" layout-align="start center">
+                            <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" has-new-work="$ctrl.hasNewWork" usernames="{{$ctrl.workgroupData.displayNames}}" workgroup-id="$ctrl.workgroupId"></workgroup-info>
+                        </div>
+                        <div flex="{{$ctrl.showScore ? 30 : 20}}" layout="row" layout-align="center center">
+                            <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>
+                        </div>
+                        <div ng-if="$ctrl.showScore" flex="20" layout="row" layout-align="center center">
+                            <workgroup-node-score score="{{$ctrl.score}}" max-score="{{$ctrl.maxScore}}"></workgroup-node-score>
+                        </div>
+                    </div>
+                </button>
+            </md-subheader>
+            <md-list-item ng-if="$ctrl.expand && !$ctrl.disabled" class="grading__item-container">
+                <workgroup-node-grading workgroup-id="::$ctrl.workgroupId"
+                                        class="workgroup-node-grading"
+                                        node-id="{{::$ctrl.nodeId}}"
+                                        hidden-components="$ctrl.hiddenComponents"
+                                        flex></workgroup-node-grading>
+            </md-list-item>
+        </div>`
 };
 
-exports.default = WorkgroupItem;
-//# sourceMappingURL=workgroupItem.js.map
+export default WorkgroupItem;

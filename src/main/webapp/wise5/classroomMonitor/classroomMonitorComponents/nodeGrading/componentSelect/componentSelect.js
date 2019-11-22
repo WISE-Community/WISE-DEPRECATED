@@ -1,137 +1,134 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var ComponentSelectController = function () {
-    function ComponentSelectController($filter, ProjectService, UtilService) {
-        var _this = this;
-
-        _classCallCheck(this, ComponentSelectController);
-
+class ComponentSelectController {
+    constructor($filter,
+                ProjectService,
+                UtilService) {
         this.$filter = $filter;
         this.ProjectService = ProjectService;
         this.UtilService = UtilService;
 
         this.$translate = this.$filter('translate');
 
-        this.$onInit = function () {
-            _this.selectedComponents = [];
-            _this.components = _this.getComponents();
+        this.$onInit = () => {
+            this.selectedComponents = [];
+            this.components = this.getComponents();
         };
-    }
+    };
 
-    _createClass(ComponentSelectController, [{
-        key: 'getNodeContent',
-        value: function getNodeContent() {
-            var result = null;
+    getNodeContent() {
+        let result = null;
 
-            var node = this.ProjectService.getNodeById(this.nodeId);
-            if (node != null) {
-                // field that will hold the node content
-                result = node;
-            }
-
-            return result;
+        let node = this.ProjectService.getNodeById(this.nodeId);
+        if (node != null) {
+            // field that will hold the node content
+            result = node;
         }
 
-        /**
-         * Get the components for this node
-         * @return an array that contains the content for the components
-         */
+        return result;
+    }
 
-    }, {
-        key: 'getComponents',
-        value: function getComponents() {
-            var components = null;
-            var nodeContent = this.getNodeContent();
+    /**
+     * Get the components for this node
+     * @return an array that contains the content for the components
+     */
+    getComponents() {
+        let components = null;
+        let nodeContent = this.getNodeContent();
 
-            if (nodeContent) {
-                components = nodeContent.components;
+        if (nodeContent) {
+            components = nodeContent.components;
 
-                if (components) {
-                    for (var c = 0; c < components.length; c++) {
-                        var component = components[c];
+            if (components) {
+                for (let c = 0; c < components.length; c++) {
+                    let component = components[c];
 
-                        // set whether component captures student work (for filtering purposes)
-                        component.hasWork = this.ProjectService.componentHasWork(component);
+                    // set whether component captures student work (for filtering purposes)
+                    component.hasWork = this.ProjectService.componentHasWork(component);
 
-                        if (component.hasWork) {
-                            // component has work, so add it to the initial selectedComponents array
-                            this.selectedComponents.push(component.id);
-                        }
+                    if (component.hasWork) {
+                        // component has work, so add it to the initial selectedComponents array
+                        this.selectedComponents.push(component.id);
                     }
                 }
             }
-
-            return components;
         }
 
-        /**
-         * Get the component type label for the given component type
-         * @param componentType string
-         * @return string of the component type label
-         */
+        return components;
+    }
 
-    }, {
-        key: 'getComponentTypeLabel',
-        value: function getComponentTypeLabel(componentType) {
-            return this.UtilService.getComponentTypeLabel(componentType);
-        }
+    /**
+     * Get the component type label for the given component type
+     * @param componentType string
+     * @return string of the component type label
+     */
+    getComponentTypeLabel(componentType) {
+        return this.UtilService.getComponentTypeLabel(componentType);
+    }
 
-        /**
-         * Get the text to display for the select dropdown
-         * @return string selected text
-         */
+    /**
+     * Get the text to display for the select dropdown
+     * @return string selected text
+     */
+    getSelectedText() {
+        let nComponents = this.$filter('filter')(this.components, {hasWork: true}).length;
+        return this.$translate('selectedComponentsLabel', { selected: this.selectedComponents.length, total: nComponents });
+    }
 
-    }, {
-        key: 'getSelectedText',
-        value: function getSelectedText() {
-            var nComponents = this.$filter('filter')(this.components, { hasWork: true }).length;
-            return this.$translate('selectedComponentsLabel', { selected: this.selectedComponents.length, total: nComponents });
-        }
+    /**
+     * Selected components have changed, so run the onChange function
+     */
+    selectedComponentsChange() {
+        let hiddenComponents = [];
 
-        /**
-         * Selected components have changed, so run the onChange function
-         */
+        for (let i = 0; i < this.components.length; i++) {
+            let component = this.components[i];
+            let id = component.id;
 
-    }, {
-        key: 'selectedComponentsChange',
-        value: function selectedComponentsChange() {
-            var hiddenComponents = [];
-
-            for (var i = 0; i < this.components.length; i++) {
-                var component = this.components[i];
-                var id = component.id;
-
-                if (this.selectedComponents.indexOf(id) < 0) {
-                    // component isn't selected for view, so add to hiddenComponents
-                    hiddenComponents.push(id);
-                }
+            if (this.selectedComponents.indexOf(id) < 0) {
+                // component isn't selected for view, so add to hiddenComponents
+                hiddenComponents.push(id);
             }
-
-            this.onChange({ value: hiddenComponents });
         }
-    }]);
 
-    return ComponentSelectController;
-}();
+        this.onChange({value: hiddenComponents});
+    }
+}
 
-ComponentSelectController.$inject = ['$filter', 'ProjectService', 'UtilService'];
+ComponentSelectController.$inject = [
+    '$filter',
+    'ProjectService',
+    'UtilService'
+];
 
-var ComponentSelect = {
+const ComponentSelect = {
     bindings: {
         nodeId: '@',
         onChange: '&'
     },
-    template: '<md-select class="md-no-underline md-button md-raised"\n                    ng-if="($ctrl.components | filter:{hasWork: true}).length > 1"\n                    ng-model="$ctrl.selectedComponents"\n                    ng-change="$ctrl.selectedComponentsChange()"\n                    md-selected-html="$ctrl.getSelectedText()"\n                    placeholder="{{ \'assessmentItemsToShow\' | translate }"\n                    multiple>\n            <md-optgroup label="{{ \'assessmentItemsToShow\' | translate }}">\n                <md-option ng-value="component.id" ng-repeat="component in $ctrl.components | filter:{hasWork: true}">\n                    {{ $index+1 }}: {{ $ctrl.getComponentTypeLabel(component.type) }}\n                </md-option>\n            </md-optgroup>\n        </md-select>\n        <md-button class="md-body-1 md-raised" aria-label="{{ \'assessmentItemsToShow\' | translate }" disabled\n                   ng-if="($ctrl.components | filter:{hasWork: true}).length === 0">\n            {{ \'numberOfAssessmentItems_0\' | translate }}\n        </md-button>\n        <md-button class="md-body-1 md-raised" aria-label="{{ \'assessmentItemsToShow\' | translate }" disabled\n                   ng-if="($ctrl.components | filter:{hasWork: true}).length === 1">\n            {{ \'numberOfAssessmentItems_1\' | translate }}\n        </md-button>',
+    template:
+        `<md-select class="md-no-underline md-button md-raised"
+                    ng-if="($ctrl.components | filter:{hasWork: true}).length > 1"
+                    ng-model="$ctrl.selectedComponents"
+                    ng-change="$ctrl.selectedComponentsChange()"
+                    md-selected-html="$ctrl.getSelectedText()"
+                    placeholder="{{ ::'assessmentItemsToShow' | translate }"
+                    multiple>
+            <md-optgroup label="{{ ::'assessmentItemsToShow' | translate }}">
+                <md-option ng-value="component.id" ng-repeat="component in $ctrl.components | filter:{hasWork: true}">
+                    {{ $index+1 }}: {{ $ctrl.getComponentTypeLabel(component.type) }}
+                </md-option>
+            </md-optgroup>
+        </md-select>
+        <md-button class="md-body-1 md-raised" aria-label="{{ ::'assessmentItemsToShow' | translate }" disabled
+                   ng-if="($ctrl.components | filter:{hasWork: true}).length === 0">
+            {{ ::'numberOfAssessmentItems_0' | translate }}
+        </md-button>
+        <md-button class="md-body-1 md-raised" aria-label="{{ ::'assessmentItemsToShow' | translate }" disabled
+                   ng-if="($ctrl.components | filter:{hasWork: true}).length === 1">
+            {{ ::'numberOfAssessmentItems_1' | translate }}
+        </md-button>`,
     controller: ComponentSelectController
 };
 
-exports.default = ComponentSelect;
-//# sourceMappingURL=componentSelect.js.map
+export default ComponentSelect;

@@ -96,6 +96,6 @@ public class HibernateVLEStatisticsDao extends AbstractHibernateDao<VLEStatistic
     Root<VLEStatistics> vleStatisticsRoot = cq.from(VLEStatistics.class);
     cq.select(vleStatisticsRoot).orderBy(cb.desc(vleStatisticsRoot.get("timestamp")));
     TypedQuery<VLEStatistics> query = entityManager.createQuery(cq);
-    return query.setMaxResults(1).getSingleResult();
+    return query.getResultStream().findFirst().orElse(null);
   }
 }

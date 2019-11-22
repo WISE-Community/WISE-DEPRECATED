@@ -61,7 +61,7 @@ public class HibernateStudentAttendanceDao extends AbstractHibernateDao<StudentA
     cq.select(studentAttendanceRoot).where(cb.equal(studentAttendanceRoot.get("runId"), runId))
         .orderBy(cb.desc(studentAttendanceRoot.get("loginTimestamp")));
     TypedQuery<StudentAttendanceImpl> query = entityManager.createQuery(cq);
-    return (List<StudentAttendance>)(Object)query.getResultList();
+    return (List<StudentAttendance>) (Object) query.getResultList();
   }
 
   @SuppressWarnings("unchecked")
@@ -83,7 +83,7 @@ public class HibernateStudentAttendanceDao extends AbstractHibernateDao<StudentA
     cq.select(studentAttendanceRoot).where(predicates.toArray(new Predicate[predicates.size()]))
         .orderBy(cb.desc(studentAttendanceRoot.get("loginTimestamp")));
     TypedQuery<StudentAttendanceImpl> query = entityManager.createQuery(cq);
-    return (List<StudentAttendance>)(Object)query.getResultList();
+    return (List<StudentAttendance>) (Object) query.getResultList();
   }
 
   @Override

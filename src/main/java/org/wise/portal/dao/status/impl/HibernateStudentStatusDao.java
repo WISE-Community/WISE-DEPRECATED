@@ -35,7 +35,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.status.StudentStatusDao;
 import org.wise.vle.domain.status.StudentStatus;
@@ -62,18 +61,6 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
     return null;
   }
 
-  public StudentStatus getStudentStatusById(Long id) {
-    StudentStatus studentStatus = null;
-
-    try {
-      studentStatus = getById(id);
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    return studentStatus;
-  }
-
   @Transactional
   public void saveStudentStatus(StudentStatus studentStatus) {
     save(studentStatus);
@@ -87,34 +74,26 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
     cq.select(studentStatusRoot).where(cb.equal(studentStatusRoot.get("workgroupId"), workgroupId))
         .orderBy(cb.desc(studentStatusRoot.get("id")));
     TypedQuery<StudentStatus> query = entityManager.createQuery(cq);
-    StudentStatus studentStatus = null;
-    try {
-      studentStatus = query.setMaxResults(1).getSingleResult();
-    } catch(Exception e) {
-
-    }
-    return studentStatus;
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   @Transactional
-  @SuppressWarnings("unchecked")
   public List<StudentStatus> getStudentStatusesByPeriodId(Long periodId) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<StudentStatus> cq = cb.createQuery(StudentStatus.class);
     Root<StudentStatus> studentStatusRoot = cq.from(StudentStatus.class);
     cq.select(studentStatusRoot).where(cb.equal(studentStatusRoot.get("periodId"), periodId));
     TypedQuery<StudentStatus> query = entityManager.createQuery(cq);
-    return (List<StudentStatus>)(Object)query.getResultList();
+    return (List<StudentStatus>) query.getResultList();
   }
 
   @Transactional
-  @SuppressWarnings("unchecked")
   public List<StudentStatus> getStudentStatusesByRunId(Long runId) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<StudentStatus> cq = cb.createQuery(StudentStatus.class);
     Root<StudentStatus> studentStatusRoot = cq.from(StudentStatus.class);
     cq.select(studentStatusRoot).where(cb.equal(studentStatusRoot.get("runId"), runId));
     TypedQuery<StudentStatus> query = entityManager.createQuery(cq);
-    return (List<StudentStatus>)(Object)query.getResultList();
+    return (List<StudentStatus>) query.getResultList();
   }
 }

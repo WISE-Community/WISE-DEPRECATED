@@ -328,7 +328,7 @@
     <div>
       <h5>{{ 'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='multipleChoiceController.mode'>
+    <div ng-switch='::multipleChoiceController.mode'>
       <div ng-switch-when='grading|gradingRevision'
            ng-switch-when-separator='|'
            layout='row'
@@ -340,7 +340,7 @@
           <div class='component--grading__response__content'>
             <md-input-container ng-if='multipleChoiceController.$scope.componentState'
                                 class='input-container md-block input-container--open-response input-container--component md-no-float'
-                                ng-switch on='multipleChoiceController.getChoiceType()'>
+                                ng-switch on='::multipleChoiceController.getChoiceType()'>
               <md-radio-group ng-switch-when='radio'
                               ng-model='multipleChoiceController.studentChoices'>
                 <div ng-repeat='choice in multipleChoiceController.getChoices()'>
@@ -350,8 +350,7 @@
                     <span>
                       <compile data='choice.text'></compile>
                     </span>
-                    <span ng-if='multipleChoiceController.showFeedback'
-                          ng-show='choice.showFeedback'
+                    <span ng-if='multipleChoiceController.showFeedback && choice.showFeedback'
                           ng-class='{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
                         {{choice.feedbackToShow}}
                     </span>
@@ -361,6 +360,7 @@
               <div ng-switch-when='checkbox'>
                 <div ng-repeat='choice in multipleChoiceController.getChoices()'>
                   <md-checkbox class='md-primary'
+                               aria-label='::choice.text'
                                ng-checked='multipleChoiceController.isChecked(choice.id)'
                                disabled>
                     <span>
@@ -422,7 +422,7 @@
       </div>
       <div ng-switch-default>
         <md-input-container class='input-container md-block input-container--open-response input-container--component md-no-float'
-                            ng-switch on='multipleChoiceController.getChoiceType()'>
+                            ng-switch on='::multipleChoiceController.getChoiceType()'>
           <label class='input-label md-no-float'
                  ng-if='multipleChoiceController.isPromptVisible'>
             <compile id='prompt' data='multipleChoiceController.getPrompt()'></compile>
@@ -435,6 +435,7 @@
                           ng-change='multipleChoiceController.studentDataChanged()'>
             <div ng-repeat='choice in multipleChoiceController.getChoices()'>
               <md-radio-button class='md-primary'
+                               aria-label='choice.text'
                                ng-value='choice.id'
                                ng-click='multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)'
                                ng-disabled='multipleChoiceController.isDisabled'>
@@ -452,6 +453,7 @@
           <div ng-switch-when='checkbox'>
             <div ng-repeat='choice in multipleChoiceController.getChoices()'>
               <md-checkbox class='md-primary'
+                           aria-label='::choice.text'
                            ng-checked='multipleChoiceController.isChecked(choice.id)'
                            ng-click='multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)'
                            ng-disabled='multipleChoiceController.isDisabled'>

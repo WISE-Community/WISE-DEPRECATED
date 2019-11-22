@@ -23,7 +23,6 @@ package org.wise.portal.dao.authentication.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -66,7 +65,7 @@ public class HibernateUserDetailsDao extends AbstractHibernateDao<MutableUserDet
     cq.select(persistentUserDetailsRoot).where(
         cb.equal(persistentUserDetailsRoot.get("username"), username));
     TypedQuery<PersistentUserDetails> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   public List<String> retrieveAllTeacherUsernames() {
@@ -98,16 +97,11 @@ public class HibernateUserDetailsDao extends AbstractHibernateDao<MutableUserDet
     cq.select(persistentUserDetailsRoot).where(
         cb.equal(persistentUserDetailsRoot.get("googleUserId"), googleUserId));
     TypedQuery<PersistentUserDetails> query = entityManager.createQuery(cq);
-    return query.getSingleResult();
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   public boolean hasUsername(String username) {
-    try {
-      this.retrieveByName(username);
-    } catch (NoResultException e) {
-      return false;
-    }
-    return true;
+    return this.retrieveByName(username) != null;
   }
 
   @Override

@@ -26,6 +26,7 @@ package org.wise.portal.presentation.web.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -76,25 +77,13 @@ public class VLEController {
     return modelAndView;
   }
 
-  @RequestMapping(value = "/student/run/{runId}")
-  protected String launchVLEWISE5Run(HttpServletRequest request, @PathVariable Long runId, ModelMap modelMap) {
-    String contextPath = request.getContextPath();
-    modelMap.put("configURL", contextPath + "/config/studentRun/" + runId);
-    return "student";
+  @GetMapping("/student/run/{runId}")
+  protected String launchVLEWISE5Run(@PathVariable Long runId) {
+    return "forward:/wise5/vle/dist/index.html#!/run/" + runId;
   }
 
-  @RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET)
-  protected String launchVLEWISE5Preview(HttpServletRequest request, @PathVariable String projectId, ModelMap modelMap) {
-    try {
-      if (!"demo".equals(projectId)) {
-        projectService.getById(Long.parseLong(projectId));
-      }
-      String contextPath = request.getContextPath();
-      modelMap.put("configURL", contextPath + "/config/preview/" + projectId);
-      return "student";
-    } catch (ObjectNotFoundException onfe) {
-      onfe.printStackTrace();
-      return "errors/friendlyError";
-    }
+  @GetMapping("/project/{projectId}")
+  protected String launchVLEWISE5Preview(@PathVariable String projectId) {
+    return "forward:/wise5/vle/dist/index.html#!/project/" + projectId;
   }
 }
