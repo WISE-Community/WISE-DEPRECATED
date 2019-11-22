@@ -19,9 +19,9 @@
                            icon="'info'"
                            icon-class="'info'"></help-icon>
             </div>
-            <div ng-switch="component.type">
-                <div ng-switch-when="HTML">
-                    <html-activity [component]="component" (activity)="nodeController.activityEvent($event)"></html-activity>
+            <div ng-switch='component.type'>
+                <div ng-switch-when='HTML'>
+                    <html-activity [component]='component' (activity)='nodeController.activityEvent($event)'></html-activity>
                 </div>
                 <div ng-switch-default>
                     <component node-id='{{::nodeController.nodeId}}'
