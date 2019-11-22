@@ -362,6 +362,16 @@ public interface RunService {
   boolean hasRunPermission(Run run, User user, Permission permission);
 
   /**
+   * Returns <code>boolean</code> true if the given <code>User</code> user has the
+   * read <code>Permission</code> permission for the given <code>Run</code> run,
+   * returns false otherwise.
+   * @param run
+   * @param user
+   * @return boolean
+   */
+  boolean hasReadPermission(Run run, User user);
+
+  /**
    * Returns <code>boolean</code> true if the run with the given
    * <code>runId</code> does not have any student workgroups that contain more
    * than 1 user, returns false otherwise.
