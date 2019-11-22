@@ -124,7 +124,7 @@ export default angular.module('vle', [
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
-  .directive('htmlactivity', downgradeComponent({component: Html, inputs: ['content', 'name']}) as angular.IDirectiveFactory)
+  .directive('htmlActivity', downgradeComponent({component: Html}) as angular.IDirectiveFactory)
   .filter('Filters', Filters)
   .config([
       '$urlRouterProvider',

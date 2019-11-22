@@ -1,44 +1,33 @@
 import * as angular from "angular";
-import { Component, Input, OnInit, SecurityContext } from "@angular/core";
+import { Component, Input, OnInit, SecurityContext, Renderer, ElementRef, EventEmitter, Output } from "@angular/core";
 import { Activity } from "../activity";
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml, SafeScript } from '@angular/platform-browser';
 
 
 @Component({
-  selector: "htmlactivity",
+  selector: "html-activity",
   template: `<div [innerHTML]="sanitizedHTML"></div>`
 })
 export class Html implements OnInit {
-  @Input() content: any;
-  @Input() name: string;
+
+  @Input() component: any;
+  @Output() activity: EventEmitter<string> = new EventEmitter<string>();
+
   sanitizedHTML: SafeHtml;
-  $state;
-  $stateParams;
-  $sce;
   $scope;
   $rootScope;
-  mode;
-  html;
   nodeId;
   componentId;
   UtilService;
 
-  constructor(private sanitizer: DomSanitizer) {
+  constructor(private sanitizer: DomSanitizer, elementRef: ElementRef, renderer: Renderer) {
     this.sanitizer = sanitizer;
-    //this.$state = $state;
-    //this.$stateParams = $stateParams;
-    //this.$sce = $sce;
+    renderer.listen(elementRef.nativeElement, 'click', (event) => {
+      this.activity.emit(event);
+    });
   }
 
   someOtherFunc() {
-    if (this.mode === "authoring") {
-    } else if (this.mode === "grading") {
-    } else if (this.mode === "student") {
-      if (this.content != null) {
-        this.html = this.content.html;
-      }
-    }
-
     /*
      * Listen for the requestImage event which is fired when something needs
      * an image representation of the student data from a specific
@@ -74,7 +63,7 @@ export class Html implements OnInit {
   }
 
   ngOnInit() {
-    this.sanitizedHTML = this.sanitizer.bypassSecurityTrustHtml(this.content.html);
+    this.sanitizedHTML = this.sanitizer.bypassSecurityTrustHtml(this.component.html);
   }
 
   /**
