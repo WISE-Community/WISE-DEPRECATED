@@ -1738,42 +1738,16 @@ class DataExportController {
     }
   }
 
-  /**
-   * Handle deselect all items
-   */
   deselectAll() {
     this.selectAll(false);
   }
 
-  /**
-   * Preview the project
-   */
   previewProject() {
-    let previewProjectURL = this.ConfigService.getConfigParam('previewProjectURL');
-    // open the preview step in a new tab
-    window.open(previewProjectURL);
+    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.ConfigService.getProjectId()}`);
   }
 
-  /**
-   * Preview the step
-   * @param node
-   */
   previewNode(node) {
-
-    if (node != null) {
-
-      // get the node id
-      let nodeId = node.id;
-
-      // get the preview project url
-      let previewProjectURL = this.ConfigService.getConfigParam('previewProjectURL');
-
-      // create the url to preview the step
-      let previewStepURL  = previewProjectURL + "#/vle/" + nodeId;
-
-      // open the preview step in a new tab
-      window.open(previewStepURL);
-    }
+    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.ConfigService.getProjectId()}/${node.id}`);
   }
 
   /**

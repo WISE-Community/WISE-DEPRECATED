@@ -79,11 +79,11 @@ public class VLEController {
 
   @GetMapping("/student/run/{runId}")
   protected String launchVLEWISE5Run(@PathVariable Long runId) {
-    return "forward:/wise5/vle/dist/index.html#/run/" + runId;
+    return "forward:/wise5/vle/dist/index.html#!/run/" + runId;
   }
 
   @GetMapping("/project/{projectId}")
   protected String launchVLEWISE5Preview(@PathVariable String projectId) {
-    return "forward:/wise5/vle/dist/index.html#/project/" + projectId;
+    return "forward:/wise5/vle/dist/index.html#!/project/" + projectId;
   }
 }

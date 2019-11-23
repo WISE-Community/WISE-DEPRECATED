@@ -22,7 +22,7 @@ describe('WISE Authoring Tool Step View', () => {
   beforeEach(() => {
     const page = new StepPage();
     isAngularSite(true);
-    browser.get('http://localhost:8080/wise/author#/project/' + projectId + '/node/' + nodeId);
+    browser.get('http://localhost:8080/wise/author#!/project/' + projectId + '/node/' + nodeId);
     browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
     browser.wait(function() {
       return page.projectTitleSpan.isPresent()
@@ -74,13 +74,13 @@ describe('WISE Authoring Tool Step View', () => {
   it('should allow navigating to the next step with the next arrow', () => {
     const page = new StepPage();
     page.clickNextNodeButton();
-    expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId + '/node/node3');
+    expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#!/project/' + projectId + '/node/node3');
   });
 
   it('should allow navigating to the previous step with the previous arrow', () => {
     const page = new StepPage();
     page.clickPreviousNodeButton();
-    expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId + '/node/node1');
+    expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#!/project/' + projectId + '/node/node1');
   });
 
   it('should delete a component', () => {
