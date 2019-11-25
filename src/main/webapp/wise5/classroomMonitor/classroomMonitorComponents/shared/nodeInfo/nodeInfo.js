@@ -1,11 +1,13 @@
 "use strict";
 
 class NodeInfoController {
-    constructor(AnnotationService,
+    constructor($injector,
+                AnnotationService,
                 ProjectService,
                 SummaryService,
                 TeacherDataService,
                 UtilService) {
+        this.$injector = $injector;
         this.AnnotationService = AnnotationService;
         this.ProjectService = ProjectService;
         this.SummaryService = SummaryService;
@@ -95,9 +97,15 @@ class NodeInfoController {
         return this.AnnotationService.isThereAnyScoreAnnotation(
                 this.nodeId, componentId, this.periodId);
     }
+
+    componentHasCorrectAnswer(component) {
+        const service = this.$injector.get(component.type + 'Service');
+        return service.componentHasCorrectAnswer(component);
+    }
 }
 
 NodeInfoController.$inject = [
+    '$injector',
     'AnnotationService',
     'ProjectService',
     'SummaryService',
@@ -152,7 +160,8 @@ const NodeInfo = {
                     <div ng-if='$ctrl.isResponsesSummaryAvailableForComponentType(component.type)'>
                         <summary-display ng-if='component.type === "MultipleChoice"'
                                 node-id='::$ctrl.nodeId' component-id='::component.id'
-                                period-id='$ctrl.periodId' student-data-type='"responses"'>
+                                period-id='$ctrl.periodId' student-data-type='"responses"' 
+                                highlight-correct-answer='$ctrl.componentHasCorrectAnswer(component)'>
                         </summary-display>
                     </div>
                     <div ng-if='$ctrl.isScoresSummaryAvailableForComponentType(component.type) &&
