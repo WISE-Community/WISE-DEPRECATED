@@ -289,8 +289,7 @@ class VLEController {
     const event = "goHomeButtonClicked";
     const eventData = {};
     this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-
-    this.$rootScope.$broadcast('goHome');
+    this.SessionService.goHome();
   }
 
   logOut() {
@@ -301,8 +300,7 @@ class VLEController {
     const event = "logOutButtonClicked";
     const eventData = {};
     this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-
-    this.$rootScope.$broadcast('logOut');
+    this.SessionService.logOut();
   }
 
   loadRoot() {

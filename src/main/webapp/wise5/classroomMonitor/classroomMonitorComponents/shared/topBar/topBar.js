@@ -4,10 +4,12 @@ class TopBarController {
     constructor($rootScope,
                 ConfigService,
                 ProjectService,
+                SessionService,
                 TeacherDataService) {
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
         this.workgroupId = this.ConfigService.getWorkgroupId();
 
@@ -75,7 +77,7 @@ class TopBarController {
         var event = "goHomeButtonClicked";
         var eventData = {};
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, eventData);
-        this.$rootScope.$broadcast('goHome');
+        this.SessionService.goHome();
     }
 
     logOut() {
@@ -95,6 +97,7 @@ TopBarController.$inject = [
     '$rootScope',
     'ConfigService',
     'ProjectService',
+    'SessionService',
     'TeacherDataService'
 ];
 

@@ -6,11 +6,13 @@ class TopBarController {
       $window,
       ConfigService,
       ProjectService,
+      SessionService,
       TeacherDataService) {
     this.$rootScope = $rootScope;
     this.$window = $window;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.SessionService = SessionService;
     this.TeacherDataService = TeacherDataService;
 
     // get the teacher workgroup id
@@ -42,15 +44,12 @@ class TopBarController {
 
   goHome() {
     this.ProjectService.notifyAuthorProjectEnd().then(() => {
-      this.$rootScope.$broadcast('goHome');
+      this.SessionService.goHome();
     });
   };
 
-  /**
-   * Log the teacher out of WISE
-   */
   logOut() {
-    // fire the logOut event
+    this.SessionService.logOut();
     this.$rootScope.$broadcast('logOut');
   };
 }
@@ -60,6 +59,7 @@ TopBarController.$inject = [
     '$window',
     'ConfigService',
     'ProjectService',
+    'SessionService',
     'TeacherDataService'
 ];
 

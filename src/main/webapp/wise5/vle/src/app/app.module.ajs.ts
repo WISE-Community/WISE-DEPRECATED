@@ -49,7 +49,6 @@ import '../../../components/openResponse/openResponseComponentModule';
 import '../../../components/outsideURL/outsideURLComponentModule';
 import PlanningService from '../../../services/planningService';
 import ProjectService from '../../../services/projectService';
-import SessionService from '../../../services/sessionService';
 import '../../studentAsset/studentAsset';
 import StudentAssetService from '../../../services/studentAssetService';
 import StudentDataService from '../../../services/studentDataService';
@@ -66,8 +65,9 @@ import * as Stomp from "@stomp/stompjs";
 import '../../../lib/summernote/dist/summernote';
 import '../../../lib/angular-summernote/dist/angular-summernote';
 import '../../../themes/default/theme';
-import { downgradeComponent } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { Html } from '../../../components/html/html.component';
+import { SessionService } from '../../../services/sessionService';
 declare var angularStatic: angular.IAngularStatic;
 
 export default angular.module('vle', [
@@ -115,7 +115,6 @@ export default angular.module('vle', [
   .service('NotificationService', NotificationService)
   .service('PlanningService', PlanningService)
   .service('ProjectService', VLEProjectService)
-  .service('SessionService', SessionService)
   .service('StudentAssetService', StudentAssetService)
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
@@ -124,7 +123,8 @@ export default angular.module('vle', [
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
-  .directive('htmlActivity', downgradeComponent({component: Html}) as angular.IDirectiveFactory)
+  .directive('htmlActivity', downgradeComponent({ component: Html }) as angular.IDirectiveFactory)
+  .factory('SessionService', downgradeInjectable(SessionService))
   .filter('Filters', Filters)
   .config([
       '$urlRouterProvider',

@@ -24,13 +24,13 @@ import java.io.IOException;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.user.User;
@@ -95,20 +95,22 @@ public class LoginController {
    * @throws IOException
    */
   @GetMapping("/session/renew")
-  public void renewSession(HttpServletResponse response) throws IOException {
+  @ResponseBody
+  public String renewSession() throws IOException {
     User loggedInUser = ControllerUtil.getSignedInUser();
     if (loggedInUser != null) {
       try {
         Portal portal = portalService.getById(new Integer(1));
         if (!portal.isLoginAllowed()) {
-          response.getWriter().print("requestLogout");
+          return "requestLogout";
         } else {
-          response.getWriter().print("true");
+          return "true";
         }
       } catch (ObjectNotFoundException e) {
+        return "false";
       }
     } else {
-      response.getWriter().print("false");
+      return "false";
     }
   }
 }
