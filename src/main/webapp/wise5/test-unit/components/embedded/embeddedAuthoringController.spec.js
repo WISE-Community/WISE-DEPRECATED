@@ -53,7 +53,7 @@ describe('EmbeddedAuthoringController', () => {
     expect(embeddedAuthoringController.height).toEqual('600px');
   });
   it('should set the width and height', () => {
-    expect(embeddedAuthoringController.width).toEqual('none');
+    expect(embeddedAuthoringController.width).toEqual('100%');
     expect(embeddedAuthoringController.height).toEqual('600px');
     embeddedAuthoringController.setWidthAndHeight(400, 300);
     expect(embeddedAuthoringController.width).toEqual('400px');

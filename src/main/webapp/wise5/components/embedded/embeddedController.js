@@ -92,7 +92,7 @@ class EmbeddedController extends ComponentController {
   }
 
   setWidthAndHeight(width, height) {
-    this.width = width ? width + 'px' : 'none';
+    this.width = width ? width + 'px' : '100%';
     this.height = height ? height + 'px' : '600px';
   }
 
