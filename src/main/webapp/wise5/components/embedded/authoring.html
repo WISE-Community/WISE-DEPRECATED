@@ -222,7 +222,7 @@
         </md-button>
         <br/>
         <md-input-container style='height: 40px'>
-          <label>{{ ::'WIDTH' | translate }})</label>
+          <label>{{ ::'WIDTH' | translate }}: ({{ ::'embedded.widthPlaceholder' | translate }})</label>
           <input size='20'
                  type='number'
                  ng-model='embeddedController.authoringComponentContent.width'
@@ -230,7 +230,7 @@
                  ng-model-options='{ debounce: 1000 }'/>
         </md-input-container>
         <md-input-container style='height: 40px'>
-          <label>{{ ::'HEIGHT' | translate }})</label>
+          <label>{{ ::'HEIGHT' | translate }} ({{ ::'embedded.px' | translate }})</label>
           <input size='20'
                  type='number'
                  ng-model='embeddedController.authoringComponentContent.height'

@@ -6,22 +6,6 @@
         <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
       </div>
       <div>
-        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ ::'WIDTH' | translate }} ({{ ::'outsideURL.px' | translate }})</label>
-          <input type='number'
-                 ng-model='outsideURLController.authoringComponentContent.width'
-                 ng-model-options='{ debounce: 1000 }'
-                 ng-change='outsideURLController.authoringViewComponentChanged()'/>
-        </md-input-container>
-        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ ::'HEIGHT' | translate }} ({{ ::'outsideURL.px' | translate }})</label>
-          <input type='number'
-                 ng-model='outsideURLController.authoringComponentContent.height'
-                 ng-model-options='{ debounce: 1000 }'
-                 ng-change='outsideURLController.authoringViewComponentChanged()'/>
-        </md-input-container>
-      </div>
-      <div>
         <md-input-container style='margin-right: 20px; width: 400px; height: 25px;'>
           <label>{{ ::'COMPONENT_WIDTH' | translate }} ({{ ::'outsideURL.integerPercentageOfPageWidth' | translate }})</label>
           <input type='number'
@@ -77,35 +61,45 @@
       </div>
     </div>
   </div>
-  <md-switch ng-model="outsideURLController.isShowOERs"
-           class="md-primary">
-    Show Open Educational Resources
+  <md-switch ng-model="outsideURLController.isShowOERs" class="md-primary">
+      {{ ::"outsideURL.showOERs" | translate }}
   </md-switch>
   <div style='width: 100%' ng-if='outsideURLController.isShowOERs'>
+    <p class="md-body-2">{{ ::"outsideURL.OERInfo" | translate }}</p>
     <div class='layout-row'>
-      <md-input-container style='width: 600px;'>
+      <md-input-container style='width: 250px;'>
         <input ng-model='searchText' type='text' placeholder='{{ ::"outsideURL.search" | translate }}'></input>
       </md-input-container>
       <md-button class='regularButton md-raised md-primary'
                 ng-click='searchText = ""'>
         <md-icon>clear</md-icon>
-        <md-tooltip md-direction='top'
-                    class='projectButtonTooltip'>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>
           {{ ::'CLEAR' | translate }}
         </md-tooltip>
       </md-button>
     </div>
-    <div style='height: 400px; overflow-y: auto; display: flex; flex-wrap: wrap'>
-      <div style='margin-right:10px; height: 200px' ng-repeat='openEducationalResource in outsideURLController.openEducationalResources | filter : searchText'>
-        <span>{{openEducationalResource.metadata.title}}</span>
-        <br/>
-        <img src='{{::openEducationalResource.thumbnail}}'
-            style='width: 200px; height: 130px'
-            ng-click='outsideURLController.populateOpenEducationalResourceURL(openEducationalResource)'>
-        <br/>
-        <a href='{{::openEducationalResource.info}}' target='_blank'>Info</a>
-        <br/>
-        <br/>
+    <div class="gray-lighter-bg" layout="row" layout-wrap
+        style='height: 400px; overflow-y: auto; padding: 8px; margin-bottom: 16px;'>
+      <div flex-xs flex-sm="50" flex-md="33" flex-gt-md="25"
+          ng-repeat='openEducationalResource in outsideURLController.openEducationalResources | filter : searchText'>
+        <md-card>
+          <md-card-header style="padding: 12px;">
+            <md-card-header-text>
+              <span class="md-body-2">{{openEducationalResource.metadata.title}}</span>
+            </md-card-header-text>
+          </md-card-header>
+          <div style="position: relative; padding-top: 60%; background-size: cover;
+              background-position: center; 
+              background-image: url('{{::openEducationalResource.thumbnail}}');" 
+              class="md-card-image"></div>
+          <md-card-actions layout="row" layout-align="end center">
+            <a style="margin: 0 16px;" ng-href="{{::openEducationalResource.info}}" 
+                target="_blank">{{ ::'outsideURL.info' | translate }}</a>
+            <md-button class="md-button md-raised md-primary"
+                ng-click="outsideURLController.populateOpenEducationalResourceURL(openEducationalResource)" 
+                target="_blank">{{ ::'select' | translate }}</md-button>
+          </md-card-actions>
+        </md-card>
       </div>
     </div>
   </div>
@@ -117,8 +111,24 @@
            ng-model-options='{ debounce: 1000 }'
            placeholder='{{ ::"outsideURL.enterURLHere" | translate }}'/>
   </md-input-container>
+  <div>
+    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+      <label>{{ ::'WIDTH' | translate }} ({{ ::'outsideURL.widthPlaceholder' | translate }})</label>
+      <input type='number'
+             ng-model='outsideURLController.authoringComponentContent.width'
+             ng-model-options='{ debounce: 1000 }'
+             ng-change='outsideURLController.authoringViewComponentChanged()'/>
+    </md-input-container>
+    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+      <label>{{ ::'HEIGHT' | translate }} ({{ ::'outsideURL.px' | translate }})</label>
+      <input type='number'
+             ng-model='outsideURLController.authoringComponentContent.height'
+             ng-model-options='{ debounce: 1000 }'
+             ng-change='outsideURLController.authoringViewComponentChanged()'/>
+    </md-input-container>
+  </div>
   <div style='width: {{outsideURLController.width}}; height: {{outsideURLController.height}}'>
-    <iframe ng-src='{{outsideURLController.url}}' style='height: 100%; width:100%;'>
+    <iframe ng-src='{{outsideURLController.url}}' width='100%' height='100%' allowfullscreen>
     </iframe>
   </div>
 </div>
