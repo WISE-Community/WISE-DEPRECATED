@@ -43,7 +43,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.dao.run.RunDao;
-import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.FamilyTag;
@@ -100,9 +99,6 @@ public class ProjectServiceImpl implements ProjectService {
   @Autowired
   private PremadeCommentService premadeCommentService;
 
-  @Autowired
-  private UserDao<User> userDao;
-
   public void addBookmarkerToProject(Project project, User bookmarker) {
     project.getBookmarkers().add(bookmarker);
     projectDao.save(project);
@@ -133,12 +129,12 @@ public class ProjectServiceImpl implements ProjectService {
 
   public SharedOwner addSharedTeacher(Long projectId, String username)
       throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
-    Project project = this.getById(projectId);
+    Project project = getById(projectId);
     User user = userService.retrieveUserByUsername(username);
     if (!project.isSharedTeacher(user)) {
       project.getSharedowners().add(user);
-      this.projectDao.save(project);
-      this.aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
+      projectDao.save(project);
+      aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
       List<Integer> newPermissions = new ArrayList<>();
       newPermissions.add(ProjectPermission.VIEW_PROJECT.getMask());
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
@@ -579,7 +575,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public List<Permission> getSharedTeacherPermissions(Project project, User sharedTeacher) {
-    return this.aclService.getPermissions(project, sharedTeacher);
+    return aclService.getPermissions(project, sharedTeacher);
   }
 
   SharedOwner createNewSharedOwner(String username) {
@@ -604,7 +600,7 @@ public class ProjectServiceImpl implements ProjectService {
     User user = userService.retrieveById(userId);
     Project project = getById(projectId);
     if (project.getSharedowners().contains(user)) {
-      this.aclService.addPermission(project, new ProjectPermission(permissionId), user);
+      aclService.addPermission(project, new ProjectPermission(permissionId), user);
     }
   }
 
@@ -613,7 +609,7 @@ public class ProjectServiceImpl implements ProjectService {
     User user = userService.retrieveById(userId);
     Project project = getById(projectId);
     if (project.getSharedowners().contains(user)) {
-      this.aclService.removePermission(project, new ProjectPermission(permissionId), user);
+      aclService.removePermission(project, new ProjectPermission(permissionId), user);
     }
   }
 
@@ -692,9 +688,11 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public String getProjectURI(Project project) {
-    String previewPath = "/project/";
+    String previewPath;
     if (project.getWiseVersion().equals(4)) {
       previewPath = "/previewproject.html?projectId=";
+    } else {
+      previewPath = "/project/";
     }
     return appProperties.getProperty("wise.hostname") + previewPath + project.getId() + "#!/project/" + project.getId();
   }

@@ -135,13 +135,9 @@
               <testExcludes>
                 <exclude>**/org/wise/portal/service/*.java</exclude>
                 <exclude>**/org/wise/portal/service/impl/*.java</exclude>
-                <exclude>**/org/wise/portal/service/newsitem/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/premadecomment/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/group/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/project/**/*.java</exclude>
                 <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
@@ -180,13 +176,9 @@
           <excludes>
             <exclude>**/org/wise/portal/service/*.java</exclude>
             <exclude>**/org/wise/portal/service/impl/*.java</exclude>
-            <exclude>**/org/wise/portal/service/newsitem/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/premadecomment/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/group/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/project/**/*.java</exclude>
             <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
             <exclude>**/org/wise/portal/domain/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
