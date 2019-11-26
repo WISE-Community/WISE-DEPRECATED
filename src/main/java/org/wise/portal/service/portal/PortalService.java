@@ -60,4 +60,6 @@ public interface PortalService {
   String getDefaultProjectLibraryGroups();
 
   String getDefaultAnnouncement();
+
+  boolean isLoginAllowed();
 }

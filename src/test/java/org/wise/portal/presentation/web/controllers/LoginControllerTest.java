@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2006 Encore Research Group, University of Toronto
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -17,47 +17,73 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.AbstractModelAndViewTests;
-import org.springframework.web.servlet.ModelAndView;
-import org.wise.portal.presentation.web.controllers.LoginController;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
+
+import java.security.Principal;
+
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.wise.portal.service.portal.PortalService;
 
 /**
- * @author Laurel Williams
- * 
- * @version $Id$
+ * @author Hiroki Terashima
  */
-public class LoginControllerTest extends AbstractModelAndViewTests {
+@RunWith(EasyMockRunner.class)
 
-  private static final String TRUE = "true";
+public class LoginControllerTest {
 
-  MockHttpServletRequest request;
+  @TestSubject
+  private LoginController controller = new LoginController();
 
-  MockHttpServletResponse response;
+  @Mock
+  private PortalService portalService;
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-    request = new MockHttpServletRequest();
-    response = new MockHttpServletResponse();
+  private Authentication authentication;
+
+  @Test
+  public void renewSession_AnonymousUser_ShouldReturnFalse() {
+    Authentication authentication = null;
+    String result = controller.renewSession(authentication);
+    assertEquals("false", result);
   }
 
-  public void testHandleRequestInternal() throws Exception {
-    // if the login fails, a parameter "failed" is added to the model.
-    // in all other cases, acegi handles the request so the login controller
-    // will not be reached
-    request.addParameter("failed", TRUE);
-    LoginController loginController = new LoginController();
-    ModelAndView modelAndView = loginController.handleRequestInternal(request,
-        response);
-    assertModelAttributeValue(modelAndView, "failed", Boolean.TRUE);
+  @Test
+  public void renewSession_LoggedInUserSiteLogInAllowed_ShouldReturnTrue() {
+    expect(portalService.isLoginAllowed()).andReturn(true);
+    replay(portalService);
+    String result = controller.renewSession(authentication);
+    assertEquals("true", result);
   }
 
-  @Override
-  protected void tearDown() throws Exception {
-    super.tearDown();
-    request = null;
-    response = null;
+  @Test
+  public void renewSession_LoggedInUserSiteLogInNotAllowed_ShouldReturnRequestLogout() {
+    expect(portalService.isLoginAllowed()).andReturn(false);
+    replay(portalService);
+    String result = controller.renewSession(authentication);
+    assertEquals("requestLogout", result);
+
+  }
+  @Before
+  public void setUp() {
+    Principal principal = null;
+    Object credentials = null;
+    authentication = new TestingAuthenticationToken(principal,
+        credentials);
+  }
+
+  @After
+  public void tearDown() {
+    controller = null;
+    portalService = null;
+    authentication = null;
   }
 }

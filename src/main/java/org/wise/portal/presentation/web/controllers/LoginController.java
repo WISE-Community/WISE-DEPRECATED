@@ -20,12 +20,14 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -33,7 +35,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.portal.Portal;
-import org.wise.portal.domain.user.User;
 import org.wise.portal.service.portal.PortalService;
 
 /**
@@ -88,26 +89,20 @@ public class LoginController {
   }
 
   /**
-   * Handles renew session requests. By virtue of making this request,
-   * a logged-in user has already renewed the session.
-   *
-   * @param response
-   * @throws IOException
+   * Handles renew session requests.
+   * Returns <code>String</code>
+   *   "true" if user is logged in
+   *   "false" if user is not logged in
+   *   "requestLogout" if user should be asked to log out
    */
   @GetMapping("/session/renew")
   @ResponseBody
-  public String renewSession() throws IOException {
-    User loggedInUser = ControllerUtil.getSignedInUser();
-    if (loggedInUser != null) {
-      try {
-        Portal portal = portalService.getById(new Integer(1));
-        if (!portal.isLoginAllowed()) {
-          return "requestLogout";
-        } else {
-          return "true";
-        }
-      } catch (ObjectNotFoundException e) {
-        return "false";
+  public String renewSession(Authentication authentication) {
+    if (authentication != null) {
+      if (portalService.isLoginAllowed()) {
+        return "true";
+      } else {
+        return "requestLogout";
       }
     } else {
       return "false";

@@ -80,4 +80,13 @@ public class PortalServiceImpl implements PortalService {
   public String getDefaultAnnouncement() {
     return this.defaultAnnouncement;
   }
+
+  public boolean isLoginAllowed() {
+    try {
+      Portal portal = getById(new Integer(1));
+      return portal.isLoginAllowed();
+    } catch (ObjectNotFoundException e) {
+       return false;
+    }
+  }
 }

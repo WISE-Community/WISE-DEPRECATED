@@ -149,7 +149,9 @@
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/IndexControllerTest.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/ModelAndViewTests.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/RegisterStudentControllerTest.java</exclude>
                 <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/authentication/impl/AllTests.java</exclude>
@@ -194,8 +196,9 @@
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
-            <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
-            <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/IndexControllerTest.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/ModelAndViewTests.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/RegisterStudentControllerTest.java</exclude>            <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
             <exclude>**/org/wise/portal/dao/*.java</exclude>
             <exclude>**/org/wise/portal/dao/authentication/impl/AllTests.java</exclude>
             <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclEntryDaoTest.java</exclude>
@@ -381,6 +384,11 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-taglibs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.security.oauth</groupId>
