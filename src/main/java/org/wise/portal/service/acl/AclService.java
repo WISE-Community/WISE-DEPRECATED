@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.domain.user.User;
 
 /**
@@ -68,10 +69,10 @@ public interface AclService<T> extends PermissionEvaluator {
    * Gets a list of Permissions that the user has on the specified object.
    *
    * @param object The object to retrieve the permission on.
-   * @param user The <code>User</code> who is granted permissions on the object.
+   * @param userDetails The <code>UserDetails</code> who is granted permissions on the object.
    * @return A <code>Permission</code> containing the
    */
-  List<Permission> getPermissions(T object, User user);
+  List<Permission> getPermissions(T object, UserDetails userDetails);
 
   /**
    * Returns <code>boolean</code> true if the given <code>User</code> principle
@@ -79,4 +80,11 @@ public interface AclService<T> extends PermissionEvaluator {
    * fale otherwise.
    */
   boolean hasPermission(T object, Permission permission, User user);
+
+  /**
+   * Returns <code>boolean</code> true if the given <code>User</code> principle
+   * has the given <code>Permission</code> on the give <code>Object</code>, returns
+   * fale otherwise.
+   */
+  boolean hasPermission(T object, Permission permission, UserDetails userDetails);
 }

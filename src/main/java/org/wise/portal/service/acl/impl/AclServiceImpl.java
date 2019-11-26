@@ -133,32 +133,6 @@ public class AclServiceImpl<T extends Persistable>
     return SecurityContextHolder.getContext().getAuthentication();
   }
 
-  public List<Permission> getPermissions(T object, User user) {
-    List<Permission> permissions = new ArrayList<Permission>();
-    if (object != null) {
-      MutableAcl acl = null;
-      ObjectIdentity objectIdentity = new ObjectIdentityImpl(
-          HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
-      List<Sid> sid = new ArrayList<Sid>();
-      sid.add(new PrincipalSid(user.getUserDetails().getUsername()));
-
-      try {
-        acl = (MutableAcl) this.readAclById(objectIdentity, sid);
-      } catch (NotFoundException nfe) {
-        return permissions;
-      }
-      List<AccessControlEntry> aces = acl.getEntries();
-      for (AccessControlEntry ace : aces) {
-        if (ace.getSid().equals(sid.get(0))) {
-          permissions.add(ace.getPermission());
-        }
-      }
-      return permissions;
-    } else {
-      throw new IllegalArgumentException("Cannot retrieve ACL. Object not set.");
-    }
-  }
-
   public List<Permission> getPermissions(T object, UserDetails userDetails) {
     List<Permission> permissions = new ArrayList<Permission>();
     if (object != null) {
@@ -187,15 +161,7 @@ public class AclServiceImpl<T extends Persistable>
   }
 
   public boolean hasPermission(T object, Permission permission, User user) {
-    if (object != null && permission != null && user != null) {
-      List<Permission> permissions = getPermissions(object, user);
-      for (Permission p : permissions){
-        if (p.getMask() >= permission.getMask()){
-          return true;
-        }
-      }
-    }
-    return false;
+    return hasPermission(object, permission, user.getUserDetails());
   }
 
   public boolean hasPermission(T object, Permission permission, UserDetails userDetails) {
@@ -230,6 +196,8 @@ public class AclServiceImpl<T extends Persistable>
       }
     } else if (permission instanceof Integer) {
       permissionsList.add((Integer) permission);
+    } else if (permission instanceof BasePermission) {
+      permissionsList.add(((BasePermission) permission).getMask());
     }
     for (int permissionMask : permissionsList) {
       Permission p = null;

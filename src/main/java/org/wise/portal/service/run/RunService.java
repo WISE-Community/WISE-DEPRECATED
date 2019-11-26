@@ -30,6 +30,7 @@ import java.util.Set;
 import org.json.JSONObject;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
@@ -351,6 +352,24 @@ public interface RunService {
   void setExtras(Run run, String extras) throws Exception;
 
   /**
+   * Returns <code>boolean</code> true iff the given <code>User</code> user has the
+   * read permission for the given <code>Run</code> run.
+   * @param authentication
+   * @param run
+   * @return boolean
+   */
+  public boolean hasReadPermission(Authentication authentication, Run run);
+
+  /**
+   * Returns <code>boolean</code> true iff the given <code>User</code> user has the
+   * write permission for the given <code>Run</code> run.
+   * @param authentication
+   * @param run
+   * @return boolean
+   */
+  public boolean hasWritePermission(Authentication authentication, Run run);
+
+  /**
    * Returns <code>boolean</code> true if the given <code>User</code> user has the
    * given <code>Permission</code> permission for the given <code>Run</code> run,
    * returns false otherwise.
@@ -360,16 +379,6 @@ public interface RunService {
    * @return boolean
    */
   boolean hasRunPermission(Run run, User user, Permission permission);
-
-  /**
-   * Returns <code>boolean</code> true if the given <code>User</code> user has the
-   * read <code>Permission</code> permission for the given <code>Run</code> run,
-   * returns false otherwise.
-   * @param run
-   * @param user
-   * @return boolean
-   */
-  boolean hasReadPermission(Run run, User user);
 
   /**
    * Returns <code>boolean</code> true if the run with the given

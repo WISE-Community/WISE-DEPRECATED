@@ -160,7 +160,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   private void removePermissions(Project project, User user) {
-    List<Permission> permissions = aclService.getPermissions(project, user);
+    List<Permission> permissions = aclService.getPermissions(project, user.getUserDetails());
     for (Permission permission : permissions) {
       aclService.removePermission(project, permission, user);
     }
@@ -277,7 +277,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public String getSharedTeacherRole(Project project, User user) {
-    List<Permission> permissions = aclService.getPermissions(project, user);
+    List<Permission> permissions = aclService.getPermissions(project, user.getUserDetails());
     // for projects, a user can have at most one permission per project
     if (!permissions.isEmpty()) {
       if (permissions.contains(BasePermission.ADMINISTRATION)) {
@@ -575,7 +575,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public List<Permission> getSharedTeacherPermissions(Project project, User sharedTeacher) {
-    return aclService.getPermissions(project, sharedTeacher);
+    return aclService.getPermissions(project, sharedTeacher.getUserDetails());
   }
 
   SharedOwner createNewSharedOwner(String username) {
