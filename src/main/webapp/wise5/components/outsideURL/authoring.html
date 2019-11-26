@@ -70,8 +70,7 @@
       <md-input-container style='width: 250px;'>
         <input ng-model='searchText' type='text' placeholder='{{ ::"outsideURL.search" | translate }}'></input>
       </md-input-container>
-      <md-button class='regularButton md-raised md-primary'
-                ng-click='searchText = ""'>
+      <md-button class='regularButton md-raised md-primary' ng-click='searchText = ""'>
         <md-icon>clear</md-icon>
         <md-tooltip md-direction='top' class='projectButtonTooltip'>
           {{ ::'CLEAR' | translate }}
@@ -81,7 +80,7 @@
     <div class="gray-lighter-bg" layout="row" layout-wrap
         style='height: 400px; overflow-y: auto; padding: 8px; margin-bottom: 16px;'>
       <div flex-xs flex-sm="50" flex-md="33" flex-gt-md="25"
-          ng-repeat='openEducationalResource in outsideURLController.openEducationalResources | filter : searchText'>
+          ng-repeat='openEducationalResource in outsideURLController.openEducationalResources | filter: searchText as filtered'>
         <md-card>
           <md-card-header style="padding: 12px;">
             <md-card-header-text>
@@ -101,6 +100,7 @@
           </md-card-actions>
         </md-card>
       </div>
+      <p class="center" ng-if="filtered.length < 1" flex>{{ ::'outsideURL.noResults' | translate }}</p>
     </div>
   </div>
   <md-input-container>
