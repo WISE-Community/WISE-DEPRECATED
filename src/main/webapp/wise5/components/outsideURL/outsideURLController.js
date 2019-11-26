@@ -26,9 +26,11 @@ class OutsideURLController extends ComponentController {
     this.$sce = $sce;
     this.OutsideURLService = OutsideURLService;
     this.url = null;
+    this.info = null;
 
     if (this.componentContent != null) {
       this.setURL(this.componentContent.url);
+      this.setInfo(this.componentContent.info);
     }
 
     this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
@@ -64,6 +66,14 @@ class OutsideURLController extends ComponentController {
       this.url = ' ';
     } else {
       this.url = this.$sce.trustAsResourceUrl(url);
+    }
+  }
+
+  setInfo(info) {
+    if (info == null || info === '') {
+      this.info = this.url;
+    } else {
+      this.info = this.$sce.trustAsResourceUrl(info);
     }
   }
 }

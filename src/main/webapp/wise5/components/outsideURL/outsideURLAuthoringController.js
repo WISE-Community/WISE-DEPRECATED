@@ -40,6 +40,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
     }, (newValue, oldValue) => {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.setURL(this.authoringComponentContent.url);
+      this.setInfo(this.authoringComponentContent.info);
       this.setWidthAndHeight(
           this.authoringComponentContent.width, this.authoringComponentContent.height);
     }, true);
@@ -114,8 +115,14 @@ class OutsideURLAuthoringController extends OutsideURLController {
     });
   }
 
+  urlInputChanged() {
+    this.authoringComponentContent.info = null;
+    this.authoringViewComponentChanged();
+  }
+
   populateOpenEducationalResourceURL(openEducationalResource) {
     this.authoringComponentContent.url = openEducationalResource.url;
+    this.authoringComponentContent.info = openEducationalResource.info;
     this.authoringViewComponentChanged();
   }
 }
