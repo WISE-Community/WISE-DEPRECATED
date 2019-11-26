@@ -104,6 +104,7 @@
             {{language.language}}
           </mat-option>
         </mat-select>
+        <mat-hint i18n>Help us translate WISE! Visit <a href="https://crowdin.com/project/wise" target="_blank">https://crowdin.com/project/wise</a>.</mat-hint>
         <mat-error *ngIf="editProfileFormGroup.controls['language'].hasError('required')" i18n>Language required</mat-error>
       </mat-form-field>
     </p>
