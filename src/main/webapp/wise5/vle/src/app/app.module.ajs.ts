@@ -67,7 +67,7 @@ import '../../../lib/angular-summernote/dist/angular-summernote';
 import '../../../themes/default/theme';
 import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { Html } from '../../../components/html/html.component';
-import { SessionService } from '../../../services/sessionService';
+import { SessionService } from '../../../session/session-service';
 declare var angularStatic: angular.IAngularStatic;
 
 export default angular.module('vle', [

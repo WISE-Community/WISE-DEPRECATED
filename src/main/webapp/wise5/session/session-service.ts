@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { SessionWarningDialogComponent } from './session-warning-dialog.component';
 
 @Injectable()
 export class SessionService {
@@ -11,12 +13,14 @@ export class SessionService {
   forceLogoutAfterWarningInterval;
   checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+      public dialog: MatDialog) {
     //const sessionTimeout = this.ConfigService.getConfigParam('sessionTimeout');
     const sessionTimeout = 30000;
     this.calculateIntervals(sessionTimeout);
     this.updateLastActivityTimestamp();
     this.initializeSession();
+    // this.showWarning();
   }
 
   calculateIntervals(sessionTimeout) {
@@ -115,7 +119,13 @@ export class SessionService {
 
   showWarning() {
     this.warningVisible = true;
-    //this.$rootScope.$broadcast('showSessionWarning');
+    this.dialog.open(SessionWarningDialogComponent, {
+      ariaLabel: 'Session Timeout',
+      data: {},
+      panelClass: 'mat-dialog--md',
+      autoFocus: true,
+      maxWidth: '80vw'
+    });
   }
 
   closeWarningAndRenewSession() {

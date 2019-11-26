@@ -1,25 +1,47 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { UpgradeModule } from '@angular/upgrade/static';
 import VLEModule from './app.module.ajs';
 import { Html } from '../../../components/html/html.component';
-import { SessionService } from '../../../services/sessionService';
+import { SessionService } from '../../../session/session-service';
 import { HttpClientModule } from '@angular/common/http';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { SessionWarningDialogComponent } from '../../../session/session-warning-dialog.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import {
+  MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
+  MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
+  MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatRadioModule,
+  MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule
+} from '@angular/material';
 
+const materialModules = [
+  MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
+  MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
+  MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatRadioModule,
+  MatSnackBarModule, MatTabsModule, MatTableModule, MatTooltipModule
+];
 @NgModule({
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
+    FlexLayoutModule,
     HttpClientModule,
+    materialModules,
     UpgradeModule
   ],
   providers: [
-    SessionService
+    SessionService,
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ],
   declarations: [
-    Html
+    Html,
+    SessionWarningDialogComponent
   ],
   entryComponents: [
-    Html
+    Html,
+    SessionWarningDialogComponent
   ]
 })
 export class AppModule {

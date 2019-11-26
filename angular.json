@@ -220,6 +220,7 @@
             "assets": [
             ],
             "styles": [
+              "src/main/webapp/site/src/style/styles.scss"
             ],
             "scripts": [
             ]
