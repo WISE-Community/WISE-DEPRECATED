@@ -445,7 +445,8 @@ public class RunServiceImpl implements RunService {
         for (Permission runPermission : runPermissions) {
           aclService.removePermission(run, runPermission, user);
         }
-        List<Permission> projectPermissions = aclService.getPermissions(runProject, user.getUserDetails());
+        List<Permission> projectPermissions = aclService.getPermissions(runProject,
+            user.getUserDetails());
         for (Permission projectPermission : projectPermissions) {
           aclService.removePermission(runProject, projectPermission, user);
         }

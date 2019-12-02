@@ -78,28 +78,13 @@ public class GradeWorkControllerTest {
     TeacherUserDetails adminUserDetails = new TeacherUserDetails();
     adminUserDetails.setAuthorities(new GrantedAuthority[] { adminAuthority });
     Object credentials = null;
-    adminAuthentication = new TestingAuthenticationToken(adminUserDetails,
-        credentials);
+    adminAuthentication = new TestingAuthenticationToken(adminUserDetails, credentials);
   }
 
   @After
   public void tearDown() {
     runService = null;
     controller = null;
-  }
-
-  @Test
-  public void launchClassroomMonitorWISE5_AdminUser_ShouldReturnCMView() throws Exception {
-    Run run = new RunImpl();
-    Long runId = 1l;
-    run.setId(runId);
-    expect(runService.retrieveById(runId)).andReturn(run);
-    expect(runService.hasReadPermission(adminAuthentication, run)).andReturn(true);
-    replay(runService);
-    ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(runId, adminAuthentication);
-    assertEquals("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/",
-        modelAndView.getViewName());
-    verify(runService);
   }
 
   @Test

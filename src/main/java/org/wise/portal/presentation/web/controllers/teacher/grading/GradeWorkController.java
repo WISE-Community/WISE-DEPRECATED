@@ -88,8 +88,7 @@ public class GradeWorkController {
     Run run = runService.retrieveById(runId);
     if (runService.hasReadPermission(authentication, run)) {
       return new ModelAndView(
-          "forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId
-              + "/project/");
+          "forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/");
     } else {
       return new ModelAndView("errors/accessdenied");
     }
