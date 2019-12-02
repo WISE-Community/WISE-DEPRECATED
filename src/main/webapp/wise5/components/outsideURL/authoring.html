@@ -113,14 +113,14 @@
   </md-input-container>
   <div>
     <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-      <label>{{ ::'WIDTH' | translate }} ({{ ::'outsideURL.widthPlaceholder' | translate }})</label>
+      <label>{{ ::'outsideURL.widthPlaceholder' | translate }}</label>
       <input type='number'
              ng-model='outsideURLController.authoringComponentContent.width'
              ng-model-options='{ debounce: 1000 }'
              ng-change='outsideURLController.authoringViewComponentChanged()'/>
     </md-input-container>
     <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-      <label>{{ ::'HEIGHT' | translate }} ({{ ::'outsideURL.px' | translate }})</label>
+      <label>{{ ::'outsideURL.heightPlaceholder' | translate }}</label>
       <input type='number'
              ng-model='outsideURLController.authoringComponentContent.height'
              ng-model-options='{ debounce: 1000 }'
