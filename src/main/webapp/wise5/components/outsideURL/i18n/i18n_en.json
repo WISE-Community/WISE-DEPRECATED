@@ -9,6 +9,7 @@
   "outsideURL.OERInfo": "Select from our curated library of OERs or enter your own in the 'URL' field below. (Note: Outside resources must start with 'https://' to be displayed.)",
   "outsideURL.search": "Search OERs",
   "outsideURL.select": "Select",
+  "outsideURL.selected": "Selected",
   "outsideURL.showOERs": "Show Open Educational Resources",
   "outsideURL.url": "URL",
   "outsideURL.widthPlaceholder": "Width (px) (optional)"

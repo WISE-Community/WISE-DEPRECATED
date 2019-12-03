@@ -125,6 +125,10 @@ class OutsideURLAuthoringController extends OutsideURLController {
     this.authoringComponentContent.info = openEducationalResource.info;
     this.authoringViewComponentChanged();
   }
+
+  isResourceSelected(resourceUrl) {
+    return resourceUrl === this.authoringComponentContent.url;
+  }
 }
 
   OutsideURLAuthoringController.$inject = [
