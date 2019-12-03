@@ -39,6 +39,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -49,6 +50,7 @@ import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.announcement.Announcement;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -342,7 +344,7 @@ public class RunServiceImpl implements RunService {
   }
 
   private void removePermissions(Run run, User user) {
-    List<Permission> permissions = aclService.getPermissions(run, user);
+    List<Permission> permissions = aclService.getPermissions(run, user.getUserDetails());
     for (Permission permission : permissions) {
       aclService.removePermission(run, permission, user);
     }
@@ -439,11 +441,12 @@ public class RunServiceImpl implements RunService {
 
       try {
         List<Permission> runPermissions =
-          aclService.getPermissions(run, user);
+          aclService.getPermissions(run, user.getUserDetails());
         for (Permission runPermission : runPermissions) {
           aclService.removePermission(run, runPermission, user);
         }
-        List<Permission> projectPermissions = aclService.getPermissions(runProject, user);
+        List<Permission> projectPermissions = aclService.getPermissions(runProject,
+            user.getUserDetails());
         for (Permission projectPermission : projectPermissions) {
           aclService.removePermission(runProject, projectPermission, user);
         }
@@ -455,7 +458,7 @@ public class RunServiceImpl implements RunService {
   }
 
   public String getSharedTeacherRole(Run run, User user) {
-    List<Permission> permissions = aclService.getPermissions(run, user);
+    List<Permission> permissions = aclService.getPermissions(run, user.getUserDetails());
     // for runs, a user can have at most one permission per run
     if (!permissions.isEmpty()) {
       Permission permission = permissions.get(0);
@@ -469,7 +472,7 @@ public class RunServiceImpl implements RunService {
   }
 
   public List<Permission> getSharedTeacherPermissions(Run run, User sharedTeacher) {
-    return aclService.getPermissions(run, sharedTeacher);
+    return aclService.getPermissions(run, sharedTeacher.getUserDetails());
   }
 
   private String generateUniqueRunCode(Locale locale) {
@@ -603,13 +606,19 @@ public class RunServiceImpl implements RunService {
     runDao.save(run);
   }
 
-  public boolean hasRunPermission(Run run, User user, Permission permission) {
-    return aclService.hasPermission(run, permission, user);
+  public boolean hasReadPermission(Authentication authentication, Run run) {
+    return ((MutableUserDetails) authentication.getPrincipal()).isAdminUser() ||
+        aclService.hasPermission(authentication, run, BasePermission.READ) ||
+        aclService.hasPermission(authentication, run, BasePermission.WRITE);
   }
 
-  public boolean hasReadPermission(Run run, User user) {
-    return user.isAdmin() || hasRunPermission(run, user, BasePermission.READ) ||
-        hasRunPermission(run, user, BasePermission.WRITE);
+  public boolean hasWritePermission(Authentication authentication, Run run) {
+    return ((MutableUserDetails) authentication.getPrincipal()).isAdminUser() ||
+        aclService.hasPermission(authentication, run, BasePermission.WRITE);
+  }
+
+  public boolean hasRunPermission(Run run, User user, Permission permission) {
+    return aclService.hasPermission(run, permission, user.getUserDetails());
   }
 
   public boolean canDecreaseMaxStudentsPerTeam(Long runId) {

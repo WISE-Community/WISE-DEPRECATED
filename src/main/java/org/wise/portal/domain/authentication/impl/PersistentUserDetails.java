@@ -46,6 +46,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.service.authentication.UserDetailsService;
 
 /**
  * Implementation class of <code>MutableUserDetails</code> that uses an EJB3
@@ -443,6 +444,10 @@ public class PersistentUserDetails implements MutableUserDetails {
 
   public void clearNumberOfRecentFailedVerificationCodeAttempts() {
     this.numberOfRecentFailedVerificationCodeAttempts = null;
+  }
+
+  public boolean isAdminUser() {
+    return hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
   }
 
   public boolean isGoogleUser() {
