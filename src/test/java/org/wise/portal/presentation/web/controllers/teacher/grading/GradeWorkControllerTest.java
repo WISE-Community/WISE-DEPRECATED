@@ -44,7 +44,6 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.run.RunService;
-import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 
 /**
@@ -60,25 +59,22 @@ public class GradeWorkControllerTest {
   private UserService userService;
 
   @Mock
-  private StudentService studentService;
-
-  @Mock
   private RunService runService;
 
-  private Authentication adminAuthentication;
+  private Authentication teacherAuthentication;
 
   @Before
   public void setUp() {
-    initializeAdminAuthentication();
+    initializeTeacherAuthentication();
   }
 
-  protected void initializeAdminAuthentication() {
-    PersistentGrantedAuthority adminAuthority = new PersistentGrantedAuthority();
-    adminAuthority.setAuthority(UserDetailsService.ADMIN_ROLE);
-    TeacherUserDetails adminUserDetails = new TeacherUserDetails();
-    adminUserDetails.setAuthorities(new GrantedAuthority[] { adminAuthority });
+  protected void initializeTeacherAuthentication() {
+    PersistentGrantedAuthority teacherAuthority = new PersistentGrantedAuthority();
+    teacherAuthority.setAuthority(UserDetailsService.TEACHER_ROLE);
+    TeacherUserDetails teacherUserDetails = new TeacherUserDetails();
+    teacherUserDetails.setAuthorities(new GrantedAuthority[] { teacherAuthority });
     Object credentials = null;
-    adminAuthentication = new TestingAuthenticationToken(adminUserDetails, credentials);
+    teacherAuthentication = new TestingAuthenticationToken(teacherUserDetails, credentials);
   }
 
   @After
@@ -93,9 +89,10 @@ public class GradeWorkControllerTest {
     Long runId = 1l;
     run.setId(runId);
     expect(runService.retrieveById(runId)).andReturn(run);
-    expect(runService.hasReadPermission(adminAuthentication, run)).andReturn(true);
+    expect(runService.hasReadPermission(teacherAuthentication, run)).andReturn(true);
     replay(runService);
-    ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(runId, adminAuthentication);
+    ModelAndView modelAndView =
+        controller.launchClassroomMonitorWISE5(runId, teacherAuthentication);
     assertEquals("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/",
         modelAndView.getViewName());
     verify(runService);
@@ -108,9 +105,10 @@ public class GradeWorkControllerTest {
     Long runId = 1l;
     run.setId(runId);
     expect(runService.retrieveById(runId)).andReturn(run);
-    expect(runService.hasReadPermission(adminAuthentication, run)).andReturn(false);
+    expect(runService.hasReadPermission(teacherAuthentication, run)).andReturn(false);
     replay(runService);
-    ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(runId, adminAuthentication);
+    ModelAndView modelAndView =
+        controller.launchClassroomMonitorWISE5(runId, teacherAuthentication);
     assertEquals("errors/accessdenied", modelAndView.getViewName());
     verify(runService);
   }
