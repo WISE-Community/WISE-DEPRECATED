@@ -2841,22 +2841,14 @@ class NodeAuthoringController {
           this.clearComponentsToChecked();
         }
 
-        /*
-         * Wait a small amount of time before returning the UI back to the
-         * normal view. This allows the author to see the component number
-         * and type view a little longer so that they can see the change
-         * they just made before we switch back to the normal view.
-         */
-        this.$timeout(() => {
-          // turn off the insert component mode
-          this.turnOffInsertComponentMode();
+        // turn off the insert component mode
+        this.turnOffInsertComponentMode();
 
-          // uncheck the component check boxes
-          this.clearComponentsToChecked();
+        // uncheck the component check boxes
+        this.clearComponentsToChecked();
 
-          // show the component authoring
-          this.showComponentAuthoring();
-        }, 2000);
+        // show the component authoring
+        this.showComponentAuthoring();
       });
     }
   }
