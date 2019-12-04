@@ -42,5 +42,8 @@
   "openResponse.youGotAScoreOf": "you got a score of",
   "openResponse.youHaveNoMoreChances": "You do not have any more chances to receive feedback on your answer.",
   "openResponse.youHaveOneChance": "You have {{numberOfSubmitsLeft}} chance to receive feedback on your answer so this should be your best work.\n\nAre you ready to receive feedback on this answer?",
-  "openResponse.youHaveMultipleChances": "You have {{numberOfSubmitsLeft}} chances to receive feedback on your answer so this should be your best work.\n\nAre you ready to receive feedback on this answer?"
+  "openResponse.youHaveMultipleChances": "You have {{numberOfSubmitsLeft}} chances to receive feedback on your answer so this should be your best work.\n\nAre you ready to receive feedback on this answer?",
+  "openResponse.youHaveNoMoreChancesWithoutFeedback": "You do not have any more chances to submit your answer.",
+  "openResponse.youHaveOneChanceWithoutFeedback": "You have {{numberOfSubmitsLeft}} chance to submit your answer so this should be your best work.\n\nAre you ready to submit this answer?",
+  "openResponse.youHaveMultipleChancesWithoutFeedback": "You have {{numberOfSubmitsLeft}} chances to submit your answer so this should be your best work.\n\nAre you ready to submit this answer?"
 }
