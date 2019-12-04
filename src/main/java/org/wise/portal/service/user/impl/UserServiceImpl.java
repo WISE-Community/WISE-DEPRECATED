@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
   }
 
   public void assignRole(MutableUserDetails userDetails, final String role) {
-    GrantedAuthority authority = this.grantedAuthorityDao.retrieveByName(role);
+    GrantedAuthority authority = grantedAuthorityDao.retrieveByName(role);
     userDetails.addAuthority(authority);
   }
 
@@ -144,8 +144,7 @@ public class UserServiceImpl implements UserService {
    * @throws DuplicateUsernameException if the username is the same as a username already in data
    * store.
    */
-  private void checkUserErrors(final String username)
-    throws DuplicateUsernameException {
+  private void checkUserErrors(final String username) throws DuplicateUsernameException {
     if (userDetailsDao.hasUsername(username)) {
       throw new DuplicateUsernameException(username);
     }
@@ -214,7 +213,7 @@ public class UserServiceImpl implements UserService {
   public List<User> retrieveTeachersByCity(String city) {
     return userDao.retrieveTeachersByCity(city);
   }
-  
+
   public List<User> retrieveTeachersByState(String state) {
     return userDao.retrieveTeachersByState(state);
   }
