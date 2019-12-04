@@ -27,6 +27,7 @@ class OutsideURLController extends ComponentController {
     this.OutsideURLService = OutsideURLService;
     this.url = null;
     this.info = null;
+    this.outsideURLIFrameId = 'outsideResource_' + this.componentId;
 
     if (this.componentContent != null) {
       this.setURL(this.componentContent.url);

@@ -1,7 +1,6 @@
 <div ng-controller="OutsideURLAuthoringController as outsideURLController">
   <div>
-    <div class="advancedAuthoringDiv"
-         ng-if="outsideURLController.showAdvancedAuthoring">
+    <div class="advancedAuthoringDiv" ng-if="outsideURLController.showAdvancedAuthoring">
       <div>
         <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
       </div>
@@ -21,8 +20,7 @@
         <md-button class="topButton md-raised md-primary"
                    ng-click="outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring">
           <md-icon>message</md-icon>
-          <md-tooltip md-direction="top"
-                      class="projectButtonTooltip">
+          <md-tooltip md-direction="top" class="projectButtonTooltip">
             {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
           </md-tooltip>
         </md-button>
@@ -78,7 +76,10 @@
     </div>
     <div class="gray-lighter-bg" layout="row" layout-wrap
         style="height: 400px; overflow-y: auto; padding: 8px; margin-bottom: 16px;">
-      <div flex-xs flex-sm="50" flex-md="33" flex-gt-md="25"
+      <div flex-xs
+           flex-sm="50" 
+           flex-md="33" 
+           flex-gt-md="25"
            ng-repeat="openEducationalResource in outsideURLController.openEducationalResources | filter: searchText as filtered">
         <md-card ng-style="outsideURLController.isResourceSelected(openEducationalResource.url) && {'border': '1px solid'}">
           <md-card-header style="padding: 12px;">
@@ -119,7 +120,7 @@
            ng-model-options="{ debounce: 1000 }"
            placeholder="{{ ::'outsideURL.enterURLHere' | translate }}"/>
   </md-input-container>
-  <div>
+  <div layout="row" layout-align="center end" layout-wrap>
     <md-input-container style="margin-right: 20px; width: 150px; height: 25px;">
       <label>{{ ::'outsideURL.widthPlaceholder' | translate }}</label>
       <input type="number"
@@ -134,9 +135,20 @@
              ng-model-options="{ debounce: 1000 }"
              ng-change="outsideURLController.authoringViewComponentChanged()"/>
     </md-input-container>
+    <span flex></span>
+    <md-button class="md-icon-button md-primary"
+               aria-label="{{ ::'outsideURL.reloadResource' | translate }}"
+               ng-click="outsideURLController.reloadResource()">
+      <md-tooltip md-direction="top">{{ ::'outsideURL.reloadResource' | translate }}</md-tooltip>
+      <md-icon>refresh</md-icon>
+    </md-button>
   </div>
   <div style="width: {{outsideURLController.width}}; height: {{outsideURLController.height}}">
-    <iframe ng-src="{{outsideURLController.url}}" width="100%" height="100%" allowfullscreen>
+    <iframe ng-src="{{outsideURLController.url}}" 
+            width="100%" 
+            height="100%" 
+            allowfullscreen
+            ng-attr-id='{{outsideURLController.outsideURLIFrameId}}'>
     </iframe>
   </div>
 </div>

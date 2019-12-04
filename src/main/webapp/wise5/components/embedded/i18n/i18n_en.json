@@ -4,5 +4,6 @@
   "embedded.heightPlaceholder": "Height (px)",
   "embedded.modelFileName": "Model File Name",
   "embedded.modelParameters": "Model Parameters",
+  "embedded.reloadModel": "Reload model",
   "embedded.widthPlaceholder": "Width (px) (optional)"
 }

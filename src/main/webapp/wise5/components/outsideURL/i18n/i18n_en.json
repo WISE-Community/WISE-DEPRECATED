@@ -7,6 +7,7 @@
   "outsideURL.linkCredit": "Credit: {{ url }}",
   "outsideURL.noResults": "No results found.",
   "outsideURL.OERInfo": "Select from our curated library of OERs or enter your own in the 'URL' field below. (Note: Outside resources must start with 'https://' to be displayed.)",
+  "outsideURL.reloadResource": "Reload resource",
   "outsideURL.search": "Search OERs",
   "outsideURL.select": "Select",
   "outsideURL.selected": "Selected",

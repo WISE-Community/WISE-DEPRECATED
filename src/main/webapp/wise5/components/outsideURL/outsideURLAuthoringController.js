@@ -129,6 +129,12 @@ class OutsideURLAuthoringController extends OutsideURLController {
   isResourceSelected(resourceUrl) {
     return resourceUrl === this.authoringComponentContent.url;
   }
+
+  reloadResource() {
+    const iframe = document.getElementById(this.outsideURLIFrameId);
+    iframe.src = '';
+    iframe.src = this.authoringComponentContent.url;
+  }
 }
 
   OutsideURLAuthoringController.$inject = [
