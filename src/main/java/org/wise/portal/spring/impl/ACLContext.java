@@ -28,7 +28,6 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cache.ehcache.EhCacheFactoryBean;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -39,9 +38,10 @@ import org.springframework.security.acls.domain.ConsoleAuditLogger;
 import org.springframework.security.acls.domain.DefaultPermissionGrantingStrategy;
 import org.springframework.security.acls.domain.EhCacheBasedAclCache;
 import org.springframework.security.acls.jdbc.BasicLookupStrategy;
+import org.springframework.security.acls.jdbc.JdbcMutableAclService;
 import org.springframework.security.acls.jdbc.LookupStrategy;
+import org.springframework.security.acls.model.MutableAclService;
 import org.springframework.security.acls.model.PermissionGrantingStrategy;
-import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.authentication.MutableAclSid;
 import org.wise.portal.domain.authentication.MutableAclTargetObject;
 import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;
@@ -49,8 +49,6 @@ import org.wise.portal.domain.authentication.impl.PersistentAclSid;
 import org.wise.portal.domain.authentication.impl.PersistentAclTargetObject;
 import org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdentity;
 import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
-import org.wise.portal.service.acl.AclService;
-import org.wise.portal.service.acl.impl.AclServiceImpl;
 
 @Configuration
 public class ACLContext {
@@ -95,8 +93,16 @@ public class ACLContext {
   }
 
   @Bean
-  public AclService aclService() {
-    return new AclServiceImpl<Persistable>(dataSource, lookupStrategy(), aclCache(), appProperties);
+  public MutableAclService aclservice() {
+    JdbcMutableAclService aclService = new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
+    if (appProperties.containsKey("spring.datasource.driver-class-name")) {
+      String driverClass = (String) appProperties.get("spring.datasource.driver-class-name");
+      if ("com.mysql.jdbc.Driver".equals(driverClass)) {
+        aclService.setClassIdentityQuery("SELECT @@IDENTITY");
+        aclService.setSidIdentityQuery("SELECT @@IDENTITY");
+      }
+    }
+    return aclService;
   }
 
   @Bean
