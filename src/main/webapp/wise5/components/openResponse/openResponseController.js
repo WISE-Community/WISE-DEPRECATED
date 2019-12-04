@@ -276,18 +276,35 @@ class OpenResponseController extends ComponentController {
     return true;
   }
 
+  hasFeedback() {
+    return this.isCRaterEnabled();
+  }
+
   confirmSubmit(numberOfSubmitsLeft) {
     let message = '';
     let isPerformSubmit = false;
 
-    if (numberOfSubmitsLeft <= 0) {
-      alert(this.$translate('openResponse.youHaveNoMoreChances'));
-    } else if (numberOfSubmitsLeft == 1) {
-      message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-      isPerformSubmit = confirm(message);
-    } else if (numberOfSubmitsLeft > 1) {
-      message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-      isPerformSubmit = confirm(message);
+    if (this.hasFeedback()) {
+      if (numberOfSubmitsLeft <= 0) {
+        alert(this.$translate('openResponse.youHaveNoMoreChances'));
+      } else if (numberOfSubmitsLeft == 1) {
+        message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+        isPerformSubmit = confirm(message);
+      } else if (numberOfSubmitsLeft > 1) {
+        message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+        isPerformSubmit = confirm(message);
+      }
+    }
+    else {
+      if (numberOfSubmitsLeft <= 0) {
+        alert(this.$translate('openResponse.youHaveNoMoreChancesWithoutFeedback'));
+      } else if (numberOfSubmitsLeft == 1) {
+        message = this.$translate('openResponse.youHaveOneChanceWithoutFeedback', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+        isPerformSubmit = confirm(message);
+      } else if (numberOfSubmitsLeft > 1) {
+        message = this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+        isPerformSubmit = confirm(message);
+      }
     }
 
     return isPerformSubmit;
@@ -726,13 +743,7 @@ class OpenResponseController extends ComponentController {
    * @returns whether CRater is enabled for this component
    */
   isCRaterEnabled() {
-    var result = false;
-
-    if (this.CRaterService.isCRaterEnabled(this.componentContent)) {
-      result = true;
-    }
-
-    return result;
+    return this.CRaterService.isCRaterEnabled(this.componentContent);
   }
 
   /**
