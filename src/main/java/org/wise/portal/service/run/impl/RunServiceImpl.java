@@ -119,34 +119,35 @@ public class RunServiceImpl implements RunService {
   @Autowired
   private ProjectService projectService;
 
-  @Transactional()
+  @Transactional(readOnly = true)
   public List<Run> getRunList() {
     // for some reason, runDao.getList returns all runs, when it should
     // only return runs with the right privileges according to Acegi.
     return runDao.getList();
   }
 
-  @Transactional()
+  @Transactional(readOnly = true)
+  public List<Run> getRunList(User user) {
+    return runDao.getRunListByUser(user);
+  }
+
+  @Transactional(readOnly = true)
   public List<Run> getRunListByOwner(User owner) {
     // for some reason, runDao.getList returns all runs, when it should
     // only return runs with the right privileges according to Acegi.
     return runDao.getRunListByOwner(owner);
   }
 
-  @Transactional()
+  @Transactional(readOnly = true)
   public List<Run> getRunListBySharedOwner(User owner) {
     // for some reason, runDao.getList returns all runs, when it should
     // only return runs with the right privileges according to Acegi.
     return runDao.getRunListBySharedOwner(owner);
   }
 
-  @Transactional()
+  @Transactional(readOnly = true)
   public List<Run> getAllRunList() {
     return runDao.getList();
-  }
-
-  public List<Run> getRunList(User user) {
-    return runDao.getRunListByUser(user);
   }
 
   /**
@@ -167,7 +168,7 @@ public class RunServiceImpl implements RunService {
     String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
     String runcodePrefixesStr =
         appProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
-    if (appProperties.containsKey("runcode_prefixes_"+language)) {
+    if (appProperties.containsKey("runcode_prefixes_" + language)) {
       runcodePrefixesStr = appProperties.getProperty("runcode_prefixes_" + language);
     }
     String[] runcodePrefixes = runcodePrefixesStr.split(",");

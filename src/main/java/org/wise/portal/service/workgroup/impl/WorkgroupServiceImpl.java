@@ -152,7 +152,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
       addMembers(toGroup, addMemberSet);
     }
 
-    if(!(fromGroup == null)){
+    if (!(fromGroup == null)) {
       Set<User> removeMemberSet = new HashSet<User>();
       removeMemberSet.add(user);
       removeMembers(fromGroup, removeMemberSet);
