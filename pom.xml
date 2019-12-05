@@ -133,9 +133,6 @@
             </goals>
             <configuration>
               <testExcludes>
-                <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
@@ -171,9 +168,6 @@
         <configuration>
           <forkMode>once</forkMode>
           <excludes>
-            <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
             <exclude>**/org/wise/portal/domain/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
