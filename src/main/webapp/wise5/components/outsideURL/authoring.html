@@ -81,7 +81,7 @@
            flex-md="33" 
            flex-gt-md="25"
            ng-repeat="openEducationalResource in outsideURLController.openEducationalResources | filter: searchText as filtered">
-        <md-card ng-style="outsideURLController.isResourceSelected(openEducationalResource.url) && {'border': '2px solid #00C853'}">
+        <md-card ng-style="outsideURLController.isResourceSelected(openEducationalResource.url) && {'border': '4px solid #00C853'}">
           <md-card-header style="padding: 12px;">
             <md-card-header-text>
               <span class="md-body-2">{{openEducationalResource.metadata.title}}</span>
