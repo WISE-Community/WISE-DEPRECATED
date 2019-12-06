@@ -40,16 +40,16 @@ import org.wise.portal.domain.premadecomment.PremadeComment;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 
-
 /**
- * PremadeComment domain object that is Owned but
- * with the following added information: comment
+ * PremadeComment domain object that is Owned but with the following added
+ * information: comment
  *
  * @author Patrick Lawler
  */
 @Entity
 @Table(name = PremadeCommentImpl.DATA_STORE_NAME)
-public class PremadeCommentImpl implements PremadeComment, Comparable<PremadeComment>{
+public class PremadeCommentImpl
+    implements PremadeComment, Comparable<PremadeComment> {
 
   @Transient
   public static final String DATA_STORE_NAME = "premadecomments";
@@ -108,11 +108,11 @@ public class PremadeCommentImpl implements PremadeComment, Comparable<PremadeCom
     long thisListPosition = this.getListPosition();
     long otherListPosition = o.getListPosition();
 
-    if(thisListPosition == otherListPosition) {
+    if (thisListPosition == otherListPosition) {
       result = 0;
-    } else if(thisListPosition < otherListPosition) {
+    } else if (thisListPosition < otherListPosition) {
       result = -1;
-    } else if(thisListPosition > otherListPosition) {
+    } else if (thisListPosition > otherListPosition) {
       result = 1;
     }
 

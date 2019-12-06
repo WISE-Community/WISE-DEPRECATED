@@ -35,7 +35,7 @@
   <artifactId>wise</artifactId>
   <packaging>war</packaging>
   <name>Web-based Inquiry Science Environment</name>
-  <version>5.7.8</version>
+  <version>5.8.1</version>
   <url>http://wise5.org</url>
 
   <licenses>
@@ -133,13 +133,25 @@
             </goals>
             <configuration>
               <testExcludes>
-                <exclude>**/org/wise/portal/service/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
-                <exclude>**/org/wise/portal/dao/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/AllTests.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclEntryDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclSidDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectIdentityDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateGrantedAuthorityDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateStudentUserDetailsDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/authentication/impl/HibernateTeacherUserDetailsDaoTest.java</exclude>
+                <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
+                <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
               </testExcludes>
             </configuration>
           </execution>
@@ -156,13 +168,25 @@
         <configuration>
           <forkMode>once</forkMode>
           <excludes>
-            <exclude>**/org/wise/portal/service/**/*.java</exclude>
             <exclude>**/org/wise/portal/domain/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
-            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
-            <exclude>**/org/wise/portal/dao/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/AllTests.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclEntryDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclSidDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectIdentityDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateGrantedAuthorityDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateStudentUserDetailsDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/authentication/impl/HibernateTeacherUserDetailsDaoTest.java</exclude>
+            <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -265,7 +289,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.6.RELEASE</version>
+    <version>2.2.0.RELEASE</version>
   </parent>
 
   <dependencies>
@@ -317,11 +341,8 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -357,14 +378,9 @@
       <version>${jwks-rsa.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>2.5.0</version>
-    </dependency>
-    <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.47</version>
+      <version>5.1.48</version>
     </dependency>
     <dependency>
       <groupId>net.sf.ehcache</groupId>
@@ -425,6 +441,12 @@
       <artifactId>jackson-databind</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.200</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
       <version>3.6</version>
@@ -457,16 +479,11 @@
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
-      <version>2.9.3</version>
+      <version>3.1.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.28.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.oauth-client</groupId>
-      <artifactId>google-oauth-client-jetty</artifactId>
       <version>1.28.0</version>
     </dependency>
     <dependency>
@@ -478,7 +495,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <org.hibernate.version>5.2.10.Final</org.hibernate.version>
     <spring-security-oauth2.version>2.2.4.RELEASE</spring-security-oauth2.version>
     <spring-security-jwt.version>1.0.9.RELEASE</spring-security-jwt.version>
     <jwks-rsa.version>0.3.0</jwks-rsa.version>

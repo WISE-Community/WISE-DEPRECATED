@@ -24,7 +24,6 @@
 package org.wise.portal.dao.run;
 
 import java.util.List;
-import java.util.Set;
 
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.SimpleDao;
@@ -83,17 +82,7 @@ public interface RunDao<T extends Run> extends SimpleDao<T> {
    * @param user
    * @return <code>List<Run></code>
    */
-  List<Run> getRunListByUserInPeriod(User user);
-
-  /**
-   * Retrieves a <code>List<Workgroup></code> given a <code>Long</code> runId and
-   * <code>Long</code> periodId
-   *
-   * @param runId id of the run
-   * @param periodId id of the period
-   * @return <code>List<Workgroup></code>
-   */
-  Set<Workgroup> getWorkgroupsForRunAndPeriod(Long runId, Long periodId);
+  List<Run> getRunListByUser(User user);
 
   /**
    * Retrieves a <code>List</code> of <code>Run</code> that are associated with the
@@ -111,7 +100,7 @@ public interface RunDao<T extends Run> extends SimpleDao<T> {
    * @param period
    * @return List<Run> - run list
    */
-  List<Run> getRunsRunWithinPeriod(String period);
+  List<Run> getRunsRunWithinTimePeriod(String period);
 
   /**
    * Returns a <code>List<Run></code> list of runs ordered descending by how
@@ -121,21 +110,8 @@ public interface RunDao<T extends Run> extends SimpleDao<T> {
    */
   List<Run> getRunsByActivity();
 
-  /**
-   * Retrieves run by id, and fetches all fields if specified.
-   * @param runId
-   * @param doEagerFetch true iff fetch all fields eagerly
-   * @return
-   */
-  Run getById(Long runId, boolean doEagerFetch);
-
-  /**
-   * Returns a set of workgroups for the run with provided runId.
-   *
-   * @param runId key to the <code>Run</code> to look up
-   * @return a Set of Workgroups that belong in the <code>Run</code>
-   */
-  Set<Workgroup> getWorkgroupsForRun(Long runId);
+  List<Workgroup> getWorkgroupsForRun(Long runId);
+  List<Workgroup> getWorkgroupsForRunAndPeriod(Long runId, Long periodId);
 
   long getMaxRunId();
 }

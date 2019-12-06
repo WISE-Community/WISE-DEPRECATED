@@ -1,22 +1,20 @@
-'use strict';
-
 // E2E test for Portal
-describe('WISE Portal', function () {
+describe('WISE Portal', () => {
 
     function hasClass(element, cls) {
-        return element.getAttribute('class').then(function (classes) {
+        return element.getAttribute('class').then((classes) => {
             return classes.split(' ').indexOf(cls) !== -1;
         });
     }
 
-    var createAccountButton = $('#createAccountButton');
-    var forgotAccountLink = $('#forgotLogin a');
-    var usernameInput = $('#username');
-    var passwordInput = $('#password');
-    var signInButton = $('#signInButton');
-    var contactUSLink = element(by.cssContainingText('a', 'Contact US'));
+    let createAccountButton = $('#createAccountButton');
+    let forgotAccountLink = $('#forgotLogin a');
+    let usernameInput = $('#username');
+    let passwordInput = $('#password');
+    let signInButton = $('#signInButton');
+    let contactUSLink = element(by.cssContainingText('a', 'Contact US'));
 
-    it('should show WISE logo and login inputs in the homepage', function () {
+    it('should show WISE logo and login inputs in the homepage', () => {
         isAngularSite(false);
         browser.get('http://localhost:8080/wise/');
 
@@ -29,7 +27,7 @@ describe('WISE Portal', function () {
         expect(contactUSLink.isPresent()).toBeTruthy();
     });
 
-    it('should not allow invalid username/password to log in', function () {
+    it('should not allow invalid username/password to log in', () => {
         isAngularSite(false);
         browser.get('http://localhost:8080/wise/');
         // try to log in with empty username/password
@@ -41,7 +39,7 @@ describe('WISE Portal', function () {
         expect(signInButton.isPresent()).toBeTruthy();
         expect($(".forgotlink[href='forgotaccount/selectaccounttype']").isPresent()).toBeTruthy();
         expect($(".joinlink[href='join']").isPresent()).toBeTruthy();
-        var returnToWISELink = $(".joinlink[href='/wise/']");
+        let returnToWISELink = $(".joinlink[href='/wise/']");
         expect(returnToWISELink.isPresent()).toBeTruthy();
 
         // test empty username
@@ -65,17 +63,17 @@ describe('WISE Portal', function () {
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/');
     });
 
-    it('should allow user to reach the create account page from the homepage', function () {
+    it('should allow user to reach the create account page from the homepage', () => {
         isAngularSite(false);
         browser.get('http://localhost:8080/wise/');
         createAccountButton.click();
         expect(browser.getTitle()).toEqual('Create WISE Account');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/join');
-        var createStudentAccountLink = element(by.cssContainingText('a', 'Student Account'));
-        var createTeacherAccountLink = element(by.cssContainingText('a', 'Teacher Account'));
+        let createStudentAccountLink = element(by.cssContainingText('a','Student Account'));
+        let createTeacherAccountLink = element(by.cssContainingText('a','Teacher Account'));
         expect(createStudentAccountLink.isPresent()).toBeTruthy();
         expect(createTeacherAccountLink.isPresent()).toBeTruthy();
-        var returnToHomepageLink = element(by.cssContainingText('a', 'Return to Home Page'));
+        let returnToHomepageLink = element(by.cssContainingText('a','Return to Home Page'));
         expect(returnToHomepageLink.isPresent()).toBeTruthy();
 
         // clicking on return to homepage link should take user back to homepage
@@ -83,7 +81,7 @@ describe('WISE Portal', function () {
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/');
     });
 
-    it('should allow user to reach the contact us page from the homepage', function () {
+    it('should allow user to reach the contact us page from the homepage', () => {
         isAngularSite(false);
         browser.get('http://localhost:8080/wise/');
         contactUSLink.click();
@@ -95,7 +93,7 @@ describe('WISE Portal', function () {
         expect($('#summary').isPresent()).toBeTruthy();
         expect($('#description').isPresent()).toBeTruthy();
         expect($('#sendMessageButton').isPresent()).toBeTruthy();
-        var returnToHomepageLink = element(by.cssContainingText('a', 'Return to Home Page'));
+        let returnToHomepageLink = element(by.cssContainingText('a','Return to Home Page'));
         expect(returnToHomepageLink.isPresent()).toBeTruthy();
 
         // clicking on return to homepage link should take user back to homepage
@@ -105,5 +103,5 @@ describe('WISE Portal', function () {
 
     // TODO: test create account student
     // TODO: test create account teacher
+
 });
-//# sourceMappingURL=portal.spec.js.map

@@ -41,10 +41,10 @@
     translate-value-max="{{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}"
     translate-value-percentage="{{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}"></span>
 <span ng-if="projectAssetController.totalUnusedFilesSize != null && projectAssetController.totalUnusedFilesSize != 0"
-    style="color:red">({{ 'unusedFiles' | translate }} {{projectAssetController.totalUnusedFilesSize | appropriateSizeText}} ({{projectAssetController.unusedFilesPercentage | roundToDecimal:0}}%))
+    style="color:red">({{ ::'unusedFiles' | translate }} {{projectAssetController.totalUnusedFilesSize | appropriateSizeText}} ({{projectAssetController.unusedFilesPercentage | roundToDecimal:0}}%))
   </span>
 <span id="assetMessage">{{projectAssetController.assetMessage}}</span><br/>
-<span translate="sortAssets" />: <select ng-model="projectAssetController.assetSortBy">
+<span translate="sortAssets"></span>: <select ng-model="projectAssetController.assetSortBy">
   <option value="aToZ" translate="fileNameAToZ"></option>
   <option value="zToA" translate="fileNameZToA"></option>
   <option value="smallToLarge" translate="fileSizeSmallToLarge"></option>
@@ -67,7 +67,7 @@
         </span>
         <md-icon ng-click='projectAssetController.deleteAsset(assetItem)'> delete </md-icon>
         <span ng-if="assetItem.used === false">
-          <span style="color:red">({{ 'notUsed' | translate }})</span>
+          <span style="color:red">({{ ::'notUsed' | translate }})</span>
         </span>
       </li>
     </ul>

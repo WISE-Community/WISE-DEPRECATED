@@ -49,7 +49,7 @@ public class SiteController {
       "/admin/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features",
       "/privacy", "/news", "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"})
   protected String showSite() {
-    return "forward:/index.html";
+    return "forward:/site/dist/index.html";
   }
 
   @ResponseBody

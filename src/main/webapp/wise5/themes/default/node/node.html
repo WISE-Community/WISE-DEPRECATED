@@ -1,6 +1,6 @@
 <div class="l-constrained">
     <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}; position: relative;" layout="row" layout-wrap>
-        <div ng-if="nodeController.rubric && nodeController.mode === 'preview'" class="node-content__rubric" layout="row" layout-align="center center">
+        <div ng-if="::nodeController.isShowNodeRubric()" class="node-content__rubric" layout="row" layout-align="center center">
             <help-icon id="nodeRubric_{{nodeController.nodeId}}"
                        pulse="!nodeController.rubricTour.steps[0].viewed"
                        label="{{ 'STEP_INFO' | translate}}"
@@ -9,9 +9,9 @@
                        icon-class="'info'"></help-icon>
         </div>
         <div id="component_{{component.id}}" class="component"
-             ng-repeat='component in nodeController.getComponents()'
+             ng-repeat='component in ::nodeController.getComponents() track by component.id'
              flex="100" flex-gt-sm="{{component.componentWidth ? component.componentWidth : 100}}">
-            <div ng-if="component.rubric && nodeController.mode === 'preview'" class="component__rubric">
+            <div ng-if="::nodeController.isShowComponentRubric(component)" class="component__rubric">
                 <help-icon id="rubric_{{component.id}}"
                            pulse="!nodeController.rubricTour.steps[$index+1].viewed"
                            label="{{ 'TEACHING_TIPS' | translate }}"
@@ -19,28 +19,27 @@
                            icon="'info'"
                            icon-class="'info'"></help-icon>
             </div>
-            <component node-id='{{nodeController.nodeId}}'
-                       component-id='{{component.id}}'
-                       component-state='{{nodeController.getComponentStateByComponentId(component.id)}}'
-                       workgroup-id='{{nodeController.workgroupId}}'
-                       teacher-workgroup-id='{{nodeController.teacherWorkgroupId}}'
+            <component node-id='{{::nodeController.nodeId}}'
+                       component-id='{{::component.id}}'
+                       component-state='{{::nodeController.getComponentStateByComponentId(component.id)}}'
+                       workgroup-id='{{::nodeController.workgroupId}}'
+                       teacher-workgroup-id='{{::nodeController.teacherWorkgroupId}}'
                        mode='student'></component>
         </div>
         <div class="node-content__actions" layout="row" layout-align="start center" flex="100">
             <md-button class="md-raised md-primary"
                    ng-click='nodeController.saveButtonClicked()'
                    ng-disabled='nodeController.isDisabled || !nodeController.dirtyComponentIds.length'
-                   ng-if='nodeController.showSaveButton()'
-                   aria-label="{{ 'save' | translate }}"
+                   ng-if='::nodeController.showSaveButton()'
+                   aria-label="{{ ::'save' | translate }}"
                    translate="save"></md-button>
              <md-button class="md-raised md-primary"
                   ng-click='nodeController.submitButtonClicked()'
                   ng-disabled='nodeController.isDisabled || !nodeController.dirtySubmitComponentIds.length'
-                  ng-if='nodeController.showSubmitButton()'
-                  aria-label="{{ 'submit' | translate }}"
+                  ng-if='::nodeController.showSubmitButton()'
+                  aria-label="{{ ::'submit' | translate }}"
                   translate="submit"></md-button>
-            <span ng-if="nodeController.showSaveButton() || nodeController.showSubmitButton()"
-                  ng-show="nodeController.saveMessage.text"
+            <span ng-if="nodeController.saveMessage.text && (nodeController.showSaveButton() || nodeController.showSubmitButton())"
                   class="node-content__actions__info md-caption">
                   {{nodeController.saveMessage.text}} <span class="node-content__actions__more"><md-tooltip md-direction="top">{{ nodeController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="nodeController.saveMessage.time"></span></span>
             </span>

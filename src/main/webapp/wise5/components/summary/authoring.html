@@ -6,20 +6,20 @@
     <div class='advancedAuthoringDiv'
          ng-if='summaryController.showAdvancedAuthoring'>
       <div>
-        <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+        <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='summaryController.authoringComponentContent.showSaveButton'
                      ng-change='summaryController.authoringViewComponentChanged()'>
-          {{ 'SHOW_SAVE_BUTTON' | translate }}
+          {{ ::'SHOW_SAVE_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='summaryController.authoringComponentContent.showSubmitButton'
                      ng-change='summaryController.authoringViewComponentChanged()'>
-          {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+          {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
@@ -27,13 +27,13 @@
                      ng-if='summaryController.isNotebookEnabled()'
                      ng-model='summaryController.authoringComponentContent.showAddToNotebookButton'
                      ng-change='summaryController.authoringViewComponentChanged()'>
-          {{ 'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+          {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
                             ng-if='summaryController.authoringComponentContent.showSubmitButton'>
-          <label>{{ 'MAX_SUBMIT' | translate }}</label>
+          <label>{{ ::'MAX_SUBMIT' | translate }}</label>
           <input type='number'
                  ng-model='summaryController.authoringComponentContent.maxSubmitCount'
                  ng-model-options='{ debounce: 1000 }'
@@ -42,7 +42,7 @@
       </div>
       <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+          <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
           <input type='number'
                  ng-model='summaryController.authoringComponentContent.componentWidth'
                  ng-model-options='{ debounce: 1000 }'
@@ -51,11 +51,11 @@
       </div>
       <div>
         <label class='node__label--vertical-alignment'>
-          {{ 'RUBRIC' | translate }}
+          {{ ::'RUBRIC' | translate }}
         </label>
         <md-button class='topButton md-raised md-primary' ng-click='summaryController.showRubricAuthoring = !summaryController.showRubricAuthoring'>
           <md-icon>message</md-icon>
-          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
         </md-button>
         <div ng-if='summaryController.showRubricAuthoring'>
           <summernote id='{{summaryController.summernoteRubricId}}'
@@ -71,14 +71,14 @@
       <div style='margin-top: 10px; margin-bottom: 10px;'>
         <div style='height: 50;'>
           <label class='node__label--vertical-alignment'>
-            {{ 'tags' | translate }}
+            {{ ::'tags' | translate }}
           </label>
           <md-button class='topButton md-raised md-primary'
                      ng-click='summaryController.addTag()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
-              {{ 'addTag' | translate }}
+              {{ ::'addTag' | translate }}
             </md-tooltip>
           </md-button>
         </div>
@@ -94,28 +94,28 @@
             </md-input-container>
             <md-button class='moveComponentButton md-raised md-primary' ng-click='summaryController.moveTagUp($index)'>
               <md-icon>arrow_upward</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveUp' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'moveUp' | translate }}</md-tooltip>
             </md-button>
             <md-button class='moveComponentButton md-raised md-primary' ng-click='summaryController.moveTagDown($index)'>
               <md-icon>arrow_downward</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveDown' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'moveDown' | translate }}</md-tooltip>
             </md-button>
             <md-button class='moveComponentButton md-raised md-primary' ng-click='summaryController.deleteTag($index)'>
               <md-icon>delete</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
             </md-button>
           </div>
         </div>
       </div>
       <div>
-        <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
+        <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
         <md-button class='topButton md-raised md-primary'
                    ng-click='summaryController.showJSONButtonClicked()'>
           <md-icon>code</md-icon>
-          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
         </md-button>
         <span ng-if='summaryController.isJSONStringChanged'>
-          {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+          {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
         </span>
         <div ng-if='summaryController.showJSONAuthoring'>
           <md-input-container style='width: 100%;'>
@@ -129,7 +129,7 @@
   </div>
   <div>
     <md-input-container style='width:100%'>
-      <label>{{ 'PROMPT' | translate }}</label>
+      <label>{{ ::'PROMPT' | translate }}</label>
       <textarea rows='1'
                 ng-model='summaryController.authoringComponentContent.prompt'
                 ng-change='summaryController.authoringViewComponentChanged()'
@@ -140,13 +140,13 @@
   </div>
   <div>
     <md-input-container>
-      {{ 'summary.chooseTheStepAndComponent' | translate }}
+      {{ ::'summary.chooseTheStepAndComponent' | translate }}
     </md-input-container>
   </div>
   <div layout='row' layout-wrap layout-margin='8px'>
     <div>
       <md-input-container>
-        <label>{{ 'step' | translate }}</label>
+        <label>{{ ::'step' | translate }}</label>
         <md-select ng-model='summaryController.authoringComponentContent.summaryNodeId'
             ng-change='summaryController.authoringSummaryNodeIdChanged()'
             style='min-width: 300px'>
@@ -160,78 +160,78 @@
     </div>
     <div>
       <md-input-container>
-        <label>{{ 'component' | translate }}</label>
+        <label>{{ ::'component' | translate }}</label>
         <md-select ng-model='summaryController.authoringComponentContent.summaryComponentId'
             ng-change='summaryController.authoringSummaryComponentIdChanged()'
             style='min-width: 300px'>
           <md-option ng-repeat='(componentIndex, component) in summaryController.getComponentsByNodeId(summaryController.authoringComponentContent.summaryNodeId)'
               value='{{component.id}}'
               ng-disabled='!summaryController.isComponentTypeAllowed(component.type) || summaryController.authoringComponentContent.summaryComponentId == summaryController.componentId'>
-            {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == summaryController.componentId'>({{ 'thisComponent' | translate }})</span>
+            {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == summaryController.componentId'>({{ ::'thisComponent' | translate }})</span>
           </md-option>
         </md-select>
       </md-input-container>
     </div>
     <div>
       <md-input-container>
-        <label>{{ 'summary.studentDataType' | translate }}</label>
+        <label>{{ ::'summary.studentDataType' | translate }}</label>
         <md-select ng-model='summaryController.authoringComponentContent.studentDataType'
             ng-change='summaryController.studentDataTypeChanged()'
             style='min-width: 200px'>
         <md-option value='responses'
-            ng-if='summaryController.isResponsesOptionAvailable'>
-          {{ 'summary.responses' | translate }}
+            ng-if='summaryController.isResponsesOptionAvailable' ng-selected='true'>
+          {{ ::'summary.responses' | translate }}
         </md-option>
         <md-option value='scores'>
-            {{ 'summary.scores' | translate }}
+            {{ ::'summary.scores' | translate }}
           </md-option>
         </md-select>
       </md-input-container>
     </div>
     <div>
       <md-input-container>
-        <label>{{ 'source' | translate }}</label>
+        <label>{{ ::'source' | translate }}</label>
         <md-select ng-model='summaryController.authoringComponentContent.source'
                    ng-change='summaryController.authoringViewComponentChanged()'
                    style='min-width: 200px'>
           <md-option value='period'>
-            {{ 'summary.onlyStudentsInPeriod' | translate }}
+            {{ ::'summary.onlyStudentsInPeriod' | translate }}
           </md-option>
           <md-option value='allPeriods'>
-            {{ 'summary.studentsInAllPeriods' | translate }}
+            {{ ::'summary.studentsInAllPeriods' | translate }}
           </md-option>
         </md-select>
       </md-input-container>
     </div>
     <div>
       <md-input-container>
-        <label>{{ 'summary.chartType' | translate }}</label>
+        <label>{{ ::'summary.chartType' | translate }}</label>
         <md-select ng-model='summaryController.authoringComponentContent.chartType'
             ng-change='summaryController.authoringViewComponentChanged()'
             style='min-width: 200px;'>
           <md-option value='column'>
-            {{ 'summary.bar' | translate }}
+            {{ ::'summary.bar' | translate }}
           </md-option>
           <md-option value='pie' ng-if='summaryController.isPieChartAllowed'>
-            {{ 'summary.pie' | translate }}
+            {{ ::'summary.pie' | translate }}
           </md-option>
         </md-select>
       </md-input-container>
     </div>
     <div>
       <md-input-container>
-        <label>{{ 'summary.requirementToSeeSummary' | translate }}</label>
+        <label>{{ ::'summary.requirementToSeeSummary' | translate }}</label>
         <md-select ng-model='summaryController.authoringComponentContent.requirementToSeeSummary'
             ng-change='summaryController.authoringViewComponentChanged()'
             style='min-width: 200px'>
             <md-option value='completeComponent'>
-              {{ 'summary.completeComponent' | translate }}
+              {{ ::'summary.completeComponent' | translate }}
             </md-option>
             <md-option value='submitWork'>
-            {{ 'summary.submitWork' | translate }}
+            {{ ::'summary.submitWork' | translate }}
           </md-option>
           <md-option value='none'>
-            {{ 'summary.none' | translate }}
+            {{ ::'summary.none' | translate }}
           </md-option>
         </md-select>
       </md-input-container>
@@ -242,23 +242,23 @@
       <md-checkbox class='md-primary'
                    ng-model='summaryController.authoringComponentContent.highlightCorrectAnswer'
                    ng-change='summaryController.authoringViewComponentChanged()'>
-        {{ 'summary.highlightCorrectAnswer' | translate }}
+        {{ ::'summary.highlightCorrectAnswer' | translate }}
       </md-checkbox>
     </md-input-container>
     <md-input-container>
       <md-checkbox class='md-primary'
                    ng-model='summaryController.authoringComponentContent.showPromptFromOtherComponent'
                    ng-change='summaryController.showPromptFromOtherComponentChanged()'>
-        {{ 'summary.showPromptFromOtherComponent' | translate }}
+        {{ ::'summary.showPromptFromOtherComponent' | translate }}
       </md-checkbox>
     </md-input-container>
   </div>
   <div style='border: 5px solid black; padding: 20px;'>
     <div>
-      <h5>{{ 'studentPreview' | translate }}</h5>
+      <h5>{{ ::'studentPreview' | translate }}</h5>
     </div>
     <div>
-      <compile id='prompt' data='summaryController.getPrompt()'></compile> 
+      <compile id='prompt' data='summaryController.getPrompt()'></compile>
       <div ng-if='summaryController.componentContent.showPromptFromOtherComponent'>
         <br/>
         <compile data='summaryController.otherPrompt'></compile>

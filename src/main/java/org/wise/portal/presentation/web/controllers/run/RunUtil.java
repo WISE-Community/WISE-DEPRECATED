@@ -93,7 +93,7 @@ public class RunUtil {
   public static JSONArray getClassmateUserInfos(Run run, WorkgroupService workgroupService,
       RunService runService) {
     JSONArray classmateUserInfosJSONArray = new JSONArray();
-    Set<Workgroup> workgroups = null;
+    List<Workgroup> workgroups = null;
     try {
       workgroups = runService.getWorkgroups(run.getId());
     } catch (ObjectNotFoundException e1) {

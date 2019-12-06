@@ -1,54 +1,40 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+import ComponentController from "../componentController";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+class OutsideURLController extends ComponentController {
+  constructor($filter,
+      $mdDialog,
+      $q,
+      $rootScope,
+      $sce,
+      $scope,
+      AnnotationService,
+      ConfigService,
+      NodeService,
+      NotebookService,
+      OutsideURLService,
+      ProjectService,
+      StudentAssetService,
+      StudentDataService,
+      UtilService) {
+    super($filter, $mdDialog, $rootScope, $scope,
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
+    this.$q = $q;
+    this.$sce = $sce;
+    this.OutsideURLService = OutsideURLService;
+    this.url = null;
+    this.info = null;
+    this.outsideURLIFrameId = 'outsideResource_' + this.componentId;
 
-var _componentController = require('../componentController');
-
-var _componentController2 = _interopRequireDefault(_componentController);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var OutsideURLController = function (_ComponentController) {
-  _inherits(OutsideURLController, _ComponentController);
-
-  function OutsideURLController($filter, $mdDialog, $q, $rootScope, $sce, $scope, AnnotationService, ConfigService, NodeService, NotebookService, OutsideURLService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
-    _classCallCheck(this, OutsideURLController);
-
-    var _this = _possibleConstructorReturn(this, (OutsideURLController.__proto__ || Object.getPrototypeOf(OutsideURLController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
-
-    _this.$q = $q;
-    _this.$sce = $sce;
-    _this.OutsideURLService = OutsideURLService;
-
-    // the url to the web page to display
-    _this.url = null;
-
-    // the max width of the iframe
-    _this.maxWidth = null;
-
-    // the max height of the iframe
-    _this.maxHeight = null;
-
-    if (_this.componentContent != null) {
-      // set the url
-      _this.setURL(_this.componentContent.url);
+    if (this.componentContent != null) {
+      this.setURL(this.componentContent.url);
+      this.setInfo(this.componentContent.info);
     }
 
-    // get the max width
-    _this.maxWidth = _this.componentContent.maxWidth ? _this.componentContent.maxWidth : 'none';
-
-    // get the max height
-    _this.maxHeight = _this.componentContent.maxHeight ? _this.componentContent.maxHeight : 'none';
+    this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
 
     /**
      * Get the component state from this component. The parent node will
@@ -56,8 +42,8 @@ var OutsideURLController = function (_ComponentController) {
      * save student data.
      * @return a promise of a component state containing the student data
      */
-    _this.$scope.getComponentState = function () {
-      var deferred = this.$q.defer();
+    this.$scope.getComponentState = function() {
+      const deferred = this.$q.defer();
 
       /*
        * the student does not have any unsaved changes in this component
@@ -65,34 +51,50 @@ var OutsideURLController = function (_ComponentController) {
        * we will immediately resolve the promise here.
        */
       deferred.resolve();
-
       return deferred.promise;
-    }.bind(_this);
+    }.bind(this);
 
-    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
-    return _this;
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
-  /**
-   * Set the url
-   * @param url the url
-   */
+  setWidthAndHeight(width, height) {
+    this.width = width ? width + 'px' : '100%';
+    this.height = height ? height + 'px' : '600px';
+  }
 
-
-  _createClass(OutsideURLController, [{
-    key: 'setURL',
-    value: function setURL(url) {
-      if (url != null) {
-        var trustedURL = this.$sce.trustAsResourceUrl(url);
-        this.url = trustedURL;
-      }
+  setURL(url) {
+    if (url == null || url === '') {
+      this.url = ' ';
+    } else {
+      this.url = this.$sce.trustAsResourceUrl(url);
     }
-  }]);
+  }
 
-  return OutsideURLController;
-}(_componentController2.default);
+  setInfo(info) {
+    if (info == null || info === '') {
+      this.info = this.url;
+    } else {
+      this.info = this.$sce.trustAsResourceUrl(info);
+    }
+  }
+}
 
-OutsideURLController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$sce', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'OutsideURLService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+OutsideURLController.$inject = [
+  '$filter',
+  '$mdDialog',
+  '$q',
+  '$rootScope',
+  '$sce',
+  '$scope',
+  'AnnotationService',
+  'ConfigService',
+  'NodeService',
+  'NotebookService',
+  'OutsideURLService',
+  'ProjectService',
+  'StudentAssetService',
+  'StudentDataService',
+  'UtilService'
+];
 
-exports.default = OutsideURLController;
-//# sourceMappingURL=outsideURLController.js.map
+export default OutsideURLController;

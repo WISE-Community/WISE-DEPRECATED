@@ -1,38 +1,44 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+class NodeIconController {
+  constructor(ProjectService) {
+    this.ProjectService = ProjectService;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var NodeIconController = function NodeIconController(ProjectService) {
-  var _this = this;
-
-  _classCallCheck(this, NodeIconController);
-
-  this.ProjectService = ProjectService;
-
-  this.$onChanges = function () {
-    _this.isGroup = _this.ProjectService.isGroupNode(_this.nodeId);
-    _this.icon = _this.ProjectService.getNodeIconByNodeId(_this.nodeId);
-    if (_this.size) {
-      _this.sizeClass = 'md-' + _this.size;
+    this.$onChanges = () => {
+      this.isGroup = this.ProjectService.isGroupNode(this.nodeId);
+      this.icon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
+      if (this.size) {
+        this.sizeClass = `md-${ this.size }`;
+      }
     }
-  };
-};
+    
+  }
+      
+  isFont() {
+    return this.icon.type === 'font';
+  }
 
-NodeIconController.$inject = ['ProjectService'];
+  isImage() {
+    return this.icon.type === 'img';
+  }
+}
 
-var NodeIcon = {
+NodeIconController.$inject = [
+  'ProjectService'
+];
+
+const NodeIcon = {
   bindings: {
     customClass: '<',
     nodeId: '<',
     size: '<'
   },
   controller: NodeIconController,
-  template: '<img ng-if="$ctrl.icon.type === \'img\'" ng-animate-ref="{{ $ctrl.nodeId }}" class="{{ $ctrl.isGroup ? \'avatar--square \' : \'\' }}{{ $ctrl.customClass }} {{ $ctrl.sizeClass }} avatar" ng-src="{{ $ctrl.icon.imgSrc }}" alt="{{ $ctrl.icon.imgAlt }}" />\n      <div ng-if="$ctrl.icon.type === \'font\'" ng-animate-ref="{{ $ctrl.nodeId }}" style="background-color: {{ $ctrl.icon.color }};" class="{{ $ctrl.isGroup ? \'avatar--square \' : \'\' }}{{ $ctrl.customClass }} {{ $ctrl.sizeClass }} avatar avatar--icon">\n        <md-icon class="{{ $ctrl.sizeClass }} {{ $ctrl.icon.fontSet }} md-light node-icon">{{ $ctrl.icon.fontName }}</md-icon>\n      </div>'
+  template:
+    `<img ng-if="::$ctrl.isImage()" ng-animate-ref="{{ ::$ctrl.nodeId }}" class="{{ ::$ctrl.isGroup ? 'avatar--square ' : '' }}{{ ::$ctrl.customClass }} {{ ::$ctrl.sizeClass }} avatar" ng-src="{{ ::$ctrl.icon.imgSrc }}" alt="{{ ::$ctrl.icon.imgAlt }}" />
+      <div ng-if="::$ctrl.isFont()" ng-animate-ref="{{ ::$ctrl.nodeId }}" style="background-color: {{ ::$ctrl.icon.color }};" class="{{ ::$ctrl.isGroup ? 'avatar--square ' : '' }}{{ ::$ctrl.customClass }} {{ ::$ctrl.sizeClass }} avatar avatar--icon">
+        <md-icon class="{{ ::$ctrl.sizeClass }} {{ ::$ctrl.icon.fontSet }} md-light node-icon">{{ ::$ctrl.icon.fontName }}</md-icon>
+      </div>`
 };
 
-exports.default = NodeIcon;
-//# sourceMappingURL=nodeIcon.js.map
+export default NodeIcon;

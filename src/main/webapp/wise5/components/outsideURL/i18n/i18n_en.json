@@ -1,5 +1,17 @@
 {
-  "outsideURL.componentTypeLabel": "Outside URL",
+  "outsideURL.componentTypeLabel": "Outside Resource",
   "outsideURL.enterURLHere": "Enter URL Here",
-  "outsideURL.url": "URL"
+  "outsideURL.heightPlaceholder": "Height (px)",
+  "outsideURL.info": "Info",
+  "outsideURL.integerPercentageOfPageWidth": "Integer Percentage of Page Width",
+  "outsideURL.linkCredit": "Credit: {{ url }}",
+  "outsideURL.noResults": "No results found.",
+  "outsideURL.OERInfo": "Select from our curated library of OERs or enter your own in the 'URL' field below. (Note: Outside resources must start with 'https://' to be displayed.)",
+  "outsideURL.reloadResource": "Reload resource",
+  "outsideURL.search": "Search OERs",
+  "outsideURL.select": "Select",
+  "outsideURL.selected": "Selected",
+  "outsideURL.showOERs": "Show Open Educational Resources",
+  "outsideURL.url": "URL",
+  "outsideURL.widthPlaceholder": "Width (px) (optional)"
 }

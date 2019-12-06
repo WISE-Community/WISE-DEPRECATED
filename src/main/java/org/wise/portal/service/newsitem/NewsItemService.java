@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -63,7 +63,7 @@ public interface NewsItemService {
    * Retrieves a NewsItem given an ID
    * @param id <code>Integer</code> id of news item to retrieve
    * @return NewsItem
-   * @throws ObjectNotFoundException
+   * @throws ObjectNotFoundException if news item is not in the datastore
    */
   NewsItem retrieveById(Integer id) throws ObjectNotFoundException;
 
@@ -75,14 +75,15 @@ public interface NewsItemService {
    * @param title news item title
    * @param news news item text
    * @param type news item type
-   * @throws ObjectNotFoundException
+   * @throws ObjectNotFoundException if news item is not in the datastore
    */
   void updateNewsItem(Integer id, Date date, User owner, String title, String news, String type)
       throws ObjectNotFoundException;
 
   /**
    * Deletes a NewsItem from the data store.
-   * @param newsItemId <code>Integer</code>
+   * @param id <code>Integer</code> id of the news item
+   * @throws ObjectNotFoundException if news item is not in the datastore
    */
-  void deleteNewsItem(Integer newsItemId);
+  void deleteNewsItem(Integer id) throws ObjectNotFoundException;
 }

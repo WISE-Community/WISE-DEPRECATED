@@ -152,7 +152,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
       addMembers(toGroup, addMemberSet);
     }
 
-    if(!(fromGroup == null)){
+    if (!(fromGroup == null)) {
       Set<User> removeMemberSet = new HashSet<User>();
       removeMemberSet.add(user);
       removeMembers(fromGroup, removeMemberSet);
@@ -162,11 +162,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 
   public Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException {
     return workgroupDao.getById(workgroupId);
-  }
-
-  @Override
-  public Workgroup retrieveById(Long workgroupId, boolean doEagerFetch) {
-    return workgroupDao.getById(workgroupId, doEagerFetch);
   }
 
   /**

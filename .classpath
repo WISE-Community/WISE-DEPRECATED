@@ -11,18 +11,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry excluding="**/org/wise/portal/service/**/*.java|**/org/wise/portal/domain/**/*.java|**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java|**/org/wise/portal/presentation/web/controllers/teacher/**/*.java|**/org/wise/portal/presentation/web/controllers/*.java|**/org/wise/portal/presentation/validators/teacher/*.java|**/org/wise/portal/dao/**/*.java" kind="src" output="target/test-classes" path="src/test/java">
+	<classpathentry excluding="**/org/wise/portal/domain/**/*.java|**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java|**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java|**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java|**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java|**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java|**/org/wise/portal/presentation/web/controllers/*.java|**/org/wise/portal/presentation/validators/teacher/*.java|**/org/wise/portal/dao/*.java|**/org/wise/portal/dao/authentication/impl/AllTests.java|**/org/wise/portal/dao/authentication/impl/HibernateAclEntryDaoTest.java|**/org/wise/portal/dao/authentication/impl/HibernateAclSidDaoTest.java|**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectDaoTest.java|**/org/wise/portal/dao/authentication/impl/HibernateAclTargetObjectIdentityDaoTest.java|**/org/wise/portal/dao/authentication/impl/HibernateGrantedAuthorityDaoTest.java|**/org/wise/portal/dao/authentication/impl/HibernateStudentUserDetailsDaoTest.java|**/org/wise/portal/dao/authentication/impl/HibernateTeacherUserDetailsDaoTest.java|**/org/wise/portal/dao/group/**/*.java|**/org/wise/portal/dao/premadecomment/**/*.java" kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
@@ -35,15 +24,14 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="target/generated-sources/annotations">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
-			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" output="target/test-classes" path="target/generated-test-sources/test-annotations">
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="test" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>

@@ -1,6 +1,6 @@
 <div ng-controller='MatchController as matchController' flex>
   <div>
-    <div ng-switch='matchController.mode'>
+    <div ng-switch='::matchController.mode'>
       <div ng-switch-when='grading|gradingRevision'
           ng-switch-when-separator='|'
           layout='row'
@@ -340,20 +340,20 @@
             {{ 'INCORRECT' | translate }}
           </div>
         </div>
-        <div ng-if='matchController.isSaveButtonVisible || matchController.isSubmitButtonVisible'
+        <div ng-if='::matchController.isSaveOrSubmitButtonVisible()'
             class='component__actions'
             layout='row'
             layout-align='start center'>
           <md-button class='md-raised md-primary'
               ng-class='{"md-raised": !matchController.isSubmitButtonVisible}'
               ng-click='matchController.saveButtonClicked()'
-              ng-if='matchController.isSaveButtonVisible'
+              ng-if='::matchController.isSaveButtonVisible'
               ng-disabled='matchController.isDisabled || !matchController.isDirty'>
             {{ 'SAVE' | translate }}
           </md-button>
           <md-button class='md-raised md-primary'
               ng-click='matchController.submitButtonClicked()'
-              ng-if='matchController.isSubmitButtonVisible'
+              ng-if='::matchController.isSubmitButtonVisible'
               ng-disabled='matchController.isSubmitButtonDisabled || matchController.isDisabled || !matchController.isSubmitDirty'>
             {{ 'SUBMIT' | translate }}
           </md-button>

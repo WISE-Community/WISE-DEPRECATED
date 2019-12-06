@@ -1,18 +1,16 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+class NodeProgressController {
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var NodeProgressController = function () {
-    function NodeProgressController($filter, $mdDialog, $scope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
-        var _this = this;
-
-        _classCallCheck(this, NodeProgressController);
+    constructor($filter,
+                $mdDialog,
+                $scope,
+                $state,
+                ConfigService,
+                ProjectService,
+                StudentStatusService,
+                TeacherDataService,
+                TeacherWebSocketService) {
 
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
@@ -37,8 +35,8 @@ var NodeProgressController = function () {
         this.maxScore = this.ProjectService.getMaxScore();
 
         this.nodeId = null;
-        var stateParams = null;
-        var stateParamNodeId = null;
+        let stateParams = null;
+        let stateParamNodeId = null;
 
         if (this.$state != null) {
             stateParams = this.$state.params;
@@ -58,7 +56,7 @@ var NodeProgressController = function () {
 
         this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
 
-        var startNodeId = this.ProjectService.getStartNodeId();
+        let startNodeId = this.ProjectService.getStartNodeId();
         this.rootNode = this.ProjectService.getRootNode(startNodeId);
 
         this.currentGroup = this.rootNode;
@@ -73,7 +71,7 @@ var NodeProgressController = function () {
 
         var branches = this.ProjectService.getBranches();
 
-        var currentPeriod = this.getCurrentPeriod();
+        let currentPeriod = this.getCurrentPeriod();
 
         this.showRubricButton = false;
 
@@ -84,228 +82,241 @@ var NodeProgressController = function () {
         /**
          * Listen for current node changed event
          */
-        this.$scope.$on('currentNodeChanged', function (event, args) {
-            var previousNode = args.previousNode;
-            var currentNode = args.currentNode;
+        this.$scope.$on('currentNodeChanged', (event, args) => {
+            let previousNode = args.previousNode;
+            let currentNode = args.currentNode;
             if (previousNode != null && previousNode.type === 'group') {
-                var _nodeId = previousNode.id;
+                let nodeId = previousNode.id;
             }
 
             if (currentNode != null) {
 
-                _this.nodeId = currentNode.id;
-                _this.TeacherDataService.setCurrentNode(currentNode);
+                this.nodeId = currentNode.id;
+                this.TeacherDataService.setCurrentNode(currentNode);
 
-                if (_this.isGroupNode(_this.nodeId)) {
+                if (this.isGroupNode(this.nodeId)) {
                     // current node is a group
 
-                    _this.currentGroup = currentNode;
-                    _this.currentGroupId = _this.currentGroup.id;
-                    _this.$scope.currentgroupid = _this.currentGroupId;
-                    //} else if (this.isApplicationNode(this.nodeId)) {
+                    this.currentGroup = currentNode;
+                    this.currentGroupId = this.currentGroup.id;
+                    this.$scope.currentgroupid = this.currentGroupId;
+                //} else if (this.isApplicationNode(this.nodeId)) {
                 }
             }
 
-            _this.$state.go('root.project', { nodeId: _this.nodeId });
+            this.$state.go('root.project', {nodeId: this.nodeId});
         });
 
         // listen for the currentWorkgroupChanged event
-        this.$scope.$on('currentWorkgroupChanged', function (event, args) {
-            _this.currentWorkgroup = args.currentWorkgroup;
+        this.$scope.$on('currentWorkgroupChanged', (event, args) => {
+            this.currentWorkgroup = args.currentWorkgroup;
         });
 
         /**
          * Listen for state change event
          */
-        this.$scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-            var toNodeId = toParams.nodeId;
-            var fromNodeId = fromParams.nodeId;
+        this.$scope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
+            let toNodeId = toParams.nodeId;
+            let fromNodeId = fromParams.nodeId;
             if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
-                _this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
+                this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
             }
 
             if (toState.name === 'root.project') {
-                var _nodeId2 = toParams.nodeId;
-                if (_this.ProjectService.isApplicationNode(_nodeId2)) {
+                let nodeId = toParams.nodeId;
+                if (this.ProjectService.isApplicationNode(nodeId)) {
                     // scroll to top when viewing a new step
                     document.getElementById('content').scrollTop = 0;
                 }
             }
         });
 
-        this.$scope.$on('$destroy', function () {
+        this.$scope.$on('$destroy', () => {
             // set the currently selected workgroup to null on state exit
-            _this.TeacherDataService.setCurrentWorkgroup(null);
+            this.TeacherDataService.setCurrentWorkgroup(null);
         });
 
         // save event when node progress view is displayed
-        var context = "ClassroomMonitor",
-            nodeId = this.nodeId,
-            componentId = null,
-            componentType = null,
-            category = "Navigation",
-            event = "nodeProgressViewDisplayed",
-            data = { nodeId: this.nodeId };
+        let context = "ClassroomMonitor", nodeId = this.nodeId, componentId = null, componentType = null,
+            category = "Navigation", event = "nodeProgressViewDisplayed", data = { nodeId: this.nodeId };
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
-    _createClass(NodeProgressController, [{
-        key: 'isGroupNode',
-        value: function isGroupNode(nodeId) {
-            return this.ProjectService.isGroupNode(nodeId);
-        }
-    }, {
-        key: 'isApplicationNode',
-        value: function isApplicationNode(nodeId) {
-            return this.ProjectService.isApplicationNode(nodeId);
+    isGroupNode(nodeId) {
+        return this.ProjectService.isGroupNode(nodeId);
+    }
+
+    isApplicationNode(nodeId) {
+        return this.ProjectService.isApplicationNode(nodeId);
+    }
+
+    /**
+     * Get the current period
+     */
+    getCurrentPeriod() {
+        return this.TeacherDataService.getCurrentPeriod();
+    }
+
+    /**
+     * Get the number of students on the node
+     * @param nodeId the node id
+     * @returns the number of students that are on the node
+     */
+    getNumberOfStudentsOnNode(nodeId) {
+        // get the currently selected period
+        var currentPeriod = this.getCurrentPeriod();
+        var periodId = currentPeriod.periodId;
+
+        // get the number of students that are on the node in the period
+        var count = this.StudentStatusService.getWorkgroupIdsOnNode(nodeId, periodId).length;
+
+        return count;
+    }
+
+    /**
+     * Get the percentage of the class or period that has completed the node
+     * @param nodeId the node id
+     * @returns the percentage of the class or period that has completed the node
+     */
+    getNodeCompletion(nodeId) {
+        // get the currently selected period
+        var currentPeriod = this.getCurrentPeriod();
+        var periodId = currentPeriod.periodId;
+
+        // get the percentage of the class or period that has completed the node
+        var completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId).completionPct;
+
+        return completionPercentage;
+    }
+
+    /**
+     * Check if the project has a rubric
+     * @return whether the project has a rubric
+     */
+    projectHasRubric() {
+
+        // get the project rubric
+        var projectRubric = this.ProjectService.getProjectRubric();
+
+        if (projectRubric != null && projectRubric != '') {
+            // the project has a rubric
+            return true;
         }
 
-        /**
-         * Get the current period
+        return false;
+    }
+
+    /**
+     * Show the project rubric
+     */
+    showRubric($event) {
+
+        // get the project title
+        let projectTitle = this.ProjectService.getProjectTitle();
+        let rubricTitle = this.$translate('projectInfo');
+
+        /*
+         * create the header for the popup that contains the project title,
+         * 'Open in New Tab' button, and 'Close' button
          */
+        let dialogHeader =
+            `<md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="overflow--ellipsis">${ projectTitle }</h2>
+                    <span flex>&nbsp;</span>
+                    <span class="md-subhead">${ rubricTitle }</span>
+                </div>
+            </md-toolbar>`;
 
-    }, {
-        key: 'getCurrentPeriod',
-        value: function getCurrentPeriod() {
-            return this.TeacherDataService.getCurrentPeriod();
+        let dialogActions =
+            `<md-dialog-actions layout="row" layout-align="end center">
+                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ ::'openInNewWindow' | translate }}">{{ ::'openInNewWindow' | translate }}</md-button>
+                <md-button class="md-primary" ng-click="close()" aria-label="{{ ::'close' | translate }}">{{ ::'close' | translate }}</md-button>
+            </md-dialog-actions>`;
+
+        /*
+         * create the header for the new window that contains the project title
+         */
+        let windowHeader =
+            `<md-toolbar class="layout-row">
+                <div class="md-toolbar-tools" style="color: #ffffff;">
+                    <h2>${ projectTitle }</h2>
+                    <span class="flex">&nbsp;</span>
+                    <span class="md-subhead">${ rubricTitle }</span>
+                </div>
+            </md-toolbar>`;
+
+        // create the string that will hold the rubric content
+        let rubricContent = '<md-content class="md-whiteframe-1dp md-padding" style="background-color: #ffffff;">';
+
+        // get the project rubric
+        let rubric = this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
+
+        if (rubric != null) {
+            rubricContent += rubric + '</md-content>';
         }
 
-        /**
-         * Get the number of students on the node
-         * @param nodeId the node id
-         * @returns the number of students that are on the node
-         */
+        let dialogContent =
+            `<md-dialog-content class="gray-lighter-bg">
+                <div class="md-dialog-content">${ rubricContent }</div>
+            </md-dialog-content>`;
 
-    }, {
-        key: 'getNumberOfStudentsOnNode',
-        value: function getNumberOfStudentsOnNode(nodeId) {
-            // get the currently selected period
-            var currentPeriod = this.getCurrentPeriod();
-            var periodId = currentPeriod.periodId;
+        // create the dialog string
+        let dialogString = `<md-dialog class="dialog--wider" aria-label="${ projectTitle } - ${ rubricTitle }">${ dialogHeader }${ dialogContent }${ dialogActions }</md-dialog>`;
 
-            // get the number of students that are on the node in the period
-            var count = this.StudentStatusService.getWorkgroupIdsOnNode(nodeId, periodId).length;
+        // create the window string
+        let windowString =
+            `<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' />
+            <link rel='stylesheet' href='../wise5/themes/default/style/monitor.css'>
+            <link rel='stylesheet' href='../wise5/themes/default/style/angular-material.css'>
+            <link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' />
+            <body class="layout-column">
+                <div class="layout-column">${ windowHeader }<md-content class="md-padding">${ rubricContent }</div></md-content></div>
+            </body>`;
 
-            return count;
-        }
-
-        /**
-         * Get the percentage of the class or period that has completed the node
-         * @param nodeId the node id
-         * @returns the percentage of the class or period that has completed the node
-         */
-
-    }, {
-        key: 'getNodeCompletion',
-        value: function getNodeCompletion(nodeId) {
-            // get the currently selected period
-            var currentPeriod = this.getCurrentPeriod();
-            var periodId = currentPeriod.periodId;
-
-            // get the percentage of the class or period that has completed the node
-            var completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId).completionPct;
-
-            return completionPercentage;
-        }
-
-        /**
-         * Check if the project has a rubric
-         * @return whether the project has a rubric
-         */
-
-    }, {
-        key: 'projectHasRubric',
-        value: function projectHasRubric() {
-
-            // get the project rubric
-            var projectRubric = this.ProjectService.getProjectRubric();
-
-            if (projectRubric != null && projectRubric != '') {
-                // the project has a rubric
-                return true;
-            }
-
-            return false;
-        }
-
-        /**
-         * Show the project rubric
-         */
-
-    }, {
-        key: 'showRubric',
-        value: function showRubric($event) {
-
-            // get the project title
-            var projectTitle = this.ProjectService.getProjectTitle();
-            var rubricTitle = this.$translate('projectInfo');
-
-            /*
-             * create the header for the popup that contains the project title,
-             * 'Open in New Tab' button, and 'Close' button
-             */
-            var dialogHeader = '<md-toolbar>\n                <div class="md-toolbar-tools">\n                    <h2 class="overflow--ellipsis">' + projectTitle + '</h2>\n                    <span flex>&nbsp;</span>\n                    <span class="md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
-
-            var dialogActions = '<md-dialog-actions layout="row" layout-align="end center">\n                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ \'openInNewWindow\' | translate }}">{{ \'openInNewWindow\' | translate }}</md-button>\n                <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n            </md-dialog-actions>';
-
-            /*
-             * create the header for the new window that contains the project title
-             */
-            var windowHeader = '<md-toolbar class="layout-row">\n                <div class="md-toolbar-tools" style="color: #ffffff;">\n                    <h2>' + projectTitle + '</h2>\n                    <span class="flex">&nbsp;</span>\n                    <span class="md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
-
-            // create the string that will hold the rubric content
-            var rubricContent = '<md-content class="md-whiteframe-1dp md-padding" style="background-color: #ffffff;">';
-
-            // get the project rubric
-            var rubric = this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
-
-            if (rubric != null) {
-                rubricContent += rubric + '</md-content>';
-            }
-
-            var dialogContent = '<md-dialog-content class="gray-lighter-bg">\n                <div class="md-dialog-content">' + rubricContent + '</div>\n            </md-dialog-content>';
-
-            // create the dialog string
-            var dialogString = '<md-dialog class="dialog--wider" aria-label="' + projectTitle + ' - ' + rubricTitle + '">' + dialogHeader + dialogContent + dialogActions + '</md-dialog>';
-
-            // create the window string
-            var windowString = '<link rel=\'stylesheet\' href=\'../wise5/lib/bootstrap/css/bootstrap.min.css\' />\n            <link rel=\'stylesheet\' href=\'../wise5/themes/default/style/monitor.css\'>\n            <link rel=\'stylesheet\' href=\'../wise5/themes/default/style/angular-material.css\'>\n            <link rel=\'stylesheet\' href=\'../wise5/lib/summernote/dist/summernote.css\' />\n            <body class="layout-column">\n                <div class="layout-column">' + windowHeader + '<md-content class="md-padding">' + rubricContent + '</div></md-content></div>\n            </body>';
-
-            // display the rubric in a popup
-            this.$mdDialog.show({
-                template: dialogString,
-                fullscreen: true,
-                controller: ['$scope', '$mdDialog', function DialogController($scope, $mdDialog) {
+        // display the rubric in a popup
+        this.$mdDialog.show({
+            template : dialogString,
+            fullscreen: true,
+            controller: ['$scope', '$mdDialog',
+                function DialogController($scope, $mdDialog) {
 
                     // display the rubric in a new tab
-                    $scope.openInNewWindow = function () {
+                    $scope.openInNewWindow = function() {
 
                         // open a new tab
-                        var w = window.open('', '_blank');
+                        let w = window.open('', '_blank');
 
                         // write the rubric content to the new tab
                         w.document.write(windowString);
 
                         // close the popup
                         $mdDialog.hide();
-                    };
+                    }
 
                     // close the popup
-                    $scope.close = function () {
+                    $scope.close = () => {
                         $mdDialog.hide();
-                    };
-                }],
-                targetEvent: $event,
-                clickOutsideToClose: true,
-                escapeToClose: true
-            });
-        }
-    }]);
+                    }
+                }
+            ],
+            targetEvent: $event,
+            clickOutsideToClose: true,
+            escapeToClose: true
+        });
+    }
+}
 
-    return NodeProgressController;
-}();
+NodeProgressController.$inject = [
+    '$filter',
+    '$mdDialog',
+    '$scope',
+    '$state',
+    'ConfigService',
+    'ProjectService',
+    'StudentStatusService',
+    'TeacherDataService',
+    'TeacherWebSocketService'
+];
 
-NodeProgressController.$inject = ['$filter', '$mdDialog', '$scope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
-
-exports.default = NodeProgressController;
-//# sourceMappingURL=nodeProgressController.js.map
+export default NodeProgressController;

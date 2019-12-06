@@ -33,11 +33,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.wise.portal.service.authentication.UserDetailsService;
 
 @Configuration
 @EnableTransactionManagement
@@ -49,12 +46,6 @@ public class HibernateConfig {
   @Autowired
   Properties appProperties;
 
-  @Autowired
-  PasswordEncoder passwordEncoder;
-
-  @Autowired
-  UserDetailsService userDetailsService;
-
   @Value("${spring.jpa.properties.hibernate.dialect:org.hibernate.dialect.MySQL5Dialect}")
   private String hibernateDialect;
 
@@ -63,6 +54,9 @@ public class HibernateConfig {
 
   @Value("${spring.jpa.hibernate.use-new-id-generator-mappings:false}")
   private String hibernateGeneratorMappings;
+
+  @Value("${spring.jpa.hibernate.ddl-auto:none}")
+  private String hibernateDDLAuto;
 
   @Bean
   public LocalSessionFactoryBean sessionFactory() {
@@ -85,14 +79,7 @@ public class HibernateConfig {
     properties.setProperty("hibernate.dialect", hibernateDialect);
     properties.setProperty("hibernate.storage_engine", hibernateStorageEngine);
     properties.setProperty("hibernate.id.new_generator_mappings", hibernateGeneratorMappings);
+    properties.setProperty("hibernate.hbm2ddl.auto", hibernateDDLAuto);
     return properties;
-  }
-
-  @Bean
-  public DaoAuthenticationProvider daoAuthenticationProvider() {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    provider.setUserDetailsService(userDetailsService);
-    provider.setPasswordEncoder(passwordEncoder);
-    return provider;
   }
 }

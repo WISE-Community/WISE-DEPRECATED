@@ -20,7 +20,15 @@
  */
 package org.wise.portal.dao.authentication.impl;
 
-import org.springframework.dao.support.DataAccessUtils;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.AclSidDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -38,33 +46,28 @@ import org.wise.portal.domain.authentication.impl.PersistentAclSid;
 public class HibernateAclSidDao extends AbstractHibernateDao<MutableAclSid>
     implements AclSidDao<MutableAclSid> {
 
+  @PersistenceContext
+  private EntityManager entityManager;
+
   private static final String FIND_ALL_QUERY = "from PersistentAclSid";
 
-  /**
-   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-   */
   @Override
   protected Class<PersistentAclSid> getDataObjectClass() {
     return PersistentAclSid.class;
   }
 
-  /**
-   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-   */
   @Override
   protected String getFindAllQuery() {
     return FIND_ALL_QUERY;
   }
 
-  /**
-   * @see org.wise.portal.dao.authentication.AclSidDao#retrieveBySidName(java.lang.String)
-   */
   public MutableAclSid retrieveBySidName(String sidName) {
-    return (MutableAclSid) DataAccessUtils
-      .uniqueResult(this
-        .getHibernateTemplate()
-        .findByNamedParam(
-          "from PersistentAclSid as sid where sid.sidName = :sidName",
-          "sidName", sidName));
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<PersistentAclSid> cq = cb.createQuery(PersistentAclSid.class);
+    Root<PersistentAclSid> persistentAclSidRoot = cq.from(PersistentAclSid.class);
+    cq.select(persistentAclSidRoot).where(cb.equal(persistentAclSidRoot.get("sidName"), sidName));
+    TypedQuery<PersistentAclSid> query = entityManager.createQuery(cq);
+    return query.getResultStream().findFirst().orElse(null);
   }
 }

@@ -79,35 +79,16 @@ public class SearchForStudentUsernameController {
   protected String onSubmit(
       @ModelAttribute("passwordReminderParameters") PasswordReminderParameters params,
       BindingResult bindingResult, Model model) {
-    String[] fields = null;
-    String[] values = null;
-    String classVar = "";
-
     searchForStudentUsernameValidator.validate(params, bindingResult);
     if (bindingResult.hasErrors()) {
       return formView;
     }
-
     String firstName = params.getFirstName();
     String lastName = params.getLastName();
-    String birthMonth = params.getBirthMonth();
-    String birthDay = params.getBirthDay();
-
-    fields = new String[4];
-    fields[0] = "firstname";
-    fields[1] = "lastname";
-    fields[2] = "birthmonth";
-    fields[3] = "birthday";
-
-    values = new String[4];
-    values[0] = firstName;
-    values[1] = lastName;
-    values[2] = birthMonth;
-    values[3] = birthDay;
-
-    classVar = "studentUserDetails";
-
-    List<User> accountsThatMatch = userService.retrieveByFields(fields, values, classVar);
+    Integer birthMonth = Integer.parseInt(params.getBirthMonth());
+    Integer birthDay = Integer.parseInt(params.getBirthDay());
+    List<User> accountsThatMatch = userService.retrieveStudentsByNameAndBirthday(
+        firstName, lastName, birthMonth, birthDay);
     model.addAttribute("users", accountsThatMatch);
     model.addAttribute("firstName", firstName);
     model.addAttribute("lastName", lastName);

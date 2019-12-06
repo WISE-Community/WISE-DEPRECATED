@@ -1,79 +1,99 @@
-<h2 class="mat-dialog-title" i18n>Share Classroom Unit</h2>
-<mat-dialog-content class="mat-dialog-content--scroll">
-  <p class="mat-subheading-1 accent-1">
-    {{ run.name }} <span class="mat-caption" i18n>(Run ID: {{ run.id }})</span>
-  </p>
-  <mat-form-field appearance="fill">
-    <mat-label i18n>Enter teacher username</mat-label>
-    <mat-icon matPrefix>search</mat-icon>
-    <input id="share-run-dialog-search"
-           type="text"
-           matInput
-           [formControl]="teacherSearchControl"
-           [matAutocomplete]="auto">
-    <button mat-button
-            matSuffix
-            mat-icon-button
-            [ngClass]="{'invisible': !teacherSearchControl.value}"
-            i18n-aria-label
-            aria-label="Clear"
-            (click)="teacherSearchControl.setValue('')">
-      <mat-icon>close</mat-icon>
-    </button>
-    <mat-hint *ngIf="duplicate && allTeacherUsernames.includes(teacherSearchControl.value)"
-              class="info">
-      <ng-container i18n>Teacher is already on shared list.</ng-container>
-    </mat-hint>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="shareRun()">
-      <mat-option *ngFor="let teacherUsername of filteredTeacherUsernames | async"
-                  [value]="teacherUsername">
-        {{ teacherUsername }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
-    <ng-container matColumnDef="name" sticky>
-      <th mat-header-cell *matHeaderCellDef i18n>Name</th>
-      <td mat-cell *matCellDef="let sharedOwner">
-        <ng-container *ngIf="sharedOwner.isOwner">
-          {{ run.owner.firstName }} {{ run.owner.lastName }}
-        </ng-container>
-        <ng-container *ngIf="!sharedOwner.isOwner">
-          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a [routerLink]="" (click)="unshareRun(sharedOwner)" class="warn" i18n>Revoke</a>)
-        </ng-container>
-      </td>
+<h2 *ngIf="!isTransfer" mat-dialog-title i18n>Share Classroom Unit</h2>
+<h2 *ngIf="isTransfer" 
+    mat-dialog-title 
+    fxLayoutAlign="start center" 
+    [class.warn]="transferRunWarning">
+  <span i18n>Transfer Classroom Unit</span>
+  <span fxFlex></span>
+  <mat-icon *ngIf="transferRunWarning" color="warn">warning</mat-icon>
+</h2>
+<div mat-dialog-content [class.mat-dialog-content--scroll]="!transferRunWarning"
+    *ngIf="run != null">
+  <div [class.info-block]="transferRunWarning">
+    <p class="mat-subheading-1 accent-1">
+      {{ run.name }} <span class="mat-caption" i18n>(Run ID: {{ run.id }})</span>
+    </p>
+    <mat-form-field appearance="fill" *ngIf="!transferRunWarning">
+      <mat-label i18n>Enter teacher username</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input id="share-run-dialog-search"
+             type="text"
+             matInput
+             [formControl]="teacherSearchControl"
+             [matAutocomplete]="auto">
+      <button mat-button
+              matSuffix
+              mat-icon-button
+              [ngClass]="{'invisible': !teacherSearchControl.value}"
+              i18n-aria-label
+              aria-label="Clear"
+              (click)="teacherSearchControl.setValue('')">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-hint *ngIf="isDuplicateSharedTeacher && allTeacherUsernames.includes(teacherSearchControl.value)"
+                class="info">
+        <ng-container i18n>Teacher is already on shared list.</ng-container>
+      </mat-hint>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="shareRun()">
+        <mat-option *ngFor="let teacherUsername of filteredTeacherUsernames | async"
+                    [value]="teacherUsername">
+          {{ teacherUsername }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z1" *ngIf="!isTransfer">
+      <ng-container matColumnDef="name" sticky>
+        <th mat-header-cell *matHeaderCellDef i18n>Name</th>
+        <td mat-cell *matCellDef="let sharedOwner">
+          <ng-container *ngIf="sharedOwner.isOwner">
+            {{ run.owner.firstName }} {{ run.owner.lastName }}
+          </ng-container>
+          <ng-container *ngIf="!sharedOwner.isOwner">
+            {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a [routerLink]="" (click)="unshareRun(sharedOwner)" class="warn" i18n>Revoke</a>)
+          </ng-container>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="permissions">
+        <th mat-header-cell *matHeaderCellDef i18n>Permissions</th>
+        <td mat-cell *matCellDef="let sharedOwner">
+          <ng-container *ngIf="sharedOwner.isOwner" i18n>Owner. Full permissions.</ng-container>
+          <ng-container *ngIf="!sharedOwner.isOwner">
+            <div fxLayout="row wrap" fxLayoutGap="12px">
+              <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[1]"
+                            disabled="true">
+                <ng-container i18n>View Student Work</ng-container>
+              </mat-checkbox>
+              <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[3]"
+                            (change)="runPermissionChanged(sharedOwner.id, 3, sharedOwner.runPermissions[3])">
+                <ng-container i18n>View Student Names</ng-container>
+              </mat-checkbox>
+              <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[2]"
+                            (change)="runPermissionChanged(sharedOwner.id, 2, sharedOwner.runPermissions[2])">
+                <ng-container i18n>Grade and Manage</ng-container>
+              </mat-checkbox>
+              <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]"
+                            (change)="projectPermissionChanged(project, sharedOwner.id, 2, sharedOwner.projectPermissions[2])">
+                <ng-container i18n>Edit Unit Content</ng-container>
+              </mat-checkbox>
+            </div>
+          </ng-container>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <ng-container *ngIf="transferRunWarning">
+      <p class="warning" i18n>Are you sure you want to make {{teacherSearchControl.value}} the new owner of this unit?</p>
+      <p i18n>You will still be able to access the unit but the new owner will have the ability to take away or change your access permissions.</p>
     </ng-container>
-    <ng-container matColumnDef="permissions">
-      <th mat-header-cell *matHeaderCellDef i18n>Permissions</th>
-      <td mat-cell *matCellDef="let sharedOwner">
-        <ng-container *ngIf="sharedOwner.isOwner" i18n>Owner. Full permissions.</ng-container>
-        <ng-container *ngIf="!sharedOwner.isOwner">
-          <div fxLayout="row wrap" fxLayoutGap="12px">
-            <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[1]"
-                          disabled="true">
-              <ng-container i18n>View Student Work</ng-container>
-            </mat-checkbox>
-            <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[3]"
-                          (change)="runPermissionChanged(sharedOwner.id, 3, sharedOwner.runPermissions[3])">
-              <ng-container i18n>View Student Names</ng-container>
-            </mat-checkbox>
-            <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[2]"
-                          (change)="runPermissionChanged(sharedOwner.id, 2, sharedOwner.runPermissions[2])">
-              <ng-container i18n>Grade and Manage</ng-container>
-            </mat-checkbox>
-            <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]"
-                          (change)="projectPermissionChanged(project, sharedOwner.id, 2, sharedOwner.projectPermissions[2])">
-              <ng-container i18n>Edit Unit Content</ng-container>
-            </mat-checkbox>
-          </div>
-        </ng-container>
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</mat-dialog-content>
-<mat-dialog-actions fxLayoutAlign="end">
-  <button mat-flat-button color="primary" mat-dialog-close i18n>Done</button>
-</mat-dialog-actions>
+  </div>
+</div>
+<div mat-dialog-actions
+     fxLayoutAlign="end"
+     fxLayoutGap="8px">
+  <button mat-button color="accent" (click)="openTransferRunDialog()" *ngIf="isOwner && !isTransfer" i18n>Transfer Ownership</button>
+  <button mat-flat-button color="primary" (click)="closeTransferRunDialog()" *ngIf="isTransfer" i18n>Cancel</button>
+  <button mat-button color="warn" (click)="completeRunOwnershipTransfer()" *ngIf="transferRunWarning" i18n>Proceed</button>
+  <button mat-flat-button color="primary" mat-dialog-close *ngIf="!isTransfer" i18n>Done</button>
+</div>
 

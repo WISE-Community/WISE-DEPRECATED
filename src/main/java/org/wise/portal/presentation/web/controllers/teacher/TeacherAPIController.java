@@ -188,7 +188,7 @@ public class TeacherAPIController {
 
   @RequestMapping(value = "/usernames", method = RequestMethod.GET)
   protected List<String> getAllTeacherUsernames() {
-    return userDetailsService.retrieveAllUsernames("TeacherUserDetails");
+    return userDetailsService.retrieveAllTeacherUsernames();
   }
 
   @RequestMapping(value = "/register", method = RequestMethod.POST)

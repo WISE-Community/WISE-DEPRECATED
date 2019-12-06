@@ -25,7 +25,7 @@
 <div class="view-content view-content--with-sidemenu">
     <div class="l-constrained" layout="column">
         <div style="float:right">
-            <div ng-show="dataExportController.exportType == null">
+            <div ng-if="dataExportController.exportType == null">
                 <md-button class="md-raised" ng-click="dataExportController.exportOneWorkgroupPerRowClicked()" translate="exportOneWorkgroupPerRow" id="downloadOneWorkgroupPerRowButton"></md-button>
                 <br/>
                 <md-button class="md-raised" ng-click="dataExportController.exportType = 'latestStudentWork'" translate="exportLatestStudentWork" id="downloadLatestStudentWorkButton"></md-button>
@@ -45,59 +45,59 @@
                 <br/>
                 <md-button class="md-raised" ng-click="dataExportController.rawDataExportClicked()" translate="exportRawData" id="downloadRawDataButton"></md-button>
             </div>
-            <div ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' || dataExportController.exportType == 'rawData' ">
+            <div ng-if="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' || dataExportController.exportType == 'rawData' ">
                 <h4>{{ dataExportController.exportType | translate }}</h4>
-                <div ng-show="dataExportController.exportType == 'oneWorkgroupPerRow'">
-                    <md-button class="md-raised" ng-click="dataExportController.defaultClicked()">{{ 'default' | translate }}</md-button>
-                    <md-button class="md-raised" ng-click="dataExportController.everythingClicked()">{{ 'everything' | translate }}</md-button>
+                <div ng-if="dataExportController.exportType == 'oneWorkgroupPerRow'">
+                    <md-button class="md-raised" ng-click="dataExportController.defaultClicked()">{{ ::'default' | translate }}</md-button>
+                    <md-button class="md-raised" ng-click="dataExportController.everythingClicked()">{{ ::'everything' | translate }}</md-button>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeStudentWork">{{ 'includeStudentWork' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeStudentWork">{{ ::'includeStudentWork' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeStudentWorkIds">{{ 'includeStudentWorkIDs' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeStudentWorkIds">{{ ::'includeStudentWorkIDs' | translate }}</md-checkbox>
                     <br ng-if="dataExportController.canViewStudentNames"/>
-                    <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ 'includeStudentNames' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ ::'includeStudentNames' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeStudentWorkTimestamps">{{ 'includeStudentWorkTimestamps' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeStudentWorkTimestamps">{{ ::'includeStudentWorkTimestamps' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeBranchPathTaken">{{ 'includeBranchPathTaken' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeBranchPathTaken">{{ ::'includeBranchPathTaken' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeBranchPathTakenNodeId">{{ 'includeBranchPathTakenNodeId' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeBranchPathTakenNodeId">{{ ::'includeBranchPathTakenNodeId' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeBranchPathTakenStepTitle">{{ 'includeBranchPathTakenStepTitle' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeBranchPathTakenStepTitle">{{ ::'includeBranchPathTakenStepTitle' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeScores">{{ 'includeScores' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeScores">{{ ::'includeScores' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeScoreTimestamps">{{ 'includeScoreTimestamps' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeScoreTimestamps">{{ ::'includeScoreTimestamps' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeComments">{{ 'includeComments' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeComments">{{ ::'includeComments' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeCommentTimestamps">{{ 'includeCommentTimestamps' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeCommentTimestamps">{{ ::'includeCommentTimestamps' | translate }}</md-checkbox>
                 </div>
-                <div ng-show="dataExportController.exportType == 'rawData'">
-                    <md-button class="md-raised" ng-click="dataExportController.defaultClicked()">{{ 'default' | translate }}</md-button>
-                    <md-button class="md-raised" ng-click="dataExportController.everythingClicked()">{{ 'everything' | translate }}</md-button>
+                <div ng-if="dataExportController.exportType == 'rawData'">
+                    <md-button class="md-raised" ng-click="dataExportController.defaultClicked()">{{ ::'default' | translate }}</md-button>
+                    <md-button class="md-raised" ng-click="dataExportController.everythingClicked()">{{ ::'everything' | translate }}</md-button>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeStudentWork">{{ 'includeStudentWork' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeStudentWork">{{ ::'includeStudentWork' | translate }}</md-checkbox>
                     <br ng-if="dataExportController.canViewStudentNames"/>
-                    <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ 'includeStudentNames' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ ::'includeStudentNames' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeAnnotations">{{ 'includeAnnotations' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeAnnotations">{{ ::'includeAnnotations' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.includeEvents">{{ 'includeEvents' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.includeEvents">{{ ::'includeEvents' | translate }}</md-checkbox>
                     <br/>
                 </div>
-                <div ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events'">
+                <div ng-if="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events'">
                   <br ng-if="dataExportController.canViewStudentNames"/>
-                  <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ 'includeStudentNames' | translate }}</md-checkbox>
+                  <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ ::'includeStudentNames' | translate }}</md-checkbox>
                 </div>
-                <md-radio-group ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' || dataExportController.exportType == 'rawData'"
+                <md-radio-group ng-if="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' || dataExportController.exportType == 'rawData'"
                                 ng-model="dataExportController.exportStepSelectionType">
-                    <md-radio-button value="exportAllSteps" class="md-primary">{{ 'exportAllSteps' | translate }}</md-radio-button>
-                    <md-radio-button value="exportSelectSteps" class="md-primary">{{ 'exportSelectSteps' | translate }}</md-radio-button>
+                    <md-radio-button value="exportAllSteps" class="md-primary">{{ ::'exportAllSteps' | translate }}</md-radio-button>
+                    <md-radio-button value="exportSelectSteps" class="md-primary">{{ ::'exportSelectSteps' | translate }}</md-radio-button>
                 </md-radio-group>
                 <md-button class="md-raised" ng-click="dataExportController.export()" translate="export" id="doExportButton"></md-button>
                 <md-button class="md-raised" ng-click="dataExportController.exportType = null" translate="cancel" id="cancel"></md-button>
-                <div ng-show="dataExportController.exportStepSelectionType == 'exportSelectSteps'">
+                <div ng-if="dataExportController.exportStepSelectionType == 'exportSelectSteps'">
                     <md-button translate="selectAll" ng-click="dataExportController.selectAll()"></md-button>
                     <md-button translate="deselectAll" ng-click="dataExportController.deselectAll()"></md-button><br/>
                     <h4 style='display:inline'>{{dataExportController.project.metadata.title}}</h4>
@@ -112,7 +112,7 @@
                                     ng-if='projectItem.order != 0'
                                     ng-class='{"groupHeader": dataExportController.isGroupNode(projectItem.node.id), "stepHeader": !dataExportController.isGroupNode(projectItem.node.id), "branchPathStepHeader": dataExportController.isNodeInAnyBranchPath(projectItem.node.id) && !dataExportController.isGroupNode(projectItem.node.id)}'/>
                         <h6 style='display: inline; cursor: pointer' ng-if='projectItem.order != 0'>
-                            {{dataExportController.getNodePositionById(projectItem.node.id)}} {{dataExportController.getNodeTitleByNodeId(projectItem.node.id)}}
+                            {{::dataExportController.getNodePositionById(projectItem.node.id)}} {{::dataExportController.getNodeTitleByNodeId(projectItem.node.id)}}
                         </h6>
                         <span style="cursor:pointer" ng-if='projectItem.node.type != "group"'
                                 ng-click='dataExportController.previewNode(projectItem.node)'>
@@ -120,32 +120,32 @@
                             <md-icon>pageview</md-icon>
                         </span>
                         <div ng-if='projectItem.order != 0 && projectItem.node.type != "group" && projectItem.node.components.length > 0'
-                             ng-repeat='componentItem in projectItem.node.components track by $index'>
-                            <input type='checkbox' ng-model='componentItem.checked' class='componentHeader'/> {{($index + 1)}} {{componentItem.type}}
+                             ng-repeat='componentItem in ::projectItem.node.components track by $index'>
+                            <input type='checkbox' ng-model='componentItem.checked' class='componentHeader'/> {{::($index + 1)}} {{::componentItem.type}}
                         </div>
                     </div>
                     <md-button class="md-raised" ng-click="dataExportController.export()" translate="export" id="doExportButton2"></md-button>
                     <md-button class="md-raised" ng-click="dataExportController.exportType = null" translate="cancel" id="cancel"></md-button>
                 </div>
             </div>
-            <div ng-show='dataExportController.exportType == "componentData"'>
+            <div ng-if='dataExportController.exportType == "componentData"'>
               <md-button class="md-raised" ng-click="dataExportController.exportType = null" id="cancel">
                   <md-icon>arrow_back</md-icon>
                   <md-tooltip>
-                      {{ 'back' | translate }}
+                      {{ ::'back' | translate }}
                   </md-tooltip>
               </md-button>
-              <h4>{{ 'exportComponentData' | translate }}</h4>
+              <h4>{{ ::'exportComponentData' | translate }}</h4>
               <br/>
               <md-radio-group ng-model="dataExportController.workSelectionType">
-                  <md-radio-button value="exportAllWork" class="md-primary">{{ 'exportAllStudentWork' | translate }}</md-radio-button>
-                  <md-radio-button value="exportLatestWork" class="md-primary">{{ 'exportLatestStudentWork' | translate }}</md-radio-button>
+                  <md-radio-button value="exportAllWork" class="md-primary">{{ ::'exportAllStudentWork' | translate }}</md-radio-button>
+                  <md-radio-button value="exportLatestWork" class="md-primary">{{ ::'exportLatestStudentWork' | translate }}</md-radio-button>
               </md-radio-group>
-              <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ 'includeStudentNames' | translate }}</md-checkbox>
+              <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ ::'includeStudentNames' | translate }}</md-checkbox>
               <br ng-if="dataExportController.canViewStudentNames"/>
-              <md-checkbox ng-model="dataExportController.includeCorrectnessColumns">{{ 'includeCorrectnessColumns' | translate }}</md-checkbox>
+              <md-checkbox ng-model="dataExportController.includeCorrectnessColumns">{{ ::'includeCorrectnessColumns' | translate }}</md-checkbox>
               <br/>
-              <md-checkbox ng-model="dataExportController.includeOnlySubmits">{{ 'includeOnlySubmits' | translate }}</md-checkbox>
+              <md-checkbox ng-model="dataExportController.includeOnlySubmits">{{ ::'includeOnlySubmits' | translate }}</md-checkbox>
               <br/>
               <h4 style='display:inline'>{{dataExportController.project.metadata.title}}</h4>
               <span style="cursor:pointer" ng-click='dataExportController.previewProject()'>
@@ -156,7 +156,7 @@
                   <h6 style='display: inline; cursor: pointer'
                       ng-if='projectItem.order != 0'
                       ng-class='{ "stepHeader" : !dataExportController.isGroupNode(projectItem.node.id) }'>
-                      {{dataExportController.getNodePositionById(projectItem.node.id)}} {{dataExportController.getNodeTitleByNodeId(projectItem.node.id)}}
+                      {{::dataExportController.getNodePositionById(projectItem.node.id)}} {{::dataExportController.getNodeTitleByNodeId(projectItem.node.id)}}
                   </h6>
                   <span style="cursor:pointer" ng-if='projectItem.node.type != "group"'
                           ng-click='dataExportController.previewNode(projectItem.node)'>
@@ -164,19 +164,19 @@
                       <md-icon>pageview</md-icon>
                   </span>
                   <div ng-if='projectItem.order != 0 && projectItem.node.type != "group" && projectItem.node.components.length > 0'
-                       ng-repeat='componentItem in projectItem.node.components track by $index'
+                       ng-repeat='componentItem in ::projectItem.node.components track by $index'
                        class='componentHeader'>
                       <div>
-                        {{($index + 1)}}. {{componentItem.type}}
+                        {{::($index + 1)}}. {{::componentItem.type}}
                         <md-button ng-if='dataExportController.canExportComponentDataType(componentItem.type)'
                             class='md-primary md-raised exportComponentDataButton'
                             ng-click='dataExportController.exportComponentClicked(projectItem.node.id, componentItem)'>
                           <md-icon>file_download</md-icon>
-                          <md-tooltip>{{ 'downloadExport' | translate }}</md-tooltip>
+                          <md-tooltip>{{ ::'downloadExport' | translate }}</md-tooltip>
                         </md-button>
-                        <span ng-if='componentItem.type == "Match"'>
+                        <span ng-if='::componentItem.type == "Match"'>
                           <md-icon>help</md-icon>
-                          <md-tooltip md-direction='right'>{{ 'matchCorrectnessColumnKey' | translate }}</md-tooltip>
+                          <md-tooltip md-direction='right'>{{ ::'matchCorrectnessColumnKey' | translate }}</md-tooltip>
                         </span>
                       </div>
                   </div>
@@ -184,7 +184,7 @@
               <md-button class="md-raised" ng-click="dataExportController.exportType = null" id="cancel">
                   <md-icon>arrow_back</md-icon>
                   <md-tooltip>
-                      {{ 'back' | translate }}
+                      {{ ::'back' | translate }}
                   </md-tooltip>
               </md-button>
             </div>

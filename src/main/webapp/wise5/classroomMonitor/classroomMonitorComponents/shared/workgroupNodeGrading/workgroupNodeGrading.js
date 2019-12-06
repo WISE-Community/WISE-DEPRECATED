@@ -1,164 +1,159 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var WorkgroupNodeGradingController = function () {
-    function WorkgroupNodeGradingController(ConfigService, ProjectService, TeacherDataService, UtilService) {
-        var _this = this;
-
-        _classCallCheck(this, WorkgroupNodeGradingController);
-
+class WorkgroupNodeGradingController {
+    constructor(ConfigService,
+                ProjectService,
+                TeacherDataService,
+                UtilService) {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
 
-        this.$onInit = function () {
-            _this.nodeContent = _this.getNodeContent();
-            _this.components = _this.getComponents();
-            _this.teacherWorkgroupId = _this.ConfigService.getWorkgroupId();
+        this.$onInit = () => {
+            this.nodeContent = this.getNodeContent();
+            this.components = this.getComponents();
+            this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
         };
 
-        this.$onChanges = function (changesObj) {
+        this.$onChanges = (changesObj) => {
             if (changesObj.hiddenComponents) {
-                _this.hiddenComponents = changesObj.hiddenComponents.currentValue;
+                this.hiddenComponents = changesObj.hiddenComponents.currentValue;
             }
         };
+    };
+
+    getNodeContent() {
+        let result = null;
+
+        let node = this.ProjectService.getNodeById(this.nodeId);
+        if (node != null) {
+            // field that will hold the node content
+            result = node;
+        }
+
+        return result;
     }
 
-    _createClass(WorkgroupNodeGradingController, [{
-        key: 'getNodeContent',
-        value: function getNodeContent() {
-            var result = null;
+    /**
+     * Get the components for this node
+     * @return an array that contains the content for the components
+     */
+    getComponents() {
+        let components = null;
 
-            var node = this.ProjectService.getNodeById(this.nodeId);
-            if (node != null) {
-                // field that will hold the node content
-                result = node;
-            }
+        if (this.nodeContent) {
+            components = this.nodeContent.components;
 
-            return result;
-        }
+            for (let c = 0; c < components.length; c++) {
+                let component = components[c];
 
-        /**
-         * Get the components for this node
-         * @return an array that contains the content for the components
-         */
-
-    }, {
-        key: 'getComponents',
-        value: function getComponents() {
-            var components = null;
-
-            if (this.nodeContent) {
-                components = this.nodeContent.components;
-
-                for (var c = 0; c < components.length; c++) {
-                    var component = components[c];
-
-                    if (this.isDisabled) {
-                        component.isDisabled = true;
-                    }
-
-                    // set whether component captures student work (for filtering purposes)
-                    component.hasWork = this.ProjectService.componentHasWork(component);
+                if (this.isDisabled) {
+                    component.isDisabled = true;
                 }
+
+                // set whether component captures student work (for filtering purposes)
+                component.hasWork = this.ProjectService.componentHasWork(component);
             }
-
-            return components;
         }
 
-        /**
-         * Get the student data for a specific component
-         * @param the componentId
-         * @param the workgroupId id of Workgroup who created the component state
-         * @return the student data for the given component
-         */
+        return components;
+    }
 
-    }, {
-        key: 'getLatestComponentStateByWorkgroupIdAndComponentId',
-        value: function getLatestComponentStateByWorkgroupIdAndComponentId(workgroupId, componentId) {
-            var componentState = null;
+    /**
+     * Get the student data for a specific component
+     * @param the componentId
+     * @param the workgroupId id of Workgroup who created the component state
+     * @return the student data for the given component
+     */
+    getLatestComponentStateByWorkgroupIdAndComponentId(workgroupId, componentId) {
+        let componentState = null;
 
-            if (workgroupId != null && componentId != null) {
-                // get the latest component state for the component
-                componentState = this.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, this.nodeId, componentId);
-            }
-
-            return componentState;
+        if (workgroupId != null && componentId != null) {
+            // get the latest component state for the component
+            componentState = this.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, this.nodeId, componentId);
         }
 
-        /**
-         * Get the student data for a specific part
-         * @param the componentId
-         * @param the workgroupId id of Workgroup who created the component state
-         * @return the student data for the given component
-         */
+        return componentState;
+    }
 
-    }, {
-        key: 'getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId',
-        value: function getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(workgroupId, nodeId, componentId) {
-            var componentState = null;
+    /**
+     * Get the student data for a specific part
+     * @param the componentId
+     * @param the workgroupId id of Workgroup who created the component state
+     * @return the student data for the given component
+     */
+    getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(workgroupId, nodeId, componentId) {
+        let componentState = null;
 
-            if (workgroupId != null && nodeId != null && componentId != null) {
+        if (workgroupId != null && nodeId != null && componentId != null) {
 
-                // get the latest component state for the component
-                componentState = this.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
-            }
-
-            return componentState;
-        }
-    }, {
-        key: 'convertToClientTimestamp',
-        value: function convertToClientTimestamp(time) {
-            return this.ConfigService.convertToClientTimestamp(time);
-        }
-    }, {
-        key: 'isComponentVisible',
-        value: function isComponentVisible(componentId) {
-            var result = true;
-
-            var index = this.hiddenComponents.indexOf(componentId);
-            if (index > -1) {
-                result = false;
-            }
-
-            return result;
+            // get the latest component state for the component
+            componentState = this.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
         }
 
-        /**
-         * Get the component type label for the given component type
-         * @param componentType string
-         * @return string of the component type label
-         */
+        return componentState;
+    }
 
-    }, {
-        key: 'getComponentTypeLabel',
-        value: function getComponentTypeLabel(componentType) {
-            return this.UtilService.getComponentTypeLabel(componentType);
+    convertToClientTimestamp(time) {
+        return this.ConfigService.convertToClientTimestamp(time);
+    }
+
+    isComponentVisible(componentId) {
+        let result = true;
+
+        let index = this.hiddenComponents.indexOf(componentId);
+        if (index > -1) {
+            result = false;
         }
-    }]);
 
-    return WorkgroupNodeGradingController;
-}();
+        return result;
+    }
 
-WorkgroupNodeGradingController.$inject = ['ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
+    /**
+     * Get the component type label for the given component type
+     * @param componentType string
+     * @return string of the component type label
+     */
+    getComponentTypeLabel(componentType) {
+        return this.UtilService.getComponentTypeLabel(componentType);
+    }
+}
 
-var WorkgroupNodeGrading = {
+WorkgroupNodeGradingController.$inject = [
+    'ConfigService',
+    'ProjectService',
+    'TeacherDataService',
+    'UtilService'
+];
+
+const WorkgroupNodeGrading = {
     bindings: {
         workgroupId: '<',
         nodeId: '@',
         hiddenComponents: '<'
     },
-    template: '<div class="grading__item">\n            <div id="component_{{component.id}}_{{$ctrl.workgroupId}}" class="component component--grading" ng-repeat=\'component in $ctrl.components | filter:{hasWork: true}\'>\n                <div ng-show="$ctrl.isComponentVisible(component.id)">\n                    <h3 class="accent-2 md-body-2 gray-lightest-bg component__header">\n                        {{ $index+1 + \'. \' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;\n                        <component-new-work-badge component-id="component.id"\n                                                  workgroup-id="$ctrl.workgroupId"\n                                                  node-id="$ctrl.nodeId"></component-new-work-badge>\n                    </h3>\n                    <component class="component-container"\n                               node-id=\'{{$ctrl.nodeId}}\'\n                               component-id=\'{{component.id}}\'\n                               component-state=\'{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}\'\n                               workgroup-id=\'{{$ctrl.workgroupId}}\'\n                               teacher-workgroup-id=\'{{$ctrl.teacherWorkgroupId}}\'\n                               mode=\'grading\'></component>\n                </div>\n            </div>\n        </div>',
+    template:
+        `<div class="grading__item">
+            <div id="component_{{::component.id}}_{{::$ctrl.workgroupId}}" class="component component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
+                <div ng-show="$ctrl.isComponentVisible(component.id)">
+                    <h3 class="accent-2 md-body-2 gray-lightest-bg component__header">
+                        {{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
+                        <component-new-work-badge component-id="::component.id"
+                                                  workgroup-id="::$ctrl.workgroupId"
+                                                  node-id="$ctrl.nodeId"></component-new-work-badge>
+                    </h3>
+                    <component class="component-container"
+                               node-id='{{::$ctrl.nodeId}}'
+                               component-id='{{::component.id}}'
+                               component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}'
+                               workgroup-id='{{::$ctrl.workgroupId}}'
+                               teacher-workgroup-id='{{::$ctrl.teacherWorkgroupId}}'
+                               mode='grading'></component>
+                </div>
+            </div>
+        </div>`,
     controller: WorkgroupNodeGradingController
 };
 
-exports.default = WorkgroupNodeGrading;
-//# sourceMappingURL=workgroupNodeGrading.js.map
+export default WorkgroupNodeGrading;

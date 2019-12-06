@@ -25,8 +25,14 @@ package org.wise.portal.dao.statistics.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -38,6 +44,14 @@ import org.wise.vle.domain.statistics.VLEStatistics;
 public class HibernateVLEStatisticsDao extends AbstractHibernateDao<VLEStatistics>
     implements VLEStatisticsDao<VLEStatistics> {
 
+  @PersistenceContext
+  private EntityManager entityManager;
+
+  private CriteriaBuilder getCriteriaBuilder() {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.getCriteriaBuilder(); 
+  }
+  
   @Override
   protected String getFindAllQuery() {
     return null;
@@ -65,27 +79,23 @@ public class HibernateVLEStatisticsDao extends AbstractHibernateDao<VLEStatistic
     save(vleStatistics);
   }
 
-  /**
-   * Get all the vle statistics rows ordered from oldest to newest
-   * @return a list of all the vle statistics
-   */
   @Transactional(readOnly=true)
   public List<VLEStatistics> getVLEStatistics() {
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-
-    //get the vle statistics from oldest to newest
-    return session.createCriteria(VLEStatistics.class).addOrder(Order.asc("timestamp")).list();
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<VLEStatistics> cq = cb.createQuery(VLEStatistics.class);
+    Root<VLEStatistics> vleStatisticsRoot = cq.from(VLEStatistics.class);
+    cq.select(vleStatisticsRoot).orderBy(cb.asc(vleStatisticsRoot.get("timestamp")));
+    TypedQuery<VLEStatistics> query = entityManager.createQuery(cq);
+    return query.getResultList();
   }
 
-  /**
-   * Gets latest vle statistics
-   * @return a list of all the vle statistics
-   */
   @Transactional(readOnly=true)
   public VLEStatistics getLatestVLEStatistics() {
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-
-    //get the vle statistics from oldest to newest
-    return (VLEStatistics) session.createCriteria(VLEStatistics.class).addOrder(Order.asc("timestamp")).setMaxResults(1).uniqueResult();
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<VLEStatistics> cq = cb.createQuery(VLEStatistics.class);
+    Root<VLEStatistics> vleStatisticsRoot = cq.from(VLEStatistics.class);
+    cq.select(vleStatisticsRoot).orderBy(cb.desc(vleStatisticsRoot.get("timestamp")));
+    TypedQuery<VLEStatistics> query = entityManager.createQuery(cq);
+    return query.getResultStream().findFirst().orElse(null);
   }
 }

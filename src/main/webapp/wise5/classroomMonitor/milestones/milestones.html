@@ -5,7 +5,7 @@
             <md-card ng-repeat="milestone in milestonesController.projectAchievements | orderBy:'params.targetDateTemp'"
                      class="milestone md-button" md-ink-ripple
                      ng-click="milestonesController.showMilestoneDetails(milestone, $event)"
-                     aria-label="{{ 'VIEW_MILESTONE_DETAILS' | translate:{ name: milestone.name } }}">
+                     aria-label="{{ ::'VIEW_MILESTONE_DETAILS' | translate:{ name: milestone.name } }}">
                 <md-card-content layout="column" layout-align="center center">
                     <div class="milestone__title" md-truncate>{{ milestone.name }}</div>
                     <div class="milestone__progress">
@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <p class="md-body-1 text-secondary">{{ milestone.numberOfStudentsCompleted }}/{{ milestonesController.numberOfStudentsInRun }} teams completed</p>
-                    <p ng-if="milestone.isReportAvailable" class="md-body-2 info">~ {{ 'reportAvailable' | translate }} ~</p>
+                    <p ng-if="milestone.isReportAvailable" class="md-body-2 info">~ {{ ::'reportAvailable' | translate }} ~</p>
                     <div class="md-body-2" ng-if="!milestone.isReportAvailable"
                          ng-class="{ 'warn': milestonesController.isBeforeDay(milestone.params.targetDate, milestone.percentageCompleted),
                             'info': milestonesController.isSameDay(milestone.params.targetDate, milestone.percentageCompleted) }">
@@ -30,9 +30,9 @@
             </md-card>
             <!--<md-card class="milestone milestone--add md-button primary" md-ink-ripple
                      ng-click="milestonesController.editMilestone(null, $event)"
-                     aria-label="{{ 'ADD_MILESTONE' | translate }}">
+                     aria-label="{{ ::'ADD_MILESTONE' | translate }}">
                 <md-card-content layout="column" layout-align="center center">
-                    <div class="milestone__title center">{{ 'ADD_MILESTONE' | translate }}</div>
+                    <div class="milestone__title center">{{ ::'ADD_MILESTONE' | translate }}</div>
                     <div class="milestone--add__icon" layout="column" layout-align="center center">
                         <md-icon class="md-48 md-primary"> add </md-icon>
                     </div>

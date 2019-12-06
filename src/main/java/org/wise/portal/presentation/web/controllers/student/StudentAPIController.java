@@ -23,6 +23,18 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
@@ -32,10 +44,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -59,9 +76,6 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
  * Controller for Student REST API
@@ -295,7 +309,7 @@ public class StudentAPIController {
   private JSONObject performLaunchRun(Long runId, Long workgroupId, String presentUserIds,
       String absentUserIds, HttpServletRequest request, Run run, Set<User> presentMembers,
       Workgroup workgroup) throws ObjectNotFoundException, PeriodNotFoundException,
-      StudentUserAlreadyAssociatedWithRunException, JSONException {
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException, JSONException {
     addStudentsToRunIfNecessary(run, presentMembers, workgroup);
     if (!run.isEnded()) {
       saveStudentAttendance(runId, workgroupId, presentUserIds, absentUserIds);
@@ -306,7 +320,7 @@ public class StudentAPIController {
   }
 
   private void addStudentsToRunIfNecessary(Run run, Set<User> presentMembers, Workgroup workgroup)
-      throws ObjectNotFoundException, PeriodNotFoundException, StudentUserAlreadyAssociatedWithRunException {
+      throws ObjectNotFoundException, PeriodNotFoundException, RunHasEndedException, StudentUserAlreadyAssociatedWithRunException {
     Projectcode projectcode = new Projectcode(run.getRuncode(), workgroup.getPeriod().getName());
     for (User presentMember : presentMembers) {
       if (!run.isStudentAssociatedToThisRun(presentMember)) {
@@ -402,6 +416,8 @@ public class StudentAPIController {
       error = "periodNotFound";
     } catch (StudentUserAlreadyAssociatedWithRunException se) {
       error = "studentAlreadyAssociatedWithRun";
+    } catch (RunHasEndedException e) {
+      error = "runHasEnded";
     }
 
     if (!error.equals("")) {

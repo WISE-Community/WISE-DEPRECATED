@@ -34,7 +34,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -106,8 +105,8 @@ public class WISE5AuthorProjectController {
   private String featuredProjectIconsFolderRelativePath = "wise5/authoringTool/projectIcons";
 
   @GetMapping("/author")
-  protected String authorProject(HttpServletRequest request, HttpServletResponse response,
-      ModelMap modelMap) throws ObjectNotFoundException {
+  protected String authorProject(HttpServletRequest request, HttpServletResponse response)
+      throws ObjectNotFoundException {
     Portal portal = portalService.getById(new Integer(1));
     if (!portal.isLoginAllowed()) {
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -117,9 +116,7 @@ public class WISE5AuthorProjectController {
       SecurityContextHolder.getContext().setAuthentication(null);
       return "redirect:/index.html";
     }
-    String contextPath = request.getContextPath();
-    modelMap.put("configURL", contextPath + "/authorConfig");
-    return "author";
+    return "forward:/wise5/authoringTool/dist/index.html";
   }
 
   /**
@@ -350,7 +347,7 @@ public class WISE5AuthorProjectController {
 
   @GetMapping("/authorConfig")
   @ResponseBody
-  protected String getAuthorProjectConfigChooser(HttpServletRequest request)
+  protected String getAuthorProjectConfigChooser(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     JSONObject config = getDefaultAuthoringConfigJsonObject(request);
     return config.toString();
