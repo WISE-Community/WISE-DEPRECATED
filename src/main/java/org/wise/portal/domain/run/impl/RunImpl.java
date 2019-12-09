@@ -269,8 +269,7 @@ public class RunImpl implements Run {
   }
 
   public Group getPeriodOfStudent(User studentUser) {
-    Set<Group> periods = getPeriods();
-    for (Group period : periods) {
+    for (Group period : getPeriods()) {
       if (period.getMembers().contains(studentUser)) {
         return period;
       }

@@ -23,6 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,10 +44,12 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
+import org.springframework.security.core.Authentication;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -66,9 +69,9 @@ import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.ErrorResponse;
 import org.wise.portal.presentation.web.response.LaunchRunErrorResponse;
+import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.project.ProjectService;
@@ -115,35 +118,16 @@ public class StudentAPIController {
   @Value("${google.clientId:}")
   private String googleClientId;
 
-  // path to project thumbnail image relative to project folder
-  // TODO: make this dynamic, part of project metadata?
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
-  @RequestMapping(value = "/runs", method = RequestMethod.GET)
-  protected String handleGET(ModelMap modelMap,
-      @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
-    User user = ControllerUtil.getSignedInUser();
-    List<Run> runlist = runService.getRunList(user);
+  @GetMapping("/runs")
+  protected String getRuns(Authentication authentication) throws JSONException {
+    User user = userService.retrieveUserByUsername(authentication.getName());
     JSONArray runListJSONArray = new JSONArray();
-    for (Run run : runlist) {
+    for (Run run : runService.getRunList(user)) {
       runListJSONArray.put(getRunJSON(user, run));
     }
     return runListJSONArray.toString();
-  }
-
-  private JSONObject getOwnerJSON(User owner) throws JSONException {
-    JSONObject ownerJSON = new JSONObject();
-    try {
-      ownerJSON.put("id", owner.getId());
-      TeacherUserDetails ownerUserDetails = (TeacherUserDetails) owner.getUserDetails();
-      ownerJSON.put("displayName", ownerUserDetails.getDisplayname());
-      ownerJSON.put("username", ownerUserDetails.getUsername());
-      ownerJSON.put("firstName", ownerUserDetails.getFirstname());
-      ownerJSON.put("lastName", ownerUserDetails.getLastname());
-    } catch(org.hibernate.ObjectNotFoundException e) {
-      System.out.println(e);
-    }
-    return ownerJSON;
   }
 
   /**
@@ -212,60 +196,73 @@ public class StudentAPIController {
     return runJSON;
   }
 
+  private JSONObject getOwnerJSON(User owner) throws JSONException {
+    JSONObject ownerJSON = new JSONObject();
+    ownerJSON.put("id", owner.getId());
+    TeacherUserDetails tud = (TeacherUserDetails) owner.getUserDetails();
+    ownerJSON.put("displayName", tud.getDisplayname());
+    ownerJSON.put("username", tud.getUsername());
+    ownerJSON.put("firstName", tud.getFirstname());
+    ownerJSON.put("lastName", tud.getLastname());
+    return ownerJSON;
+  }
+
   /**
    * Get the run information to display to the student when they want to register for a run.
    * @param runCode The run code string.
-   * @return A JSON object string containing information about the run such as the id, run code, title,
+   * @return HashMap object string containing information about the run such as the id, run code, title,
    * teacher name, and periods.
    */
-  @RequestMapping(value = "/run/info", method = RequestMethod.GET)
-  protected String getRunCodeInfo(@RequestParam("runCode") String runCode) throws JSONException {
-    JSONObject runRegisterInfo = new JSONObject();
+  @GetMapping("/run/info")
+  HashMap<String, Object> getRunInfoByRunCode(@RequestParam("runCode") String runCode) {
     try {
-      Run run = runService.retrieveRunByRuncode(runCode);
-      getRunInfo(runRegisterInfo, run);
+      return getRunInfo(runService.retrieveRunByRuncode(runCode));
     } catch (ObjectNotFoundException e) {
-      runRegisterInfo.put("error", "runNotFound");
+      return createRunNotFoundInfo();
     }
-    return runRegisterInfo.toString();
   }
 
-  @RequestMapping(value = "/run/info-by-id", method = RequestMethod.GET)
-  protected String getRunInfoById(@RequestParam("runId") Long runId) throws JSONException {
-    JSONObject runRegisterInfo = new JSONObject();
+  @GetMapping("/run/info-by-id")
+  HashMap<String, Object> getRunInfoById(@RequestParam("runId") Long runId) {
     try {
-      Run run = runService.retrieveById(runId);
-      getRunInfo(runRegisterInfo, run);
+      return getRunInfo(runService.retrieveById(runId));
     } catch (ObjectNotFoundException e) {
-      runRegisterInfo.put("error", "runNotFound");
+      return createRunNotFoundInfo();
     }
-    return runRegisterInfo.toString();
   }
 
-  private void getRunInfo(JSONObject runJSONObject, Run run) throws JSONException {
-    runJSONObject.put("id", run.getId());
-    runJSONObject.put("name", run.getName());
-    runJSONObject.put("runCode", run.getRuncode());
+  private HashMap<String, Object> createRunNotFoundInfo() {
+    HashMap<String, Object> info = new HashMap<String, Object>();
+    info.put("error", "runNotFound");
+    return info;
+  }
+
+  private HashMap<String, Object> getRunInfo(Run run) {
+    HashMap<String, Object> info = new HashMap<String, Object>();
+    info.put("id", String.valueOf(run.getId()));
+    info.put("name", run.getName());
+    info.put("runCode", run.getRuncode());
+    info.put("startTime", run.getStartTimeMilliseconds());
+    info.put("endTime", run.getEndTimeMilliseconds());
+    info.put("periods", getPeriodNames(run));
     User owner = run.getOwner();
-    runJSONObject.put("teacherFirstName", owner.getUserDetails().getFirstname());
-    runJSONObject.put("teacherLastName", owner.getUserDetails().getLastname());
-    runJSONObject.put("startTime", run.getStartTimeMilliseconds());
-    runJSONObject.put("endTime", run.getEndTimeMilliseconds());
-    runJSONObject.put("periods", this.getPeriods(run));
+    info.put("teacherFirstName", owner.getUserDetails().getFirstname());
+    info.put("teacherLastName", owner.getUserDetails().getLastname());
+    return info;
   }
 
-  @RequestMapping(value = "/run/launch", method = RequestMethod.POST)
-  protected String launchRun(@RequestParam("runId") Long runId,
-                             @RequestParam(value = "workgroupId", required = false) Long workgroupId,
-                             @RequestParam("presentUserIds") String presentUserIds,
-                             @RequestParam("absentUserIds") String absentUserIds,
-                             HttpServletRequest request) throws Exception {
+  @PostMapping("/run/launch")
+  HashMap<String, String> launchRun(Authentication auth,
+      @RequestParam("runId") Long runId,
+      @RequestParam(value = "workgroupId", required = false) Long workgroupId,
+      @RequestParam("presentUserIds") String presentUserIds,
+      @RequestParam("absentUserIds") String absentUserIds,
+      HttpServletRequest request) throws Exception {
     Run run = runService.retrieveById(runId);
     JSONArray presentUserIdsJSONArray = new JSONArray(presentUserIds);
-    Set<User> presentMembers = createMembers(presentUserIdsJSONArray);
+    Set<User> presentMembers = getUsers(presentUserIdsJSONArray);
     Workgroup workgroup = null;
-    User user = ControllerUtil.getSignedInUser();
-
+    User user = userService.retrieveUserByUsername(auth.getName());
     for (User member: presentMembers) {
       if (workgroupService.isUserInAnyWorkgroupForRun(member, run)) {
         workgroup = workgroupService.getWorkgroupListByRunAndUser(run, member).get(0);
@@ -276,23 +273,21 @@ public class StudentAPIController {
         Group period = run.getPeriodOfStudent(user);
         String name = "Workgroup for user: " + user.getUserDetails().getUsername();
         workgroup = workgroupService.createWorkgroup(name, presentMembers, run, period);
-        JSONObject response = performLaunchRun(runId, workgroupId, presentUserIds, absentUserIds,
+        return getLaunchRunMap(runId, workgroupId, presentUserIds, absentUserIds,
             request, run, presentMembers, workgroup);
-        return response.toString();
       } else {
         ErrorResponse errorResponse = new ErrorResponse("signedInUserNotAssociatedWithRun");
-        return errorResponse.toString();
+        return errorResponse.toMap();
       }
     } else {
       Set<User> newMembers = membersNotInWorkgroup(workgroup, presentMembers);
       if (newMembers.size() + workgroup.getMembers().size() > run.getMaxWorkgroupSize()) {
         ErrorResponse errorResponse = new LaunchRunErrorResponse("tooManyMembersInWorkgroup", workgroup);
-        return errorResponse.toString();
+        return errorResponse.toMap();
       }
       workgroupService.addMembers(workgroup, newMembers);
-      JSONObject response = performLaunchRun(runId, workgroupId, presentUserIds, absentUserIds,
+      return getLaunchRunMap(runId, workgroupId, presentUserIds, absentUserIds,
           request, run, presentMembers, workgroup);
-      return response.toString();
     }
   }
 
@@ -306,17 +301,16 @@ public class StudentAPIController {
     return membersNotInWorkgroup;
   }
 
-  private JSONObject performLaunchRun(Long runId, Long workgroupId, String presentUserIds,
+  private HashMap<String, String> getLaunchRunMap(Long runId, Long workgroupId, String presentUserIds,
       String absentUserIds, HttpServletRequest request, Run run, Set<User> presentMembers,
       Workgroup workgroup) throws ObjectNotFoundException, PeriodNotFoundException,
-      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException, JSONException {
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
     addStudentsToRunIfNecessary(run, presentMembers, workgroup);
     if (!run.isEnded()) {
       saveStudentAttendance(runId, workgroupId, presentUserIds, absentUserIds);
-      updateRunStatistics(run);
+      runService.updateRunStatistics(run.getId());
     }
-    StartProjectController.notifyServletSession(request, run);
-    return generateStartProjectUrlResponse(request, workgroup);
+    return generateStartProjectUrlMap(request, workgroup);
   }
 
   private void addStudentsToRunIfNecessary(Run run, Set<User> presentMembers, Workgroup workgroup)
@@ -336,151 +330,106 @@ public class StudentAPIController {
         presentUserIds, absentUserIds);
   }
 
-  private void updateRunStatistics(Run run) {
-    this.runService.updateRunStatistics(run.getId());
+  private HashMap<String, String> generateStartProjectUrlMap(
+        HttpServletRequest request, Workgroup workgroup) {
+    HashMap<String, String> map = new HashMap<String, String>();
+    map.put("startProjectUrl", projectService.generateStudentStartProjectUrlString(
+        workgroup, request.getContextPath()));
+    return map;
   }
 
-  private JSONObject generateStartProjectUrlResponse(HttpServletRequest request, Workgroup workgroup) throws JSONException {
-    String startProjectUrl = projectService.generateStudentStartProjectUrlString(workgroup, request.getContextPath());
-    JSONObject response = new JSONObject();
-    response.put("startProjectUrl", startProjectUrl);
-    return response;
-  }
-
-  private Set<User> createMembers(JSONArray userIds)
-      throws JSONException, ObjectNotFoundException {
-    Set<User> members = new HashSet<User>();
-    addUserToMembers(members, userIds);
-    return members;
-  }
-
-  private void addUserToMembers(Set<User> members, JSONArray userIds)
-      throws JSONException, ObjectNotFoundException {
-    for (int p = 0; p < userIds.length(); p++) {
-      long userId = userIds.getInt(p);
-      members.add(userService.retrieveById(userId));
+  private Set<User> getUsers(JSONArray userIds) throws JSONException,
+      ObjectNotFoundException {
+    Set<User> users = new HashSet<User>();
+    for (int i = 0; i < userIds.length(); i++) {
+      Long userId = userIds.getLong(i);
+      users.add(userService.retrieveById(userId));
     }
+    return users;
   }
 
   /**
-   * Add a student to a run.
+   * Add the logged in student to a run.
+   *
    * @param runCode The run code string.
    * @param period The period string.
-   * @return If the student is successfully added to the run, we will return a JSON object string
-   * that contains the information about the run. If the student is not successfully added to the
-   * run, we will return a JSON object string containing an error field with an error string.
+   * @return If the student is successfully added to the run, we will return a
+   *         JSON object string that contains the information about the run. If
+   *         the student is not successfully added to the run, we will return a
+   *         JSON object string containing an error field with an error string.
+   * @throws JSONException
    */
-  @RequestMapping(value = "/run/register", method = RequestMethod.POST)
-  protected String addStudentToRun(@RequestParam("runCode") String runCode,
-      @RequestParam("period") String period) {
-    JSONObject responseJSONObject = new JSONObject();
-    String error = "";
-    User user = ControllerUtil.getSignedInUser();
+  @PostMapping("/run/register")
+  protected String addStudentToRun(Authentication auth,
+      @RequestParam("runCode") String runCode,
+      @RequestParam("period") String period) throws JSONException {
+    User user = userService.retrieveUserByUsername(auth.getName());
     Projectcode projectCode = new Projectcode(runCode, period);
-    boolean addedStudent = false;
-    try {
-      int maxLoop = 100; // To ensure that the following while loop gets run at most this many times.
-      int currentLoopIndex = 0;
-      while (currentLoopIndex < maxLoop) {
-        try {
-          studentService.addStudentToRun(user, projectCode);
-          Run run = runService.retrieveRunByRuncode(runCode);
-          responseJSONObject = this.getRunJSON(user, run);
-          addedStudent = true;
-        } catch (HibernateOptimisticLockingFailureException holfe) {
-          /*
-           * Multiple students tried to create an account at the same time, resulting in this exception.
-           * We will try saving again.
-           */
-          currentLoopIndex++;
-          continue;
-        } catch (StaleObjectStateException sose) {
-          /*
-           * Multiple students tried to create an account at the same time, resulting in this exception.
-           * We will try saving again.
-           */
-          currentLoopIndex++;
-          continue;
-        } catch (JSONException je) {
-          je.printStackTrace();
-        }
+    int maxLoop = 100; // To ensure that the following while loop gets run at most this many times.
+    int currentLoopIndex = 0;
+    while (currentLoopIndex < maxLoop) {
+      try {
+        studentService.addStudentToRun(user, projectCode);
+        Run run = runService.retrieveRunByRuncode(runCode);
+        JSONObject responseJSONObject = getRunJSON(user, run);
+        return responseJSONObject.toString();
+      } catch (ObjectNotFoundException e) {
+        ErrorResponse response = new ErrorResponse("runCodeNotFound");
+        return response.toJSONString();
+      } catch (PeriodNotFoundException e) {
+        ErrorResponse response = new ErrorResponse("periodNotFound");
+        return response.toJSONString();
+      } catch (StudentUserAlreadyAssociatedWithRunException se) {
+        ErrorResponse response = new ErrorResponse("alreadyAddedRun");
+        return response.toJSONString();
+      } catch (RunHasEndedException e) {
+        ErrorResponse response = new ErrorResponse("runHasEnded");
+        return response.toJSONString();
+      } catch (HibernateOptimisticLockingFailureException holfe) {
         /*
-         * If it reaches here, it means the hibernate optimistic locking exception was not thrown so we
-         * can exit the loop.
+         * Multiple students tried to create an account at the same time, resulting in this exception.
+         * We will try saving again.
          */
-        break;
+        currentLoopIndex++;
+        continue;
+      } catch (StaleObjectStateException sose) {
+        /*
+         * Multiple students tried to create an account at the same time, resulting in this exception.
+         * We will try saving again.
+         */
+        currentLoopIndex++;
+        continue;
       }
-    } catch (ObjectNotFoundException e) {
-      error = "runCodeNotFound";
-    } catch (PeriodNotFoundException e) {
-      error = "periodNotFound";
-    } catch (StudentUserAlreadyAssociatedWithRunException se) {
-      error = "studentAlreadyAssociatedWithRun";
-    } catch (RunHasEndedException e) {
-      error = "runHasEnded";
     }
 
-    if (!error.equals("")) {
-      // there was an error and we were unable to add the student to the run
-      try {
-        responseJSONObject.put("error", error);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    } else if (!addedStudent) {
-      /*
-       * there were no errors but we were unable to add the student to the
-       * run for some reason so we will just return a generic error message
-       */
-      try {
-        responseJSONObject.put("error", "failedToAddStudentToRun");
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    }
-    return responseJSONObject.toString();
+    /*
+     * there were no errors but we were unable to add the student to the
+     * run for some reason so we will just return a generic error message
+     */
+    ErrorResponse response = new ErrorResponse("failedToAddStudentToRun");
+    return response.toJSONString();
   }
 
-  /**
-   * Get the periods in a run.
-   * @param run The run object.
-   * @return A JSON array containing strings.
-   */
-  private JSONArray getPeriods(Run run) {
-    JSONArray periodsJSONArray = new JSONArray();
-    Set<Group> periods = run.getPeriods();
-    for (Group period : periods) {
-      periodsJSONArray.put(period.getName());
+  private List<String> getPeriodNames(Run run) {
+    List<String> periods = new ArrayList<String>();
+    for (Group period : run.getPeriods()) {
+      periods.add(period.getName());
     }
-    return periodsJSONArray;
+    return periods;
   }
 
-  @RequestMapping(value = "/config", method = RequestMethod.GET)
-  protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
-    JSONObject configJSON = new JSONObject();
+  @GetMapping("/config")
+  HashMap<String, String> getConfig(HttpServletRequest request) {
+    HashMap<String, String> config = new HashMap<String, String>();
     String contextPath = request.getContextPath();
-    configJSON.put("contextPath", contextPath);
-    configJSON.put("googleClientId", googleClientId);
-    configJSON.put("logOutURL", contextPath + "/logout");
-    configJSON.put("currentTime", System.currentTimeMillis());
-    return configJSON.toString();
+    config.put("contextPath", contextPath);
+    config.put("logOutURL", contextPath + "/logout");
+    config.put("googleClientId", googleClientId);
+    config.put("currentTime", String.valueOf(System.currentTimeMillis()));
+    return config;
   }
 
-  private Date getLastLoginTime(String previousLoginTime, User user) {
-    Date lastLoginTime = ((StudentUserDetails) user.getUserDetails()).getLastLoginTime();
-    if (previousLoginTime != null) {
-      Calendar cal = Calendar.getInstance();
-      try {
-        Long previousLogin = new Long(previousLoginTime);
-        cal.setTimeInMillis(previousLogin);
-        return cal.getTime();
-      } catch (NumberFormatException nfe) {
-      }
-    }
-    return lastLoginTime;
-  }
-
-  @RequestMapping(value = "/register", method = RequestMethod.POST)
+  @PostMapping("/register")
   protected String createStudentAccount(
       @RequestBody Map<String, String> studentFields, HttpServletRequest request)
       throws DuplicateUsernameException {
@@ -523,76 +472,48 @@ public class StudentAPIController {
     return birthday.getTime();
   }
 
-  @RequestMapping(value = "/register/questions", method = RequestMethod.GET)
-  protected String getSecurityQuestions() throws JSONException {
-    JSONArray questions = new JSONArray();
-    AccountQuestion[] accountQuestionKeys = AccountQuestion.class.getEnumConstants();
-    for (AccountQuestion accountQuestionKey: accountQuestionKeys) {
-      questions.put(getSecurityQuestionJSONObject(accountQuestionKey));
+  @GetMapping("/register/questions")
+  List<HashMap<String, String>> getSecurityQuestions() {
+    List<HashMap<String, String>> questions = new ArrayList<HashMap<String, String>>();
+    for (AccountQuestion accountQuestionKey : AccountQuestion.class.getEnumConstants()) {
+      HashMap<String, String> question = new HashMap<String, String>();
+      question.put("key", accountQuestionKey.toString());
+      question.put("value", i18nProperties.getProperty("accountquestions." + accountQuestionKey));
+      questions.add(question);
     }
-    return questions.toString();
+    return questions;
   }
 
-  protected JSONObject getSecurityQuestionJSONObject(AccountQuestion accountQuestionKey) throws JSONException {
-    String accountQuestion = getAccountQuestionValue(accountQuestionKey.name());
-    JSONObject accountQuestionObject = new JSONObject();
-    accountQuestionObject.put("key", accountQuestionKey);
-    accountQuestionObject.put("value", accountQuestion);
-    return accountQuestionObject;
+  @PostMapping("/profile/update")
+  SimpleResponse updateProfile(Authentication auth,
+      @RequestParam("language") String language) {
+    User user = userService.retrieveUserByUsername(auth.getName());
+    StudentUserDetails studentUserDetails = (StudentUserDetails) user.getUserDetails();
+    studentUserDetails.setLanguage(language);
+    userService.updateUser(user);
+    return new SimpleResponse("success", "profileUpdated");
   }
 
-  private String getAccountQuestionValue(String accountQuestionKey) {
-    return i18nProperties.getProperty("accountquestions." + accountQuestionKey);
-  }
-
-  @RequestMapping(value = "/profile/update", method = RequestMethod.POST)
-  protected String updateProfile(HttpServletRequest request,
-                                 @RequestParam("username") String username,
-                                 @RequestParam("language") String language) throws NotAuthorizedException, JSONException {
-    User user = ControllerUtil.getSignedInUser();
-    if (user.getUserDetails().getUsername().equals(username)) {
-      StudentUserDetails studentUserDetails = (StudentUserDetails) user.getUserDetails();
-      studentUserDetails.setLanguage(language);
-      userService.updateUser(user);
-      JSONObject response = new JSONObject();
-      response.put("message", "success");
-      return response.toString();
-    } else {
-      throw new NotAuthorizedException("username is not the same as signed in user");
+  @GetMapping("/teacher-list")
+  Set<HashMap<String, String>> getAssociatedTeachers(Authentication auth) {
+    User user = userService.retrieveUserByUsername(auth.getName());
+    Set<HashMap<String, String>> teachers = new HashSet<HashMap<String, String>>();
+    for (Run run : runService.getRunList(user)) {
+      User teacher = run.getOwner();
+      TeacherUserDetails tud = (TeacherUserDetails) teacher.getUserDetails();
+      HashMap<String, String> teacherInfo = new HashMap<String, String>();
+      teacherInfo.put("username", tud.getUsername());
+      teacherInfo.put("displayName", tud.getDisplayname());
+      teachers.add(teacherInfo);
     }
+    return teachers;
   }
 
-  @RequestMapping(value = "/teacher-list", method = RequestMethod.GET)
-  protected String getTeacherList() {
-    JSONArray teacherList = new JSONArray();
-    User user = ControllerUtil.getSignedInUser();
-    if (user != null) {
-      HashMap<String, Boolean> foundTeachers = new HashMap<String, Boolean>();
-      List<Run> runList = runService.getRunList(user);
-      for (Run run: runList) {
-        User owner = run.getOwner();
-        TeacherUserDetails userDetails = (TeacherUserDetails) owner.getUserDetails();
-        String username = userDetails.getUsername();
-        if (foundTeachers.get(username) == null) {
-          try {
-            JSONObject teacherJSON = new JSONObject();
-            teacherJSON.put("username", username);
-            teacherJSON.put("displayName", userDetails.getDisplayname());
-            teacherList.put(teacherJSON);
-            foundTeachers.put(username, true);
-          } catch(JSONException e) {
-
-          }
-        }
-      }
-    }
-    return teacherList.toString();
-  }
-
-  @RequestMapping(value = "/can-be-added-to-workgroup", method = RequestMethod.GET)
-  protected String canBeAddedToWorkgroup(@RequestParam("runId") Long runId,
-                                         @RequestParam(value = "workgroupId", required = false) Long workgroupId,
-                                         @RequestParam("userId") Long userId) throws JSONException, ObjectNotFoundException {
+  @GetMapping("/can-be-added-to-workgroup")
+  protected String canBeAddedToWorkgroup(Authentication auth,
+      @RequestParam("runId") Long runId,
+      @RequestParam(value = "workgroupId", required = false) Long workgroupId,
+      @RequestParam("userId") Long userId) throws JSONException, ObjectNotFoundException {
     User user = userService.retrieveById(userId);
     Run run = runService.retrieveById(runId);
     JSONObject response = new JSONObject();
@@ -619,8 +540,9 @@ public class StudentAPIController {
           members.put(convertUserToJSON(member));
         }
       }
+      User signedInUser = userService.retrieveUserByUsername(auth.getName());
       if (workgroup.getMembers().size() == run.getMaxWorkgroupSize() &&
-          !workgroup.getMembers().contains(ControllerUtil.getSignedInUser())) {
+          !workgroup.getMembers().contains(signedInUser)) {
         response.put("status", false);
       }
     }

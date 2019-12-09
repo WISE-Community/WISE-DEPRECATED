@@ -98,7 +98,6 @@ export class StudentService {
   updateProfile(username, language) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
-    body = body.set('username', username);
     body = body.set('language', language);
     return this.http.post<any>(this.updateProfileUrl, body, { headers: headers });
   }
