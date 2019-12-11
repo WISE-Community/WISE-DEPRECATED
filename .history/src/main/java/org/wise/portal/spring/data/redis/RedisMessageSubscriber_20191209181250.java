@@ -25,10 +25,8 @@ public class RedisMessageSubscriber implements MessageListener {
           || messageJSON.get("type").equals("studentWorkToTeacher")) {
         WebSocketMessage webSockeMessage = new WebSocketMessage("studentWork",
             messageJSON.getString("studentWork"));
-        System.out.printf("student work %s", messageJSON.get("studentWork"));
         simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"),
             webSockeMessage);
-            
       } else if (messageJSON.get("type").equals("annotationToTeacher")) {
         WebSocketMessage webSockeMessage = new WebSocketMessage("annotation",
             messageJSON.getString("annotation"));
@@ -68,3 +66,9 @@ public class RedisMessageSubscriber implements MessageListener {
     }
   }
 }
+
+/**
+ * group / student group
+ * note
+ * where in the project
+ */

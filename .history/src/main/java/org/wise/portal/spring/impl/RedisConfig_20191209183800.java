@@ -72,7 +72,7 @@ public class RedisConfig {
   }
     
   @Bean
-  MessageListenerAdapter echoAgentListener() {
+  MessageListenerAdapter ec() {
     return new MessageListenerAdapter(echoAgentService());
   }
 
@@ -88,7 +88,7 @@ public class RedisConfig {
     RedisMessageListenerContainer container = new RedisMessageListenerContainer();
     container.setConnectionFactory(redisConnectionFactory());
     container.addMessageListener(messageListener(), topic());
-    container.addMessageListener(echoAgentListener(), topic());
+    container.addMessageListener(echoAgentService(), topic());
     return container;
   }
 

@@ -28,7 +28,6 @@ public class RedisMessageSubscriber implements MessageListener {
         System.out.printf("student work %s", messageJSON.get("studentWork"));
         simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"),
             webSockeMessage);
-            
       } else if (messageJSON.get("type").equals("annotationToTeacher")) {
         WebSocketMessage webSockeMessage = new WebSocketMessage("annotation",
             messageJSON.getString("annotation"));

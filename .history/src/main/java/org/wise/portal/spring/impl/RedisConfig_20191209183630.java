@@ -14,7 +14,6 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.wise.portal.service.agent.EchoAgentService;
-import org.wise.portal.service.agent.impl.EchoAgentServiceImpl;
 import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.portal.spring.data.redis.RedisMessagePublisher;
 import org.wise.portal.spring.data.redis.RedisMessageSubscriber;
@@ -70,15 +69,10 @@ public class RedisConfig {
   RedisMessageSubscriber redisMessageSubscriber() {
     return new RedisMessageSubscriber();
   }
-    
-  @Bean
-  MessageListenerAdapter echoAgentListener() {
-    return new MessageListenerAdapter(echoAgentService());
-  }
 
   @Bean
   EchoAgentService echoAgentService() {
-    return new EchoAgentServiceImpl();
+    return enw EchoAgentServiceImpl();
   }
 
 
@@ -88,7 +82,7 @@ public class RedisConfig {
     RedisMessageListenerContainer container = new RedisMessageListenerContainer();
     container.setConnectionFactory(redisConnectionFactory());
     container.addMessageListener(messageListener(), topic());
-    container.addMessageListener(echoAgentListener(), topic());
+    container.addMessageListener(ec, topics);
     return container;
   }
 
