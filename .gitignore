@@ -9,6 +9,7 @@ build
 .m2
 .npm
 .v8flags*
+.history
 node_modules
 target
 src/main/webapp/wise5/authoringTool/dist
