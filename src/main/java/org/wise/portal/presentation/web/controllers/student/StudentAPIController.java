@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2019 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * <p>
  * This software is distributed under the GNU General Public License, v3,
@@ -38,9 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.StaleObjectStateException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
@@ -85,7 +82,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping(value = "/api/student", produces = "application/json;charset=UTF-8")
+@RequestMapping(value = "/api/student")
 public class StudentAPIController {
 
   @Autowired
@@ -152,7 +149,7 @@ public class StudentAPIController {
     runMap.put("startTime", run.getStartTimeMilliseconds());
     runMap.put("endTime", run.getEndTimeMilliseconds());
     runMap.put("project", getProjectMap(project));
-    runMap.put("owner", getOwnerMap(run.getOwner()));
+    runMap.put("owner", convertUserToMap(run.getOwner()));
 
     List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
     if (workgroups.size() > 0) {
@@ -190,24 +187,13 @@ public class StudentAPIController {
     projectMap.put("dateCreated", project.getDateCreated());
     projectMap.put("dateArchived", project.getDateDeleted());
     projectMap.put("projectThumb", projectService.getProjectPath(project) + PROJECT_THUMB_PATH);
-    projectMap.put("owner", getOwnerMap(project.getOwner()));
+    projectMap.put("owner", convertUserToMap(project.getOwner()));
     projectMap.put("sharedOwners", projectService.getProjectSharedOwnersList(project));
     projectMap.put("parentId", project.getParentProjectId());
     projectMap.put("wiseVersion", project.getWiseVersion());
     projectMap.put("uri", projectService.getProjectURI(project));
     projectMap.put("license", projectService.getLicensePath(project));
     return projectMap;
-  }
-
-  private HashMap<String, Object> getOwnerMap(User owner) {
-    HashMap<String, Object> ownerMap = new HashMap<String, Object>();
-    ownerMap.put("id", owner.getId());
-    TeacherUserDetails tud = (TeacherUserDetails) owner.getUserDetails();
-    ownerMap.put("displayName", tud.getDisplayname());
-    ownerMap.put("username", tud.getUsername());
-    ownerMap.put("firstName", tud.getFirstname());
-    ownerMap.put("lastName", tud.getLastname());
-    return ownerMap;
   }
 
   @GetMapping("/run/info")
@@ -351,10 +337,9 @@ public class StudentAPIController {
    * @param runCode The run code string.
    * @param period The period string.
    * @return If the student is successfully added to the run, we will return a
-   *         JSON object string that contains the information about the run. If
+   *         map that contains the information about the run. If
    *         the student is not successfully added to the run, we will return a
-   *         JSON object string containing an error field with an error string.
-   * @throws JSONException
+   *         map containing an error field with an error string.
    */
   @PostMapping("/run/register")
   HashMap<String, Object> addStudentToRun(Authentication auth,
@@ -427,9 +412,8 @@ public class StudentAPIController {
   }
 
   @PostMapping("/register")
-  String createStudentAccount(
-      @RequestBody Map<String, String> studentFields, HttpServletRequest request)
-      throws DuplicateUsernameException {
+  String createStudentAccount(@RequestBody Map<String, String> studentFields,
+      HttpServletRequest request) throws DuplicateUsernameException {
     StudentUserDetails studentUserDetails = new StudentUserDetails();
     studentUserDetails.setFirstname(studentFields.get("firstName"));
     studentUserDetails.setLastname(studentFields.get("lastName"));
@@ -482,8 +466,7 @@ public class StudentAPIController {
   }
 
   @PostMapping("/profile/update")
-  SimpleResponse updateProfile(Authentication auth,
-      @RequestParam("language") String language) {
+  SimpleResponse updateProfile(Authentication auth, @RequestParam("language") String language) {
     User user = userService.retrieveUserByUsername(auth.getName());
     StudentUserDetails studentUserDetails = (StudentUserDetails) user.getUserDetails();
     studentUserDetails.setLanguage(language);
@@ -507,14 +490,14 @@ public class StudentAPIController {
   }
 
   @GetMapping("/can-be-added-to-workgroup")
-  String canBeAddedToWorkgroup(Authentication auth,
+  HashMap<String, Object> canBeAddedToWorkgroup(Authentication auth,
       @RequestParam("runId") Long runId,
       @RequestParam(value = "workgroupId", required = false) Long workgroupId,
-      @RequestParam("userId") Long userId) throws JSONException, ObjectNotFoundException {
+      @RequestParam("userId") Long userId) throws ObjectNotFoundException {
     User user = userService.retrieveById(userId);
     Run run = runService.retrieveById(runId);
-    JSONObject response = new JSONObject();
-    JSONArray members = new JSONArray();
+    HashMap<String, Object> response = new HashMap<String, Object>();
+    List<HashMap<String, Object>> members = new ArrayList<HashMap<String, Object>>();
     response.put("status", false);
     response.put("isTeacher", user.isTeacher());
     Workgroup workgroup = null;
@@ -525,16 +508,16 @@ public class StudentAPIController {
     }
     if (!workgroupService.isUserInAnyWorkgroupForRun(user, run) ||
         (workgroup != null && workgroupService.isUserInWorkgroupForRun(user, run, workgroup))) {
-      members.put(convertUserToJSON(user));
+      members.add(convertUserToMap(user));
       response.put("status", true);
     }
     if (workgroup != null) {
       response.put("addUserToWorkgroup", true);
       response.put("workgroupId", workgroup.getId());
       response.put("status", true);
-      for (User member: workgroup.getMembers()) {
+      for (User member : workgroup.getMembers()) {
         if (!member.getId().equals(userId)) {
-          members.put(convertUserToJSON(member));
+          members.add(convertUserToMap(member));
         }
       }
       User signedInUser = userService.retrieveUserByUsername(auth.getName());
@@ -544,17 +527,20 @@ public class StudentAPIController {
       }
     }
     response.put("workgroupMembers", members);
-    return response.toString();
+    return response;
   }
 
-  private JSONObject convertUserToJSON(User user) throws JSONException {
-    JSONObject userObject = new JSONObject();
+  private HashMap<String, Object> convertUserToMap(User user) {
+    HashMap<String, Object> userMap = new HashMap<String, Object>();
     MutableUserDetails userDetails = user.getUserDetails();
-    userObject.put("id", user.getId());
-    userObject.put("username", userDetails.getUsername());
-    userObject.put("firstName", userDetails.getFirstname());
-    userObject.put("lastName", userDetails.getLastname());
-    userObject.put("isGoogleUser", user.getUserDetails().isGoogleUser());
-    return userObject;
+    userMap.put("id", user.getId());
+    userMap.put("username", userDetails.getUsername());
+    userMap.put("firstName", userDetails.getFirstname());
+    userMap.put("lastName", userDetails.getLastname());
+    userMap.put("isGoogleUser", userDetails.isGoogleUser());
+    if (userDetails instanceof TeacherUserDetails) {
+      userMap.put("displayName", ((TeacherUserDetails) userDetails).getDisplayname());
+    }
+    return userMap;
   }
 }

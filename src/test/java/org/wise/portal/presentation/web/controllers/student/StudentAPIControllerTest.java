@@ -1,5 +1,6 @@
 package org.wise.portal.presentation.web.controllers.student;
 
+import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.isA;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 
@@ -47,6 +49,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.attendance.StudentAttendanceService;
+import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
@@ -89,13 +92,21 @@ public class StudentAPIControllerTest {
 
   private Authentication studentAuthentication;
 
+  private final String STUDENT_FIRSTNAME = "SpongeBob";
+
+  private final String STUDENT_LASTNAME = "Squarepants";
+
   private final String STUDENT_USERNAME = "SpongeBobS0101";
 
   private User student1, teacher1, teacher2;
 
+  private StudentUserDetails student1UserDetails;
+
   private List<Run> runs;
 
   private Long runId1;
+
+  private Long student1Id = 94678L;
 
   private String RUN1_RUNCODE = "orca123";
 
@@ -110,15 +121,19 @@ public class StudentAPIControllerTest {
   @Before
   public void setUp() {
     student1 = new UserImpl();
+    student1.setId(student1Id);
     PersistentGrantedAuthority studentAuthority = new PersistentGrantedAuthority();
     studentAuthority.setAuthority(UserDetailsService.STUDENT_ROLE);
-    StudentUserDetails studentUserDetails = new StudentUserDetails();
-    studentUserDetails.setUsername(STUDENT_USERNAME);
-    studentUserDetails
+    student1UserDetails = new StudentUserDetails();
+    student1UserDetails.setFirstname(STUDENT_FIRSTNAME);
+    student1UserDetails.setLastname(STUDENT_LASTNAME);
+    student1UserDetails.setUsername(STUDENT_USERNAME);
+    student1UserDetails
         .setAuthorities(new GrantedAuthority[] { studentAuthority });
-    student1.setUserDetails(studentUserDetails);
+        student1UserDetails.setGoogleUserId("google-user-12345");
+    student1.setUserDetails(student1UserDetails);
     Object credentials = null;
-    studentAuthentication = new TestingAuthenticationToken(studentUserDetails,
+    studentAuthentication = new TestingAuthenticationToken(student1UserDetails,
         credentials);
     teacher1 = new UserImpl();
     TeacherUserDetails tud1 = new TeacherUserDetails();
@@ -384,15 +399,16 @@ public class StudentAPIControllerTest {
     expect(userService.retrieveUserByUsername(STUDENT_USERNAME))
         .andReturn(student1);
     replay(userService);
-    Projectcode projectCode = new Projectcode(runCodeNotInDB, RUN1_PERIOD1_NAME);
+    Projectcode projectCode = new Projectcode(runCodeNotInDB,
+        RUN1_PERIOD1_NAME);
     studentService.addStudentToRun(student1, projectCode);
     expectLastCall();
     replay(studentService);
     expect(runService.retrieveRunByRuncode(runCodeNotInDB))
         .andThrow(new ObjectNotFoundException(runCodeNotInDB, Run.class));
     replay(runService);
-    HashMap<String, Object> response = studentAPIController
-        .addStudentToRun(studentAuthentication, runCodeNotInDB, RUN1_PERIOD1_NAME);
+    HashMap<String, Object> response = studentAPIController.addStudentToRun(
+        studentAuthentication, runCodeNotInDB, RUN1_PERIOD1_NAME);
     assertEquals("error", response.get("status"));
     assertEquals("runCodeNotFound", response.get("messageCode"));
     verify(userService);
@@ -427,8 +443,8 @@ public class StudentAPIControllerTest {
     expect(workgroupService.getWorkgroupListByRunAndUser(isA(Run.class),
         isA(User.class))).andReturn(workgroups);
     replay(workgroupService);
-    HashMap<String, Object> runMap = studentAPIController
-        .addStudentToRun(studentAuthentication, RUN1_RUNCODE, RUN1_PERIOD1_NAME);
+    HashMap<String, Object> runMap = studentAPIController.addStudentToRun(
+        studentAuthentication, RUN1_RUNCODE, RUN1_PERIOD1_NAME);
     assertEquals(RUN1_PERIOD1_NAME, runMap.get("periodName"));
     verify(userService);
     verify(studentService);
@@ -437,7 +453,60 @@ public class StudentAPIControllerTest {
     verify(workgroupService);
   }
 
-  // test createStudentAccount
+  @Test
+  public void createStudentAccount_WithGoogleUserId_ShouldCreateUser()
+      throws DuplicateUsernameException {
+    HashMap<String, String> studentFields = createDefaultStudentFields();
+    studentFields.put("googleUserId", "123456789");
+    expect(request.getLocale()).andReturn(Locale.US);
+    replay(request);
+    expect(userService.createUser(isA(StudentUserDetails.class))).andReturn(student1);
+    replay(userService);
+    String username = studentAPIController.createStudentAccount(studentFields, request);
+    assertEquals(STUDENT_USERNAME, username);
+    verify(request);
+    verify(userService);
+  }
 
-  // test canBeAddedToWorkgroup, remove convertUserToJSON and replace with non-JSON
+  private HashMap<String, String> createDefaultStudentFields() {
+    HashMap<String, String> studentFields = new HashMap<String, String>();
+    studentFields.put("firstName", STUDENT_FIRSTNAME);
+    studentFields.put("lastName", STUDENT_LASTNAME);
+    studentFields.put("birthMonth", "1");
+    studentFields.put("birthDay", "1");
+    studentFields.put("gender", "MALE");
+    return studentFields;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void canBeAddedToWorkgroup_UserNotInWorkgroup_ShouldAddUserToWorkgroup()
+      throws ObjectNotFoundException {
+    Long studentIdNotInWorkgroup = 123L;
+    Long workgroupId = 456L;
+    User studentNotInWorkgroup = createNiceMock(UserImpl.class);
+    expect(studentNotInWorkgroup.isTeacher()).andReturn(false);
+    expect(studentNotInWorkgroup.getUserDetails()).andReturn(student1UserDetails);
+    replay(studentNotInWorkgroup);
+    expect(userService.retrieveById(studentIdNotInWorkgroup)).andReturn(studentNotInWorkgroup);
+    expect(userService.retrieveUserByUsername(STUDENT_USERNAME))
+        .andReturn(student1);
+    replay(userService);
+    expect(runService.retrieveById(runId1)).andReturn(run1);
+    replay(runService);
+    expect(workgroupService.retrieveById(workgroupId)).andReturn(workgroup1);
+    expect(workgroupService.isUserInAnyWorkgroupForRun(studentNotInWorkgroup, run1))
+        .andReturn(false);
+    replay(workgroupService);
+    HashMap<String, Object> response = studentAPIController
+        .canBeAddedToWorkgroup(studentAuthentication, runId1,
+        workgroupId, studentIdNotInWorkgroup);
+    assertEquals(true, response.get("status"));
+    assertEquals(2,
+        ((ArrayList<HashMap<String, Object>>) response.get("workgroupMembers")).size());
+    verify(studentNotInWorkgroup);
+    verify(userService);
+    verify(runService);
+    verify(workgroupService);
+  }
 }
