@@ -42,6 +42,14 @@ class TableController extends ComponentController {
     this.latestConnectedComponentParams = null;
 
     this.tableId = 'table_' + this.nodeId + '_' + this.componentId;
+    this.isDataExplorerEnabled = this.componentContent.isDataExplorerEnabled;
+    this.numDataExplorerSeries = this.componentContent.numDataExplorerSeries;
+    this.dataExplorerGraphType = 'scatter';
+    this.dataExplorerGraphTypes = [
+      { name: 'Scatter Plot', value: 'scatter' },
+      { name: 'Line Plot', value: 'line' },
+      { name: 'Column Plot', value: 'column' }
+    ];
 
     if (this.mode === 'student') {
       this.isPromptVisible = true;
@@ -223,6 +231,11 @@ class TableController extends ComponentController {
       }
 
       return array;
+    }
+
+    if (this.isDataExplorerEnabled) {
+      this.updateColumnNames();
+      this.createDataExplorerSeries();
     }
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
@@ -435,6 +448,11 @@ class TableController extends ComponentController {
 
     // insert the table data
     studentData.tableData = this.getCopyOfTableData(this.tableData);
+    studentData.isDataExplorerEnabled = this.isDataExplorerEnabled;
+    studentData.dataExplorerGraphType = this.dataExplorerGraphType;
+    studentData.dataExplorerXAxisLabel = this.dataExplorerXAxisLabel;
+    studentData.dataExplorerYAxisLabel = this.dataExplorerYAxisLabel;
+    studentData.dataExplorerSeries = this.UtilService.makeCopyOfJSONObject(this.dataExplorerSeries);
 
     // set the submit counter
     studentData.submitCounter = this.submitCounter;
@@ -1060,6 +1078,59 @@ class TableController extends ComponentController {
   authoringConnectedComponentTypeChanged(connectedComponent) {
     this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
     this.authoringViewComponentChanged();
+  }
+
+  studentDataChanged(isCompleted = false) {
+    if (this.isDataExplorerEnabled) {
+      this.updateColumnNames();
+    }
+    this.setIsDirtyAndBroadcast();
+    this.setIsSubmitDirtyAndBroadcast();
+    this.clearSaveText();
+    const action = 'change';
+    this.createComponentStateAndBroadcast(action);
+  }
+
+  updateColumnNames() {
+    this.columnNames = [];
+    const firstRow = this.tableData[0];
+    for (const cell of firstRow) {
+      this.columnNames.push(cell.text);
+    }
+  }
+
+  getColumnName(index) {
+    return this.columnNames[index];
+  }
+
+  dataExplorerXColumnChanged(xColumn) {
+    for (const singleDataExplorerSeries of this.dataExplorerSeries) {
+      singleDataExplorerSeries.xColumn = xColumn;
+    }
+    if (this.numDataExplorerSeries === 1) {
+      this.dataExplorerXAxisLabel = this.getColumnName(xColumn);
+    }
+    this.studentDataChanged();
+  }
+
+  dataExplorerYColumnChanged(index, yColumn) {
+    this.dataExplorerSeries[index].yColumn = yColumn;
+    this.dataExplorerSeries[index].name = this.columnNames[yColumn];
+    if (this.numDataExplorerSeries === 1) {
+      this.dataExplorerYAxisLabel = this.getColumnName(yColumn);
+    }
+    this.studentDataChanged();
+  }
+
+  createDataExplorerSeries() {
+    this.dataExplorerSeries = [];
+    for (let index = 0; index < this.numDataExplorerSeries; index++) {
+      const dataExplorerSeries = {
+        xColumn: null,
+        yColumn: null
+      };
+      this.dataExplorerSeries.push(dataExplorerSeries);
+    }
   }
 }
 

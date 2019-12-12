@@ -228,7 +228,9 @@ class GraphController extends ComponentController {
   handleTableConnectedComponentStudentDataChanged(
       connectedComponent, connectedComponentParams, componentState) {
     const studentData = componentState.studentData;
-    if (studentData != null && studentData.tableData != null) {
+    if (studentData.isDataExplorerEnabled) {
+        this.handleDataExplorer(studentData);
+    } else {
       const rows = studentData.tableData;
       const data = this.convertRowDataToSeriesData(rows, connectedComponentParams);
       let seriesIndex = connectedComponentParams.seriesIndex;
@@ -253,9 +255,62 @@ class GraphController extends ComponentController {
           series.data = data;
         }
       }
-      this.drawGraph();
-      this.isDirty = true;
     }
+    this.drawGraph();
+    this.isDirty = true;
+  }
+
+  handleDataExplorer(studentData) {
+    const dataExplorerSeries = studentData.dataExplorerSeries;
+    const trial = this.activeTrial;
+    const graphType = studentData.dataExplorerGraphType;
+    this.xAxis.title.text = studentData.dataExplorerXAxisLabel;
+    this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
+    for (let seriesIndex = 0; seriesIndex < dataExplorerSeries.length; seriesIndex++) {
+      const xColumn = dataExplorerSeries[seriesIndex].xColumn;
+      const yColumn = dataExplorerSeries[seriesIndex].yColumn;
+      let series = trial.series[seriesIndex];
+      if (series == null) {
+        series = {};
+        this.series[seriesIndex] = series;
+      }
+      series.type = graphType;
+      series.name = dataExplorerSeries[seriesIndex].name;
+      series.data =
+          this.convertDataExplorerDataToSeriesData(studentData.tableData, xColumn, yColumn);
+      if (series.type === 'line') {
+        series.data.sort(this.sortLineData);
+      }
+    }
+  }
+
+  sortLineData(a, b) {
+    if (a[0] > b[0]) {
+      return 1;
+    } else if (a[0] < b[0]) {
+      return -1;
+    } else {
+      if (a[1] > b[1]) {
+        return 1;
+      } else if (a[1] < b[1]) {
+        return -1;
+      } else {
+        return 0;
+      }
+    }
+  }
+
+  convertDataExplorerDataToSeriesData(rows, xColumn, yColumn) {
+    const data = [];
+    for (let r = 1; r < rows.length; r++) {
+      const row = rows[r];
+      const xCell = row[xColumn];
+      const yCell = row[yColumn];
+      if (xCell != null && yCell != null) {
+        this.addPointFromTableIntoData(xCell, yCell, data);
+      }
+    }
+    return data;
   }
 
   handleEmbeddedConnectedComponentStudentDataChanged(

@@ -88,6 +88,52 @@
             <md-icon>note_add</md-icon>
             {{ ::'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
           </md-button>
+          <div ng-if='tableController.isDataExplorerEnabled'>
+            <md-input-container style='width: 300px;'>
+              <label>Graph Type</label>
+              <md-select ng-model='tableController.dataExplorerGraphType'
+                  ng-change='tableController.studentDataChanged()'>
+                <md-option ng-repeat='dataExplorerGraphType in tableController.dataExplorerGraphTypes'
+                    ng-value='dataExplorerGraphType.value'>
+                  <span>{{dataExplorerGraphType.name}}</span>
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <br/>
+            <div ng-if='tableController.numDataExplorerSeries > 1'>
+              <md-input-container style='width: 300px;'>
+                  <label>X Axis Label</label>
+                  <input ng-model='tableController.dataExplorerXAxisLabel'
+                      ng-change='tableController.studentDataChanged()'/>
+                </md-input-container>
+                <md-input-container style='width: 300px;'>
+                  <label>Y Axis Label</label>
+                  <input ng-model='tableController.dataExplorerYAxisLabel'
+                      ng-change='tableController.studentDataChanged()'/>
+                </md-input-container>
+            </div>
+            <md-input-container style='width: 300px;'>
+              <label>X Column</label>
+              <md-select ng-model='xColumn'
+                  ng-change='tableController.dataExplorerXColumnChanged(xColumn)'>
+                <md-option ng-repeat='columnName in tableController.columnNames'
+                    ng-value='$index'>
+                  <span>{{columnName}}</span>
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container ng-repeat='singleDataExplorerSeries in tableController.dataExplorerSeries'
+                style='width: 300px;'>
+              <label>Y Column {{$index + 1}}</label>
+              <md-select ng-model='yColumn'
+                  ng-change='tableController.dataExplorerYColumnChanged($index, yColumn)'>
+                <md-option ng-repeat='columnName in tableController.columnNames'
+                    ng-value='$index'>
+                  <span>{{columnName}}</span>
+                </md-option>
+                </md-select>
+            </md-input-container>
+          </div>
           <table id='{{tableController.tableId}}'
               class='table table--student'>
             <tr ng-repeat='row in tableController.getTableDataRows()'>
